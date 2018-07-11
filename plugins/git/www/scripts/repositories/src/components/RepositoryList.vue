@@ -18,29 +18,24 @@
   -->
 
 <template>
-    <div class="empty-page" v-if="show_filter_empty_state">
-        <div class="empty-page-text">
-            <translate>No repository name matching your query has been found.</translate>
-        </div>
+    <div class="git-repository-list" v-if="! is_loading_initial">
+        <git-repository
+            v-for="repository in filteredRepositories"
+            v-bind:repository="repository"
+            v-bind:key="repository.id"
+        />
     </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import GitRepository from "./GitRepository.vue";
+
 export default {
-    name: "FilterEmptyState",
+    name: "RepositoryList",
+    components: { GitRepository },
     computed: {
-        show_filter_empty_state() {
-            return (
-                this.isThereAtLeastOneRepository &&
-                this.filteredRepositories.length === 0 &&
-                this.isInitialLoadingDoneWithoutError
-            );
-        },
-        ...mapGetters([
-            "filteredRepositories",
-            "isThereAtLeastOneRepository",
-            "isInitialLoadingDoneWithoutError"
-        ])
+        ...mapState(["is_loading_initial"]),
+        ...mapGetters(["filteredRepositories"])
     }
 };
 </script>

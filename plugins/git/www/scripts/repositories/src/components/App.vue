@@ -25,7 +25,8 @@
             <action-bar />
             <error-message />
             <git-repository-create />
-            <repositories-list />
+            <repository-list />
+            <repository-list-spinner />
             <filter-empty-state />
             <no-repository-empty-state />
         </div>
@@ -38,8 +39,9 @@ import FilterEmptyState from "./FilterEmptyState.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import NoRepositoryEmptyState from "./NoRepositoryEmptyState.vue";
 import ActionBar from "./ActionBar.vue";
-import RepositoriesList from "./RepositoriesList.vue";
+import RepositoryList from "./RepositoryList.vue";
 import ErrorMessage from "./ErrorMessage.vue";
+import RepositoryListSpinner from "./RepositoryListSpinner.vue";
 import { PROJECT_KEY } from "../constants.js";
 
 export default {
@@ -47,12 +49,13 @@ export default {
     store,
     components: {
         ErrorMessage,
-        RepositoriesList,
+        RepositoryList,
         ActionBar,
         NoRepositoryEmptyState,
         FilterEmptyState,
         GitRepositoryCreate,
-        GitBreadcrumbs
+        GitBreadcrumbs,
+        RepositoryListSpinner
     },
     mounted() {
         this.$store.dispatch("changeRepositories", PROJECT_KEY);

@@ -16,32 +16,20 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <template>
-    <div>
-        <div class="git-repository-list" v-if="! is_loading_initial">
-            <git-repository
-                v-for="repository in filteredRepositories"
-                v-bind:repository="repository"
-                v-bind:key="repository.id"
-            />
-        </div>
-        <div class="git-repository-list-loading" v-if="show_spinner"></div>
-    </div>
+    <div class="git-repository-list-loading" v-if="show_spinner"></div>
 </template>
 <script>
 import { mapGetters, mapState } from "vuex";
-import GitRepository from "./GitRepository.vue";
 
 export default {
-    name: "repositories-list",
-    components: { GitRepository },
+    name: "RepositoryListSpinner",
     computed: {
         show_spinner() {
             return !this.hasError && (this.is_loading_initial || this.is_loading_next);
         },
         ...mapState(["is_loading_initial", "is_loading_next"]),
-        ...mapGetters(["filteredRepositories", "hasError"])
+        ...mapGetters(["hasError"])
     }
 };
 </script>

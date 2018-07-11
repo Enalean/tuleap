@@ -19,13 +19,15 @@
 
 import { ERROR_TYPE_NO_ERROR } from "../constants.js";
 
-export const filteredRepositories = state => {
-    const repositories = state.repositories_for_owner[state.selected_owner_id] || [];
-
-    return repositories.filter(repository => {
-        return repository.name.toLowerCase().includes(state.filter.toLowerCase());
-    });
+export const filteredRepositories = (state, getters) => {
+    return !getters.areRepositoriesAlreadyLoadedForCurrentOwner
+        ? []
+        : getters.currentRepositoryList.filter(repository => {
+              return repository.name.toLowerCase().includes(state.filter.toLowerCase());
+          });
 };
+
+export const currentRepositoryList = state => state.repositories_for_owner[state.selected_owner_id];
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = state => {
     return state.repositories_for_owner.hasOwnProperty(state.selected_owner_id);
@@ -44,10 +46,7 @@ export const isThereAtLeastOneRepository = state => {
     return false;
 };
 
-export const hasError = state => {
-    return state.error_message_type !== ERROR_TYPE_NO_ERROR;
-};
+export const hasError = state => state.error_message_type !== ERROR_TYPE_NO_ERROR;
 
-export const isInitialLoadingDoneWithoutError = state => {
-    return !state.is_loading_initial && !state.has_error;
-};
+export const isInitialLoadingDoneWithoutError = state =>
+    !state.is_loading_initial && !state.has_error;

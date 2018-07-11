@@ -18,60 +18,61 @@
   -->
 
 <template>
-<div role="dialog"
-     aria-labelledby="create-repository-modal-title"
-     id="create-repository-modal"
-     class="tlp-modal"
-     ref="create_modal"
->
-    <div class="tlp-modal-header">
-        <h1 class="tlp-modal-title" id="create-repository-modal-title">
-            <i class="fa fa-plus tlp-modal-title-icon"></i>
-            <translate>Add repository</translate>
-        </h1>
-        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="closeLabel">
-            &times;
+    <div role="dialog"
+         aria-labelledby="create-repository-modal-title"
+         id="create-repository-modal"
+         class="tlp-modal"
+         ref="create_modal"
+    >
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title" id="create-repository-modal-title">
+                <i class="fa fa-plus tlp-modal-title-icon"></i>
+                <translate>Add repository</translate>
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
+                &times;
+            </div>
         </div>
-    </div>
-    <div class="tlp-modal-body git-repository-create-modal-body">
-        <div v-if="error.length > 0" class="tlp-alert-danger">
-            {{ error }}
-        </div>
+        <div class="tlp-modal-body git-repository-create-modal-body">
+            <div v-if="error.length > 0" class="tlp-alert-danger">
+                {{ error }}
+            </div>
 
-        <div class="tlp-form-element">
-            <label class="tlp-label" for="repository_name">
-                <translate>Repository name</translate>
-                <i class="fa fa-asterisk"></i></label>
-            <input
-                    type="text"
-                    class="tlp-input"
-                    id="repository_name"
-                    v-model="repository_name"
-                    v-bind:placeholder="placeholder"
-                    pattern="[a-zA-Z0-9/_.-]{1,255}"
-                    maxlength="255"
-                    v-bind:title="repositoryPattern"
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="repository_name">
+                    <translate>Repository name</translate>
+                    <i class="fa fa-asterisk"></i></label>
+                <input type="text"
+                       class="tlp-input"
+                       id="repository_name"
+                       required
+                       v-model="repository_name"
+                       v-bind:placeholder="placeholder"
+                       pattern="[a-zA-Z0-9/_.-]{1,255}"
+                       maxlength="255"
+                       v-bind:title="repository_pattern"
+                >
+                <p class="tlp-text-info">
+                    <i class="fa fa-info-circle"></i>
+                    <translate>Allowed characters: a-zA-Z0-9/_.- and max length is 255, no slashes at the beginning or the end, it also must not finish with ".git".</translate>
+                </p>
+            </div>
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="reset"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
             >
-            <p class="tlp-text-info">
-                <i class="fa fa-info-circle"></i> {{ repositoryPattern }}
-                {{ repositoryMaxLength }}
-                {{ repositoryRules }}
-            </p>
+                <translate>Cancel</translate>
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action" v-on:click="createRepository()">
+                <i class="fa fa-plus tlp-button-icon"
+                    v-bind:class="{'fa-spin fa-spinner': is_loading}"
+                ></i>
+                <translate>Add repository</translate>
+            </button>
         </div>
     </div>
-    <div class="tlp-modal-footer">
-        <button type="reset"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
-        >
-            <translate>Cancel</translate>
-        </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action" v-on:click="createRepository()">
-            <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Add repository</translate>
-        </button>
-    </div>
-</div>
 </template>
 <script>
 import { postRepository } from "../api/rest-querier.js";
@@ -83,6 +84,7 @@ export default {
     data() {
         return {
             error: "",
+            is_loading: false,
             repository_name: ""
         };
     },
@@ -93,23 +95,17 @@ export default {
         placeholder() {
             return this.$gettext("Repository name");
         },
-        repositoryPattern() {
+        repository_pattern() {
             return this.$gettext("Allowed characters: a-zA-Z0-9/_.-");
         },
-        repositoryMaxLength() {
-            return this.$gettext("max length is 255");
-        },
-        repositoryRules() {
-            return this.$gettext(
-                'no slashes at the beginning or the end, it also must not finish with ".git'
-            );
-        },
-        closeLabel() {
+        close_label() {
             return this.$gettext("Close");
         }
     },
     methods: {
         async createRepository() {
+            this.is_loading = true;
+            this.error = "";
             try {
                 const repository = await postRepository(getProjectId(), this.repository_name);
                 window.location.href = repository.html_url;
@@ -131,7 +127,6 @@ export default {
                         "Something went wrong, please check your network connection"
                     );
                 }
-            } finally {
                 this.is_loading = false;
             }
         }

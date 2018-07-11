@@ -41,10 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     TimeAgo.locale(time_ago_english);
     TimeAgo.locale(time_ago_french);
 
-    const rootComponent = document.getElementById("git-repository-list");
+    const vue_mount_point = document.getElementById("git-repository-list");
 
-    if (rootComponent) {
-        const repositoryList = Vue.extend(App);
+    if (vue_mount_point) {
+        const AppComponent = Vue.extend(App);
 
         const {
             repositoriesAdministrationUrl,
@@ -53,11 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
             projectId,
             isAdmin,
             repositoriesOwners
-        } = rootComponent.dataset;
+        } = vue_mount_point.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
         buildRepositoryListPresenter(projectId, isAdmin, locale, JSON.parse(repositoriesOwners));
 
-        new repositoryList().$mount(rootComponent);
+        new AppComponent().$mount(vue_mount_point);
     }
 });

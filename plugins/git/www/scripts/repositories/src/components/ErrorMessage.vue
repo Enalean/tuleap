@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="has_error" class="tlp-alert-danger">
+    <div v-if="hasError" class="tlp-alert-danger">
         {{ message }}
     </div>
 </template>
@@ -27,7 +27,7 @@ import { mapGetters } from "vuex";
 import { ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants.js";
 
 export default {
-    name: "error-message",
+    name: "ErrorMessage",
     computed: {
         message() {
             switch (this.$store.state.error_message_type) {
@@ -41,9 +41,7 @@ export default {
                     return "";
             }
         },
-        ...mapGetters({
-            has_error: "hasError"
-        })
+        ...mapGetters(["hasError"])
     }
 };
 </script>
