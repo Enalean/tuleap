@@ -22,6 +22,7 @@
 namespace Tuleap\Git;
 
 use EventManager;
+use GitPlugin;
 use GitRepositoryFactory;
 use HTTPRequest;
 use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
@@ -60,11 +61,17 @@ class GitPluginDefaultController implements DispatchableWithRequest
      * Is able to process a request routed by FrontRouter
      *
      * @param HTTPRequest $request
-     * @param array $variables
+     * @param array       $variables
+     *
      * @return void
+     * @throws \Tuleap\Request\NotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (! $request->getProject()->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+            throw new \Tuleap\Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+        }
+
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
         $this->event_manager->processEvent(

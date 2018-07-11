@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\RepositoryList;
 
+use GitPlugin;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
@@ -90,9 +91,14 @@ class GitRepositoryListController implements Request\DispatchableWithRequest, Re
      * @param array       $variables
      *
      * @return void
+     * @throws Request\NotFoundException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (! $this->project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+            throw new Request\NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
+        }
+
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
         $layout->addCssAsset(
