@@ -72,18 +72,6 @@ class TimeDao extends DataAccessObject
         return $this->getDB()->row($sql, $user_id, $time_id);
     }
 
-    public function getExistingTimeForUserInArtifactAtGivenDate($user_id, $artifact_id, $day)
-    {
-        $sql = 'SELECT *
-                FROM plugin_timetracking_times
-                WHERE user_id = ?
-                  AND artifact_id = ?
-                  AND day = ?
-                LIMIT 1';
-
-        return $this->getDB()->row($sql, $user_id, $artifact_id, $day);
-    }
-
     public function updateTime($time_id, $day, $minutes, $step)
     {
         $sql = 'UPDATE plugin_timetracking_times

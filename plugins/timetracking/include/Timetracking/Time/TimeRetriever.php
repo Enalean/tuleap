@@ -103,19 +103,6 @@ class TimeRetriever
     }
 
     /**
-     * @return null|Time
-     */
-    public function getExistingTimeForUserInArtifactAtGivenDate(PFUser $user, Tracker_Artifact $artifact, $date)
-    {
-        $row = $this->dao->getExistingTimeForUserInArtifactAtGivenDate($user->getId(), $artifact->getId(), $date);
-        if ($row) {
-            return $this->buildTimeFromRow($row);
-        }
-
-        return null;
-    }
-
-    /**
      * @return Time
      */
     private function buildTimeFromRow($row_time)

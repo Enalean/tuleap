@@ -11,12 +11,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.6\n"
 
-#, php-format
-msgid "A time already exists for the day %s. Skipping."
-msgstr ""
-"Un temps est déjà existant pour la journée du %s. Il n'a pas été pris en "
-"compte."
-
 msgid "Access denied. You don't have permissions to perform this action."
 msgstr ""
 "Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette "
