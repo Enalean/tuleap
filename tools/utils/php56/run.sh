@@ -20,6 +20,7 @@ sed -e "s/\$nodejs_server_jwt_private_key = '';/\$nodejs_server_jwt_private_key 
     -i /etc/tuleap/conf/local.inc
 
 if [ -f /usr/share/tuleap/.metrics_secret.key ]; then
-    cp /usr/share/tuleap/.metrics_secret.key /etc/tuleap/conf/metrics_secret.key
-    chown codendiadm:codendiadm /etc/tuleap/conf/metrics_secret.key
+    mkdir -p /etc/tuleap/plugins/prometheus_metrics/etc/
+    cp /usr/share/tuleap/.metrics_secret.key /etc/tuleap/plugins/prometheus_metrics/etc/metrics_secret.key
+    chown codendiadm:codendiadm /etc/tuleap/plugins/prometheus_metrics/etc/metrics_secret.key
 fi
