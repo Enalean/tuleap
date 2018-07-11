@@ -57,7 +57,7 @@
 const DEFAULT_DESCRIPTION = "-- Default description --";
 
 import TimeAgo from "javascript-time-ago";
-import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "./repository-list-presenter.js";
+import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "../repository-list-presenter.js";
 import PullRequestBadge from "./PullRequestBadge.vue";
 
 export default {

@@ -119,17 +119,24 @@
     </div>
 </template>
 <script>
-const PROJECT_KEY = 'project';
+const PROJECT_KEY = "project";
 
+import { mapMutations } from "vuex";
+import store from "../store/index.js";
 import { modal as tlpModal } from "tlp";
 import GitRepositoryCreate from "./GitRepositoryCreate.vue";
 import GitBreadcrumbs from "./GitBreadcrumbs.vue";
 import GitRepository from "./GitRepository.vue";
-import { getRepositoryList, getForkedRepositoryList } from "./rest-querier.js";
-import { getProjectId, getUserIsAdmin, getRepositoriesOwners } from "./repository-list-presenter.js";
+import { getRepositoryList, getForkedRepositoryList } from "../api/rest-querier.js";
+import {
+    getProjectId,
+    getUserIsAdmin,
+    getRepositoriesOwners
+} from "../repository-list-presenter.js";
 
 export default {
     name: "GitRepositoriesList",
+    store,
     components: {
         GitRepository,
         GitRepositoryCreate,
@@ -138,13 +145,12 @@ export default {
     data() {
         return {
             add_repository_modal: null,
-            filtered_repositories: [],
             repositories: [],
             repository_filter: "",
             is_loading_initial: true,
             is_loading_next: true,
             error: "",
-            selected_owner_id: '',
+            selected_owner_id: "",
             cached_repositories: {}
         };
     },
@@ -155,7 +161,7 @@ export default {
         async getProjectRepositories() {
             try {
                 this.repositories = await getRepositoryList(getProjectId(), repositories => {
-                    this.filtered_repositories.push(...repositories);
+                    this.pushFilteredRepositories(repositories);
                     this.is_loading_initial = false;
                 });
             } catch (e) {
@@ -168,17 +174,21 @@ export default {
         async getForkedRepositories(owner_id) {
             if (this.cached_repositories.hasOwnProperty(owner_id)) {
                 this.repositories = this.cached_repositories[owner_id];
-                this.filtered_repositories.push(...this.repositories);
+                this.pushFilteredRepositories(this.repositories);
                 return;
             }
 
             this.is_loading_initial = true;
-            this.is_loading_next    = true;
+            this.is_loading_next = true;
             try {
-                this.repositories = await getForkedRepositoryList(getProjectId(), owner_id, repositories => {
-                        this.filtered_repositories.push(...repositories);
+                this.repositories = await getForkedRepositoryList(
+                    getProjectId(),
+                    owner_id,
+                    repositories => {
+                        this.pushFilteredRepositories(repositories);
                         this.is_loading_initial = false;
-                    });
+                    }
+                );
             } catch (e) {
                 this.handleGetRepositoryListError(e);
             } finally {
@@ -187,14 +197,15 @@ export default {
             }
         },
         changeRepositories() {
+            this.repository_filter = "";
             this.repositories = [];
-            this.filtered_repositories = [];
+            this.emptyFilteredRepositories();
 
             if (this.selected_owner_id) {
                 this.getForkedRepositories(this.selected_owner_id);
             } else {
                 this.repositories = this.cached_repositories[PROJECT_KEY];
-                this.filtered_repositories.push(...this.repositories);
+                this.setFilteredRepositories([...this.repositories]);
             }
         },
         async handleGetRepositoryListError(e) {
@@ -208,10 +219,19 @@ export default {
             }
         },
         filterRepositories() {
-            this.filtered_repositories = this.repositories.filter(repository => {
-                return repository.name.toLowerCase().includes(this.repository_filter.toLowerCase());
-            });
-        }
+            this.setFilteredRepositories(
+                this.repositories.filter(repository => {
+                    return repository.name
+                        .toLowerCase()
+                        .includes(this.repository_filter.toLowerCase());
+                })
+            );
+        },
+        ...mapMutations([
+            "setFilteredRepositories",
+            "emptyFilteredRepositories",
+            "pushFilteredRepositories"
+        ])
     },
     mounted() {
         this.add_repository_modal = tlpModal(this.$refs.create_modal.$el);
@@ -220,7 +240,12 @@ export default {
     },
     computed: {
         show_create_repository_button() {
-            return this.is_admin && this.repositories.length !== 0 && !this.is_loading_initial && !this.error;
+            return (
+                this.is_admin &&
+                this.repositories.length !== 0 &&
+                !this.is_loading_initial &&
+                !this.error
+            );
         },
         show_empty_state() {
             return this.repositories.length === 0 && !this.is_loading_initial && !this.error;
@@ -246,12 +271,15 @@ export default {
             return getRepositoriesOwners().length > 0;
         },
         sorted_repositories_owners() {
-            return getRepositoriesOwners().sort(function (user_a, user_b) {
+            return getRepositoriesOwners().sort(function(user_a, user_b) {
                 return user_a.display_name.localeCompare(user_b.display_name);
             });
         },
         project_repositories_label() {
-            return this.$gettext('Project repositories');
+            return this.$gettext("Project repositories");
+        },
+        filtered_repositories() {
+            return this.$store.state.filtered_repositories;
         }
     }
 };

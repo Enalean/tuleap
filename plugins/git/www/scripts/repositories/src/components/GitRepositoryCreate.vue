@@ -73,8 +73,8 @@
 </div>
 </template>
 <script>
-import { postRepository } from "./rest-querier.js";
-import { getProjectId } from "./repository-list-presenter.js";
+import { postRepository } from "../api/rest-querier.js";
+import { getProjectId } from "../repository-list-presenter.js";
 
 export default {
     name: "GitRepositoryCreate",

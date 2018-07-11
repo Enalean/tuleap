@@ -52,8 +52,8 @@ import {
     getAdministrationUrl,
     getForkRepositoriesUrl,
     getRepositoryListUrl
-} from "./breadcrumb-presenter.js";
-import { getUserIsAdmin } from "./repository-list-presenter";
+} from "../breadcrumb-presenter.js";
+import { getUserIsAdmin } from "../repository-list-presenter.js";
 
 export default {
     name: "GitBreadcrumbs",
