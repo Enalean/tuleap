@@ -24,6 +24,8 @@ use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\WidgetFactory;
 
+require_once __DIR__.'/../../lib/TestDataBuilder.php';
+
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
     const TEST_USER_4_NAME        = 'rest_api_tester_4';
@@ -235,15 +237,7 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         return $this->getTrackerInProjectPrivateMember(self::DELETED_TRACKER_SHORTNAME);
     }
 
-    /**
-     * @return Tracker
-     */
-    private function getKanbanTracker()
-    {
-        return $this->getTrackerInProjectPrivateMember(self::KANBAN_TRACKER_SHORTNAME);
-    }
-
-    private function getTrackerInProjectPrivateMember($tracker_shortname)
+    protected function getTrackerInProjectPrivateMember($tracker_shortname)
     {
         return $this->getTrackerInProject($tracker_shortname, self::PROJECT_PRIVATE_MEMBER_SHORTNAME);
     }
@@ -260,31 +254,5 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         }
 
         throw new RuntimeException('Data seems not correctly initialized');
-    }
-
-    public function generateCrossTracker()
-    {
-        echo "Generate Cross Tracker\n";
-
-        $cross_tracker_saver = new CrossTrackerReportDao();
-        $report_id           = $cross_tracker_saver->create();
-        $cross_tracker_saver->addTrackersToReport(array($this->getKanbanTracker()), $report_id);
-
-        $widget_dao = new DashboardWidgetDao(
-            new WidgetFactory(
-                UserManager::instance(),
-                new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-                EventManager::instance()
-            )
-        );
-
-        $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
-
-        $user_report_id  = $cross_tracker_saver->create();
-        $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
-        $project_report_id  = $cross_tracker_saver->create();
-        $widget_dao->create($test_user_1_id, 'g', 3, 'crosstrackersearch', $project_report_id);
-
-        return $this;
     }
 }

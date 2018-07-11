@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,15 +19,7 @@
  *
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../../include/crosstrackerPlugin.class.php';
+require_once __DIR__.'/CrossTrackerDataBuilder.php';
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+(new Tuleap\CrossTracker\CrossTrackerDataBuilder())->setUp();

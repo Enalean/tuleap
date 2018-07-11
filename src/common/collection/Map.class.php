@@ -72,7 +72,7 @@ class Map {
     }
 
     /**
-     * @return a collection view of the values contained in this map.
+     * @return Collection
      */
     function getValues() {
         return new Collection($this->elements);

@@ -23,6 +23,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'pre.php';
+require_once __DIR__.'/../include/svnPlugin.class.php';
+
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
 use Tuleap\Svn\Admin\Destructor;
@@ -36,8 +39,6 @@ use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnLogger;
 
 try {
-    require_once 'pre.php';
-
     $repository         = $argv[1];
     $propname           = $argv[4];
     $action             = $argv[5];

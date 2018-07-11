@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,30 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
+ * @codingStandardsIgnoreFile
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../vendor/autoload.php';
+use PHPUnit\Framework\TestCase;
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+class EventManagerTest extends TestCase
+{
+
+    /**
+     * @test
+     */
+    public function itCallsAClosure()
+    {
+
+        $event_manager = new EventManager();
+
+        $test = $this;
+        $event_manager->addClosureOnEvent(
+            'foo',
+            function ($event, $params) use ($test) {
+                $test->assertEquals($params['stuff'], 'bar');
+            }
+        );
+
+        $event_manager->processEvent('foo', ['stuff' => 'bar']);
+    }
+}

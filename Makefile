@@ -65,6 +65,11 @@ composer:  ## Install PHP dependencies with Composer
 	@echo "Processing tools/Configuration/composer.json"
 	@composer install --working-dir=tools/Configuration/
 
+composer-production-autoloaders: ## Dump autoloaders for production
+	@composer dump-autoload --working-dir=src/ --optimize --no-dev --classmap-authoritative
+	@find plugins/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+		-exec echo "Processing {}" \; -execdir composer dump-autoload  --optimize --no-dev --classmap-authoritative \;
+
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng

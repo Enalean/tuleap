@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,15 +19,39 @@
  *
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../vendor/autoload.php';
+class DatAnotherPlugin {
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+    private $id;
+
+    private $counter = 0;
+
+    public function __construct($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setRandomInteger(array $params)
+    {
+        $params['random'] = 4;
+    }
+
+    public function increment(array $params)
+    {
+        $params['counter'] = $this->counter++;
+    }
+
+    public function setName($name)
+    {
+
+    }
+
+    public function setIsRestricted($restricted)
+    {
+
+    }
+}
