@@ -91,7 +91,7 @@ class GitRepository implements DVCSRepository {
         $this->isInitialized   = 0;
         $this->access          = 'private';
         $this->mailPrefix      = self::DEFAULT_MAIL_PREFIX;
-        $this->notifiedMails   = array();
+        $this->notifiedMails;
 
         $this->hooks           = array();
         $this->branches        = array();
@@ -640,6 +640,9 @@ class GitRepository implements DVCSRepository {
     }
     
     public function getNotifiedMails() {
+        if ($this->notifiedMails === null) {
+            $this->loadNotifiedMails();
+        }
         return $this->notifiedMails;
     }
 
