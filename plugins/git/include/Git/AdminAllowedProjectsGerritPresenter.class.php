@@ -67,7 +67,7 @@ class AdminAllowedProjectsGerritPresenter
 
     public function restricted_resource_action()
     {
-        return '/plugins/git/admin/?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
+        return GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=set-gerrit-server-restriction&gerrit_server_id=' .
                 urlencode($this->gerrit->getId());
     }
 
@@ -79,7 +79,7 @@ class AdminAllowedProjectsGerritPresenter
 
     public function update_allowed_projects_action()
     {
-        return '/plugins/git/admin/?view=gerrit_servers_restriction&action=update-allowed-project-list&gerrit_server_id=' .
+        return GIT_SITE_ADMIN_BASE_URL . '?view=gerrit_servers_restriction&action=update-allowed-project-list&gerrit_server_id=' .
                 urlencode($this->gerrit->getId());
     }
 

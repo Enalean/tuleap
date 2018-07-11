@@ -19,6 +19,7 @@
  */
 
 define('GIT_BASE_URL', '/plugins/git');
+define('GIT_SITE_ADMIN_BASE_URL', '/admin/git/');
 define('GIT_BASE_DIR', dirname(__FILE__));
 define('GIT_TEMPLATE_DIR', GIT_BASE_DIR . '/../templates');
 define('GITOLITE3_LOGS_PATH', '/var/lib/gitolite/.gitolite/logs/');
