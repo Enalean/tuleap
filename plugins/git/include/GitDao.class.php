@@ -200,6 +200,15 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
+    public function countProjectRepositories($project_id)
+    {
+        $sql = 'SELECT count(*) as count FROM plugin_git
+                WHERE project_id = ?
+                AND repository_deletion_date = "0000-00-00 00:00:00"';
+
+        return $this->getDB()->single($sql, [$project_id]);
+    }
+
     /**
      * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
