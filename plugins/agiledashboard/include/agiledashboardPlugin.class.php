@@ -41,7 +41,7 @@ use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
-use Tuleap\AgileDashboard\Semantic\MoveSemanticChecker;
+use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDoneValueChecker;
@@ -63,10 +63,8 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
-use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
-use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -170,8 +168,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(PermissionPerGroupPaneCollector::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
-            $this->addHook(MoveArtifactCheckExternalSemantics::NAME);
-            $this->addHook(MoveArtifactGetExternalSemanticTargetField::NAME);
+            $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
         }
 
@@ -1655,37 +1652,22 @@ class AgileDashboardPlugin extends Plugin {
         return true;
     }
 
-    /**
-     * @throws MoveArtifactSemanticsException
-     */
-    public function moveArtifactCheckExternalSemantics(MoveArtifactCheckExternalSemantics $event)
+    public function moveArtifactGetExternalSemanticCheckers(MoveArtifactGetExternalSemanticCheckers $event)
     {
-        $event->setVisitedByPlugin();
-        $event->setExternalSemanticsChecked('initial_effort');
+        $checker = new MoveSemanticInitialEffortChecker(
+            $this->getSemanticInitialEffortFactory(),
+            $this->getFormElementFactory()
+        );
 
-        try {
-            $aligned = $this->getMoveSemanticChecker()->checkSemanticsAreAligned($event->getSourceTracker(), $event->getTargetTracker());
-            if ($aligned) {
-                $event->setExternalSemanticAligned();
-            }
-        } catch (MoveArtifactSemanticsException $exception) {
-            throw $exception;
-        }
-    }
-
-    public function moveArtifactGetExternalSemanticTargetField(MoveArtifactGetExternalSemanticTargetField $event)
-    {
-        if (! $this->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
-            return;
-        }
-
-        $target_initial_effort = $this->getSemanticInitialEffortFactory()->getByTracker($event->getTargetTracker());
-        $event->setField($target_initial_effort->getField());
+        $event->addExternalSemanticsChecker($checker);
     }
 
     public function moveArtifactParseFieldChangeNodes(MoveArtifactParseFieldChangeNodes $event)
     {
-        if (! $this->areSemanticsAligned($event->getSourceTracker(), $event->getTargetTracker())) {
+        if (! $this->getMoveSemanticInitialEffortChecker()->areSemanticsAligned(
+            $event->getSourceTracker(),
+            $event->getTargetTracker())
+        ) {
             return;
         }
 
@@ -1706,23 +1688,11 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     /**
-     * @return bool
+     * @return MoveSemanticInitialEffortChecker
      */
-    private function areSemanticsAligned(Tracker $source_tracker, Tracker $target_tracker)
+    private function getMoveSemanticInitialEffortChecker()
     {
-        try {
-            return $this->getMoveSemanticChecker()->checkSemanticsAreAligned($source_tracker, $target_tracker);
-        } catch (MoveArtifactSemanticsException $exception) {
-            return false;
-        }
-    }
-
-    /**
-     * @return MoveSemanticChecker
-     */
-    private function getMoveSemanticChecker()
-    {
-        return new MoveSemanticChecker(
+        return new MoveSemanticInitialEffortChecker(
             $this->getSemanticInitialEffortFactory(),
             $this->getFormElementFactory()
         );

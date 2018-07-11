@@ -28,7 +28,7 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
-use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticTargetField;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
@@ -158,11 +158,12 @@ class MoveChangesetXMLUpdater
             $target_tracker
         );
 
+        $external_semantic_can_be_moved = $this->canExternalSemanticBeMoved($source_tracker, $target_tracker);
+
         $target_title_field             = $target_tracker->getTitleField();
         $target_description_field       = $target_tracker->getDescriptionField();
         $target_status_field            = $target_tracker->getStatusField();
         $source_status_field            = $source_tracker->getStatusField();
-        $external_semantic_target_field = $this->getExternalSemanticTargetField($source_tracker, $target_tracker);
 
         $this->deleteEmptyCommentsNode($changeset_xml);
 
@@ -185,7 +186,7 @@ class MoveChangesetXMLUpdater
                 $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
                 $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index);
                 continue;
-            } elseif ($external_semantic_target_field) {
+            } elseif ($external_semantic_can_be_moved) {
                 $modified = $this->parseFieldChangeNodesForExternalSemantics(
                     $source_tracker,
                     $target_tracker,
@@ -305,14 +306,20 @@ class MoveChangesetXMLUpdater
     }
 
     /**
-     * @return null|Tracker_FormElement_Field
+     * @return bool
      */
-    private function getExternalSemanticTargetField(Tracker $source_tracker, Tracker $target_tracker)
+    private function canExternalSemanticBeMoved(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $event = new MoveArtifactGetExternalSemanticTargetField($source_tracker, $target_tracker);
+        $event = new MoveArtifactGetExternalSemanticCheckers();
         $this->event_manager->processEvent($event);
 
-        return $event->getField();
+        foreach ($event->getExternalSemanticsCheckers() as $external_semantics_checker) {
+            if ($external_semantics_checker->areSemanticsAligned($source_tracker, $target_tracker)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

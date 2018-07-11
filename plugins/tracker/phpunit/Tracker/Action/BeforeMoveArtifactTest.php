@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Events\MoveArtifactCheckExternalSemantics;
+use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -254,7 +254,7 @@ class BeforeMoveArtifactTest extends TestCase
      */
     public function testExternalSemanticsAreNotCheckedIfNotReturnedByOtherPlugin()
     {
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
             return true;
         }));
 
@@ -278,8 +278,16 @@ class BeforeMoveArtifactTest extends TestCase
      */
     public function testSemanticsAreNotAlignedIfBothTrackerAndExternalSemanticsAreNotAligne()
     {
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
-            $event->setVisitedByPlugin();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
+            $checker = Mockery::mock(MoveSemanticChecker::class);
+            $checker->shouldReceive([
+                'areBothSemanticsDefined'              => false,
+                'doesBothSemanticFieldHaveTheSameType' => false,
+                'areSemanticsAligned'                  => false,
+                'getSemanticName'                      => 'whatever',
+            ]);
+
+            $event->addExternalSemanticsChecker($checker);
             return true;
         }));
 
@@ -300,9 +308,16 @@ class BeforeMoveArtifactTest extends TestCase
 
     public function testSemanticsAreAlignedIfExternalSemanticsAreAlignedAndNotTrackerSemantics()
     {
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactCheckExternalSemantics $event) {
-            $event->setVisitedByPlugin();
-            $event->setExternalSemanticAligned();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
+            $checker = Mockery::mock(MoveSemanticChecker::class);
+            $checker->shouldReceive([
+                'areBothSemanticsDefined'              => true,
+                'doesBothSemanticFieldHaveTheSameType' => true,
+                'areSemanticsAligned'                  => true,
+                'getSemanticName'                      => 'whatever',
+            ]);
+
+            $event->addExternalSemanticsChecker($checker);
             return true;
         }));
 

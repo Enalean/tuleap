@@ -22,12 +22,13 @@ namespace Tuleap\AgileDashboard\Semantic;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Tracker;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
+use Tuleap\Tracker\Action\MoveSemanticChecker;
 
-class MoveSemanticChecker
+class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
 {
+    const INITIAL_EFFORT_SEMANTIC_LABEL = 'initial effort';
+
     /**
      * @var AgileDashboard_Semantic_InitialEffortFactory
      */
@@ -48,9 +49,8 @@ class MoveSemanticChecker
 
     /**
      * @return bool
-     * @throws MoveArtifactSemanticsException
      */
-    public function checkSemanticsAreAligned(Tracker $source_tracker, Tracker $target_tracker)
+    public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
     {
         $source_initial_effort = $this->initial_effort_factory->getByTracker($source_tracker);
         $target_initial_effort = $this->initial_effort_factory->getByTracker($target_tracker);
@@ -58,25 +58,29 @@ class MoveSemanticChecker
         $source_initial_effort_field = $source_initial_effort->getField();
         $target_initiel_effort_field = $target_initial_effort->getField();
 
-        return ($source_initial_effort_field &&
-            $target_initiel_effort_field &&
-            $this->areFieldsTypeAligned($source_initial_effort_field, $target_initiel_effort_field)
-        );
+        return $source_initial_effort_field && $target_initiel_effort_field;
     }
 
     /**
      * @return bool
-     * @throws MoveArtifactSemanticsException
      */
-    private function areFieldsTypeAligned(
-        Tracker_FormElement_Field $source_initial_effort_field,
-        Tracker_FormElement_Field $target_initial_effort_field
-    ) {
-        if ($this->form_element_factory->getType($source_initial_effort_field) !==
-            $this->form_element_factory->getType($target_initial_effort_field)) {
-            throw new MoveArtifactSemanticsException("Both initial effort fields must have the same type.");
-        }
+    public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
+    {
+        $source_initial_effort = $this->initial_effort_factory->getByTracker($source_tracker);
+        $target_initial_effort = $this->initial_effort_factory->getByTracker($target_tracker);
 
-        return true;
+        $source_initial_effort_field = $source_initial_effort->getField();
+        $target_initial_effort_field = $target_initial_effort->getField();
+
+        return $this->form_element_factory->getType($source_initial_effort_field) ===
+            $this->form_element_factory->getType($target_initial_effort_field);
+    }
+
+    /**
+     * @return string
+     */
+    public function getSemanticName()
+    {
+        return self::INITIAL_EFFORT_SEMANTIC_LABEL;
     }
 }
