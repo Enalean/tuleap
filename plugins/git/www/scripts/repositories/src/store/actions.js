@@ -49,6 +49,7 @@ function getAsyncRepositoryList(commit, getRepositories) {
     try {
         return getRepositories(repositories => {
             commit("pushRepositoriesForCurrentOwner", repositories);
+            commit("sortRepositoriesByUpdateDate");
             commit("setIsLoadingInitial", false);
         });
     } catch (e) {

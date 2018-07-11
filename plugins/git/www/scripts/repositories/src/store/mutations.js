@@ -29,6 +29,11 @@ export default {
         }
         state.repositories_for_owner[state.selected_owner_id].push(...repositories);
     },
+    sortRepositoriesByUpdateDate(state) {
+        state.repositories_for_owner[state.selected_owner_id].sort(
+            (a, b) => new Date(b.last_update_date) - new Date(a.last_update_date)
+        );
+    },
     setFilter(state, filter) {
         state.filter = filter;
     },
