@@ -33,6 +33,7 @@
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveStatusSemanticChecker.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveTitleSemanticChecker.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveDescriptionSemanticChecker.php</directory>
+            <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveContributorSemanticChecker.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields/FieldValueMatcher.php</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
         </whitelist>

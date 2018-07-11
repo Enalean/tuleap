@@ -154,7 +154,12 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder {
             if ($field->validateField($this->createFakeArtifact(), $submitted_value)) {
                 $data[$field->getId()] = $submitted_value;
             } else {
-                $this->logger->warn("Skipped invalid value ".(string)$submitted_value." for field ".$field->getName());
+                if (is_array($submitted_value)) {
+                    $invalid_submitted_value = implode(', ', $submitted_value);
+                } else {
+                    $invalid_submitted_value = (string)$submitted_value;
+                }
+                $this->logger->warn("Skipped invalid value $invalid_submitted_value for field ".$field->getName());
             }
         } catch(Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException $exception) {
             $this->logger->warn("Skipped invalid value for field ".$field->getName().': '.$exception->getMessage());

@@ -25,6 +25,8 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
@@ -60,18 +62,25 @@ class MoveChangesetXMLUpdater
      */
     private $description_semantic_checker;
 
+    /**
+     * @var MoveContributorSemanticChecker
+     */
+    private $contributor_semantic_checker;
+
     public function __construct(
         EventManager $event_manager,
         FieldValueMatcher $field_value_matcher,
         MoveTitleSemanticChecker $title_semantic_checker,
         MoveDescriptionSemanticChecker $description_semantic_checker,
-        MoveStatusSemanticChecker $status_semantic_checker
+        MoveStatusSemanticChecker $status_semantic_checker,
+        MoveContributorSemanticChecker $contributor_semantic_checker
     ) {
-        $this->event_manager           = $event_manager;
-        $this->field_value_matcher     = $field_value_matcher;
-        $this->status_semantic_checker = $status_semantic_checker;
-        $this->title_semantic_checker  = $title_semantic_checker;
+        $this->event_manager                = $event_manager;
+        $this->field_value_matcher          = $field_value_matcher;
+        $this->status_semantic_checker      = $status_semantic_checker;
+        $this->title_semantic_checker       = $title_semantic_checker;
         $this->description_semantic_checker = $description_semantic_checker;
+        $this->contributor_semantic_checker = $contributor_semantic_checker;
     }
 
     public function update(
@@ -158,12 +167,20 @@ class MoveChangesetXMLUpdater
             $target_tracker
         );
 
+        $contributor_semantic_can_be_moved = $this->contributor_semantic_checker->areSemanticsAligned(
+            $source_tracker,
+            $target_tracker
+        );
+
         $external_semantic_can_be_moved = $this->canExternalSemanticBeMoved($source_tracker, $target_tracker);
 
-        $target_title_field             = $target_tracker->getTitleField();
-        $target_description_field       = $target_tracker->getDescriptionField();
-        $target_status_field            = $target_tracker->getStatusField();
-        $source_status_field            = $source_tracker->getStatusField();
+        $target_title_field       = $target_tracker->getTitleField();
+        $target_description_field = $target_tracker->getDescriptionField();
+        $target_status_field      = $target_tracker->getStatusField();
+        $target_contributor_field = $target_tracker->getContributorField();
+
+        $source_status_field      = $source_tracker->getStatusField();
+        $source_contributor_field = $source_tracker->getContributorField();
 
         $this->deleteEmptyCommentsNode($changeset_xml);
 
@@ -185,6 +202,12 @@ class MoveChangesetXMLUpdater
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
                 $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index);
+                continue;
+            } elseif ($contributor_semantic_can_be_moved &&
+                $this->isFieldChangeCorrespondingToContributorSemanticField($changeset_xml, $source_contributor_field, $index)
+            ) {
+                $this->useTargetTrackerFieldName($changeset_xml, $target_contributor_field, $index);
+                $this->removeNonPossibleUserValues($changeset_xml, $target_contributor_field, $index);
                 continue;
             } elseif ($external_semantic_can_be_moved) {
                 $modified = $this->parseFieldChangeNodesForExternalSemantics(
@@ -266,6 +289,14 @@ class MoveChangesetXMLUpdater
         return $this->isFieldChangeCorrespondingToField($changeset_xml, $source_status_field, $index);
     }
 
+    private function isFieldChangeCorrespondingToContributorSemanticField(
+        SimpleXMLElement $changeset_xml,
+        Tracker_FormElement_Field $source_contributor_field,
+        $index
+    ) {
+        return $this->isFieldChangeCorrespondingToField($changeset_xml, $source_contributor_field, $index);
+    }
+
     private function isFieldChangeCorrespondingToField(
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $source_field,
@@ -303,6 +334,22 @@ class MoveChangesetXMLUpdater
         );
 
         $changeset_xml->field_change[$index]->value = (int) $value;
+    }
+
+    private function removeNonPossibleUserValues(
+        SimpleXMLElement $changeset_xml,
+        Tracker_FormElement_Field_list $target_contributor_field,
+        $field_change_index
+    ) {
+        $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
+        for ($value_index = $last_index; $value_index >= 0; $value_index--) {
+            if (! $this->field_value_matcher->isSourceUserValueMathingATargetUserValue(
+                $target_contributor_field,
+                $changeset_xml->field_change[$field_change_index]->value[$value_index]
+            )) {
+                unset($changeset_xml->field_change[$field_change_index]->value[$value_index]);
+            }
+        }
     }
 
     /**

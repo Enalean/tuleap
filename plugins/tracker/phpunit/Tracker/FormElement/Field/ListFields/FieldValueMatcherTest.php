@@ -22,10 +22,14 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Bind_Users;
+use XMLImportHelper;
 
 require_once __DIR__ . '/../../../../bootstrap.php';
 
@@ -50,7 +54,17 @@ class FieldValueMatcherTest extends TestCase
         $this->source_field->shouldReceive('getBind')->andReturn($this->source_field_bind);
         $this->target_field->shouldReceive('getBind')->andReturn($this->target_field_bind);
 
-        $this->matcher = new FieldValueMatcher();
+        $this->target_user_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+
+        $this->user = Mockery::mock(PFUser::class);
+        $this->user->shouldReceive('getId')->andReturn(101);
+
+        $this->xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+            <value format="ldap">101</value>
+        ');
+
+        $this->user_finder = Mockery::mock(XMLImportHelper::class);
+        $this->matcher     = new FieldValueMatcher($this->user_finder);
     }
 
     public function testItRetrievesMatchingValueByName()
@@ -154,5 +168,37 @@ class FieldValueMatcherTest extends TestCase
         $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 0);
 
         $this->assertEquals($matching_value, 100);
+    }
+
+    public function testItReturnsTrueIfThereIsAMatchingUserValue()
+    {
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+        $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
+        $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(true);
+
+        $this->assertTrue(
+            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+        );
+    }
+
+    public function testItReturnsFalseIfUserIsAnonymous()
+    {
+        $this->user->shouldReceive('isAnonymous')->andReturn(true);
+        $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
+
+        $this->assertFalse(
+            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+        );
+    }
+
+    public function testItReturnsFalseIfThereIsNoMatchingUserValue()
+    {
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+        $this->user_finder->shouldReceive('getUser')->andReturn($this->user);
+        $this->target_user_field->shouldReceive('checkValueExists')->with(101)->andReturn(false);
+
+        $this->assertFalse(
+            $this->matcher->isSourceUserValueMathingATargetUserValue($this->target_user_field, $this->xml)
+        );
     }
 }
