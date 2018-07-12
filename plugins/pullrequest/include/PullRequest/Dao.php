@@ -48,6 +48,17 @@ class Dao extends DataAccessObject
         return $this->getDB()->row($sql, $repo_src_id, $sha1_src, $repo_dest_id, $sha1_dest);
     }
 
+    public function searchRepositoriesWithOpenPullRequests(array $repository_ids)
+    {
+        $ids_stmt = EasyStatement::open()->in('?*', $repository_ids);
+
+        $sql = "SELECT repository_id, repo_dest_id
+                FROM plugin_pullrequest_review
+                WHERE status = ?
+                  AND (repository_id IN ($ids_stmt) OR repo_dest_id IN ($ids_stmt))";
+        return $this->getDB()->safeQuery($sql, array_merge([PullRequest::STATUS_REVIEW], $ids_stmt->values(), $ids_stmt->values()));
+    }
+
     public function searchNbOfOpenedPullRequestsForRepositoryId($repository_id)
     {
         $sql = 'SELECT count(*) AS open_pr FROM plugin_pullrequest_review

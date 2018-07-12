@@ -28,6 +28,7 @@ use Git_RemoteServer_NotFoundException;
 use GitPermissionsManager;
 use GitRepository;
 use PFUser;
+use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 
 class RepositoryRepresentationBuilder
@@ -100,6 +101,7 @@ class RepositoryRepresentationBuilder
 
         $this->cacheGerritServers();
         $this->cacheLastAccessDates($repo_ids);
+        $this->cacheAdditionalInformations($repo_ids);
     }
 
     private function cacheGerritServers()
@@ -116,6 +118,11 @@ class RepositoryRepresentationBuilder
         foreach ($this->log_dao->getLastPushForRepositories($repo_ids) as $row) {
             $this->last_push_date[$row['repository_id']] = $row['push_date'];
         }
+    }
+
+    private function cacheAdditionalInformations(array $repo_ids)
+    {
+        $this->event_manager->processEvent(new AdditionalInformationRepresentationCache($repo_ids));
     }
 
     /**

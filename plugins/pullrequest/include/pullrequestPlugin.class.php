@@ -27,6 +27,7 @@ use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
+use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
@@ -50,6 +51,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNamespaceAvailabilityChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
+use Tuleap\PullRequest\GitRestRouteAdditionalInformations;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
@@ -77,6 +79,7 @@ class pullrequestPlugin extends Plugin
     const PR_REFERENCE_KEYWORD          = 'pr';
     const PULLREQUEST_REFERENCE_KEYWORD = 'pullrequest';
     const REFERENCE_NATURE              = 'pullrequest';
+    private $git_rest_route_additional_informations;
 
     public function __construct($id)
     {
@@ -114,6 +117,7 @@ class pullrequestPlugin extends Plugin
             $this->addHook(GitRepositoryDeletionEvent::NAME);
             $this->addHook(GitAdditionalActionEvent::NAME);
             $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
+            $this->addHook(AdditionalInformationRepresentationCache::NAME);
         }
     }
 
@@ -621,9 +625,19 @@ class pullrequestPlugin extends Plugin
 
     public function additionalInformationRepresentationRetriever(AdditionalInformationRepresentationRetriever $event)
     {
-        $dao       = new PullRequestDao();
-        $opened_pullrequest = $dao->searchNbOfOpenedPullRequestsForRepositoryId($event->getRepository()->getId());
+        $this->getGitRestRouteAdditionaInformations()->getOpenPullRequestsCount($event);
+    }
 
-        $event->addInformation("opened_pull_requests", $opened_pullrequest);
+    public function additionalInformationRepresentationCache(AdditionalInformationRepresentationCache $event)
+    {
+        $this->getGitRestRouteAdditionaInformations()->createCache($event);
+    }
+
+    private function getGitRestRouteAdditionaInformations()
+    {
+        if ($this->git_rest_route_additional_informations === null) {
+            $this->git_rest_route_additional_informations = new GitRestRouteAdditionalInformations(new PullRequestDao());
+        }
+        return $this->git_rest_route_additional_informations;
     }
 }
