@@ -87,7 +87,6 @@ class Tracker_ArtifactCreator {
         }
 
         return $this->createFirstChangesetNoValidation(
-            $tracker,
             $artifact,
             $fields_data,
             $user,
@@ -100,7 +99,6 @@ class Tracker_ArtifactCreator {
      * already have checked them. This function is private
      */
     private function createFirstChangesetNoValidation(
-        Tracker $tracker,
         Tracker_Artifact $artifact,
         array $fields_data,
         PFUser $user,
@@ -122,6 +120,7 @@ class Tracker_ArtifactCreator {
 
         if ($send_notification) {
             $changeset->notify();
+            $this->changeset_creator->emitWebhooks($artifact, $user, 'create');
         }
 
         return $artifact;
@@ -149,7 +148,7 @@ class Tracker_ArtifactCreator {
             return false;
         }
 
-        if (! $this->createFirstChangesetNoValidation($tracker, $artifact, $fields_data, $user, $submitted_on, $send_notification)) {
+        if (! $this->createFirstChangesetNoValidation($artifact, $fields_data, $user, $submitted_on, $send_notification)) {
             $this->revertBareArtifactInsertion($artifact);
             return false;
         }

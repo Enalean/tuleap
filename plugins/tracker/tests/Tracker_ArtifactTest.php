@@ -307,7 +307,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         stub($fields_validator)->validate()->returns(true);
 
         $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
-        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->never();
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
@@ -1069,7 +1069,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $comment_dao = stub('Tracker_Artifact_Changeset_CommentDao')->createNewVersion()->returns(true);
 
         $webhook_factory = \Mockery::spy(\Tuleap\Tracker\Webhook\WebhookFactory::class);
-        $webhook_factory->shouldReceive('getWebhooksForTracker')->once()->andReturn([]);
+        $webhook_factory->shouldReceive('getWebhooksForTracker')->never();
 
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,

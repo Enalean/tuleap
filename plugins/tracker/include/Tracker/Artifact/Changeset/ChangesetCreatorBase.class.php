@@ -102,7 +102,7 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         return false;
     }
 
-    protected function emitWebhooks(Tracker_Artifact $artifact, PFUser $user, $action)
+    public function emitWebhooks(Tracker_Artifact $artifact, PFUser $user, $action)
     {
         $tracker  = $artifact->getTracker();
         $webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);
