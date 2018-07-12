@@ -114,7 +114,7 @@ class MoveChangesetXMLUpdater
         PFUser $submitted_by,
         $submitted_on
     ) {
-        $last_index = count($artifact_xml->changeset) - 1;
+        $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             $this->parseFieldChangeNodesInReverseOrder(
                 $source_tracker,
@@ -184,7 +184,7 @@ class MoveChangesetXMLUpdater
 
         $this->deleteEmptyCommentsNode($changeset_xml);
 
-        $last_index = count($changeset_xml->field_change) - 1;
+        $last_index = $changeset_xml->field_change === null ? -1 : count($changeset_xml->field_change) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             $modified = false;
             if ($title_semantic_can_be_moved &&
@@ -238,14 +238,14 @@ class MoveChangesetXMLUpdater
     {
         $this->deleteEmptyCommentNodes($changeset_xml->comments);
 
-        if (count($changeset_xml->comments->comment) === 0) {
+        if ($changeset_xml->comments->comment === null || count($changeset_xml->comments->comment) === 0) {
             unset($changeset_xml->comments);
         }
     }
 
     private function deleteEmptyCommentNodes(SimpleXMLElement $comments_xml)
     {
-        $last_index = count($comments_xml->comment) - 1;
+        $last_index = $comments_xml->comment === null ? -1 : count($comments_xml->comment) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             if ((string) $comments_xml->comment[$index]->body === '') {
                 unset($comments_xml->comment[$index]);
