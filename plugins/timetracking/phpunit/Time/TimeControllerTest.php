@@ -110,19 +110,6 @@ class TimeControllerTest extends TestCase
         $this->time_controller->addTimeForUser($this->request, $this->user, $this->artifact, $this->csrf);
     }
 
-    public function testItThrowsTimeTrackingMissingTimeToAddTimeIfTimeNull()
-    {
-        $this->request->allows()->get('timetracking-new-time-time')->andReturns(null);
-        $this->request->allows()->get('timetracking-new-time-date')->andReturns('2018-04-04');
-        $this->request->allows()->get('timetracking-new-time-step')->andReturns('step');
-
-        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
-
-        $this->expectException(TimeTrackingMissingTimeException::class);
-
-        $this->time_controller->addTimeForUser($this->request, $this->user, $this->artifact, $this->csrf);
-    }
-
     public function testItThrowsNothingIfDeleteTimeSuccess()
     {
         $this->request->allows()->get('timetracking-new-time-step')->andReturns('step');
@@ -210,20 +197,5 @@ class TimeControllerTest extends TestCase
         $this->expectException(TimeTrackingNotBelongToUserException::class);
 
         $this->time_controller->editTimeForUser($this->request, $user, $this->artifact, $this->csrf);
-    }
-
-    public function testItTrowsTimeTrackingMissingTimeExceptionToEditTime()
-    {
-        $this->time_retriever->allows()->getTimeByIdForUser($this->user, $this->time->getId())->andReturns($this->time);
-
-        $this->request->allows()->get('timetracking-edit-time-time')->andReturns(null);
-        $this->request->allows()->get('timetracking-edit-time-date')->andReturns('2018-04-04');
-        $this->request->allows()->get('timetracking-edit-time-step')->andReturns('step');
-
-        $this->permissions_retriever->allows()->userCanAddTimeInTracker($this->user, $this->tracker)->andReturns(true);
-
-        $this->expectException(TimeTrackingMissingTimeException::class);
-
-        $this->time_controller->editTimeForUser($this->request, $this->user, $this->artifact, $this->csrf);
     }
 }

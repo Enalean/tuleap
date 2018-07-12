@@ -73,6 +73,9 @@ msgstr "Étapes"
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
 
+msgid "The time format is not the one expected (hh:mm)."
+msgstr "Le format du temps n'est pas celui attendu (hh:mm)."
+
 msgid "The time is missing"
 msgstr "Le temps est manquant"
 

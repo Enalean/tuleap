@@ -22,6 +22,8 @@ namespace Tuleap\Timetracking\Time;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__.'/../bootstrap.php';
 
@@ -43,7 +45,6 @@ class TimeCheckerTest extends TestCase
 
         $this->time_retriever  = \Mockery::spy(TimeRetriever::class);
         $this->time_checker    = new TimeChecker($this->time_retriever);
-
         $this->time            = \Mockery::spy(Time::class);
 
         $this->artifact        = \Mockery::spy(\Tracker_Artifact::class);
@@ -65,13 +66,39 @@ class TimeCheckerTest extends TestCase
         $this->assertTrue($this->time_checker->doesTimeBelongsToUser($this->time, $this->user));
     }
 
-    public function testItReturnTrueIfTimeNotNull()
+    public function testItReturnTimeTrackingNoTimeExceptionIfTimeIsNull()
     {
-        $this->assertTrue($this->time_checker->checkMandatoryTimeValue('01:21'));
+        $this->expectException(TimeTrackingMissingTimeException::class);
+        $this->time_checker->checkMandatoryTimeValue(null);
     }
 
-    public function testItReturnFalseIfTimeNull()
+    public function testItReturnNullIfGoodTimeFormat()
     {
-        $this->assertFalse($this->time_checker->checkMandatoryTimeValue(null));
+        $this->assertNull($this->time_checker->checkMandatoryTimeValue("11:23"));
+    }
+
+
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSlashSeparator()
+    {
+        $this->expectException(TimeTrackingBadTimeFormatException::class);
+        $this->time_checker->checkMandatoryTimeValue("11/23");
+    }
+
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatWrongSemicolonSeparator()
+    {
+        $this->expectException(TimeTrackingBadTimeFormatException::class);
+        $this->time_checker->checkMandatoryTimeValue("11;23");
+    }
+
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatToLong()
+    {
+        $this->expectException(TimeTrackingBadTimeFormatException::class);
+        $this->time_checker->checkMandatoryTimeValue("11:234");
+    }
+
+    public function testItReturnTimeTrackingBadTimeFormatExceptionIfBadTimeFormatIfLetter()
+    {
+        $this->expectException(TimeTrackingBadTimeFormatException::class);
+        $this->time_checker->checkMandatoryTimeValue("11:f8");
     }
 }
