@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -315,13 +315,13 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         return $changes;
     }
 
-    public function nodiff($format = 'html') {
+    public function nodiff($format = 'html')
+    {
         $next = $this->getListValues();
         $added_arr = array();
         foreach ($next as $element) {
                 $added_arr[] = $element->getLabel();
         }
-        $added = implode(', ', $added_arr);
-        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+        return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '. $this->format(implode(', ', $added_arr), $format);
     }
 }

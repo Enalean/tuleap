@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,11 +63,13 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to') . ' ' . $next_numeric;
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to') . ' ' . $this->format($next_numeric, $format);
             } elseif ($next_numeric === null) {
                 return $GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
             } else {
-                return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' ' . $previous_numeric . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact','to') . ' ' . $next_numeric;
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' ' .
+                    $this->format($previous_numeric, $format) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact','to') .
+                    ' ' . $this->format($next_numeric, $format);
             }
         }
         return false;
@@ -78,9 +80,19 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string The sentence to add in changeset
      */
-    public function nodiff($format = 'html') {
+    public function nodiff($format = 'html')
+    {
         if ($this->getNumeric() != 0) {
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$this->getValue();
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '. $this->format($this->getValue(), $format);
         }
+        return '';
+    }
+
+    private function format($value, $format)
+    {
+        if ($format === 'text') {
+            return $value;
+        }
+        return Codendi_HTMLPurifier::instance()->purify($value);
     }
 }
