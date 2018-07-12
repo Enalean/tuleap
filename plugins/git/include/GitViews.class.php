@@ -126,63 +126,6 @@ class GitViews extends PluginViews {
     }
 
     /**
-     * HELP VIEW
-     */
-    public function help($topic, $params=array()) {
-        if ( empty($topic) ) {
-            return false;
-        }
-        $display = 'block';
-        if ( !empty($params['display']) ) {
-            $display = $params['display'];
-        }
-        switch( $topic ) {
-                case 'init':
-             ?>
-<div id="help_init" class="alert alert-info" style="display:<?php echo $display?>">
-    <h3><?php echo $this->getText('help_reference_title'); ?></h3>
-    <p>
-                       <?php
-                       echo '<ul>'.$this->getText('help_init_reference').'</ul>';
-                       ?>
-    </p>
-    </div>
-                    <?php
-                    break;
-                    case 'create':
-                        ?>
-                        <div id="help_create" class="alert alert-info" style="display:<?php echo $display?>">
-                            <h3><?php echo $this->getText('help_create_reference_title'); ?></h3>
-                        <?php
-                        echo '<ul>'.$this->getText('help_create_reference').'</ul>';
-                        ?>
-                        </div>
-                        <?php
-                        break;
-                    case 'tree':
-                        ?>
-                        <div id="help_tree" class="alert alert-info" style="display:<?php echo $display?>">
-                        <?php
-                        echo '<ul>'.$this->getText('help_tree').'</ul>';
-                        ?>
-                        </div>
-                        <?php
-                        break;
-                    case 'fork':
-                        ?>
-                        <div id="help_fork" class="alert alert-info" style="display:<?php echo $display?>">
-                        <?php
-                        echo '<ul>'.$this->getText('help_fork').'</ul>';
-                        ?>
-                        </div>
-                        <?php
-                        break;
-                default:
-                    break;
-            }
-    }
-
-    /**
      * REPOSITORY MANAGEMENT VIEW
      */
     public function repoManagement() {
@@ -206,36 +149,6 @@ class GitViews extends PluginViews {
             $this->regexp_retriever
         );
         $repo_management_view->display();
-    }
-
-    /**
-     * FORK VIEW
-     */
-    public function fork() {
-        $params = $this->getData();
-        $repository   = $params['repository'];
-        $repoId       = $repository->getId();
-        $initialized  = $repository->isInitialized();
-
-        echo "<h1>". $repository->getHTMLLink($this->url_manager) ."</h1>";
-        ?>
-        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
-        <input type="hidden" id="action" name="action" value="edit" />
-        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-        <?php
-        if ( $initialized && $this->getController()->isAPermittedAction('clone') ) :
-        ?>
-            <p id="plugin_git_fork_form">
-                <input type="hidden" id="parent_id" name="parent_id" value="<?php echo $repoId?>">
-                <label for="repo_name"><?php echo $this->getText('admin_fork_creation_input_name');
-        ?>:     </label>
-                <input type="text" id="repo_name" name="repo_name" value="" /><input type="submit" class="btn btn-default" name="clone" value="<?php echo $this->getText('admin_fork_creation_submit');?>" />
-                <a href="#" onclick="$('help_fork').toggle();"> [?]</a>
-            </p>
-        </form>
-        <?php
-        endif;
-        $this->help('fork', array('display'=>'none'));
     }
 
     /**
@@ -283,37 +196,6 @@ class GitViews extends PluginViews {
         if ( $this->getController()->isAPermittedAction('add') ) {
             $this->_createForm();
         }
-    }
-
-    /**
-     * CREATE REF FORM
-     */
-    protected function _createForm() {
-        $user = UserManager::instance()->getCurrentUser();
-        ?>
-<h2><?php echo $this->getText('admin_reference_creation_title');
-        ?> <a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"><i class="icon-question-sign"></i></a></h2>
-<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST" class="form-inline">
-    <input type="hidden" id="action" name="action" value="add" />
-
-    <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
-    <input id="repo_name" name="repo_name" class="" type="text" value=""/>
-
-    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>" class="btn btn-primary">
-</form>
-        <?php
-        $this->help('create', array('display'=>'none')) ;
-        $this->help('init', array('display'=>'none')) ;
-    }
-
-    /**
-     * @todo several cases ssh, http ...
-     * @param <type> $repositoryName
-     * @return <type>
-     */
-    protected function _getRepositoryUrl($repositoryName) {
-        $serverName  = $_SERVER['SERVER_NAME'];
-        return  $this->userName.'@'.$serverName.':/gitroot/'.$this->projectName.'/'.$repositoryName.'.git';
     }
 
     protected function forkRepositories() {
@@ -580,59 +462,6 @@ class GitViews extends PluginViews {
             }
         }
         return $html;
-    }
-
-    /**
-     * TREE SUBVIEW
-     */
-    protected function _tree($params=array()) {
-        if ( empty($params) ) {
-            $params = $this->getData();
-        }
-        if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && count($params['repositories_owners']) > 0)) {
-            echo '<h1>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"><i class="icon-question-sign"></i></a></h1>';
-            if (isset($params['repositories_owners']) && count($params['repositories_owners']) > 0) {
-                $purifier   = Codendi_HTMLPurifier::instance();
-                $current_id = null;
-                if (!empty($params['user'])) {
-                    $current_id = (int)$params['user'];
-                }
-                $select = '<select name="user" onchange="this.form.submit()">';
-                $uh = UserHelper::instance();
-                $selected = 'selected="selected"';
-                $select .= '<option value="" '. ($current_id ? '' : $selected) .'>'. $this->getText('tree_title_available_repo') .'</option>';
-                foreach ($params['repositories_owners'] as $owner) {
-                    $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '.
-                        ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'.
-                        $purifier->purify($uh->getDisplayName($owner['user_name'], $owner['realname'])) .
-                        '</option>';
-                }
-                $select .= '</select>';
-                echo '<form action="" class="form-tree" method="GET">';
-                echo '<input type="hidden" name="action" value="index" />';
-                echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-                echo $select;
-                echo '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
-                echo '</form>';
-            }
-            $this->help('tree', array('display' => 'none'));
-
-
-            $lastPushes = array();
-            $dao = new Git_LogDao();
-            foreach ($params['repository_list'] as $repository) {
-                $id  = $repository['repository_id'];
-                $row = $dao->getLastPushForRepository($id);
-                if (! empty($row)) {
-                    $lastPushes[$id] = $row;
-                }
-            }
-            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes, $this->url_manager);
-            echo $strategy->fetch($params['repository_list'], $this->user);
-        }
-        else {
-            echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";
-        }
     }
 
     protected function adminDefaultSettings($are_mirrors_defined, $pane) {

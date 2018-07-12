@@ -9,15 +9,6 @@ plugin_git	title	Git
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 
-plugin_git	help_reference_title	Initialize a repository
-plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (for example)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;repository_url&gt; master</li>
-plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
-plugin_git	help_create_reference_title	Create a reference
-plugin_git	help_create_reference	<li>A reference is main repository which intends to be forked onto the Tuleap server (e.g. shared project feature) as well as cloned by users for local developments</li>
-plugin_git	help_link	Help
-plugin_git	help_tree	<li>The tree of repositories shows the repository hierarchie. References are roots as clones (forks) are displayed below their parent</li><li>Each repository is a link to a detail and administration page</li>
-plugin_git	help_fork	<li>A fork is a reference clone or a fork clone</li><li>It is accessible by all project members with read and write permissions.</li><li>It may be used as a repository for any feature developpement.</li>
-
 plugin_git	info_access_title	Git access
 plugin_git	info_access_content	Repositories are accessible through the following url, where REPO_NAME must be replaced with the actual repository name.<br /> For any access permission issue please contact your site admin.
 
@@ -25,8 +16,6 @@ plugin_git	bread_crumb_home	Repository list
 plugin_git	bread_crumb_help	Help
 plugin_git	bread_crumb_admin	Admin
 
-plugin_git	tree_title_available_repo	Project repositories
-plugin_git	tree_msg_no_available_repo	No repository found
 
 plugin_git	admin_reference_creation_title	Reference creation
 plugin_git	admin_reference_creation_input_name	Name:
