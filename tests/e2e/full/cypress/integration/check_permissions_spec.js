@@ -68,7 +68,7 @@ describe("Permissions", function() {
     it("should raise an error when user try to access to plugin Git admin page", function() {
         cy.visit('/plugins/git/?group_id=' + this.projects.permission_project_id + '&action=admin');
 
-        cy.get('[data-test=feedback]').contains('You are not allowed to access this page');
+        cy.get('[data-test=git-administration-page]').should('not.exist');
     });
 
     it("should raise an error when user try to access to Forum admin page", function() {

@@ -102,6 +102,7 @@ seed_data() {
 
     load_project /usr/share/tuleap/tests/e2e/_fixtures/permission_project_02
     load_project /usr/share/tuleap/tests/e2e/_fixtures/docman_project_03
+    load_project /usr/share/tuleap/tests/e2e/_fixtures/git_project_04
 
     chown -R codendiadm:codendiadm /var/log/tuleap
 }

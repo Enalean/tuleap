@@ -152,7 +152,8 @@ class RepoHeader
         $additional_info = $this->getAdditionalHeaderInfo();
         $index_url       = $this->url_manager->getRepositoryBaseUrl($this->repository);
 
-        $html .= '<h1><a class="git-repo-name" href="'.$index_url.'">'.$accessType.$this->repository->getFullName().'</a> ' . $additional_info . '</h1>';
+        $html .= '<h1><a class="git-repo-name" href="' . $index_url . '" data-test="git_repo_name">' . $accessType
+            . $this->repository->getFullName() . '</a> ' . $additional_info . '</h1>';
 
         if (!empty($parent)) {
             $html .= '<div id="plugin_git_repo_parent">';
