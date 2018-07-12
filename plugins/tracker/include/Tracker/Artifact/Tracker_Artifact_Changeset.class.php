@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -718,12 +718,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     * @param String $diff
     *
     */
-    public function displayDiff($diff, $format, $field) {
+    public function displayDiff($diff, $format, $field)
+    {
         $result = false;
         switch($format) {
             case 'html':
                 $result .= '<li>';
-                $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. $field->getLabel() .'</b></span> ';
+                $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. Codendi_HTMLPurifier::instance()->purify($field->getLabel()) .'</b></span> ';
                 $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
                 $result .= '</li>';
             break;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -151,13 +151,13 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             foreach ($removed_elements as $removed_element) {                
                 $removed_arr[] = $this->getUgroupLabel($removed_element);
             }
-            $removed = implode(', ', $removed_arr);
+            $removed = $this->format(implode(', ', $removed_arr), $format);
             $added_elements = array_diff($next, $previous);
             $added_arr = array();
             foreach ($added_elements as $added_element) {
                 $added_arr[] = $this->getUgroupLabel($added_element);
             }
-            $added   = implode(', ', $added_arr);
+            $added   = $this->format(implode(', ', $added_arr), $format);
             if (empty($next)) {
                 $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
             } else if (empty($previous)) {
@@ -186,8 +186,16 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         foreach ($next as $element) {
                 $added_arr[] = $this->getUgroupLabel($element);
         }
-        $added = implode(', ', $added_arr);
+        $added = $this->format(implode(', ', $added_arr), $format);
         return ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
+    }
+
+    private function format($value, $format)
+    {
+        if ($format === 'text') {
+            return $value;
+        }
+        return Codendi_HTMLPurifier::instance()->purify($value);
     }
     
     protected function getDao() {

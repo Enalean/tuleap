@@ -119,9 +119,9 @@ class Tracker_ArtifactLinkInfo {
      *
      * @return string the html code (a href) to this artifact link
      */
-    public function getLink() {
-        $server_url = get_server_url();
-        return '<a class="cross-reference" href="' . $this->getUrl() . '">' . $this->getLabel() . '</a>';
+    public function getLink()
+    {
+        return '<a class="cross-reference" href="' . $this->getUrl() . '">' . Codendi_HTMLPurifier::instance()->purify($this->getLabel()) . '</a>';
     }
 
     public function getUrl() {
