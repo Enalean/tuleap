@@ -2,7 +2,7 @@
 
 set -e
 
-PHP=/opt/rh/rh-php70/root/usr/bin/php
+PHP=/opt/remi/php72/root/usr/bin/php
 
 setup_composer() {
     (cd /usr/share/tuleap/tests/rest && scl enable rh-git29 "$PHP /usr/local/bin/composer.phar --no-interaction install")

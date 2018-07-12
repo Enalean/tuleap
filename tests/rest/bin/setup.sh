@@ -6,6 +6,14 @@ if [ -z "$MYSQL_DAEMON" ]; then
     MYSQL_DAEMON=mysqld
 fi
 
+if [ -z "$FPM_DAEMON" ]; then
+    FPM_DAEMON='rh-php56-php-fpm'
+fi
+
+if [ -z "$PHP_CLI" ]; then
+    PHP_CLI='/opt/rh/rh-php56/root/usr/bin/php'
+fi
+
 setup_tuleap() {
     echo "Setup Tuleap"
     cat /usr/share/tuleap/src/etc/database.inc.dist | \
@@ -110,7 +118,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/10-permissions-on-artifacts
 
     echo "Load initial data"
-    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
+    "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php
 
     seed_plugin_data
 }
@@ -132,14 +140,14 @@ seed_plugin_data() {
     done
 
     echo "Load plugins initial data"
-    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
+    "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data_plugins.php
 }
 
 setup_tuleap
-/usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
-service rh-php56-php-fpm start
+"$PHP_CLI" /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
+service "$FPM_DAEMON" start
 service nginx start
 setup_database
 seed_data
-service rh-php56-php-fpm restart
+service "$FPM_DAEMON" restart
 service nginx reload
