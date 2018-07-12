@@ -47,10 +47,16 @@ class RepositoryRepresentationBuilder
      * @var Git_LogDao
      */
     private $log_dao;
+
     /**
      * @var \EventManager
      */
     private $event_manager;
+
+    /**
+     * @var array
+     */
+    private $last_push_date;
 
     public function __construct(
         GitPermissionsManager $permissions_manger,
@@ -62,6 +68,34 @@ class RepositoryRepresentationBuilder
         $this->gerrit_server_factory = $gerrit_server_factory;
         $this->log_dao               = $log_dao;
         $this->event_manager         = $event_manager;
+    }
+
+    /**
+     * @param PFUser $user
+     * @param GitRepository[] $repositories
+     * @param $fields
+     * @return \Generator
+     */
+    public function buildWithList(PFUser $user, array $repositories, $fields)
+    {
+        if (count($repositories) > 0) {
+            $this->cacheLastAccessDate($repositories);
+            foreach ($repositories as $repository) {
+                yield $this->build($user, $repository, $fields);
+            }
+        }
+    }
+
+    private function cacheLastAccessDate(array $repositories)
+    {
+        $repo_ids = array_map(function (GitRepository $repository) {
+            $this->last_push_date[$repository->getId()] = -1;
+            return $repository->getId();
+        }, $repositories);
+
+        foreach ($this->log_dao->getLastPushForRepositories($repo_ids) as $row) {
+            $this->last_push_date[$row['repository_id']] = $row['push_date'];
+        }
     }
 
     /**
@@ -127,11 +161,14 @@ class RepositoryRepresentationBuilder
      */
     private function getLastUpdateDate(GitRepository $repository)
     {
-        $last_push = $this->log_dao->getLastPushForRepository($repository->getId());
-        if (! $last_push['push_date']) {
+        if (! isset($this->last_push_date[$repository->getId()])) {
+            $row = $this->log_dao->getLastPushForRepository($repository->getId());
+            $this->last_push_date[$repository->getId()] = $row['push_date'];
+        }
+        if (! $this->last_push_date[$repository->getId()] || $this->last_push_date[$repository->getId()] === -1) {
             $creation_date = new DateTime($repository->getCreationDate());
             return $creation_date->getTimestamp();
         }
-        return $last_push['push_date'];
+        return $this->last_push_date[$repository->getId()];
     }
 }

@@ -2081,7 +2081,7 @@ class GitPlugin extends Plugin
             new QueryParameterParser(new JsonDecoder())
         );
 
-        $params['result'] = $project_resource->getGit(
+        $params['result']->repositories = $project_resource->getGit(
             $project,
             $this->getCurrentUser(),
             $params['limit'],

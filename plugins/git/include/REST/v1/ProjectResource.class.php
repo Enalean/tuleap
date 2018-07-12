@@ -73,7 +73,7 @@ class ProjectResource
      * @param string  $fields
      * @param string  $query
      *
-     * @return GitRepositoryRepresentation[]
+     * @return \Generator
      * @throws RestException
      */
     public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query)
@@ -87,7 +87,6 @@ class ProjectResource
             throw new RestException(400, $e->getMessage());
         }
 
-        $results          = [];
         $git_repositories = $this->repository_factory->getPaginatedRepositoriesUserCanSee(
             $project,
             $user,
@@ -97,13 +96,7 @@ class ProjectResource
             $offset
         );
 
-        foreach ($git_repositories as $repository) {
-            $results[] = $this->repository_resource_builder->build($user, $repository, $fields);
-        }
-
-        return [
-            'repositories' => $results
-        ];
+        return $this->repository_resource_builder->buildWithList($user, $git_repositories, $fields);
     }
 
     /**

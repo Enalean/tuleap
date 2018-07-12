@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use ParagonIE\EasyDB\EasyStatement;
 
 class Git_LogDao extends \Tuleap\DB\DataAccessObject
 {
@@ -29,6 +30,15 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
                 ORDER BY push_date DESC
                 LIMIT 1';
         return $this->getDB()->row($sql, $repositoryId);
+    }
+
+    public function getLastPushForRepositories($repository_ids)
+    {
+        $ids_condition = EasyStatement::open()->in('?*', $repository_ids);
+        $sql = "SELECT repository_id, push_date
+                FROM plugin_git_log
+                WHERE repository_id IN ($ids_condition)";
+        return $this->getDB()->safeQuery($sql, $ids_condition->values());
     }
 
     /**

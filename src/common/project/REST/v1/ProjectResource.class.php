@@ -57,6 +57,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
+use Tuleap\REST\v1\GitRepositoryListRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\v1\OrderRepresentationBase;
@@ -1095,7 +1096,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param string $fields Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
      * @param string $query  Filter repositories {@from path}
      *
-     * @return array {@type Tuleap\REST\v1\GitRepositoryRepresentationBase}
+     * @return GitRepositoryListRepresentation
      *
      * @throws RestException
      */
@@ -1109,7 +1110,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->checkAccess();
 
         $project                = $this->getProjectForUser($id);
-        $result                 = array();
+        $result                 = new GitRepositoryListRepresentation();
         $total_git_repositories = 0;
 
         $this->event_manager->processEvent(
@@ -1126,7 +1127,7 @@ class ProjectResource extends AuthenticatedResource {
             )
         );
 
-        if (count($result) > 0) {
+        if (count($result->repositories) > 0) {
             $this->sendAllowHeadersForProject();
             $this->sendPaginationHeaders($limit, $offset, $total_git_repositories);
             return $result;
