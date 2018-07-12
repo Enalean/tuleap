@@ -34,7 +34,7 @@ describe("Store mutations", () => {
 
         it("Given some repositories and that the selected owner has already some repositories loaded, then It should push them in his list.", () => {
             const repositories = [
-                { name: "boobstrap 4", path: "myproject/boobs/straps/boobstrap4.git" },
+                { name: "boobs/straps/boobstrap4", path: "myproject/boobs/straps/boobstrap4.git" },
                 { name: "angular.js", path: "myproject/u/johnpapa/angular.js.git" }
             ];
 
@@ -43,9 +43,10 @@ describe("Store mutations", () => {
                     "101": [
                         {
                             label: "vuex",
-                            name: "VueX",
+                            name: "vuex",
                             path: "myproject/vuex.git",
-                            path_without_project: ""
+                            path_without_project: "",
+                            normalized_path: "vuex"
                         }
                     ]
                 },
@@ -58,21 +59,24 @@ describe("Store mutations", () => {
                 "101": [
                     {
                         label: "vuex",
-                        name: "VueX",
+                        name: "vuex",
                         path: "myproject/vuex.git",
-                        path_without_project: ""
+                        path_without_project: "",
+                        normalized_path: "vuex"
                     },
                     {
                         label: "boobstrap4",
-                        name: "boobstrap 4",
+                        name: "boobs/straps/boobstrap4",
                         path: "myproject/boobs/straps/boobstrap4.git",
-                        path_without_project: "boobs/straps"
+                        path_without_project: "boobs/straps",
+                        normalized_path: "boobs/straps/boobstrap4"
                     },
                     {
                         label: "angular.js",
                         name: "angular.js",
                         path: "myproject/u/johnpapa/angular.js.git",
-                        path_without_project: "u/johnpapa"
+                        path_without_project: "u/johnpapa",
+                        normalized_path: "u/johnpapa/angular.js"
                     }
                 ]
             });

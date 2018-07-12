@@ -22,7 +22,7 @@
              v-bind:class="{ 'git-repository-card-two-columns': ! isFolderDisplayMode }"
     >
         <div class="tlp-pane-container">
-            <a v-bind:href="normalized_path" class="git-repository-card-link">
+            <a v-bind:href="repository.normalized_path" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
                         <h2 class="tlp-pane-title git-repository-card-title"
@@ -101,14 +101,7 @@ export default {
                 return this.repository.label;
             }
 
-            return this.normalized_path;
-        },
-        normalized_path() {
-            if (this.repository.path_without_project !== "") {
-                return this.repository.path_without_project + "/" + this.repository.label;
-            }
-
-            return this.repository.label;
+            return this.repository.normalized_path;
         },
         ...mapGetters(["isFolderDisplayMode"])
     }

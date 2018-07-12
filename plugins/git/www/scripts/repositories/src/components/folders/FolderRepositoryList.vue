@@ -19,7 +19,7 @@
 
 <template>
     <collapsible-folder v-bind:is-root-folder="true"
-                        v-bind:children="repositoriesGroupedByPath.children"
+                        v-bind:children="filteredRepositoriesGroupedByPath.children"
     />
 </template>
 <script>
@@ -30,7 +30,7 @@ export default {
     name: "FolderRepositoryList",
     components: { CollapsibleFolder },
     computed: {
-        ...mapGetters(["repositoriesGroupedByPath"])
+        ...mapGetters(["filteredRepositoriesGroupedByPath"])
     }
 };
 </script>
