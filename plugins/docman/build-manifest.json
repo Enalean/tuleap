@@ -32,7 +32,6 @@
         }
     },
     "javascript": [
-        "../../src/www/scripts/behaviour/behaviour.js",
         "www/scripts/docman.js",
         "www/scripts/embedded_file.js",
         "www/scripts/ApprovalTableReminder.js",
