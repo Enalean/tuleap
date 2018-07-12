@@ -2,7 +2,7 @@
 
 /**
   * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+  * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -472,10 +472,12 @@ class Git extends PluginController {
                 'delete_gerrit_project',
                 'update_mirroring',
                 'update_default_mirroring',
-                'restore',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
+            }
+            if ($user->isSuperUser()) {
+                $this->permittedActions[] = 'restore';
             }
         } else {
             $this->addPermittedAction('index');
