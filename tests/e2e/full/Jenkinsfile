@@ -1,0 +1,49 @@
+#!/usr/bin/env groovy
+
+def npm_credentials = [usernamePassword(credentialsId: 'nexus.enalean.com_readonly', passwordVariable: 'NPM_PASSWORD', usernameVariable: 'NPM_USER')];
+
+
+pipeline {
+    agent {
+        label 'docker'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Prepare') {
+            steps {
+                dir ('results') {
+                    deleteDir()
+                }
+                withCredentials(npm_credentials) {
+                    sh 'docker run --rm -e NPM_REGISTRY="$NPM_REGISTRY" -e NPM_USER="$NPM_USER" -e NPM_PASSWORD="$NPM_PASSWORD" -e NPM_EMAIL="$NPM_EMAIL" -v "$WORKSPACE/sources/":/tuleap -v "$WORKSPACE/sources/":/output --tmpfs /tmp/tuleap_build:rw,noexec,nosuid --read-only $DOCKER_REGISTRY/tuleap-generated-files-builder dev'
+                }
+            }
+        }
+
+        stage('E2E Tests') {
+            steps {
+                'Cypress': {
+                    dir ('sources') {
+                        sh """
+                        tests/e2e/full/wrap.sh "$WORKSPACE/results/cypress"
+                        """
+                    }
+                    junit 'results/cypress/*.xml'
+                },
+                failFast: false
+            }
+            post {
+                always {
+                    archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
+                    sh 'rm -rf working_copy || echo "Cleanup of the working copies has failed, please stop writing files as root"'
+                }
+            }
+        }
+    }
+}
