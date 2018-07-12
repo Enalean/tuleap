@@ -19,8 +19,6 @@
  */
 
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Webhook\Emitter;
 
 /**
  * I am a Template Method to create an initial changeset.
@@ -35,17 +33,13 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         Tracker_FormElementFactory                 $formelement_factory,
         Tracker_Artifact_ChangesetDao              $changeset_dao,
         Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager,
-        Emitter                                    $emitter,
-        WebhookFactory                             $webhook_factory
+        EventManager                               $event_manager
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $artifact_factory,
-            $event_manager,
-            $emitter,
-            $webhook_factory
+            $event_manager
         );
 
         $this->changeset_dao = $changeset_dao;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Webhook;
 
-use PFUser;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -28,24 +27,27 @@ use Tuleap\Webhook\Payload;
 
 class ArtifactPayload implements Payload
 {
-
+    /**
+     * @var Tracker_Artifact_Changeset
+     */
+    private $last_changeset;
     /**
      * @var array
      */
     private $payload;
 
-    public function __construct(Tracker_Artifact $artifact, PFUser $user, $action)
+    public function __construct(Tracker_Artifact_Changeset $last_changeset)
     {
-        $this->payload = $this->buildPayload($artifact, $user, $action);
+        $this->last_changeset = $last_changeset;
     }
 
     /**
      * @return array
      */
-    private function buildPayload(Tracker_Artifact $artifact, PFUser $user, $action)
+    private function buildPayload(Tracker_Artifact_Changeset $last_changeset)
     {
-        $last_changeset     = $artifact->getLastChangeset();
-        $previous_changeset = $artifact->getPreviousChangeset($last_changeset->getId());
+        $user               = $last_changeset->getSubmitter();
+        $previous_changeset = $last_changeset->getArtifact()->getPreviousChangeset($last_changeset->getId());
 
         $last_changeset_content     = $last_changeset->getFullRESTValue($user);
         $previous_changeset_content = null;
@@ -57,7 +59,7 @@ class ArtifactPayload implements Payload
         $user_representation->build($user);
 
         return [
-            'action'   => $action,
+            'action'   => $previous_changeset === null ? 'create' : 'update',
             'user'     => $user_representation,
             'current'  => $last_changeset_content,
             'previous' => $previous_changeset_content
@@ -69,6 +71,9 @@ class ArtifactPayload implements Payload
      */
     public function getPayload()
     {
+        if ($this->payload === null) {
+            $this->payload = $this->buildPayload($this->last_changeset);
+        }
         return $this->payload;
     }
 }

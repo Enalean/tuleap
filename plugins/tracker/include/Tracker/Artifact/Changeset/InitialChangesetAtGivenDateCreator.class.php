@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Webhook\Emitter;
-
 /**
  * I create an initial changeset at a given date.
  *
@@ -35,18 +32,14 @@ class Tracker_Artifact_Changeset_InitialChangesetAtGivenDateCreator extends Trac
         Tracker_FormElementFactory                            $formelement_factory,
         Tracker_Artifact_ChangesetDao                         $changeset_dao,
         Tracker_ArtifactFactory                               $artifact_factory,
-        EventManager                                          $event_manager,
-        Emitter                                               $emitter,
-        WebhookFactory                                        $webhook_factory
+        EventManager                                          $event_manager
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $changeset_dao,
             $artifact_factory,
-            $event_manager,
-            $emitter,
-            $webhook_factory
+            $event_manager
         );
     }
 

@@ -19,8 +19,6 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Webhook\Emitter;
 
 /**
  * I create a new changeset (update of an artifact)
@@ -35,9 +33,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
-        Emitter $emitter,
-        WebhookFactory $webhook_factory
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
     ) {
         parent::__construct(
             $fields_validator,
@@ -47,9 +43,7 @@ class Tracker_Artifact_Changeset_NewChangesetCreator extends Tracker_Artifact_Ch
             $artifact_factory,
             $event_manager,
             $reference_manager,
-            $source_of_association_collection_builder,
-            $emitter,
-            $webhook_factory
+            $source_of_association_collection_builder
         );
     }
 
