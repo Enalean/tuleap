@@ -125,7 +125,7 @@ class CreateTestEnvironment
     private function execImport()
     {
         try {
-            $cmd = sprintf('sudo -u root /usr/share/tuleap/src/utils/import_project_xml.php -u admin --automap=no-email,create:A -i %s', escapeshellarg($this->output_dir));
+            $cmd = sprintf('sudo -u root /usr/share/tuleap/src/utils/tuleap import-project-xml -u admin --automap=no-email,create:A -i %s', escapeshellarg($this->output_dir));
             $exec = new \System_Command();
             $exec->exec($cmd);
         } catch (\System_Command_CommandException $exception) {
