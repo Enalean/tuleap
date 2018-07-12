@@ -20,7 +20,7 @@
 <template>
     <section class="tlp-pane git-repository-card">
         <div class="tlp-pane-container">
-            <a v-bind:href="repository.html_url" class="git-repository-card-link">
+            <a v-bind:href="name_with_path" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
                         <h1 class="tlp-pane-title git-repository-card-title"
