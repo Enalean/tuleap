@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,37 +20,40 @@
 
 namespace Tuleap\Captcha;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/bootstrap.php';
 
-class ConfigurationRetrieverTest extends \TuleapTestCase
+class ConfigurationRetrieverTest extends TestCase
 {
-    public function itRetrievesConfiguration()
+    use MockeryPHPUnitIntegration;
+
+    public function testConfigurationIsRetrieved()
     {
-        $dao = mock('\\Tuleap\\Captcha\\DataAccessObject');
-        stub($dao)->getConfiguration()->returns(
-            array(
-                'site_key'   => 'site_key',
-                'secret_key' => 'secret_key'
-            )
-        );
+        $dao = \Mockery::mock(DataAccessObject::class);
+        $dao->shouldReceive('getConfiguration')->andReturns([
+            'site_key'   => 'site_key',
+            'secret_key' => 'secret_key'
+        ]);
 
         $configuration_retriever = new ConfigurationRetriever($dao);
         $configuration           = $configuration_retriever->retrieve();
 
-        $this->assertEqual($configuration->getSiteKey(), 'site_key');
-        $this->assertEqual($configuration->getSecretKey(), 'secret_key');
+        $this->assertSame($configuration->getSiteKey(), 'site_key');
+        $this->assertSame($configuration->getSecretKey(), 'secret_key');
     }
 
-    public function itThrowsAnExceptionWhenConfigurationIsNotFound()
+    /**
+     * @expectedException \Tuleap\Captcha\ConfigurationNotFoundException
+     */
+    public function testAnExceptionIsThrownWhenConfigurationIsNotFound()
     {
-        $dao = mock('\\Tuleap\\Captcha\\DataAccessObject');
-        stub($dao)->getConfiguration()->returns(false);
+        $dao = \Mockery::mock(DataAccessObject::class);
+        $dao->shouldReceive('getConfiguration')->andReturns(false);
 
         $configuration_retriever = new ConfigurationRetriever($dao);
 
-        $this->expectException('');
-
-        $this->expectException('\\Tuleap\\Captcha\\ConfigurationNotFoundException');
         $configuration_retriever->retrieve();
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -284,7 +284,7 @@ extends Valid {
      * @param  String Index of file to check in $_FILES array.
      * @return Boolean
      */
-    function validate($files, $index) {
+    function validate($files, $index = '') {
         if(is_array($files) && isset($files[$index])) {
             $this->addRule(new Rule_File());
             return parent::validate($files[$index]);
