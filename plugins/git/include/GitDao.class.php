@@ -466,7 +466,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
         $repository->setRemoteServerMigrationStatus($result[self::REMOTE_SERVER_MIGRATION_STATUS]);
-        $repository->loadNotifiedMails();
     }
 
     /**
