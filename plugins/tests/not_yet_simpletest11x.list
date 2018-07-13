@@ -30,11 +30,6 @@
 /tuleap/plugins/git/tests/GitRepositoryManagerTest.php
 /tuleap/plugins/git/tests/GitViewsRepositoriesTraversalStrategy_TreeTest.php
 
-/tuleap/plugins/svn/tests/Svn/XMLImporterTest.php
-/tuleap/plugins/svn/tests/Svn/Repository/HookConfigUpdatorTest.php
-/tuleap/plugins/svn/tests/Svn/Hooks/PreCommitSHA1CollisionTest.php
-/tuleap/plugins/svn/tests/events/SystemEvent_SVN_CREATE_REPOSITORYTest.php
-
 /tuleap/plugins/cardwall/tests/OnTop/ConfigTest.php
 /tuleap/plugins/cardwall/tests/ColumnTest.php
 /tuleap/plugins/cardwall/tests/CardControllerTest.php

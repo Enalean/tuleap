@@ -39,12 +39,13 @@ class HookConfigUpdatorTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->hook_dao                  = mock('Tuleap\Svn\Repository\HookDao');
-        $this->project_history_dao       = mock('ProjectHistoryDao');
-        $this->hook_config_checker       = mock('Tuleap\Svn\Repository\HookConfigChecker');
-        $this->hook_config_sanitizer     = mock('Tuleap\Svn\Repository\HookConfigSanitizer');
-        $this->project_history_formatter = mock('Tuleap\Svn\Repository\ProjectHistoryFormatter');
+        $this->hook_dao                  = \Mockery::spy(\Tuleap\Svn\Repository\HookDao::class);
+        $this->project_history_dao       = \Mockery::spy(\ProjectHistoryDao::class);
+        $this->hook_config_checker       = \Mockery::spy(\Tuleap\Svn\Repository\HookConfigChecker::class);
+        $this->hook_config_sanitizer     = \Mockery::spy(\Tuleap\Svn\Repository\HookConfigSanitizer::class);
+        $this->project_history_formatter = \Mockery::spy(\Tuleap\Svn\Repository\ProjectHistoryFormatter::class);
 
         $this->updator = new HookConfigUpdator(
             $this->hook_dao,
@@ -55,7 +56,7 @@ class HookConfigUpdatorTest extends TuleapTestCase
         );
 
         $project          = aMockProject()->withId(101)->build();
-        $this->repository = stub('Tuleap\Svn\Repository\Repository')->getProject()->returns($project);
+        $this->repository = mockery_stub(\Tuleap\Svn\Repository\Repository::class)->getProject()->returns($project);
     }
 
     public function itUpdatesHookConfig()
@@ -70,6 +71,8 @@ class HookConfigUpdatorTest extends TuleapTestCase
             'commit_message_can_change' => false
 
         );
+
+        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 
         $this->updator->updateHookConfig($this->repository, $hook_config);
     }
@@ -87,6 +90,8 @@ class HookConfigUpdatorTest extends TuleapTestCase
 
         );
 
+        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+
         $this->updator->updateHookConfig($this->repository, $hook_config);
     }
 
@@ -103,6 +108,8 @@ class HookConfigUpdatorTest extends TuleapTestCase
 
         );
 
+        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
+
         $this->updator->initHookConfiguration($this->repository, $hook_config);
     }
 
@@ -118,6 +125,8 @@ class HookConfigUpdatorTest extends TuleapTestCase
             'commit_message_can_change' => false
 
         );
+
+        $this->hook_config_sanitizer->shouldReceive('sanitizeHookConfigArray')->with($hook_config)->andReturn($hook_config);
 
         $this->updator->initHookConfiguration($this->repository, $hook_config);
     }
