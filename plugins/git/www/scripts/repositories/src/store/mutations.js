@@ -28,8 +28,10 @@ export default {
         if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
             Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
         }
-        repositories.forEach(extendRepository);
-        state.repositories_for_owner[state.selected_owner_id].push(...repositories);
+        if (repositories.length > 0) {
+            repositories.forEach(extendRepository);
+            state.repositories_for_owner[state.selected_owner_id].push(...repositories);
+        }
     },
     setFilter(state, filter) {
         state.filter = filter;
