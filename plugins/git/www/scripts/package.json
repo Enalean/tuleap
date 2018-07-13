@@ -19,7 +19,9 @@
   },
   "scripts": {
     "build": "NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'",
+    "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
+    "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
     "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find repositories/src/components/ -type f -name '*.vue')"
   }
 }

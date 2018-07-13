@@ -43,16 +43,16 @@ export const changeRepositories = (context, new_owner_id) => {
     }
 };
 
-function getAsyncRepositoryList(commit, getRepositories) {
+export async function getAsyncRepositoryList(commit, getRepositories) {
     commit("setIsLoadingInitial", true);
     commit("setIsLoadingNext", true);
     try {
-        return getRepositories(repositories => {
+        await getRepositories(repositories => {
             commit("pushRepositoriesForCurrentOwner", repositories);
             commit("setIsLoadingInitial", false);
         });
     } catch (e) {
-        return handleGetRepositoryListError(e, commit);
+        handleGetRepositoryListError(e, commit);
     } finally {
         commit("setIsLoadingNext", false);
     }
