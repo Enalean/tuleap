@@ -44,20 +44,21 @@ $service_manager = ServiceManager::instance();
 $project_manager = ProjectManager::instance();
 $service_dao     = new ServiceDao();
 
-$router = new AdminRouter(
+$event_manager = EventManager::instance();
+$router        = new AdminRouter(
     new IndexController(
-        new ServicesPresenterBuilder(ServiceManager::instance()),
+        new ServicesPresenterBuilder(ServiceManager::instance(), $event_manager),
         new IncludeAssets(ForgeConfig::get('tuleap_dir') . '/src/www/assets', '/assets'),
         new HeaderNavigationDisplayer()
     ),
     new DeleteController($service_dao),
     new AddController(
         new ServiceCreator($service_dao, $project_manager),
-        new ServicePOSTDataBuilder()
+        new ServicePOSTDataBuilder($event_manager)
     ),
     new EditController(
         new ServiceUpdator($service_dao, $project_manager, $service_manager),
-        new ServicePOSTDataBuilder(),
+        new ServicePOSTDataBuilder($event_manager),
         $service_manager
     )
 );

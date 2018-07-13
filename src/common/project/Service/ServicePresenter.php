@@ -41,13 +41,26 @@ class ServicePresenter
     public $link;
     public $is_summary;
     public $is_in_iframe;
+    public $is_link_customizable;
 
+    /**
+     * ServicePresenter constructor.
+     *
+     * @param Service $service
+     * @param         $is_read_only
+     * @param         $can_see_shortname
+     * @param         $is_scope_project
+     * @param         $can_update_is_active
+     * @param         $is_link_customizable
+     * @param         $service_link
+     */
     public function __construct(
         Service $service,
         $is_read_only,
         $can_see_shortname,
         $is_scope_project,
-        $can_update_is_active
+        $can_update_is_active,
+        $service_link
     ) {
         $this->id                   = $service->getId();
         $this->label                = $service->getInternationalizedName();
@@ -58,13 +71,14 @@ class ServicePresenter
         $this->scope                = $service->getScope();
         $this->rank                 = $service->getRank();
         $this->short_name           = $service->getShortName();
-        $this->link                 = $service->getUrl();
+        $this->link                 = $service->getUrl($service_link);
         $this->can_be_deleted       = $this->canBeDeleted($service);
         $this->is_read_only         = $is_read_only;
         $this->can_see_shortname    = $can_see_shortname;
         $this->is_scope_project     = $is_scope_project;
         $this->can_update_is_active = $can_update_is_active;
         $this->is_summary           = $service->getShortName() === 'summary';
+        $this->is_link_customizable = $service_link === null;
     }
 
     private function canBeDeleted(Service $service)

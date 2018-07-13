@@ -51,7 +51,7 @@
             </div>
         {{/ is_read_only }}
 
-        <div class="tlp-form-element">
+        <div class="tlp-form-element {{^ is_link_customizable }} tlp-form-element-disabled {{/ is_link_customizable }}">
             <label class="tlp-label" for="project-admin-services-edit-modal-{{ id }}-link">
                 {{# gettext }}Link{{/ gettext }}
                 <i class="fa fa-asterisk"></i>
@@ -65,7 +65,9 @@
                    pattern="(https?://|#|/|\?).+"
                    title="{{# gettext }}Please, enter a http:// or https:// link{{/ gettext }}"
                    required
-                   value="{{ link }}">
+                   value="{{ link }}"
+                   {{^ is_link_customizable }} disabled {{/ is_link_customizable }}
+            >
         </div>
 
         {{# can_see_shortname }}

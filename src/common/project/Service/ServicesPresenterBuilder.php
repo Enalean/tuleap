@@ -25,6 +25,7 @@ use PFUser;
 use Project;
 use Service;
 use ServiceManager;
+use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicesPresenterBuilder
 {
@@ -34,10 +35,15 @@ class ServicesPresenterBuilder
      * @var ServiceManager
      */
     private $service_manager;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
-    public function __construct(ServiceManager $service_manager)
+    public function __construct(ServiceManager $service_manager, \EventManager $event_manager)
     {
         $this->service_manager = $service_manager;
+        $this->event_manager   = $event_manager;
     }
 
     public function build(Project $project, CSRFSynchronizerToken $csrf, PFUser $user)
@@ -48,12 +54,14 @@ class ServicesPresenterBuilder
             if (! $this->isServiceReadable($service, $user)) {
                 continue;
             }
+
             $service_presenters[] = new ServicePresenter(
                 $service,
                 $this->isReadOnly($service, $user),
                 $this->canSeeShortname($service, $user),
                 $service->getScope() !== Service::SCOPE_SYSTEM,
-                $this->canUpdateIsActive($user)
+                $this->canUpdateIsActive($user),
+                $this->getServiceLink($service, $project)
             );
         }
 
@@ -90,5 +98,14 @@ class ServicesPresenterBuilder
     private function canUpdateIsActive(PFuser $user)
     {
         return $user->isSuperUser();
+    }
+
+    private function getServiceLink(Service $service, Project $project)
+    {
+        $service_url_collector = new ServiceUrlCollector($project, $service->getShortName());
+
+        $this->event_manager->processEvent($service_url_collector);
+
+        return $service_url_collector->getUrl();
     }
 }

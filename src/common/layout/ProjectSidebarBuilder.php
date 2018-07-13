@@ -181,7 +181,15 @@ class ProjectSidebarBuilder
         if ($service_data['is_in_iframe']) {
             $link = '/service/?group_id=' . $project_id . '&amp;id=' . $service_data['service_id'];
         } else {
-            $link = $this->purifier->purify($service_data['link']);
+            $service_url_collector = new ServiceUrlCollector($project, $service_data['short_name']);
+
+            $this->event_manager->processEvent($service_url_collector);
+
+            if ($service_url_collector->hasUrl()) {
+                $link = $service_url_collector->getUrl();
+            } else {
+                $link = $this->purifier->purify($service_data['link']);
+            }
         }
         if ($project_id == 100) {
             if (strpos($link, '$projectname') !== false) {
