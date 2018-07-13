@@ -10,6 +10,10 @@
     <input type="checkbox" id="enable-email-custom-from" name="email-custom-enabled" {{# custom_email_enabled }}checked{{/ custom_email_enabled }}>
     <label for="enable-email-custom-from">{{# dgettext }} tuleap-tracker | Enable custom sender fields for email notifications {{/ dgettext }}</label>
     <input type="text" id="email-custom-from" name="email-custom-from" placeholder="Tuleap" value="{{ custom_email_content }}"></input>
+    <p>
+    {{# dgettext }} tuleap-tracker | You can use variables to customize the sender field. The available variables are %%realname and %%username.
+    These will be replaced by the full name and username of the user who updated the artifact. {{/ dgettext }}
+    </p>
 </div>
 
 <input class="btn" type="submit" value="{{ submit_changes }}">

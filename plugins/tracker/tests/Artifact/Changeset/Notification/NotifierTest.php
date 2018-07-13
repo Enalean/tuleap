@@ -32,6 +32,9 @@ use UserHelper;
 use BaseLanguageFactory;
 use TestHelper;
 use Tracker_Artifact_MailGateway_RecipientFactory;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
+use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use ConfigNotificationAssignedTo;
 use Logger;
 use Codendi_HTMLPurifier;
@@ -72,6 +75,11 @@ class NotifierTest extends \TuleapTestCase
      */
     private $mail_sender;
 
+    /**
+     * @var ConfigNotificationEmailCustomSender
+     * */
+    private $custom_email_sender;
+
     public function setUp()
     {
         parent::setUp();
@@ -87,6 +95,9 @@ class NotifierTest extends \TuleapTestCase
         $this->recipient_factory         = mock('Tracker_Artifact_MailGateway_RecipientFactory');
         $user_helper                     = mock('UserHelper');
         $this->mail_sender               = mock('\Tuleap\Tracker\Artifact\Changeset\Notification\MailSender');
+        $this->custom_email_sender       = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
+
+        $this->custom_email_sender->shouldReceive('getCustomSender')->andReturn(array('format' => '', 'enabled' => 0));
 
         $this->changeset = stub('Tracker_Artifact_Changeset')
             ->getArtifact()
@@ -99,6 +110,8 @@ class NotifierTest extends \TuleapTestCase
                     ->build()
             );
 
+        stub($this->changeset)->getTracker()->returns(aMockTracker()->withId(101)->build());
+
         $this->changeset_notifications = new Notifier(
             $logger,
             $this->mail_gateway_config,
@@ -107,7 +120,8 @@ class NotifierTest extends \TuleapTestCase
             $user_helper,
             $this->recipients_manager,
             $this->mail_sender,
-            mock('\Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao')
+            mock('\Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao'),
+            $this->custom_email_sender
         );
     }
 
@@ -169,7 +183,6 @@ class NotifierTest extends \TuleapTestCase
         );
         $this->changeset_notifications->notify($changeset);
     }
-
 
     public function testChangesetShouldUseUserLanguageInGetBody()
     {
