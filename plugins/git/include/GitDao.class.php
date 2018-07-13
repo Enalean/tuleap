@@ -466,6 +466,9 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->setRemoteProjectDeletionDate($result[self::REMOTE_SERVER_DELETE_DATE]);
         $repository->setRemoteServerMigrationStatus($result[self::REMOTE_SERVER_MIGRATION_STATUS]);
+        if (isset($result['push_date'])) {
+            $repository->setLastPushDate($result['push_date']);
+        }
     }
 
     /**
@@ -712,32 +715,31 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
     public function getPaginatedOpenRepositories($project_id, $scope, $owner_id, $limit, $offset)
     {
-        $additional_where_statement = '';
-        $parameters                 = [$project_id];
-        if ($scope) {
-            $additional_where_statement .= ' AND repository_scope = ? ';
+        $additional_where_statement = EasyStatement::open();
 
-            $parameters[] = $scope;
+        $additional_where_statement->with('repository_deletion_date IS NULL');
+        $additional_where_statement->andWith('project_id = ?', $project_id);
+
+        if ($scope) {
+            $additional_where_statement->andWith('repository_scope = ?', $scope);
         }
 
         if ($owner_id) {
-            $additional_where_statement .= ' AND repository_creation_user_id = ? ';
-
-            $parameters[] = $owner_id;
+            $additional_where_statement->andWith('repository_creation_user_id = ?', $owner_id);
         }
 
-        $parameters[] = $limit;
-        $parameters[] = $offset;
-
-        $sql = "SELECT *
-                FROM plugin_git
-                WHERE repository_deletion_date IS NULL
-                AND project_id = ?
-                $additional_where_statement
+        $sql = "SELECT git.*, IF(push_date, push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
+                FROM plugin_git git
+                  LEFT JOIN plugin_git_log log ON (log.repository_id = git.repository_id)
+                WHERE
+                  $additional_where_statement
+                GROUP BY git.repository_id
+                ORDER BY log.push_date DESC
                 LIMIT ?
-                OFFSET ?";
+                OFFSET ?
+                ";
 
-        return $this->getDB()->safeQuery($sql, $parameters);
+        return $this->getDB()->safeQuery($sql, array_merge($additional_where_statement->values(), [$limit, $offset]));
     }
 
     public function getUGroupsByRepositoryPermissions($repository_id, $permission_type)

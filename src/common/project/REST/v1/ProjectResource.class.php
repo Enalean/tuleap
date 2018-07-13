@@ -1011,7 +1011,8 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * Get git
      *
-     * Get info about project Git repositories
+     * Get info about project Git repositories. Repositories are returned ordered by last_push date, if there are no push
+     * yet, it's the creation date of the repository that is taken into account.
      * <br>
      * <br>
      * With fields = 'basic', permissions is always set as <strong>NULL</strong>

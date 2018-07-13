@@ -72,6 +72,7 @@ class GitRepository implements DVCSRepository {
     private $remote_project_deletion_date;
     private $remote_project_is_deleted;
     private $remote_server_migration_status;
+    private $last_push_date;
 
     private $is_mirrored;
 
@@ -918,5 +919,15 @@ class GitRepository implements DVCSRepository {
 
     public function setBackupPath($path) {
         $this->backup_path = $path;
+    }
+
+    public function setLastPushDate($date)
+    {
+        $this->last_push_date = $date;
+    }
+
+    public function getLastPushDate()
+    {
+        return $this->last_push_date;
     }
 }

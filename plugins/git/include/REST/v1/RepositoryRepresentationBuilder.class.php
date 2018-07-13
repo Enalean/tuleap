@@ -54,10 +54,6 @@ class RepositoryRepresentationBuilder
      */
     private $event_manager;
 
-    /**
-     * @var array
-     */
-    private $last_push_date;
     private $remote_server;
 
     public function __construct(
@@ -92,7 +88,6 @@ class RepositoryRepresentationBuilder
     {
         $repo_ids = array_map(
             function (GitRepository $repository) {
-                $this->last_push_date[$repository->getId()] = -1;
                 $this->remote_server[$repository->getRemoteServerId()] = -1;
                 return $repository->getId();
             },
@@ -100,7 +95,6 @@ class RepositoryRepresentationBuilder
         );
 
         $this->cacheGerritServers();
-        $this->cacheLastAccessDates($repo_ids);
         $this->cacheAdditionalInformations($repo_ids);
     }
 
@@ -110,13 +104,6 @@ class RepositoryRepresentationBuilder
             foreach ($this->gerrit_server_factory->getServers() as $remote) {
                 $this->remote_server[$remote->getId()] = $remote;
             }
-        }
-    }
-
-    private function cacheLastAccessDates(array $repo_ids)
-    {
-        foreach ($this->log_dao->getLastPushForRepositories($repo_ids) as $row) {
-            $this->last_push_date[$row['repository_id']] = $row['push_date'];
         }
     }
 
@@ -194,14 +181,15 @@ class RepositoryRepresentationBuilder
      */
     private function getLastUpdateDate(GitRepository $repository)
     {
-        if (! isset($this->last_push_date[$repository->getId()])) {
-            $row = $this->log_dao->getLastPushForRepository($repository->getId());
-            $this->last_push_date[$repository->getId()] = $row['push_date'];
+        $last_push = $repository->getLastPushDate();
+        if ($last_push !== null) {
+            return $last_push;
         }
-        if (! $this->last_push_date[$repository->getId()] || $this->last_push_date[$repository->getId()] === -1) {
-            $creation_date = new DateTime($repository->getCreationDate());
-            return $creation_date->getTimestamp();
+        $row = $this->log_dao->getLastPushForRepository($repository->getId());
+        if ($row) {
+            return $row['push_date'];
         }
-        return $this->last_push_date[$repository->getId()];
+        return (new DateTime($repository->getCreationDate()))->getTimestamp();
+
     }
 }
