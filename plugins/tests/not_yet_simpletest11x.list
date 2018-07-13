@@ -35,9 +35,6 @@
 /tuleap/plugins/svn/tests/Svn/Hooks/PreCommitSHA1CollisionTest.php
 /tuleap/plugins/svn/tests/events/SystemEvent_SVN_CREATE_REPOSITORYTest.php
 
-/tuleap/plugins/fulltextsearch/tests/FullTextSearchTrackerActionsTest.php
-/tuleap/plugins/fulltextsearch/tests/SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest.php
-
 /tuleap/plugins/cardwall/tests/OnTop/ConfigTest.php
 /tuleap/plugins/cardwall/tests/ColumnTest.php
 /tuleap/plugins/cardwall/tests/CardControllerTest.php
