@@ -20,7 +20,8 @@
 
 
 require_once __DIR__ .'/../include/autoload.php';
-require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once __DIR__ .'/../../tracker/tests/bootstrap.php';
+require_once __DIR__ .'/../../docman/tests/bootstrap.php';
 
 class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
 

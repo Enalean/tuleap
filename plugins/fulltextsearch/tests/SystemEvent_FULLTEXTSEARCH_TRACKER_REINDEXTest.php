@@ -18,18 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/autoload.php';
+require_once __DIR__ .'/../include/autoload.php';
 require_once __DIR__ .'/../../tracker/include/trackerPlugin.class.php';
 
-class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase
+{
 
     public function setUp() {
         parent::setUp();
-        $this->actions         = mock('FullTextSearchTrackerActions');
-        $this->tracker_factory = mock('TrackerFactory');
+        $this->setUpGlobalsMockery();
+        $this->actions         = \Mockery::spy(\FullTextSearchTrackerActions::class);
+        $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
     }
 
-    public function aSystemEventWithParameter($parameters) {
+    public function aSystemEventWithParameter($parameters)
+    {
         $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
         $event = new SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEX(
             $id,
@@ -46,7 +49,8 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase {
         return $event;
     }
 
-    public function itDeletesTrackerIndex() {
+    public function itDeletesTrackerIndex()
+    {
         $tracker_id  = 145;
 
         $parameters = implode(SystemEvent::PARAMETER_SEPARATOR, array(
@@ -57,6 +61,7 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_REINDEXTest extends TuleapTestCase {
         $event->injectDependencies($this->actions, $this->tracker_factory);
 
         stub($this->actions)->reIndexTracker()->once()->returns(true);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(Mockery::mock(Tracker::class));
 
         $this->assertTrue($event->process());
     }

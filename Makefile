@@ -225,6 +225,7 @@ simpletest11x-56-ci:
 	/tuleap/plugins/admindelegation/tests \
 	/tuleap/plugins/webdav/tests \
 	/tuleap/plugins/mediawiki/tests \
+	/tuleap/plugins/fulltextsearch/tests \
 
 simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
