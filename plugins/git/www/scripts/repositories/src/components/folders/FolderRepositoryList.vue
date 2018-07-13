@@ -16,36 +16,21 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-<template>
-    <input
-        class="tlp-search"
-        autocomplete="off"
-        v-bind:placeholder="filter_placeholder"
-        type="search"
-        v-model="filter"
-        size="30"
-        v-if="isThereAtLeastOneRepository"
-        v-bind:disabled="isFolderDisplayMode"
-    >
-</template>
 
+<template>
+    <collapsible-folder v-bind:is-root-folder="true"
+                        v-bind:children="repositoriesGroupedByPath.children"
+    />
+</template>
 <script>
 import { mapGetters } from "vuex";
+import CollapsibleFolder from "./CollapsibleFolder.vue";
+
 export default {
-    name: "ListFilter",
+    name: "FolderRepositoryList",
+    components: { CollapsibleFolder },
     computed: {
-        filter_placeholder() {
-            return this.$gettext("Repository name");
-        },
-        filter: {
-            get() {
-                return this.$store.state.filter;
-            },
-            set(value) {
-                this.$store.commit("setFilter", value);
-            }
-        },
-        ...mapGetters(["isThereAtLeastOneRepository", "isFolderDisplayMode"])
+        ...mapGetters(["repositoriesGroupedByPath"])
     }
 };
 </script>

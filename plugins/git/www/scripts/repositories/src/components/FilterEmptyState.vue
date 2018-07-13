@@ -32,12 +32,12 @@ export default {
         show_filter_empty_state() {
             return (
                 this.isThereAtLeastOneRepository &&
-                this.filteredRepositories.length === 0 &&
+                this.filteredRepositoriesByLastUpdateDate.length === 0 &&
                 this.isInitialLoadingDoneWithoutError
             );
         },
         ...mapGetters([
-            "filteredRepositories",
+            "filteredRepositoriesByLastUpdateDate",
             "isThereAtLeastOneRepository",
             "isInitialLoadingDoneWithoutError"
         ])

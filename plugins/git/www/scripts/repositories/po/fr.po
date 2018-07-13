@@ -85,6 +85,12 @@ msgstr ""
 msgid "Something went wrong, please check your network connection"
 msgstr "Quelque chose s'est mal passé, merci de vérifer votre connexion réseau"
 
+msgid "Sort repositories alphabetically"
+msgstr "Trier les dépôts par ordre alphabétique"
+
+msgid "Sort repositories by their last update date"
+msgstr "Trier les dépôts par leur date de dernière mise à jour"
+
 msgid "There are no repositories in this project"
 msgstr "Il n'y a aucun dépôt dans ce projet"
 

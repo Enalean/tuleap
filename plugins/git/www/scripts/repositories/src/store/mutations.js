@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import { REPOSITORIES_SORTED_BY_LAST_UPDATE, REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
 
 export default {
     setSelectedOwnerId(state, selected_owner_id) {
@@ -27,12 +28,8 @@ export default {
         if (typeof state.repositories_for_owner[state.selected_owner_id] === "undefined") {
             Vue.set(state.repositories_for_owner, state.selected_owner_id, []);
         }
+        repositories.forEach(extendRepository);
         state.repositories_for_owner[state.selected_owner_id].push(...repositories);
-    },
-    sortRepositoriesByUpdateDate(state) {
-        state.repositories_for_owner[state.selected_owner_id].sort(
-            (a, b) => new Date(b.last_update_date) - new Date(a.last_update_date)
-        );
     },
     setFilter(state, filter) {
         state.filter = filter;
@@ -48,5 +45,18 @@ export default {
     },
     setAddRepositoryModal(state, modal) {
         state.add_repository_modal = modal;
+    },
+    toggleDisplayMode(state) {
+        state.display_mode =
+            state.display_mode === REPOSITORIES_SORTED_BY_LAST_UPDATE
+                ? REPOSITORIES_SORTED_BY_PATH
+                : REPOSITORIES_SORTED_BY_LAST_UPDATE;
     }
 };
+
+function extendRepository(repository) {
+    const split_path = repository.path.split("/");
+    split_path.shift();
+    repository.label = split_path.pop().replace(".git", "");
+    repository.path_without_project = split_path.join("/");
+}

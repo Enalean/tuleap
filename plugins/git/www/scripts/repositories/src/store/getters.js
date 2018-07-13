@@ -17,20 +17,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ERROR_TYPE_NO_ERROR } from "../constants.js";
-
-export const filteredRepositories = (state, getters) => {
-    return !getters.areRepositoriesAlreadyLoadedForCurrentOwner
-        ? []
-        : getters.currentRepositoryList.filter(repository => {
-              return repository.name.toLowerCase().includes(state.filter.toLowerCase());
-          });
-};
+import { ERROR_TYPE_NO_ERROR, REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
 
 export const currentRepositoryList = state => state.repositories_for_owner[state.selected_owner_id];
 
 export const areRepositoriesAlreadyLoadedForCurrentOwner = state => {
     return state.repositories_for_owner.hasOwnProperty(state.selected_owner_id);
+};
+
+export const filteredRepositoriesByLastUpdateDate = (state, getters) => {
+    if (!getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
+        return [];
+    }
+
+    return sortByLastUpdateDate(getters.currentRepositoryList).filter(repository => {
+        return repository.name.toLowerCase().includes(state.filter.toLowerCase());
+    });
+};
+
+const sortByLastUpdateDate = repositories =>
+    repositories.sort((a, b) => new Date(b.last_update_date) - new Date(a.last_update_date));
+
+export const repositoriesGroupedByPath = (state, getters) => {
+    if (!getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
+        return {
+            is_folder: true,
+            label: "root",
+            children: []
+        };
+    }
+
+    const grouped = getters.currentRepositoryList.reduce(
+        (accumulator, repository) => {
+            if (repository.path_without_project) {
+                const split_path = repository.path_without_project.split("/");
+                const end_of_path = split_path.reduce(createHierarchy, accumulator);
+
+                end_of_path.children.set(repository.label, repository);
+                return accumulator;
+            }
+
+            accumulator.children.set(repository.label, repository);
+            return accumulator;
+        },
+        {
+            is_folder: true,
+            label: "root",
+            children: new Map()
+        }
+    );
+
+    return recursivelySortAlphabetically(grouped);
+};
+
+const recursivelySortAlphabetically = folder => {
+    let all_children = [];
+    folder.children.forEach(value => {
+        if (value.is_folder) {
+            const sorted_folder = recursivelySortAlphabetically(value);
+            all_children.push(sorted_folder);
+            return;
+        }
+        all_children.push(value);
+    });
+    const sorted_children = all_children.sort((a, b) => a.label.localeCompare(b.label));
+
+    return {
+        ...folder,
+        children: sorted_children
+    };
+};
+
+const createHierarchy = (hierarchy, path_part) => {
+    if (!hierarchy.children.has(path_part)) {
+        hierarchy.children.set(path_part, {
+            is_folder: true,
+            label: path_part,
+            children: new Map()
+        });
+    }
+
+    return hierarchy.children.get(path_part);
 };
 
 export const isThereAtLeastOneRepository = state => {
@@ -48,5 +115,7 @@ export const isThereAtLeastOneRepository = state => {
 
 export const hasError = state => state.error_message_type !== ERROR_TYPE_NO_ERROR;
 
-export const isInitialLoadingDoneWithoutError = state =>
-    !state.is_loading_initial && !state.has_error;
+export const isInitialLoadingDoneWithoutError = (state, getters) =>
+    !state.is_loading_initial && !getters.hasError;
+
+export const isFolderDisplayMode = state => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
