@@ -82,6 +82,13 @@ class Git_RemoteServer_GerritServerFactory {
         return $this->getOrderedServerList($servers);
     }
 
+    public function getAllServersNoSort()
+    {
+        foreach ($this->dao->searchAll() as $row) {
+            yield $this->instantiateFromRow($row);
+        }
+    }
+
     /**
      * @return Git_RemoteServer_GerritServer[]
      */
