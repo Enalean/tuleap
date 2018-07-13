@@ -90,7 +90,7 @@ load_project() {
     if [ ! -f $base_dir/user_map.csv ]; then
         user_mapping="--automap=no-email,create:A"
     fi
-    /usr/share/tuleap/src/utils/tuleap import-project-xml \
+    PHP="$PHP_CLI" /usr/share/tuleap/src/utils/tuleap import-project-xml \
         -u admin \
         -i $base_dir \
         $user_mapping

@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class PermissionsManager implements IPermissionsManagerNG {
@@ -267,7 +268,7 @@ class PermissionsManager implements IPermissionsManagerNG {
     }
 
     protected function buildPermissionsCache(&$dar, &$ugroups) {
-        while ($row =& $dar->getRow()) {
+        while ($row = $dar->getRow()) {
             if (!isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
             }
@@ -296,9 +297,9 @@ class PermissionsManager implements IPermissionsManagerNG {
     protected function retrievePermissions($object_id, $ugroups = array()) {
         $tracker_field_id = explode('#', $object_id); //An artifact field ?
         if (count($tracker_field_id) > 1) {
-            $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
+            $dar = $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
         } else {
-            $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id);
+            $dar = $this->_permission_dao->searchPermissionsByObjectId($object_id);
         }
         $this->buildPermissionsCache($dar, $ugroups);
     }

@@ -1339,7 +1339,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
+    {
+        if (! $old_value instanceof Tracker_Artifact_ChangesetValue_ArtifactLink) {
+            return false;
+        }
+
         $source_of_association_collection_dev_null = new SourceOfAssociationCollection();
         $submitted_value = $this->getSubmittedValueConvertor()->convert(
             $new_value,

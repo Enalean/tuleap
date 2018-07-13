@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,6 +33,7 @@ use User_ForgeUserGroupFactory;
 use ProjectUGroup;
 use ServiceFile;
 use TemplateRenderer;
+use UserManager;
 
 class PermissionController extends BaseFrsPresenter
 {
@@ -147,7 +148,25 @@ class PermissionController extends BaseFrsPresenter
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();
 
-        $service->displayHeader($project, $title);
+        $user = UserManager::instance()->getCurrentUser();
+        if ($this->permission_manager->isAdmin($project, $user)) {
+            $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
+                'url'   => '/file/admin/?'. http_build_query(array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'edit-permissions'
+                    ))
+            );
+        }
+
+        $toolbar[] = array(
+            'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
+            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/frs.html')"
+        );
+
+        $breadcrumbs = [];
+
+        $service->displayHeader($title, $toolbar, $breadcrumbs);
         $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
     }
 

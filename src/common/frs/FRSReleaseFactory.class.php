@@ -81,7 +81,7 @@ class FRSReleaseFactory {
 	 */
 	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
 		$_id = (int) $release_id;
-		$dao = & $this->_getFRSReleaseDao();
+		$dao = $this->_getFRSReleaseDao();
 		if($group_id && $package_id){
 			$_group_id = (int) $group_id;
 			$_package_id = (int) $package_id;
@@ -102,7 +102,7 @@ class FRSReleaseFactory {
 			return;
 		}
 
-		$data_array = & $dar->current();
+		$data_array = $dar->current();
 
 		return (FRSReleaseFactory :: getFRSReleaseFromArray($data_array));
 	}

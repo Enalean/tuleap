@@ -48,7 +48,8 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', strtolower($this->artifact_show)) . ']';
     }
 
-    function updatePreferences($request) {
+    function updatePreferences(&$request)
+    {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'AS'));
         $vShow->required();

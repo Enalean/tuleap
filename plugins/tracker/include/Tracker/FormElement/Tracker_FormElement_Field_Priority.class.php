@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -176,7 +176,11 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         return $output;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = []
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -244,7 +248,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return string html
      */
-    public function fetchSubmit() {
+    public function fetchSubmit($submitted_values = [])
+    {
         return '';
     }
 
@@ -294,7 +299,8 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         );
     }
 
-    public function getSoapValue() {
+    public function getSoapValue(PFUser $user = null, Tracker_Artifact_Changeset $changeset = null)
+    {
         return null;
     }
 
@@ -315,7 +321,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      *
      * @return boolean true on success or false on failure
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Tracker_Artifact $artifact,
+        $submitted_value,
+        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        $is_submission = null
+    ) {
         $is_valid = true;
 
         if ($submitted_value !== null && ! $this->userCanUpdate()) {

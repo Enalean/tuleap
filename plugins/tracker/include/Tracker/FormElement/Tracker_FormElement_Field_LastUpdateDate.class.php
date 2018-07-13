@@ -205,7 +205,11 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $html;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = []
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
             
@@ -274,7 +278,12 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @return boolean true on success or false on failure
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Tracker_Artifact $artifact,
+        $submitted_value,
+        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        $is_submission = null
+    ) {
         $is_valid = true;
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
