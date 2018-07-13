@@ -1014,6 +1014,9 @@ class ProjectResource extends AuthenticatedResource {
      * Get info about project Git repositories. Repositories are returned ordered by last_push date, if there are no push
      * yet, it's the creation date of the repository that is taken into account.
      * <br>
+     * The total number of repositories returned by 'x-pagination-size' header corresponds to ALL repositories, including
+     * those you cannot view so you might retrieve a lower number of repositories than 'x-pagination-size'.
+     * <br>
      * <br>
      * With fields = 'basic', permissions is always set as <strong>NULL</strong>
      * <br>
