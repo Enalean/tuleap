@@ -1,3 +1,4 @@
+#!/opt/remi/php72/root/usr/bin/php
 <?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
@@ -16,15 +17,18 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\REST\v1;
+require_once '/usr/share/php/Zend/autoload.php';
 
-class GitRepositoryListRepresentation
-{
-    /**
-     * @var GitRepositoryRepresentationBase[]|null
-     */
-    public $repositories = null;
-}
+$loader = new Zend\Loader\StandardAutoloader(
+    array(
+        'namespaces' => array(
+            'Tuleap\Configuration' => '/usr/share/tuleap/tools/Configuration',
+        )
+    )
+);
+$loader->register();
+
+$php72centos6 = new \Tuleap\Configuration\Setup\PHP72CentOS6(new Tuleap\Configuration\Logger\Console());
+$php72centos6->main();

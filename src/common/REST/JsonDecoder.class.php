@@ -46,7 +46,11 @@ class JsonDecoder {
      *
      * @return array
      */
-    public function decodeAsAnArray($key, $value) {
+    public function decodeAsAnArray($key, $value)
+    {
+        if ($value === null || $value === '') {
+            return [];
+        }
         $value = json_decode($value, true);
         $this->checkForJsonErrors($key);
         return $value;

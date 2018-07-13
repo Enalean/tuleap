@@ -1131,7 +1131,7 @@ class ProjectResource extends AuthenticatedResource {
             )
         );
 
-        if (count($result->repositories) > 0) {
+        if ($result->repositories !== null) {
             $this->sendAllowHeadersForProject();
             $this->sendPaginationHeaders($limit, $offset, $total_git_repositories);
             return $result;

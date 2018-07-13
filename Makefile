@@ -131,8 +131,11 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests_rest: ## Run all REST tests
+tests_rest_56: ## Run all REST tests with PHP FPM 5.6
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql56
+
+tests_rest_72: ## Run all REST tests with PHP FPM 7.2
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql56
 
 tests_soap: ## Run all SOAP tests
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
@@ -143,8 +146,11 @@ tests_cypress: ## Run Cypress tests
 tests_cypress_dev: ## Start cypress container to launch tests manually
 	@tests/e2e/full/wrap_for_dev_context.sh
 
-tests_rest_setup: ## Start REST tests container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-mysql56
+tests_rest_setup_56: ## Start REST tests (PHP FPM 5.6) container to launch tests manually
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-mysql56 bash
+
+tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql56 bash
 
 phpunit-ci-run:
 	$(PHP) src/vendor/bin/phpunit \

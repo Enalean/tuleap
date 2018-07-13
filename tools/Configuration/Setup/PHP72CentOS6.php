@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Configuration\Setup;
@@ -24,10 +23,9 @@ namespace Tuleap\Configuration\Setup;
 use Tuleap\Configuration\Etc;
 use Tuleap\Configuration\FPM;
 use Tuleap\Configuration\Nginx;
-use Tuleap\Configuration\Apache;
 use Tuleap\Configuration\Logger;
 
-class PHP56Centos6
+class PHP72CentOS6
 {
     private $logger;
 
@@ -50,9 +48,9 @@ class PHP56Centos6
             );
             $this->exitIfHelp($options);
 
-            $this->logger->info("Configure Tuleap for PHP 5.6 / FPM and Nginx");
+            $this->logger->info('Configure Tuleap for PHP 7.2 / FPM and Nginx');
             $this->configure($this->getModules($options), $this->getIsDevelopment($options));
-            $this->logger->info("Configuration completed");
+            $this->logger->info('Configuration completed');
         } catch (\Exception $exception) {
             $this->logger->error($exception);
             exit(1);
@@ -91,37 +89,18 @@ class PHP56Centos6
         $conf_loader = new Etc\LoadLocalInc('/etc/tuleap', '/usr/share/tuleap');
         $variables   = $conf_loader->getVars();
 
-        $nginx_base_dir = null;
-        $nginx_dirs = [
-            '/etc/nginx',
-            '/etc/opt/rh/rh-nginx18/nginx',
-        ];
-        foreach ($nginx_dirs as $nginx_dir) {
-            if (is_dir($nginx_dir)) {
-                $nginx_base_dir = $nginx_dir;
-                break;
-            }
-        }
-        if ($nginx_base_dir == null) {
-            throw new \RuntimeException("No valid nginx directory found");
-        }
-
-
         $configs = [];
-        if (in_array('fpm', $modules)) {
-            $configs[] = FPM\TuleapWeb::buildForPHP56($this->logger, $variables->getApplicationUser(), $for_development);
+        if (in_array('fpm', $modules, true)) {
+            $configs[] = FPM\TuleapWeb::buildForPHP72($this->logger, $variables->getApplicationUser(), $for_development);
         }
-        if (in_array('nginx', $modules)) {
+        if (in_array('nginx', $modules, true)) {
             $configs[] = new Nginx\TuleapWeb(
                 $this->logger,
                 $variables->getApplicationBaseDir(),
-                $nginx_base_dir,
+                '/etc/nginx',
                 $variables->getServerName(),
                 $for_development
             );
-        }
-        if (in_array('apache', $modules)) {
-            $configs[] = new Apache\TuleapWeb($this->logger, '/etc/httpd');
         }
 
         foreach ($configs as $conf) {
@@ -132,9 +111,9 @@ class PHP56Centos6
     private function help()
     {
         echo <<<EOT
-Usage: /usr/share/tuleap/tools/utils/php56/run.php [--module=apache,nginx,fpm]
+Usage: /usr/share/tuleap/tools/utils/php72/run.php [--module=nginx,fpm]
 
-Configuration of Tuleap for usage of PHP 5.6 / FPM and Nginx
+Configuration of Tuleap for usage of PHP 7.2 / FPM and Nginx
 
 --module=...    Select the module(s) you want to configure (comma separated)
 
