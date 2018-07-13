@@ -16,76 +16,63 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const path_to_badge = path.resolve(
     __dirname,
-    '../../../../src/www/scripts/project/admin/permissions-per-group/'
+    "../../../../src/www/scripts/project/admin/permissions-per-group/"
 );
 
 const webpack_config_for_permisssions_per_group = {
     entry: {
-        'permission-per-group': './permissions-per-group/src/index.js'
+        "permission-per-group": "./permissions-per-group/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
     },
     resolve: {
         alias: {
-            'permission-badge': path_to_badge
+            "permission-badge": path_to_badge
         }
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ]
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()]
 };
 
 const webpack_config_for_repositories = {
     entry: {
-        'repositories-list': './repositories/src/index.js'
+        "repositories-list": "./repositories/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
+    },
+    resolve: {
+        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_mocks_alias)
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ],
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases(
-            {},
-            webpack_configurator.easygettext_loader_alias
-        )
+        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
     }
 };
 
-module.exports = [
-    webpack_config_for_permisssions_per_group,
-    webpack_config_for_repositories
-];
+module.exports = [webpack_config_for_permisssions_per_group, webpack_config_for_repositories];

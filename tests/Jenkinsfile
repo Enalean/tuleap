@@ -97,6 +97,7 @@ pipeline {
                 'Karma PullRequest plugin': { runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') },
                 'Karma CrossTracker plugin': { runKarmaTests('crosstracker', 'plugins/crosstracker/www/scripts') },
                 'Karma TimeTracking plugin': { runKarmaTests('timetracking', 'plugins/timetracking/www/scripts') },
+                'Karma Git plugin': { runKarmaTests('git', 'plugins/git/www/scripts') },
                 'REST CentOS 6 PHP 5.6 MySQL 5.6': { runRESTTests('c6-php56-mysql56') },
                 'SOAP': {
                     sh """
