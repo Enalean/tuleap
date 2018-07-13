@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\EventRepository;
 
+use Mockery;
+use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\SVNRepositoryCreationException;
 use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 
@@ -28,6 +30,15 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingStandardsIgnoreLine
 {
+    public function setUp()
+    {
+        $this->user_manager                = Mockery::spy(\UserManager::class);
+        $this->backend_svn                 = Mockery::spy(\BackendSVN::class);
+        $this->access_file_history_creator = Mockery::spy(\Tuleap\Svn\AccessControl\AccessFileHistoryCreator::class);
+        $this->repository_manager          = Mockery::spy(\Tuleap\Svn\Repository\RepositoryManager::class);
+    }
+
+
     public function itRetrievesParameters()
     {
         $parameters            = array(
@@ -80,69 +91,74 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
 
     public function itMarksTheEventAsDoneWhenTheRepositoryIsSuccessfullyCreated()
     {
-        $system_event = partial_mock(
-            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
-            array('done', 'getRequiredParameter')
-        );
+        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
+        $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::spy(\PFUser::class));
+        $this->backend_svn->shouldReceive('createRepositorySVN')->andReturn(true);
+        $this->access_file_history_creator->shouldReceive('useAVersion')->andReturn(true);
+        $this->repository_manager->shouldReceive('getRepositoryById')->andReturn(Mockery::spy(Repository::class));
 
         $system_event->injectDependencies(
-            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
-            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
-            mock('UserManager'),
-            mock('BackendSVN'),
-            mock('BackendSystem'),
-            mock('Tuleap\Svn\Migration\RepositoryCopier')
+            $this->access_file_history_creator,
+            $this->repository_manager,
+            $this->user_manager,
+            $this->backend_svn,
+            Mockery::spy(\BackendSystem::class),
+            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
         );
 
-        $system_event->expectOnce('done');
+        $system_event->shouldReceive('done')->once();
+        $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
 
         $system_event->process();
     }
 
     public function itGeneratesAnErrorIfTheRepositoryCanNotBeCreated()
     {
-        $system_event = partial_mock(
-            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
-            array('error', 'done', 'getRequiredParameter')
-        );
+        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $backend_svn    = mock('BackendSVN');
-        $backend_svn->throwOn('createRepositorySVN', new SVNRepositoryCreationException());
+        $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::spy(\PFUser::class));
+        $this->backend_svn->shouldReceive('createRepositorySVN')->andThrow(new SVNRepositoryCreationException());
+
         $system_event->injectDependencies(
-            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
-            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
-            mock('UserManager'),
-            $backend_svn,
-            mock('BackendSystem'),
-            mock('Tuleap\Svn\Migration\RepositoryCopier')
+            $this->access_file_history_creator,
+            $this->repository_manager,
+            $this->user_manager,
+            $this->backend_svn,
+            Mockery::spy(\BackendSystem::class),
+            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
         );
 
-        $system_event->expectOnce('error');
-        $system_event->expectNever('done');
+        $system_event->shouldReceive('error')->once();
+        $system_event->shouldReceive('done')->never();
+        $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
 
         $system_event->process();
     }
 
     public function itGeneratesAWarningIfTheDirectoryLayoutCanNotBeCreated()
     {
-        $system_event = partial_mock(
-            'Tuleap\\Svn\\EventRepository\\SystemEvent_SVN_CREATE_REPOSITORY',
-            array('warning', 'done', 'getRequiredParameter')
-        );
+        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $backend_svn    = mock('BackendSVN');
-        $backend_svn->throwOn('createRepositorySVN', new SVNRepositoryLayoutInitializationException());
+        $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::spy(\PFUser::class));
+        $this->backend_svn->shouldReceive('createRepositorySVN')->andThrow(new SVNRepositoryLayoutInitializationException());
+
         $system_event->injectDependencies(
-            mock('Tuleap\\Svn\\AccessControl\\AccessFileHistoryCreator'),
-            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
-            mock('UserManager'),
-            $backend_svn,
-            mock('BackendSystem'),
-            mock('Tuleap\Svn\Migration\RepositoryCopier')
+            $this->access_file_history_creator,
+            $this->repository_manager,
+            $this->user_manager,
+            $this->backend_svn,
+            Mockery::spy(\BackendSystem::class),
+            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
         );
 
-        $system_event->expectOnce('warning');
-        $system_event->expectNever('done');
+        $system_event->shouldReceive('warning')->once();
+        $system_event->shouldReceive('done')->never();
+        $system_event->shouldReceive('getRequiredParameter')->andReturn([]);
 
         $system_event->process();
     }

@@ -55,27 +55,28 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project    = mock('Project');
+        $this->project    = \Mockery::spy(\Project::class);
         $this->planning_id = 34;
         $this->artifact_id = 56;
 
         $this->milestone_tracker_id = 112;
-        $this->milestone_tracker    = mock('Tracker');
+        $this->milestone_tracker    = \Mockery::spy(\Tracker::class);
         stub($this->milestone_tracker)->getId()->returns($this->milestone_tracker_id);
         stub($this->milestone_tracker)->getProject()->returns($this->project);
 
-        $this->user                         = mock('PFUser');
+        $this->user                         = \Mockery::spy(\PFUser::class);
         $this->planning                     = aPlanning()->withId($this->planning_id)->build();
-        $this->artifact                     = mock('Tracker_Artifact');
-        $this->planning_factory             = mock('PlanningFactory');
-        $this->artifact_factory             = mock('Tracker_ArtifactFactory');
-        $this->formelement_factory          = mock('Tracker_FormElementFactory');
-        $this->tracker_factory              = mock('TrackerFactory');
-        $this->status_counter               = mock('AgileDashboard_Milestone_MilestoneStatusCounter');
-        $this->planning_permissions_manager = mock('PlanningPermissionsManager');
-        $this->dao                          = mock('AgileDashboard_Milestone_MilestoneDao');
-        $this->mono_milestone_checker       = mock('Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker');
+        $this->artifact                     = \Mockery::spy(\Tracker_Artifact::class);
+        $this->planning_factory             = \Mockery::spy(\PlanningFactory::class);
+        $this->artifact_factory             = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->formelement_factory          = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->tracker_factory              = \Mockery::spy(\TrackerFactory::class);
+        $this->status_counter               = \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class);
+        $this->planning_permissions_manager = \Mockery::spy(\PlanningPermissionsManager::class);
+        $this->dao                          = \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class);
+        $this->mono_milestone_checker       = \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class);
         $this->milestone_factory            = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
@@ -99,18 +100,18 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
 class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
     public function itCanRetrieveSubMilestonesOfAGivenMilestone() {
-        $sprints_tracker   = mock('Tracker');
-        $hackfests_tracker = mock('Tracker');
+        $sprints_tracker   = \Mockery::spy(\Tracker::class);
+        $hackfests_tracker = \Mockery::spy(\Tracker::class);
 
-        $sprint_planning   = mock('Planning');
-        $hackfest_planning = mock('Planning');
+        $sprint_planning   = \Mockery::spy(\Planning::class);
+        $hackfest_planning = \Mockery::spy(\Planning::class);
 
-        $release_1_0   = mock('Tracker_Artifact');
+        $release_1_0   = \Mockery::spy(\Tracker_Artifact::class);
         $sprint_1      = aMockArtifact()->withTracker($sprints_tracker)->allUsersCanView()->build();
         $sprint_2      = aMockArtifact()->withTracker($sprints_tracker)->allUsersCanView()->build();
         $hackfest_2012 = aMockArtifact()->withTracker($hackfests_tracker)->allUsersCanView()->build();
 
-        $results = mock('DataAccessResult');
+        $results = \Mockery::mock(DataAccessResult::class);
         stub($this->dao)->searchSubMilestones()->returns($results);
         stub($results)->instanciateWith()->returns(array($sprint_1, $sprint_2, $hackfest_2012));
 
@@ -170,7 +171,7 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
 
     public function itAddsTheArtifactsToTheRootNode() {
         $root_aid   = 100;
-        $root_artifact = mock('Tracker_Artifact');
+        $root_artifact = \Mockery::spy(\Tracker_Artifact::class);
 
         stub($root_artifact)->getId()->returns($root_aid);
         stub($root_artifact)->getTracker()->returns($this->milestone_tracker);
@@ -180,12 +181,12 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
 
         $root_note_data = $root_node->getObject();
         $this->assertEqual($root_aid, $root_node->getId());
-        $this->assertIdentical($root_artifact, $root_note_data);
+        $this->assertEqual($root_artifact, $root_note_data);
     }
 
     public function itAddsTheArtifactsToTheChildNodes() {
         $root_aid   = 100;
-        $root_artifact = mock('Tracker_Artifact');
+        $root_artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($root_artifact)->getId()->returns($root_aid);
         stub($root_artifact)->getTracker()->returns($this->milestone_tracker);
         $depth1_artifact = $this->anArtifactWithId(9999);
@@ -196,7 +197,7 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $child_node      = $root_node->getChild(0);
         $child_node_data = $child_node->getObject();
         $this->assertEqual(9999, $child_node->getId());
-        $this->assertIdentical($depth1_artifact, $child_node_data);
+        $this->assertEqual($depth1_artifact, $child_node_data);
     }
 
 }
@@ -210,9 +211,9 @@ abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_Miles
 
     public function setUp() {
         parent::setUp();
-        $this->milestone_factory = partial_mock(
-            'Planning_MilestoneFactory',
-            array('getSubMilestones', 'updateMilestoneWithPlannedArtifacts'),
+        $this->setUpGlobalsMockery();
+        $this->milestone_factory = \Mockery::mock(
+            \Planning_MilestoneFactory::class,
             array(
                 $this->planning_factory,
                 $this->artifact_factory,
@@ -223,7 +224,9 @@ abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_Miles
                 $this->dao,
                 mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
             )
-        );
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         stub($this->milestone_factory)->getSubMilestones()->returns(array());
         $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
     }
@@ -240,8 +243,8 @@ class MilestoneFactory_MilestoneComesWithStartDateTest extends MilestoneFactory_
         $start_date          = '12/10/2013';
         $expected_start_date = strtotime($start_date);
 
-        $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($expected_start_date);
-        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
+        $start_date_changeset = mockery_stub(\Tracker_Artifact_ChangesetValue_Date::class)->getTimestamp()->returns($expected_start_date);
+        $start_date_field     = mockery_stub(\Tracker_FormElement_Field_Date::class)->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
 
         stub($this->formelement_factory)->getDateFieldByNameForUser(
             $this->milestone_tracker,
@@ -274,9 +277,9 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends MilestoneFactory_Mi
         $start_date        = '07/01/2013';
         $expected_end_date = '07/15/2013';
 
-        $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(strtotime($start_date));
-        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
-        $duration_field       = stub('Tracker_FormElement_Field_Integer')->getComputedValue($this->user, $this->artifact)->returns($duration);
+        $start_date_changeset = mockery_stub(\Tracker_Artifact_ChangesetValue_Date::class)->getTimestamp()->returns(strtotime($start_date));
+        $start_date_field     = mockery_stub(\Tracker_FormElement_Field_Date::class)->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
+        $duration_field       = mockery_stub(\Tracker_FormElement_Field_Integer::class)->getComputedValue($this->user, $this->artifact)->returns($duration);
 
         stub($this->formelement_factory)->getDateFieldByNameForUser(
             $this->milestone_tracker,
@@ -303,52 +306,64 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user             = mock('PFUser');
-        $this->project          = stub('Project')->getID()->returns(99);
-        $this->planning_tracker = stub('Tracker')->getProject()->returns($this->project);
+        $this->setUpGlobalsMockery();
+        $this->user             = \Mockery::spy(\PFUser::class);
+        $this->project          = mockery_stub(\Project::class)->getID()->returns(99);
+        $this->planning_tracker = mockery_stub(\Tracker::class)->getProject()->returns($this->project);
         $this->planning_id      = 3333;
-        $this->planning         = stub('Planning')->getPlanningTracker()->returns($this->planning_tracker);
+        $this->planning         = mockery_stub(\Planning::class)->getPlanningTracker()->returns($this->planning_tracker);
+
+        $this->tracker = Mockery::mock(Tracker::class);
+        $this->tracker->shouldReceive('getId')->andReturn(101);
+
+        $this->form_element_factory = Mockery::spy(Tracker_FormElementFactory::class);
     }
 
     public function itReturnsAnEmptyArrayWhenAllItemsAreClosed() {
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array());
-        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mockery_stub(\Tracker_ArtifactFactory::class)->getArtifactsByTrackerIdUserCanView()->returns(array());
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
-        $this->assertIdentical(array(), $factory->getAllMilestones($this->user, $this->planning));
+        $this->assertEqual(array(), $factory->getAllMilestones($this->user, $this->planning));
     }
 
     public function itReturnsAsManyMilestonesAsThereAreArtifacts() {
-        $artifacts        = array(anArtifact()->withChangesets(array(10,11))->build(),
-                                  anArtifact()->withChangesets(array(12,13))->build());
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns($artifacts);
-        $planning_factory = mock('PlanningFactory');
+        $artifacts = array(
+            anArtifact()->withChangesets(array(10,11))->withTracker($this->tracker)->withFormElementFactory($this->form_element_factory)->build(),
+            anArtifact()->withChangesets(array(12,13))->withTracker($this->tracker)->withFormElementFactory($this->form_element_factory)->build()
+        );
+
+        $artifact_factory = mockery_stub(\Tracker_ArtifactFactory::class)->getArtifactsByTrackerIdUserCanView()->returns($artifacts);
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         $this->assertEqual(2, count($factory->getAllMilestones($this->user, $this->planning)));
     }
 
     public function itReturnsMilestones()
     {
-        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
-        $planning_factory = mock('PlanningFactory');
+        $changeset01 = Mockery::spy(Tracker_Artifact_Changeset::class);
+        $artifact    = Mockery::mock(Tracker_Artifact::class);
+
+        $artifact->shouldReceive('getId')->andReturns(101);
+        $artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([]);
+        $artifact->shouldReceive('getUniqueLinkedArtifacts')->with($this->user)->andReturns(null);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset01);
+
+        $artifact_factory = mockery_stub(\Tracker_ArtifactFactory::class)->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
-        $mile_stone = new Planning_ArtifactMilestone(
-            $this->project,
-            $this->planning,
-            $artifact,
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
-        );
-        $this->assertIdentical(array($mile_stone), $factory->getAllMilestones($this->user, $this->planning));
+
+        $all_milestones = $factory->getAllMilestones($this->user, $this->planning);
+        $this->assertEqual($artifact->getId(), $all_milestones[0]->getArtifact()->getId());
     }
 
     public function itReturnsMilestonesWithPlannedArtifacts()
     {
-        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->withTracker($this->tracker)->withFormElementFactory($this->form_element_factory)->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
         $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
-        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mockery_stub(\Tracker_ArtifactFactory::class)->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
 
         $planned_artifacts= new ArtifactNode($artifact);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -358,7 +373,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
             $this->project,
             $planning,
             $artifact,
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
             $planned_artifacts
         );
         $milestones = $factory->getAllMilestones($this->user, $planning);
@@ -367,12 +382,12 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
 
     public function itReturnsMilestonesWithoutPlannedArtifacts()
     {
-        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->withTracker($this->tracker)->withFormElementFactory($this->form_element_factory)->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
         $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
-        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mockery_stub(\Tracker_ArtifactFactory::class)->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
 
         $planned_artifacts = new ArtifactNode($artifact);
         $factory           = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -382,7 +397,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
             $this->project,
             $planning,
             $artifact,
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker'),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class),
             null
         );
         $milestones = $factory->getAllMilestonesWithoutPlannedElement($this->user, $planning);
@@ -390,17 +405,18 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
 
     public function newMileStoneFactory($planning_factory, $artifact_factory) {
-        $factory = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getPlannedArtifacts'));
-        $factory->__construct(
+        $factory = \Mockery::mock(\Planning_MilestoneFactory::class, [
             $planning_factory,
             $artifact_factory,
-            mock('Tracker_FormElementFactory'),
-            mock('TrackerFactory'),
-            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-            mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
-        );
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+        ])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         return $factory;
     }
 }
@@ -414,16 +430,16 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
         $factory = new Planning_MilestoneFactory(
-            mock('PlanningFactory'),
-            mock('Tracker_ArtifactFactory'),
-            mock('Tracker_FormElementFactory'),
-            mock('TrackerFactory'),
-            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-            mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\PlanningFactory::class),
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
-        $planning_items_tree = $factory->getPlannedArtifacts(mock('PFUser'), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(\Mockery::spy(\PFUser::class), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 
@@ -438,25 +454,26 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project          = mock('Project');
-        $this->release_planning = mock('Planning');
+        $this->project          = \Mockery::spy(\Project::class);
+        $this->release_planning = \Mockery::spy(\Planning::class);
         $this->release_tracker  = aTracker()->withId(2)->withProject($this->project)->build();
         $this->release_artifact = aMockArtifact()->withTracker($this->release_tracker)->build();
 
         $this->task_tracker  = aTracker()->withId(21)->withProject($this->project)->build();
         $this->task_artifact = aMockArtifact()->withTracker($this->task_tracker)->build();
 
-        $planning_factory        = stub('PlanningFactory')->getPlanningByPlanningTracker($this->release_tracker)->returns($this->release_planning);
+        $planning_factory        = mockery_stub(\PlanningFactory::class)->getPlanningByPlanningTracker($this->release_tracker)->returns($this->release_planning);
         $this->milestone_factory = new Planning_MilestoneFactory(
             $planning_factory,
-            mock('Tracker_ArtifactFactory'),
-            mock('Tracker_FormElementFactory'),
-            mock('TrackerFactory'),
-            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-            mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
     }
 
@@ -471,7 +488,7 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
             $this->project,
             $this->release_planning,
             $this->release_artifact,
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
         $this->assertEqual($actual_release_milestone, $expected_release_milestone);
     }
@@ -485,31 +502,37 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
 class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends TuleapTestCase {
 
     public function itCreateMilestoneFromArtifactAndLoadsItsPlannedArtifacts() {
-        $milestone_factory = partial_mock(
-            'Planning_MilestoneFactory',
-            array('getPlannedArtifacts', 'getMilestoneFromArtifact'),
-            array(
-                mock('PlanningFactory'),
-                mock('Tracker_ArtifactFactory'),
-                mock('Tracker_FormElementFactory'),
-                mock('TrackerFactory'),
-                mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-                mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_Milestone_MilestoneDao'),
-                mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
-            )
-        );
 
-        $user     = aUser()->build();
-        $artifact = aMockArtifact()->withId(101)->build();
+        $planning_factory = mockery_stub(\PlanningFactory::class)->getPlanningByPlanningTracker()->returns(\Mockery::spy(\Planning::class));
 
-        $planned_artifacts = array(
-            aMockArtifact()->withId(102)->build(),
-            aMockArtifact()->withId(103)->build(),
-        );
+        $milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class, [
+            $planning_factory,
+            \Mockery::spy(\Tracker_ArtifactFactory::class),
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
+        ])
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        stub($milestone_factory)->getPlannedArtifacts($user, $artifact)->once()->returns($planned_artifacts);
-        stub($milestone_factory)->getMilestoneFromArtifact($artifact, $planned_artifacts)->once();
+        $user      = aUser()->build();
+        $project   = Mockery::mock(Project::class);
+        $tracker   = \Mockery::spy(\Tracker::class);
+        $artifact  = aMockArtifact()->withId(101)->withTracker($tracker)->build();
+        $artifact2 = aMockArtifact()->withId(102)->build();
+        $artifact3 = aMockArtifact()->withId(103)->build();
+
+        $node = new ArtifactNode($artifact);
+        $node->addChild(new ArtifactNode($artifact2));
+        $node->addChild(new ArtifactNode($artifact3));
+
+        stub($milestone_factory)->getPlannedArtifacts($user, $artifact)->once()->returns($node);
+        stub($milestone_factory)->getMilestoneFromArtifact($artifact, $node)->once();
+
+        $tracker->shouldReceive('getProject')->andReturn($project);
 
         $milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($artifact, $user);
     }
@@ -519,15 +542,16 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->current_user     = aUser()->build();
-        $this->milestone_factory = partial_mock('Planning_MilestoneFactory', array('getMilestoneFromArtifact'));
+        $this->milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->sprint_artifact  = mock('Tracker_Artifact');
+        $this->sprint_artifact  = \Mockery::spy(\Tracker_Artifact::class);
         $this->sprint_milestone = aMilestone()->withArtifact($this->sprint_artifact)->build();
     }
 
     public function itReturnsEmptyArrayIfThereIsNoArtifactInMilestone() {
-        $empty_milestone = new Planning_NoMilestone(mock('Project'), mock('Planning'));
+        $empty_milestone = new Planning_NoMilestone(\Mockery::spy(\Project::class), \Mockery::spy(\Planning::class));
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $empty_milestone);
         $this->assertEqual($milestones, array());
@@ -544,7 +568,7 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         $release_artifact = aMockArtifact()->build();
         stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array($release_artifact));
 
-        $release_milestone = mock('Planning_ArtifactMilestone');
+        $release_milestone = \Mockery::spy(\Planning_ArtifactMilestone::class);
         stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns($release_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
@@ -586,30 +610,29 @@ class MilestoneFactory_getLastMilestoneCreatedsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->current_user      = aUser()->build();
-        $this->planning_factory  = mock('PlanningFactory');
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
-        $this->milestone_factory = partial_mock(
-            'Planning_MilestoneFactory',
-            array('getMilestoneFromArtifact'),
-            array(
-                $this->planning_factory,
-                $this->artifact_factory,
-                mock('Tracker_FormElementFactory'),
-                mock('TrackerFactory'),
-                mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-                mock('PlanningPermissionsManager'),
-                mock('AgileDashboard_Milestone_MilestoneDao'),
-                mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
-            )
-        );
+        $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->milestone_factory = \Mockery::mock(\Planning_MilestoneFactory::class, array(
+            $this->planning_factory,
+            $this->artifact_factory,
+            mock('Tracker_FormElementFactory'),
+            mock('TrackerFactory'),
+            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
+            mock('PlanningPermissionsManager'),
+            mock('AgileDashboard_Milestone_MilestoneDao'),
+            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+        ))
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
         $this->sprint_1_artifact   = aMockArtifact()->withId(1)->build();
         $this->sprint_1_milestone  = aMilestone()->withArtifact($this->sprint_1_artifact)->build();
 
         $this->planning_id = 12;
         $this->planning_tracker_id = 123;
-        $this->planning_tracker = aTracker()->withId($this->planning_tracker_id)->withProject(mock('Project'))->build();
+        $this->planning_tracker = aTracker()->withId($this->planning_tracker_id)->withProject(\Mockery::spy(\Project::class))->build();
         $this->planning    = aPlanning()->withId($this->planning_id)->withPlanningTracker($this->planning_tracker)->build();
         stub($this->planning_factory)->getPlanning($this->planning_id)->returns($this->planning);
     }
@@ -644,34 +667,35 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->planning_factory  = mock('PlanningFactory');
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
-            mock('Tracker_FormElementFactory'),
-            mock('TrackerFactory'),
-            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-            mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
 
-        $planning = mock('Planning');
+        $planning = \Mockery::spy(\Planning::class);
         stub($planning)->getPlanningTrackerId()->returns(45);
 
 
-        $project = mock('Project');
+        $project = \Mockery::spy(\Project::class);
         stub($project)->getID()->returns(3233);
 
-        $this->tracker = mock('Tracker');
+        $this->tracker = \Mockery::spy(\Tracker::class);
         stub($this->tracker)->getId()->returns(12);
         stub($this->tracker)->getName()->returns('tracker');
 
-        $this->user = mock('PFUser');
+        $this->user = \Mockery::spy(\PFUser::class);
 
-        $this->top_milestone = mock('Planning_VirtualTopMilestone');
+        $this->top_milestone = \Mockery::spy(\Planning_VirtualTopMilestone::class);
         stub($this->top_milestone)->getPlanning()->returns($planning);
         stub($this->top_milestone)->getProject()->returns($project);
     }
@@ -685,12 +709,12 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
     }
 
     public function itReturnsMilestonePerArtifact() {
-        $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $artifact_1 = mockery_stub(\Tracker_Artifact::class)->getLastChangeset()->returns(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         stub($artifact_1)->userCanView()->returns(true);
         stub($artifact_1)->getTracker()->returns($this->tracker);
         stub($artifact_1)->getAllAncestors()->returns(array());
 
-        $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $artifact_2 = mockery_stub(\Tracker_Artifact::class)->getLastChangeset()->returns(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         stub($artifact_2)->userCanView()->returns(true);
         stub($artifact_2)->getTracker()->returns($this->tracker);
         stub($artifact_2)->getAllAncestors()->returns(array());
@@ -701,7 +725,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         );
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
-        stub($this->planning_factory)->getRootPlanning()->returns(mock('Planning'));
+        stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
 
         $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
@@ -718,10 +742,10 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         // Some artifacts have no changeset on Tuleap.net (because of anonymous that can create
         // artifacts but artifact creation fails because they have to write access to fields
         // the artifact creation is stopped half the way hence without changeset
-        $artifact_1 = stub('Tracker_Artifact')->getLastChangeset()->returns(null);
+        $artifact_1 = mockery_stub(\Tracker_Artifact::class)->getLastChangeset()->returns(null);
         stub($artifact_1)->getTracker()->returns($this->tracker);
 
-        $artifact_2 = stub('Tracker_Artifact')->getLastChangeset()->returns(mock('Tracker_Artifact_Changeset'));
+        $artifact_2 = mockery_stub(\Tracker_Artifact::class)->getLastChangeset()->returns(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         stub($artifact_2)->userCanView()->returns(true);
         stub($artifact_2)->getTracker()->returns($this->tracker);
         stub($artifact_2)->getAllAncestors()->returns(array());
@@ -732,7 +756,7 @@ class MilestoneFactory_GetTopMilestonesTest extends TuleapTestCase {
         );
 
         stub($this->artifact_factory)->getArtifactsByTrackerId()->returns($my_artifacts);
-        stub($this->planning_factory)->getRootPlanning()->returns(mock('Planning'));
+        stub($this->planning_factory)->getRootPlanning()->returns(\Mockery::spy(\Planning::class));
 
         $milestones = $this->milestone_factory->getSubMilestones($this->user, $this->top_milestone);
 
@@ -753,18 +777,19 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->planning_factory  = mock('PlanningFactory');
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->planning_factory  = \Mockery::spy(\PlanningFactory::class);
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
         $this->milestone_factory = new Planning_MilestoneFactory(
             $this->planning_factory,
             $this->artifact_factory,
-            mock('Tracker_FormElementFactory'),
-            mock('TrackerFactory'),
-            mock('AgileDashboard_Milestone_MilestoneStatusCounter'),
-            mock('PlanningPermissionsManager'),
-            mock('AgileDashboard_Milestone_MilestoneDao'),
-            mock('\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker')
+            \Mockery::spy(\Tracker_FormElementFactory::class),
+            \Mockery::spy(\TrackerFactory::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneStatusCounter::class),
+            \Mockery::spy(\PlanningPermissionsManager::class),
+            \Mockery::spy(\AgileDashboard_Milestone_MilestoneDao::class),
+            \Mockery::spy(\Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker::class)
         );
         $this->user = aUser()->build();
         $this->artifact_id = 112;
@@ -777,7 +802,7 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
     }
 
     public function itReturnsAMilestone() {
-        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
+        $planning_tracker = aTracker()->withId(12)->withProject(\Mockery::spy(\Project::class))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($planning_tracker)->returns(aPlanning()->withId(4)->build());
 
         $artifact = anArtifact()->withTracker($planning_tracker)->build();
@@ -789,7 +814,7 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
 
     public function itReturnsNullWhenArtifactIsNotAMilestone() {
 
-        $planning_tracker = aTracker()->withId(12)->withProject(mock('Project'))->build();
+        $planning_tracker = aTracker()->withId(12)->withProject(\Mockery::spy(\Project::class))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(false);
 
         $artifact = anArtifact()->withTracker($planning_tracker)->build();

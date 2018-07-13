@@ -47,7 +47,7 @@ class CardwallConfigXmlExport {
     public function export(SimpleXMLElement $root) {
         $cardwall_node = $root->addChild(CardwallConfigXml::NODE_CARDWALL);
         $trackers_node = $cardwall_node->addChild(CardwallConfigXml::NODE_TRACKERS);
-        $trackers      = $this->tracker_factory->getTrackersByGroupId($this->project->getId());
+        $trackers      = $this->tracker_factory->getTrackersByGroupId($this->project->getID());
         foreach ($trackers as $tracker) {
             $this->addTrackerChild($tracker, $trackers_node);
         }

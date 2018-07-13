@@ -1,65 +1,39 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 require_once 'bootstrap.php';
 
-Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestVersion', array('addMail', '_getDao','removeMailByRepository','_getGitDao', '_getGitRepository'));
-Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestRemoveRepository', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));
-Mock::generate('Git_PostReceiveMailDao');
+class Git_PostReceiveMailManagerTest extends TuleapTestCase
+{
 
-require_once('common/user/User.class.php');
-Mock::generate('GitRepository');
-Mock::generate('PFUser');
-Mock::generate('Project');
-Mock::generate('GitDao');
-Mock::generate('GitBackend');
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
-class Git_PostReceiveMailManagerTest extends TuleapTestCase {
-
-    public function setUp()
+    public function testRemoveMailByRepository()
     {
-        parent::setUp();
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Response'] = new MockResponse();
-    }
-
-    public function tearDown()
-    {
-        unset($GLOBALS['Language']);
-        unset($GLOBALS['Response']);
-        parent::tearDown();
-    }
-
-    public function testRemoveMailByRepository(){
-        $prm = new PostReceiveMailManagerTestRemoveRepository();
-        $dao = new MockGit_PostReceiveMailDao();
+        $prm = partial_mock('Git_PostReceiveMailManager', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));
+        $dao = mock('Git_PostReceiveMailDao');
         $prm->dao = $dao;
 
-        $repo = new MockGitRepository($this);
+        $repo = mock('GitRepository');
 
-        $backend = new MockGitBackend();
+        $backend = mock('GitBackend');
         $repo->SetReturnValue('getBackend', $backend);
 
         $prm->dao->setReturnValue('removeNotification', True);

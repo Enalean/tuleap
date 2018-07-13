@@ -26,22 +26,23 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $tracker        = mock('Tracker');
+        $tracker        = \Mockery::spy(\Tracker::class);
         $this->field_id = 77777;
-        $this->field    = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns($this->field_id);
+        $this->field    = mockery_stub(\Tracker_FormElement_Field_MultiselectBox::class)->getId()->returns($this->field_id);
         $this->artifact = aMockArtifact()->withTracker($tracker)->build();
 
-        $this->card_presenter       = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
+        $this->card_presenter       = mockery_stub(\Cardwall_CardPresenter::class)->getArtifact()->returns($this->artifact);
 
-        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($tracker)->returns($this->field);
+        $this->field_provider = mockery_stub(\Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class)->getField($tracker)->returns($this->field);
     }
 
     public function itHasACardInCellPresenterWithASemanticStatusFieldId() {
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, new Cardwall_MappingCollection());
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
 
-        $this->assertIdentical(
+        $this->assertEqual(
             $cell_presenter,
             new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id)
         );
@@ -66,7 +67,7 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
         $swimline_id = 112;
         stub($this->card_presenter)->getSwimlineId()->returns($swimline_id);
 
-        $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
+        $mapping_collection = mockery_stub(\Cardwall_MappingCollection::class)->getSwimLineValues($this->field_id)->returns(array(123, 456));
 
         $card_in_cell_presenter_factory = new Cardwall_CardInCellPresenterFactory($this->field_provider, $mapping_collection);
         $cell_presenter = $card_in_cell_presenter_factory->getCardInCellPresenter($this->card_presenter);
@@ -77,5 +78,3 @@ class CardInCellPresenterFactoryTest extends TuleapTestCase {
         );
     }
 }
-
-?>

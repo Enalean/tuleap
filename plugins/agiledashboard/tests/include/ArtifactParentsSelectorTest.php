@@ -19,7 +19,7 @@
  */
 
 
-require_once dirname(__FILE__).'/../bootstrap.php';
+require_once __DIR__.'/../bootstrap.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class ArtifactParentsSelectorTest extends TuleapTestCase {
@@ -38,6 +38,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         '┝ corporation    ──────≫ theme
          │ ┝ product      ──┬───≫  ┕ epic
          │ │  ┕ release   ──┘   ┌─≫   ┕ story
@@ -56,19 +57,19 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->story_tracker   = aTracker()->build();
 
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getParent($this->product_tracker)->returns($this->corp_tracker);
         stub($hierarchy_factory)->getParent($this->release_tracker)->returns($this->product_tracker);
         stub($hierarchy_factory)->getParent($this->sprint_tracker)->returns($this->release_tracker);
         stub($hierarchy_factory)->getParent($this->epic_tracker)->returns($this->theme_tracker);
         stub($hierarchy_factory)->getParent($this->story_tracker)->returns($this->epic_tracker);
 
-        $corp_planning    = stub('Planning')->getBacklogTrackers()->returns(array($this->theme_tracker));
-        $product_planning = stub('Planning')->getBacklogTrackers()->returns(array($this->epic_tracker));
-        $release_planning = stub('Planning')->getBacklogTrackers()->returns(array($this->epic_tracker));
-        $sprint_planning  = stub('Planning')->getBacklogTrackers()->returns(array($this->story_tracker));
+        $corp_planning    = mockery_stub(\Planning::class)->getBacklogTrackers()->returns(array($this->theme_tracker));
+        $product_planning = mockery_stub(\Planning::class)->getBacklogTrackers()->returns(array($this->epic_tracker));
+        $release_planning = mockery_stub(\Planning::class)->getBacklogTrackers()->returns(array($this->epic_tracker));
+        $sprint_planning  = mockery_stub(\Planning::class)->getBacklogTrackers()->returns(array($this->story_tracker));
 
-        $planning_factory = mock('PlanningFactory');
+        $planning_factory = \Mockery::spy(\PlanningFactory::class);
         stub($planning_factory)->getPlanningByPlanningTracker($this->corp_tracker)->returns($corp_planning);
         stub($planning_factory)->getPlanningByPlanningTracker($this->product_tracker)->returns($product_planning);
         stub($planning_factory)->getPlanningByPlanningTracker($this->release_tracker)->returns($release_planning);
@@ -76,8 +77,8 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
 
         $this->user   = aUser()->build();
 
-        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
-        $this->milestone_factory = mock('Planning_MilestoneFactory');
+        $this->artifact_factory  = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->milestone_factory = \Mockery::spy(\Planning_MilestoneFactory::class);
 
         list($this->faq,      $this->faq_milestone)      = $this->getArtifact($this->faq_id,     $this->faq_tracker,      array());
         list($this->corp,     $this->corp_milestone)     = $this->getArtifact($this->corp_id,    $this->corp_tracker,     array());
@@ -121,11 +122,14 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     private function getArtifact($id, Tracker $tracker, array $ancestors) {
         reset($ancestors);
         $parent = current($ancestors);
-        $artifact  = aMockArtifact()->withId($id)->withTracker($tracker)->withParent($parent)->build();
-        $milestone = mock('Planning_ArtifactMilestone');
+        $artifact = Mockery::mock(Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn($id);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $artifact->shouldReceive('getParent')->andReturn($parent);
+        $milestone = \Mockery::spy(\Planning_ArtifactMilestone::class);
         stub($artifact)->getAllAncestors($this->user)->returns($ancestors);
         stub($this->artifact_factory)->getArtifactById($id)->returns($artifact);
-        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts(new EqualExpectation($artifact), $this->user)->returns($milestone);
+        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts($artifact, $this->user)->returns($milestone);
         return array($artifact, $milestone);
     }
 
@@ -167,4 +171,3 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->epic);
     }
 }
-?>
