@@ -35,10 +35,15 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
      * @var \GitRepositoryFactory
      */
     private $repository_factory;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
-    public function __construct(\GitRepositoryFactory $repository_factory)
+    public function __construct(\ProjectManager $project_manager, \GitRepositoryFactory $repository_factory)
     {
         $this->repository_factory = $repository_factory;
+        $this->project_manager    = $project_manager;
     }
 
     /**
@@ -53,7 +58,11 @@ class GitLegacyURLRedirectController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (! $request->getProject()->usesService(gitPlugin::SERVICE_SHORTNAME)) {
+        $project = $this->project_manager->getProject($variables['project_id']);
+        if (! $project || $project->isError()) {
+            throw new NotFoundException();
+        }
+        if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 

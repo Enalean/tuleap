@@ -2491,6 +2491,7 @@ class GitPlugin extends Plugin
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
             $r->addRoute(['GET'], '/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', function () {
                 return new \Tuleap\Git\GitLegacyURLRedirectController(
+                    $this->getProjectManager(),
                     $this->getRepositoryFactory()
                 );
             });
