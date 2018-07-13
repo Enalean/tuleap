@@ -84,9 +84,9 @@ class MetricsController implements DispatchableWithRequestNoAuthz
                 return '';
             }
             $request_factory = MessageFactoryBuilder::build();
-            $http_client = HttpClientFactory::createClient();
-            $request = $request_factory->createRequest('GET', $node_exporter_url);
-            $response = $http_client->sendRequest($request);
+            $http_client     = HttpClientFactory::createClientForInternalTuleapUse();
+            $request         = $request_factory->createRequest('GET', $node_exporter_url);
+            $response        = $http_client->sendRequest($request);
             return (string) $response->getBody();
         } catch (\Exception $exception) {
             return '';

@@ -33,12 +33,30 @@ class HttpClientFactory
      */
     public static function createClient()
     {
-        $client = Client::createWithConfig(
-            [
-                'timeout' => self::TIMEOUT,
-                'proxy'   => \ForgeConfig::get('sys_proxy')
-            ]
-        );
+        return self::createClientWithConfig([
+            'timeout' => self::TIMEOUT,
+            'proxy'   => \ForgeConfig::get('sys_proxy')
+        ]);
+    }
+
+    /**
+     * This client should only be used for Tuleap internal use to
+     * query internal resources. Queries requested by users (e.g. webhooks)
+     * MUST NOT use it.
+     *
+     * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
+     */
+    public static function createClientForInternalTuleapUse()
+    {
+        return self::createClientWithConfig(['timeout' => self::TIMEOUT]);
+    }
+
+    /**
+     * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
+     */
+    private static function createClientWithConfig(array $config)
+    {
+        $client = Client::createWithConfig($config);
 
         return new PluginClient($client, [new ErrorPlugin()]);
     }
