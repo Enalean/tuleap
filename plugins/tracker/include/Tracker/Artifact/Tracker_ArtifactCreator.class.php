@@ -119,7 +119,7 @@ class Tracker_ArtifactCreator {
         );
 
         if ($send_notification) {
-            $changeset->notify();
+            $changeset->executePostCreationActions();
             $this->changeset_creator->emitWebhooks($artifact, $user, 'create');
         }
 

@@ -266,7 +266,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expect('notify', array());
+        $new_changeset->expect('executePostCreationActions', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getValues', array());
@@ -464,7 +464,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expect('notify', array());
+        $new_changeset->expect('executePostCreationActions', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', true);
@@ -585,7 +585,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expectNever('notify');
+        $new_changeset->expectNever('executePostCreationActions');
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', true);
@@ -704,7 +704,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expectNever('notify', array());
+        $new_changeset->expectNever('executePostCreationActions', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', true);

@@ -37,9 +37,8 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
-use Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousSupervisor;
-use Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao;
-use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -61,6 +60,7 @@ use Tuleap\Tracker\Notifications\NotificationLevelExtractor;
 use Tuleap\Tracker\Notifications\NotificationListBuilder;
 use Tuleap\Tracker\Notifications\NotificationsForceUsageUpdater;
 use Tuleap\Tracker\Notifications\NotificationsForProjectMemberCleaner;
+use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsDisplayController;
 use Tuleap\Tracker\Notifications\Settings\NotificationsAdminSettingsUpdateController;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
@@ -248,7 +248,7 @@ class trackerPlugin extends Plugin {
     {
         return new AsynchronousSupervisor(
             $logger,
-            new NotifierDao()
+            new ActionsRunnerDao()
         );
     }
 
@@ -1535,8 +1535,8 @@ class trackerPlugin extends Plugin {
 
     public function workerEvent(WorkerEvent $event)
     {
-        $async_notifier = new \Tuleap\Tracker\Artifact\Changeset\Notification\AsynchronousNotifier();
-        $async_notifier->addListener($event);
+        $async_actions_runner = new \Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner();
+        $async_actions_runner->addListener($event);
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)

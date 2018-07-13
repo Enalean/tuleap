@@ -19,14 +19,12 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Notifications;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
-use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
-use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use UserManager;
 
 class RecipientsManager
