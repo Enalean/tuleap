@@ -299,7 +299,7 @@ class MediawikiUserGroupsMapper_DefineGroupsTest extends TuleapTestCase {
         parent::setUp();
 
         $this->tuleap_user    = stub('PFUser')->getId()->returns(101);
-        $this->project        = stub('Group')->getId()->returns(202);
+        $this->project        = stub(Project::class)->getId()->returns(202);
         $this->dao            = mock('MediawikiDao');
         $this->forge_pems_dao = mock('User_ForgeUserGroupPermissionsDao');
         $this->mapper         = new MediawikiUserGroupsMapper($this->dao, $this->forge_pems_dao);
