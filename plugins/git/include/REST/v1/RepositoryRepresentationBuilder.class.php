@@ -88,7 +88,7 @@ class RepositoryRepresentationBuilder
     {
         $repo_ids = array_map(
             function (GitRepository $repository) {
-                $this->remote_server[$repository->getRemoteServerId()] = -1;
+                $this->remote_server[$repository->getRemoteServerId()] = null;
                 return $repository->getId();
             },
             $repositories
@@ -152,13 +152,14 @@ class RepositoryRepresentationBuilder
     /**
      * @return GerritServerRepresentation | null
      */
-    private function getGerritServerRepresentation(GitRepository $repository) {
-        $remote_server_id = $repository->getRemoteServerId();
-        if (! $remote_server_id) {
+    private function getGerritServerRepresentation(GitRepository $repository)
+    {
+        if (! $repository->isMigratedToGerrit()) {
             return null;
         }
 
-        if ($this->remote_server[$remote_server_id]) {
+        $remote_server_id = $repository->getRemoteServerId();
+        if ($this->remote_server[$remote_server_id] !== null) {
             $server_representation = new GerritServerRepresentation();
             $server_representation->build($this->remote_server[$remote_server_id]);
             return $server_representation;
