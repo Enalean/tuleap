@@ -30,7 +30,7 @@ use Tuleap\Captcha\Plugin\Info as PluginInfo;
 use Tuleap\Captcha\Registration\Presenter;
 
 require_once __DIR__ . '/constants.php';
-require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
 {
