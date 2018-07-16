@@ -2087,10 +2087,9 @@ class GitPlugin extends Plugin
             $params['limit'],
             $params['offset'],
             $params['fields'],
-            $params['query']
+            $params['query'],
+            $params['total_git_repo']
         );
-
-        $params['total_git_repo'] = $this->getRepositoryFactory()->countAllRepositories($project);
     }
 
     public function rest_project_options_git($params) {

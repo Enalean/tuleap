@@ -200,15 +200,6 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function countProjectRepositories($project_id)
-    {
-        $sql = 'SELECT count(*) as count FROM plugin_git
-                WHERE project_id = ?
-                AND repository_deletion_date = "0000-00-00 00:00:00"';
-
-        return $this->getDB()->single($sql, [$project_id]);
-    }
-
     /**
      * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
@@ -728,7 +719,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
             $additional_where_statement->andWith('repository_creation_user_id = ?', $owner_id);
         }
 
-        $sql = "SELECT git.*, IF(push_date, push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
+        $sql = "SELECT SQL_CALC_FOUND_ROWS git.*, IF(push_date, push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
                 FROM plugin_git git
                   LEFT JOIN plugin_git_log log ON (log.repository_id = git.repository_id)
                 WHERE

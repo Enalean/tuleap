@@ -82,11 +82,6 @@ class GitRepositoryFactory
         return $repository;
     }
 
-    public function countAllRepositories(Project $project)
-    {
-        return $this->dao->countProjectRepositories($project->getID());
-    }
-
     /**
      * Return all git repositories of a project (gitshell, gitolite, personal forks)
      *
@@ -123,6 +118,7 @@ class GitRepositoryFactory
      * @param int $owner_id
      * @param int $limit
      * @param int $offset
+     * @param int $total_number_repositories
      * @return GitRepository[]
      */
     public function getPaginatedRepositoriesUserCanSee(
@@ -131,7 +127,8 @@ class GitRepositoryFactory
         $scope,
         $owner_id,
         $limit,
-        $offset
+        $offset,
+        &$total_number_repositories
     ) {
         $repositories    = [];
         $repository_list = $this->dao->getPaginatedOpenRepositories(
@@ -141,12 +138,14 @@ class GitRepositoryFactory
             $limit,
             $offset
         );
+        $total_number_repositories = $this->dao->foundRows();
         foreach ($repository_list as $row) {
             $repository = $this->getRepositoryFromRow($row);
             if ($repository->userCanRead($user)) {
                 $repositories[] = $repository;
             }
         }
+
 
         return $repositories;
     }

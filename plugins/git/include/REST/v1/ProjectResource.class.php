@@ -67,16 +67,17 @@ class ProjectResource
 
     /**
      * @param Project $project
-     * @param PFUser  $user
-     * @param int     $limit
-     * @param int     $offset
-     * @param string  $fields
-     * @param string  $query
+     * @param PFUser $user
+     * @param int $limit
+     * @param int $offset
+     * @param string $fields
+     * @param string $query
+     * @param int $total_number_repositories
      *
      * @return \Generator
      * @throws RestException
      */
-    public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query)
+    public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query, &$total_number_repositories)
     {
         try {
             $scope    = $this->getScopeFromQueryParameter($query);
@@ -93,7 +94,8 @@ class ProjectResource
             $scope,
             $owner_id,
             $limit,
-            $offset
+            $offset,
+            $total_number_repositories
         );
 
         return $this->repository_resource_builder->buildWithList($user, $git_repositories, $fields);
