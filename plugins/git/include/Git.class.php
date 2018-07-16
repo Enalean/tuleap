@@ -418,8 +418,13 @@ class Git extends PluginController {
         $this->action = $action;
     }
 
-    public function setGroupId($groupId) {
-        $this->groupId = $groupId;
+    /**
+     * @deprecated For old unit tests only, do NOT use it otherwise.
+     */
+    public function setProject(Project $project)
+    {
+        $this->groupId = $project->getID();
+        $this->project = $project;
     }
 
     public function setPermittedActions($permittedActions) {
@@ -545,7 +550,7 @@ class Git extends PluginController {
         //check permissions
         if ( empty($this->permittedActions) || !$this->isAPermittedAction($this->action) ) {
             $this->addError($this->getText('controller_access_denied'));
-            $this->redirect('/plugins/git/?group_id='.$this->groupId);
+            $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
             return;
         }
 
@@ -652,7 +657,7 @@ class Git extends PluginController {
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_access_denied') );
-                    $this->redirect('/plugins/git/?group_id='.$this->groupId);
+                    $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 }
                 break;
             #repo_management
@@ -878,7 +883,7 @@ class Git extends PluginController {
                 break;
             case 'migrate_to_gerrit':
                 if (! $this->gerrit_can_migrate_checker->canMigrate($repository->getProject())) {
-                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                     break;
                 }
 
@@ -887,7 +892,7 @@ class Git extends PluginController {
 
                 if (empty($repository) || empty($remote_server_id) || empty($gerrit_template_id)) {
                     $this->addError($this->getText('actions_params_error'));
-                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
                     try {
                         $project_exists = $this->gerritProjectAlreadyExists($remote_server_id, $repository);
@@ -907,7 +912,7 @@ class Git extends PluginController {
             case 'disconnect_gerrit':
                 if (empty($repository)) {
                     $this->addError($this->getText('actions_params_error'));
-                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 } else {
                     $this->addAction('disconnectFromGerrit', array($repository));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repository->getId(), $pane));
@@ -1261,7 +1266,7 @@ class Git extends PluginController {
             $validator->required();
             if (!$request->valid($validator)) {
                 $this->addError($this->getText('missing_parameter_'. $validator->key));
-                $this->redirect('/plugins/git/?group_id='.$this->groupId);
+                $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
                 return;
             }
         }
@@ -1272,7 +1277,7 @@ class Git extends PluginController {
             $repos           = $this->getRepositoriesFromIds($repos_ids);
             $namespace       = '';
             $scope           = GitRepository::REPO_SCOPE_PROJECT;
-            $redirect_url    = '/plugins/git/?group_id='. (int)$to_project_id;
+            $redirect_url    = '/plugins/git/' . urlencode($to_project->getUnixNameLowerCase()) . '/';
             $forkPermissions = $this->getForkPermissionsFromRequest($request);
 
             $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));

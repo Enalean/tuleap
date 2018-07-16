@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,6 @@ class GitTest extends TuleapTestCase  {
         $git->setUserManager($usermanager);
         $git->setAction('del');
         $git->setPermittedActions(array('del'));
-        $git->setGroupId(101);
 
         $repository = mock('GitRepository');
         $factory    = stub('GitRepositoryFactory')->getRepositoryById()->returns($repository);
@@ -104,8 +103,9 @@ class GitTest extends TuleapTestCase  {
 
 abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
-    protected $repo_id  = 999;
-    protected $group_id = 101;
+    protected $repo_id           = 999;
+    protected $group_id          = 101;
+    protected $project_unix_name = 'gitproject';
     protected $repository;
 
     public function setUp() {
@@ -126,6 +126,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
         $project = mock('Project');
         stub($project)->getId()->returns($this->group_id);
+        stub($project)->getUnixNameLowerCase()->returns($this->project_unix_name);
 
         stub($this->project_manager)->getProject()->returns($project);
         stub($this->plugin_manager)->isPluginAllowedForProject()->returns(true);
@@ -196,13 +197,13 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         );
         $git->setRequest($request);
         $git->setUserManager($this->user_manager);
-        $git->setGroupId($this->group_id);
         $git->setFactory($factory);
 
         return $git;
     }
 
-    protected function assertItIsForbiddenForNonProjectAdmins($factory) {
+    protected function assertItIsForbiddenForNonProjectAdmins($factory)
+    {
         stub($this->user_manager)->getCurrentUser()->returns($this->user);
         $request = aRequest()->with('repo_id', $this->repo_id)->build();
 
@@ -210,7 +211,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
 
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
-        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $this->group_id));
+        $git->expectOnce('redirect', array('/plugins/git/' . $this->project_unix_name . '/'));
 
         $git->request();
     }
@@ -226,7 +227,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
 
-        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $this->group_id));
+        $git->expectOnce('redirect', array('/plugins/git/' . $this->project_unix_name . '/'));
         $git->request();
     }
 }
@@ -323,7 +324,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
 
-        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $this->group_id));
+        $git->expectOnce('redirect', array('/plugins/git/' . $this->project_unix_name . '/'));
 
         $git->request();
     }
@@ -339,7 +340,7 @@ class Gittest_MigrateToGerritRouteTest extends Git_RouteBaseTestCase
         $request->set('remote_server_id', $server_id);
         $git = $this->getGit($request, $this->factory);
         $git->expectNever('addAction');
-        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $this->group_id));
+        $git->expectOnce('redirect', array('/plugins/git/' . $this->project_unix_name . '/'));
 
         $git->request();
     }

@@ -76,7 +76,7 @@ class GitViewHeader
 
     private function getToolbar(PFUser $user, BaseLayout $layout, Project $project)
     {
-        $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_home'), '/plugins/git/?group_id='.$project->getID()));
+        $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_home'), '/plugins/git/' . urlencode($project->getUnixNameLowerCase()) . '/'));
         $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'fork_repositories'), '/plugins/git/?group_id='.$project->getID() .'&action=fork_repositories'));
         $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_help'), 'javascript:help_window(\'/doc/'.$user->getShortLocale().'/user-guide/git.html\')'));
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,9 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $path = userRepoPath('Ben', 'toto');
         $forkPermissions = array();
 
-        $project = new MockProject();
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('getID')->andReturns($groupId);
+        $project->shouldReceive('getUnixNameLowerCase')->andReturns('projectname');
 
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array($groupId));
@@ -65,7 +67,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $factory->setReturnValue('getRepositoryById', $repo);
 
         $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
-        $git->setGroupId($groupId);
+        $git->setProject($project);
         $git->setProjectManager($projectManager);
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
         $git->expectAt(1,'addAction', array('fork', array($repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions)));
@@ -80,10 +82,8 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
         $git->throwOn('checkSynchronizerToken', new Exception());
-        $git->setGroupId(101);
         $this->expectException();
         $git->_doDispatchForkRepositories(null, null);
 
     }
 }
-?>
