@@ -22,6 +22,7 @@ namespace Tuleap\Timetracking\ArtifactView;
 
 use CSRFSynchronizerToken;
 use Tracker_Artifact;
+use Tuleap\Timetracking\Time\TimeChecker;
 
 class ArtifactViewPresenter
 {
@@ -75,6 +76,11 @@ class ArtifactViewPresenter
      */
     public $edit_url;
 
+    /**
+     * @var string
+     */
+    public $pattern;
+
     public function __construct(
         Tracker_Artifact $artifact,
         CSRFSynchronizerToken $csrf,
@@ -102,6 +108,7 @@ class ArtifactViewPresenter
         $this->times             = $times;
         $this->has_times         = count($times) > 0;
         $this->total_time        = $formatted_total_time;
+        $this->pattern           = TimeChecker::PATTERN;
 
         $request_time             = $_SERVER['REQUEST_TIME'];
         $this->default_date_value = date('Y-m-d', $request_time);

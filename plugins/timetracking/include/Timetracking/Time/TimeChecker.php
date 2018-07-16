@@ -21,10 +21,12 @@
 namespace Tuleap\Timetracking\Time;
 
 use PFUser;
-use Tracker_Artifact;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 class TimeChecker
 {
+    const PATTERN = '^[0-9]{2}[:][0-9]{2}$';
     /*
     * @var TimeRetriever
     */
@@ -42,6 +44,11 @@ class TimeChecker
 
     public function checkMandatoryTimeValue($time_value)
     {
-        return ($time_value != null);
+        $pattern = "/" . self::PATTERN . "/";
+        if (! $time_value) {
+            throw new TimeTrackingMissingTimeException(dgettext('tuleap-timetracking', "The time is missing"));
+        } else if (! preg_match($pattern, $time_value)) {
+            throw new TimeTrackingBadTimeFormatException();
+        }
     }
 }

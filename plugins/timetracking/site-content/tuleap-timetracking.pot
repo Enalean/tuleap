@@ -58,6 +58,9 @@ msgstr ""
 msgid "The request is not valid."
 msgstr ""
 
+msgid "The time format is not the one expected (hh:mm)."
+msgstr ""
+
 msgid "The time is missing"
 msgstr ""
 

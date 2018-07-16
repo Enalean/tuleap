@@ -168,12 +168,11 @@ class TimeController
 
     /**
      * @throws TimeTrackingMissingTimeException
+     * @throws TimeTrackingBadTimeFormatException
      */
     private function checkMandatoryTimeValue($time_value)
     {
-        if (! $this->time_checker->checkMandatoryTimeValue($time_value)) {
-            throw new TimeTrackingMissingTimeException(dgettext('tuleap-timetracking', "The time is missing"));
-        }
+        $this->time_checker->checkMandatoryTimeValue($time_value);
     }
 
     /**
