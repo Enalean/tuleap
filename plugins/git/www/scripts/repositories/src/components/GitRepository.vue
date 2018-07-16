@@ -19,7 +19,10 @@
 
 <template>
     <section class="tlp-pane git-repository-card"
-             v-bind:class="{ 'git-repository-card-two-columns': ! isFolderDisplayMode }"
+             v-bind:class="{
+                'git-repository-card-two-columns': ! isFolderDisplayMode,
+                'git-repository-in-folder': isFolderDisplayMode && is_in_folder
+             }"
     >
         <div class="tlp-pane-container">
             <a v-bind:href="repository.normalized_path" class="git-repository-card-link">
@@ -102,6 +105,9 @@ export default {
             }
 
             return this.repository.normalized_path;
+        },
+        is_in_folder() {
+            return this.repository.path_without_project.length;
         },
         ...mapGetters(["isFolderDisplayMode"])
     }

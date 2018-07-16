@@ -70,7 +70,22 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
-.git-repository-list-folder-label {
+.git-repository-list-base-folder {
+    margin: 0;
+}
+
+.git-repository-list-collapsible-folder {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
     color: $tlp-theme-color;
-    font-size: 20px;
+    cursor: pointer;
+
+    > .git-repository-list-folder-label {
+        margin: 0 0 0 $tlp-half-spacing;
+        font-size: 20px;
+    }
+}
+
+.git-repository-in-folder {
+    margin: 0 0 $tlp-spacing $tlp-spacing;
 }
