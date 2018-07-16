@@ -18,11 +18,12 @@
   -->
 
 <template>
-    <div role="dialog"
+    <form role="dialog"
          aria-labelledby="create-repository-modal-title"
          id="create-repository-modal"
          class="tlp-modal"
          ref="create_modal"
+         v-on:submit="createRepository"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -41,7 +42,8 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="repository_name">
                     <translate>Repository name</translate>
-                    <i class="fa fa-asterisk"></i></label>
+                    <i class="fa fa-asterisk"></i>
+                </label>
                 <input type="text"
                        class="tlp-input"
                        id="repository_name"
@@ -63,13 +65,13 @@
             <button type="reset"
                     class="tlp-button-primary tlp-button-outline tlp-modal-action"
                     data-dismiss="modal"
+                    v-on:click="reset()"
             >
                 <translate>Cancel</translate>
             </button>
             <button type="submit"
                     class="tlp-button-primary tlp-modal-action"
                     v-bind:disabled="is_loading"
-                    v-on:click="createRepository()"
                     data-test="create_repository"
             >
                 <i class="fa fa-plus tlp-button-icon"
@@ -78,7 +80,7 @@
                 <translate>Add repository</translate>
             </button>
         </div>
-    </div>
+    </form>
 </template>
 <script>
 import { postRepository } from "../api/rest-querier.js";
@@ -109,7 +111,12 @@ export default {
         }
     },
     methods: {
-        async createRepository() {
+        reset() {
+            this.repository_name = "";
+            this.error = "";
+        },
+        async createRepository(event) {
+            event.preventDefault();
             this.is_loading = true;
             this.error = "";
             try {
