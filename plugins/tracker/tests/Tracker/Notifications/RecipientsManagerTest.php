@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Notifications;
 
 use Tracker;
 use Tracker_Artifact_Changeset;
@@ -29,7 +29,7 @@ use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 
-require_once __DIR__.'/../../../bootstrap.php';
+require_once __DIR__.'/../../bootstrap.php';
 
 class RecipientsManagerTest extends \TuleapTestCase
 {

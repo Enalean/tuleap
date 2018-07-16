@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
@@ -29,16 +29,11 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker;
 use Tracker_Artifact;
+use Tuleap\Tracker\Notifications\RecipientsManager;
 use UserHelper;
-use BaseLanguageFactory;
-use TestHelper;
 use Tracker_Artifact_MailGateway_RecipientFactory;
-use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderDao;
-use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use ConfigNotificationAssignedTo;
-use Logger;
-use Codendi_HTMLPurifier;
 
 class NotifierCustomSenderTest extends TestCase
 {
@@ -52,7 +47,7 @@ class NotifierCustomSenderTest extends TestCase
         parent::setUp();
 
         $logger                          = \Mockery::mock(\Logger::class);
-        $this->recipients_manager        = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager::class);
+        $this->recipients_manager        = \Mockery::mock(RecipientsManager::class);
 
         $this->mail_gateway_config       = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);
         $this->mail_gateway_config->shouldReceive('isTokenBasedEmailgatewayEnabled')->andReturn(false);
@@ -63,7 +58,7 @@ class NotifierCustomSenderTest extends TestCase
 
         $this->recipient_factory         = \Mockery::mock(Tracker_Artifact_MailGateway_RecipientFactory::class);
         $user_helper                     = \Mockery::spy(UserHelper::class);
-        $this->mail_sender               = \Mockery::mock(\Tuleap\Tracker\Artifact\Changeset\Notification\MailSender::class);
+        $this->mail_sender               = \Mockery::mock(MailSender::class);
         $this->custom_email_sender       = \Mockery::mock(\Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender::class);
 
         $tracker = \Mockery::spy(Tracker::class);
@@ -77,7 +72,7 @@ class NotifierCustomSenderTest extends TestCase
         $this->changeset->shouldReceive('getArtifact')->andReturn($artifact);
         $this->changeset->shouldReceive('getTracker')->andReturn($tracker);
 
-        $this->changeset_notifications = new Notifier(
+        $this->changeset_notifications = new ActionsRunner(
             $logger,
             $this->mail_gateway_config,
             $config_notification_assigned_to,
@@ -85,7 +80,7 @@ class NotifierCustomSenderTest extends TestCase
             $user_helper,
             $this->recipients_manager,
             $this->mail_sender,
-            \Mockery::spy(\Tuleap\Tracker\Artifact\Changeset\Notification\NotifierDao::class),
+            \Mockery::spy(ActionsRunnerDao::class),
             $this->custom_email_sender
         );
 

@@ -854,8 +854,8 @@ CREATE TABLE plugin_tracker_projects_unused_artifactlink_types (
     INDEX idx_artifactlink_types_unused_project_id(project_id)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS tracker_email_notification_log;
-CREATE TABLE IF NOT EXISTS tracker_email_notification_log (
+DROP TABLE IF EXISTS tracker_post_creation_event_log;
+CREATE TABLE IF NOT EXISTS tracker_post_creation_event_log (
     changeset_id INT(11) NOT NULL PRIMARY KEY,
     create_date int(11) NOT NULL,
     start_date int(11) NULL,

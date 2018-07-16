@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,11 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Logger;
 use WrapperLogger;
 use ForgeConfig;
-use System_Command;
 
 class AsynchronousSupervisor
 {
@@ -33,7 +32,7 @@ class AsynchronousSupervisor
     const ONE_WEEK_IN_SECONDS = 604800;
 
     /**
-     * @var NotifierDao
+     * @var ActionsRunnerDao
      */
     private $dao;
     /**
@@ -41,7 +40,7 @@ class AsynchronousSupervisor
      */
     private $logger;
 
-    public function __construct(Logger $logger, NotifierDao $dao)
+    public function __construct(Logger $logger, ActionsRunnerDao $dao)
     {
         $this->logger = new WrapperLogger($logger, __CLASS__);
         $this->dao    = $dao;
@@ -57,10 +56,10 @@ class AsynchronousSupervisor
 
     private function warnWhenToMuchDelay()
     {
-        $last_end_date = $this->dao->getLastEndDate();
-        $nb_pending_notifications = $this->dao->searchPendingNotificationsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
-        if ($nb_pending_notifications > 0) {
-            $this->logger->warn("There are ".$nb_pending_notifications." notifications pending, you should check '/usr/share/tuleap/src/utils/worker.php' and it's log file to ensure it's still running.");
+        $last_end_date     = $this->dao->getLastEndDate();
+        $nb_pending_events = $this->dao->searchPostCreationEventsAfter($last_end_date + self::ACCEPTABLE_PROCESS_DELAY);
+        if ($nb_pending_events > 0) {
+            $this->logger->warn('There are ' . $nb_pending_events . " post creation events waiting to be processed, you should check '/usr/share/tuleap/src/utils/worker.php' and it's log file to ensure it's still running.");
         }
     }
 

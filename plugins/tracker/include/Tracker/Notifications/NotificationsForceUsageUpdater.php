@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Tracker;
-use Tuleap\Tracker\Artifact\Changeset\Notification\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
 

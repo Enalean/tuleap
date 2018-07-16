@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Changeset\Notification\Notifier;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
 require_once('utils.php');
 
@@ -447,7 +447,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
      */
     public function updateComment($body, $user, $comment_format, $timestamp) {
         if ($this->updateCommentWithoutNotification($body, $user, $comment_format, $timestamp)) {
-            $this->notify();
+            $this->executePostCreationActions();
         }
     }
 
@@ -749,13 +749,9 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $this->artifact->getTracker();
     }
 
-    /**
-     * notify people
-     *
-     * @return void
-     */
-    public function notify() {
-        Notifier::build(BackendLogger::getDefaultLogger())->notify($this);
+    public function executePostCreationActions()
+    {
+        ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this);
     }
 
     /**

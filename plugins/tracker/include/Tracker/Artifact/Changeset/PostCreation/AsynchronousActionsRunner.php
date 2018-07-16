@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,12 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\WorkerEvent;
 
-class AsynchronousNotifier
+class AsynchronousActionsRunner
 {
     const TOPIC = 'tuleap.tracker.artifact';
 
@@ -32,11 +32,11 @@ class AsynchronousNotifier
     {
         if ($event->getEventName() === self::TOPIC) {
             $message = $event->getPayload();
-            $notifier = Notifier::build($event->getLogger());
+            $notifier = ActionsRunner::build($event->getLogger());
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($message['artifact_id']);
             $changeset = $artifact->getChangeset($message['changeset_id']);
 
-            $notifier->processAsyncNotify($changeset);
+            $notifier->processAsyncPostCreationActions($changeset);
         }
     }
 }

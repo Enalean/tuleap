@@ -166,7 +166,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         }
 
         if ($send_notification) {
-            $artifact->getChangeset($changeset_id)->notify();
+            $artifact->getChangeset($changeset_id)->executePostCreationActions();
             $this->emitWebhooks($artifact, $submitter, 'update');
         }
 

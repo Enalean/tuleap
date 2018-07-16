@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\Artifact\Changeset\Notification;
+namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 use BaseLanguage;
 use Codendi_HTMLPurifier;
@@ -46,6 +46,7 @@ use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsRetriever;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
@@ -53,7 +54,7 @@ use UserHelper;
 use UserManager;
 use WrapperLogger;
 
-class Notifier
+class ActionsRunner
 {
     const DEFAULT_MAIL_SENDER = 'forge__artifacts';
     const DEFAULT_SENDER_EXPOSED_FIELDS = [
@@ -91,11 +92,11 @@ class Notifier
      */
     private $mail_sender;
     /**
-     * @var NotifierDao
+     * @var ActionsRunnerDao
      */
     private $notifier_dao;
     /**
-     * @var \ConfigNotificationEmailCustomSender
+     * @var ConfigNotificationEmailCustomSender
      */
     private $config_notification_custom_sender;
 
@@ -107,7 +108,7 @@ class Notifier
         UserHelper $user_helper,
         RecipientsManager $recipients_manager,
         MailSender $mail_sender,
-        NotifierDao $notifier_dao,
+        ActionsRunnerDao $notifier_dao,
         ConfigNotificationEmailCustomSender $config_notification_custom_sender
     ) {
         $this->logger                                   = new WrapperLogger($logger, __CLASS__);
@@ -123,7 +124,7 @@ class Notifier
 
     public static function build(Logger $logger)
     {
-        return new Notifier(
+        return new ActionsRunner(
             $logger,
             new MailGatewayConfig(
                 new MailGatewayConfigDao()
@@ -145,7 +146,7 @@ class Notifier
                 new UserNotificationOnlyStatusChangeDAO()
             ),
             new MailSender(),
-            new NotifierDao(),
+            new ActionsRunnerDao(),
             new ConfigNotificationEmailCustomSender(new ConfigNotificationEmailCustomSenderDao())
         );
     }
@@ -155,12 +156,12 @@ class Notifier
      *
      * @param Tracker_Artifact_Changeset $changeset
      */
-    public function notify(Tracker_Artifact_Changeset $changeset)
+    public function executePostCreationActions(Tracker_Artifact_Changeset $changeset)
     {
         if ($this->useAsyncEmails($changeset)) {
-            $this->queueNotification($changeset);
+            $this->queuePostCreationEvent($changeset);
         } else {
-            $this->processNotify($changeset);
+            $this->processPostCreationActions($changeset);
         }
     }
 
@@ -169,10 +170,10 @@ class Notifier
      *
      * @param Tracker_Artifact_Changeset $changeset
      */
-    public function processAsyncNotify(Tracker_Artifact_Changeset $changeset)
+    public function processAsyncPostCreationActions(Tracker_Artifact_Changeset $changeset)
     {
         $this->notifier_dao->addStartDate($changeset->getId());
-        $this->processNotify($changeset);
+        $this->processPostCreationActions($changeset);
         $this->notifier_dao->addEndDate($changeset->getId());
     }
 
@@ -198,13 +199,13 @@ class Notifier
         return false;
     }
 
-    private function queueNotification(Tracker_Artifact_Changeset $changeset)
+    private function queuePostCreationEvent(Tracker_Artifact_Changeset $changeset)
     {
         try {
-            $this->notifier_dao->addNewNotification($changeset->getId());
+            $this->notifier_dao->addNewPostCreationEvent($changeset->getId());
             $queue = QueueFactory::getPersistentQueue($this->logger, Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
             $queue->pushSinglePersistentMessage(
-                AsynchronousNotifier::TOPIC,
+                AsynchronousActionsRunner::TOPIC,
                 [
                     'artifact_id'  => (int) $changeset->getArtifact()->getId(),
                     'changeset_id' => (int) $changeset->getId(),
@@ -212,12 +213,12 @@ class Notifier
             );
         } catch (Exception $exception) {
             $this->logger->error("Unable to queue notification for {$changeset->getId()}, fallback to online notif");
-            $this->processNotify($changeset);
+            $this->processPostCreationActions($changeset);
             $this->notifier_dao->addEndDate($changeset->getId());
         }
     }
 
-    private function processNotify(Tracker_Artifact_Changeset $changeset)
+    private function processPostCreationActions(Tracker_Artifact_Changeset $changeset)
     {
         $tracker = $changeset->getTracker();
         if (! $tracker->isNotificationStopped()) {
