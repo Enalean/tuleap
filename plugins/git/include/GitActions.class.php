@@ -926,7 +926,8 @@ class GitActions extends PluginActions
         $repository = $this->factory->getRepositoryById($repoId);
         if (! $repository) {
             $this->addError('actions_repo_not_found');
-            $controller->redirect('/plugins/git/?group_id='.$projectId);
+            $project = $repository->getProject();
+            $controller->redirect('/plugins/git/' . urlencode($project->getUnixNameLowerCase()) . '/');
             return false;
         }
         if (empty($repoAccess)) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,7 @@ abstract class SettingsController
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('plugin_git', 'controller_access_denied')
             );
-            $GLOBALS['Response']->redirect('/plugins/git/?group_id=' . $request->getProject()->getID());
+            $GLOBALS['Response']->redirect('/plugins/git/' . urlencode($request->getProject()->getUnixNameLowerCase()));
         }
     }
 }
