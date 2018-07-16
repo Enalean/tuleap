@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_Condition_CommentNotEmpty_Dao extends DataAccessObject
+class Workflow_Transition_Condition_CommentNotEmpty_Dao extends DataAccessObject // phpcs:ignore
 {
 
     public function create($transition_id, $is_comment_required)
@@ -41,16 +41,6 @@ class Workflow_Transition_Condition_CommentNotEmpty_Dao extends DataAccessObject
                 WHERE transition_id = $transition_id";
 
         return $this->retrieve($sql);
-    }
-
-    public function deleteByTransitionId($transition_id)
-    {
-        $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "DELETE
-                FROM tracker_workflow_transition_condition_comment_notempty
-                WHERE transition_id = $transition_id";
-
-        return $this->update($sql);
     }
 
     public function duplicate($from_transition_id, $to_transition_id)
