@@ -18,14 +18,3 @@
 /tuleap/plugins/tracker/tests/workflow/TransitionFactoryTest.php
 /tuleap/plugins/tracker/tests/workflow/Trigger/RulesBuilderFactoryTest.php
 /tuleap/plugins/tracker/tests/workflow/Trigger/RulesManagerTest.php
-
-/tuleap/plugins/git/tests/GitRepositoryTest.php
-/tuleap/plugins/git/tests/GitActionsTest.php
-/tuleap/plugins/git/tests/Git_PostReceiveMailManagerTest.php
-/tuleap/plugins/git/tests/Git/Permissions/FineGrainedRegexpValidatorTest.php
-/tuleap/plugins/git/tests/Git/SystemEventManagerTest.php
-/tuleap/plugins/git/tests/Git/RemoteServer/MigrationHandlerTest.php
-/tuleap/plugins/git/tests/events/SystemEvent_GIT_GERRIT_MIGRATIONTest.php
-/tuleap/plugins/git/tests/events/SystemEvent_GIT_EDIT_SSH_KEYSTest.php
-/tuleap/plugins/git/tests/GitRepositoryManagerTest.php
-/tuleap/plugins/git/tests/GitViewsRepositoriesTraversalStrategy_TreeTest.php

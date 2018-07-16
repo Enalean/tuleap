@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,11 @@
  */
 
 require_once 'bootstrap.php';
-require_once (dirname(__FILE__).'/../include/GitActions.class.php');
-Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
-require_once (dirname(__FILE__).'/../include/Git.class.php');
-Mock::generate('Git');
-require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
-Mock::generate('GitRepository');
-Mock::generate('GitDao');
+require_once (__DIR__.'/../include/GitActions.class.php');
+require_once (__DIR__.'/../include/Git.class.php');
+require_once (__DIR__.'/../include/GitRepository.class.php');
 require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 require_once('common/include/Response.class.php');
-Mock::generate('Response');
-Mock::generate('Project');
-Mock::generate('GitRepositoryFactory');
-Mock::generate('PFUser');
-Mock::generate('SystemEventManager');
-Mock::generate('Layout');
 
 require_once 'builders/aGitRepository.php';
 
@@ -43,127 +32,126 @@ class GitActionsTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
-        $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_forked', array('plugin_git', 'actions_no_repository_forked', '*'));
-        $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
+        $this->setUpGlobalsMockery();
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'actions_no_repository_forked', '*')->andReturns('actions_no_repository_forked');
+        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_git', 'successfully_forked', '*')->andReturns('successfully_forked');
 
-        $git_plugin        = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $git_plugin        = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
         $url_manager       = new Git_GitRepositoryUrlManager($git_plugin);
 
-        $this->gitAction = partial_mock(
-            'GitActions',
-            array('getText', 'addData', 'getGitRepository', 'save'),
-            array(
-                mock('Git'),
-                mock('Git_SystemEventManager'),
-                mock('GitRepositoryFactory'),
-                mock('GitRepositoryManager'),
-                mock('Git_RemoteServer_GerritServerFactory'),
-                stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
-                mock('Git_Driver_Gerrit_UserAccountManager'),
-                mock('Git_Driver_Gerrit_ProjectCreator'),
-                mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-                mock('ProjectManager'),
-                mock('GitPermissionsManager'),
-                $url_manager,
-                mock('Logger'),
-                mock('Git_Mirror_MirrorDataMapper'),
-                mock('ProjectHistoryDao'),
-                mock('GitRepositoryMirrorUpdater'),
-                mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
-                mock('Tuleap\Git\GerritCanMigrateChecker'),
-                mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
-                mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-                mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-                mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-                mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
-                mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
-                mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
-                mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
-                mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
-                mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-                mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-                mock('UGroupManager')
-            )
-        );
+        $this->gitAction = \Mockery::mock(\GitActions::class, array(
+            mock('Git'),
+            mock('Git_SystemEventManager'),
+            mock('GitRepositoryFactory'),
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory'),
+            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
+            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mock('Git_Driver_Gerrit_ProjectCreator'),
+            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
+            mock('ProjectManager'),
+            mock('GitPermissionsManager'),
+            $url_manager,
+            mock('Logger'),
+            mock('Git_Mirror_MirrorDataMapper'),
+            Mockery::spy(ProjectHistoryDao::class),
+            mock('GitRepositoryMirrorUpdater'),
+            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
+            mock('Tuleap\Git\GerritCanMigrateChecker'),
+            mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
+            mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
+            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
+            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
+            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
+            mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
+            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
+            mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
+            mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
+            mock('UGroupManager')
+        ))
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
     }
 
     function testNotificationUpdatePrefixFail() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addInfo');
-        $gitRepository->expectNever('setMailPrefix');
-        $gitRepository->expectNever('changeMailPrefix');
-        $this->gitAction->expectNever('addData');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addInfo')->never();
+        $gitRepository->shouldReceive('setMailPrefix')->never();
+        $gitRepository->shouldReceive('changeMailPrefix')->never();
+        $this->gitAction->shouldReceive('addData')->never();
 
         $this->assertFalse($this->gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationUpdatePrefixPass() {
-        $this->gitAction->setReturnValue('getText', 'mail_prefix_updated', array('mail_prefix_updated'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_prefix_updated')->andReturns('mail_prefix_updated');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectOnce('addInfo', array('mail_prefix_updated'));
-        $gitRepository->expectOnce('setMailPrefix');
-        $gitRepository->expectOnce('changeMailPrefix');
-        $this->gitAction->expectCallCount('addData', 2);
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addInfo')->with('mail_prefix_updated')->once();
+        $gitRepository->shouldReceive('setMailPrefix')->once();
+        $gitRepository->shouldReceive('changeMailPrefix')->once();
+        $this->gitAction->shouldReceive('addData')->times(2);
 
         $this->assertTrue($this->gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationAddMailFailNoRepoId() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addInfo')->never();
 
         $mails = array('john.doe@acme.com');
         $this->assertFalse($this->gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailFailNoMails() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationAddMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationAddMailFailAlreadyNotified() {
-        $this->gitAction->setReturnValue('getText', 'mail_existing john.doe@acme.com', array('mail_existing', array('john.doe@acme.com')));
-        $this->gitAction->setReturnValue('getText', 'mail_existing jane.doe@acme.com', array('mail_existing', array('jane.doe@acme.com')));
-        $this->gitAction->setReturnValue('getText', 'mail_existing john.smith@acme.com', array('mail_existing', array('john.smith@acme.com')));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('john.doe@acme.com'))->andReturns('mail_existing john.doe@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('jane.doe@acme.com'))->andReturns('mail_existing jane.doe@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('john.smith@acme.com'))->andReturns('mail_existing john.smith@acme.com');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('isAlreadyNotified', true);
-        $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', false, array('jane.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', false, array('john.smith@acme.com'));
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('isAlreadyNotified')->andReturns(true);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.doe@acme.com')->andReturns(false);
+        $gitRepository->shouldReceive('notificationAddMail')->with('jane.doe@acme.com')->andReturns(false);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.smith@acme.com')->andReturns(false);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectAt(0, 'addInfo', array('mail_existing john.doe@acme.com'));
-        $git->expectAt(1, 'addInfo', array('mail_existing jane.doe@acme.com'));
-        $git->expectAt(2, 'addInfo', array('mail_existing john.smith@acme.com'));
-        $git->expectCallCount('addInfo', 3);
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addInfo')->times(3);
+        $git->shouldReceive('addInfo')->with('mail_existing john.doe@acme.com')->ordered();
+        $git->shouldReceive('addInfo')->with('mail_existing jane.doe@acme.com')->ordered();
+        $git->shouldReceive('addInfo')->with('mail_existing john.smith@acme.com')->ordered();
 
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
@@ -172,21 +160,21 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailPartialPass() {
-        $this->gitAction->setReturnValue('getText', 'mail_not_added john.doe@acme.com', array('mail_not_added', array('john.doe@acme.com')));
-        $this->gitAction->setReturnValue('getText', 'mail_not_added john.smith@acme.com', array('mail_not_added', array('john.smith@acme.com')));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_not_added', array('john.doe@acme.com'))->andReturns('mail_not_added john.doe@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_not_added', array('john.smith@acme.com'))->andReturns('mail_not_added john.smith@acme.com');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('isAlreadyNotified', false);
-        $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', true, array('jane.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', false, array('john.smith@acme.com'));
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('isAlreadyNotified')->andReturns(false);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.doe@acme.com')->andReturns(false);
+        $gitRepository->shouldReceive('notificationAddMail')->with('jane.doe@acme.com')->andReturns(true);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.smith@acme.com')->andReturns(false);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectAt(0, 'addError', array('mail_not_added john.doe@acme.com'));
-        $git->expectAt(1, 'addError', array('mail_not_added john.smith@acme.com'));
-        $git->expectCallCount('addError', 2);
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->times(2);
+        $git->shouldReceive('addError')->with('mail_not_added john.doe@acme.com')->ordered();
+        $git->shouldReceive('addError')->with('mail_not_added john.smith@acme.com')->ordered();
+        $git->shouldReceive('addInfo')->never();
 
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
@@ -195,18 +183,18 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationAddMailPass() {
-        $this->gitAction->setReturnValue('getText', 'mail_added', array('mail_added'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_added')->andReturns('mail_added');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('isAlreadyNotified', false);
-        $gitRepository->setReturnValue('notificationAddMail', true, array('john.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', true, array('jane.doe@acme.com'));
-        $gitRepository->setReturnValue('notificationAddMail', true, array('john.smith@acme.com'));
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('isAlreadyNotified')->andReturns(false);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.doe@acme.com')->andReturns(true);
+        $gitRepository->shouldReceive('notificationAddMail')->with('jane.doe@acme.com')->andReturns(true);
+        $gitRepository->shouldReceive('notificationAddMail')->with('john.smith@acme.com')->andReturns(true);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectOnce('addInfo', array('mail_added'));
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addInfo')->with('mail_added')->once();
 
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
@@ -215,184 +203,182 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testNotificationRemoveMailFailNoRepoId() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoMail() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailNotRemoved() {
-        $this->gitAction->setReturnValue('getText', 'mail_not_removed john.doe@acme.com', array('mail_not_removed', array('john.doe@acme.com')));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_not_removed', array('john.doe@acme.com'))->andReturns('mail_not_removed john.doe@acme.com');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('notificationRemoveMail', false);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('notificationRemoveMail')->andReturns(false);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('mail_not_removed john.doe@acme.com'));
-        $git->expectNever('addInfo');
+        $git->shouldReceive('addError')->with('mail_not_removed john.doe@acme.com')->once();
+        $git->shouldReceive('addInfo')->never();
 
         $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailPass() {
-        $this->gitAction->setReturnValue('getText', 'mail_removed john.doe@acme.com', array('mail_removed', array('john.doe@acme.com')));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('mail_removed', array('john.doe@acme.com'))->andReturns('mail_removed john.doe@acme.com');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('notificationRemoveMail', True);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('notificationRemoveMail')->andReturns(True);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectOnce('addInfo', array('mail_removed john.doe@acme.com'));
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addInfo')->with('mail_removed john.doe@acme.com')->once();
 
         $this->assertTrue($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testConfirmPrivateFailNoRepoId() {
-        $this->gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $this->gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $this->gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $this->gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addWarn');
-        $gitRepository->expectNever('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $this->gitAction->expectNever('save');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->never();
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $this->gitAction->shouldReceive('save')->never();
 
         $this->assertFalse($this->gitAction->confirmPrivate(1, null, 'private', 'desc'));
     }
 
     function testConfirmPrivateFailNoAccess() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addWarn');
-        $gitRepository->expectNever('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $gitAction->expectNever('save');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->never();
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $gitAction->shouldReceive('save')->never();
 
         $this->assertFalse($gitAction->confirmPrivate(1, 1, null, 'desc'));
     }
 
     function testConfirmPrivateFailNoDesc() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $gitAction->shouldReceive('getText')->with('actions_params_error')->andReturns('actions_params_error');
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
-        $git->expectNever('addWarn');
-        $gitRepository->expectNever('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $gitAction->expectNever('save');
+        $git->shouldReceive('addError')->with('actions_params_error')->once();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->never();
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $gitAction->shouldReceive('save')->never();
 
         $this->assertFalse($gitAction->confirmPrivate(1, 1, 'private', null));
     }
 
     function testConfirmPrivateNotSettingToPrivate() {
-        $gitAction = new GitActionsTestVersion();
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('getAccess', 'public');
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('getAccess')->andReturns('public');
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectNever('addWarn');
-        $gitRepository->expectNever('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $gitAction->expectOnce('save');
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->never();
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $gitAction->shouldReceive('save')->once();
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'public', 'desc'));
     }
 
     function testConfirmPrivateAlreadyPrivate() {
-        $gitAction = new GitActionsTestVersion();
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('getAccess', 'private');
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('getAccess')->andReturns('private');
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectNever('addWarn');
-        $gitRepository->expectNever('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $gitAction->expectOnce('save');
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->never();
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $gitAction->shouldReceive('save')->once();
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
 
     function testConfirmPrivateNoMailsToDelete() {
-        $gitAction = new GitActionsTestVersion();
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('getAccess', 'public');
-        $gitRepository->setReturnValue('getNonMemberMails', array());
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('getAccess')->andReturns('public');
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectNever('addWarn');
-        $gitRepository->expectOnce('getNonMemberMails');
-        $gitRepository->expectNever('setDescription');
-        $gitRepository->expectNever('save');
-        $gitAction->expectOnce('save');
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addWarn')->never();
+        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(array());
+        $gitRepository->shouldReceive('setDescription')->never();
+        $gitRepository->shouldReceive('save')->never();
+        $gitAction->shouldReceive('save')->once();
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
 
     function testConfirmPrivate() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'set_private_warn');
-        $git = new MockGit($this);
+        $gitAction = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $gitAction->shouldReceive('getText')->andReturns('set_private_warn');
+        $git = \Mockery::spy(\Git::class);
         $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitRepository->setReturnValue('getAccess', 'public');
-        $gitRepository->setReturnValue('getNonMemberMails', array('john.doe@acme.com'));
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $gitRepository = \Mockery::spy(\GitRepository::class);
+        $gitRepository->shouldReceive('getAccess')->andReturns('public');
+        $gitAction->shouldReceive('getGitRepository')->andReturns($gitRepository);
 
-        $git->expectNever('addError');
-        $git->expectOnce('addWarn', array('set_private_warn'));
-        $gitRepository->expectOnce('getNonMemberMails');
-        $gitRepository->expectOnce('setDescription');
-        $gitRepository->expectOnce('save');
-        $gitAction->expectNever('save');
-        $gitAction->expectCallCount('addData', 3);
+        $git->shouldReceive('addError')->never();
+        $git->shouldReceive('addWarn')->with('set_private_warn')->once();
+        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(array('john.doe@acme.com'));
+        $gitRepository->shouldReceive('setDescription')->once();
+        $gitRepository->shouldReceive('save')->once();
+        $gitAction->shouldReceive('save')->never();
+        $gitAction->shouldReceive('addData')->times(3);
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
@@ -430,18 +416,18 @@ class GitActionsTest extends TuleapTestCase {
             )
         );
 
-        $dao    = new MockGitDao();
-        $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, true, null));
-        $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, true, $userId));
-        $dao->setReturnValue('getProjectRepositoriesOwners', $repo_owners, array($projectId));
+        $dao    = \Mockery::spy(\GitDao::class);
+        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, null)->andReturns($project_repos);
+        $dao->shouldReceive('getProjectRepositoryList')->with($projectId, false, true, $userId)->andReturns($sandra_repos);
+        $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);
 
-        $controller = new MockGit();
-        $controller->expectAt(0, 'addData', array(array('repository_list' => $project_repos, 'repositories_owners' => $repo_owners)));
-        $controller->expectAt(1, 'addData', array(array('repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners)));
+        $controller = \Mockery::spy(\Git::class);
+        $controller->shouldReceive('addData')->with(array('repository_list' => $project_repos, 'repositories_owners' => $repo_owners))->ordered();
+        $controller->shouldReceive('addData')->with(array('repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners))->ordered();
 
-        $action = TestHelper::getPartialMock('GitActions', array('getDao'));
+        $action = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $action->setController($controller);
-        $action->setReturnValue('getDao', $dao);
+        $action->shouldReceive('getDao')->andReturns($dao);
 
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
@@ -458,61 +444,62 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->project_id    = 101;
         $this->repository_id = 69;
 
-        $this->repository = mock('GitRepository');
+        $this->repository = \Mockery::spy(\GitRepository::class);
         stub($this->repository)->getId()->returns($this->repository_id);
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
-        $this->git_system_event_manager = mock('Git_SystemEventManager');
-        $controler                  = stub('Git')->getPlugin()->returns(mock('gitPlugin'));
-        $git_repository_factory     = mock('GitRepositoryFactory');
+        $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $controler                  = mockery_stub(\Git::class)->getPlugin()->returns(\Mockery::spy(\gitPlugin::class));
+        $git_repository_factory     = \Mockery::spy(\GitRepositoryFactory::class);
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
-        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->git_actions = new GitActions(
             $controler,
             $this->git_system_event_manager,
             $git_repository_factory,
-            mock('GitRepositoryManager'),
-            mock('Git_RemoteServer_GerritServerFactory'),
-            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
-            mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator'),
-            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager'),
-            mock('GitPermissionsManager'),
+            \Mockery::spy(\GitRepositoryManager::class),
+            \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class),
+            mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns(\Mockery::spy(\Git_Driver_Gerrit::class)),
+            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+            \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class),
+            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
+            \Mockery::spy(\ProjectManager::class),
+            \Mockery::spy(\GitPermissionsManager::class),
             $url_manager,
-            mock('Logger'),
-            mock('Git_Mirror_MirrorDataMapper'),
-            mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater'),
-            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
-            mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
-            mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
-            mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-            mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('UGroupManager')
+            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+            \Mockery::spy(\ProjectHistoryDao::class),
+            \Mockery::spy(\GitRepositoryMirrorUpdater::class),
+            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
+            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
+            \Mockery::spy(\UGroupManager::class)
         );
     }
 
     public function itMarksRepositoryAsDeleted() {
         stub($this->repository)->canBeDeleted()->returns(true);
 
-        $this->repository->expectOnce('markAsDeleted');
+        $this->repository->shouldReceive('markAsDeleted')->once();
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
@@ -520,7 +507,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     public function itTriggersASystemEventForPhysicalRemove() {
         stub($this->repository)->canBeDeleted()->returns(true);
 
-        stub($this->repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
+        stub($this->repository)->getBackend()->returns(\Mockery::spy(\Git_Backend_Gitolite::class));
 
         expect($this->git_system_event_manager)->queueRepositoryDeletion($this->repository)->once();
 
@@ -530,7 +517,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     public function itDoesntDeleteWhenRepositoryCannotBeDeleted() {
         stub($this->repository)->canBeDeleted()->returns(false);
 
-        $this->repository->expectNever('markAsDeleted');
+        $this->repository->shouldReceive('markAsDeleted')->never();
         expect($this->git_system_event_manager)->queueRepositoryDeletion()->never();
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
@@ -541,56 +528,57 @@ class GitActions_ForkTests extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->manager = mock('GitRepositoryManager');
+        $this->setUpGlobalsMockery();
+        $this->manager = \Mockery::spy(\GitRepositoryManager::class);
 
-        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
         $this->actions = new GitActions(
-            mock('Git'),
-            mock('Git_SystemEventManager'),
-            mock('GitRepositoryFactory'),
+            \Mockery::spy(\Git::class),
+            \Mockery::spy(\Git_SystemEventManager::class),
+            \Mockery::spy(\GitRepositoryFactory::class),
             $this->manager,
-            mock('Git_RemoteServer_GerritServerFactory'),
-            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
-            mock('Git_Driver_Gerrit_UserAccountManager'),
-            mock('Git_Driver_Gerrit_ProjectCreator'),
-            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager'),
-            mock('GitPermissionsManager'),
+            \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class),
+            mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns(\Mockery::spy(\Git_Driver_Gerrit::class)),
+            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
+            \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class),
+            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
+            \Mockery::spy(\ProjectManager::class),
+            \Mockery::spy(\GitPermissionsManager::class),
             $url_manager,
-            mock('Logger'),
-            mock('Git_Mirror_MirrorDataMapper'),
-            mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater'),
-            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
-            mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
-            mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
-            mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-            mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('UGroupManager')
+            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+            \Mockery::spy(\ProjectHistoryDao::class),
+            \Mockery::spy(\GitRepositoryMirrorUpdater::class),
+            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
+            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
+            \Mockery::spy(\UGroupManager::class)
         );
     }
 
     public function itDelegatesForkToGitManager() {
         $repositories = array(aGitRepository()->build(), aGitRepository()->build());
-        $to_project   = mock('Project');
+        $to_project   = \Mockery::spy(\Project::class);
         $namespace    = 'namespace';
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
-        $user         = mock('PFUser');
-        $response     = mock('Layout');
+        $user         = \Mockery::spy(\PFUser::class);
+        $response     = \Mockery::spy(\Layout::class);
         $redirect_url = '/stuff';
         $forkPermissions = array();
 
-        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope, $forkPermissions));
+        $this->manager->shouldReceive('forkRepositories')->with($repositories, $to_project, $user, $namespace, $scope, $forkPermissions)->once();
 
         $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url, $forkPermissions);
     }
@@ -600,8 +588,9 @@ class GitActions_ForkTests extends TuleapTestCase {
 class GitActions_ProjectPrivacyTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
-        $this->dao = mock('GitDao');
-        $this->factory = mock('GitRepositoryFactory');
+        $this->setUpGlobalsMockery();
+        $this->dao = \Mockery::spy(\GitDao::class);
+        $this->factory = \Mockery::spy(\GitRepositoryFactory::class);
     }
 
     public function itDoesNothingWhenThereAreNoRepositories() {
@@ -615,7 +604,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         $project_id = 99;
         $is_private = false;
         $repo_id = 333;
-        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        $repo = mockery_stub(\GitRepository::class)->setAccess()->never()->returns("whatever");
         stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
         stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
@@ -625,7 +614,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         $project_id = 99;
         $is_private = true;
         $repo_id = 333;
-        $repo = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo = mockery_stub(\GitRepository::class)->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
         stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
         stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
         $this->changeProjectRepositoriesAccess($project_id, $is_private);
@@ -636,7 +625,7 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         $project_id = 99;
         $is_private = true;
         $repo_id = 333;
-        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        $repo = mockery_stub(\GitRepository::class)->setAccess()->never()->returns("whatever");
         stub($repo)->getAccess()->returns(GitRepository::PRIVATE_ACCESS);
         stub($repo)->changeAccess()->returns("whatever");
         stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
@@ -649,8 +638,8 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         $is_private = true;
         $repo_id1 = 333;
         $repo_id2 = 444;
-        $repo1 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
-        $repo2 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo1 = mockery_stub(\GitRepository::class)->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo2 = mockery_stub(\GitRepository::class)->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
         stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id1 => null, $repo_id2 => null));
         stub($this->factory)->getRepositoryById($repo_id1)->returns($repo1);
         stub($this->factory)->getRepositoryById($repo_id2)->returns($repo2);
@@ -671,36 +660,37 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
 
      public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->project_id = 458;
-        $this->project    = mock('Project');
+        $this->project    = \Mockery::spy(\Project::class);
         stub($this->project)->getId()->returns($this->project_id);
 
         $this->repo_id = 14;
-        $this->repo    = mock('GitRepository');
+        $this->repo    = \Mockery::spy(\GitRepository::class);
         stub($this->repo)->getId()->returns($this->repo_id);
         stub($this->repo)->belongsToProject($this->project)->returns(true);
 
-        $this->user    = mock('PFUser');
+        $this->user    = \Mockery::spy(\PFUser::class);
 
-        $this->request = mock('Codendi_Request');
-        $this->system_event_manager = mock('Git_SystemEventManager');
-        $this->controller = mock('Git');
-        $this->driver = mock('Git_Driver_Gerrit');
+        $this->request = \Mockery::spy(\Codendi_Request::class);
+        $this->system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
+        $this->controller = \Mockery::spy(\Git::class);
+        $this->driver = \Mockery::spy(\Git_Driver_Gerrit::class);
 
-        $gerrit_server = mock('Git_RemoteServer_GerritServer');
+        $gerrit_server = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
-        $this->gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $this->gerrit_server_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class);
         stub($this->gerrit_server_factory)->getServerById()->returns($gerrit_server);
 
-        $this->factory = stub('GitRepositoryFactory')->getRepositoryById(14)->returns($this->repo);
+        $this->factory = mockery_stub(\GitRepositoryFactory::class)->getRepositoryById(14)->returns($this->repo);
 
-        $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
-        $this->git_permissions_manager = mock('GitPermissionsManager');
+        $this->project_creator = \Mockery::spy(\Git_Driver_Gerrit_ProjectCreator::class);
+        $this->git_permissions_manager = \Mockery::spy(\GitPermissionsManager::class);
 
         stub($this->controller)->getRequest()->returns($this->request);
 
-        $git_plugin  = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $git_plugin  = mockery_stub(\GitPlugin::class)->areFriendlyUrlsActivated()->returns(false);
         $url_manager = new Git_GitRepositoryUrlManager($git_plugin);
 
 
@@ -708,33 +698,33 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
             $this->controller,
             $this->system_event_manager,
             $this->factory,
-            mock('GitRepositoryManager'),
+            \Mockery::spy(\GitRepositoryManager::class),
             $this->gerrit_server_factory,
-            stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns($this->driver),
-            mock('Git_Driver_Gerrit_UserAccountManager'),
+            mockery_stub(\Git_Driver_Gerrit_GerritDriverFactory::class)->getDriver()->returns($this->driver),
+            \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class),
             $this->project_creator,
-            mock('Git_Driver_Gerrit_Template_TemplateFactory'),
-            mock('ProjectManager'),
+            \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class),
+            \Mockery::spy(\ProjectManager::class),
             $this->git_permissions_manager,
             $url_manager,
-            mock('Logger'),
-            mock('Git_Mirror_MirrorDataMapper'),
-            mock('ProjectHistoryDao'),
-            mock('GitRepositoryMirrorUpdater'),
-            mock('Tuleap\Git\RemoteServer\Gerrit\MigrationHandler'),
-            mock('Tuleap\Git\GerritCanMigrateChecker'),
-            mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
-            mock('Tuleap\Git\Permissions\FineGrainedPermissionSaver'),
-            mock('Tuleap\Git\Permissions\FineGrainedRetriever'),
-            mock('Tuleap\Git\Permissions\HistoryValueFormatter'),
-            mock('Tuleap\Git\Permissions\PermissionChangesDetector'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedEnabler'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedDisabler'),
-            mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
-            mock('Tuleap\Git\Permissions\RegexpFineGrainedRetriever'),
-            mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
-            mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-            mock('UGroupManager')
+            \Mockery::spy(\Logger::class),
+            \Mockery::spy(\Git_Mirror_MirrorDataMapper::class),
+            \Mockery::spy(\ProjectHistoryDao::class),
+            \Mockery::spy(\GitRepositoryMirrorUpdater::class),
+            \Mockery::spy(\Tuleap\Git\RemoteServer\Gerrit\MigrationHandler::class),
+            \Mockery::spy(\Tuleap\Git\GerritCanMigrateChecker::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedUpdater::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionSaver::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\HistoryValueFormatter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\PermissionChangesDetector::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedEnabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedDisabler::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpPermissionFilter::class),
+            \Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UsersToNotifyDao::class),
+            \Mockery::spy(\Tuleap\Git\Notifications\UgroupsToNotifyDao::class),
+            \Mockery::spy(\UGroupManager::class)
         );
 
     }
@@ -743,16 +733,16 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         stub($this->factory)->getRepositoryById()->returns(null);
         $repo_id = 458;
 
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(404));
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(404)->once();
 
         $this->actions->fetchGitConfig($repo_id, $this->user, $this->project);
     }
 
     public function itReturnsAnErrorIfRepoDoesNotBelongToProject() {
-        $project = mock('Project');
+        $project = \Mockery::spy(\Project::class);
         stub($this->repo)->belongsToProject($project)->returns(false);
 
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(403));
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(403)->once();
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $project);
     }
@@ -760,7 +750,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     public function itReturnsAnErrorIfUserIsNotProjectAdmin() {
         stub($this->user)->isAdmin($this->project_id)->returns(false);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(401));
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(401)->once();
 
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
@@ -769,7 +759,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
     public function itReturnsAnErrorIfRepoIsNotMigratedToGerrit() {
         stub($this->user)->isAdmin($this->project_id)->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(false);
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(500)->once();
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }
@@ -778,7 +768,7 @@ class GitActions_fetchGitConfig extends TuleapTestCase {
         stub($this->git_permissions_manager)->userIsGitAdmin()->returns(true);
         stub($this->repo)->isMigratedToGerrit()->returns(true);
         stub($this->project_creator)->getGerritConfig()->throws(new Git_Driver_Gerrit_Exception());
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(500));
+        $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(500)->once();
 
         $this->actions->fetchGitConfig($this->repo_id, $this->user, $this->project);
     }

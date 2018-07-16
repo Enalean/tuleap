@@ -876,7 +876,7 @@ class GitActions extends PluginActions
                 return true;
             }
         }
-        $this->save($projectId, $repoId, $repoAccess, $repoDescription);
+        $this->save($projectId, $repoId, $repoAccess, $repoDescription, false, [], [], [], false);
         return true;
     }
 
