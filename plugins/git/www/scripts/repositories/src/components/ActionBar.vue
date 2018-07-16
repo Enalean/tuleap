@@ -18,7 +18,9 @@
   -->
 
 <template>
-    <div class="git-repository-list-actions">
+    <div class="git-repository-list-actions"
+        v-if="isThereAtLeastOneRepository"
+    >
         <button type="button"
                 class="tlp-button-primary git-repository-list-create-repository-button"
                 v-if="show_create_repository_button"
@@ -53,7 +55,7 @@ export default {
     },
     computed: {
         show_create_repository_button() {
-            return getUserIsAdmin() && this.isThereAtLeastOneRepository;
+            return getUserIsAdmin();
         },
         ...mapGetters(["isThereAtLeastOneRepository"])
     }

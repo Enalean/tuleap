@@ -20,16 +20,15 @@
     <div class="git-repository-list-loading" v-if="show_spinner"></div>
 </template>
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
     name: "RepositoryListSpinner",
     computed: {
         show_spinner() {
-            return !this.hasError && (this.is_loading_initial || this.is_loading_next);
+            return !this.hasError && this.isLoading;
         },
-        ...mapState(["is_loading_initial", "is_loading_next"]),
-        ...mapGetters(["hasError"])
+        ...mapGetters(["hasError", "isLoading"])
     }
 };
 </script>

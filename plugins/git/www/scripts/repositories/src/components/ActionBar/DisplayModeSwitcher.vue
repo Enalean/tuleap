@@ -25,9 +25,11 @@
                    class="tlp-button-bar-checkbox"
                    v-bind:value="repositories_sorted_by_last_update"
                    v-model="current_display_mode"
+                   v-bind:disabled="isLoading"
             >
             <label for="git-repository-list-switch-last-update"
                    class="tlp-button-primary tlp-button-outline"
+                   v-bind:class="{ disabled: isLoading }"
                    v-bind:title="sort_by_last_update_title"
             >
                 <span class="fa-stack">
@@ -43,9 +45,11 @@
                    class="tlp-button-bar-checkbox"
                    v-bind:value="repositories_sorted_by_path"
                    v-model="current_display_mode"
+                   v-bind:disabled="isLoading"
             >
             <label for="git-repository-list-switch-path"
                    class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
+                   v-bind:class="{ disabled: isLoading }"
                    v-bind:title="sort_by_path_title"
             >
                 <i class="fa fa-fw fa-sort-alpha-asc"></i>
@@ -54,6 +58,7 @@
     </div>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import {
     REPOSITORIES_SORTED_BY_LAST_UPDATE,
     REPOSITORIES_SORTED_BY_PATH
@@ -81,7 +86,8 @@ export default {
             set() {
                 return this.$store.commit("toggleDisplayMode");
             }
-        }
+        },
+        ...mapGetters(["isLoading"])
     }
 };
 </script>

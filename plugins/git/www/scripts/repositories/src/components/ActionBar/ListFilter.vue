@@ -16,6 +16,7 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
+
 <template>
     <input
         class="tlp-search"
@@ -24,12 +25,9 @@
         type="search"
         v-model="filter"
         size="30"
-        v-if="isThereAtLeastOneRepository"
     >
 </template>
-
 <script>
-import { mapGetters } from "vuex";
 export default {
     name: "ListFilter",
     computed: {
@@ -43,8 +41,7 @@ export default {
             set(value) {
                 this.$store.commit("setFilter", value);
             }
-        },
-        ...mapGetters(["isThereAtLeastOneRepository"])
+        }
     }
 };
 </script>
