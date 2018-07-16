@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean SAS - 2014. All rights reserved
+ * Copyright (c) Enalean SAS - 2014-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,16 @@
                     remote_filter: function(query, callback) {
                         if (query.length > 2) {
                             $.getJSON("/api/v1/users", {query: query}, function(data) {
-                                callback(data);
+                                let minimal_and_html_sanitized_user_representation = [];
+                                data.forEach(function(user) {
+                                    minimal_and_html_sanitized_user_representation.push({
+                                        'username': tuleap.escaper.html(user.username),
+                                        'real_name': tuleap.escaper.html(user.real_name),
+                                        'avatar_url': tuleap.escaper.html(user.avatar_url)
+                                    });
+                                });
+
+                                callback(minimal_and_html_sanitized_user_representation);
                             });
                         }
                     },
