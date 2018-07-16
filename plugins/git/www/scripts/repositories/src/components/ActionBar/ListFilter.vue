@@ -25,7 +25,6 @@
         v-model="filter"
         size="30"
         v-if="isThereAtLeastOneRepository"
-        v-bind:disabled="isFolderDisplayMode"
     >
 </template>
 
@@ -45,7 +44,7 @@ export default {
                 this.$store.commit("setFilter", value);
             }
         },
-        ...mapGetters(["isThereAtLeastOneRepository", "isFolderDisplayMode"])
+        ...mapGetters(["isThereAtLeastOneRepository"])
     }
 };
 </script>

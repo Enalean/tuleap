@@ -30,24 +30,63 @@ export const filteredRepositoriesByLastUpdateDate = (state, getters) => {
         return [];
     }
 
-    return sortByLastUpdateDate(getters.currentRepositoryList).filter(repository => {
-        return repository.name.toLowerCase().includes(state.filter.toLowerCase());
-    });
+    return sortByLastUpdateDate(getters.currentRepositoryList).filter(repository =>
+        filterRepositoriesOnName(repository, state.filter)
+    );
 };
+
+const filterRepositoriesOnName = (repository, query) =>
+    repository.normalized_path.toLowerCase().includes(query.toLowerCase());
 
 const sortByLastUpdateDate = repositories =>
     repositories.sort((a, b) => new Date(b.last_update_date) - new Date(a.last_update_date));
 
-export const repositoriesGroupedByPath = (state, getters) => {
+export const filteredRepositoriesGroupedByPath = (state, getters) => {
     if (!getters.areRepositoriesAlreadyLoadedForCurrentOwner) {
-        return {
-            is_folder: true,
-            label: "root",
-            children: []
-        };
+        return root_folder;
     }
 
-    const grouped = getters.currentRepositoryList.reduce(
+    return filterAFolder(groupRepositoriesByPath(getters.currentRepositoryList), state.filter);
+};
+
+const root_folder = {
+    is_folder: true,
+    label: "root",
+    children: []
+};
+
+const filterAFolder = (folder, query) => {
+    const filtered_children = folder.children.reduce((accumulator, child) => {
+        const filtered_child = filterAChild(child, query);
+        if (filtered_child) {
+            accumulator.push(filtered_child);
+        }
+        return accumulator;
+    }, []);
+
+    return {
+        ...folder,
+        children: filtered_children
+    };
+};
+
+const filterAChild = (child, query) => {
+    if (child.is_folder) {
+        const filtered_folder = filterAFolder(child, query);
+        if (filtered_folder.children.length === 0) {
+            return;
+        }
+        return filtered_folder;
+    }
+
+    if (!filterRepositoriesOnName(child, query)) {
+        return;
+    }
+    return child;
+};
+
+const groupRepositoriesByPath = repositories => {
+    const grouped = repositories.reduce(
         (accumulator, repository) => {
             if (repository.path_without_project) {
                 const split_path = repository.path_without_project.split("/");
@@ -98,6 +137,12 @@ const createHierarchy = (hierarchy, path_part) => {
     }
 
     return hierarchy.children.get(path_part);
+};
+
+export const isThereAResultInCurrentFilteredList = (state, getters) => {
+    return getters.isFolderDisplayMode
+        ? getters.filteredRepositoriesGroupedByPath.children.length > 0
+        : getters.filteredRepositoriesByLastUpdateDate.length > 0;
 };
 
 export const isThereAtLeastOneRepository = state => {
