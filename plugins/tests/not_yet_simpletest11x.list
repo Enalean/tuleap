@@ -29,12 +29,3 @@
 /tuleap/plugins/git/tests/events/SystemEvent_GIT_EDIT_SSH_KEYSTest.php
 /tuleap/plugins/git/tests/GitRepositoryManagerTest.php
 /tuleap/plugins/git/tests/GitViewsRepositoriesTraversalStrategy_TreeTest.php
-
-/tuleap/plugins/agiledashboard/tests/include/ArtifactParentsSelectorTest.php
-/tuleap/plugins/agiledashboard/tests/include/ArtifactLinkerTest.php
-/tuleap/plugins/agiledashboard/tests/include/MilestoneFactoryTest.php
-/tuleap/plugins/agiledashboard/tests/include/AgileDashboard/SequenceIdManagerTest.php
-/tuleap/plugins/agiledashboard/tests/include/AgileDashboard/Kanban/KanbanXmlImporterTest.php
-/tuleap/plugins/agiledashboard/tests/include/AgileDashboard/Milestone/MilestoneReportCriterionOptionsProviderTest.php
-/tuleap/plugins/agiledashboard/tests/include/AgileDashboard/REST/v1/MilestoneResourceValidatorTest.php
-/tuleap/plugins/agiledashboard/tests/include/ControllerTest.php

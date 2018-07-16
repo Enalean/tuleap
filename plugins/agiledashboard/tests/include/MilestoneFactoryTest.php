@@ -805,7 +805,10 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         $planning_tracker = aTracker()->withId(12)->withProject(\Mockery::spy(\Project::class))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($planning_tracker)->returns(aPlanning()->withId(4)->build());
 
-        $artifact = anArtifact()->withTracker($planning_tracker)->build();
+        $artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
+        $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
+        $artifact->shouldReceive('getAllAncestors')->with($this->user)->once()->andReturn([]);
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($this->user, $this->artifact_id);
@@ -817,7 +820,9 @@ class MilestoneFactory_GetBareMilestoneByArtifactIdTest extends TuleapTestCase {
         $planning_tracker = aTracker()->withId(12)->withProject(\Mockery::spy(\Project::class))->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker()->returns(false);
 
-        $artifact = anArtifact()->withTracker($planning_tracker)->build();
+        $artifact = Mockery::spy(Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($planning_tracker);
+        $artifact->shouldReceive('userCanView')->with($this->user)->once()->andReturn($planning_tracker);
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
 
         $this->assertNull(
