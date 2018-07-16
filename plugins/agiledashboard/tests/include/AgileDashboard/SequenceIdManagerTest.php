@@ -38,6 +38,9 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
     private $artifact_5;
     private $artifact_6;
 
+    /**
+     * @var AgileDashboard_SequenceIdManager
+     */
     private $sequence_id_manager;
 
     private $milestone_1;
@@ -220,6 +223,7 @@ class AgileDashboard_SequenceIdManagerTest extends TuleapTestCase {
         $this->items_collection->push($this->backlog_item_3);
 
         stub($this->backlog_item_collection_factory)->getUnassignedOpenCollection()->returns($this->items_collection);
+        stub($this->backlog_factory)->getSelfBacklog()->returns(\Mockery::spy(AgileDashboard_Milestone_Backlog_Backlog::class));
 
         expect($this->backlog_factory)->getSelfBacklog()->once();
         expect($this->backlog_item_collection_factory)->getUnassignedOpenCollection()->once();
