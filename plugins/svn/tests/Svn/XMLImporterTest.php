@@ -26,6 +26,7 @@ use Backend;
 use BackendSVN;
 use EventManager;
 use ForgeConfig;
+use Mockery;
 use Project;
 use ProjectManager;
 use SimpleXMLElement;
@@ -41,6 +42,7 @@ use Tuleap\Svn\Admin\MailNotificationManager;
 use Tuleap\Svn\Migration\RepositoryCopier;
 use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
 use Tuleap\Svn\Repository\ProjectHistoryFormatter;
+use Tuleap\Svn\Repository\Repository;
 use Tuleap\Svn\Repository\RepositoryCreator;
 use Tuleap\Svn\Repository\RepositoryManager;
 use Tuleap\Svn\Repository\RuleName;
@@ -201,6 +203,7 @@ class XMLImporterTest extends TuleapTestCase
     {
         global $Language;
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         ForgeConfig::store();
         $this->arpath = parent::getTmpDir();
@@ -209,9 +212,9 @@ class XMLImporterTest extends TuleapTestCase
         ForgeConfig::set('sys_http_user', 'codendiadm');
         ProjectManager::clearInstance();
 
-        $this->user_manager       = mock('UserManager');
-        $this->ugroup_manager     = mock('UgroupManager');
-        $this->logger             = mock('Logger');
+        $this->user_manager       = \Mockery::spy(\UserManager::class);
+        $this->ugroup_manager     = \Mockery::spy(\UgroupManager::class);
+        $this->logger             = \Mockery::spy(\Logger::class);
         $this->pmdao              = safe_mock('ProjectDao');
         $this->evdao              = safe_mock('SystemEventDao');
         $this->evfdao             = safe_mock('SystemEventsFollowersDao');
@@ -222,12 +225,12 @@ class XMLImporterTest extends TuleapTestCase
         $this->ugudao             = safe_mock('UGroupUserDao');
         $this->accessfiledao      = safe_mock('Tuleap\Svn\AccessControl\AccessFileHistoryDao');
         $this->accessfilefac      = new AccessFileHistoryFactory($this->accessfiledao);
-        $project_history_dao      = mock('\ProjectHistoryDao');
+        $project_history_dao      = \Mockery::spy(\ProjectHistoryDao::class);
         $this->accessfilemgr      = new AccessFileHistoryCreator(
             $this->accessfiledao,
             $this->accessfilefac,
             $project_history_dao,
-            mock('Tuleap\Svn\Repository\ProjectHistoryFormatter')
+            \Mockery::spy(\Tuleap\Svn\Repository\ProjectHistoryFormatter::class)
         );
 
         $users_to_notify_dao      = safe_mock('Tuleap\Svn\Notifications\UsersToNotifyDao');
@@ -242,26 +245,26 @@ class XMLImporterTest extends TuleapTestCase
             $this->ugroup_manager
         );
 
-        $permissions_manager      = mock('Tuleap\Svn\SvnPermissionManager');
+        $permissions_manager      = \Mockery::spy(\Tuleap\Svn\SvnPermissionManager::class);
         $this->repository_creator = new RepositoryCreator(
             $this->repodao,
             $this->sysevmgr,
             $project_history_dao,
             $permissions_manager,
-            mock('Tuleap\Svn\Repository\HookConfigUpdator'),
+            \Mockery::spy(\Tuleap\Svn\Repository\HookConfigUpdator::class),
             new ProjectHistoryFormatter(),
-            mock('Tuleap\Svn\Admin\ImmutableTagCreator'),
-            mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator'),
-            mock('Tuleap\Svn\Admin\MailNotificationManager')
+            \Mockery::spy(\Tuleap\Svn\Admin\ImmutableTagCreator::class),
+            \Mockery::spy(\Tuleap\Svn\AccessControl\AccessFileHistoryCreator::class),
+            \Mockery::spy(\Tuleap\Svn\Admin\MailNotificationManager::class)
         );
 
-        $this->user = mock('PFUser');
+        $this->user = \Mockery::spy(\PFUser::class);
         $this->user = aUser()->build();
         stub($permissions_manager)->isAdmin()->returns(true);
 
         Backend::clearInstances();
 
-        $Language = mock('BaseLanguage');
+        $Language = \Mockery::spy(\BaseLanguage::class);
 
         $this->project = $this->pm->getProjectFromDbRow(
             array(
@@ -275,13 +278,13 @@ class XMLImporterTest extends TuleapTestCase
 
         $this->rule_name = new RuleName($this->project, $this->repodao);
 
-        $this->access_file_history_creator = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
-        $this->repository_manager          = mock('Tuleap\Svn\Repository\RepositoryManager');
-        $this->backend_svn                 = Backend::instance(Backend::SVN, 'Tuleap\Svn\TestBackendSVN', array($this));
-        $this->backend_system              = mock('BackendSystem');
-        $this->access_file                 = mock('Tuleap\Svn\AccessControl\AccessFileHistory');
+        $this->access_file_history_creator = \Mockery::spy(\Tuleap\Svn\AccessControl\AccessFileHistoryCreator::class);
+        $this->repository_manager          = \Mockery::spy(\Tuleap\Svn\Repository\RepositoryManager::class);
+        $this->backend_svn                 = Backend::instance(Backend::SVN, TestBackendSVN::class, array($this));
+        $this->backend_system              = \Mockery::spy(\BackendSystem::class);
+        $this->access_file                 = \Mockery::spy(\Tuleap\Svn\AccessControl\AccessFileHistory::class);
         $this->notification_emails_builder = new NotificationsEmailsBuilder();
-        $this->repository_copier           = mock('Tuleap\Svn\Migration\RepositoryCopier');
+        $this->repository_copier           = \Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class);
     }
 
     public function tearDown() {
@@ -313,6 +316,7 @@ class XMLImporterTest extends TuleapTestCase
             ->returnsEmptyDar();
         stub($this->ugudao)->searchUserByDynamicUGroupId(3, $project_id)
             ->returnsEmptyDar();
+        $this->repository_manager->shouldReceive('getRepositoryById')->andReturn(Mockery::spy(Repository::class));
     }
 
     private function callImport(XMLImporter $importer, Project $project)
@@ -337,7 +341,7 @@ class XMLImporterTest extends TuleapTestCase
         stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
-        stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->user_manager)->getUserById()->returns(\Mockery::spy(\PFUser::class));
 
         $svn = new XMLImporter(
             $xml,
@@ -434,7 +438,7 @@ class XMLImporterTest extends TuleapTestCase
             '<project><svn><repository name="svn01" dump-file="non-existant-svn.dump"/></svn></project>'
         );
 
-        stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->user_manager)->getUserById()->returns(\Mockery::spy(\PFUser::class));
         stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         $this->expectException('Tuleap\Svn\XMLImporterException');
 
@@ -470,7 +474,7 @@ XML;
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->repodao)->doesRepositoryAlreadyExist()->returns(false);
         stub($this->notifdao)->create()->count(2)->returns(true);
-        stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->user_manager)->getUserById()->returns(\Mockery::spy(\PFUser::class));
         stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
         $svn = new XMLImporter(
@@ -505,7 +509,7 @@ XML;
         $this->stubRepoCreation(123, 85, 1585);
         stub($this->accessfiledao)->searchLastVersion()->once()->returns(null);
         stub($this->accessfiledao)->create()->once()->returns(true);
-        stub($this->user_manager)->getUserById()->returns(mock('PFUser'));
+        stub($this->user_manager)->getUserById()->returns(\Mockery::spy(\PFUser::class));
         stub($this->accessfiledao)->searchCurrentVersion()->returns(false);
 
         $svn = new XMLImporter(

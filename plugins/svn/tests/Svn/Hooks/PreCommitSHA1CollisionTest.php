@@ -20,6 +20,8 @@
 
 namespace Tuleap\Svn\Hooks;
 
+use Mockery;
+use Tuleap\Svn\Repository\Repository;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../../bootstrap.php';
@@ -28,47 +30,53 @@ class PreCommitSHA1CollisionTest extends TuleapTestCase
 {
     public function itAcceptsCommitThatDoesNotContainSHA1Collision()
     {
-        $svnlook                 = mock('Tuleap\\Svn\\Commit\\SVNLook');
-        $sha1_collision_detector = mock('Tuleap\\Svn\\SHA1CollisionDetector');
-        $pre_commit_hook         = new PreCommit(
+        $svnlook                 = Mockery::spy(\Tuleap\Svn\Commit\SVNLook::class);
+        $sha1_collision_detector = Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
+        $repository_manager      = Mockery::spy(\Tuleap\Svn\Repository\RepositoryManager::class);
+        $repository_manager->shouldReceive('getRepositoryFromSystemPath')->with('path/to/repo')->andReturn(Mockery::spy(Repository::class));
+
+        $pre_commit_hook = new PreCommit(
+            'path/to/repo',
             '',
-            '',
-            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
-            mock('Tuleap\\Svn\\Commit\\CommitInfoEnhancer'),
-            mock('Tuleap\\Svn\\Admin\\ImmutableTagFactory'),
+            $repository_manager,
+            Mockery::spy(\Tuleap\Svn\Commit\CommitInfoEnhancer::class),
+            Mockery::spy(\Tuleap\Svn\Admin\ImmutableTagFactory::class),
             $svnlook,
             $sha1_collision_detector,
-            mock('Logger'),
-            mock('Tuleap\Svn\Repository\HookConfigRetriever')
+            Mockery::spy(\Logger::class),
+            Mockery::spy(\Tuleap\Svn\Repository\HookConfigRetriever::class)
         );
 
         stub($svnlook)->getTransactionPath()->returns(array('D   trunk/f1', 'A   trunk/f2'));
         stub($svnlook)->getContent()->returns(popen('', 'rb'));
-        stub($sha1_collision_detector)->isColliding()->returns(false);
 
-        $sha1_collision_detector->expectOnce('isColliding');
+        $sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(false);
         $pre_commit_hook->assertCommitDoesNotContainSHA1Collision();
     }
 
     public function itRejectsCommitContainingSHA1Collision()
     {
-        $svnlook                 = mock('Tuleap\\Svn\\Commit\\SVNLook');
-        $sha1_collision_detector = mock('Tuleap\\Svn\\SHA1CollisionDetector');
-        $pre_commit_hook         = new PreCommit(
+        $svnlook                 = Mockery::spy(\Tuleap\Svn\Commit\SVNLook::class);
+        $sha1_collision_detector = Mockery::spy(\Tuleap\Svn\SHA1CollisionDetector::class);
+        $repository_manager      = Mockery::spy(\Tuleap\Svn\Repository\RepositoryManager::class);
+        $repository_manager->shouldReceive('getRepositoryFromSystemPath')->with('path/to/repo')->andReturn(Mockery::spy(Repository::class));
+
+        $pre_commit_hook  = new PreCommit(
+            'path/to/repo',
             '',
-            '',
-            mock('Tuleap\\Svn\\Repository\\RepositoryManager'),
-            mock('Tuleap\\Svn\\Commit\\CommitInfoEnhancer'),
-            mock('Tuleap\\Svn\\Admin\\ImmutableTagFactory'),
+            $repository_manager,
+            Mockery::spy(\Tuleap\Svn\Commit\CommitInfoEnhancer::class),
+            Mockery::spy(\Tuleap\Svn\Admin\ImmutableTagFactory::class),
             $svnlook,
             $sha1_collision_detector,
-            mock('Logger'),
-            mock('Tuleap\Svn\Repository\HookConfigRetriever')
+            Mockery::spy(\Logger::class),
+            Mockery::spy(\Tuleap\Svn\Repository\HookConfigRetriever::class)
         );
 
         stub($svnlook)->getTransactionPath()->returns(array('A   trunk/f1'));
         stub($svnlook)->getContent()->returns(popen('', 'rb'));
-        stub($sha1_collision_detector)->isColliding()->returns(true);
+
+        $sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(true);
 
         $this->expectException('Tuleap\\Svn\\SHA1CollisionException');
         $pre_commit_hook->assertCommitDoesNotContainSHA1Collision();
