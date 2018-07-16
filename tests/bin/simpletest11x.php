@@ -41,6 +41,8 @@ $include_path = $basedir.'/src/www/include';
 $pear         = '/usr/share/pear';
 ini_set('include_path', implode(':', [$src_path, $include_path, $pear]));
 
+exec('service mysqld start');
+
 require_once __DIR__.'/../../src/etc/local.inc.dist';
 
 $cli_args = $argv;
