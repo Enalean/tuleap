@@ -25,7 +25,7 @@
              }"
     >
         <div class="tlp-pane-container">
-            <a v-bind:href="repository.normalized_path" class="git-repository-card-link">
+            <a v-bind:href="getRepositoryPath" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
                     <div class="git-repository-card-header-line">
                         <h2 class="tlp-pane-title git-repository-card-title"
@@ -67,6 +67,7 @@ import { mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
 import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "../repository-list-presenter.js";
 import PullRequestBadge from "./PullRequestBadge.vue";
+import { getRepositoryListUrl } from "../breadcrumb-presenter.js";
 
 export default {
     name: "GitRepository",
@@ -108,6 +109,9 @@ export default {
         },
         is_in_folder() {
             return this.repository.path_without_project.length;
+        },
+        getRepositoryPath() {
+            return getRepositoryListUrl() + this.repository.normalized_path;
         },
         ...mapGetters(["isFolderDisplayMode"])
     }
