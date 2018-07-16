@@ -30,11 +30,6 @@
 /tuleap/plugins/git/tests/GitRepositoryManagerTest.php
 /tuleap/plugins/git/tests/GitViewsRepositoriesTraversalStrategy_TreeTest.php
 
-/tuleap/plugins/cardwall/tests/OnTop/ConfigTest.php
-/tuleap/plugins/cardwall/tests/ColumnTest.php
-/tuleap/plugins/cardwall/tests/CardControllerTest.php
-/tuleap/plugins/cardwall/tests/CardwallConfigXmlExportTest.php
-
 /tuleap/plugins/agiledashboard/tests/include/ArtifactParentsSelectorTest.php
 /tuleap/plugins/agiledashboard/tests/include/ArtifactLinkerTest.php
 /tuleap/plugins/agiledashboard/tests/include/MilestoneFactoryTest.php
