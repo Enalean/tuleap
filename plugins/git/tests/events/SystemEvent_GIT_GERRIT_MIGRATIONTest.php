@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -93,6 +92,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
     public function itInformsAboutAnyGenericFailure() {
         stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $e = new Exception("failure detail");
         stub($this->project_creator)->createGerritProject()->throws($e);
         expect($this->event)->error("failure detail")->once();
@@ -102,6 +102,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
     public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
         stub($this->user_manager)->getUserById()->returns(aUser()->withId(0)->build());
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $e = new Git_Driver_Gerrit_Exception("failure detail");
         stub($this->project_creator)->createGerritProject()->throws($e);
         expect($this->event)->error("gerrit: failure detail")->once();
@@ -134,4 +135,3 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToProjectCreatorTest extends SystemE
         $this->event->process();
     }
 }
-?>

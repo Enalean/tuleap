@@ -58,14 +58,14 @@ class Git_Admin_process_Test extends TuleapTestCase {
             'host',
             '1234',
             '80',
-            'login',
+            'new_login',
             '/path/to/file',
-            'replication_key',
-            0,
+            '',
+            1,
             '2.5',
             'azerty',
             '',
-            ''
+            'Digest'
         );
 
         $this->an_existing_server = new Git_RemoteServer_GerritServer(

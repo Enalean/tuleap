@@ -395,6 +395,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($this->user));
+            $repo->setReturnValue('getProject', $this->project);
             $this->backend->setReturnValue('isNameValid', true, array($namespace));
             stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
@@ -414,6 +415,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($this->user));
+            $repo->setReturnValue('getProject', \Mockery::spy(Project::class));
             stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
         }
@@ -537,6 +539,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true);
+        $repo->setReturnValue('getProject', \Mockery::spy(Project::class));
         $this->backend->setReturnValue('isNameValid', true);
         stub($repo)->getBackend()->returns($this->backend);
         return $repo;

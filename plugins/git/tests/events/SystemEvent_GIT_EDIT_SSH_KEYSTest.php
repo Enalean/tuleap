@@ -140,6 +140,8 @@ class SystemEvent_GIT_EDIT_SSH_KEYSTest extends TuleapTestCase {
             $this->logger
         );
 
+        stub($this->user)->getAuthorizedKeysArray()->returns([]);
+
         $this->user_account_manager->throwOn('synchroniseSSHKeys', new Git_UserSynchronisationException());
 
         $event->process();

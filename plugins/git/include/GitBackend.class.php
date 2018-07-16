@@ -298,7 +298,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      * @return String
      */
     public function getBackendStatistics(Statistics_Formatter $formatter) {
-        $dao = $this->getDao();
         $formatter->clearContent();
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');

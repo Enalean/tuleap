@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/Statistics_Services_UsageFormatter.class.php';
+require_once __DIR__ . '/bootstrap.php';
 require_once 'www/include/user.php';
 
 class Statistics_Services_UsageFormatterTest extends TuleapTestCase {

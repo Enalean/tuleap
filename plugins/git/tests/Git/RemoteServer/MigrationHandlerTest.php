@@ -21,6 +21,7 @@
 
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
+use Project;
 use TuleapTestCase;
 use Git_SystemEventManager;
 use Git_RemoteServer_NotFoundException;
@@ -71,7 +72,9 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 
     public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
-        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(false);
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(false);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
 
@@ -82,7 +85,9 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 
     public function itThrowsAnExceptionIfRepositoryIsAlreadyInQueueForMigration() {
-        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
 
@@ -95,7 +100,9 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 
     public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer() {
-        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
 
@@ -109,7 +116,9 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
     }
 
     public function itMigratesRepository() {
-        $repository         = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
         $remote_server_id   = 1;
         $gerrit_template_id = "none";
 
