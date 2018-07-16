@@ -47,7 +47,7 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $swimline_id    = 215;
         $drop_into      = array('5', '7');
 
-        $artifact = aMockArtifact()->withId($artifact_id)->build();
+        $artifact    = aMockArtifact()->withId($artifact_id)->withlastChangeset(Mockery::spy(Tracker_Artifact_Changeset::class))->build();
         $card_fields = mock('Cardwall_CardFields');
 
         $field1 = mock('Tracker_FormElement_Field_Float');
@@ -113,5 +113,3 @@ class Cardwall_CardControllerTest extends TuleapTestCase {
         $card_controller->getCard();
     }
 }
-
-?>
