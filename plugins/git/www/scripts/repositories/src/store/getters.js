@@ -164,3 +164,5 @@ export const isInitialLoadingDoneWithoutError = (state, getters) =>
     !state.is_loading_initial && !getters.hasError;
 
 export const isFolderDisplayMode = state => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
+
+export const isLoading = state => state.is_loading_initial || state.is_loading_next;

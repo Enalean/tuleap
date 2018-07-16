@@ -21,6 +21,7 @@
     <select v-if="are_there_personal_repositories"
             class="tlp-select tlp-select-adjusted"
             v-model="selected_owner_id"
+            v-bind:disabled="isLoading"
     >
         <option v-bind:value="project_key">{{ project_repositories_label }}</option>
         <option v-for="owner in sorted_repositories_owners"
@@ -31,6 +32,7 @@
     </select>
 </template>
 <script>
+import { mapGetters } from "vuex";
 import { getRepositoriesOwners } from "../../repository-list-presenter.js";
 import { PROJECT_KEY } from "../../constants";
 
@@ -58,7 +60,8 @@ export default {
         },
         project_key() {
             return PROJECT_KEY;
-        }
+        },
+        ...mapGetters(["isLoading"])
     }
 };
 </script>
