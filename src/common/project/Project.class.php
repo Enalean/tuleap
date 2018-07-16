@@ -145,6 +145,7 @@ class Project extends Group implements PFO_Project {
 
             $this->service_data_array[$short_name] = $res_row;
             $this->services[$short_name] = $service;
+
             if ($service->isActive()) {
                 $this->cache_active_services[] = $service;
             }

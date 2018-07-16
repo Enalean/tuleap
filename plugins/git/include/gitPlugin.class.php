@@ -107,6 +107,7 @@ use Tuleap\GitBundle;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
@@ -269,6 +270,7 @@ class GitPlugin extends Plugin
         $this->addHook(UserBecomesProjectAdmin::NAME);
         $this->addHook(UserIsNoLongerProjectAdmin::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
+        $this->addHook(ServiceUrlCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2566,5 +2568,12 @@ class GitPlugin extends Plugin
             $this->getHistoryValueFormatter(),
             $this->getCITokenManager()
         );
+    }
+
+    public function serviceUrlCollector(ServiceUrlCollector $collector)
+    {
+        if ($collector->getServiceShortname() === $this->getServiceShortname()) {
+            $collector->setUrl(GIT_BASE_URL . "/" . urlencode($collector->getProject()->getUnixNameLowerCase()));
+        }
     }
 }
