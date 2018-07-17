@@ -28,7 +28,6 @@
 
 .git-repository-card-two-columns {
     width: calc(50% - #{$tlp-half-spacing});
-    max-height: 100%;
     margin: 0 $tlp-half-spacing $tlp-spacing 0;
 
     &:nth-child(2n) {
@@ -47,12 +46,23 @@
     }
 }
 
-.git-repository-card-link:hover {
-    text-decoration: none;
+.git-repository-card-link {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    > .tlp-pane-section {
+        padding-top: 0;
+    }
 }
 
 .git-repository-card-header {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
 }
 
@@ -68,6 +78,11 @@
     word-break: break-all;
 }
 
+.git-repository-path {
+    display: block;
+    font-size: 14px;
+}
+
 .git-repository-card-last-update-icon {
     margin: 0 5px 0 0;
 }
@@ -79,14 +94,12 @@
 }
 
 .git-repository-card-description {
-    overflow: hidden;
     color: $tlp-ui-dimmed;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .git-pullrequest-badge {
     margin: 0 $tlp-spacing;
+    transition: opacity 100ms;
     background-color: $tlp-theme-color;
 }
 
@@ -100,9 +113,12 @@
 
 .git-repository-card-admin-link {
     margin: 5px 0 0;
+    transition: color 100ms, opacity 100ms;
+    opacity: .2;
     color: $tlp-ui-dimmed;
 
     &:hover {
+        opacity: 1;
         color: $tlp-theme-color;
     }
 }
