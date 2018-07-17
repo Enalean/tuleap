@@ -129,18 +129,8 @@
     }
 
     .doc-table-color {
-        table-layout: fixed;
-
         %size {
             font-size: 13px;
-        }
-
-        .doc-color-name {
-            width: 250px;
-        }
-
-        .doc-color-variable {
-            width: 350px;
         }
 
         .code-inline {
@@ -163,6 +153,11 @@
             &.doc-color-red              { background-color: $tlp-theme-red;    }
         }
 
+        tbody > tr > td:first-child,
+        tbody > tr > td:nth-child(2) {
+            white-space: nowrap;
+        }
+
         @each $color-name, $colors in $tlp-swatch-color-map {
             .doc-color-#{$color-name} {
                 border: 3px solid map-get($colors, 'primary');
@@ -171,23 +166,40 @@
 
             .doc-color-code-#{$color-name}-primary {
                 @extend %size;
-                color: map-get($colors, 'primary');
+                background-color: map-get($colors, 'primary');
+                color: $tlp-ui-white;
             }
 
             .doc-color-code-#{$color-name}-secondary {
                 @extend %size;
                 background-color: map-get($colors, 'secondary');
+                color: map-get($colors, 'text');
             }
 
             .doc-color-code-#{$color-name}-border {
                 @extend %size;
                 border: 2px solid map-get($colors, 'border');
+                color: map-get($colors, 'border');
+            }
+
+            .doc-color-code-#{$color-name}-text {
+                @extend %size;
+                background-color: map-get($colors, 'secondary');
+                color: map-get($colors, 'text');
             }
 
             .doc-color-#{$color-name}-pattern {
                 width: 30px;
                 height: 30px;
-                background: url(map-get($colors, 'pattern'));
+                background-color: map-get($colors, 'text');
+                // scss-lint:disable VendorPrefix
+                -webkit-mask-image: url(map-get($colors, 'pattern'));
+                mask-image: url(map-get($colors, 'pattern'));
+
+                @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                    background-color: transparent;
+                    background-image: url(map-get($colors, 'pattern'));
+                }
             }
         }
     }

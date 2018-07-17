@@ -48,7 +48,7 @@
 .card-preview {
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.card-style-#{$color-name} {
-            border-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
+            border-color: map-get($colors, 'border');
             background: map-get($colors, 'secondary');
 
             > .card-container {
@@ -57,7 +57,7 @@
 
             .card-accessibility {
                 opacity: .5;
-                background-color: map-get($colors, 'border');
+                background-color: map-get($colors, 'text');
                 // scss-lint:disable VendorPrefix
                 -webkit-mask-image: url(map-get($colors, 'pattern'));
                 mask-image: url(map-get($colors, 'pattern'));
@@ -65,6 +65,27 @@
                 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
                     background-color: transparent;
                     background-image: url(map-get($colors, 'pattern'));
+                }
+            }
+
+            .card-actions {
+                // scss-lint:disable QualifyingElement
+                a.dropdown-toggle {
+                    color: map-get($colors, 'text');
+                }
+
+                .caret {
+                    border-top-color: map-get($colors, 'text');
+                }
+            }
+
+            .card-details {
+                > .toggler,
+                > .toggler-hide,
+                > .toggler-hide-noajax,
+                > .toggler-noajax,
+                tr td:first-child {
+                    color: map-get($colors, 'text');
                 }
             }
         }
@@ -76,9 +97,7 @@
     div.card.card-accent-#{$color-name} {
         background: map-get($colors, 'primary');
     }
-}
 
-@each $color-name, $colors in $tlp-swatch-color-map {
     .card-type-border-#{$color-name} {
         flex: 0 0 auto;
         width: 4px;
@@ -111,11 +130,11 @@
     a.dropdown-toggle {
         color: #7d7d7d;
         font-size: .9em;
-    }
 
-    a.dropdown-toggle:hover {
-        color: #333333;
-        text-decoration: none;
+        &:hover {
+            opacity: .7;
+            text-decoration: none;
+        }
     }
 
     ul {
@@ -123,14 +142,8 @@
         list-style: none;
     }
 
-    .caret {
-        margin-top: 6px;
-        margin-left: 0;
-    }
-
     &:hover .caret {
         opacity: .7;
-        filter: alpha(opacity = 70);
     }
 
     .dropdown.open .dropdown-toggle {

@@ -33,10 +33,16 @@
 
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
-            border-top-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
-            border-right-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
-            border-bottom-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
+            border-top-color: map-get($colors, 'border');
+            border-right-color: map-get($colors, 'border');
+            border-bottom-color: map-get($colors, 'border');
             background: map-get($colors, 'secondary');
+
+            .backlog-item-details-id,
+            .backlog-item-details-parent > a,
+            .extra-card-field-title {
+                color: map-get($colors, 'text');
+            }
         }
     }
 
@@ -144,7 +150,7 @@
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: .5;
-            background-color: map-get($colors, 'border');
+            background-color: map-get($colors, 'text');
             // scss-lint:disable VendorPrefix
             -webkit-mask-image: url(map-get($colors, 'pattern'));
             mask-image: url(map-get($colors, 'pattern'));
