@@ -36,7 +36,6 @@ $router = new FrontRouter(
     new ThemeManager(
         new BurningParrotCompatiblePageDetector(
             new CurrentPage(),
-            new Admin_Homepage_Dao(),
             new User_ForgeUserGroupPermissionsManager(
                 new User_ForgeUserGroupPermissionsDao()
             )

@@ -225,7 +225,6 @@ if (! defined('FRONT_ROUTER')) {
     $theme_manager = new ThemeManager(
         new BurningParrotCompatiblePageDetector(
             new CurrentPage(),
-            new Admin_Homepage_Dao(),
             new User_ForgeUserGroupPermissionsManager(
                 new User_ForgeUserGroupPermissionsDao()
             )
