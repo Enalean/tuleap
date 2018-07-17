@@ -152,8 +152,10 @@ class SvnRouter {
                     $this->checkUserCanAdministrateARepository($request);
                     $this->admin_controller->deleteRepository($request);
                     break;
-                case "restore":
-                    $this->checkUserCanAdministrateARepository($request);
+                case 'restore':
+                    if(! $request->getCurrentUser()->isSuperUser()) {
+                        throw new UserCannotAdministrateRepositoryException();
+                    }
                     $this->restore_controller->restoreRepository($request);
                     break;
                 case "access-control":

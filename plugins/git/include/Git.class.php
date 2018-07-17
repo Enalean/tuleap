@@ -477,10 +477,12 @@ class Git extends PluginController {
                 'delete_gerrit_project',
                 'update_mirroring',
                 'update_default_mirroring',
-                'restore',
             );
             if ($this->areMirrorsEnabledForProject()) {
                 $this->permittedActions[] = 'admin-mass-update';
+            }
+            if ($user->isSuperUser()) {
+                $this->permittedActions[] = 'restore';
             }
         } else {
             $this->addPermittedAction('index');
