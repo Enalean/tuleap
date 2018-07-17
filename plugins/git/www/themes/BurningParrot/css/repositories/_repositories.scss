@@ -20,11 +20,11 @@
 @import './repository-card';
 
 .git-repository-list-empty-image {
-    stroke: mix($tlp-ui-white, $tlp-theme-color, 70%);
+    stroke: transparentize($tlp-theme-color, .7);
 }
 
 .git-repository-list-empty-rect {
-    fill: mix($tlp-ui-white, $tlp-theme-color, 70%);
+    fill: transparentize($tlp-theme-color, .7);
 }
 
 .git-repository-create-modal-body {
@@ -74,7 +74,7 @@
 }
 
 .git-repository-list-folder {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 24px;
 }
 
 .git-repository-list-base-folder {
@@ -84,12 +84,18 @@
 .git-repository-list-collapsible-folder {
     display: flex;
     margin: 0 0 $tlp-spacing;
+    padding: 0 0 0 5px;
     color: $tlp-theme-color;
     cursor: pointer;
 
     > .git-repository-list-folder-label {
-        margin: 0 0 0 $tlp-half-spacing;
+        margin: 0 0 0 5px;
         font-size: 20px;
+
+        > .fa-folder-o {
+            margin: 0 3px 0 0;
+            font-size: 18px;
+        }
     }
 }
 
