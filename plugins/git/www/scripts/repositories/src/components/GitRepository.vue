@@ -31,6 +31,11 @@
                         <h2 class="tlp-pane-title git-repository-card-title"
                             data-test="repository_name"
                         >
+                            <span v-if="is_in_folder && ! isFolderDisplayMode"
+                                class="git-repository-path"
+                            >
+                                {{ folder_path }}
+                            </span>
                             {{ repository_label }}
                         </h2>
                         <div class="git-repository-links-spacer"></div>
@@ -101,17 +106,16 @@ export default {
             return Number.parseInt(this.repository.additional_information.opened_pull_requests, 10);
         },
         repository_label() {
-            if (this.isFolderDisplayMode) {
-                return this.repository.label;
-            }
-
-            return this.repository.normalized_path;
+            return this.repository.label;
         },
         is_in_folder() {
             return this.repository.path_without_project.length;
         },
         getRepositoryPath() {
             return getRepositoryListUrl() + this.repository.normalized_path;
+        },
+        folder_path() {
+            return this.repository.path_without_project + "/";
         },
         ...mapGetters(["isFolderDisplayMode"])
     }
