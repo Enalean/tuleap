@@ -105,10 +105,17 @@ kanban-item {
 
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
-            border-top-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
-            border-right-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
-            border-bottom-color: mix($tlp-ui-white, map-get($colors, 'border'), 70%);
+            border-top-color: map-get($colors, 'border');
+            border-right-color: map-get($colors, 'border');
+            border-bottom-color: map-get($colors, 'border');
             background: map-get($colors, 'secondary');
+
+            .kanban-item-content-info-link,
+            .kanban-item-content-clock,
+            .extra-card-field-title,
+            .kanban-item-content-expand-collapse-icon {
+                color: map-get($colors, 'text');
+            }
         }
     }
 }
@@ -155,7 +162,8 @@ kanban-item {
     text-decoration: none;
 
     &:hover {
-        color: $tlp-theme-color;
+        opacity: .7;
+        text-decoration: none;
     }
 }
 
@@ -180,7 +188,7 @@ kanban-item {
     @each $color-name, $colors in $tlp-swatch-color-map {
         &.#{$color-name} {
             opacity: .5;
-            background-color: map-get($colors, 'border');
+            background-color: map-get($colors, 'text');
             // scss-lint:disable VendorPrefix
             -webkit-mask-image: url(map-get($colors, 'pattern'));
             mask-image: url(map-get($colors, 'pattern'));
@@ -213,6 +221,7 @@ kanban-item {
 
 .kanban-item-content-expand-collapse {
     display: flex;
+    flex: 0 0 auto;
     justify-content: center;
     height: 0;
     overflow: hidden;
@@ -226,7 +235,7 @@ kanban-item {
 
 .kanban-item-content-expand-collapse-icon {
     position: relative;
-    top: -6px;
+    top: -7px;
     color: $tlp-ui-dimmed;
     font-weight: 600;
 }
