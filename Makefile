@@ -230,6 +230,7 @@ simpletest11x-56-ci:
 	/tuleap/plugins/cardwall/tests \
 	/tuleap/plugins/agiledashboard/tests \
 	/tuleap/plugins/git/tests \
+	/tuleap/plugins/statistics/tests \
 
 simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
@@ -262,6 +263,7 @@ simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	/tuleap/plugins/fulltextsearch/tests \
 	/tuleap/plugins/cardwall/tests \
 	/tuleap/plugins/agiledashboard/tests \
+	/tuleap/plugins/statistics/tests \
 
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
