@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,29 +51,31 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $tracker = aTracker()->withId(101)->build();
 
-        $changesets_123 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1231));
-        $changesets_124 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(1241));
-        $changesets_201 = array(stub('Tracker_Artifact_Changeset')->getId()->returns(2011));
+        $changesets_123 = array(mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(1231));
+        $changesets_124 = array(mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(1241));
+        $changesets_201 = array(mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(2011));
 
         $this->artifact = anArtifact()->withId(120)->build();
         $this->art_123  = anArtifact()->withId(123)->withTracker($tracker)->withChangesets($changesets_123)->build();
         $this->art_124  = anArtifact()->withId(124)->withTracker($tracker)->withChangesets($changesets_124)->build();
         $this->art_201  = anArtifact()->withId(201)->withTracker($tracker)->withChangesets($changesets_201)->build();
 
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $this->source_of_association_detector = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector');
+        $this->source_of_association_detector = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector::class);
 
-        $this->previous_changesetvalue = mock('Tracker_Artifact_ChangesetValue_ArtifactLink');
+        $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         stub($this->previous_changesetvalue)->getValue()->returns(array(
             201 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->art_201, '_is_child')
         ));
 
         stub($this->artifact_factory)->getArtifactById(123)->returns($this->art_123);
         stub($this->artifact_factory)->getArtifactById(124)->returns($this->art_124);
+        stub($this->artifact_factory)->getArtifactById(201)->returns($this->art_201);
 
         $this->source_of_association_collection = new SourceOfAssociationCollection();
         $this->convertor = new SubmittedValueConvertor(
@@ -151,7 +153,7 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
         $submitted_value = array(
             'new_values' => '',
             'natures' => array(
-                '201' => ''
+                '201' => '_is_child'
             )
         );
 
@@ -164,7 +166,7 @@ class SubmittedValueConvertorTest extends TuleapTestCase {
 
         $existing_list_of_artifactlinkinfo = $this->previous_changesetvalue->getValue();
 
-        $this->assertClone(
+        $this->assertEqual(
             $updated_submitted_value['list_of_artifactlinkinfo'][201],
             $existing_list_of_artifactlinkinfo[201]
         );

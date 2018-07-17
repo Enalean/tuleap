@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('bootstrap.php');
-
-Mock::generatePartial(
-    'Tracker_FormElement_Field_File',
-    'Tracker_FormElement_Field_FileTestVersion', 
-    array('getValueDao', 'getFileInfoDao', 'getSubmittedInfoFromFILES', 'getId', 'isRequired', 'getTrackerFileInfoFactory', 'isPreviousChangesetEmpty', 'checkThatAtLeastOneFileIsUploaded'));
-
-Mock::generate('Tracker_Artifact_ChangesetValue_File');
-
-Mock::generate('Tracker_FormElement_Field_Value_FileDao');
-
-Mock::generate('Tracker_FileInfoDao');
-
-Mock::generate('Tracker_Artifact');
-
-Mock::generate('Tracker_FileInfo');
-
 require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
 require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 
 abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     protected $fixture_dir;
@@ -51,6 +33,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         ForgeConfig::store();
         $this->fixture_dir    = '/var/tmp'.'/_fixtures';
         if(!is_dir($this->fixture_dir)) {
@@ -70,11 +53,11 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
 
-        $this->file_info_factory = mock('Tracker_FileInfoFactory');
+        $this->file_info_factory = \Mockery::spy(\Tracker_FileInfoFactory::class);
 
         ForgeConfig::set('sys_http_user', 'user');
 
-        $backend = mock('Backend');
+        $backend = \Mockery::spy(\Backend::class);
         Backend::setInstance('Backend', $backend);
     }
 
@@ -96,7 +79,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
     function testGetChangesetValue()
     {
-        $value_dao = new MockTracker_FormElement_Field_Value_FileDao();
+        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
 
         stub($value_dao)->searchById()->returnsDarFromArray(
             [
@@ -106,41 +89,42 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ]
         );
 
-        $tracker_file_info_factory = mock('Tracker_FileInfoFactory');
-        stub($tracker_file_info_factory)->getById()->returns(mock('Tracker_FileInfo'));
+        $tracker_file_info_factory = \Mockery::spy(\Tracker_FileInfoFactory::class);
+        stub($tracker_file_info_factory)->getById()->returns(\Mockery::spy(\Tracker_FileInfo::class));
         
-        $file_field = new Tracker_FormElement_Field_FileTestVersion();
-        $file_field->setReturnReference('getValueDao', $value_dao);
-        $file_field->setReturnReference('getTrackerFileInfoFactory', $tracker_file_info_factory);
+        $file_field = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $file_field->shouldReceive('getValueDao')->andReturns($value_dao);
+        $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturns($tracker_file_info_factory);
         
-        $changeset_value = $file_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
+        $changeset_value = $file_field->getChangesetValue(\Mockery::spy(\Tracker_Artifact_Changeset::class), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 3);
     }
     
     function testGetChangesetValue_doesnt_exist() {
-        $value_dao = new MockTracker_FormElement_Field_Value_FileDao();
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('getRow', false);
-        $value_dao->setReturnReference('searchById', $dar);
+        $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
+        $dar = Mockery::spy(DataAccessResult::class);
+        $dar->shouldReceive('getRow')->andReturn(false);
+        $value_dao->shouldReceive('searchById')->andReturn($dar);
         
-        $file_field = new Tracker_FormElement_Field_FileTestVersion();
-        $file_field->setReturnReference('getValueDao', $value_dao);
-        
-        $changeset_value = $file_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
+        $file_field = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $file_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturn(Mockery::spy(Tracker_FileInfoFactory::class));
+
+        $changeset_value = $file_field->getChangesetValue(\Mockery::spy(\Tracker_Artifact_Changeset::class), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 0);
     }
     
     function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertNull($f->getSoapAvailableValues());
     }
 
     function test_augmentDataFromRequest_null() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue('getSubmittedInfoFromFILES', null);
-        $f->setReturnValue('getId', 66);
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(null);
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -150,9 +134,9 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_emptyarray() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue('getSubmittedInfoFromFILES', array());
-        $f->setReturnValue('getId', 66);
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array());
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -162,33 +146,30 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_one_file_belonging_to_field() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue(
-            'getSubmittedInfoFromFILES', 
-            array(
-                'name' => array(
-                    66 => array(
-                        0 => array('file' => 'toto.gif'),
-                    ),
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
+            'name' => array(
+                66 => array(
+                    0 => array('file' => 'toto.gif'),
                 ),
-                'type' => array(
-                    66 => array(
-                        0 => array('file' => 'image/gif'),
-                    ),
+            ),
+            'type' => array(
+                66 => array(
+                    0 => array('file' => 'image/gif'),
                 ),
-                'error' => array(
-                    66 => array(
-                        0 => array('file' => 0),
-                    ),
+            ),
+            'error' => array(
+                66 => array(
+                    0 => array('file' => 0),
                 ),
-                'tmp_name' => array(
-                    66 => array(
-                        0 => array('file' => 'dtgjio'),
-                    ),
+            ),
+            'tmp_name' => array(
+                66 => array(
+                    0 => array('file' => 'dtgjio'),
                 ),
-            )
-        );
-        $f->setReturnValue('getId', 66);
+            ),
+        ));
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -205,37 +186,34 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_two_files_belonging_to_field() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue(
-            'getSubmittedInfoFromFILES', 
-            array(
-                'name' => array(
-                    66 => array(
-                        0 => array('file' => 'toto.gif'),
-                        1 => array('file' => 'Spec.doc'),
-                    ),
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
+            'name' => array(
+                66 => array(
+                    0 => array('file' => 'toto.gif'),
+                    1 => array('file' => 'Spec.doc'),
                 ),
-                'type' => array(
-                    66 => array(
-                        0 => array('file' => 'image/gif'),
-                        1 => array('file' => 'application/word'),
-                    ),
+            ),
+            'type' => array(
+                66 => array(
+                    0 => array('file' => 'image/gif'),
+                    1 => array('file' => 'application/word'),
                 ),
-                'error' => array(
-                    66 => array(
-                        0 => array('file' => 0),
-                        1 => array('file' => 1),
-                    ),
+            ),
+            'error' => array(
+                66 => array(
+                    0 => array('file' => 0),
+                    1 => array('file' => 1),
                 ),
-                'tmp_name' => array(
-                    66 => array(
-                        0 => array('file' => 'dtgjio'),
-                        1 => array('file' => ''),
-                    ),
+            ),
+            'tmp_name' => array(
+                66 => array(
+                    0 => array('file' => 'dtgjio'),
+                    1 => array('file' => ''),
                 ),
-            )
-        );
-        $f->setReturnValue('getId', 66);
+            ),
+        ));
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -258,49 +236,46 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_two_files_belonging_to_field_and_one_file_not() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue(
-            'getSubmittedInfoFromFILES', 
-            array(
-                'name' => array(
-                    66 => array(
-                        0 => array('file' => 'toto.gif'),
-                        1 => array('file' => 'Spec.doc'),
-                    ),
-                    111 => array(
-                        0 => array('file' => 'Screenshot.png'),
-                    ),
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
+            'name' => array(
+                66 => array(
+                    0 => array('file' => 'toto.gif'),
+                    1 => array('file' => 'Spec.doc'),
                 ),
-                'type' => array(
-                    66 => array(
-                        0 => array('file' => 'image/gif'),
-                        1 => array('file' => 'application/word'),
-                    ),
-                    111 => array(
-                        0 => array('file' => 'image/png'),
-                    ),
+                111 => array(
+                    0 => array('file' => 'Screenshot.png'),
                 ),
-                'error' => array(
-                    66 => array(
-                        0 => array('file' => 0),
-                        1 => array('file' => 1),
-                    ),
-                    111 => array(
-                        0 => array('file' => 0),
-                    ),
+            ),
+            'type' => array(
+                66 => array(
+                    0 => array('file' => 'image/gif'),
+                    1 => array('file' => 'application/word'),
                 ),
-                'tmp_name' => array(
-                    66 => array(
-                        0 => array('file' => 'dtgjio'),
-                        1 => array('file' => ''),
-                    ),
-                    111 => array(
-                        0 => array('file' => 'aoeeg'),
-                    ),
+                111 => array(
+                    0 => array('file' => 'image/png'),
                 ),
-            )
-        );
-        $f->setReturnValue('getId', 66);
+            ),
+            'error' => array(
+                66 => array(
+                    0 => array('file' => 0),
+                    1 => array('file' => 1),
+                ),
+                111 => array(
+                    0 => array('file' => 0),
+                ),
+            ),
+            'tmp_name' => array(
+                66 => array(
+                    0 => array('file' => 'dtgjio'),
+                    1 => array('file' => ''),
+                ),
+                111 => array(
+                    0 => array('file' => 'aoeeg'),
+                ),
+            ),
+        ));
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -324,33 +299,30 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_one_file_does_not_belong_to_field() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue(
-            'getSubmittedInfoFromFILES', 
-            array(
-                'name' => array(
-                    111 => array(
-                        0 => array('file' => 'toto.gif'),
-                    ),
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
+            'name' => array(
+                111 => array(
+                    0 => array('file' => 'toto.gif'),
                 ),
-                'type' => array(
-                    111 => array(
-                        0 => array('file' => 'image/gif'),
-                    ),
+            ),
+            'type' => array(
+                111 => array(
+                    0 => array('file' => 'image/gif'),
                 ),
-                'error' => array(
-                    111 => array(
-                        0 => array('file' => 0),
-                    ),
+            ),
+            'error' => array(
+                111 => array(
+                    0 => array('file' => 0),
                 ),
-                'tmp_name' => array(
-                    111 => array(
-                        0 => array('file' => 'dtgjio'),
-                    ),
+            ),
+            'tmp_name' => array(
+                111 => array(
+                    0 => array('file' => 'dtgjio'),
                 ),
-            )
-        );
-        $f->setReturnValue('getId', 66);
+            ),
+        ));
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123'
@@ -360,33 +332,30 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function test_augmentDataFromRequest_dont_override_description() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue(
-            'getSubmittedInfoFromFILES', 
-            array(
-                'name' => array(
-                    66 => array(
-                        0 => array('file' => 'toto.gif'),
-                    ),
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
+            'name' => array(
+                66 => array(
+                    0 => array('file' => 'toto.gif'),
                 ),
-                'type' => array(
-                    66 => array(
-                        0 => array('file' => 'image/gif'),
-                    ),
+            ),
+            'type' => array(
+                66 => array(
+                    0 => array('file' => 'image/gif'),
                 ),
-                'error' => array(
-                    66 => array(
-                        0 => array('file' => 0),
-                    ),
+            ),
+            'error' => array(
+                66 => array(
+                    0 => array('file' => 0),
                 ),
-                'tmp_name' => array(
-                    66 => array(
-                        0 => array('file' => 'dtgjio'),
-                    ),
+            ),
+            'tmp_name' => array(
+                66 => array(
+                    0 => array('file' => 'dtgjio'),
                 ),
-            )
-        );
-        $f->setReturnValue('getId', 66);
+            ),
+        ));
+        $f->shouldReceive('getId')->andReturns(66);
         
         $fields_data = array(
             '102' => '123',
@@ -401,7 +370,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
 
     function test_isValid_not_filled() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  '',
@@ -413,18 +382,18 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
-        $required_file->setReturnValue('isPreviousChangesetEmpty', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
+        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
     
     function test_isValid_two_not_filled() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  '',
@@ -444,18 +413,18 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
-        $required_file->setReturnValue('isPreviousChangesetEmpty', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
+        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
     
     function test_isValid_only_description_filled() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  'User sets the description but the file is not submitted (missing, ... ?)',
@@ -467,17 +436,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
     
     function test_isValid_description_filled_but_error_with_file_upload() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  'User sets the description but the file has error (network, ... ?)',
@@ -489,17 +458,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
     
     function test_isValid_description_filled_and_file_ok() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  "Capture d'ecran",
@@ -511,17 +480,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
 
     function itIsValidWhenFieldIsRequiredButHasAFileFromPreviousChangeset() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  "Capture d'ecran",
@@ -533,14 +502,14 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
 
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
-        $required_file->setReturnValue('isPreviousChangesetEmpty', false);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
+        $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(false);
         $this->assertTrue($required_file->isValid($artifact, $value));
     }
 
     function test_isValid_two_files_ok() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  "Capture d'ecran",
@@ -560,17 +529,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
     
     function test_isValid_one_file_ok_among_two() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  "Capture d'ecran",
@@ -590,17 +559,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
     
     function test_isValid_one_file_ok_and_one_empty() {
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
             array(
                 'description' =>  "Capture d'ecran",
@@ -620,24 +589,24 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
         
-        $required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $required_file->setReturnValue('isRequired', true);
+        $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
         
-        $not_required_file = new Tracker_FormElement_Field_FileTestVersion();
-        $not_required_file->setReturnValue('isRequired', false);
+        $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
     
     function testGetRootPath() {
         ForgeConfig::set('sys_data_dir', dirname(__FILE__) .'/data');
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $f->setReturnValue('getId', 123);
+        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $f->shouldReceive('getId')->andReturns(123);
         $this->assertEqual($f->getRootPath(), ForgeConfig::get('sys_data_dir') .'/tracker/123');
     }
 
     public function itReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAnEmptyPreviousChangeset(){
-        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $formelement_field_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $submitted_value = array(
             array(
                 'description' =>  '',
@@ -649,16 +618,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             )
         );
 
-        $files_in_previous_changeset = array();
+        $artifact = Mockery::spy(Tracker_Artifact::class);
 
-        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
-        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', true);
+        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturn(false);
+        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturn(true);
 
-        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $files_in_previous_changeset));
+        $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
     public function itReturnsFalseWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangeset(){
-        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $formelement_field_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $submitted_value = array(
             array(
                 'description' =>  '',
@@ -671,19 +640,19 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         );
 
         $file = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
-        $changesets = mock('Tracker_Artifact_ChangesetValue_File');
+        $changesets = \Mockery::spy(\Tracker_Artifact_ChangesetValue_File::class);
         stub($changesets)->getFiles()->returns(array($file));
-        $artifact = mock('Tracker_Artifact');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact)->getLastChangeset()->returns($changesets);
 
-        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
-        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', false);
+        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
+        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(false);
 
         $this->assertFalse($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
 
     public function itReturnsTrueWhenTheFieldIsEmptyAtFieldUpdateAndHasAPreviousChangesetWhichIsDeleted(){
-        $formelement_field_file = new Tracker_FormElement_Field_FileTestVersion();
+        $formelement_field_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $submitted_value = array(
             'delete' => array(123),
             array(
@@ -697,13 +666,13 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         );
 
         $file = new Tracker_FileInfo(123, '*', '*', 'Description 123', 'file123.txt', 123, 'text/xml');
-        $changesets = mock('Tracker_Artifact_ChangesetValue_File');
+        $changesets = \Mockery::spy(\Tracker_Artifact_ChangesetValue_File::class);
         stub($changesets)->getFiles()->returns(array($file));
-        $artifact = mock('Tracker_Artifact');
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
         stub($artifact)->getLastChangeset()->returns($changesets);
 
-        $formelement_field_file->setReturnValue('checkThatAtLeastOneFileIsUploaded', false);
-        $formelement_field_file->setReturnValue('isPreviousChangesetEmpty', true);
+        $formelement_field_file->shouldReceive('checkThatAtLeastOneFileIsUploaded')->andReturns(false);
+        $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
 
         $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
     }
@@ -717,6 +686,7 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->tmp_dir = '/var/tmp'.'/_fixtures/tmp';
         ForgeConfig::set('codendi_cache_dir', $this->tmp_dir);
         if (! is_dir($this->tmp_dir)) {
@@ -724,7 +694,7 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
         }
         
         $this->current_user = aUser()->withId(123)->build();
-        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
+        $user_manager = mockery_stub(\UserManager::class)->getCurrentUser()->returns($this->current_user);
         UserManager::setInstance($user_manager);
     }
 
@@ -755,6 +725,7 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->storage_dir = $this->fixture_dir.'/storage';
         if(!is_dir($this->storage_dir)) {
             mkdir($this->storage_dir);
@@ -762,18 +733,24 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 
         ForgeConfig::set('sys_data_dir', $this->storage_dir);
         $this->field_id = 987;
-        $this->field    = partial_mock('Tracker_FormElement_Field_File_FileSystemPersistanceTest',
-            array('getTemporaryFileManagerDao', 'getFileInfoFactory'),
-            array($this->field_id)
-        );
+        $this->field    = \Mockery::mock(
+            \Tracker_FormElement_Field_File_FileSystemPersistanceTest::class,
+            [$this->field_id]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        stub($this->field)->getTemporaryFileManagerDao()->returns(mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao'));
-        stub($this->field)->getFileInfoFactory()->returns(mock('Tracker_FileInfoFactory'));
+        stub($this->field)->getTemporaryFileManagerDao()->returns(\Mockery::spy(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class));
+        stub($this->field)->getFileInfoFactory()->returns(\Mockery::spy(\Tracker_FileInfoFactory::class));
 
         $this->attachment_id = 654;
-        $this->attachment = partial_mock('Tracker_FileInfo', array('save', 'delete', 'postUploadActions'), array(
-            $this->attachment_id, $this->field, null, null, null, null, null
-        ));
+        $this->attachment = \Mockery::mock(
+            \Tracker_FileInfo::class,
+            [$this->attachment_id, $this->field, null, null, null, null, null]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
         stub($this->attachment)->save()->returns(true);
     }
 
@@ -826,12 +803,11 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
 
     public function setUp() {
         parent::setUp();
-        $this->field = partial_mock('Tracker_FormElement_Field_File_FileSystemPersistanceTest',
-            array('getTemporaryFileManagerDao', 'getFileInfoFactory')
-        );
+        $this->setUpGlobalsMockery();
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field_File_FileSystemPersistanceTest::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        stub($this->field)->getTemporaryFileManagerDao()->returns(mock('Tracker_Artifact_Attachment_TemporaryFileManagerDao'));
-        stub($this->field)->getFileInfoFactory()->returns(mock('Tracker_FileInfoFactory'));
+        stub($this->field)->getTemporaryFileManagerDao()->returns(\Mockery::spy(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class));
+        stub($this->field)->getFileInfoFactory()->returns(\Mockery::spy(\Tracker_FileInfoFactory::class));
     }
 
     private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype, $action = null) {

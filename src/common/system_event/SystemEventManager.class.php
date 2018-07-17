@@ -99,7 +99,7 @@ class SystemEventManager {
         return self::$_instance;
     }
 
-    public function setInstance(SystemEventManager $instance) {
+    public static function setInstance(SystemEventManager $instance) {
         self::$_instance = $instance;
     }
 

@@ -19,134 +19,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
-Mock::generatePartial('Tracker',
-                      'TrackerTestVersion',
-                      array(
-                          'displaySubmit',
-                          'displayAdmin',
-                          'displayAdminOptions',
-                          'displayAdminPerms',
-                          'displayAdminPermsTracker',
-                          'displayAdminPermsFields',
-                          'displayAdminFormElements',
-                          'getTrackerSemanticManager',
-                          'getNotificationsManager',
-                          'getDateReminderManager',
-                          'getCannedResponseManager',
-                          'getCannedResponseFactory',
-                          'getFormElementFactory',
-                          'getReportFactory',
-                          'getWorkflowFactory',
-                          'getWorkflowManager',
-                          'getTrackerManager',
-                          'getTrackerFactory',
-                          'getProject',
-                          'getGroupId',
-                          'getPermissionsByUgroupId',
-                          'getFormELements',
-                          'getId',
-                          'getColor',
-                          'sendXML',
-                          'isUsed',
-                          'getAllFormElements',
-                          'getTrackerArtifactFactory',
-                          'aidExists',
-                          'getUserManager',
-                          'getHierarchyFactory',
-                          'getPermissionController',
-                          'userCanView',
-                          'getProjectUgroups',
-                          'getWebhookXMLExporter'
-                      )
-);
-
-Mock::generatePartial('Tracker',
-                      'TrackerTestVersionForIsValid',
-                      array(
-                          'displaySubmit',
-                          'displayAdmin',
-                          'displayAdminOptions',
-                          'displayAdminPerms',
-                          'displayAdminPermsTracker',
-                          'displayAdminPermsFields',
-                          'displayAdminFormElements',
-                          'getTrackerSemanticManager',
-                          'getNotificationsManager',
-                          'getDateReminderManager',
-                          'getCannedResponseManager',
-                          'getCannedResponseFactory',
-                          'getFormElementFactory',
-                          'getReportFactory',
-                          'getWorkflowFactory',
-                          'getWorkflowManager',
-                          'getTrackerFactory',
-                          'getGroupId',
-                          'getPermissionsByUgroupId',
-                          'getFormELements',
-                          'getId',
-                          'sendXML',
-                          'isUsed',
-                          'getAllFormElements',
-                          'getTrackerArtifactFactory',
-                          'aidExists',
-                          'getUserManager',
-                          'hasError'
-                      )
-);
-
-Mock::generatePartial('Tracker',
-                      'TrackerTestVersionForAccessPerms',
-                      array(
-                          'getGroupId',
-                          'getPermissionsByUgroupId',
-                          'getId',
-                          'getUserManager',
-                          'getProject',
-                          'getTrackerManager'
-                      )
-);
-
 require_once('common/include/Codendi_Request.class.php');
-Mock::generate('Codendi_Request');
-
 require_once('common/user/User.class.php');
-Mock::generate('PFUser');
-
 require_once('common/user/UserManager.class.php');
-Mock::generate('UserManager');
-
-Mock::generate('TrackerManager');
-
-Mock::generate('TrackerFactory');
-
-Mock::generate('Tracker_SemanticManager');
-
-Mock::generate('Tracker_NotificationsManager');
-
-Mock::generate('Tracker_DateReminderManager');
-
-Mock::generate('Tracker_CannedResponseManager');
-
-Mock::generate('WorkflowManager');
-
-Mock::generate('Tracker_ReportFactory');
-
-Mock::generate('WorkflowFactory');
-
-Mock::generate('Tracker_FormElementFactory');
-
-Mock::generate('Tracker_FormElement_Field_String');
-
-Mock::generate('Tracker_CannedResponseFactory');
-
-Mock::generate('Tracker_FormElement_Interface');
-
-Mock::generate('Tracker_ArtifactFactory');
-
-Mock::generate('Tracker_Artifact');
-
-Mock::generate('Tracker_SharedFormElementFactory');
-
+require_once('common/layout/Layout.class.php');
 
 class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_Interface {
     public function exportToXml(
@@ -179,307 +55,305 @@ class Tracker_FormElement_InterfaceTestVersion implements Tracker_FormElement_In
     }
 }
 
-require_once('common/layout/Layout.class.php');
-Mock::generate('Layout');
-
 class TrackerTest extends TuleapTestCase {
 
     private $all_trackers_admin_user;
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->project = mock('Project');
-        $this->project->setReturnValue('getID', 101);
-        $this->project->setReturnValue('isPublic', true);
+        $this->project = \Mockery::spy(\Project::class);
+        $this->project->shouldReceive('getID')->andReturns(101);
+        $this->project->shouldReceive('isPublic')->andReturns(true);
 
-        $this->project_private = mock('Project');
-        $this->project_private->setReturnValue('getID', 102);
-        $this->project_private->setReturnValue('isPublic', false);
+        $this->project_private = \Mockery::spy(\Project::class);
+        $this->project_private->shouldReceive('getID')->andReturns(102);
+        $this->project_private->shouldReceive('isPublic')->andReturns(false);
 
-        $this->tracker = new TrackerTestVersion();
-        $this->tracker1 = new TrackerTestVersion();
-        $this->tracker2 = new TrackerTestVersion();
-        $this->tracker_manager = new MockTrackerManager();
+        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker1 = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker2 = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->tracker_manager = \Mockery::spy(\TrackerManager::class);
 
-        $this->tracker->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $this->tracker1->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $this->tracker2->setReturnReference('getTrackerManager', $this->tracker_manager);
+        $this->tracker->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $this->tracker1->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $this->tracker2->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
 
-        $this->tracker_manager->setReturnValue('userCanAdminAllProjectTrackers', false);
+        $this->tracker_manager->shouldReceive('userCanAdminAllProjectTrackers')->andReturns(false);
 
-        $this->tf = new MockTrackerFactory();
-        $this->tracker->setReturnReference('getTrackerFactory', $this->tf);
-        $this->tracker1->setReturnReference('getTrackerFactory', $this->tf);
-        $this->tracker2->setReturnReference('getTrackerFactory', $this->tf);
-        $this->tsm = new MockTracker_SemanticManager();
-        $this->tracker->setReturnReference('getTrackerSemanticManager', $this->tsm);
-        $this->tracker1->setReturnReference('getTrackerSemanticManager', $this->tsm);
-        $this->tracker2->setReturnReference('getTrackerSemanticManager', $this->tsm);
-        $this->tnm = new MockTracker_NotificationsManager();
-        $this->tracker->setReturnReference('getNotificationsManager', $this->tnm);
-        $this->tracker1->setReturnReference('getNotificationsManager', $this->tnm);
-        $this->tracker2->setReturnReference('getNotificationsManager', $this->tnm);
-        $this->trr = new MockTracker_DateReminderManager();
-        $this->tracker->setReturnReference('getDateReminderManager', $this->trr);
-        $this->tracker1->setReturnReference('getDateReminderManager', $this->trr);
-        $this->tracker2->setReturnReference('getDateReminderManager', $this->trr);
-        $this->tcrm = new MockTracker_CannedResponseManager();
-        $this->tracker->setReturnReference('getCannedResponseManager', $this->tcrm);
-        $this->tracker1->setReturnReference('getCannedResponseManager', $this->tcrm);
-        $this->tracker2->setReturnReference('getCannedResponseManager', $this->tcrm);
-        $this->wm = new MockWorkflowManager();
-        $this->tracker->setReturnReference('getWorkflowManager', $this->wm);
-        $this->tracker1->setReturnReference('getWorkflowManager', $this->wm);
-        $this->tracker2->setReturnReference('getWorkflowManager', $this->wm);
+        $this->tf = \Mockery::spy(\TrackerFactory::class);
+        $this->tracker->shouldReceive('getTrackerFactory')->andReturns($this->tf);
+        $this->tracker1->shouldReceive('getTrackerFactory')->andReturns($this->tf);
+        $this->tracker2->shouldReceive('getTrackerFactory')->andReturns($this->tf);
+        $this->tsm = \Mockery::spy(\Tracker_SemanticManager::class);
+        $this->tracker->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
+        $this->tracker1->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
+        $this->tracker2->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
+        $this->tnm = \Mockery::spy(\Tracker_NotificationsManager::class);
+        $this->tracker->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
+        $this->tracker1->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
+        $this->tracker2->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
+        $this->trr = \Mockery::spy(\Tracker_DateReminderManager::class);
+        $this->tracker->shouldReceive('getDateReminderManager')->andReturns($this->trr);
+        $this->tracker1->shouldReceive('getDateReminderManager')->andReturns($this->trr);
+        $this->tracker2->shouldReceive('getDateReminderManager')->andReturns($this->trr);
+        $this->tcrm = \Mockery::spy(\Tracker_CannedResponseManager::class);
+        $this->tracker->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
+        $this->tracker1->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
+        $this->tracker2->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
+        $this->wm = \Mockery::spy(\WorkflowManager::class);
+        $this->tracker->shouldReceive('getWorkflowManager')->andReturns($this->wm);
+        $this->tracker1->shouldReceive('getWorkflowManager')->andReturns($this->wm);
+        $this->tracker2->shouldReceive('getWorkflowManager')->andReturns($this->wm);
         $group_id = 999;
-        $this->tracker->setReturnValue('getGroupId', $group_id);
-        $this->tracker->setReturnValue('getId', 110);
-        $this->tracker->setReturnValue('getColor', 'inca_gray');
-        $this->tracker1->setReturnValue('getGroupId', $group_id);
-        $this->tracker1->setReturnValue('getId', 111);
-        $this->tracker2->setReturnValue('getGroupId', $group_id);
-        $this->tracker2->setReturnValue('getId', 112);
+        $this->tracker->shouldReceive('getGroupId')->andReturns($group_id);
+        $this->tracker->shouldReceive('getId')->andReturns(110);
+        $this->tracker->shouldReceive('getColor')->andReturns('inca_gray');
+        $this->tracker1->shouldReceive('getGroupId')->andReturns($group_id);
+        $this->tracker1->shouldReceive('getId')->andReturns(111);
+        $this->tracker2->shouldReceive('getGroupId')->andReturns($group_id);
+        $this->tracker2->shouldReceive('getId')->andReturns(112);
 
 
-        $this->tracker->setReturnValue('getPermissionsByUgroupId', array(
+        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
             1 => array('PERM_1'),
             3 => array('PERM_2'),
             5 => array('PERM_3'),
             115 => array('PERM_3'),
         ));
-        $this->tracker1->setReturnValue('getPermissionsByUgroupId', array(
+        $this->tracker1->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
             1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
         ));
-        $this->tracker2->setReturnValue('getPermissionsByUgroupId', array(
+        $this->tracker2->shouldReceive('getPermissionsByUgroupId')->andReturns(array(
             1002 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
         ));
 
-        $this->site_admin_user = mock('PFUser');
-        $this->site_admin_user->setReturnValue('getId', 1);
-        $this->site_admin_user->setReturnValue('isMember', false);
-        $this->site_admin_user->setReturnValue('isSuperUser', true);
-        $this->site_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->site_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->site_admin_user->setReturnValue('isLoggedIn', true);
+        $this->site_admin_user = \Mockery::spy(\PFUser::class);
+        $this->site_admin_user->shouldReceive('getId')->andReturns(1);
+        $this->site_admin_user->shouldReceive('isMember')->andReturns(false);
+        $this->site_admin_user->shouldReceive('isSuperUser')->andReturns(true);
+        $this->site_admin_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->site_admin_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->site_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->project_admin_user = mock('PFUser');
-        $this->project_admin_user->setReturnValue('getId', 123);
-        $this->project_admin_user->setReturnValue('isMember', true, array($group_id, 'A'));
-        $this->project_admin_user->setReturnValue('isMember', false, array(102));
-        $this->project_admin_user->setReturnValue('isSuperUser', false);
-        $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->project_admin_user->setReturnValue('isLoggedIn', true);
+        $this->project_admin_user = \Mockery::spy(\PFUser::class);
+        $this->project_admin_user->shouldReceive('getId')->andReturns(123);
+        $this->project_admin_user->shouldReceive('isMember')->with($group_id, 'A')->andReturns(true);
+        $this->project_admin_user->shouldReceive('isMember')->with(102)->andReturns(false);
+        $this->project_admin_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->project_admin_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->project_admin_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->project_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->all_trackers_admin_user = mock('PFUser');
-        $this->all_trackers_admin_user->setReturnValue('getId', 222);
-        $this->all_trackers_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
-        $this->all_trackers_admin_user->setReturnValue('isMember', false, array(102));
-        $this->all_trackers_admin_user->setReturnValue('isSuperUser', false);
-        $this->all_trackers_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*')); //1001 = ugroup who has ADMIN perm on tracker
-        $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*')); //1002 = ugroup who has ADMIN perm on tracker
-        $this->all_trackers_admin_user->setReturnValue('isLoggedIn', true);
+        $this->all_trackers_admin_user = \Mockery::spy(\PFUser::class);
+        $this->all_trackers_admin_user->shouldReceive('getId')->andReturns(222);
+        $this->all_trackers_admin_user->shouldReceive('isMember')->with($group_id, 'A')->andReturns(false);
+        $this->all_trackers_admin_user->shouldReceive('isMember')->with(102)->andReturns(false);
+        $this->all_trackers_admin_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->all_trackers_admin_user->shouldReceive('isMember')->with($group_id, 0)->andReturns(true);
+        $this->all_trackers_admin_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(true); //1001 = ugroup who has ADMIN perm on tracker
+        $this->all_trackers_admin_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(true); //1002 = ugroup who has ADMIN perm on tracker
+        $this->all_trackers_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->tracker1_admin_user = mock('PFUser');
-        $this->tracker1_admin_user->setReturnValue('getId', 333);
-        $this->tracker1_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
-        $this->tracker1_admin_user->setReturnValue('isMember', false, array(102));
-        $this->tracker1_admin_user->setReturnValue('isSuperUser', false);
-        $this->tracker1_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
-        $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->tracker1_admin_user->setReturnValue('isLoggedIn', true);
+        $this->tracker1_admin_user = \Mockery::spy(\PFUser::class);
+        $this->tracker1_admin_user->shouldReceive('getId')->andReturns(333);
+        $this->tracker1_admin_user->shouldReceive('isMember')->with($group_id, 'A')->andReturns(false);
+        $this->tracker1_admin_user->shouldReceive('isMember')->with(102)->andReturns(false);
+        $this->tracker1_admin_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker1_admin_user->shouldReceive('isMember')->with($group_id, 0)->andReturns(true);
+        $this->tracker1_admin_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(true);
+        $this->tracker1_admin_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->tracker1_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->tracker2_admin_user = mock('PFUser');
-        $this->tracker2_admin_user->setReturnValue('getId', 444);
-        $this->tracker2_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
-        $this->tracker2_admin_user->setReturnValue('isMember', false, array(102));
-        $this->tracker2_admin_user->setReturnValue('isSuperUser', false);
-        $this->tracker2_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*'));
-        $this->tracker2_admin_user->setReturnValue('isLoggedIn', true);
+        $this->tracker2_admin_user = \Mockery::spy(\PFUser::class);
+        $this->tracker2_admin_user->shouldReceive('getId')->andReturns(444);
+        $this->tracker2_admin_user->shouldReceive('isMember')->with($group_id, 'A')->andReturns(false);
+        $this->tracker2_admin_user->shouldReceive('isMember')->with(102)->andReturns(false);
+        $this->tracker2_admin_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker2_admin_user->shouldReceive('isMember')->with($group_id, 0)->andReturns(true);
+        $this->tracker2_admin_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->tracker2_admin_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(true);
+        $this->tracker2_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->project_member_user = mock('PFUser');
-        $this->project_member_user->setReturnValue('getId', 555);
-        $this->project_member_user->setReturnValue('isMember', false, array($group_id, 'A'));
-        $this->project_member_user->setReturnValue('isMember', false, array(102));
-        $this->project_member_user->setReturnValue('isSuperUser', false);
-        $this->project_member_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->project_member_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->project_member_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->project_member_user->setReturnValue('isTrackerAdmin', false);
-        $this->project_member_user->setReturnValue('isLoggedIn', true);
+        $this->project_member_user = \Mockery::spy(\PFUser::class);
+        $this->project_member_user->shouldReceive('getId')->andReturns(555);
+        $this->project_member_user->shouldReceive('isMember')->with($group_id, 'A')->andReturns(false);
+        $this->project_member_user->shouldReceive('isMember')->with(102)->andReturns(false);
+        $this->project_member_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->project_member_user->shouldReceive('isMember')->with($group_id, 0)->andReturns(true);
+        $this->project_member_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->project_member_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->project_member_user->shouldReceive('isTrackerAdmin')->andReturns(false);
+        $this->project_member_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->registered_user = mock('PFUser');
-        $this->registered_user->setReturnValue('getId', 777);
-        $this->registered_user->setReturnValue('isMember', false);
-        $this->registered_user->setReturnValue('isSuperUser', false);
-        $this->registered_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->registered_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->registered_user->setReturnValue('isLoggedIn', true);
+        $this->registered_user = \Mockery::spy(\PFUser::class);
+        $this->registered_user->shouldReceive('getId')->andReturns(777);
+        $this->registered_user->shouldReceive('isMember')->andReturns(false);
+        $this->registered_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->registered_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->registered_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->registered_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->anonymous_user = mock('PFUser');
-        $this->anonymous_user->setReturnValue('getId', 777);
-        $this->anonymous_user->setReturnValue('isMember', false);
-        $this->anonymous_user->setReturnValue('isSuperUser', false);
-        $this->anonymous_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->anonymous_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->anonymous_user->setReturnValue('isLoggedIn', false);
+        $this->anonymous_user = \Mockery::spy(\PFUser::class);
+        $this->anonymous_user->shouldReceive('getId')->andReturns(777);
+        $this->anonymous_user->shouldReceive('isMember')->andReturns(false);
+        $this->anonymous_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->anonymous_user->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->anonymous_user->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->anonymous_user->shouldReceive('isLoggedIn')->andReturns(false);
 
         // Users for tracker access perm tests
-        $this->anonymous = mock('PFUser');
-        $this->anonymous->setReturnValue('isSuperUser', false);
-        $this->anonymous->setReturnValue('getId', 0);
-        $this->anonymous->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->anonymous = \Mockery::spy(\PFUser::class);
+        $this->anonymous->shouldReceive('isSuperUser')->andReturns(false);
+        $this->anonymous->shouldReceive('getId')->andReturns(0);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->anonymous->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
 
-        $this->registered = mock('PFUser');
-        $this->registered->setReturnValue('isSuperUser',false);
-        $this->registered->setReturnValue('getId', 101);
-        $this->registered->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->registered = \Mockery::spy(\PFUser::class);
+        $this->registered->shouldReceive('isSuperUser')->andReturns(false);
+        $this->registered->shouldReceive('getId')->andReturns(101);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(true);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->registered->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
 
-        $this->project_member = mock('PFUser');
-        $this->project_member->setReturnValue('isSuperUser', false);
-        $this->project_member->setReturnValue('getId', 102);
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(3, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->project_member->setReturnValue('isMember', false, array(102));
+        $this->project_member = \Mockery::spy(\PFUser::class);
+        $this->project_member->shouldReceive('isSuperUser')->andReturns(false);
+        $this->project_member->shouldReceive('getId')->andReturns(102);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(true);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(true);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->project_member->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->project_member->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->project_admin = mock('PFUser');
-        $this->project_admin->setReturnValue('isSuperUser', false);
-        $this->project_admin->setReturnValue('getId', 103);
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(3, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(4, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->project_admin->setReturnValue('isMember', false, array(102));
+        $this->project_admin = \Mockery::spy(\PFUser::class);
+        $this->project_admin->shouldReceive('isSuperUser')->andReturns(false);
+        $this->project_admin->shouldReceive('getId')->andReturns(103);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(true);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(true);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(true);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->project_admin->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->project_admin->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->super_admin = mock('PFUser');
-        $this->super_admin->setReturnValue('isSuperUser', true);
-        $this->super_admin->setReturnValue('getId', 104);
-        $this->super_admin->setReturnValue('isMemberOfUGroup', true, array('*', '*'));
-        $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        $this->super_admin = \Mockery::spy(\PFUser::class);
+        $this->super_admin->shouldReceive('isSuperUser')->andReturns(true);
+        $this->super_admin->shouldReceive('getId')->andReturns(104);
+        $this->super_admin->shouldReceive('isMemberOfUGroup')->with(Mockery::any(), Mockery::any())->andReturns(true);
+        $this->super_admin->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->super_admin->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
 
-        $this->tracker_submitter = mock('PFUser');
-        $this->tracker_submitter->setReturnValue('isSuperUser', false);
-        $this->tracker_submitter->setReturnValue('getId', 105);
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(138, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->tracker_submitter->setReturnValue('isMember', false, array(102));
+        $this->tracker_submitter = \Mockery::spy(\PFUser::class);
+        $this->tracker_submitter->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker_submitter->shouldReceive('getId')->andReturns(105);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(true);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->tracker_submitter->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->tracker_assignee = mock('PFUser');
-        $this->tracker_assignee->setReturnValue('isSuperUser', false);
-        $this->tracker_assignee->setReturnValue('getId', 106);
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->tracker_assignee->setReturnValue('isMember', false, array(102));
+        $this->tracker_assignee = \Mockery::spy(\PFUser::class);
+        $this->tracker_assignee->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker_assignee->shouldReceive('getId')->andReturns(106);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(true);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->tracker_assignee->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->tracker_submitterassignee = mock('PFUser');
-        $this->tracker_submitterassignee->setReturnValue('isSuperUser', false);
-        $this->tracker_submitterassignee->setReturnValue('getId', 107);
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(138, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMember', false, array(102));
+        $this->tracker_submitterassignee = \Mockery::spy(\PFUser::class);
+        $this->tracker_submitterassignee->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('getId')->andReturns(107);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(true);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(true);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(true);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->tracker_submitterassignee->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->tracker_admin = mock('PFUser');
-        $this->tracker_admin->setReturnValue('isSuperUser', false);
-        $this->tracker_admin->setReturnValue('getId', 107);
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
-        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
-        $this->tracker_admin->setReturnValue('isMember', false, array(102));
+        $this->tracker_admin = \Mockery::spy(\PFUser::class);
+        $this->tracker_admin->shouldReceive('isSuperUser')->andReturns(false);
+        $this->tracker_admin->shouldReceive('getId')->andReturns(107);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(1, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(2, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(3, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(4, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(138, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(196, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(1001, Mockery::any())->andReturns(true);
+        $this->tracker_admin->shouldReceive('isMemberOfUGroup')->with(1002, Mockery::any())->andReturns(false);
+        $this->tracker_admin->shouldReceive('isMember')->with(102)->andReturns(false);
 
-        $this->all_trackers_forge_admin_user = mock('PFUser');
-        $this->all_trackers_forge_admin_user->setReturnValue('getId', 888);
-        $this->all_trackers_forge_admin_user->setReturnValue('isMember', false);
-        $this->all_trackers_forge_admin_user->setReturnValue('isSuperUser', false);
-        $this->all_trackers_forge_admin_user->setReturnValue('isMemberOfUGroup', false);
-        $this->all_trackers_forge_admin_user->setReturnValue('isMemberOfUGroup', false);
-        $this->all_trackers_forge_admin_user->setReturnValue('isLoggedIn', true);
+        $this->all_trackers_forge_admin_user = \Mockery::spy(\PFUser::class);
+        $this->all_trackers_forge_admin_user->shouldReceive('getId')->andReturns(888);
+        $this->all_trackers_forge_admin_user->shouldReceive('isMember')->andReturns(false);
+        $this->all_trackers_forge_admin_user->shouldReceive('isSuperUser')->andReturns(false);
+        $this->all_trackers_forge_admin_user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->all_trackers_forge_admin_user->shouldReceive('isMemberOfUGroup')->andReturns(false);
+        $this->all_trackers_forge_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
 
-        $this->workflow_factory = new MockWorkflowFactory();
-        $this->tracker->setReturnReference('getWorkflowFactory', $this->workflow_factory);
+        $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
+        $this->tracker->shouldReceive('getWorkflowFactory')->andReturns($this->workflow_factory);
 
-        $this->formelement_factory = new MockTracker_FormElementFactory();
-        $this->tracker->setReturnReference('getFormElementFactory', $this->formelement_factory);
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->tracker->shouldReceive('getFormElementFactory')->andReturns($this->formelement_factory);
 
-        $this->report_factory = new MockTracker_ReportFactory();
-        $this->tracker->setReturnReference('getReportFactory', $this->report_factory);
+        $this->report_factory = \Mockery::spy(\Tracker_ReportFactory::class);
+        $this->tracker->shouldReceive('getReportFactory')->andReturns($this->report_factory);
 
-        $this->canned_response_factory = new MockTracker_CannedResponseFactory();
-        $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
+        $this->canned_response_factory = \Mockery::spy(\Tracker_CannedResponseFactory::class);
+        $this->tracker->shouldReceive('getCannedResponseFactory')->andReturns($this->canned_response_factory);
 
-        $this->permission_controller = mock('Tracker_Permission_PermissionController');
+        $this->permission_controller = \Mockery::spy(\Tracker_Permission_PermissionController::class);
         stub($this->tracker)->getPermissionController()->returns($this->permission_controller);
 
-        $this->permission_controller1 = mock('Tracker_Permission_PermissionController');
+        $this->permission_controller1 = \Mockery::spy(\Tracker_Permission_PermissionController::class);
         stub($this->tracker1)->getPermissionController()->returns($this->permission_controller1);
 
-        $this->permission_controller2 = mock('Tracker_Permission_PermissionController');
+        $this->permission_controller2 = \Mockery::spy(\Tracker_Permission_PermissionController::class);
         stub($this->tracker2)->getPermissionController()->returns($this->permission_controller2);
 
         $this->hierarchy = new Tracker_Hierarchy();
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
-        $this->tracker->setReturnValue('getHierarchyFactory', $hierarchy_factory);
+        $this->tracker->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
 
-        $this->workflow_factory = mock('WorkflowFactory');
+        $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
         WorkflowFactory::setInstance($this->workflow_factory);
 
-        $this->user_manager = mock('UserManager');
+        $this->user_manager = \Mockery::spy(\UserManager::class);
         UserManager::setInstance($this->user_manager);
 
-        $GLOBALS['Response'] = new MockLayout();
+        $GLOBALS['Response'] = \Mockery::spy(\Layout::class);
 
         $GLOBALS['UGROUPS'] = array(
             'UGROUP_1' => 1,
@@ -516,10 +390,10 @@ class TrackerTest extends TuleapTestCase {
     // New artifact permissions
     //
     public function testPermsNewArtifactSiteAdmin() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field
@@ -527,15 +401,15 @@ class TrackerTest extends TuleapTestCase {
 
         // site admin can submit artifacts
         stub($this->tracker)->userCanView()->returns(true);
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
     public function testPermsNewArtifactProjectAdmin() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field
@@ -543,15 +417,15 @@ class TrackerTest extends TuleapTestCase {
 
         // project admin can submit artifacts
         stub($this->tracker)->userCanView()->returns(true);
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_admin_user);
     }
 
     public function testPermsNewArtifactTrackerAdmin() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field
@@ -559,15 +433,15 @@ class TrackerTest extends TuleapTestCase {
 
         // tracker admin can submit artifacts
         stub($this->tracker)->userCanView()->returns(true);
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->all_trackers_admin_user);
     }
 
     public function testPermsNewArtifactProjectMember() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(true);
         stub($this->tracker)->userCanView()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
@@ -575,15 +449,15 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // project member can submit artifacts
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->project_member_user);
     }
 
     public function testPermsNewArtifactRegisteredUser() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(true);
         stub($this->tracker)->userCanView()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
@@ -591,36 +465,38 @@ class TrackerTest extends TuleapTestCase {
         ));
 
         // registered user can submit artifacts
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
     public function testUserCannotCreateArtifactIfTheyDoNotHaveSubmitPermissionsOnAtLeastOneField() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(false);
-        $tracker_field2 = mock('Tracker_FormElement_Field_Text');
+        $tracker_field2 = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field2)->userCanSubmit()->returns(false);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field,
             $tracker_field2
         ));
 
+        $this->tracker->shouldReceive('userCanView')->with($this->registered_user)->andReturn(true);
+
         // registered user can submit artifacts
-        $this->tracker->expectNever('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->never();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
     public function testUserCanCreateArtifactEvenIfTheyDoNotHaveSubmitPermissionsOnAllRequiredFields() {
-        $request_new_artifact = new MockCodendi_Request($this);
-        $request_new_artifact->setReturnValue('get', 'new-artifact', array('func'));
+        $request_new_artifact = \Mockery::spy(\Codendi_Request::class);
+        $request_new_artifact->shouldReceive('get')->with('func')->andReturns('new-artifact');
 
-        $tracker_field = mock('Tracker_FormElement_Field_Text');
+        $tracker_field = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field)->userCanSubmit()->returns(false);
         stub($tracker_field)->isRequired()->returns(true);
-        $tracker_field2 = mock('Tracker_FormElement_Field_Text');
+        $tracker_field2 = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         stub($tracker_field2)->userCanSubmit()->returns(true);
         stub($this->formelement_factory)->getUsedFields()->returns(array(
             $tracker_field,
@@ -629,7 +505,7 @@ class TrackerTest extends TuleapTestCase {
 
         // registered user can submit artifacts
         stub($this->tracker)->userCanView()->returns(true);
-        $this->tracker->expectOnce('displaySubmit');
+        $this->tracker->shouldReceive('displaySubmit')->once();
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->registered_user);
     }
 
@@ -637,43 +513,43 @@ class TrackerTest extends TuleapTestCase {
     // Delete tracker permissions
     //
     public function testPermsDeleteTrackerSiteAdmin() {
-        $request_delete_tracker = new MockCodendi_Request($this);
-        $request_delete_tracker->setReturnValue('get', 'delete', array('func'));
+        $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
         // site admin can delete trackers
-        $this->tracker->expectOnce('getTrackerFactory');
+        $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->site_admin_user);
     }
     public function testPermsDeleteTrackerProjectAdmin() {
-        $request_delete_tracker = new MockCodendi_Request($this);
-        $request_delete_tracker->setReturnValue('get', 'delete', array('func'));
+        $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
         // project admin can delete trackers
-        $this->tracker->expectOnce('getTrackerFactory');
+        $this->tf->shouldReceive('markAsDeleted')->once();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_admin_user);
     }
     public function testPermsDeleteTrackerTrackerAdmin() {
-        $request_delete_tracker = new MockCodendi_Request($this);
-        $request_delete_tracker->setReturnValue('get', 'delete', array('func'));
+        $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
         // tracker admin can NOT delete trackers if he's not project admin
-        $this->tracker->expectNever('getTrackerFactory');
+        $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsDeleteTrackerProjectMember() {
-        $request_delete_tracker = new MockCodendi_Request($this);
-        $request_delete_tracker->setReturnValue('get', 'delete', array('func'));
+        $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
         // project member can NOT delete tracker
-        $this->tracker->expectNever('getTrackerFactory');
+        $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->project_member_user);
     }
     public function testPermsDeleteTrackerRegisteredUser() {
-        $request_delete_tracker = new MockCodendi_Request($this);
-        $request_delete_tracker->setReturnValue('get', 'delete', array('func'));
+        $request_delete_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_delete_tracker->shouldReceive('get')->with('func')->andReturns('delete');
 
         // registered user can NOT delete trackers
-        $this->tracker->expectNever('getTrackerFactory');
+        $this->tf->shouldReceive('markAsDeleted')->never();
         $this->tracker->process($this->tracker_manager, $request_delete_tracker, $this->registered_user);
     }
 
@@ -681,73 +557,73 @@ class TrackerTest extends TuleapTestCase {
     // Tracker admin permissions
     //
     public function testPermsAdminTrackerSiteAdmin() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdmin');
+        $this->tracker->shouldReceive('displayAdmin')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->site_admin_user);
     }
     public function testPermsAdminTrackerProjectAdmin() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdmin');
+        $this->tracker->shouldReceive('displayAdmin')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_admin_user);
     }
     public function testPermsAdminTrackerTrackerAdmin() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdmin');
+        $this->tracker1->shouldReceive('displayAdmin')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdmin');
+        $this->tracker2->shouldReceive('displayAdmin')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminTrackerTracker1Admin() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdmin');
+        $this->tracker1->shouldReceive('displayAdmin')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdmin');
+        $this->tracker2->shouldReceive('displayAdmin')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminTrackerTracker2Admin() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdmin');
+        $this->tracker1->shouldReceive('displayAdmin')->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdmin');
+        $this->tracker2->shouldReceive('displayAdmin')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminTrackerProjectMember() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdmin');
+        $this->tracker->shouldReceive('displayAdmin')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_member_user);
     }
     public function testPermsAdminTrackerRegisteredUser() {
-        $request_admin_tracker = new MockCodendi_Request($this);
-        $request_admin_tracker->setReturnValue('get', 'admin', array('func'));
+        $request_admin_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_tracker->shouldReceive('get')->with('func')->andReturns('admin');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdmin');
+        $this->tracker->shouldReceive('displayAdmin')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->registered_user);
     }
 
     public function itCachesTrackerAdminPermission()
     {
-        $user = mock('PFUser');
+        $user = \Mockery::spy(\PFUser::class);
         stub($user)->getId()->returns(101);
-        $user->expectOnce('isSuperUser');
+        $user->shouldReceive('isSuperUser')->once();
 
         $this->tracker->userIsAdmin($user);
         $this->tracker->userIsAdmin($user);
@@ -757,65 +633,65 @@ class TrackerTest extends TuleapTestCase {
     // Tracker admin edit option permissions
     //
     public function testPermsAdminEditOptionsTrackerSiteAdmin() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminOptions');
+        $this->tracker->shouldReceive('displayAdminOptions')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->site_admin_user);
     }
     public function testPermsAdminEditOptionsTrackerProjectAdmin() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminOptions');
+        $this->tracker->shouldReceive('displayAdminOptions')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_admin_user);
     }
     public function testPermsAdminEditOptionsTrackerTrackerAdmin() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminOptions');
+        $this->tracker1->shouldReceive('displayAdminOptions')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminOptions');
+        $this->tracker2->shouldReceive('displayAdminOptions')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminEditOptionsTrackerTracker1Admin() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminOptions');
+        $this->tracker1->shouldReceive('displayAdminOptions')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminOptions');
+        $this->tracker2->shouldReceive('displayAdminOptions')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminEditOptionsTrackerTracker2Admin() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminOptions');
+        $this->tracker1->shouldReceive('displayAdminOptions')->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminOptions');
+        $this->tracker2->shouldReceive('displayAdminOptions')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminEditOptionsTrackerProjectMember() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminOptions');
+        $this->tracker->shouldReceive('displayAdminOptions')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_member_user);
     }
     public function testPermsAdminEditOptionsTrackerRegisteredUser() {
-        $request_admin_editoptions_tracker = new MockCodendi_Request($this);
-        $request_admin_editoptions_tracker->setReturnValue('get', 'admin-editoptions', array('func'));
+        $request_admin_editoptions_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_editoptions_tracker->shouldReceive('get')->with('func')->andReturns('admin-editoptions');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminOptions');
+        $this->tracker->shouldReceive('displayAdminOptions')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->registered_user);
     }
 
@@ -823,65 +699,65 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin perms" permissions
     //
     public function testPermsAdminPermsTrackerSiteAdmin() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPerms');
+        $this->tracker->shouldReceive('displayAdminPerms')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->site_admin_user);
     }
     public function testPermsAdminPermsTrackerProjectAdmin() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPerms');
+        $this->tracker->shouldReceive('displayAdminPerms')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerAdmin() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPerms');
+        $this->tracker1->shouldReceive('displayAdminPerms')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminPerms');
+        $this->tracker2->shouldReceive('displayAdminPerms')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminPermsTrackerTracker1Admin() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPerms');
+        $this->tracker1->shouldReceive('displayAdminPerms')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminPerms');
+        $this->tracker2->shouldReceive('displayAdminPerms')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminPermsTrackerTracker2Admin() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminPerms');
+        $this->tracker1->shouldReceive('displayAdminPerms')->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminPerms');
+        $this->tracker2->shouldReceive('displayAdminPerms')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminPermsTrackerProjectMember() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPerms');
+        $this->tracker->shouldReceive('displayAdminPerms')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_member_user);
     }
     public function testPermsAdminPermsTrackerRegisteredUser() {
-        $request_admin_perms_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker->setReturnValue('get', 'admin-perms', array('func'));
+        $request_admin_perms_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPerms');
+        $this->tracker->shouldReceive('displayAdminPerms')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->registered_user);
     }
 
@@ -889,24 +765,24 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin perms tracker" permissions
     //
     public function testPermsAdminPermsTrackerTrackerSiteAdmin() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // site admin can access tracker admin part
         expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->site_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectAdmin() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // project admin can access tracker admin part
         expect($this->permission_controller)->process()->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTrackerAdmin() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // tracker admin can access tracker admin part
         expect($this->permission_controller1)->process()->once();
@@ -915,8 +791,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker1Admin() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // tracker admin can access tracker admin part
         expect($this->permission_controller1)->process()->once();
@@ -925,8 +801,8 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerTracker2Admin() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // tracker admin can access tracker admin part
         expect($this->permission_controller1)->process()->never();
@@ -935,16 +811,16 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminPermsTrackerTrackerProjectMember() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // project member can NOT access tracker admin part
         expect($this->permission_controller)->process()->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->project_member_user);
     }
     public function testPermsAdminPermsTrackerTrackerRegisteredUser() {
-        $request_admin_perms_tracker_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_tracker_tracker->setReturnValue('get', 'admin-perms-tracker', array('func'));
+        $request_admin_perms_tracker_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_tracker_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-tracker');
 
         // registered user can NOT access tracker admin part
         expect($this->permission_controller)->process()->never();
@@ -955,65 +831,65 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin perms fields" permissions
     //
     public function testPermsAdminPermsFieldsTrackerSiteAdmin() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsFields');
+        $this->tracker->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->site_admin_user);
     }
     public function testPermsAdminPermsFieldsTrackerProjectAdmin() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminPermsFields');
+        $this->tracker->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->project_admin_user);
     }
     public function testPermsAdminPermsFieldsTrackerTrackerAdmin() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsFields');
+        $this->tracker1->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsFields');
+        $this->tracker2->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminPermsFieldsTrackerTracker1Admin() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminPermsFields');
+        $this->tracker1->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminPermsFields');
+        $this->tracker2->shouldReceive('displayAdminPermsFields')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminPermsFieldsTrackerTracker2Admin() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminPermsFields');
+        $this->tracker1->shouldReceive('displayAdminPermsFields')->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminPermsFields');
+        $this->tracker2->shouldReceive('displayAdminPermsFields')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminPermsFieldsTrackerProjectMember() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsFields');
+        $this->tracker->shouldReceive('displayAdminPermsFields')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->project_member_user);
     }
     public function testPermsAdminPermsFieldsTrackerRegisteredUser() {
-        $request_admin_perms_fields_tracker = new MockCodendi_Request($this);
-        $request_admin_perms_fields_tracker->setReturnValue('get', 'admin-perms-fields', array('func'));
+        $request_admin_perms_fields_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_perms_fields_tracker->shouldReceive('get')->with('func')->andReturns('admin-perms-fields');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminPermsFields');
+        $this->tracker->shouldReceive('displayAdminPermsFields')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_perms_fields_tracker, $this->registered_user);
     }
 
@@ -1021,65 +897,65 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin form elements" permissions
     //
     public function testPermsAdminFormElementTrackerSiteAdmin() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminFormElements');
+        $this->tracker->shouldReceive('displayAdminFormElements')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->site_admin_user);
     }
     public function testPermsAdminFormElementTrackerProjectAdmin() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('displayAdminFormElements');
+        $this->tracker->shouldReceive('displayAdminFormElements')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_admin_user);
     }
     public function testPermsAdminFormElementTrackerTrackerAdmin() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminFormElements');
+        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_formelement_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('displayAdminFormElements');
+        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminFormElementTrackerTracker1Admin() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('displayAdminFormElements');
+        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('displayAdminFormElements');
+        $this->tracker2->shouldReceive('displayAdminFormElements')->never();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminFormElementTrackerTracker2Admin() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('displayAdminFormElements');
+        $this->tracker1->shouldReceive('displayAdminFormElements')->never();
         $this->tracker1->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('displayAdminFormElements');
+        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_formelement_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminFormElementTrackerProjectMember() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminFormElements');
+        $this->tracker->shouldReceive('displayAdminFormElements')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_member_user);
     }
     public function testPermsAdminFormElementTrackerRegisteredUser() {
-        $request_admin_formelement_tracker = new MockCodendi_Request($this);
-        $request_admin_formelement_tracker->setReturnValue('get', 'admin-formElements', array('func'));
+        $request_admin_formelement_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_formelement_tracker->shouldReceive('get')->with('func')->andReturns('admin-formElements');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('displayAdminFormElements');
+        $this->tracker->shouldReceive('displayAdminFormElements')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->registered_user);
     }
 
@@ -1087,65 +963,62 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin semantic" permissions
     //
     public function testPermsAdminSemanticTrackerSiteAdmin() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->site_admin_user);
     }
     public function testPermsAdminSemanticTrackerProjectAdmin() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_admin_user);
     }
     public function testPermsAdminSemanticTrackerTrackerAdmin() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->times(2);
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('getTrackerSemanticManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminSemanticTrackerTracker1Admin() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('getTrackerSemanticManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminSemanticTrackerTracker2Admin() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('getTrackerSemanticManager');
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminSemanticTrackerProjectMember() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_member_user);
     }
     public function testPermsAdminSemanticTrackerRegisteredUser() {
-        $request_admin_semantic_tracker = new MockCodendi_Request($this);
-        $request_admin_semantic_tracker->setReturnValue('get', 'admin-semantic', array('func'));
+        $request_admin_semantic_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_semantic_tracker->shouldReceive('get')->with('func')->andReturns('admin-semantic');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('getTrackerSemanticManager');
+        $this->tsm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->registered_user);
     }
 
@@ -1153,65 +1026,62 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin canned" permissions
     //
     public function testPermsAdminCannedTrackerSiteAdmin() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->site_admin_user);
     }
     public function testPermsAdminCannedTrackerProjectAdmin() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_admin_user);
     }
     public function testPermsAdminCannedTrackerTrackerAdmin() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->times(2);
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('getCannedResponseManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminCannedTrackerTracker1Admin() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('getCannedResponseManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminCannedTrackerTracker2Admin() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('getCannedResponseManager');
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminCannedTrackerProjectMember() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_member_user);
     }
     public function testPermsAdminCannedTrackerRegisteredUser() {
-        $request_admin_canned_tracker = new MockCodendi_Request($this);
-        $request_admin_canned_tracker->setReturnValue('get', 'admin-canned', array('func'));
+        $request_admin_canned_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_canned_tracker->shouldReceive('get')->with('func')->andReturns('admin-canned');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('getCannedResponseManager');
+        $this->tcrm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->registered_user);
     }
 
@@ -1219,65 +1089,62 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "admin workflow" permissions
     //
     public function testPermsAdminWorkflowTrackerSiteAdmin() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // site admin can access tracker admin part
-        $this->tracker->expectOnce('getWorkflowManager');
+        $this->wm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->site_admin_user);
     }
     public function testPermsAdminWorkflowTrackerProjectAdmin() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // project admin can access tracker admin part
-        $this->tracker->expectOnce('getWorkflowManager');
+        $this->wm->shouldReceive('process')->once();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTrackerAdmin() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getWorkflowManager');
+        $this->wm->shouldReceive('process')->times(2);
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->expectOnce('getWorkflowManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->all_trackers_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTracker1Admin() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectOnce('getWorkflowManager');
+        $this->wm->shouldReceive('process')->once();
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
-        $this->tracker2->expectNever('getWorkflowManager');
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
     }
     public function testPermsAdminWorkflowTrackerTracker2Admin() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // tracker admin can access tracker admin part
-        $this->tracker1->expectNever('getWorkflowManager');
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
-        $this->tracker2->expectOnce('getWorkflowManager');
+        $this->wm->shouldReceive('process')->once();
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
     }
     public function testPermsAdminWorkflowTrackerProjectMember() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // project member can NOT access tracker admin part
-        $this->tracker->expectNever('getWorkflowManager');
+        $this->wm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
     }
     public function testPermsAdminWorkflowTrackerRegisteredUser() {
-        $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
+        $request_admin_workflow_tracker = \Mockery::spy(\Codendi_Request::class);
+        $request_admin_workflow_tracker->shouldReceive('get')->with('func')->andReturns(Workflow::FUNC_ADMIN_TRANSITIONS);
 
         // registered user can NOT access tracker admin part
-        $this->tracker->expectNever('getWorkflowManager');
+        $this->wm->shouldReceive('process')->never();
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
     }
 
@@ -1285,17 +1152,17 @@ class TrackerTest extends TuleapTestCase {
     // Tracker "access" permissions
     //
     public function testAccessPermsAnonymousFullAccess() {
-        $t_access_anonymous = new TrackerTestVersionForAccessPerms();
-        $t_access_anonymous->setReturnValue('getId', 1);
-        $t_access_anonymous->setReturnValue('getGroupId', 101);
-        $t_access_anonymous->setReturnValue('getProject', $this->project);
+        $t_access_anonymous = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_anonymous->shouldReceive('getId')->andReturns(1);
+        $t_access_anonymous->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_anonymous->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_anonymous->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_anonymous->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_anonymous->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_anonymous->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_anonymous->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_anonymous->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertTrue($t_access_anonymous->userCanView($this->anonymous));
         $this->assertTrue($t_access_anonymous->userCanView($this->registered));
@@ -1309,17 +1176,17 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsRegisteredFullAccess() {
-        $t_access_registered = new TrackerTestVersionForAccessPerms();
-        $t_access_registered->setReturnValue('getId', 2);
-        $t_access_registered->setReturnValue('getGroupId', 101);
-        $t_access_registered->setReturnValue('getProject', $this->project);
-        $t_access_registered->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_registered->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_registered = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_registered->shouldReceive('getId')->andReturns(2);
+        $t_access_registered->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_registered->shouldReceive('getProject')->andReturns($this->project);
+        $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_registered->shouldReceive('getUserManager')->andReturns($this->user_manager);
         $perms = array(
                 2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_registered->setReturnReference('getPermissionsByUgroupId', $perms);
+        $t_access_registered->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
         $this->assertFalse($t_access_registered->userCanView($this->anonymous));
         $this->assertTrue($t_access_registered->userCanView($this->registered));
@@ -1333,17 +1200,17 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsMemberFullAccess() {
-        $t_access_members = new TrackerTestVersionForAccessPerms();
-        $t_access_members->setReturnValue('getId', 3);
-        $t_access_members->setReturnValue('getGroupId', 101);
-        $t_access_members->setReturnValue('getProject', $this->project);
+        $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_members->shouldReceive('getId')->andReturns(3);
+        $t_access_members->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_members->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_members->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_members->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_members->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_members->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_members->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertFalse($t_access_members->userCanView($this->anonymous));
         $this->assertFalse($t_access_members->userCanView($this->registered));
@@ -1357,19 +1224,19 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsTrackerAdminAllProjects() {
-        $t_access_members = new TrackerTestVersionForAccessPerms();
-        $t_access_members->setReturnValue('getId', 3);
-        $t_access_members->setReturnValue('getGroupId', 101);
-        $t_access_members->setReturnValue('getProject', $this->project);
+        $t_access_members = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_members->shouldReceive('getId')->andReturns(3);
+        $t_access_members->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_members->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_members->setReturnReference('getPermissionsByUgroupId', $perms);
+        $t_access_members->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
-        $tracker_manager = mock('TrackerManager');
-        $t_access_members->setReturnReference('getTrackerManager', $tracker_manager);
-        $t_access_members->setReturnReference('getUserManager', $this->user_manager);
+        $tracker_manager = \Mockery::spy(\TrackerManager::class);
+        $t_access_members->shouldReceive('getTrackerManager')->andReturns($tracker_manager);
+        $t_access_members->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         stub($tracker_manager)->userCanAdminAllProjectTrackers($this->all_trackers_forge_admin_user)->returns(true);
 
@@ -1377,17 +1244,17 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsAdminFullAccess() {
-        $t_access_admin = new TrackerTestVersionForAccessPerms();
-        $t_access_admin->setReturnValue('getId', 4);
-        $t_access_admin->setReturnValue('getGroupId', 101);
-        $t_access_admin->setReturnValue('getProject', $this->project);
+        $t_access_admin = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_admin->shouldReceive('getId')->andReturns(4);
+        $t_access_admin->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_admin->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
                 );
-        $t_access_admin->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_admin->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_admin->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_admin->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_admin->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_admin->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertFalse($t_access_admin->userCanView($this->anonymous));
         $this->assertFalse($t_access_admin->userCanView($this->registered));
@@ -1401,18 +1268,18 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsSubmitterFullAccess() {
-        $t_access_submitter = new TrackerTestVersionForAccessPerms();
-        $t_access_submitter->setReturnValue('getId', 5);
-        $t_access_submitter->setReturnValue('getGroupId', 101);
-        $t_access_submitter->setReturnValue('getProject', $this->project);
+        $t_access_submitter = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_submitter->shouldReceive('getId')->andReturns(5);
+        $t_access_submitter->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_submitter->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_submitter->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_submitter->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_submitter->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_submitter->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_submitter->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_submitter->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertFalse($t_access_submitter->userCanView($this->anonymous));
         $this->assertFalse($t_access_submitter->userCanView($this->registered));
@@ -1426,18 +1293,18 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsAssigneeFullAccess() {
-        $t_access_assignee = new TrackerTestVersionForAccessPerms();
-        $t_access_assignee->setReturnValue('getId', 6);
-        $t_access_assignee->setReturnValue('getGroupId', 101);
-        $t_access_assignee->setReturnValue('getProject', $this->project);
+        $t_access_assignee = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_assignee->shouldReceive('getId')->andReturns(6);
+        $t_access_assignee->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_assignee->shouldReceive('getProject')->andReturns($this->project);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_assignee->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_assignee->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_assignee->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_assignee->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_assignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_assignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertFalse($t_access_assignee->userCanView($this->anonymous));
         $this->assertFalse($t_access_assignee->userCanView($this->registered));
@@ -1451,12 +1318,12 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsSubmitterAssigneeFullAccess() {
-        $t_access_submitterassignee  = new TrackerTestVersionForAccessPerms();
-        $t_access_submitterassignee->setReturnValue('getId', 7);
-        $t_access_submitterassignee->setReturnValue('getGroupId', 101);
-        $t_access_submitterassignee->setReturnValue('getProject', $this->project);
-        $t_access_submitterassignee->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_submitterassignee->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_submitterassignee  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_submitterassignee->shouldReceive('getId')->andReturns(7);
+        $t_access_submitterassignee->shouldReceive('getGroupId')->andReturns(101);
+        $t_access_submitterassignee->shouldReceive('getProject')->andReturns($this->project);
+        $t_access_submitterassignee->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_submitterassignee->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
@@ -1464,7 +1331,7 @@ class TrackerTest extends TuleapTestCase {
                 196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
                 1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
-        $t_access_submitterassignee->setReturnReference('getPermissionsByUgroupId', $perms);
+        $t_access_submitterassignee->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
 
         $this->assertFalse($t_access_submitterassignee->userCanView($this->anonymous));
         $this->assertFalse($t_access_submitterassignee->userCanView($this->registered));
@@ -1478,19 +1345,19 @@ class TrackerTest extends TuleapTestCase {
     }
 
     public function testAccessPermsPrivateProject() {
-        $t_access_registered  = new TrackerTestVersionForAccessPerms();
-        $t_access_registered->setReturnValue('getId', 7);
-        $t_access_registered->setReturnValue('getGroupId', 102);
-        $t_access_registered->setReturnValue('getProject', $this->project_private);
+        $t_access_registered  = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $t_access_registered->shouldReceive('getId')->andReturns(7);
+        $t_access_registered->shouldReceive('getGroupId')->andReturns(102);
+        $t_access_registered->shouldReceive('getProject')->andReturns($this->project_private);
 
         $perms = array(
                2    => array( 102 => 'PLUGIN_TRACKER_ACCESS_FULL'),
                1003 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
         );
 
-        $t_access_registered->setReturnReference('getPermissionsByUgroupId', $perms);
-        $t_access_registered->setReturnReference('getTrackerManager', $this->tracker_manager);
-        $t_access_registered->setReturnReference('getUserManager', $this->user_manager);
+        $t_access_registered->shouldReceive('getPermissionsByUgroupId')->andReturns($perms);
+        $t_access_registered->shouldReceive('getTrackerManager')->andReturns($this->tracker_manager);
+        $t_access_registered->shouldReceive('getUserManager')->andReturns($this->user_manager);
 
         $this->assertFalse($t_access_registered->userCanView($this->anonymous));
         $this->assertFalse($t_access_registered->userCanView($this->registered));
@@ -1511,46 +1378,46 @@ class TrackerTest extends TuleapTestCase {
                     array('summary 1', 'details 1'),
                     array('summary 2', 'details 2'),
                  );
-        $field1 = new MockTracker_FormElement_Field_String();
-        $field2 = new MockTracker_FormElement_Field_String();
+        $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
+        $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
         stub($this->formelement_factory)->getUsedFields()->returns(array($field1, $field2));
 
-        $field1->setReturnValue('validateFieldWithPermissionsAndRequiredStatus', true);
-        $field2->setReturnValue('validateFieldWithPermissionsAndRequiredStatus', true);
+        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
+        $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
 
-        $field1->setReturnValue('getId', 1);
-        $field2->setReturnValue('getId', 2);
+        $field1->shouldReceive('getId')->andReturns(1);
+        $field2->shouldReceive('getId')->andReturns(2);
 
-        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 1', array('summary 1'));
-        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 2', array('summary 2'));
+        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1')->andReturns('summary 1');
+        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2')->andReturns('summary 2');
 
-        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 1', array('details 1'));
-        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 2', array('details 2'));
+        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1')->andReturns('details 1');
+        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2')->andReturns('details 2');
 
-        $field1->setReturnValue('isCSVImportable', true);
-        $field2->setReturnValue('isCSVImportable', true);
+        $field1->shouldReceive('isCSVImportable')->andReturns(true);
+        $field2->shouldReceive('isCSVImportable')->andReturns(true);
 
-        $this->formelement_factory->setReturnReference('getUsedFieldByName', $field1, array(110, 'summary'));
-        $this->formelement_factory->setReturnReference('getUsedFieldByName', $field2, array(110, 'details'));
+        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
+        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
 
-        $artifact = new MockTracker_Artifact();
+        $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $af = new MockTracker_ArtifactFactory();
-        $this->tracker->setReturnReference('getTrackerArtifactFactory', $af);
-        $this->tracker->setReturnValue('aidExists', false, array('0'));
+        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
+        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
 
-        $um = new MockUserManager();
-        $u = mock('PFUser');
-        $u->setReturnValue('getId', '107');
-        $this->tracker->setReturnReference('getUserManager', $um);
-        $um->setReturnReference('getCurrentUser', $u);
+        $um = \Mockery::spy(\UserManager::class);
+        $u = \Mockery::spy(\PFUser::class);
+        $u->shouldReceive('getId')->andReturns('107');
+        $this->tracker->shouldReceive('getUserManager')->andReturns($um);
+        $um->shouldReceive('getCurrentUser')->andReturns($u);
 
 
-        $af->setReturnReference('getInstanceFromRow', $artifact);
+        $af->shouldReceive('getInstanceFromRow')->andReturns($artifact);
 
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
 
-        $GLOBALS['Response']->expectNever('addFeedback');
+        $GLOBALS['Response']->shouldReceive('addFeedback')->never();
         $this->assertFalse($this->tracker->hasError($header, $lines));
     }
 
@@ -1575,25 +1442,25 @@ class TrackerTest extends TuleapTestCase {
                     array('4','summary 4', 'details 4'),
                  );
 
-        $artifact1 = new MockTracker_Artifact();
-        $artifact1->setReturnValue('getId', '1');
-        $artifact2 = new MockTracker_Artifact();
-        $artifact2->setReturnValue('getId', '2');
-        $artifact3 = new MockTracker_Artifact();
-        $artifact3->setReturnValue('getId', '3');
-        $artifact4 = new MockTracker_Artifact();
-        $artifact4->setReturnValue('getId', '4');
+        $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact1->shouldReceive('getId')->andReturns('1');
+        $artifact2 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact2->shouldReceive('getId')->andReturns('2');
+        $artifact3 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact3->shouldReceive('getId')->andReturns('3');
+        $artifact4 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact4->shouldReceive('getId')->andReturns('4');
 
 
-        $af = new MockTracker_ArtifactFactory();
-        $this->tracker->setReturnReference('getTrackerArtifactFactory', $af);
-        $af->setReturnReference('getArtifactById', $artifact1, array('1'));
-        $af->setReturnReference('getArtifactById', $artifact2, array('2'));
-        $af->setReturnReference('getArtifactById', $artifact3, array('3'));
-        $af->setReturnReference('getArtifactById', $artifact4, array('4'));
+        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
+        $af->shouldReceive('getArtifactById')->with('1')->andReturns($artifact1);
+        $af->shouldReceive('getArtifactById')->with('2')->andReturns($artifact2);
+        $af->shouldReceive('getArtifactById')->with('3')->andReturns($artifact3);
+        $af->shouldReceive('getArtifactById')->with('4')->andReturns($artifact4);
 
 
-        $this->tracker->setReturnValue('aidExists', true);
+        $this->tracker->shouldReceive('aidExists')->andReturns(true);
         $this->assertFalse($this->tracker->hasUnknownAid($header, $lines));
     }
 
@@ -1606,24 +1473,24 @@ class TrackerTest extends TuleapTestCase {
                     array('4','summary 4', 'details 4'),
                  );
 
-        $artifact1 = new MockTracker_Artifact();
-        $artifact1->setReturnValue('getId', '1');
-        $artifact2 = new MockTracker_Artifact();
-        $artifact2->setReturnValue('getId', '2');
-        $artifact3 = new MockTracker_Artifact();
-        $artifact3->setReturnValue('getId', '3');
+        $artifact1 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact1->shouldReceive('getId')->andReturns('1');
+        $artifact2 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact2->shouldReceive('getId')->andReturns('2');
+        $artifact3 = \Mockery::spy(\Tracker_Artifact::class);
+        $artifact3->shouldReceive('getId')->andReturns('3');
 
-        $af = new MockTracker_ArtifactFactory();
-        $this->tracker->setReturnReference('getTrackerArtifactFactory', $af);
-        $af->setReturnReference('getArtifactById', $artifact1, array('1'));
-        $af->setReturnReference('getArtifactById', $artifact2, array('2'));
-        $af->setReturnReference('getArtifactById', $artifact3, array('3'));
-        $af->setReturnValue('getArtifactById', null, array('4'));
+        $af = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($af);
+        $af->shouldReceive('getArtifactById')->with('1')->andReturns($artifact1);
+        $af->shouldReceive('getArtifactById')->with('2')->andReturns($artifact2);
+        $af->shouldReceive('getArtifactById')->with('3')->andReturns($artifact3);
+        $af->shouldReceive('getArtifactById')->with('4')->andReturns(null);
 
-        $this->tracker->setReturnValue('aidExists', true, array('1'));
-        $this->tracker->setReturnValue('aidExists', true, array('2'));
-        $this->tracker->setReturnValue('aidExists', true, array('3'));
-        $this->tracker->setReturnValue('aidExists', false, array('4'));
+        $this->tracker->shouldReceive('aidExists')->with('1')->andReturns(true);
+        $this->tracker->shouldReceive('aidExists')->with('2')->andReturns(true);
+        $this->tracker->shouldReceive('aidExists')->with('3')->andReturns(true);
+        $this->tracker->shouldReceive('aidExists')->with('4')->andReturns(false);
 
         $this->assertTrue($this->tracker->hasUnknownAid($header, $lines));
     }
@@ -1638,10 +1505,10 @@ class TrackerTest extends TuleapTestCase {
                  );
         $separator = ',';
 
-        $tracker = new TrackerTestVersionForIsValid();
-        $tracker->setReturnValue('hasError', false);
+        $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker->shouldReceive('hasError')->andReturns(false);
 
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', '*', '*'));    // expected warning about wrong separator
+        $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', Mockery::any(), Mockery::any())->once();    // expected warning about wrong separator
         $tracker->isValidCSV($lines, $separator);
     }
 
@@ -1655,10 +1522,10 @@ class TrackerTest extends TuleapTestCase {
                  );
         $separator = ',';
 
-        $tracker = new TrackerTestVersionForIsValid();
-        $tracker->setReturnValue('hasError', false);
+        $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker->shouldReceive('hasError')->andReturns(false);
 
-        $GLOBALS['Response']->expectNever('addFeedback', array('warning', '*', '*'));
+        $GLOBALS['Response']->shouldReceive('addFeedback')->never();
         $tracker->isValidCSV($lines, $separator);
     }
 
@@ -1666,8 +1533,8 @@ class TrackerTest extends TuleapTestCase {
         $data = array('type' => 'string');
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
-        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data, false, false));
-        $sharedFactory->expectNever('createFormElement');
+        $factory->shouldReceive('createFormElement')->with($tracker, $data['type'], $data, false, false)->once();
+        $sharedFactory->shouldReceive('createFormElement')->never();
 
         $tracker->createFormElement($data['type'], $data, $user);
     }
@@ -1676,19 +1543,19 @@ class TrackerTest extends TuleapTestCase {
         $data = array('type' => 'shared');
 
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
-        $factory->expectNever('createFormElement');
-        $sharedFactory->expectOnce('createFormElement', array($tracker , $data, $user, false, false));
+        $factory->shouldReceive('createFormElement')->never();
+        $sharedFactory->shouldReceive('createFormElement')->with($tracker, $data, $user, false, false)->once();
 
         $tracker->createFormElement($data['type'], $data, $user);
     }
 
     private function GivenATrackerAndItsFactories() {
         $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-        $factory = new MockTracker_FormElementFactory();
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $tracker->setFormElementFactory($factory);
-        $sharedFactory = new MockTracker_SharedFormElementFactory();
+        $sharedFactory = \Mockery::spy(\Tracker_SharedFormElementFactory::class);
         $tracker->setSharedFormElementFactory($sharedFactory);
-        $user = mock('PFUser');
+        $user = \Mockery::spy(\PFUser::class);
         return array($tracker, $factory, $sharedFactory, $user);
     }
 }
@@ -1702,33 +1569,35 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker = new TrackerTestVersion();
-        stub($this->tracker)->getID()->returns(110);
+        $this->setUpGlobalsMockery();
+        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        stub($this->tracker)->getId()->returns(110);
         stub($this->tracker)->getColor()->returns('inca_gray');
-        stub($this->tracker)->getUserManager()->returns(mock('UserManager'));
+        stub($this->tracker)->getUserManager()->returns(\Mockery::spy(\UserManager::class));
+        stub($this->tracker)->getProject()->returns(\Mockery::spy(\Project::class));
 
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($this->tracker)->getFormElementFactory()->returns($this->formelement_factory);
 
-        $this->workflow_factory = mock('WorkflowFactory');
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
 
         $this->hierarchy = new Tracker_Hierarchy();
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getHierarchy()->returns($this->hierarchy);
         stub($this->tracker)->getHierarchyFactory()->returns($hierarchy_factory);
 
-        $tcrm = mock('Tracker_CannedResponseManager');
+        $tcrm = \Mockery::spy(\Tracker_CannedResponseManager::class);
         stub($this->tracker)->getCannedResponseManager()->returns($tcrm);
 
-        $canned_response_factory = mock('Tracker_CannedResponseFactory');
+        $canned_response_factory = \Mockery::spy(\Tracker_CannedResponseFactory::class);
         stub($this->tracker)->getCannedResponseFactory()->returns($canned_response_factory);
 
-        $tsm = mock('Tracker_SemanticManager');
+        $tsm = \Mockery::spy(\Tracker_SemanticManager::class);
         stub($this->tracker)->getTrackerSemanticManager()->returns($tsm);
 
-        $report_factory = mock('Tracker_ReportFactory');
+        $report_factory = \Mockery::spy(\Tracker_ReportFactory::class);
         stub($this->tracker)->getReportFactory()->returns($report_factory);
 
         $webhook_xml_exporter = \Mockery::mock(\Tuleap\Tracker\Webhook\WebhookXMLExporter::class);
@@ -1755,7 +1624,7 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
 
         stub($this->workflow_factory)->getGlobalRulesManager()->returns(
-            mock('Tracker_RulesManager')
+            \Mockery::spy(\Tracker_RulesManager::class)
         );
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
@@ -1777,7 +1646,9 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
     public function itExportsTheTrackerID() {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
+        stub($this->tracker)->getProjectUgroups()->returns([]);
+        stub($this->tracker)->getPermissionsByUgroupId()->returns([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1788,7 +1659,9 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
     public function itExportsNoParentIfNotInAHierarchy() {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
+        stub($this->tracker)->getProjectUgroups()->returns([]);
+        stub($this->tracker)->getPermissionsByUgroupId()->returns([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1798,8 +1671,10 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
     }
 
     public function itExportsTheParentId() {
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
+        stub($this->tracker)->getProjectUgroups()->returns([]);
+        stub($this->tracker)->getPermissionsByUgroupId()->returns([]);
 
         $this->hierarchy->addRelationship(9001, 110);
 
@@ -1812,7 +1687,9 @@ class Tracker_ExportToXmlTest extends TuleapTestCase {
 
     public function itExportsTheTrackerColor() {
         stub($this->formelement_factory)->getUsedFormElementForTracker()->returns(array());
-        stub($this->workflow_factory)->getGlobalRulesManager()->returns(mock('Tracker_RulesManager'));
+        stub($this->workflow_factory)->getGlobalRulesManager()->returns(\Mockery::spy(\Tracker_RulesManager::class));
+        stub($this->tracker)->getProjectUgroups()->returns([]);
+        stub($this->tracker)->getPermissionsByUgroupId()->returns([]);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $xml = $this->tracker->exportToXML($xml);
@@ -1827,11 +1704,12 @@ class Tracker_WorkflowTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->tracker_id = 12;
-        $this->tracker = partial_mock('Tracker', array('getWorkflowFactory'));
+        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker->setId($this->tracker_id);
 
-        $this->workflow_factory = mock('WorkflowFactory');
+        $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
         stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
     }
 
@@ -1839,20 +1717,20 @@ class Tracker_WorkflowTest extends TuleapTestCase {
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
         stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns($workflow);
-        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
+        $this->assertEqual($this->tracker->getWorkflow(), $workflow);
     }
 
     public function itAlwaysHaveTheSameDefaultWorkflow() {
         stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
-        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returnsAt(0, aWorkflow()->withTrackerId(12)->build());
-        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returnsAt(1, aWorkflow()->withTrackerId(33)->build());
-        $this->assertIdentical($this->tracker->getWorkflow(), $this->tracker->getWorkflow());
+        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns(aWorkflow()->withTrackerId(12)->build());
+        stub($this->workflow_factory)->getWorkflowWithoutTransition()->returns(aWorkflow()->withTrackerId(33)->build());
+        $this->assertEqual($this->tracker->getWorkflow(), $this->tracker->getWorkflow());
     }
 
     public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
         $workflow = aWorkflow()->withTrackerId($this->tracker_id)->build();
         stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
-        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
+        $this->assertEqual($this->tracker->getWorkflow(), $workflow);
     }
 }
 
@@ -1864,58 +1742,57 @@ class Tracker_getParentTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->tracker_factory = mock('TrackerFactory');
-        $this->tracker = partial_mock('Tracker', array('getParentId', 'getTrackerFactory'));
+        $this->setUpGlobalsMockery();
+        $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
+        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         stub($this->tracker)->getTrackerFactory()->returns($this->tracker_factory);
     }
 
     public function itReturnsNullWhenItHasNoParentFromAccessor() {
         $tracker = aTracker()->build();
         $tracker->setParent(null);
-        $this->assertIdentical($tracker->getParent(), null);
+        $this->assertEqual($tracker->getParent(), null);
     }
 
     public function itReturnsParentWhenParentWasSetByAccessor() {
         $parent  = aTracker()->build();
         $tracker = aTracker()->build();
         $tracker->setParent($parent);
-        $this->assertIdentical($tracker->getParent(), $parent);
+        $this->assertEqual($tracker->getParent(), $parent);
     }
 
     public function itReturnsNullWhenItHasNoParentFromDb() {
         stub($this->tracker)->getParentId()->returns(null);
-        $this->assertIdentical($this->tracker->getParent(), null);
+        $this->assertEqual($this->tracker->getParent(), null);
     }
 
     public function itReturnsNullWhenParentNotFoundInDb() {
         stub($this->tracker_factory)->getTrackerById(15)->returns(null);
         stub($this->tracker)->getParentId()->returns(15);
-        $this->assertIdentical($this->tracker->getParent(), null);
+        $this->assertEqual($this->tracker->getParent(), null);
     }
 
     public function itReturnsParentWhenFetchedFromDb() {
         $parent  = aTracker()->build();
         stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
         stub($this->tracker)->getParentId()->returns(15);
-        $this->assertIdentical($this->tracker->getParent(), $parent);
+        $this->assertEqual($this->tracker->getParent(), $parent);
     }
 
     public function itDoesntFetchParentTwiceWhenThereIsParent() {
         $parent  = aTracker()->build();
+        expect($this->tracker_factory)->getTrackerById(15)->once();
         stub($this->tracker_factory)->getTrackerById(15)->returns($parent);
         stub($this->tracker)->getParentId()->returns(15);
-
-        expect($this->tracker_factory)->getTrackerById(15)->once();
 
         $this->tracker->getParent();
         $this->tracker->getParent();
     }
 
     public function itDoesntFetchParentTwiceWhenOrphan() {
+        expect($this->tracker_factory)->getTrackerById(15)->once();
         stub($this->tracker_factory)->getTrackerById(15)->returns(null);
         stub($this->tracker)->getParentId()->returns(15);
-
-        expect($this->tracker_factory)->getTrackerById(15)->once();
 
         $this->tracker->getParent();
         $this->tracker->getParent();

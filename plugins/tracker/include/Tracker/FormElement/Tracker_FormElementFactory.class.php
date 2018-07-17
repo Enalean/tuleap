@@ -780,7 +780,7 @@ class Tracker_FormElementFactory {
      *
      * @param Tracker $tracker
      *
-     * @return DataAccessObject
+     * @return DataAccessResult
      */
     public function getUsedStaticSbFields(Tracker $tracker) {
         return $this->getDao()->searchUsedStaticSbFieldByTrackerId($tracker->getId())
@@ -1155,7 +1155,7 @@ class Tracker_FormElementFactory {
      * @return Array of Tracker_FormElement_Field
      */
     public function getProjectSharedFields(Project $project) {
-        $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
+        $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getID());
         return $this->getCachedInstancesFromRows($dar);
     }
 

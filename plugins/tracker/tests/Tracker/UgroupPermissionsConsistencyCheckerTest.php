@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
 class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
 
@@ -39,21 +39,31 @@ class Tracker_UgroupPermissionsConsistencyCheckerTest extends TuleapTestCase {
     protected $template_ugroup_dev_id     = 123;
     protected $template_ugroup_support_id = 124;
 
+    /**
+     * @var Tracker_UgroupPermissionsConsistencyChecker
+     */
+    protected $checker;
+
     public function setUp() {
         parent::setUp();
-        $this->template_ugroup_dev     = stub('ProjectUGroup')->getName()->returns('dev');
-        $this->template_ugroup_support = stub('ProjectUGroup')->getName()->returns('support');
-        $this->target_ugroup_dev       = stub('ProjectUGroup')->getName()->returns('dev');
-        $this->target_ugroup_support   = stub('ProjectUGroup')->getName()->returns('support');
+        $this->setUpGlobalsMockery();
+        $this->template_ugroup_dev     = mockery_stub(\ProjectUGroup::class)->getName()->returns('dev');
+        $this->template_ugroup_support = mockery_stub(\ProjectUGroup::class)->getName()->returns('support');
+        $this->target_ugroup_dev       = mockery_stub(\ProjectUGroup::class)->getName()->returns('dev');
+        $this->target_ugroup_support   = mockery_stub(\ProjectUGroup::class)->getName()->returns('support');
 
-        $template_project            = stub('Project')->getId()->returns(103);
+        $template_project            = mockery_stub(\Project::class)->getID()->returns(103);
         $this->template_tracker      = aTracker()->withProject($template_project)->build();
-        $this->target_project        = stub('Project')->getId()->returns(104);
-        $this->ugroup_manager        = mock('UGroupManager');
-        $this->messenger             = mock('Tracker_UgroupPermissionsConsistencyMessenger');
-        $this->permissions_retriever = mock('Tracker_UgroupPermissionsGoldenRetriever');
+        $this->target_project        = mockery_stub(\Project::class)->getID()->returns(104);
+        $this->ugroup_manager        = \Mockery::spy(\UGroupManager::class);
+        $this->messenger             = \Mockery::spy(\Tracker_UgroupPermissionsConsistencyMessenger::class);
+        $this->permissions_retriever = \Mockery::spy(\Tracker_UgroupPermissionsGoldenRetriever::class);
 
-        $this->checker = new Tracker_UgroupPermissionsConsistencyChecker($this->permissions_retriever, $this->ugroup_manager, $this->messenger);
+        $this->checker = new Tracker_UgroupPermissionsConsistencyChecker(
+            $this->permissions_retriever,
+            $this->ugroup_manager,
+            $this->messenger
+        );
     }
 }
 
@@ -64,20 +74,20 @@ class Tracker_UgroupPermissionsConsistencyChecker_SameProjectTest extends Tracke
         expect($this->messenger)->ugroupsMissing()->never();
         expect($this->messenger)->ugroupsAreTheSame()->never();
 
-        $message = $this->checker->checkConsistency($this->template_tracker, $this->template_tracker->getProject());
+        $this->checker->checkConsistency($this->template_tracker, $this->template_tracker->getProject());
     }
 }
 
 class Tracker_UgroupPermissionsConsistencyChecker_NoPermOnStaticGroupsTest extends Tracker_UgroupPermissionsConsistencyCheckerTest {
 
     public function itReturnsNoMessage() {
-        stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array());
+        stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns([]);
 
         expect($this->messenger)->allIsWell()->once();
         expect($this->messenger)->ugroupsMissing()->never();
         expect($this->messenger)->ugroupsAreTheSame()->never();
 
-        $message = $this->checker->checkConsistency($this->template_tracker, $this->target_project);
+        $this->checker->checkConsistency($this->template_tracker, $this->target_project);
     }
 
 }
@@ -86,6 +96,7 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnOneStaticGroupTest exten
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array($this->template_ugroup_dev));
     }
 
@@ -114,6 +125,7 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnManyStaticGroupTest exte
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         stub($this->permissions_retriever)->getListOfInvolvedStaticUgroups($this->template_tracker)->returns(array($this->template_ugroup_dev, $this->template_ugroup_support));
     }
 
@@ -147,4 +159,3 @@ class Tracker_UgroupPermissionsConsistencyChecker_PermOnManyStaticGroupTest exte
         $message = $this->checker->checkConsistency($this->template_tracker, $this->target_project);
     }
 }
-?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,12 +56,13 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         Tracker_ArtifactFactory::clearInstance();
         $this->artifact_factory  = Tracker_ArtifactFactory::instance();
-        $this->changeset_creator = mock('Tracker_Artifact_Changeset_InitialChangesetCreator');
-        $this->fields_validator  = mock('Tracker_Artifact_Changeset_InitialChangesetFieldsValidator');
-        $this->dao               = mock('Tracker_ArtifactDao');
-        $this->visit_recorder    = mock('Tuleap\\Tracker\\RecentlyVisited\\VisitRecorder');
+        $this->changeset_creator = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetCreator::class);
+        $this->fields_validator  = \Mockery::spy(\Tracker_Artifact_Changeset_InitialChangesetFieldsValidator::class);
+        $this->dao               = \Mockery::spy(\Tracker_ArtifactDao::class);
+        $this->visit_recorder    = \Mockery::spy(\Tuleap\Tracker\RecentlyVisited\VisitRecorder::class);
 
         $this->artifact_factory->setDao($this->dao);
 
@@ -83,7 +84,16 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase {
     }
 
     public function itValidateFields() {
-        expect($this->fields_validator)->validate($this->bare_artifact, $this->fields_data)->once();
+        $this->fields_validator->shouldReceive('validate')
+            ->with(
+                Mockery::on(function ($artifact) {
+                    return $artifact->getId() === $this->bare_artifact->getId() &&
+                        $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
+                        $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
+                }),
+                $this->fields_data
+            )
+            ->once();
 
         $this->creator->create(
             $this->tracker,
@@ -148,8 +158,17 @@ class Tracker_ArtifactCreator_createTest extends TuleapTestCase {
 
         $this->bare_artifact->setId(1001);
 
-        expect($this->changeset_creator)
-            ->create($this->bare_artifact, $this->fields_data, $this->user, $this->submitted_on)
+        $this->changeset_creator->shouldReceive('create')
+            ->with(
+                Mockery::on(function ($artifact) {
+                    return $artifact->getId() === $this->bare_artifact->getId() &&
+                        $artifact->getSubmittedOn() === $this->bare_artifact->getSubmittedOn() &&
+                        $artifact->getSubmittedBy() === $this->bare_artifact->getSubmittedBy();
+                }),
+                $this->fields_data,
+                $this->user,
+                $this->submitted_on
+            )
             ->once();
 
         $this->creator->create(
