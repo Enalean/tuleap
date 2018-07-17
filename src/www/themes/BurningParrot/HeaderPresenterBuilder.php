@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,6 +29,7 @@ use ThemeVariantColor;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use ForgeConfig;
@@ -95,6 +96,7 @@ class HeaderPresenterBuilder
         $this->css_assets                            = $css_assets;
 
         $color = $this->getMainColor();
+        $theme_variation = new ThemeVariation($color, $current_user);
 
         return new HeaderPresenter(
             $this->current_user,
@@ -108,7 +110,7 @@ class HeaderPresenterBuilder
                 $url_redirect
             ),
             $color,
-            $this->getStylesheets($color),
+            $this->getStylesheets($theme_variation),
             $feedback_logs,
             $this->getBodyClassesAsString(),
             $this->getMainClassesAsString(),
@@ -175,31 +177,29 @@ class HeaderPresenterBuilder
         return $page_title;
     }
 
-    private function getStylesheets(ThemeVariantColor $color)
+    private function getStylesheets(ThemeVariation $theme_variation)
     {
-        $core_burning_parrot_include_assets = new IncludeAssets(
-            ForgeConfig::get('tuleap_dir') . '/src/www/themes/BurningParrot/assets',
-            '/themes/BurningParrot/assets'
-        );
-
-        $condensed_suffix = '';
-        if ($this->current_user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED) {
-            $condensed_suffix = '-condensed';
-        }
-
         $stylesheets = array(
-            '/themes/common/tlp/dist/tlp-'. $color->getName() . $condensed_suffix . '.min.css',
+            '/themes/common/tlp/dist/tlp' . $theme_variation->getFileColorCondensedSuffix() . '.min.css',
         );
-        $stylesheets[] = $core_burning_parrot_include_assets->getFileURL('burning-parrot-' . $color->getName() . $condensed_suffix . '.css');
+
+        $core_burning_parrot_css = new CssAsset(
+            new IncludeAssets(
+                ForgeConfig::get('tuleap_dir') . '/src/www/themes/BurningParrot/assets',
+                '/themes/BurningParrot/assets'
+            ),
+            'burning-parrot'
+        );
+        $stylesheets[] = $core_burning_parrot_css->getFileURL($theme_variation);
 
         foreach ($this->css_assets as $css_asset) {
-            $stylesheets[] = $css_asset->getFileURL($color);
+            $stylesheets[] = $css_asset->getFileURL($theme_variation);
         }
 
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
             array(
-                'variant' => $this->getMainColor(),
+                'variant'     => $this->getMainColor(),
                 'stylesheets' => &$stylesheets
             )
         );
