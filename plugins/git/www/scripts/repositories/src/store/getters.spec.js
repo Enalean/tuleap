@@ -162,6 +162,26 @@ describe("Store getters", () => {
             expect(fork_leaf_repo).toEqual(forked_repository);
         });
 
+        it("Given repositories, then it will sort folders before repositories and then sort each group alphabetically", () => {
+            const root_repository = {
+                path_without_project: "",
+                label: "acquirability",
+                normalized_path: "acquirability"
+            };
+            const project_repository_with_path = {
+                path_without_project: "zannichelliaceae",
+                label: "kafta",
+                normalized_path: "zannichelliaceae/kafta"
+            };
+            mock_getters.currentRepositoryList = [root_repository, project_repository_with_path];
+
+            const result = getters.filteredRepositoriesGroupedByPath(state, mock_getters);
+
+            const [folder, root_repo] = result.children;
+            expect(folder.label).toEqual("zannichelliaceae");
+            expect(root_repo.label).toEqual("acquirability");
+        });
+
         it("Given a filter query and repositories, then it will keep only repositories with the query in their normalized path and it will keep only folders that are not empty as a result", () => {
             const project_repository_at_root = {
                 path_without_project: "",

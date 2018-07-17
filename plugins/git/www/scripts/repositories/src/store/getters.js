@@ -109,17 +109,23 @@ const groupRepositoriesByPath = repositories => {
     return recursivelySortAlphabetically(grouped);
 };
 
+const sortByLabelAlphabetically = items => items.sort((a, b) => a.label.localeCompare(b.label));
+
 const recursivelySortAlphabetically = folder => {
-    let all_children = [];
+    let folders = [];
+    let repositories = [];
     folder.children.forEach(value => {
         if (value.is_folder) {
             const sorted_folder = recursivelySortAlphabetically(value);
-            all_children.push(sorted_folder);
+            folders.push(sorted_folder);
             return;
         }
-        all_children.push(value);
+        repositories.push(value);
     });
-    const sorted_children = all_children.sort((a, b) => a.label.localeCompare(b.label));
+    const sorted_children = [
+        ...sortByLabelAlphabetically(folders),
+        ...sortByLabelAlphabetically(repositories)
+    ];
 
     return {
         ...folder,
