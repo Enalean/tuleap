@@ -21,15 +21,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    Duration,
-    DateTime
-} from 'luxon';
+import { Duration, DateTime } from "luxon";
 
-export {
-    formatMinutes,
-    formatDatetimeToISO
-};
+export { formatMinutes, formatDatetimeToISO, formatDateDayMonthYear };
 
 function formatMinutes(minutes) {
     return Duration.fromObject({ minutes }).toFormat("hh:mm");
@@ -37,8 +31,12 @@ function formatMinutes(minutes) {
 
 function formatDatetimeToISO(string_date) {
     return DateTime.fromISO(string_date).toISO({
-        suppressSeconds     : false,
+        suppressSeconds: false,
         suppressMilliseconds: true,
-        includeOffset       : true
+        includeOffset: true
     });
+}
+
+function formatDateDayMonthYear(date) {
+    return DateTime.fromISO(date).toLocaleString();
 }

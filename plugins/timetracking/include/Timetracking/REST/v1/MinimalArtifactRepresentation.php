@@ -55,6 +55,10 @@ class MinimalArtifactRepresentation
      * @var string
      */
     public $badge_color;
+    /**
+     * @var string
+     */
+    public $submission_date;
 
     public function build(Tracker_Artifact $artifact)
     {
@@ -62,8 +66,9 @@ class MinimalArtifactRepresentation
         $this->uri  = self::ROUTE . '/' . $this->id;
         $this->xref = $artifact->getXRef();
 
-        $this->html_url    = $artifact->getUri();
-        $this->title       = $artifact->getTitle();
-        $this->badge_color = $artifact->getTracker()->getNormalizedColor();
+        $this->html_url        = $artifact->getUri();
+        $this->title           = $artifact->getTitle();
+        $this->badge_color     = $artifact->getTracker()->getNormalizedColor();
+        $this->submission_date = JsonCast::toDate($artifact->getSubmittedOn());
     }
 }

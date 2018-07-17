@@ -37,11 +37,12 @@
                             <i class="fa fa-question-circle"></i>
                         </span>
                     </th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="! hasDataToDisplay">
-                    <td colspan="3" class="tlp-table-cell-empty">
+                    <td colspan="4" class="tlp-table-cell-empty">
                         {{ empty_state }}
                     </td>
                 </tr>
@@ -55,6 +56,7 @@
                     <th></th>
                     <th></th>
                     <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ getFormattedTotalSum() }}</th>
+                    <th></th>
                 </tr>
             </tfoot>
         </table>
@@ -73,124 +75,121 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider } from './gettext-provider.js';
-    import { getTrackedTimes }  from "./rest-querier.js";
-    import { formatMinutes }    from './time-formatters.js';
-    import ArtifactTableRow     from "./WidgetArtifactTableRow.vue";
+import { gettext_provider } from "./gettext-provider.js";
+import { getTrackedTimes } from "./rest-querier.js";
+import { formatMinutes } from "./time-formatters.js";
+import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 
-    export default {
-        name: "WidgetArtifactTable",
-        props: {
-            startDate      : String,
-            endDate        : String,
-            isInReadingMode: Boolean,
-            hasQueryChanged: Boolean
+export default {
+    name: "WidgetArtifactTable",
+    props: {
+        startDate: String,
+        endDate: String,
+        isInReadingMode: Boolean,
+        hasQueryChanged: Boolean
+    },
+    components: { ArtifactTableRow },
+    data() {
+        return {
+            tracked_times: [],
+            rest_error: "",
+            is_loading: false,
+            is_loaded: false,
+            is_loading_more: false,
+            total_times: 0,
+            pagination_offset: 0,
+            pagination_limit: 50
+        };
+    },
+    computed: {
+        hasRestError() {
+            return this.rest_error !== "";
         },
-        components: { ArtifactTableRow },
-        data() {
-            return {
-                tracked_times    : [],
-                rest_error       : '',
-                is_loading       : false,
-                is_loaded        : false,
-                is_loading_more  : false,
-                total_times      : 0,
-                pagination_offset: 0,
-                pagination_limit : 50
-            }
+        hasDataToDisplay() {
+            return this.tracked_times.length > 0;
         },
-        computed: {
-            hasRestError() {
-                return this.rest_error !== "";
-            },
-            hasDataToDisplay() {
-                return this.tracked_times.length > 0;
-            },
-            canResultsBeDisplayed() {
-                return this.is_loaded
-                    && ! this.hasRestError;
-            },
-            report_state() {
-                return [ this.isInReadingMode, this.hasQueryChanged ];
-            },
-            canLoadMore() {
-                return this.pagination_offset < this.total_times;
-            },
-            time_format_tooltip: () => gettext_provider.gettext('The time is displayed in hours:minutes'),
-            empty_state        : () => gettext_provider.gettext('No tracked time have been found for this period'),
-            artifact_label     : () => gettext_provider.gettext('Artifact'),
-            project_label      : () => gettext_provider.gettext('Project'),
-            time_label         : () => gettext_provider.gettext('Time'),
-            load_more_label    : () => gettext_provider.gettext('Load more')
+        canResultsBeDisplayed() {
+            return this.is_loaded && !this.hasRestError;
         },
-        watch: {
-            report_state() {
-                if (this.isInReadingMode && this.hasQueryChanged) {
-                    this.pagination_offset    = 0;
-                    this.tracked_times.length = 0;
-                    this.loadFirstBatchOfTimes();
-                }
-            }
+        report_state() {
+            return [this.isInReadingMode, this.hasQueryChanged];
         },
-        mounted() {
-            this.loadFirstBatchOfTimes();
+        canLoadMore() {
+            return this.pagination_offset < this.total_times;
         },
-        methods: {
-            getFormattedTotalSum() {
-                const sum = [].concat(...this.tracked_times)
-                    .reduce(
-                        (sum, { minutes }) => minutes + sum,
-                        0
-                    );
-
-                return formatMinutes(sum);
-            },
-            async loadTimes() {
-                try {
-                    this.rest_error = '';
-
-                    const { times, total } = await getTrackedTimes(
-                        this.startDate,
-                        this.endDate,
-                        this.pagination_limit,
-                        this.pagination_offset
-                    );
-
-                    this.tracked_times = this.tracked_times.concat(
-                        Object.values(times)
-                    );
-
-                    this.pagination_offset += this.pagination_limit;
-
-                    this.total_times = total;
-                    this.is_loaded   = true;
-                } catch (error) {
-                    await this.showRestError(error);
-                }
-            },
-            async showRestError(rest_error) {
-                try {
-                    const { error } = await rest_error.response.json();
-
-                    this.rest_error = error.code + ' ' + error.message;
-                } catch (error) {
-                    this.rest_error = gettext_provider.gettext('An error occured');
-                }
-            },
-            async loadMore() {
-                this.is_loading_more = true;
-
-                await this.loadTimes();
-
-                this.is_loading_more = false;
-            },
-            async loadFirstBatchOfTimes() {
-                this.is_loading = true;
-
-                await this.loadTimes();
-
-                this.is_loading = false;
+        time_format_tooltip: () =>
+            gettext_provider.gettext("The time is displayed in hours:minutes"),
+        empty_state: () =>
+            gettext_provider.gettext("No tracked time have been found for this period"),
+        artifact_label: () => gettext_provider.gettext("Artifact"),
+        project_label: () => gettext_provider.gettext("Project"),
+        time_label: () => gettext_provider.gettext("Time"),
+        load_more_label: () => gettext_provider.gettext("Load more")
+    },
+    watch: {
+        report_state() {
+            if (this.isInReadingMode && this.hasQueryChanged) {
+                this.pagination_offset = 0;
+                this.tracked_times.length = 0;
+                this.loadFirstBatchOfTimes();
             }
         }
+    },
+    mounted() {
+        this.loadFirstBatchOfTimes();
+    },
+    methods: {
+        getFormattedTotalSum() {
+            const sum = []
+                .concat(...this.tracked_times)
+                .reduce((sum, { minutes }) => minutes + sum, 0);
+
+            return formatMinutes(sum);
+        },
+        async loadTimes() {
+            try {
+                this.rest_error = "";
+
+                const { times, total } = await getTrackedTimes(
+                    this.startDate,
+                    this.endDate,
+                    this.pagination_limit,
+                    this.pagination_offset
+                );
+
+                this.tracked_times = this.tracked_times.concat(Object.values(times));
+
+                this.pagination_offset += this.pagination_limit;
+
+                this.total_times = total;
+                this.is_loaded = true;
+            } catch (error) {
+                await this.showRestError(error);
+            }
+        },
+        async showRestError(rest_error) {
+            try {
+                const { error } = await rest_error.response.json();
+
+                this.rest_error = error.code + " " + error.message;
+            } catch (error) {
+                this.rest_error = gettext_provider.gettext("An error occured");
+            }
+        },
+        async loadMore() {
+            this.is_loading_more = true;
+
+            await this.loadTimes();
+
+            this.is_loading_more = false;
+        },
+        async loadFirstBatchOfTimes() {
+            this.is_loading = true;
+
+            await this.loadTimes();
+
+            this.is_loading = false;
+        }
     }
+};
 </script>)
