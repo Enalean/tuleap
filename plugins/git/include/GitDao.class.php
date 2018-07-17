@@ -719,13 +719,17 @@ class GitDao extends \Tuleap\DB\DataAccessObject
             $additional_where_statement->andWith('repository_creation_user_id = ?', $owner_id);
         }
 
-        $sql = "SELECT SQL_CALC_FOUND_ROWS git.*, IF(push_date, push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
+        $sql = "SELECT SQL_CALC_FOUND_ROWS git.*,
+                  IF(log1.push_date, log1.push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
                 FROM plugin_git git
-                  LEFT JOIN plugin_git_log log ON (log.repository_id = git.repository_id)
+                  LEFT JOIN plugin_git_log AS log1 ON (log1.repository_id = git.repository_id)
+                  LEFT JOIN plugin_git_log AS log2 ON (log2.repository_id = log1.repository_id)
+                      AND log1.push_date < log2.push_date
                 WHERE
                   $additional_where_statement
+                  AND log2.push_date IS NULL
                 GROUP BY git.repository_id
-                ORDER BY log.push_date DESC
+                ORDER BY log1.push_date DESC
                 LIMIT ?
                 OFFSET ?
                 ";
