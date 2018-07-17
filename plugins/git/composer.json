@@ -7,6 +7,6 @@
   },
   "require": {
     "smarty/smarty": "^2.6",
-    "geshi/geshi": "^1.0"
+    "geshi/geshi": "1.0.8.13"
   }
 }
