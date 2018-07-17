@@ -18,6 +18,7 @@
  */
 
 import mutations from "./mutations.js";
+import { PROJECT_KEY } from "../constants.js";
 
 describe("Store mutations", () => {
     describe("pushRepositoriesForCurrentOwner", () => {
@@ -30,6 +31,21 @@ describe("Store mutations", () => {
             mutations.pushRepositoriesForCurrentOwner(state, []);
 
             expect(state.repositories_for_owner.hasOwnProperty("101")).toBe(true);
+        });
+
+        it("will set the repository label as 'normalized_path' when it is a 'root' repository (without path)", () => {
+            const repositories = [{ name: "archiplasm", path: "myproject/archiplasm.git" }];
+
+            const state = {
+                repositories_for_owner: {},
+                selected_owner_id: PROJECT_KEY
+            };
+
+            mutations.pushRepositoriesForCurrentOwner(state, repositories);
+
+            expect(state.repositories_for_owner[PROJECT_KEY][0].normalized_path).toEqual(
+                "archiplasm"
+            );
         });
 
         it("Given some repositories and that the selected owner has already some repositories loaded, then It should push them in his list.", () => {

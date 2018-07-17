@@ -19,7 +19,7 @@
 
 import { getForkedRepositoryList, getRepositoryList } from "../api/rest-querier.js";
 import { getProjectId } from "../repository-list-presenter.js";
-import { ERROR_TYPE_UNKNOWN_ERROR, ERROR_TYPE_NO_GIT, PROJECT_KEY } from "../constants";
+import { ERROR_TYPE_UNKNOWN_ERROR, ERROR_TYPE_NO_GIT, PROJECT_KEY } from "../constants.js";
 
 export const showAddRepositoryModal = ({ state }) => {
     state.add_repository_modal.toggle();
@@ -47,12 +47,12 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
     commit("setIsLoadingInitial", true);
     commit("setIsLoadingNext", true);
     try {
-        await getRepositories(repositories => {
+        return await getRepositories(repositories => {
             commit("pushRepositoriesForCurrentOwner", repositories);
             commit("setIsLoadingInitial", false);
         });
     } catch (e) {
-        handleGetRepositoryListError(e, commit);
+        return handleGetRepositoryListError(e, commit);
     } finally {
         commit("setIsLoadingNext", false);
     }

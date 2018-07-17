@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PROJECT_KEY } from "../constants.js";
+import { mockFetchError } from "tlp-mocks";
+import { PROJECT_KEY, ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants.js";
 import {
     getAsyncRepositoryList,
     changeRepositories,
@@ -130,22 +131,67 @@ describe("Store actions", () => {
     });
 
     describe("getAsyncRepositoryList", () => {
-        const repositories = [{ name: "VueX" }];
+        let commit, getRepositories;
+        beforeEach(() => {
+            commit = jasmine.createSpy("commit");
+            getRepositories = jasmine.createSpy("getRepositories");
+        });
 
         it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", () => {
-            const commit = jasmine.createSpy("commit");
+            const repositories = [{ name: "VueX" }];
+            getRepositories.and.callFake(callback => callback(repositories));
 
-            function fakeGetRepositories(callback) {
-                callback(repositories);
-            }
-
-            getAsyncRepositoryList(commit, fakeGetRepositories);
+            getAsyncRepositoryList(commit, getRepositories);
 
             expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", true);
             expect(commit).toHaveBeenCalledWith("setIsLoadingNext", true);
 
             expect(commit).toHaveBeenCalledWith("pushRepositoriesForCurrentOwner", repositories);
             expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
+        });
+
+        it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
+            const error_json = {
+                error: {
+                    code: "404"
+                }
+            };
+            mockFetchError(getRepositories, { error_json });
+
+            await getAsyncRepositoryList(commit, getRepositories);
+
+            expect(commit).toHaveBeenCalledWith("setErrorMessageType", ERROR_TYPE_NO_GIT);
+        });
+
+        it("When the server responds with another error code, then the unknown error will be committed", async () => {
+            const error_json = {
+                error: {
+                    code: "403"
+                }
+            };
+            mockFetchError(getRepositories, { error_json });
+
+            try {
+                await getAsyncRepositoryList(commit, getRepositories);
+            } catch (e) {
+                expect(commit).toHaveBeenCalledWith(
+                    "setErrorMessageType",
+                    ERROR_TYPE_UNKNOWN_ERROR
+                );
+            }
+        });
+
+        it("When something else happens (no response), then the unknown error will be committed", async () => {
+            mockFetchError(getRepositories, { status: 500 });
+
+            try {
+                await getAsyncRepositoryList(commit, getRepositories);
+            } catch (e) {
+                expect(commit).toHaveBeenCalledWith(
+                    "setErrorMessageType",
+                    ERROR_TYPE_UNKNOWN_ERROR
+                );
+            }
         });
     });
 });
