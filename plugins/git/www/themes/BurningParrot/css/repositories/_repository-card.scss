@@ -99,11 +99,11 @@
 
 .git-pullrequest-badge {
     margin: 0 $tlp-spacing;
-    transition: opacity 100ms;
     background-color: $tlp-theme-color;
 }
 
 .git-pullrequest-badge-link {
+    transition: opacity 100ms;
     color: $tlp-ui-white;
 
     &:hover {

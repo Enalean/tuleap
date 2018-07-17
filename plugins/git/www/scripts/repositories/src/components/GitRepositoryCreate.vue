@@ -65,7 +65,6 @@
             <button type="reset"
                     class="tlp-button-primary tlp-button-outline tlp-modal-action"
                     data-dismiss="modal"
-                    v-on:click="reset()"
             >
                 <translate>Cancel</translate>
             </button>
@@ -97,7 +96,11 @@ export default {
         };
     },
     mounted() {
-        this.$store.commit("setAddRepositoryModal", tlpModal(this.$refs.create_modal));
+        const create_modal = tlpModal(this.$refs.create_modal);
+
+        create_modal.addEventListener("tlp-modal-hidden", this.reset);
+
+        this.$store.commit("setAddRepositoryModal", create_modal);
     },
     computed: {
         placeholder() {

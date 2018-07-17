@@ -60,6 +60,13 @@
 
 .git-repository-list-actions-display-switch {
     margin: 0 $tlp-spacing 0 0;
+
+    .fa-calendar {
+        position: relative;
+        top: -2px;
+        left: 0;
+        font-size: 15px;
+    }
 }
 
 .git-repository-list-switch-path-label {
