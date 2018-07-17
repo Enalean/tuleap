@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017. All rights reserved
+ * Copyright (c) Enalean 2017-2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -144,7 +144,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         return $output;
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = [])
+    {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -227,7 +228,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      *
      * @return string html
      */
-     public function fetchSubmit() {
+     public function fetchSubmit($submitted_values = [])
+     {
          return '';
      }
      

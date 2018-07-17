@@ -180,7 +180,8 @@ abstract class Tracker_Widget_Renderer extends Widget {
         return $content_id;
     }
 
-    function updatePreferences($request) {
+    function updatePreferences(&$request)
+    {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

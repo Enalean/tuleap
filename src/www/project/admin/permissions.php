@@ -116,7 +116,7 @@ function permission_get_object_type($permission_type,$object_id) {
     } else if ($permission_type=='TRACKER_ACCESS_FULL') {
         return 'artefact';
     } else {
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $object_type = false;
         $em->processEvent('permission_get_object_type', array(
             'permission_type' => $permission_type, 
@@ -191,7 +191,7 @@ function permission_get_object_name($permission_type,$object_id) {
         $a  = new Artifact($at,$object_id);
         return 'art #'. $a->getId() .' - '. util_unconvert_htmlspecialchars($a->getSummary());    
     } else {
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $object_name = false;
         $em->processEvent('permission_get_object_name', array(
             'permission_type' => $permission_type, 

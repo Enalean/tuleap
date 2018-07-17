@@ -4,7 +4,7 @@
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -314,9 +314,9 @@ class BaseLanguage {
             args is an array which will replace the $1, $2, etc
             in the text_array string before it is returned
         */
-        if ($args || $args == 0) {
+        if (($args || $args == 0) && $args !== '') {
             //$tstring = sprintf($this->text_array[$pagename][$category],$args);
-            for ($i=1; $i<=sizeof($args)+1; $i++) {
+            for ($i = 1; $i <= count($args) + 1; $i++) {
                 $patterns[] = '/\$'.$i.'/';
             }
             $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);

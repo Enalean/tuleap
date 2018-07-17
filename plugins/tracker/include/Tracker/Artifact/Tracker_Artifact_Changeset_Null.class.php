@@ -85,7 +85,8 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    public function updateComment($body, $user) {
+    public function updateComment($body, $user, $comment_format, $timestamp)
+    {
     }
 
     /**

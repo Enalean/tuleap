@@ -166,7 +166,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return '';
     }
 
-    public function fetchArtifactCopyMode(Tracker_Artifact $artifact) {
+    public function fetchArtifactCopyMode(Tracker_Artifact $artifact, $submitted_values = [])
+    {
         $last_changeset = $artifact->getLastChangeset();
         if ($last_changeset) {
             $value = $last_changeset->getValue($this);

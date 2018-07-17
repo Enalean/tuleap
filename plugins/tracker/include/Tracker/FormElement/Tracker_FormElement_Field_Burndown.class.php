@@ -31,10 +31,6 @@ use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
 
-require_once 'common/chart/ErrorChart.class.php';
-require_once 'common/date/TimePeriodWithWeekEnd.class.php';
-require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
-
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
 
@@ -607,7 +603,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
-    public function fetchSubmit() {
+    public function fetchSubmit($submitted_values = [])
+    {
         return '';
     }
 

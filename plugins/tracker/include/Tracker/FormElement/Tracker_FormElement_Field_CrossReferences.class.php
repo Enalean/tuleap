@@ -140,7 +140,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         return $crossref_factory;
     }
 
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report = null)
+    {
         $html = '';
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
 
@@ -482,7 +483,12 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return boolean true on success or false on failure
      */
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Tracker_Artifact $artifact,
+        $submitted_value,
+        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        $is_submission = null
+    ) {
         return true;
     }
     
@@ -504,7 +510,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string html
      */
-     public function fetchSubmit() {
+     public function fetchSubmit($submitted_values = [])
+     {
          return '';
      }
 

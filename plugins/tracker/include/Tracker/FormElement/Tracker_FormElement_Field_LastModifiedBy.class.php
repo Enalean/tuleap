@@ -173,7 +173,11 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return '';
     }
 
-    public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueWithEditionFormIfEditable(
+        Tracker_Artifact $artifact,
+        Tracker_Artifact_ChangesetValue $value = null,
+        $submitted_values = []
+    ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -212,7 +216,12 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return true;
     }
 
-    public function validateFieldWithPermissionsAndRequiredStatus(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+    public function validateFieldWithPermissionsAndRequiredStatus(
+        Tracker_Artifact $artifact,
+        $submitted_value,
+        Tracker_Artifact_ChangesetValue $last_changeset_value = null,
+        $is_submission = null
+    ) {
         if ($submitted_value !== null) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         }
@@ -268,7 +277,8 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
-    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences) {
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences = null)
+    {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($artifact->getLastModifiedBy());
         return $value->fetchCard($display_preferences);
     }
