@@ -2011,9 +2011,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function getNewChangesetCreator(Tracker_Artifact_Changeset_FieldsValidator $fields_validator)
     {
-        $emitter         = $this->getWebhookEmitter();
-        $webhook_factory = $this->getWebhookFactory();
-
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
             $this->getFormElementFactory(),
@@ -2022,9 +2019,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $this->getArtifactFactory(),
             $this->getEventManager(),
             $this->getReferenceManager(),
-            $this->getSourceOfAssociationCollectionBuilder(),
-            $emitter,
-            $webhook_factory
+            $this->getSourceOfAssociationCollectionBuilder()
         );
 
         return $creator;
@@ -2051,26 +2046,5 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
         return $types;
-    }
-
-    /**
-     * @return Emitter
-     */
-    protected function getWebhookEmitter()
-    {
-        $emitter = new Emitter(
-            MessageFactoryBuilder::build(),
-            HttpClientFactory::createClient(),
-            new WebhookStatusLogger(new WebhookDao())
-        );
-        return $emitter;
-    }
-
-    /**
-     * @return WebhookFactory
-     */
-    protected function getWebhookFactory()
-    {
-        return new WebhookFactory(new WebhookDao());
     }
 }

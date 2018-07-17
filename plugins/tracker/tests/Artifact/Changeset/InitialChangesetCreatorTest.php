@@ -59,9 +59,7 @@ class Tracker_Artifact_Changeset_InitialChangesetCreator_BaseTest extends Tuleap
             $this->factory,
             $this->changeset_dao,
             $this->artifact_factory,
-            mock('EventManager'),
-            \Mockery::spy(\Tuleap\Webhook\Emitter::class),
-            \Mockery::mock(\Tuleap\Tracker\Webhook\WebhookFactory::class)
+            mock('EventManager')
         );
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];

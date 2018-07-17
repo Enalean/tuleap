@@ -21,8 +21,6 @@
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Webhook\Emitter;
 
 /**
  * I am a Template Method to create a new changeset (update of an artifact)
@@ -47,17 +45,13 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         Tracker_ArtifactFactory $artifact_factory,
         EventManager $event_manager,
         ReferenceManager $reference_manager,
-        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder,
-        Emitter $emitter,
-        WebhookFactory $webhook_factory
+        SourceOfAssociationCollectionBuilder $source_of_association_collection_builder
     ) {
         parent::__construct(
             $fields_validator,
             $formelement_factory,
             $artifact_factory,
-            $event_manager,
-            $emitter,
-            $webhook_factory
+            $event_manager
         );
 
         $this->changeset_dao                            = $changeset_dao;
@@ -167,7 +161,6 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
         if ($send_notification) {
             $artifact->getChangeset($changeset_id)->executePostCreationActions();
-            $this->emitWebhooks($artifact, $submitter, 'update');
         }
 
         $this->event_manager->processEvent(TRACKER_EVENT_ARTIFACT_POST_UPDATE, array('artifact' => $artifact));

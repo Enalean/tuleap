@@ -66,9 +66,9 @@ class WebhookDao extends DataAccessObject
     public function addLog($webhook_id, $status)
     {
         $sql = 'INSERT INTO plugin_tracker_webhook_log(created_on, webhook_id, status)
-                VALUES (?, ?, ?)';
+                VALUES (UNIX_TIMESTAMP(), ?, ?)';
 
-        $this->getDB()->run($sql, $_SERVER['REQUEST_TIME'], $webhook_id, $status);
+        $this->getDB()->run($sql, $webhook_id, $status);
     }
 
     public function duplicateWebhooks($source_tracker_id, $tracker_id)

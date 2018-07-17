@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 
 require_once __DIR__.'/../../../../bootstrap.php';
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use BaseLanguage;
 use PFUser;
@@ -37,10 +38,22 @@ use ConfigNotificationAssignedTo;
 
 class NotifierCustomSenderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var String
      * */
     private $default_format;
+    private $recipients_manager;
+    private $mail_gateway_config;
+    private $recipient_factory;
+    private $mail_sender;
+    private $custom_email_sender;
+    private $changeset;
+    private $mail_notification_task;
+    private $user_realname;
+    private $default_format_var;
+    private $default_format_value;
 
     public function setUp()
     {
@@ -72,28 +85,21 @@ class NotifierCustomSenderTest extends TestCase
         $this->changeset->shouldReceive('getArtifact')->andReturn($artifact);
         $this->changeset->shouldReceive('getTracker')->andReturn($tracker);
 
-        $this->changeset_notifications = new ActionsRunner(
+        $this->mail_notification_task = new EmailNotificationTask(
             $logger,
-            $this->mail_gateway_config,
-            $config_notification_assigned_to,
-            $this->recipient_factory,
             $user_helper,
             $this->recipients_manager,
+            $this->recipient_factory,
+            $this->mail_gateway_config,
             $this->mail_sender,
-            \Mockery::spy(ActionsRunnerDao::class),
+            $config_notification_assigned_to,
             $this->custom_email_sender
         );
 
-        $this->user_realname = "J. Doe";
-        $this->default_format_var = 'realname';
-        $this->default_format = '%'.$this->default_format_var.' from Tuleap';
+        $this->user_realname        = "J. Doe";
+        $this->default_format_var   = 'realname';
+        $this->default_format       = '%' . $this->default_format_var . ' from Tuleap';
         $this->default_format_value = $this->user_realname;
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-        \Mockery::close();
     }
 
     private function getMessagesForRecipients($custom_sender_enabled)
@@ -146,7 +152,7 @@ class NotifierCustomSenderTest extends TestCase
                 'enabled' => $custom_sender_enabled
             )
         );
-         return $this->changeset_notifications->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
+         return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
     }
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()

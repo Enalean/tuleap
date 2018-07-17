@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -27,7 +27,7 @@ Mock::generatePartial(
         'getValueDao',
         'getFormElementFactory',
         'getArtifact',
-        'sendNotification',
+        'executePostCreationActions',
         'getUserManager',
         'getTracker',
         'getComment',

@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Webhook\Emitter;
-
 /**
  * I am a Template Method to create an initial changeset.
  */
@@ -42,31 +39,17 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
     /** @var EventManager */
     protected $event_manager;
 
-    /**
-     * @var Emitter
-     */
-    private $emitter;
-
-    /**
-     * @var WebhookFactory
-     */
-    private $webhook_factory;
-
     public function __construct(
         Tracker_Artifact_Changeset_FieldsValidator $fields_validator,
         Tracker_FormElementFactory                 $formelement_factory,
         Tracker_ArtifactFactory                    $artifact_factory,
-        EventManager                               $event_manager,
-        Emitter                                    $emitter,
-        WebhookFactory                             $webhook_factory
+        EventManager                               $event_manager
     ) {
         $this->fields_validator    = $fields_validator;
         $this->formelement_factory = $formelement_factory;
         $this->artifact_factory    = $artifact_factory;
         $this->event_manager       = $event_manager;
         $this->field_initializator = new Tracker_Artifact_Changeset_ChangesetDataInitializator($this->formelement_factory);
-        $this->emitter             = $emitter;
-        $this->webhook_factory     = $webhook_factory;
     }
 
     /**
@@ -100,18 +83,5 @@ abstract class Tracker_Artifact_Changeset_ChangesetCreatorBase {
         }
 
         return false;
-    }
-
-    public function emitWebhooks(Tracker_Artifact $artifact, PFUser $user, $action)
-    {
-        $tracker  = $artifact->getTracker();
-        $webhooks = $this->webhook_factory->getWebhooksForTracker($tracker);
-
-        if (count($webhooks) === 0) {
-            return;
-        }
-
-        $payload  = new \Tuleap\Tracker\Webhook\ArtifactPayload($artifact, $user, $action);
-        $this->emitter->emit($payload, ...$webhooks);
     }
 }
