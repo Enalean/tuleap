@@ -58,7 +58,7 @@ class ActionsRunnerDao extends DataAccessObject
     {
         $sql = 'SELECT count(*) as nb FROM tracker_post_creation_event_log WHERE start_date IS NULL AND create_date > ?';
 
-        return $this->getDB()->single($sql, $create_date);
+        return $this->getDB()->single($sql, [$create_date]);
     }
 
     public function deleteLogsOlderThan($delay)
