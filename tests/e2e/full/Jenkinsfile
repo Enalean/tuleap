@@ -28,15 +28,12 @@ pipeline {
 
         stage('E2E Tests') {
             steps {
-                'Cypress': {
-                    dir ('sources') {
-                        sh """
-                        tests/e2e/full/wrap.sh "$WORKSPACE/results/cypress"
-                        """
-                    }
-                    junit 'results/cypress/*.xml'
-                },
-                failFast: false
+                dir ('sources') {
+                    sh """
+                    tests/e2e/full/wrap.sh "$WORKSPACE/results/cypress"
+                    """
+                }
+                junit 'results/cypress/*.xml'
             }
             post {
                 always {
