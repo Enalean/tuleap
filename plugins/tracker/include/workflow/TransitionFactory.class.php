@@ -150,7 +150,7 @@ class TransitionFactory {
     /**
      * Get the Workflow Transition dao
      *
-     * @return Worflow_TransitionDao
+     * @return Workflow_TransitionDao
      */
     protected function getDao() {
         return new Workflow_TransitionDao();
@@ -198,8 +198,6 @@ class TransitionFactory {
 
         $this->getDao()->startTransaction();
 
-        $field_not_empty_dao = $this->getFieldNotEmptyDao();
-
         //Delete permissions
         foreach($transitions as $transition) {
             $transition_id = $transition->getTransitionId();
@@ -211,24 +209,14 @@ class TransitionFactory {
                 false
             );
 
-            $field_not_empty_dao->deleteByTransitionId($transition_id);
         }
-
-        //Delete postactions
-        if ($this->getPostActionFactory()->deleteWorkflow($workflow_id)) {
-            $result = $this->getDao()->deleteWorkflowTransitions($workflow_id);
+        $result = $this->getDao()->deleteWorkflowTransitions($workflow_id);
+        if ($result === false) {
+            $this->getDao()->rollBack();
         }
-
         $this->getDao()->commit();
 
-        return $result;
-    }
-
-    /**
-     * @return Workflow_Transition_Condition_FieldNotEmpty_Dao
-     */
-    private function getFieldNotEmptyDao() {
-        return new Workflow_Transition_Condition_FieldNotEmpty_Dao();
+        return true;
     }
 
     /**
