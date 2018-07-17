@@ -28,8 +28,8 @@
         >
             <i v-if="! isRootFolder"
                 v-bind:class="{
-                    'fa fa-caret-down': ! isFolderCollapsed,
-                    'fa fa-caret-right': isFolderCollapsed
+                    'fa fa-fw fa-caret-down': ! isFolderCollapsed,
+                    'fa fa-fw fa-caret-right': isFolderCollapsed
                 }"
             ></i>
             <h2 class="git-repository-list-folder-label"
