@@ -72,6 +72,9 @@ function db_result($qhandle,$row,$field) {
     if ($qhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
         $qhandle->seek($row);
         $row = $qhandle->current();
+        if ($field === null) {
+            $field = 0;
+        }
         if (isset($row[$field])) {
             return $row[$field];
         }
