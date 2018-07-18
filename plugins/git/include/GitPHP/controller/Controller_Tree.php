@@ -1,24 +1,26 @@
 <?php
-
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Controller Tree
- *
- * Controller for displaying a tree
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-/**
- * Tree controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
 
@@ -104,6 +106,24 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         if (!isset($this->params['hashbase'])) {
             // TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this
             throw new \Exception('Hashbase is required');
+        }
+
+        $taglist = $this->project->GetTags(17);
+        if ($taglist) {
+            if (count($taglist) > 16) {
+                $this->tpl->assign('hasmoretags', true);
+                $taglist = array_slice($taglist, 0, 16);
+            }
+            $this->tpl->assign('taglist', $taglist);
+        }
+
+        $headlist = $this->project->GetHeads(17);
+        if ($headlist) {
+            if (count($headlist) > 17) {
+                $this->tpl->assign('hasmoreheads', true);
+                $headlist = array_slice($headlist, 0, 16);
+            }
+            $this->tpl->assign('headlist', $headlist);
         }
 
         $commit = $this->project->GetCommit($this->params['hashbase']);
