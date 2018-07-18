@@ -380,7 +380,7 @@ function Graph(
                     select('.graph')
                         .append('img')
                         .attrs({
-                            'src': 'scripts/assets/loader.gif',
+                            'src': '/themes/BurningParrot/images/spinner.gif',
                             'class': 'loader loader-node'
                         })
                 );

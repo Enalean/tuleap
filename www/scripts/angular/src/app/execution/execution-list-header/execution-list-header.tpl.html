@@ -26,7 +26,7 @@
         <div class="tlp-avatar tlp-tooltip tlp-tooltip-top" data-tlp-tooltip="{{ presence.real_name }}">
             <img title="{{ presence.real_name }}"
                  ng-src="{{ presence.avatar_url }}"
-                 onerror="this.src='scripts/assets/avatar_default.png'"
+                 onerror="this.src='/themes/common/images/avatar_default.png'"
                  alt="avatar">
         </div>
         <span class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>

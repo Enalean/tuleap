@@ -94,7 +94,7 @@
                                  ng-repeat="user in execution.viewed_by">
                                 <img title="{{ user.real_name }}"
                                      ng-src="{{ user.avatar_url }}"
-                                     onerror="this.src='scripts/assets/avatar_default.png'"
+                                     onerror="this.src='/themes/common/images/avatar_default.png'"
                                      alt="avatar">
                             </div>
                             <span class="tests-list-test-title">
@@ -118,7 +118,7 @@
                         </li>
                     </ul>
 
-                    <img src="scripts/assets/loader.gif" ng-if="loading()" class="loader">
+                    <img src="/themes/BurningParrot/images/spinner.gif" ng-if="loading()" class="loader">
                 </section>
             </div>
         </section>
