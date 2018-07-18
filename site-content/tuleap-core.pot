@@ -1211,6 +1211,10 @@ msgid ""
 "confusion."
 msgstr ""
 
+#, php-format
+msgid "Your account has been created on %s"
+msgstr ""
+
 msgid ""
 "Your email change is complete. Your new email address is <strong>%s</strong>."
 msgstr ""

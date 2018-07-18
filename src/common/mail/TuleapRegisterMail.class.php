@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,7 +53,7 @@ class TuleapRegisterMail {
             $subject = $GLOBALS['Language']->getText('account_register', 'mail_approval_subject', $login);
             $message = $this->createNotificationMessageText($login, $redirect_url);
         } else {
-            $subject = $GLOBALS['Language']->getText('admin_approve_pending_users', 'title', $GLOBALS['sys_name']);
+            $subject = sprintf(_('Your account has been created on %s'), ForgeConfig::get('sys_name'));
             include($GLOBALS['Language']->getContent('admin/new_account_email'));
         }
 

@@ -1341,6 +1341,10 @@ msgid ""
 "confusion."
 msgstr "La variable <code>$sys_project_approval</code> est toujours présente"
 
+#, php-format
+msgid "Your account has been created on %s"
+msgstr "Votre compte a été créé sur %s"
+
 msgid ""
 "Your email change is complete. Your new email address is <strong>%s</strong>."
 msgstr ""
