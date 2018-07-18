@@ -89,37 +89,12 @@ class WidgetKanbanDao extends DataAccessObject
 
     public function deleteKanbanWidget($id, $owner_id, $owner_type)
     {
-        try {
-            $this->getDB()->beginTransaction();
+        $sql = 'DELETE plugin_agiledashboard_kanban_widget, plugin_agiledashboard_kanban_widget_config
+                FROM plugin_agiledashboard_kanban_widget
+                LEFT JOIN plugin_agiledashboard_kanban_widget_config ON
+                  plugin_agiledashboard_kanban_widget_config.widget_id = plugin_agiledashboard_kanban_widget.id
+                WHERE id = ? AND owner_id = ? AND owner_type = ?';
 
-            $this->deleteConfigForWidgetId($id);
-            $this->delete($id, $owner_id, $owner_type);
-
-            $this->getDB()->commit();
-        } catch (Exception $error) {
-            $this->getDB()->rollBack();
-
-            throw $error;
-        }
-    }
-
-    private function delete($id, $owner_id, $owner_type)
-    {
-        $sql = "DELETE FROM plugin_agiledashboard_kanban_widget
-                WHERE id = ?
-                  AND owner_id = ?
-                  AND owner_type = ?";
-
-        return $this->getDB()->run($sql, $id, $owner_id, $owner_type);
-    }
-
-    private function deleteConfigForWidgetId($widget_id)
-    {
-        $sql = "
-            DELETE FROM plugin_agiledashboard_kanban_widget_config
-            WHERE widget_id = ?
-        ";
-
-        $this->getDB()->run($sql, $widget_id);
+        $this->getDB()->run($sql, $id, $owner_id, $owner_type);
     }
 }
