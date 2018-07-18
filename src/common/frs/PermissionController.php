@@ -148,25 +148,7 @@ class PermissionController extends BaseFrsPresenter
         $toolbar_presenter->setPermissionIsActive();
         $toolbar_presenter->displaySectionNavigation();
 
-        $user = UserManager::instance()->getCurrentUser();
-        if ($this->permission_manager->isAdmin($project, $user)) {
-            $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
-                'url'   => '/file/admin/?'. http_build_query(array(
-                        'group_id' => $project->getID(),
-                        'action'   => 'edit-permissions'
-                    ))
-            );
-        }
-
-        $toolbar[] = array(
-            'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
-            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/frs.html')"
-        );
-
-        $breadcrumbs = [];
-
-        $service->displayHeader($title, $toolbar, $breadcrumbs);
+        $service->displayFRSHeader($project, $title);
         $renderer->renderToPage('toolbar-presenter', $toolbar_presenter);
     }
 

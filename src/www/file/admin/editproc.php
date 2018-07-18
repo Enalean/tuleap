@@ -67,7 +67,7 @@ $presenter = new ToolbarPresenter($project, $title);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$project->getService(Service::FILE)->displayHeader($project, $title);
+$project->getService(Service::FILE)->displayFRSHeader($project, $title);
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $sql = "SELECT name,rank FROM frs_processor WHERE group_id=".db_ei($group_id)." AND processor_id=".db_ei($proc_id);
