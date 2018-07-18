@@ -16,27 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Layout;
 
-class CssAsset
-{
-    /**
-     * @var IncludeAssets
-     */
-    private $include_assets;
-    private $name;
+use PFUser;
+use ThemeVariantColor;
 
-    public function __construct(IncludeAssets $include_assets, $name)
+class ThemeVariation
+{
+    private $color;
+
+    private $is_condensed_mode;
+
+    /**
+     * @param ThemeVariantColor $color
+     * @param PFUser            $current_user
+     */
+    public function __construct(ThemeVariantColor $color, PFUser $current_user)
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
+        $this->color             = $color;
+        $this->is_condensed_mode = $current_user->getPreference(
+            PFUser::PREFERENCE_DISPLAY_DENSITY
+        ) === PFUser::DISPLAY_DENSITY_CONDENSED;
     }
 
-    public function getFileURL(ThemeVariation $variant)
+    public function getFileColorCondensedSuffix()
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        $condensed_suffix = '';
+        if ($this->is_condensed_mode) {
+            $condensed_suffix = '-condensed';
+        }
+        return '-' . $this->color->getName() . $condensed_suffix;
     }
 }
