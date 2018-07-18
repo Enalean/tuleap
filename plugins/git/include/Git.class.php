@@ -184,9 +184,6 @@ class Git extends PluginController {
     /** @var Git_Driver_Gerrit_UserAccountManager */
     private $gerrit_usermanager;
 
-    /** @var PluginManager */
-    private $plugin_manager;
-
     /** @var Git_Driver_Gerrit_ProjectCreator */
     private $project_creator;
 
@@ -274,7 +271,6 @@ class Git extends PluginController {
         GitRepositoryFactory $git_repository_factory,
         UserManager $user_manager,
         ProjectManager $project_manager,
-        PluginManager $plugin_manager,
         Codendi_Request $request,
         Git_Driver_Gerrit_ProjectCreator $project_creator,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
@@ -316,7 +312,6 @@ class Git extends PluginController {
         $this->repository_manager         = $repository_manager;
         $this->git_system_event_manager   = $system_event_manager;
         $this->gerrit_usermanager         = $gerrit_usermanager;
-        $this->plugin_manager             = $plugin_manager;
         $this->project_creator            = $project_creator;
         $this->template_factory           = $template_factory;
         $this->permissions_manager        = $permissions_manager;
@@ -343,17 +338,8 @@ class Git extends PluginController {
         if (empty($this->action)) {
             $this->action = 'index';
         }
-        if (empty($this->groupId)) {
-            $this->addError('Bad request');
-            $this->redirect('/');
-        }
 
-        $this->project     = $this->projectManager->getProject($this->groupId);
-        $this->projectName = $this->project->getUnixName();
-        if (! $this->plugin_manager->isPluginAllowedForProject($this->plugin, $this->groupId)) {
-            $this->addError($this->getText('project_service_not_available'));
-            $this->redirect('/projects/' . $this->projectName . '/');
-        }
+        $this->project = $this->projectManager->getProject($this->groupId);
 
         $this->permittedActions                = array();
         $this->fine_grained_updater            = $fine_grained_updater;
