@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -250,7 +250,7 @@ class ArtifactXMLDebugExporterDao extends DataAccessObject {
     public function searchPermsForArtifact($artifact_id) {
         $sql = "SELECT ugroup_id
                 FROM permissions
-                    INNER JOIN artifact ON (CAST(artifact_id AS CHAR) = object_id)
+                    INNER JOIN artifact ON (CAST(artifact_id AS CHAR CHARACTER SET utf8) = object_id)
                 WHERE permission_type = 'TRACKER_ARTIFACT_ACCESS'
                   AND object_id = '$artifact_id'
                   AND use_artifact_permissions = 1

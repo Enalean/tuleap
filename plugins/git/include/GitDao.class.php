@@ -605,7 +605,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $sql = "SELECT *
                 FROM plugin_git git
                   JOIN permissions ON (
-                    permissions.object_id = CAST(git.repository_id as CHAR)
+                    permissions.object_id = CAST(git.repository_id as CHAR CHARACTER SET utf8)
                     AND permissions.permission_type IN ($permission_type_condition)
                     )
                 WHERE git.remote_server_id IS NOT NULL
@@ -738,7 +738,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         $sql = 'SELECT ugroup_id
                 FROM permissions
                 WHERE permission_type = ?
-                AND object_id = CAST(? AS CHAR)';
+                AND object_id = CAST(? AS CHAR CHARACTER SET utf8)';
 
         $rows = $this->getDB()->run($sql, $permission_type, $repository_id);
 

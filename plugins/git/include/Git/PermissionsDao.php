@@ -95,7 +95,7 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
         $old_ugroup_ids_in_condition      = EasyStatement::open()->in('?*', $old_ugroup_ids);
 
         $sql = "UPDATE permissions perms
-                  JOIN plugin_git git ON (perms.object_id = CAST(git.repository_id AS CHAR) AND perms.permission_type IN ($git_permission_type_in_condition))
+                  JOIN plugin_git git ON (perms.object_id = CAST(git.repository_id AS CHAR CHARACTER SET utf8) AND perms.permission_type IN ($git_permission_type_in_condition))
                 SET perms.ugroup_id = ?
                 WHERE perms.ugroup_id IN ($old_ugroup_ids_in_condition)
                   AND git.project_id = ?";
@@ -125,7 +125,7 @@ class Git_PermissionsDao extends \Tuleap\DB\DataAccessObject
         $sql = "SELECT DISTINCT groups.group_id
                 FROM groups
                   JOIN plugin_git AS git ON (git.project_id = groups.group_id)
-                  JOIN permissions ON (permissions.object_id = CAST(git.repository_id AS CHAR) AND permissions.permission_type IN ($git_permission_type_in_condition))
+                  JOIN permissions ON (permissions.object_id = CAST(git.repository_id AS CHAR CHARACTER SET utf8) AND permissions.permission_type IN ($git_permission_type_in_condition))
                 WHERE groups.status = 'A'
                   AND git.repository_deletion_date = ?
                   AND permissions.ugroup_id = ?

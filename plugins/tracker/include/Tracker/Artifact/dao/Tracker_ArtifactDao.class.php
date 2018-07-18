@@ -92,7 +92,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
 
         if (!$user_is_admin) {
             $ugroups = $this->da->escapeIntImplode($ugroups);
-            $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
+            $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR CHARACTER SET utf8) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
         }
 
