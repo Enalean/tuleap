@@ -720,19 +720,15 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS git.*,
-                  IF(log1.push_date, log1.push_date, UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
-                FROM plugin_git git
-                  LEFT JOIN plugin_git_log AS log1 ON (log1.repository_id = git.repository_id)
-                  LEFT JOIN plugin_git_log AS log2 ON (log2.repository_id = log1.repository_id)
-                      AND log1.push_date < log2.push_date
+                  IF(plugin_git_log.push_date, MAX(plugin_git_log.push_date), UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
+                FROM plugin_git AS git
+                  LEFT JOIN plugin_git_log ON plugin_git_log.repository_id = git.repository_id
                 WHERE
                   $additional_where_statement
-                  AND log2.push_date IS NULL
                 GROUP BY git.repository_id
-                ORDER BY log1.push_date DESC
+                ORDER BY plugin_git_log.push_date DESC
                 LIMIT ?
-                OFFSET ?
-                ";
+                OFFSET ?";
 
         return $this->getDB()->safeQuery($sql, array_merge($additional_where_statement->values(), [$limit, $offset]));
     }
