@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\FRS\FRSPermissionDao;
+use Tuleap\FRS\FRSPermissionFactory;
+use Tuleap\FRS\FRSPermissionManager;
+
 /**
  * ServiceFile
  */
@@ -171,12 +175,38 @@ class ServiceFile extends Service
         ));
     }
 
-    public function displayHeader($title, $breadcrumbs, $toolbar, $params = array())
+    public function displayFRSHeader(Project $project, $title)
     {
         $GLOBALS['HTML']->includeJavascriptSnippet(
             file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
         );
 
-        parent::displayHeader($title, $breadcrumbs, $toolbar);
+        $user = UserManager::instance()->getCurrentUser();
+        if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {
+            $toolbar[]   = array(
+                'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
+                'url'   => '/file/admin/?'. http_build_query(array(
+                        'group_id' => $project->getID(),
+                        'action'   => 'edit-permissions'
+                    ))
+            );
+        }
+
+        $toolbar[] = array(
+            'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
+            'url'   => "javascript:help_window('/doc/".$user->getShortLocale()."/user-guide/frs.html')"
+        );
+
+        $breadcrumbs = array();
+
+        $this->displayHeader($title, $breadcrumbs, $toolbar);
+    }
+
+    private function getFrsPermissionManager()
+    {
+        return new FRSPermissionManager(
+            new FRSPermissionDao(),
+            new FRSPermissionFactory(new FRSPermissionDao())
+        );
     }
 }

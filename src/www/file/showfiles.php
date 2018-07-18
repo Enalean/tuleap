@@ -117,7 +117,7 @@ $params = array (
     'file_p_for',
     $hp->purify($project_manager->getProject($group_id)->getPublicName())
 ), 'pv' => $pv);
-$project->getService(Service::FILE)->displayHeader($project, $params['title']);
+$project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
 
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');

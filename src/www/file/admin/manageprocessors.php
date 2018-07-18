@@ -67,7 +67,7 @@ $presenter = new ToolbarPresenter($project, $title);
 $presenter->setProcessorsIsActive();
 $presenter->displaySectionNavigation();
 
-$project->getService(Service::FILE)->displayHeader($project, $title);
+$project->getService(Service::FILE)->displayFRSHeader($project, $title);
 $renderer->renderToPage('toolbar-presenter', $presenter);
 
 $vAdd      = new Valid_String('add');

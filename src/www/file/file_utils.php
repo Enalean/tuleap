@@ -39,7 +39,7 @@ function file_utils_header($params) {
         $project_manager = ProjectManager::instance();
         $project         = $project_manager->getProject($group_id);
 
-        $project->getService(Service::FILE)->displayHeader($project, $params['title']);
+        $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']);
     }
 }
 
