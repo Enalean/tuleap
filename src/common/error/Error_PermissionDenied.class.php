@@ -263,7 +263,7 @@ abstract class Error_PermissionDenied {
 
         //In case of restricted user, we only show the zone text area to ask for membership
         //just when the requested page belongs to a project
-        if ($project !== null && $param['func'] === 'restricted_user_request') {
+        if (!(($param['func'] == 'restricted_user_request') && ($project === null))) {
             $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
             $pm = ProjectManager::instance();
             $dar = $pm->getMessageToRequesterForAccessProject($project->getID());
