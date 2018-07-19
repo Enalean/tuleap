@@ -25,7 +25,6 @@ Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
-require_once 'common/plugin/PluginManager.class.php';
 
 class GitTest extends TuleapTestCase  {
 
@@ -114,7 +113,6 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $this->admin        = mock('PFUser');
         $this->user_manager = mock('UserManager');
         $this->project_manager  = mock('ProjectManager');
-        $this->plugin_manager   = mock('PluginManager');
         $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
         $this->template_factory = mock('Git_Driver_Gerrit_Template_TemplateFactory');
         $this->git_permissions_manager = mock('GitPermissionsManager');
@@ -129,7 +127,6 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         stub($project)->getUnixNameLowerCase()->returns($this->project_unix_name);
 
         stub($this->project_manager)->getProject()->returns($project);
-        stub($this->plugin_manager)->isPluginAllowedForProject()->returns(true);
         stub($this->project_creator)->checkTemplateIsAvailableForProject()->returns(true);
         stub($this->git_permissions_manager)->userIsGitAdmin($this->admin, $project)->returns(true);
 
@@ -162,7 +159,6 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('GitRepositoryFactory'),
                 $this->user_manager,
                 $this->project_manager,
-                $this->plugin_manager,
                 aRequest()->with('group_id', $this->group_id)->build(),
                 $this->project_creator,
                 $template_factory,
