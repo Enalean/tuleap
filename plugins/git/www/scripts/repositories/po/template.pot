@@ -30,10 +30,10 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-msgid "Empty description"
+msgid "Fork repositories"
 msgstr ""
 
-msgid "Fork repositories"
+msgid "Forks:"
 msgstr ""
 
 msgid "Git plugin is not activated"
@@ -79,6 +79,9 @@ msgid "Sort repositories by their last update date"
 msgstr ""
 
 msgid "There are no repositories in this project"
+msgstr ""
+
+msgid "Users forks"
 msgstr ""
 
 msgid ""

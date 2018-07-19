@@ -18,18 +18,25 @@
   -->
 
 <template>
-    <select v-if="are_there_personal_repositories"
-            class="tlp-select tlp-select-adjusted"
-            v-model="selected_owner_id"
-            v-bind:disabled="isLoading"
-    >
-        <option v-bind:value="project_key">{{ project_repositories_label }}</option>
-        <option v-for="owner in sorted_repositories_owners"
-                v-bind:key="owner.id"
-                v-bind:value="owner.id">
-            {{ owner.display_name }}
-        </option>
-    </select>
+    <div v-if="are_there_personal_repositories" class="git-repository-actions-select-owners">
+        <label class="tlp-label" for="git-repository-select-owner">
+            <translate>Forks:</translate>
+        </label>
+        <select id="git-repository-select-owner"
+                class="tlp-select tlp-select-adjusted"
+                v-model="selected_owner_id"
+                v-bind:disabled="isLoading"
+        >
+            <option v-bind:value="project_key">{{ project_repositories_label }}</option>
+            <optgroup v-bind:label="users_forks_label">
+                <option v-for="owner in sorted_repositories_owners"
+                        v-bind:key="owner.id"
+                        v-bind:value="owner.id">
+                    {{ owner.display_name }}
+                </option>
+            </optgroup>
+        </select>
+    </div>
 </template>
 <script>
 import { mapGetters } from "vuex";
@@ -41,6 +48,9 @@ export default {
     computed: {
         project_repositories_label() {
             return this.$gettext("Project repositories");
+        },
+        users_forks_label() {
+            return this.$gettext("Users forks");
         },
         are_there_personal_repositories() {
             return getRepositoriesOwners().length > 0;

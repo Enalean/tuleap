@@ -55,11 +55,10 @@
                         <translate>Last update %{ formatted_last_update_date }</translate>
                     </div>
                 </div>
-                <section class="tlp-pane-section">
-                    <p v-if="hasRepositoryDescription" class="git-repository-card-description">
+                <section class="tlp-pane-section" v-if="hasRepositoryDescription">
+                    <p class="git-repository-card-description">
                         {{ repository.description }}
                     </p>
-                    <p v-else v-translate class="git-repository-card-description">Empty description</p>
                 </section>
             </a>
         </div>
