@@ -18,26 +18,25 @@
   -->
 
 <template>
-    <div class="git-repository-list-actions"
-        v-if="isThereAtLeastOneRepository"
-    >
+    <div class="git-repository-list-actions">
         <button type="button"
                 class="tlp-button-primary git-repository-list-create-repository-button"
                 v-if="show_create_repository_button"
                 v-on:click="showAddRepositoryModal()"
-                data-test="empty_state_create_repository"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Add repository</translate>
+            <translate>Add project repository</translate>
         </button>
 
         <select-owner />
 
-        <div class="git-repository-list-actions-spacer"></div>
+        <template v-if="! isCurrentRepositoryListEmpty">
+            <div class="git-repository-list-actions-spacer"></div>
 
-        <display-mode-switcher />
+            <display-mode-switcher />
 
-        <list-filter />
+            <list-filter />
+        </template>
     </div>
 </template>
 <script>
@@ -57,7 +56,7 @@ export default {
         show_create_repository_button() {
             return getUserIsAdmin();
         },
-        ...mapGetters(["isThereAtLeastOneRepository"])
+        ...mapGetters(["isCurrentRepositoryListEmpty"])
     }
 };
 </script>

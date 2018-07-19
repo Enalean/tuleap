@@ -21,6 +21,10 @@ import { ERROR_TYPE_NO_ERROR, REPOSITORIES_SORTED_BY_PATH } from "../constants.j
 
 export const currentRepositoryList = state => state.repositories_for_owner[state.selected_owner_id];
 
+export const isCurrentRepositoryListEmpty = (state, getters) =>
+    getters.areRepositoriesAlreadyLoadedForCurrentOwner &&
+    getters.currentRepositoryList.length === 0;
+
 export const areRepositoriesAlreadyLoadedForCurrentOwner = state => {
     return state.repositories_for_owner.hasOwnProperty(state.selected_owner_id);
 };
@@ -151,19 +155,6 @@ export const isThereAResultInCurrentFilteredList = (state, getters) => {
         : getters.filteredRepositoriesByLastUpdateDate.length > 0;
 };
 
-export const isThereAtLeastOneRepository = state => {
-    for (const owner_id in state.repositories_for_owner) {
-        if (
-            state.repositories_for_owner.hasOwnProperty(owner_id) &&
-            state.repositories_for_owner[owner_id].length > 0
-        ) {
-            return true;
-        }
-    }
-
-    return false;
-};
-
 export const hasError = state => state.error_message_type !== ERROR_TYPE_NO_ERROR;
 
 export const isInitialLoadingDoneWithoutError = (state, getters) =>
@@ -172,3 +163,5 @@ export const isInitialLoadingDoneWithoutError = (state, getters) =>
 export const isFolderDisplayMode = state => state.display_mode === REPOSITORIES_SORTED_BY_PATH;
 
 export const isLoading = state => state.is_loading_initial || state.is_loading_next;
+
+export const isFiltering = state => state.filter.length > 0;

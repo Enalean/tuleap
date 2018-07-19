@@ -10,7 +10,7 @@ msgid_plural "%{ numberPullRequest } pull requests"
 msgstr[0] ""
 msgstr[1] ""
 
-msgid "Add repository"
+msgid "Add project repository"
 msgstr ""
 
 msgid "Administration"
