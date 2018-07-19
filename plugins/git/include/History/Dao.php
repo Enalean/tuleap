@@ -47,24 +47,21 @@ class Dao extends DataAccessObject
 
     public function searchStatistics($start_date, $end_date, $project_id = null)
     {
-        $project_filter = EasyStatement::open();
+        $filter = EasyStatement::open();
 
+        $filter->with("day BETWEEN DATE_FORMAT(?, '%Y%m%d') AND DATE_FORMAT(?, '%Y%m%d')", $start_date, $end_date);
         if (! empty($project_id)) {
-            $project_filter->andWith('AND project_id = ?', $project_id);
+            $filter->andWith('AND project_id = ?', $project_id);
         }
 
         $sql = "SELECT DATE_FORMAT(day, '%M') AS month,
                   YEAR(day) as year,
                   SUM(git_read) as nb
                 FROM plugin_git_log_read_daily JOIN plugin_git USING(repository_id)
-                WHERE day BETWEEN DATE_FORMAT(?, '%Y%m%d') AND DATE_FORMAT(?, '%Y%m%d')
-                  $project_filter
+                WHERE $filter
                 GROUP BY year, month
                 ORDER BY year, STR_TO_DATE(month,'%M')";
 
-        $params = [$start_date, $end_date];
-        $params = array_merge($params, $project_filter->values());
-
-        return $this->getDB()->safeQuery($sql, $params);
+        return $this->getDB()->safeQuery($sql, $filter->values());
     }
 }
