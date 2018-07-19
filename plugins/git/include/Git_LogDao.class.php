@@ -153,10 +153,11 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
      */
     public function totalPushes($startDate, $endDate, $projectId = null)
     {
-        $projectFilter = \ParagonIE\EasyDB\EasyStatement::open();
+        $filter = \ParagonIE\EasyDB\EasyStatement::open();
 
+        $filter->with('push_date BETWEEN UNIX_TIMESTAMP(?) AND UNIX_TIMESTAMP(?)', $startDate, $endDate);
         if ($projectId !== null) {
-            $projectFilter->andWith('AND project_id = ?', $projectId);
+            $filter->andWith('project_id = ?', $projectId);
         }
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
                     YEAR(FROM_UNIXTIME(push_date)) AS year, 
@@ -165,14 +166,11 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
                     SUM(commits_number) AS commits_count, 
                     COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
-                WHERE push_date BETWEEN UNIX_TIMESTAMP(?) AND UNIX_TIMESTAMP(?)
-                  $projectFilter
+                WHERE $filter
                 GROUP BY year, month
                 ORDER BY year, STR_TO_DATE(month,'%M')";
 
-        $params = [$startDate, $endDate];
-        $params = array_merge($params, $projectFilter->values());
-        return $this->getDB()->safeQuery($sql, $params);
+        return $this->getDB()->safeQuery($sql, $filter->values());
     }
 
     public function searchLatestPushesInProject($project_id, $nb_max)
