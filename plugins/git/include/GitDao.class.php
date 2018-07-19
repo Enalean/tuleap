@@ -730,7 +730,23 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 LIMIT ?
                 OFFSET ?";
 
-        return $this->getDB()->safeQuery($sql, array_merge($additional_where_statement->values(), [$limit, $offset]));
+        // The repository creation date is a DATETIME value so before converting to a timestamp we need to
+        // put MySQL in the same timezone than the one PHP used to create the date
+        $current_mysql_timezone = $this->getDB()->single('SELECT @@session.time_zone');
+        try {
+            $this->getDB()->run('SET time_zone = ?', date_default_timezone_get());
+        } catch (PDOException $ex) {
+            // Changing the time_zone of the current MySQL session might fail if the time zone tables are not
+            // populated or not in sync with the PHP timezones. In that case we just silent the issue and repositories
+            // without any push might have an incorrect 'push_date' value if the MySQL server does not use the same
+            // timezone than the session of PHP-FPM that has registered the value 'repository_creation_date'
+        }
+        try {
+            return $this->getDB()->safeQuery($sql, array_merge($additional_where_statement->values(), [$limit, $offset]));
+        } finally {
+            $this->getDB()->run('SET time_zone = ?', $current_mysql_timezone);
+        }
+
     }
 
     public function getUGroupsByRepositoryPermissions($repository_id, $permission_type)
