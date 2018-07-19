@@ -422,14 +422,14 @@ extends Docman_FilterList {
 */
 class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced {
     function __construct($md) {
-        parent::__construct($md);
+        Docman_Filter::__construct($md);
         $this->setValue(array());
     }
 }
 
 class Docman_FilterItemType extends Docman_FilterList {
     function __construct($md) {
-        parent::__construct($md);
+        Docman_Filter::__construct($md);
         $this->setValue(0);
     }
 }
