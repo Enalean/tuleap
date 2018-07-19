@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -33,7 +33,7 @@ class Tracker_PermissionsDao extends DataAccessObject {
 
         $sql = "SELECT DISTINCT ugroup_id
                 FROM tracker_field AS F
-                    INNER JOIN permissions ON (object_id = CAST(id AS CHAR) AND permission_type LIKE 'PLUGIN_TRACKER_FIELD_%')
+                    INNER JOIN permissions ON (object_id = CAST(id AS CHAR CHARACTER SET utf8) AND permission_type LIKE 'PLUGIN_TRACKER_FIELD_%')
                 WHERE F.tracker_id = $tracker_id
                   AND ugroup_id > $dynamic_upper_boundary
 
@@ -54,7 +54,7 @@ class Tracker_PermissionsDao extends DataAccessObject {
                FROM tracker_workflow_transition AS T
                     INNER JOIN tracker_workflow AS W ON (T.workflow_id = W.workflow_id AND W.tracker_id = $tracker_id)
                     INNER JOIN permissions AS P ON (
-                        P.object_id = CAST(T.transition_id AS CHAR) AND
+                        P.object_id = CAST(T.transition_id AS CHAR CHARACTER SET utf8) AND
                         permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION')
                WHERE ugroup_id > $dynamic_upper_boundary
                ";
@@ -92,7 +92,7 @@ class Tracker_PermissionsDao extends DataAccessObject {
         $sql =
            "SELECT * FROM tracker_field
                 JOIN tracker ON tracker.id = tracker_field.tracker_id
-                LEFT JOIN permissions ON permissions.object_id = CAST(tracker_field.id as CHAR)
+                LEFT JOIN permissions ON permissions.object_id = CAST(tracker_field.id as CHAR CHARACTER SET utf8)
             WHERE tracker.group_id = $project_id
                 AND permission_type IS NULL
             LIMIT 1

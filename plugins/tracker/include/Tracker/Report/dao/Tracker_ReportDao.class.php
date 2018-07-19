@@ -256,7 +256,7 @@ class Tracker_ReportDao extends DataAccessObject {
         if(!$user_is_admin) {
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions 
-                              ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 
+                              ON (permissions.object_id = CAST(c.artifact_id AS CHAR CHARACTER SET utf8)
                                   AND permissions.permission_type = '".Tracker_Artifact::PERMISSION_ACCESS."')
                             ";
             $res['where'] = " AND (artifact.use_artifact_permissions = 0 

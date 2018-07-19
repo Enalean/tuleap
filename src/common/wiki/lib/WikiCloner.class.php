@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright 2007, STMicroelectronics
  *
  * Originally written by Sabri LABBENE <sabri.labbene@st.com>
@@ -266,7 +266,7 @@ class WikiCloner {
   function attachmentHasAPermission($attachment_id){
       $attachment_id = db_ei($attachment_id);
       $result        = db_query(
-          "SELECT count(*) AS nb FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=CAST($attachment_id AS CHAR)"
+          "SELECT count(*) AS nb FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=CAST($attachment_id AS CHAR CHARACTER SET utf8)"
       );
       if (db_result($result, 0, 'nb') > 0){
           return true;   
@@ -304,7 +304,7 @@ class WikiCloner {
   function getAttachmentPermission($attachment_id){
       $attachment_id = db_ei($attachment_id);
       $result        = db_query(
-          "SELECT ugroup_id FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=CAST($attachment_id AS CHAR)"
+          "SELECT ugroup_id FROM permissions WHERE permission_type='WIKIATTACHMENT_READ' AND object_id=CAST($attachment_id AS CHAR CHARACTER SET utf8)"
       );
       $ugroup        = db_result($result, 0, 'ugroup_id');
       return $this->getMappedUGroupId($ugroup);
@@ -323,7 +323,7 @@ class WikiCloner {
       $new_attachment_id = db_ei($new_attachment_id);
       $permission        = db_ei($permission);
       db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)
-               VALUES ('WIKIATTACHMENT_READ', CAST($new_attachment_id AS CHAR), $permission)");
+               VALUES ('WIKIATTACHMENT_READ', CAST($new_attachment_id AS CHAR CHARACTER SET utf8), $permission)");
   }
  
  /**
@@ -643,12 +643,12 @@ class WikiCloner {
   function cloneWikiPermission(){
       $template_id = db_ei($this->template_id);
       $result      = db_query("SELECT * FROM permissions
-                               where permission_type='WIKI_READ' and object_id=CAST($template_id AS CHAR)");
+                               where permission_type='WIKI_READ' and object_id=CAST($template_id AS CHAR CHARACTER SET utf8)");
       while($row = db_fetch_array($result)){
           $group_id  = db_ei($this->group_id);
           $ugroup_id = db_ei($this->getMappedUGroupId($row['ugroup_id']));
           db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)
-                    VALUES ('WIKI_READ', CAST($group_id AS CHAR), $ugroup_id)");
+                    VALUES ('WIKI_READ', CAST($group_id AS CHAR CHARACTER SET utf8), $ugroup_id)");
       }
   }
   
@@ -671,7 +671,7 @@ class WikiCloner {
           $wiki_page_clone_id = db_ei($this->getWikiPageCloneId($array, $row['object_id']));
           $ugroup_id          = db_ei($this->getMappedUGroupId($row['ugroup_id']));
           db_query("INSERT INTO permissions (permission_type, object_id, ugroup_id)"
-                  ."VALUES ('WIKIPAGE_READ', CAST($wiki_page_clone_id AS CHAR), $ugroup_id)");
+                  ."VALUES ('WIKIPAGE_READ', CAST($wiki_page_clone_id AS CHAR CHARACTER SET utf8), $ugroup_id)");
       }
   }
   

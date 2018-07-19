@@ -1153,7 +1153,7 @@ CREATE TABLE ugroup_user (
 #
 CREATE TABLE permissions (
   permission_type VARCHAR(255) NOT NULL,
-  object_id VARCHAR(255) NOT NULL,
+  object_id VARCHAR(255) CHARACTER SET utf8 NOT NULL,
   ugroup_id int(11) NOT NULL,
   INDEX object_id (object_id (10))
 );

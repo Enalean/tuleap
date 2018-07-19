@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -144,7 +144,7 @@ class FRSPermissionDao extends DataAccessObject
         $this->update($sql);
 
         $sql = "UPDATE permissions
-                INNER JOIN frs_package ON permissions.object_id = CAST(frs_package.package_id AS CHAR)
+                INNER JOIN frs_package ON permissions.object_id = CAST(frs_package.package_id AS CHAR CHARACTER SET utf8)
                 INNER JOIN frs_release ON frs_release.package_id = frs_package.package_id
                 SET ugroup_id = $new_ugroup_id
                 WHERE ugroup_id IN ($old_ugroup_ids)
