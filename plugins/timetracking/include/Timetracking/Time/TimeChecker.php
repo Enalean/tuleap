@@ -27,21 +27,16 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 class TimeChecker
 {
     const PATTERN = '^[0-9]{2}[:][0-9]{2}$';
-    /*
-    * @var TimeRetriever
-    */
-    private $time_retriever;
-
-    public function __construct(TimeRetriever $time_retriever)
-    {
-        $this->time_retriever = $time_retriever;
-    }
 
     public function doesTimeBelongsToUser(Time $time, PFUser $user)
     {
         return $time->getUserId() !== (int) $user->getId();
     }
 
+    /**
+     * @throws TimeTrackingBadTimeFormatException
+     * @throws TimeTrackingMissingTimeException
+     */
     public function checkMandatoryTimeValue($time_value)
     {
         $pattern = "/" . self::PATTERN . "/";

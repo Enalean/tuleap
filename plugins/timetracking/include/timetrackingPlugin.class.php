@@ -31,6 +31,7 @@ use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
 use Tuleap\Timetracking\Time\DateFormatter;
+use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeController;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
@@ -147,11 +148,16 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
      */
     private function getTimeController()
     {
+        $time_dao     = new TimeDao();
+        $time_updater = new TimeUpdater(
+            $time_dao,
+            new TimeChecker(),
+            $this->getPermissionsRetriever()
+        );
+
         return new TimeController(
-            $this->getPermissionsRetriever(),
-            new TimeUpdater(new TimeDao()),
-            new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever()),
-            new \Tuleap\Timetracking\Time\TimeChecker(new TimeRetriever(new TimeDao(), $this->getPermissionsRetriever()))
+            $time_updater,
+            new TimeRetriever($time_dao, $this->getPermissionsRetriever())
         );
     }
 

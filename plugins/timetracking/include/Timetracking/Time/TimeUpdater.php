@@ -22,14 +22,43 @@ namespace Tuleap\Timetracking\Time;
 
 use PFUser;
 use Tracker_Artifact;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
+use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 
 class TimeUpdater
 {
-    public function __construct(TimeDao $time_dao)
+    /**
+     * @var TimeDao
+     */
+    private $time_dao;
+
+    /**
+     * @var TimeChecker
+     */
+    private $time_checker;
+
+    /**
+     * @var PermissionsRetriever
+     */
+    private $permissions_retriever;
+
+    public function __construct(TimeDao $time_dao, TimeChecker $time_checker, PermissionsRetriever $permissions_retriever)
     {
-        $this->time_dao = $time_dao;
+        $this->time_dao              = $time_dao;
+        $this->time_checker          = $time_checker;
+        $this->permissions_retriever = $permissions_retriever;
     }
 
+    /**
+     * @throws TimeTrackingBadTimeFormatException
+     * @throws TimeTrackingMissingTimeException
+     * @throws TimeTrackingNotAllowedToAddException
+     */
     public function addTimeForUserInArtifact(
         PFUser $user,
         Tracker_Artifact $artifact,
@@ -37,6 +66,12 @@ class TimeUpdater
         $added_time,
         $added_step
     ) {
+        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+            throw new TimeTrackingNotAllowedToAddException(dgettext('tuleap-timetracking', "You are not allowed to add a time."));
+        }
+
+        $this->time_checker->checkMandatoryTimeValue($added_time);
+
         $minutes = $this->getMinutes($added_time);
 
         $this->time_dao->addTime(
@@ -48,13 +83,41 @@ class TimeUpdater
         );
     }
 
-    public function deleteTime(Time $time)
+    /**
+     * @throws TimeTrackingNotAllowedToDeleteException
+     * @throws TimeTrackingNotBelongToUserException
+     */
+    public function deleteTime(PFUser $user, Tracker_Artifact $artifact, Time $time)
     {
+        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+            throw new TimeTrackingNotAllowedToDeleteException(dgettext('tuleap-timetracking', "You are not allowed to delete a time."));
+        }
+
+        if ($this->time_checker->doesTimeBelongsToUser($time, $user)) {
+            throw new TimeTrackingNotBelongToUserException(dgettext('tuleap-timetracking', "This time does not belong to you."));
+        }
+
         $this->time_dao->deleteTime($time->getId());
     }
 
-    public function updateTime(Time $time, $updated_date, $updated_time, $updated_step)
+    /**
+     * @throws TimeTrackingNotAllowedToEditException
+     * @throws TimeTrackingNotBelongToUserException
+     * @throws TimeTrackingBadTimeFormatException
+     * @throws TimeTrackingMissingTimeException
+     */
+    public function updateTime(PFUser $user, Tracker_Artifact $artifact, Time $time, $updated_date, $updated_time, $updated_step)
     {
+        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
+            throw new TimeTrackingNotAllowedToEditException(dgettext('tuleap-timetracking', "You are not allowed to edit a time."));
+        }
+
+        $this->time_checker->checkMandatoryTimeValue($updated_time);
+
+        if ($this->time_checker->doesTimeBelongsToUser($time, $user)) {
+            throw new TimeTrackingNotBelongToUserException(dgettext('tuleap-timetracking', "This time does not belong to you."));
+        }
+
         $this->time_dao->updateTime(
             $time->getId(),
             $updated_date,

@@ -31,7 +31,13 @@ use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
+use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
+use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
+use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
+use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
+use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
 
 class TimetrackingDataBuilder extends REST_TestDataBuilder
@@ -50,7 +56,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     public function setUp()
     {
-        echo 'Setup Timetracking REST tests configuration';
+        echo 'Setup Timetracking REST tests configuration' . PHP_EOL;
 
         $this->installPlugin();
         $this->activatePlugin('timetracking');
@@ -58,8 +64,9 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_TEST_TIMETRACKING_SHORTNAME);
 
         $this->createUser();
-        $this->addTimesInDB($project);
         $this->setEnabledTrackers($project);
+        $this->setWritersAndReaders($project);
+        $this->addTimesInDB($project);
     }
 
     private function createUser()
@@ -95,16 +102,14 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
      */
     private function addTimes(array $artifacts, PFUser $user)
     {
-        $time_updater = new TimeUpdater(
-            new TimeDao()
-        );
+        $time_dao = new TimeDao();
 
         foreach ($artifacts as $artifact) {
-            $time_updater->addTimeForUserInArtifact(
-                $user,
-                $artifact,
+            $time_dao->addTime(
+                $user->getId(),
+                $artifact->getId(),
                 date('Y-m-d', $artifact->getSubmittedOn()),
-                '10:00',
+                600,
                 'test'
             );
         }
@@ -122,5 +127,17 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
         );
 
         $enabler->enableTimetrackingForTracker($tracker);
+    }
+
+    private function setWritersAndReaders(Project $project)
+    {
+        $dao     = new TimetrackingUgroupSaver(new TimetrackingUgroupDao());
+        $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
+            self::TRACKER_SHORTNAME,
+            $project->getID()
+        );
+
+        $dao->saveWriters($tracker, [\ProjectUGroup::PROJECT_MEMBERS]);
+        $dao->saveReaders($tracker, [\ProjectUGroup::PROJECT_ADMIN]);
     }
 }

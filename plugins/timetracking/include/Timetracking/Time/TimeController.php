@@ -24,8 +24,6 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use PFUser;
 use Tracker_Artifact;
-use Tuleap\Timetracking\Permissions\PermissionsRetriever;
-use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
@@ -36,19 +34,9 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 class TimeController
 {
     /**
-     * @var PermissionsRetriever
-     */
-    private $permissions_retriever;
-
-    /**
      * @var TimeUpdater
      */
     private $time_updater;
-
-    /**
-     * @var TimeChecker
-     */
-    private $time_checker;
 
     /**
      * @var TimeRetriever
@@ -56,21 +44,17 @@ class TimeController
     private $time_retriever;
 
     public function __construct(
-        PermissionsRetriever $permissions_retriever,
         TimeUpdater $time_updater,
-        TimeRetriever $time_retriever,
-        TimeChecker $time_checker
+        TimeRetriever $time_retriever
     ) {
-        $this->permissions_retriever = $permissions_retriever;
         $this->time_updater          = $time_updater;
         $this->time_retriever        = $time_retriever;
-        $this->time_checker          = $time_checker;
     }
 
     /**
-     * @throws TimeTrackingExistingDateException
      * @throws TimeTrackingMissingTimeException
      * @throws TimeTrackingNotAllowedToAddException
+     * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException
      */
     public function addTimeForUser(
         Codendi_Request $request,
@@ -80,15 +64,9 @@ class TimeController
     ) {
         $csrf->check();
 
-        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            throw new TimeTrackingNotAllowedToAddException(dgettext('tuleap-timetracking', "You are not allowed to add a time."));
-        }
-
         $added_step = $request->get('timetracking-new-time-step');
         $added_time = $request->get('timetracking-new-time-time');
         $added_date = $request->get('timetracking-new-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
-
-        $this->checkMandatoryTimeValue($added_time);
 
         $this->time_updater->addTimeForUserInArtifact($user, $artifact, $added_date, $added_time, $added_step);
     }
@@ -106,23 +84,17 @@ class TimeController
     ) {
         $csrf->check();
 
-        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            throw new TimeTrackingNotAllowedToDeleteException(dgettext('tuleap-timetracking', "You are not allowed to delete a time."));
-        }
-
         $time = $this->getTimeFromRequest($request, $user);
 
-        $this->checkTimeBelongsToUser($time, $user);
-
-        $this->time_updater->deleteTime($time);
+        $this->time_updater->deleteTime($user, $artifact, $time);
     }
 
     /**
-     * @throws TimeTrackingExistingDateException
      * @throws TimeTrackingMissingTimeException
      * @throws TimeTrackingNoTimeException
      * @throws TimeTrackingNotAllowedToEditException
      * @throws TimeTrackingNotBelongToUserException
+     * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException
      */
     public function editTimeForUser(
         Codendi_Request $request,
@@ -132,20 +104,13 @@ class TimeController
     ) {
         $csrf->check();
 
-        if (! $this->permissions_retriever->userCanAddTimeInTracker($user, $artifact->getTracker())) {
-            throw new TimeTrackingNotAllowedToEditException(dgettext('tuleap-timetracking', "You are not allowed to edit this time."));
-        }
         $time = $this->getTimeFromRequest($request, $user);
-
-        $this->checkTimeBelongsToUser($time, $user);
 
         $updated_step = $request->get('timetracking-edit-time-step');
         $updated_time = $request->get('timetracking-edit-time-time');
         $updated_date = $request->get('timetracking-edit-time-date') ?: date('Y-m-d', $_SERVER['REQUEST_TIME']);
 
-        $this->checkMandatoryTimeValue($updated_time);
-
-        $this->time_updater->updateTime($time, $updated_date, $updated_time, $updated_step);
+        $this->time_updater->updateTime($user, $artifact, $time, $updated_date, $updated_time, $updated_step);
     }
 
     /**
@@ -164,24 +129,5 @@ class TimeController
         }
 
         return $time;
-    }
-
-    /**
-     * @throws TimeTrackingMissingTimeException
-     * @throws TimeTrackingBadTimeFormatException
-     */
-    private function checkMandatoryTimeValue($time_value)
-    {
-        $this->time_checker->checkMandatoryTimeValue($time_value);
-    }
-
-    /**
-     * @throws TimeTrackingNotBelongToUserException
-     */
-    private function checkTimeBelongsToUser(Time $time, PFUser $user)
-    {
-        if ($this->time_checker->doesTimeBelongsToUser($time, $user)) {
-            throw new TimeTrackingNotBelongToUserException(dgettext('tuleap-timetracking', "This time does not belong to you."));
-        }
     }
 }
