@@ -58,6 +58,15 @@
     min-width: 20px;
 }
 
+.git-repository-actions-select-owners {
+    display: flex;
+    align-items: baseline;
+
+    > .tlp-label {
+        margin: 0 5px 0 0;
+    }
+}
+
 .git-repository-list-actions-display-switch {
     margin: 0 $tlp-spacing 0 0;
 
@@ -74,7 +83,18 @@
 }
 
 .git-repository-list-folder {
+    position: relative;
     margin: 0 0 0 24px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 25px;
+        left: 10px;
+        width: 1px;
+        height: calc(100% - 25px);
+        border-left: 1px solid $tlp-ui-border-normal;
+    }
 }
 
 .git-repository-list-base-folder {
@@ -84,7 +104,6 @@
 .git-repository-list-collapsible-folder {
     display: flex;
     margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 5px;
     color: $tlp-theme-color;
     cursor: pointer;
 
@@ -100,5 +119,5 @@
 }
 
 .git-repository-in-folder {
-    margin: 0 0 $tlp-spacing $tlp-spacing;
+    margin: 0 0 $tlp-spacing 33px;
 }

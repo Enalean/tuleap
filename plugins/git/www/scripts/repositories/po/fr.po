@@ -40,11 +40,11 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Empty description"
-msgstr "Description vide"
-
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
+
+msgid "Forks:"
+msgstr "Forks :"
 
 msgid "Git plugin is not activated"
 msgstr "Le plugin Git est désactivé"
@@ -93,6 +93,9 @@ msgstr "Trier les dépôts par leur date de dernière mise à jour"
 
 msgid "There are no repositories in this project"
 msgstr "Il n'y a aucun dépôt dans ce projet"
+
+msgid "Users forks"
+msgstr "Forks des utilisateurs"
 
 msgid ""
 "You don't have permission to create Git repositories as you are not Git "
