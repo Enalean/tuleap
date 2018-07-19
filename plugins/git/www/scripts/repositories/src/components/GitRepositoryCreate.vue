@@ -28,7 +28,7 @@
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
                 <i class="fa fa-plus tlp-modal-title-icon"></i>
-                <translate>Add repository</translate>
+                <translate>Add project repository</translate>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close_label">
                 &times;
@@ -76,7 +76,7 @@
                 <i class="fa fa-plus tlp-button-icon"
                     v-bind:class="{'fa-spin fa-spinner': is_loading}"
                 ></i>
-                <translate>Add repository</translate>
+                <translate>Add project repository</translate>
             </button>
         </div>
     </form>

@@ -222,30 +222,6 @@ describe("Store getters", () => {
         });
     });
 
-    describe("isThereAtLeastOneRepository", () => {
-        it("will return false when there is no repository", () => {
-            const result = getters.isThereAtLeastOneRepository(state);
-
-            expect(result).toEqual(false);
-        });
-
-        it("will return true when there is one project repository", () => {
-            state.repositories_for_owner[PROJECT_KEY] = [{ id: 2 }];
-
-            const result = getters.isThereAtLeastOneRepository(state);
-
-            expect(result).toEqual(true);
-        });
-
-        it("will return true when there is one forked repository", () => {
-            state.repositories_for_owner[549] = [{ id: 1 }];
-
-            const result = getters.isThereAtLeastOneRepository(state);
-
-            expect(result).toEqual(true);
-        });
-    });
-
     describe("areRepositoriesAlreadyLoadedForCurrentOwner", () => {
         it("will return false when there is no 'project' key", () => {
             state.selected_owner_id = PROJECT_KEY;

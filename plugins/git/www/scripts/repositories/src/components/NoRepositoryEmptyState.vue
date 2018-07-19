@@ -49,7 +49,7 @@
                     data-test="empty_state_create_repository"
             >
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Add repository</translate>
+                <translate>Add project repository</translate>
             </button>
         </div>
     </div>
@@ -68,9 +68,9 @@ export default {
             return getUserIsAdmin();
         },
         show_empty_state() {
-            return !this.isThereAtLeastOneRepository && this.isInitialLoadingDoneWithoutError;
+            return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
         },
-        ...mapGetters(["isThereAtLeastOneRepository", "isInitialLoadingDoneWithoutError"])
+        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"])
     }
 };
 </script>

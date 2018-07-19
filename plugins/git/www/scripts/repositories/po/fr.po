@@ -17,8 +17,8 @@ msgid_plural "%{ numberPullRequest } pull requests"
 msgstr[0] "%{ numberPullRequest } pull request"
 msgstr[1] "%{ numberPullRequest } pull requests"
 
-msgid "Add repository"
-msgstr "Ajouter un dépôt"
+msgid "Add project repository"
+msgstr "Ajouter un dépôt projet"
 
 msgid "Administration"
 msgstr "Administration"

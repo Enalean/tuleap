@@ -31,15 +31,17 @@ export default {
     computed: {
         show_filter_empty_state() {
             return (
-                this.isThereAtLeastOneRepository &&
+                !this.isCurrentRepositoryListEmpty &&
                 this.isInitialLoadingDoneWithoutError &&
+                this.isFiltering &&
                 !this.isThereAResultInCurrentFilteredList
             );
         },
         ...mapGetters([
             "isThereAResultInCurrentFilteredList",
-            "isThereAtLeastOneRepository",
-            "isInitialLoadingDoneWithoutError"
+            "isCurrentRepositoryListEmpty",
+            "isInitialLoadingDoneWithoutError",
+            "isFiltering"
         ])
     }
 };
