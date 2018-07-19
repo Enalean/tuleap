@@ -232,6 +232,7 @@ simpletest11x-56-ci:
 	/tuleap/plugins/git/tests \
 	/tuleap/plugins/statistics/tests \
 	/tuleap/plugins/tracker/tests \
+	/tuleap/plugins/tracker/db_tests \
 	/tuleap/tests/integration \
 
 simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
@@ -267,6 +268,7 @@ simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	/tuleap/plugins/agiledashboard/tests \
 	/tuleap/plugins/statistics/tests \
 	/tuleap/plugins/tracker/tests \
+	/tuleap/plugins/tracker/db_tests \
 	/tuleap/tests/integration \
 
 bash-web: ## Give a bash on web container
