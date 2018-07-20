@@ -14,7 +14,7 @@
         ng-repeat="event in timeline_controller.timeline track by $index"
         ng-class="[event.type, { 'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated, 'inline-comment': event.isInlineComment }]">
         <div class="avatar">
-            <img src="{{ event.user.avatar_url }}" class="media-object">
+            <img ng-src="{{ ::event.user.avatar_url }}" class="media-object">
         </div>
 
         <div class="pull-request-event-content">
