@@ -60,6 +60,7 @@
         "no-with": "error",
         "radix": "error",
         "require-await": "error",
+        // Prettier plugin
         "prettier/prettier": ["error", null, {
             "usePrettierrc": true
         }]
