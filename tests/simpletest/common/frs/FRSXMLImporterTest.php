@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,10 +36,8 @@ class FRSXMLImporterTest_FRSFileFactory extends FRSFileFactory {
 
 }
 
-
-class FRSXMLImporterTest_BootStrap extends TuleapTestCase
+class FRSXMLImporterTest extends TuleapTestCase
 {
-
     /**
      * @var \Tuleap\FRS\UploadedLinksDao
      */
@@ -128,10 +126,6 @@ class FRSXMLImporterTest_BootStrap extends TuleapTestCase
             unset($GLOBALS['ftp_frs_dir_prefix']);
         }
     }
-
-}
-
-class FRSXMLImporterTest extends FRSXMLImporterTest_BootStrap {
 
     public function itShouldImportOnePackageWithDefaultValues() {
         $pm = ProjectManager::instance();

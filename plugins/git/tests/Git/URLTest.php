@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,8 @@
 
 require_once dirname(__FILE__).'/../bootstrap.php';
 
-class Git_URLTest extends TuleapTestCase {
+class Git_URL_GitSmartHTTPTest extends TuleapTestCase
+{
 
     /** @var ProjectManager **/
     protected $project_manager;
@@ -79,9 +80,6 @@ class Git_URLTest extends TuleapTestCase {
             ->getProject($this->gpig_project_id)
             ->returns($this->gpig_project);
     }
-}
-
-class Git_URL_GitSmartHTTPTest extends Git_URLTest {
 
     public function itRetrievesTheRepository() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-upload-pack');
