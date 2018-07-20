@@ -35,4 +35,4 @@ setup_user
 
 is_server_ready
 
-su -c 'cypress run --project /tuleap/tests/e2e/full' -l runner
+su -c 'CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project /tuleap/tests/e2e/full' -l runner
