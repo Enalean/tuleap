@@ -29,7 +29,8 @@
                  onerror="this.src='/themes/common/images/avatar_default.png'"
                  alt="avatar">
         </div>
-        <span class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>
+        <span ng-if="$ctrl.positiveScore(presence.score)"
+            class="tlp-badge-primary">{{ $ctrl.positiveScore(presence.score) }}</span>
     </div>
     <i class="fa fa-trophy test-campaign-header-trophy"
        ng-if="$ctrl.isRealtimeEnabled()"
