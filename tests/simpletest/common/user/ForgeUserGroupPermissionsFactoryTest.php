@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
 use \Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
 
-class User_ForgeUserGroupPermssionsFactory_BaseTest extends TuleapTestCase {
+class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TuleapTestCase {
 
     /**
      * @var User_ForgeUserGroupPermissionsDao
@@ -38,9 +38,6 @@ class User_ForgeUserGroupPermssionsFactory_BaseTest extends TuleapTestCase {
         $this->dao     = mock('User_ForgeUserGroupPermissionsDao');
         $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao,  mock('EventManager'));
     }
-}
-
-class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends User_ForgeUserGroupPermssionsFactory_BaseTest {
 
     public function itReturnsEmptyArrayIfNoResultsInDb() {
         $user_group = new User_ForgeUGroup(101, '', '');

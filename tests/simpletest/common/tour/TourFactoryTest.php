@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class TourFactoryTest extends TuleapTestCase {
+class TourFactoryTest_getTour extends TuleapTestCase {
 
     protected $factory;
 
@@ -40,9 +40,6 @@ class TourFactoryTest extends TuleapTestCase {
 
         ForgeConfig::set('sys_custom_incdir', $this->fixtures_dir);
     }
-}
-
-class TourFactoryTest_getTour extends TourFactoryTest {
 
     public function itReturnsTheWelcomeTour() {
         $tour = $this->factory->getTour($this->user, Tuleap_Tour_WelcomeTour::TOUR_NAME);

@@ -29,15 +29,15 @@ use \Tuleap\PullRequest\UniDiffLine;
 
 require_once __DIR__ . '/../bootstrap.php';
 
-class InlineCommentUpdaterTest extends TuleapTestCase
+class WhenSourceChangesTest extends TuleapTestCase
 {
-    public function __construct()
+    public function setUp()
     {
+        parent::setUp();
+
         $this->updater = new InlineCommentUpdater();
     }
-}
 
-class WhenSourceChangesTest extends InlineCommentUpdaterTest {
     public function itShouldBeObsoleteIfLineWasAddedAndLineIsDeleted()
     {
         $comments = array(new InlineComment(1, 1, 1, 1, 'file.txt', 1, 'commentaire', false));
