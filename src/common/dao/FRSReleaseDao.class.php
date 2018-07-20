@@ -319,7 +319,7 @@ class FRSReleaseDao extends DataAccessObject {
         if ($release_id) {
             $dar = $this->searchById($release_id);
             if (!$dar->isError() && $dar->valid()) {
-                $current = & $dar->current();
+                $current = $dar->current();
                 $set_array = array ();
                 foreach ($data_array as $key => $value) {
                     if ($key != 'release_id' && $key != 'released_by' && $value != $current[$key]) {

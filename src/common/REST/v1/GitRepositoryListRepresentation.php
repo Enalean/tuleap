@@ -24,7 +24,7 @@ namespace Tuleap\REST\v1;
 class GitRepositoryListRepresentation
 {
     /**
-     * @var GitRepositoryRepresentationBase[]|null
+     * @var GitRepositoryRepresentationBase[]
      */
-    public $repositories = null;
+    public $repositories;
 }

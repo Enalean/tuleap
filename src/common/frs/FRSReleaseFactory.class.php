@@ -208,7 +208,7 @@ class FRSReleaseFactory {
      */
     public function getReleaseIdByName($release_name, $package_id){
     	$_id = (int) $package_id;
-        $dao =& $this->_getFRSReleaseDao();
+        $dao = $this->_getFRSReleaseDao();
         $dar = $dao->searchReleaseByName($release_name, $_id);
 
         if($dar->isError()){

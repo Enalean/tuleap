@@ -65,7 +65,7 @@ class IntegerFieldChecker implements InvalidFieldChecker
                 throw new IntegerToEmptyStringComparisonException($comparison, $field);
             }
 
-            if (is_float($value + 0)) {
+            if (preg_match("/^\\d+\\.\\d+$/", $value) === 1) {
                 throw new IntegerToFloatComparisonException($field, $value);
             }
 

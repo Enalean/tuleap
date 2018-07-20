@@ -1,14 +1,12 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  * 
  * 
  *
  * Cross Reference Factory class
  */
-
-require_once('common/reference/CrossReference.class.php');
 
 class CrossReferenceFactory {
     
@@ -22,14 +20,14 @@ class CrossReferenceFactory {
      * In other words, Items in this array have made references to the current Item
      * @var array
      */
-    var $source_refs_datas;
+    var $source_refs_datas = [];
     
     /**
      * array of references {Object CrossReference} made by the current CrossReferenceFactory
      * In other words, Items in this array are referenced by the current Item
      * @var array
      */
-    var $target_refs_datas;
+    var $target_refs_datas = [];
     
     /** 
      * Constructor 
@@ -89,8 +87,9 @@ class CrossReferenceFactory {
         }
     }
         
-    function getNbReferences(){
-        return (sizeof($this->target_refs_datas) +sizeof($this->source_refs_datas));
+    public function getNbReferences()
+    {
+        return (count($this->target_refs_datas) + count($this->source_refs_datas));
     }
 
     /** Accessors */
@@ -346,7 +345,7 @@ class CrossReferenceFactory {
         $crossRefArray = array();
 
         // Walk the target ref array in order to fill the crossRefArray array
-        for ($i=0;$i<sizeof($this->target_refs_datas);$i++) {
+        for ($i=0, $nb_target_refs = count($this->target_refs_datas); $i< $nb_target_refs; $i++) {
             $is_cross = false;
             // Check if the ref is cross referenced (means referenced by a source)
             $j = 0;
@@ -375,7 +374,7 @@ class CrossReferenceFactory {
         }
 
         // Walk the source ref array in order to fill the crossRefArray array
-        for ($i=0; $i < sizeof($this->source_refs_datas); $i++) {
+        for ($i=0, $nb_source_refs = count($this->source_refs_datas); $i < $nb_source_refs; $i++) {
             $is_cross = false;
             // Check if the ref is cross referenced (means referenced by a target)
             foreach ($this->target_refs_datas as $target_refs) {

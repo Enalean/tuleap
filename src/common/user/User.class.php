@@ -1213,7 +1213,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function setPreference($preference_name, $preference_value) {
         $this->_preferences[$preference_name] = false;
         if (!$this->isAnonymous()) {
-            $dao =& $this->getPreferencesDao();
+            $dao = $this->getPreferencesDao();
             if ($dao->set($this->getId(), $preference_name, $preference_value)) {
                 $this->_preferences[$preference_name] = $preference_value;
                 return true;

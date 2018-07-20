@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,10 +36,13 @@ class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentat
      */
     public $formatted_content;
 
-    public function build(WikiPage $wiki_page, WikiPageVersion $version) {
+    public function build(WikiPageVersion $version, WikiPage $wiki_page = null)
+    {
         parent::build($version);
 
         $this->wiki_content      = $version->getContent();
-        $this->formatted_content = $version->getFormattedContent($wiki_page);
+        if ($wiki_page !== null) {
+            $this->formatted_content = $version->getFormattedContent($wiki_page);
+        }
     }
 }

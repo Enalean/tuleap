@@ -280,7 +280,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
             if (count($value['bind_value_ids']) > 1) {
                 throw new Tracker_FormElement_InvalidFieldValueException('Selectbox fields can only have one value');
             }
-            return intval(array_shift(array_map(array($this->getBind(), 'getFieldDataFromRESTValue'), $value['bind_value_ids'])));
+
+            $map = array_map(array($this->getBind(), 'getFieldDataFromRESTValue'), $value['bind_value_ids']);
+            return (int) array_shift($map);
         }
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
            .' Expected format for field '.$this->id .' : {"field_id": 1548, "bind_value_ids": [457]}');

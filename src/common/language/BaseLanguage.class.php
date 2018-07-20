@@ -316,7 +316,11 @@ class BaseLanguage {
         */
         if (($args || $args == 0) && $args !== '') {
             //$tstring = sprintf($this->text_array[$pagename][$category],$args);
-            for ($i = 1; $i <= count($args) + 1; $i++) {
+            $nb_args = 1;
+            if (is_array($args)) {
+                $nb_args = count($args);
+            }
+            for ($i = 1; $i <= $nb_args + 1; $i++) {
                 $patterns[] = '/\$'.$i.'/';
             }
             $tstring = preg_replace($patterns, $args, $this->text_array[$pagename][$category]);
