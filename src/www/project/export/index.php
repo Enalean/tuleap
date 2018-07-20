@@ -122,36 +122,9 @@ switch ($export) {
      site_project_footer( array() );
      break;
 
- case 'project_db':
-     if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
-         if ($project->usesTracker()) {
-             project_admin_header(array('title' => $pg_title), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
-             if ($project->usesTracker()) {
-                 require('./artifact_export.php');
-                 require('./artifact_history_export.php');
-                 require('./artifact_deps_export.php');
-             }
-
-             echo '<p>' . $Language->getText('project_export_index', 'proj_db_success') . '</p>';
-             display_db_params();
-             site_project_footer(array());
-         } else {
-             $GLOBALS['Response']->addFeedback('info', $Language->getText('project_export_index', 'proj_db_no_data'),
-                 CODENDI_PURIFIER_DISABLED);
-             $GLOBALS['Response']->redirect('index.php?group_id=' . $group_id);
-         }
-     } else {
-         exit_permission_denied();
-     }
-    break;
-
     default:
      project_admin_header(array('title'=>$pg_title, 'help' => 'project-admin.html#project-data-export'), NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
      // Display the welcome screen
-     if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
-         echo '<p> '.$Language->getText('project_export_index','export_to_csv_or_db',array(help_button('project-admin.html#project-data-export',false,$Language->getText('project_export_index','online_help')))).'</p>';
-     }
-
      echo '
 <h3> '.$Language->getText('project_export_index','export_to_csv_hdr',array(help_button('project-admin.html#text-file-export'))).'</h3>';
 
@@ -273,26 +246,6 @@ switch ($export) {
 
 
     echo '</TABLE>';
-    if (ForgeConfig::get('sys_enable_deprecated_feature_database_export')) {
-        echo '
-<br>
-<h3>' . $Language->getText('project_export_index',
-                'direct_db_access') . ' ' . help_button('project-admin.html#direct-database-access') . '</h3>';
-
-        if ($project->usesTracker()) {
-            echo '<ol>';
-
-            echo '<li><b><a href="?group_id=' . $group_id . '&export=project_db">' . $Language->getText('project_export_index',
-                    'generate_full_db') . "\n";
-            echo '<li>' . $Language->getText('project_export_index', 'db_connection_params') . ' ';
-
-            echo '</ol>';
-
-            display_db_params();
-        } else {
-            echo '<p>' . $Language->getText('project_export_index', 'proj_db_no_data') . '</p>';
-        }
-    }
 
     site_project_footer( array() );
     break;

@@ -93,21 +93,6 @@ function build_csv_record($col_list, $record) {
     return $line;
 }
 
-function insert_record_in_table($dbname, $tbl_name, $col_list, $record) {
-  global $Language;
-    // Generate the values list for the INSERT statement
-    reset($col_list); $values = '';
-    while (list(,$col) = each($col_list)) {
-	$values .= '\''.addslashes($record[$col]).'\',';
-    }
-    // remove excess comma at the end
-    $values = substr($values,0,-1);
-    
-    $sql_insert = "INSERT INTO $tbl_name VALUES ( $values )";
-    db_project_query($dbname,$sql_insert);
-
-}
-
 function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand_list=false){
    global $Language;
 
@@ -395,69 +380,6 @@ function prepare_access_logs_record($group_id, &$record) {
     	$day = $record['day'];
 	    $record['day'] = substr($day,0,4)."-".substr($day,4,2)."-".substr($day,6,2);
     }
-}
-
-function display_db_params () {
-    global $dbname, $Language;
-echo '
-<table align="center" cellpadding="0">
-      <tr><td>'.$Language->getText('project_export_utils','server').':</td><td>'.$GLOBALS['sys_dbhost'].'</td></tr>
-      <tr><td>'.$Language->getText('project_export_utils','port').':</td><td>'.$Language->getText('project_export_utils','leave_blank').'</td></tr>
-      <tr><td>'.$Language->getText('project_export_utils','db').':</td><td>'.$dbname.'</td></tr>
-      <tr><td>'.$Language->getText('project_export_utils','user').':</td><td>cxuser</td></tr>
-      <tr><td>'.$Language->getText('project_export_utils','passwd').':</td><td>'.$Language->getText('project_export_utils','leave_blank').'</td></tr>
-</table>';
-}
-
-/**
- * @deprecated
- */
-function db_project_query($dbname,$qstring,$print=0) {
-  global $Language;
-	if ($print) print '<br>'.$Language->getText('project_export_utils','query_is',array($dbname,$qstring)).'<br>';
-
-	try {
-	    $db = \Tuleap\DB\DBFactory::getDB($dbname);
-        $db->run($qstring);
-    } catch (PDOException $ex) {
-	    return false;
-    }
-	return true;
-}
-
-
-function db_project_create($dbname) {
-    /*
-          Create the db if it does not exist and grant read access only
-          to the user 'cxuser'
-          CAUTION!! The codendiadm user must have GRANT privilege granted 
-          for this to work. This can be done from the mysql shell with:
-             $ mysql -u root mysql -p
-             mysql> UPDATE user SET Grant_priv='Y' where User='codendiadm';
-             mysql> FLUSH PRIVILEGES;
-     */
-
-    // make sure the database name is not the same as the 
-    // system database name !!!!
-    if ($dbname != $GLOBALS['sys_dbname']) {
-       db_query('CREATE DATABASE IF NOT EXISTS `'.$dbname.'`');
-       db_project_query($dbname,'GRANT SELECT ON `'.$dbname.'`.* TO cxuser@\'%\'');
-	return true;
-    } else {
-	return false;
-    }
-}
-
-/**
- * Check if a given database already exists
- * 
- * @param String $dbname
- * 
- * @return Boolean
- */
-function db_database_exist($dbname) {
-    $res = db_query("SHOW DATABASES LIKE '$dbname'");
-    return db_numrows($res) == 1;
 }
 
 ?>
