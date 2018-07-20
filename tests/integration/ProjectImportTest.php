@@ -35,6 +35,8 @@ require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
+require_once __DIR__ . '/bootstrap.php';
+
 class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
 
 }

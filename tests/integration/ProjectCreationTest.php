@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
@@ -23,6 +22,8 @@ require_once 'common/project/ProjectCreator.class.php';
 require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
+
+require_once __DIR__ . '/bootstrap.php';
 
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
