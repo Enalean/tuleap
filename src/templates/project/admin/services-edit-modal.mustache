@@ -131,7 +131,12 @@
 
         <div class="tlp-form-element">
             <label class="tlp-label tlp-checkbox">
-                <input type="checkbox" name="is_used" value="1" {{# is_used }}checked{{/ is_used }}>
+                <input type="checkbox"
+                       name="is_used"
+                       value="1"
+                       {{# is_used }}checked{{/ is_used }}
+                       data-test="service-{{ short_name }}-is-used"
+                >
                 {{# gettext }}Enabled{{/ gettext }}
             </label>
         </div>
@@ -171,7 +176,11 @@
         <button type="reset" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{# gettext }}Cancel{{/ gettext }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action user-group-modal-button">
+        <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action user-group-modal-button"
+                data-test="save-service-{{ short_name }}-modifications"
+        >
             <i class="fa fa-save tlp-button-icon"></i> {{# gettext }}Save modifications{{/ gettext }}
         </button>
     </div>

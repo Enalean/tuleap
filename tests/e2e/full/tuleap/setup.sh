@@ -112,6 +112,9 @@ setup_tuleap
 /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
 setup_database
 seed_data
+
+/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
+
 service rh-php56-php-fpm start
 service nginx start
 

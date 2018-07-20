@@ -39,6 +39,7 @@
                            type="text"
                            name="{{full_name_label}}"
                            value="{{getFullName}}"
+                           data-test="project_full_name"
                            required
                            autofocus/>
                     <div class="help">{{getDescriptionContainerFullNameHelp}}</div>
@@ -52,6 +53,7 @@
                        size="15"
                        name="{{unix_name_label}}"
                        value="{{getUnixName}}"
+                       data-test="project_description"
                        required/>
                 <div class="help">{{getDescriptionContainerShortNameHelp}}</div>
                 <span class="label label-info">Info</span> {{getDescriptionContainerShortNameLabel}}
@@ -66,6 +68,7 @@
                     wrap="virtual"
                     cols="40"
                     rows="3"
+                    data-test="project_short_description"
                     required>{{getShortDescription}}</textarea>
                     <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
             </div>
@@ -160,7 +163,12 @@
             <div class="control-group">
                 <div class="controls">
                     <label class="checkbox">
-                        <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
+                        <input type="checkbox"
+                               name="{{term_of_service_approval_label}}"
+                               value="approved"
+                               required
+                               data-test="approve_tos"
+                        />
                         {{getAgreeTOSLabel}}
                         <a href="/tos/tos.php">{{getTOSLabel}}</a>
                     </label>
@@ -169,7 +177,11 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <input type="submit" value="{{getCreateProjectButtonLabel}}" name="create_project" class="btn btn-primary"/>
+                    <input type="submit"
+                           value="{{getCreateProjectButtonLabel}}"
+                           name="create_project"
+                           class="btn btn-primary"
+                           data-test="project-creation-submit"/>
                 </div>
             </div>
         </fieldset>
