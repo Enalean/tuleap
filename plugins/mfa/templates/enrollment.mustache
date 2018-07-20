@@ -1,3 +1,9 @@
+{{# is_user_already_registered }}
+<div>
+    {{# dgettext }} tuleap-mfa | You already have registered a multi-factor authentication device. Registering a new device will invalidate the one currently used. {{/ dgettext }}
+</div>
+{{/ is_user_already_registered }}
+
 <p>{{ secret }}</p>
 
 <form method="post">

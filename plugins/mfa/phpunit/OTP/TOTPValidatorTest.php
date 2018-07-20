@@ -32,9 +32,9 @@ class TOTPValidatorTest extends TestCase
     public function testValidation()
     {
         $totp_success           = \Mockery::mock(TOTP::class);
-        $totp_validator_success = new TOTPValidator($totp_success);
+        $totp_validator_success = new TOTPValidator();
         $totp_failure           = \Mockery::mock(TOTP::class);
-        $totp_validator_failure = new TOTPValidator($totp_failure);
+        $totp_validator_failure = new TOTPValidator();
         $current_time           = \Mockery::mock(\DateTimeImmutable::class);
         $totp_mode              = \Mockery::mock(TOTPMode::class);
 
@@ -46,7 +46,7 @@ class TOTPValidatorTest extends TestCase
         $current_time->shouldReceive('sub')->andReturns(\Mockery::mock(\DateTimeImmutable::class));
         $current_time->shouldReceive('add')->andReturns(\Mockery::mock(\DateTimeImmutable::class));
 
-        $this->assertTrue($totp_validator_success->validate('111111', $current_time));
-        $this->assertFalse($totp_validator_failure->validate('111111', $current_time));
+        $this->assertTrue($totp_validator_success->validate($totp_success, '111111', $current_time));
+        $this->assertFalse($totp_validator_failure->validate($totp_failure, '111111', $current_time));
     }
 }

@@ -21,15 +21,23 @@
 namespace Tuleap\MFA\Enrollment;
 
 use HTTPRequest;
-use ParagonIE\ConstantTime\Base32;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\MFA\OTP\TOTP;
-use Tuleap\MFA\OTP\TOTPModeBuilder;
-use Tuleap\MFA\OTP\TOTPValidator;
+use Tuleap\MFA\Enrollment\TOTP\EnrollmentTOTPException;
+use Tuleap\MFA\Enrollment\TOTP\TOTPEnroller;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
 {
+    /**
+     * @var TOTPEnroller
+     */
+    private $totp_enroller;
+
+    public function __construct(TOTPEnroller $totp_enroller)
+    {
+        $this->totp_enroller = $totp_enroller;
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $request_uri = $request->getFromServer('REQUEST_URI');
@@ -37,18 +45,14 @@ class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
         $csrf_token = new \CSRFSynchronizerToken($request_uri);
         $csrf_token->check();
 
-        $secret = $request->get('secret');
-        $code   = $request->get('code');
+        $code = $request->get('code');
 
-        $totp           = new TOTP(TOTPModeBuilder::build(), Base32::decode($secret));
-        $totp_validator = new TOTPValidator($totp);
-
-        if ($totp_validator->validate($code, new \DateTimeImmutable())) {
-            $layout->addFeedback(\Feedback::INFO, 'Valid code');
-        } else {
-            $layout->addFeedback(\Feedback::INFO, 'Not valid code');
+        try {
+            $this->totp_enroller->enrollUser($request->getCurrentUser(), $_SESSION, $code);
+            $layout->addFeedback(\Feedback::INFO, 'Valid code, user enrolled');
+        } catch (EnrollmentTOTPException $ex) {
+            $layout->addFeedback(\Feedback::INFO, 'Not valid code or incorrect state, enrollment failed');
         }
-
 
         $layout->redirect($request_uri);
     }

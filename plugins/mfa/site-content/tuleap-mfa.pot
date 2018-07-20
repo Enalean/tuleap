@@ -6,3 +6,8 @@ msgstr ""
 
 msgid "Multi-factor authentication"
 msgstr ""
+
+msgid ""
+"You already have registered a multi-factor authentication device. "
+"Registering a new device will invalidate the one currently used."
+msgstr ""
