@@ -4,6 +4,17 @@
     <meta charset="utf-8">
     <title>{{title}}</title>
     <link rel="SHORTCUT ICON" href="{{imgRoot}}favicon.ico">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ imgRoot }}favicon/{{ variant }}/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ imgRoot }}favicon/{{ variant }}/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ imgRoot }}favicon/{{ variant }}/favicon-16x16.png">
+    <link rel="shortcut icon" href="{{ imgRoot }}favicon/{{ variant }}/favicon.ico">
+    <link rel="manifest" href="{{ imgRoot }}favicon/{{ variant }}/site.webmanifest">
+    <link rel="mask-icon" href="{{ imgRoot }}favicon/{{ variant }}/safari-pinned-tab.svg" color="{{ variant_color_code }}">
+    <meta name="msapplication-TileColor" content="{{ variant_color_code }}">
+    <meta name="msapplication-config" content="{{ imgRoot }}favicon/{{ variant }}/browserconfig.xml">
+    <meta name="theme-color" content="{{ variant_color_code }}">
+
     {{# open_graph }}
         {{# properties }}
             <meta property="og:{{ name }}" content="{{ content }}" />

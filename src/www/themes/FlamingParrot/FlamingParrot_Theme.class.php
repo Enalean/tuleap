@@ -96,12 +96,19 @@ class FlamingParrot_Theme extends Layout {
         if (!empty($params['title'])) {
            $title = $params['title'] .' - '. $title;
         }
+
+        $current_user    = UserManager::instance()->getCurrentUser();
+        $theme_variant   = new ThemeVariant();
+        $current_variant = $theme_variant->getVariantForUser($current_user);
+
         $open_graph = isset($params['open_graph']) ? $params['open_graph'] : new NoOpenGraphPresenter();
 
         $this->render('header', new FlamingParrot_HeaderPresenter(
             $title,
             $this->imgroot,
-            $open_graph
+            $open_graph,
+            $current_variant,
+            $this->getColorOfCurrentTheme($current_variant)
         ));
 
         $this->displayJavascriptElements($params);
