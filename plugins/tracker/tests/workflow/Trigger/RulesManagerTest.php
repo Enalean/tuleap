@@ -29,16 +29,17 @@ abstract class Tracker_Workflow_Trigger_RulesManagerTest extends TuleapTestCase 
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->target_value_id     = 789;
-        $this->dao                 = mock('Tracker_Workflow_Trigger_RulesDao');
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
-        $this->rules_processor     = mock('Tracker_Workflow_Trigger_RulesProcessor');
+        $this->dao                 = \Mockery::spy(\Tracker_Workflow_Trigger_RulesDao::class);
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->rules_processor     = \Mockery::spy(\Tracker_Workflow_Trigger_RulesProcessor::class);
         $this->manager             = new Tracker_Workflow_Trigger_RulesManager(
             $this->dao,
             $this->formelement_factory,
             $this->rules_processor,
-            mock('WorkflowBackendLogger'),
-            mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
+            \Mockery::spy(\WorkflowBackendLogger::class),
+            \Mockery::spy(\Tracker_Workflow_Trigger_RulesBuilderFactory::class)
         );
     }
 }
@@ -47,10 +48,10 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->manager = partial_mock(
-            'Tracker_Workflow_Trigger_RulesManager',
-            array('add', 'getForTargetTracker', 'getTriggers'),
+        $this->manager = \Mockery::mock(
+            \Tracker_Workflow_Trigger_RulesManager::class,
             array(
                 $this->dao,
                 $this->formelement_factory,
@@ -58,11 +59,13 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
                 mock('WorkflowBackendLogger'),
                 mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
-        );
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
     }
 
     public function itDuplicatesTriggerRulesFromOldTracker() {
-        $template_tracker  = stub('Tracker')->getId()->returns(101);
+        $template_tracker  = mockery_stub(\Tracker::class)->getId()->returns(101);
         $new_field_01      = aMockField()->withTracker($template_tracker)->withId(502)->build();
         $new_field_02      = aMockField()->withTracker($template_tracker)->withId(503)->build();
         $new_field_03      = aMockField()->withTracker($template_tracker)->withId(501)->build();
@@ -110,8 +113,8 @@ class Tracker_Workflow_Trigger_RulesManager_duplicateTest extends Tracker_Workfl
             array($rule_01, $rule_02)
         );
 
-        stub($this->manager)->getTriggers(0)->returns($trigger_01);
-        stub($this->manager)->getTriggers(1)->returns($trigger_02);
+//        stub($this->manager)->getTriggers(0)->returns($trigger_01);
+//        stub($this->manager)->getTriggers(1)->returns($trigger_02);
 
         $template_trackers = array(
            $template_tracker,
@@ -157,6 +160,7 @@ class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Tri
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->trigger_value_id_1 = 369;
         $this->trigger_value_id_2 = 258;
@@ -191,8 +195,8 @@ class Tracker_Workflow_Trigger_RulesManager_addTest extends Tracker_Workflow_Tri
         stub($this->dao)->addTarget()->returns($rule_id);
 
         expect($this->dao)->addTriggeringField()->count(2);
-        expect($this->dao)->addTriggeringField($rule_id, $this->trigger_value_id_1)->at(0);
-        expect($this->dao)->addTriggeringField($rule_id, $this->trigger_value_id_2)->at(1);
+        expect($this->dao)->addTriggeringField($rule_id, $this->trigger_value_id_1);
+        expect($this->dao)->addTriggeringField($rule_id, $this->trigger_value_id_2);
 
         $this->manager->add($this->rule);
     }
@@ -218,6 +222,7 @@ class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_W
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
         $this->rule_id = 6347;
 
@@ -250,8 +255,10 @@ class Tracker_Workflow_Trigger_RulesManager_getFromTrackerTest extends Tracker_W
     }
 
     public function itFetchesDataFromDb() {
-        expect($this->dao)->searchForTargetTracker($this->tracker_id)->once();
-        stub($this->dao)->searchForTargetTracker()->returnsEmptyDar();
+        $this->dao->shouldReceive('searchForTargetTracker')
+            ->with($this->tracker_id)
+            ->once()
+            ->andReturn(Mockery::spy(DataAccessResult::class));
 
         $this->manager->getForTargetTracker($this->tracker);
     }
@@ -340,9 +347,10 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->rule_id = 777;
         $this->tracker = aTracker()->build();
-        $this->rule    = mock('Tracker_Workflow_Trigger_TriggerRule');
+        $this->rule    = \Mockery::spy(\Tracker_Workflow_Trigger_TriggerRule::class);
         stub($this->rule)->getId()->returns($this->rule_id);
         stub($this->rule)->getTargetTracker()->returns($this->tracker);
     }
@@ -378,9 +386,8 @@ class Tracker_Workflow_Trigger_RulesManager_deleteByRuleIdTest extends Tracker_W
 class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_Workflow_Trigger_RulesManagerTest {
 
     public function itProcessTheInvolvedTriggerRules() {
-        $manager = partial_mock(
-            'Tracker_Workflow_Trigger_RulesManager',
-            array('getRuleById'),
+        $manager = \Mockery::mock(
+            \Tracker_Workflow_Trigger_RulesManager::class,
             array(
                 $this->dao,
                 $this->formelement_factory,
@@ -388,12 +395,14 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
                 mock('WorkflowBackendLogger'),
                 mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
             )
-        );
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
 
-        $artifact  = mock('Tracker_Artifact');
+        $artifact  = \Mockery::spy(\Tracker_Artifact::class);
         $trigger_1 = aTriggerRule()->withId(1)->build();
         $trigger_2 = aTriggerRule()->withId(2)->build();
-        $changeset = stub('Tracker_Artifact_Changeset')->getId()->returns(3);
+        $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getId()->returns(3);
         stub($changeset)->getArtifact()->returns($artifact);
 
         stub($this->dao)->searchForInvolvedRulesIdsByChangesetId(3)->returnsDar(
@@ -403,8 +412,8 @@ class Tracker_Workflow_Trigger_RulesManager_processTriggersTest extends Tracker_
         stub($manager)->getRuleById(1)->returns($trigger_1);
         stub($manager)->getRuleById(2)->returns($trigger_2);
 
-        expect($this->rules_processor)->process($artifact, $trigger_1)->at(1);
-        expect($this->rules_processor)->process($artifact, $trigger_2)->at(2);
+        expect($this->rules_processor)->process($artifact, $trigger_1);
+        expect($this->rules_processor)->process($artifact, $trigger_2);
         $manager->processTriggers($changeset);
     }
 }
@@ -491,6 +500,7 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->xml = new SimpleXMLElement('
             <triggers>
                 <trigger_rule>
@@ -522,12 +532,12 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
             </triggers>'
         );
 
-        $this->field_1685 = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns(1685);
-        $this->field_1741 = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns(1741);
-        $this->value_2060 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2060);
-        $this->value_2061 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2061);
-        $this->value_2117 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2117);
-        $this->value_2118 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2118);
+        $this->field_1685 = mockery_stub(\Tracker_FormElement_Field_Selectbox::class)->getId()->returns(1685);
+        $this->field_1741 = mockery_stub(\Tracker_FormElement_Field_Selectbox::class)->getId()->returns(1741);
+        $this->value_2060 = mockery_stub(\Tracker_FormElement_Field_List_Bind_StaticValue::class)->getId()->returns(2060);
+        $this->value_2061 = mockery_stub(\Tracker_FormElement_Field_List_Bind_StaticValue::class)->getId()->returns(2061);
+        $this->value_2117 = mockery_stub(\Tracker_FormElement_Field_List_Bind_StaticValue::class)->getId()->returns(2117);
+        $this->value_2118 = mockery_stub(\Tracker_FormElement_Field_List_Bind_StaticValue::class)->getId()->returns(2118);
 
         $this->xmlFieldMapping = array(
             'F1685' => $this->field_1685,
@@ -538,19 +548,7 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
             'V2118' => $this->value_2118,
         );
 
-        $this->manager = partial_mock(
-            'Tracker_Workflow_Trigger_RulesManager',
-            array(
-                'add'
-            ),
-            array(
-                $this->dao,
-                $this->formelement_factory,
-                $this->rules_processor,
-                mock('WorkflowBackendLogger'),
-                mock('Tracker_Workflow_Trigger_RulesBuilderFactory')
-            )
-        );
+        $this->manager = \Mockery::mock(\Tracker_Workflow_Trigger_RulesManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
     }
 
     public function itImportRules() {
@@ -586,8 +584,8 @@ class Tracker_Workflow_Trigger_RulesManager_XMLImportTest extends Tracker_Workfl
         );
 
         expect($this->manager)->add()->count(2);
-        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_1))->at(0);
-        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_2))->at(1);
+        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_1));
+        expect($this->manager)->add(new TriggerRuleComparatorExpectaction($trigger_rule_2));
 
         $this->manager->createFromXML($this->xml, $this->xmlFieldMapping);
     }

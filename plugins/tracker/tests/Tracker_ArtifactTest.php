@@ -20,108 +20,14 @@
  */
 
 require_once('bootstrap.php');
-Mock::generatePartial(
-    'Tracker_Artifact',
-    'Tracker_ArtifactTestVersion',
-    array(
-        'getChangesetDao',
-        'getChangesetCommentDao',
-        'getFormElementFactory',
-        'getTracker',
-        'getId',
-        'getLastChangeset',
-        'getReferenceManager',
-        'getChangesets',
-        'getChangeset',
-        'getUserManager',
-        'getArtifactFactory',
-        'getHierarchyFactory',
-        'getWorkflow'
-    )
-);
-
-Mock::generatePartial(
-    'Tracker_Artifact',
-    'Tracker_ArtifactTestPermissions',
-    array(
-        'getTracker',
-        'getId',
-        'getUserManager',
-        'useArtifactPermissions',
-        'permission_db_authorized_ugroups',
-        'getValue',
-        'getSubmittedBy'
-    )
-);
-
-Mock::generate('Tracker_Artifact_Changeset');
-Mock::generate('Tracker_Artifact_ChangesetValue');
-Mock::generate('Tracker_FormElement_Field_Date');
-Mock::generate('Tracker_Artifact_ChangesetValue_Date');
-Mock::generate('Tracker_Artifact_ChangesetDao');
-Mock::generate('Tracker_Artifact_Changeset_CommentDao');
-Mock::generate('Tracker');
-Mock::generate('Tracker_FormElementFactory');
-Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Field', array(
-        'getId',
-        'getLabel',
-        'getName',
-        'isValid',
-        'isValidRegardingRequiredProperty',
-        'fetchCriteriaValue',
-        'fetchChangesetValue',
-        'fetchRawValue',
-        'getCriteriaFrom',
-        'getCriteriaWhere',
-        'getCriteriaDao',
-        'fetchArtifactValue',
-        'fetchArtifactValueReadOnly',
-        'fetchSubmitValue',
-        'fetchTooltipValue',
-        'getValueDao',
-        'fetchFollowUp',
-        'fetchRawValueFromChangeset',
-        'saveValue',
-        'fetchAdminFormElement',
-        'getFactoryLabel',
-        'getFactoryDescription',
-        'getFactoryIconUseIt',
-        'getFactoryIconCreate',
-        'getChangesetValue',
-        'saveNewChangeset',
-        'validate',
-        'getSoapAvailableValues',
-        'hasDefaultValue',
-        'getDefaultValue',
-        'isRequired',
-        'userCanUpdate',
-        'userCanSubmit',
-        'setHasErrors',
-        'fetchSubmitValueMasschange',
-        'accept'
-    )
-);
 require_once('common/dao/include/DataAccessResult.class.php');
-Mock::generate('DataAccessResult');
 require_once('common/user/User.class.php');
-Mock::generate('PFUser');
 require_once('common/include/Response.class.php');
-Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 require_once('common/reference/ReferenceManager.class.php');
-Mock::generate('ReferenceManager');
 require_once('common/user/UserManager.class.php');
-Mock::generate('UserManager');
-Mock::generate('Tracker_ArtifactFactory');
 
-Mock::generate('Tracker_FormElement_Field_ArtifactLink');
-
-Mock::generate('TrackerManager');
-
-Mock::generate('Workflow');
-
-class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
+class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends Workflow {
     function before(&$fields_data, $submitter, $artifact) {
         $fields_data[102] = '456';
         return parent::before($fields_data, $submitter, $artifact);
@@ -132,37 +38,38 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->response = $GLOBALS['Response'];
         $this->language = $GLOBALS['Language'];
 
         $this->setText('fields not valid', array('plugin_tracker_artifact', 'fields_not_valid'));
 
-        $tracker     = new MockTracker();
-        $factory     = new MockTracker_FormElementFactory();
-        $this->field = new MockTracker_FormElement_Field();
-        $this->field->setReturnValue('getId', 101);
-        $this->field->setReturnValue('getLabel', 'Summary');
-        $this->field->setReturnValue('getName', 'summary');
-        $factory->setReturnValue('getUsedFields', array($this->field));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $tracker     = \Mockery::spy(\Tracker::class);
+        $factory     = \Mockery::spy(\Tracker_FormElementFactory::class);
+        $this->field = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->field->shouldReceive('getId')->andReturns(101);
+        $this->field->shouldReceive('getLabel')->andReturns('Summary');
+        $this->field->shouldReceive('getName')->andReturns('summary');
+        $factory->shouldReceive('getUsedFields')->andReturns(array($this->field));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 
-        $this->artifact = new Tracker_ArtifactTestVersion();
-        $this->artifact->setReturnReference('getFormElementFactory', $factory);
-        $this->artifact->setReturnReference('getTracker', $tracker);
-        $this->artifact->setReturnValue('getLastChangeset', false); // no changeset => artifact submission
+        $this->artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $this->artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $this->artifact->shouldReceive('getLastChangeset')->andReturns(false); // no changeset => artifact submission
 
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
+        $workflow = \Mockery::spy(\Workflow::class);
+        $workflow->shouldReceive('validate')->andReturns(true);
 
-        $this->artifact->setReturnReference('getWorkflow', $workflow);
-        $this->artifact_update = new Tracker_ArtifactTestVersion();
-        $this->artifact_update->setReturnReference('getFormElementFactory', $factory);
-        $this->artifact_update->setReturnReference('getTracker', $tracker);
-        $this->artifact_update->setReturnReference('getWorkflow', $workflow);
-        $this->changeset = new MockTracker_Artifact_Changeset();
-        $this->changeset_value = new MockTracker_Artifact_ChangesetValue();
-        $this->changeset->setReturnReference('getValue', $this->changeset_value, array($this->field));
-        $this->artifact_update->setReturnReference('getLastChangeset', $this->changeset); // changeset => artifact modification
+        $this->artifact->shouldReceive('getWorkflow')->andReturns($workflow);
+        $this->artifact_update = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $this->artifact_update->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $this->artifact_update->shouldReceive('getTracker')->andReturns($tracker);
+        $this->artifact_update->shouldReceive('getWorkflow')->andReturns($workflow);
+        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns($this->changeset_value);
+        $this->artifact_update->shouldReceive('getLastChangeset')->andReturns($this->changeset); // changeset => artifact modification
     }
 
     function tearDown() {
@@ -172,11 +79,11 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     }
 
     function testGetValue() {
-        $changeset = new MockTracker_Artifact_Changeset();
-        $field     = new MockTracker_FormElement_Field_Date();
-        $value     = new MockTracker_Artifact_ChangesetValue_Date();
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
+        $value     = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
 
-        $changeset->setReturnReference('getValue', $value);
+        $changeset->shouldReceive('getValue')->andReturns($value);
 
         $id = $tracker_id = $use_artifact_permissions = $submitted_by = $submitted_on = '';
         $artifact = new Tracker_Artifact($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
@@ -185,14 +92,14 @@ class Tracker_ArtifactTest extends TuleapTestCase {
     }
 
     function testGetValue_without_changeset() {
-        $changeset = new MockTracker_Artifact_Changeset();
-        $field     = new MockTracker_FormElement_Field_Date();
-        $value     = new MockTracker_Artifact_ChangesetValue_Date();
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $field     = \Mockery::spy(\Tracker_FormElement_Field_Date::class);
+        $value     = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
 
-        $changeset->setReturnReference('getValue', $value);
+        $changeset->shouldReceive('getValue')->andReturns($value);
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getLastChangeset', $changeset);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
         $this->assertEqual($artifact->getValue($field), $value);
     }
@@ -204,92 +111,71 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $email   = null; //not anonymous user
         $comment = '';
 
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
-        stub($comment_dao)->createNewVersion()->returns(true);
+        $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
+        $comment_dao->shouldReceive('createNewVersion')->once()->andReturn(true);
 
-        $comment_dao->expectCallCount('createNewVersion', 1);
+        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1001);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002);
 
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->expectCallCount('create', 1);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(1234);
+        $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturns(666);
+        $tracker->shouldReceive('getItemName')->andReturns('foobar');
+        $tracker->shouldReceive('getFormElements')->andReturns(array());
 
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getGroupId', 666);
-        $tracker->setReturnValue('getItemName', 'foobar');
-        $tracker->setReturnValue('getFormElements', array());
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $factory = new MockTracker_FormElementFactory();
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $workflow = \Mockery::spy(\Workflow::class);
+        $workflow->shouldReceive('before')->times(2);
+        $workflow->shouldReceive('validate')->andReturns(true);
+        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
-        $artifact = partial_mock('Tracker_Artifact', array(
-            'getChangesetDao',
-            'getChangesetCommentDao',
-            'getFormElementFactory',
-            'getTracker',
-            'getId',
-            'getLastChangeset',
-            'getReferenceManager',
-            'getChangesets',
-            'getChangeset',
-            'getUserManager',
-            'getArtifactFactory',
-            'getWorkflow',
-            )
-        );
-        $workflow = new MockWorkflow();
-        $workflow->expectCallCount('before', 2);
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
+        $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field1->shouldReceive('getId')->andReturns(101);
+        $field1->shouldReceive('isValid')->andReturns(true);
+        $field1->shouldReceive('userCanUpdate')->andReturns(true);
+        $workflow->shouldReceive('bypassPermissions')->with($field1)->andReturns(false);
+        $field1->shouldReceive('saveNewChangeset')->once()->andReturns(true);
 
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->setReturnValue('saveNewChangeset', true);
-        $workflow->setReturnValue('bypassPermissions', false, array($field1));
-        $field1->expectOnce('saveNewChangeset');
+        $field2  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field2->shouldReceive('getId')->andReturns(102);
+        $field2->shouldReceive('isValid')->andReturns(true);
+        $field2->shouldReceive('userCanUpdate')->andReturns(false);
+        $workflow->shouldReceive('bypassPermissions')->with($field2)->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->with(Mockery::any(), Mockery::any(), Mockery::any(), Mockery::any(), $user, false, true)->once()->andReturns(true);
+        $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('userCanUpdate', false);
-        $field2->setReturnValue('saveNewChangeset', true);
-        $workflow->setReturnValue('bypassPermissions', true, array($field2));
-        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, false, true));
-        $factory->setReturnValue('getUsedFields', array($field1, $field2));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $new_changeset->shouldReceive('executePostCreationActions')->with([]);
 
-        $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expect('executePostCreationActions', array());
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('getValues')->andReturns(array());
+        $changeset->shouldReceive('hasChanges')->andReturns(true);
+        $changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset->shouldReceive('getValue')->with($field1)->andReturns($changeset_value1);
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValues', array());
-        $changeset->setReturnValue('hasChanges', true);
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-
-        $reference_manager = new MockReferenceManager();
-        $reference_manager->expect('extractCrossRef', array(
+        $reference_manager = \Mockery::spy(\ReferenceManager::class);
+        $reference_manager->shouldReceive('extractCrossRef')->with([
             $comment,
             66,
             'plugin_tracker_artifact',
             666,
             $user->getId(),
             'foobar',
-        ));
+        ]);
 
-        $art_factory = new MockTracker_ArtifactFactory();
-        stub($art_factory)->save()->returns(true);
+        $art_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        stub($art_factory)->save()->once()->returns(true);
 
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
-
-        $art_factory->expectOnce('save');
+        $artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $artifact->shouldReceive('getId')->andReturns(66);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
         // Valid
         $fields_data = array(
@@ -301,7 +187,7 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
         $send_notification = false;
         $comment_format    = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
 
-        $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
+        $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         stub($fields_validator)->validate()->returns(true);
 
         $creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
@@ -310,82 +196,82 @@ class Tracker_Artifact_delegatedCreateNewChangesetTest extends Tracker_ArtifactT
             $dao,
             $comment_dao,
             $art_factory,
-            mock('EventManager'),
+            \Mockery::spy(\EventManager::class),
             $reference_manager,
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class)
         );
 
         $creator->create($artifact, $fields_data, $comment, $user, $submitted_on, $send_notification, $comment_format);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
-        $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        $this->response->expectNever('addFeedback');
+        $this->language->shouldReceive('getText')->with('plugin_tracker_artifact', 'no_changes', Mockery::any())->andReturns('no changes');
+        $this->response->shouldReceive('addFeedback')->never();
 
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
-        $comment_dao->expectNever('createNewVersion');
+        $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
+        $comment_dao->shouldReceive('createNewVersion')->never();
 
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->expectNever('create');
+        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao->shouldReceive('create')->never();
 
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(1234);
+        $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getFormElements', array());
-        $factory = new MockTracker_FormElementFactory();
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getFormElements')->andReturns(array());
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->expectNever('saveNewChangeset');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true);
-        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->expectNever('saveNewChangeset');
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field3->setReturnValue('userCanUpdate', true);
-        $field3->expectNever('saveNewChangeset');
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
-        $factory->setReturnValue('getUsedArtifactLinkFields', array());
+        $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field1->shouldReceive('getId')->andReturns(101);
+        $field1->shouldReceive('isValid')->andReturns(true);
+        $field1->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field1->shouldReceive('userCanUpdate')->andReturns(true);
+        $field1->shouldReceive('saveNewChangeset')->never();
+        $field2  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field2->shouldReceive('getId')->andReturns(102);
+        $field2->shouldReceive('isValid')->andReturns(true);
+        $field2->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field2->shouldReceive('userCanUpdate')->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->never();
+        $field3  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field3->shouldReceive('getId')->andReturns(103);
+        $field3->shouldReceive('isValid')->andReturns(true);
+        $field3->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field3->shouldReceive('userCanUpdate')->andReturns(true);
+        $field3->shouldReceive('saveNewChangeset')->never();
+        $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2, $field3));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
+        $factory->shouldReceive('getUsedArtifactLinkFields')->andReturns(array());
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('hasChanges', false);
-        $changeset->setReturnValue('getValues', array());
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('hasChanges')->andReturns(false);
+        $changeset->shouldReceive('getValues')->andReturns(array());
+        $changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value2 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset->shouldReceive('getValue')->with($field1)->andReturns($changeset_value1);
+        $changeset->shouldReceive('getValue')->with($field2)->andReturns($changeset_value2);
+        $changeset->shouldReceive('getValue')->with($field3)->andReturns($changeset_value3);
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getChildren()->returns(array());
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getArtifactFactory', mock('Tracker_ArtifactFactory'));
-        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
-        $artifact->setReturnReference('getReferenceManager', mock('ReferenceManager'));
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
+        $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
+        $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $artifact->shouldReceive('getArtifactFactory')->andReturns(\Mockery::spy(\Tracker_ArtifactFactory::class));
+        $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
+        $artifact->shouldReceive('getReferenceManager')->andReturns(\Mockery::spy(\ReferenceManager::class));
+        $artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $artifact->shouldReceive('getId')->andReturns(66);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $workflow = new MockWorkflow();
-        $workflow->expectNever('before');
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
+        $workflow = \Mockery::spy(\Workflow::class);
+        $workflow->shouldReceive('before')->never();
+        $workflow->shouldReceive('validate')->andReturns(true);
+        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         $email   = null; //not annonymous user
         $comment = ''; //empty comment
@@ -403,102 +289,99 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
-        $this->response->expectCallCount('addFeedback', 0);
+        $this->response->shouldReceive('addFeedback')->never();
 
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
         stub($comment_dao)->createNewVersion()->returns(true);
-        $comment_dao->expectCallCount('createNewVersion', 1);
+        $comment_dao->shouldReceive('createNewVersion')->once();
 
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->expectCallCount('create', 1);
+        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1001);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002);
+        $dao->shouldReceive('create')->once();
 
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(1234);
+        $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getGroupId', 666);
-        $tracker->setReturnValue('getItemName', 'foobar');
-        $tracker->setReturnValue('getFormElements', array());
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturns(666);
+        $tracker->shouldReceive('getItemName')->andReturns('foobar');
+        $tracker->shouldReceive('getFormElements')->andReturns(array());
 
-        $factory = new MockTracker_FormElementFactory();
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->setReturnValue('saveNewChangeset', true);
-        $field1->expectOnce('saveNewChangeset');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true, array('*', '123'));
-        $field2->setReturnValue('isValid', false, array('*', '456'));
-        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->setReturnValue('saveNewChangeset', true);
-        $field2->expectOnce('saveNewChangeset');
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field3->setReturnValue('saveNewChangeset', true);
-        $field3->expectOnce('saveNewChangeset');
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field1->shouldReceive('getId')->andReturns(101);
+        $field1->shouldReceive('isValid')->andReturns(true);
+        $field1->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field1->shouldReceive('userCanUpdate')->andReturns(true);
+        $field1->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field2  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field2->shouldReceive('getId')->andReturns(102);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '123')->andReturns(true);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '456')->andReturns(false);
+        $field2->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field2->shouldReceive('userCanUpdate')->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field3  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field3->shouldReceive('getId')->andReturns(103);
+        $field3->shouldReceive('isValid')->andReturns(true);
+        $field3->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field3->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field3->shouldReceive('userCanUpdate')->andReturns(true);
+        $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2, $field3));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 
-        $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expect('executePostCreationActions', array());
+        $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $new_changeset->shouldReceive('executePostCreationActions')->with([]);
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('hasChanges', true);
-        $changeset->setReturnValue('getValues', array());
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('hasChanges')->andReturns(true);
+        $changeset->shouldReceive('getValues')->andReturns(array());
+        $changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value2 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset->shouldReceive('getValue')->with($field1)->andReturns($changeset_value1);
+        $changeset->shouldReceive('getValue')->with($field2)->andReturns($changeset_value2);
+        $changeset->shouldReceive('getValue')->with($field3)->andReturns($changeset_value3);
 
-        $reference_manager = new MockReferenceManager();
-        $reference_manager->expect('extractCrossRef', array(
+        $reference_manager = \Mockery::spy(\ReferenceManager::class);
+        $reference_manager->shouldReceive('extractCrossRef')->with([
             $comment,
             66,
             'plugin_tracker_artifact',
             666,
             $user->getId(),
             'foobar',
-        ));
+        ]);
 
-        $art_factory = new MockTracker_ArtifactFactory();
+        $art_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getChildren()->returns(array());
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
-        $artifact->setReturnReference('getChangeset', $new_changeset);
-        $artifact->setReturnReference('getReferenceManager', $reference_manager);
-        $artifact->setReturnReference('getArtifactFactory', $art_factory);
-        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
+        $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
+        $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $artifact->shouldReceive('getId')->andReturns(66);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $artifact->shouldReceive('getChangeset')->andReturns($new_changeset);
+        $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
+        $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
+        $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
         stub($art_factory)->save()->returns(true);
-        $art_factory->expectOnce('save');
+        $art_factory->shouldReceive('save')->once();
 
-        $workflow = new MockWorkflow();
-        $workflow->expectCallCount('before', 2);
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
+        $workflow = \Mockery::spy(\Workflow::class);
+        $workflow->shouldReceive('before')->times(2);
+        $workflow->shouldReceive('validate')->andReturns(true);
+        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         // Valid
         $fields_data = array(
@@ -522,94 +405,94 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
-        $this->response->expectNever('addFeedback');
+        $this->response->shouldReceive('addFeedback')->never();
 
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
-        $comment_dao->expectNever('createNewVersion');
+        $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
+        $comment_dao->shouldReceive('createNewVersion')->never();
 
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->expectNever('create');
+        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1001);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002);
+        $dao->shouldReceive('create')->never();
 
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(1234);
+        $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getGroupId', 666);
-        $tracker->setReturnValue('getItemName', 'foobar');
-        $tracker->setReturnValue('getFormElements', array());
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturns(666);
+        $tracker->shouldReceive('getItemName')->andReturns('foobar');
+        $tracker->shouldReceive('getFormElements')->andReturns(array());
 
-        $factory = new MockTracker_FormElementFactory();
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->expectNever('saveNewChangeset');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true, array('*', '123'));
-        $field2->setReturnValue('isValid', false, array('*', '456'));
-        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->expectNever('saveNewChangeset');
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field3->expectNever('saveNewChangeset');
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field1->shouldReceive('getId')->andReturns(101);
+        $field1->shouldReceive('isValid')->andReturns(true);
+        $field1->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field1->shouldReceive('userCanUpdate')->andReturns(true);
+        $field1->shouldReceive('saveNewChangeset')->never();
+        $field2  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field2->shouldReceive('getId')->andReturns(102);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '123')->andReturns(true);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '456')->andReturns(false);
+        $field2->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field2->shouldReceive('userCanUpdate')->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->never();
+        $field3  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field3->shouldReceive('getId')->andReturns(103);
+        $field3->shouldReceive('isValid')->andReturns(true);
+        $field3->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field3->shouldReceive('saveNewChangeset')->never();
+        $field3->shouldReceive('userCanUpdate')->andReturns(true);
+        $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2, $field3));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 
-        $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expectNever('executePostCreationActions');
+        $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $new_changeset->shouldReceive('executePostCreationActions')->never();
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('hasChanges', true);
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
-        $changeset->setReturnValue('getValues', array());
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('hasChanges')->andReturns(true);
+        $changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value2 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset->shouldReceive('getValue')->with($field1)->andReturns($changeset_value1);
+        $changeset->shouldReceive('getValue')->with($field2)->andReturns($changeset_value2);
+        $changeset->shouldReceive('getValue')->with($field3)->andReturns($changeset_value3);
+        $changeset->shouldReceive('getValues')->andReturns(array());
 
-        $reference_manager = new MockReferenceManager();
-        $reference_manager->expect('extractCrossRef', array(
+        $reference_manager = \Mockery::spy(\ReferenceManager::class);
+        $reference_manager->shouldReceive('extractCrossRef')->with([
             $comment,
             66,
             'plugin_tracker_artifact',
             666,
             $user->getId(),
             'foobar',
-        ));
+        ]);
 
-        $art_factory = new MockTracker_ArtifactFactory();
+        $art_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getChildren()->returns(array());
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
-        $artifact->setReturnReference('getChangeset', $new_changeset);
-        $artifact->setReturnReference('getReferenceManager', $reference_manager);
-        $artifact->setReturnReference('getArtifactFactory', $art_factory);
-        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
+        $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
+        $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $artifact->shouldReceive('getId')->andReturns(66);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $artifact->shouldReceive('getChangeset')->andReturns($new_changeset);
+        $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
+        $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
+        $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
 
-        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
+        $workflow = Mockery::spy(MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields::class);
+        $workflow->shouldReceive('validate')->andReturns(true);
+        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
-        $art_factory->expectNever('save');
+        $art_factory->shouldReceive('save')->never();
 
         $email = null; //not annonymous user
 
@@ -631,102 +514,99 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $email   = null; //not anonymous user
         $comment = '';
 
-        $this->response->expectCallCount('addFeedback', 0);
+        $this->response->shouldReceive('addFeedback')->never();
 
-        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        $comment_dao = \Mockery::spy(\Tracker_Artifact_Changeset_CommentDao::class);
         stub($comment_dao)->createNewVersion()->returns(true);
-        $comment_dao->expectCallCount('createNewVersion', 1);
+        $comment_dao->shouldReceive('createNewVersion')->once();
 
-        $dao = new MockTracker_Artifact_ChangesetDao();
-        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null, $_SERVER['REQUEST_TIME']));
-        $dao->expectCallCount('create', 1);
+        $dao = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1001);
+        $dao->shouldReceive('create')->with(66, 1234, null, $_SERVER['REQUEST_TIME'])->andReturn(1002);
+        $dao->shouldReceive('create')->once();
 
-        $user = mock('PFUser');
-        $user->setReturnValue('getId', 1234);
-        $user->setReturnValue('isAnonymous', false);
+        $user = \Mockery::spy(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(1234);
+        $user->shouldReceive('isAnonymous')->andReturns(false);
 
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getGroupId', 666);
-        $tracker->setReturnValue('getItemName', 'foobar');
-        $tracker->setReturnValue('getFormElements', array());
+        $tracker = \Mockery::spy(\Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturns(666);
+        $tracker->shouldReceive('getItemName')->andReturns('foobar');
+        $tracker->shouldReceive('getFormElements')->andReturns(array());
 
-        $factory = new MockTracker_FormElementFactory();
+        $factory = \Mockery::spy(\Tracker_FormElementFactory::class);
 
-        $field1  = new MockTracker_FormElement_Field();
-        $field1->setReturnValue('getId', 101);
-        $field1->setReturnValue('isValid', true);
-        $field1->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field1->setReturnValue('userCanUpdate', true);
-        $field1->setReturnValue('saveNewChangeset', true);
-        $field1->expectOnce('saveNewChangeset');
-        $field2  = new MockTracker_FormElement_Field();
-        $field2->setReturnValue('getId', 102);
-        $field2->setReturnValue('isValid', true, array('*', '123'));
-        $field2->setReturnValue('isValid', false, array('*', '456'));
-        $field2->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field2->setReturnValue('userCanUpdate', true);
-        $field2->setReturnValue('saveNewChangeset', true);
-        $field2->expectOnce('saveNewChangeset');
-        $field3  = new MockTracker_FormElement_Field();
-        $field3->setReturnValue('getId', 103);
-        $field3->setReturnValue('isValid', true);
-        $field3->setReturnValue('isValidRegardingRequiredProperty', true);
-        $field3->setReturnValue('saveNewChangeset', true);
-        $field3->expectOnce('saveNewChangeset');
-        $field3->setReturnValue('userCanUpdate', true);
-        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        $field1  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field1->shouldReceive('getId')->andReturns(101);
+        $field1->shouldReceive('isValid')->andReturns(true);
+        $field1->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field1->shouldReceive('userCanUpdate')->andReturns(true);
+        $field1->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field2  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field2->shouldReceive('getId')->andReturns(102);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '123')->andReturns(true);
+        $field2->shouldReceive('isValid')->with(Mockery::any(), '456')->andReturns(false);
+        $field2->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field2->shouldReceive('userCanUpdate')->andReturns(true);
+        $field2->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field3  = \Mockery::mock(\Tracker_FormElement_Field::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field3->shouldReceive('getId')->andReturns(103);
+        $field3->shouldReceive('isValid')->andReturns(true);
+        $field3->shouldReceive('isValidRegardingRequiredProperty')->andReturns(true);
+        $field3->shouldReceive('saveNewChangeset')->once()->andReturns(true);
+        $field3->shouldReceive('userCanUpdate')->andReturns(true);
+        $factory->shouldReceive('getUsedFields')->andReturns(array($field1, $field2, $field3));
+        $factory->shouldReceive('getAllFormElementsForTracker')->andReturns(array());
 
-        $new_changeset = new MockTracker_Artifact_Changeset();
-        $new_changeset->expectNever('executePostCreationActions', array());
+        $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $new_changeset->shouldReceive('executePostCreationActions')->never();
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('hasChanges', true);
-        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
-        $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
-        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
-        $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
-        $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
-        $changeset->setReturnValue('getValues', array());
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $changeset->shouldReceive('hasChanges')->andReturns(true);
+        $changeset_value1 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value2 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset_value3 = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $changeset->shouldReceive('getValue')->with($field1)->andReturns($changeset_value1);
+        $changeset->shouldReceive('getValue')->with($field2)->andReturns($changeset_value2);
+        $changeset->shouldReceive('getValue')->with($field3)->andReturns($changeset_value3);
+        $changeset->shouldReceive('getValues')->andReturns(array());
 
-        $reference_manager = new MockReferenceManager();
-        $reference_manager->expect('extractCrossRef', array(
+        $reference_manager = \Mockery::spy(\ReferenceManager::class);
+        $reference_manager->shouldReceive('extractCrossRef')->with([
             $comment,
             66,
             'plugin_tracker_artifact',
             666,
             $user->getId(),
             'foobar',
-        ));
+        ]);
 
-        $art_factory = new MockTracker_ArtifactFactory();
+        $art_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
 
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
         stub($hierarchy_factory)->getChildren()->returns(array());
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnReference('getChangesetDao', $dao);
-        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
-        $artifact->setReturnReference('getFormElementFactory', $factory);
-        $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnValue('getId', 66);
-        $artifact->setReturnReference('getLastChangeset', $changeset);
-        $artifact->setReturnReference('getChangeset', $new_changeset);
-        $artifact->setReturnReference('getReferenceManager', $reference_manager);
-        $artifact->setReturnReference('getArtifactFactory', $art_factory);
-        $artifact->setReturnReference('getHierarchyFactory', $hierarchy_factory);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getChangesetDao')->andReturns($dao);
+        $artifact->shouldReceive('getChangesetCommentDao')->andReturns($comment_dao);
+        $artifact->shouldReceive('getFormElementFactory')->andReturns($factory);
+        $artifact->shouldReceive('getTracker')->andReturns($tracker);
+        $artifact->shouldReceive('getId')->andReturns(66);
+        $artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
+        $artifact->shouldReceive('getChangeset')->andReturns($new_changeset);
+        $artifact->shouldReceive('getReferenceManager')->andReturns($reference_manager);
+        $artifact->shouldReceive('getArtifactFactory')->andReturns($art_factory);
+        $artifact->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
 
         stub($GLOBALS['Response'])->getFeedbackErrors()->returns(array());
 
         stub($art_factory)->save()->returns(true);
-        $art_factory->expectOnce('save');
+        $art_factory->shouldReceive('save')->once();
 
-        $workflow = new MockWorkflow();
-        $workflow->expectCallCount('before', 2);
-        $workflow->setReturnValue('validate', true);
-        $artifact->setReturnValue('getWorkflow', $workflow);
+        $workflow = \Mockery::spy(\Workflow::class);
+        $workflow->shouldReceive('before')->times(2);
+        $workflow->shouldReceive('validate')->andReturns(true);
+        $artifact->shouldReceive('getWorkflow')->andReturns($workflow);
 
         // Valid
         $fields_data = array(
@@ -744,29 +624,29 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
     }
 
     function testGetCommentators() {
-        $c1 = new MockTracker_Artifact_Changeset();
-        $c2 = new MockTracker_Artifact_Changeset();
-        $c3 = new MockTracker_Artifact_Changeset();
-        $c4 = new MockTracker_Artifact_Changeset();
+        $c1 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $c2 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $c3 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $c4 = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
-        $u1 = mock('PFUser'); $u1->setReturnValue('getUserName', 'sandrae');
-        $u2 = mock('PFUser'); $u2->setReturnValue('getUserName', 'marc');
+        $u1 = \Mockery::spy(\PFUser::class); $u1->shouldReceive('getUserName')->andReturns('sandrae');
+        $u2 = \Mockery::spy(\PFUser::class); $u2->shouldReceive('getUserName')->andReturns('marc');
 
-        $um = new MockUserManager();
-        $um->setReturnReference('getUserById', $u1, array(101));
-        $um->setReturnReference('getUserById', $u2, array(102));
+        $um = \Mockery::spy(\UserManager::class);
+        $um->shouldReceive('getUserById')->with(101)->andReturns($u1);
+        $um->shouldReceive('getUserById')->with(102)->andReturns($u2);
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $artifact->setReturnValue('getChangesets', array($c1, $c2, $c3, $c4));
-        $artifact->setReturnValue('getUserManager', $um);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $artifact->shouldReceive('getChangesets')->andReturns(array($c1, $c2, $c3, $c4));
+        $artifact->shouldReceive('getUserManager')->andReturns($um);
 
-        $c1->setReturnValue('getSubmittedBy', 101);
-        $c2->setReturnValue('getSubmittedBy', 102);
-        $c2->setReturnValue('getEmail', 'titi@example.com');
-        $c3->setReturnValue('getSubmittedBy', null);
-        $c3->setReturnValue('getEmail', 'toto@example.com');
-        $c4->setReturnValue('getSubmittedBy', null);
-        $c4->setReturnValue('getEmail', '');
+        $c1->shouldReceive('getSubmittedBy')->andReturns(101);
+        $c2->shouldReceive('getSubmittedBy')->andReturns(102);
+        $c2->shouldReceive('getEmail')->andReturns('titi@example.com');
+        $c3->shouldReceive('getSubmittedBy')->andReturns(null);
+        $c3->shouldReceive('getEmail')->andReturns('toto@example.com');
+        $c4->shouldReceive('getSubmittedBy')->andReturns(null);
+        $c4->shouldReceive('getEmail')->andReturns('');
 
         $this->assertEqual($artifact->getCommentators(), array(
             'sandrae',
@@ -780,8 +660,9 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $this->hierarchy_factory = \Mockery::spy(\Tracker_HierarchyFactory::class);
 
         $this->sprint = anArtifact()->build();
         $this->sprint->setHierarchyFactory($this->hierarchy_factory);
@@ -810,9 +691,11 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
     private $artifact;
 
     public function setUp() {
+        parent::setUp();
+        $this->setUpGlobalsMockery();
         $tracker_id = 123;
         $this->workflow = aWorkflow()->withTrackerId($tracker_id)->build();
-        $tracker = aMockTracker()->withId($tracker_id)->build();
+        $tracker = aMockeryTracker()->withId($tracker_id)->build();
         stub($tracker)->getWorkflow()->returns($this->workflow);
         $this->artifact = anArtifact()->build();
         $this->artifact->setTracker($tracker);
@@ -853,6 +736,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->tracker_id    = 123;
         $this->email         = 'martin.goyot@example.com';
 
@@ -962,8 +846,8 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
      public function itReturnsTheReferencesInSOAPFormat() {
         $id       = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = 0;
-        $factory  = mock('CrossReferenceFactory');
-        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'));
+        $factory  = \Mockery::spy(\CrossReferenceFactory::class);
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $wiki_ref = array(
             'ref' => 'wiki #toto',
             'url' => 'http://example.com/le_link_to_teh_wiki'
@@ -1004,18 +888,19 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
         $this->fields_data = array();
         $this->submitter   = aUser()->withId(74)->build();
 
-        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
+        $this->changeset_dao  = \Mockery::spy(\Tracker_Artifact_ChangesetDao::class);
         $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
-        $factory     = mock('Tracker_FormElementFactory');
+        $factory     = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($factory)->getAllFormElementsForTracker()->returns(array());
         stub($factory)->getUsedFields()->returns(array());
 
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
-        $this->workflow = mock('Workflow');
-        $this->changeset_factory  = mock('Tracker_Artifact_ChangesetFactory');
+        $this->artifact_factory = \Mockery::spy(\Tracker_ArtifactFactory::class);
+        $this->workflow = \Mockery::spy(\Workflow::class);
+        $this->changeset_factory  = \Mockery::spy(\Tracker_Artifact_ChangesetFactory::class);
         stub($this->changeset_factory)->getChangeset()->returns(new Tracker_Artifact_Changeset(
             123,
             aMockArtifact()->build(),
@@ -1023,7 +908,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             21,
             ''
         ));
-        $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
+        $tracker        = mockery_stub(\Tracker::class)->getWorkflow()->returns($this->workflow);
         $this->artifact = anArtifact()
             ->withId(42)
             ->withChangesets($this->changesets)
@@ -1032,10 +917,10 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
 
         $this->submitted_on = $_SERVER['REQUEST_TIME'];
 
-        $fields_validator = mock('Tracker_Artifact_Changeset_NewChangesetFieldsValidator');
+        $fields_validator = \Mockery::spy(\Tracker_Artifact_Changeset_NewChangesetFieldsValidator::class);
         stub($fields_validator)->validate()->returns(true);
 
-        $comment_dao = stub('Tracker_Artifact_Changeset_CommentDao')->createNewVersion()->returns(true);
+        $comment_dao = mockery_stub(\Tracker_Artifact_Changeset_CommentDao::class)->createNewVersion()->returns(true);
 
         $this->creator = new Tracker_Artifact_Changeset_NewChangesetCreator(
             $fields_validator,
@@ -1043,16 +928,22 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
             $this->changeset_dao,
             $comment_dao,
             $this->artifact_factory,
-            mock('EventManager'),
-            mock('ReferenceManager'),
-            mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder')
+            \Mockery::spy(\EventManager::class),
+            \Mockery::spy(\ReferenceManager::class),
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder::class)
         );
     }
 
     public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), end($this->changesets))->once();
+        expect($this->workflow)->after(
+            $this->fields_data,
+            Mockery::on(function ($element) {
+                return is_a($element, Tracker_Artifact_Changeset::class);
+            }),
+            end($this->changesets)
+        )->once();
 
         $this->creator->create(
             $this->artifact,
@@ -1096,23 +987,23 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user     = mock('PFUser');
+        $this->setUpGlobalsMockery();
+        $this->user     = \Mockery::spy(\PFUser::class);
 
-        $this->last_changeset = mock('Tracker_Artifact_Changeset');
+        $this->last_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         stub($this->last_changeset)->getSubmittedOn()->returns($this->last_update_date);
         stub($this->last_changeset)->getValues()->returns(array());
 
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
 
-        $this->artifact = partial_mock(
-            'Tracker_Artifact',
-            array(
-                'userCanView',
-                'getCrossReferencesSOAPValues',
-            ),
+        $this->artifact = \Mockery::mock(
+            \Tracker_Artifact::class,
             array($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, $this->use_artifact_permissions)
-        );
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
+
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->artifact)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
         $this->artifact->setChangesets(array($this->last_changeset));
@@ -1121,22 +1012,24 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
     }
 
     public function itReturnsEmptyArrayIfUserCannotViewArtifact() {
-        $artifact = partial_mock('Tracker_Artifact', array('userCanView'));
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->setTracker(aTracker()->build());
         $artifact->setFormElementFactory($this->formelement_factory);
-        $user     = mock('PFUser');
+        $user     = \Mockery::spy(\PFUser::class);
         stub($artifact)->userCanView($user)->returns(false);
 
         $this->assertArrayEmpty($artifact->getSoapValue($user));
     }
 
     public function itReturnsDataIfUserCanViewArtifact() {
-        $artifact = partial_mock('Tracker_Artifact', array('userCanView', 'getCrossReferencesSOAPValues'), array('whatever', 'whatever', 'whatever', 'whatever', 'whatever'));
+        $artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artifact->setChangesets(array($this->last_changeset));
         $artifact->setTracker(aTracker()->build());
         $artifact->setFormElementFactory($this->formelement_factory);
-        $user     = mock('PFUser');
+        $user     = \Mockery::spy(\PFUser::class);
         stub($artifact)->userCanView($user)->returns(true);
+
+        $artifact->shouldReceive('getCrossReferencesSOAPValues')->once()->andReturn(null);
 
         $this->assertArrayNotEmpty($artifact->getSoapValue($user));
     }
@@ -1167,36 +1060,31 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user = mock('PFUser');
+        $this->setUpGlobalsMockery();
+        $this->user = \Mockery::spy(\PFUser::class);
 
         $this->field_id = 123242;
 
         $this->field           = aMockField()->build();
-        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue');
-        $this->last_changeset  = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
+        $this->changeset_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
+        $this->last_changeset  = mockery_stub(\Tracker_Artifact_Changeset::class)->getValues()->returns(array($this->field_id => $this->changeset_value));
 
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         stub($this->formelement_factory)->getFormElementById()->returns($this->field);
 
         $this->tracker = aTracker()->build();
 
-        $this->artifact = partial_mock(
-            'Tracker_Artifact',
-            array(
-                'userCanView',
-                'getCrossReferencesSOAPValues',
-            ),
-            array('whatever', 'whatever', 'whatever', 'whatever', 'whatever')
-        );
+        $this->artifact = \Mockery::mock(\Tracker_Artifact::class)->makePartial()->shouldAllowMockingProtectedMethods();
         stub($this->artifact)->userCanView()->returns(true);
         $this->artifact->setChangesets(array($this->last_changeset));
         $this->artifact->setFormElementFactory($this->formelement_factory);
         $this->artifact->setTracker($this->tracker);
+        $this->artifact->shouldReceive('getCrossReferencesSOAPValues')->once()->andReturn(null);
     }
 
     public function itFetchFieldFromFactory() {
-        expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
-        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+        $this->formelement_factory->shouldReceive('getUsedFieldsForSoap')->with($this->tracker)->once()->andReturn([]);
+
         $this->artifact->getSoapValue($this->user);
     }
 
@@ -1224,10 +1112,12 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
     private $user_manager;
 
     public function setUp() {
-        $this->user_manager = mock('UserManager');
+        parent::setUp();
+        $this->setUpGlobalsMockery();
+        $this->user_manager = \Mockery::spy(\UserManager::class);
         UserManager::setInstance($this->user_manager);
 
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
     }
 
@@ -1243,10 +1133,10 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         stub($this->user_manager)->getUserById(101)->returns($user);
         stub($this->formelement_factory)->getUsedFileFields()->returns(array());
 
-        $changeset_01 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
-        $changeset_02 = stub('Tracker_Artifact_Changeset')->getsubmittedBy()->returns(101);
+        $changeset_01 = mockery_stub(\Tracker_Artifact_Changeset::class)->getsubmittedBy()->returns(101);
+        $changeset_02 = mockery_stub(\Tracker_Artifact_Changeset::class)->getsubmittedBy()->returns(101);
 
-        $project = stub('Project')->getID()->returns(101);
+        $project = mockery_stub(\Project::class)->getID()->returns(101);
         $tracker = aTracker()->withId(101)->withProject($project)->build();
 
         $artifact = anArtifact()->withTracker($tracker)
@@ -1257,11 +1147,11 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         $artifacts_node = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                              <artifacts/>');
 
-        $text_field_01 = stub('Tracker_FormElement_Field_Text')->getName()->returns('text_01');
+        $text_field_01 = mockery_stub(\Tracker_FormElement_Field_Text::class)->getName()->returns('text_01');
         stub($text_field_01)->getTracker()->returns($tracker);
 
-        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, mock('Tracker_Artifact_Changeset'), $text_field_01, true, 'value_01', 'text');
-        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, mock('Tracker_Artifact_Changeset'), $text_field_01, true, 'value_02', 'text');
+        $value_01 = new Tracker_Artifact_ChangesetValue_Text(1, \Mockery::spy(\Tracker_Artifact_Changeset::class), $text_field_01, true, 'value_01', 'text');
+        $value_02 = new Tracker_Artifact_ChangesetValue_Text(2, \Mockery::spy(\Tracker_Artifact_Changeset::class), $text_field_01, true, 'value_02', 'text');
 
         stub($changeset_01)->getArtifact()->returns($artifact);
         stub($changeset_01)->getValues()->returns(array($value_01));
@@ -1269,9 +1159,9 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
         stub($changeset_02)->getArtifact()->returns($artifact);
         stub($changeset_02)->getValues()->returns(array($value_02));
 
-        $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
+        $archive = \Mockery::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
 
-        $user_xml_exporter      = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
+        $user_xml_exporter      = new UserXmlExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
         $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
         $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
         $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();

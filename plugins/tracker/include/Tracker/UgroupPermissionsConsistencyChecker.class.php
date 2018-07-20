@@ -56,7 +56,7 @@ class Tracker_UgroupPermissionsConsistencyChecker {
      * @return Tracker_UgroupPermissionsConsistencyMessage
      */
     public function checkConsistency(Tracker $template_tracker, Project $target_project) {
-        if ($template_tracker->getProject() == $target_project) {
+        if ($template_tracker->getProject()->getID() === $target_project->getID()) {
             $this->messenger->allIsWell();
             return;
         }
@@ -84,4 +84,3 @@ class Tracker_UgroupPermissionsConsistencyChecker {
         return $ugroup->getName();
     }
 }
-?>

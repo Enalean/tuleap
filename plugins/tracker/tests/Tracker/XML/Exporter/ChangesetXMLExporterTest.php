@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,20 +43,22 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user_manager      = mock('UserManager');
-        $this->user_xml_exporter = partial_mock(
-            'UserXMLExporter',
-            array('exportUserByMail', 'exportUserByUserId'),
-            array($this->user_manager, mock('UserXMLExportedCollection'))
-        );
+        $this->setUpGlobalsMockery();
+        $this->user_manager      = \Mockery::spy(\UserManager::class);
+        $this->user_xml_exporter = \Mockery::mock(
+            \UserXMLExporter::class,
+            [$this->user_manager, Mockery::spy(UserXMLExportedCollection::class)]
+        )
+            ->makePartial()
+            ->shouldAllowMockingProtectedMethods();
         $this->artifact_xml      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
-        $this->values_exporter   = mock('Tracker_XML_Exporter_ChangesetValuesXMLExporter');
+        $this->values_exporter   = \Mockery::spy(\Tracker_XML_Exporter_ChangesetValuesXMLExporter::class);
         $this->exporter          = new Tracker_XML_Exporter_ChangesetXMLExporter(
             $this->values_exporter,
             $this->user_xml_exporter
         );
 
-        $changeset = mock('Tracker_Artifact_Changeset');
+        $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
 
         $this->int_changeset_value   = new Tracker_Artifact_ChangesetValue_Integer('*', $changeset, '*', '*', '*');
         $this->float_changeset_value = new Tracker_Artifact_ChangesetValue_Float('*', $changeset, '*', '*', '*');
@@ -65,9 +67,9 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
             $this->float_changeset_value
         );
 
-        $this->artifact  = mock('Tracker_Artifact');
-        $this->changeset = mock('Tracker_Artifact_Changeset');
-        $this->comment   = mock('Tracker_Artifact_Changeset_Comment');
+        $this->artifact  = \Mockery::spy(\Tracker_Artifact::class);
+        $this->changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
+        $this->comment   = \Mockery::spy(\Tracker_Artifact_Changeset_Comment::class);
 
         stub($this->changeset)->getValues()->returns($this->values);
         stub($this->changeset)->getArtifact()->returns($this->artifact);
@@ -92,7 +94,7 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
 
     public function itExportsTheComments() {
         $user = aUser()->withId(101)->withLdapId('ldap_01')->withUserName('user_01')->build();
-        stub($this->user_manager)->getUserById(101)->returns($user);
+        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturn($user);
 
         expect($this->values_exporter)->exportChangedFields($this->artifact_xml, '*', $this->artifact, $this->values)->once();
         expect($this->comment)->exportToXML()->once();
@@ -103,21 +105,24 @@ class Tracker_XML_Exporter_ChangesetXMLExporterTest extends TuleapTestCase {
     public function itExportsAnonUser() {
         expect($this->user_xml_exporter)->exportUserByMail()->once();
 
-        $changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array());
+        $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getValues()->returns(array());
         stub($changeset)->getSubmittedBy()->returns(null);
         stub($changeset)->getEmail()->returns('veloc@dino.com');
+        stub($changeset)->getArtifact()->returns($this->artifact);
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }
 
     public function itRemovesNullValuesInChangesetValues() {
-        $value = mock('Tracker_Artifact_ChangesetValue');
+        $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue::class);
 
         expect($this->values_exporter)->exportChangedFields('*', '*', '*', array(101 => $value))->once();
 
-        $changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array(
+        $changeset = mockery_stub(\Tracker_Artifact_Changeset::class)->getValues()->returns(array(
             101 => $value,
             102 => null
         ));
+
+        stub($changeset)->getArtifact()->returns($this->artifact);
 
         $this->exporter->exportFullHistory($this->artifact_xml, $changeset);
     }

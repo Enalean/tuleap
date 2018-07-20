@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,37 +20,55 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase {
+class Tracker_Workflow_Trigger_RulesBuilderFactoryTest extends TuleapTestCase
+{
 
     /**
      * @var Tracker
      */
     private $target_tracker;
 
-    public function setUp() {
+    /**
+     * @var Tracker_Workflow_Trigger_RulesBuilderFactory
+     */
+    private $factory;
+
+    public function setUp()
+    {
         parent::setUp();
-        $this->target_tracker = aTracker()->withId(12)->withChildren(array())->build();
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->setUpGlobalsMockery();
+
+        $this->target_tracker      = aTracker()->withId(12)->withChildren(array())->build();
+        $this->formelement_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
+
         $this->factory = new Tracker_Workflow_Trigger_RulesBuilderFactory($this->formelement_factory);
     }
 
-    public function itHasAllTargetTrackerSelectBoxFields() {
-        expect($this->formelement_factory)->getUsedStaticSbFields($this->target_tracker)->once();
-        stub($this->formelement_factory)->getUsedStaticSbFields()->returnsEmptyDar();
+    public function itHasAllTargetTrackerSelectBoxFields()
+    {
+        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
+            ->with($this->target_tracker)
+            ->once()
+            ->andReturn(Mockery::spy(DataAccessResult::class));
 
         $this->factory->getForTracker($this->target_tracker);
     }
 
-    public function itHasAllTriggeringFields() {
+    public function itHasAllTriggeringFields()
+    {
         $child_tracker = aTracker()->withId(200)->build();
         $this->target_tracker->setChildren(array($child_tracker));
 
-        expect($this->formelement_factory)->getUsedStaticSbFields()->count(2);
-        expect($this->formelement_factory)->getUsedStaticSbFields($child_tracker)->at(1);
-        stub($this->formelement_factory)->getUsedStaticSbFields()->returnsEmptyDar();
+        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
+            ->with($this->target_tracker)
+            ->once()
+            ->andReturn(Mockery::spy(DataAccessResult::class));
+
+        $this->formelement_factory->shouldReceive('getUsedStaticSbFields')
+            ->with($child_tracker)
+            ->once()
+            ->andReturn(Mockery::spy(DataAccessResult::class));
 
         $this->factory->getForTracker($this->target_tracker);
     }
 }
-
-?>

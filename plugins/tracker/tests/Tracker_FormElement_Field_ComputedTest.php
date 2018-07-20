@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 
@@ -55,7 +56,7 @@ class Tracker_FormElement_Field_Computed_StorableValue extends TuleapTestCase
         $this->submitter        = aUser()->build();
         $this->new_changeset_value_id = 66666;
 
-        $this->value_dao = mock('Tracker_FormElement_Field_Value_ArtifactLinkDao');
+        $this->value_dao = mock(ComputedDao::class);
         stub($this->field)->getValueDao()->returns($this->value_dao);
         $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
         stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
@@ -846,7 +847,7 @@ class Tracker_FormElement_Field_Computed_RESTValueTest extends TuleapTestCase
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true
         );
 
-        $this->assertClone($value, $this->field->getFieldDataFromRESTValue($value));
+        $this->assertEqual($value, $this->field->getFieldDataFromRESTValue($value));
     }
 
     public function itRejectsDataWhenAutocomputedIsDisabledAndNoManualValueIsProvided()
