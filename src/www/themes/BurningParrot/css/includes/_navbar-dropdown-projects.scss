@@ -11,17 +11,11 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 }
 
 .nav-dropdown-content-projects-adaptable {
-    max-height: 60vh;
     border-right: $nav-dropdown-content-border;
     border-bottom: $nav-dropdown-content-border;
     border-left: $nav-dropdown-content-border;
     border-bottom-left-radius: $nav-dropdown-content-border-radius;
     border-bottom-right-radius: $nav-dropdown-content-border-radius;
-    overflow-y: auto;
-
-    @media only screen and (min-height: 415px) {
-        max-height: 80vh;
-    }
 }
 
 .nav-dropdown-content-projects-new {
@@ -39,17 +33,24 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 .nav-dropdown-content-projects-lists {
     display: flex;
     flex-direction: column;
+    max-height: 50vh;
+    overflow-y: auto;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: normal;
+
+    @media only screen and (max-height: 450px) {
+        max-height: 30vh;
+    }
 }
 
 .nav-dropdown-content-projects-list-project {
     display: flex;
     position: relative;
+    flex: 0 0 auto;
+    overflow: hidden;
     color: $tlp-ui-dimmed;
     text-decoration: none;
-    overflow: hidden;
 }
 
 .nav-dropdown-content-projects-list-project-name,
@@ -75,7 +76,7 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 }
 
 .nav-dropdown-content-projects-list-project-name-access {
-    padding: 0 5px 0 0;
+    margin: 0 10px 0 0;
     color: $tlp-theme-color;
 
     &.fa-unlock {
@@ -85,13 +86,18 @@ $nav-dropdown-content-border: 1px solid $tlp-ui-border-dark;
 
 .nav-dropdown-content-projects-list-project-config {
     padding: $nav-dropdown-content-projects-content-padding;
-    color: #cccccc;
+    transition: color 100ms, opacity 100ms;
+    opacity: .2;
+    color: $tlp-ui-dimmed;
     font-size: 12px;
+
+    &:hover {
+        opacity: 1;
+        color: $tlp-theme-color;
+    }
 }
 
 .nav-dropdown-content-projects-list-project-config:hover,
 .nav-dropdown-content-projects-list-project-config-hover {
-    transform: scale(1.2);
-    transition: transform 50ms linear;
     color: $tlp-theme-color;
 }
