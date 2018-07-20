@@ -41,8 +41,6 @@ class TestHelper {
     
     /**
      * Generate a DataAccessResult
-     *
-     * @return Mock
      */
     public static function arrayToDar() {
         return self::argListToDar(func_get_args());

@@ -63,17 +63,7 @@ pipeline {
 
         stage('Tests') {
             steps {
-                parallel 'UT SimpleTest PHP 5.6': {
-                    sh """
-                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php56)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/ut-simpletest-php-56'
-                    docker cp "\$cid":/output/unit_tests_report.xml results/ut-simpletest-php-56/
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/ut-simpletest-php-56/unit_tests_report.xml'
-                },
-                'UT SimpleTest 1.1.x PHP 5.6': {
+                parallel 'UT SimpleTest 1.1.x PHP 5.6': {
                     sh "make -C $WORKSPACE/sources simpletest11x-56-ci"
                     junit 'results/ut-simpletest11x-php-56/results.xml'
                 },
