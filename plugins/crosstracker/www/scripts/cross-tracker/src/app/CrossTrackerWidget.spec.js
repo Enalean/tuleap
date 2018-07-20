@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                from 'vue';
-import CrossTrackerWidget from './CrossTrackerWidget.vue';
-import {
-    rewire$isAnonymous,
-    restore as restoreUser
-} from './user-service.js';
-import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
-import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
-import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
+import Vue from "vue";
+import { mockFetchError } from "tlp-mocks";
+import CrossTrackerWidget from "./CrossTrackerWidget.vue";
+import { rewire$isAnonymous, restore as restoreUser } from "./user-service.js";
+import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
+import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
+import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
 import {
     rewire$getReport,
+    rewire$getReportContent,
+    rewire$getQueryResult,
     restore as restoreRest
-} from './rest-querier.js';
+} from "./rest-querier.js";
 
 describe("CrossTrackerWidget", () => {
     let Widget,
@@ -38,17 +38,29 @@ describe("CrossTrackerWidget", () => {
         readingCrossTrackerReport,
         writingCrossTrackerReport,
         reportId,
-        getReport;
+        getReport,
+        getReportContent,
+        getQueryResult;
 
     beforeEach(() => {
         Widget = Vue.extend(CrossTrackerWidget);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        reportId = '86';
+        reportId = "86";
 
         spyOn(writingCrossTrackerReport, "duplicateFromReport");
         spyOn(readingCrossTrackerReport, "duplicateFromReport");
+
+        getReportContent = jasmine.createSpy("getReportContent");
+        rewire$getReportContent(getReportContent);
+
+        getQueryResult = jasmine.createSpy("getQueryResult");
+        rewire$getQueryResult(getQueryResult);
+    });
+
+    afterEach(() => {
+        restoreRest();
     });
 
     function instantiateComponent() {
@@ -57,7 +69,7 @@ describe("CrossTrackerWidget", () => {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
                 writingCrossTrackerReport,
-                reportId,
+                reportId
             }
         });
         vm.$mount();
@@ -80,7 +92,9 @@ describe("CrossTrackerWidget", () => {
 
             vm.switchToWritingMode();
 
-            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                readingCrossTrackerReport
+            );
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(false);
@@ -103,7 +117,9 @@ describe("CrossTrackerWidget", () => {
 
             vm.switchToReadingMode({ saved_state: true });
 
-            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                readingCrossTrackerReport
+            );
             expect(vm.is_saved).toBe(true);
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
@@ -115,7 +131,9 @@ describe("CrossTrackerWidget", () => {
 
             vm.switchToReadingMode({ saved_state: false });
 
-            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(writingCrossTrackerReport);
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                writingCrossTrackerReport
+            );
             expect(vm.is_saved).toBe(false);
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
@@ -129,12 +147,8 @@ describe("CrossTrackerWidget", () => {
             rewire$getReport(getReport);
         });
 
-        afterEach(() => {
-            restoreRest();
-        });
-
         it("When I load the report, then the reports will be initialized", async () => {
-            const trackers     = [{ id: 25 }, { id: 30 }];
+            const trackers = [{ id: 25 }, { id: 30 }];
             const expert_query = '@title != ""';
             getReport.and.returnValue({
                 trackers,
@@ -150,45 +164,53 @@ describe("CrossTrackerWidget", () => {
 
             expect(vm.is_loading).toBe(false);
             expect(backendCrossTrackerReport.init).toHaveBeenCalledWith(trackers, expert_query);
-            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(backendCrossTrackerReport);
-            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                backendCrossTrackerReport
+            );
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                readingCrossTrackerReport
+            );
         });
 
-        it("When there is a REST error, it will be shown", async () => {
-            const i18n_error_message = 'Error while parsing the query';
-            getReport.and.returnValue(Promise.reject({
-                response: {
-                    json() {
-                        return Promise.resolve({
-                            error: { i18n_error_message }
-                        });
-                    }
+        it("When there is a REST error, it will be shown", () => {
+            const i18n_error_message = "Error while parsing the query";
+            mockFetchError(getReport, {
+                error_json: {
+                    error: { i18n_error_message }
                 }
-            }));
+            });
             const vm = instantiateComponent();
 
-            vm.loadBackendReport().then(() => {
-                fail();
-            }, () => {
-                expect(vm.error_message).toEqual(i18n_error_message);
-            });
+            vm.loadBackendReport().then(
+                () => {
+                    fail();
+                },
+                () => {
+                    expect(vm.error_message).toEqual(i18n_error_message);
+                }
+            );
         });
 
         it("When there is an error in REST error, a generic error message will be shown", async () => {
-            getReport.and.returnValue(Promise.reject({
-                response: {
-                    json() {
-                        return Promise.reject();
+            getReport.and.returnValue(
+                Promise.reject({
+                    response: {
+                        json() {
+                            return Promise.reject();
+                        }
                     }
-                }
-            }));
+                })
+            );
             const vm = instantiateComponent();
 
-            vm.loadBackendReport().then(() => {
-                fail();
-            }, () => {
-                expect(vm.error_message).toEqual('An error occured');
-            });
+            vm.loadBackendReport().then(
+                () => {
+                    fail();
+                },
+                () => {
+                    expect(vm.error_message).toEqual("An error occured");
+                }
+            );
         });
     });
 
@@ -198,8 +220,12 @@ describe("CrossTrackerWidget", () => {
 
             vm.reportSaved();
 
-            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(backendCrossTrackerReport);
-            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(readingCrossTrackerReport);
+            expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                backendCrossTrackerReport
+            );
+            expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
+                readingCrossTrackerReport
+            );
             expect(vm.error_message).toBe(null);
             expect(vm.is_saved).toBe(true);
             expect(vm.success_message).toEqual(jasmine.any(String));
