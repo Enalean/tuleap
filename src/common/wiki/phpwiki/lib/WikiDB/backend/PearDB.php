@@ -12,7 +12,7 @@ extends WikiDB_backend
 
     var $_dbh;
 
-    function __construct ($dbparams) {
+    function __construct () {
         // Find and include PEAR's DB.php. maybe we should force our private version again...
         // if DB would have exported its version number, it would be easier.
         @require_once('DB/common.php'); // Either our local pear copy or the system one

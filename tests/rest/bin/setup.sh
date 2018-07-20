@@ -144,7 +144,13 @@ seed_plugin_data() {
 }
 
 setup_tuleap
-"$PHP_CLI" /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
+if [ "$FPM_DAEMON" == 'php72-php-fpm' ]; then
+    echo "Deploy PHP FPM 7.2"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php72/run.php --modules=nginx,fpm
+else
+    echo "Deploy PHP FPM 5.6"
+    "$PHP_CLI" /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
+fi
 service "$FPM_DAEMON" start
 service nginx start
 setup_database

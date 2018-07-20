@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,8 +36,8 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $logger = new Tuleap\Configuration\Logger\Console();
 
-$fpm   = new Tuleap\Configuration\FPM\TuleapWeb($logger, 'codendiadm', true);
-$nginx = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'reverse-proxy');
+$fpm      = Tuleap\Configuration\FPM\TuleapWeb::buildForPHP56($logger, 'codendiadm', true);
+$nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'reverse-proxy');
 $rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 
 $fpm->configure();
