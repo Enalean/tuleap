@@ -36,7 +36,6 @@ define('PLUGIN_CACHED_MAP', 2);    	     // area maps
 define('PLUGIN_CACHED_SVG', 3);    	     // special SVG/SVGZ object
 define('PLUGIN_CACHED_SVG_PNG', 4);      // special SVG/SVGZ object with PNG fallback
 define('PLUGIN_CACHED_SWF', 5);    	     // special SWF (flash) object
-define('PLUGIN_CACHED_PDF', 6);    	     // special PDF object (inlinable?)
 define('PLUGIN_CACHED_PS', 7);    	     // special PS object (inlinable?)
 // boolean tests:
 define('PLUGIN_CACHED_IMG_ONDEMAND', 64); // don't cache

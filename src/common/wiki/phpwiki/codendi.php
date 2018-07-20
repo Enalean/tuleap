@@ -39,14 +39,6 @@ function codendi_main () {
         $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING);
     $request = new WikiRequest();
 
-    $action = $request->getArg('action');
-    if (substr($action, 0, 3) != 'zip') {
-    	if ($action == 'pdf')
-    	    $ErrorManager->setPostponedErrorMask(-1); // everything
-    	//else // reject postponing of warnings
-        //    $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE);
-    }
-
     /*
      * Allow for disabling of markup cache.
      * (Mostly for debugging ... hopefully.)

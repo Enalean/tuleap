@@ -167,7 +167,6 @@ function action2access ($action) {
     case 'diff':
     case 'select':
     case 'search':
-    case 'pdf':
         return 'view';
     case 'zip':
     case 'ziphtml':

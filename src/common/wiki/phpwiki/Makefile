@@ -52,7 +52,7 @@ all:  TAGS
 TAGS:  $(PHP_SRC)
 	if [ -f $@ ]; then /usr/bin/mv -f $@ $@~; fi
 #	etags $(PHP_SRC)
-	/usr/bin/find . \( -type d -regex '\(^\./lib/pear\)\|\(^\./lib/WikiDB/adodb\)\|\(^\./lib/nusoap\)\|\(^\./lib/fpdf\)\|\(^\./locale/.*/LC_MESSAGES\)' \) -prune -o -type f -name \*.php | grep .php | $(ETAGS_STDIN)
+	/usr/bin/find . \( -type d -regex '\(^\./lib/pear\)\|\(^\./lib/WikiDB/adodb\)\|\(^\./lib/nusoap\)\|\(^\./locale/.*/LC_MESSAGES\)' \) -prune -o -type f -name \*.php | grep .php | $(ETAGS_STDIN)
 
 TAGS.full:  $(PHP_SRC)
 	if [ -f $@ ]; then /usr/bin/mv -f $@ $@~; fi

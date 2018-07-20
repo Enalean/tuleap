@@ -1237,7 +1237,7 @@ class Button extends HtmlElement {
         if ($request->getArg('frame'))
             $this->setAttr('target', '_top');
         // Google honors this
-        if (in_array(strtolower($text), array('edit','create','diff','pdf'))
+        if (in_array(strtolower($text), array('edit','create','diff'))
             and !$request->_user->isAuthenticated())
             $this->setAttr('rel', 'nofollow');
         $this->pushContent($GLOBALS['WikiTheme']->maybeSplitWikiWord($text));
@@ -1263,7 +1263,7 @@ class ImageButton extends Button {
         if ($class)
             $this->setAttr('class', $class);
         // Google honors this
-        if (in_array(strtolower($text), array('edit','create','diff','pdf'))
+        if (in_array(strtolower($text), array('edit','create','diff'))
             and !$GLOBALS['request']->_user->isAuthenticated())
             $this->setAttr('rel', 'nofollow');
 
