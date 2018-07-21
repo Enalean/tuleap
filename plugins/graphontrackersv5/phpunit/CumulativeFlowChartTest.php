@@ -1,5 +1,6 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) Jtekt, 2014. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2014. Jtekt Europe SAS.
@@ -20,7 +21,10 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once(dirname(__FILE__) . '/../include/autoload.php');
+
+use PHPUnit\Framework\TestCase;
+
+require_once __DIR__ . '/bootstrap.php';
 
 class TestableFlowChartDataBuilder extends GraphOnTrackersV5_CumulativeFlow_DataBuilder {
     public function filterEmptyLines(array $array) {
@@ -28,7 +32,8 @@ class TestableFlowChartDataBuilder extends GraphOnTrackersV5_CumulativeFlow_Data
     }
 }
 
-class CumulativeFlowChartTest extends TuleapTestCase {
+class CumulativeFlowChartTest extends TestCase
+{
     public function testFilterEmptyLines() {
         $initial_array= array(
             "1393891200" => array
@@ -101,7 +106,6 @@ class CumulativeFlowChartTest extends TuleapTestCase {
         );
 
         $data_builder = new TestableFlowChartDataBuilder(null, null);
-        $this->assertEqual($data_builder->filterEmptyLines($initial_array), $expected_array);
+        $this->assertEquals($data_builder->filterEmptyLines($initial_array), $expected_array);
     }
 }
-?>

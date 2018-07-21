@@ -258,7 +258,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
     /**
      * Return true if current project has the right to use this plugin.
      */
-    function isAllowed() {
+    public function isAllowed($group_id)
+    {
         require_once('common/include/HTTPRequest.class.php');
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
