@@ -73,13 +73,6 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
                ' VALUES ('.$this->da->escapeInt($serviceId).', '.$this->da->escapeInt($userId).')';
         return $this->update($sql);
     }
-
-    public function removeUserService($userId, $serviceId) {
-        $sql = 'DELETE FROM plugin_admindelegation_service_user'.
-               ' WHERE user_id = '.$this->da->escapeInt($userId).
-               ' AND service_id = '.$this->da->escapeInt($serviceId);
-        return $this->update($sql);
-    }
     
     public function removeUser($userId) {
         $sql = 'DELETE FROM plugin_admindelegation_service_user'.
@@ -87,5 +80,3 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
         return $this->update($sql);
     }
 }
-
-?>

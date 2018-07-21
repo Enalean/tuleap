@@ -42,6 +42,9 @@ use Tuleap\Layout\IncludeAssets;
  * @see AdminDelegation_Service
  *
  */
+
+require_once __DIR__ . '/autoload.php';
+
 class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
 {
 
@@ -101,7 +104,11 @@ class AdminDelegationPlugin extends Plugin  // @codingStandardsIgnoreLine
         if ($user) {
             $service = AdminDelegation_Service::getServiceFromWidget($widget);
             if ($service) {
-                $usm = new AdminDelegation_UserServiceManager();
+                $usm = new AdminDelegation_UserServiceManager(
+                    new AdminDelegation_UserServiceDao(),
+                    new AdminDelegation_UserServiceLogDao()
+                );
+
                 return $usm->isUserGrantedForService($user, $service);
             }
         }
