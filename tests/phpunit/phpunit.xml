@@ -39,6 +39,7 @@
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields/FieldValueMatcher.php</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
             <directory suffix=".php">../../plugins/admindelegation/include</directory>
+            <directory suffix=".php">../../plugins/bugzilla_reference/include/Bugzilla</directory>
         </whitelist>
     </filter>
     <testsuites>
