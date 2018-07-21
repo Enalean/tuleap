@@ -208,73 +208,13 @@ simpletest11x-56-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest11x-php-56
 	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest11x-php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/docman/tests \
-	/tuleap/plugins/pullrequest/tests \
-	/tuleap/plugins/referencealias_tracker/tests \
-	/tuleap/plugins/referencealias_svn/tests \
-	/tuleap/plugins/referencealias_mediawiki/tests \
-	/tuleap/plugins/referencealias_git/tests \
-	/tuleap/plugins/referencealias_core/tests \
-	/tuleap/plugins/openidconnectclient/tests \
-	/tuleap/plugins/ldap/tests \
-	/tuleap/plugins/label/tests \
-	/tuleap/plugins/IM/tests \
-	/tuleap/plugins/hudson_svn/tests \
-	/tuleap/plugins/hudson_git/tests \
-	/tuleap/plugins/hudson/tests \
-	/tuleap/plugins/graphontrackersv5/tests \
-	/tuleap/plugins/frs/tests \
-	/tuleap/plugins/forumml/tests \
-	/tuleap/plugins/crosstracker/tests \
-	/tuleap/plugins/bugzilla_reference/tests \
-	/tuleap/plugins/archivedeleteditems/tests \
-	/tuleap/plugins/admindelegation/tests \
-	/tuleap/plugins/webdav/tests \
-	/tuleap/plugins/mediawiki/tests \
-	/tuleap/plugins/fulltextsearch/tests \
-	/tuleap/plugins/svn/tests \
-	/tuleap/plugins/cardwall/tests \
-	/tuleap/plugins/agiledashboard/tests \
-	/tuleap/plugins/git/tests \
-	/tuleap/plugins/statistics/tests \
-	/tuleap/plugins/tracker/tests \
-	/tuleap/plugins/tracker/db_tests \
+	/tuleap/plugins/ \
 	/tuleap/tests/integration \
 
 simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
 	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
-	/tuleap/plugins/docman/tests \
-	/tuleap/plugins/pullrequest/tests \
-	/tuleap/plugins/referencealias_tracker/tests \
-	/tuleap/plugins/referencealias_svn/tests \
-	/tuleap/plugins/referencealias_mediawiki/tests \
-	/tuleap/plugins/referencealias_git/tests \
-	/tuleap/plugins/referencealias_core/tests \
-	/tuleap/plugins/openidconnectclient/tests \
-	/tuleap/plugins/ldap/tests \
-	/tuleap/plugins/label/tests \
-	/tuleap/plugins/IM/tests \
-	/tuleap/plugins/hudson_svn/tests \
-	/tuleap/plugins/hudson_git/tests \
-	/tuleap/plugins/hudson/tests \
-	/tuleap/plugins/graphontrackersv5/tests \
-	/tuleap/plugins/frs/tests \
-	/tuleap/plugins/forumml/tests \
-	/tuleap/plugins/crosstracker/tests \
-	/tuleap/plugins/bugzilla_reference/tests \
-	/tuleap/plugins/archivedeleteditems/tests \
-	/tuleap/plugins/admindelegation/tests \
-	/tuleap/plugins/webdav/tests \
-	/tuleap/plugins/git/tests \
-	/tuleap/plugins/svn/tests \
-	/tuleap/plugins/mediawiki/tests \
-	/tuleap/plugins/fulltextsearch/tests \
-	/tuleap/plugins/cardwall/tests \
-	/tuleap/plugins/agiledashboard/tests \
-	/tuleap/plugins/statistics/tests \
-	/tuleap/plugins/tracker/tests \
-	/tuleap/plugins/tracker/db_tests \
+	/tuleap/plugins/ \
 	/tuleap/tests/integration \
 
 bash-web: ## Give a bash on web container
