@@ -38,6 +38,7 @@
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Action/MoveContributorSemanticChecker.php</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/ListFields/FieldValueMatcher.php</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
+            <directory suffix=".php">../../plugins/admindelegation/include</directory>
         </whitelist>
     </filter>
     <testsuites>

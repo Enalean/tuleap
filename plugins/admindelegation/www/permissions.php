@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,10 @@ if (! $user_manager->getCurrentUser()->isSuperUser()) {
     $GLOBALS['Response']->redirect($plugin->getPluginPath() . '/permissions.php');
 }
 
-$user_delegation_manager = new AdminDelegation_UserServiceManager();
+$user_delegation_manager = new AdminDelegation_UserServiceManager(
+    new AdminDelegation_UserServiceDao(),
+    new AdminDelegation_UserServiceLogDao()
+);
 
 if ($request->isPost()) {
     $vFunc = new Valid_WhiteList('func', array('grant_user_service', 'revoke_user'));
@@ -68,7 +71,7 @@ if ($request->isPost()) {
             }
 
             if ($user && $service) {
-                if ($user_delegation_manager->addUserService($user, $service)) {
+                if ($user_delegation_manager->addUserService($user, $service, $_SERVER['REQUEST_TIME'])) {
                     $GLOBALS['Response']->addFeedback('info', 'Permission granted to user');
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'Fail to grant permission to user');
@@ -85,7 +88,7 @@ if ($request->isPost()) {
                 foreach ($request->get('users_to_revoke') as $userId) {
                     $user = $user_manager->getUserById($userId);
                     if ($user) {
-                        $user_delegation_manager->removeUser($user);
+                        $user_delegation_manager->removeUser($user, $_SERVER['REQUEST_TIME']);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', 'Bad user');
                     }
