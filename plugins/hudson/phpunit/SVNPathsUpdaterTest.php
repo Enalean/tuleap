@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'bootstrap.php';
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-class SVNPathsUpdaterTest extends TuleapTestCase {
+require_once __DIR__ . '/bootstrap.php';
 
-    public function itAddsSlashesAtTheBeginingOfEachPathIfNecessary() {
+class SVNPathsUpdaterTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    public function itAddsSlashesAtTheBeginingOfEachPathIfNecessary()
+    {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = <<<EOS
@@ -30,16 +36,17 @@ folder01/
 /folder02/
 folder02/folder03/
 EOS;
-        $expected_content = <<<EOS
+        $expected_content  = <<<EOS
 /folder01/
 /folder02/
 /folder02/folder03/
 EOS;
 
-        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function itAddsSlashesAtTheEndOfEachPathIfNecessary() {
+    public function testItAddsSlashesAtTheEndOfEachPathIfNecessary()
+    {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = <<<EOS
@@ -47,44 +54,46 @@ EOS;
 /folder02/
 /folder02/folder03
 EOS;
-        $expected_content = <<<EOS
+        $expected_content  = <<<EOS
 /folder01/
 /folder02/
 /folder02/folder03/
 EOS;
 
-        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function itRemovesTrailingSpaces() {
+    public function testItRemovesTrailingSpaces()
+    {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = <<<EOS
 /folder01/ 
 EOS;
-        $expected_content = <<<EOS
+        $expected_content  = <<<EOS
 /folder01/
 EOS;
 
-        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function itDoesNotTranformEmptyContent() {
+    public function testItDoesNotTranformEmptyContent()
+    {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = '';
         $expected_content  = '';
 
-        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
 
-    public function itTranformsSpacesOnlyContentAsEmptyContent() {
+    public function testItTranformsSpacesOnlyContentAsEmptyContent()
+    {
         $updater = new SVNPathsUpdater();
 
         $submitted_content = '            ';
         $expected_content  = '';
 
-        $this->assertEqual($updater->transformContent($submitted_content), $expected_content);
+        $this->assertEquals($updater->transformContent($submitted_content), $expected_content);
     }
-
 }

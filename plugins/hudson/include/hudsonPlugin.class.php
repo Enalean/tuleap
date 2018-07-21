@@ -25,8 +25,8 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/constants.php';
 
 class hudsonPlugin extends Plugin
 {
