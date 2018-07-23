@@ -2880,8 +2880,8 @@ class Artifact {
         $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
 
         if ($ok) {
-            $mail = new Mail();
-            $mail->setBody($body);
+            $mail = new Codendi_Mail();
+            $mail->setBodyText($body);
             return $mail;
         } else {
             return null;

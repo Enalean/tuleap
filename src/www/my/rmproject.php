@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
  */
 
 require_once('pre.php');
-require_once('common/mail/Mail.class.php');
 require_once('www/include/account.php');
 require_once('www/project/admin/ugroup_utils.php');
 
@@ -72,11 +71,11 @@ if (user_isloggedin()) {
 	    $link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
 	    $subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
 	    $body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
-	    $mail = new Mail();
+	    $mail = new Codendi_Mail();
         $mail->setTo($to);
         $mail->setSubject($subject);
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setBody($body);
+        $mail->setBodyText($body);
         $mail->send();
     }
 	// display the personal page again

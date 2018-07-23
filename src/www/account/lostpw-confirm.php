@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright 2015-2017 (c) Enalean
+// Copyright 2015-2018 (c) Enalean
 // SourceForge: Breaking Down the Barriers to Open Source Development
 // Copyright 1999-2000 (c) The SourceForge Crew
 // http://sourceforge.net
@@ -43,10 +43,10 @@ $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body
 	      array($GLOBALS['sys_name'],
                 $request->getServerUrl(). '/account/lostlogin.php?confirm_hash=' . urlencode($reset_token->getIdentifier()))));
 
-$mail = new Mail();
+$mail = new Codendi_Mail();
 $mail->setTo($user->getEmail(), true);
 $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
-$mail->setBody($message);
+$mail->setBodyText($message);
 $mail->setFrom($GLOBALS['sys_noreply']);
 $mail_is_sent = $mail->send();
 if (!$mail_is_sent) {

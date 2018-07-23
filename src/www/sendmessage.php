@@ -123,9 +123,8 @@ if ($request->valid($valid)) {
     $cc = $request->get('cc');
 }
 
-$mailMgr = new MailManager();
-
-$mail = $mailMgr->getMailByType();
+$mail = new Codendi_Mail();
+$mail->setFrom(ForgeConfig::get('sys_noreply'));
 if (isset($touser)) {
     //Return the user given its user_id
     $to = $um->getUserById($touser);

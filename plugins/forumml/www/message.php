@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
  *
  * Originally written by Jean-Philippe Giola, 2005
@@ -32,11 +32,6 @@
 require_once('pre.php');
 require_once('forumml_utils.php');
 require_once('www/mail/mail_utils.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
-require_once(dirname(__FILE__).'/../include/ForumML_HTMLPurifier.class.php');
-require_once(dirname(__FILE__).'/../include/ForumML_MessageManager.class.php');
 
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('forumml');

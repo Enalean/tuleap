@@ -378,7 +378,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     // retrieve the user that submit the news
     $user = UserManager::instance()->getCurrentUser();
     
-    $mail = new Mail();
+    $mail = new Codendi_Mail();
     $mail->setFrom($GLOBALS['sys_noreply']);
     $mail->setTo($GLOBALS['sys_email_admin'],true); // Don't invalidate admin email!
     $mail->setSubject($Language->getText('news_utils','news_request', array($GLOBALS['sys_name'])));
@@ -390,7 +390,7 @@ function news_notify_promotion_request($group_id,$news_bytes_id,$summary,$detail
     $body .= $Language->getText('news_utils','news_request_mail_details', array($details)).$GLOBALS['sys_lf'].$GLOBALS['sys_lf'];
     $body .= $Language->getText('news_utils','news_request_mail_approve_link').$GLOBALS['sys_lf'];
     $body .= get_server_url()."/news/admin/?approve=1&id=".$news_bytes_id.$GLOBALS['sys_lf'];
-    $mail->setBody($body);
+    $mail->setBodyText($body);
     
     $is_sent = $mail->send();
     if ($is_sent) {

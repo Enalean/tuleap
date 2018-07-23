@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS - 2016. All rights reserved
+ * Copyright (c) Enalean SAS - 2016-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ namespace Tuleap\SystemEvent;
 use Codendi_HTMLPurifier;
 use Codendi_Mail;
 use ForgeConfig;
-use MailManager;
 use SystemEvent;
 
 /**
@@ -99,13 +98,11 @@ class Massmail extends SystemEvent
 
     private function buildMail($parameters)
     {
-        $mail_manager = new MailManager();
-
         $purifier = Codendi_HTMLPurifier::instance();
         $title    = $purifier->purify($parameters->subject, CODENDI_PURIFIER_CONVERT_HTML);
 
-        /** @var Codendi_Mail $mail */
-        $mail = $mail_manager->getMailByType('html');
+        $mail = new Codendi_Mail();
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->getLookAndFeelTemplate()->set('title', $title);
         $mail->setBodyHtml($parameters->message);
         $mail->setSubject($parameters->subject);

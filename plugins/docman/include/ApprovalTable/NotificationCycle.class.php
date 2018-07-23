@@ -538,8 +538,9 @@ class Docman_ApprovalTableNotificationCycle {
         return new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
     }
 
-    function _getMail() {
-        return new Mail();
+    function _getMail()
+    {
+        return new Codendi_Mail();
     }
 
     function _getUserManager() {
