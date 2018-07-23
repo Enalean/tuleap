@@ -71,9 +71,9 @@ class PasswordStrategy {
     * 
     * @param  v  
     */
-    function add(&$v) {
-        $this->validators[] =& $v;
+    public function add($v)
+    {
+        $this->validators[] = $v;
     }
     
 }
-?>

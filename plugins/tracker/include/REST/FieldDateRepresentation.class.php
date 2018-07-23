@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,9 +25,11 @@ class Tracker_REST_FieldDateRepresentation extends Tracker_REST_FieldRepresentat
      */
     public $is_time_displayed;
 
-    public function build(Tracker_FormElement_Field_Date $field, $type, array $permissions) {
+    public function build(Tracker_FormElement $field, $type, array $permissions) {
         parent::build($field, $type, $permissions);
 
-        $this->is_time_displayed = $field->isTimeDisplayed();
+        if ($field instanceof Tracker_FormElement_Field_Date) {
+            $this->is_time_displayed = $field->isTimeDisplayed();
+        }
     }
 }

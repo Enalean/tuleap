@@ -254,7 +254,7 @@ class WikiPage {
         $referenced = false;
 
         //Check for Docman Perms
-        $eM =& EventManager::instance();
+        $eM = EventManager::instance();
         $eM->processEvent(
             'isWikiPageReferenced', array(
                 'referenced' => &$referenced,

@@ -136,7 +136,7 @@ class PhpWikiResource extends AuthenticatedResource {
         $page_version = $this->getVersion($wiki_page, $version_id);
 
         $wiki_page_representation = new PhpWikiPageVersionFullRepresentation();
-        $wiki_page_representation->build($wiki_page, $page_version);
+        $wiki_page_representation->build($page_version, $wiki_page);
 
         return array($wiki_page_representation);
     }

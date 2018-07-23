@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UserDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('Codendi_Mail_Interface.class.php');
 
 class Mail implements Codendi_Mail_Interface {
     
@@ -276,7 +273,7 @@ class Mail implements Codendi_Mail_Interface {
     function _sendmail($header) {
         $params = array('mail' => $this,
                         'header' => $header);
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
         
         return mail($this->getTo(),

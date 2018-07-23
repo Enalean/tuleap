@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
-
-require_once 'common/date/TimePeriodWithoutWeekEnd.class.php';
 
 /**
  * A planning milestone (e.g.: Sprint, Release...)
@@ -245,8 +243,10 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->parent_milestones;
     }
 
-    public function getParent() {
-        return array_shift(array_values($this->parent_milestones));
+    public function getParent()
+    {
+        $parent_milestones_values = array_values($this->parent_milestones);
+        return array_shift($parent_milestones_values);
     }
 
     public function setAncestors(array $parents) {

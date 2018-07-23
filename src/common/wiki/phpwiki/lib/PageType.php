@@ -346,7 +346,7 @@ class PageFormatter {
 
 class PageFormatter_wikitext extends PageFormatter 
 {
-    function format(&$text) {
+    function format($text) {
 	return HTML::div(array('class' => 'wikitext'),
 			 $this->_transform($text));
     }

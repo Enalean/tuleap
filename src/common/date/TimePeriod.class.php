@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2011 - 2015. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -25,7 +25,8 @@
 /**
  * A time period that has a start date and a duration
  */
-abstract class TimePeriod {
+abstract class TimePeriod
+{
     /**
      * @var int The time period start date, as a Unix timestamp.
      */
@@ -59,7 +60,8 @@ abstract class TimePeriod {
      * @return int
      */
     public function getEndDate() {
-        $last_offset = end($this->getDayOffsets());
+        $day_offsets = $this->getDayOffsets();
+        $last_offset = end($day_offsets);
         return strtotime("+$last_offset days", $this->getStartDate());
     }
 

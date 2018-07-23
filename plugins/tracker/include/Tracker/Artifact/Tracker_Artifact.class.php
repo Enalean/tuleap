@@ -1972,7 +1972,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         Tracker_XML_Exporter_ArtifactXMLExporter $artifact_xml_exporter
     ) {
 
-        if (count($this->getChangesets() > 0)) {
+        if (count($this->getChangesets()) > 0) {
             $artifact_xml_exporter->exportFullHistory($artifacts_node, $this);
 
             $attachment_exporter = $this->getArtifactAttachmentExporter();

@@ -969,7 +969,7 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
         $this->_html .= '</div>';
     }
 
-    function _lines($lines, $class, $prefix = false, $elem = false) {
+    function _lines($lines, $class = '', $prefix = false, $elem = false) {
         if (!$prefix) {
             $prefix = '&nbsp;';
         }
