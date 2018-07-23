@@ -96,6 +96,10 @@ msgstr "Les liens entre artéfacts typés ont été activés."
 msgid "Artifact links types"
 msgstr "Liens entre artéfacts typés"
 
+#, php-format
+msgid "Artifact was moved from '%s' tracker in '%s' project."
+msgstr "Cet artéfact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
+
 msgid "Artifacts deletion"
 msgstr "Suppression d'artéfacts"
 
@@ -785,10 +789,10 @@ msgid ""
 "    These will be replaced by the full name and username of the user who "
 "updated the artifact."
 msgstr ""
-"Vous pouvez utiliser des variables pour personnaliser le champ "
-"expéditeur. Les variables disponibles sont %%realname et %%username.\n"
-"    Celles-ci seront remplacées par le nom complet et le nom d'utilisateur de "
-"la personne qui a mis uà jour l'artefact."
+"Vous pouvez utiliser des variables pour personnaliser le champ expéditeur. "
+"Les variables disponibles sont %%realname et %%username.\n"
+"    Celles-ci seront remplacées par le nom complet et le nom d'utilisateur "
+"de la personne qui a mis uà jour l'artefact."
 
 msgid ""
 "You can't choose your notifications level for this tracker because tracker "

@@ -70,6 +70,10 @@ msgstr ""
 msgid "Artifact links types"
 msgstr ""
 
+#, php-format
+msgid "Artifact was moved from '%s' tracker in '%s' project."
+msgstr ""
+
 msgid "Artifacts deletion"
 msgstr ""
 

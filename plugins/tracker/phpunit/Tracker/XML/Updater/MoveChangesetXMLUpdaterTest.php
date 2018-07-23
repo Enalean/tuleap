@@ -25,6 +25,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Project;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
@@ -53,7 +54,9 @@ class MoveChangesetXMLUpdaterTest extends TestCase
     {
         parent::setUp();
 
+        $project                            = Mockery::mock(Project::class);
         $this->user                         = Mockery::mock(PFUser::class);
+        $this->submitter                    = Mockery::mock(PFUser::class);
         $this->tracker                      = Mockery::mock(Tracker::class);
         $this->event_manager                = Mockery::mock(EventManager::class);
         $this->value_matcher                = Mockery::mock(FieldValueMatcher::class);
@@ -71,7 +74,12 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->contributor_semantic_checker
         );
 
-        $this->user->shouldReceive('getId')->andReturn(101);
+
+        $this->submitter->shouldReceive('getId')->andReturn(101);
+        $this->user->shouldReceive('getId')->andReturn(102);
+        $project->allows()->getUnconvertedPublicName()->andReturn('Project01');
+        $this->tracker->allows()->getName()->andReturn('TrackerName');
+        $this->tracker->allows()->getProject()->andReturn($project);
     }
 
     public function testItUpdatesTheTitleFieldChangeTagsInMoveAction()
@@ -138,12 +146,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset->submitted_on, date('c', $time));
-        $this->assertEquals((int)$artifact_xml->changeset->submitted_by, $this->user->getId());
+        $this->assertEquals((int)$artifact_xml->changeset->submitted_by, $this->submitter->getId());
 
         $this->assertEquals(count($artifact_xml->changeset->field_change), 1);
         $this->assertEquals($artifact_xml->changeset->field_change[0]['field_name'], 'title2');
@@ -228,14 +237,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
-        $this->assertEquals(count($artifact_xml->changeset), 2);
+        $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value, '<p><strong>Description</strong></p>');
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]->value['format'], 'html');
@@ -330,14 +340,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
-        $this->assertEquals(count($artifact_xml->changeset), 2);
+        $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'V2status');
         $this->assertEquals((int)$artifact_xml->changeset[0]->field_change[0]->value, 201);
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'V2status');
@@ -433,14 +444,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
-        $this->assertEquals(count($artifact_xml->changeset), 2);
+        $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertEquals((string)$artifact_xml->changeset[0]->field_change[0]['field_name'], 'contrib');
         $this->assertEquals((int)$artifact_xml->changeset[0]->field_change[0]->value, 101);
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'contrib');
@@ -531,9 +543,11 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, time());
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
-        $this->assertEquals(count($artifact_xml->changeset), 2);
+        $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertNull($artifact_xml->changeset[0]->comments[0]);
         $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment[0]->body, 'My comment');
     }
@@ -621,14 +635,15 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }));
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
         $this->assertEquals((int)$artifact_xml->changeset[0]->submitted_by, 101);
 
-        $this->assertEquals(count($artifact_xml->changeset), 3);
+        $this->assertEquals(count($artifact_xml->changeset), 4);
         $this->assertNull($artifact_xml->changeset[0]->field_change[0]);
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]['field_name'], 'v2desc');
         $this->assertEquals((string)$artifact_xml->changeset[1]->field_change[0]->value, '<p><strong>Description</strong></p>');
@@ -699,7 +714,89 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             return true;
         }))->once();
 
-        $time = time();
-        $this->updater->update($this->tracker, $target_tracker, $artifact_xml, $this->user, $time);
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+    }
+
+    public function testItAddsALastChangesetWithACommentToSayThatThisArtifactHasBeenMoved()
+    {
+        $source_title_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $target_title_field = Mockery::mock(Tracker_FormElement_Field::class);
+        $target_tracker     = Mockery::mock(Tracker::class);
+
+        $artifact_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
+            . '<artifact>'
+            . '  <changeset>'
+            . '    <submitted_on>2014</submitted_on>'
+            . '    <submitted_by>123</submitted_by>'
+            . '    <field_change field_name="summary">'
+            . '      <value>Initial summary value</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="effort">'
+            . '      <value>125</value>'
+            . '    </field_change>'
+            . '    <field_change field_name="details">'
+            . '      <value>Content of details</value>'
+            . '    </field_change>'
+            . '  </changeset>'
+            . '</artifact>');
+
+        $this->tracker->shouldReceive('getTitleField')->andReturn($source_title_field);
+        $this->tracker->shouldReceive('getStatusField')->andReturn(null);
+        $this->tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $target_tracker->shouldReceive('getTitleField')->andReturn($target_title_field);
+        $target_tracker->shouldReceive('getDescriptionField')->andReturn(null);
+        $target_tracker->shouldReceive('getStatusField')->andReturn(null);
+        $target_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $target_tracker->shouldReceive('getId')->andReturn(201);
+
+        $target_title_field->shouldReceive('getName')->andReturn('title2');
+        $source_title_field->shouldReceive('getName')->andReturn('summary');
+        $source_title_field->shouldReceive('getId')->andReturn(1001);
+
+        $this->title_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(true);
+
+        $this->description_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->status_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->contributor_semantic_checker
+            ->shouldReceive('areSemanticsAligned')
+            ->with($this->tracker, $target_tracker)
+            ->andReturns(false);
+
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactGetExternalSemanticCheckers $event) {
+            return true;
+        }));
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function (MoveArtifactParseFieldChangeNodes $event) {
+            return true;
+        }));
+
+        $time       = time();
+        $moved_time = time();
+        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+
+        $this->assertEquals(count($artifact_xml->changeset), 2);
+
+        $this->assertEquals((string)$artifact_xml->changeset[1]->submitted_on, date('c', $moved_time));
+        $this->assertEquals((int)$artifact_xml->changeset[1]->submitted_by, $this->user->getId());
+
+        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->submitted_on, date('c', $moved_time));
+        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->submitted_by, $this->user->getId());
+        $this->assertEquals((string)$artifact_xml->changeset[1]->comments->comment->body['format'], 'text');
+        $this->assertNotEmpty((string)$artifact_xml->changeset[1]->comments->comment->body);
+
+        $this->assertEquals(count($artifact_xml->changeset[1]->field_change), 0);
     }
 }

@@ -110,11 +110,13 @@ class MoveArtifact
         $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
         $this->xml_updater->update(
+            $user,
             $source_tracker,
             $target_tracker,
             $xml_artifacts->artifact,
             $artifact->getSubmittedByUser(),
-            $artifact->getSubmittedOn()
+            $artifact->getSubmittedOn(),
+            time()
         );
 
         if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
