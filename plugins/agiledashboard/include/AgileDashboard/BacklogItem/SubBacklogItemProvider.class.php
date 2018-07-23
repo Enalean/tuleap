@@ -50,7 +50,8 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
      */
     private $planning_factory;
 
-    public function __construct(Tracker_ArtifactDao $dao,
+    public function __construct(
+        Tracker_ArtifactDao $dao,
         AgileDashboard_Milestone_Backlog_BacklogFactory $backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $backlog_item_collection_factory,
         PlanningFactory $planning_factory
@@ -110,7 +111,11 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider {
     {
         $artifacts_to_inspect = array();
         foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
-            if (in_array($artifact_row['tracker_id'], $filtrable_planning_tracker_ids)) {
+            $artifact_row_tracker_id = $artifact_row['tracker_id'];
+
+            if (! $this->planning_factory->isTrackerIdUsedInAPlanning($artifact_row['tracker_id']) ||
+                in_array($artifact_row_tracker_id, $filtrable_planning_tracker_ids)
+            ) {
                 $artifacts_to_inspect[] = $artifact_row['id'];
             }
 

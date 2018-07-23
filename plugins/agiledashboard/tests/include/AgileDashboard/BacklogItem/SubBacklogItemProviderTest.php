@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../../bootstrap.php';
+require_once __DIR__.'/../../../bootstrap.php';
 
 class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCase {
 
@@ -29,22 +29,22 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
 
     public function setUp() {
         parent::setUp();
+        $this->setUpGlobalsMockery();
 
-        $release_tracker  = aMockTracker()->withId(105)->build();
-        $sprint_tracker   = aMockTracker()->withId(106)->build();
-        $release_planning = aPlanning()->withId(1)->withPlanningTracker($release_tracker)->build();
-        $sprint_planning  = aPlanning()->withId(2)->withPlanningTracker($sprint_tracker)->build();
+        $this->backlog_tracker = aTracker()->withId(35)->build();
+        $this->task_tracker    = aMockeryTracker()->withId(36)->withParent($this->backlog_tracker)->build();
+        $release_tracker       = aMockeryTracker()->withId(105)->build();
+        $sprint_tracker        = aMockeryTracker()->withId(106)->build();
+        $release_planning      = aPlanning()->withId(1)->withPlanningTracker($release_tracker)->build();
+        $sprint_planning       = aPlanning()->withId(2)->withPlanningTracker($sprint_tracker)->withBacklogTracker($this->backlog_tracker)->build();
 
         $this->milestone       = aMilestone()->withArtifact(anArtifact()->withId(3)->build())->withPlanning($sprint_planning)->build();
-        $this->backlog_tracker = aTracker()->withId(35)->build();
-        $this->dao             = mock('Tracker_ArtifactDao');
+        $this->dao             = \Mockery::spy(\Tracker_ArtifactDao::class);
 
         $this->user                            = aUser()->build();
-        $this->backlog_factory                 = mock('AgileDashboard_Milestone_Backlog_BacklogFactory');
-        $this->backlog_item_collection_factory = mock('AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory');
-        $this->planning_factory                = stub(PlanningFactory::class)->getSubPlannings()->returns(array(
-            $sprint_planning
-        ));
+        $this->backlog_factory                 = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogFactory::class);
+        $this->backlog_item_collection_factory = \Mockery::spy(\AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
+        $this->planning_factory                = \Mockery::spy(PlanningFactory::class);
 
         $this->provider = new AgileDashboard_BacklogItem_SubBacklogItemProvider(
             $this->dao,
@@ -52,6 +52,11 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
             $this->backlog_item_collection_factory,
             $this->planning_factory
         );
+
+        $this->planning_factory->shouldReceive('getSubPlannings')->andReturn($sprint_planning);
+        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(35)->andReturn(false);
+        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(36)->andReturn(false);
+        $this->planning_factory->shouldReceive('isTrackerIdUsedInAPlanning')->with(105)->andReturn(true);
     }
 
     public function itReturnsTheMatchingIds() {
@@ -63,6 +68,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
         stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11))->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
+
         $this->assertEqual(array_keys($result), array(7, 8, 11));
     }
 
@@ -82,9 +88,30 @@ class AgileDashboard_BacklogItem_SubBacklogItemProviderTest extends TuleapTestCa
             array('id' => 158, 'tracker_id' => 105)
         );
 
-        expect($this->dao)->getLinkedArtifactsByIds()->once();
+        stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11, 158))->returnsEmptyDar();
 
         $result = $this->provider->getMatchingIds($this->milestone, $this->backlog_tracker, $this->user);
         $this->assertEqual(array_keys($result), array(7, 8, 11));
+    }
+
+    public function itFiltersFromArtifactsThatAreChildOfContentOfSubOrCurrentPlanning()
+    {
+        stub($this->dao)->getLinkedArtifactsByIds(array(3), array(3))->returnsDar(
+            array('id' => 7,  'tracker_id' => 35),
+            array('id' => 8,  'tracker_id' => 35),
+            array('id' => 11, 'tracker_id' => 35),
+            array('id' => 158, 'tracker_id' => 105)
+        );
+
+        stub($this->dao)->getLinkedArtifactsByIds(array(7, 8, 11), array(3, 7, 8, 11, 158))->returnsDar(
+            array('id' => 200,  'tracker_id' => 36),
+            array('id' => 201,  'tracker_id' => 36),
+            array('id' => 159, 'tracker_id' => 105)
+        );
+
+        stub($this->dao)->getLinkedArtifactsByIds(array(200, 201), array(3, 7, 8, 11, 158, 200, 201, 159))->returnsEmptyDar();
+
+        $result = $this->provider->getMatchingIds($this->milestone, $this->task_tracker, $this->user);
+        $this->assertEqual(array_keys($result), array(200, 201));
     }
 }
