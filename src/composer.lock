@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ba2904537796ee2e16a62f62fc9d005",
+    "content-hash": "f73fbda91c6ddcd975383e4d0c41a060",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -567,16 +567,16 @@
         },
         {
             "name": "luracast/restler",
-            "version": "3.0.0-RC6",
+            "version": "dev-3.0.0-RC6-July2018",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/Restler.git",
-                "reference": "9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8"
+                "reference": "06f0cadc14a5e47d52c431abb6f60197e7c0b2e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/Restler/zipball/9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8",
-                "reference": "9ca6dadb5f17e6dedccc3087957c8e2e25bd6cf8",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/06f0cadc14a5e47d52c431abb6f60197e7c0b2e2",
+                "reference": "06f0cadc14a5e47d52c431abb6f60197e7c0b2e2",
                 "shasum": ""
             },
             "require": {
@@ -630,9 +630,9 @@
                 "server"
             ],
             "support": {
-                "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6"
+                "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6-July2018"
             },
-            "time": "2017-12-05T08:49:39+00:00"
+            "time": "2018-01-17T08:18:17+00:00"
         },
         {
             "name": "michelf/php-markdown",
@@ -3400,7 +3400,7 @@
     "stability-flags": {
         "mustache/mustache": 20,
         "ezyang/htmlpurifier": 20,
-        "luracast/restler": 5
+        "luracast/restler": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
