@@ -143,12 +143,6 @@ class Router
 
                     break;
             }
-        } catch (TimeTrackingExistingDateException $e) {
-            $GLOBALS['Response']->addFeedback(
-                Feedback::WARN,
-                $e->getMessage()
-            );
-            $this->redirectToArtifactViewInTimetrackingPane($artifact);
         } catch (TimeTrackingMissingTimeException $e) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
