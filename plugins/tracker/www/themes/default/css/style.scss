@@ -3587,3 +3587,17 @@ td.tracker-unsubscriber-actions {
 .create-tracker-webhook-btn {
     margin: 0 0 10px;
 }
+
+#tracker-action-button-section {
+    .tracker-action-button {
+        text-align: left;
+        background-color: #ffffff;
+        border-color: #ffffff;
+        box-shadow: none;
+        margin: 5px 0;
+    }
+}
+
+#tracker-action-icon {
+    margin: 10px 0 0 5px;
+}

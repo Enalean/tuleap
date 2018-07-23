@@ -25,8 +25,6 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
@@ -37,10 +35,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\Webhook\WebhookDao;
-use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Webhook\WebhookStatusLogger;
-use Tuleap\Webhook\Emitter;
+use Tuleap\Tracker\REST\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -49,15 +44,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     const REFERENCE_NATURE  = 'plugin_tracker_artifact';
     const STATUS_OPEN       = 'open';
     const STATUS_CLOSED     = 'closed';
-
-    /**
-     * Allow listeners to add custom action buttons alongside [Enable notifications]
-     *
-     * Parameters:
-     *  - html     => (in/out) string           The buttons should be appended here
-     *  - artifact => (in)     Tracker_Artifact The current artifact
-     */
-    const ACTION_BUTTONS    = 'tracker_artifact_action_buttons';
 
     /**
      * Display the form to copy an artifact
@@ -391,75 +377,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function fetchActionButtons()
     {
-        $html = '<div class="tracker-artifact-actions">';
-
-        $params = array(
-            'html'     => &$html,
-            "artifact" => $this
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            TRACKER_TEMPLATE_DIR
         );
-        EventManager::instance()->processEvent(self::ACTION_BUTTONS, $params);
 
-        $html .= $this->fetchIncomingMailButton() . ' ';
-        $html .= $this->fetchNotificationButton();
-        $html .= '</div>';
+        $builder                   = new ArtifactActionButtonPresenterBuilder(
+            Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance(),
+            $this->getUnsubscribersNotificationDao(),
+            $this->getDao()
+        );
 
-        return $html;
-    }
-
-    private function fetchNotificationButton()
-    {
-        if ($this->doesUserHaveUnsubscribedFromTrackerNotification($this->getCurrentUser())) {
-            return '';
-        }
-
-        $alternate_text = $this->getUnsubscribeButtonAlternateText();
-
-        $html  = '<button type="button" class="btn btn-default tracker-artifact-notification" title="' . $alternate_text . '">';
-        $html .= '<i class="icon-bell-alt"></i> ' . $this->getUnsubscribeButtonLabel();
-        $html .= '</button>';
-
-        return $html;
-    }
-
-    private function getUnsubscribeButtonLabel() {
-        $user = $this->getCurrentUser();
-
-        if ($this->doesUserHaveUnsubscribedFromArtifactNotification($user)) {
-            return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications');
-        }
-
-        return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications');
-    }
-
-    private function fetchIncomingMailButton() {
-        if (! $this->getCurrentUser()->isSuperUser()) {
-            return '';
-        }
-
-        $retriever = Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance();
-        $raw_mail  = $retriever->getRawMailThatCreatedArtifact($this);
-        if (! $raw_mail) {
-            return '';
-        }
-
-        $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
-        $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
-
-        $html = '<button type="button" class="btn btn-default artifact-incoming-mail-button" data-raw-email="'. $raw_mail .'">
-                      <i class="icon-envelope"></i> '. $raw_email_button_title .'
-                 </button>';
-
-        return $html;
-    }
-
-    private function getUnsubscribeButtonAlternateText() {
-        $user = $this->getCurrentUser();
-
-        if ($this->doesUserHaveUnsubscribedFromArtifactNotification($user)) {
-            return $GLOBALS['Language']->getText('plugin_tracker', 'enable_notifications_alternate_text');
-        }
-
-        return $GLOBALS['Language']->getText('plugin_tracker', 'disable_notifications_alternate_text');
+        $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);
+        return $renderer->renderToString(
+            'action-buttons',
+            $action_buttons_presenters
+        );
     }
 
     private function doesUserHaveUnsubscribedFromArtifactNotification(PFUser $user)

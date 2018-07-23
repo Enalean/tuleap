@@ -121,7 +121,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->artifact->getId())
         );
-        $toolbar = $this->getToolbar();
+        $toolbar = $this->tracker->getDefaultToolbar();
         $params = [
             'body_class' => ['widgetable'],
             'open_graph' => new \Tuleap\OpenGraph\OpenGraphPresenter(
@@ -131,42 +131,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             )
         ];
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, $params);
-    }
-
-    protected function getToolbar() {
-        $toolbar = $this->tracker->getDefaultToolbar();
-
-        if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
-            $this->injectCopyItemInToolbar($toolbar);
-        }
-
-        return $toolbar;
-    }
-
-    private function injectCopyItemInToolbar(array &$toolbar) {
-        $item = array(
-            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-            'url'   => TRACKER_BASE_URL.'/?func=copy-artifact&aid='. $this->artifact->getId()
-        );
-
-        array_splice($toolbar, $this->findLastPositionOfSubmitNewItemInToolbar($toolbar) + 1, 0, array($item));
-    }
-
-    private function findLastPositionOfSubmitNewItemInToolbar(array $toolbar) {
-        $submit_new_found = false;
-        $last_position_of_submitnew_item = 0;
-
-        foreach ($toolbar as $item) {
-            if (isset($item['submit-new'])) {
-                $submit_new_found = true;
-            } elseif ($submit_new_found) {
-                $last_position_of_submitnew_item--;
-                break;
-            }
-            $last_position_of_submitnew_item++;
-        }
-
-        return $last_position_of_submitnew_item;
     }
 
     protected function fetchView(Codendi_Request $request, PFUser $user) {
