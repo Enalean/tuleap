@@ -20,7 +20,6 @@
 
 namespace Tuleap\Bugzilla\Reference;
 
-use Reference;
 use ReferenceManager;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
@@ -163,7 +162,7 @@ class ReferenceSaver
 
     private function createReferenceForBugzillaServer($keyword, $server)
     {
-        $reference = new Reference(
+        $reference = new \Reference(
             0,
             $keyword,
             'Bugzilla reference',

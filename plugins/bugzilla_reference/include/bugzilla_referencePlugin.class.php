@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,8 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\reference\ReferenceValidator;
 use Tuleap\reference\ReservedKeywordsRetriever;
 
-require_once 'constants.php';
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/autoload.php';
 
 class bugzilla_referencePlugin extends Plugin
 {
