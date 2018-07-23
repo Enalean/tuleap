@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+# Copyright (c) Enalean, 2011-2018. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
 #
 # Originally written by Manuel Vacelet, 2005
@@ -45,10 +45,10 @@ PEAR_PATH="/usr/share/pear"
 # Include path is only defined in php.conf (and not php.ini).
 # It was also reported that 8MB (default memory limit) is not sufficient in some cases.
 if [ -z "$PHP_PARAMS" ]; then
-    PHP_PARAMS="-q -d include_path=/usr/share/php:/usr/share/pear:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src:/usr/share/jpgraph:. -d memory_limit=256M -d display_errors=On"
+    PHP_PARAMS="-q -d include_path=/usr/share/php:/usr/share/pear:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src:/usr/share/jpgraph:. -d memory_limit=256M"
 fi
 
 # Finally runs php interpretor
 phpscript=$1;
 shift;
-exec "${PHP}" ${PHP_PARAMS} $phpscript "$@"
+exec "${PHP}" ${PHP_PARAMS} $phpscript "$@" 2> /dev/null
