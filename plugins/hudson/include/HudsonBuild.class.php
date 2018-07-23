@@ -22,6 +22,10 @@
 class HudsonBuild {
 
     protected $hudson_build_url;
+
+    /**
+     * @var SimpleXMLElement
+     */
     protected $dom_build;
     /**
      * @var Http_Client
@@ -41,10 +45,6 @@ class HudsonBuild {
         $this->hudson_build_url = $hudson_build_url . "/api/xml";
         $this->http_client      = $http_client;
 
-        $this->buildBuildObject();
-    }
-    
-    public function buildBuildObject(){
         $this->dom_build = $this->_getXMLObject($this->hudson_build_url);
     }
     
@@ -73,27 +73,35 @@ class HudsonBuild {
     function getBuildStyle() {
         return $this->dom_build->getName();
     }
+
     function isBuilding() {
         return ($this->dom_build->building == "true");
     }
+
     function getUrl() {
-        return $this->dom_build->url;
+        return (string) $this->dom_build->url;
     }
+
     function getResult() {
-        return $this->dom_build->result;
+        return (string) $this->dom_build->result;
     }
+
     function getNumber() {
-        return $this->dom_build->number;
+        return (int) $this->dom_build->number;
     }
+
     function getDuration() {
-        return $this->dom_build->duration;
+        return (int) $this->dom_build->duration;
     }
+
     function getTimestamp() {
-        return $this->dom_build->timestamp;
+        return (int) $this->dom_build->timestamp;
     }
+
     function getBuildTime() {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), substr($this->getTimestamp(), 0, -3));
     }
+
     function getStatusIcon() {
         $color = 'red';
         if ($this->getResult() == 'SUCCESS') {

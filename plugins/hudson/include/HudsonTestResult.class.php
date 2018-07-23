@@ -42,11 +42,7 @@ class HudsonTestResult {
                 
         $this->hudson_test_result_url = $hudson_job_url . "/lastBuild/testReport/api/xml/";
         $this->http_client            = $http_client;
-        
-        $this->buildJobObject();
-    }
-    
-    public function buildJobObject() {
+
         $this->dom_job = $this->_getXMLObject($this->hudson_test_result_url);
     }
     
