@@ -97,8 +97,8 @@ class PullRequestUpdater
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
-            $ancestor_rev = $this->getCommonAncestorRev($git_exec, $pr);
-            if ($ancestor_rev != $pr->getSha1Dest()) {
+            $ancestor_rev = $git_exec->getCommonAncestor($new_rev, $pr->getBranchDest());
+            if ($ancestor_rev !== $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
             }
 
@@ -134,7 +134,7 @@ class PullRequestUpdater
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
 
             $this->updateInlineCommentsWhenSourceChanges($git_exec, $pr, $ancestor_rev, $new_rev);
-            $this->timeline_event_creator->storeUpdateEvent($pr, $user, $new_rev);
+            $this->timeline_event_creator->storeUpdateEvent($pr, $user);
         }
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
@@ -148,11 +148,6 @@ class PullRequestUpdater
             );
             $this->pull_request_factory->updateMergeStatus($pr, $merge_status);
         }
-    }
-
-    private function getCommonAncestorRev(GitExec $git_exec, PullRequest $pr)
-    {
-        return $git_exec->getCommonAncestor($pr->getSha1Src(), $pr->getBranchDest());
     }
 
     private function updateInlineCommentsWhenSourceChanges(GitExec $git_exec, PullRequest $pull_request, $new_dest_rev, $new_src_rev)
