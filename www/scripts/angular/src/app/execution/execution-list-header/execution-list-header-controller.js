@@ -69,7 +69,7 @@ export default function controller(
     }
 
     function positiveScore(score) {
-        return score ? Math.max(score, 0) : '-';
+        return score ? Math.max(score, 0) : false;
     }
 
     function isAutomatedTestButtonShown() {
