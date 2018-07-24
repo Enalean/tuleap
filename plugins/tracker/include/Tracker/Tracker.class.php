@@ -23,8 +23,10 @@ use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
+use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
+use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
@@ -3628,6 +3630,8 @@ EOS;
             )
         );
 
+        $xml_import_helper = new XMLImportHelper($this->getUserManager());
+        $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
         return new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
             $artifact_creator,
@@ -3639,7 +3643,9 @@ EOS;
             $send_notifications,
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
-            new XMLArtifactSourcePlatformExtractor($logger)
+            new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
+            new ExistingArtifactSourceIdFromTrackerExtractor(Tracker_ArtifactFactory::instance(), $artifact_source_id_dao),
+            $artifact_source_id_dao
         );
     }
 

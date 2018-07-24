@@ -25,6 +25,8 @@
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
+use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
@@ -143,8 +145,10 @@ class Tracker_Migration_MigrationManager {
     }
 
     private function getXMLImporter() {
-        $fields_validator = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($this->form_element_factory);
-        $changeset_dao    = new Tracker_Artifact_ChangesetDao();
+        $fields_validator       = new Tracker_Artifact_Changeset_AtGivenDateFieldsValidator($this->form_element_factory);
+        $changeset_dao          = new Tracker_Artifact_ChangesetDao();
+        $xml_import_helper      = new XMLImportHelper($this->user_manager);
+        $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
 
         return new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
@@ -157,7 +161,9 @@ class Tracker_Migration_MigrationManager {
             false,
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
-            new XMLArtifactSourcePlatformExtractor($this->logger)
+            new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $this->logger),
+            new ExistingArtifactSourceIdFromTrackerExtractor($this->artifact_factory, $artifact_source_id_dao),
+            $artifact_source_id_dao
         );
     }
 

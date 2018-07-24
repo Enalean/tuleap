@@ -20,6 +20,8 @@
 
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
+use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 
 class Tracker_Artifact_XMLImport {
@@ -61,6 +63,21 @@ class Tracker_Artifact_XMLImport {
      */
     private $xml_artifact_source_platform_extractor;
 
+    /**
+     * @var array
+     */
+    private $existing_sources_artifact_ids = [];
+
+    /**
+     * @var ExistingArtifactSourceIdFromTrackerExtractor
+     */
+    private $existing_artifact_source_id_extractor;
+
+    /**
+     * @var TrackerArtifactSourceIdDao
+     */
+    private $tracker_artifact_source_id_dao;
+
     public function __construct(
         XML_RNGValidator $rng_validator,
         Tracker_ArtifactCreator $artifact_creator,
@@ -72,7 +89,9 @@ class Tracker_Artifact_XMLImport {
         $send_notifications,
         Tracker_ArtifactFactory $tracker_artifact_factory,
         NatureDao $nature_dao,
-        XMLArtifactSourcePlatformExtractor $xml_artifact_source_platform_extractor
+        XMLArtifactSourcePlatformExtractor $artifact_source_platform_extractor,
+        ExistingArtifactSourceIdFromTrackerExtractor $existing_artifact_source_id_extractor,
+        TrackerArtifactSourceIdDao $artifact_source_id_dao
     ) {
         $this->rng_validator                          = $rng_validator;
         $this->artifact_creator                       = $artifact_creator;
@@ -84,7 +103,9 @@ class Tracker_Artifact_XMLImport {
         $this->send_notifications                     = $send_notifications;
         $this->tracker_artifact_factory               = $tracker_artifact_factory;
         $this->nature_dao                             = $nature_dao;
-        $this->xml_artifact_source_platform_extractor = $xml_artifact_source_platform_extractor;
+        $this->xml_artifact_source_platform_extractor = $artifact_source_platform_extractor;
+        $this->existing_artifact_source_id_extractor  = $existing_artifact_source_id_extractor;
+        $this->tracker_artifact_source_id_dao         = $artifact_source_id_dao;
     }
 
     public function importFromArchive(Tracker $tracker, Tracker_Artifact_XMLImport_XMLImportZipArchive $archive) {
@@ -93,7 +114,7 @@ class Tracker_Artifact_XMLImport {
 
         $extraction_path   = $archive->getExtractionPath();
         $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-        $config = new ImportConfig();
+        $config            = new ImportConfig();
 
         $this->importFromXML($tracker, $xml, $extraction_path, $xml_field_mapping, $config);
 
@@ -105,7 +126,7 @@ class Tracker_Artifact_XMLImport {
         $xml               = $xml_security->loadFile($xml_file_path);
         $xml_file_path     = "";
         $xml_field_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
-        $config = new ImportConfig();
+        $config            = new ImportConfig();
 
         $this->importFromXML(
             $tracker, $xml, $xml_file_path, $xml_field_mapping, $config
@@ -182,7 +203,8 @@ class Tracker_Artifact_XMLImport {
         $tracker->getWorkflow()->disable();
         $artifacts = array();
 
-        $this->source_platform = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
+        $this->source_platform              = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
+        $this->existing_sources_artifact_ids = $this->existing_artifact_source_id_extractor->getSourceArtifactIds($tracker, $this->source_platform);
 
         foreach (iterator_to_array($xml_element->artifact, false) as $i => $artifact_xml) {
             $artifact = $this->importBareArtifact($tracker, $artifact_xml, $configuration);
@@ -302,6 +324,13 @@ class Tracker_Artifact_XMLImport {
             return $this->importNewBareArtifact($tracker, $xml_artifact);
         }
 
+        $xml_artifact_source_id = (int) $xml_artifact->attributes()['id'];
+
+        if (isset($this->existing_sources_artifact_ids[$xml_artifact_source_id])) {
+            $existing_artifact_id = $this->existing_sources_artifact_ids[$xml_artifact_source_id];
+            return $this->getExistingBareArtifact($existing_artifact_id);
+        }
+
         $this->logger->warn("No correspondence between existings artifacts and the new XML artifact. New artifact created.");
         return $this->importNewBareArtifact($tracker, $xml_artifact);
     }
@@ -337,7 +366,18 @@ class Tracker_Artifact_XMLImport {
             $this->getSubmittedBy($first_changeset),
             $this->getSubmittedOn($first_changeset));
         $this->logger->info("--> new artifact {$artifact->getId()}");
+
+        if ($this->source_platform !== null) {
+            $this->tracker_artifact_source_id_dao->save($artifact->getId(), (int) $xml_artifact->attributes()['id'], $this->source_platform);
+        }
+
         return $artifact;
+    }
+
+    public function getExistingBareArtifact($artifact_id)
+    {
+        $this->logger->info("--> old artifact {$artifact_id}");
+        return $this->tracker_artifact_factory->getArtifactById($artifact_id);
     }
 
     /**
@@ -412,7 +452,7 @@ class Tracker_Artifact_XMLImport {
     ) {
         $xml_changesets = $this->getSortedBySubmittedOn($xml_changesets);
 
-        $count = 0;
+        $count = $this->getCountChangeset($artifact, $configuration);
         $this->logger->info('art #'.$artifact->getId());
         foreach($xml_changesets as $xml_changeset) {
             try {
@@ -433,6 +473,24 @@ class Tracker_Artifact_XMLImport {
             }
             $count++;
         }
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param ImportConfig $configuration
+     * @return int
+     */
+    private function getCountChangeset(Tracker_Artifact $artifact, ImportConfig $configuration)
+    {
+        if (! $configuration->isUpdate()) {
+            return 0;
+        }
+
+        if ($this->source_platform === null) {
+            return 0;
+        }
+
+        return count($this->tracker_artifact_factory->getArtifactById($artifact->getId())->getChangesets());
     }
 
     /**
