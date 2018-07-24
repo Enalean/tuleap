@@ -84,15 +84,32 @@ class MoveChangesetXMLUpdater
     }
 
     public function update(
+        PFUser $current_user,
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $artifact_xml,
         PFUser $submitted_by,
-        $submitted_on
+        $submitted_on,
+        $moved_time
     ) {
         $artifact_xml['tracker_id'] = $target_tracker->getId();
 
-        $this->parseChangesetNodes($source_tracker, $target_tracker, $artifact_xml, $submitted_by, $submitted_on);
+        $this->parseChangesetNodes(
+            $source_tracker,
+            $target_tracker,
+            $artifact_xml,
+            $submitted_by,
+            $submitted_on
+        );
+
+        if (count($artifact_xml->changeset) > 0) {
+            $this->addLastMovedChangesetComment(
+                $current_user,
+                $artifact_xml,
+                $source_tracker,
+                $moved_time
+            );
+        }
     }
 
     private function addSubmittedInformation(SimpleXMLElement $changeset_xml, PFUser $user, $submitted_on)
@@ -382,5 +399,48 @@ class MoveChangesetXMLUpdater
         $this->event_manager->processEvent($event);
 
         return $event->isModifiedByPlugin();
+    }
+
+    private function addLastMovedChangesetComment(
+        PFUser $current_user,
+        SimpleXMLElement $artifact_xml,
+        Tracker $source_tracker,
+        $moved_time
+    ) {
+        $last_changeset = $artifact_xml->addChild('changeset');
+
+        $submitted_on =$last_changeset->addChild('submitted_on', date('c', $moved_time));
+        $submitted_on->addAttribute('format', "ISO8601");
+
+        $submitted_by = $last_changeset->addChild('submitted_by', $current_user->getId());
+        $submitted_by->addAttribute('format', 'id');
+
+        $this->addLastChangesetCommentContent($current_user, $last_changeset, $source_tracker, $moved_time);
+    }
+
+    private function addLastChangesetCommentContent(
+        PFUser $current_user,
+        SimpleXMLElement $last_changeset,
+        Tracker $source_tracker,
+        $moved_time
+    ) {
+        $comments_tag = $last_changeset->addChild('comments');
+        $comment_tag  = $comments_tag->addChild('comment');
+
+        $comment_submitted_on = $comment_tag->addChild('submitted_on', date('c', $moved_time));
+        $comment_submitted_on->addAttribute('format', "ISO8601");
+
+        $comment_submitted_by = $comment_tag->addChild('submitted_by', $current_user->getId());
+        $comment_submitted_by->addAttribute('format', 'id');
+
+        $comment_body = $comment_tag->addChild(
+            'body',
+            sprintf(
+                dgettext('tuleap-tracker', "Artifact was moved from '%s' tracker in '%s' project."),
+                $source_tracker->getName(),
+                $source_tracker->getProject()->getUnconvertedPublicName()
+            )
+        );
+        $comment_body->addAttribute('format', 'text');
     }
 }
