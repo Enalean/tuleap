@@ -33,6 +33,7 @@ class Tracker_REST_ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactFilesResource', 'artifact_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactTemporaryFilesResource', 'artifact_temporary_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ReportsResource', ReportRepresentation::ROUTE);
+        $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackerFieldsResource', "tracker_fields");
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project) {
