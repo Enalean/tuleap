@@ -1,5 +1,10 @@
 <div class="empty-home">
     <p>{{{ scrum_nothing_set_up }}}</p>
+    {{# is_user_admin }}
+        {{^ is_mono_milestone_enabled }}
+            <a href="{{ create_scrum_url }}" class="btn btn-large" data-test="start-scrum">{{ start_scrum }}</a>
+        {{/is_mono_milestone_enabled}}
+    {{/ is_user_admin }}
 
     {{^ is_user_admin }}
         <p class="later">{{ come_back_later }}</p>
