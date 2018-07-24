@@ -142,7 +142,7 @@ class Tracker_NotificationsManager {
 
         $email_custom_enabled = $request->get('email-custom-enabled');
         $email_custom_from = $request->get('email-custom-from');
-        if ($email_custom_from) {
+        if ($request->exist('email-custom-from')) {
             $config_notification_custom_email_from->setCustomSender($this->tracker, $email_custom_from, $email_custom_enabled);
         }
 
