@@ -125,7 +125,7 @@ class TimeController
         $time    = $this->time_retriever->getTimeByIdForUser($user, $time_id);
 
         if (! $time) {
-            throw new TimeTrackingNoTimeException(dgettext('tuleap-timetracking', "Time not found."));
+            throw new TimeTrackingNoTimeException();
         }
 
         return $time;

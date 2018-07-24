@@ -129,7 +129,7 @@ msgstr "Vous n'êtes pas autorisé à ajouter un temps."
 msgid "You are not allowed to delete a time."
 msgstr "Vous n'êtes pas autorisé à supprimer un temps."
 
-msgid "You are not allowed to edit a time."
+msgid "You are not allowed to edit this time."
 msgstr "Vous n'êtes pas autorisé à modifier ce temps."
 
 msgid "hh:mm"

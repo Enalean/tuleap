@@ -24,5 +24,8 @@ use Exception;
 
 class TimeTrackingMissingTimeException extends Exception
 {
-
+    public function __construct()
+    {
+        parent::__construct(dgettext('tuleap-timetracking', "The time is missing"));
+    }
 }
