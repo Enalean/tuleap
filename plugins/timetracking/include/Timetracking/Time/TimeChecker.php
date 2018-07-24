@@ -41,7 +41,7 @@ class TimeChecker
     {
         $pattern = "/" . self::PATTERN . "/";
         if (! $time_value) {
-            throw new TimeTrackingMissingTimeException(dgettext('tuleap-timetracking', "The time is missing"));
+            throw new TimeTrackingMissingTimeException();
         } else if (! preg_match($pattern, $time_value)) {
             throw new TimeTrackingBadTimeFormatException();
         }
