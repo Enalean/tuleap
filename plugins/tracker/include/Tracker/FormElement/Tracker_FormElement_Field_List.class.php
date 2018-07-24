@@ -427,7 +427,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
             $styles = $this->getBind()->getSelectOptionStyles($id);
 
-            $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $styles['inline-styles'] . '" class="' . $styles['classes'] . '"' . '">';
+            $html .= '<option value="'. $id .'"  title="'. $this->getBind()->formatCriteriaValue($id) .'" '. $selected .' style="'. $styles['inline-styles'] . '" class="' . $styles['classes'] . '">';
             $html .= $this->getBind()->formatCriteriaValue($id);
             $html .= '</option>';
         }
