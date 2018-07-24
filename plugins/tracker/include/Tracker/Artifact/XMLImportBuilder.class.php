@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
@@ -102,7 +103,8 @@ class Tracker_Artifact_XMLImportBuilder {
             $logger,
             $send_notifications,
             Tracker_ArtifactFactory::instance(),
-            new NatureDao()
+            new NatureDao(),
+            new XMLArtifactSourcePlatformExtractor($logger)
         );
     }
 }

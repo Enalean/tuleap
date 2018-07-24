@@ -359,13 +359,49 @@ XML;
         $artifact456  = aMockArtifact()->withId(456)->withTracker($tracker1)->build();
         $artifact789  = aMockArtifact()->withId(789)->withTracker($tracker2)->build();
 
-        $this->xml_importer->shouldReceive('importBareArtifact')->with($tracker1, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}))->andReturn($artifact123)->once();
-        $this->xml_importer->shouldReceive('importBareArtifact')->with($tracker1, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}))->andReturn($artifact456)->once();
-        $this->xml_importer->shouldReceive('importBareArtifact')->with($tracker2, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}))->andReturn($artifact789)->once();
+        $this->xml_importer->shouldReceive('importBareArtifact')
+            ->with(
+                $tracker1,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+            )
+            ->andReturn($artifact123)->once();
+        $this->xml_importer->shouldReceive('importBareArtifact')
+            ->with(
+                $tracker1,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+            )
+            ->andReturn($artifact456)->once();
+        $this->xml_importer->shouldReceive('importBareArtifact')
+            ->with(
+                $tracker2,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+            )
+            ->andReturn($artifact789)->once();
 
-        $this->xml_importer->shouldReceive('importChangesets')->with($artifact123, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}), \Mockery::any())->once();
-        $this->xml_importer->shouldReceive('importChangesets')->with($artifact456, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}), \Mockery::any())->once();
-        $this->xml_importer->shouldReceive('importChangesets')->with($artifact789, \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}), \Mockery::any())->once();
+        $this->xml_importer->shouldReceive('importChangesets')
+            ->with(
+                $artifact123,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 123;}),
+                \Mockery::any(),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); }))
+            ->once();
+        $this->xml_importer->shouldReceive('importChangesets')
+            ->with(
+                $artifact456,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 456;}),
+                \Mockery::any(),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+            )->once();
+        $this->xml_importer->shouldReceive('importChangesets')
+            ->with(
+                $artifact789,
+                \Mockery::on(function (SimpleXMLElement $val) { return (int)$val['id'] === 789;}),
+                \Mockery::any(),
+                Mockery::on(function ($element) { return is_a($element, Tuleap\Project\XML\Import\ImportConfig::class); })
+            )->once();
 
         $this->action->process($this->layout, $this->request, $this->user);
     }
