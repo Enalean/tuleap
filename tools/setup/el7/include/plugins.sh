@@ -181,7 +181,6 @@ _pluginSVN() {
     local -r httpd_conf="/etc/httpd/conf/httpd.conf"
     local -r httpd_conf_ssl="/etc/httpd/conf.d/ssl.conf"
     local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
-    local -r httpd_logrotate="/etc/logrotate.d/httpd"
     local plugin_svn_configured="false"
 
     if ${grep} --quiet "%sys_dbauth_passwd%" "${tuleap_conf}/${local_inc}"; then
@@ -202,10 +201,6 @@ _pluginSVN() {
             exit 1
         fi
     fi
-
-    ${awk} '{ gsub("%service_restart%",
-    "'"${systemctl} reload httpd.service > /dev/null 2>/dev/null || true"'");
-    print }' "${tuleap_src}/etc/el7/httpd/logrotate" > ${httpd_logrotate}
 
     if [ ! -f ${httpd_vhost} ]; then
         server_name=$(${awk} --field-separator="'" \
