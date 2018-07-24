@@ -1,0 +1,24 @@
+{{# has_at_least_one_action }}
+    <div class="tracker-artifact-actions btn-group">
+        <a href="#" class="btn dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-align-justify"></i> {{# dgettext }} tuleap-tracker | Actions {{/ dgettext }}<span class="caret" id="tracker-action-icon"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" id="tracker-action-button-section">
+            {{# action_buttons }}
+                {{# section }}
+                    <li>
+                        <a class="btn tracker-action-button {{ css_class }}"
+                           {{# data_property }}{{ . }}{{/ data_property }}
+                           {{# url }}href="{{ url }}"{{/ url }}
+                           {{# title }} title="{{ . }}" {{/ title }}>
+                           <i class="{{ icon }}"></i> {{ label }}
+                        </a>
+                    </li>
+                {{/ section }}
+                {{# divider }}
+                    <li class="divider"></li>
+                {{/ divider }}
+            {{/ action_buttons }}
+        </ul>
+    </div>
+{{/ has_at_least_one_action }}

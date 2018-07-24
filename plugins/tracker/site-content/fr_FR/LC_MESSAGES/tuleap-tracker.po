@@ -36,6 +36,9 @@ msgstr "Tracker %s"
 msgid "'%s' is not supported for the operator %s."
 msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
+msgid "Actions"
+msgstr "Actions"
+
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
 "Activer les liens entre artéfacts typés pour l'ensemble des outils de suivi "

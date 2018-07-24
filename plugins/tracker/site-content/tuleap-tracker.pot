@@ -22,6 +22,9 @@ msgstr ""
 msgid "'%s' is not supported for the operator %s."
 msgstr ""
 
+msgid "Actions"
+msgstr ""
+
 msgid "Activate artifact links types for all the trackers of this project?"
 msgstr ""
 
