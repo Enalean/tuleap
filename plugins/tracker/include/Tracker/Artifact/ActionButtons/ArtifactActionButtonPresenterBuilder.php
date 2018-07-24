@@ -42,17 +42,23 @@ class ArtifactActionButtonPresenterBuilder
      * @var ArtifactMoveButtonPresenterBuilder
      */
     private $move_button_builder;
+    /**
+     * @var ArtifactGraphDependenciesButtonPresenterBuilder
+     */
+    private $graph_button_builder;
 
     public function __construct(
         ArtifactNotificationActionButtonPresenterBuilder $notification_button_builder,
         ArtifactIncomingEmailButtonPresenterBuilder $mail_button_builder,
         ArtifactCopyButtonPresenterBuilder $artifact_copy_button_builder,
-        ArtifactMoveButtonPresenterBuilder $move_button_builder
+        ArtifactMoveButtonPresenterBuilder $move_button_builder,
+        ArtifactGraphDependenciesButtonPresenterBuilder $graph_button_builder
     ) {
         $this->notification_button_builder  = $notification_button_builder;
         $this->mail_button_builder          = $mail_button_builder;
         $this->artifact_copy_button_builder = $artifact_copy_button_builder;
         $this->move_button_builder          = $move_button_builder;
+        $this->graph_button_builder         = $graph_button_builder;
     }
 
     public function build(PFUser $user, Tracker_Artifact $artifact)
@@ -67,6 +73,8 @@ class ArtifactActionButtonPresenterBuilder
             $move_artifact  = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
         }
 
+        $graph_references = $this->graph_button_builder->getGraphReferencesButton($artifact);
+
         if ($original_email) {
             $action_buttons[]['section'] = $original_email;
         }
@@ -76,8 +84,11 @@ class ArtifactActionButtonPresenterBuilder
         if (\ForgeConfig::get('tracker_move_artifact_ui') && $move_artifact) {
             $action_buttons[]['section'] = $move_artifact;
         }
+        if ($graph_references) {
+            $action_buttons[]['section'] = $graph_references;
+        }
 
-        if (($original_email || $copy_artifact || $move_artifact) && $notification) {
+        if (($original_email || $copy_artifact || $move_artifact || $graph_references) && $notification) {
             $action_buttons[]['divider'] = true;
         }
 

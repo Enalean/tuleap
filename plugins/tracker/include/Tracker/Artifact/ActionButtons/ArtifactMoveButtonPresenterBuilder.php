@@ -90,7 +90,8 @@ class ArtifactMoveButtonPresenterBuilder
             "",
             "icon-share-alt",
             $property,
-            ""
+            "",
+            false
         );
     }
 

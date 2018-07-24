@@ -35,7 +35,7 @@ class ActionButtonPresenter
      */
     public $icon;
     /**
-     * @var string
+     * @var array
      */
     public $data_property;
     /**
@@ -46,8 +46,12 @@ class ActionButtonPresenter
      * @var string
      */
     public $css_class;
+    /**
+     * @var string
+     */
+    public $has_svg;
 
-    public function __construct($label, $title, $url, $icon, array $data_property, $class)
+    public function __construct($label, $title, $url, $icon, array $data_property, $class, $has_svg)
     {
         $this->label         = $label;
         $this->title         = $title;
@@ -55,5 +59,6 @@ class ActionButtonPresenter
         $this->icon          = $icon;
         $this->data_property = $data_property;
         $this->css_class     = $class;
+        $this->has_svg       = $has_svg;
     }
 }

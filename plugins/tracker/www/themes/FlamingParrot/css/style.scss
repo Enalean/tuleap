@@ -95,6 +95,14 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
     }
+
+    .tracker-action-button > svg {
+        margin: 0 5px 0 2px;
+
+        path {
+            fill: $main;
+        }
+    }
 }
 
 body {

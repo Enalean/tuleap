@@ -765,10 +765,7 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker-artifact-actions {
     float: right;
-
-    i {
-        margin-right: 5px;
-    }
+    font-weight: 400;
 }
 
 .copy-mode {
@@ -2955,112 +2952,6 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
 
 .tracker_artifact {
     max-width: 960px;
-}
-
-.artifact-references {
-    $grip-size: 40px;
-
-    position: fixed;
-    z-index: 1;
-    right: 0;
-    top: 140px;
-    width: $grip-size;
-    height: $grip-size;
-    overflow: hidden;
-    font-size: 0.9em;
-    transition: all 0.2s ease;
-
-    .artifact-references-content {
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        width: 0;
-        height: 0;
-        padding: 0;
-        transition: all 0.2s ease;
-        position: relative;
-        left: $grip-size;
-        background: rgba(255, 255, 255, 0.95);
-        border: 1px solid #E9E9E9;
-        border-right: none;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        -webkit-border-bottom-left-radius: 3px;
-        -moz-border-radius-bottomleft: 3px;
-        border-bottom-left-radius: 3px;
-
-        div {
-            padding-left: 15px;
-            padding-right: 15px;
-
-            img {
-                margin-right: 10px;
-            }
-
-            ul {
-                list-style-type: none;
-                margin: 0;
-
-                li {
-                    margin-bottom: 8px;
-                    line-height: 1.2em;
-
-                    a {
-                        color: #222;
-
-                        &:hover {
-                            text-decoration: none;
-                            opacity: 0.9;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .grip {
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1;
-        width: $grip-size;
-        height: $grip-size;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        padding-top: 8px;
-        cursor: pointer;
-        text-align: center;
-        font-size: 1.6em;
-        -webkit-border-top-left-radius: 3px;
-        -webkit-border-bottom-left-radius: 3px;
-        -moz-border-radius-topleft: 3px;
-        -moz-border-radius-bottomleft: 3px;
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-        border: 1px solid #222;
-        border-right: none;
-        color: #FFF;
-        transition: all 0.2s ease;
-        background-color: #303030;
-    }
-
-    &.expanded {
-        width: 400px + $grip-size;
-        height: auto;
-
-        .artifact-references-content {
-            width: 400px;
-            padding: 15px;
-            min-height: 100px;
-            height: auto;
-            max-height: 400px;
-        }
-
-        .grip {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: 1px solid #E9E9E9;
-            color: #222;
-            border-right: none;
-        }
-    }
 }
 
 .tracker_report_renderer_description {

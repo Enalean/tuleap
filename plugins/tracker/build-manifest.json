@@ -76,7 +76,6 @@
         "www/scripts/FixAggregatesHeaderHeight.js",
         "www/scripts/TrackerSettings.js",
         "www/scripts/TrackerCollapseFieldset.js",
-        "www/scripts/TrackerArtifactReferences.js",
         "www/scripts/CopyArtifact.js",
         "www/scripts/tracker-report-nature-column.js",
         "www/scripts/tracker-admin-notifications.js",
