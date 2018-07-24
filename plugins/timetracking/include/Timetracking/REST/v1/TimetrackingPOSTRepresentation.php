@@ -22,6 +22,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TimetrackingDataBuilder.php';
-require_once dirname(__FILE__).'/TimetrackingBase.php';
+namespace Tuleap\Timetracking\REST\v1;
+
+class TimetrackingPOSTRepresentation
+{
+    /**
+     * @var string {@type string}
+     */
+    public $date_time;
+
+    /**
+     * @var integer {@type integer}
+     */
+    public $artifact_id;
+
+    /**
+     * @var string {@type string}
+     */
+    public $time_value;
+
+    /**
+     * @var string {@type string} {@required false}
+     */
+    public $step = "";
+}

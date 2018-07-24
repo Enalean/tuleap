@@ -90,6 +90,14 @@ class TimeRetriever
     }
 
     /**
+     * @return Time
+     */
+    public function getLastTime(PFUser $user, Tracker_Artifact $artifact)
+    {
+        return $this->buildTimeFromRow($this->dao->getLastTime($user->getId(), $artifact->getId()));
+    }
+
+    /**
      * @return null|Time
      */
     public function getTimeByIdForUser(PFUser $user, $time_id)

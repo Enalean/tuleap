@@ -59,6 +59,7 @@ class TimeUpdater
      * @throws TimeTrackingBadTimeFormatException
      * @throws TimeTrackingMissingTimeException
      * @throws TimeTrackingNotAllowedToAddException
+     * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException
      */
     public function addTimeForUserInArtifact(
         PFUser $user,
@@ -72,6 +73,7 @@ class TimeUpdater
         }
 
         $this->time_checker->checkMandatoryTimeValue($added_time);
+        $this->time_checker->checkDateFormat($added_date);
 
         $minutes = $this->getMinutes($added_time);
 
@@ -106,6 +108,7 @@ class TimeUpdater
      * @throws TimeTrackingNotBelongToUserException
      * @throws TimeTrackingBadTimeFormatException
      * @throws TimeTrackingMissingTimeException
+     * @throws \Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException
      */
     public function updateTime(PFUser $user, Tracker_Artifact $artifact, Time $time, $updated_date, $updated_time, $updated_step)
     {
@@ -114,6 +117,7 @@ class TimeUpdater
         }
 
         $this->time_checker->checkMandatoryTimeValue($updated_time);
+        $this->time_checker->checkDateFormat($updated_date);
 
         if ($this->time_checker->doesTimeBelongsToUser($time, $user)) {
             throw new TimeTrackingNotBelongToUserException();

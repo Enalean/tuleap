@@ -108,7 +108,7 @@ class ArtifactViewPresenter
         $this->times             = $times;
         $this->has_times         = count($times) > 0;
         $this->total_time        = $formatted_total_time;
-        $this->pattern           = TimeChecker::PATTERN;
+        $this->pattern           = TimeChecker::TIME_PATTERN;
 
         $request_time             = $_SERVER['REQUEST_TIME'];
         $this->default_date_value = date('Y-m-d', $request_time);

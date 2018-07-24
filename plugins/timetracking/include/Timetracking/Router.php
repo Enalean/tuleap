@@ -30,6 +30,7 @@ use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminController;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingExistingDateException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
@@ -180,6 +181,12 @@ class Router
             );
             $this->redirectToArtifactViewInTimetrackingPane($artifact);
         } catch (TimeTrackingBadTimeFormatException $e) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                $e->getMessage()
+            );
+            $this->redirectToArtifactViewInTimetrackingPane($artifact);
+        } catch (TimeTrackingBadDateFormatException $e) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $e->getMessage()

@@ -1,10 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
-require_once dirname(__FILE__).'/TimetrackingDataBuilder.php';
-require_once dirname(__FILE__).'/TimetrackingBase.php';
+namespace Tuleap\Timetracking\Exceptions;
+
+use Exception;
+
+class TimeTrackingBadDateFormatException extends Exception
+{
+    public function __construct()
+    {
+        parent::__construct(dgettext('tuleap-timetracking', "The date format is not the one expected (YYYY-MM-DD)."));
+    }
+}

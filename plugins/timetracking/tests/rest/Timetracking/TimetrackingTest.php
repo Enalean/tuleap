@@ -25,11 +25,10 @@
 namespace Tuleap\Timetracking\REST;
 
 use Guzzle\Http\Exception\ClientErrorResponseException;
-use RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class TimetrackingTest extends RestBase
+class TimetrackingTest extends TimetrackingBase
 {
     public function testGetTimesForUserWithDates()
     {
@@ -275,5 +274,46 @@ class TimetrackingTest extends RestBase
             $this->assertEquals($times[0]['artifact']['id'], $current_artifact_id);
             $this->assertEquals($times[0]['id'], $times_ids[ $offset ]);
         }
+    }
+
+    public function testAddTimeSuccess()
+    {
+        $query = json_encode([
+            "date_time"   => "2018-03-01",
+            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+            "time_value"  => "11:11",
+            "step"        => "etape"
+        ]);
+        $response = $this->getResponse($this->client->post('/api/v1/timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+
+        $this->assertEquals($response->getStatusCode(), 201);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()
+    {
+        $query = json_encode([
+             "date_time"   => "2018-03-01",
+             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+             "time_value"  => "11/11",
+             "step"        => "etape"
+         ]);
+        $this->getResponse($this->client->post('timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testAddTimeReturnBadDateFormatException()
+    {
+        $query = json_encode([
+             "date_time"   => "oui",
+             "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+             "time_value"  => "11:11",
+             "step"        => "etape"
+         ]);
+        $this->getResponse($this->client->post('timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
     }
 }

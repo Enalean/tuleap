@@ -26,6 +26,7 @@ namespace Tuleap\Timetracking\REST\v1;
 
 use DateTime;
 use Luracast\Restler\RestException;
+use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -34,9 +35,15 @@ use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
+use Tuleap\Timetracking\Time\TimeUpdater;
 
 class TimetrackingResource extends AuthenticatedResource
 {
@@ -59,19 +66,26 @@ class TimetrackingResource extends AuthenticatedResource
      */
     private $time_retriever;
 
+    /**
+     * @var TimeUpdater
+     */
+    private $time_updater;
+
     public function __construct()
     {
         $this->representation_builder = new TimetrackingRepresentationBuilder();
+        $time_dao                     = new TimeDao();
+        $permissionsRetriever         = new PermissionsRetriever((
+        new TimetrackingUgroupRetriever(
+            new TimetrackingUgroupDao()
+        )
+        ));
         $this->time_retriever         = new TimeRetriever(
-            new TimeDao(),
-            new PermissionsRetriever(
-                new TimetrackingUgroupRetriever(
-                    new TimetrackingUgroupDao()
-                )
-            )
+            $time_dao,
+            $permissionsRetriever
         );
-
-        $this->rest_user_manager = UserManager::build();
+        $this->time_updater           = new TimeUpdater($time_dao, new TimeChecker(), $permissionsRetriever);
+        $this->rest_user_manager      = UserManager::build();
     }
 
     /**
@@ -149,9 +163,63 @@ class TimetrackingResource extends AuthenticatedResource
         return $this->representation_builder->buildPaginatedTimes($paginated_times->getTimes());
     }
 
+    /**
+     * Add a Time
+     *
+     * Add a time in Timetracking modal
+     *
+     * <br><br>
+     * Notes on the query parameter
+     * <ol>
+     *  <li>You do not have the obligation to fill in the step field </li>
+     *  <li>A time needs to respect the format "11:11" </li>
+     *  <li>Exemple of date "2018-01-01"</li>
+     *  <li>artifact_id is an integer like 1</li>
+     * </ol>
+     *
+     * @url POST
+     * @access protected
+     *
+     * @status 201
+     * @param TimetrackingPOSTRepresentation $item_representation The created Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPOSTRepresentation}
+     * @return TimetrackingRepresentation
+     *
+     * @throws 406
+     * @throws 403
+     * @throws 404
+     */
+    protected function addTime(TimetrackingPOSTRepresentation $item)
+    {
+        $this->checkAccess();
+
+        $this->sendAllowHeaders();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($current_user, $item->artifact_id);
+        if (! $artifact) {
+            throw new RestException(404, dgettext('tuleap-timetracking', "Please add the time on an existing artifact"));
+        }
+
+        try {
+            $time_representation = new TimetrackingRepresentation();
+            $this->time_updater->addTimeForUserInArtifact($current_user, $artifact, $item->date_time, $item->time_value, $item->step);
+            $time_representation->build($this->time_retriever->getLastTime($current_user, $artifact));
+            return $time_representation;
+        } catch (TimeTrackingBadTimeFormatException $e) {
+            throw new RestException(406, $e->getMessage());
+        } catch (TimeTrackingMissingTimeException $e) {
+            throw new RestException(406, $e->getMessage());
+        } catch (TimeTrackingNotAllowedToAddException $e) {
+            throw new RestException(403, $e->getMessage());
+        } catch (TimeTrackingBadDateFormatException $e) {
+            throw new RestException(406, $e->getMessage());
+        }
+    }
+
     private function sendAllowHeaders()
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPost();
     }
 
     private function checkTimePeriodIsValid($start_date, $end_date)

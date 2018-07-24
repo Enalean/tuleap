@@ -23,6 +23,7 @@ namespace Tuleap\Timetracking\Time;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 
 require_once __DIR__.'/../bootstrap.php';
@@ -51,7 +52,6 @@ class TimeCheckerTest extends TestCase
             'getId'      => 200
         ]);
     }
-
 
     public function testItReturnFalseIfEqual()
     {
@@ -99,5 +99,16 @@ class TimeCheckerTest extends TestCase
     {
         $this->expectException(TimeTrackingBadTimeFormatException::class);
         $this->time_checker->checkMandatoryTimeValue("11:f8");
+    }
+
+    public function testItReturnNullIfGoodDateFormat()
+    {
+        $this->assertNull($this->time_checker->checkDateFormat("2018-01-01"));
+    }
+
+    public function testItReturnTimeTrackingBadDateFormatException()
+    {
+        $this->expectException(TimeTrackingBadDateFormatException::class);
+        $this->time_checker->checkDateFormat("toto");
     }
 }

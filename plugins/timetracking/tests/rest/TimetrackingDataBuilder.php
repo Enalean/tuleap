@@ -131,13 +131,13 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
 
     private function setWritersAndReaders(Project $project)
     {
-        $dao     = new TimetrackingUgroupSaver(new TimetrackingUgroupDao());
+        $saver   = new TimetrackingUgroupSaver(new TimetrackingUgroupDao());
         $tracker = $this->tracker_factory->getTrackerByShortnameAndProjectId(
             self::TRACKER_SHORTNAME,
             $project->getID()
         );
 
-        $dao->saveWriters($tracker, [\ProjectUGroup::PROJECT_MEMBERS]);
-        $dao->saveReaders($tracker, [\ProjectUGroup::PROJECT_ADMIN]);
+        $saver->saveWriters($tracker, [\ProjectUGroup::PROJECT_MEMBERS]);
+        $saver->saveReaders($tracker, [\ProjectUGroup::PROJECT_ADMIN]);
     }
 }
