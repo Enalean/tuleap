@@ -134,6 +134,7 @@ if [ ${tuleap_installed:-false} = "false" ] || \
     _serviceStart "${timers[@]}"
     _phpConfigureModule "nginx,fpm"
     _serviceRestart "nginx" "tuleap"
+    _serviceEnable "nginx"
     _endMessage
 fi
 
