@@ -438,6 +438,8 @@ class PlanningFactory {
             $p->setBacklogTrackers($this->getBacklogTrackers($p));
             return $p;
         }
+
+        return null;
     }
 
     public function isTrackerIdUsedInAPlanning($tracker_id) {
