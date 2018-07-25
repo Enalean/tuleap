@@ -801,9 +801,6 @@ msgid ""
 "address. Visiting this link will complete the email change."
 msgstr ""
 
-msgid "System"
-msgstr ""
-
 msgid "System groups"
 msgstr ""
 

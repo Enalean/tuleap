@@ -24,6 +24,7 @@ use Codendi_Request;
 use Feedback;
 use ForgeConfig;
 use Project;
+use Service;
 use Tuleap\Layout\ServiceUrlCollector;
 
 class ServicePOSTDataBuilder
@@ -52,11 +53,11 @@ class ServicePOSTDataBuilder
         $label             = $request->getValidated('label', 'string', '');
         $description       = $request->getValidated('description', 'string', '');
         $rank              = $request->getValidated('rank', 'int', 500);
-        $scope             = $request->getValidated('scope', 'string', '');
         $is_active         = $request->getValidated('is_active', 'uint', 0);
         $is_used           = $request->getValidated('is_used', 'uint', false);
         $is_in_iframe      = $request->get('is_in_iframe') ? 1 : 0;
         $is_system_service = $this->isSystemService($request, $short_name);
+        $scope             = $is_system_service ? Service::SCOPE_SYSTEM : Service::SCOPE_PROJECT;
 
         $this->checkShortname($project, $short_name);
         $this->checkLabel($label);

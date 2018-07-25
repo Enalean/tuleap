@@ -35,7 +35,8 @@ class Service {
     const WIKI      = 'wiki';
     const TRACKERV3 = 'tracker';
 
-    const SCOPE_SYSTEM = 'system';
+    const SCOPE_SYSTEM  = 'system';
+    const SCOPE_PROJECT = 'project';
 
     public $data;
     

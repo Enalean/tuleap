@@ -82,21 +82,6 @@
                    maxlength="255">
         </div>
 
-        {{# is_default_template }}
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="project-admin-services-add-modal-scope">
-                    {{# gettext }}Scope{{/ gettext }}
-                </label>
-                <select class="tlp-select tlp-select-adjusted" id="project-admin-services-add-modal-scope" name="scope">
-                    <option value="system" selected>{{# gettext }}System{{/ gettext }}</option>
-                    <option value="project">{{# gettext }}Project{{/ gettext }}</option>
-                </select>
-            </div>
-        {{/ is_default_template }}
-        {{^ is_default_template }}
-            <input type="hidden" name="scope" value="project">
-        {{/ is_default_template }}
-
         <hr class="tlp-modal-separator">
 
         {{# is_default_template }}
