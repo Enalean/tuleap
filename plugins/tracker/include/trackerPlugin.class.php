@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuealp\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -28,6 +29,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
+use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
@@ -184,6 +186,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
         $this->addHook(CLICommandsCollector::NAME);
+        $this->addHook(GetProjectWithTrackerAdministrationPermission::NAME);
     }
 
     public function getHooksAndCallbacks() {
@@ -1717,5 +1720,29 @@ class trackerPlugin extends Plugin {
             ),
             new UserNotificationSettingsDAO()
         );
+    }
+
+    public function getProjectWithTrackerAdministrationPermission(GetProjectWithTrackerAdministrationPermission $event)
+    {
+        $user = $event->getUser();
+        $dao  = new \Tuleap\Tracker\dao\ProjectDao(new TrackerManager);
+
+        $matching_projects_rows = $dao->searchProjectsForREST($user, $event->getLimit(), $event->getOffset());
+        $total_size             = $dao->foundRows();
+
+        $project_with_tracker_administration = [];
+        foreach ($matching_projects_rows as $project_row) {
+            $trackers = $this->getTrackerFactory()->getTrackersByProjectIdUserCanAdministration(
+                $project_row['group_id'],
+                $user
+            );
+
+            if (count($trackers) > 0) {
+                $project_with_tracker_administration[] = new Project($project_row);
+            }
+        }
+
+        $paginated_projects = new PaginatedProjects($project_with_tracker_administration, $total_size);
+        $event->setPaginatedProjects($paginated_projects);
     }
 }

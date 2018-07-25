@@ -165,6 +165,23 @@ class TrackerFactory {
     }
 
     /**
+     * @return array of Tracker
+     */
+    public function getTrackersByProjectIdUserCanAdministration($project_id, PFUser $user)
+    {
+        $trackers = [];
+        foreach($this->getDao()->searchByGroupId($project_id) as $row) {
+            $tracker_id = $row['id'];
+            $tracker    = $this->getCachedInstanceFromRow($row);
+            if ($tracker->userIsAdmin($user)) {
+                $trackers[$tracker_id] = $tracker;
+            }
+        }
+
+        return $trackers;
+    }
+
+    /**
      * @param Tracker $tracker
      *
      * @return Children trackers of the given tracker.

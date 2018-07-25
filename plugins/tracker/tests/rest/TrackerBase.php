@@ -28,14 +28,17 @@ use RestBase;
 
 class TrackerBase extends RestBase
 {
-    const MOVE_PROJECT_NAME           = 'move-artifact';
-    const DELETE_PROJECT_NAME         = 'test-delete-artifacts';
-    const TRACKER_FIELDS_PROJECT_NAME = 'test-tracker-fields';
+    const MOVE_PROJECT_NAME                  = 'move-artifact';
+    const DELETE_PROJECT_NAME                = 'test-delete-artifacts';
+    const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
+    const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
 
     const MOVE_TRACKER_SHORTNAME            = 'ToMoveArtifacts';
     const BASE_TRACKER_SHORTNAME            = 'base';
     const DELETE_TRACKER_SHORTNAME          = 'diasabled_delete_artifacts_testing_2';
     const TRACKER_FIELDS_TRACKER_SHORTNAME  = 'tracker_fields_tracker';
+
+    protected $tracker_administrator_project_id;
 
     protected $delete_tracker_id;
     protected $move_tracker_id;
@@ -49,9 +52,10 @@ class TrackerBase extends RestBase
     {
         parent::setUp();
 
-        $move_project_id           = $this->getProjectId(self::MOVE_PROJECT_NAME);
-        $delete_project_id         = $this->getProjectId(self::DELETE_PROJECT_NAME);
-        $tracker_fields_project_id = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
+        $move_project_id                        = $this->getProjectId(self::MOVE_PROJECT_NAME);
+        $delete_project_id                      = $this->getProjectId(self::DELETE_PROJECT_NAME);
+        $tracker_fields_project_id              = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
+        $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
 
         $this->move_tracker_id           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
         $this->base_tracker_id           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];

@@ -26,6 +26,7 @@
     unix-name="test-tracker-fields" full-name="TrackerFields" description="For test" access="public">
     <long-description>Project for tracker fields actions</long-description>
     <services>
+        <service shortname="plugin_tracker" enabled="true" />
     </services>
     <ugroups>
         <ugroup name="project_members" description="">
