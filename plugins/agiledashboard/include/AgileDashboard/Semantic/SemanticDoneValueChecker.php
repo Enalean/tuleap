@@ -29,7 +29,7 @@ class SemanticDoneValueChecker
     /**
      * @return bool
      */
-    public function isValueADoneValue(
+    public function isValueAPossibleDoneValue(
         Tracker_FormElement_Field_List_Value $value,
         Tracker_Semantic_Status $semantic_status
     ) {
@@ -39,7 +39,7 @@ class SemanticDoneValueChecker
     /**
      * @return bool
      */
-    public function isValueADoneValueInXMLImport(
+    public function isValueAPossibleDoneValueInXMLImport(
         Tracker_FormElement_Field_List_Value $value,
         SimpleXMLElement $xml_semantic_status
     ) {

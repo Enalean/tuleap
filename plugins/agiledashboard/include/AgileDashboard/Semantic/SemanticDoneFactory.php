@@ -82,7 +82,7 @@ class SemanticDoneFactory
             $ref   = (string) $xml_closed_value['REF'];
             $value = $xmlMapping[$ref];
 
-            if ($value && $this->value_checker->isValueADoneValueInXMLImport($value, $xml_semantic_status)) {
+            if ($value && $this->value_checker->isValueAPossibleDoneValueInXMLImport($value, $xml_semantic_status)) {
                 $done_values[] = $value;
             }
         }

@@ -20,14 +20,19 @@
 
 namespace Tuleap\AgileDashboard\Semantic;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use TuleapTestCase;
+use Tracker_Semantic_Status;
 
-require_once dirname(__FILE__) . '/../../../bootstrap.php';
+require_once dirname(__FILE__) . '/../../bootstrap.php';
 
-class SemanticDoneValueCheckerTest extends TuleapTestCase
+class SemanticDoneValueCheckerTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var SemanticDoneValueChecker
      */
@@ -47,7 +52,8 @@ class SemanticDoneValueCheckerTest extends TuleapTestCase
         $this->xml_done_value     = new Tracker_FormElement_Field_List_Bind_StaticValue("F3", 'done', '', 3, false);
         $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue("F4", 'hidden', '', 4, true);
 
-        $this->semantic_status = stub('Tracker_Semantic_Status')->getOpenValues()->returns(array(
+        $this->semantic_status = Mockery::spy(Tracker_Semantic_Status::class);
+        $this->semantic_status->shouldReceive('getOpenValues')->andReturn(array(
             1,
             2
         ));
@@ -64,46 +70,46 @@ class SemanticDoneValueCheckerTest extends TuleapTestCase
         $this->value_checker = new SemanticDoneValueChecker();
     }
 
-    public function itReturnsTrueWhenTheValueCouldBeAddedAsADoneValue()
+    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValue()
     {
-        $this->assertTrue($this->value_checker->isValueADoneValue($this->done_value, $this->semantic_status));
+        $this->assertTrue($this->value_checker->isValueAPossibleDoneValue($this->done_value, $this->semantic_status));
     }
 
-    public function itReturnsFalseWhenTheValueIsAnOpenValue()
+    public function testItReturnsFalseWhenTheValueIsAnOpenValue()
     {
-        $this->assertFalse($this->value_checker->isValueADoneValue($this->to_do_value, $this->semantic_status));
-        $this->assertFalse($this->value_checker->isValueADoneValue($this->on_going_value, $this->semantic_status));
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->to_do_value, $this->semantic_status));
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->on_going_value, $this->semantic_status));
     }
 
-    public function itReturnsFalseWhenTheValueIsHidden()
+    public function testItReturnsFalseWhenTheValueIsHidden()
     {
-        $this->assertFalse($this->value_checker->isValueADoneValue($this->hidden_value, $this->semantic_status));
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValue($this->hidden_value, $this->semantic_status));
     }
 
-    public function itReturnsTrueWhenTheValueCouldBeAddedAsADoneValueInXML()
+    public function testItReturnsTrueWhenTheValueCouldBeAddedAsADoneValueInXML()
     {
-        $this->assertTrue($this->value_checker->isValueADoneValueInXMLImport(
+        $this->assertTrue($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_done_value,
             $this->xml_semantic_status
         ));
     }
 
-    public function itReturnsFalseWhenTheValueIsAnOpenValueInXML()
+    public function testItReturnsFalseWhenTheValueIsAnOpenValueInXML()
     {
-        $this->assertFalse($this->value_checker->isValueADoneValueInXMLImport(
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_to_do_value,
             $this->xml_semantic_status
         ));
 
-        $this->assertFalse($this->value_checker->isValueADoneValueInXMLImport(
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_on_going_value,
             $this->xml_semantic_status
         ));
     }
 
-    public function itReturnsFalseWhenTheValueIsHiddenInXML()
+    public function testItReturnsFalseWhenTheValueIsHiddenInXML()
     {
-        $this->assertFalse($this->value_checker->isValueADoneValueInXMLImport(
+        $this->assertFalse($this->value_checker->isValueAPossibleDoneValueInXMLImport(
             $this->xml_hidden_value,
             $this->xml_semantic_status
         ));
