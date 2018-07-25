@@ -19,33 +19,19 @@
  *
  */
 
-namespace Tuleap\Widget\Event;
+namespace Tuleap\Widget\Note;
 
-use Tuleap\Widget\Note\ProjectNote;
-use Tuleap\Widget\ProjectHeartbeat;
-
-class GetProjectWidgetList extends GetWidgetList
+class NotePreferencesPresenter
 {
-    const NAME = 'getProjectWidgetList';
 
-    const CORE_WIDGETS = [
-        'projectdescription',
-        'projectmembers',
-        ProjectHeartbeat::NAME,
-        'projectlatestfilereleases',
-        'projectlatestnews',
-        'projectpublicareas',
-        'projectlatestsvncommits',
-        'projectlatestcvscommits',
-        'projectsvnstats',
-        'projectrss',
-        'projectimageviewer',
-        'projectcontacts',
-        ProjectNote::NAME,
-    ];
+    public $widget_id;
+    public $title;
+    public $content;
 
-    public function __construct()
+    public function __construct($widget_id, $title, $content)
     {
-        parent::__construct(self::CORE_WIDGETS);
+        $this->widget_id = $widget_id;
+        $this->title     = $title;
+        $this->content   = $content;
     }
 }

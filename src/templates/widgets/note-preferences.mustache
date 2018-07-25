@@ -1,0 +1,17 @@
+<div class="tlp-form-element">
+    <label class="tlp-label" for="title-{{ widget_id }}">{{# gettext }}Title{{/ gettext }}</label>
+    <input type="text"
+           class="tlp-input"
+           id="title-{{ widget_id }}"
+           name="note[title]"
+           value="{{ title }}"
+           placeholder="{{# gettext }}Note{{/ gettext }}">
+</div>
+
+<div class="tlp-form-element">
+    <label class="tlp-label" for="content-{{ widget_id }}">
+        {{# gettext }}Content{{/ gettext }} <i class="fa fa-asterisk"></i>
+    </label>
+    <textarea type="text" class="tlp-textarea" id="content-{{ widget_id }}" name="note[content]" placeholder="{{# gettext }}## Some notes{{/ gettext }}" cols="60" rows="10">{{ content }}</textarea>
+    <p class="tlp-text-info"><i class="fa fa-life-saver"></i> {{# gettext }}You can use markdown to format your text{{/ gettext }}</p>
+</div>
