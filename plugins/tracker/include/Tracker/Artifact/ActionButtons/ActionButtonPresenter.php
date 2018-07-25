@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\REST\Artifact\ActionButtons;
+namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 class ActionButtonPresenter
 {

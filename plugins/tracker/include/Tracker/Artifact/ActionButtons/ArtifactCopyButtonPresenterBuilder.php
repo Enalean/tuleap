@@ -20,20 +20,27 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-class GlobalButtonsActionPresenter
-{
-    /**
-     * @var array
-     */
-    public $action_buttons;
-    /**
-     * @var bool
-     */
-    public $has_at_least_one_action;
+use PFUser;
+use Tracker_Artifact;
 
-    public function __construct(array $action_buttons)
+class ArtifactCopyButtonPresenterBuilder
+{
+    public function getCopyArtifactButton(PFUser $user, Tracker_Artifact $artifact)
     {
-        $this->action_buttons          = $action_buttons;
-        $this->has_at_least_one_action = count($action_buttons) > 0;
+        if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
+            return new ActionButtonPresenter(
+                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
+                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
+                TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId(),
+                "icon-copy",
+                "",
+                ""
+            );
+        }
+    }
+
+    private function isAlreadyCopyingArtifact()
+    {
+        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
     }
 }
