@@ -55,7 +55,7 @@ class ArtifactNotificationActionButtonPresenterBuilder
             $this->getUnsubscribeButtonAlternateText($user, $artifact),
             "",
             "icon-bell-alt",
-            "",
+            [],
             "tracker-artifact-notification"
         );
     }

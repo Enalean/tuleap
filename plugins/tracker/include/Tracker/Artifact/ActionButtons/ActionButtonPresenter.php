@@ -47,13 +47,13 @@ class ActionButtonPresenter
      */
     public $css_class;
 
-    public function __construct($label, $title, $url, $icon, $data_property, $class)
+    public function __construct($label, $title, $url, $icon, array $data_property, $class)
     {
         $this->label         = $label;
+        $this->title         = $title;
         $this->url           = $url;
         $this->icon          = $icon;
         $this->data_property = $data_property;
-        $this->title         = $title;
         $this->css_class     = $class;
     }
 }

@@ -8,7 +8,7 @@
                 {{# section }}
                     <li>
                         <a class="btn tracker-action-button {{ css_class }}"
-                           {{# data_property }}{{ . }}{{/ data_property }}
+                           {{# data_property }}{{ name }}="{{ value }}"{{/ data_property }}
                            {{# url }}href="{{ url }}"{{/ url }}
                            {{# title }} title="{{ . }}" {{/ title }}>
                            <i class="{{ icon }}"></i> {{ label }}
