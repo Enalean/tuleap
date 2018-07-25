@@ -15,7 +15,7 @@
     "ezyang/htmlpurifier": "dev-master#89b3fe431e422fd06ce71ced8cfbd5a56c22b344",
     "firebase/php-jwt": "^5.0.0",
     "paragonie/sodium_compat": "^1.6",
-    "Luracast/Restler": "dev-3.0.0-RC6-July2018",
+    "Luracast/Restler": "dev-3.0.0-RC6-July2018-FixURLDecoding",
     "php-amqplib/php-amqplib": "^2.7",
     "delight-im/cookie": "^3.1",
     "paragonie/easydb": "^1.3",

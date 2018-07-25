@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f73fbda91c6ddcd975383e4d0c41a060",
+    "content-hash": "361db4b21906e30cdc2faab3feebe39f",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -567,16 +567,16 @@
         },
         {
             "name": "luracast/restler",
-            "version": "dev-3.0.0-RC6-July2018",
+            "version": "dev-3.0.0-RC6-July2018-FixURLDecoding",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Enalean/Restler.git",
-                "reference": "06f0cadc14a5e47d52c431abb6f60197e7c0b2e2"
+                "reference": "151a1813a29348967f190b950abcfb2eda3150ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Enalean/Restler/zipball/06f0cadc14a5e47d52c431abb6f60197e7c0b2e2",
-                "reference": "06f0cadc14a5e47d52c431abb6f60197e7c0b2e2",
+                "url": "https://api.github.com/repos/Enalean/Restler/zipball/151a1813a29348967f190b950abcfb2eda3150ae",
+                "reference": "151a1813a29348967f190b950abcfb2eda3150ae",
                 "shasum": ""
             },
             "require": {
@@ -630,9 +630,9 @@
                 "server"
             ],
             "support": {
-                "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6-July2018"
+                "source": "https://github.com/Enalean/Restler/tree/3.0.0-RC6-July2018-FixURLDecoding"
             },
-            "time": "2018-01-17T08:18:17+00:00"
+            "time": "2018-07-25T10:07:10+00:00"
         },
         {
             "name": "michelf/php-markdown",
