@@ -47,6 +47,19 @@ class SemanticDoneDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
+    public function isValueADoneValue($tracker_id, $value_id)
+    {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $value_id   = $this->da->escapeInt($value_id);
+
+        $sql = "SELECT NULL
+                FROM plugin_agiledashboard_semantic_done
+                WHERE tracker_id = $tracker_id
+                  AND value_id = $value_id";
+
+        return count($this->retrieve($sql)) > 0;
+    }
+
     public function getSemanticStatement($field_id, $tracker_id)
     {
         $field_id   = $this->da->escapeInt($field_id);

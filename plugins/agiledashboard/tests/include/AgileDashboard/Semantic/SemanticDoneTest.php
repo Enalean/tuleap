@@ -29,11 +29,6 @@ require_once dirname(__FILE__) . '/../../../bootstrap.php';
 class SemanticDoneTest extends TuleapTestCase
 {
 
-    /**
-     * @var SemanticDone
-     */
-    private $semantic_done;
-
     public function setUp()
     {
         parent::setUp();

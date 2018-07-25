@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Tracker_Artifact;
+use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Semantic\SemanticDone;
@@ -112,11 +113,11 @@ class BurnupCalculator
          * @var $initial_effort_field \Tracker_FormElement_Field
          */
         $initial_effort_field = $semantic_initial_effort->getField();
+        $changeset            = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
 
         $total_effort = 0;
         $team_effort  = 0;
-        if ($initial_effort_field) {
-            $changeset = $this->changeset_factory->getChangesetAtTimestamp($artifact, $timestamp);
+        if ($initial_effort_field && $this->artifactMustBeAddedInBurnupCalculation($changeset, $semantic_done)) {
             if ($artifact->getValue($initial_effort_field, $changeset)) {
                 $total_effort = $artifact->getValue($initial_effort_field, $changeset)->getValue();
             }
@@ -126,5 +127,15 @@ class BurnupCalculator
         }
 
         return new BurnupEffort((float) $team_effort, (float) $total_effort);
+    }
+
+    /**
+     * @return bool
+     */
+    private function artifactMustBeAddedInBurnupCalculation(
+        Tracker_Artifact_Changeset $changeset,
+        SemanticDone $semantic_done
+    ) {
+        return $changeset->getArtifact()->isOpen() || $semantic_done->isDone($changeset);
     }
 }
