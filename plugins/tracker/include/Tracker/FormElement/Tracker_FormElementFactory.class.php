@@ -1742,4 +1742,9 @@ class Tracker_FormElementFactory {
 
         return $fields;
     }
+
+    public function isFieldASimpleListField(Tracker_FormElement_Field $field)
+    {
+        return in_array($this->getType($field), ["sb", "rb"]);
+    }
 }

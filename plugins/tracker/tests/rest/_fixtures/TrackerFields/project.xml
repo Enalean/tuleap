@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright Enalean (c) 2018. All rights reserved.
+  ~
+  ~ Tuleap and Enalean names and logos are registrated trademarks owned by
+  ~ Enalean SAS. All other trademarks or names are properties of their respective
+  ~ owners.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project
+    unix-name="test-tracker-fields" full-name="TrackerFields" description="For test" access="public">
+    <long-description>Project for tracker fields actions</long-description>
+    <services>
+    </services>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T1" parent_id="0">
+            <name><![CDATA[Tacker Fields tracker]]></name>
+            <item_name>tracker_fields_tracker</item_name>
+            <description>tracker fields REST actions</description>
+            <color>clockwork_orange</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="msb" ID="F35457" rank="0">
+                    <name>staticmsb</name>
+                    <label><![CDATA[StaticMSB]]></label>
+                    <properties size="7"/>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V31081" label="1" is_hidden="0"/>
+                            <item ID="V31082" label="2" is_hidden="0"/>
+                            <item ID="V31083" label="3" is_hidden="0"/>
+                            <item ID="V31084" label="4" is_hidden="0"/>
+                            <item ID="V31085" label="5" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="tbl" ID="F35241" rank="3">
+                    <name>usersol</name>
+                    <label><![CDATA[UsersOL]]></label>
+                    <properties hint="Type in a search term"/>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="msb" ID="F35240" rank="4">
+                    <name>usersmsb</name>
+                    <label><![CDATA[UsersMSB]]></label>
+                    <properties size="7"/>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F35239" rank="5">
+                    <name>userssb</name>
+                    <label><![CDATA[UsersSB]]></label>
+                    <bind type="users">
+                        <items>
+                            <item label="group_members"/>
+                        </items>
+                    </bind>
+                </formElement>
+                <formElement type="rb" ID="F34992" rank="6">
+                    <name>staticrb</name>
+                    <label><![CDATA[StaticRB]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V30826" label="1" is_hidden="0"/>
+                            <item ID="V30827" label="2" is_hidden="0"/>
+                            <item ID="V30828" label="3" is_hidden="0"/>
+                            <item ID="V30829" label="4" is_hidden="0"/>
+                            <item ID="V30830" label="5" is_hidden="0"/>
+                        </items>
+                        <default_values>
+                            <value REF="V30826"/>
+                        </default_values>
+                    </bind>
+                </formElement>
+                <formElement type="sb" ID="F34988" rank="14">
+                    <name>staticsb</name>
+                    <label><![CDATA[StaticSB]]></label>
+                    <bind type="static" is_rank_alpha="0">
+                        <items>
+                            <item ID="V30809" label="1" is_hidden="0"/>
+                            <item ID="V30810" label="2" is_hidden="0"/>
+                            <item ID="V30811" label="3" is_hidden="0"/>
+                            <item ID="V30812" label="4" is_hidden="0"/>
+                            <item ID="V30813" label="5" is_hidden="0"/>
+                        </items>
+                    </bind>
+                </formElement>
+            </formElements>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+                <permission scope="field" REF="F35457" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F35457" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F35457" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F35241" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F35241" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F35241" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F35240" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F35240" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F35240" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F35239" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F35239" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F35239" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F34992" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F34992" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F34992" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+                <permission scope="field" REF="F34988" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+                <permission scope="field" REF="F34988" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+                <permission scope="field" REF="F34988" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+            </permissions>
+        </tracker>
+    </trackers>
+</project>
