@@ -33,10 +33,6 @@ use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 class ArtifactsDeletionManager
 {
     /**
-     * @var ArtifactsDeletionConfig
-     */
-    private $config;
-    /**
      * @var SystemEventDao
      */
     private $dao;
@@ -45,20 +41,18 @@ class ArtifactsDeletionManager
      */
     private $artifact_deletor;
     /**
-     * @var UserDeletionRetriever
+     * @var ArtifactDeletionLimitRetriever
      */
-    private $user_deletion_retriever;
+    private $deletion_limit_retriever;
 
     public function __construct(
-        ArtifactsDeletionConfig $config,
         ArtifactsDeletionDAO $dao,
         ArtifactDeletor $artifact_deletor,
-        UserDeletionRetriever $user_deletion_retriever
+        ArtifactDeletionLimitRetriever $deletion_limit_retriever
     ) {
-        $this->config                  = $config;
         $this->dao                     = $dao;
         $this->artifact_deletor        = $artifact_deletor;
-        $this->user_deletion_retriever = $user_deletion_retriever;
+        $this->deletion_limit_retriever = $deletion_limit_retriever;
     }
 
     /**
@@ -71,7 +65,7 @@ class ArtifactsDeletionManager
         Tracker_artifact $artifact,
         PFUser $user
     ) {
-        $remaining_deletions = $this->getNumberOfArtifactsAllowedToDelete($user);
+        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;
 
         $this->artifact_deletor->delete($artifact, $user);
         $this->dao->recordDeletionForUser($user->getId(), time());
@@ -89,31 +83,11 @@ class ArtifactsDeletionManager
         Tracker_artifact $artifact,
         PFUser $user
     ) {
-        $remaining_deletions = $this->getNumberOfArtifactsAllowedToDelete($user);
+        $remaining_deletions = $this->deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user) -1;
 
         $this->artifact_deletor->deleteWithoutTransaction($artifact, $user);
         $this->dao->recordDeletionForUser($user->getId(), time());
 
         return $remaining_deletions;
-    }
-
-    /**
-     * @throws ArtifactsDeletionLimitReachedException
-     * @throws DeletionOfArtifactsIsNotAllowedException
-     */
-    private function getNumberOfArtifactsAllowedToDelete(PFUser $user)
-    {
-        $limit = $this->config->getArtifactsDeletionLimit();
-        if (!$limit) {
-            throw new DeletionOfArtifactsIsNotAllowedException();
-        }
-
-        $nb_artifacts_deleted = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
-
-        if ($nb_artifacts_deleted >= (int)$limit) {
-            throw new ArtifactsDeletionLimitReachedException();
-        }
-
-        return $limit - ($nb_artifacts_deleted + 1);
     }
 }

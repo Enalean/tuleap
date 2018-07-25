@@ -83,6 +83,9 @@ msgstr ""
 msgid "Artifacts deletion configuration"
 msgstr ""
 
+msgid "Artifacts with artifact links can not be moved."
+msgstr ""
+
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
 "this tracker."
@@ -200,6 +203,9 @@ msgid ""
 "24 hours sliding window."
 msgstr ""
 
+msgid "Move artifact"
+msgstr ""
+
 msgid "No color"
 msgstr ""
 
@@ -216,6 +222,9 @@ msgid "No notifications"
 msgstr ""
 
 msgid "No notifications at all"
+msgstr ""
+
+msgid "No semantic defined in this tracker."
 msgstr ""
 
 msgid "No users have unsubscribed."

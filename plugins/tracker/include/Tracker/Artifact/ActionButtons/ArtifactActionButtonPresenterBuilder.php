@@ -38,14 +38,21 @@ class ArtifactActionButtonPresenterBuilder
      */
     private $artifact_copy_button_builder;
 
+    /**
+     * @var ArtifactMoveButtonPresenterBuilder
+     */
+    private $move_button_builder;
+
     public function __construct(
         ArtifactNotificationActionButtonPresenterBuilder $notification_button_builder,
         ArtifactIncomingEmailButtonPresenterBuilder $mail_button_builder,
-        ArtifactCopyButtonPresenterBuilder $artifact_copy_button_builder
+        ArtifactCopyButtonPresenterBuilder $artifact_copy_button_builder,
+        ArtifactMoveButtonPresenterBuilder $move_button_builder
     ) {
         $this->notification_button_builder  = $notification_button_builder;
         $this->mail_button_builder          = $mail_button_builder;
         $this->artifact_copy_button_builder = $artifact_copy_button_builder;
+        $this->move_button_builder          = $move_button_builder;
     }
 
     public function build(PFUser $user, Tracker_Artifact $artifact)
@@ -56,14 +63,21 @@ class ArtifactActionButtonPresenterBuilder
         $copy_artifact  = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);
         $notification   = $this->notification_button_builder->getNotificationButton($user, $artifact);
 
+        if (\ForgeConfig::get('tracker_move_artifact_ui')) {
+            $move_artifact  = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
+        }
+
         if ($original_email) {
             $action_buttons[]['section'] = $original_email;
         }
         if ($copy_artifact) {
             $action_buttons[]['section'] = $copy_artifact;
         }
+        if (\ForgeConfig::get('tracker_move_artifact_ui') && $move_artifact) {
+            $action_buttons[]['section'] = $move_artifact;
+        }
 
-        if (($original_email || $copy_artifact) && $notification) {
+        if (($original_email || $copy_artifact || $move_artifact) && $notification) {
             $action_buttons[]['divider'] = true;
         }
 

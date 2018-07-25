@@ -71,6 +71,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
@@ -170,6 +171,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_ARTIFACT_DELETE);
             $this->addHook(MoveArtifactGetExternalSemanticCheckers::NAME);
             $this->addHook(MoveArtifactParseFieldChangeNodes::NAME);
+            $this->addHook(MoveArtifactActionAllowedByPluginRetriever::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -1696,5 +1698,12 @@ class AgileDashboardPlugin extends Plugin {
             $this->getSemanticInitialEffortFactory(),
             $this->getFormElementFactory()
         );
+    }
+
+    public function moveArtifactActionAllowedByPluginRetriever(MoveArtifactActionAllowedByPluginRetriever $event)
+    {
+        if ($this->getSemanticInitialEffortFactory()->getByTracker($event->getTracker())->getFieldId() !== 0) {
+            $event->hasExternalSemanticDefined();
+        };
     }
 }
