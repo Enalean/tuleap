@@ -83,11 +83,11 @@ then
     ${GREP} -i -q centos ${RH_RELEASE}
     if [ "${?}" -eq 0 ]
     then
-        RH_VERSION=($(${AWK} '{print $1, $3}' ${RH_RELEASE}))
+        RH_FULL_VERSION=($(${AWK} '{print $1, $3}' ${RH_RELEASE}))
     else
-        RH_VERSION=($(${AWK} '{print $1$2, $7}' ${RH_RELEASE}))
+        RH_FULL_VERSION=($(${AWK} '{print $1$2, $7}' ${RH_RELEASE}))
     fi
-    RH_MINOR_VERSION=$(echo ${RH_VERSION[1]: 2:1})
+    RH_VERSION=$(echo ${RH_FULL_VERSION[1]})
 else
     echo -e "\033[31mSorry, Tuleap is running only on RedHat/CentOS.\033[0m"
     exit 1
@@ -952,10 +952,10 @@ done
 # Check release
 #
 RH_UPDATE="3"
-if [ "x$RH_MINOR_VERSION" != x ] && [ "$RH_MINOR_VERSION" -ge "$RH_UPDATE" ]; then
-    echo "Good! You are running ${RH_VERSION[@]}"
+if [ "x$RH_VERSION" != x ] && [ "$(echo -e "$RH_VERSION\n6.$RH_UPDATE" | sort -V | head -n 1)" != "$RH_VERSION" ]; then
+    echo "Good! You are running ${RH_FULL_VERSION[@]}"
 else
-    echo "This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}"
+    echo "This machine is not running RedHat Enterprise Linux or CentOS 6.${RH_UPDATE}"
     echo "You should consider to upgrade your system before going any further (yum upgrade)."
     read -p "Continue? [y|n]: " yn
     if [ "$yn" = "n" ]; then
