@@ -33,7 +33,7 @@ class ArtifactCopyButtonPresenterBuilder
                 $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
                 TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId(),
                 "icon-copy",
-                "",
+                [],
                 ""
             );
         }
