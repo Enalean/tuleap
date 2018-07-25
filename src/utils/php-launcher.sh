@@ -48,7 +48,12 @@ if [ -z "$PHP_PARAMS" ]; then
     PHP_PARAMS="-q -d include_path=/usr/share/php:/usr/share/pear:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src:/usr/share/jpgraph:. -d memory_limit=256M"
 fi
 
+php_display_errors="-d error_reporting=0"
+if [ "$DISPLAY_ERRORS" = true ]; then
+    php_display_errors=""
+fi
+
 # Finally runs php interpretor
 phpscript=$1;
 shift;
-exec "${PHP}" ${PHP_PARAMS} $phpscript "$@" 2> /dev/null
+exec "${PHP}" ${php_display_errors} ${PHP_PARAMS} $phpscript "$@"
