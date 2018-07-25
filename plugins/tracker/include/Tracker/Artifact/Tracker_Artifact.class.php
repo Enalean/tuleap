@@ -25,7 +25,12 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -35,7 +40,6 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
-use Tuleap\Tracker\REST\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const REST_ROUTE        = 'artifacts';
@@ -381,10 +385,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             TRACKER_TEMPLATE_DIR
         );
 
-        $builder                   = new ArtifactActionButtonPresenterBuilder(
-            Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance(),
-            $this->getUnsubscribersNotificationDao(),
-            $this->getDao()
+        $builder = new ArtifactActionButtonPresenterBuilder(
+            new ArtifactNotificationActionButtonPresenterBuilder(
+                $this->getUnsubscribersNotificationDao(),
+                $this->getDao()
+            ),
+            new ArtifactIncomingEmailButtonPresenterBuilder(
+                Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance()
+            ),
+            new ArtifactCopyButtonPresenterBuilder()
         );
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);
