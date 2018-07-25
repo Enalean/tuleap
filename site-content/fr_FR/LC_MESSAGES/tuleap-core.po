@@ -853,9 +853,6 @@ msgstr ""
 "nouvelle adresse incluant un lien à visiter pour confirmer définitivement le "
 "changement."
 
-msgid "System"
-msgstr "Système"
-
 msgid "System groups"
 msgstr "Groupes système"
 

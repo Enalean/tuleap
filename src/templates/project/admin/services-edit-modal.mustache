@@ -100,21 +100,6 @@
             </div>
         {{/ is_read_only }}
 
-        {{# is_default_template }}
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="project-admin-services-edit-modal-{{ id }}-scope">
-                    {{# gettext }}Scope{{/ gettext }}
-                </label>
-                <select class="tlp-select tlp-select-adjusted" id="project-admin-services-edit-modal-{{ id }}-scope" name="scope">
-                    <option value="system" {{^ is_scope_project }}selected{{/ is_scope_project }}>{{# gettext }}System{{/ gettext }}</option>
-                    <option value="project" {{# is_scope_project }}selected{{/ is_scope_project }}>{{# gettext }}Project{{/ gettext }}</option>
-                </select>
-            </div>
-        {{/ is_default_template }}
-        {{^ is_default_template }}
-            <input type="hidden" name="scope" value="{{ scope }}">
-        {{/ is_default_template }}
-
         <hr class="tlp-modal-separator">
 
         {{# can_update_is_active }}
