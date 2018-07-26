@@ -8,6 +8,9 @@ msgstr ""
 msgid "\"%s\" label already exists. Please choose another one."
 msgstr ""
 
+msgid "## Some notes"
+msgstr ""
+
 #, php-format
 msgid "%d member"
 msgid_plural "%d members"
@@ -67,6 +70,9 @@ msgid "Agile Dashboard"
 msgstr ""
 
 msgid "All groups"
+msgstr ""
+
+msgid "Allow to write informations for users on your dashboards using Markdown"
 msgstr ""
 
 msgid "Already used"
@@ -195,6 +201,9 @@ msgid "Configure services"
 msgstr ""
 
 msgid "Contact (help menu)"
+msgstr ""
+
+msgid "Content"
 msgstr ""
 
 msgid "Could not commit repository initial layout"
@@ -547,6 +556,9 @@ msgid "Not categorized"
 msgstr ""
 
 msgid "Not found"
+msgstr ""
+
+msgid "Note"
 msgstr ""
 
 msgid "Ooops an error occured"
@@ -1153,6 +1165,9 @@ msgid "You can not delete system user groups"
 msgstr ""
 
 msgid "You can only edit your own widgets."
+msgstr ""
+
+msgid "You can use markdown to format your text"
 msgstr ""
 
 msgid ""

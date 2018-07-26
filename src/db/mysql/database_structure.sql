@@ -1417,6 +1417,15 @@ CREATE TABLE IF NOT EXISTS widget_wikipage (
   KEY (owner_id, owner_type)
 );
 
+DROP TABLE IF EXISTS widget_note;
+CREATE TABLE IF NOT EXISTS widget_note (
+  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+  owner_id int(11) unsigned NOT NULL default '0',
+  owner_type varchar(1) NOT NULL default 'g',
+  title varchar(255) NOT NULL,
+  content TEXT NOT NULL,
+  KEY (owner_id, owner_type)
+);
 
 
 #

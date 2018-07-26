@@ -20,6 +20,8 @@
 
 namespace Tuleap\Widget;
 
+use ForgeConfig;
+use TemplateRendererFactory;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
@@ -168,6 +170,14 @@ class WidgetFactory
                 break;
             case 'projectcontacts':
                 $widget = new Widget_Contacts();
+                break;
+            case Note\ProjectNote::NAME:
+                $widget = new Note\ProjectNote(
+                    new Note\NoteDao(),
+                    TemplateRendererFactory::build()->getRenderer(
+                        __DIR__ . '/../../templates/widgets'
+                    )
+                );
                 break;
             default:
                 $get_widget_event = new GetWidget($widget_name);
