@@ -75,9 +75,9 @@ pipeline {
                     sh "make -C $WORKSPACE/sources phpunit-ci-56"
                     junit 'results/ut-phpunit-php-56/phpunit_tests_results.xml'
                 },
-                'UT PHPUnit PHP 7.0': {
-                    sh "make -C $WORKSPACE/sources phpunit-ci-70"
-                    junit 'results/ut-phpunit-php-70/phpunit_tests_results.xml'
+                'UT PHPUnit PHP 7.2': {
+                    sh "make -C $WORKSPACE/sources phpunit-ci-72"
+                    junit 'results/ut-phpunit-php-72/phpunit_tests_results.xml'
                 },
                 'Karma AgileDashboard PlanningV2': { runKarmaTests('planning', 'plugins/agiledashboard/www/js/planning-v2') },
                 'Karma AgileDashboard Kanban': { runKarmaTests('kanban', 'plugins/agiledashboard/www/js/kanban') },
