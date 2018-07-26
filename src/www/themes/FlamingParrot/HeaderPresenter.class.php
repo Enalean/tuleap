@@ -32,14 +32,24 @@ class FlamingParrot_HeaderPresenter
     /** @var OpenGraphPresenter */
     public $open_graph;
 
+    /** @var string */
+    public $variant;
+
+    /** @var string */
+    public $variant_color_code;
+
     function __construct(
         $title,
         $img_root,
-        OpenGraphPresenter $open_graph
+        OpenGraphPresenter $open_graph,
+        $variant,
+        $variant_color_code
     ) {
-        $this->title      = $title;
-        $this->img_root   = $img_root;
-        $this->open_graph = $open_graph;
+        $this->title              = $title;
+        $this->img_root           = $img_root;
+        $this->open_graph         = $open_graph;
+        $this->variant            = $variant;
+        $this->variant_color_code = $variant_color_code;
     }
 
     public function title()
