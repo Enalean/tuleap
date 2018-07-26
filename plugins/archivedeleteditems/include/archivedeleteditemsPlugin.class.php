@@ -1,7 +1,9 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean, 2015, 2016. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
+require_once __DIR__ . '/autoload.php';
 
 use Tuleap\ArchiveDeletedItems\ArchiveLogger;
 use Tuleap\ArchiveDeletedItems\FileCopier;
