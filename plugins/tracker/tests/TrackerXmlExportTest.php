@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,10 @@ class TrackerXmlExportTest extends TuleapTestCase {
 
     /** @var  Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory */
     private $nature_presenter_factory;
+    /**
+     * @var \Tracker_Artifact_XMLExport
+     */
+    private $tracker_artifact_XMLexport;
 
     public function setUp() {
         parent::setUp();
@@ -41,12 +45,13 @@ class TrackerXmlExportTest extends TuleapTestCase {
 
         $this->nature_presenter_factory = mock('Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory');
         $this->artifact_link_dao        = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
+        $this->tracker_artifact_XMLexport = mock('Tracker_Artifact_XMLExport');
 
         $this->xml_export = new TrackerXmlExport(
             $tracker_factory,
             mock('Tracker_Workflow_Trigger_RulesManager'),
             mock('XML_RNGValidator'),
-            mock('Tracker_Artifact_XMLExport'),
+            $this->tracker_artifact_XMLexport,
             mock('UserXMLExporter'),
             mock('EventManager'),
             $this->nature_presenter_factory,
@@ -109,6 +114,7 @@ class TrackerXmlExportTest extends TuleapTestCase {
 
         expect($this->tracker1)->exportToXML()->never();
         expect($this->tracker1)->exportToXMLInProjectExportContext()->once();
+        expect($this->tracker_artifact_XMLexport)->export()->once();
 
         $archive = mock('Tuleap\Project\XML\Export\ArchiveInterface');
 
