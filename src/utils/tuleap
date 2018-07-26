@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -d '/usr/share/tuleap' ]; then
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php $@
+    DISPLAY_ERRORS=true /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php $@
 else
-    /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/tuleap.php $@
+    DISPLAY_ERRORS=true /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/tuleap.php $@
 fi
