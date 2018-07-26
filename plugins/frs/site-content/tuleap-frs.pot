@@ -1,0 +1,2 @@
+msgid "Artifact linked to a Files release cannot be moved"
+msgstr ""

@@ -48,6 +48,7 @@ use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
@@ -101,6 +102,10 @@ class ArtifactsResource extends AuthenticatedResource {
     const VALUES_DEFAULT           = null;
 
     const EMPTY_TYPE = '';
+    /**
+     * @var UserDeletionRetriever
+     */
+    private $user_deletion_retriever;
 
     /** @var Tracker_ArtifactFactory */
     private $artifact_factory;
@@ -151,10 +156,9 @@ class ArtifactsResource extends AuthenticatedResource {
         $artifacts_deletion_dao           = new ArtifactsDeletionDAO();
         $this->user_deletion_retriever    = new UserDeletionRetriever($artifacts_deletion_dao);
         $this->artifacts_deletion_manager = new ArtifactsDeletionManager(
-            $this->artifacts_deletion_config,
             $artifacts_deletion_dao,
             ArtifactDeletorBuilder::build(),
-            $this->user_deletion_retriever
+            new ArtifactDeletionLimitRetriever($this->artifacts_deletion_config, $this->user_deletion_retriever)
         );
 
         $this->event_manager = EventManager::instance();

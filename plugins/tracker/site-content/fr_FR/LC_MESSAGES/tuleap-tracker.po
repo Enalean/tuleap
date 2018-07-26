@@ -109,6 +109,9 @@ msgstr "Suppression d'artéfacts"
 msgid "Artifacts deletion configuration"
 msgstr "Configuration de la suppression d'artéfacts"
 
+msgid "Artifacts with artifact links can not be moved."
+msgstr "Les artéfacts avec des liens vers d'autres artéfacts ne peuvent pas être déplacés."
+
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
 "this tracker."
@@ -242,6 +245,9 @@ msgstr ""
 "Nombre maximum d'artéfacts que les utilisateurs peuvent supprimer ou "
 "déplacer depuis l'API REST sur une période de 24 heures."
 
+msgid "Move artifact"
+msgstr "Déplacer l'artéfact"
+
 msgid "No color"
 msgstr "Pas de couleur"
 
@@ -259,6 +265,9 @@ msgstr "Aucune notification n'a été définie"
 
 msgid "No notifications at all"
 msgstr "Aucune notification"
+
+msgid "No semantic defined in this tracker."
+msgstr "Aucune sémantique n'est définie pour cet outil de suivi."
 
 msgid "No users have unsubscribed."
 msgstr "Aucun utilisateur ne s'est désabonné."

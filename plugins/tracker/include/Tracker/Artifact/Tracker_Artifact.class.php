@@ -28,9 +28,14 @@ require_once(dirname(__FILE__).'/../../constants.php');
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
+use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -393,7 +398,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             new ArtifactIncomingEmailButtonPresenterBuilder(
                 Tracker_Artifact_Changeset_IncomingMailGoldenRetriever::instance()
             ),
-            new ArtifactCopyButtonPresenterBuilder()
+            new ArtifactCopyButtonPresenterBuilder(),
+            new ArtifactMoveButtonPresenterBuilder(
+                new ArtifactDeletionLimitRetriever(
+                    new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
+                    new UserDeletionRetriever(new ArtifactsDeletionDAO())
+                ),
+                $this->getEventManager()
+            )
         );
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);
