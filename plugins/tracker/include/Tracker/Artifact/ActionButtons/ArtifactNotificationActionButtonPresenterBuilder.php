@@ -56,7 +56,8 @@ class ArtifactNotificationActionButtonPresenterBuilder
             "",
             "icon-bell-alt",
             [],
-            "tracker-artifact-notification"
+            "tracker-artifact-notification",
+            false
         );
     }
 

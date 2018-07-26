@@ -57,7 +57,8 @@ class ArtifactIncomingEmailButtonPresenterBuilder
             "",
             "icon-envelope-alt",
             ["name" => 'data-raw-email', "value" => $raw_mail],
-            "artifact-incoming-mail-button"
+            "artifact-incoming-mail-button",
+            false
         );
     }
 }

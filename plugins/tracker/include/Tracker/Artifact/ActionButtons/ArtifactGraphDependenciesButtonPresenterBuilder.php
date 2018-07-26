@@ -20,28 +20,41 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use PFUser;
 use Tracker_Artifact;
 
-class ArtifactCopyButtonPresenterBuilder
+class ArtifactGraphDependenciesButtonPresenterBuilder
 {
-    public function getCopyArtifactButton(PFUser $user, Tracker_Artifact $artifact)
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
+
+    public function __construct(\EventManager $event_manager)
     {
-        if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
-            return new ActionButtonPresenter(
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId(),
-                "icon-copy",
-                [],
-                "",
-                false
-            );
-        }
+        $this->event_manager = $event_manager;
     }
 
-    private function isAlreadyCopyingArtifact()
+    public function getGraphReferencesButton(Tracker_Artifact $artifact)
     {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
+        $reference_information = "";
+        $this->event_manager->processEvent(
+            TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION,
+            [
+                'artifact'              => $artifact,
+                'reference_information' => &$reference_information
+            ]
+        );
+
+        if (! empty($reference_information)) {
+            return new ActionButtonPresenter(
+                $reference_information[0]['links'][0]['label'],
+                "",
+                $reference_information[0]['links'][0]['link'],
+                "",
+                [],
+                "",
+                true
+            );
+        }
     }
 }

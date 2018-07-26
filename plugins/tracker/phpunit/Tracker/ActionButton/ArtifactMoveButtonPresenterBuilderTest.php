@@ -27,7 +27,6 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tracker;
 use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
@@ -106,7 +105,8 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             "",
             "icon-share-alt",
             ["name" => "disabled", "value" => "disabled"],
-            ""
+            "",
+            false
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -131,7 +131,8 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             "",
             "icon-share-alt",
             ["name" => "disabled", "value" => "disabled"],
-            ""
+            "",
+            false
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -158,7 +159,8 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             "",
             "icon-share-alt",
             ["name" => "disabled", "value" => "disabled"],
-            ""
+            "",
+            false
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -181,7 +183,8 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             "",
             "icon-share-alt",
             ["name" => "disabled", "value" => "disabled"],
-            ""
+            "",
+            false
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -204,7 +207,8 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             "",
             "icon-share-alt",
             [],
-            ""
+            "",
+            false
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);

@@ -72,64 +72,12 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
     public function fetch() {
         $html  = '';
         $html .= '<div class="tracker_artifact">';
-        $html .= $this->fetchArtifactReferencesSidebar();
 
         $html_form = $this->renderer->fetchFields($this->artifact, $this->request->get('artifact'));
         $html_form .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
         $html .= $this->renderer->fetchArtifactForm($html_form);
         $html .= '</div>';
-
-        return $html;
-    }
-
-    protected function fetchArtifactReferencesSidebar() {
-        $html                  = '';
-        $linked_artifacts      = $this->artifact->getLinkedArtifacts($this->user);
-        $reference_information = array();
-
-        $this->event_manager->processEvent(
-            TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION,
-            array(
-                'artifact' => $this->artifact,
-                'reference_information'=> &$reference_information
-            )
-        );
-
-        if (! empty($reference_information) || count($linked_artifacts) > 0) {
-            $html .= '<div class="artifact-references">';
-            $html .= '<div class="grip"><i class="icon-double-angle-left"></i></div>';
-            $html .= '<div class="artifact-references-content">';
-
-            foreach ($reference_information as $information) {
-                $html .= '<div>';
-                $html .= '<h2>' . $information['title'] . '</h2>';
-                foreach ($information['links'] as $link) {
-                    $html .= '<img src="' . $link['icon'] . '"/>';
-                    $html .= '<a href="' . $link['link'] . '">' . $link['label'] . '</a>';
-                }
-                $html .= '</div>';
-            }
-
-            if (count($linked_artifacts) > 0) {
-                $html .= '<div>';
-                $html .= '<h2>' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'references_title') . '</h2>';
-                $html .= '<ul>';
-
-                foreach ($linked_artifacts as $artifact) {
-                    $link = '/goto?key=' . $artifact->getTracker()->getItemName() . '&val=' . $artifact->getId() . '&group_id=' . $artifact->getTracker()->getProject()->getID();
-                    $html .= '<li>';
-                    $html .= '<a href="' . $link . '">' . $artifact->getXRefAndTitle() . '</a>';
-                    $html .= '</li>';
-                }
-
-                $html .= '</ul>';
-                $html .= '</div>';
-            }
-
-            $html .= '</div>';
-            $html .= '</div>';
-        }
 
         return $html;
     }
