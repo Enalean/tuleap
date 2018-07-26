@@ -22,9 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\REST\DataBuilder;
 
 require_once __DIR__ . '/../../include/trackerPlugin.class.php';
+require_once __DIR__ .'/DataBuilder.php';
 
-$config_dao = new ArtifactsDeletionConfigDAO();
-$config_dao->updateDeletableArtifactsLimit(2);
+$data_builder = new DataBuilder();
+$data_builder->setUp();

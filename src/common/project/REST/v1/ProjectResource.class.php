@@ -31,6 +31,7 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ReferenceManager;
+use Tuealp\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -232,11 +233,18 @@ class ProjectResource extends AuthenticatedResource {
      *   <li>a property "is_member_of" to search projects the current user is member of.
      *     Example: <pre>{"is_member_of": true}</pre>
      *   </li>
+     *   <li>a property "is_tracker_admin" to search projects the current user is administrator of at least one tracker.
+     *     Example: <pre>{"is_tracker_admin": true}</pre>
+     *   </li>
      * </ul>
      * </p>
      *
      * <p>
      *   <strong>/!\</strong> Please note that {"is_member_of": false} is not supported and will result
+     *   in a 400 Bad Request error.
+     * </p>
+     * <p>
+     *   <strong>/!\</strong> Please note that {"is_tracker_admin": false} is not supported and will result
      *   in a 400 Bad Request error.
      * </p>
      *
@@ -308,12 +316,20 @@ class ProjectResource extends AuthenticatedResource {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
         if (! isset($json_query['shortname'])
             && ! isset($json_query['is_member_of'])
+            && ! isset($json_query['is_tracker_admin'])
         ) {
-            throw new RestException(400, "You can only search on 'shortname' or 'is_member_of': true");
+            throw new RestException(400, "You can only search on 'shortname', 'is_member_of': true or 'is_tracker_admin': true");
         }
 
         if (isset($json_query['is_member_of']) && ! $json_query['is_member_of']) {
             throw new RestException(400, "Searching for projects you are not member of is not supported. Use 'is_member_of': true");
+        }
+
+        if (isset($json_query['is_tracker_admin']) && ! $json_query['is_tracker_admin']) {
+            throw new RestException(
+                400,
+                "Searching for projects you are not administrator of at least one tracker is not supported. Use 'is_tracker_admin': true"
+            );
         }
 
         if (isset($json_query['shortname'])) {
@@ -323,13 +339,18 @@ class ProjectResource extends AuthenticatedResource {
                 $offset,
                 $limit
             );
-        }
+        } elseif (isset($json_query['is_tracker_admin'])) {
+            $event = new GetProjectWithTrackerAdministrationPermission($user, $limit, $offset);
+            $this->event_manager->processEvent($event);
 
-        return $this->project_manager->getMyProjectsForREST(
-            $user,
-            $offset,
-            $limit
-        );
+            return $event->getPaginatedProjects();
+        } else {
+            return $this->project_manager->getMyProjectsForREST(
+                $user,
+                $offset,
+                $limit
+            );
+        }
     }
 
     /**
