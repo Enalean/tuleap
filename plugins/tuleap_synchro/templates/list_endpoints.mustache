@@ -1,0 +1,38 @@
+<h1>{{# dgettext }} tuleap-tuleap_synchro | Tuleap to Tuleap Synchronization {{/ dgettext }}</h1>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-list"></i> {{# dgettext }} tuleap-tuleap_synchro | List of import endpoints{{/ dgettext }}</h1>
+        </div>
+        <section class="tlp-pane-section">
+            <div class="tlp-table-actions">
+                <button id="button-add-import-endpoint"
+                        type="button"
+                        class="add-modal-button tlp-button-primary tlp-table-actions-element"
+                        data-modal-id="add-import-endpoint"
+                ><i class="tlp-button-icon fa fa-plus"></i> {{# dgettext }} tuleap-tuleap_synchro | Add endpoint{{/ dgettext }}</button>
+            </div>
+            <table class="tlp-table">
+                <thead>
+                <tr>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Password {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Shortname of the source project {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Webhook {{/ dgettext }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4" class="tlp-table-cell-empty">
+                        {{# dgettext }} tuleap-tuleap_synchro | There isn't any matching webhook {{/ dgettext }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+        {{>add_new_endpoint}}
+    </div>
+</section>

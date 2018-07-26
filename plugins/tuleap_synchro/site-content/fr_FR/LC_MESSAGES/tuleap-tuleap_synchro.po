@@ -1,0 +1,55 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add endpoint"
+msgstr "Ajouter un point d'accès"
+
+msgid "Add new import endpoint"
+msgstr "Ajouter un nouveau point d'accès pour l'importation"
+
+msgid "Allows to replicate artifacts from one Tuleap instance to another"
+msgstr "Permet de recopier les artefacts d'une instance Tuleap sur une autre"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "List of import endpoints"
+msgstr "Liste les points d'accès pour l'importation"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Shortname of the source project"
+msgstr "Nom court du projet source"
+
+msgid "There isn't any matching webhook"
+msgstr "Aucun webhook trouvé"
+
+msgid "Tuleap to Tuleap"
+msgstr "Tuleap vers Tuleap"
+
+msgid "Tuleap to Tuleap Synchronization"
+msgstr "Synchronisation de Tuleap vers Tuleap"
+
+msgid "Under implementation"
+msgstr "En cours d'implémentation"
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Webhook"
+msgstr "Webhook"
