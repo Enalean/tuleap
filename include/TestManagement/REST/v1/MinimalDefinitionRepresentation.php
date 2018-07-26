@@ -145,7 +145,7 @@ class MinimalDefinitionRepresentation
     private function getCategory()
     {
         /** @var \Tracker_FormElement_Field_List $field_status */
-        $field_status = $this->form_element_factory->getUsedFieldByNameForUser(
+        $field_status = $this->form_element_factory->getSelectboxFieldByNameForUser(
             $this->tracker_id,
             self::FIELD_CATEGORY,
             $this->user
