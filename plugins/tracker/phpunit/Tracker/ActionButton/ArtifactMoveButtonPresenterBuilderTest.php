@@ -101,10 +101,11 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $expected_presenter = new ActionButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            'Deletion of artifacts is not allowed',
-            "",
             "icon-share-alt",
-            ["name" => "disabled", "value" => "disabled"],
+            [
+                ["name" => "disabled", "value" => "disabled"],
+                ["name" => "title", "value" => "Deletion of artifacts is not allowed"]
+            ],
             "",
             false
         );
@@ -127,10 +128,11 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $expected_presenter = new ActionButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            'The limit of artifacts deletions has been reached for the previous 24 hours.',
-            "",
             "icon-share-alt",
-            ["name" => "disabled", "value" => "disabled"],
+            [
+                ["name" => "disabled", "value" => "disabled"],
+                ["name" => "title", "value" => "The limit of artifacts deletions has been reached for the previous 24 hours."]
+            ],
             "",
             false
         );
@@ -155,10 +157,11 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $expected_presenter = new ActionButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            'No semantic defined in this tracker.',
-            "",
             "icon-share-alt",
-            ["name" => "disabled", "value" => "disabled"],
+            [
+                ["name" => "disabled", "value" => "disabled"],
+                ["name" => "title", "value" => "No semantic defined in this tracker."]
+            ],
             "",
             false
         );
@@ -179,10 +182,11 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $expected_presenter = new ActionButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            'Artifacts with artifact links can not be moved.',
-            "",
             "icon-share-alt",
-            ["name" => "disabled", "value" => "disabled"],
+            [
+                ["name" => "disabled", "value" => "disabled"],
+                ["name" => "title", "value" => "Artifacts with artifact links can not be moved."]
+            ],
             "",
             false
         );
@@ -201,12 +205,19 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
+
         $expected_presenter = new ActionButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            '',
-            "",
             "icon-share-alt",
-            [],
+            [
+                [
+                    "name"  => "data-toggle",
+                    "value" => "modal"
+                ], [
+                    "name"  => "data-target",
+                    "value" => "#move-artifact-modal"
+                ]
+            ],
             "",
             false
         );

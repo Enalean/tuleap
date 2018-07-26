@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,37 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact\ActionButtons;
+import Vue from "vue";
+import MoveModal from "./components/MoveModal.vue";
+import { setFromTracker } from "./from-tracker-presenter.js";
+import GetTextPlugin from "vue-gettext";
 
-class ActionButtonPresenter
-{
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $icon;
-    /**
-     * @var array
-     */
-    public $data_property;
-    /**
-     * @var string
-     */
-    public $css_class;
-    /**
-     * @var string
-     */
-    public $has_svg;
+Vue.use(GetTextPlugin, {
+    translations: {},
+    silent: true
+});
 
-    public function __construct($label, $icon, array $data_property, $class, $has_svg)
-    {
-        $this->label         = $label;
-        $this->icon          = $icon;
-        $this->data_property = $data_property;
-        $this->css_class     = $class;
-        $this->has_svg       = $has_svg;
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_point = document.getElementById("move-artifact-modal");
+    if (vue_mount_point) {
+        const RootComponent = Vue.extend(MoveModal);
+
+        const { trackerName, trackerColor, artifactId } = vue_mount_point.dataset;
+
+        setFromTracker(trackerName, trackerColor, artifactId);
+
+        new RootComponent({}).$mount(vue_mount_point);
     }
-}
+});

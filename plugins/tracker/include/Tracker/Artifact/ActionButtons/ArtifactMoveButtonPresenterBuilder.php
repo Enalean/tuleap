@@ -76,18 +76,31 @@ class ArtifactMoveButtonPresenterBuilder
             $errors[] = $links_error;
         }
 
-        $property = [];
         if (count($errors) > 0) {
             $property = [
-                "name"  => "disabled",
-                "value" => "disabled"
+                [
+                    "name"  => "disabled",
+                    "value" => "disabled"
+                ],
+                [
+                    "name"  => "title",
+                    "value" => implode(",", $errors)
+                ]
+            ];
+        } else {
+            $property = [
+                [
+                    "name"  => "data-toggle",
+                    "value" => "modal"
+                ], [
+                    "name"  => "data-target",
+                    "value" => "#move-artifact-modal"
+                ]
             ];
         }
 
         return new ActionButtonPresenter(
             dgettext('tuleap-tracker', "Move artifact"),
-            implode(",", $errors),
-            "",
             "icon-share-alt",
             $property,
             "",

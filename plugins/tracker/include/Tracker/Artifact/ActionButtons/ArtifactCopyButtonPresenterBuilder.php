@@ -30,10 +30,16 @@ class ArtifactCopyButtonPresenterBuilder
         if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
             return new ActionButtonPresenter(
                 $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId(),
                 "icon-copy",
-                [],
+                [
+                    [
+                        "name"  => "href",
+                        "value" => TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
+                    ], [
+                        "name"  => "title",
+                        "value" => $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact')
+                    ]
+                ],
                 "",
                 false
             );
