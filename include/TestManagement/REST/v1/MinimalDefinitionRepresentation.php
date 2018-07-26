@@ -151,7 +151,7 @@ class MinimalDefinitionRepresentation
             $this->user
         );
 
-        if (! $field_status) {
+        if (! $field_status || ! $this->changeset) {
             return null;
         }
 
