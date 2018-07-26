@@ -678,7 +678,7 @@ class UserDao extends DataAccessObject {
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.*, admin_of.nb AS admin_of, member_of.nb AS member_of, user_access.last_access_date
                 $from
-                INNER JOIN user_access USING (user_id)
+                INNER JOIN user_access ON (user_access.user_id = user.user_id)
                 LEFT JOIN (
                     SELECT count(admin_flags) as nb, user_id
                     FROM user_group
