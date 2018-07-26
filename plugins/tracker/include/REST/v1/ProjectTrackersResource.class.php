@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\Tracker\REST\v1;
 
 use \TrackerFactory;
@@ -26,19 +27,23 @@ use \PFUser;
 use \Project;
 use \Luracast\Restler\RestException;
 use \Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
 /**
  * Wrapper for tracker related REST methods
  */
-class ProjectTrackersResource {
+class ProjectTrackersResource
+{
     const MAX_LIMIT              = 50;
     const MINIMAL_REPRESENTATION = 'minimal';
 
     /**
      * Get all the tracker representation of a given project
+     *
+     * @throws RestException
      */
-    public function get(PFUser $user, Project $project, $representation, $limit, $offset)
+    public function get(PFUser $user, Project $project, $representation, $query, $limit, $offset)
     {
         if (! $this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
@@ -49,7 +54,13 @@ class ProjectTrackersResource {
         $trackers                = array_slice($all_trackers, $offset, $limit);
         $tracker_representations = array();
 
+        $filter_on_tracker_administration_permission = $this->mustFilterOnTrackerAdministration($query);
+
         foreach($trackers as $tracker) {
+            if ($filter_on_tracker_administration_permission && ! $tracker->userIsAdmin($user)) {
+                continue;
+            }
+
             if ($representation === self::MINIMAL_REPRESENTATION) {
                 $tracker_minimal_representation = new MinimalTrackerRepresentation();
                 $tracker_minimal_representation->build($tracker);
@@ -63,6 +74,37 @@ class ProjectTrackersResource {
         $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
 
         return $tracker_representations;
+    }
+
+    /**
+     * @return bool
+     * @throws RestException
+     */
+    private function mustFilterOnTrackerAdministration($query)
+    {
+        if ($query === '') {
+            return false;
+        }
+
+        $json_decoder = new JsonDecoder();
+
+        if ($query && ! $json_decoder->looksLikeJson($query)) {
+            throw new RestException(400, 'Query must be in Json');
+        }
+
+        $json_query = $json_decoder->decodeAsAnArray('query', $query);
+        if (! isset($json_query['is_tracker_admin'])) {
+            throw new RestException(400, 'You can only filter on "is_tracker_admin"');
+        }
+
+        if (isset($json_query['is_tracker_admin']) && ! $json_query['is_tracker_admin']) {
+            throw new RestException(
+                400,
+                "Filtering for trackers you are not administrator is not supported. Use 'is_tracker_admin': true"
+            );
+        }
+
+        return true;
     }
 
     private function limitValueIsAcceptable($limit) {
@@ -84,4 +126,3 @@ class ProjectTrackersResource {
         Header::allowOptionsGet();
     }
 }
-?>

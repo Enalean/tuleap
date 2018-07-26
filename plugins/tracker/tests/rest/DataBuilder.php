@@ -27,7 +27,6 @@ class DataBuilder extends REST_TestDataBuilder
 {
     const USER_TESTER_NAME   = 'rest_api_tracker_admin_1';
     const USER_TESTER_PASS   = 'welcome0';
-    const USER_TESTER_STATUS = 'A';
 
     /**
      * @var ArtifactsDeletionConfigDAO

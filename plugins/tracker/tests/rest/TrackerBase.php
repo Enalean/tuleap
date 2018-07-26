@@ -37,6 +37,8 @@ class TrackerBase extends RestBase
     const BASE_TRACKER_SHORTNAME            = 'base';
     const DELETE_TRACKER_SHORTNAME          = 'diasabled_delete_artifacts_testing_2';
     const TRACKER_FIELDS_TRACKER_SHORTNAME  = 'tracker_fields_tracker';
+    const SIMPLE_01_TRACKER_SHORTNAME       = 'simple_tracker_01';
+    const SIMPLE_02_TRACKER_SHORTNAME       = 'simple_tracker_02';
 
     protected $tracker_administrator_project_id;
 
