@@ -21,6 +21,11 @@ msgstr[1] ""
 msgid "%s has multiple corresponding users."
 msgstr ""
 
+msgid ""
+"A non available service cannot be enabled. To enable this service, switch it "
+"to available before."
+msgstr ""
+
 msgid "A project cannot be its own parent."
 msgstr ""
 
@@ -122,6 +127,9 @@ msgid "And one other users group you are not allowed to administrate."
 msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "Available (also available for new projects)"
+msgstr ""
 
 msgid "Awesome service to manage extra stuff"
 msgstr ""
@@ -430,9 +438,6 @@ msgid "Initial layout creation"
 msgstr ""
 
 msgid "Instant messaging"
-msgstr ""
-
-msgid "Instantiated for new projects"
 msgstr ""
 
 msgid "Internal server error"

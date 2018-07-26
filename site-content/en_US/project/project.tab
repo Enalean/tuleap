@@ -397,7 +397,6 @@ project_admin_servicebar	label_missed	The label is missing
 project_admin_servicebar	link_missed	The link is missing
 project_admin_servicebar	rank_missed	The rank is missing
 project_admin_servicebar	cant_make_s	Cannot make system-wide service without short name
-project_admin_servicebar	set_stat_unused	- Setting status to "unused" -
 project_admin_servicebar	short_name_exist	A service with this short name ($short_name) already exists
 project_admin_servicebar	cant_make_system_wide_s	Cannot make system-wide service in project other than 100
 project_admin_servicebar	cant_create_s	Can not create service

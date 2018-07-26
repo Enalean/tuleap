@@ -37,6 +37,13 @@ msgstr[1] "%d membres"
 msgid "%s has multiple corresponding users."
 msgstr "%s a plusieurs utilisateurs associés."
 
+msgid ""
+"A non available service cannot be enabled. To enable this service, switch it "
+"to available before."
+msgstr ""
+"Un service non disponible ne peut être activé. Pour activer ce service, vous "
+"devez au préalable le rendre disponible."
+
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -147,6 +154,9 @@ msgid "And one other users group you are not allowed to administrate."
 msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] "Et un autre groupe que vous ne pouvez pas administrer."
 msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
+
+msgid "Available (also available for new projects)"
+msgstr "Disponible (également disponible dans les nouveaux projets)"
 
 msgid "Awesome service to manage extra stuff"
 msgstr "Le service qui gère des trucs"
@@ -374,10 +384,10 @@ msgid "Enable accessibility mode"
 msgstr "Activer le mode d'accessiblilité"
 
 msgid "Enabled"
-msgstr "Actif"
+msgstr "Activé"
 
 msgid "Enabled?"
-msgstr "Activé?"
+msgstr "Activé ?"
 
 msgid "Escape from input/textarea, close dropdown or modal"
 msgstr "Sort d'un champ de texte, ferme les listes déroulantes et les modales"
@@ -467,9 +477,6 @@ msgstr "Création de la structure initiale"
 
 msgid "Instant messaging"
 msgstr "Messagerie Instantanée"
-
-msgid "Instantiated for new projects"
-msgstr "Instancié dans les nouveaux projets"
 
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
