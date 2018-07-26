@@ -170,15 +170,15 @@ phpunit-ci-56:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
 	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/rh/rh-php56/root/usr/bin/php"
 
-phpunit-ci-70:
-	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-70
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-70:/tmp/results enalean/tuleap-test-phpunit:c6-php70 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/rh/rh-php70/root/usr/bin/php run-as-owner
+phpunit-ci-72:
+	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-72
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
 
 phpunit-docker-56:
 	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable rh-php56 "make -C /tuleap phpunit"
 
-phpunit-docker-70:
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php70 scl enable rh-php70 "make -C /tuleap phpunit"
+phpunit-docker-72:
+	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit"
 
 phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
