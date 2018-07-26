@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
+    <name>t10</name>
+    <item_name>t11</item_name>
+    <description>t12</description>
+    <formElements>
+        <formElement type="column" ID="F1" rank="4" required="1">
+            <name>stepA</name>
+            <label><![CDATA[StepA]]></label>
+            <formElements>
+                <formElement type="column" ID="F2" rank="4" required="1">
+                    <name>stepB</name>
+                    <label><![CDATA[StepB]]></label>
+                    <formElements>
+                        <formElement type="column" ID="F3" rank="4" required="1">
+                            <name>stepC</name>
+                            <label><![CDATA[StepC]]></label>
+                            <formElements>
+                                <formElement type="column" ID="F4" rank="4" required="1">
+                                    <name>stepD</name>
+                                    <label><![CDATA[StepD]]></label>
+                                    <formElements>
+                                        <formElement type="sb" ID="F5" rank="4" required="1">
+                                            <name>stepE</name>
+                                            <label><![CDATA[StepE]]></label>
+                                            <bind type="static" is_rank_alpha="0">
+                                                <items>
+                                                    <item ID="V1" label="To be done" is_hidden="0"/>
+                                                    <item ID="V2" label="On going" is_hidden="0"/>
+                                                    <item ID="V3" label="Done" is_hidden="0"/>
+                                                    <item ID="V4" label="Canceled" is_hidden="0"/>
+                                                    <item ID="V5" label="Functional review" is_hidden="0"/>
+                                                    <item ID="V6" label="Code review" is_hidden="0"/>
+                                                </items>
+                                                <default_values>
+                                                    <value REF="V2059"/>
+                                                </default_values>
+                                            </bind>
+                                        </formElement>
+                                        <formElement type="text" ID="F6" rank="4" required="1">
+                                            <name>stepF</name>
+                                            <label><![CDATA[StepF]]></label>
+                                        </formElement>
+                                    </formElements>
+                                </formElement>
+                                <formElement type="text" ID="F7" rank="4" required="1">
+                                    <name>stepG</name>
+                                    <label><![CDATA[StepG]]></label>
+                                </formElement>
+                            </formElements>
+                        </formElement>
+                        <formElement type="text" ID="F8" rank="4" required="1">
+                            <name>stepH</name>
+                            <label><![CDATA[StepH]]></label>
+                        </formElement>
+                    </formElements>
+                </formElement>
+                <formElement type="text" ID="F9" rank="4" required="1">
+                    <name>stepI</name>
+                    <label><![CDATA[StepI]]></label>
+                </formElement>
+            </formElements>
+        </formElement>
+        <formElement type="text" ID="F10" rank="4" required="1">
+            <name>stepJ</name>
+            <label><![CDATA[StepJ]]></label>
+        </formElement>
+    </formElements>
+</tracker>

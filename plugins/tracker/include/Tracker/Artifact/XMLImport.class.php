@@ -105,6 +105,10 @@ class Tracker_Artifact_XMLImport {
      * importBareArtifactsFromXML() first to generate the mapping for all the
      * trackers and then importArtifactChangesFromXML().
      *
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $xml_element
+     * @param $extraction_path
+     * @param TrackerXmlFieldsMapping $xml_fields_mapping
      * @return bool for success or failure
      */
     public function importFromXML(
@@ -140,7 +144,13 @@ class Tracker_Artifact_XMLImport {
      * Import bare artifacts without any changeset
      * Fill up $artifacts_id_mapping with a mapping from old ids to new ids
      *
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $xml_element
+     * @param $extraction_path
+     * @param TrackerXmlFieldsMapping $xml_fields_mapping
+     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
      * @return array of bare artifacts or null on error
+     * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importBareArtifactsFromXML(
         Tracker $tracker,
@@ -165,6 +175,12 @@ class Tracker_Artifact_XMLImport {
 
     /**
      * Import changesets from a n array of bare artifacts
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $xml_element
+     * @param $extraction_path
+     * @param TrackerXmlFieldsMapping $xml_fields_mapping
+     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
+     * @param array $artifacts
      * @return true
      */
     public function importArtifactChangesFromXML(
@@ -193,6 +209,11 @@ class Tracker_Artifact_XMLImport {
     }
 
     /**
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $artifact_xml
+     * @param $extraction_path
+     * @param TrackerXmlFieldsMapping $xml_fields_mapping
+     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
      * @return Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
      */
     public function createFieldsDataBuilder(
@@ -219,7 +240,10 @@ class Tracker_Artifact_XMLImport {
     }
 
     /**
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $xml_artifact
      * @return Tracker_Artifact|null The created artifact
+     * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importBareArtifact(
         Tracker $tracker,
@@ -402,7 +426,10 @@ class Tracker_Artifact_XMLImport {
     }
 
     /**
+     * @param Tracker $tracker
+     * @param SimpleXMLElement $xml_artifact
      * @return Tracker_Artifact|null
+     * @throws Tracker_Artifact_Exception_XMLImportException
      */
     public function importArtifactWithAllDataFromXMLContent(
         Tracker $tracker,

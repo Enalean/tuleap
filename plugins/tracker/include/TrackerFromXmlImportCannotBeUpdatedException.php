@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,31 +16,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-namespace Tuleap\Project\XML\Import;
 
-class ImportConfig
+namespace Tuleap\Tracker;
+
+use TrackerFromXmlException;
+
+class TrackerFromXmlImportCannotBeUpdatedException extends TrackerFromXmlException
 {
-    private $force = array();
-    private $update = false;
-
-    public function setForce($force)
+    public function __construct($tracker_name)
     {
-        $this->force[$force] = true;
-    }
-
-    public function isForce($value)
-    {
-        return isset($this->force[$value]);
-    }
-
-    public function isUpdate()
-    {
-        return $this->update;
-    }
-
-    public function setUpdate($update)
-    {
-        $this->update = $update;
+        parent::__construct(sprintf(
+            dgettext(
+                "tuleap-tracker",
+                "The tracker '%s' cannot be updated because it doesn't exist. Try again without \"--update\""
+            ),
+            $tracker_name
+        ));
     }
 }

@@ -574,6 +574,12 @@ msgstr ""
 msgid "The text field '%s' cannot be compared to OPEN()."
 msgstr ""
 
+#, php-format
+msgid ""
+"The tracker '%s' cannot be updated because it doesn't exist. Try again "
+"without \"--update\""
+msgstr ""
+
 msgid "The tracker hierarchy cannot be defined."
 msgstr ""
 
