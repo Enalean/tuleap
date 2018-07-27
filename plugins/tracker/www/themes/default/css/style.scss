@@ -757,14 +757,20 @@ select.tracker-report-expert-allowed-fields {
 }
 
 .tracker_artifact_title {
-    font-weight: bold;
+    font-weight: 600;
     font-size: 2em;
     color: #474747;
-    margin: 7px 0 10px;
+    margin: 0 0 10px;
+
+    .xref-in-title {
+        align-self: flex-end;
+        padding: 4px 12px;
+        font-size: 18px;
+    }
 }
 
 .tracker-artifact-actions {
-    float: right;
+    margin: 0 0 0 10px;
     font-weight: 400;
 }
 
@@ -773,21 +779,16 @@ select.tracker-report-expert-allowed-fields {
 }
 
 .xref-in-title {
-    padding: 2px 7px;
-    font-size: 0.8em;
-    border-radius: 3px;
-    position: relative;
-    top: -1px;
-    color: #FFFFFF;
-    text-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    display: inline-block;
+    margin: 0 5px 0 0;
+    padding: 2px 10px;
+    border-radius: 15px;
+    color: #ffffff;
+    font-size: 12px;
     font-weight: normal;
-
-    span {
-        display: none;
-    }
 }
 
-a:hover .xref-in-title {
+.direct-link-to-artifact:hover > .xref-in-title {
     text-decoration: none;
 }
 
@@ -1875,10 +1876,21 @@ ul.plugin_tracker_my_artifacts_list {
     margin: 0;
     padding: 0;
     list-style-type: none;
+    font-family: SourceSansPro, "Helvetica Neue", Arial, sans-serif;
 }
 
 .tracker-hierarchy ul {
     clear: both;
+}
+
+.tracker-hierarchy > li {
+    display: flex;
+    align-items: center;
+    margin: 0 0 3px;
+
+    .tree-last {
+        background-position: -48px 3px;
+    }
 }
 
 .tracker-admin-hierarchy-edit-form {
