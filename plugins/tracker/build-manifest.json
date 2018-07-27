@@ -92,6 +92,12 @@
             "po" : "www/scripts/permissions-per-group/po"
         }
     },
+    "gettext-vue": {
+        "artifact-action-buttons": {
+            "scripts": "www/scripts/artifact-action-buttons/src",
+            "po" : "www/scripts/artifact-action-buttons/po"
+        }
+    },
     "components": [
         "grammar/",
         "www/scripts/"

@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,37 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact\ActionButtons;
+export { setFromTracker, getTrackerName, getTrackerColor, getArtifactId };
 
-class ActionButtonPresenter
-{
-    /**
-     * @var string
-     */
-    public $label;
-    /**
-     * @var string
-     */
-    public $icon;
-    /**
-     * @var array
-     */
-    public $data_property;
-    /**
-     * @var string
-     */
-    public $css_class;
-    /**
-     * @var string
-     */
-    public $has_svg;
+let tracker_name, tracker_color, artifact_id;
 
-    public function __construct($label, $icon, array $data_property, $class, $has_svg)
-    {
-        $this->label         = $label;
-        $this->icon          = $icon;
-        $this->data_property = $data_property;
-        $this->css_class     = $class;
-        $this->has_svg       = $has_svg;
-    }
+function setFromTracker(name_tracker, color_tracker, id_artifact) {
+    tracker_name = name_tracker;
+    tracker_color = color_tracker;
+    artifact_id = id_artifact;
+}
+
+function getTrackerName() {
+    return tracker_name;
+}
+
+function getTrackerColor() {
+    return tracker_color;
+}
+
+function getArtifactId() {
+    return artifact_id;
 }

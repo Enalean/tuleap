@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactGraphDependenciesButtonPresenterBuilder;
@@ -411,6 +412,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);
+
+        $include_assets = new \Tuleap\Layout\IncludeAssets(
+            __DIR__ . '/../../../www/assets',
+            TRACKER_BASE_URL . '/assets'
+        );
+
+
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
+
         return $renderer->renderToString(
             'action-buttons',
             $action_buttons_presenters

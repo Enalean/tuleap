@@ -52,10 +52,8 @@ class ArtifactNotificationActionButtonPresenterBuilder
 
         return new ActionButtonPresenter(
             $this->getUnsubscribeButtonLabel($user, $artifact),
-            $this->getUnsubscribeButtonAlternateText($user, $artifact),
-            "",
             "icon-bell-alt",
-            [],
+            [["name" => "title", "value" => $this->getUnsubscribeButtonAlternateText($user, $artifact)]],
             "tracker-artifact-notification",
             false
         );

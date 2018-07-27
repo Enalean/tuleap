@@ -30,10 +30,25 @@ class GlobalButtonsActionPresenter
      * @var bool
      */
     public $has_at_least_one_action;
+    /**
+     * @var string
+     */
+    public $tracker_name;
+    /**
+     * @var string
+     */
+    public $tracker_color;
+    /**
+     * @var int
+     */
+    public $artifact_id;
 
-    public function __construct(array $action_buttons)
+    public function __construct(array $action_buttons, \Tracker_Artifact $artifact)
     {
         $this->action_buttons          = $action_buttons;
         $this->has_at_least_one_action = count($action_buttons) > 0;
+        $this->tracker_name            = $artifact->getTracker()->getItemName();
+        $this->tracker_color           = $artifact->getTracker()->getColor();
+        $this->artifact_id             = $artifact->getId();
     }
 }

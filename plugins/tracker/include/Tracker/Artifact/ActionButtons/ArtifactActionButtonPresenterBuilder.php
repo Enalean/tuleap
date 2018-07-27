@@ -96,6 +96,6 @@ class ArtifactActionButtonPresenterBuilder
             $action_buttons[]['section'] = $notification;
         }
 
-        return new GlobalButtonsActionPresenter($action_buttons);
+        return new GlobalButtonsActionPresenter($action_buttons, $artifact);
     }
 }

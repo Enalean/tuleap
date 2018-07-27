@@ -53,8 +53,6 @@ class ArtifactIncomingEmailButtonPresenterBuilder
 
         return new ActionButtonPresenter(
             $raw_email_button_title,
-            "",
-            "",
             "icon-envelope-alt",
             ["name" => 'data-raw-email', "value" => $raw_mail],
             "artifact-incoming-mail-button",

@@ -9,8 +9,7 @@
                     <li>
                         <a class="btn tracker-action-button {{ css_class }}"
                            {{# data_property }}{{ name }}="{{ value }}"{{/ data_property }}
-                           {{# url }}href="{{ url }}"{{/ url }}
-                           {{# title }} title="{{ . }}" {{/ title }}>
+                        >
                            {{# icon }}<i class="icon-fixed-width {{ icon }}"></i> {{/ icon }}
                            {{# has_svg }}
                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 20 17">
@@ -27,4 +26,9 @@
             {{/ action_buttons }}
         </ul>
     </div>
+    <div id="move-artifact-modal"
+         data-tracker-name="{{ tracker_name}}"
+         data-tracker-color="{{ tracker_color }}"
+         data-artifact-id="{{ artifact_id }}"
+    ></div>
 {{/ has_at_least_one_action }}
