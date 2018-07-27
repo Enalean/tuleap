@@ -68,6 +68,7 @@ class ArtifactActionButtonPresenterBuilder
         $original_email = $this->mail_button_builder->getIncomingEmailButton($user, $artifact);
         $copy_artifact  = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);
         $notification   = $this->notification_button_builder->getNotificationButton($user, $artifact);
+        $move_artifact  = null;
 
         if (\ForgeConfig::get('tracker_move_artifact_ui')) {
             $move_artifact  = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
