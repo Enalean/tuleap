@@ -316,4 +316,55 @@ class TimetrackingTest extends TimetrackingBase
          ]);
         $this->getResponse($this->client->post('timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
     }
+
+    public function testEditTimeSuccess()
+    {
+        $query = json_encode([
+            "date_time"   => "2018-03-01",
+            "time_value"  => "11:11",
+            "step"        => "etape"
+        ]);
+        $response = $this->getResponse($this->client->put('/api/v1/timetracking/1', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+
+        $this->assertEquals($response->getStatusCode(), 201);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testEditTimeReturnBadTimeFormatException()
+    {
+        $query = json_encode([
+            "date_time"   => "2018-03-01",
+            "time_value"  => "11/11",
+            "step"        => "etape"
+        ]);
+        $response = $this->getResponse($this->client->put('/api/v1/timetracking/1', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testEditTimeReturnBadDateFormatException()
+    {
+        $query = json_encode([
+            "date_time"   => "201803-01",
+            "time_value"  => "11:11",
+            "step"        => "etape"
+        ]);
+        $this->getResponse($this->client->put('/api/v1/timetracking/1', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testEditTimeReturnNoTimeException()
+    {
+        $query = json_encode([
+            "date_time"   => "2018-03-01",
+            "time_value"  => "11:11",
+            "step"        => "etape"
+        ]);
+        $this->getResponse($this->client->put('/api/v1/timetracking/8000', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
+    }
 }

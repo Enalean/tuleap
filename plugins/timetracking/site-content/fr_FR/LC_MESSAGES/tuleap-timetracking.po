@@ -88,6 +88,9 @@ msgstr "Le temps est manquant"
 msgid "This time does not belong to you."
 msgstr "Ce temps ne vous appartient pas."
 
+msgid "This time does not exist"
+msgstr "Ce temps n'existe pas"
+
 msgid "Time"
 msgstr "Temps"
 
