@@ -1054,7 +1054,8 @@ class trackerPlugin extends Plugin {
     /**
      * @see REST_GET_PROJECT_TRACKERS
      */
-    public function rest_get_project_trackers($params) {
+    public function rest_get_project_trackers($params)
+    {
         $user             = UserManager::instance()->getCurrentUser();
         $tracker_resource = $this->buildRightVersionOfProjectTrackersResource($params['version']);
         $project          = $params['project'];
@@ -1065,6 +1066,7 @@ class trackerPlugin extends Plugin {
             $user,
             $project,
             $params['representation'],
+            $params['query'],
             $params['limit'],
             $params['offset']
         );

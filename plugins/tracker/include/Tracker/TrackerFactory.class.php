@@ -150,7 +150,7 @@ class TrackerFactory {
     }
 
     /**
-     * @return array of Tracker
+     * @return Tracker[]
      */
     public function getTrackersByGroupIdUserCanView($group_id, PFUser $user) {
         $trackers = array();
@@ -165,7 +165,7 @@ class TrackerFactory {
     }
 
     /**
-     * @return array of Tracker
+     * @return Tracker[]
      */
     public function getTrackersByProjectIdUserCanAdministration($project_id, PFUser $user)
     {

@@ -673,8 +673,18 @@ class ProjectResource extends AuthenticatedResource {
      *
      * Get the trackers of a given project.
      *
-     *
      * Fetching reference representations can be helpful if you encounter performance issues with complex trackers.
+     *
+     * <br/>
+     * query is optional. When filled, it is a json object with a property "is_tracker_admin" to filter trackers.
+     * <br/>
+     * <br/>
+     * Example: <pre>{"is_tracker_admin": true}</pre>
+     * <br/>
+     * <p>
+     *   <strong>/!\</strong> Please note that {"is_tracker_admin": false} is not supported and will result
+     *   in a 400 Bad Request error.
+     * </p>
      *
      * @url GET {id}/trackers
      * @access hybrid
@@ -683,14 +693,22 @@ class ProjectResource extends AuthenticatedResource {
      * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
      * @param int $limit  Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
+     * @param string $query JSON object of search criteria properties {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
      */
-    public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0)
+    public function getTrackers($id, $representation = 'full', $limit = 10, $offset = 0, $query = '')
     {
         $this->checkAccess();
 
-        $trackers = $this->getRepresentationsForTrackers($id, $representation, $limit, $offset, Event::REST_GET_PROJECT_TRACKERS);
+        $trackers = $this->getRepresentationsForTrackers(
+            $id,
+            $representation,
+            $limit,
+            $offset,
+            $query
+        );
+
         $this->sendAllowHeadersForProject();
 
         return $trackers;
@@ -705,18 +723,19 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForProject();
     }
 
-    private function getRepresentationsForTrackers($id, $representation, $limit, $offset, $event)
+    private function getRepresentationsForTrackers($id, $representation, $limit, $offset, $query)
     {
         $project = $this->getProjectWithoutAuthorisation($id);
         $result  = array();
 
         $this->event_manager->processEvent(
-            $event,
+            Event::REST_GET_PROJECT_TRACKERS,
             array(
                 'version'        => 'v1',
                 'project'        => $project,
                 'representation' => $representation,
                 'limit'          => $limit,
+                'query'          => $query,
                 'offset'         => $offset,
                 'result'         => &$result,
             )

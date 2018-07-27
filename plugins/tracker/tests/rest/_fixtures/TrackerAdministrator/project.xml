@@ -30,22 +30,33 @@
     <ugroups>
         <ugroup name="project_members" description="">
             <members>
+                <member format="username">rest_api_tester_1</member>
                 <member format="username">rest_api_tracker_admin_1</member>
             </members>
         </ugroup>
         <ugroup name="project_admins" description="">
             <members>
-                <member format="username">rest_api_tracker_admin_1</member>
+                <member format="username">rest_api_tester_1</member>
             </members>
         </ugroup>
     </ugroups>
     <trackers>
         <tracker id="T1" parent_id="0">
-            <name><![CDATA[Simple tracker]]></name>
-            <item_name>simple_tracker</item_name>
+            <name><![CDATA[Simple tracker 01]]></name>
+            <item_name>simple_tracker_01</item_name>
             <description>Simple tracker with an administrator</description>
             <color>clockwork_orange</color>
             <cannedResponses/>
+        </tracker>
+        <tracker id="T2" parent_id="0">
+            <name><![CDATA[Simple tracker 02]]></name>
+            <item_name>simple_tracker_02</item_name>
+            <description>Simple tracker with an administrator</description>
+            <color>clockwork_orange</color>
+            <cannedResponses/>
+            <permissions>
+                <permission scope="tracker" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_ADMIN"/>
+            </permissions>
         </tracker>
     </trackers>
 </project>
