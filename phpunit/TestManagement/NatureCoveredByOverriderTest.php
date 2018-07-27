@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,16 @@
 
 namespace Tuleap\TestManagement\Nature;
 
-use TuleapTestCase;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-require_once dirname(__FILE__) .'/bootstrap.php';
+require_once __DIR__ .'/../bootstrap.php';
 
-class NatureCoveredByOverriderTest extends TuleapTestCase
+class NatureCoveredByOverriderTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var TrackerArtifact */
     private $artifact;
 
@@ -46,23 +50,31 @@ class NatureCoveredByOverriderTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->artifact  = stub('Tracker_Artifact')->getId()->returns($this->artifact_id);
-        $this->config    = mock('Tuleap\\TestManagement\\Config');
-        $this->project   = aMockProject()->withId(101)->build();
-        $this->dao       = mock('Tuleap\Tracker\Admin\ArtifactLinksUsageDao');
+        $this->artifact  = Mockery::spy(\Tracker_Artifact::class);
+        $this->artifact->shouldReceive('getId')->andReturn($this->artifact_id);
+
+        $this->project  = Mockery::spy(\Project::class);
+        $this->project->shouldReceive('getID')->andReturn(101);
+
+        $this->config    = \Mockery::spy(\Tuleap\TestManagement\Config::class);
+        $this->dao       = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
 
         $this->overrider = new NatureCoveredByOverrider($this->config, $this->dao);
 
-        stub($this->config)->getTestDefinitionTrackerId($this->project)
-            ->returns($this->test_definition_tracker_id);
+        $this->config->shouldReceive('getTestDefinitionTrackerId')
+            ->with($this->project)
+            ->andReturn($this->test_definition_tracker_id);
     }
 
-    public function itGivesTheCoveredByNatureToNewLinkToTestDefinition()
+    public function testItGivesTheCoveredByNatureToNewLinkToTestDefinition()
     {
         $new_linked_artifact_ids = array($this->artifact_id);
 
-        stub($this->artifact)->getTrackerId()->returns($this->test_definition_tracker_id);
-        stub($this->dao)->isTypeDisabledInProject(101, '_covered_by')->returns(false);
+        $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
+
+        $this->dao->shouldReceive('isTypeDisabledInProject')
+            ->with(101, '_covered_by')
+            ->andReturn(false);
 
         $overridingNature = $this->overrider->getOverridingNature(
             $this->project,
@@ -70,17 +82,19 @@ class NatureCoveredByOverriderTest extends TuleapTestCase
             $new_linked_artifact_ids
         );
 
-        $this->assertEqual(
+        $this->assertEquals(
             $overridingNature,
             NatureCoveredByPresenter::NATURE_COVERED_BY
         );
     }
 
-    public function itReturnsNothingWhenNotLinkingToTestDefinition()
+    public function testItReturnsNothingWhenNotLinkingToTestDefinition()
     {
         $new_linked_artifact_ids = array($this->artifact_id);
 
-        stub($this->dao)->isTypeDisabledInProject(101, '_covered_by')->returns(false);
+        $this->dao->shouldReceive('isTypeDisabledInProject')
+            ->with(101, '_covered_by')
+            ->andReturn(false);
 
         $overridingNature = $this->overrider->getOverridingNature(
             $this->project,
@@ -91,12 +105,15 @@ class NatureCoveredByOverriderTest extends TuleapTestCase
         $this->assertNull($overridingNature);
     }
 
-    public function itReturnsNothingWhenUpdatingLinkToTestDefinition()
+    public function testItReturnsNothingWhenUpdatingLinkToTestDefinition()
     {
         $new_linked_artifact_ids = array();
 
-        stub($this->artifact)->getTrackerId()->returns($this->test_definition_tracker_id);
-        stub($this->dao)->isTypeDisabledInProject(101, '_covered_by')->returns(false);
+        $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
+
+        $this->dao->shouldReceive('isTypeDisabledInProject')
+            ->with(101, '_covered_by')
+            ->andReturn(false);
 
         $overridingNature = $this->overrider->getOverridingNature(
             $this->project,
@@ -107,11 +124,13 @@ class NatureCoveredByOverriderTest extends TuleapTestCase
         $this->assertNull($overridingNature);
     }
 
-    public function itReturnsNothingIfCoveredByTypeIsDisabled()
+    public function testItReturnsNothingIfCoveredByTypeIsDisabled()
     {
         $new_linked_artifact_ids = array($this->artifact_id);
 
-        stub($this->dao)->isTypeDisabledInProject(101, '_covered_by')->returns(true);
+        $this->dao->shouldReceive('isTypeDisabledInProject')
+            ->with(101, '_covered_by')
+            ->andReturn(true);
 
         $overridingNature = $this->overrider->getOverridingNature(
             $this->project,

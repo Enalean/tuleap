@@ -85,7 +85,7 @@ class ConfigConformanceValidator {
         $definition_project = $definition->getTracker()->getProject();
         $execution_project  = $execution->getTracker()->getProject();
 
-        return $definition_project == $execution_project;
+        return $definition_project->getID() === $execution_project->getID();
     }
 
     /**
