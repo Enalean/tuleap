@@ -393,7 +393,6 @@ project_admin_servicebar	label_missed	Le label est manquant
 project_admin_servicebar	link_missed	Le lien est manquant
 project_admin_servicebar	rank_missed	Le rang est manquant
 project_admin_servicebar	cant_make_s	Impossible de créer un service de portée "système" sans un nom court
-project_admin_servicebar	set_stat_unused	- Statut sur "inutilisé" -
 project_admin_servicebar	short_name_exist	Un service ayant le même nom court existe déjà
 project_admin_servicebar	cant_make_system_wide_s	Impossible de créer un service de portée "système" dans un projet autre que le projet 100
 project_admin_servicebar	cant_create_s	Impossible de créer le service

@@ -76,8 +76,8 @@ class ServicePOSTDataBuilder
         if (! $is_active) {
             if ($is_used) {
                 $GLOBALS['Response']->addFeedback(
-                    Feedback::INFO,
-                    $GLOBALS['Language']->getText('project_admin_servicebar', 'set_stat_unused')
+                    Feedback::WARN,
+                    _('A non available service cannot be enabled. To enable this service, switch it to available before.')
                 );
                 $is_used = false;
             }
