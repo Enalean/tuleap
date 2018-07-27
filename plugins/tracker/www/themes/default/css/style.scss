@@ -763,9 +763,15 @@ select.tracker-report-expert-allowed-fields {
     margin: 0 0 10px;
 
     .xref-in-title {
-        align-self: flex-end;
+        margin: 0 10px 0 0;
         padding: 4px 12px;
         font-size: 18px;
+        line-height: 26px;
+    }
+
+    .tracker-hierarchy > li {
+        margin: 0;
+        line-height: 30px;
     }
 }
 
@@ -782,10 +788,12 @@ select.tracker-report-expert-allowed-fields {
     display: inline-block;
     margin: 0 5px 0 0;
     padding: 2px 10px;
-    border-radius: 15px;
+    border-radius: 20px;
     color: #ffffff;
     font-size: 12px;
     font-weight: normal;
+    line-height: 20px;
+    white-space: nowrap;
 }
 
 .direct-link-to-artifact:hover > .xref-in-title {
@@ -1885,11 +1893,16 @@ ul.plugin_tracker_my_artifacts_list {
 
 .tracker-hierarchy > li {
     display: flex;
-    align-items: center;
-    margin: 0 0 3px;
+    align-items: flex-start;
+    margin: 0 0 5px;
+
+    .tree-blank,
+    .tree-last {
+        flex: 0 0 auto;
+    }
 
     .tree-last {
-        background-position: -48px 3px;
+        background-position: -48px 5px;
     }
 }
 
