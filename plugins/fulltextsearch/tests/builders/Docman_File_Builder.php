@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Constants.php';
-require_once DOCMAN_INCLUDE_PATH.'/Docman_File.class.php';
+require_once __DIR__.'/../../../docman/include/Docman_File.class.php';
 
 Mock::generate('Docman_File');
 
