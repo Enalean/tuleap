@@ -21,12 +21,14 @@
 namespace Tuleap\Timetracking\Time;
 
 use PFUser;
+use DateTime;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
+use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 
 class TimeChecker
 {
-    const PATTERN = '^[0-9]{2}[:][0-9]{2}$';
+    const TIME_PATTERN = '^[0-9]{2}[:][0-9]{2}$';
 
     public function doesTimeBelongsToUser(Time $time, PFUser $user)
     {
@@ -39,11 +41,19 @@ class TimeChecker
      */
     public function checkMandatoryTimeValue($time_value)
     {
-        $pattern = "/" . self::PATTERN . "/";
+        $pattern = "/" . self::TIME_PATTERN . "/";
         if (! $time_value) {
             throw new TimeTrackingMissingTimeException();
         } else if (! preg_match($pattern, $time_value)) {
             throw new TimeTrackingBadTimeFormatException();
+        }
+    }
+
+    public function checkDateFormat($date)
+    {
+        $date_checked = DateTime::createFromFormat('Y-m-d', $date);
+        if (! $date_checked) {
+            throw new TimeTrackingBadDateFormatException();
         }
     }
 }

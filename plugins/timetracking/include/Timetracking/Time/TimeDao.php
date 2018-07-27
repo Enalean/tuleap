@@ -99,4 +99,16 @@ class TimeDao extends DataAccessObject
 
         return $this->getDB()->run($sql, $user_id, $start_date, $end_date, $offset, $limit);
     }
+
+    public function getLastTime($user_id, $artifact_id)
+    {
+        $sql = 'SELECT *
+                FROM plugin_timetracking_times
+                WHERE user_id= ?
+                    AND artifact_id = ?
+                ORDER BY id DESC
+                LIMIT 1';
+
+        return $this->getDB()->row($sql, $user_id, $artifact_id);
+    }
 }

@@ -58,6 +58,9 @@ msgstr "Les permissions ont été enregistrées avec succès."
 msgid "Personal time tracking"
 msgstr "Suivi de temps personnel"
 
+msgid "Please add the time on an existing artifact"
+msgstr "Veuillez ajouter un temps sur un artéfact existant"
+
 msgid "Read"
 msgstr "Lecture"
 
@@ -69,6 +72,9 @@ msgstr "Étape"
 
 msgid "Steps"
 msgstr "Étapes"
+
+msgid "The date format is not the one expected (YYYY-MM-DD)."
+msgstr "Le format de la date n'est pas celui attendu (AAAA-MM-JJ)."
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."

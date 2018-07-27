@@ -43,6 +43,9 @@ msgstr ""
 msgid "Personal time tracking"
 msgstr ""
 
+msgid "Please add the time on an existing artifact"
+msgstr ""
+
 msgid "Read"
 msgstr ""
 
@@ -53,6 +56,9 @@ msgid "Step"
 msgstr ""
 
 msgid "Steps"
+msgstr ""
+
+msgid "The date format is not the one expected (YYYY-MM-DD)."
 msgstr ""
 
 msgid "The request is not valid."
