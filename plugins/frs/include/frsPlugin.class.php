@@ -52,7 +52,7 @@ class frsPlugin extends \Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        bindTextDomain('tuleap-frs', FRS_BASE_DIR . '/../site-content');
+        bindTextDomain('tuleap-frs', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
