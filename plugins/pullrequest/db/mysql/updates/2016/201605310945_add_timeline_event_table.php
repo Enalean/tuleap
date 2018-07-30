@@ -18,19 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201605310945_add_timeline_event_table extends ForgeUpgrade_Bucket {
+class b201605310945_add_timeline_event_table extends ForgeUpgrade_Bucket // phpcs:ignore
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add timeline_event table to keep track of events made on the pullrequest and show it to the user.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_pullrequest_timeline_event (
             id INT(11) PRIMARY KEY AUTO_INCREMENT,
             pull_request_id INT(11) NOT NULL,
@@ -40,10 +44,10 @@ EOT;
             INDEX idx_pr_pull_request_id(pull_request_id)
         );";
         $this->db->createTable('plugin_pullrequest_timeline_event', $sql);
-
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_pullrequest_timeline_event')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_pullrequest_timeline_event');
         }

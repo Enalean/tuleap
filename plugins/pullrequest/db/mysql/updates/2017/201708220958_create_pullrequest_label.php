@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201708220958_create_pullrequest_label extends ForgeUpgrade_Bucket
+class b201708220958_create_pullrequest_label extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

@@ -93,6 +93,5 @@ class PaginatedTimelineRepresentationBuilder
                 );
                 return $event_representation;
         }
-
     }
 }

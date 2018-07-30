@@ -19,6 +19,7 @@
  */
 
 namespace Tuleap\PullRequest\REST\v1;
+
 use Tuleap\REST\JsonCast;
 use Codendi_HTMLPurifier;
 

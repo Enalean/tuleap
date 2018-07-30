@@ -30,34 +30,34 @@ class AdditionalHelpTextPresenter
         return 'additional-help-text';
     }
 
-    public function git_clone_bar_help_text_title()
+    public function git_clone_bar_help_text_title() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_title');
     }
 
-    public function git_clone_bar_help_text_intro()
+    public function git_clone_bar_help_text_intro() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_intro');
     }
 
-    public function git_clone_bar_help_text_create_pull_request()
+    public function git_clone_bar_help_text_create_pull_request() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_create_pull_request');
     }
 
-    public function new_pull_request_button_title()
+    public function new_pull_request_button_title() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_button_title');
     }
 
-    public function git_clone_bar_help_text_view_pull_requests()
+    public function git_clone_bar_help_text_view_pull_requests() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_view_pull_requests', array(
             $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array('#'))
         ));
     }
 
-    public function git_clone_bar_help_text_pull_request_actions()
+    public function git_clone_bar_help_text_pull_request_actions() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'git_clone_bar_help_text_pull_request_actions');
     }

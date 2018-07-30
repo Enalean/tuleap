@@ -24,7 +24,6 @@ use PFUser;
 use Project;
 use Tuleap\Event\Dispatchable;
 
-
 class GetCreatePullRequest implements Dispatchable
 {
     const NAME = 'pullrequest_hook_create_pull_request';

@@ -18,19 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201602151010_add_plugin_pullrequest_comments_table extends ForgeUpgrade_Bucket {
+class b201602151010_add_plugin_pullrequest_comments_table extends ForgeUpgrade_Bucket // phpcs:ignore
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add plugin_pullrequest_comments table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_pullrequest_comments (
             id INT(11) PRIMARY KEY AUTO_INCREMENT,
             pull_request_id INT(11) NOT NULL,
@@ -42,7 +46,8 @@ EOT;
         $this->db->createTable('plugin_pullrequest_comments', $sql);
     }
 
-    public function postUp() {
+    public function postUp()
+    {
         if (!$this->db->tableNameExists('plugin_pullrequest_comments')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_pullrequest_comments table is missing');
         }

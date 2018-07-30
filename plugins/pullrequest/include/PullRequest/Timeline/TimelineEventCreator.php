@@ -52,5 +52,4 @@ class TimelineEventCreator
     {
         $this->timeline_dao->save($pull_request->getId(), $user->getId(), time(), TimelineEvent::ABANDON);
     }
-
 }

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604291015_add_plugin_pullrequest_inline_comments_table extends ForgeUpgrade_Bucket
+class b201604291015_add_plugin_pullrequest_inline_comments_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
 
     public function description()

@@ -29,7 +29,8 @@ use Tuleap\PullRequest\Criterion\StatusClosed;
 /**
  * I convert a json query string to a ISearchOnStatus criterion.
  */
-class QueryToCriterionConverter {
+class QueryToCriterionConverter
+{
 
     public function convert($query)
     {
@@ -50,10 +51,8 @@ class QueryToCriterionConverter {
         if (isset($query_object->status)) {
             if ($query_object->status === 'open') {
                 return new StatusOpen();
-
             } else if ($query_object->status === 'closed') {
                 return new StatusClosed();
-
             } else {
                 throw new MalformedQueryParameterException();
             }
@@ -61,5 +60,4 @@ class QueryToCriterionConverter {
 
         throw new MalformedQueryParameterException();
     }
-
 }

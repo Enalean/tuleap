@@ -66,10 +66,10 @@ class PullRequest implements Labelable
         $repo_dest_id,
         $branch_dest,
         $sha1_dest,
-        $last_build_date   = null,
+        $last_build_date = null,
         $last_build_status = self::BUILD_STATUS_UNKNOWN,
-        $status            = 'R',
-        $merge_status      = self::UNKNOWN_MERGE
+        $status = 'R',
+        $merge_status = self::UNKNOWN_MERGE
     ) {
         $this->id                = $id;
         $this->title             = $title;

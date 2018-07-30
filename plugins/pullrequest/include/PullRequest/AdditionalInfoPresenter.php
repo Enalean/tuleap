@@ -43,12 +43,12 @@ class AdditionalInfoPresenter
         return 'additional-info';
     }
 
-    public function action_url()
+    public function action_url() // phpcs:ignore
     {
         return '/plugins/git/?action=pull-requests&repo_id=' . $this->repository->getId() . '&group_id=' . $this->repository->getProjectId();
     }
 
-    public function nb_pull_request_badge()
+    public function nb_pull_request_badge() // phpcs:ignore
     {
         $nb_open = $this->nb_pull_requests->getNbOpen();
         if ($nb_open <= 1) {
@@ -58,7 +58,7 @@ class AdditionalInfoPresenter
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'nb_pull_request_badge_plural', array($nb_open));
     }
 
-    public function is_there_at_least_one_pull_request()
+    public function is_there_at_least_one_pull_request() // phpcs:ignore
     {
         return $this->nb_pull_requests->isThereAtLeastOnePullRequest();
     }

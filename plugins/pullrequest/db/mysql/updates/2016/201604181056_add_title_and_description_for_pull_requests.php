@@ -18,24 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604181056_add_title_and_description_for_pull_requests extends ForgeUpgrade_Bucket {
+class b201604181056_add_title_and_description_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add title & description columns into pull_requests_review table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_pullrequest_review ADD (title VARCHAR(256) NOT NULL, description TEXT NOT NULL);";
         $this->executeSql($sql);
     }
 
-    public function executeSql($sql) {
+    public function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

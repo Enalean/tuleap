@@ -75,7 +75,7 @@ use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
 
-class pullrequestPlugin extends Plugin
+class pullrequestPlugin extends Plugin // phpcs:ignore
 {
 
     const PR_REFERENCE_KEYWORD          = 'pr';
@@ -87,7 +87,7 @@ class pullrequestPlugin extends Plugin
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
-        bindtextdomain('tuleap-pullrequest',  __DIR__ . '/../site-content/');
+        bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
@@ -136,7 +136,7 @@ class pullrequestPlugin extends Plugin
         return array('git');
     }
 
-    public function service_classnames($params)
+    public function service_classnames($params) // phpcs:ignore
     {
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
@@ -149,7 +149,7 @@ class pullrequestPlugin extends Plugin
         }
     }
 
-    public function javascript_file()
+    public function javascript_file() // phpcs:ignore
     {
         if ($this->isAPullrequestRequest()) {
             $include_asset_pullrequest = new IncludeAssets(
@@ -205,7 +205,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see REST_RESOURCES
      */
-    public function rest_resources(array $params)
+    public function rest_resources(array $params) // phpcs:ignore
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
@@ -214,7 +214,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see REST_GIT_PULL_REQUEST_ENDPOINTS
      */
-    public function rest_git_pull_request_endpoints($params)
+    public function rest_git_pull_request_endpoints($params) // phpcs:ignore
     {
         $params['available'] = true;
     }
@@ -222,7 +222,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY
      */
-    public function rest_git_pull_request_get_for_repository($params)
+    public function rest_git_pull_request_get_for_repository($params) // phpcs:ignore
     {
         $version = $params['version'];
         $class   = "\\Tuleap\\PullRequest\\REST\\$version\\RepositoryResource";
@@ -239,7 +239,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see GIT_ADDITIONAL_INFO
      */
-    public function git_additional_info($params)
+    public function git_additional_info($params) // phpcs:ignore
     {
         $repository = $params['repository'];
 
@@ -256,7 +256,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see GIT_ADDITIONAL_ACTIONS
      */
-    public function git_additional_actions($params)
+    public function git_additional_actions($params) // phpcs:ignore
     {
         $repository = $params['repository'];
         $user       = $params['user'];
@@ -298,7 +298,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see GIT_ADDITIONAL_BODY_CLASSES
      */
-    public function git_additional_body_classes($params)
+    public function git_additional_body_classes($params) // phpcs:ignore
     {
         if ($params['request']->get('action') === 'pull-requests') {
             $params['classes'][] = 'git-pull-requests';
@@ -308,7 +308,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see GIT_ADDITIONAL_PERMITTED_ACTIONS
      */
-    public function git_additional_permitted_actions($params)
+    public function git_additional_permitted_actions($params) // phpcs:ignore
     {
         $repository = $params['repository'];
         $user       = $params['user'];
@@ -343,7 +343,7 @@ class pullrequestPlugin extends Plugin
     /**
      * @see GIT_ADDITIONAL_HELP_TEXT
      */
-    public function git_additional_help_text($params)
+    public function git_additional_help_text($params) // phpcs:ignore
     {
         $repository = $params['repository'];
 
@@ -355,7 +355,8 @@ class pullrequestPlugin extends Plugin
         }
     }
 
-    public function gitHookPostReceive($params) {
+    public function gitHookPostReceive($params)
+    {
         $refname     = $params['refname'];
         $branch_name = $this->getBranchNameFromRef($refname);
 
@@ -439,7 +440,7 @@ class pullrequestPlugin extends Plugin
     {
         $factory = $this->getPullRequestFactory();
         $pull_requests = $factory->getOpenedBySourceBranch($params['repository'], $params['branch']);
-        foreach($pull_requests as $pull_request) {
+        foreach ($pull_requests as $pull_request) {
             $factory->updateLastBuildStatus($pull_request, $params['status'], time());
         }
     }
@@ -476,7 +477,7 @@ class pullrequestPlugin extends Plugin
         return new TimelineEventCreator(new TimelineDao());
     }
 
-    public function get_reference($params)
+    public function get_reference($params) // phpcs:ignore
     {
         $keyword         = $params['keyword'];
         $pull_request_id = $params['value'];
@@ -504,11 +505,12 @@ class pullrequestPlugin extends Plugin
         );
     }
 
-    private function isReferenceAPullRequestReference($keyword) {
+    private function isReferenceAPullRequestReference($keyword)
+    {
         return $keyword === self::PR_REFERENCE_KEYWORD || $keyword === self::PULLREQUEST_REFERENCE_KEYWORD;
     }
 
-    public function get_plugins_available_keywords_references($params)
+    public function get_plugins_available_keywords_references($params) // phpcs:ignore
     {
         $params['keywords'] = array_merge(
             $params['keywords'],
@@ -516,7 +518,8 @@ class pullrequestPlugin extends Plugin
         );
     }
 
-    public function get_available_reference_natures($params) {
+    public function get_available_reference_natures($params) // phpcs:ignore
+    {
         $nature = array(self::REFERENCE_NATURE => array(
             'keyword' => 'pullrequest',
             'label'   => 'Git Pull Request'

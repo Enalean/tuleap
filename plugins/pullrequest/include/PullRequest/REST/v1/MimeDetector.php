@@ -97,7 +97,7 @@ class MimeDetector
         'yaml'          => 'text/x-yaml'
     );
 
-    static public function getMimeInfo($file_path, $dest_content, $src_content)
+    public static function getMimeInfo($file_path, $dest_content, $src_content)
     {
         $finfo = finfo_open(FILEINFO_MIME);
         $file_content = $src_content === null ? $dest_content : $src_content;

@@ -20,9 +20,11 @@
 
 namespace Tuleap\PullRequest;
 
-class PluginInfo extends \PluginInfo {
+class PluginInfo extends \PluginInfo
+{
 
-    public function __construct($plugin) {
+    public function __construct($plugin)
+    {
         parent::__construct($plugin);
 
         $this->setPluginDescriptor(new PluginDescriptor());

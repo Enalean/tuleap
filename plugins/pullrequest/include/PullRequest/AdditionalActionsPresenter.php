@@ -36,7 +36,7 @@ class AdditionalActionsPresenter
     public $src_branches;
 
     /** @var array */
-    public  $dest_branches;
+    public $dest_branches;
     /**
      * @var bool
      */
@@ -57,52 +57,52 @@ class AdditionalActionsPresenter
         return 'additional-actions';
     }
 
-    public function form_action()
+    public function form_action() // phpcs:ignore
     {
         return '/plugins/pullrequest/?action=generatePullRequest&group_id=' . $this->repository->getProjectId() . '&repository_id=' . $this->repository->getId();
     }
 
-    public function new_pull_request_button_title()
+    public function new_pull_request_button_title() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_button_title');
     }
 
-    public function pull_request_can_not_be_created()
+    public function pull_request_can_not_be_created() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'pull_request_can_not_be_created');
     }
 
-    public function new_pull_request_modal_title()
+    public function new_pull_request_modal_title() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_title');
     }
 
-    public function new_pull_request_modal_from()
+    public function new_pull_request_modal_from() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_from');
     }
 
-    public function new_pull_request_modal_to()
+    public function new_pull_request_modal_to() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_to');
     }
 
-    public function new_pull_request_modal_choose_branch_from()
+    public function new_pull_request_modal_choose_branch_from() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_choose_branch_from');
     }
 
-    public function new_pull_request_modal_choose_branch_to()
+    public function new_pull_request_modal_choose_branch_to() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_choose_branch_to');
     }
 
-    public function new_pull_request_modal_close()
+    public function new_pull_request_modal_close() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_close');
     }
 
-    public function new_pull_request_modal_submit()
+    public function new_pull_request_modal_submit() // phpcs:ignore
     {
         return $GLOBALS['Language']->getText('plugin_pullrequest', 'new_pull_request_modal_submit');
     }

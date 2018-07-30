@@ -18,24 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201604260945_add_post_date_for_comments extends ForgeUpgrade_Bucket {
+class b201604260945_add_post_date_for_comments extends ForgeUpgrade_Bucket // phpcs:ignore
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add post_date column into pull_requests_comments table.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_pullrequest_comments ADD (post_date INT(11) NOT NULL);";
         $this->executeSql($sql);
     }
 
-    public function executeSql($sql) {
+    public function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

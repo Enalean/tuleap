@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201608091537_add_system_references extends ForgeUpgrade_Bucket
+class b201608091537_add_system_references extends ForgeUpgrade_Bucket // phpcs:ignore
 {
 
     public function description()
