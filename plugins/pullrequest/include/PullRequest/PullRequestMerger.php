@@ -25,11 +25,21 @@ use GitRepository;
 use Git_Command_Exception;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use System_Command;
+use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestMerger
 {
     const GIT_MERGE_CONFLICT_MARKER = '+<<<<<<<';
     const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
+    /**
+     * @var MergeSettingRetriever
+     */
+    private $merge_setting_retriever;
+
+    public function __construct(MergeSettingRetriever $merge_setting_retriever)
+    {
+        $this->merge_setting_retriever = $merge_setting_retriever;
+    }
 
     public function doMergeIntoDestination(PullRequest $pull_request, GitRepository $repository_dest, PFUser $user)
     {
@@ -44,9 +54,15 @@ class PullRequestMerger
         }
         $executor = new GitExec($temp_working_dir);
 
+        $merge_setting = $this->merge_setting_retriever->getMergeSettingForRepository($repository_dest);
+
         try {
             $executor->sharedCloneAndCheckout($repository_dest->getFullPath(), $pull_request->getBranchDest());
-            $executor->merge($pull_request->getSha1Src(), $user);
+            if ($merge_setting->isMergeCommitAllowed()) {
+                $executor->merge($pull_request->getSha1Src(), $user);
+            } else {
+                $executor->fastForwardMergeOnly($pull_request->getSha1Src());
+            }
             $executor->push(escapeshellarg('gitolite@gl-adm:' . $repository_dest->getPath()) . ' HEAD:' . escapeshellarg($pull_request->getBranchDest()));
         } catch (Git_Command_Exception $exception) {
             $exception_message = $exception->getMessage();

@@ -60,6 +60,11 @@ CREATE TABLE IF NOT EXISTS plugin_pullrequest_label (
     PRIMARY KEY (label_id, pull_request_id)
 );
 
+CREATE TABLE IF NOT EXISTS plugin_pullrequest_merge_setting (
+    repository_id INT(10) UNSIGNED NOT NULL PRIMARY KEY,
+    merge_commit_allowed BOOLEAN NOT NULL
+);
+
 INSERT INTO reference (id, keyword, description, link, scope, service_short_name, nature)
 VALUES (31, 'pr', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins/git/?action=pull-requests&repo_id=$repo_id&group_id=$group_id#/pull-requests/$1/overview', 'S', 'plugin_pullrequest', 'pullrequest'),
 (32, 'pullrequest', 'plugin_pullrequest:reference_pullrequest_desc_key', '/plugins/git/?action=pull-requests&repo_id=$repo_id&group_id=$group_id#/pull-requests/$1/overview', 'S', 'plugin_pullrequest', 'pullrequest');
