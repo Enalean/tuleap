@@ -3510,6 +3510,9 @@ td.tracker-unsubscriber-actions {
         background-color: #ffffff;
         border-color: #ffffff;
         box-shadow: none;
+    }
+
+    .tracker-action-button:last-child {
         margin: 5px 0;
     }
 }
@@ -3519,5 +3522,5 @@ td.tracker-unsubscriber-actions {
 }
 
 #tracker-move-artifact-divider {
-    margin: -5px 0 5px;
+    margin: 0 0 5px;
 }
