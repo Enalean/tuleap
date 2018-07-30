@@ -102,7 +102,7 @@ const webpack_config_for_artifacts = {
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
         alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
     }
