@@ -22,11 +22,11 @@
     "d3-selection": "^1.1.0",
     "d3-selection-multi": "^1.0.1",
     "d3-zoom": "^1.6.0",
+    "dompurify": "^1.0.7",
     "lodash": "^2.4.2",
     "moment": "^2.18.1",
     "restangular": "~1.4.0",
     "socket.io-client": "^2.0.3",
-    "dompurify": "^1.0.4",
     "uuid": "^3.2.1",
     "vue": "^2.5.13",
     "vue-gettext": "^2.0.31"
