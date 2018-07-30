@@ -90,6 +90,11 @@ class GitExec extends Git_Exec
         return $this->gitCmdWithOutput("merge --no-edit " . $reference, $output);
     }
 
+    public function fastForwardMergeOnly($reference)
+    {
+        $this->gitCmdWithOutput('merge --ff-only ' . escapeshellarg($reference), $output);
+    }
+
     /**
      * @return array
      */

@@ -57,6 +57,8 @@ use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Logger;
+use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
+use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
@@ -171,7 +173,9 @@ class pullrequestPlugin extends Plugin
         $event_manager          = EventManager::instance();
         $git_repository_factory = $this->getRepositoryFactory();
 
-        $pull_request_merger  = new PullRequestMerger();
+        $pull_request_merger  = new PullRequestMerger(
+            new MergeSettingRetriever(new MergeSettingDAO())
+        );
         $pull_request_creator = new PullRequestCreator(
             $this->getPullRequestFactory(),
             new PullRequestDao(),
@@ -366,7 +370,9 @@ class pullrequestPlugin extends Plugin
             } else {
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
-                    new PullRequestMerger(),
+                    new PullRequestMerger(
+                        new MergeSettingRetriever(new MergeSettingDAO())
+                    ),
                     new InlineCommentDao(),
                     new InlineCommentUpdater(),
                     new FileUniDiffBuilder(),
@@ -412,7 +418,12 @@ class pullrequestPlugin extends Plugin
     {
         $pull_request_factory   = $this->getPullRequestFactory();
         $timeline_event_creator = $this->getTimelineEventCreator();
-        $closer                 = new PullRequestCloser($this->getPullRequestFactory(), new PullRequestMerger());
+        $closer                 = new PullRequestCloser(
+            $this->getPullRequestFactory(),
+            new PullRequestMerger(
+                new MergeSettingRetriever(new MergeSettingDAO())
+            )
+        );
 
         $prs = $pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {

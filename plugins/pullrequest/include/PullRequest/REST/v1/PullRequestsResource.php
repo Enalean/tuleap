@@ -64,6 +64,8 @@ use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
+use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
+use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\PullRequestWithGitReference;
 use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
@@ -192,7 +194,9 @@ class PullRequestsResource extends AuthenticatedResource
 
         $this->user_manager         = UserManager::instance();
         $this->event_manager        = EventManager::instance();
-        $this->pull_request_merger  = new PullRequestMerger();
+        $this->pull_request_merger  = new PullRequestMerger(
+            new MergeSettingRetriever(new MergeSettingDAO())
+        );
         $this->pull_request_creator = new PullRequestCreator(
             $this->pull_request_factory,
             $pull_request_dao,
