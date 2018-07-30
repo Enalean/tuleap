@@ -20,7 +20,6 @@
 
 require_once dirname(__FILE__) .'/../include/autoload.php';
 require_once dirname(__FILE__) .'/../../docman/include/autoload.php';
-require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
 
 class FullTextSearchDocmanActionsTests extends TuleapTestCase {

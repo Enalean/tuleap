@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/Docman_File_Builder.php';
-require_once DOCMAN_INCLUDE_PATH.'/Docman_Version.class.php';
+require_once __DIR__.'/../../../docman/include/Docman_Version.class.php';
 require_once 'common/user/User.class.php';
 
 
