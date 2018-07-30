@@ -1,0 +1,12 @@
+{{# artifact_move_button_presenter }}
+    <li>
+        <a class="btn tracker-action-button"
+           data-toggle="modal"
+           data-target="#move-artifact-modal"
+           {{# errors }} title="{{ . }}" disabled="disabled"{{/ errors }}
+        >
+            <i class="icon-fixed-width icon-share-alt"></i>
+            {{ label }}
+        </a>
+    </li>
+{{/ artifact_move_button_presenter }}

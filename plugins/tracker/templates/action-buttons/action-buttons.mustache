@@ -1,0 +1,26 @@
+{{# has_at_least_one_action }}
+    <div class="tracker-artifact-actions btn-group">
+        <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-reorder"></i> {{# dgettext }} tuleap-tracker | Actions {{/ dgettext }}
+            <span class="caret" id="tracker-action-icon"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" id="tracker-action-button-section">
+            {{> action-buttons/original-email }}
+            {{> action-buttons/copy-artifact }}
+            {{> action-buttons/move-artifact }}
+            {{> action-buttons/graph-dependencies }}
+            {{# divider }}
+                <li class="divider" id="tracker-move-artifact-divider"></li>
+            {{/ divider }}
+            {{> action-buttons/mail-notifications }}
+        </ul>
+    </div>
+
+    {{# artifact_move_button_presenter }}
+        <div id="move-artifact-modal"
+             data-tracker-name="{{ tracker_name}}"
+             data-tracker-color="{{ tracker_color }}"
+             data-artifact-id="{{ artifact_id }}"
+        ></div>
+    {{/ artifact_move_button_presenter }}
+{{/ has_at_least_one_action }}

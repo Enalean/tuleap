@@ -20,24 +20,20 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use PFUser;
-use Tracker_Artifact;
-
-class ArtifactCopyButtonPresenterBuilder
+class ArtifactOriginalEmailButtonPresenter
 {
-    public function getCopyArtifactButton(PFUser $user, Tracker_Artifact $artifact)
-    {
-        if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
-            return new ArtifactCopyButtonPresenter(
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
-            );
-        }
-    }
+    /**
+     * @var string
+     */
+    public $raw_email;
+    /**
+     * @var string
+     */
+    public $label;
 
-    private function isAlreadyCopyingArtifact()
+    public function __construct($label, $raw_mail)
     {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/?func=copy-artifact') === 0;
+        $this->label     = $label;
+        $this->raw_email = $raw_mail;
     }
 }

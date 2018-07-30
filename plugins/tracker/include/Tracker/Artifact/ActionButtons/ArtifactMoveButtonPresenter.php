@@ -20,35 +20,20 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-class ActionButtonPresenter
+class ArtifactMoveButtonPresenter
 {
     /**
      * @var string
      */
     public $label;
     /**
-     * @var string
-     */
-    public $icon;
-    /**
      * @var array
      */
-    public $data_property;
-    /**
-     * @var string
-     */
-    public $css_class;
-    /**
-     * @var string
-     */
-    public $has_svg;
+    public $errors;
 
-    public function __construct($label, $icon, array $data_property, $class, $has_svg)
+    public function __construct($label, array $errors)
     {
-        $this->label         = $label;
-        $this->icon          = $icon;
-        $this->data_property = $data_property;
-        $this->css_class     = $class;
-        $this->has_svg       = $has_svg;
+        $this->label  = $label;
+        $this->errors = implode(" ", $errors);
     }
 }

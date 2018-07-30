@@ -422,7 +422,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('MoveArtifactModal.js'));
 
         return $renderer->renderToString(
-            'action-buttons',
+            'action-buttons/action-buttons',
             $action_buttons_presenters
         );
     }

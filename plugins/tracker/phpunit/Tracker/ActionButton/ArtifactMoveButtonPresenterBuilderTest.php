@@ -99,15 +99,9 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             new DeletionOfArtifactsIsNotAllowedException()
         );
 
-        $expected_presenter = new ActionButtonPresenter(
+        $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            "icon-share-alt",
-            [
-                ["name" => "disabled", "value" => "disabled"],
-                ["name" => "title", "value" => "Deletion of artifacts is not allowed"]
-            ],
-            "",
-            false
+            ["Deletion of artifacts is not allowed"]
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -126,15 +120,9 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
             new ArtifactsDeletionLimitReachedException()
         );
 
-        $expected_presenter = new ActionButtonPresenter(
+        $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            "icon-share-alt",
-            [
-                ["name" => "disabled", "value" => "disabled"],
-                ["name" => "title", "value" => "The limit of artifacts deletions has been reached for the previous 24 hours."]
-            ],
-            "",
-            false
+            ["The limit of artifacts deletions has been reached for the previous 24 hours."]
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -155,15 +143,9 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
-        $expected_presenter = new ActionButtonPresenter(
+        $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            "icon-share-alt",
-            [
-                ["name" => "disabled", "value" => "disabled"],
-                ["name" => "title", "value" => "No semantic defined in this tracker."]
-            ],
-            "",
-            false
+            ["No semantic defined in this tracker."]
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -180,15 +162,9 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
-        $expected_presenter = new ActionButtonPresenter(
+        $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            "icon-share-alt",
-            [
-                ["name" => "disabled", "value" => "disabled"],
-                ["name" => "title", "value" => "Artifacts with artifact links can not be moved."]
-            ],
-            "",
-            false
+            ["Artifacts with artifact links can not be moved."]
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
@@ -206,20 +182,9 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
 
-        $expected_presenter = new ActionButtonPresenter(
+        $expected_presenter = new ArtifactMoveButtonPresenter(
             dgettext('plugin-tracker', "Move artifact"),
-            "icon-share-alt",
-            [
-                [
-                    "name"  => "data-toggle",
-                    "value" => "modal"
-                ], [
-                    "name"  => "data-target",
-                    "value" => "#move-artifact-modal"
-                ]
-            ],
-            "",
-            false
+            []
         );
 
         $built_presenter = $this->move_button_builder->getMoveArtifactButton($this->user, $this->artifact);
