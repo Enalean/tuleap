@@ -1473,9 +1473,6 @@ $properties["DBADMIN_USER"] =
 $properties["DBADMIN_PASSWD"] =
   new _define_commented_optional('DBADMIN_PASSWD', "", "
 ");
-$properties["USE_EXTERNAL_HTML2PDF"] =
-  new _define_commented_optional('USE_EXTERNAL_HTML2PDF', "htmldoc --quiet --format pdf14 --no-toc --no-title %s", "
-");
 
 $properties["Part Seven A"] =
 new part('_part7a', $SEPARATOR."\n", "

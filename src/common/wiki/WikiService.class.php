@@ -139,9 +139,6 @@ class WikiService extends Controler {
         $this->view = 'empty'; 
 
     if(isset($_REQUEST['action'])) {
-        if($_REQUEST['action'] == 'pdf') 
-            $this->view = 'empty';
-        
         if($_REQUEST['action'] == 'ziphtml') 
             $this->view = 'empty';
         

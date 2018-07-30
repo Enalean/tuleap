@@ -109,7 +109,6 @@ ${POT_FILE}: ../lib/main.php
 ${POT_FILE}: ../lib/PageList.php
 ${POT_FILE}: ../lib/PagePerm.php
 ${POT_FILE}: ../lib/PageType.php
-${POT_FILE}: ../lib/pdf.php
 ${POT_FILE}: ../lib/plugin/AddComment.php
 ${POT_FILE}: ../lib/plugin/AllPages.php
 ${POT_FILE}: ../lib/plugin/AllUsers.php

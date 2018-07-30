@@ -568,7 +568,6 @@ class WikiRequest extends Request {
             case 'diff':
             case 'select':
             case 'search':
-            case 'pdf':
                 return WIKIAUTH_ANON;
 
             case 'zip':
@@ -1043,11 +1042,6 @@ class WikiRequest extends Request {
         include_once("lib/loadsave.php");
         RakeSandboxAtUserRequest($this);
     }
-
-    function action_pdf () {
-    	include_once("lib/pdf.php");
-    	ConvertAndDisplayPdf($this);
-    }
     
 }
 
@@ -1103,14 +1097,6 @@ function main () {
     else
         $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE|E_USER_WARNING|E_WARNING);
     $request = new WikiRequest();
-
-    $action = $request->getArg('action');
-    if (substr($action, 0, 3) != 'zip') {
-    	if ($action == 'pdf')
-    	    $ErrorManager->setPostponedErrorMask(-1); // everything
-    	//else // reject postponing of warnings
-        //    $ErrorManager->setPostponedErrorMask(E_NOTICE|E_USER_NOTICE);
-    }
 
     /*
      * Allow for disabling of markup cache.

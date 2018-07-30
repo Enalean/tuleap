@@ -115,23 +115,6 @@ class XmlContent
         return $xml;
     }
 
-    function asPDF () {
-        $pdf = '';
-        foreach ($this->_content as $item) {
-            if (is_object($item)) {
-                if (method_exists($item, 'asPDF'))
-                    $pdf .= $item->asPDF();
-                elseif (method_exists($item, 'asString'))
-                    $pdf .= $this->_quote($item->asString());
-                else
-                    $pdf .= sprintf("==Object(%s)==", get_class($item));
-            }
-            else
-                $pdf .= $this->_quote((string) $item);
-        }
-        return $pdf;
-    }
-
     function asString () {
         $val = '';
         foreach ($this->_content as $item) {

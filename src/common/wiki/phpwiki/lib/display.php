@@ -182,18 +182,7 @@ function displayPage(&$request, $template=false) {
 
     $request->appendValidators(array('pagerev' => $revision->getVersion(),
                                      '%mtime' => $revision->get('mtime')));
-/*
-    // FIXME: This is also in the template...
-    if ($request->getArg('action') != 'pdf' and !headers_sent()) {
-      // FIXME: enable MathML/SVG/... support
-      if (ENABLE_XHTML_XML
-             and (!isBrowserIE()
-                  and strstr($request->get('HTTP_ACCEPT'),'application/xhtml+xml')))
-            header("Content-Type: application/xhtml+xml; charset=" . $GLOBALS['charset']);
-        else
-            header("Content-Type: text/html; charset=" . $GLOBALS['charset']);
-    }
-*/
+
     $page_content = $revision->getTransformedContent();
 
     // if external searchengine (google) referrer, highlight the searchterm
@@ -261,8 +250,7 @@ function displayPage(&$request, $template=false) {
     $template->printExpansion($toks);
     $page->increaseHitCount();
 
-    if ($request->getArg('action') != 'pdf')
-        $request->checkValidators();
+    $request->checkValidators();
     flush();
 }
 

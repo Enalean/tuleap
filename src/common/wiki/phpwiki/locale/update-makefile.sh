@@ -40,8 +40,8 @@ po_files () {
 # TODO: autogenerate .exclude list from CVS/Entries
 pot_file_deps () {
     test -f .exclude || ( echo lib/pear/ > .exclude; echo lib/WikiDB/adodb/ > .exclude; echo lib/nusoap/ > .exclude )
-    (cd ..; find lib themes \( -type d -regex '\(^lib/pear\)\|\(^lib/WikiDB/adodb\)\|\(^lib/nusoap\)\|\(^lib/fpdf\)' \) -prune -o \( -type f -a -name \*.php -o -name \*.tmpl \)) |
-        egrep -v '(^lib/pear)|(^lib/WikiDB/adodb)|(^lib/nusoap)|(^lib/fpdf)' |
+    (cd ..; find lib themes \( -type d -regex '\(^lib/pear\)\|\(^lib/WikiDB/adodb\)\|\(^lib/nusoap\)' \) -prune -o \( -type f -a -name \*.php -o -name \*.tmpl \)) |
+        egrep -v '(^lib/pear)|(^lib/WikiDB/adodb)|(^lib/nusoap)' |
         grep -v -f .exclude |
 	sed 's|^|${POT_FILE}: ../|;' |
 	sort
