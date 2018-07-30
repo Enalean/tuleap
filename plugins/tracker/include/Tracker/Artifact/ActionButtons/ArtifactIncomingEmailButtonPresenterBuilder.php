@@ -51,12 +51,9 @@ class ArtifactIncomingEmailButtonPresenterBuilder
         $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
         $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
 
-        return new ActionButtonPresenter(
+        return new ArtifactOriginalEmailButtonPresenter(
             $raw_email_button_title,
-            "icon-envelope-alt",
-            ["name" => 'data-raw-email', "value" => $raw_mail],
-            "artifact-incoming-mail-button",
-            false
+            $raw_mail
         );
     }
 }

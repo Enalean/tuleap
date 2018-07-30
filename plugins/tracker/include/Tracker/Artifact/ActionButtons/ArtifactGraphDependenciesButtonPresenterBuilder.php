@@ -46,17 +46,9 @@ class ArtifactGraphDependenciesButtonPresenterBuilder
         );
 
         if (! empty($reference_information)) {
-            return new ActionButtonPresenter(
+            return new ArtifactGrapDependenciesButtonPresenter(
                 $reference_information[0]['links'][0]['label'],
-                "",
-                [
-                    [
-                        "name"  => "href",
-                        "value" => $reference_information[0]['links'][0]['link']
-                    ]
-                ],
-                "",
-                true
+                $reference_information[0]['links'][0]['link']
             );
         }
     }

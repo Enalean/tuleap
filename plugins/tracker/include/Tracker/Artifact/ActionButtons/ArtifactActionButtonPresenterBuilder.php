@@ -76,27 +76,13 @@ class ArtifactActionButtonPresenterBuilder
 
         $graph_references = $this->graph_button_builder->getGraphReferencesButton($artifact);
 
-        if ($original_email) {
-            $action_buttons[]['section'] = $original_email;
-        }
-        if ($copy_artifact) {
-            $action_buttons[]['section'] = $copy_artifact;
-        }
-        if (\ForgeConfig::get('tracker_move_artifact_ui') && $move_artifact) {
-            $action_buttons[]['section'] = $move_artifact;
-        }
-        if ($graph_references) {
-            $action_buttons[]['section'] = $graph_references;
-        }
-
-        if (($original_email || $copy_artifact || $move_artifact || $graph_references) && $notification) {
-            $action_buttons[]['divider'] = true;
-        }
-
-        if ($notification) {
-            $action_buttons[]['section'] = $notification;
-        }
-
-        return new GlobalButtonsActionPresenter($action_buttons, $artifact);
+        return new GlobalButtonsActionPresenter(
+            $artifact,
+            $move_artifact,
+            $copy_artifact,
+            $graph_references,
+            $notification,
+            $original_email
+        );
     }
 }
