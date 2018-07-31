@@ -43,6 +43,10 @@ const tlp_mocks_alias = {
     "tlp-mocks": path.join(path_to_tlp, "mocks/index.js")
 };
 
+const jquery_mocks_alias = {
+    "jquery-mocks": path.join(path_to_tlp, "mocks/jQuery.js")
+};
+
 const angular_artifact_modal_alias = {
     "angular-artifact-modal": path.join(
         path_to_tuleap_root,
@@ -84,5 +88,6 @@ module.exports = {
     flaming_parrot_labels_box_aliases,
     tlp_fetch_alias,
     tlp_mocks_alias,
-    tuleap_core_alias
+    tuleap_core_alias,
+    jquery_mocks_alias
 };

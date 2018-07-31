@@ -18,6 +18,12 @@ msgstr "Choisissez un projet"
 msgid "Choose project..."
 msgstr "Choisissez un projet..."
 
+msgid "Choose tracker"
+msgstr "Choisissez un outil de suivi"
+
+msgid "Choose tracker..."
+msgstr "Choisissez un outil de suivi..."
+
 msgid "Close"
 msgstr "Fermer"
 

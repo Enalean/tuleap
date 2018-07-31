@@ -11,6 +11,12 @@ msgstr ""
 msgid "Choose project..."
 msgstr ""
 
+msgid "Choose tracker"
+msgstr ""
+
+msgid "Choose tracker..."
+msgstr ""
+
 msgid "Close"
 msgstr ""
 

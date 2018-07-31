@@ -17,10 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: ""
-};
+//Cannot be added in all mocks because it can conflicts with existing tests
+//Because jQuery is set up as external in webpack configs
+window.jQuery = {};

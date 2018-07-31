@@ -3,6 +3,7 @@
 @import 'includes/cards';
 @import 'includes/field-bound-colors';
 @import "includes/columns-colors";
+@import "includes/move-artifact";
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
@@ -3519,16 +3520,4 @@ td.tracker-unsubscriber-actions {
 
 #tracker-action-icon {
     margin: 10px 0 0 5px;
-}
-
-#tracker-move-artifact-divider {
-    margin: 0 0 5px;
-}
-.move-artifact-loader {
-    height: 100px;
-    background: url('/themes/common/images/tuleap-spinner.gif') no-repeat center center;
-}
-
-.highlight {
-    color: red;
 }

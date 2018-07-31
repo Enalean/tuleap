@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: ""
-};
+#tracker-move-artifact-divider {
+    margin: 0 0 5px;
+}
+
+.move-artifact-loader {
+    height: 100px;
+    background: url('/themes/common/images/tuleap-spinner.gif') no-repeat center center;
+}
+
+.move-artifact-tracker-loader-spinner {
+    background: url('/themes/common/images/tuleap-spinner.gif') no-repeat top right;
+}
+
+.move-artifact-tracker-loader {
+    width: 100%;
+    height: 100px;
+    margin: 20px 10px 0;
+}
+
+.highlight {
+    color: #ff0000;
+}
+
+.move-artifact-selectors {
+    display: flex;
+}

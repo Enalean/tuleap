@@ -95,14 +95,14 @@ const webpack_config_for_artifacts = {
     },
     context: path.resolve(__dirname),
     externals: {
-        tlp: "tlp",
         jquery: "jQuery"
     },
     resolve: {
-        alias: {
-            // TLP is not included in FlamingParrot
-            "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js")
-        }
+        alias: webpack_configurator.extendAliases(
+            webpack_configurator.tlp_fetch_alias,
+            webpack_configurator.tlp_mocks_alias,
+            webpack_configurator.jquery_mocks_alias
+        )
     },
     output: webpack_configurator.configureOutput(assets_dir_path),
     module: {
@@ -114,7 +114,7 @@ const webpack_config_for_artifacts = {
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
+        alias: webpack_configurator.extendAliases(webpack_configurator.easygettext_loader_alias)
     }
 };
 
