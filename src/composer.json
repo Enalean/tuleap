@@ -41,6 +41,7 @@
     "mockery/mockery": "^1.0",
     "simpletest/simpletest": "^1.1",
     "mikey179/vfsStream": "^1.6",
-    "php-http/mock-client": "^1.1"
+    "php-http/mock-client": "^1.1",
+    "squizlabs/php_codesniffer": "^3.3"
   }
 }

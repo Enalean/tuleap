@@ -8,14 +8,6 @@ cleanup_temporary_directory() {
 }
 trap cleanup_temporary_directory EXIT
 
-check_phpcs_presence() {
-    hash phpcs 2>/dev/null || {
-        echo "PHP CodeSniffer bin not found or executable"
-        echo "Please run make dev-setup"
-        exit 1
-    };
-}
-
 get_list_of_files() {
     git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.php$
 }
@@ -66,8 +58,6 @@ get_list_of_mandatory_psr2_files() {
 }
 
 main() {
-    check_phpcs_presence
-
     local files_list
     files_list=$(get_list_of_files)
     local files_psr2_mandatory
@@ -75,7 +65,7 @@ main() {
     if [[ -n ${files_psr2_mandatory} ]]
     then
         local phpcs_output
-        phpcs_output=$(phpcs --standard=PSR2 --encoding=utf-8 --warning-severity=0 -p ${files_psr2_mandatory})
+        phpcs_output=$(./src/vendor/bin/phpcs --standard=PSR2 --encoding=utf-8 --warning-severity=0 -p ${files_psr2_mandatory})
         local status=$?
         if [ ${status} -ne 0 ]
         then
