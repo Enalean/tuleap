@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\Repository;
 
+use EventManager;
 use Git_Backend_Gitolite;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
@@ -29,6 +30,7 @@ use PFUser;
 use Project;
 use ProjectHistoryDao;
 use Tuleap\Git\CIToken\Manager;
+use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 
@@ -70,6 +72,10 @@ class RepositoryCreator
      * @var Manager
      */
     private $ci_token_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         GitRepositoryFactory $factory,
@@ -80,18 +86,19 @@ class RepositoryCreator
         FineGrainedPermissionReplicator $fine_grained_replicator,
         ProjectHistoryDao $history_dao,
         HistoryValueFormatter $history_value_formatter,
-        Manager $ci_token_manager
+        Manager $ci_token_manager,
+        EventManager $event_manager
     ) {
-
-        $this->factory = $factory;
-        $this->backend_gitolite = $backend_gitolite;
-        $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->manager = $manager;
+        $this->factory                 = $factory;
+        $this->backend_gitolite        = $backend_gitolite;
+        $this->mirror_data_mapper      = $mirror_data_mapper;
+        $this->manager                 = $manager;
         $this->git_permissions_manager = $git_permissions_manager;
         $this->fine_grained_replicator = $fine_grained_replicator;
-        $this->history_dao = $history_dao;
+        $this->history_dao             = $history_dao;
         $this->history_value_formatter = $history_value_formatter;
-        $this->ci_token_manager = $ci_token_manager;
+        $this->ci_token_manager        = $ci_token_manager;
+        $this->event_manager           = $event_manager;
     }
 
     /**
@@ -129,6 +136,9 @@ class RepositoryCreator
         $this->fine_grained_replicator->replicateDefaultPermissions(
             $repository
         );
+
+        $event = new AfterRepositoryCreated($repository);
+        $this->event_manager->processEvent($event);
 
         $this->history_dao->groupAddHistory(
             "git_repo_create",
