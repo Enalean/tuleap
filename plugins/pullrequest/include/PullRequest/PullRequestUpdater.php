@@ -79,8 +79,7 @@ class PullRequestUpdater
         TimelineEventCreator $timeline_event_creator,
         GitRepositoryFactory $git_repository_factory,
         GitPullRequestReferenceUpdater $git_pull_request_reference_updater
-    )
-    {
+    ) {
         $this->pull_request_factory               = $pull_request_factory;
         $this->pull_request_merger                = $pull_request_merger;
         $this->inline_comment_dao                 = $inline_comment_dao;
@@ -171,7 +170,12 @@ class PullRequestUpdater
                 }
 
                 $comments_to_update = $this->inline_comment_updater->updateWhenSourceChanges(
-                    $comments, $original_diff, $changes_diff, $dest_changes_diff, $target_diff);
+                    $comments,
+                    $original_diff,
+                    $changes_diff,
+                    $dest_changes_diff,
+                    $target_diff
+                );
                 $this->saveInDb($comments_to_update);
             }
         }

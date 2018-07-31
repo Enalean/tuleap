@@ -135,12 +135,12 @@ class GitExec extends Git_Exec
 
     public function getCommitMessage($ref)
     {
-       $ref    = escapeshellarg($ref);
-       $cmd    = "log -1 $ref --pretty=%B";
-       $output = array();
+        $ref    = escapeshellarg($ref);
+        $cmd    = "log -1 $ref --pretty=%B";
+        $output = array();
 
-       $this->gitCmdWithOutput($cmd, $output);
-       return $output;
+        $this->gitCmdWithOutput($cmd, $output);
+        return $output;
     }
 
     public function getShortStat($ref_base, $ref_compare)
@@ -223,7 +223,8 @@ class GitExec extends Git_Exec
         $this->execAsGitoliteGroup('update-ref -d ' . escapeshellarg($reference), $output);
     }
 
-    private function parseDiffNumStatOutput($output) {
+    private function parseDiffNumStatOutput($output)
+    {
         $lines_added   = 0;
         $lines_removed = 0;
         $files_changed = 0;

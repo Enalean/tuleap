@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201710271043_purge_pullrequest_table_when_repositories_not_found extends ForgeUpgrade_Bucket
+class b201710271043_purge_pullrequest_table_when_repositories_not_found extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

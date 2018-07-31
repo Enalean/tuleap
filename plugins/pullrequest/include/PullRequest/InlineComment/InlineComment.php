@@ -40,8 +40,7 @@ class InlineComment
         $unidiff_offset,
         $content,
         $is_outdated
-    )
-    {
+    ) {
         $this->id              = $id;
         $this->pull_request_id = $pull_request_id;
         $this->user_id         = $user_id;
@@ -55,13 +54,13 @@ class InlineComment
     public static function buildFromRow($row)
     {
         return new InlineComment(
-            (int)  $row['id'],
-            (int)  $row['pull_request_id'],
-            (int)  $row['user_id'],
-                   $row['post_date'],
-                   $row['file_path'],
-            (int)  $row['unidiff_offset'],
-                   $row['content'],
+            (int) $row['id'],
+            (int) $row['pull_request_id'],
+            (int) $row['user_id'],
+            $row['post_date'],
+            $row['file_path'],
+            (int) $row['unidiff_offset'],
+            $row['content'],
             (bool) $row['is_outdated']
         );
     }

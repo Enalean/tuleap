@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201807301400_add_table_merge_setting extends ForgeUpgrade_Bucket
+class b201807301400_add_table_merge_setting extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

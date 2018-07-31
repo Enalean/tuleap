@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201606131624_add_last_build_status_and_date_for_pull_requests extends ForgeUpgrade_Bucket
+class b201606131624_add_last_build_status_and_date_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
 {
 
     public function description()
@@ -33,12 +33,14 @@ EOT;
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "alter table plugin_pullrequest_review add (last_build_status varchar(1) not null default 'U', last_build_date int(11));";
         $this->executeSql($sql);
     }
 
-    public function executeSql($sql) {
+    public function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());

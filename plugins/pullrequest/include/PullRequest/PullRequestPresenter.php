@@ -52,7 +52,7 @@ class PullRequestPresenter
         return 'index';
     }
 
-    public function nb_pull_request_badge()
+    public function nb_pull_request_badge() // phpcs:ignore
     {
         $nb_open = $this->nb_pull_requests->getNbOpen();
         if ($nb_open <= 1) {

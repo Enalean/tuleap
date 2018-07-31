@@ -20,13 +20,16 @@
 
 namespace Tuleap\PullRequest\Criterion;
 
-class StatusClosed implements ISearchOnStatus {
+class StatusClosed implements ISearchOnStatus
+{
 
-    public function shouldRetrieveOpenPullRequests() {
+    public function shouldRetrieveOpenPullRequests()
+    {
         return false;
     }
 
-    public function shouldRetrieveClosedPullRequests() {
+    public function shouldRetrieveClosedPullRequests()
+    {
         return true;
     }
 }

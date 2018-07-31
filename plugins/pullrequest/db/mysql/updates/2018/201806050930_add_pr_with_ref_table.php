@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201806050930_add_pr_with_ref_table extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+class b201806050930_add_pr_with_ref_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
     public function description()
     {

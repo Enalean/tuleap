@@ -20,9 +20,11 @@
 
 namespace Tuleap\PullRequest;
 
-class PluginDescriptor extends \PluginDescriptor {
+class PluginDescriptor extends \PluginDescriptor
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct(
             $GLOBALS['Language']->getText('plugin_pullrequest', 'descriptor_name'),
             false,

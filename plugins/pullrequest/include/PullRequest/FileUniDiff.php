@@ -47,7 +47,7 @@ class FileUniDiff
 
     public function getLineFromOldOffset($old_offset)
     {
-        foreach ($this->lines as  $line) {
+        foreach ($this->lines as $line) {
             if ($line->getOldOffset() == $old_offset) {
                 return $line;
             }
@@ -57,7 +57,7 @@ class FileUniDiff
 
     public function getLineFromNewOffset($new_offset)
     {
-        foreach ($this->lines as  $line) {
+        foreach ($this->lines as $line) {
             if ($line->getNewOffset() == $new_offset) {
                 return $line;
             }

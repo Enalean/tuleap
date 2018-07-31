@@ -18,24 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class b201605131519_add_repo_dest_id_for_pull_requests extends ForgeUpgrade_Bucket {
+class b201605131519_add_repo_dest_id_for_pull_requests extends ForgeUpgrade_Bucket // phpcs:ignore
+{
 
-    public function description() {
+    public function description()
+    {
         return <<<EOT
 Add repo_dest_id to pull requests to manage pull requests between forks.
 EOT;
     }
 
-    public function preUp() {
+    public function preUp()
+    {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function up() {
+    public function up()
+    {
         $sql = "ALTER TABLE plugin_pullrequest_review ADD (repo_dest_id INT(11) NOT NULL);";
         $this->executeSql($sql);
     }
 
-    public function executeSql($sql) {
+    public function executeSql($sql)
+    {
         $result = $this->db->dbh->exec($sql);
         if ($result === false) {
             $error_message = implode(', ', $this->db->dbh->errorInfo());
