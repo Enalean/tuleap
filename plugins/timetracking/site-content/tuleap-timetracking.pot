@@ -43,9 +43,6 @@ msgstr ""
 msgid "Personal time tracking"
 msgstr ""
 
-msgid "Please add the time on an existing artifact"
-msgstr ""
-
 msgid "Read"
 msgstr ""
 
@@ -68,6 +65,9 @@ msgid "The time format is not the one expected (hh:mm)."
 msgstr ""
 
 msgid "The time is missing"
+msgstr ""
+
+msgid "This artifact does not exist"
 msgstr ""
 
 msgid "This time does not belong to you."

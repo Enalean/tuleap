@@ -58,9 +58,6 @@ msgstr "Les permissions ont été enregistrées avec succès."
 msgid "Personal time tracking"
 msgstr "Suivi de temps personnel"
 
-msgid "Please add the time on an existing artifact"
-msgstr "Veuillez ajouter un temps sur un artéfact existant"
-
 msgid "Read"
 msgstr "Lecture"
 
@@ -84,6 +81,9 @@ msgstr "Le format du temps n'est pas celui attendu (hh:mm)."
 
 msgid "The time is missing"
 msgstr "Le temps est manquant"
+
+msgid "This artifact does not exist"
+msgstr "Cet artéfact n'existe pas"
 
 msgid "This time does not belong to you."
 msgstr "Ce temps ne vous appartient pas."

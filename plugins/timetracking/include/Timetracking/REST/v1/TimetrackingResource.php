@@ -269,9 +269,45 @@ class TimetrackingResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * Delete time
+     *
+     * Notes on the query parameter
+     * <ol>
+     *   <li>time_id is an integer like 602</li>
+     * </ol>
+     *
+     * @url DELETE {id}
+     * @access protected
+     *
+     * @param int $id Id of the time
+     *
+     * @throws 401
+     * @throws 404
+     */
+    protected function delete($id)
+    {
+        $this->checkAccess();
+
+        $this->sendAllowHeaders();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $time     = $this->getTime($current_user, $id);
+        $artifact = $this->getArtifact($current_user, $time->getArtifactId());
+
+        try {
+            $this->time_updater->deleteTime($current_user, $artifact, $time);
+        } catch (TimeTrackingNotAllowedToDeleteException $e) {
+            throw new RestException(401, $e->getMessage());
+        } catch (TimeTrackingNotBelongToUserException $e) {
+            throw new RestException(401, $e->getMessage());
+        }
+    }
+
     private function sendAllowHeaders()
     {
-        Header::allowOptionsGetPutPost();
+        Header::allowOptionsGetPutPostDelete();
     }
 
     private function checkTimePeriodIsValid($start_date, $end_date)
@@ -297,8 +333,17 @@ class TimetrackingResource extends AuthenticatedResource
     {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($user, $artifact_id);
         if (! $artifact) {
-            throw new RestException(404, dgettext('tuleap-timetracking', "Please add the time on an existing artifact"));
+            throw new RestException(404, dgettext('tuleap-timetracking', "This artifact does not exist"));
         }
         return $artifact;
+    }
+
+    private function getTime(\PFUser $user, $time_id)
+    {
+        $time = $this->time_retriever->getTimeByIdForUser($user, $time_id);
+        if (! $time) {
+            throw new RestException(404, dgettext('tuleap-timetracking', "This time does not exist"));
+        }
+        return $time;
     }
 }
