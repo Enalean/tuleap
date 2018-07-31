@@ -1,18 +1,27 @@
 <?php
-
-namespace Tuleap\Git\GitPHP;
-
 /**
- * GitPHP Pack
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2011 Christopher Han <xiphux@gmail.com>
  *
- * Extracts data from a pack
  * Based on code from Glip by Patrik Fimml
  *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2011 Christopher Han
- * @package GitPHP
- * @subpackage Git
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+namespace Tuleap\Git\GitPHP;
 
 /**
  * Pack class
@@ -31,40 +40,32 @@ class Pack
     const OBJ_REF_DELTA = 7;
 
     /**
-     * project
-     *
-     * Stores the project internally
-     *
-     * @access protected
+     * @var Project
      */
-    protected $project;
+    private $project;
 
     /**
      * hash
      *
      * Stores the hash of the pack
-     *
-     * @access protected
      */
-    protected $hash;
+    private $hash;
 
     /**
      * offsetCache
      *
      * Caches object offsets
      *
-     * @access protected
      */
-    protected $offsetCache = array();
+    private $offsetCache = array();
 
     /**
      * indexModified
      *
      * Stores the index file last modified time
      *
-     * @access protected
      */
-    protected $indexModified = 0;
+    private $indexModified = 0;
 
     /**
      * __construct
@@ -74,7 +75,6 @@ class Pack
      * @access public
      * @param mixed $project the project
      * @param string $hash pack hash
-     * @return mixed pack object
      * @throws \Exception exception on invalid hash
      */
     public function __construct($project, $hash)
@@ -183,9 +183,11 @@ class Pack
     private function SearchIndexV1($index, $hash) // @codingStandardsIgnoreLine
     {
         /*
-         * index v1 struture:
+         * index v1 structure:
          * fanout table - 256*4 bytes
          * offset/sha table - 24*count bytes (4 byte offset + 20 byte sha for each index)
+         *
+         * @see https://git-scm.com/docs/pack-format#_original_version_1_pack_idx_files_have_the_following_format
          */
 
         $binaryHash = pack('H40', $hash);
@@ -201,7 +203,7 @@ class Pack
         }
 
         /*
-         * binary serach for the index of the hash in the sha/offset listing
+         * binary search for the index of the hash in the sha/offset listing
          * between cur and after from the fanout
          */
         while ($low <= $high) {
@@ -247,6 +249,8 @@ class Pack
          * sha listing - 20*count bytes
          * crc checksums - 4*count bytes
          * offsets - 4*count bytes
+         *
+         * @see https://git-scm.com/docs/pack-format#_version_2_pack_idx_files_support_packs_larger_than_4_gib_and
          */
         $binaryHash = pack('H40', $hash);
 
@@ -380,6 +384,8 @@ class Pack
      * @param resource $pack pack file pointer
      * @param int $offset object offset
      * @return array object type and data
+     *
+     * @see https://git-scm.com/docs/pack-format#_pack_pack_files_have_the_following_format
      */
     private function UnpackObject($pack, $offset) // @codingStandardsIgnoreLine
     {
