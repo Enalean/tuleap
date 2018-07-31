@@ -12,11 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Choose project"
+msgstr "Choisissez un projet"
+
+msgid "Choose project..."
+msgstr "Choisissez un projet..."
+
 msgid "Close"
 msgstr "Fermer"
 
 msgid "Move"
 msgstr "Déplacer"
-
-msgid "Under implementation, there is nothing here !"
-msgstr "En cours d'implementation il n'y a rien ici !"

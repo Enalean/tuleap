@@ -94,6 +94,16 @@ const webpack_config_for_artifacts = {
         MoveArtifactModal: "./artifact-action-buttons/src/index.js"
     },
     context: path.resolve(__dirname),
+    externals: {
+        tlp: "tlp",
+        jquery: "jQuery"
+    },
+    resolve: {
+        alias: {
+            // TLP is not included in FlamingParrot
+            "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js")
+        }
+    },
     output: webpack_configurator.configureOutput(assets_dir_path),
     module: {
         rules: [

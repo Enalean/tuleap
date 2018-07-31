@@ -18,46 +18,66 @@
   -->
 
 <template>
-    <div class="modal fade" id="move-artifact-modal" tabindex="-1" role="dialog"
-         aria-labelledby="modal-move-artifact-choose-trackers" aria-hidden="true">
+    <div class="modal fade"
+         id="move-artifact-modal"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modal-move-artifact-choose-trackers"
+         aria-hidden="true"
+         ref="vuemodal"
+    >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <i class="tuleap-modal-close close">×</i>
-                    <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
-                        <i class="icon-share-alt"></i>
-                        <translate>Move</translate>
-                        <span v-bind:class="getArtifactBadgeClass">
-                            {{ getArtifactBadgeTrackerName }} #{{ getArtifactBadgeArtifactId }}
-                        <span> -</span></span>
-                    </h3>
+                    <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
+                    <move-modal-title />
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-primary" role="alert">
-                        <translate>Under implementation, there is nothing here !</translate>
-                    </div>
+                    <div v-if="is_loading_initial" class="move-artifact-loader"></div>
+                    <div v-if="hasError" class="alert alert-error">{{ getErrorMessage }}</div>
+                    <label for="move-artifact-project-selector" v-if="should_display_project_dropdown">
+                        <translate>Choose project</translate>
+                        <span class="highlight">*</span>
+                    </label>
+                    <project-selector v-if="should_display_project_dropdown"/>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-import { getTrackerName, getTrackerColor, getArtifactId } from "../from-tracker-presenter.js";
+import MoveModalTitle from "./MoveModalTitle.vue";
+import ProjectSelector from "./ProjectSelector.vue";
+import store from "../store/index.js";
+import { mapGetters } from "vuex";
+import $ from "jquery";
+
 export default {
     name: "MoveModal",
+    store,
+    components: {
+        MoveModalTitle,
+        ProjectSelector
+    },
     computed: {
-        getArtifactBadgeClass() {
-            return getTrackerColor() + " xref-in-title";
+        is_loading_initial() {
+            return this.isLoadingInitial;
         },
-        getArtifactBadgeTrackerName() {
-            return getTrackerName();
+        should_display_project_dropdown() {
+            return !this.is_loading_initial && !this.hasError;
         },
-        getArtifactBadgeArtifactId() {
-            return getArtifactId();
-        }
+        ...mapGetters(["isLoadingInitial", "hasError", "getErrorMessage"])
+    },
+    mounted() {
+        $(this.$refs.vuemodal).on("show", () => {
+            this.$store.dispatch("loadProjectList");
+        });
+        $(this.$refs.vuemodal).on("hidden", () => {
+            this.$store.dispatch("resetState");
+        });
     }
 };
 </script>
