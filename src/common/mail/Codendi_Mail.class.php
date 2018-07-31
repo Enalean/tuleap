@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2011. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -484,10 +484,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $mime_message->addPart($attachment);
         }
         $this->message->setBody($mime_message);
+        \Tuleap\Mail\MailInstrumentation::increment();
         try {
             $this->transport->send($this->message);
         } catch (Exception $e) {
             $status = false;
+            \Tuleap\Mail\MailInstrumentation::incrementFailure();
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
         }
         $this->clearRecipients();
