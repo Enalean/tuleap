@@ -184,8 +184,8 @@ class TimetrackingResource extends AuthenticatedResource
      * @param TimetrackingPOSTRepresentation $item_representation The created Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPOSTRepresentation}
      * @return TimetrackingRepresentation
      *
-     * @throws 406
-     * @throws 403
+     * @throws 400
+     * @throws 401
      * @throws 404
      */
     protected function addTime(TimetrackingPOSTRepresentation $item)
@@ -196,10 +196,7 @@ class TimetrackingResource extends AuthenticatedResource
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($current_user, $item->artifact_id);
-        if (! $artifact) {
-            throw new RestException(404, dgettext('tuleap-timetracking', "Please add the time on an existing artifact"));
-        }
+        $artifact = $this->getArtifact($current_user, $item->artifact_id);
 
         try {
             $time_representation = new TimetrackingRepresentation();
@@ -207,19 +204,74 @@ class TimetrackingResource extends AuthenticatedResource
             $time_representation->build($this->time_retriever->getLastTime($current_user, $artifact));
             return $time_representation;
         } catch (TimeTrackingBadTimeFormatException $e) {
-            throw new RestException(406, $e->getMessage());
+            throw new RestException(400, $e->getMessage());
         } catch (TimeTrackingMissingTimeException $e) {
-            throw new RestException(406, $e->getMessage());
+            throw new RestException(400, $e->getMessage());
         } catch (TimeTrackingNotAllowedToAddException $e) {
-            throw new RestException(403, $e->getMessage());
+            throw new RestException(401, $e->getMessage());
         } catch (TimeTrackingBadDateFormatException $e) {
-            throw new RestException(406, $e->getMessage());
+            throw new RestException(400, $e->getMessage());
+        }
+    }
+
+    /**
+     * Update a Time
+     *
+     * Update a time in Timetracking modal
+     *
+     * <br><br>
+     * Notes on the query parameter
+     * <ol>
+     *  <li>You do not have the obligation to fill in the step field </li>
+     *  <li>A time needs to respect the format "11:11" </li>
+     *  <li>Exemple of date "2018-01-01"</li>
+     *  <li>time_id is an integers or 602</li>
+     * </ol>
+     *
+     * @url PUT {id}
+     * @status 201
+     * @param int $time_id Id of the time
+     * @param TimetrackingPUTRepresentation $item_representation The edited Time {@from body} {@type Tuleap\Timetracking\REST\v1\TimetrackingPUTRepresentation}
+     *
+     * @return TimetrackingRepresentation
+     *
+     * @throws 400
+     * @throws 401
+     * @throws 404
+     */
+    protected function updateTime($id, TimetrackingPUTRepresentation $item)
+    {
+        $this->checkAccess();
+
+        $this->sendAllowHeaders();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $time = $this->time_retriever->getTimeByIdForUser($current_user, $id);
+        if (! $time) {
+            throw new RestException(404, dgettext('tuleap-timetracking', "This time does not exist"));
+        }
+        $artifact = $this->getArtifact($current_user, $time->getArtifactId());
+
+        try {
+            $time_representation = new TimetrackingRepresentation();
+            $this->time_updater->updateTime($current_user, $artifact, $time, $item->date_time, $item->time_value, $item->step);
+            $time_representation->build($this->time_retriever->getTimeByIdForUser($current_user, $id));
+            return $time_representation;
+        } catch (TimeTrackingBadTimeFormatException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (TimeTrackingMissingTimeException $e) {
+            throw new RestException(400, $e->getMessage());
+        } catch (TimeTrackingNotAllowedToEditException $e) {
+            throw new RestException(401, $e->getMessage());
+        } catch (TimeTrackingBadDateFormatException $e) {
+            throw new RestException(400, $e->getMessage());
         }
     }
 
     private function sendAllowHeaders()
     {
-        Header::allowOptionsGetPost();
+        Header::allowOptionsGetPutPost();
     }
 
     private function checkTimePeriodIsValid($start_date, $end_date)
@@ -239,5 +291,14 @@ class TimetrackingResource extends AuthenticatedResource
         if ($period_start > $period_end) {
             throw new RestException(400, "end_date must be greater than start_date");
         }
+    }
+
+    private function getArtifact(\PFUser $user, $artifact_id)
+    {
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($user, $artifact_id);
+        if (! $artifact) {
+            throw new RestException(404, dgettext('tuleap-timetracking', "Please add the time on an existing artifact"));
+        }
+        return $artifact;
     }
 }
