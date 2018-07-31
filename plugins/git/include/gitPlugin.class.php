@@ -21,14 +21,12 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
-use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
-use Tuleap\Git\Events\ParseGitolite3Logs;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
@@ -101,6 +99,7 @@ use Tuleap\Git\Repository\Settings\WebhookRouter;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\RestrictedGerritServerDao;
+use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
@@ -597,7 +596,7 @@ class GitPlugin extends Plugin
                 );
                 break;
             case ParseGitolite3Logs::NAME:
-                $params['class'] = '\\Tuleap\\Git\\Events\\ParseGitolite3Logs';
+                $params['class'] = '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs';
                 $params['dependencies'] = array(
                     $this->getGitolite3Parser()
                 );
@@ -2312,7 +2311,7 @@ class GitPlugin extends Plugin
                 null,
                 SystemEvent::PRIORITY_LOW,
                 SystemEvent::OWNER_ROOT,
-                '\\Tuleap\\Git\\Events\\ParseGitolite3Logs'
+                '\\Tuleap\\Git\\SystemEvents\\ParseGitolite3Logs'
             );
         }
 
