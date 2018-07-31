@@ -37,8 +37,7 @@ class SystemEvent_GIT_REPO_FORKTest extends TuleapTestCase {
         $this->old_repository = mock('GitRepository');
         stub($this->old_repository)->getBackend()->returns($this->backend);
 
-        $this->new_repository = mock('GitRepository');
-        
+        $this->new_repository     = mock('GitRepository');
         $this->repository_factory = mock('GitRepositoryFactory');
 
         $this->event = partial_mock('SystemEvent_GIT_REPO_FORK', array('done', 'warning', 'error'));
