@@ -98,10 +98,10 @@ class ChangePasswordController
             \ForgeConfig::get('sys_name')
         );
 
-        $mail = new \Mail();
+        $mail = new \Codendi_Mail();
         $mail->setTo($new_mail, true);
         $mail->setSubject($subject);
-        $mail->setBody($message);
+        $mail->setBodyText($message);
         $mail->setFrom(\ForgeConfig::get('sys_noreply'));
         if (! $mail->send()) {
             $error_message = sprintf(_('The mail was not accepted for the delivery. Please contact the administrator at %s.'), \ForgeConfig::get('sys_email_admin'));

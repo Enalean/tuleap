@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mail/MailManager.class.php';
-
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 
@@ -34,56 +32,6 @@ class MailManagerTest extends TuleapTestCase {
     public function tearDown() {
         UserManager::clearInstance();
         parent::tearDown();
-    }
-
-    function testMailShouldCreateHtmlMailForUserByDefault() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        $mm->setReturnValue('getConfig', 'noreply@example.com', array('sys_noreply'));
-        
-        $user = mock('PFUser');
-        $this->assertIsA($mm->getMailForUser($user), 'Codendi_Mail');
-    }
-    
-    function testMailShouldCreateTextMailWhenUserAsSetPreference() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        $mm->setReturnValue('getConfig', 'noreply@example.com', array('sys_noreply'));
-        
-        $user = mock('PFUser');
-        $user->setReturnValue('getPreference', 'text');
-        
-        $this->assertIsA($mm->getMailForUser($user), 'Mail');
-    }
-    
-    function testMailShouldBeSetToUserAutomatically() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        $mm->setReturnValue('getConfig', 'noreply@example.com', array('sys_noreply'));
-        
-        $user = mock('PFUser');
-        $user->setReturnValue('getStatus', 'A');
-        $user->setReturnValue('getEmail', 'john.doe@mailserver.com');
-        
-        $mail = $mm->getMailForUser($user);
-        $this->assertEqual($mail->getTo(), 'john.doe@mailserver.com');
-    }
-    
-    function testMailByTypeShouldBeInHTMLWhenRequested() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        $mm->setReturnValue('getConfig', 'noreply@example.com', array('sys_noreply'));
-        
-        $this->assertIsA($mm->getMailByType('html'), 'Codendi_Mail');
-    }
-    
-    function testMailByTypeShouldBeInTextWhenRequested() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        
-        $this->assertIsA($mm->getMailByType('text'), 'Mail');
-    }
-    
-    function testMailByTypeShouldBeInHTMLByDefault() {
-        $mm = TestHelper::getPartialMock('MailManager', array('getConfig'));
-        $mm->setReturnValue('getConfig', 'noreply@example.com', array('sys_noreply'));
-        
-        $this->assertIsA($mm->getMailByType(), 'Codendi_Mail');
     }
     
     function testGetMailPrefsShouldReturnUsersAccordingToPreferences() {
@@ -218,5 +166,3 @@ class MailManagerTest extends TuleapTestCase {
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
     }
 }
-
-?>

@@ -1,31 +1,25 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
- * This file is a part of CodeX.
+ * This file is a part of Tuleap.
  *
- * CodeX is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * CodeX is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with CodeX; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/mail/Mail.class.php');
-require_once('common/tracker/ArtifactType.class.php');
-require_once('common/tracker/ArtifactFieldFactory.class.php');
-require_once('common/tracker/Artifact.class.php');
-
 
 //
 // The artifact date reminder object
@@ -477,7 +471,7 @@ class ArtifactDateReminderFactory {
         $sent = true;
         $week = date("W",$this->getDateValue());
 
-        $mail = new Mail();
+        $mail = new Codendi_Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setSubject("[" . $this->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_subject',array($field->getLabel(),date("j F Y",$this->getDateValue()),$art->getSummary())));
 
@@ -490,7 +484,7 @@ class ArtifactDateReminderFactory {
 		"\n".get_server_url()."/tracker/?func=detail&aid=".$this->getArtifactId()."&atid=".$this->getGroupArtifactId()."&group_id=".$this->getGroupId().
 		"\n\n______________________________________________________________________".
 		"\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','reminder_mail_footer')."\n";
-        $mail->setBody($body);
+        $mail->setBodyText($body);
         
         $allNotified = $this->getNotifiedPeople();
         $logger->info("notify: ".implode(', ', $allNotified));

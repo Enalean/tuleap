@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,48 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mail/Codendi_Mail_Interface.class.php';
-require_once 'common/mail/Mail.class.php';
-require_once 'common/mail/Codendi_Mail.class.php';
-require_once 'common/include/Tuleap_Template.class.php';
-
-require_once 'common/user/UserManager.class.php';
-
 /**
  * Mail manager is the key interface to send emails in the platform
  *
  */
-class MailManager {
-    
-    /**
-     * Prepare the mail according to user preferences
-     * 
-     * @param PFUser $user The user to whom send the mail
-     * 
-     * @return Mail 
-     */
-    public function getMailForUser(PFUser $user) {
-        $mail = $this->getMailByType($this->getMailPreferencesByUser($user));
-        $mail->setToUser(array($user));
-        return $mail;
-    }
-    
-    /**
-     * Return a mail object depending of the requested format
-     * 
-     * @param String $type Type of mail (text or html)
-     * 
-     * @return Mail
-     */
-    public function getMailByType($type = null) {
-        $mail = new Codendi_Mail();
-        if ($type == Codendi_Mail_Interface::FORMAT_TEXT) {
-            $mail = new Mail();
-        }
-        $mail->setFrom($this->getConfig('sys_noreply'));
-        return $mail;
-    }
-    
+class MailManager
+{
     /**
      * Return users corresponding to email addresses mapped according to their
      * preferences.

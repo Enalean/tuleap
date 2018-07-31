@@ -408,11 +408,11 @@ abstract class SystemEvent {
         }
         if (count($listeners)) {
             $listeners = array_unique($listeners);
-            $m = new Mail();
+            $m = new Codendi_Mail();
             $m->setFrom($GLOBALS['sys_noreply']);
             $m->setTo(implode(',', $listeners));
             $m->setSubject('['. $this->getstatus() .'] '. $this->getType());
-            $m->setBody("
+            $m->setBodyText("
 Event:        #{$this->getId()}
 Type:         {$this->getType()}
 Parameters:   {$this->verbalizeParameters(false)}

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -38,8 +38,6 @@ Mock::generate('Docman_Item');
 Mock::generate('Docman_Path');
 
 Mock::generate('PFUser');
-
-Mock::generate('Mail');
 
 Mock::generate('Project');
 
@@ -125,8 +123,8 @@ class Docman_NotificationsManagerTest extends TuleapTestCase
 
     public function testSendNotificationsSuccess()
     {
-        $mail = new MockMail($this);
-        $mail->setReturnValue('send', true);
+        $mail = \Mockery::mock(Codendi_Mail_Interface::class);
+        $mail->shouldReceive('send')->andReturns(true);
 
         $this->project->setReturnValue('getPublicName', 'Guinea Pig');
 

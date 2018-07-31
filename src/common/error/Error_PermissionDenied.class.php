@@ -191,7 +191,7 @@ abstract class Error_PermissionDenied {
      * @param String  $messageToAdmin
      */
     function sendMail($project, $user, $urlData, $hrefApproval,$messageToAdmin) {
-        $mail = new Mail();
+        $mail = new Codendi_Mail();
 
         //to
         $adminList = $this->extractReceiver($project, $urlData);
@@ -209,7 +209,7 @@ abstract class Error_PermissionDenied {
         if ($adminList['status']== false) {
             $body .= "\n\n". $GLOBALS['Language']->getText($this->getTextBase(), 'mail_content_unvalid_ugroup', array($project->getPublicName()));
         }
-        $mail->setBody($body);
+        $mail->setBodyText($body);
 
         if (!$mail->send()) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));

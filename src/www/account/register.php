@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2001 (c) VA Linux Systems
  *
@@ -26,8 +26,6 @@ require_once('proj_email.php');
 require_once('account.php');
 require_once('timezones.php');
 
-require_once('common/mail/Mail.class.php');
-require_once('common/include/HTTPRequest.class.php');
 $GLOBALS['HTML']->includeCalendarScripts();
 $request = HTTPRequest:: instance();
 $page = $request->get('page');

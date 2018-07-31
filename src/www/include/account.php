@@ -107,11 +107,11 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             // $message is defined in the content file
             include($Language->getContent('include/add_user_to_group_email'));
 
-            $mail = new Mail();
+            $mail = new Codendi_Mail();
             $mail->setTo($email_address);
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
-            $mail->setBody($message);
+            $mail->setBodyText($message);
             $result = $mail->send();
             if (!$result) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_DISABLED);

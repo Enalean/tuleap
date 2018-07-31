@@ -1,10 +1,24 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 /*
 
@@ -659,7 +673,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 		$result = db_query ($sql);
 
 		if ($result && db_numrows($result) > 0) {
-            $mail = new Mail();
+            $mail = new Codendi_Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . util_unconvert_htmlspecialchars(db_result($result,0,'forum_name'))." - ". db_result($result,0, 'user_name') ."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
             $mail->setBcc($tolist);
@@ -672,7 +686,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 			    "\n\n" . util_unconvert_htmlspecialchars(db_result($result,0, 'body')).
 			    "\n\n______________________________________________________________________".
 			    "\n".$Language->getText('forum_forum_utils','stop_monitor_explain',array($url1,$url2));
-                $mail->setBody($body);
+                $mail->setBodyText($body);
             
 			if ($mail->send()) {
                 $feedback .= ' - '.$Language->getText('forum_forum_utils','mail_sent');		

@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean 2015 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,8 +25,6 @@ use Tuleap\Docman\Notifications\UgroupsUpdater;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\Notifications\UsersRetriever;
-
-require_once('common/mail/Mail.class.php');
 
 class Docman_NotificationsManager
 {

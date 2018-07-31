@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,13 +63,11 @@ if ($request->isPost() && $request->existAndNonEmpty('destination')) {
         );
         $GLOBALS['Response']->redirect('/admin/massmail.php');
     } else {
-        $mail_manager = new MailManager();
-
         $purifier = Codendi_HTMLPurifier::instance();
         $title    = $purifier->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML);
 
-        /** @var Codendi_Mail $mail */
-        $mail = $mail_manager->getMailByType('html');
+        $mail = new Codendi_Mail();
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->getLookAndFeelTemplate()->set('title', $title);
         $mail->setBodyHtml($mailMessage);
         $mail->setSubject($mailSubject);
