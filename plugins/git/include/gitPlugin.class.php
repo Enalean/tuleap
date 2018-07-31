@@ -23,6 +23,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
@@ -1498,7 +1499,8 @@ class GitPlugin extends Plugin
         return new DescriptionUpdater(new ProjectHistoryDao(), $this->getGitSystemEventManager());
     }
 
-    private function getGitController() {
+    private function getGitController()
+    {
         $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
             $this,
@@ -1539,7 +1541,8 @@ class GitPlugin extends Plugin
             $this->getRegexpPermissionFilter(),
             new UsersToNotifyDao(),
             $this->getUgroupsToNotifyDao(),
-            new UGroupManager()
+            new UGroupManager(),
+            $this->getGitCrumbBuilder()
         );
     }
 
@@ -2466,6 +2469,7 @@ class GitPlugin extends Plugin
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getMirrorDataMapper(),
             $this->getGitPermissionsManager(),
+            $this->getGitCrumbBuilder(),
             $this->getGerritServerFactory()->getServers(),
             $this->getConfigurationParameter('master_location_name')
         );
@@ -2574,5 +2578,14 @@ class GitPlugin extends Plugin
         if ($collector->getServiceShortname() === $this->getServiceShortname()) {
             $collector->setUrl(GIT_BASE_URL . "/" . urlencode($collector->getProject()->getUnixNameLowerCase()));
         }
+    }
+
+    /**
+     * @access protected for test purpose
+     * @return GitCrumbBuilder
+     */
+    protected function getGitCrumbBuilder()
+    {
+        return new GitCrumbBuilder($this->getGitPermissionsManager(), $this->getPluginPath());
     }
 }

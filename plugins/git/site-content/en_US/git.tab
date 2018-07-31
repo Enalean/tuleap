@@ -12,10 +12,6 @@ plugin_git	service_desc_key	Git
 plugin_git	info_access_title	Git access
 plugin_git	info_access_content	Repositories are accessible through the following url, where REPO_NAME must be replaced with the actual repository name.<br /> For any access permission issue please contact your site admin.
 
-plugin_git	bread_crumb_home	Repository list
-plugin_git	bread_crumb_help	Help
-plugin_git	bread_crumb_admin	Admin
-
 
 plugin_git	admin_reference_creation_title	Reference creation
 plugin_git	admin_reference_creation_input_name	Name:

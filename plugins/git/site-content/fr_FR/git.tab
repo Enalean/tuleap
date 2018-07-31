@@ -12,10 +12,6 @@ plugin_git	service_desc_key	Git
 plugin_git	info_access_title	Accès aux dépôts Git
 plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessous, dans laquelle REPO_NAME doit être remplacé par le nom du dépôt.<br /> Pour tout problème de permissions contactez l'administrateur du site.
 
-plugin_git	bread_crumb_home	Liste des dépôts
-plugin_git	bread_crumb_help	Aide
-plugin_git	bread_crumb_admin	Admin
-
 plugin_git	admin_reference_creation_title	Création d'une référence
 plugin_git	admin_reference_creation_input_name	Nom :
 plugin_git	admin_reference_creation_submit	Créer

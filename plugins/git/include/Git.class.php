@@ -20,6 +20,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
@@ -261,6 +262,16 @@ class Git extends PluginController {
      */
     private $history_dao;
 
+    /**
+     * @var GitPhpAccessLogger
+     */
+    private $access_loger;
+
+    /**
+     * @var GitCrumbBuilder
+     */
+    private $service_crumb_builder;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -300,7 +311,8 @@ class Git extends PluginController {
         RegexpPermissionFilter $regexp_filter,
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
-        UGroupManager $ugroup_manager
+        UGroupManager $ugroup_manager,
+        GitCrumbBuilder $service_crumb_builder
     ) {
         parent::__construct($user_manager, $request);
 
@@ -362,9 +374,11 @@ class Git extends PluginController {
         $this->users_to_notify_dao                     = $users_to_notify_dao;
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
         $this->ugroup_manager                          = $ugroup_manager;
+        $this->service_crumb_builder                   = $service_crumb_builder;
     }
 
-    protected function instantiateView() {
+    protected function instantiateView()
+    {
         return new GitViews(
             $this,
             new Git_GitRepositoryUrlManager($this->getPlugin()),
@@ -376,7 +390,8 @@ class Git extends PluginController {
             $this->fine_grained_builder,
             $this->access_loger,
             $this->regexp_retriever,
-            $this->gerrit_server_factory
+            $this->gerrit_server_factory,
+            $this->service_crumb_builder
         );
     }
 

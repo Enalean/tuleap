@@ -59,18 +59,17 @@ class AgileDashboardCrumbBuilder
         );
 
         if ($user->isAdmin($project->getID())) {
-            $this->addAdministrationLink($user, $project, $agile_breadcrumb);
+            $this->addAdministrationLink($project, $agile_breadcrumb);
         }
 
         return $agile_breadcrumb;
     }
 
     /**
-     * @param PFUser     $user
      * @param Project    $project
      * @param BreadCrumb $agile_breadcrumb
      */
-    private function addAdministrationLink(PFUser $user, Project $project, BreadCrumb $agile_breadcrumb)
+    private function addAdministrationLink(Project $project, BreadCrumb $agile_breadcrumb)
     {
         $admin_url = AGILEDASHBOARD_BASE_URL . '/?' .
             http_build_query(

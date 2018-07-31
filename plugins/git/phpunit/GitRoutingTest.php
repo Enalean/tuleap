@@ -32,6 +32,7 @@ use GitRepositoryFactory;
 use Logger;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Layout\IncludeAssets;
@@ -140,20 +141,26 @@ class GitRoutingTest extends TestCase
     {
         $dispatcher = \FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route_collector) {
             $git_plugin = Mockery::mock(GitPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
-            $git_plugin->shouldReceive([
-                'getRepositoryFactory'      => \Mockery::mock(GitRepositoryFactory::class),
-                'getChainOfRouters'         => \Mockery::mock(RouterLink::class),
-                'getLogger'                 => \Mockery::mock(Logger::class),
-                'getGerritServerFactory'    => \Mockery::mock(Git_RemoteServer_GerritServerFactory::class, ['getServers' => []]),
-                'getPermissionsManager'     => \Mockery::mock(PermissionsManager::class),
-                'getMirrorDataMapper'       => \Mockery::mock(Git_Mirror_MirrorDataMapper::class),
-                'getGitPhpAccessLogger'     => \Mockery::mock(GitPhpAccessLogger::class),
-                'getGitPermissionsManager'  => \Mockery::mock(GitPermissionsManager::class),
-                'getUserDao'                => \Mockery::mock(UserDao::class),
-                'getGitDao'                 => \Mockery::mock(GitDao::class),
-                'getConfigurationParameter' => 'foo',
-                'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
-            ]);
+            $git_plugin->shouldReceive(
+                [
+                    'getRepositoryFactory'      => \Mockery::mock(GitRepositoryFactory::class),
+                    'getChainOfRouters'         => \Mockery::mock(RouterLink::class),
+                    'getLogger'                 => \Mockery::mock(Logger::class),
+                    'getGerritServerFactory'    => \Mockery::mock(
+                        Git_RemoteServer_GerritServerFactory::class,
+                        ['getServers' => []]
+                    ),
+                    'getPermissionsManager'     => \Mockery::mock(PermissionsManager::class),
+                    'getMirrorDataMapper'       => \Mockery::mock(Git_Mirror_MirrorDataMapper::class),
+                    'getGitPhpAccessLogger'     => \Mockery::mock(GitPhpAccessLogger::class),
+                    'getGitPermissionsManager'  => \Mockery::mock(GitPermissionsManager::class),
+                    'getUserDao'                => \Mockery::mock(UserDao::class),
+                    'getGitDao'                 => \Mockery::mock(GitDao::class),
+                    'getConfigurationParameter' => 'foo',
+                    'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
+                    'getGitCrumbBuilder'        => \Mockery::mock(GitCrumbBuilder::class)
+                ]
+            );
 
             $event = new CollectRoutesEvent($route_collector);
 

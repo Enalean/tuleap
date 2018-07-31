@@ -34,6 +34,9 @@ msgstr ""
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr ""
 
+msgid "Fork repositories"
+msgstr ""
+
 msgid "Git"
 msgstr ""
 
