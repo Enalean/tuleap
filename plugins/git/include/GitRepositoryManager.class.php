@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\Permissions\FineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\HistoryValueFormatter;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
@@ -233,6 +234,9 @@ class GitRepositoryManager {
             } else {
                 $this->fine_grained_replicator->replicateRepositoryPermissions($repository, $clone);
             }
+
+            $event = new AfterRepositoryForked($repository, $clone);
+            $this->event_manager->processEvent($event);
 
             $this->history_dao->groupAddHistory(
                 'perm_granted_for_git_repository',

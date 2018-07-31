@@ -31,4 +31,14 @@ class MergeSettingDAO extends DataAccessObject
             $repository_id
         );
     }
+
+    public function duplicateRepositoryMergeSettings($base_repository_id, $forked_repository_id)
+    {
+        $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
+                SELECT  ?, merge_commit_allowed
+                FROM plugin_pullrequest_merge_setting
+                WHERE repository_id = ?";
+
+        return $this->getDB()->single($sql, [$forked_repository_id, $base_repository_id]);
+    }
 }
