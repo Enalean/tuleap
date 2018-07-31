@@ -219,12 +219,14 @@ describe("BacklogItemController -", function() {
     describe("dragularLeave() -", function() {
         it("Given I was dragging something, when I leave a backlog item, then the 'appending-child' css class will be removed from the current $element", function() {
             BacklogItemController.initDragularForBacklogItemChildren();
+            const [fake_node] = affix("div");
+            dragularService.shared.extra = fake_node;
 
             spyOn($element, "removeClass");
 
-            $element.trigger('dragularleave');
+            $element.trigger("dragularleave");
 
-            expect($element.removeClass).toHaveBeenCalledWith('appending-child');
+            expect($element.removeClass).toHaveBeenCalledWith("appending-child");
         });
     });
 

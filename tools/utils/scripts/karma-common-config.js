@@ -20,39 +20,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require('path');
+const path = require("path");
 
 function getBaseConfig(config) {
     return {
-        basePath  : '.',
-        plugins   : [
-            'karma-chrome-launcher',
-            'karma-coverage',
-            'karma-jasmine',
-            'karma-junit-reporter',
-            'karma-webpack'
+        basePath: ".",
+        plugins: [
+            "karma-chrome-launcher",
+            "karma-coverage",
+            "karma-jasmine",
+            "karma-junit-reporter",
+            "karma-webpack"
         ],
-        frameworks: [ 'jasmine' ],
-        port      : 9876,
-        colors    : true,
-        autoWatch : false,
-        logLevel  : config.LOG_INFO,
-        browsers  : [
-            process.platform !== 'linux'
-                ? 'ChromeHeadless'
-                : 'ChromiumHeadless'
-        ]
+        frameworks: ["jasmine"],
+        client: {
+            jasmine: {
+                random: false
+            }
+        },
+        port: 9876,
+        colors: true,
+        autoWatch: false,
+        logLevel: config.LOG_INFO,
+        browsers: [process.platform !== "linux" ? "ChromeHeadless" : "ChromiumHeadless"]
     };
 }
 
 const jasmine_promise_matchers_path = path.resolve(
     __dirname,
-    '../../../node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js'
+    "../../../node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js"
 );
 
 const jasmine_fixtures_path = path.resolve(
     __dirname,
-    '../../../node_modules/jasmine-fixture/dist/jasmine-fixture.js'
+    "../../../node_modules/jasmine-fixture/dist/jasmine-fixture.js"
 );
 
 module.exports = {
