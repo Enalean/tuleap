@@ -105,6 +105,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProtectedGitReferences::NAME);
         $this->addHook(MarkTechnicalReference::NAME);
         $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -676,6 +677,15 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $dao->inheritFromTemplate(
             $repository->getId(),
             $repository->getProjectId()
+        );
+    }
+
+    public function register_project_creation(array $params) // phpcs:ignore
+    {
+        $dao = new MergeSettingDAO();
+        $dao->duplicateFromProjectTemplate(
+            $params['template_id'],
+            $params['group_id']
         );
     }
 }
