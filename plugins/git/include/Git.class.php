@@ -21,31 +21,31 @@
   */
 
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\User\InvalidEntryInAutocompleterCollection;
-use Tuleap\User\RequestFromAutocompleter;
+use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
+use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
-use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
-use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
-use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
-use Tuleap\Git\Permissions\FineGrainedPermissionDestructor;
-use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
-use Tuleap\Git\Permissions\HistoryValueFormatter;
-use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\TemplatePermissionsUpdater;
+use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
 use Tuleap\Git\Repository\DescriptionUpdater;
-use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
-use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\User\InvalidEntryInAutocompleterCollection;
+use Tuleap\User\RequestFromAutocompleter;
 
 /**
  * Git
@@ -272,6 +272,11 @@ class Git extends PluginController {
      */
     private $service_crumb_builder;
 
+    /**
+     * @var RepositorySettingsCrumbsBuilder
+     */
+    private $settings_crumbs_builder;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -312,7 +317,8 @@ class Git extends PluginController {
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UGroupManager $ugroup_manager,
-        GitCrumbBuilder $service_crumb_builder
+        GitCrumbBuilder $service_crumb_builder,
+        RepositorySettingsCrumbsBuilder $settings_crumbs_builder
     ) {
         parent::__construct($user_manager, $request);
 
@@ -375,6 +381,7 @@ class Git extends PluginController {
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
         $this->ugroup_manager                          = $ugroup_manager;
         $this->service_crumb_builder                   = $service_crumb_builder;
+        $this->settings_crumbs_builder                 = $settings_crumbs_builder;
     }
 
     protected function instantiateView()
@@ -391,7 +398,8 @@ class Git extends PluginController {
             $this->access_loger,
             $this->regexp_retriever,
             $this->gerrit_server_factory,
-            $this->service_crumb_builder
+            $this->service_crumb_builder,
+            $this->settings_crumbs_builder
         );
     }
 
@@ -670,6 +678,7 @@ class Git extends PluginController {
                     return false;
                 }
                 $this->addAction('repoManagement', array($repository));
+                $this->addView('header', [true]);
                 $this->addView('repoManagement');
                 break;
             case 'mail':

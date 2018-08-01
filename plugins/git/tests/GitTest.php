@@ -147,7 +147,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $can_migrate_checker   = stub('Tuleap\Git\GerritCanMigrateChecker')->canMigrate()->returns(true);
 
         $git                   = partial_mock(
-            'Git',
+            Git::class,
             array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
             array(
                 mock('GitPlugin'),
@@ -189,7 +189,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
                 mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
                 mock('UGroupManager'),
-                mock(Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder::class)
+                mock(Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder::class),
+                mock(\Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder::class)
             )
         );
         $git->setRequest($request);
