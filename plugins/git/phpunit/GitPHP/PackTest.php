@@ -37,6 +37,8 @@ class PackTest extends TestCase
     const V2_PACK_INDEX_PATH                     = __DIR__ . '/fixtures/pack/v2.idx';
     const V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH = __DIR__ . '/fixtures/pack/v2-64bit-index-entries.idx';
 
+    const ALL_PACK_INDEX_PATHS = [self::V1_PACK_INDEX_PATH, self::V2_PACK_INDEX_PATH, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH];
+
     /**
      * @var \Mockery\MockInterface
      */
@@ -112,45 +114,32 @@ class PackTest extends TestCase
 
     public function objectReferenceProvider()
     {
-        return [
-            ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true, self::V1_PACK_INDEX_PATH],
-            ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true, self::V2_PACK_INDEX_PATH],
-            ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH],
-            ['469f89045dbaeb0579d2fe3e49ad135191539860', true, self::V1_PACK_INDEX_PATH],
-            ['469f89045dbaeb0579d2fe3e49ad135191539860', true, self::V2_PACK_INDEX_PATH],
-            ['469f89045dbaeb0579d2fe3e49ad135191539860', true, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH],
-            ['15f8b4788fc689400c9513bb98c732810d085089', true, self::V1_PACK_INDEX_PATH],
-            ['15f8b4788fc689400c9513bb98c732810d085089', true, self::V2_PACK_INDEX_PATH],
-            ['15f8b4788fc689400c9513bb98c732810d085089', true, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH],
-            ['74b6c7ad1241339bfcc8b00a1caadf444eca141a', true, self::V1_PACK_INDEX_PATH],
-            ['74b6c7ad1241339bfcc8b00a1caadf444eca141a', true, self::V2_PACK_INDEX_PATH],
-            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', false, self::V1_PACK_INDEX_PATH],
-            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', false, self::V2_PACK_INDEX_PATH],
-            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', false, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH],
-            ['invalid_reference_format', false, self::V1_PACK_INDEX_PATH],
-            ['invalid_reference_format', false, self::V2_PACK_INDEX_PATH],
-            ['invalid_reference_format', false, self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH],
+        $reference_tests = [
+            ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true],
+            ['469f89045dbaeb0579d2fe3e49ad135191539860', true],
+            ['15f8b4788fc689400c9513bb98c732810d085089', true],
+            ['74b6c7ad1241339bfcc8b00a1caadf444eca141a', true],
+            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', false],
+            ['invalid_reference_format', false],
         ];
-    }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage 64-bit offsets not implemented
-     */
-    public function testExceptionIsThrownOnPackfileIndexContaining8BytesOffsetEntry()
-    {
-        $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_64BIT_INDEX_ENTRIES_PATH));
+        $full_reference_tests = [];
+        foreach ($reference_tests as $reference_test) {
+            foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
+                $reference_test[] = $pack_index_path;
+                $full_reference_tests[] = $reference_test;
+            }
+        }
 
-        $pack = new Pack($this->project, self::SHA1_PACK);
-        $pack->ContainsObject('74b6c7ad1241339bfcc8b00a1caadf444eca141a');
+        return $full_reference_tests;
     }
 
     /**
      * @dataProvider objectProvider
      */
-    public function testGetObject($object_reference, $sha256_expected_content, $expected_type)
+    public function testGetObject($object_reference, $sha256_expected_content, $expected_type, $pack_index_path)
     {
-        $this->pack_index_file->withContent(file_get_contents(self::V2_PACK_INDEX_PATH));
+        $this->pack_index_file->withContent(file_get_contents($pack_index_path));
 
         $pack           = new Pack($this->project, self::SHA1_PACK);
         $object_content = $pack->GetObject($object_reference, $type);
@@ -165,13 +154,23 @@ class PackTest extends TestCase
 
     public function objectProvider()
     {
-        return [
+        $object_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', 'db098907ae9b166cb9c8078858ba284024649c971c37fb89c21d112d416264d2', Pack::OBJ_COMMIT],
             ['45e4d9873aca93dfaefae43da5a080c82527a45a', '55a267fd657fe8f419107e83a5ff9c6196fed103f51d37b18d181da632993160', Pack::OBJ_TREE],
             ['74b6c7ad1241339bfcc8b00a1caadf444eca141a', '707489da83ed56dc38a7e7a33c30a1a443ed495ba8f1155aa8583c4cf70f6f70', Pack::OBJ_BLOB],
             ['bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', null, null],
             ['invalid_reference_format', null, null],
         ];
+
+        $full_object_tests = [];
+        foreach ($object_tests as $object_test) {
+            foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
+                $object_test[] = $pack_index_path;
+                $full_object_tests[] = $object_test;
+            }
+        }
+
+        return $full_object_tests;
     }
 
     /**

@@ -248,7 +248,8 @@ class Pack
          * fanout table - 256*4 bytes
          * sha listing - 20*count bytes
          * crc checksums - 4*count bytes
-         * offsets - 4*count bytes
+         * offsets values - 4*count bytes
+         * 8-bit offset entries - 8*count bytes
          *
          * @see https://git-scm.com/docs/pack-format#_version_2_pack_idx_files_support_packs_larger_than_4_gib_and
          */
@@ -300,11 +301,14 @@ class Pack
          * get the offset from the same index in the offset table
          */
         fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objIndex);
-        $offset = Pack::fuint32($index);
-        if ($offset & 0x80000000) {
-            throw new \Exception('64-bit offsets not implemented');
+        $offset = self::fuint32($index);
+        if (($offset & 0x80000000) === 0) {
+            return $offset;
         }
-        return $offset;
+
+        $offset_in_64bit_entries_index = ($offset ^ 0x80000000);
+        fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objectCount + 8*$offset_in_64bit_entries_index);
+        return self::fuint64($index);
     }
 
     /**
@@ -590,5 +594,16 @@ class Pack
     private static function fuint32($handle)
     {
         return Pack::uint32(fread($handle, 4));
+    }
+
+    private static function uint64($str)
+    {
+        $a = unpack('Jx', substr($str, 0, 8));
+        return $a['x'];
+    }
+
+    private static function fuint64($handle)
+    {
+        return self::uint64(fread($handle, 8));
     }
 }
