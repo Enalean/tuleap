@@ -188,7 +188,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Permissions\RegexpPermissionFilter'),
                 mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
                 mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
-                mock('UGroupManager')
+                mock('UGroupManager'),
+                mock(Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder::class)
             )
         );
         $git->setRequest($request);

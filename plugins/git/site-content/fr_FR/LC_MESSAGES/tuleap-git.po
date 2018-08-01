@@ -10,6 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #, php-format
 msgid "%s commit was pushed on %s"
@@ -46,6 +47,9 @@ msgstr "Impossible de supprimer l'utilisateur %s des notifications"
 #, php-format
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr "Impossible de supprimer le groupe %s des notifications"
+
+msgid "Fork repositories"
+msgstr "Fork de dépôts Git"
 
 msgid "Git"
 msgstr "Git"

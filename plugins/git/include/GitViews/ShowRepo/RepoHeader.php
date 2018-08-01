@@ -36,6 +36,7 @@ use HTTPRequest;
 use PFUser;
 use RepositoryClonePresenter;
 use TemplateRendererFactory;
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\GitViews\GitViewHeader;
 use Tuleap\Layout\BaseLayout;
 
@@ -89,6 +90,10 @@ class RepoHeader
      * @var BaseLayout
      */
     private $layout;
+    /**
+     * @var GitCrumbBuilder
+     */
+    private $service_crumb_builder;
 
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
@@ -96,16 +101,18 @@ class RepoHeader
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPermissionsManager $permissions_manager,
+        GitCrumbBuilder $service_crumb_builder,
         array $gerrit_servers,
         $master_location_name
     ) {
-        $this->driver_factory       = $driver_factory;
-        $this->gerrit_usermanager   = $gerrit_usermanager;
-        $this->gerrit_servers       = $gerrit_servers;
-        $this->mirror_data_mapper   = $mirror_data_mapper;
-        $this->url_manager          = $url_manager;
-        $this->permissions_manager  = $permissions_manager;
-        $this->master_location_name = $master_location_name;
+        $this->driver_factory        = $driver_factory;
+        $this->gerrit_usermanager    = $gerrit_usermanager;
+        $this->gerrit_servers        = $gerrit_servers;
+        $this->mirror_data_mapper    = $mirror_data_mapper;
+        $this->url_manager           = $url_manager;
+        $this->permissions_manager   = $permissions_manager;
+        $this->master_location_name  = $master_location_name;
+        $this->service_crumb_builder = $service_crumb_builder;
     }
 
     public function display(HTTPRequest $request, BaseLayout $layout, GitRepository $repository)
@@ -126,7 +133,7 @@ class RepoHeader
 
         $header = new GitViewHeader(
             EventManager::instance(),
-            $this->permissions_manager
+            $this->service_crumb_builder
         );
 
         $header->header($this->request, $this->request->getCurrentUser(), $this->layout, $this->repository->getProject());

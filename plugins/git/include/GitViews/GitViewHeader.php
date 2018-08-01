@@ -23,10 +23,13 @@ namespace Tuleap\Git\GitViews;
 
 use EventManager;
 use GitPermissionsManager;
+use GitPlugin;
 use HTTPRequest;
 use PFUser;
 use Project;
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class GitViewHeader
 {
@@ -35,30 +38,47 @@ class GitViewHeader
      */
     private $event_manager;
     /**
-     * @var GitPermissionsManager
+     * @var GitCrumbBuilder
      */
-    private $permissions_manager;
+    private $service_crumb_builder;
 
     /**
-     * GitViewHeader constructor.
-     * @param EventManager $event_manager
+     * @param EventManager          $event_manager
+     * @param GitCrumbBuilder       $service_crumb_builder
      */
-    public function __construct(EventManager $event_manager, GitPermissionsManager $permissions_manager)
-    {
-        $this->event_manager       = $event_manager;
-        $this->permissions_manager = $permissions_manager;
+    public function __construct(
+        EventManager $event_manager,
+        GitCrumbBuilder $service_crumb_builder
+    ) {
+        $this->event_manager         = $event_manager;
+        $this->service_crumb_builder = $service_crumb_builder;
     }
 
     public function header(HTTPRequest $request, PFUser $user, BaseLayout $layout, Project $project)
     {
-        $this->getToolbar($user, $layout, $project);
+        $layout->addBreadcrumbs($this->getBreadcrumbs($user, $project));
 
-        $layout->header(array(
-            'title'      => $GLOBALS['Language']->getText('plugin_git', 'title'),
-            'group'      => $project->getID(),
-            'toptab'     => $GLOBALS['Language']->getText('plugin_git', 'title'),
-            'body_class' => $this->getAdditionalBodyClasses($request)
-        ));
+        $layout->header(
+            array(
+                'title'      => $GLOBALS['Language']->getText('plugin_git', 'title'),
+                'group'      => $project->getID(),
+                'toptab'     => $GLOBALS['Language']->getText('plugin_git', 'title'),
+                'body_class' => $this->getAdditionalBodyClasses($request)
+            )
+        );
+    }
+
+    private function getBreadcrumbs(PFUser $user, Project $project)
+    {
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(
+            $this->service_crumb_builder->build(
+                $user,
+                $project
+            )
+        );
+
+        return $breadcrumbs;
     }
 
     private function getAdditionalBodyClasses(HTTPRequest $request)
@@ -72,22 +92,5 @@ class GitViewHeader
         $this->event_manager->processEvent(GIT_ADDITIONAL_BODY_CLASSES, $params);
 
         return $classes;
-    }
-
-    private function getToolbar(PFUser $user, BaseLayout $layout, Project $project)
-    {
-        $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_home'), '/plugins/git/' . urlencode($project->getUnixNameLowerCase()) . '/'));
-        $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'fork_repositories'), '/plugins/git/?group_id='.$project->getID() .'&action=fork_repositories'));
-        $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_help'), 'javascript:help_window(\'/doc/'.$user->getShortLocale().'/user-guide/git.html\')'));
-
-        if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
-            $layout->addToolbarItem($this->linkTo($GLOBALS['Language']->getText('plugin_git', 'bread_crumb_admin'), '/plugins/git/?group_id='.$project->getID() .'&action=admin'));
-        }
-    }
-
-
-    private function linkTo($link, $href, $options = '')
-    {
-        return '<a href="'.$href.'" '.$options.' >'.$link.'</a>';
     }
 }

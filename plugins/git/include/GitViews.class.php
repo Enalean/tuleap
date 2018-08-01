@@ -20,6 +20,8 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
+use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
+use Tuleap\Git\GitViews\GitViewHeader;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
@@ -80,6 +82,10 @@ class GitViews extends PluginViews {
      * @var Git_RemoteServer_GerritServerFactory
      */
     private $gerrit_server_factory;
+    /**
+     * @var GitCrumbBuilder
+     */
+    private $service_crumb_builder;
 
     public function __construct(
         $controller,
@@ -92,10 +98,11 @@ class GitViews extends PluginViews {
         FineGrainedRepresentationBuilder $fine_grained_builder,
         GitPhpAccessLogger $access_loger,
         RegexpFineGrainedRetriever $regexp_retriever,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        GitCrumbBuilder $service_crumb_builder
     ) {
         parent::__construct($controller);
-        $this->groupId                                 = (int)$this->request->get('group_id');
+        $this->groupId                                 = (int) $this->request->get('group_id');
         $this->project                                 = ProjectManager::instance()->getProject($this->groupId);
         $this->projectName                             = $this->project->getUnixName();
         $this->userName                                = $this->user->getName();
@@ -110,10 +117,15 @@ class GitViews extends PluginViews {
         $this->access_loger                            = $access_loger;
         $this->regexp_retriever                        = $regexp_retriever;
         $this->gerrit_server_factory                   = $gerrit_server_factory;
+        $this->service_crumb_builder                   = $service_crumb_builder;
     }
 
-    public function header() {
-        $headers = new \Tuleap\Git\GitViews\GitViewHeader(EventManager::instance(), $this->git_permissions_manager);
+    public function header()
+    {
+        $headers = new GitViewHeader(
+            EventManager::instance(),
+            $this->service_crumb_builder
+        );
         $headers->header($this->request, $this->user, $GLOBALS['HTML'], $this->project);
     }
 
