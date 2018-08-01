@@ -28,6 +28,7 @@ use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -126,7 +127,8 @@ class GitViews extends PluginViews {
             EventManager::instance(),
             $this->service_crumb_builder
         );
-        $headers->header($this->request, $this->user, $GLOBALS['HTML'], $this->project);
+        $breadcrumbs = new BreadCrumbCollection();
+        $headers->header($this->request, $this->user, $GLOBALS['HTML'], $this->project, $breadcrumbs);
     }
 
     public function footer() {

@@ -37,8 +37,10 @@ use PFUser;
 use RepositoryClonePresenter;
 use TemplateRendererFactory;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\GitViews\GitViewHeader;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 class RepoHeader
 {
@@ -87,13 +89,13 @@ class RepoHeader
      */
     private $permissions_manager;
     /**
-     * @var BaseLayout
-     */
-    private $layout;
-    /**
      * @var GitCrumbBuilder
      */
     private $service_crumb_builder;
+    /**
+     * @var RepositoryCrumbBuilder
+     */
+    private $repository_crumb_builder;
 
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
@@ -102,25 +104,26 @@ class RepoHeader
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         GitPermissionsManager $permissions_manager,
         GitCrumbBuilder $service_crumb_builder,
+        RepositoryCrumbBuilder $repository_crumb_builder,
         array $gerrit_servers,
         $master_location_name
     ) {
-        $this->driver_factory        = $driver_factory;
-        $this->gerrit_usermanager    = $gerrit_usermanager;
-        $this->gerrit_servers        = $gerrit_servers;
-        $this->mirror_data_mapper    = $mirror_data_mapper;
-        $this->url_manager           = $url_manager;
-        $this->permissions_manager   = $permissions_manager;
-        $this->master_location_name  = $master_location_name;
-        $this->service_crumb_builder = $service_crumb_builder;
+        $this->driver_factory           = $driver_factory;
+        $this->gerrit_usermanager       = $gerrit_usermanager;
+        $this->gerrit_servers           = $gerrit_servers;
+        $this->mirror_data_mapper       = $mirror_data_mapper;
+        $this->url_manager              = $url_manager;
+        $this->permissions_manager      = $permissions_manager;
+        $this->master_location_name     = $master_location_name;
+        $this->service_crumb_builder    = $service_crumb_builder;
+        $this->repository_crumb_builder = $repository_crumb_builder;
     }
 
     public function display(HTTPRequest $request, BaseLayout $layout, GitRepository $repository)
     {
-        $this->layout               = $layout;
-        $this->repository           = $repository;
-        $this->request              = $request;
-        $this->current_user         = $this->request->getCurrentUser();
+        $this->repository   = $repository;
+        $this->request      = $request;
+        $this->current_user = $this->request->getCurrentUser();
 
         $gerrit_status = new GitViews_ShowRepo_ContentGerritStatus(
             $this->driver_factory,
@@ -136,9 +139,13 @@ class RepoHeader
             $this->service_crumb_builder
         );
 
-        $header->header($this->request, $this->request->getCurrentUser(), $this->layout, $this->repository->getProject());
+        $user        = $this->request->getCurrentUser();
+        $project     = $this->repository->getProject();
+        $breadcrumbs = $this->getBreadcrumbs($user, $repository);
 
-        $html  = '';
+        $header->header($this->request, $user, $layout, $project, $breadcrumbs);
+
+        $html = '';
         $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
         $html .= $this->getHeader();
         $html .= $gerrit_status->getContent();
@@ -146,6 +153,16 @@ class RepoHeader
         $html .= '</div>';
 
         echo $html;
+    }
+
+    private function getBreadcrumbs(PFUser $user, GitRepository $repository)
+    {
+        $breadcrumbs = new BreadCrumbCollection();
+        $breadcrumbs->addBreadCrumb(
+            $this->repository_crumb_builder->build($user, $repository)
+        );
+
+        return $breadcrumbs;
     }
 
     private function getHeader()

@@ -22,8 +22,6 @@
 namespace Tuleap\Git\GitViews;
 
 use EventManager;
-use GitPermissionsManager;
-use GitPlugin;
 use HTTPRequest;
 use PFUser;
 use Project;
@@ -54,9 +52,15 @@ class GitViewHeader
         $this->service_crumb_builder = $service_crumb_builder;
     }
 
-    public function header(HTTPRequest $request, PFUser $user, BaseLayout $layout, Project $project)
-    {
-        $layout->addBreadcrumbs($this->getBreadcrumbs($user, $project));
+    public function header(
+        HTTPRequest $request,
+        PFUser $user,
+        BaseLayout $layout,
+        Project $project,
+        BreadCrumbCollection $breadcrumbs
+    ) {
+        $complete_breadcrumbs = $this->unshiftServiceBreadcrumb($breadcrumbs, $user, $project);
+        $layout->addBreadcrumbs($complete_breadcrumbs);
 
         $layout->header(
             array(
@@ -68,10 +72,9 @@ class GitViewHeader
         );
     }
 
-    private function getBreadcrumbs(PFUser $user, Project $project)
+    private function unshiftServiceBreadcrumb(BreadCrumbCollection $breadcrumbs, PFUser $user, Project $project)
     {
-        $breadcrumbs = new BreadCrumbCollection();
-        $breadcrumbs->addBreadCrumb(
+        $breadcrumbs->unshiftBreadCrumb(
             $this->service_crumb_builder->build(
                 $user,
                 $project
