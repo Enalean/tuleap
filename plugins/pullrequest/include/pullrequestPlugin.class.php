@@ -25,6 +25,7 @@ use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
+use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
 use Tuleap\Git\MarkTechnicalReference;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
@@ -71,6 +72,7 @@ use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
 use Tuleap\PullRequest\Reference\ReferenceDao;
 use Tuleap\PullRequest\Reference\ReferenceFactory;
+use Tuleap\PullRequest\RepoManagement\PullRequestPane;
 use Tuleap\PullRequest\REST\ResourcesInjector;
 use Tuleap\PullRequest\Router;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
@@ -125,6 +127,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(AdditionalInformationRepresentationCache::NAME);
             $this->addHook(AfterRepositoryForked::NAME);
             $this->addHook(AfterRepositoryCreated::NAME);
+            $this->addHook(PanesCollection::NAME);
         }
     }
 
@@ -686,6 +689,17 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $dao->duplicateFromProjectTemplate(
             $params['template_id'],
             $params['group_id']
+        );
+    }
+
+    public function collectPanes(PanesCollection $collection)
+    {
+        $collection->add(
+            new PullRequestPane(
+                $collection->getRepository(),
+                $collection->getRequest(),
+                new MergeSettingRetriever(new MergeSettingDAO())
+            )
         );
     }
 }

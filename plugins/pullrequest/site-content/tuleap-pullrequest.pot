@@ -1,2 +1,16 @@
+msgid ""
+"Default (Will fast-forward when possible, fallback to merge when not "
+"possible)"
+msgstr ""
+
+msgid "Fast-forward only"
+msgstr ""
+
+msgid "Merge"
+msgstr ""
+
+msgid "Pull requests"
+msgstr ""
+
 msgid "The pull request is not accessible anymore"
 msgstr ""
