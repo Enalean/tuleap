@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp-fetch";
+import { recursiveGet } from "tlp-fetch";
 
 export { getProjectList, getTrackerList };
 
 function getProjectList() {
-    return get("/api/projects", {
+    return recursiveGet("/api/projects", {
         params: {
             query: JSON.stringify({
                 is_tracker_admin: "true"
@@ -34,7 +34,7 @@ function getProjectList() {
 }
 
 function getTrackerList(project_id) {
-    return get("/api/projects/" + project_id + "/trackers/", {
+    return recursiveGet("/api/projects/" + project_id + "/trackers/", {
         params: {
             query: JSON.stringify({
                 is_tracker_admin: "true"
