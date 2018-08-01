@@ -23,6 +23,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
@@ -2460,8 +2461,18 @@ class GitPlugin extends Plugin
         return new PermissionPerGroupController($this->getJSONRepositoriesRetriever());
     }
 
-    private function getRepoHeader()
+    /**
+     * @access protected for test purpose
+     * @return \Tuleap\Git\GitViews\ShowRepo\RepoHeader
+     */
+    protected function getRepoHeader()
     {
+        $repository_crumb_builder = new RepositoryCrumbBuilder(
+            $this->getGitRepositoryUrlManager(),
+            $this->getGitPermissionsManager(),
+            $this->getPluginPath()
+        );
+
         return new Tuleap\Git\GitViews\ShowRepo\RepoHeader(
             $this->getGitRepositoryUrlManager(),
             $this->getGerritDriverFactory(),
@@ -2469,6 +2480,7 @@ class GitPlugin extends Plugin
             $this->getMirrorDataMapper(),
             $this->getGitPermissionsManager(),
             $this->getGitCrumbBuilder(),
+            $repository_crumb_builder,
             $this->getGerritServerFactory()->getServers(),
             $this->getConfigurationParameter('master_location_name')
         );

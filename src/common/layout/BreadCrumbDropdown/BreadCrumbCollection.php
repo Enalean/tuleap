@@ -30,6 +30,11 @@ class BreadCrumbCollection
         $this->breadcrumbs[] = $crumb;
     }
 
+    public function unshiftBreadCrumb(BreadCrumb $crumb)
+    {
+        array_unshift($this->breadcrumbs, $crumb);
+    }
+
     public function getBreadcrumbs()
     {
         return $this->breadcrumbs;
