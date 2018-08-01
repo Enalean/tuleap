@@ -17,16 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchError } from "tlp-mocks";
 import { loadProjectList, loadTrackerList } from "./actions.js";
-import { restore as restoreFetch, rewire$get } from "tlp-fetch";
+import {
+    rewire$getProjectList,
+    rewire$getTrackerList,
+    restore as restoreFetch
+} from "../api/rest-querier.js";
 
 describe("Store actions", () => {
     describe("loadProjectList", () => {
-        let get, context;
+        let getProjectList, context;
         beforeEach(() => {
-            get = jasmine.createSpy("get");
-            rewire$get(get);
+            getProjectList = jasmine.createSpy("getProjectList");
+            rewire$getProjectList(getProjectList);
             context = {
                 commit: jasmine.createSpy("commit")
             };
@@ -37,18 +41,18 @@ describe("Store actions", () => {
         });
 
         it("When I want to load the project, Then it should fetch them asynchronously and put them in the store.", async () => {
-            const return_json = [
+            const json = [
                 {
                     id: 102,
                     label: "Project name"
                 }
             ];
 
-            mockFetchSuccess(get, { return_json });
+            getProjectList.and.returnValue(Promise.resolve(json));
 
             await loadProjectList(context);
 
-            expect(context.commit).toHaveBeenCalledWith("saveProjects", return_json);
+            expect(context.commit).toHaveBeenCalledWith("saveProjects", json);
             expect(context.commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
         });
 
@@ -59,21 +63,18 @@ describe("Store actions", () => {
                     message: "error"
                 }
             };
-            mockFetchError(get, { error_json });
+            mockFetchError(getProjectList, { error_json });
 
-            try {
-                await loadProjectList(context);
-            } catch (e) {
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
-            }
+            await loadProjectList(context);
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
         });
     });
 
     describe("loadTrackerList", () => {
-        let get, context;
+        let getTrackerList, context;
         beforeEach(() => {
-            get = jasmine.createSpy("get");
-            rewire$get(get);
+            getTrackerList = jasmine.createSpy("getTrackerList");
+            rewire$getTrackerList(getTrackerList);
             context = {
                 commit: jasmine.createSpy("commit")
             };
@@ -91,7 +92,7 @@ describe("Store actions", () => {
                 }
             ];
 
-            mockFetchSuccess(get, { return_json });
+            getTrackerList.and.returnValue(Promise.resolve(return_json));
 
             await loadTrackerList(context);
 
@@ -107,13 +108,10 @@ describe("Store actions", () => {
                     message: "error"
                 }
             };
-            mockFetchError(get, { error_json });
+            mockFetchError(getTrackerList, { error_json });
 
-            try {
-                await loadTrackerList(context);
-            } catch (e) {
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
-            }
+            await loadTrackerList(context);
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
         });
     });
 });
