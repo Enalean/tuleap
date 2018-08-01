@@ -51,4 +51,14 @@ class MergeSettingDAO extends DataAccessObject
 
         $this->getDB()->single($sql, [$repository_id, $project_id]);
     }
+
+    public function duplicateFromProjectTemplate($template_project_id, $project_id)
+    {
+        $sql = "INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
+                SELECT  ?, merge_commit_allowed
+                FROM plugin_pullrequest_template_merge_setting
+                WHERE project_id = ?";
+
+        $this->getDB()->single($sql, [$project_id, $template_project_id]);
+    }
 }
