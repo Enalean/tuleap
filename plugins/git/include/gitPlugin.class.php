@@ -2564,7 +2564,8 @@ class GitPlugin extends Plugin
             $this->getFineGrainedPermissionReplicator(),
             new ProjectHistoryDao(),
             $this->getHistoryValueFormatter(),
-            $this->getCITokenManager()
+            $this->getCITokenManager(),
+            EventManager::instance()
         );
     }
 

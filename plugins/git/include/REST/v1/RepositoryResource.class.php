@@ -284,7 +284,8 @@ class RepositoryResource extends AuthenticatedResource {
             $fine_grained_replicator,
             $project_history_dao,
             $history_value_formatter,
-            $this->ci_token_manager
+            $this->ci_token_manager,
+            $event_manager
         );
     }
 

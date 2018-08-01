@@ -21,6 +21,7 @@
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
@@ -122,6 +123,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(AdditionalInformationRepresentationRetriever::NAME);
             $this->addHook(AdditionalInformationRepresentationCache::NAME);
             $this->addHook(AfterRepositoryForked::NAME);
+            $this->addHook(AfterRepositoryCreated::NAME);
         }
     }
 
@@ -663,6 +665,17 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $dao->duplicateRepositoryMergeSettings(
             $event->getBaseRepository()->getId(),
             $event->getForkedRepository()->getId()
+        );
+    }
+
+    public function afterRepositoryCreated(AfterRepositoryCreated $event)
+    {
+        $repository = $event->getRepository();
+        $dao        = new MergeSettingDAO();
+
+        $dao->inheritFromTemplate(
+            $repository->getId(),
+            $repository->getProjectId()
         );
     }
 }
