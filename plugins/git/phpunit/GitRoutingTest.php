@@ -23,6 +23,7 @@ namespace Tuleap\Git;
 
 require_once __DIR__.'/bootstrap.php';
 
+use FastRoute;
 use Git_Mirror_MirrorDataMapper;
 use Git_RemoteServer_GerritServerFactory;
 use GitDao;
@@ -30,16 +31,15 @@ use GitPermissionsManager;
 use GitPlugin;
 use GitRepositoryFactory;
 use Logger;
+use Mockery;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
+use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
-use FastRoute;
-use Mockery;
 use UserDao;
 
 /**
@@ -159,7 +159,7 @@ class GitRoutingTest extends TestCase
                     'getGitDao'                 => \Mockery::mock(GitDao::class),
                     'getConfigurationParameter' => 'foo',
                     'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
-                    'getRepoHeader'             => \Mockery::mock(RepoHeader::class),
+                    'getRepositoryCrumbBuilder' => \Mockery::mock(RepositoryCrumbBuilder::class),
                     'getGitCrumbBuilder'        => \Mockery::mock(GitCrumbBuilder::class)
                 ]
             );

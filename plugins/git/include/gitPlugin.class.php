@@ -24,6 +24,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
@@ -1501,6 +1502,11 @@ class GitPlugin extends Plugin
 
     private function getGitController()
     {
+        $settings_crumbs_builder = new RepositorySettingsCrumbsBuilder(
+            $this->getRepositoryCrumbBuilder(),
+            $this->getPluginPath()
+        );
+
         $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
             $this,
@@ -1542,7 +1548,8 @@ class GitPlugin extends Plugin
             new UsersToNotifyDao(),
             $this->getUgroupsToNotifyDao(),
             new UGroupManager(),
-            $this->getGitCrumbBuilder()
+            $this->getGitCrumbBuilder(),
+            $settings_crumbs_builder
         );
     }
 
@@ -2336,12 +2343,6 @@ class GitPlugin extends Plugin
         );
     }
 
-    private function canIncludeStylesheets()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/my/') === 0
-            || strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
-    }
-
     public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
     {
         $glyph_locations_collector->addLocation(
@@ -2467,12 +2468,6 @@ class GitPlugin extends Plugin
      */
     protected function getRepoHeader()
     {
-        $repository_crumb_builder = new RepositoryCrumbBuilder(
-            $this->getGitRepositoryUrlManager(),
-            $this->getGitPermissionsManager(),
-            $this->getPluginPath()
-        );
-
         return new Tuleap\Git\GitViews\ShowRepo\RepoHeader(
             $this->getGitRepositoryUrlManager(),
             $this->getGerritDriverFactory(),
@@ -2480,7 +2475,7 @@ class GitPlugin extends Plugin
             $this->getMirrorDataMapper(),
             $this->getGitPermissionsManager(),
             $this->getGitCrumbBuilder(),
-            $repository_crumb_builder,
+            $this->getRepositoryCrumbBuilder(),
             $this->getGerritServerFactory()->getServers(),
             $this->getConfigurationParameter('master_location_name')
         );
@@ -2599,5 +2594,19 @@ class GitPlugin extends Plugin
     protected function getGitCrumbBuilder()
     {
         return new GitCrumbBuilder($this->getGitPermissionsManager(), $this->getPluginPath());
+    }
+
+    /**
+     * @access protected for test purpose
+     * @return RepositoryCrumbBuilder
+     */
+    protected function getRepositoryCrumbBuilder()
+    {
+        $repository_crumb_builder = new RepositoryCrumbBuilder(
+            $this->getGitRepositoryUrlManager(),
+            $this->getGitPermissionsManager(),
+            $this->getPluginPath()
+        );
+        return $repository_crumb_builder;
     }
 }
