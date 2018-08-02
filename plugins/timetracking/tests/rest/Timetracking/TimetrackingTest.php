@@ -367,4 +367,19 @@ class TimetrackingTest extends TimetrackingBase
         ]);
         $this->getResponse($this->client->put('/api/v1/timetracking/8000', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
     }
+
+    public function testDeleteTimeSuccess()
+    {
+        $response = $this->getResponse($this->client->delete('/api/v1/timetracking/1', null), TimetrackingDataBuilder::USER_TESTER_NAME);
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testDeleteTimeReturnNoTimeException()
+    {
+        $this->getResponse($this->client->put('/api/v1/timetracking/8000', null), TimetrackingDataBuilder::USER_TESTER_NAME);
+    }
 }
