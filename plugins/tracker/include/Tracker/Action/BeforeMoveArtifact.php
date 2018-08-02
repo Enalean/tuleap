@@ -67,14 +67,6 @@ class BeforeMoveArtifact
             if ($semantic_checker->areSemanticsAligned($source_tracker, $target_tracker)) {
                 return true;
             }
-
-            if (! $semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker)) {
-                continue;
-            }
-
-            if (! $semantic_checker->doesBothSemanticFieldHaveTheSameType($source_tracker, $target_tracker)) {
-                throw new MoveArtifactSemanticsException("Both $semantic_name fields must have the same type.");
-            }
         }
 
         throw new MoveArtifactSemanticsException(

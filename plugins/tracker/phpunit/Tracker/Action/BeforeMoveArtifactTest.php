@@ -160,6 +160,9 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
         $this->form_element_factory->shouldReceive('getType')->with($this->source_description_field)->andReturn('text');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_description_field)->andReturn('string');
 
@@ -404,6 +407,9 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsDescription' => false,
             'hasSemanticsStatus'      => true,
         ]);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_status_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_status_field)->andReturn('rb');
