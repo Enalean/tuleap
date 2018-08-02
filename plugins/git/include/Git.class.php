@@ -21,8 +21,8 @@
   */
 
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
+use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\History\GitPhpAccessLogger;
@@ -277,6 +277,11 @@ class Git extends PluginController {
      */
     private $settings_crumbs_builder;
 
+    /**
+     * @var ServiceAdministrationCrumbBuilder
+     */
+    private $administration_crumb_builder;
+
     public function __construct(
         GitPlugin $plugin,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
@@ -318,7 +323,8 @@ class Git extends PluginController {
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UGroupManager $ugroup_manager,
         GitCrumbBuilder $service_crumb_builder,
-        RepositorySettingsCrumbsBuilder $settings_crumbs_builder
+        RepositorySettingsCrumbsBuilder $settings_crumbs_builder,
+        ServiceAdministrationCrumbBuilder $administration_crumb_builder
     ) {
         parent::__construct($user_manager, $request);
 
@@ -382,6 +388,7 @@ class Git extends PluginController {
         $this->ugroup_manager                          = $ugroup_manager;
         $this->service_crumb_builder                   = $service_crumb_builder;
         $this->settings_crumbs_builder                 = $settings_crumbs_builder;
+        $this->administration_crumb_builder            = $administration_crumb_builder;
     }
 
     protected function instantiateView()
@@ -399,7 +406,8 @@ class Git extends PluginController {
             $this->regexp_retriever,
             $this->gerrit_server_factory,
             $this->service_crumb_builder,
-            $this->settings_crumbs_builder
+            $this->settings_crumbs_builder,
+            $this->administration_crumb_builder
         );
     }
 
@@ -737,6 +745,7 @@ class Git extends PluginController {
                     }
                 }
 
+                $this->addView('header', [false, true]);
                 $this->addView(
                     'adminGitAdminsView',
                     array($this->areMirrorsEnabledForProject())
@@ -767,6 +776,7 @@ class Git extends PluginController {
 
                 if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
+                    $this->addView('header', [false, true]);
                     $this->addView(
                         'adminGerritTemplatesView',
                         array($this->areMirrorsEnabledForProject())
@@ -791,6 +801,7 @@ class Git extends PluginController {
 
                 if ($this->request->get('go-to-mass-change')) {
                     $this->addAction('setSelectedRepositories', array($repositories));
+                    $this->addView('header', [false, true]);
                     $this->addView('adminMassUpdateView');
                     return;
                 }
@@ -803,6 +814,7 @@ class Git extends PluginController {
                     ));
                 }
 
+                $this->addView('header', [false, true]);
                 $this->addView('adminMassUpdateSelectRepositoriesView');
 
                 break;
@@ -1094,6 +1106,7 @@ class Git extends PluginController {
             $pane = $this->request->get('pane');
         }
 
+        $this->addView('header', [false, true]);
         $this->addView(
             'adminDefaultSettings',
             array($this->areMirrorsEnabledForProject(), $pane)

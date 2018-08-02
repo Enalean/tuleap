@@ -22,6 +22,7 @@
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
+use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\GitViews\GitViewHeader;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
@@ -98,6 +99,11 @@ class GitViews extends PluginViews {
      */
     private $event_manager;
 
+    /**
+     * @var ServiceAdministrationCrumbBuilder
+     */
+    private $administration_crumb_builder;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
@@ -111,7 +117,8 @@ class GitViews extends PluginViews {
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         GitCrumbBuilder $service_crumb_builder,
-        RepositorySettingsCrumbsBuilder $settings_crumbs_builder
+        RepositorySettingsCrumbsBuilder $settings_crumbs_builder,
+        ServiceAdministrationCrumbBuilder $administration_crumb_builder
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int) $this->request->get('group_id');
@@ -132,16 +139,20 @@ class GitViews extends PluginViews {
         $this->service_crumb_builder                   = $service_crumb_builder;
         $this->event_manager                           = EventManager::instance();
         $this->settings_crumbs_builder                 = $settings_crumbs_builder;
+        $this->administration_crumb_builder            = $administration_crumb_builder;
     }
 
-    public function header($is_in_settings = false)
+    public function header($is_in_settings = false, $is_in_service_administration = false)
     {
         $breadcrumbs = new BreadCrumbCollection();
         if ($is_in_settings === true) {
             $params      = $this->getData();
             $repository  = $params['repository'];
             $breadcrumbs = $this->settings_crumbs_builder->build($this->user, $repository);
+        } elseif ($is_in_service_administration === true) {
+            $breadcrumbs->addBreadCrumb($this->administration_crumb_builder->build($this->project));
         }
+
         $headers = new GitViewHeader(
             $this->event_manager,
             $this->service_crumb_builder
