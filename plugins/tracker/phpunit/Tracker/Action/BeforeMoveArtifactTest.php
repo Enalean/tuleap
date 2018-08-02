@@ -28,6 +28,7 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Semantic_Contributor;
 use Tracker_Semantic_ContributorFactory;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -54,6 +55,8 @@ class BeforeMoveArtifactTest extends TestCase
         $this->description_semantic_checker = new MoveDescriptionSemanticChecker($this->form_element_factory);
         $this->contributor_semantic_checker = new MoveContributorSemanticChecker($this->form_element_factory);
 
+        $this->feedback_field_collector = new FeedbackFieldCollector();
+
         $this->before_move_artifact = new BeforeMoveArtifact(
             $this->event_manager,
             $this->title_semantic_checker,
@@ -63,9 +66,19 @@ class BeforeMoveArtifactTest extends TestCase
         );
 
         $this->source_tracker           = Mockery::mock(\Tracker::class);
+        $this->source_title_field       = Mockery::mock(Tracker_FormElement_Field::class);
         $this->source_description_field = Mockery::mock(Tracker_FormElement_Field::class);
         $this->source_status_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->source_contributor_field = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->source_external_field    = Mockery::mock(Tracker_FormElement_Field::class);
+
+
+        $this->source_title_field->shouldReceive('getId')->andReturn(1);
+        $this->source_description_field->shouldReceive('getId')->andReturn(2);
+        $this->source_status_field->shouldReceive('getId')->andReturn(3);
+        $this->source_contributor_field->shouldReceive('getId')->andReturn(4);
+        $this->source_external_field->shouldReceive('getId')->andReturn(5);
+
         $this->source_tracker->shouldReceive('getDescriptionField')->andReturn($this->source_description_field);
         $this->source_tracker->shouldReceive('getStatusField')->andReturn($this->source_status_field);
 
@@ -73,6 +86,7 @@ class BeforeMoveArtifactTest extends TestCase
         $this->target_status_field      = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->target_description_field = Mockery::mock(Tracker_FormElement_Field::class);
         $this->target_contributor_field = Mockery::mock(Tracker_FormElement_Field::class);
+
         $this->target_tracker->shouldReceive('getDescriptionField')->andReturn($this->target_description_field);
         $this->target_tracker->shouldReceive('getStatusField')->andReturn($this->target_status_field);
     }
@@ -91,6 +105,8 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn($this->source_contributor_field);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
@@ -103,7 +119,13 @@ class BeforeMoveArtifactTest extends TestCase
         $this->form_element_factory->shouldReceive('getType')->with($this->source_contributor_field)->andReturn('msb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_contributor_field)->andReturn('msb');
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue(
+            $this->before_move_artifact->artifactCanBeMoved(
+                $this->source_tracker,
+                $this->target_tracker,
+                $this->feedback_field_collector
+            )
+        );
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyTitleSemantic()
@@ -120,7 +142,18 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $this->assertTrue(
+            $this->before_move_artifact->artifactCanBeMoved(
+                $this->source_tracker,
+                $this->target_tracker,
+                $this->feedback_field_collector
+            )
+        );
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyDescriptionSemantic()
@@ -137,10 +170,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
         $this->form_element_factory->shouldReceive('getType')->with($this->source_description_field)->andReturn('text');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_description_field)->andReturn('text');
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     /**
@@ -160,13 +198,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_description_field)->andReturn('text');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_description_field)->andReturn('string');
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     public function testSemanticAreAlignedIfSourceTrackersHasTitleAndDescriptionSemanticsAndTargetHasOnlyTitleSemantic()
@@ -183,7 +223,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     public function testSemanticAreAlignedIfSourceTrackersHasTitleAndDescriptionSemanticsAndTargetHasOnlyDescriptionSemantic()
@@ -200,10 +245,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
         $this->form_element_factory->shouldReceive('getType')->with($this->source_description_field)->andReturn('text');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_description_field)->andReturn('text');
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     /**
@@ -223,10 +273,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -246,10 +298,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn($this->source_title_field);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -269,10 +323,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -296,10 +352,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -314,6 +372,7 @@ class BeforeMoveArtifactTest extends TestCase
                 'doesBothSemanticFieldHaveTheSameType' => false,
                 'areSemanticsAligned'                  => false,
                 'getSemanticName'                      => 'whatever',
+                'getSourceSemanticField'               => $this->source_external_field,
             ]);
 
             $event->addExternalSemanticsChecker($checker);
@@ -332,10 +391,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     public function testSemanticsAreAlignedIfExternalSemanticsAreAlignedAndNotTrackerSemantics()
@@ -347,6 +408,7 @@ class BeforeMoveArtifactTest extends TestCase
                 'doesBothSemanticFieldHaveTheSameType' => true,
                 'areSemanticsAligned'                  => true,
                 'getSemanticName'                      => 'whatever',
+                'getSourceSemanticField'               => $this->source_external_field,
             ]);
 
             $event->addExternalSemanticsChecker($checker);
@@ -365,10 +427,11 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyStatusSemanticWithFieldsOfSameType()
@@ -385,10 +448,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
+        $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
+        $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
+
         $this->form_element_factory->shouldReceive('getType')->with($this->source_status_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_status_field)->andReturn('sb');
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     /**
@@ -408,13 +476,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => true,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_status_field)->andReturn('sb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_status_field)->andReturn('rb');
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -434,10 +504,12 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn(null);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     public function testSemanticAreAlignedIfBothTrackersHaveOnlyContributorSemanticWithFieldsOfSameType()
@@ -454,13 +526,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn($this->source_contributor_field);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_contributor_field)->andReturn('msb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_contributor_field)->andReturn('msb');
 
-        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker));
+        $this->assertTrue($this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector));
     }
 
     /**
@@ -480,13 +554,15 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn($this->source_contributor_field);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn($this->target_contributor_field);
 
         $this->form_element_factory->shouldReceive('getType')->with($this->source_contributor_field)->andReturn('msb');
         $this->form_element_factory->shouldReceive('getType')->with($this->target_contributor_field)->andReturn('rb');
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 
     /**
@@ -506,9 +582,11 @@ class BeforeMoveArtifactTest extends TestCase
             'hasSemanticsStatus'      => false,
         ]);
 
+        $this->source_tracker->shouldReceive('getTitleField')->andReturn(null);
+
         $this->source_tracker->shouldReceive('getContributorField')->andReturn($this->source_contributor_field);
         $this->target_tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker);
+        $this->before_move_artifact->artifactCanBeMoved($this->source_tracker, $this->target_tracker, $this->feedback_field_collector);
     }
 }

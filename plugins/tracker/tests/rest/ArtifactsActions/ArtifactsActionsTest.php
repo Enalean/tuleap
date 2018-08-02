@@ -31,6 +31,54 @@ require_once __DIR__.'/../bootstrap.php';
 
 class ArtifactsActionsTest extends TrackerBase
 {
+    public function testMoveArtifactDryRun()
+    {
+        $artifact_id = end($this->base_artifact_ids);
+        $body        = json_encode(
+            [
+                "move" => [
+                    "tracker_id" => $this->move_tracker_id,
+                    "dry_run"    => true,
+                ]
+            ]
+        );
+
+        $response = $this->getResponse(
+            $this->client->patch("artifacts/$artifact_id", null, $body)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $this->assertEquals(
+            $response->getHeader('x-ratelimit-limit')->toArray()[0],
+            "2"
+        );
+
+        $this->assertEquals(
+            $response->getHeader('x-ratelimit-remaining')->toArray()[0],
+            "2"
+        );
+
+        $json = $response->json();
+
+        $this->assertArrayHasKey("dry_run", $json);
+        $this->assertArrayHasKey("fields", $json['dry_run']);
+
+        $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
+        $this->assertCount(5, $migrated_fields);
+
+        $this->assertTrue(in_array('Summary', $migrated_fields));
+        $this->assertTrue(in_array('Description', $migrated_fields));
+        $this->assertTrue(in_array('Assigned to', $migrated_fields));
+        $this->assertTrue(in_array('Status', $migrated_fields));
+        $this->assertTrue(in_array('Initial', $migrated_fields));
+
+        $this->assertCount(0, $json['dry_run']['fields']['fields_not_migrated']);
+    }
+
+    /**
+     * @depends testMoveArtifactDryRun
+     */
     public function testMoveArtifact()
     {
         $artifact_id = end($this->base_artifact_ids);

@@ -27,4 +27,9 @@ class MoveRepresentation
      * @var int {@type int} {@required true}
      */
     public $tracker_id;
+
+    /**
+     * @var bool {@type boolean} {@required false}
+     */
+    public $dry_run = false;
 }
