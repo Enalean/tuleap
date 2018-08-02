@@ -24,16 +24,9 @@
 (<template>
     <tr>
         <td>
-            <a v-bind:href="artifact.html_url">
-                <span class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
-                      v-bind:class="badge_color"
-                >
-                    {{ artifact.xref }}
-                </span>
-                <span>
-                    {{ artifact.title }}
-                </span>
-            </a>
+            <widget-link-to-artifact
+                v-bind:artifact="artifact"
+            />
         </td>
         <td>{{ project.label }}</td>
         <td class="tlp-table-cell-numeric">
@@ -55,10 +48,12 @@ import { formatMinutes } from "./time-formatters.js";
 import WidgetModalTimes from "./WidgetModalTimes.vue";
 import { gettext_provider } from "./gettext-provider.js";
 import { modal as createModal } from "tlp";
+import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 
 export default {
     name: "WidgetArtifactTableRow",
     components: {
+        WidgetLinkToArtifact,
         WidgetModalTimes
     },
     props: {
@@ -75,10 +70,7 @@ export default {
         };
     },
     computed: {
-        show_times_label: () => gettext_provider.gettext("Details"),
-        badge_color() {
-            return "tlp-badge-" + this.artifact.badge_color;
-        }
+        show_times_label: () => gettext_provider.gettext("Details")
     },
     methods: {
         getFormattedAggregatedTime() {
