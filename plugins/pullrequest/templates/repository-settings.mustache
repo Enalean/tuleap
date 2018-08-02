@@ -1,7 +1,7 @@
 <h2>{{# dgettext }}tuleap-pullrequest | Pull requests{{/ dgettext }}</h2>
-<form method="POST" action="/plugins/pullrequest/?group_id={{ project_id }}">
-    <input type="hidden" name="action" value="repository-settings" />
-    <input type="hidden" name="repo_id" value="{{ repository_id }}" />
+<form method="POST" action="/plugins/pullrequest/repository-settings">
+    <input type="hidden" name="group_id" value="{{ project_id }}" />
+    <input type="hidden" name="repository_id" value="{{ repository_id }}" />
 
     <h3>{{# dgettext }}tuleap-pullrequest | Merge{{/ dgettext }}</h3>
 
@@ -14,7 +14,7 @@
         {{# dgettext }}tuleap-pullrequest | Fast-forward only{{/ dgettext }}
     </label>
 
-    <button type="submit" class="btn btn-primary pullrequest-repomanagement-save-button" disabled>
+    <button type="submit" class="btn btn-primary pullrequest-repomanagement-save-button">
         {{# gettext }}Save modifications{{/gettext}}
     </button>
 </form>

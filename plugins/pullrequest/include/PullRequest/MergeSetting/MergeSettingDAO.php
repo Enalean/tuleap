@@ -61,4 +61,13 @@ class MergeSettingDAO extends DataAccessObject
 
         $this->getDB()->single($sql, [$project_id, $template_project_id]);
     }
+
+    public function save($repository_id, $merge_commit_allowed)
+    {
+        $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?";
+
+        $this->getDB()->run($sql, $repository_id, $merge_commit_allowed, $merge_commit_allowed);
+    }
 }

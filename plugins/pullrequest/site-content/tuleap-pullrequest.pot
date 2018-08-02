@@ -12,5 +12,8 @@ msgstr ""
 msgid "Pull requests"
 msgstr ""
 
+msgid "Pull requests settings updated"
+msgstr ""
+
 msgid "The pull request is not accessible anymore"
 msgstr ""

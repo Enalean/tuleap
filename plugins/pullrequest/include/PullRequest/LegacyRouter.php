@@ -26,14 +26,19 @@ use Exception;
 use Feedback;
 use GitRepository;
 use GitRepositoryFactory;
+use HTTPRequest;
+use Tuleap\Layout\BaseLayout;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
+use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
+use Tuleap\Request\NotFoundException;
 use UserManager;
 
-class Router
+class LegacyRouter implements DispatchableWithRequest
 {
 
     /**
@@ -61,7 +66,7 @@ class Router
         $this->user_manager           = $user_manager;
     }
 
-    public function route(Codendi_Request $request)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $repository_id = $request->get('repository_id');
         $project_id    = $request->get('group_id');

@@ -28,5 +28,8 @@ msgstr "Fusion"
 msgid "Pull requests"
 msgstr "Pull requests"
 
+msgid "Pull requests settings updated"
+msgstr "Les paramètres des pull requests ont été mis à jour"
+
 msgid "The pull request is not accessible anymore"
 msgstr "Cette pull request n'est plus accessible"
