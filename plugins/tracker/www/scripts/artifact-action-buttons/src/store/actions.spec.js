@@ -18,10 +18,11 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { loadProjectList, loadTrackerList } from "./actions.js";
+import { loadProjectList, loadTrackerList, move } from "./actions.js";
 import {
     rewire$getProjectList,
     rewire$getTrackerList,
+    rewire$moveArtifact,
     restore as restoreFetch
 } from "../api/rest-querier.js";
 
@@ -111,6 +112,46 @@ describe("Store actions", () => {
             mockFetchError(getTrackerList, { error_json });
 
             await loadTrackerList(context);
+            expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+        });
+    });
+
+    describe("move", () => {
+        let moveArtifact, context;
+        beforeEach(() => {
+            moveArtifact = jasmine.createSpy("moveArtifact");
+            rewire$moveArtifact(moveArtifact);
+            context = {
+                commit: jasmine.createSpy("commit")
+            };
+        });
+
+        afterEach(() => {
+            restoreFetch();
+        });
+
+        it("When I want to process the move, Then it should process move.", async () => {
+            moveArtifact.and.returnValue(Promise.resolve());
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            await move(context, [artifact_id, tracker_id]);
+            expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
+        });
+
+        it("When the server responds with an error the error message is stored", async () => {
+            const error_json = {
+                error: {
+                    code: "403",
+                    message: "error"
+                }
+            };
+            mockFetchError(moveArtifact, { error_json });
+
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            await move(context, [artifact_id, tracker_id]);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
         });
     });

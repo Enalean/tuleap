@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProjectList, getTrackerList } from "../api/rest-querier.js";
+import { getProjectList, getTrackerList, moveArtifact } from "../api/rest-querier.js";
 
 export async function loadTrackerList(context, project_id) {
     try {
@@ -52,4 +52,13 @@ function getAsyncProjectList(commit, projectList) {
 
 function getAsyncTrackerList(commit, trackerList) {
     commit("saveTrackers", trackerList);
+}
+
+export function move(context, data) {
+    const [artifact_id, tracker_id] = data;
+
+    return moveArtifact(artifact_id, tracker_id).catch(async e => {
+        const { error } = await e.response.json();
+        context.commit("setErrorMessage", error.message);
+    });
 }

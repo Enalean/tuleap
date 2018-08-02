@@ -30,15 +30,23 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
-                    <move-modal-title />
+                    <move-modal-title v-if="! hasError"/>
+                    <move-modal-preview-title v-else />
                 </div>
                 <div class="modal-body">
-                    <div v-if="isLoadingInitial" class="move-artifact-loader"></div>
+                    <div v-if="isLoadingInitial || is_processing_move" class="move-artifact-loader"></div>
                     <div v-if="hasError" class="alert alert-error">{{ getErrorMessage }}</div>
-                    <move-modal-selectors />
+                    <move-modal-selectors v-if="! is_processing_move"  />
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            v-on:click="moveArtifact()"
+                            v-bind:disabled="hasNoSelectedTracker || is_processing_move"
+                    >
+                        <translate>Move</translate>
+                    </button>
                 </div>
             </div>
         </div>
@@ -47,21 +55,31 @@
 <script>
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
+import MoveModalPreviewTitle from "./MoveModalPreviewTitle.vue";
 import store from "../store/index.js";
 import { mapGetters, mapState } from "vuex";
 import $ from "jquery";
+import { getArtifactId } from "../from-tracker-presenter.js";
 
 export default {
     name: "MoveModal",
     store,
     components: {
+        MoveModalPreviewTitle,
         MoveModalTitle,
         MoveModalSelectors
+    },
+    data() {
+        return {
+            is_processing_move: false
+        };
     },
     computed: {
         ...mapState({
             isLoadingInitial: state => state.is_loading_initial,
-            getErrorMessage: state => state.error_message
+            getErrorMessage: state => state.error_message,
+            hasNoSelectedTracker: state => state.selected_tracker.tracker_id === null,
+            getSelectedTrackerId: state => state.selected_tracker.tracker_id
         }),
         ...mapGetters(["hasError"])
     },
@@ -72,6 +90,17 @@ export default {
         $(this.$refs.vuemodal).on("hidden", () => {
             this.$store.commit("resetState");
         });
+    },
+    methods: {
+        async moveArtifact() {
+            this.is_processing_move = true;
+            await this.$store.dispatch("move", [getArtifactId(), this.getSelectedTrackerId]);
+            if (this.getErrorMessage.length === 0) {
+                window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
+            } else {
+                this.is_processing_move = false;
+            }
+        }
     }
 };
 </script>

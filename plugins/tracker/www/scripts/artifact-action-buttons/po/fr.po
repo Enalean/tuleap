@@ -29,3 +29,6 @@ msgstr "Fermer"
 
 msgid "Move"
 msgstr "Déplacer"
+
+msgid "Preview"
+msgstr "Aperçu"

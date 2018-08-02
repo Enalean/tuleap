@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { recursiveGet } from "tlp-fetch";
+import { patch, recursiveGet } from "tlp-fetch";
 
-export { getProjectList, getTrackerList };
+export { getProjectList, getTrackerList, moveArtifact };
 
 function getProjectList() {
     return recursiveGet("/api/projects", {
@@ -42,5 +42,22 @@ function getTrackerList(project_id) {
             limit: 50,
             offset: 0
         }
+    });
+}
+
+function moveArtifact(artifact_id, tracker_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        move: {
+            tracker_id: tracker_id
+        }
+    });
+
+    return patch("/api/artifacts/" + artifact_id, {
+        headers,
+        body
     });
 }

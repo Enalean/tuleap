@@ -36,8 +36,17 @@ export default {
         state.error_message = "";
         state.projects = [];
         state.trackers = [];
+        this.resetSelectedTracker(state);
     },
     setAreTrackerLoading(state, status) {
         state.are_trackers_loading = status;
+    },
+    setSelectedTracker(state, tracker) {
+        state.selected_tracker = tracker;
+    },
+    resetSelectedTracker(state) {
+        state.selected_tracker = {
+            tracker_id: null
+        };
     }
 };

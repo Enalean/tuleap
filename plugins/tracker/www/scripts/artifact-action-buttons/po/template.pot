@@ -22,3 +22,6 @@ msgstr ""
 
 msgid "Move"
 msgstr ""
+
+msgid "Preview"
+msgstr ""

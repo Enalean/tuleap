@@ -43,3 +43,9 @@
 .move-artifact-selectors {
     display: flex;
 }
+
+.move-artifact-svg-project {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+    fill: $tlp-ui-white;
+}

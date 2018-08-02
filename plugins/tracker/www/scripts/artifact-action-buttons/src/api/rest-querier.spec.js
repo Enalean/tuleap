@@ -18,14 +18,17 @@
  */
 
 import { mockFetchSuccess } from "tlp-mocks";
-import { getProjectList, getTrackerList } from "./rest-querier.js";
-import { restore as restoreFetch, rewire$recursiveGet } from "tlp-fetch";
+import { getProjectList, getTrackerList, moveArtifact } from "./rest-querier.js";
+import { restore as restoreFetch, rewire$patch, rewire$recursiveGet } from "tlp-fetch";
 
 describe("API querier", () => {
-    let recursiveGet;
+    let recursiveGet, patch;
     beforeEach(() => {
         recursiveGet = jasmine.createSpy("recursiveGet");
         rewire$recursiveGet(recursiveGet);
+
+        patch = jasmine.createSpy("patch");
+        rewire$patch(patch);
     });
 
     afterEach(() => {
@@ -81,6 +84,20 @@ describe("API querier", () => {
                     }
                 })
             );
+        });
+    });
+
+    describe("moveArtifact", () => {
+        it("Given a tracker id, and a project id then it will process the move", () => {
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            moveArtifact(artifact_id, tracker_id);
+
+            expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
+                headers: { "content-type": "application/json" },
+                body: '{"move":{"tracker_id":' + tracker_id + "}}"
+            });
         });
     });
 });
