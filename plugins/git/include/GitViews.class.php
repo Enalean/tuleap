@@ -88,6 +88,11 @@ class GitViews extends PluginViews {
      */
     private $service_crumb_builder;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct(
         $controller,
         Git_GitRepositoryUrlManager $url_manager,
@@ -119,12 +124,13 @@ class GitViews extends PluginViews {
         $this->regexp_retriever                        = $regexp_retriever;
         $this->gerrit_server_factory                   = $gerrit_server_factory;
         $this->service_crumb_builder                   = $service_crumb_builder;
+        $this->event_manager                           = EventManager::instance();
     }
 
     public function header()
     {
         $headers = new GitViewHeader(
-            EventManager::instance(),
+            $this->event_manager,
             $this->service_crumb_builder
         );
         $breadcrumbs = new BreadCrumbCollection();
@@ -160,7 +166,8 @@ class GitViews extends PluginViews {
             $this->fine_grained_builder,
             $this->default_fine_grained_permission_factory,
             $this->git_permissions_manager,
-            $this->regexp_retriever
+            $this->regexp_retriever,
+            $this->event_manager
         );
         $repo_management_view->display();
     }

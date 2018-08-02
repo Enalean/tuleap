@@ -4,7 +4,7 @@
 
 #modal-generate-pull-request {
     .modal-header {
-        border-bottom: 2px solid #333;
+        border-bottom: 2px solid #333333;
     }
 
     .modal-body {
@@ -29,10 +29,14 @@
     }
 }
 
-body.git-pull-requests .main .content {
+body.git-pull-requests .main .content { /* scss-lint:disable QualifyingElement */
     padding: 0;
 
-    #plugin_git_reference {
+    #plugin_git_reference { /* scss-lint:disable SelectorFormat */
         padding: 12px 12px 0;
     }
+}
+
+.pullrequest-repomanagement-save-button {
+    margin: 20px 0 0;
 }

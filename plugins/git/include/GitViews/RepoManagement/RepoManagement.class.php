@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
 use Tuleap\Git\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\CollectionOfUserToBeNotifiedPresenterBuilder;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
@@ -95,6 +96,10 @@ class GitViews_RepoManagement {
      * @var RegexpFineGrainedRetriever
      */
     private $regexp_retriever;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         GitRepository $repository,
@@ -109,7 +114,8 @@ class GitViews_RepoManagement {
         FineGrainedRepresentationBuilder $fine_grained_builder,
         DefaultFineGrainedPermissionFactory $default_fine_grained_factory,
         GitPermissionsManager $git_permission_manager,
-        RegexpFineGrainedRetriever $regexp_retriever
+        RegexpFineGrainedRetriever $regexp_retriever,
+        EventManager $event_manager
     ) {
         $this->repository                      = $repository;
         $this->request                         = $request;
@@ -124,6 +130,7 @@ class GitViews_RepoManagement {
         $this->default_fine_grained_factory    = $default_fine_grained_factory;
         $this->git_permission_manager          = $git_permission_manager;
         $this->regexp_retriever                = $regexp_retriever;
+        $this->event_manager                   = $event_manager;
         $this->panes                           = $this->buildPanes($repository);
         $this->current_pane                    = 'settings';
 
@@ -136,19 +143,21 @@ class GitViews_RepoManagement {
      * @return array
      */
     private function buildPanes(GitRepository $repository) {
-        $panes = array(new Pane\GeneralSettings($repository, $this->request));
+        $collection = new PanesCollection($repository, $this->request);
+        $collection->add(new Pane\GeneralSettings($repository, $this->request));
 
         if ($repository->getBackendType() == GitDao::BACKEND_GITOLITE) {
-            $panes[] = new Pane\Gerrit(
+            $collection->add(new Pane\Gerrit(
                 $repository,
                 $this->request,
                 $this->driver_factory,
                 $this->gerrit_can_migrate_checker,
                 $this->gerrit_servers,
-                $this->gerrit_config_templates);
+                $this->gerrit_config_templates
+            ));
         }
 
-        $panes[] = new Pane\AccessControl(
+        $collection->add(new Pane\AccessControl(
             $repository,
             $this->request,
             $this->fine_grained_permission_factory,
@@ -157,13 +166,13 @@ class GitViews_RepoManagement {
             $this->default_fine_grained_factory,
             $this->git_permission_manager,
             $this->regexp_retriever
-        );
-        $panes[] = new GitViewsRepoManagementPaneCIToken($repository, $this->request);
+        ));
+        $collection->add(new GitViewsRepoManagementPaneCIToken($repository, $this->request));
 
         $mirrors = $this->mirror_data_mapper->fetchAllForProject($repository->getProject());
         if (count($mirrors) > 0) {
             $repository_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
-            $panes[]            = new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors);
+            $collection->add(new Pane\Mirroring($repository, $this->request, $mirrors, $repository_mirrors));
         }
 
         $webhook_dao                  = new WebhookDao();
@@ -173,17 +182,20 @@ class GitViews_RepoManagement {
             new UgroupsToNotifyDao()
         );
 
-        $panes[] = new Pane\Notification(
+        $collection->add(new Pane\Notification(
             $repository,
             $this->request,
             $user_to_be_notified_builder,
             $group_to_be_notified_builder
-        );
-        $panes[] = new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao);
-        $panes[] = new Pane\Delete($repository, $this->request);
+        ));
+        $collection->add(new Pane\Hooks($repository, $this->request, $webhook_factory, $webhook_dao));
+
+        $this->event_manager->processEvent($collection);
+
+        $collection->add(new Pane\Delete($repository, $this->request));
 
         $indexed_panes = array();
-        foreach ($panes as $pane) {
+        foreach ($collection->getPanes() as $pane) {
             if ($pane->canBeDisplayed()) {
                 $indexed_panes[$pane->getIdentifier()] = $pane;
             }
