@@ -25,6 +25,7 @@ use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
+use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
@@ -1507,6 +1508,10 @@ class GitPlugin extends Plugin
             $this->getPluginPath()
         );
 
+        $administration_crumbs_builder = new ServiceAdministrationCrumbBuilder(
+            $this->getPluginPath()
+        );
+
         $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
             $this,
@@ -1549,7 +1554,8 @@ class GitPlugin extends Plugin
             $this->getUgroupsToNotifyDao(),
             new UGroupManager(),
             $this->getGitCrumbBuilder(),
-            $settings_crumbs_builder
+            $settings_crumbs_builder,
+            $administration_crumbs_builder
         );
     }
 
