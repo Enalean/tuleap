@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
-{
-    public $panes;
-    public $manage_default_settings = true;
+namespace Tuleap\Git\DefaultSettings\Pane;
 
-    public function __construct($project_id, $are_mirrors_defined, array $panes)
+abstract class Pane
+{
+    public $is_active;
+    public $is_disabled;
+    public $href;
+    public $title;
+
+    /**
+     * @param string $title
+     * @param string $href
+     * @param bool   $is_active
+     * @param bool   $is_disabled
+     */
+    public function __construct($title, $href, $is_active, $is_disabled)
     {
-        parent::__construct($project_id, $are_mirrors_defined);
-        $this->panes = $panes;
+        $this->is_active   = $is_active;
+        $this->is_disabled = $is_disabled;
+        $this->href        = $href;
+        $this->title       = $title;
     }
+
+    /**
+     * @return string
+     */
+    abstract public function content();
 }
