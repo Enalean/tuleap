@@ -28,6 +28,8 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestPane extends Pane
 {
+    const NAME = 'pullrequest';
+
     /**
      * @var MergeSettingRetriever
      */
@@ -47,7 +49,7 @@ class PullRequestPane extends Pane
      */
     public function getIdentifier()
     {
-        return 'pullrequest';
+        return self::NAME;
     }
 
     /**

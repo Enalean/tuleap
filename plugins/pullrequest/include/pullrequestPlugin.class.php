@@ -27,6 +27,8 @@ use Tuleap\Git\GitAdditionalActionEvent;
 use Tuleap\Git\GitRepositoryDeletionEvent;
 use Tuleap\Git\GitViews\RepoManagement\Pane\PanesCollection;
 use Tuleap\Git\MarkTechnicalReference;
+use Tuleap\Git\Permissions\FineGrainedDao;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\GetProtectedGitReferences;
 use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
@@ -73,11 +75,13 @@ use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
 use Tuleap\PullRequest\Reference\ReferenceDao;
 use Tuleap\PullRequest\Reference\ReferenceFactory;
 use Tuleap\PullRequest\RepoManagement\PullRequestPane;
+use Tuleap\PullRequest\RepoManagement\RepoManagementController;
 use Tuleap\PullRequest\REST\ResourcesInjector;
-use Tuleap\PullRequest\Router;
+use Tuleap\PullRequest\LegacyRouter;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
+use Tuleap\Request\CollectRoutesEvent;
 
 class pullrequestPlugin extends Plugin // phpcs:ignore
 {
@@ -108,6 +112,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(MarkTechnicalReference::NAME);
         $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -175,7 +180,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0;
     }
 
-    public function process(Codendi_Request $request)
+    private function getLegacyRouter()
     {
         $user_manager           = UserManager::instance();
         $event_manager          = EventManager::instance();
@@ -195,8 +200,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             )
         );
 
-        $router = new Router($pull_request_creator, $git_repository_factory, $user_manager);
-        $router->route($request);
+        return new LegacyRouter($pull_request_creator, $git_repository_factory, $user_manager);
     }
 
     /**
@@ -700,6 +704,34 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 $collection->getRequest(),
                 new MergeSettingRetriever(new MergeSettingDAO())
             )
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->post(
+            $this->getPluginPath() . '/repository-settings',
+            function () {
+                $repository_factory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+                $fine_grained_dao   = new FineGrainedDao();
+
+                return new RepoManagementController(
+                    new MergeSettingDAO(),
+                    $repository_factory,
+                    new GitPermissionsManager(
+                        new Git_PermissionsDao(),
+                        new Git_SystemEventManager(SystemEventManager::instance(), $repository_factory),
+                        $fine_grained_dao,
+                        new FineGrainedRetriever($fine_grained_dao)
+                    )
+                );
+            }
+        );
+        $event->getRouteCollector()->post(
+            $this->getPluginPath() . '/{query:.*}',
+            function () {
+                return $this->getLegacyRouter();
+            }
         );
     }
 }
