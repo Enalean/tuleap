@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: ""
-};
+import "babel-polyfill";
+import "tlp-mocks";
+import "jquery-mocks";
+
+import "./index.js"; // To have actual coverage
+import "./api/rest-querier.spec.js";
+import "./store/actions.spec.js";

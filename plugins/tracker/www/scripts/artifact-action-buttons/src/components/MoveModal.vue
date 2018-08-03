@@ -33,13 +33,9 @@
                     <move-modal-title />
                 </div>
                 <div class="modal-body">
-                    <div v-if="is_loading_initial" class="move-artifact-loader"></div>
+                    <div v-if="isLoadingInitial" class="move-artifact-loader"></div>
                     <div v-if="hasError" class="alert alert-error">{{ getErrorMessage }}</div>
-                    <label for="move-artifact-project-selector" v-if="should_display_project_dropdown">
-                        <translate>Choose project</translate>
-                        <span class="highlight">*</span>
-                    </label>
-                    <project-selector v-if="should_display_project_dropdown"/>
+                    <move-modal-selectors />
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
@@ -50,9 +46,9 @@
 </template>
 <script>
 import MoveModalTitle from "./MoveModalTitle.vue";
-import ProjectSelector from "./ProjectSelector.vue";
+import MoveModalSelectors from "./MoveModalSelectors.vue";
 import store from "../store/index.js";
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import $ from "jquery";
 
 export default {
@@ -60,23 +56,21 @@ export default {
     store,
     components: {
         MoveModalTitle,
-        ProjectSelector
+        MoveModalSelectors
     },
     computed: {
-        is_loading_initial() {
-            return this.isLoadingInitial;
-        },
-        should_display_project_dropdown() {
-            return !this.is_loading_initial && !this.hasError;
-        },
-        ...mapGetters(["isLoadingInitial", "hasError", "getErrorMessage"])
+        ...mapState({
+            isLoadingInitial: state => state.is_loading_initial,
+            getErrorMessage: state => state.error_message
+        }),
+        ...mapGetters(["hasError"])
     },
     mounted() {
         $(this.$refs.vuemodal).on("show", () => {
             this.$store.dispatch("loadProjectList");
         });
         $(this.$refs.vuemodal).on("hidden", () => {
-            this.$store.dispatch("resetState");
+            this.$store.commit("resetState");
         });
     }
 };

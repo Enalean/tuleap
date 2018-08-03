@@ -19,10 +19,22 @@
 
 import { get } from "tlp-fetch";
 
-export { getProjectList };
+export { getProjectList, getTrackerList };
 
 function getProjectList() {
     return get("/api/projects", {
+        params: {
+            query: JSON.stringify({
+                is_tracker_admin: "true"
+            }),
+            limit: 50,
+            offset: 0
+        }
+    });
+}
+
+function getTrackerList(project_id) {
+    return get("/api/projects/" + project_id + "/trackers/", {
         params: {
             query: JSON.stringify({
                 is_tracker_admin: "true"

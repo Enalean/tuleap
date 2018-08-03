@@ -17,27 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProjectList } from "../api/rest-querier.js";
+import { getProjectList, getTrackerList } from "../api/rest-querier.js";
+
+export async function loadTrackerList(context, project_id) {
+    try {
+        context.commit("setAreTrackerLoading", true);
+        const trackerList = await getTrackerList(project_id);
+
+        getAsyncTrackerList(context.commit, await trackerList.json());
+    } catch (e) {
+        const { error } = await e.response.json();
+        context.commit("setErrorMessage", error.message);
+    } finally {
+        context.commit("setAreTrackerLoading", false);
+    }
+}
 
 export async function loadProjectList(context) {
     try {
         const projectList = await getProjectList();
 
-        getAsyncProjectList(context.commit, projectList.json());
+        getAsyncProjectList(context.commit, await projectList.json());
     } catch (e) {
         const { error } = await e.response.json();
-        context.commit("setErrorMessageType", error.message);
+        context.commit("setErrorMessage", error.message);
     } finally {
         context.commit("setIsLoadingInitial", false);
     }
 }
 
-export function resetState(context) {
-    context.commit("setIsLoadingInitial", true);
-    context.commit("setErrorMessageType", "");
-    context.commit("pushProjects", {});
+function getAsyncProjectList(commit, projectList) {
+    commit("saveProjects", projectList);
 }
 
-export async function getAsyncProjectList(commit, projectList) {
-    commit("pushProjects", await projectList);
+function getAsyncTrackerList(commit, trackerList) {
+    commit("saveTrackers", trackerList);
 }

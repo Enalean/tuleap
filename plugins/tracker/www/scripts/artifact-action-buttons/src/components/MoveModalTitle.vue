@@ -21,8 +21,8 @@
     <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
         <i class="icon-share-alt"></i>
         <translate>Move</translate>
-        <span v-bind:class="getArtifactBadgeClass">
-            {{ getArtifactBadgeTrackerName }} #{{ getArtifactBadgeArtifactId }}
+        <span v-bind:class="artifact_badge_class">
+            {{ artifact_badge_tracker_name }} #{{ artifact_badge_artifact_id }}
         </span>
     </h3>
 </template>
@@ -32,13 +32,13 @@ import { getTrackerName, getTrackerColor, getArtifactId } from "../from-tracker-
 export default {
     name: "MoveModalTitle",
     computed: {
-        getArtifactBadgeClass() {
+        artifact_badge_class() {
             return getTrackerColor() + " xref-in-title";
         },
-        getArtifactBadgeTrackerName() {
+        artifact_badge_tracker_name() {
             return getTrackerName();
         },
-        getArtifactBadgeArtifactId() {
+        artifact_badge_artifact_id() {
             return getArtifactId();
         }
     }

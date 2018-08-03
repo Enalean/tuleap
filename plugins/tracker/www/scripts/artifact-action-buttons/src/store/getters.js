@@ -17,10 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const projectList = state => state.projects;
-
-export const isLoadingInitial = state => state.is_loading_initial;
-
-export const hasError = state => state.error_message_type.length > 0;
-
-export const getErrorMessage = state => state.error_message_type;
+export const hasError = state => state.error_message.length > 0;

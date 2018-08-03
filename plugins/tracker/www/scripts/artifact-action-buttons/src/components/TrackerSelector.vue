@@ -18,39 +18,38 @@
   -->
 
 <template>
-    <label for="move-artifact-project-selector">
-        <translate>Choose project</translate>
+    <label for="move-artifact-tracker-selector">
+        <translate>Choose tracker</translate>
         <span class="highlight">*</span>
-
-
-        <select id="move-artifact-project-selector"
-                name="move-artifact-project-selector"
-                v-on:change="loadTrackers">
+        <select id="move-artifact-tracker-selector"
+                name="move-artifact-tracker-selector"
+                v-bind:disabled="isTrackerListEmpty"
+        >
+            <option disabled="disabled" selected>
+                <translate>Choose tracker...</translate>
+            </option>
+            <option v-for="tracker in trackers"
+                    v-bind:key="tracker.id"
+                    v-bind:value="tracker.id"
             >
-            <option disabled="disabled" selected><translate>Choose project...</translate></option>
-            <option v-for="project in projects"
-                    v-bind:key="project.id"
-                    v-bind:value="project.id"
-            >
-                {{ project.shortname }}
+                {{ tracker.label }}
             </option>
         </select>
     </label>
 </template>
+
 <script>
 import { mapState } from "vuex";
 
 export default {
-    name: "ProjectSelector",
-    methods: {
-        loadTrackers(event) {
-            this.$store.dispatch("loadTrackerList", event.target.value);
-        }
-    },
+    name: "TrackerSelector",
     computed: {
         ...mapState({
-            projects: state => state.projects
-        })
+            trackers: state => state.trackers
+        }),
+        isTrackerListEmpty() {
+            return this.trackers.length === 0;
+        }
     }
 };
 </script>

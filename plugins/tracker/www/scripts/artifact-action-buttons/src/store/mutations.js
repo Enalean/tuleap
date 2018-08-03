@@ -21,12 +21,23 @@ export default {
     setIsLoadingInitial(state, is_loading_initial) {
         state.is_loading_initial = is_loading_initial;
     },
-    pushProjects(state, projects) {
-        if (projects.length > 0) {
-            state.projects = projects;
-        }
+    saveProjects(state, projects) {
+        state.projects = projects;
     },
-    setErrorMessageType(state, error_message_type) {
-        state.error_message_type = error_message_type;
+    saveTrackers(state, trackers) {
+        state.trackers = trackers;
+    },
+    setErrorMessage(state, error_message) {
+        state.error_message = error_message;
+    },
+    resetState(state) {
+        state.is_loading_initial = true;
+        state.are_trackers_loading = false;
+        state.error_message = "";
+        state.projects = [];
+        state.trackers = [];
+    },
+    setAreTrackerLoading(state, status) {
+        state.are_trackers_loading = status;
     }
 };

@@ -17,10 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_loading_initial: true,
-    are_trackers_loading: false,
-    projects: [],
-    trackers: [],
-    error_message: ""
+const path = require("path");
+const webpack_config = require("../webpack.config.js")[3];
+const karma_configurator = require("../../../../../tools/utils/scripts/karma-configurator.js");
+
+webpack_config.mode = "development";
+
+module.exports = function(config) {
+    const coverage_dir = path.resolve(__dirname, "../coverage");
+    const base_config = karma_configurator.setupBaseKarmaConfig(
+        config,
+        webpack_config,
+        coverage_dir
+    );
+
+    Object.assign(base_config, {
+        files: [karma_configurator.jasmine_promise_matchers_path, "src/app.spec.js"],
+        preprocessors: {
+            "src/app.spec.js": ["webpack"]
+        }
+    });
+
+    config.set(base_config);
 };
