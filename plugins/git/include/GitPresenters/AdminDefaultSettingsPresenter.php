@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Git\DefaultSettings\IndexController;
+
 class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPresenter
 {
     public $title_warning_regexp_uncheck;
@@ -300,12 +302,12 @@ class GitPresenters_AdminDefaultSettingsPresenter extends GitPresenters_AdminPre
 
     public function mirroring_href()
     {
-        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . GitViews::DEFAULT_SETTINGS_PANE_MIRRORING;
+        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . IndexController::DEFAULT_SETTINGS_PANE_MIRRORING;
     }
 
     public function access_control_href()
     {
-        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . GitViews::DEFAULT_SETTINGS_PANE_ACCESS_CONTROL;
+        return "?action=admin-default-settings&group_id=$this->project_id&pane=" . IndexController::DEFAULT_SETTINGS_PANE_ACCESS_CONTROL;
     }
 
     public function fine_grained_permissions_checkbox_label()

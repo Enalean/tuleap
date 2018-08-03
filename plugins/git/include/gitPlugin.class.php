@@ -30,6 +30,8 @@ use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CreateRepositoryController;
+use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
+use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
 use Tuleap\Git\GerritCanMigrateChecker;
@@ -712,9 +714,26 @@ class GitPlugin extends Plugin
             ->chain($this->getCreateRepositoryController())
             ->chain($this->getCITokenRouter($repository_retriever))
             ->chain($this->getPermissionsPerGroupController())
+            ->chain($this->getDefaultSettingsRouter())
             ->chain($final_link);
 
         return $webhook_router;
+    }
+
+    private function getDefaultSettingsRouter()
+    {
+        return new DefaultSettingsRouter(
+            new IndexController(
+                $this->getAccessRightsPresenterOptionsBuilder(),
+                $this->getGitPermissionsManager(),
+                $this->getFineGrainedRetriever(),
+                $this->getDefaultFineGrainedPermissionFactory(),
+                $this->getFineGrainedRepresentationBuilder(),
+                $this->getRegexpFineGrainedRetriever(),
+                $this->getMirrorDataMapper(),
+                $this->getHeaderRenderer()
+            )
+        );
     }
 
     private function getCreateRepositoryController()
@@ -1631,9 +1650,7 @@ class GitPlugin extends Plugin
 
     private function getFineGrainedRepresentationBuilder()
     {
-        $user_group_factory  = new User_ForgeUserGroupFactory(new UserGroupDao());
-        $permissions_manager = $this->getPermissionsManager();
-        $option_builder      = new AccessRightsPresenterOptionsBuilder($user_group_factory, $permissions_manager);
+        $option_builder = $this->getAccessRightsPresenterOptionsBuilder();
 
         return new FineGrainedRepresentationBuilder($option_builder);
     }
@@ -2606,5 +2623,17 @@ class GitPlugin extends Plugin
             $repository_crumb_builder,
             $settings_crumb_builder
         );
+    }
+
+    /**
+     * @return AccessRightsPresenterOptionsBuilder
+     */
+    private function getAccessRightsPresenterOptionsBuilder()
+    {
+        $user_group_factory  = new User_ForgeUserGroupFactory(new UserGroupDao());
+        $permissions_manager = $this->getPermissionsManager();
+        $option_builder      = new AccessRightsPresenterOptionsBuilder($user_group_factory, $permissions_manager);
+
+        return $option_builder;
     }
 }
