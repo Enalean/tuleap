@@ -20,17 +20,13 @@
  */
 
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
-use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
-use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
-use Tuleap\Git\GitViews\GitViewHeader;
+use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedRepresentationBuilder;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
 require_once 'www/project/admin/permissions.php';
 
@@ -86,23 +82,9 @@ class GitViews extends PluginViews {
      */
     private $gerrit_server_factory;
     /**
-     * @var GitCrumbBuilder
+     * @var HeaderRenderer
      */
-    private $service_crumb_builder;
-    /**
-     * @var RepositorySettingsCrumbsBuilder
-     */
-    private $settings_crumbs_builder;
-
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
-    /**
-     * @var ServiceAdministrationCrumbBuilder
-     */
-    private $administration_crumb_builder;
+    private $header_renderer;
 
     public function __construct(
         $controller,
@@ -116,9 +98,7 @@ class GitViews extends PluginViews {
         GitPhpAccessLogger $access_loger,
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        GitCrumbBuilder $service_crumb_builder,
-        RepositorySettingsCrumbsBuilder $settings_crumbs_builder,
-        ServiceAdministrationCrumbBuilder $administration_crumb_builder
+        HeaderRenderer $header_renderer
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int) $this->request->get('group_id');
@@ -136,28 +116,27 @@ class GitViews extends PluginViews {
         $this->access_loger                            = $access_loger;
         $this->regexp_retriever                        = $regexp_retriever;
         $this->gerrit_server_factory                   = $gerrit_server_factory;
-        $this->service_crumb_builder                   = $service_crumb_builder;
         $this->event_manager                           = EventManager::instance();
-        $this->settings_crumbs_builder                 = $settings_crumbs_builder;
-        $this->administration_crumb_builder            = $administration_crumb_builder;
+        $this->header_renderer                         = $header_renderer;
     }
 
     public function header($is_in_settings = false, $is_in_service_administration = false)
     {
-        $breadcrumbs = new BreadCrumbCollection();
         if ($is_in_settings === true) {
             $params      = $this->getData();
             $repository  = $params['repository'];
-            $breadcrumbs = $this->settings_crumbs_builder->build($this->user, $repository);
+            $this->header_renderer->renderRepositorySettingsHeader(
+                $this->request,
+                $this->user,
+                $this->project,
+                $repository
+            );
+            return;
         } elseif ($is_in_service_administration === true) {
-            $breadcrumbs->addBreadCrumb($this->administration_crumb_builder->build($this->project));
+            $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
+            return;
         }
-
-        $headers = new GitViewHeader(
-            $this->event_manager,
-            $this->service_crumb_builder
-        );
-        $headers->header($this->request, $this->user, $GLOBALS['HTML'], $this->project, $breadcrumbs);
+        $this->header_renderer->renderDefaultHeader($this->request, $this->user, $this->project);
     }
 
     public function footer() {

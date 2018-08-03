@@ -25,6 +25,7 @@ use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
@@ -393,6 +394,13 @@ class Git extends PluginController {
 
     protected function instantiateView()
     {
+        $header_renderer = new HeaderRenderer(
+            EventManager::instance(),
+            $this->service_crumb_builder,
+            $this->settings_crumbs_builder,
+            $this->administration_crumb_builder
+        );
+
         return new GitViews(
             $this,
             new Git_GitRepositoryUrlManager($this->getPlugin()),
@@ -405,9 +413,7 @@ class Git extends PluginController {
             $this->access_loger,
             $this->regexp_retriever,
             $this->gerrit_server_factory,
-            $this->service_crumb_builder,
-            $this->settings_crumbs_builder,
-            $this->administration_crumb_builder
+            $header_renderer
         );
     }
 
