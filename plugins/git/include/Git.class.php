@@ -20,9 +20,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
-use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -269,19 +266,9 @@ class Git extends PluginController
     private $access_loger;
 
     /**
-     * @var GitCrumbBuilder
+     * @var HeaderRenderer
      */
-    private $service_crumb_builder;
-
-    /**
-     * @var RepositorySettingsCrumbsBuilder
-     */
-    private $settings_crumbs_builder;
-
-    /**
-     * @var ServiceAdministrationCrumbBuilder
-     */
-    private $administration_crumb_builder;
+    private $header_renderer;
 
     public function __construct(
         GitPlugin $plugin,
@@ -323,9 +310,7 @@ class Git extends PluginController
         UsersToNotifyDao $users_to_notify_dao,
         UgroupsToNotifyDao $ugroups_to_notify_dao,
         UGroupManager $ugroup_manager,
-        GitCrumbBuilder $service_crumb_builder,
-        RepositorySettingsCrumbsBuilder $settings_crumbs_builder,
-        ServiceAdministrationCrumbBuilder $administration_crumb_builder
+        HeaderRenderer $header_renderer
     ) {
         parent::__construct($user_manager, $request);
 
@@ -387,20 +372,11 @@ class Git extends PluginController
         $this->users_to_notify_dao                     = $users_to_notify_dao;
         $this->ugroups_to_notify_dao                   = $ugroups_to_notify_dao;
         $this->ugroup_manager                          = $ugroup_manager;
-        $this->service_crumb_builder                   = $service_crumb_builder;
-        $this->settings_crumbs_builder                 = $settings_crumbs_builder;
-        $this->administration_crumb_builder            = $administration_crumb_builder;
+        $this->header_renderer                         = $header_renderer;
     }
 
     protected function instantiateView()
     {
-        $header_renderer = new HeaderRenderer(
-            EventManager::instance(),
-            $this->service_crumb_builder,
-            $this->settings_crumbs_builder,
-            $this->administration_crumb_builder
-        );
-
         return new GitViews(
             $this,
             new Git_GitRepositoryUrlManager($this->getPlugin()),
@@ -413,7 +389,7 @@ class Git extends PluginController
             $this->access_loger,
             $this->regexp_retriever,
             $this->gerrit_server_factory,
-            $header_renderer
+            $this->header_renderer
         );
     }
 

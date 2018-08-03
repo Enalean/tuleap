@@ -21,39 +21,28 @@
 namespace Tuleap\Git\BreadCrumbDropdown;
 
 use GitRepository;
-use PFUser;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 
-class RepositorySettingsCrumbsBuilder
+class RepositorySettingsCrumbBuilder
 {
-    /** @var RepositoryCrumbBuilder */
-    private $repository_crumb_builder;
     /** @var string */
     private $plugin_path;
 
-    public function __construct(RepositoryCrumbBuilder $repository_crumb_builder, $plugin_path)
+    public function __construct($plugin_path)
     {
-        $this->repository_crumb_builder = $repository_crumb_builder;
-        $this->plugin_path              = $plugin_path;
+        $this->plugin_path = $plugin_path;
     }
 
-    /** @return BreadCrumbCollection */
-    public function build(PFUser $user, GitRepository $repository)
+    /** @return BreadCrumb */
+    public function build(GitRepository $repository)
     {
-        $crumbs = new BreadCrumbCollection();
-        $crumbs->addBreadCrumb($this->repository_crumb_builder->build($user, $repository));
-        $crumbs->addBreadCrumb(
-            new BreadCrumb(
-                new BreadCrumbLink(
-                    $GLOBALS['Language']->getText('global', 'Settings'),
-                    $this->getRepositoryAdminUrl($repository)
-                )
+        return new BreadCrumb(
+            new BreadCrumbLink(
+                $GLOBALS['Language']->getText('global', 'Settings'),
+                $this->getRepositoryAdminUrl($repository)
             )
         );
-
-        return $crumbs;
     }
 
     private function getRepositoryAdminUrl(GitRepository $repository)
