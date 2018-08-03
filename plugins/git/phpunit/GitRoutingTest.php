@@ -34,8 +34,7 @@ use Logger;
 use Mockery;
 use PermissionsManager;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
+use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Layout\IncludeAssets;
@@ -159,8 +158,7 @@ class GitRoutingTest extends TestCase
                     'getGitDao'                 => \Mockery::mock(GitDao::class),
                     'getConfigurationParameter' => 'foo',
                     'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
-                    'getRepositoryCrumbBuilder' => \Mockery::mock(RepositoryCrumbBuilder::class),
-                    'getGitCrumbBuilder'        => \Mockery::mock(GitCrumbBuilder::class)
+                    'getHeaderRenderer'         => Mockery::mock(HeaderRenderer::class)
                 ]
             );
 

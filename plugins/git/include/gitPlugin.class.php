@@ -24,6 +24,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
+use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
@@ -46,6 +47,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\User;
 use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
@@ -1503,15 +1505,6 @@ class GitPlugin extends Plugin
 
     private function getGitController()
     {
-        $settings_crumbs_builder = new RepositorySettingsCrumbsBuilder(
-            $this->getRepositoryCrumbBuilder(),
-            $this->getPluginPath()
-        );
-
-        $administration_crumbs_builder = new ServiceAdministrationCrumbBuilder(
-            $this->getPluginPath()
-        );
-
         $gerrit_server_factory = $this->getGerritServerFactory();
         return new Git(
             $this,
@@ -1553,9 +1546,7 @@ class GitPlugin extends Plugin
             new UsersToNotifyDao(),
             $this->getUgroupsToNotifyDao(),
             new UGroupManager(),
-            $this->getGitCrumbBuilder(),
-            $settings_crumbs_builder,
-            $administration_crumbs_builder
+            $this->getHeaderRenderer()
         );
     }
 
@@ -2480,8 +2471,7 @@ class GitPlugin extends Plugin
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getMirrorDataMapper(),
             $this->getGitPermissionsManager(),
-            $this->getGitCrumbBuilder(),
-            $this->getRepositoryCrumbBuilder(),
+            $this->getHeaderRenderer(),
             $this->getGerritServerFactory()->getServers(),
             $this->getConfigurationParameter('master_location_name')
         );
@@ -2595,24 +2585,26 @@ class GitPlugin extends Plugin
 
     /**
      * @access protected for test purpose
-     * @return GitCrumbBuilder
+     * @return HeaderRenderer
      */
-    protected function getGitCrumbBuilder()
+    protected function getHeaderRenderer()
     {
-        return new GitCrumbBuilder($this->getGitPermissionsManager(), $this->getPluginPath());
-    }
+        $service_crumb_builder        = new GitCrumbBuilder($this->getGitPermissionsManager(), $this->getPluginPath());
+        $settings_crumb_builder       = new RepositorySettingsCrumbBuilder($this->getPluginPath());
+        $administration_crumb_builder = new ServiceAdministrationCrumbBuilder($this->getPluginPath());
 
-    /**
-     * @access protected for test purpose
-     * @return RepositoryCrumbBuilder
-     */
-    protected function getRepositoryCrumbBuilder()
-    {
         $repository_crumb_builder = new RepositoryCrumbBuilder(
             $this->getGitRepositoryUrlManager(),
             $this->getGitPermissionsManager(),
             $this->getPluginPath()
         );
-        return $repository_crumb_builder;
+
+        return new HeaderRenderer(
+            EventManager::instance(),
+            $service_crumb_builder,
+            $administration_crumb_builder,
+            $repository_crumb_builder,
+            $settings_crumb_builder
+        );
     }
 }

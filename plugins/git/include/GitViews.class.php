@@ -85,6 +85,10 @@ class GitViews extends PluginViews {
      * @var HeaderRenderer
      */
     private $header_renderer;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         $controller,

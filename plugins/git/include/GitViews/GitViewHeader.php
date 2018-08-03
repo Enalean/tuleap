@@ -54,13 +54,11 @@ class GitViewHeader
 
     public function header(
         HTTPRequest $request,
-        PFUser $user,
         BaseLayout $layout,
         Project $project,
         BreadCrumbCollection $breadcrumbs
     ) {
-        $complete_breadcrumbs = $this->unshiftServiceBreadcrumb($breadcrumbs, $user, $project);
-        $layout->addBreadcrumbs($complete_breadcrumbs);
+        $layout->addBreadcrumbs($breadcrumbs);
 
         $layout->header(
             array(
@@ -70,18 +68,6 @@ class GitViewHeader
                 'body_class' => $this->getAdditionalBodyClasses($request)
             )
         );
-    }
-
-    private function unshiftServiceBreadcrumb(BreadCrumbCollection $breadcrumbs, PFUser $user, Project $project)
-    {
-        $breadcrumbs->unshiftBreadCrumb(
-            $this->service_crumb_builder->build(
-                $user,
-                $project
-            )
-        );
-
-        return $breadcrumbs;
     }
 
     private function getAdditionalBodyClasses(HTTPRequest $request)
