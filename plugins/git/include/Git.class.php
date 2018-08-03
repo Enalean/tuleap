@@ -52,8 +52,8 @@ use Tuleap\User\RequestFromAutocompleter;
  * Git
  * @author Guillaume Storchi
  */
-class Git extends PluginController {
-
+class Git extends PluginController
+{
     /**
      * @var DescriptionUpdater
      */
@@ -692,7 +692,7 @@ class Git extends PluginController {
                     return false;
                 }
                 $this->addAction('repoManagement', array($repository));
-                $this->addView('header', [true]);
+                $this->setDefaultPageRendering(false);
                 $this->addView('repoManagement');
                 break;
             case 'mail':
@@ -751,7 +751,7 @@ class Git extends PluginController {
                     }
                 }
 
-                $this->addView('header', [false, true]);
+                $this->setDefaultPageRendering(false);
                 $this->addView(
                     'adminGitAdminsView',
                     array($this->areMirrorsEnabledForProject())
@@ -782,7 +782,7 @@ class Git extends PluginController {
 
                 if ($this->permissions_manager->userIsGitAdmin($user, $project)) {
                     $this->addAction('generateGerritRepositoryAndTemplateList', array($project, $user));
-                    $this->addView('header', [false, true]);
+                    $this->setDefaultPageRendering(false);
                     $this->addView(
                         'adminGerritTemplatesView',
                         array($this->areMirrorsEnabledForProject())
@@ -807,7 +807,7 @@ class Git extends PluginController {
 
                 if ($this->request->get('go-to-mass-change')) {
                     $this->addAction('setSelectedRepositories', array($repositories));
-                    $this->addView('header', [false, true]);
+                    $this->setDefaultPageRendering(false);
                     $this->addView('adminMassUpdateView');
                     return;
                 }
@@ -820,7 +820,7 @@ class Git extends PluginController {
                     ));
                 }
 
-                $this->addView('header', [false, true]);
+                $this->setDefaultPageRendering(false);
                 $this->addView('adminMassUpdateSelectRepositoriesView');
 
                 break;
@@ -1112,7 +1112,7 @@ class Git extends PluginController {
             $pane = $this->request->get('pane');
         }
 
-        $this->addView('header', [false, true]);
+        $this->setDefaultPageRendering(false);
         $this->addView(
             'adminDefaultSettings',
             array($this->areMirrorsEnabledForProject(), $pane)
