@@ -929,7 +929,13 @@ class LdapPlugin extends Plugin {
             return;
         }
 
-        $ldap_result_iterator = $this->getLdap()->searchLogin($event->getUsername());
+        $user_name = $event->getUsername();
+        $ldap_user = $this->getLdapUserManager()->getLdapLoginFromUserIds([$event->getUser()->getId()])->getRow();
+        if ($ldap_user['ldap_uid'] !== false) {
+            $user_name = $ldap_user['ldap_uid'];
+        }
+
+        $ldap_result_iterator = $this->getLdap()->searchLogin($user_name);
         if ($ldap_result_iterator && count($ldap_result_iterator) === 1) {
             $event->setUsername($ldap_result_iterator->current()->getLogin());
         } else {
