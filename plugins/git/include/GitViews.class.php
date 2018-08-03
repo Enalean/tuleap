@@ -120,22 +120,8 @@ class GitViews extends PluginViews {
         $this->header_renderer                         = $header_renderer;
     }
 
-    public function header($is_in_settings = false, $is_in_service_administration = false)
+    public function header()
     {
-        if ($is_in_settings === true) {
-            $params      = $this->getData();
-            $repository  = $params['repository'];
-            $this->header_renderer->renderRepositorySettingsHeader(
-                $this->request,
-                $this->user,
-                $this->project,
-                $repository
-            );
-            return;
-        } elseif ($is_in_service_administration === true) {
-            $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-            return;
-        }
         $this->header_renderer->renderDefaultHeader($this->request, $this->user, $this->project);
     }
 
@@ -150,9 +136,17 @@ class GitViews extends PluginViews {
     /**
      * REPOSITORY MANAGEMENT VIEW
      */
-    public function repoManagement() {
+    public function repoManagement()
+    {
         $params = $this->getData();
         $repository   = $params['repository'];
+
+        $this->header_renderer->renderRepositorySettingsHeader(
+            $this->request,
+            $this->user,
+            $this->project,
+            $repository
+        );
 
         echo '<h1>'. $repository->getHTMLLink($this->url_manager) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h1>';
         $repo_management_view = new GitViews_RepoManagement(
@@ -172,6 +166,8 @@ class GitViews extends PluginViews {
             $this->event_manager
         );
         $repo_management_view->display();
+
+        $this->footer();
     }
 
     /**
@@ -289,9 +285,8 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 
-    protected function adminGitAdminsView($are_mirrors_defined) {
-        $params = $this->getData();
-
+    protected function adminGitAdminsView($are_mirrors_defined)
+    {
         $presenter = new GitPresenters_AdminGitAdminsPresenter(
             $this->groupId,
             $are_mirrors_defined,
@@ -301,10 +296,13 @@ class GitViews extends PluginViews {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
+        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin', $presenter);
+        $this->footer();
     }
 
-    protected function adminGerritTemplatesView($are_mirrors_defined) {
+    protected function adminGerritTemplatesView($are_mirrors_defined)
+    {
         $params = $this->getData();
 
         $repository_list       = (isset($params['repository_list'])) ? $params['repository_list'] : array();
@@ -322,12 +320,13 @@ class GitViews extends PluginViews {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
+        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin', $presenter);
+        $this->footer();
     }
 
-    protected function adminMassUpdateSelectRepositoriesView() {
-        $params = $this->getData();
-
+    protected function adminMassUpdateSelectRepositoriesView()
+    {
         $repository_list = $this->getGitRepositoryFactory()->getAllRepositories($this->project);
         $presenter       = new GitPresenters_AdminMassUpdateSelectRepositoriesPresenter(
             $this->generateMassUpdateCSRF(),
@@ -337,10 +336,13 @@ class GitViews extends PluginViews {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
+        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin', $presenter);
+        $this->footer();
     }
 
-    protected function adminMassUpdateView() {
+    protected function adminMassUpdateView()
+    {
         $params = $this->getData();
 
         $repositories = $params['repositories'];
@@ -358,7 +360,9 @@ class GitViews extends PluginViews {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
+        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin', $presenter);
+        $this->footer();
     }
 
     private function buildListOfMirroredRepositoriesPresenters(
@@ -487,7 +491,8 @@ class GitViews extends PluginViews {
         return $html;
     }
 
-    protected function adminDefaultSettings($are_mirrors_defined, $pane) {
+    protected function adminDefaultSettings($are_mirrors_defined, $pane)
+    {
         $mirror_presenters = $this->getMirrorPresentersForGitAdmin();
         $project_id        = $this->project->getID();
 
@@ -561,7 +566,9 @@ class GitViews extends PluginViews {
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
 
+        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
         echo $renderer->renderToString('admin', $presenter);
+        $this->footer();
     }
 
     private function areRegexpActivatedAtSiteLevel()
