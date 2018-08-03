@@ -1,33 +1,39 @@
-import './campaign-new.tpl.html';
+import "./campaign-new.tpl.html";
+
+import { getCampaigns } from "../api/rest-querier.js";
+import { setError } from "../feedback-state.js";
 
 export default CampaignListCtrl;
 
 CampaignListCtrl.$inject = [
-    '$scope',
-    'TlpModalService',
-    '$filter',
-    'CampaignService',
-    'SharedPropertiesService',
-    'milestone'
+    "$q",
+    "$scope",
+    "$filter",
+    "gettextCatalog",
+    "TlpModalService",
+    "SharedPropertiesService",
+    "milestone"
 ];
 
 function CampaignListCtrl(
+    $q,
     $scope,
-    TlpModalService,
     $filter,
-    CampaignService,
+    gettextCatalog,
+    TlpModalService,
     SharedPropertiesService,
     milestone
 ) {
-    var project_id = SharedPropertiesService.getProjectId();
+    const self = this;
+    const project_id = SharedPropertiesService.getProjectId();
 
     Object.assign($scope, {
-        loading                : true,
-        campaigns              : [],
-        filtered_campaigns     : [],
-        has_open_campaigns     : false,
-        has_closed_campaigns   : false,
-        campaigns_loaded       : false,
+        loading: true,
+        campaigns: [],
+        filtered_campaigns: [],
+        has_open_campaigns: false,
+        has_closed_campaigns: false,
+        campaigns_loaded: false,
         closed_campaigns_hidden: true,
         shouldShowNoCampaigns,
         shouldShowNoOpenCampaigns,
@@ -36,37 +42,51 @@ function CampaignListCtrl(
         openNewCampaignModal
     });
 
-    this.$onInit = function() {
-        loadCampaigns(project_id, 10, 0);
-    };
+    Object.assign(self, {
+        $onInit: init
+    });
 
-    function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
-        return CampaignService
-            .getCampaigns(project_id, milestone_id, campaign_status, limit, offset)
-            .then(function(data) {
-                $scope.campaigns = $scope.campaigns.concat(data.results);
-
-                if (filterCampaigns($scope.campaigns, campaign_status).length < data.total) {
-                    return getCampaigns(project_id, milestone_id, campaign_status, limit, offset + limit);
-                }
-            });
+    function init() {
+        return loadCampaigns(project_id);
     }
 
-    function loadCampaigns(project_id, limit, offset) {
+    function loadCampaigns(project_id) {
         $scope.loading = true;
 
-        getCampaigns(project_id, milestone.id, 'open', limit, offset)
-        .then(function() {
-            $scope.filtered_campaigns = filterCampaigns($scope.campaigns, 'open');
-            $scope.has_open_campaigns = $scope.filtered_campaigns.length > 0;
+        return $q
+            .when(getCampaigns(project_id, milestone.id, "open"))
+            .then(campaigns => {
+                $scope.campaigns = $scope.campaigns.concat(campaigns);
+                $scope.filtered_campaigns = filterCampaigns($scope.campaigns, "open");
+                $scope.has_open_campaigns = $scope.filtered_campaigns.length > 0;
 
-            return getCampaigns(project_id, milestone.id, 'closed', limit, offset);
-        })
-        .then(function() {
-            $scope.has_closed_campaigns = filterCampaigns($scope.campaigns, 'closed').length > 0;
-            $scope.campaigns_loaded = true;
-            $scope.loading = false;
-        });
+                return $q.when(getCampaigns(project_id, milestone.id, "closed"));
+            })
+            .then(campaigns => {
+                $scope.campaigns = $scope.campaigns.concat(campaigns);
+                $scope.has_closed_campaigns =
+                    filterCampaigns($scope.campaigns, "closed").length > 0;
+
+                $scope.campaigns_loaded = true;
+            })
+            .catch(e => {
+                if (!e.response) {
+                    throw e;
+                }
+
+                return e.response.json().then(({ error }) => {
+                    const message = error.message;
+                    setError(
+                        gettextCatalog.getString(
+                            "An error occurred while loading the campaigns. Please refresh the page. {{ message }}",
+                            { message }
+                        )
+                    );
+                });
+            })
+            .finally(() => {
+                $scope.loading = false;
+            });
     }
 
     function shouldShowNoCampaigns() {
@@ -74,35 +94,37 @@ function CampaignListCtrl(
     }
 
     function shouldShowNoOpenCampaigns() {
-        return $scope.closed_campaigns_hidden &&
-               $scope.campaigns_loaded &&
-               ! $scope.has_open_campaigns &&
-               $scope.has_closed_campaigns;
+        return (
+            $scope.closed_campaigns_hidden &&
+            $scope.campaigns_loaded &&
+            !$scope.has_open_campaigns &&
+            $scope.has_closed_campaigns
+        );
     }
 
     function showClosedCampaigns() {
-        $scope.filtered_campaigns      = $scope.campaigns;
+        $scope.filtered_campaigns = $scope.campaigns;
         $scope.closed_campaigns_hidden = false;
     }
 
     function hideClosedCampaigns() {
-        $scope.filtered_campaigns      = filterCampaigns($scope.campaigns, 'open');
+        $scope.filtered_campaigns = filterCampaigns($scope.campaigns, "open");
         $scope.closed_campaigns_hidden = true;
     }
 
     function filterCampaigns(list, status) {
         if (status === null) {
-          return list;
+            return list;
         }
 
-        return $filter('filter')(list, { 'status': status });
+        return $filter("filter")(list, { status: status });
     }
 
     function openNewCampaignModal() {
         return TlpModalService.open({
-            templateUrl : 'campaign-new.tpl.html',
-            controller  : 'CampaignNewCtrl',
-            controllerAs: 'campaign_modal'
+            templateUrl: "campaign-new.tpl.html",
+            controller: "CampaignNewCtrl",
+            controllerAs: "campaign_modal"
         });
     }
 }

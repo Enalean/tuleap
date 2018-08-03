@@ -20,7 +20,6 @@ function CampaignService(
 
     return {
         getCampaign,
-        getCampaigns,
         createCampaign,
         patchCampaign,
         patchExecutions,
@@ -32,27 +31,6 @@ function CampaignService(
             .get()
             .then((response) => {
                 return response.data;
-            });
-    }
-
-    function getCampaigns(project_id, milestone_id, campaign_status, limit, offset) {
-        return rest.one('projects', project_id)
-            .all('testmanagement_campaigns')
-            .getList({
-                limit: limit,
-                offset: offset,
-                query : {
-                    status: campaign_status,
-                    milestone_id: milestone_id
-                }
-            })
-            .then(function(response) {
-                var result = {
-                    results: response.data,
-                    total: response.headers('X-PAGINATION-SIZE')
-                };
-
-                return result;
             });
     }
 

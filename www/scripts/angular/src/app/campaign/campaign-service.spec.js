@@ -30,32 +30,6 @@ describe ('CampaignService - ', () => {
         mockBackend.verifyNoOutstandingRequest();
     });
 
-    it("getCampaigns() - ", function() {
-        var campaigns = [
-            {
-                id: "6",
-                label: "Release 1",
-                status: "Open",
-                nb_of_passed: 0,
-                nb_of_failed: 0,
-                nb_of_notrun: 1,
-                nb_of_blocked: 0
-            }
-        ];
-
-        mockBackend
-            .expectGET('/api/v1/projects/101/testmanagement_campaigns?limit=10&offset=0&query=%7B%22status%22:%22open%22,%22milestone_id%22:0%7D')
-            .respond(JSON.stringify(campaigns));
-
-        var promise = CampaignService.getCampaigns(101, 0, "open", 10, 0);
-
-        mockBackend.flush();
-
-        promise.then(function(response) {
-            expect(response.results.length).toEqual(1);
-        });
-    });
-
     it("createCampaign() - ", function() {
         var campaign_to_create = {
             label: 'Release',

@@ -8,10 +8,6 @@
     overflow: hidden;
 }
 
-.breadcrumb + #testmanagement-app .test-campaign {
-    padding: 0 $tlp-spacing $tlp-spacing;
-}
-
 $toolbar-height: 46px;
 .toolbar + #testmanagement-app .test-campaign {
     height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height});

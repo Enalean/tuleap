@@ -1,5 +1,7 @@
 import angular from 'angular';
 import ui_router from 'angular-ui-router';
+import shared_properties_module from "../shared-properties/shared-properties.js";
+import angular_tlp_module from "angular-tlp";
 
 import 'restangular';
 import 'angular-gettext';
@@ -14,7 +16,9 @@ import CurrentPageFilter from './campaign-new-filter.js';
 export default angular.module('campaign', [
     ui_router,
     'restangular',
-    'gettext'
+    'gettext',
+    angular_tlp_module,
+    shared_properties_module
 ])
 .config(CampaignConfig)
 .service('CampaignService', CampaignService)

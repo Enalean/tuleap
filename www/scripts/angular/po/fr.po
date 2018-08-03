@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/campaign/campaign-edit.tpl.html
@@ -50,6 +50,14 @@ msgid ""
 msgstr ""
 "Une erreur s'est produite pendant l'exécution de cette étape. Veuillez "
 "réessayer plus tard. {{ error }}"
+
+#: src/app/campaign/campaign-list-controller.js
+msgid ""
+"An error occurred while loading the campaigns. Please refresh the page. "
+"{{ message }}"
+msgstr ""
+"Une erreur s'est produite pendant le chargement des campagnes. Veuillez "
+"rafraîchir cette page. {{ message }}"
 
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
@@ -159,6 +167,10 @@ msgstr ""
 #: src/app/execution/execution-detail-controller.js
 msgid "Error while refreshing the list of linked bugs"
 msgstr "Erreur pendant la récupération des bugs liés"
+
+#: src/app/execution/execution-with-steps/step/step.tpl.html
+msgid "Expected results"
+msgstr "Résultats attendus"
 
 #: src/app/execution/execution-detail.tpl.html
 #: src/app/execution/execution-list.tpl.html

@@ -37,6 +37,10 @@ msgstr ""
 msgid "An error occurred while executing this step. Please try again later. {{ error }}"
 msgstr ""
 
+#: src/app/campaign/campaign-list-controller.js
+msgid "An error occurred while loading the campaigns. Please refresh the page. {{ message }}"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
 msgstr ""
