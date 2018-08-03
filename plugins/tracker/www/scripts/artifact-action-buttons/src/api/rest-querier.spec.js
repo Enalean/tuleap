@@ -19,13 +19,13 @@
 
 import { mockFetchSuccess } from "tlp-mocks";
 import { getProjectList, getTrackerList } from "./rest-querier.js";
-import { restore as restoreFetch, rewire$get } from "tlp-fetch";
+import { restore as restoreFetch, rewire$recursiveGet } from "tlp-fetch";
 
 describe("API querier", () => {
-    let get;
+    let recursiveGet;
     beforeEach(() => {
-        get = jasmine.createSpy("get");
-        rewire$get(get);
+        recursiveGet = jasmine.createSpy("recursiveGet");
+        rewire$recursiveGet(recursiveGet);
     });
 
     afterEach(() => {
@@ -41,10 +41,10 @@ describe("API querier", () => {
                 }
             ];
 
-            mockFetchSuccess(get, { return_json });
+            mockFetchSuccess(recursiveGet, { return_json });
             getProjectList();
 
-            expect(get).toHaveBeenCalledWith(
+            expect(recursiveGet).toHaveBeenCalledWith(
                 "/api/projects",
                 jasmine.objectContaining({
                     params: {
@@ -66,12 +66,12 @@ describe("API querier", () => {
                 }
             ];
 
-            mockFetchSuccess(get, { return_json });
+            mockFetchSuccess(recursiveGet, { return_json });
             const project_id = 5;
 
             getTrackerList(project_id);
 
-            expect(get).toHaveBeenCalledWith(
+            expect(recursiveGet).toHaveBeenCalledWith(
                 "/api/projects/5/trackers/",
                 jasmine.objectContaining({
                     params: {

@@ -24,7 +24,7 @@ export async function loadTrackerList(context, project_id) {
         context.commit("setAreTrackerLoading", true);
         const trackerList = await getTrackerList(project_id);
 
-        getAsyncTrackerList(context.commit, await trackerList.json());
+        getAsyncTrackerList(context.commit, trackerList);
     } catch (e) {
         const { error } = await e.response.json();
         context.commit("setErrorMessage", error.message);
@@ -37,7 +37,7 @@ export async function loadProjectList(context) {
     try {
         const projectList = await getProjectList();
 
-        getAsyncProjectList(context.commit, await projectList.json());
+        getAsyncProjectList(context.commit, projectList);
     } catch (e) {
         const { error } = await e.response.json();
         context.commit("setErrorMessage", error.message);
