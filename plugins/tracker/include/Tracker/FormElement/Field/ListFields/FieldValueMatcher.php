@@ -55,7 +55,7 @@ class FieldValueMatcher
             }
         }
 
-        return $target_field->getDefaultValue();
+        return null;
     }
 
     public function isSourceUserValueMathingATargetUserValue(Tracker_FormElement_Field_list $target_contributor_field, SimpleXMLElement $value)

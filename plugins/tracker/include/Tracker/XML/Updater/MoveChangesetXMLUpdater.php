@@ -350,6 +350,10 @@ class MoveChangesetXMLUpdater
             $xml_value
         );
 
+        if ($value === null) {
+            $value = $target_status_field->getDefaultValue();
+        }
+
         $changeset_xml->field_change[$index]->value = (int) $value;
     }
 

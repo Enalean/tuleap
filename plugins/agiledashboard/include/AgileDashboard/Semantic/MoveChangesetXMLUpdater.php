@@ -120,6 +120,10 @@ class MoveChangesetXMLUpdater
             $xml_value
         );
 
+        if ($value === null) {
+            $value = $target_initial_effort_field->getDefaultValue();
+        }
+
         $field_change->value = (int) $value;
     }
 
