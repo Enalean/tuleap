@@ -65,41 +65,41 @@
 </template>
 )(
 <script>
-    import { datePicker }       from 'tlp';
-    import { gettext_provider } from './gettext-provider.js';
+import { datePicker } from "tlp";
+import { gettext_provider } from "../gettext-provider.js";
 
-    export default {
-        name: 'WidgetWritingMode',
-        props: {
-            readingStartDate: String,
-            readingEndDate  : String
+export default {
+    name: "WidgetWritingMode",
+    props: {
+        readingStartDate: String,
+        readingEndDate: String
+    },
+    data() {
+        return {
+            start_date: this.readingStartDate,
+            end_date: this.readingEndDate
+        };
+    },
+    computed: {
+        start_date_label: () => gettext_provider.gettext("From"),
+        end_date_label: () => gettext_provider.gettext("To"),
+        cancel_label: () => gettext_provider.gettext("Cancel"),
+        search_label: () => gettext_provider.gettext("Search")
+    },
+    methods: {
+        switchToReadingMode() {
+            this.$emit("switchToReadingMode", {
+                start_date: this.$refs.start_date.value,
+                end_date: this.$refs.end_date.value
+            });
         },
-        data() {
-            return {
-                start_date: this.readingStartDate,
-                end_date  : this.readingEndDate
-            };
-        },
-        computed: {
-            start_date_label: () => gettext_provider.gettext('From'),
-            end_date_label  : () => gettext_provider.gettext('To'),
-            cancel_label    : () => gettext_provider.gettext('Cancel'),
-            search_label    : () => gettext_provider.gettext('Search')
-        },
-        methods: {
-            switchToReadingMode() {
-                this.$emit('switchToReadingMode', {
-                    start_date: this.$refs.start_date.value,
-                    end_date  : this.$refs.end_date.value
-                });
-            },
-            cancel() {
-                this.$emit('switchToReadingMode');
-            }
-        },
-        mounted() {
-            [ this.$refs.start_date, this.$refs.end_date ].forEach(element => datePicker(element));
+        cancel() {
+            this.$emit("switchToReadingMode");
         }
-    };
+    },
+    mounted() {
+        [this.$refs.start_date, this.$refs.end_date].forEach(element => datePicker(element));
+    }
+};
 </script>
 )

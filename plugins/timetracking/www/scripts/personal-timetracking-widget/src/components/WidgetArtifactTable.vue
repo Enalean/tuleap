@@ -75,9 +75,9 @@
     </div>
 </template>)
 (<script>
-import { gettext_provider } from "./gettext-provider.js";
-import { getTrackedTimes } from "./rest-querier.js";
-import { formatMinutes } from "./time-formatters.js";
+import { gettext_provider } from "../gettext-provider.js";
+import { getTrackedTimes } from "../api/rest-querier.js";
+import { formatMinutes } from "../time-formatters.js";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 
 export default {

@@ -21,31 +21,49 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue               from 'vue';
-import WidgetReadingMode from './WidgetReadingMode.vue';
+import Vue from "vue";
+import WidgetWritingMode from "./WidgetWritingMode.vue";
 
-describe('WidgetReadingMode', () => {
-    let ReadingMode;
+describe("WidgetWritingMode", () => {
+    let WritingMode;
 
     beforeEach(() => {
-        ReadingMode = Vue.extend(WidgetReadingMode);
+        WritingMode = Vue.extend(WidgetWritingMode);
     });
 
     function instantiateComponent(data = {}) {
-        return new ReadingMode({
+        return new WritingMode({
             propsData: { ...data }
         }).$mount();
     }
 
-    describe('switchToWritingMode', () => {
-        it('When I switch to writing mode, Then an event is emitted', () => {
+    describe("Cancel", () => {
+        it("When I click on the cancel button, Then an event is emitted without data to broadcast", () => {
             const vm = instantiateComponent();
 
             spyOn(vm, "$emit");
 
-            vm.switchToWritingMode();
+            vm.cancel();
 
-            expect(vm.$emit).toHaveBeenCalledWith('switchToWritingMode');
+            expect(vm.$emit).toHaveBeenCalledWith("switchToReadingMode");
+        });
+    });
+
+    describe("switchToReadingMode", () => {
+        it("When I click on the search button, Then the selected dates are broadcast through an event.", () => {
+            const vm = instantiateComponent({
+                readingStartDate: "2018-01-01",
+                readingEndDate: "2018-01-08"
+            });
+
+            spyOn(vm, "$emit");
+
+            vm.switchToReadingMode();
+
+            expect(vm.$emit).toHaveBeenCalledWith("switchToReadingMode", {
+                start_date: "2018-01-01",
+                end_date: "2018-01-08"
+            });
         });
     });
 });

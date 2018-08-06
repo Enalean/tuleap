@@ -36,23 +36,23 @@
 </template>
 )(
 <script>
-    import { gettext_provider } from './gettext-provider.js';
+import { gettext_provider } from "../gettext-provider.js";
 
-    export default {
-        name: 'WidgetReadingMode',
-        props: {
-            startDate: String,
-            endDate  : String
-        },
-        computed: {
-            start_date_label: () => gettext_provider.gettext('From'),
-            end_date_label  : () => gettext_provider.gettext('To')
-        },
-        methods: {
-            switchToWritingMode() {
-                this.$emit('switchToWritingMode');
-            }
+export default {
+    name: "WidgetReadingMode",
+    props: {
+        startDate: String,
+        endDate: String
+    },
+    computed: {
+        start_date_label: () => gettext_provider.gettext("From"),
+        end_date_label: () => gettext_provider.gettext("To")
+    },
+    methods: {
+        switchToWritingMode() {
+            this.$emit("switchToWritingMode");
         }
-    };
+    }
+};
 </script>
 )

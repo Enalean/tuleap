@@ -24,7 +24,7 @@
 </template>)
 
 (<script>
-import { gettext_provider } from "./gettext-provider.js";
+import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalRow from "./WidgetModalRow.vue";
 
 export default {

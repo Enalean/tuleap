@@ -21,7 +21,7 @@
     </div>
 </template>)
 (<script>
-import { gettext_provider } from "./gettext-provider.js";
+import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalContent from "./WidgetModalContent.vue";
 export default {
     name: "WidgetModalTimes",

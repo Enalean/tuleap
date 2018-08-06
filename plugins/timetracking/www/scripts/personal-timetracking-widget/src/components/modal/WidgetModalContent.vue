@@ -24,10 +24,10 @@
     </div>
 </template>)
 (<script>
-import { gettext_provider } from "./gettext-provider.js";
+import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
-import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
+import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
 export default {
     name: "WidgetModalContent",
     components: { WidgetLinkToArtifact, WidgetModalTable, WidgetModalArtifactInfo },

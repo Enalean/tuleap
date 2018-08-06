@@ -7,7 +7,7 @@
 </template>)
 
 (<script>
-import { formatMinutes } from "./time-formatters.js";
+import { formatMinutes } from "../../time-formatters.js";
 
 export default {
     name: "WidgetModalRow",

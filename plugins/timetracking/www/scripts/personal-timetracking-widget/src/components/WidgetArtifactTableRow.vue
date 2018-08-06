@@ -44,9 +44,9 @@
     </tr>
 </template>)
 (<script>
-import { formatMinutes } from "./time-formatters.js";
-import WidgetModalTimes from "./WidgetModalTimes.vue";
-import { gettext_provider } from "./gettext-provider.js";
+import { formatMinutes } from "../time-formatters.js";
+import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
+import { gettext_provider } from "../gettext-provider.js";
 import { modal as createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 

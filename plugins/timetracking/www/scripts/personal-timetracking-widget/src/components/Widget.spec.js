@@ -21,11 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                from 'vue';
-import { DateTime }       from 'luxon';
-import TimetrackingWidget from './Widget.vue';
+import Vue from "vue";
+import { DateTime } from "luxon";
+import TimetrackingWidget from "./Widget.vue";
 
-describe('Widget', () => {
+describe("Widget", () => {
     let Widget;
 
     beforeEach(() => {
@@ -36,19 +36,21 @@ describe('Widget', () => {
         return new Widget().$mount();
     }
 
-    describe('Widget initialization', () => {
-        it('When the widget is instanciated, Then its end_date must equal to the current date and start_date must equal to end_date minus one week', () => {
-            const vm        = instantiateComponent();
-            const today     = DateTime.local().toISODate();
-            const last_week = DateTime.local().minus({ weeks: 1 }).toISODate();
+    describe("Widget initialization", () => {
+        it("When the widget is instanciated, Then its end_date must equal to the current date and start_date must equal to end_date minus one week", () => {
+            const vm = instantiateComponent();
+            const today = DateTime.local().toISODate();
+            const last_week = DateTime.local()
+                .minus({ weeks: 1 })
+                .toISODate();
 
             expect(vm.start_date).toEqual(last_week);
             expect(vm.end_date).toEqual(today);
         });
     });
 
-    describe('switchToReadingMode', () => {
-        it('Given a widget in writing mode, When I switch to the reading mode, Then the reading mode is shown', () => {
+    describe("switchToReadingMode", () => {
+        it("Given a widget in writing mode, When I switch to the reading mode, Then the reading mode is shown", () => {
             const vm = instantiateComponent();
 
             vm.reading_mode = false;
@@ -58,19 +60,19 @@ describe('Widget', () => {
             expect(vm.reading_mode).toBe(true);
         });
 
-        it('Given a widget in writing mode and some data, When I switch to the reading mode, Then the reading mode is shown', () => {
+        it("Given a widget in writing mode and some data, When I switch to the reading mode, Then the reading mode is shown", () => {
             const vm = instantiateComponent();
 
             vm.reading_mode = false;
 
             vm.switchToReadingMode({
-                start_date: '2018-01-01',
-                end_date  : '2018-01-08'
+                start_date: "2018-01-01",
+                end_date: "2018-01-08"
             });
 
             expect(vm.reading_mode).toBe(true);
-            expect(vm.start_date).toEqual('2018-01-01');
-            expect(vm.end_date).toEqual('2018-01-08');
+            expect(vm.start_date).toEqual("2018-01-01");
+            expect(vm.end_date).toEqual("2018-01-08");
         });
     });
 });
