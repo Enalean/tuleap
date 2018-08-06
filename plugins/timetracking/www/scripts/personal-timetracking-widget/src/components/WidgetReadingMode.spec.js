@@ -21,30 +21,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
-import { formatDatetimeToISO } from "./time-formatters.js";
+import Vue from "vue";
+import WidgetReadingMode from "./WidgetReadingMode.vue";
 
-export { getTrackedTimes };
+describe("WidgetReadingMode", () => {
+    let ReadingMode;
 
-async function getTrackedTimes(start_date, end_date, limit, offset) {
-    const query = JSON.stringify({
-        start_date: formatDatetimeToISO(start_date),
-        end_date: formatDatetimeToISO(end_date)
+    beforeEach(() => {
+        ReadingMode = Vue.extend(WidgetReadingMode);
     });
 
-    const response = await get("/api/v1/timetracking", {
-        params: {
-            limit,
-            offset,
-            query
-        }
+    function instantiateComponent(data = {}) {
+        return new ReadingMode({
+            propsData: { ...data }
+        }).$mount();
+    }
+
+    describe("switchToWritingMode", () => {
+        it("When I switch to writing mode, Then an event is emitted", () => {
+            const vm = instantiateComponent();
+
+            spyOn(vm, "$emit");
+
+            vm.switchToWritingMode();
+
+            expect(vm.$emit).toHaveBeenCalledWith("switchToWritingMode");
+        });
     });
-
-    const total = response.headers.get("X-PAGINATION-SIZE");
-    const times = await response.json();
-
-    return {
-        times,
-        total
-    };
-}
+});

@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                  from 'vue';
-import Widget               from './Widget.vue';
-import { gettext_provider } from './gettext-provider.js';
+import Vue from "vue";
+import Widget from "./components/Widget.vue";
+import { gettext_provider } from "./gettext-provider.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_point = document.getElementById('personal-timetracking-widget');
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_point = document.getElementById("personal-timetracking-widget");
 
     if (vue_mount_point) {
         const rootComponent = Vue.extend(Widget);
-        const locale        = document.body.dataset.userLocale;
+        const locale = document.body.dataset.userLocale;
 
         gettext_provider.setLocale(locale);
 

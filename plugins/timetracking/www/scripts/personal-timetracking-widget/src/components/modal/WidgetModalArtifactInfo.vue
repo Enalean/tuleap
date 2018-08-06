@@ -24,8 +24,8 @@
 </template>)
 
 (<script>
-import { gettext_provider } from "./gettext-provider.js";
-import { formatDateDayMonthYear } from "./time-formatters.js";
+import { gettext_provider } from "../../gettext-provider.js";
+import { formatDateDayMonthYear } from "../../time-formatters.js";
 export default {
     name: "WidgetModalArtifactInfo",
     props: {

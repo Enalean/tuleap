@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'babel-polyfill';
-import 'tlp-mocks';
+import "babel-polyfill";
+import "tlp-mocks";
 
-import './time-formatters.spec.js';
-import './rest-querier.spec.js';
+import "./time-formatters.spec.js";
+import "./api/rest-querier.spec.js";
 
-import './Widget.spec.js';
-import './WidgetWritingMode.spec.js';
-import './WidgetReadingMode.spec.js';
-import './WidgetArtifactTable.spec.js';
+import "./components/Widget.spec.js";
+import "./components/WidgetWritingMode.spec.js";
+import "./components/WidgetReadingMode.spec.js";
+import "./components/WidgetArtifactTable.spec.js";

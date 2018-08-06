@@ -41,50 +41,52 @@
 )
 (
 <script>
-    import { DateTime }         from 'luxon';
-    import WidgetReadingMode    from './WidgetReadingMode.vue';
-    import WidgetWritingMode    from './WidgetWritingMode.vue';
-    import WidgetArtifactTable  from './WidgetArtifactTable.vue';
+import { DateTime } from "luxon";
+import WidgetReadingMode from "./WidgetReadingMode.vue";
+import WidgetWritingMode from "./WidgetWritingMode.vue";
+import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
-    export default {
-        name      : 'Widget',
-        components: {
-            WidgetReadingMode,
-            WidgetWritingMode,
-            WidgetArtifactTable
+export default {
+    name: "Widget",
+    components: {
+        WidgetReadingMode,
+        WidgetWritingMode,
+        WidgetArtifactTable
+    },
+    data() {
+        const start_date = DateTime.local()
+            .minus({ weeks: 1 })
+            .toISODate();
+        const end_date = DateTime.local().toISODate();
+
+        return {
+            reading_mode: true,
+            query_has_changed: false,
+            start_date,
+            end_date
+        };
+    },
+    methods: {
+        switchToWritingMode() {
+            this.reading_mode = false;
         },
-        data() {
-            const start_date = DateTime.local().minus({ weeks: 1 }).toISODate();
-            const end_date   = DateTime.local().toISODate();
 
-            return {
-                reading_mode     : true,
-                query_has_changed: false,
-                start_date,
-                end_date
+        switchToReadingMode(data) {
+            if (data) {
+                const { start_date, end_date } = data;
+
+                this.start_date = start_date;
+                this.end_date = end_date;
+                this.reading_mode = true;
+                this.query_has_changed = true;
+
+                return;
             }
-        },
-        methods: {
-            switchToWritingMode() {
-                this.reading_mode = false;
-            },
 
-            switchToReadingMode(data) {
-                if (data) {
-                    const { start_date, end_date } = data;
-
-                    this.start_date        = start_date;
-                    this.end_date          = end_date;
-                    this.reading_mode      = true;
-                    this.query_has_changed = true;
-
-                    return;
-                }
-
-                this.reading_mode      = true;
-                this.query_has_changed = false;
-            }
+            this.reading_mode = true;
+            this.query_has_changed = false;
         }
-    };
+    }
+};
 </script>
 )
