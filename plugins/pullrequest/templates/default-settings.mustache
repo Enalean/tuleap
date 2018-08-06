@@ -1,0 +1,19 @@
+<h2>{{# dgettext }}tuleap-pullrequest | Pull requests{{/ dgettext }}</h2>
+<form method="POST" action="/plugins/pullrequest/default-settings">
+    <input type="hidden" name="group_id" value="{{ project_id }}" />
+
+    <h3>{{# dgettext }}tuleap-pullrequest | Merge{{/ dgettext }}</h3>
+
+    <label class="radio">
+        <input type="radio" name="is_merge_commit_allowed" value="1" {{# is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
+        {{# dgettext }}tuleap-pullrequest | Default (Will fast-forward when possible, fallback to merge when not possible){{/ dgettext }}
+    </label>
+    <label class="radio">
+        <input type="radio" name="is_merge_commit_allowed" value="0" {{^ is_merge_commit_allowed }}checked{{/ is_merge_commit_allowed }}>
+        {{# dgettext }}tuleap-pullrequest | Fast-forward only{{/ dgettext }}
+    </label>
+
+    <button type="submit" class="btn btn-primary pullrequest-repomanagement-save-button">
+        {{# gettext }}Save modifications{{/gettext}}
+    </button>
+</form>

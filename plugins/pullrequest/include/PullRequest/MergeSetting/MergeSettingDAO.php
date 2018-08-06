@@ -32,6 +32,14 @@ class MergeSettingDAO extends DataAccessObject
         );
     }
 
+    public function getMergeSettingByProjectID($project_id)
+    {
+        return $this->getDB()->row(
+            'SELECT merge_commit_allowed FROM plugin_pullrequest_template_merge_setting WHERE project_id = ?',
+            $project_id
+        );
+    }
+
     public function duplicateRepositoryMergeSettings($base_repository_id, $forked_repository_id)
     {
         $sql = "INSERT INTO plugin_pullrequest_merge_setting (repository_id, merge_commit_allowed)
@@ -69,5 +77,14 @@ class MergeSettingDAO extends DataAccessObject
                 ON DUPLICATE KEY UPDATE merge_commit_allowed = ?";
 
         $this->getDB()->run($sql, $repository_id, $merge_commit_allowed, $merge_commit_allowed);
+    }
+
+    public function saveDefaultSettings($project_id, $merge_commit_allowed)
+    {
+        $sql = "INSERT INTO plugin_pullrequest_template_merge_setting (project_id, merge_commit_allowed)
+                VALUES (?, ?)
+                ON DUPLICATE KEY UPDATE merge_commit_allowed = ?";
+
+        $this->getDB()->run($sql, $project_id, $merge_commit_allowed, $merge_commit_allowed);
     }
 }

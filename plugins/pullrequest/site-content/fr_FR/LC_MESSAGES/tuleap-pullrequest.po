@@ -19,6 +19,9 @@ msgstr ""
 "Par défaut (avance rapide \"fast-forward\" si possible, sinon création d'un "
 "commit de fusion)"
 
+msgid "Default pull requests settings updated"
+msgstr "Les paramètres par defaut des pull requests ont été mis à jour"
+
 msgid "Fast-forward only"
 msgstr "Avance rapide uniquement"
 

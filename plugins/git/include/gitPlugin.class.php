@@ -731,7 +731,8 @@ class GitPlugin extends Plugin
                 $this->getFineGrainedRepresentationBuilder(),
                 $this->getRegexpFineGrainedRetriever(),
                 $this->getMirrorDataMapper(),
-                $this->getHeaderRenderer()
+                $this->getHeaderRenderer(),
+                EventManager::instance()
             )
         );
     }

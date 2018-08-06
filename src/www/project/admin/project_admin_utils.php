@@ -1,8 +1,8 @@
 <?php
 /**
+ * Copyright Enalean (c) 2012 - 2018. All rights reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright Enalean (c) 2017. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,6 +24,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 
 require_once('common/dao/ProjectHistoryDao.class.php');
@@ -310,6 +311,9 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $template =& TemplateSingleton::instance();
             $val = $template->getLabel($val);
         }
+        $event = new GetProjectHistoryEntryValue($row, $val);
+        EventManager::instance()->processEvent($event);
+        $val = $event->getValue();
 
         if ($export) {
             $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
