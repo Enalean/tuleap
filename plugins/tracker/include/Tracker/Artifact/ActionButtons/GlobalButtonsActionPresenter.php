@@ -64,6 +64,10 @@ class GlobalButtonsActionPresenter
      * @var bool
      */
     public $divider;
+    /**
+     * @var bool
+     */
+    public $should_load_modal;
 
     public function __construct(
         Tracker_Artifact $artifact,
@@ -82,6 +86,9 @@ class GlobalButtonsActionPresenter
         $this->artifact_graph_dependencies_button_presenter = $artifact_graph_dependencies_button_presenter;
         $this->artifact_notifications_button_presenter      = $artifact_notifications_button_presenter;
         $this->artifact_original_email_button_presenter     = $artifact_original_email_button_presenter;
+
+        $this->should_load_modal = $artifact_move_button_presenter !== null &&
+            ! $artifact_move_button_presenter->hasError();
 
         $this->divider = $this->hasPrimaryAction(
             $artifact_move_button_presenter,
