@@ -23,6 +23,8 @@ function InPropertiesFilter($filter) {
             });
         });
 
-        return result;
+        const unique_result = result.filter((item, index, array) => array.indexOf(item) === index);
+
+        return unique_result;
     };
 }

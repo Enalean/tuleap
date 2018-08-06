@@ -31,6 +31,7 @@ function CampaignConfig($stateProvider) {
         .state('campaigns.list', {
             url:         '',
             controller:  CampaignListCtrl,
+            controllerAs: '$ctrl',
             templateUrl: 'campaign-list.tpl.html',
             ncyBreadcrumb: {
                 label: '{{ campaign_breadcrumb_label }}',

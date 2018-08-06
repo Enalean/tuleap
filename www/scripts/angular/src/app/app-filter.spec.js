@@ -62,4 +62,11 @@ describe('InPropertiesFilter', function() {
             {id: 5, label: 'Valid status', status: 'First status'}
         );
     });
+
+    it("Given 'closed' keyword and given a campaign label containing 'closed', then it will not return duplicates", () => {
+        const campaign = [{ id: 21, label: "Closed valid 10.4", status: "closed" }];
+        expect(ngFilter("InPropertiesFilter")([campaign], "closed", properties)).toEqual([
+            campaign
+        ]);
+    });
 });
