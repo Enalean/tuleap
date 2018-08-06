@@ -30,6 +30,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveSemanticChecker;
@@ -74,6 +75,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->contributor_semantic_checker
         );
 
+        $this->collector = new FeedbackFieldCollector();
 
         $this->submitter->shouldReceive('getId')->andReturn(101);
         $this->user->shouldReceive('getId')->andReturn(102);
@@ -148,7 +150,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset->submitted_on, date('c', $time));
@@ -239,7 +250,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
@@ -342,7 +362,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
@@ -446,7 +475,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
@@ -545,7 +583,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals(count($artifact_xml->changeset), 3);
         $this->assertNull($artifact_xml->changeset[0]->comments[0]);
@@ -637,7 +684,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals((int)$artifact_xml['tracker_id'], 201);
         $this->assertEquals((string)$artifact_xml->changeset[0]->submitted_on, date('c', $time));
@@ -716,7 +772,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
     }
 
     public function testItAddsALastChangesetWithACommentToSayThatThisArtifactHasBeenMoved()
@@ -785,7 +850,16 @@ class MoveChangesetXMLUpdaterTest extends TestCase
 
         $time       = time();
         $moved_time = time();
-        $this->updater->update($this->user, $this->tracker, $target_tracker, $artifact_xml, $this->submitter, $time, $moved_time);
+        $this->updater->update(
+            $this->user,
+            $this->tracker,
+            $target_tracker,
+            $artifact_xml,
+            $this->submitter,
+            $time,
+            $moved_time,
+            $this->collector
+        );
 
         $this->assertEquals(count($artifact_xml->changeset), 2);
 

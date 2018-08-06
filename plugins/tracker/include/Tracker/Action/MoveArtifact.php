@@ -89,10 +89,12 @@ class MoveArtifact
     public function checkMoveIsPossible(
         Tracker_Artifact $artifact,
         Tracker $target_tracker,
+        PFUser $user,
         FeedbackFieldCollector $feedback_field_collector
     ) {
         try {
             $this->before_move_artifact->artifactCanBeMoved($artifact->getTracker(), $target_tracker, $feedback_field_collector);
+            $this->getUpdatedXML($artifact, $target_tracker, $user, $feedback_field_collector);
         } catch (MoveArtifactSemanticsException $exception) {
             $this->artifact_priority_manager->rollback();
             throw $exception;
@@ -113,8 +115,31 @@ class MoveArtifact
     ) {
         $this->artifact_priority_manager->startTransaction();
 
-        $this->checkMoveIsPossible($artifact, $target_tracker, $feedback_field_collector);
+        $this->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_field_collector);
 
+        $xml_artifacts = $this->getUpdatedXML($artifact, $target_tracker, $user, $feedback_field_collector);
+
+        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
+        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
+
+        if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
+            $this->artifact_priority_manager->rollback();
+            throw new MoveArtifactNotDoneException();
+        }
+
+        $this->artifact_priority_manager->commit();
+        return $limit;
+    }
+
+    /**
+     * @return SimpleXMLElement
+     */
+    private function getUpdatedXML(
+        Tracker_Artifact $artifact,
+        Tracker $target_tracker,
+        PFUser $user,
+        FeedbackFieldCollector $feedback_field_collector
+    ) {
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportFullHistory(
             $xml_artifacts,
@@ -128,19 +153,11 @@ class MoveArtifact
             $xml_artifacts->artifact,
             $artifact->getSubmittedByUser(),
             $artifact->getSubmittedOn(),
-            time()
+            time(),
+            $feedback_field_collector
         );
 
-        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
-
-        if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
-            $this->artifact_priority_manager->rollback();
-            throw new MoveArtifactNotDoneException();
-        }
-
-        $this->artifact_priority_manager->commit();
-        return $limit;
+        return $xml_artifacts;
     }
 
     private function processMove(SimpleXMLElement $artifact_xml, Tracker $tracker, $global_rank)

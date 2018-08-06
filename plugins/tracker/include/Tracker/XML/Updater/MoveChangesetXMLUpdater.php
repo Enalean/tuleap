@@ -26,6 +26,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
@@ -90,7 +91,8 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $artifact_xml,
         PFUser $submitted_by,
         $submitted_on,
-        $moved_time
+        $moved_time,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $artifact_xml['tracker_id'] = $target_tracker->getId();
 
@@ -99,7 +101,8 @@ class MoveChangesetXMLUpdater
             $target_tracker,
             $artifact_xml,
             $submitted_by,
-            $submitted_on
+            $submitted_on,
+            $feedback_field_collector
         );
 
         if (count($artifact_xml->changeset) > 0) {
@@ -129,14 +132,16 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $artifact_xml,
         PFUser $submitted_by,
-        $submitted_on
+        $submitted_on,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
             $this->parseFieldChangeNodesInReverseOrder(
                 $source_tracker,
                 $target_tracker,
-                $artifact_xml->changeset[$index]
+                $artifact_xml->changeset[$index],
+                $feedback_field_collector
             );
 
             if ($this->isChangesetNodeDeletable($artifact_xml, $index)) {
@@ -167,7 +172,8 @@ class MoveChangesetXMLUpdater
     private function parseFieldChangeNodesInReverseOrder(
         Tracker $source_tracker,
         Tracker $target_tracker,
-        SimpleXMLElement $changeset_xml
+        SimpleXMLElement $changeset_xml,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $title_semantic_can_be_moved = $this->title_semantic_checker->areSemanticsAligned(
             $source_tracker,
@@ -218,20 +224,27 @@ class MoveChangesetXMLUpdater
                 $this->isFieldChangeCorrespondingToStatusSemanticField($changeset_xml, $source_status_field, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
-                $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index);
+                $this->updateValue($changeset_xml, $source_status_field, $target_status_field, $index, $feedback_field_collector);
                 continue;
             } elseif ($contributor_semantic_can_be_moved &&
                 $this->isFieldChangeCorrespondingToContributorSemanticField($changeset_xml, $source_contributor_field, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_contributor_field, $index);
-                $this->removeNonPossibleUserValues($changeset_xml, $target_contributor_field, $index);
+                $this->removeNonPossibleUserValues(
+                    $source_contributor_field,
+                    $changeset_xml,
+                    $target_contributor_field,
+                    $index,
+                    $feedback_field_collector
+                );
                 continue;
             } elseif ($external_semantic_can_be_moved) {
                 $modified = $this->parseFieldChangeNodesForExternalSemantics(
                     $source_tracker,
                     $target_tracker,
                     $changeset_xml,
-                    $index
+                    $index,
+                    $feedback_field_collector
                 );
             }
 
@@ -336,7 +349,8 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field $source_status_field,
         Tracker_FormElement_Field $target_status_field,
-        $index
+        $index,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $xml_value = (int) $changeset_xml->field_change[$index]->value;
 
@@ -352,15 +366,18 @@ class MoveChangesetXMLUpdater
 
         if ($value === null) {
             $value = $target_status_field->getDefaultValue();
+            $feedback_field_collector->addFieldInPartiallyMigrated($source_status_field);
         }
 
         $changeset_xml->field_change[$index]->value = (int) $value;
     }
 
     private function removeNonPossibleUserValues(
+        Tracker_FormElement_Field $source_contributor_field,
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field_list $target_contributor_field,
-        $field_change_index
+        $field_change_index,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
         for ($value_index = $last_index; $value_index >= 0; $value_index--) {
@@ -369,6 +386,8 @@ class MoveChangesetXMLUpdater
                 $changeset_xml->field_change[$field_change_index]->value[$value_index]
             )) {
                 unset($changeset_xml->field_change[$field_change_index]->value[$value_index]);
+
+                $feedback_field_collector->addFieldInPartiallyMigrated($source_contributor_field);
             }
         }
     }
@@ -397,9 +416,17 @@ class MoveChangesetXMLUpdater
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
-        $index
+        $index,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
-        $event = new MoveArtifactParseFieldChangeNodes($source_tracker, $target_tracker, $changeset_xml, $index);
+        $event = new MoveArtifactParseFieldChangeNodes(
+            $source_tracker,
+            $target_tracker,
+            $changeset_xml,
+            $feedback_field_collector,
+            $index
+        );
+
         $this->event_manager->processEvent($event);
 
         return $event->isModifiedByPlugin();

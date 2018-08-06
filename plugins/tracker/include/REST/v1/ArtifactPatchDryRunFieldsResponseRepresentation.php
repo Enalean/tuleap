@@ -35,6 +35,11 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
      */
     public $fields_not_migrated = [];
 
+    /**
+     * @var array {@type string}
+     */
+    public $fields_partially_migrated = [];
+
     public function build(FeedbackFieldCollector $feedback_field_collector)
     {
         foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
@@ -43,6 +48,10 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
 
         foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
             $this->fields_migrated[$field->getId()] = $field->getLabel();
+        }
+
+        foreach ($feedback_field_collector->getFieldsPartiallyMigrated() as $field) {
+            $this->fields_partially_migrated[$field->getId()] = $field->getLabel();
         }
     }
 }

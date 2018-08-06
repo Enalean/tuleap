@@ -74,6 +74,7 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertTrue(in_array('Initial', $migrated_fields));
 
         $this->assertCount(0, $json['dry_run']['fields']['fields_not_migrated']);
+        $this->assertCount(0, $json['dry_run']['fields']['fields_partially_migrated']);
     }
 
     /**
