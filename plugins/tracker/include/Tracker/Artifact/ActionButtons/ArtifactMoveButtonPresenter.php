@@ -27,13 +27,23 @@ class ArtifactMoveButtonPresenter
      */
     public $label;
     /**
+     * @var string
+     */
+    public $errors_content;
+    /**
      * @var array
      */
-    public $errors;
+    private $errors;
 
     public function __construct($label, array $errors)
     {
-        $this->label  = $label;
-        $this->errors = implode(" ", $errors);
+        $this->label          = $label;
+        $this->errors_content = implode(" ", $errors);
+        $this->errors         = $errors;
+    }
+
+    public function hasError()
+    {
+        return count($this->errors) > 0;
     }
 }
