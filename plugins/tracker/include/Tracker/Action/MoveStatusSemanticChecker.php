@@ -45,7 +45,7 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_tracker_status_field = $source_tracker->getStatusField();
+        $source_tracker_status_field = $this->getSourceSemanticField($source_tracker);
         $target_tracker_status_field = $target_tracker->getStatusField();
 
         return $this->form_element_factory->getType($source_tracker_status_field) ===
@@ -58,5 +58,10 @@ class MoveStatusSemanticChecker extends MoveSemanticChecker
     public function getSemanticName()
     {
         return self::STATUS_SEMANTIC_LABEL;
+    }
+
+    public function getSourceSemanticField(Tracker $source_tracker)
+    {
+        return $source_tracker->getStatusField();
     }
 }

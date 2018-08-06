@@ -26,7 +26,6 @@ use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
-use Tracker_Semantic_ContributorFactory;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
@@ -39,6 +38,7 @@ use \Tracker_ArtifactFactory;
 use \Tracker_Artifact;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
@@ -737,6 +737,19 @@ class ArtifactsResource extends AuthenticatedResource {
      * Values for list fields bound to users (contributor) are are moved "as much as possible".
      * <br/>
      * If a user is not part of the target group, he is silently ignored..
+     * <br/>
+     * <br/>
+     * A new dry-run mode has been added, it allows user to know which fields will be moved or not without doing the action.
+     *  <br/>
+     * To move an Artifact in dry-run:
+     * <pre>
+     * {<br>
+     * &nbsp;"move": {<br/>
+     * &nbsp;&nbsp;"tracker_id": 1<br/>
+     * &nbsp;&nbsp;"dry_run": true<br/>
+     * &nbsp;}<br/>
+     * }
+     * </pre>
      *
      * @url PATCH {id}
      *
@@ -744,6 +757,8 @@ class ArtifactsResource extends AuthenticatedResource {
      *
      * @param int                         $id    Id of the artifact
      * @param ArtifactPatchRepresentation $patch Tracker in which the artifact must be created {@from body} {@type \Tuleap\Tracker\REST\v1\ArtifactPatchRepresentation}
+     *
+     * @return ArtifactPatchResponseRepresentation
      *
      * @throws 400
      * @throws 404 Artifact Not found
@@ -781,12 +796,23 @@ class ArtifactsResource extends AuthenticatedResource {
             throw new RestException(400, $event->getNotUpdatableMessage());
         }
 
-        $remaining_deletions = 0;
-        $limit               = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
-        $move_action         = $this->getMoveAction($user);
+        $remaining_deletions     = 0;
+        $limit                   = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
+        $move_action             = $this->getMoveAction($user);
+        $feedback_collector      = new FeedbackFieldCollector();
+        $response_representation = new ArtifactPatchResponseRepresentation();
 
         try {
-            $remaining_deletions = $move_action->move($artifact, $target_tracker, $user);
+            if ($patch->move->dry_run) {
+                $move_action->checkMoveIsPossible($artifact, $target_tracker, $feedback_collector);
+                $response_representation->build($feedback_collector);
+
+                $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
+            } else {
+                $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
+            }
+
+            return $response_representation;
         } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
             throw new RestException(403, "The artifact limit is exceeded. The move operation is not possible. Aborting.");
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {

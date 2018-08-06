@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use EventManager;
 use Tracker;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
@@ -54,19 +55,43 @@ class BeforeMoveArtifact
      * @return bool
      * @throws MoveArtifactSemanticsException
      */
-    public function artifactCanBeMoved(Tracker $source_tracker, Tracker $target_tracker)
-    {
+    public function artifactCanBeMoved(
+        Tracker $source_tracker,
+        Tracker $target_tracker,
+        FeedbackFieldCollector $feedback_field_collector
+    ) {
         $event = new MoveArtifactGetExternalSemanticCheckers();
         $this->event_manager->processEvent($event);
+
+        $semantics_are_aligned = false;
 
         $all_semantic_checkers = array_merge($this->semantic_checkers, $event->getExternalSemanticsCheckers());
         foreach ($all_semantic_checkers as $semantic_checker) {
             $semantic_name            = $semantic_checker->getSemanticName();
+            $source_semantic_field    = $semantic_checker->getSourceSemanticField($source_tracker);
             $this->semantic_checked[] = $semantic_name;
 
             if ($semantic_checker->areSemanticsAligned($source_tracker, $target_tracker)) {
-                return true;
+                $semantics_are_aligned = true;
+
+                $feedback_field_collector->addFieldInFullyMigrated($source_semantic_field);
             }
+
+            if ($source_semantic_field &&
+                ! $semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker)
+            ) {
+                $feedback_field_collector->addFieldInNotMigrated($source_semantic_field);
+            }
+
+            if ($semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker) &&
+                ! $semantic_checker->doesBothSemanticFieldHaveTheSameType($source_tracker, $target_tracker)
+            ) {
+                $feedback_field_collector->addFieldInNotMigrated($source_semantic_field);
+            }
+        }
+
+        if ($semantics_are_aligned) {
+            return true;
         }
 
         throw new MoveArtifactSemanticsException(

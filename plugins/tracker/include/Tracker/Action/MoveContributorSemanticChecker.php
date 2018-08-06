@@ -41,7 +41,7 @@ class MoveContributorSemanticChecker extends MoveSemanticChecker
      */
     public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_contributor_field = $source_tracker->getContributorField();
+        $source_contributor_field = $this->getSourceSemanticField($source_tracker);
         $target_contributor_field = $target_tracker->getContributorField();
 
         return $source_contributor_field && $target_contributor_field;
@@ -52,7 +52,7 @@ class MoveContributorSemanticChecker extends MoveSemanticChecker
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_contributor_field = $source_tracker->getContributorField();
+        $source_contributor_field = $this->getSourceSemanticField($source_tracker);
         $target_contributor_field = $target_tracker->getContributorField();
 
         return $this->form_element_factory->getType($source_contributor_field) ===
@@ -65,5 +65,10 @@ class MoveContributorSemanticChecker extends MoveSemanticChecker
     public function getSemanticName()
     {
         return Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME;
+    }
+
+    public function getSourceSemanticField(Tracker $source_tracker)
+    {
+        return $source_tracker->getContributorField();
     }
 }

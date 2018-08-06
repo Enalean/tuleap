@@ -45,7 +45,7 @@ class MoveDescriptionSemanticChecker extends MoveSemanticChecker
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_tracker_description_field = $source_tracker->getDescriptionField();
+        $source_tracker_description_field = $this->getSourceSemanticField($source_tracker);
         $target_tracker_description_field = $target_tracker->getDescriptionField();
 
         return $this->form_element_factory->getType($source_tracker_description_field) ===
@@ -58,5 +58,10 @@ class MoveDescriptionSemanticChecker extends MoveSemanticChecker
     public function getSemanticName()
     {
         return self::DESCRIPTION_SEMANTIC_LABEL;
+    }
+
+    public function getSourceSemanticField(Tracker $source_tracker)
+    {
+        return $source_tracker->getDescriptionField();
     }
 }

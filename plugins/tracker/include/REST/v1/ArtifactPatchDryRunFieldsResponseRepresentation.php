@@ -18,32 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Action;
+namespace Tuleap\Tracker\REST\v1;
 
-use Tracker;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 
-class MoveTitleSemanticChecker extends MoveSemanticChecker
+class ArtifactPatchDryRunFieldsResponseRepresentation
 {
-    const TITLE_SEMANTIC_LABEL = 'title';
 
     /**
-     * @return bool
+     * @var array {@type string}
      */
-    public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
-    {
-        return $source_tracker->hasSemanticsTitle() && $target_tracker->hasSemanticsTitle();
-    }
+    public $fields_migrated = [];
 
     /**
-     * @return string
+     * @var array {@type string}
      */
-    public function getSemanticName()
-    {
-        return self::TITLE_SEMANTIC_LABEL;
-    }
+    public $fields_not_migrated = [];
 
-    public function getSourceSemanticField(Tracker $source_tracker)
+    public function build(FeedbackFieldCollector $feedback_field_collector)
     {
-        return $source_tracker->getTitleField();
+        foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
+            $this->fields_not_migrated[$field->getId()] = $field->getLabel();
+        }
+
+        foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
+            $this->fields_migrated[$field->getId()] = $field->getLabel();
+        }
     }
 }

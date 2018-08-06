@@ -27,6 +27,7 @@ use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
@@ -83,22 +84,36 @@ class MoveArtifact
     }
 
     /**
+     * @throws MoveArtifactSemanticsException
+     */
+    public function checkMoveIsPossible(
+        Tracker_Artifact $artifact,
+        Tracker $target_tracker,
+        FeedbackFieldCollector $feedback_field_collector
+    ) {
+        try {
+            $this->before_move_artifact->artifactCanBeMoved($artifact->getTracker(), $target_tracker, $feedback_field_collector);
+        } catch (MoveArtifactSemanticsException $exception) {
+            $this->artifact_priority_manager->rollback();
+            throw $exception;
+        }
+    }
+
+    /**
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionLimitReachedException
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactNotDoneException
      * @throws MoveArtifactSemanticsException
      */
-    public function move(Tracker_Artifact $artifact, Tracker $target_tracker, PFUser $user)
-    {
+    public function move(
+        Tracker_Artifact $artifact,
+        Tracker $target_tracker,
+        PFUser $user,
+        FeedbackFieldCollector $feedback_field_collector
+    ) {
         $this->artifact_priority_manager->startTransaction();
 
-        $source_tracker = $artifact->getTracker();
-        try {
-            $this->before_move_artifact->artifactCanBeMoved($source_tracker, $target_tracker);
-        } catch (MoveArtifactSemanticsException $exception) {
-            $this->artifact_priority_manager->rollback();
-            throw $exception;
-        }
+        $this->checkMoveIsPossible($artifact, $target_tracker, $feedback_field_collector);
 
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportFullHistory(
@@ -106,18 +121,18 @@ class MoveArtifact
             $artifact
         );
 
-        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
-        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
-
         $this->xml_updater->update(
             $user,
-            $source_tracker,
+            $artifact->getTracker(),
             $target_tracker,
             $xml_artifacts->artifact,
             $artifact->getSubmittedByUser(),
             $artifact->getSubmittedOn(),
             time()
         );
+
+        $global_rank = $this->artifact_priority_manager->getGlobalRank($artifact->getId());
+        $limit       = $this->artifacts_deletion_manager->deleteArtifactBeforeMoveOperation($artifact, $user);
 
         if (! $this->processMove($xml_artifacts->artifact, $target_tracker, $global_rank)) {
             $this->artifact_priority_manager->rollback();

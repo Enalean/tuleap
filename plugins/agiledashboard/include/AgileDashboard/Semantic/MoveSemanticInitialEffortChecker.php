@@ -52,10 +52,9 @@ class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
      */
     public function areBothSemanticsDefined(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_initial_effort = $this->initial_effort_factory->getByTracker($source_tracker);
         $target_initial_effort = $this->initial_effort_factory->getByTracker($target_tracker);
 
-        $source_initial_effort_field = $source_initial_effort->getField();
+        $source_initial_effort_field = $this->getSourceSemanticField($source_tracker);
         $target_initiel_effort_field = $target_initial_effort->getField();
 
         return $source_initial_effort_field && $target_initiel_effort_field;
@@ -66,10 +65,9 @@ class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
      */
     public function doesBothSemanticFieldHaveTheSameType(Tracker $source_tracker, Tracker $target_tracker)
     {
-        $source_initial_effort = $this->initial_effort_factory->getByTracker($source_tracker);
         $target_initial_effort = $this->initial_effort_factory->getByTracker($target_tracker);
 
-        $source_initial_effort_field = $source_initial_effort->getField();
+        $source_initial_effort_field = $this->getSourceSemanticField($source_tracker);
         $target_initial_effort_field = $target_initial_effort->getField();
 
         return $this->form_element_factory->getType($source_initial_effort_field) ===
@@ -82,5 +80,12 @@ class MoveSemanticInitialEffortChecker extends MoveSemanticChecker
     public function getSemanticName()
     {
         return self::INITIAL_EFFORT_SEMANTIC_LABEL;
+    }
+
+    public function getSourceSemanticField(Tracker $source_tracker)
+    {
+        $source_initial_effort = $this->initial_effort_factory->getByTracker($source_tracker);
+
+        return $source_initial_effort->getField();
     }
 }

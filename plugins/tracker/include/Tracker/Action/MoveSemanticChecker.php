@@ -42,6 +42,8 @@ abstract class MoveSemanticChecker
         return true;
     }
 
+    abstract public function getSourceSemanticField(Tracker $source_tracker);
+
     /**
      * @return bool
      */

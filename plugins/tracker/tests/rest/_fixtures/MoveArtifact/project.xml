@@ -164,7 +164,7 @@
         </formElement>
         <formElement type="computed" ID="F111" rank="250">
           <name>initial</name>
-          <label><![CDATA[initial]]></label>
+          <label><![CDATA[Initial]]></label>
         </formElement>
       </formElements>
       <semantics>
