@@ -8,7 +8,8 @@
   "dependencies": {
     "luxon": "^0.5.3",
     "node-gettext": "^2.0.0",
-    "vue": "^2.5.13"
+    "vue": "^2.5.13",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "concurrently": "^3.5.1"

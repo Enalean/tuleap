@@ -17,8 +17,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(
-<template>
+(<template>
     <form class="timetracking-writing-mode">
         <div class="timetracking-writing-mode-selected-dates">
 
@@ -54,52 +53,38 @@
         <div class="timetracking-writing-mode-actions">
             <button class="tlp-button-primary tlp-button-outline"
                 type="button"
-                v-on:click="cancel"
+                v-on:click="toggleReadingMode()"
             >{{ cancel_label }}</button>
             <button class="tlp-button-primary timetracking-writing-search"
                 type="button"
-                v-on:click="switchToReadingMode"
+                v-on:click="changeDates"
             >{{ search_label }}</button>
         </div>
     </form>
-</template>
-)(
-<script>
+</template>)
+(<script>
 import { datePicker } from "tlp";
 import { gettext_provider } from "../gettext-provider.js";
+import { mapState, mapMutations } from "vuex";
 
 export default {
     name: "WidgetWritingMode",
-    props: {
-        readingStartDate: String,
-        readingEndDate: String
-    },
-    data() {
-        return {
-            start_date: this.readingStartDate,
-            end_date: this.readingEndDate
-        };
-    },
+
     computed: {
+        ...mapState(["start_date", "end_date"]),
         start_date_label: () => gettext_provider.gettext("From"),
         end_date_label: () => gettext_provider.gettext("To"),
         cancel_label: () => gettext_provider.gettext("Cancel"),
         search_label: () => gettext_provider.gettext("Search")
     },
     methods: {
-        switchToReadingMode() {
-            this.$emit("switchToReadingMode", {
-                start_date: this.$refs.start_date.value,
-                end_date: this.$refs.end_date.value
-            });
-        },
-        cancel() {
-            this.$emit("switchToReadingMode");
+        ...mapMutations(["toggleReadingMode", "setDates"]),
+        changeDates() {
+            this.setDates([this.$refs.start_date.value, this.$refs.end_date.value]);
         }
     },
     mounted() {
         [this.$refs.start_date, this.$refs.end_date].forEach(element => datePicker(element));
     }
 };
-</script>
-)
+</script>)

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "babel-polyfill";
-import "tlp-mocks";
+export default {
+    setStartDate(state, date) {
+        state.start_date = date;
+    },
 
-import "./time-formatters.spec.js";
-import "./api/rest-querier.spec.js";
+    setEndDate(state, date) {
+        state.end_date = date;
+    },
 
-import "./store/mutations.spec.js";
+    toggleReadingMode(state) {
+        state.reading_mode = !state.reading_mode;
+    },
 
-import "./components/WidgetArtifactTable.spec.js";
+    setQueryHasChanged(state, has_changed) {
+        state.query_has_changed = has_changed;
+    },
+
+    setDates(state, [start_date, end_date]) {
+        state.start_date = start_date;
+        state.end_date = end_date;
+        state.reading_mode = !state.reading_mode;
+        state.query_has_changed = true;
+    }
+};

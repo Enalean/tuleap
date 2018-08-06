@@ -77,17 +77,12 @@
 (<script>
 import { gettext_provider } from "../gettext-provider.js";
 import { getTrackedTimes } from "../api/rest-querier.js";
+import { mapState } from "vuex";
 import { formatMinutes } from "../time-formatters.js";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 
 export default {
     name: "WidgetArtifactTable",
-    props: {
-        startDate: String,
-        endDate: String,
-        isInReadingMode: Boolean,
-        hasQueryChanged: Boolean
-    },
     components: { ArtifactTableRow },
     data() {
         return {
@@ -102,6 +97,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["start_date", "end_date", "reading_mode", "query_has_changed"]),
         hasRestError() {
             return this.rest_error !== "";
         },
@@ -112,7 +108,7 @@ export default {
             return this.is_loaded && !this.hasRestError;
         },
         report_state() {
-            return [this.isInReadingMode, this.hasQueryChanged];
+            return [this.reading_mode, this.query_has_changed];
         },
         canLoadMore() {
             return this.pagination_offset < this.total_times && !this.rest_error;
@@ -128,7 +124,7 @@ export default {
     },
     watch: {
         report_state() {
-            if (this.isInReadingMode && this.hasQueryChanged) {
+            if (this.reading_mode && this.query_has_changed) {
                 this.pagination_offset = 0;
                 this.tracked_times.length = 0;
                 this.loadFirstBatchOfTimes();
@@ -151,8 +147,8 @@ export default {
                 this.rest_error = "";
 
                 const { times, total } = await getTrackedTimes(
-                    this.startDate,
-                    this.endDate,
+                    this.start_date,
+                    this.end_date,
                     this.pagination_limit,
                     this.pagination_offset
                 );
