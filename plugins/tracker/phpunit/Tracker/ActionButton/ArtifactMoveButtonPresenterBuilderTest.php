@@ -93,7 +93,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturns([]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andThrow(
             new DeletionOfArtifactsIsNotAllowedException()
@@ -114,7 +114,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturns([]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andThrow(
             new ArtifactsDeletionLimitReachedException()
@@ -139,7 +139,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('hasSemanticsStatus')->andReturn(false);
         $this->tracker->shouldReceive('getContributorField')->andReturn(null);
 
-        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturns([]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
@@ -158,7 +158,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturns([\Mockery::mock(Tracker_Artifact::class)]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([\Mockery::mock(Tracker_Artifact::class)]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 
@@ -177,7 +177,7 @@ class ArtifactMoveButtonPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('userIsAdmin')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
         $this->tracker->shouldReceive('hasSemanticsTitle')->andReturn(true);
-        $this->artifact->shouldReceive('getLinkedArtifacts')->andReturns([]);
+        $this->artifact->shouldReceive('getLinkedAndReverseArtifacts')->andReturns([]);
 
         $this->deletion_limit_retriever->shouldReceive('getNumberOfArtifactsAllowedToDelete')->andReturn(10);
 

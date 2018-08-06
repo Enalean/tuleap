@@ -118,7 +118,7 @@ class ArtifactMoveButtonPresenterBuilder
 
     private function collectErrorsRelatedToArtifactLinks(Tracker_Artifact $artifact, PFUser $user)
     {
-        if ($artifact->getLinkedArtifacts($user)) {
+        if ($artifact->getLinkedAndReverseArtifacts($user)) {
             return dgettext("tuleap-tracker", "Artifacts with artifact links can not be moved.");
         }
 
