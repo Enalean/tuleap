@@ -21,21 +21,21 @@
 
 require_once('common/layout/Layout.class.php');
 
+use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\GerritCanMigrateChecker;
+use Tuleap\Git\GitViews\RepoManagement\Pane;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
+use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\Permissions\FineGrainedUpdater;
+use Tuleap\Git\Permissions\HistoryValueFormatter;
+use Tuleap\Git\Permissions\PermissionChangesDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpPermissionFilter;
 use Tuleap\Git\RemoteServer\Gerrit\MigrationHandler;
-use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
-use Tuleap\Git\GitViews\RepoManagement\Pane;
-use Tuleap\Git\Permissions\FineGrainedUpdater;
-use Tuleap\Git\Permissions\FineGrainedPermissionSaver;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
-use Tuleap\Git\Permissions\HistoryValueFormatter;
-use Tuleap\Git\Permissions\PermissionChangesDetector;
 
 /**
  * GitActions
@@ -832,6 +832,19 @@ class GitActions extends PluginActions
         }
 
         return $great_success;
+    }
+
+    public function redirectToDefaultSettings($project_id, $pane)
+    {
+        $this->getController()->redirect(
+            GIT_BASE_URL . '/?' . http_build_query(
+                [
+                    'action'   => 'admin-default-settings',
+                    'group_id' => $project_id,
+                    'pane'     => $pane
+                ]
+            )
+        );
     }
 
     public function redirectToRepoManagement($projectId, $repositoryId, $pane) {

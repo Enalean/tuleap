@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -34,9 +34,6 @@ require_once 'www/project/admin/permissions.php';
  * GitViews
  */
 class GitViews extends PluginViews {
-
-    const DEFAULT_SETTINGS_PANE_ACCESS_CONTROL = 'access_control';
-    const DEFAULT_SETTINGS_PANE_MIRRORING      = 'mirroring';
 
     /** @var Project */
     private $project;
@@ -494,115 +491,4 @@ class GitViews extends PluginViews {
         }
         return $html;
     }
-
-    protected function adminDefaultSettings($are_mirrors_defined, $pane)
-    {
-        $mirror_presenters = $this->getMirrorPresentersForGitAdmin();
-        $project_id        = $this->project->getID();
-
-        $builder        = $this->getAccessRightsPresenterOptionsBuilder();
-        $read_options   = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_READ);
-        $write_options  = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WRITE);
-        $rewind_options = $builder->getDefaultOptions($this->project, Git::DEFAULT_PERM_WPLUS);
-        $csrf           = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access-rights");
-
-        $pane_access_control = true;
-        $pane_mirroring      = false;
-
-        if ($are_mirrors_defined && $pane === self::DEFAULT_SETTINGS_PANE_MIRRORING) {
-            $pane_access_control = false;
-            $pane_mirroring      = true;
-        }
-
-        $user = UserManager::instance()->getCurrentUser();
-
-        $can_use_fine_grained_permissions = $this->git_permissions_manager->userIsGitAdmin($user, $this->project);
-
-        $are_fine_grained_permissions_defined = $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions(
-            $this->project
-        );
-
-        $branches_permissions     = $this->default_fine_grained_permission_factory->getBranchesFineGrainedPermissionsForProject($this->project);
-        $tags_permissions         = $this->default_fine_grained_permission_factory->getTagsFineGrainedPermissionsForProject($this->project);
-        $new_fine_grained_ugroups = $builder->getAllOptions($this->project);
-
-        $delete_url  = '?action=delete-default-permissions&pane=access_control&group_id='.$this->project->getID();
-        $url         = '?action=admin-default-settings&pane=access_control&group_id='.$this->project->getID();
-        $csrf_delete = new CSRFSynchronizerToken($url);
-
-        $branches_permissions_representation = array();
-        foreach ($branches_permissions as $permission) {
-            $branches_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
-                $permission,
-                $this->project
-            );
-        }
-
-        $tags_permissions_representation = array();
-        foreach ($tags_permissions as $permission) {
-            $tags_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
-                $permission,
-                $this->project
-            );
-        }
-
-        $presenter = new GitPresenters_AdminDefaultSettingsPresenter(
-            $project_id,
-            $are_mirrors_defined,
-            $mirror_presenters,
-            $csrf,
-            $read_options,
-            $write_options,
-            $rewind_options,
-            $pane_access_control,
-            $pane_mirroring,
-            $are_fine_grained_permissions_defined,
-            $can_use_fine_grained_permissions,
-            $branches_permissions_representation,
-            $tags_permissions_representation,
-            $new_fine_grained_ugroups,
-            $delete_url,
-            $csrf_delete,
-            $this->areRegexpActivatedAtSiteLevel(),
-            $this->isRegexpActivatedForDefault(),
-            $this->areRegexpConflictingForDefault()
-        );
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-        $this->header_renderer->renderServiceAdministrationHeader($this->request, $this->user, $this->project);
-        echo $renderer->renderToString('admin', $presenter);
-        $this->footer();
-    }
-
-    private function areRegexpActivatedAtSiteLevel()
-    {
-        return $this->regexp_retriever->areRegexpActivatedAtSiteLevel();
-    }
-
-
-    private function isRegexpActivatedForDefault()
-    {
-        return $this->regexp_retriever->areRegexpActivatedForDefault($this->project);
-    }
-
-    private function areRegexpConflictingForDefault()
-    {
-        return $this->regexp_retriever->areDefaultRegexpConflitingWithPlateform($this->project);
-    }
-
-    private function getMirrorPresentersForGitAdmin() {
-        $mirrors            = $this->mirror_data_mapper->fetchAllForProject($this->project);
-        $default_mirror_ids = $this->mirror_data_mapper->getDefaultMirrorIdsForProject($this->project);
-        $mirror_presenters  = array();
-
-        foreach ($mirrors as $mirror) {
-            $is_used = in_array($mirror->id, $default_mirror_ids);
-
-            $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, $is_used);
-        }
-
-        return $mirror_presenters;
-    }
-
 }

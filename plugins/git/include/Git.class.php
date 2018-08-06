@@ -1,8 +1,7 @@
 <?php
-
 /**
-  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -462,7 +461,6 @@ class Git extends PluginController
                 'admin',
                 'admin-git-admins',
                 'admin-gerrit-templates',
-                'admin-default-settings',
                 'admin-default-access-rights',
                 'delete-permissions',
                 'delete-default-permissions',
@@ -800,16 +798,12 @@ class Git extends PluginController
                 $this->addView('adminMassUpdateSelectRepositoriesView');
 
                 break;
-            case 'admin-default-settings':
-                $this->addDefaultSettingsView();
-
-                break;
             case 'admin-default-access-rights':
                 if ($this->request->get('save')) {
                     $this->template_permission_updater->updateProjectTemplatePermissions($this->request);
                 }
 
-                $this->addDefaultSettingsView();
+                $this->addRedirectToDefaultSettingsAction();
 
                 break;
             case 'fetch_git_config':
@@ -975,7 +969,7 @@ class Git extends PluginController
                     $this->addError($this->getText('actions_mirror_ids_not_valid'));
                 }
 
-                $this->addDefaultSettingsView();
+                $this->addRedirectToDefaultSettingsAction();
 
                 break;
             case 'restore':
@@ -1033,7 +1027,7 @@ class Git extends PluginController
                     array($this->groupId)
                 );
 
-                $this->addDefaultSettingsView();
+                $this->addRedirectToDefaultSettingsAction();
                 break;
             #LIST
             default:
@@ -1082,17 +1076,14 @@ class Git extends PluginController
         return $permission_id;
     }
 
-    private function addDefaultSettingsView() {
+    private function addRedirectToDefaultSettingsAction()
+    {
         $pane = '';
         if ($this->request->exist('pane')) {
             $pane = $this->request->get('pane');
         }
 
-        $this->setDefaultPageRendering(false);
-        $this->addView(
-            'adminDefaultSettings',
-            array($this->areMirrorsEnabledForProject(), $pane)
-        );
+        $this->addAction('redirectToDefaultSettings', [$this->groupId, $pane]);
     }
 
     private function getValidatedGerritTemplateId($repository) {
