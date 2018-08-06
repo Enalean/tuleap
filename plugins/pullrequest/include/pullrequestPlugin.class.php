@@ -338,7 +338,18 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
                 $renderer         = $this->getTemplateRenderer();
                 $user             = $event->getRequest()->getCurrentUser();
-                $presenter        = new PullRequestPresenter($repository->getId(), $user->getId(), $user->getShortLocale(), $nb_pull_requests);
+
+                $merge_settings_retriever = new MergeSettingRetriever(
+                    new MergeSettingDAO()
+                );
+
+                $presenter = new PullRequestPresenter(
+                    $repository->getId(),
+                    $user->getId(),
+                    $user->getShortLocale(),
+                    $nb_pull_requests,
+                    $merge_settings_retriever->getMergeSettingForRepository($repository)
+                );
 
                 $event->getRepoHeader()->display($event->getRequest(), $event->getLayout(), $repository);
 

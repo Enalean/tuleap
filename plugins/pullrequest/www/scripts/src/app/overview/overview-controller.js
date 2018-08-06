@@ -45,7 +45,8 @@ function OverviewController(
     });
 
     SharedPropertiesService.whenReady().then(function() {
-        self.pull_request = SharedPropertiesService.getPullRequest();
+        self.pull_request            = SharedPropertiesService.getPullRequest();
+        self.is_merge_commit_allowed = SharedPropertiesService.isMergeCommitAllowed();
 
         self.current_checkout_method = self.pull_request.repository_dest.clone_ssh_url ? 'ssh' : 'http';
 
