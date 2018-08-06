@@ -1,32 +1,19 @@
 <div class="tab-pane active">
     <div class="tabbable" id="admin-general-settings">
         <ul class="nav nav-tabs">
-            <li>
-                <a class ="disabled-link" href="#">{{ left_tab_admin_settings }}</a>
-            </li>
-            <li {{# pane_access_control}} class="active" {{/ pane_access_control}}>
-                <a href="{{ access_control_href }}">{{ left_tab_admin_permissions }}</a>
-            </li>
-            {{# are_mirrors_defined }}
-            <li {{# pane_mirroring}} class="active" {{/ pane_mirroring}}>
-                <a href="{{ mirroring_href }}">{{ table_title }}</a>
-            </li>
-            {{/ are_mirrors_defined }}
-            <li>
-                <a class ="disabled-link" href="#">{{ left_tab_admin_notifications }}</a>
-            </li>
+            {{# panes }}
+                <li {{# is_active }} class="active" {{/ is_active }}>
+                    <a {{# is_disabled }}class="disabled-link"{{/is_disabled}} href="{{ href }}">{{ title }}</a>
+                </li>
+            {{/ panes }}
         </ul>
         <div class="tab-content">
             <div class="tab-pane active">
-                {{# pane_access_control }}
-                    {{> admin-git-access-rights }}
-                {{/ pane_access_control }}
-
-                {{# are_mirrors_defined }}
-                    {{# pane_mirroring }}
-                        {{> default-mirroring }}
-                    {{/ pane_mirroring }}
-                {{/ are_mirrors_defined }}
+                {{# panes }}
+                    {{# is_active }}
+                        {{{ content }}}
+                    {{/is_active}}
+                {{/ panes }}
             </div>
         </div>
     </div>

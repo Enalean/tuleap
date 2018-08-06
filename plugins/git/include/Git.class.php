@@ -1078,9 +1078,10 @@ class Git extends PluginController
 
     private function addRedirectToDefaultSettingsAction()
     {
-        $pane = '';
-        if ($this->request->exist('pane')) {
-            $pane = $this->request->get('pane');
+        $pane = \Tuleap\Git\DefaultSettings\Pane\AccessControl::NAME;
+        $requested_pane = $this->request->get('pane');
+        if ($requested_pane) {
+            $pane = $requested_pane;
         }
 
         $this->addAction('redirectToDefaultSettings', [$this->groupId, $pane]);

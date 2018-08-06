@@ -124,7 +124,7 @@ class TemplatePermissionsUpdater
         $project    = $request->getProject();
         $project_id = $project->getID();
 
-        $csrf = new CSRFSynchronizerToken("plugins/git/?group_id=$project_id&action=admin-default-access-rights");
+        $csrf = new CSRFSynchronizerToken("/plugins/git/?group_id=$project_id&action=admin-default-access-rights");
         $csrf->check();
 
         $read_ugroup_ids                 = array();
