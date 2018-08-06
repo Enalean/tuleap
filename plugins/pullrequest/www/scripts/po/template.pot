@@ -98,6 +98,10 @@ msgstr ""
 msgid "Merge"
 msgstr ""
 
+#: src/app/overview/overview.tpl.html
+msgid "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request."
+msgstr ""
+
 #: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
 msgstr ""

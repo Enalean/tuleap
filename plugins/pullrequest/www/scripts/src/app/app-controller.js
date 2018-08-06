@@ -35,6 +35,9 @@ function MainController(
 
         const language = pullrequest_init_data.language;
         initLocale(language);
+
+        const is_merge_commit_allowed = pullrequest_init_data.isMergeCommitAllowed;
+        SharedPropertiesService.setIsMergeCommitAllowed(is_merge_commit_allowed);
     }
 
     function initLocale(language) {

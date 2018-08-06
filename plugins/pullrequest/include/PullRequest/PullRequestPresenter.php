@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest;
 
+use Tuleap\PullRequest\MergeSetting\MergeSetting;
+
 class PullRequestPresenter
 {
     /** @var PullRequestCount */
@@ -37,19 +39,22 @@ class PullRequestPresenter
     /** @var bool */
     public $is_there_at_least_one_pull_request;
 
+    /** @var bool */
+    public $is_merge_commit_allowed;
 
-    public function __construct($repository_id, $user_id, $language, PullRequestCount $nb_pull_requests)
+    public function __construct($repository_id, $user_id, $language, PullRequestCount $nb_pull_requests, MergeSetting $merge_setting)
     {
         $this->repository_id                      = $repository_id;
         $this->user_id                            = $user_id;
         $this->language                           = $language;
         $this->nb_pull_requests                   = $nb_pull_requests;
         $this->is_there_at_least_one_pull_request = $nb_pull_requests->isThereAtLeastOnePullRequest();
+        $this->is_merge_commit_allowed            = $merge_setting->isMergeCommitAllowed();
     }
 
     public function getTemplateName()
     {
-        return 'index';
+        return 'angular-pullrequest';
     }
 
     public function nb_pull_request_badge() // phpcs:ignore

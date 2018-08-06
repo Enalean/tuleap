@@ -9,7 +9,8 @@ function SharedPropertiesService() {
         pull_request                      : null,
         user_id                           : null,
         nb_pull_request_badge             : null,
-        is_there_at_least_one_pull_request: null
+        is_there_at_least_one_pull_request: null,
+        is_merge_commit_allowed           : null
     };
 
     return {
@@ -24,7 +25,9 @@ function SharedPropertiesService() {
         getNbPullRequestBadge,
         setNbPullRequestBadge,
         isThereAtLeastOnePullRequest,
-        setIsThereAtLeastOnePullRequest
+        setIsThereAtLeastOnePullRequest,
+        isMergeCommitAllowed,
+        setIsMergeCommitAllowed,
     };
 
     function whenReady() {
@@ -73,5 +76,13 @@ function SharedPropertiesService() {
 
     function setIsThereAtLeastOnePullRequest(is_there_at_least_one_pull_request) {
         property.is_there_at_least_one_pull_request = Boolean(is_there_at_least_one_pull_request);
+    }
+
+    function isMergeCommitAllowed() {
+        return property.is_merge_commit_allowed;
+    }
+
+    function setIsMergeCommitAllowed(is_merge_commit_allowed) {
+        property.is_merge_commit_allowed = Boolean(is_merge_commit_allowed);
     }
 }

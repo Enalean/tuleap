@@ -101,13 +101,26 @@
     <div id="pull-request-actions" ng-class="{ 'in-edition': overview.showEditionForm }">
         <div ng-if="overview.operationInProgress" class="loading"></div>
 
-        <div ng-if="overview.isNonFastForwardMerge()">
+        <div ng-if="overview.isNonFastForwardMerge() && overview.is_merge_commit_allowed">
             <button ng-if="overview.hasMergeRight()" class="btn btn-large btn-warning" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
                 <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
             </button>
             <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
                 <i class="icon-trash"></i> {{ 'Abandon' | translate }}
             </button>
+        </div>
+
+        <div ng-if="overview.isNonFastForwardMerge() && ! overview.is_merge_commit_allowed" class="alert alert-error">
+            <i class="icon-remove-sign"></i>
+            {{ "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request." | translate }}
+            <p>
+                <button class="btn btn-large btn-warning" disabled="true">
+                    <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                </button>
+                <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
+                    <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                </button>
+            </p>
         </div>
 
         <div ng-if="overview.isConflictingMerge()" class="alert alert-error">

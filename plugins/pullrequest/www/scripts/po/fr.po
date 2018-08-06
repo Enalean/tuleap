@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -109,6 +109,15 @@ msgstr "Charger les pull requests fermées"
 #: src/app/overview/overview.tpl.html
 msgid "Merge"
 msgstr "Intégrer"
+
+#: src/app/overview/overview.tpl.html
+msgid ""
+"Merge commits are forbidden in the repository configuration (fast-forward "
+"only). Please rebase the commit and update the pull request."
+msgstr ""
+"Les commits de fusion sont interdits par la configuration du dépôt "
+"(avance rapide uniquement). Veuillez rebaser votre commit et mettre à jour "
+"la pull request."
 
 #: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"
@@ -212,8 +221,12 @@ msgstr "Inconnu"
 
 #: src/app/overview/overview.tpl.html
 msgid ""
-"Your CI job is using a deprecated REST route to publish the build result and must be updated.\n"
-"                    Consult the documentation or the API Explorer for more information."
+"Your CI job is using a deprecated REST route to publish the build result and "
+"must be updated.\n"
+"                    Consult the documentation or the API Explorer for more "
+"information."
 msgstr ""
-"Votre job d'intégration continue utilise une route REST obsolète et doit être mis à jour.\n"
-"                    Consulter la documentation ou l'API Explorer pour plus d'informations."
+"Votre job d'intégration continue utilise une route REST obsolète et doit "
+"être mis à jour.\n"
+"                    Consulter la documentation ou l'API Explorer pour plus "
+"d'informations."
