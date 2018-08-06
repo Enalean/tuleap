@@ -10,7 +10,7 @@
 import { formatMinutes } from "./time-formatters.js";
 
 export default {
-    name: "WidgetModalRows",
+    name: "WidgetModalRow",
     props: {
         timeData: Object
     },
