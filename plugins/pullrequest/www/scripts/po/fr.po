@@ -94,6 +94,22 @@ msgstr ""
 msgid "Files"
 msgstr "Fichiers"
 
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has abandoned the pull request."
+msgstr "A abandonné la pull request."
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has merged the pull request."
+msgstr "A intégré la pull request."
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has rebased the pull request."
+msgstr "A rebasé la pull request."
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has updated the pull request."
+msgstr "A mis à jour la pull request."
+
 #: src/app/dashboard/dashboard.tpl.html
 msgid "Hide closed pull requests"
 msgstr "Cacher les pull requests fermées"
@@ -115,9 +131,9 @@ msgid ""
 "Merge commits are forbidden in the repository configuration (fast-forward "
 "only). Please rebase the commit and update the pull request."
 msgstr ""
-"Les commits de fusion sont interdits par la configuration du dépôt "
-"(avance rapide uniquement). Veuillez rebaser votre commit et mettre à jour "
-"la pull request."
+"Les commits de fusion sont interdits par la configuration du dépôt (avance "
+"rapide uniquement). Veuillez rebaser votre commit et mettre à jour la pull "
+"request."
 
 #: src/app/dashboard/pull-request-summary/pull-request-summary.tpl.html
 msgid "Merged"

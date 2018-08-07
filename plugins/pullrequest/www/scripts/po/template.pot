@@ -82,6 +82,22 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has abandoned the pull request."
+msgstr ""
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has merged the pull request."
+msgstr ""
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has rebased the pull request."
+msgstr ""
+
+#: src/app/overview/timeline/timeline-service.js
+msgid "Has updated the pull request."
+msgstr ""
+
 #: src/app/dashboard/dashboard.tpl.html
 msgid "Hide closed pull requests"
 msgstr ""

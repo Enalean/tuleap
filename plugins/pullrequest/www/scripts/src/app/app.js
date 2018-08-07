@@ -6,6 +6,7 @@ import 'angular-moment';
 import 'angular-gettext';
 import 'angular-ui-bootstrap-templates';
 import 'angular-ui-select';
+import '../../po/fr.po';
 
 import MainController                   from './app-controller.js';
 import ErrorModalController             from './error-modal/error-modal-controller.js';
