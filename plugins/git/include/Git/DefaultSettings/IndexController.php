@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\DefaultSettings;
 
+use EventManager;
 use Git_Mirror_MirrorDataMapper;
 use GitPermissionsManager;
 use GitPresenters_AdminDefaultSettingsPresenter;
@@ -28,6 +29,7 @@ use Project;
 use TemplateRendererFactory;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\DefaultSettings\Pane\AccessControl;
+use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\DefaultSettings\Pane\DisabledPane;
 use Tuleap\Git\DefaultSettings\Pane\Mirroring;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
@@ -71,6 +73,10 @@ class IndexController
      * @var HeaderRenderer
      */
     private $header_renderer;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         AccessRightsPresenterOptionsBuilder $access_rights_builder,
@@ -80,7 +86,8 @@ class IndexController
         FineGrainedRepresentationBuilder $fine_grained_builder,
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper,
-        HeaderRenderer $header_renderer
+        HeaderRenderer $header_renderer,
+        EventManager $event_manager
     ) {
         $this->access_rights_builder                   = $access_rights_builder;
         $this->git_permissions_manager                 = $git_permissions_manager;
@@ -90,6 +97,7 @@ class IndexController
         $this->regexp_retriever                        = $regexp_retriever;
         $this->mirror_data_mapper                      = $mirror_data_mapper;
         $this->header_renderer                         = $header_renderer;
+        $this->event_manager                           = $event_manager;
     }
 
     public function displayDefaultSettings(HTTPRequest $request)
@@ -119,7 +127,7 @@ class IndexController
      * @param HTTPRequest $request
      * @param bool        $are_mirrors_defined
      *
-     * @return array
+     * @return Pane\Pane[]
      */
     private function getPanes(Project $project, HTTPRequest $request, $are_mirrors_defined)
     {
@@ -129,8 +137,10 @@ class IndexController
             $current_pane = $requested_pane;
         }
 
-        $panes = [
-            new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_settings')),
+        $panes = new DefaultSettingsPanesCollection($project, $current_pane);
+
+        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_settings')));
+        $panes->add(
             new AccessControl(
                 $this->access_rights_builder,
                 $this->git_permissions_manager,
@@ -141,18 +151,20 @@ class IndexController
                 UserManager::instance(),
                 $project,
                 $current_pane === AccessControl::NAME
-            ),
-            new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token')),
-        ];
+            )
+        );
+        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'view_repo_ci_token')));
 
         if ($are_mirrors_defined) {
-            $panes[] = new Mirroring($this->mirror_data_mapper, $project, $current_pane === Mirroring::NAME);
+            $panes->add(new Mirroring($this->mirror_data_mapper, $project, $current_pane === Mirroring::NAME));
         }
 
-        $panes[] = new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_mail'));
-        $panes[] = new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'settings_hooks_title'));
+        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'admin_mail')));
+        $panes->add(new DisabledPane($GLOBALS['Language']->getText('plugin_git', 'settings_hooks_title')));
 
-        return $panes;
+        $this->event_manager->processEvent($panes);
+
+        return $panes->getPanes();
     }
 
     /**

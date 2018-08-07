@@ -21,6 +21,7 @@
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;
 use Tuleap\Git\Events\AfterRepositoryForked;
 use Tuleap\Git\GitAdditionalActionEvent;
@@ -41,11 +42,14 @@ use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\PullRequest\AdditionalActionsPresenter;
 use Tuleap\PullRequest\AdditionalHelpTextPresenter;
 use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
+use Tuleap\PullRequest\DefaultSettings\PullRequestPane as DefaultSettingsPullRequestPane;
 use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\GitExec;
@@ -61,6 +65,7 @@ use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\LegacyRouter;
 use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
@@ -77,7 +82,6 @@ use Tuleap\PullRequest\Reference\ReferenceFactory;
 use Tuleap\PullRequest\RepoManagement\PullRequestPane;
 use Tuleap\PullRequest\RepoManagement\RepoManagementController;
 use Tuleap\PullRequest\REST\ResourcesInjector;
-use Tuleap\PullRequest\LegacyRouter;
 use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
 use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\PullRequest\Tooltip\Presenter;
@@ -113,6 +117,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(GetProjectHistoryEntryValue::NAME);
 
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
@@ -133,6 +138,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(AfterRepositoryForked::NAME);
             $this->addHook(AfterRepositoryCreated::NAME);
             $this->addHook(PanesCollection::NAME);
+            $this->addHook(DefaultSettingsPanesCollection::NAME);
         }
     }
 
@@ -718,6 +724,32 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    public function collectDefaultSettingsPanes(DefaultSettingsPanesCollection $collection)
+    {
+        $collection->add(
+            new DefaultSettingsPullRequestPane(
+                new MergeSettingRetriever(new MergeSettingDAO()),
+                $collection->getProject(),
+                $collection->getCurrentPane() === DefaultSettingsPullRequestPane::NAME
+            )
+        );
+    }
+
+    public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event)
+    {
+        $project_history_entry = $event->getRow();
+        if ($project_history_entry['field_name'] === DefaultSettingsController::HISTORY_FIELD_NAME) {
+            $is_merge_commit_allowed = $event->getValue();
+            if ($is_merge_commit_allowed) {
+                $value = dgettext('tuleap-pullrequest', 'Default (Will fast-forward when possible, fallback to merge when not possible)');
+            } else {
+                $value = dgettext('tuleap-pullrequest', 'Fast-forward only');
+            }
+
+            $event->setValue($value);
+        }
+    }
+
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->post(
@@ -738,6 +770,13 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 );
             }
         );
+        $event->getRouteCollector()->post(
+            $this->getPluginPath() . '/default-settings',
+            function () {
+                return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
+            }
+        );
+
         $event->getRouteCollector()->post(
             $this->getPluginPath() . '/{query:.*}',
             function () {

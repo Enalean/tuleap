@@ -40,3 +40,5 @@ plugin_pullrequest	status_in_review	In review
 plugin_pullrequest	tooltip_title_label	Title:
 plugin_pullrequest	tooltip_status_label	Status:
 plugin_pullrequest	tooltip_creation_date_label	Created on:
+
+project_admin_utils	pullrequest-default-settings	Pull requests default merge mode

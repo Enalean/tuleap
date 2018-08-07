@@ -20,6 +20,8 @@
 
 namespace Tuleap\PullRequest\MergeSetting;
 
+use Project;
+
 class MergeSettingRetriever
 {
     /**
@@ -37,7 +39,21 @@ class MergeSettingRetriever
      */
     public function getMergeSettingForRepository(\GitRepository $repository)
     {
-        $merge_setting = $this->dao->getMergeSettingByRepositoryID($repository->getId());
+        return $this->instantiateMergeSetting($this->dao->getMergeSettingByRepositoryID($repository->getId()));
+    }
+
+    public function getMergeSettingForProject(Project $project)
+    {
+        return $this->instantiateMergeSetting($this->dao->getMergeSettingByProjectID($project->getId()));
+    }
+
+    /**
+     * @param $merge_setting
+     *
+     * @return MergeSettingDefault|MergeSettingWithValue
+     */
+    private function instantiateMergeSetting($merge_setting)
+    {
         if ($merge_setting === null) {
             return new MergeSettingDefault();
         }

@@ -40,3 +40,5 @@ plugin_pullrequest	status_in_review	En revue
 plugin_pullrequest	tooltip_title_label	Titre :
 plugin_pullrequest	tooltip_status_label	Statut :
 plugin_pullrequest	tooltip_creation_date_label	Créée le :
+
+project_admin_utils	pullrequest-default-settings	Mode de fusion par défaut pour les pull requests

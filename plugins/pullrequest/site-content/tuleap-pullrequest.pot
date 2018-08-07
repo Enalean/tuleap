@@ -3,6 +3,9 @@ msgid ""
 "possible)"
 msgstr ""
 
+msgid "Default pull requests settings updated"
+msgstr ""
+
 msgid "Fast-forward only"
 msgstr ""
 
