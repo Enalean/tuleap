@@ -7,6 +7,14 @@ msgid "%s has been created by %s"
 msgstr ""
 
 #, php-format
+msgid "%s has been successfully moved to %s"
+msgstr ""
+
+#, php-format
+msgid "%s has been successfully moved to %s in %s"
+msgstr ""
+
+#, php-format
 msgid "%s has been updated"
 msgstr ""
 

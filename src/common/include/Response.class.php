@@ -126,7 +126,7 @@ class Response {
     function _serializeFeedback() {
         $dao        = $this->getFeedbackDao();
         $session_id = UserManager::instance()->getCurrentUser()->getSessionId();
-        $dao->create($session_id, json_encode($this->_feedback->getLogs()));
+        $dao->create($session_id, $this->_feedback->getLogs());
     }
 
     public function sendStatusCode($code) {

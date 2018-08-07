@@ -21,28 +21,46 @@
 namespace Tuleap\Tracker\REST\v1;
 
 use EventManager;
+use FeedbackDao;
 use Log_NoopLogger;
+use Luracast\Restler\RestException;
+use PFUser;
+use Tracker_Artifact;
+use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
+use Tracker_Artifact_Attachment_FileNotFoundException;
+use Tracker_Artifact_Changeset as Changeset;
 use Tracker_Artifact_PriorityDao;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImportBuilder;
+use Tracker_ArtifactFactory;
+use Tracker_Exception;
+use Tracker_FormElement_InvalidFieldException;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
+use Tracker_FormElementFactory;
+use Tracker_NoChangeException;
+use Tracker_REST_Artifact_ArtifactCreator;
+use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
+use Tracker_REST_Artifact_ArtifactUpdater;
+use Tracker_REST_Artifact_ArtifactValidator;
+use Tracker_URLVerification;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
-use Tuleap\REST\JsonDecoder;
-use \Tuleap\REST\ProjectAuthorization;
-use \Tuleap\REST\Header;
+use TrackerFactory;
+use Tuleap\Glyph\GlyphFinder;
 use Tuleap\REST\AuthenticatedResource;
-use \Luracast\Restler\RestException;
-use \Tracker_ArtifactFactory;
-use \Tracker_Artifact;
+use Tuleap\REST\Header;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveArtifact;
-use Tuleap\Tracker\Action\BeforeMoveArtifact;
-use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
+use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
 use Tuleap\Tracker\Action\MoveTitleSemanticChecker;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
@@ -57,31 +75,15 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedExc
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
+use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\Artifact\MovedArtifactValueBuilder;
+use Tuleap\Tracker\REST\ChangesetCommentRepresentation;
+use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\Event\ArtifactPartialUpdate;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
-use \UserManager;
-use \PFUser;
-use \Tracker_REST_Artifact_ArtifactRepresentationBuilder;
-use \Tracker_FormElementFactory;
-use \Tracker_REST_Artifact_ArtifactUpdater;
-use \Tracker_REST_Artifact_ArtifactValidator;
-use \Tracker_FormElement_InvalidFieldException;
-use \Tracker_FormElement_InvalidFieldValueException;
-use \Tracker_FormElement_RESTValueByField_NotImplementedException;
-use \Tracker_Artifact_Attachment_FileNotFoundException;
-use \Tracker_Exception;
-use \Tuleap\Tracker\REST\ChangesetCommentRepresentation;
-use \Tuleap\Tracker\REST\TrackerReference;
-use \Tracker_NoChangeException;
-use \TrackerFactory;
-use \Tracker_REST_Artifact_ArtifactCreator;
-use \Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use \Tracker_URLVerification;
-use \Tracker_Artifact_Changeset as Changeset;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
+use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
 use XML_RNGValidator;
@@ -102,6 +104,14 @@ class ArtifactsResource extends AuthenticatedResource {
     const VALUES_DEFAULT           = null;
 
     const EMPTY_TYPE = '';
+    /**
+     * @var PostMoveArticfactRESTAction
+     */
+    private $post_move_action;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
     /**
      * @var UserDeletionRetriever
      */
@@ -163,6 +173,10 @@ class ArtifactsResource extends AuthenticatedResource {
 
         $this->event_manager = EventManager::instance();
         $this->user_manager  = UserManager::instance();
+
+        $this->post_move_action = new PostMoveArticfactRESTAction(
+            new FeedbackDao()
+        );
     }
 
     /**
@@ -810,6 +824,8 @@ class ArtifactsResource extends AuthenticatedResource {
                 $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             } else {
                 $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
+
+                $this->post_move_action->addFeedback($source_tracker, $target_tracker, $artifact, $user);
             }
 
             return $response_representation;

@@ -21,6 +21,14 @@ msgid "%s has been created by %s"
 msgstr "%s a été créé par %s"
 
 #, php-format
+msgid "%s has been successfully moved to %s"
+msgstr "%s a été déplacé avec succès vers %s"
+
+#, php-format
+msgid "%s has been successfully moved to %s in %s"
+msgstr "%s a été déplacé avec succès vers %s dans %"
+
+#, php-format
 msgid "%s has been updated"
 msgstr "%s a été mis à jour"
 
@@ -101,7 +109,8 @@ msgstr "Liens entre artéfacts typés"
 
 #, php-format
 msgid "Artifact was moved from '%s' tracker in '%s' project."
-msgstr "Cet artéfact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
+msgstr ""
+"Cet artéfact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
 
 msgid "Artifacts deletion"
 msgstr "Suppression d'artéfacts"
@@ -110,7 +119,9 @@ msgid "Artifacts deletion configuration"
 msgstr "Configuration de la suppression d'artéfacts"
 
 msgid "Artifacts with artifact links can not be moved."
-msgstr "Les artéfacts avec des liens vers d'autres artéfacts ne peuvent pas être déplacés."
+msgstr ""
+"Les artéfacts avec des liens vers d'autres artéfacts ne peuvent pas être "
+"déplacés."
 
 msgid ""
 "As a tracker administrator, you can choose the e-mail notifications level in "
