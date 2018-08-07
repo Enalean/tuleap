@@ -803,25 +803,23 @@ class ArtifactsResource extends AuthenticatedResource {
         $response_representation = new ArtifactPatchResponseRepresentation();
 
         try {
+            $remaining_deletions = $this->getRemainingNumberOfDeletion($user);
+
             if ($patch->move->dry_run) {
                 $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
                 $response_representation->build($feedback_collector);
-
-                $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             } else {
                 $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
             }
 
             return $response_representation;
         } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
-            throw new RestException(403, "The artifact limit is exceeded. The move operation is not possible. Aborting.");
+            throw new RestException(403, $exception->getMessage());
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
             throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
-            $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(500, $exception->getMessage());
         } catch (MoveArtifactSemanticsException $exception) {
-            $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);
             throw new RestException(400, $exception->getMessage());
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
@@ -829,11 +827,18 @@ class ArtifactsResource extends AuthenticatedResource {
         }
     }
 
-    private function getRemainingNumberOfDeletion(PFUser $user, $limit)
+    /**
+     * @throws ArtifactsDeletionLimitReachedException
+     * @throws DeletionOfArtifactsIsNotAllowedException
+     */
+    private function getRemainingNumberOfDeletion(PFUser $user)
     {
-        $number_of_deletions = $this->user_deletion_retriever->getNumberOfArtifactsDeletionsForUserInTimePeriod($user);
+        $artifact_deletion_limit_retriever = new ArtifactDeletionLimitRetriever(
+            $this->artifacts_deletion_config,
+            $this->user_deletion_retriever
+        );
 
-        return (int)($limit - $number_of_deletions);
+        return (int) $artifact_deletion_limit_retriever->getNumberOfArtifactsAllowedToDelete($user);
     }
 
     /**
