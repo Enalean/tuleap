@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -119,6 +119,13 @@ tuleap.graphontrackersv5.addLegendBox = function(
         .attr("ry", 3)
         .attr("width", 16)
         .attr("height", 16)
+        .attr("class", function(d) {
+            if (d.color.indexOf('#') > -1) {
+                return;
+            }
+
+            return "graph-element-" + d.color;
+        })
         .style("fill", function (d) { return d.color; });
 
     legend.append("text")
