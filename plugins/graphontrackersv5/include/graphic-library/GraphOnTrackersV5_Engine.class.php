@@ -75,7 +75,7 @@ abstract class GraphOnTrackersV5_Engine {
 
     /** @return bool */
     private function isColorUndefined($color) {
-        return $color[0] == NULL || $color[1] == NULL || $color[2] == NULL;
+        return $color[0] === NULL || $color[1] === NULL || $color[2] === NULL;
     }
 
     /** @return string hexadecimal representation of the color */
