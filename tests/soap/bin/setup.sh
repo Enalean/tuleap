@@ -95,12 +95,12 @@ seed_data() {
     load_project /usr/share/tuleap/tests/soap/_fixtures/02-plugin-tracker
 
     echo "Load initial data"
-    /opt/rh/rh-php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
+    /opt/remi/php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 setup_tuleap
 /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
-service rh-php56-php-fpm start
+service php56-php-fpm start
 service nginx start
 setup_database
 seed_data

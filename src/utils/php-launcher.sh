@@ -26,7 +26,7 @@ set -e
 
 # PHP path and parameters
 if [ -z "$PHP" ]; then
-    PHP="/opt/rh/rh-php56/root/usr/bin/php"
+    PHP="/opt/remi/php56/root/usr/bin/php"
     if [ ! -x "$PHP" ]; then
         if hash php 2> /dev/null; then
             PHP="php"

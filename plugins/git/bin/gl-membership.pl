@@ -43,4 +43,4 @@ while (<PHP_LAUNCHER>) {
 }
 close(PHP_LAUNCHER);
 
-exec "/opt/rh/rh-php56/root/usr/bin/php -d error_reporting=0 $PHP_PARAMS /usr/share/tuleap/plugins/git/bin/gl-membership.php $username";
+exec "/opt/remi/php56/root/usr/bin/php -d error_reporting=0 $PHP_PARAMS /usr/share/tuleap/plugins/git/bin/gl-membership.php $username";

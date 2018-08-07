@@ -55,7 +55,7 @@ MV='/bin/mv'
 MYSQL='/usr/bin/mysql'
 MYSQLSHOW='/usr/bin/mysqlshow'
 PERL='/usr/bin/perl'
-PHP='/opt/rh/rh-php56/root/usr/bin/php'
+PHP='/opt/remi/php56/root/usr/bin/php'
 RM='/bin/rm'
 RPM='/bin/rpm'
 SERVICE='/sbin/service'
@@ -1508,8 +1508,8 @@ $INSTALL_DIR/tools/utils/php56/run.php
 control_service httpd start
 enable_service nginx
 control_service nginx start
-enable_service rh-php56-php-fpm
-control_service rh-php56-php-fpm start
+enable_service php56-php-fpm
+control_service php56-php-fpm start
 
 ##############################################
 # End of installation

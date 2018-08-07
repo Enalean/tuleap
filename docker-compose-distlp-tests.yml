@@ -32,7 +32,7 @@ services:
 
   reverse-proxy:
     container_name: ${BUILD_TAG}tuleap_runtests_reverse-proxy
-    image: enalean/tuleap-reverseproxy:distlp-1.1
+    image: enalean/tuleap-reverseproxy:distlp-1.2
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
@@ -45,9 +45,9 @@ services:
 
   backend-web:
     container_name: ${BUILD_TAG}tuleap_runtests_backend-web
-    image: enalean/tuleap-aio-dev:c6-php56-nginx18-v1.7
+    image: enalean/tuleap-aio-dev:c6-php56-nginx-v1.12
     environment:
-      RUN_COMMAND: "php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
+      RUN_COMMAND: "/opt/remi/php56/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php test"
       MYSQL_ROOT_PASSWORD: DumpPass4Tests
       LDAP_MANAGER_PASSWORD: DumpPass4Tests
       VIRTUAL_HOST: reverse-proxy
@@ -63,7 +63,7 @@ services:
 
   backend-svn:
     container_name: ${BUILD_TAG}tuleap_runtests_backend-svn
-    image: enalean/tuleap-dev:1.7
+    image: enalean/tuleap-dev:1.8
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap

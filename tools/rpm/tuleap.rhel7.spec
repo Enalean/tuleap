@@ -35,7 +35,7 @@ Packager: Manuel VACELET <manuel.vacelet@enalean.com>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: rh-php56-php, rh-php56-php-mysql, rh-php56-php-xml, rh-php56-php-mbstring, rh-php56-php-gd, rh-php56-php-soap, rh-php56-php-pear, rh-php56-php-intl, rh-php56-php-process, rh-php56-php-opcache, rh-php56-php-fpm, rh-mysql57-mysql
+Requires: php56-php, php56-php-mysql, php56-php-xml, php56-php-mbstring, php56-php-gd, php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-opcache, php56-php-fpm, rh-mysql57-mysql
 
 Requires: highlight, forgeupgrade >= 1.5, ckeditor, jpgraph-tuleap, nginx, logrotate
 
@@ -142,7 +142,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: rh-php56-php-ldap, perl-LDAP
+Requires: php56-php-ldap, perl-LDAP
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -190,7 +190,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, rh-php56-php-imap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php56-php-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -739,7 +739,7 @@ if [ $1 -eq 1 ]; then
     /usr/bin/systemctl enable \
         tuleap.service \
         tuleap-php-fpm.service &>/dev/null || :
-    /usr/bin/systemctl mask rh-php56-php-fpm || :
+    /usr/bin/systemctl mask php56-php-fpm || :
 fi
 
 %post core-subversion
@@ -779,7 +779,7 @@ if [ $1 -eq 0 ]; then
 fi
 
 %postun
-/usr/bin/systemctl unmask rh-php56-php-fpm || :
+/usr/bin/systemctl unmask php56-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun core-subversion

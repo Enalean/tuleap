@@ -122,7 +122,7 @@ redeploy-nginx: ## Redeploy nginx configuration
 	@$(DOCKER_COMPOSE) exec web service nginx restart
 
 restart-services: redeploy-nginx ## Restart nginx, apache and fpm
-	@$(DOCKER_COMPOSE) exec web service rh-php56-php-fpm restart
+	@$(DOCKER_COMPOSE) exec web service php56-php-fpm restart
 	@$(DOCKER_COMPOSE) exec web service httpd restart
 
 generate-po: ## Generate translatable strings
@@ -168,14 +168,14 @@ run-as-owner:
 
 phpunit-ci-56:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/rh/rh-php56/root/usr/bin/php"
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/remi/php56/root/usr/bin/php"
 
 phpunit-ci-72:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-72
 	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
 
 phpunit-docker-56:
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable rh-php56 "make -C /tuleap phpunit"
+	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable php56 "make -C /tuleap phpunit"
 
 phpunit-docker-72:
 	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit"
@@ -206,13 +206,13 @@ simpletest-70-update-compatibility-list: ## Run this to update the list of PHP7 
 
 simpletest11x-56-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest11x-php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest11x-php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest11x-php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration \
 
 simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
-	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/rh/rh-php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration \

@@ -37,19 +37,18 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 $logger = new Tuleap\Configuration\Logger\Console();
 
 $fpm      = Tuleap\Configuration\FPM\TuleapWeb::buildForPHP56($logger, 'codendiadm', true);
-$nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/opt/rh/rh-nginx18/nginx', 'reverse-proxy');
+$nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 $rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 
 $fpm->configure();
 $nginx->configure();
 $rabbitmq->configure();
 
+$exec = new \Tuleap\Configuration\Common\Exec();
+
 if (isset($argv[1]) && $argv[1] == 'test') {
     try {
-        $exec = new \Tuleap\Configuration\Common\Exec();
-        $exec->command("/usr/share/tuleap/src/utils/tuleap import-project-xml -u admin --automap=no-email,create:A -i /usr/share/tuleap/tests/e2e/_fixtures/svn_project_01 --use-lame-password");
-        $exec->command("/usr/share/tuleap/src/utils/tuleap import-project-xml -u admin --automap=no-email,create:A -i /usr/share/tuleap/tests/e2e/_fixtures/permission_project_02 --use-lame-password");
-        $exec->command("/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/svnroot_push.php");
+        $exec->command('/usr/share/tuleap/tools/distlp/backend-web/prepare-instance.sh');
     } catch (Exception $e) {
         die($e->getMessage());
     }

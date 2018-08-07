@@ -15,7 +15,7 @@ if [ ! -f "/etc/nginx/conf.d/tuleap.conf" ]; then
     mv /etc/nginx /data/etc
     ln -s /data/etc/nginx /etc/nginx
 
-    mkdir -p /data/etc/opt/rh/rh-php56/
-    mv /etc/opt/rh/rh-php56/php-fpm.d/ /data/etc/opt/rh/rh-php56/
-    ln -s /data/etc/opt/rh/rh-php56/php-fpm.d /etc/opt/rh/rh-php56/php-fpm.d
+    mkdir -p /data/etc/opt/remi/php56/
+    mv /etc/opt/remi/php56/php-fpm.d/ /data/etc/opt/remi/php56/
+    ln -s /data/etc/opt/remi/php56/php-fpm.d /etc/opt/remi/php56/php-fpm.d
 fi

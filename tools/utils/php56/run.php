@@ -1,7 +1,7 @@
-#!/opt/rh/rh-php56/root/usr/bin/php
+#!/opt/remi/php56/root/usr/bin/php
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *

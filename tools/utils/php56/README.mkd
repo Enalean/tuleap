@@ -10,4 +10,4 @@ Good to know
 ------------
 
 Logs for nginx are there:
-/var/opt/rh/rh-nginx18/log/nginx
+/var/log/nginx
