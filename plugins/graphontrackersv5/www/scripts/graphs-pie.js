@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -82,9 +82,19 @@ tuleap.graphontrackersv5.draw.pie = function (id, graph) {
 
         slice.append("path")
             .attr("d", arc)
-            .style("fill", function(d, i) { return "url(#" + getGradientId(i) + ")"; })
+            .style("fill", function(d, i) {
+                if (! isHexaColor(d.data.color)) {
+                    return;
+                }
+
+                return "url(#" + getGradientId(i) + ")";
+            })
             .attr("class", function (d, i) {
-                return getDonutSliceClass(i);
+                if (isHexaColor(d.data.color)) {
+                    return getDonutSliceClass(i);
+                }
+
+                return getDonutSliceClass(i) + " graph-element-" + d.data.color
             })
             .on("mouseover", onOverValue)
             .on("mouseout", onOutValue)
@@ -185,5 +195,9 @@ tuleap.graphontrackersv5.draw.pie = function (id, graph) {
 
     function getDonutSliceClass(value_index) {
         return 'slice_' + id + '_' + value_index;
+    }
+
+    function isHexaColor(color) {
+        return color && color.indexOf('#') > -1;
     }
 };

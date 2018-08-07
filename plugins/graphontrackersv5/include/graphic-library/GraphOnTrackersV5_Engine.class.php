@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -111,10 +111,23 @@ abstract class GraphOnTrackersV5_Engine {
     }
 
     protected function getColorOrNull($color) {
+        if ($this->isColorATLPColor($color)) {
+            return $color;
+        }
+
         if (! $this->isColorUndefined($color)) {
             return $this->getHexaColor($color);
         }
         return null;
+    }
+
+    /**
+     * @param $color
+     * @return bool
+     */
+    private function isColorATLPColor($color)
+    {
+        return ! is_array($color) && strpos($color, '-') > 0;
     }
 }
 ?>

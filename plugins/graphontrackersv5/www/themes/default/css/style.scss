@@ -1,3 +1,5 @@
+@import '../../../../../../src/www/themes/common/tlp/src/scss/variables/colors/common-colors';
+
 .inline_help {
     width: auto;
     background: url(../images/help.png) no-repeat;
@@ -96,5 +98,11 @@ form[name=edit_chart_form] label {
     .y.axis line {
         stroke: #BBB;
         stroke-dasharray: 2, 2;
+    }
+}
+
+@each $color-name, $colors in $tlp-swatch-color-map {
+    .graph-element-#{$color-name} {
+        fill: map-get($colors, 'primary');
     }
 }

@@ -269,7 +269,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @see getQueryFrom
      */
     public function getQuerySelectWithDecorator() {
-        return $this->getQuerySelect() . ", color.red, color.green, color.blue";
+        return $this->getQuerySelect() . ", color.red, color.green, color.blue, color.tlp_color_name";
     }
 
     /**
