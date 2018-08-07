@@ -804,7 +804,7 @@ class ArtifactsResource extends AuthenticatedResource {
 
         try {
             if ($patch->move->dry_run) {
-                $move_action->checkMoveIsPossible($artifact, $target_tracker, $feedback_collector);
+                $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
                 $response_representation->build($feedback_collector);
 
                 $remaining_deletions = $this->getRemainingNumberOfDeletion($user, $limit);

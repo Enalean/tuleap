@@ -35,6 +35,11 @@ class FeedbackFieldCollector
      */
     private $fields_not_migrated = [];
 
+    /**
+     * @var Tracker_FormElement_Field[]
+     */
+    private $fields_partially_migrated = [];
+
     public function addFieldInNotMigrated(Tracker_FormElement_Field $field)
     {
         $field_id = $field->getId();
@@ -53,6 +58,15 @@ class FeedbackFieldCollector
         $this->fields_fully_migrated[$field_id] = $field;
     }
 
+    public function addFieldInPartiallyMigrated(Tracker_FormElement_Field $field)
+    {
+        $field_id = $field->getId();
+
+        $this->removeField($field_id);
+
+        $this->fields_partially_migrated[$field_id] = $field;
+    }
+
     private function removeField($field_id)
     {
         if (isset($this->fields_fully_migrated[$field_id])) {
@@ -61,6 +75,10 @@ class FeedbackFieldCollector
 
         if (isset($this->fields_not_migrated[$field_id])) {
             unset($this->fields_not_migrated[$field_id]);
+        }
+
+        if (isset($this->fields_partially_migrated[$field_id])) {
+            unset($this->fields_partially_migrated[$field_id]);
         }
     }
 
@@ -78,5 +96,13 @@ class FeedbackFieldCollector
     public function getFieldsNotMigrated()
     {
         return $this->fields_not_migrated;
+    }
+
+    /**
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getFieldsPartiallyMigrated()
+    {
+        return $this->fields_partially_migrated;
     }
 }

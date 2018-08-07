@@ -25,6 +25,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class MoveChangesetXMLUpdater
@@ -61,7 +62,8 @@ class MoveChangesetXMLUpdater
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
-        $index
+        $index,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $source_initial_effort_field = $this->initial_effort_factory->getByTracker($source_tracker)->getField();
         $target_initial_effort_field = $this->initial_effort_factory->getByTracker($target_tracker)->getField();
@@ -70,7 +72,12 @@ class MoveChangesetXMLUpdater
         if ($target_initial_effort_field &&
             $this->isFieldChangeCorrespondingToTitleSemanticField($field_change, $source_initial_effort_field)
         ) {
-            $this->updateFieldChangeNode($field_change, $source_initial_effort_field, $target_initial_effort_field);
+            $this->updateFieldChangeNode(
+                $field_change,
+                $source_initial_effort_field,
+                $target_initial_effort_field,
+                $feedback_field_collector
+            );
             return true;
         }
 
@@ -87,12 +94,18 @@ class MoveChangesetXMLUpdater
     private function updateFieldChangeNode(
         SimpleXMLElement $field_change,
         Tracker_FormElement_Field $source_initial_effort_field,
-        Tracker_FormElement_Field $target_initial_effort_field
+        Tracker_FormElement_Field $target_initial_effort_field,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $this->useTargetTrackerFieldName($field_change, $target_initial_effort_field);
 
         if ($this->areFieldsLists($source_initial_effort_field, $target_initial_effort_field)) {
-            $this->updateValue($field_change, $source_initial_effort_field, $target_initial_effort_field);
+            $this->updateValue(
+                $field_change,
+                $source_initial_effort_field,
+                $target_initial_effort_field,
+                $feedback_field_collector
+            );
         }
     }
 
@@ -106,7 +119,8 @@ class MoveChangesetXMLUpdater
     private function updateValue(
         SimpleXMLElement $field_change,
         Tracker_FormElement_Field $source_initial_effort_field,
-        Tracker_FormElement_Field $target_initial_effort_field
+        Tracker_FormElement_Field $target_initial_effort_field,
+        FeedbackFieldCollector $feedback_field_collector
     ) {
         $xml_value = (int) $field_change->value;
 
@@ -122,6 +136,7 @@ class MoveChangesetXMLUpdater
 
         if ($value === null) {
             $value = $target_initial_effort_field->getDefaultValue();
+            $feedback_field_collector->addFieldInPartiallyMigrated($source_initial_effort_field);
         }
 
         $field_change->value = (int) $value;

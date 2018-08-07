@@ -30,6 +30,7 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 require_once __DIR__.'/../../bootstrap.php';
@@ -55,6 +56,8 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->form_element_factory,
             $this->field_value_matcher
         );
+
+        $this->collector = new FeedbackFieldCollector();
 
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '  <changeset>'
@@ -94,7 +97,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
 
         $index = 1;
-        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $this->changeset_xml, $index);
+        $this->updater->parseFieldChangeNodesAtGivenIndex(
+            $this->source_tracker,
+            $this->target_tracker,
+            $this->changeset_xml,
+            $index,
+            $this->collector
+        );
 
         $this->assertEquals((string) $this->changeset_xml->field_change[$index]['field_name'], 'effort_v2');
     }
@@ -109,12 +118,24 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
 
         $index = 2;
-        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $this->changeset_xml, $index);
+        $this->updater->parseFieldChangeNodesAtGivenIndex(
+            $this->source_tracker,
+            $this->target_tracker,
+            $this->changeset_xml,
+            $index,
+            $this->collector
+        );
 
         $this->assertEquals((string) $this->changeset_xml->field_change[$index]['field_name'], 'details');
 
         $index = 0;
-        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $this->changeset_xml, $index);
+        $this->updater->parseFieldChangeNodesAtGivenIndex(
+            $this->source_tracker,
+            $this->target_tracker,
+            $this->changeset_xml,
+            $index,
+            $this->collector
+        );
 
         $this->assertEquals((string) $this->changeset_xml->field_change[$index]['field_name'], 'summary');
     }
@@ -149,7 +170,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->once()->andReturn(201);
 
         $index = 1;
-        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $changeset_xml, $index);
+        $this->updater->parseFieldChangeNodesAtGivenIndex(
+            $this->source_tracker,
+            $this->target_tracker,
+            $changeset_xml,
+            $index,
+            $this->collector
+        );
 
         $this->assertEquals((string) $changeset_xml->field_change[$index]['field_name'], 'effort_v2');
         $this->assertEquals((int) $changeset_xml->field_change[$index]->value, 201);
@@ -179,7 +206,13 @@ class MoveChangesetXMLUpdaterTest extends TestCase
         $this->field_value_matcher->shouldReceive('getMatchingValueByDuckTyping')->never();
 
         $index = 0;
-        $this->updater->parseFieldChangeNodesAtGivenIndex($this->source_tracker, $this->target_tracker, $changeset_xml, $index);
+        $this->updater->parseFieldChangeNodesAtGivenIndex(
+            $this->source_tracker,
+            $this->target_tracker,
+            $changeset_xml,
+            $index,
+            $this->collector
+        );
 
         $this->assertEquals((string) $changeset_xml->field_change[$index]['field_name'], 'effort_v2');
         $this->assertEquals((int) $changeset_xml->field_change[$index]->value, 0);

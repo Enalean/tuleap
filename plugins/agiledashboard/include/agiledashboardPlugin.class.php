@@ -1683,8 +1683,9 @@ class AgileDashboardPlugin extends Plugin {
             $event->getSourceTracker(),
             $event->getTargetTracker(),
             $event->getChangesetXml(),
-            $event->getIndex())
-        ) {
+            $event->getIndex(),
+            $event->getFeedbackFieldCollector()
+        )) {
             $event->setModifiedByPlugin();
         }
     }
