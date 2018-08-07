@@ -135,7 +135,7 @@ class FieldValueMatcherTest extends TestCase
         $this->assertEquals($matching_value, 200);
     }
 
-    public function testItReturnsDefaultValueIfNoMatchingValue()
+    public function testItReturnsNullIfNoMatchingValue()
     {
         $source_value = new Tracker_FormElement_Field_List_Bind_StaticValue(101, '3', '', 0, 0);
         $this->source_field_bind->shouldReceive('getValue')->with(101)->andReturn($source_value);
@@ -149,11 +149,9 @@ class FieldValueMatcherTest extends TestCase
             $target_value_00,
         ]);
 
-        $this->target_field->shouldReceive('getDefaultValue')->andReturn(202);
-
         $matching_value = $this->matcher->getMatchingValueByDuckTyping($this->source_field, $this->target_field, 101);
 
-        $this->assertEquals($matching_value, 202);
+        $this->assertEquals($matching_value, null);
     }
 
     public function testItReturnsNoneValueIfSourceValueIsAlsoNoneAndTargetValueNotRequired()
