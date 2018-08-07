@@ -110,7 +110,6 @@ class ExecutionRepresentationBuilder
 
     /**
      * @return \Tuleap\TestManagement\REST\v1\SlicedExecutionRepresentations
-     * @throws DefinitionNotFoundException
      */
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
@@ -182,7 +181,6 @@ class ExecutionRepresentationBuilder
      * @param PaginatedExecutions $executions
      *
      * @return array
-     * @throws DefinitionNotFoundException
      */
     private function getListOfRepresentations(PFUser $user, PaginatedExecutions $executions)
     {
@@ -190,11 +188,15 @@ class ExecutionRepresentationBuilder
         $definitions_changeset_ids  = $executions->getDefinitionsChangesetIds();
 
         foreach ($executions->getArtifacts() as $execution) {
-            $executions_representations[] = $this->getExecutionRepresentationWithSpecificChangesetForDefinition(
-                $user,
-                $execution,
-                $definitions_changeset_ids
-            );
+            try {
+                $executions_representations[] = $this->getExecutionRepresentationWithSpecificChangesetForDefinition(
+                    $user,
+                    $execution,
+                    $definitions_changeset_ids
+                );
+            } catch (DefinitionNotFoundException $e) {
+                // Ignore, the user may not be allowed to read the Definition
+            }
         }
 
         return $executions_representations;

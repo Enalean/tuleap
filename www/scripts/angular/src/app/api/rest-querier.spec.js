@@ -18,7 +18,7 @@
  */
 
 import { tlp } from "tlp-mocks";
-import { getCampaigns } from "./rest-querier.js";
+import { getCampaigns, getDefinitions } from "./rest-querier.js";
 
 describe("rest querier", () => {
     describe("getCampaigns()", () => {
@@ -52,6 +52,53 @@ describe("rest querier", () => {
                 }
             );
             expect(result).toEqual(campaigns);
+        });
+    });
+
+    describe("getDefinitions()", () => {
+        it("Given a project id and a report id, then the test definitions will be retrieved recursively and a promise will be resolved with all definitions", async () => {
+            const definitions = [
+                { id: 1, summary: "plumber" },
+                { id: 86, summary: "disguisement" }
+            ];
+
+            tlp.recursiveGet.and.returnValue(Promise.resolve(definitions));
+            const project_id = 77;
+            const report_id = 53;
+
+            const result = await getDefinitions(project_id, report_id);
+
+            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+                "/api/v1/projects/77/testmanagement_definitions",
+                {
+                    params: {
+                        limit: 100,
+                        report_id
+                    }
+                }
+            );
+            expect(result).toEqual(definitions);
+        });
+
+        it("Given no report id, then the test definitions will be retrieved without it", async () => {
+            const definitions = [
+                { id: 22, summary: "polymazia" },
+                { id: 72, summary: "pilastering" }
+            ];
+
+            tlp.recursiveGet.and.returnValue(Promise.resolve(definitions));
+            const project_id = 6;
+
+            await getDefinitions(project_id);
+
+            expect(tlp.recursiveGet).toHaveBeenCalledWith(
+                "/api/v1/projects/6/testmanagement_definitions",
+                {
+                    params: {
+                        limit: 100
+                    }
+                }
+            );
         });
     });
 });

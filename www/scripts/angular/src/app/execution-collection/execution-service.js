@@ -84,12 +84,10 @@ function ExecutionService(
     }
 
     function loadExecutions(campaign_id) {
-        var deferred = $q.defer();
         self.campaign_id = campaign_id;
 
         if (self.executions_by_categories_by_campaigns[campaign_id]) {
-            deferred.resolve();
-            return deferred.promise;
+            return $q.when(Object.values(self.executions_by_categories_by_campaigns[campaign_id]));
         }
 
         var remote_executions = [],
@@ -99,9 +97,8 @@ function ExecutionService(
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
 
-        return getAllRemoteExecutions(campaign_id, limit, offset).then(function(executions) {
+        return getAllRemoteExecutions(campaign_id, limit, offset).finally(() => {
             self.loading[campaign_id] = false;
-            return;
         });
     }
 

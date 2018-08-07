@@ -19,7 +19,7 @@
 
 import { recursiveGet } from "tlp";
 
-export { getCampaigns };
+export { getCampaigns, getDefinitions };
 
 function getCampaigns(project_id, milestone_id, campaign_status) {
     return recursiveGet(`/api/v1/projects/${project_id}/testmanagement_campaigns`, {
@@ -30,5 +30,19 @@ function getCampaigns(project_id, milestone_id, campaign_status) {
                 milestone_id
             })
         }
+    });
+}
+
+function getDefinitions(project_id, report_id) {
+    const params = {
+        limit: 100
+    };
+
+    if (report_id) {
+        params.report_id = report_id;
+    }
+
+    return recursiveGet(`/api/v1/projects/${project_id}/testmanagement_definitions`, {
+        params
     });
 }

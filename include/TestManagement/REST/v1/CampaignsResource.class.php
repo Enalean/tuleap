@@ -340,19 +340,14 @@ class CampaignsResource
         $campaign = $this->getCampaignUserCanRead($user, $id);
         $artifact = $campaign->getArtifact();
 
-        try {
-            $execution_representations = $this->execution_representation_builder
-                ->getPaginatedExecutionsRepresentationsForCampaign(
-                    $user,
-                    $artifact,
-                    $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
-                    $limit,
-                    $offset
-                );
-        } catch (DefinitionNotFoundException $e) {
-            $execution_id = $e->getExecutionArtifact()->getId();
-            throw new RestException(400, "The execution with id $execution_id is not linked to a definition");
-        }
+        $execution_representations = $this->execution_representation_builder
+            ->getPaginatedExecutionsRepresentationsForCampaign(
+                $user,
+                $artifact,
+                $this->config->getTestExecutionTrackerId($artifact->getTracker()->getProject()),
+                $limit,
+                $offset
+            );
 
         $this->sendPaginationHeaders($limit, $offset, $execution_representations->getTotalSize());
 

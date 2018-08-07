@@ -70,6 +70,10 @@
                     </div>
                 </section>
 
+                <section class="empty-pane empty-execution-list" ng-if="shouldShowEmptyState()">
+                    <p class="empty-pane-text" translate>There are no tests you can see.</p>
+                </section>
+
                 <section class="tlp-pane-section tests-list-section">
                     <ul class="tests-list">
                         <li class="tests-list-category"

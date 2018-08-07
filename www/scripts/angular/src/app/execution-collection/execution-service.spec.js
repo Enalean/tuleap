@@ -25,18 +25,20 @@ describe ('ExecutionService - ', () => {
             SharedPropertiesService = _SharedPropertiesService_;
             ExecutionService        = _ExecutionService_;
         });
+
+        installPromiseMatchers();
     });
 
-    describe("loadExecutions() -", function() {
-        it("Given that campaign, when I load executions, then executions are returned sorted by categories", function () {
-            var campaign = {
+    describe("loadExecutions() -", () => {
+        it("Given a campaign id, then executions are built and sorted by categories and a promise will be resolved with the list of executions", () => {
+            const campaign = {
                 id: "6",
                 label: "Release 1",
                 status: "Open",
                 uri: "testmanagement_campaigns/6"
             };
 
-            var categories_results = {
+            const categories_results = {
                 Svn: {
                     label: "Svn",
                     executions: [
@@ -54,7 +56,7 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            var execution_results = {
+            const execution_results = {
                 4: {
                     id: 4,
                     definition: {
@@ -67,11 +69,11 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            var executions_by_categories_by_campaigns_results = {
+            const executions_by_categories_by_campaigns_results = {
                 6: categories_results
             };
 
-            var response = {
+            const response = {
                 results: [
                     {
                         id: 4,
@@ -87,22 +89,23 @@ describe ('ExecutionService - ', () => {
                 total: 1
             };
 
-            var get_remote_executions_request = $q.defer();
-            var get_executions_request = $q.defer();
-            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(get_remote_executions_request.promise);
-            spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_executions_request.promise);
+            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(
+                $q.when(response.results)
+            );
+            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue($q.when(response));
 
-            var promise = ExecutionService.loadExecutions(campaign.id);
-            get_executions_request.resolve(response);
-            get_remote_executions_request.resolve(response.results);
+            const promise = ExecutionService.loadExecutions(campaign.id);
 
-            promise.then(function() {
-                expect(ExecutionService.categories).toEqual(categories_results);
-                expect(ExecutionService.executions).toEqual(execution_results);
-                expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(executions_by_categories_by_campaigns_results);
-            });
+            expect(ExecutionService.loading[campaign.id]).toBe(true);
 
-            $rootScope.$apply();
+            expect(promise).toBeResolvedWith(response.results);
+            expect(ExecutionService.categories).toEqual(categories_results);
+            expect(ExecutionService.executions).toEqual(execution_results);
+            expect(ExecutionService.executions_by_categories_by_campaigns).toEqual(
+                executions_by_categories_by_campaigns_results
+            );
+
+            expect(ExecutionService.loading[campaign.id]).toBe(false);
         });
     });
 

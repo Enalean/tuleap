@@ -1,6 +1,7 @@
 import angular from 'angular';
 import ui_router from 'angular-ui-router';
 import shared_properties_module from "../shared-properties/shared-properties.js";
+import definition_module from "../definition/definition.js";
 import angular_tlp_module from "angular-tlp";
 
 import 'restangular';
@@ -18,6 +19,7 @@ export default angular.module('campaign', [
     'restangular',
     'gettext',
     angular_tlp_module,
+    definition_module,
     shared_properties_module
 ])
 .config(CampaignConfig)

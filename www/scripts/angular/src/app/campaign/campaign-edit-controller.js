@@ -29,8 +29,12 @@ function CampaignEditCtrl(
     NewTuleapArtifactModalService,
     editCampaignCallback
 ) {
-    var project_id,
-        campaign_id;
+    let project_id, campaign_id;
+    const self = this;
+    Object.assign(self, {
+        $onInit: init,
+        loadDefinitions
+    });
 
     _.extend($scope, {
         tests_list            : {},
@@ -48,8 +52,8 @@ function CampaignEditCtrl(
         diffState             : diffState,
     });
 
-    this.$onInit = function() {
-        project_id  = SharedPropertiesService.getProjectId();
+    function init() {
+        project_id = SharedPropertiesService.getProjectId();
         campaign_id = $state.params.id;
 
         SharedPropertiesService.setCampaignId(campaign_id);
@@ -78,27 +82,8 @@ function CampaignEditCtrl(
         });
     }
 
-    function loadDefinitions(options) {
-        var options     = options || {},
-            limit       = options.limit || 100,
-            offset      = options.offset || 0,
-            report_id   = options.report_id,
-            definitions = options.definitions || [];
-
-        return DefinitionService.getDefinitions(project_id, limit, offset, report_id).then(function(data) {
-            definitions = definitions.concat(data.results);
-
-            if (definitions.length === data.total) {
-                return definitions;
-            }
-
-            return loadDefinitions({
-                limit: limit,
-                offset: offset + limit,
-                report_id: report_id,
-                definitions: definitions
-            });
-        });
+    function loadDefinitions(report_id) {
+        return DefinitionService.getDefinitions(project_id, report_id);
     }
 
     function loadExecutions() {
@@ -217,18 +202,17 @@ function CampaignEditCtrl(
     function selectReportTests() {
         var selected_report = $scope.filters.selected_report;
 
-        if (_.isEmpty(selected_report)) {
+        if (selected_report === "") {
             return;
         }
 
-        loadDefinitions({ report_id: selected_report })
-            .then(function(definitions) {
-                _.forEach($scope.tests_list, function(category) {
-                    _.forEach(category.tests, function(test) {
-                        test.selected = _.some(definitions, { id: test.definition.id });
-                    });
+        self.loadDefinitions(selected_report).then(definitions => {
+            _.forEach($scope.tests_list, function(category) {
+                _.forEach(category.tests, function(test) {
+                    test.selected = _.some(definitions, { id: test.definition.id });
                 });
             });
+        });
     }
 
     function showAddTestModal() {

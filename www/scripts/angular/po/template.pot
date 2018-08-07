@@ -41,6 +41,10 @@ msgstr ""
 msgid "An error occurred while loading the campaigns. Please refresh the page. {{ message }}"
 msgstr ""
 
+#: src/app/execution/execution-list-controller.js
+msgid "An error occurred while loading the tests. {{ error }}"
+msgstr ""
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
 msgstr ""
@@ -299,6 +303,10 @@ msgstr ""
 
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no open campaigns"
+msgstr ""
+
+#: src/app/execution/execution-list.tpl.html
+msgid "There are no tests you can see."
 msgstr ""
 
 #: src/app/execution/execution-link-issue.tpl.html

@@ -59,6 +59,10 @@ msgstr ""
 "Une erreur s'est produite pendant le chargement des campagnes. Veuillez "
 "rafraîchir cette page. {{ message }}"
 
+#: src/app/execution/execution-list-controller.js
+msgid "An error occurred while loading the tests. {{ error }}"
+msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
+
 #: src/app/campaign/campaign-edit.tpl.html
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
@@ -327,6 +331,10 @@ msgstr "Il n'existe pas de campagne"
 #: src/app/campaign/campaign-list.tpl.html
 msgid "There are no open campaigns"
 msgstr "Il n’existe pas de campagne ouverte"
+
+#: src/app/execution/execution-list.tpl.html
+msgid "There are no tests you can see."
+msgstr "Il n'y a aucun test visible."
 
 #: src/app/execution/execution-link-issue.tpl.html
 msgid "This artifact is already linked to this test."

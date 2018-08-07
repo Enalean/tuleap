@@ -1,40 +1,48 @@
 import _ from 'lodash';
 import angular from 'angular';
 
-import { sortAlphabetically } from '../ksort.js';
+import { sortAlphabetically } from "../ksort.js";
+import { setError } from "../feedback-state.js";
 
 export default ExecutionListCtrl;
 
 ExecutionListCtrl.$inject = [
-    '$scope',
-    '$state',
-    '$filter',
-    'ExecutionService',
-    'CampaignService',
-    'SocketService',
-    'SharedPropertiesService',
-    'ExecutionRestService'
+    "$scope",
+    "$state",
+    "$filter",
+    "gettextCatalog",
+    "ExecutionService",
+    "CampaignService",
+    "SocketService",
+    "SharedPropertiesService",
+    "ExecutionRestService"
 ];
 
 function ExecutionListCtrl(
     $scope,
     $state,
     $filter,
+    gettextCatalog,
     ExecutionService,
     CampaignService,
     SocketService,
     SharedPropertiesService,
     ExecutionRestService
 ) {
+    const self = this;
+    Object.assign(self, {
+        $onInit: initialization,
+        loadExecutions
+    });
+
     Object.assign($scope, {
         checkActiveClassOnExecution,
         toggleStatus,
         viewTestExecution,
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
+        shouldShowEmptyState: () => self.should_show_empty_state
     });
-
-    this.$onInit = initialization;
 
     function checkActiveClassOnExecution(execution) {
         return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
@@ -113,16 +121,16 @@ function ExecutionListCtrl(
 
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
-        loadExecutions();
-        CampaignService.getCampaign($scope.campaign_id).then((campaign) => {
-            $scope.campaign             = campaign;
-            $scope.search               = '';
-            $scope.loading              = loading;
-            $scope.status               = {
-                passed:  false,
-                failed:  false,
+        self.loadExecutions();
+        CampaignService.getCampaign($scope.campaign_id).then(campaign => {
+            $scope.campaign = campaign;
+            $scope.search = "";
+            $scope.loading = loading;
+            $scope.status = {
+                passed: false,
+                failed: false,
                 blocked: false,
-                notrun:  false
+                notrun: false
             };
 
             ExecutionService.updateCampaign($scope.campaign);
@@ -141,15 +149,28 @@ function ExecutionListCtrl(
     }
 
     function loadExecutions() {
-        return ExecutionService.loadExecutions($scope.campaign_id).then(function() {
-            ExecutionService.removeAllViewTestExecution();
-            if ($scope.execution_id) {
-                updateViewTestExecution($scope.execution_id, '');
-            }
+        return ExecutionService.loadExecutions($scope.campaign_id).then(
+            executions => {
+                if (executions.length === 0) {
+                    self.should_show_empty_state = true;
+                }
 
-            ExecutionService.executions_loaded = true;
-            ExecutionService.displayPresencesForAllExecutions();
-        });
+                ExecutionService.removeAllViewTestExecution();
+                if ($scope.execution_id) {
+                    updateViewTestExecution($scope.execution_id, "");
+                }
+
+                ExecutionService.executions_loaded = true;
+                ExecutionService.displayPresencesForAllExecutions();
+            },
+            error =>
+                setError(
+                    gettextCatalog.getString(
+                        "An error occurred while loading the tests. {{ error }}",
+                        { error: error.data.error.message }
+                    )
+                )
+        );
     }
 
     function updateViewTestExecution(current_execution_id, old_execution_id) {

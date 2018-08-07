@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
+
 export default DefinitionService;
 
 DefinitionService.$inject = [
@@ -21,34 +23,18 @@ function DefinitionService(
     });
 
     return {
-        UNCATEGORIZED        : DefinitionConstants.UNCATEGORIZED,
-        getDefinitions       : getDefinitions,
-        getDefinitionReports : getDefinitionReports,
-        getArtifactById      : getArtifactById,
-        getDefinitionById    : getDefinitionById,
-        getTracker           : getTracker
+        UNCATEGORIZED: DefinitionConstants.UNCATEGORIZED,
+        getDefinitions,
+        getDefinitionReports,
+        getArtifactById,
+        getDefinitionById,
+        getTracker
     };
 
-    function getDefinitions(project_id, limit, offset, report_id) {
-        var data = $q.defer();
-
-        rest.one('projects', project_id)
-            .all('testmanagement_definitions')
-            .getList({
-                limit: limit,
-                offset: offset,
-                report_id: report_id
-            })
-            .then(function(response) {
-                var result = {
-                    results: categorize(response.data),
-                    total: parseInt(response.headers('X-PAGINATION-SIZE'), 10)
-                };
-
-                data.resolve(result);
-            });
-
-        return data.promise;
+    function getDefinitions(project_id, report_id) {
+        return tlpGetDefinitions(project_id, report_id).then(definitions =>
+            categorize(definitions)
+        );
     }
 
     function categorize(definitions) {
@@ -100,4 +86,3 @@ function DefinitionService(
             });
     }
 }
-
