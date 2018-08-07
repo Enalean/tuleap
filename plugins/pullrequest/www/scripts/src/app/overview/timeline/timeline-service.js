@@ -2,12 +2,14 @@ export default TimelineService;
 
 TimelineService.$inject = [
     '$sce',
-    'TimelineRestService'
+    'TimelineRestService',
+    'gettextCatalog'
 ];
 
 function TimelineService(
     $sce,
-    TimelineRestService
+    TimelineRestService,
+    gettextCatalog
 ) {
     const self = this;
 
@@ -64,16 +66,16 @@ function TimelineService(
                 return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
             },
             update: function() {
-                return 'Has updated the pull request.';
+                return gettextCatalog.getString('Has updated the pull request.');
             },
             rebase: function() {
-                return 'Has rebased the pull request.';
+                return gettextCatalog.getString('Has rebased the pull request.');
             },
             merge: function() {
-                return 'Has merged the pull request.';
+                return gettextCatalog.getString('Has merged the pull request.');
             },
             abandon: function() {
-                return 'Has abandoned the pull request.';
+                return gettextCatalog.getString('Has abandoned the pull request.');
             }
         };
 
