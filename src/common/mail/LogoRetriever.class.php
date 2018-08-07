@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,11 @@
  */
 
 class LogoRetriever {
-    private $theme;
     private $logo_path;
     private $logo_mimetype;
 
     public function __construct() {
-        $this->theme         = ForgeConfig::get('sys_themedefault');
-        $this->logo_path     = ForgeConfig::get('sys_urlroot') . '/themes/'. $this->theme .'/images/organization_logo.png';
+        $this->logo_path     = ForgeConfig::get('sys_urlroot') . '/themes/FlamingParrot/images/organization_logo.png';
         $this->logo_mimetype = 'image/png';
     }
 
@@ -38,7 +36,7 @@ class LogoRetriever {
 
     public function getUrl() {
         if ($this->hasLogo()) {
-            return get_server_url() . '/themes/'.$this->theme.'/images/organization_logo.png';
+            return get_server_url() . '/themes/FlamingParrot/images/organization_logo.png';
         }
         return null;
     }

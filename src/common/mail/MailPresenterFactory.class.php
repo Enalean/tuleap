@@ -254,26 +254,12 @@ class MailPresenterFactory {
      * @return string
      */
     private function setColorTheme(&$color_logo = null, &$color_button = null) {
-        $defaultTheme = ForgeConfig::get('sys_themedefault');
-
-        if ($this->themeIsFlamingParrot($defaultTheme)) {
-            if (! class_exists('FlamingParrot_Theme')) {
-                require_once 'www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
-            }
-
-            $theme_variant       = new ThemeVariant();
-            $defaultThemeVariant = $theme_variant->getDefault();
-            $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
-            $color_button        = $color_logo;
+        if (! class_exists('FlamingParrot_Theme')) {
+            require_once __DIR__ . '/../../www/themes/FlamingParrot/FlamingParrot_Theme.class.php';
         }
-    }
-
-    /**
-     * Check if we need to display the theme color.
-     *
-     * @return boolean
-     */
-    private function themeIsFlamingParrot($theme) {
-        return $theme === self::FLAMING_PARROT_THEME;
+        $theme_variant       = new ThemeVariant();
+        $defaultThemeVariant = $theme_variant->getDefault();
+        $color_logo          = FlamingParrot_Theme::getColorOfCurrentTheme($defaultThemeVariant);
+        $color_button        = $color_logo;
     }
 }

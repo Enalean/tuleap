@@ -855,7 +855,8 @@ class UserManager {
      *
      * @return PFUser
      */
-    function createAccount($user){
+    public function createAccount($user)
+    {
         $dao = $this->getDao();
         $user_id = $dao->create(
             $user->getUserName(),
@@ -876,8 +877,7 @@ class UserManager {
             $user->getStickyLogin(),
             $user->getAuthorizedKeys(),
             $user->getNewMail(),
-            $user->getTimeZone(),
-            $user->getTheme(),
+            $user->getTimezone(),
             $user->getLanguageID(),
             $user->getExpiryDate(),
             $_SERVER['REQUEST_TIME']

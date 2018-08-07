@@ -1,5 +1,5 @@
 #
-# Copyright (c) Enalean 2014-2017. All rights reserved
+# Copyright (c) Enalean 2014-2018. All rights reserved
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #
 # This file is a part of Tuleap.
@@ -55,7 +55,6 @@ INSERT INTO user SET \
         authorized_keys = NULL, \
         email_new = NULL, \
         timezone = 'GMT', \
-        theme = '', \
         language_id = 'en_US', \
         last_pwd_update = '0';
 
@@ -86,7 +85,6 @@ INSERT INTO user SET \
         authorized_keys = NULL, \
         email_new = NULL, \
         timezone = 'GMT', \
-        theme = '', \
         language_id = 'en_US', \
         last_pwd_update = '0';
 

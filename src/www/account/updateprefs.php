@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -52,17 +52,6 @@ if($request->existAndNonEmpty('form_mail_va')) {
         $form_mail_va = (int) $request->get('form_mail_va');
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_mail_va'));
-    }
-}
-
-// $theme_list is defined in /www/include/utils.php
-$user_theme = $GLOBALS['sys_themedefault'];
-$theme_list = util_get_theme_list();
-if($request->existAndNonEmpty('user_theme')) {
-    if($request->valid(new Valid_WhiteList('user_theme', $theme_list))) {
-        $user_theme = $request->get('user_theme');
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_theme'));
     }
 }
 
@@ -162,7 +151,6 @@ if ($request->existAndNonEmpty('form_accessibility_mode')) {
 db_query("UPDATE user SET "
          . "mail_siteupdates=" . $form_mail_site . ","
          . "mail_va=" . $form_mail_va . ","
-         . "theme='" . db_es($user_theme) . "',"
          . "sticky_login=" . $form_sticky_login . ","
          . "language_id='" . db_es($language_id) . "' WHERE "
          . "user_id=" . user_getid());

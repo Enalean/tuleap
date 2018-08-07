@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -37,10 +37,8 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
         ForgeConfig::set('sys_extra_plugin_path', '');
         $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
         $GLOBALS['sys_pluginsroot']       = ForgeConfig::get('sys_pluginsroot');
-        $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
-        $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
 
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
         if (!is_dir($this->cache_dir.'/lang')) {
@@ -51,10 +49,8 @@ class BaseLanguage_BaseTest extends TuleapTestCase {
     function tearDown() {
         unset($GLOBALS['sys_incdir']);
         unset($GLOBALS['sys_pluginsroot']);
-        unset($GLOBALS['sys_themeroot']);
         unset($GLOBALS['sys_custom_incdir']);
         unset($GLOBALS['sys_custompluginsroot']);
-        unset($GLOBALS['sys_custom_themeroot']);
 
         ForgeConfig::restore();
         parent::tearDown();

@@ -488,13 +488,9 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         return $this->stylesheets;
     }
 
-    function getStylesheetTheme($css) {
-        if ($GLOBALS['sys_is_theme_custom']) {
-            $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
-        } else {
-            $path = '/themes/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
-        }
-        return $path;
+    public function getStylesheetTheme($css)
+    {
+        return '/themes/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
     }
 
     /**

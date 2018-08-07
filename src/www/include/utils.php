@@ -21,44 +21,6 @@
 
 require_once('session.php');
 
-function util_get_theme_list() {
-    $excludes          = array('.', '..', 'CVS', 'custom', '.svn');
-    $deprecated_themes = array('CodeX', 'CodeXTab');
-
-    $user = UserManager::instance()->getCurrentUser();
-    // Build the theme list from directories in css and css/custom
-    $theme_list = array();
-    $theme_dirs = array($GLOBALS['sys_themeroot'], $GLOBALS['sys_custom_themeroot']);
-    while (list(,$dirname) = each($theme_dirs)) {
-        if (! is_dir($dirname)) {
-            continue;
-        }
-
-        $dir = opendir($dirname);
-        while ($file = readdir($dir)) {
-            if (! is_dir("$dirname/$file") || in_array($file, $excludes)) {
-                continue;
-            }
-
-            if ($dirname == $GLOBALS['sys_themeroot'] && in_array($file, $deprecated_themes)) {
-                continue;
-            }
-
-            $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php';
-            if (! is_file($path)) {
-                $path = $dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'Theme.php';
-                if (! is_file($path)) {
-                    continue;
-                }
-            }
-
-            $theme_list[] = $file;
-        }
-        closedir($dir);
-    }
-    return $theme_list;
-}
-
 function util_microtime_float($offset = null) {
     list($usec, $sec) = explode(" ", microtime());
     $now = ((float)$usec + (float)$sec);
@@ -738,16 +700,9 @@ function util_user_finder($ident, $strict=true) {
 // Requirement: $sys_user_theme is already
 // set (done by theme.php in pre.php)
 //
-function util_get_css_theme(){
-
-    $path = "style.css";
-
-    if ($GLOBALS['sys_is_theme_custom'])
-        $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$path;
-    else
-	    $path = '/themes/'.$GLOBALS['sys_user_theme'].'/css/'.$path;
-
-    return $path;
+function util_get_css_theme()
+{
+    return '/themes/'.$GLOBALS['sys_user_theme'].'/css/style.css';
 }
 
 // This function get the image file for the theme.
@@ -758,31 +713,20 @@ function util_get_css_theme(){
 function util_get_image_theme($fn, $the_theme=false, $absolute=false){
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
-        if (strpos($path, '/custom') !== false) { 
-            // Custom images are in /etc/codendi/themes
-            $path= preg_replace('/\/custom/','',$path);
-            $path = $GLOBALS['sys_custom_themeroot'] . $path;
-        } else {
-            $path = $GLOBALS['sys_urlroot'] . $path;
-        }
+        $path = $GLOBALS['sys_urlroot'] . $path;
     }
     return $path.$fn;
 }
 
 // this function get the image directory for the theme
 // (either given or current theme)
-function util_get_dir_image_theme($the_theme=false){
-
+function util_get_dir_image_theme($the_theme=false)
+{
     if (! $the_theme) {
       $the_theme = $GLOBALS['sys_user_theme'];
     }
 
-    if ($GLOBALS['sys_is_theme_custom'])
-        $path = '/custom/'.$the_theme.'/images/';
-    else
-	    $path = '/themes/'.$the_theme.'/images/';
-
-    return $path;
+    return '/themes/'.$the_theme.'/images/';
 }
 
 // Format a size in byte into a size in Mb
