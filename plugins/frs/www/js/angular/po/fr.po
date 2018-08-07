@@ -9,47 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#: src/app/file-download/license-modal/license-modal.tpl.html
-msgid ""
-"<p>\n"
-"        You are about to download software from this site. Software re-use "
-"and sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a "
-"ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>Code eXchange Corporate "
-"Policy</b></a>.\n"
-"    </p>\n"
-"    <p>\n"
-"        By downloading this software you implicitly recognize that you have "
-"<a ng-href=\"{{ $ctrl.exchange_policy_url }}\"><b>read the Policy</b></a> "
-"and agree with the terms and conditions.\n"
-"    </p>\n"
-"    <p>\n"
-"        To proceed with the file download, click on '<b>I accept</b>'. If "
-"you do not want to download the file click on '<b>I decline</b>' and <a ng-"
-"href=\"mailto:{{ $ctrl.contact_email }}\"><b>contact us</b></a> if you need "
-"clarification or want to explain why you declined the agreement.\n"
-"    </p>"
-msgstr ""
-"<p>\n"
-"        Vous êtes sur le point de télécharger un logiciel depuis ce site. Le "
-"partage et la réutilisation de logiciels <b>à l'intérieur</b> de {{ $ctrl."
-"organisation_name }} est soumis à la <a ng-href=\"{{ $ctrl."
-"exchange_policy_url }}\"><b>Politique d'échange de code</b></a>.\n"
-"    </p>\n"
-"    <p>\n"
-"        En téléchargeant ce logiciel vous reconnaissez implicitement <a ng-"
-"href=\"{{ $ctrl.exchange_policy_url  }}\"><b>avoir lu cette politique "
-"d'échange de code</b></a> et être en accord avec son contenu.\n"
-"    </p>\n"
-"    <p>\n"
-"        Pour débuter le téléchargement, cliquer sur '<b>Je suis d'accord</"
-"b>'. Si vous ne souhaitez pas télécharger le fichier cliquer sur '<b>Je "
-"refuse</b>' et <a href=\"mailto:{{ $ctrl.contact_email }}\"><b>contactez-"
-"nous</b></a> si vous avez besoin de clarifications ou si vous souhaitez "
-"expliquer les raisons de votre refus.\n"
-"    </p>"
 
 #: src/app/release/files/files.tpl.html
 msgid "Arch."
@@ -58,6 +19,16 @@ msgstr "Arch."
 #: src/app/release/release.tpl.html
 msgid "Artifact"
 msgstr "Artéfact"
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid ""
+"By downloading this software you implicitly recognize that you have <a ng-"
+"href=\"{{ $ctrl.exchange_policy_url }}\"><b>read the Policy</b></a> and "
+"agree with the terms and conditions."
+msgstr ""
+"En téléchargeant ce logiciel vous reconnaissez implicitement <a ng-href="
+"\"{{ $ctrl.exchange_policy_url }}\"><b>avoir lu cette politique d'échange de "
+"code</b></a> et être en accord avec son contenu."
 
 #: src/app/release/files/files.tpl.html
 msgid "Changelog"
@@ -87,13 +58,17 @@ msgstr "Je suis d'accord"
 msgid "I decline"
 msgstr "Je refuse"
 
+#: src/app/release/files/files.tpl.html
+msgid "Link"
+msgstr "Lien"
+
 #: src/app/release/release.tpl.html
 msgid "Linked Artifacts"
 msgstr "Artéfacts liés"
 
 #: src/app/release/files/files.tpl.html
-msgid "Link"
-msgstr "Lien"
+msgid "Links"
+msgstr "Liens"
 
 #: src/app/release/files/files.tpl.html
 msgid "MD5Sum"
@@ -163,6 +138,19 @@ msgstr ""
 "Une erreur est survenue pendant la récupération des artéfacts liés : "
 "{{ $ctrl.getError().rest_error }}"
 
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid ""
+"To proceed with the file download, click on '<b>I accept</b>'. If you do not "
+"want to download the file click on '<b>I decline</b>' and <a ng-href="
+"\"mailto:{{ $ctrl.contact_email }}\"><b>contact us</b></a> if you need "
+"clarification or want to explain why you declined the agreement."
+msgstr ""
+"Pour débuter le téléchargement, cliquer sur '<b>Je suis d'accord</b>'. Si "
+"vous ne souhaitez pas télécharger le fichier cliquer sur '<b>Je refuse</b>' "
+"et <a href=\"mailto:{{ $ctrl.contact_email }}\"><b>contactez-nous</b></a> si "
+"vous avez besoin de clarifications ou si vous souhaitez expliquer les "
+"raisons de votre refus."
+
 #: src/app/release/linked-artifacts/linked-artifacts.tpl.html
 msgid "Tracker"
 msgstr "Suivi"
@@ -170,3 +158,15 @@ msgstr "Suivi"
 #: src/app/release/files/files.tpl.html
 msgid "Type"
 msgstr "Type"
+
+#: src/app/file-download/license-modal/license-modal.tpl.html
+msgid ""
+"You are about to download software from this site. Software re-use and "
+"sharing <b>inside</b> {{ $ctrl.organisation_name }} is subject to the <a ng-"
+"href=\"{{ $ctrl.exchange_policy_url }}\"><b>Code eXchange Corporate Policy</"
+"b></a>."
+msgstr ""
+"Vous êtes sur le point de télécharger un logiciel depuis ce site. Le partage "
+"et la réutilisation de logiciels <b>à l'intérieur</b> de {{ $ctrl."
+"organisation_name }} est soumis à la <a ng-href=\"{{ $ctrl."
+"exchange_policy_url }}\"><b>Politique d'échange de code</b></a>."

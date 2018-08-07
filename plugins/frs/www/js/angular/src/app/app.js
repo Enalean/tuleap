@@ -6,6 +6,7 @@ import 'angular-gettext';
 import 'angular-filter';
 import 'ng-showdown';
 import 'angular-ui-bootstrap-templates';
+import '../../po/fr.po';
 
 import AppController           from './app-controller.js';
 import RestErrorService        from './rest-error-service.js';
