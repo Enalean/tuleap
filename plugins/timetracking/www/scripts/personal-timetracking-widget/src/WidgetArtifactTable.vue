@@ -115,7 +115,7 @@ export default {
             return [this.isInReadingMode, this.hasQueryChanged];
         },
         canLoadMore() {
-            return this.pagination_offset < this.total_times;
+            return this.pagination_offset < this.total_times && !this.rest_error;
         },
         time_format_tooltip: () =>
             gettext_provider.gettext("The time is displayed in hours:minutes"),
