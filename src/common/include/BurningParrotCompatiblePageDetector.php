@@ -25,6 +25,8 @@ use EventManager;
 use HTTPRequest;
 use PFUser;
 use Tuleap\Request\CurrentPage;
+use User_ForgeUserGroupPermission_ProjectApproval;
+use User_ForgeUserGroupPermissionsManager;
 
 class BurningParrotCompatiblePageDetector
 {
@@ -32,15 +34,25 @@ class BurningParrotCompatiblePageDetector
      * @var Admin_Homepage_Dao
      */
     private $homepage_dao;
+
     /**
      * @var CurrentPage
      */
     private $current_page;
 
-    public function __construct(CurrentPage $current_page, Admin_Homepage_Dao $homepage_dao)
-    {
-        $this->homepage_dao = $homepage_dao;
-        $this->current_page = $current_page;
+    /**
+     * @var User_ForgeUserGroupPermissionsManager
+     */
+    private $forge_user_group_permissions_manager;
+
+    public function __construct(
+        CurrentPage $current_page,
+        Admin_Homepage_Dao $homepage_dao,
+        User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager
+    ) {
+        $this->homepage_dao                         = $homepage_dao;
+        $this->current_page                         = $current_page;
+        $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
 
     public function isInCompatiblePage(PFUser $current_user)
@@ -87,7 +99,23 @@ class BurningParrotCompatiblePageDetector
                 ) &&
                 strpos($uri, '/admin/register_admin.php') !== 0;
 
-        return $is_in_site_admin && $current_user->isSuperUser();
+        if ($is_in_site_admin && $current_user->isSuperUser()) {
+            return true;
+        }
+
+        return $this->isInCoreServicesSiteAdminWithPermissionDelegation($current_user);
+    }
+
+    private function isInCoreServicesSiteAdminWithPermissionDelegation(PFUser $current_user)
+    {
+        $uri                       = $_SERVER['REQUEST_URI'];
+        $is_in_project_approbation = (strpos($uri, '/admin/approve-pending.php') === 0);
+
+        return $is_in_project_approbation &&
+            $this->forge_user_group_permissions_manager->doesUserHavePermission(
+                $current_user,
+                new User_ForgeUserGroupPermission_ProjectApproval()
+            );
     }
 
     public function isInHomepage()
