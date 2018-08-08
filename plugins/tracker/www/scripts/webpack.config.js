@@ -121,6 +121,7 @@ const webpack_config_for_artifacts = {
 if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
     webpack_config_for_artifact_modal.devtool = "cheap-module-eval-source-map";
     webpack_config_for_burndown_chart.devtool = "cheap-module-eval-source-map";
+    webpack_config_for_artifacts.devtool      = "cheap-module-eval-source-map";
 }
 
 if (process.env.NODE_ENV === "production") {
