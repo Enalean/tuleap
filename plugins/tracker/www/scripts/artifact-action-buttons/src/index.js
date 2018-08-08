@@ -37,9 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (vue_mount_point) {
         const RootComponent = Vue.extend(MoveModal);
 
-        const { trackerName, trackerColor, artifactId, projectName } = vue_mount_point.dataset;
+        const { trackerName, trackerColor, artifactId } = vue_mount_point.dataset;
 
-        setFromTracker(trackerName, trackerColor, artifactId, projectName);
+        setFromTracker(trackerName, trackerColor, artifactId);
 
         new RootComponent({}).$mount(vue_mount_point);
     }

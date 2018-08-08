@@ -30,13 +30,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
-                    <move-modal-title v-if="! hasError"/>
-                    <move-modal-preview-title v-else />
+                    <move-modal-title />
                 </div>
                 <div class="modal-body">
                     <div v-if="isLoadingInitial || is_processing_move" class="move-artifact-loader"></div>
                     <div v-if="hasError" class="alert alert-error">{{ getErrorMessage }}</div>
-                    <move-modal-selectors v-if="! is_processing_move"  />
+                    <move-modal-selectors v-show="! is_processing_move"  />
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
@@ -55,7 +54,6 @@
 <script>
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
-import MoveModalPreviewTitle from "./MoveModalPreviewTitle.vue";
 import store from "../store/index.js";
 import { mapGetters, mapState } from "vuex";
 import $ from "jquery";
@@ -65,7 +63,6 @@ export default {
     name: "MoveModal",
     store,
     components: {
-        MoveModalPreviewTitle,
         MoveModalTitle,
         MoveModalSelectors
     },
