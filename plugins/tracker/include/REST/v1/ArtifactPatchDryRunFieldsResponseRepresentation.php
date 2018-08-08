@@ -20,38 +20,51 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+use Tracker_FormElement_Field;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 
 class ArtifactPatchDryRunFieldsResponseRepresentation
 {
 
     /**
-     * @var array {@type string}
+     * @var array {@type MinimalFieldRepresentation}
      */
     public $fields_migrated = [];
 
     /**
-     * @var array {@type string}
+     * @var array {@type MinimalFieldRepresentation}
      */
     public $fields_not_migrated = [];
 
     /**
-     * @var array {@type string}
+     * @var array {@type MinimalFieldRepresentation}
      */
     public $fields_partially_migrated = [];
 
     public function build(FeedbackFieldCollector $feedback_field_collector)
     {
         foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
-            $this->fields_not_migrated[$field->getId()] = $field->getLabel();
+            $this->fields_not_migrated[] = $this->getFieldRepresentation($field);
         }
 
         foreach ($feedback_field_collector->getFieldsFullyMigrated() as $field) {
-            $this->fields_migrated[$field->getId()] = $field->getLabel();
+            $this->fields_migrated[] = $this->getFieldRepresentation($field);
         }
 
         foreach ($feedback_field_collector->getFieldsPartiallyMigrated() as $field) {
-            $this->fields_partially_migrated[$field->getId()] = $field->getLabel();
+            $this->fields_partially_migrated[] = $this->getFieldRepresentation($field);
         }
+    }
+
+    /**
+     * @return MinimalFieldRepresentation
+     */
+    private function getFieldRepresentation(Tracker_FormElement_Field $field)
+    {
+        $field_representation = new MinimalFieldRepresentation();
+        $field_representation->build($field);
+
+        return $field_representation;
     }
 }

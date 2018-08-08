@@ -67,14 +67,25 @@ class ArtifactsActionsTest extends TrackerBase
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
         $this->assertCount(5, $migrated_fields);
 
-        $this->assertTrue(in_array('Summary', $migrated_fields));
-        $this->assertTrue(in_array('Description', $migrated_fields));
-        $this->assertTrue(in_array('Assigned to', $migrated_fields));
-        $this->assertTrue(in_array('Status', $migrated_fields));
-        $this->assertTrue(in_array('Initial', $migrated_fields));
+        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Summary'));
+        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Description'));
+        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Assigned to'));
+        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Status'));
+        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Initial'));
 
         $this->assertCount(0, $json['dry_run']['fields']['fields_not_migrated']);
         $this->assertCount(0, $json['dry_run']['fields']['fields_partially_migrated']);
+    }
+
+    private function isFieldInArrayByLabel(array $fields, $label)
+    {
+        foreach ($fields as $minimal_field_representation) {
+            if ($minimal_field_representation['label'] === $label) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
