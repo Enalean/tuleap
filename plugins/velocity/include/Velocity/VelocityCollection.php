@@ -41,7 +41,12 @@ class VelocityCollection
     {
         ksort($this->velocity_representations);
 
-        return array_slice(array_values($this->velocity_representations), 0, self::NB_MAX_VELOCITIES);
+        return array_slice(
+            array_values(
+                $this->velocity_representations
+            ),
+            -self::NB_MAX_VELOCITIES
+        );
     }
 
     public function hasMoreThanMaxLimitDisplayVelocities()
