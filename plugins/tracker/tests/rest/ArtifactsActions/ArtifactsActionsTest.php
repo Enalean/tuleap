@@ -73,7 +73,13 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Status'));
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Initial'));
 
-        $this->assertCount(0, $json['dry_run']['fields']['fields_not_migrated']);
+        $not_migrated_fields = $json['dry_run']['fields']['fields_not_migrated'];
+        $this->assertCount(3, $json['dry_run']['fields']['fields_not_migrated']);
+
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Attachments'));
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Type'));
+        $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Impediment'));
+
         $this->assertCount(0, $json['dry_run']['fields']['fields_partially_migrated']);
     }
 
