@@ -25,7 +25,7 @@
 
         <select id="move-artifact-project-selector"
                 name="move-artifact-project-selector"
-                v-on:change="loadTrackers">
+                v-on:change="loadTrackers"
             >
             <option disabled="disabled" selected><translate>Choose project...</translate></option>
             <option v-for="project in projects"
@@ -44,6 +44,8 @@ export default {
     name: "ProjectSelector",
     methods: {
         loadTrackers(event) {
+            this.$store.commit("saveTrackers", []);
+            this.$store.commit("resetSelectedTracker");
             this.$store.dispatch("loadTrackerList", event.target.value);
         }
     },

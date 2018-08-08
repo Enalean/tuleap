@@ -22,5 +22,8 @@ export default {
     are_trackers_loading: false,
     projects: [],
     trackers: [],
-    error_message: ""
+    error_message: "",
+    selected_tracker: {
+        tracker_id: null
+    }
 };

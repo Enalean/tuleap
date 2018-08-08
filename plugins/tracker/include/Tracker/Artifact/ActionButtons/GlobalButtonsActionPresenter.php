@@ -69,6 +69,11 @@ class GlobalButtonsActionPresenter
      */
     public $should_load_modal;
 
+    /**
+     * @var string
+     */
+    public $project_name;
+
     public function __construct(
         Tracker_Artifact $artifact,
         ArtifactMoveButtonPresenter $artifact_move_button_presenter = null,
@@ -80,6 +85,7 @@ class GlobalButtonsActionPresenter
         $this->tracker_name  = $artifact->getTracker()->getItemName();
         $this->tracker_color = $artifact->getTracker()->getColor();
         $this->artifact_id   = $artifact->getId();
+        $this->project_name  = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
 
         $this->artifact_move_button_presenter               = $artifact_move_button_presenter;
         $this->artifact_copy_button_presenter               = $artifact_copy_button_presenter;

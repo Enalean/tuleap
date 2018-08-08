@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { setFromTracker, getTrackerName, getTrackerColor, getArtifactId };
+export { setFromTracker, getTrackerName, getTrackerColor, getArtifactId, getProjectName };
 
-let tracker_name, tracker_color, artifact_id;
+let tracker_name, tracker_color, artifact_id, name_project;
 
-function setFromTracker(name_tracker, color_tracker, id_artifact) {
+function setFromTracker(name_tracker, color_tracker, id_artifact, project_name) {
     tracker_name = name_tracker;
     tracker_color = color_tracker;
     artifact_id = id_artifact;
+    name_project = project_name;
 }
 
 function getTrackerName() {
@@ -37,4 +38,8 @@ function getTrackerColor() {
 
 function getArtifactId() {
     return artifact_id;
+}
+
+function getProjectName() {
+    return name_project;
 }
