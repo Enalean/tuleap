@@ -25,5 +25,6 @@ export default {
     error_message: "",
     selected_tracker: {
         tracker_id: null
-    }
+    },
+    selected_project_id: null
 };

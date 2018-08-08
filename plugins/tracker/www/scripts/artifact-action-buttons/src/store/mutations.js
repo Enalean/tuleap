@@ -24,6 +24,9 @@ export default {
     saveProjects(state, projects) {
         state.projects = projects;
     },
+    saveSelectedProjectId(state, project_id) {
+        state.selected_project_id = project_id;
+    },
     saveTrackers(state, trackers) {
         state.trackers = trackers;
     },
@@ -36,7 +39,11 @@ export default {
         state.error_message = "";
         state.projects = [];
         state.trackers = [];
-        this.resetSelectedTracker(state);
+        state.selected_project_id = null;
+
+        state.selected_tracker = {
+            tracker_id: null
+        };
     },
     setAreTrackerLoading(state, status) {
         state.are_trackers_loading = status;
