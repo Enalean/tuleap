@@ -52,6 +52,7 @@ export default {
                 this.$store.commit("saveSelectedProjectId", project_id);
                 this.$store.commit("saveTrackers", []);
                 this.$store.commit("resetSelectedTracker");
+                this.$store.commit("setHasProcessedDryRun", false);
                 this.$store.dispatch("loadTrackerList");
             }
         }

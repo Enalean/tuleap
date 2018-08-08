@@ -5,6 +5,31 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "%{ getCountOfFullyMigratedField } field will be fully migrated:"
+msgid_plural "%{ getCountOfFullyMigratedField } fields will be fully migrated:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"%{ getCountOfNotMigratedField } field do not match with the targeted "
+"tracker. If you confirm your action, its value will be lost forever:"
+msgid_plural ""
+"%{ getCountOfNotMigratedField } fields do not match with the targeted "
+"tracker. If you confirm your action, their values will be lost forever:"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid ""
+"%{ getCountOfPartiallyMigratedField } field do not fully match with the "
+"targeted tracker. One value of the field has not been found in targeted "
+"tracker, if you confirm your action, this value will be lost forever:"
+msgid_plural ""
+"%{ getCountOfPartiallyMigratedField } fields do not fully match with the "
+"targeted tracker. One value of the fields has not been found in targeted "
+"tracker, if you confirm your action, this value will be lost forever:"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "An artifact cannot be moved in the same tracker"
 msgstr ""
 
@@ -23,5 +48,11 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Confirm"
+msgstr ""
+
 msgid "Move"
+msgstr ""
+
+msgid "Move artifact"
 msgstr ""

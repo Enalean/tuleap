@@ -17,13 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError } from "tlp-mocks";
-import { loadProjectList, loadTrackerList, move } from "./actions.js";
+import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { loadProjectList, loadTrackerList, move, moveDryRun } from "./actions.js";
 import {
+    restore as restoreFetch,
     rewire$getProjectList,
     rewire$getTrackerList,
     rewire$moveArtifact,
-    restore as restoreFetch
+    rewire$moveDryRunArtifact
 } from "../api/rest-querier.js";
 
 describe("Store actions", () => {
@@ -156,6 +157,67 @@ describe("Store actions", () => {
 
             await move(context, [artifact_id, tracker_id]);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+        });
+    });
+
+    describe("move dry run", () => {
+        let moveDryRunArtifact, moveArtifact, context;
+        beforeEach(() => {
+            moveDryRunArtifact = jasmine.createSpy("moveDryRunArtifact");
+            rewire$moveDryRunArtifact(moveDryRunArtifact);
+
+            moveArtifact = jasmine.createSpy("moveArtifact");
+            rewire$moveArtifact(moveArtifact);
+            context = {
+                commit: jasmine.createSpy("commit")
+            };
+        });
+
+        afterEach(() => {
+            restoreFetch();
+        });
+
+        it("When I process move in Dry run, if at least one field has en error, I store dry run has been processed in store", async () => {
+            const return_json = {
+                dry_run: {
+                    fields: {
+                        fields_not_migrated: ["not_migrated"],
+                        fields_partially_migrated: [],
+                        fields_migrated: []
+                    }
+                }
+            };
+
+            mockFetchSuccess(moveDryRunArtifact, { return_json });
+
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            await moveDryRun(context, [artifact_id, tracker_id]);
+            expect(context.commit).toHaveBeenCalledWith("setHasProcessedDryRun", true);
+        });
+
+        it("When I process move in Dry run, if all field can mmigrated, I process the move", async () => {
+            const return_json = {
+                dry_run: {
+                    fields: {
+                        fields_not_migrated: [],
+                        fields_partially_migrated: [],
+                        fields_migrated: ["fully_migrated"]
+                    }
+                }
+            };
+
+            mockFetchSuccess(moveDryRunArtifact, { return_json });
+            moveArtifact.and.returnValue(Promise.resolve());
+
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            await moveDryRun(context, [artifact_id, tracker_id]);
+
+            expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
+            expect(context.commit).toHaveBeenCalledWith("setShouldRedirect", true);
         });
     });
 });

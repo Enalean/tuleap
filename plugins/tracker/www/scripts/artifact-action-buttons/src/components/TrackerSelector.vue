@@ -69,6 +69,7 @@ export default {
             },
             set(tracker) {
                 this.$store.commit("setErrorMessage", "");
+                this.$store.commit("setHasProcessedDryRun", false);
                 this.$store.commit("setSelectedTracker", tracker);
             }
         },

@@ -32,3 +32,10 @@ export const tracker_list_with_disabled_from = state =>
         tracker.disabled = tracker.id === getTrackerId();
         return tracker;
     });
+
+export const getCountOfNotMigratedField = state => state.dry_run_fields.fields_not_migrated.length;
+
+export const getCountOfPartiallyMigratedField = state =>
+    state.dry_run_fields.fields_partially_migrated.length;
+
+export const getCountOfFullyMigratedField = state => state.dry_run_fields.fields_migrated.length;

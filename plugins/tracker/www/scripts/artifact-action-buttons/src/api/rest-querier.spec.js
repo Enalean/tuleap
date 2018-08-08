@@ -18,7 +18,12 @@
  */
 
 import { mockFetchSuccess } from "tlp-mocks";
-import { getProjectList, getTrackerList, moveArtifact } from "./rest-querier.js";
+import {
+    getProjectList,
+    getTrackerList,
+    moveArtifact,
+    moveDryRunArtifact
+} from "./rest-querier.js";
 import { restore as restoreFetch, rewire$patch, rewire$recursiveGet } from "tlp-fetch";
 
 describe("API querier", () => {
@@ -87,7 +92,7 @@ describe("API querier", () => {
         });
     });
 
-    describe("moveArtifact", () => {
+    describe("moveDryRunArtifact", () => {
         it("Given a tracker id, and a project id then it will process the move", () => {
             const artifact_id = 101;
             const tracker_id = 5;
@@ -96,7 +101,21 @@ describe("API querier", () => {
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
-                body: '{"move":{"tracker_id":' + tracker_id + "}}"
+                body: '{"move":{"tracker_id":' + tracker_id + ',"dry_run":false}}'
+            });
+        });
+    });
+
+    describe("moveArtifact", () => {
+        it("Given a tracker id, and a project id then it will process the dry run move", () => {
+            const artifact_id = 101;
+            const tracker_id = 5;
+
+            moveDryRunArtifact(artifact_id, tracker_id);
+
+            expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
+                headers: { "content-type": "application/json" },
+                body: '{"move":{"tracker_id":' + tracker_id + ',"dry_run":true}}'
             });
         });
     });
