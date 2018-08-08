@@ -207,6 +207,17 @@ class LDAPResult implements Iterator, Countable {
         return $this->get($this->ldapParams['cn']);
     }
 
+    /**
+     * @return string
+     * */
+    function getGroupDisplayName()
+    {
+        if (isset($this->ldapParams['grp_display_name'])) {
+            return $this->get($this->ldapParams['grp_display_name']);
+        }
+        return $this->getCommonName();
+    }
+
     function getLogin() {
         return $this->get($this->ldapParams['uid']);
     }

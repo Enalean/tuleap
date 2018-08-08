@@ -49,8 +49,12 @@ function autocomplete_groups_for_select2(element, options) {
             if (ldap_group.loading) {
                 return ldap_group.text;
             }
+            // If no distinct display name, just show the ID (cn).
+            if (!ldap_group.text || ldap_group.text === ldap_group.id) {
+                return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${ escaper.html(ldap_group.id) }`;
+            }
 
-            return `<i class="autocomplete-ldap-group-icon fa fa-group"></i>  ${ escaper.html(ldap_group.text) }`;
+            return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${ escaper.html(ldap_group.text) } <span style="float:right"> ${ escaper.html(ldap_group.id) } </span>`;
         },
         ...options
     };
