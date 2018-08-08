@@ -953,6 +953,8 @@ class LdapPlugin extends Plugin {
     public function codendi_daily_start($params)
     {
         if ($this->isLdapAuthType() && $this->isDailySyncEnabled()) {
+            $this->getLogger()->info('Starting LDAP daily synchronisation');
+
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap(), $this->getLogger());
             $ldapQuery->syncAll();
 
@@ -969,18 +971,23 @@ class LdapPlugin extends Plugin {
             $this->synchronizeProjectMembers();
             $this->synchronizeStaticUgroupMembers();
 
+            $this->getLogger()->info('LDAP daily synchronisation done');
             return true;
         }
     }
 
     private function synchronizeProjectMembers()
     {
+        $this->getLogger()->info('LDAP daily synchronisation: project members');
+
         $ldap_project_group_manager = $this->getLdapProjectGroupManager();
         $ldap_project_group_manager->synchronize();
     }
 
     private function synchronizeStaticUgroupMembers()
     {
+        $this->getLogger()->info('LDAP daily synchronisation: static ugroup members');
+
         $ldapUserGroupManager = $this->getLdapUserGroupManager();
         $ldapUserGroupManager->synchronizeUgroups();
     }

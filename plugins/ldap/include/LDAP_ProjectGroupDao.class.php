@@ -154,7 +154,9 @@ class LDAP_ProjectGroupDao extends DataAccessObject
 
         $sql = "SELECT *
                 FROM plugin_ldap_project_group
-                WHERE synchro_policy = $auto_synchronized_value";
+                  INNER JOIN groups ON (groups.group_id = plugin_ldap_project_group.group_id)
+                WHERE synchro_policy = $auto_synchronized_value
+                  AND groups.status IN ('A', 's')";
 
         return $this->retrieve($sql);
     }
