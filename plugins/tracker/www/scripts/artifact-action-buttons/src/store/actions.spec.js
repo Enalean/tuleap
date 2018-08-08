@@ -77,7 +77,10 @@ describe("Store actions", () => {
             getTrackerList = jasmine.createSpy("getTrackerList");
             rewire$getTrackerList(getTrackerList);
             context = {
-                commit: jasmine.createSpy("commit")
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    selected_project_id: 101
+                }
             };
         });
 

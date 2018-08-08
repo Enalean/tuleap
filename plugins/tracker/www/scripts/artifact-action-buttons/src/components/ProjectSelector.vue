@@ -25,9 +25,9 @@
 
         <select id="move-artifact-project-selector"
                 name="move-artifact-project-selector"
-                v-on:change="loadTrackers"
+                v-model="selectedProjectId"
             >
-            <option disabled="disabled" selected><translate>Choose project...</translate></option>
+            <option disabled="disabled" value="null" selected><translate>Choose project...</translate></option>
             <option v-for="project in sortedProjects"
                     v-bind:key="project.id"
                     v-bind:value="project.id"
@@ -42,15 +42,19 @@ import { mapGetters } from "vuex";
 
 export default {
     name: "ProjectSelector",
-    methods: {
-        loadTrackers(event) {
-            this.$store.commit("saveTrackers", []);
-            this.$store.commit("resetSelectedTracker");
-            this.$store.dispatch("loadTrackerList", event.target.value);
-        }
-    },
     computed: {
-        ...mapGetters(["sortedProjects"])
+        ...mapGetters(["sortedProjects"]),
+        selectedProjectId: {
+            get() {
+                return this.$store.state.selected_project_id;
+            },
+            set(project_id) {
+                this.$store.commit("saveSelectedProjectId", project_id);
+                this.$store.commit("saveTrackers", []);
+                this.$store.commit("resetSelectedTracker");
+                this.$store.dispatch("loadTrackerList");
+            }
+        }
     }
 };
 </script>

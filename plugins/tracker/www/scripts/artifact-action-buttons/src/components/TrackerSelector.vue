@@ -24,19 +24,19 @@
         <select id="move-artifact-tracker-selector"
                 name="move-artifact-tracker-selector"
                 v-bind:disabled="isTrackerListEmpty"
-                v-on:change="selectTracker"
+                v-model="selectedTracker"
         >
-            <option disabled="disabled" selected>
+            <option disabled="disabled" selected="selected" v-bind:value="{ tracker_id: null }">
                 <translate>Choose tracker...</translate>
             </option>
             <option v-for="tracker of trackerList"
                     v-bind:key="tracker.id"
-                    v-bind:value="JSON.stringify({
+                    v-bind:value="{
                         tracker_id: tracker.id,
                         label: tracker.label,
                         project: tracker.project,
                         color_name: tracker.color_name
-                    })"
+                    }"
             >
                 {{ tracker.label }}
             </option>
@@ -55,12 +55,15 @@ export default {
         }),
         isTrackerListEmpty() {
             return this.trackerList.length === 0;
-        }
-    },
-    methods: {
-        selectTracker(event) {
-            this.$store.commit("setErrorMessage", "");
-            this.$store.commit("setSelectedTracker", JSON.parse(event.target.value));
+        },
+        selectedTracker: {
+            get() {
+                return this.$store.state.selected_tracker;
+            },
+            set(tracker) {
+                this.$store.commit("setErrorMessage", "");
+                this.$store.commit("setSelectedTracker", tracker);
+            }
         }
     }
 };
