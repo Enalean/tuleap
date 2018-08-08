@@ -21,13 +21,18 @@ import Vue from "vue";
 import MoveModal from "./components/MoveModal.vue";
 import { setFromTracker } from "./from-tracker-presenter.js";
 import GetTextPlugin from "vue-gettext";
-
-Vue.use(GetTextPlugin, {
-    translations: {},
-    silent: true
-});
+import french_translations from "../po/fr.po";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(GetTextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
+    Vue.config.language = document.body.dataset.userLocale;
+
     const vue_mount_point = document.getElementById("move-artifact-modal");
     if (vue_mount_point) {
         const RootComponent = Vue.extend(MoveModal);
