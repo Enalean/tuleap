@@ -18,3 +18,9 @@
  */
 
 export const hasError = state => state.error_message.length > 0;
+
+export const sortedProjects = state => {
+    return state.projects.sort(function(a, b) {
+        return a.label.localeCompare(b.label);
+    });
+};
