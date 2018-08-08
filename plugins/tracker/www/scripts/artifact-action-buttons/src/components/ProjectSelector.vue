@@ -28,17 +28,17 @@
                 v-on:change="loadTrackers"
             >
             <option disabled="disabled" selected><translate>Choose project...</translate></option>
-            <option v-for="project in projects"
+            <option v-for="project in sortedProjects"
                     v-bind:key="project.id"
                     v-bind:value="project.id"
             >
-                {{ project.shortname }}
+                {{ project.label }}
             </option>
         </select>
     </label>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ProjectSelector",
@@ -50,9 +50,7 @@ export default {
         }
     },
     computed: {
-        ...mapState({
-            projects: state => state.projects
-        })
+        ...mapGetters(["sortedProjects"])
     }
 };
 </script>
