@@ -52,6 +52,7 @@ use Tuleap\Git\CommitStatus\CommitStatusCreator;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\InvalidCommitReferenceException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
 use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
 use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
@@ -636,6 +637,62 @@ class RepositoryResource extends AuthenticatedResource {
 
 
         $this->sendAllowHeaders();
+    }
+
+    /**
+     * @url OPTIONS {id}/files
+     *
+     * @param int    $id           Id of the git repository
+     * @param string $path_to_file path of the file {@from path}
+     * @param string $ref          ref {@from path}
+     */
+    public function optionsGetFileContent($id, $path_to_file, $ref)
+    {
+        Header::allowOptionsPost();
+    }
+
+
+    /**
+     * Get the content of a specific file from a git repository.
+     *
+     * The file size is in Bytes. <br/>
+     * If no ref given, master is used.
+     *
+     * @url    GET {id}/files
+     *
+     * @access protected
+     *
+     * @param int    $id           Id of the git repository
+     * @param string $path_to_file path of the file {@from path}
+     * @param string $ref          reference {@from path}
+     *
+     * @return GitFileContentRepresentation
+     *
+     * @status 200
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     *
+     */
+    public function getFileContent($id, $path_to_file, $ref = 'master')
+    {
+        $this->checkAccess();
+        $user                        = $this->getCurrentUser();
+        $repository                  = $this->getRepository($user, $id);
+        $file_representation_factory = new GitFileRepresentationFactory();
+        try {
+            $result = $file_representation_factory->getGitFileRepresentation(
+                $path_to_file,
+                $ref,
+                $repository
+            );
+        } catch (\GitRepositoryException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        } catch (GitRepoRefNotFoundException $exception) {
+            throw new RestException(404, $exception->getMessage());
+        }
+        $this->sendAllowHeaders();
+        return $result;
     }
 
     private function disconnect(GitRepository $repository, $disconnect_from_gerrit) {
