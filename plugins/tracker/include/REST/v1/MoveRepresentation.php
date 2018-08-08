@@ -29,7 +29,7 @@ class MoveRepresentation
     public $tracker_id;
 
     /**
-     * @var bool {@type boolean} {@required false}
+     * @var bool {@type bool} {@required false}
      */
     public $dry_run = false;
 }
