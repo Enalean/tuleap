@@ -30,25 +30,24 @@
         </td>
         <td>{{ project.label }}</td>
         <td class="tlp-table-cell-numeric">
-            {{ getFormattedAggregatedTime() }}
+            {{ get_formatted_aggregated_time(timeData) }}
         </td>
         <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal"
             v-on:click="show_modal">
             {{ show_times_label }}
         </td>
         <widget-modal-times
-            v-bind:key="times.id"
-            v-bind:time-data="times"
-            v-bind:total-time="getFormattedAggregatedTime()"
+            v-bind:key="timeData.id"
+            v-bind:time-data="timeData"
         />
     </tr>
 </template>)
 (<script>
-import { formatMinutes } from "../time-formatters.js";
-import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
+import { mapGetters } from "vuex";
 import { gettext_provider } from "../gettext-provider.js";
 import { modal as createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
+import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
 
 export default {
     name: "WidgetArtifactTableRow",
@@ -60,24 +59,17 @@ export default {
         timeData: Array
     },
     data() {
-        const data = this.timeData[0];
-
         return {
-            artifact: data.artifact,
-            project: data.project,
-            times: this.timeData,
+            artifact: this.timeData[0].artifact,
+            project: this.timeData[0].project,
             modal_simple_content: null
         };
     },
     computed: {
+        ...mapGetters(["get_formatted_aggregated_time"]),
         show_times_label: () => gettext_provider.gettext("Details")
     },
     methods: {
-        getFormattedAggregatedTime() {
-            const minutes = this.timeData.reduce((sum, { minutes }) => minutes + sum, 0);
-
-            return formatMinutes(minutes);
-        },
         show_modal() {
             this.modal_simple_content.toggle();
         }

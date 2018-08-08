@@ -18,13 +18,14 @@
             </div>
             <widget-modal-table
                 v-bind:time-data="timeData"
-                v-bind:total-time="totalTime"
+                v-bind:total-time="get_formatted_aggregated_time(timeData)"
             />
         </div>
     </div>
 </template>)
 (<script>
 import { gettext_provider } from "../../gettext-provider.js";
+import { mapGetters } from "vuex";
 import WidgetModalArtifactInfo from "./WidgetModalArtifactInfo.vue";
 import WidgetModalTable from "./WidgetModalTable.vue";
 import WidgetLinkToArtifact from "../WidgetLinkToArtifact.vue";
@@ -32,17 +33,16 @@ export default {
     name: "WidgetModalContent",
     components: { WidgetLinkToArtifact, WidgetModalTable, WidgetModalArtifactInfo },
     props: {
-        timeData: Array,
-        totalTime: String
+        timeData: Array
     },
     data() {
-        const data = this.timeData[0];
         return {
-            artifact: data.artifact,
-            project: data.project
+            artifact: this.timeData[0].artifact,
+            project: this.timeData[0].project
         };
     },
     computed: {
+        ...mapGetters(["get_formatted_aggregated_time"]),
         edit_time: () => gettext_provider.gettext("Detailed times"),
         timetracking_url() {
             return this.artifact.html_url + "&view=timetracking";

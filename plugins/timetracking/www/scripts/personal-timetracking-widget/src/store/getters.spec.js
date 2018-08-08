@@ -21,25 +21,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import WidgetArtifactTable from "./WidgetArtifactTable.vue";
+import initial_state from "./state.js";
+import * as getters from "./getters.js";
+import mutations from "./mutations";
 
-describe("WidgetArtifactTable", () => {
-    let ArtifactTable;
-
+describe("Widget", () => {
+    let state;
     beforeEach(() => {
-        ArtifactTable = Vue.extend(WidgetArtifactTable);
+        state = { ...initial_state };
     });
 
-    function instantiateComponent() {
-        return new ArtifactTable().$mount();
-    }
-
-    describe("getFormattedTotalSum", () => {
-        it("Given a collection of times aggregated by artifacts, then it should return the formatted sum of all the times' minutes", () => {
-            const vm = instantiateComponent();
-
-            vm.tracked_times = [
+    describe("Call sums", () => {
+        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
+            let times = [
                 [
                     {
                         artifact: {},
@@ -51,18 +45,28 @@ describe("WidgetArtifactTable", () => {
                         project: {},
                         minutes: 20
                     }
-                ],
-                [
-                    {
-                        artifact: {},
-                        project: {},
-                        minutes: 20
-                    }
                 ]
             ];
 
-            const formatted_times = vm.getFormattedTotalSum();
-            expect(formatted_times).toEqual("01:00");
+            mutations.setTimes(state, times);
+            expect(getters.get_formatted_total_sum(state)).toBe("00:40");
+        });
+
+        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
+            let times = [
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20
+                },
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20
+                }
+            ];
+
+            expect(getters.get_formatted_aggregated_time()(times)).toBe("00:40");
         });
     });
 });

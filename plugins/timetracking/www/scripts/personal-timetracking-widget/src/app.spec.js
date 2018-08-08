@@ -24,5 +24,5 @@ import "./time-formatters.spec.js";
 import "./api/rest-querier.spec.js";
 
 import "./store/mutations.spec.js";
-
-import "./components/WidgetArtifactTable.spec.js";
+import "./store/actions.spec.js";
+import "./store/getters.spec.js";

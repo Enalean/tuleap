@@ -43,18 +43,64 @@ describe("Store mutations", () => {
             expect(state.reading_mode).toBe(false);
         });
 
-        it("Given a widget with state initialisation, Then we change queryHasChanged, state must change too", () => {
-            mutations.setQueryHasChanged(state, true);
-            expect(state.query_has_changed).toBe(true);
-        });
-
         it("Given a widget with state initialisation, Then we put new dates, state must change too", () => {
             mutations.toggleReadingMode(state);
-            mutations.setDates(state, ["2018-01-01", "2018-02-02"]);
+            mutations.setParametersForNewQuery(state, ["2018-01-01", "2018-02-02"]);
             expect(state.start_date).toEqual("2018-01-01");
             expect(state.end_date).toEqual("2018-02-02");
             expect(state.reading_mode).toBe(true);
-            expect(state.query_has_changed).toBe(true);
+        });
+
+        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
+            let times = [
+                [
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    },
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    }
+                ],
+                [
+                    {
+                        artifact: {},
+                        project: {},
+                        minutes: 20
+                    }
+                ]
+            ];
+
+            mutations.setTimes(state, times);
+            expect(state.times.length).toBe(2);
+        });
+
+        it("Given a widget with state initialisation, Then we change total_time, state must change too", () => {
+            mutations.setTotalTimes(state, 5);
+            expect(state.total_times).toBe(5);
+        });
+
+        it("Given a widget with state initialisation, Then we change pagination_offset, state must change too", () => {
+            mutations.setPaginationOffset(state, 5);
+            expect(state.pagination_offset).toBe(5);
+        });
+
+        it("Given a widget with state initialisation, Then we change pagination_limit, state must change too", () => {
+            mutations.setPaginationLimit(state, 5);
+            expect(state.pagination_limit).toBe(5);
+        });
+
+        it("Given a widget with state initialisation, Then we change rest_error, state must change too", () => {
+            mutations.setErrorMessage(state, "oui");
+            expect(state.error_message).toEqual("oui");
+        });
+
+        it("Given a widget with state initialisation, Then we change isLoading, state must change too", () => {
+            mutations.setIsLoading(state, true);
+            expect(state.is_loading).toBe(true);
         });
     });
 });

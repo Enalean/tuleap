@@ -65,7 +65,7 @@
 (<script>
 import { datePicker } from "tlp";
 import { gettext_provider } from "../gettext-provider.js";
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "WidgetWritingMode",
@@ -78,9 +78,10 @@ export default {
         search_label: () => gettext_provider.gettext("Search")
     },
     methods: {
-        ...mapMutations(["toggleReadingMode", "setDates"]),
+        ...mapMutations(["toggleReadingMode"]),
+        ...mapActions(["setDatesAndReload"]),
         changeDates() {
-            this.setDates([this.$refs.start_date.value, this.$refs.end_date.value]);
+            this.setDatesAndReload([this.$refs.start_date.value, this.$refs.end_date.value]);
         }
     },
     mounted() {

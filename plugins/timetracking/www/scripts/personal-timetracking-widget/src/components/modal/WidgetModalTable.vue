@@ -10,6 +10,7 @@
         <tbody>
         <widget-modal-row
             v-for="time in sorted_times"
+            v-bind:key="time.id"
             v-bind:time-data="time"
         />
         </tbody>
