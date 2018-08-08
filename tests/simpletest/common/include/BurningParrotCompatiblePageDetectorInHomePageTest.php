@@ -22,6 +22,7 @@
 namespace Tuleap;
 
 use Tuleap\Request\CurrentPage;
+use User_ForgeUserGroupPermissionsManager;
 
 class BurningParrotCompatiblePageDetectorInHomePageTest extends \TuleapTestCase
 {
@@ -36,8 +37,14 @@ class BurningParrotCompatiblePageDetectorInHomePageTest extends \TuleapTestCase
         $this->preserveServer('SERVER_NAME');
         \ForgeConfig::store();
 
-        $this->dao = stub('Admin_Homepage_Dao')->isStandardHomepageUsed()->returns(true);
-        $this->detector = new BurningParrotCompatiblePageDetector(new CurrentPage(), $this->dao);
+        $forge_user_group_permissions_manager = mock(User_ForgeUserGroupPermissionsManager::class);
+
+        $this->dao      = stub('Admin_Homepage_Dao')->isStandardHomepageUsed()->returns(true);
+        $this->detector = new BurningParrotCompatiblePageDetector(
+            new CurrentPage(),
+            $this->dao,
+            $forge_user_group_permissions_manager
+        );
     }
 
     public function tearDown()
