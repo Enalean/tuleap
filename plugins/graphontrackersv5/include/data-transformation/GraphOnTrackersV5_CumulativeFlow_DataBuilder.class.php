@@ -122,7 +122,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     private function initEmptyResultArrayFromField($engine) {
 
             //Return {Label, r, g, b}
-            $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue
+            $sql = "SELECT val.id, val.label, deco.red, deco.green, deco.blue, deco.tlp_color_name
     FROM  tracker_field_list_bind_static_value val
     LEFT JOIN tracker_field_list_bind_decorator deco ON (val.id = deco.value_id)
     WHERE val.field_id = $this->observed_field_id
@@ -132,7 +132,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
             $engine->colors[$this->labels[100]] = array(null, null, null);
             $resultArray = array();
             while($data = db_fetch_array($res)) {
-               $engine->colors[$data['label']] = $this->getColor($data);
+               $engine->colors[$data['label']] = $this->getColorForJPGraph($data);
                $this->labels[$data['id']] = $data['label'];
                for ($i = 0 ; $i <= $this->nbSteps; $i++ ) {
                    $timestamp = $this->startDate + ($i * $this->timeFiller[$this->scale]) ;
