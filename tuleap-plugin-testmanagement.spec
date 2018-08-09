@@ -14,7 +14,7 @@ Obsoletes: tuleap-plugin-testing-backend <= 0.3, tuleap-plugin-trafficlights-bac
 
 AutoReqProv: no
 
-Requires: php(language) >= 5.3, tuleap >= 9.11, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
+Requires: tuleap >= 9.11, tuleap-plugin-tracker, tuleap-plugin-agiledashboard
 
 %description
 %{summary}.
