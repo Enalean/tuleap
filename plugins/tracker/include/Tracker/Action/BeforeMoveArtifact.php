@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use EventManager;
 use Tracker;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 
@@ -58,7 +58,7 @@ class BeforeMoveArtifact
     public function artifactCanBeMoved(
         Tracker $source_tracker,
         Tracker $target_tracker,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $event = new MoveArtifactGetExternalSemanticCheckers();
         $this->event_manager->processEvent($event);

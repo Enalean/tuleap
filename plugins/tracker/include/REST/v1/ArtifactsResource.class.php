@@ -49,7 +49,6 @@ use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_LocalAbsoluteFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
 use TrackerFactory;
-use Tuleap\Glyph\GlyphFinder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -58,6 +57,7 @@ use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Action\BeforeMoveArtifact;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveArtifact;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
@@ -818,14 +818,15 @@ class ArtifactsResource extends AuthenticatedResource {
             }
 
             $move_action             = $this->getMoveAction($user);
-            $feedback_collector      = new FeedbackFieldCollector();
             $response_representation = new ArtifactPatchResponseRepresentation();
 
             if ($patch->move->dry_run) {
+                $feedback_collector = new FeedbackFieldCollector();
                 $feedback_collector->initAllTrackerFieldAsNotMigrated($source_tracker);
                 $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
                 $response_representation->build($feedback_collector);
             } else {
+                $feedback_collector  = new NoFeedbackFieldCollector();
                 $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
 
                 $this->post_move_action->addFeedback($source_tracker, $target_tracker, $artifact, $user);

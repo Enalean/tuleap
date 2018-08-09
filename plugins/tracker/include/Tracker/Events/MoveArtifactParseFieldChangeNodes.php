@@ -22,9 +22,8 @@ namespace Tuleap\Tracker\Events;
 
 use SimpleXMLElement;
 use Tracker;
-use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 
 class MoveArtifactParseFieldChangeNodes implements Dispatchable
 {
@@ -56,7 +55,7 @@ class MoveArtifactParseFieldChangeNodes implements Dispatchable
     private $index;
 
     /**
-     * @var FeedbackFieldCollector
+     * @var FeedbackFieldCollectorInterface
      */
     private $feedback_field_collector;
 
@@ -64,7 +63,7 @@ class MoveArtifactParseFieldChangeNodes implements Dispatchable
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
-        FeedbackFieldCollector $feedback_field_collector,
+        FeedbackFieldCollectorInterface $feedback_field_collector,
         $index
     ) {
         $this->source_tracker           = $source_tracker;
@@ -120,7 +119,7 @@ class MoveArtifactParseFieldChangeNodes implements Dispatchable
     }
 
     /**
-     * @return FeedbackFieldCollector
+     * @return FeedbackFieldCollectorInterface
      */
     public function getFeedbackFieldCollector()
     {

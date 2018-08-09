@@ -25,7 +25,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 class MoveChangesetXMLUpdater
@@ -63,7 +63,7 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
         $index,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $source_initial_effort_field = $this->initial_effort_factory->getByTracker($source_tracker)->getField();
         $target_initial_effort_field = $this->initial_effort_factory->getByTracker($target_tracker)->getField();
@@ -95,7 +95,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $field_change,
         Tracker_FormElement_Field $source_initial_effort_field,
         Tracker_FormElement_Field $target_initial_effort_field,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $this->useTargetTrackerFieldName($field_change, $target_initial_effort_field);
 
@@ -120,7 +120,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $field_change,
         Tracker_FormElement_Field $source_initial_effort_field,
         Tracker_FormElement_Field $target_initial_effort_field,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $xml_value = (int) $field_change->value;
 
