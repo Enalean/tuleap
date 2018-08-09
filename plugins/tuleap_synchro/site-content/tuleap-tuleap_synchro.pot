@@ -1,0 +1,41 @@
+msgid "Add endpoint"
+msgstr ""
+
+msgid "Add new import endpoint"
+msgstr ""
+
+msgid "Allows to replicate artifacts from one Tuleap instance to another"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "List of import endpoints"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Shortname of the source project"
+msgstr ""
+
+msgid "There isn't any matching webhook"
+msgstr ""
+
+msgid "Tuleap to Tuleap"
+msgstr ""
+
+msgid "Tuleap to Tuleap Synchronization"
+msgstr ""
+
+msgid "Under implementation"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Webhook"
+msgstr ""
