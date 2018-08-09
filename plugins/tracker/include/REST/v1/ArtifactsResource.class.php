@@ -808,6 +808,7 @@ class ArtifactsResource extends AuthenticatedResource {
             $response_representation = new ArtifactPatchResponseRepresentation();
 
             if ($patch->move->dry_run) {
+                $feedback_collector->initAllTrackerFieldAsNotMigrated($source_tracker);
                 $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
                 $response_representation->build($feedback_collector);
             } else {

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Action\Move;
 
+use Tracker;
 use Tracker_FormElement_Field;
 
 class FeedbackFieldCollector
@@ -40,7 +41,18 @@ class FeedbackFieldCollector
      */
     private $fields_partially_migrated = [];
 
-    public function addFieldInNotMigrated(Tracker_FormElement_Field $field)
+    public function initAllTrackerFieldAsNotMigrated(Tracker $tracker)
+    {
+        foreach ($tracker->getFormElementFields() as $field) {
+            if (! $field->isUpdateable()) {
+                continue;
+            }
+
+            $this->addFieldInNotMigrated($field);
+        }
+    }
+
+    private function addFieldInNotMigrated(Tracker_FormElement_Field $field)
     {
         $field_id = $field->getId();
 

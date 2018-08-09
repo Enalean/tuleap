@@ -76,18 +76,6 @@ class BeforeMoveArtifact
 
                 $feedback_field_collector->addFieldInFullyMigrated($source_semantic_field);
             }
-
-            if ($source_semantic_field &&
-                ! $semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker)
-            ) {
-                $feedback_field_collector->addFieldInNotMigrated($source_semantic_field);
-            }
-
-            if ($semantic_checker->areBothSemanticsDefined($source_tracker, $target_tracker) &&
-                ! $semantic_checker->doesBothSemanticFieldHaveTheSameType($source_tracker, $target_tracker)
-            ) {
-                $feedback_field_collector->addFieldInNotMigrated($source_semantic_field);
-            }
         }
 
         if ($semantics_are_aligned) {
