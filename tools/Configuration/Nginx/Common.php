@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -60,7 +60,7 @@ class Common
     {
         $this->logger->info("Deploy configuration chunks in {$this->nginx_base_dir}/conf.d/tuleap.d");
         $tuleap_d_dir       = $this->nginx_base_dir.'/conf.d/tuleap.d';
-        $tuleap_d_base_dir  = $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.d';
+        $tuleap_d_base_dir  = $this->tuleap_base_dir.'/src/etc/nginx/tuleap.d';
 
         $this->createDirectoryIfNotExists($tuleap_d_dir);
         foreach (new DirectoryIterator($tuleap_d_base_dir) as $file) {
@@ -77,11 +77,11 @@ class Common
 
         $this->createDirectoryIfNotExists($tuleap_plugins_dir);
 
-        $plugin_conf_template = file_get_contents($this->tuleap_base_dir.'/src/etc/nginx18/plugin.conf.dist');
+        $plugin_conf_template = file_get_contents($this->tuleap_base_dir.'/src/etc/nginx/plugin.conf.dist');
         foreach (new DirectoryIterator($this->tuleap_base_dir.'/plugins') as $file) {
             if (! $file->isDot()) {
                 $plugin = $file->getBasename();
-                $conf_file = $file->getPathname().'/etc/nginx18/'.$plugin.'.conf';
+                $conf_file = $file->getPathname().'/etc/nginx/'.$plugin.'.conf';
                 $plugin_conf_file = $tuleap_plugins_dir.'/'.basename($conf_file);
                 if (is_file($conf_file)) {
                     copy($conf_file, $plugin_conf_file);
@@ -98,7 +98,7 @@ class Common
     {
         if (! $this->hasTuleapMarker()) {
             $this->backupOriginalFile($this->nginx_base_dir.'/nginx.conf');
-            copy($this->tuleap_base_dir.'/src/etc/nginx18/nginx.conf', $this->nginx_base_dir.'/nginx.conf');
+            copy($this->tuleap_base_dir.'/src/etc/nginx/nginx.conf', $this->nginx_base_dir.'/nginx.conf');
         }
     }
 

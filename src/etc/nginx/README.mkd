@@ -18,25 +18,19 @@ Edit `/etc/httpd/conf/httpd.conf` and change the values for:
 
 ### Deploy fpm conf
 
-In `/etc/opt/rh/rh-php56/php-fpm.d/www.conf`
+In `/etc/opt/remi/php56/php-fpm.d/www.conf`
 * Remove php_value[session.save_path]
 * Remove php_value[soap.wsdl_cache_dir]
-* Append the content of src/etc/fpm.conf.dist (cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/rh/rh-php56/php-fpm.d/www.conf)
+* Append the content of src/etc/fpm.conf.dist (cat /usr/share/tuleap/src/etc/fpm.conf.dist >> /etc/opt/remi/php56/php-fpm.d/www.conf)
 
 start fpm:
 
-    service rh-php56-php-fpm restart
+    service php56-php-fpm restart
 
 ### Deploy nginx
 
-Deploy `src/etc/nginx18/tuleap.conf.dist` as `/etc/opt/rh/rh-nginx18/nginx/conf.d/tuleap.conf` if it doesn't exist yet
+Deploy `src/etc/nginx/tuleap.conf.dist` as `/etc/nginx/conf.d/tuleap.conf` if it doesn't exist yet
 adapt to your context (name, ssl, etc)
-
-Then run
-
-    /usr/share/tuleap/src/etc/nginx18/redeploy.sh
-
-The configuration is meant to be redeployable at anytime.
 
 
 Organisation

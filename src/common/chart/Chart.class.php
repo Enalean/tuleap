@@ -1,22 +1,22 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Chart\ColorsForCharts;
@@ -68,7 +68,13 @@ class Chart
         $this->jpgraph_instance->SetMarginColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
         if ($aWidth && $aHeight) {
-            $this->jpgraph_instance->img->SetAntiAliasing();
+            // Commented because php56-php-gd from remi-safe
+            // does not rely on the GD library bundle with PHP
+            // but by the one provided by the OS which does not
+            // include the antiliasing feature
+            if (function_exists('imageantialias')) {
+                $this->jpgraph_instance->img->SetAntiAliasing();
+            }
         }
         Chart_TTFFactory::setUserFont($this->jpgraph_instance);
 

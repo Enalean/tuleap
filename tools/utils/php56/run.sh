@@ -2,7 +2,7 @@
 
 set -ex
 
-/opt/rh/rh-php56/root/usr/bin/php /usr/share/tuleap/tools/utils/php56/run.php --development
+/opt/remi/php56/root/usr/bin/php /usr/share/tuleap/tools/utils/php56/run.php --development
 
 while [ ! -f /etc/pki/ca-trust/source/anchors/tuleap-realtime-cert.pem ]; do
     echo "Waiting for Tuleap Realtime certificate…"

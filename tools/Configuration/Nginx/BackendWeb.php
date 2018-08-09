@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,7 @@ class BackendWeb
         $this->tuleap_base_dir = $tuleap_base_dir;
         $this->nginx_base_dir  = $nginx_base_dir;
         $this->server_name     = $server_name;
-        $this->common          = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir, $server_name);
+        $this->common          = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure()

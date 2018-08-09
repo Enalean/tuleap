@@ -46,7 +46,7 @@ class TuleapWeb
         $this->server_name     = $server_name;
         $this->for_development = $for_development;
 
-        $this->common = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir, $server_name);
+        $this->common = new Common($this->logger, $tuleap_base_dir, $nginx_base_dir);
     }
 
     public function configure()
@@ -60,7 +60,7 @@ class TuleapWeb
         if (! file_exists($this->nginx_base_dir.'/conf.d/tuleap.conf')) {
             $this->logger->info("Generate tuleap.conf");
             $this->common->replacePlaceHolderInto(
-                $this->tuleap_base_dir.'/src/etc/nginx18/tuleap.conf.dist',
+                $this->tuleap_base_dir.'/src/etc/nginx/tuleap.conf.dist',
                 $this->nginx_base_dir.'/conf.d/tuleap.conf',
                 array(
                     '%ssl_certificate_key_path%',
@@ -77,7 +77,7 @@ class TuleapWeb
 
             $this->logger->info('Generate default.d/redirect_tuleap.conf');
             $this->common->replacePlaceHolderInto(
-                $this->tuleap_base_dir.'/src/etc/nginx18/default.d/redirect_tuleap.conf.dist',
+                $this->tuleap_base_dir.'/src/etc/nginx/default.d/redirect_tuleap.conf.dist',
                 $this->nginx_base_dir.'/default.d/redirect_tuleap.conf',
                 ['%sys_default_domain%'],
                 [$this->server_name]

@@ -21,7 +21,7 @@ setup_user() {
     useradd -g $gid -u $uid -m runner
 }
 
-is_server_ready() {
+is_backend_svn_server_ready() {
     code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://reverse-proxy/svnplugin/svn-project-01/sample || true)
     while [ $code -ne 401 ]; do
         sleep 1
@@ -29,9 +29,17 @@ is_server_ready() {
     done
 }
 
+is_backend_web_server_ready() {
+    code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://reverse-proxy/ || true)
+    while [ $code -eq 502 ]; do
+        sleep 1
+        code=$(curl -k -s -o /dev/null -w "%{http_code}"  https://reverse-proxy/ || true)
+    done
+}
+
 setup_user
 
-is_server_ready
+is_backend_svn_server_ready
+is_backend_web_server_ready
 
-su -c 'npm install cypress@^2.1.0 && `npm bin`/cypress verify' -l runner
-su -c '`npm bin`/cypress run --project /tuleap/tests/e2e/distlp' -l runner
+su -c 'cypress run --project /tuleap/tests/e2e/distlp' -l runner

@@ -44,9 +44,9 @@ AutoReqProv: no
 
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
-Requires: rh-php56-php-mysqlnd, rh-php56-php-pdo, rh-php56-php-xml, rh-php56-php-mbstring, rh-php56-php-gd,
-Requires: rh-php56-php-soap, rh-php56-php-pear, rh-php56-php-intl, rh-php56-php-process, rh-php56-php-cli
-Requires: rh-php56-php-bcmath, rh-php56-php-fpm, rh-php56-php-opcache, rh-php56-php-pecl-jsonc
+Requires: php56-php-mysqlnd, php56-php-pdo, php56-php-xml, php56-php-mbstring, php56-php-gd
+Requires: php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-cli
+Requires: php56-php-bcmath, php56-php-fpm, php56-php-opcache, php56-php-pecl-jsonc, php56-php-pecl-zip
 Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 
 Requires: jpgraph-%{PKG_NAME}
@@ -217,7 +217,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, rh-php56-php-ldap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, perl-LDAP, php56-php-ldap
 Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
@@ -278,7 +278,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, rh-php56-php-imap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php56-php-imap
 %description plugin-tracker
 New tracker generation for Tuleap.
 
