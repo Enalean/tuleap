@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "babel-polyfill";
-import "tlp-mocks";
+import Vue from "vue";
+import Vuex from "vuex";
+import mutations from "./mutations.js";
+import state from "./state.js";
 
-import "./time-formatters.spec.js";
-import "./api/rest-querier.spec.js";
+Vue.use(Vuex);
 
-import "./store/mutations.spec.js";
-
-import "./components/WidgetArtifactTable.spec.js";
+export default new Vuex.Store({
+    state,
+    mutations
+});

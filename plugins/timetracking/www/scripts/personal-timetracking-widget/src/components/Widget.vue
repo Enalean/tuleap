@@ -17,76 +17,31 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(
-<template>
+(<template>
     <div class="timetracking-widget">
-        <widget-reading-mode v-if="reading_mode"
-             v-on:switchToWritingMode="switchToWritingMode"
-             v-bind:startDate="start_date"
-             v-bind:endDate="end_date"
-        />
-        <widget-writing-mode v-else
-             v-on:switchToReadingMode="switchToReadingMode"
-             v-bind:readingStartDate="start_date"
-             v-bind:readingEndDate="end_date"
-        />
-        <widget-artifact-table
-            v-bind:is-in-reading-mode="reading_mode"
-            v-bind:has-query-changed="query_has_changed"
-            v-bind:startDate="start_date"
-            v-bind:endDate="end_date"
-        />
+        <widget-reading-mode v-if="reading_mode"/>
+        <widget-writing-mode v-else/>
+        <widget-artifact-table/>
     </div>
-</template>
-)
-(
-<script>
-import { DateTime } from "luxon";
+</template>)
+
+(<script>
+import { mapState } from "vuex";
+import store from "../store/index.js";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
 import WidgetWritingMode from "./WidgetWritingMode.vue";
 import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 
 export default {
     name: "Widget",
+    store,
     components: {
         WidgetReadingMode,
         WidgetWritingMode,
         WidgetArtifactTable
     },
-    data() {
-        const start_date = DateTime.local()
-            .minus({ weeks: 1 })
-            .toISODate();
-        const end_date = DateTime.local().toISODate();
-
-        return {
-            reading_mode: true,
-            query_has_changed: false,
-            start_date,
-            end_date
-        };
-    },
-    methods: {
-        switchToWritingMode() {
-            this.reading_mode = false;
-        },
-
-        switchToReadingMode(data) {
-            if (data) {
-                const { start_date, end_date } = data;
-
-                this.start_date = start_date;
-                this.end_date = end_date;
-                this.reading_mode = true;
-                this.query_has_changed = true;
-
-                return;
-            }
-
-            this.reading_mode = true;
-            this.query_has_changed = false;
-        }
+    computed: {
+        ...mapState(["reading_mode"])
     }
 };
-</script>
-)
+</script>)

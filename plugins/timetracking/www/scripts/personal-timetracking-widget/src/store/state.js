@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,13 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { DateTime } from "luxon";
 
-import "babel-polyfill";
-import "tlp-mocks";
+const state = {
+    start_date: DateTime.local()
+        .minus({ weeks: 1 })
+        .toISODate(),
+    end_date: DateTime.local().toISODate(),
+    reading_mode: true,
+    query_has_changed: false
+};
 
-import "./time-formatters.spec.js";
-import "./api/rest-querier.spec.js";
-
-import "./store/mutations.spec.js";
-
-import "./components/WidgetArtifactTable.spec.js";
+export default state;

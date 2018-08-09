@@ -20,16 +20,16 @@
 (
 <template>
     <div class="timetracking-reading-mode"
-         v-on:click="switchToWritingMode"
+         v-on:click="toggleReadingMode()"
     >
         <div class="timetracking-reading-mode-dates">
             <div class="tlp-property timetracking-reading-date">
                 <label class="tlp-label">{{ start_date_label }}</label>
-                <span>{{ startDate }}</span>
+                <span>{{ start_date }}</span>
             </div>
             <div class="tlp-property timetracking-reading-date">
                 <label class="tlp-label">{{ end_date_label }}</label>
-                <span>{{ endDate }}</span>
+                <span>{{ end_date }}</span>
             </div>
         </div>
     </div>
@@ -37,21 +37,17 @@
 )(
 <script>
 import { gettext_provider } from "../gettext-provider.js";
+import { mapState, mapMutations } from "vuex";
 
 export default {
     name: "WidgetReadingMode",
-    props: {
-        startDate: String,
-        endDate: String
-    },
     computed: {
+        ...mapState(["start_date", "end_date"]),
         start_date_label: () => gettext_provider.gettext("From"),
         end_date_label: () => gettext_provider.gettext("To")
     },
     methods: {
-        switchToWritingMode() {
-            this.$emit("switchToWritingMode");
-        }
+        ...mapMutations(["toggleReadingMode"])
     }
 };
 </script>
