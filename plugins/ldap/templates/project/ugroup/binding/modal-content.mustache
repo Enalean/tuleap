@@ -23,7 +23,7 @@
                 tuleap-ldap
                 | <strong>%s</strong> is already linked with directory group <strong>%s</strong>.
                 | {{ ugroup_name }}
-                | {{ ldap_group_name }}
+                | {{ ldap_group_display_name }}
             {{/ dgettext }}
         {{/ is_linked }}
 
@@ -64,7 +64,7 @@
             >
                 <option></option>
                 {{# ldap_group_name }}
-                    <option value="{{ ldap_group_name }}" selected>{{ ldap_group_name }}</option>
+                    <option value="{{ ldap_group_name }}" selected>{{ ldap_group_display_name }}</option>
                 {{/ ldap_group_name }}
             </select>
         </div>

@@ -87,16 +87,17 @@ class AdditionalModalPresenterBuilder
         return $this->renderer->renderToString(
             'modal-content',
             array(
-                'title'           => $title,
-                'is_linked'       => (boolean)$ldap_group,
-                'ugroup_id'       => $ugroup->getId(),
-                'ugroup_name'     => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
-                'ldap_group_name' => $ldap_group ? $ldap_group->getCommonName() : '',
-                'sys_name'        => ForgeConfig::get('sys_name'),
-                'is_preserved'    => $this->isPreserved($ugroup, $bind_option),
-                'is_synchronized' => $this->isSynchronized($ugroup, $synchro),
-                'locale'          => $this->request->getCurrentUser()->getLocale(),
-                'csrf_token'      => $csrf,
+                'title'                   => $title,
+                'is_linked'               => (boolean)$ldap_group,
+                'ugroup_id'               => $ugroup->getId(),
+                'ugroup_name'             => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
+                'ldap_group_name'         => $ldap_group ? $ldap_group->getCommonName() : '',
+                'ldap_group_display_name' => $ldap_group ? $ldap_group->getGroupDisplayName() : '',
+                'sys_name'                => ForgeConfig::get('sys_name'),
+                'is_preserved'            => $this->isPreserved($ugroup, $bind_option),
+                'is_synchronized'         => $this->isSynchronized($ugroup, $synchro),
+                'locale'                  => $this->request->getCurrentUser()->getLocale(),
+                'csrf_token'              => $csrf,
             )
         );
     }
@@ -106,7 +107,7 @@ class AdditionalModalPresenterBuilder
         $title = dgettext('tuleap-ldap', "Set directory group binding");
 
         if ($ldap_group !== null) {
-            $name  = $ldap_group->getCommonName();
+            $name  = $ldap_group->getGroupDisplayName();
             $title = sprintf(
                 dgettext(
                     'tuleap-ldap',
