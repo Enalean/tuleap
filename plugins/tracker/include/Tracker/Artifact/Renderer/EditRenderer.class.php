@@ -208,9 +208,9 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $html .= $this->displayANumberOfBlankTab($tab_level);
         $html .= '<div class="tree-last">&nbsp;</div>';
         $html .= $artifact->getXRefAndTitle();
-        $html .= $artifact->fetchActionButtons();
         $html .= '</li>';
         $html .= '</ul>';
+        $html .= $artifact->fetchActionButtons();
         $html .= '</div>';
         return $html;
     }
@@ -235,7 +235,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
                 $html .= $parent->getXRefAndTitle();
-                $html .= $parent->fetchActionButtons();
             }
             if ($parents) {
                 $html .= '</a>';
@@ -251,6 +250,9 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             }
             $html .= '</li>';
             $html .= '</ul>';
+
+
+            $html .= $parent->fetchActionButtons();
         }
         return $html;
     }

@@ -758,6 +758,7 @@ select.tracker-report-expert-allowed-fields {
 }
 
 .tracker_artifact_title {
+    display: flex;
     font-weight: 600;
     font-size: 2em;
     color: #474747;
