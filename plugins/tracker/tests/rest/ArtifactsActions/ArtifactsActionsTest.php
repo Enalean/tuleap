@@ -65,12 +65,11 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertArrayHasKey("fields", $json['dry_run']);
 
         $migrated_fields = $json['dry_run']['fields']['fields_migrated'];
-        $this->assertCount(5, $migrated_fields);
+        $this->assertCount(4, $migrated_fields);
 
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Summary'));
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Description'));
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Assigned to'));
-        $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Status'));
         $this->assertTrue($this->isFieldInArrayByLabel($migrated_fields, 'Initial'));
 
         $not_migrated_fields = $json['dry_run']['fields']['fields_not_migrated'];
@@ -80,7 +79,10 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Type'));
         $this->assertTrue($this->isFieldInArrayByLabel($not_migrated_fields, 'Impediment'));
 
-        $this->assertCount(0, $json['dry_run']['fields']['fields_partially_migrated']);
+        $partially_migrated_fields = $json['dry_run']['fields']['fields_partially_migrated'];
+        $this->assertCount(1, $partially_migrated_fields);
+
+        $this->assertTrue($this->isFieldInArrayByLabel($partially_migrated_fields, 'Status'));
     }
 
     private function isFieldInArrayByLabel(array $fields, $label)

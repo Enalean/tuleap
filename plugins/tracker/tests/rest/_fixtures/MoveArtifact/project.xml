@@ -345,7 +345,7 @@
           <label>Status</label>
           <bind type="static" is_rank_alpha="0">
             <items>
-              <item ID="V1730" label="To be done" is_hidden="0"/>
+              <item ID="V1730" label="To do" is_hidden="0"/>
               <item ID="V1740" label="On going" is_hidden="0"/>
               <item ID="V1750" label="Review" is_hidden="0"/>
               <item ID="V1760" label="Done" is_hidden="0"/>
