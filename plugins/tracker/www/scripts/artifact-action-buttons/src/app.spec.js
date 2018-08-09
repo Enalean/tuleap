@@ -20,6 +20,7 @@
 import "babel-polyfill";
 import "tlp-mocks";
 import "jquery-mocks";
+import "./codendi-mock.spec.js";
 
 import "./index.js"; // To have actual coverage
 import "./api/rest-querier.spec.js";

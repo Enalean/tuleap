@@ -1,11 +1,8 @@
 {{# artifact_move_button_presenter }}
     <li>
-        <a class="btn tracker-action-button"
-            {{^ hasError }}
-                data-toggle="modal"
-                data-target="#move-artifact-modal"
-            {{/ hasError }}
-            {{# hasError }} title="{{ errors_content }}" disabled="disabled"{{/ hasError }}
+        <a class="btn tracker-action-button {{# hasError }}disabled{{/ hasError}}"
+            id="tracker-action-button-move"
+            {{# hasError }}title="{{ errors_content }}"{{/ hasError }}
         >
             <i class="icon-fixed-width icon-share-alt"></i>
             {{ label }}
