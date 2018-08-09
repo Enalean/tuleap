@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * Manage configuration of a cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
+class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig
+{
 
     /**
      * @var Tracker
@@ -97,6 +97,14 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
      */
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
         return $this->column_factory->getRendererColumns($cardwall_field);
+    }
+
+    /**
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
+    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter)
+    {
+        return $this->column_factory->getFilteredRendererColumns($cardwall_field, $filter);
     }
 
     /**
@@ -181,8 +189,4 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
             }
         }
     }
-
-
-
 }
-?>
