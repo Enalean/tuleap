@@ -71,7 +71,7 @@ Requires: mysql
 # libnss-mysql (system authentication based on MySQL)
 Requires: libnss-mysql, nss, nscd
 # Forgeupgrade
-Requires: forgeupgrade >= 1.5
+Requires: forgeupgrade >= 1.6
 # MIME libs
 Requires: shared-mime-info
 # Documentation
