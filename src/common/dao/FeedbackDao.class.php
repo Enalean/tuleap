@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -38,15 +38,10 @@ class FeedbackDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-
-    /**
-    * create a row in the table Feedback 
-    * @return true if there is no error
-    */
-    public function create($session_id, $serialized_feedback)
+    public function create($session_id, array $feedback)
     {
         $session_id          = $this->da->escapeInt($session_id);
-        $serialized_feedback = $this->da->quoteSmart($serialized_feedback);
+        $serialized_feedback = $this->da->quoteSmart(json_encode($feedback));
 
         $sql = "REPLACE INTO feedback (session_id, feedback, created_at) VALUES ($session_id, $serialized_feedback, NOW())";
 
