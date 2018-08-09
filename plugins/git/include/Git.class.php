@@ -960,6 +960,13 @@ class Git extends PluginController
                 break;
 
             case 'update_default_mirroring':
+                if (! $this->request->isPost()) {
+                    break;
+                }
+                $url  = '?action=admin-default-settings&pane=mirroring&group_id=' . urlencode($this->groupId);
+                $csrf = new CSRFSynchronizerToken($url);
+                $csrf->check();
+
                 $project             = $this->request->getProject();
                 $selected_mirror_ids = $this->request->get('selected_mirror_ids');
 
