@@ -1,17 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
-
-/**
- * GitPHP Tag
- *
- * Represents a single tag object
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
 
 /**
  * Tag class
@@ -361,109 +369,7 @@ class Tag extends Ref
     protected function ReadData() // @codingStandardsIgnoreLine
     {
         $this->dataRead = true;
-
-        if ($this->GetProject()->GetCompat()) {
-            $this->ReadDataGit();
-        } else {
-            $this->ReadDataRaw();
-        }
-    }
-
-    /**
-     * ReadDataGit
-     *
-     * Reads the tag data using the git executable
-     *
-     * @access private
-     */
-    private function ReadDataGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this->GetProject());
-        $args = array();
-        $args[] = '-t';
-        $args[] = escapeshellarg($this->GetHash());
-        $ret = trim($exe->Execute(GitExe::CAT_FILE, $args));
-
-        if ($ret === 'commit') {
-            /* light tag */
-            $this->object = $this->GetProject()->GetCommit($this->GetHash());
-            $this->commit = $this->object;
-            $this->type = 'commit';
-            return;
-        }
-
-        /* get data from tag object */
-        $args = array();
-        $args[] = 'tag';
-        $args[] = escapeshellarg($this->GetName());
-        $ret = $exe->Execute(GitExe::CAT_FILE, $args);
-        unset($exe);
-
-        $lines = explode("\n", $ret);
-
-        if (!isset($lines[0])) {
-            return;
-        }
-
-        $objectHash = null;
-
-        $readInitialData = false;
-        foreach ($lines as $i => $line) {
-            if (!$readInitialData) {
-                if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
-                    $objectHash = $regs[1];
-                    continue;
-                } elseif (preg_match('/^type (.+)$/', $line, $regs)) {
-                    $this->type = $regs[1];
-                    continue;
-                } elseif (preg_match('/^tag (.+)$/', $line, $regs)) {
-                    continue;
-                } elseif (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
-                    $this->tagger = $regs[1];
-                    $this->taggerEpoch = $regs[2];
-                    $this->taggerTimezone = $regs[3];
-                    continue;
-                }
-            }
-
-            $trimmed = trim($line);
-
-            if ((strlen($trimmed) > 0) || ($readInitialData === true)) {
-                $this->comment[] = $line;
-            }
-            $readInitialData = true;
-        }
-
-        switch ($this->type) {
-            case 'commit':
-                try {
-                    $this->object = $this->GetProject()->GetCommit($objectHash);
-                    $this->commit = $this->object;
-                } catch (\Exception $e) {
-                }
-                break;
-            case 'tag':
-                $exe = new GitExe($this->GetProject());
-                $args = array();
-                $args[] = 'tag';
-                $args[] = escapeshellarg($objectHash);
-                $ret = $exe->Execute(GitExe::CAT_FILE, $args);
-                unset($exe);
-                $lines = explode("\n", $ret);
-                foreach ($lines as $i => $line) {
-                    if (preg_match('/^tag (.+)$/', $line, $regs)) {
-                        $name = trim($regs[1]);
-                        $this->object = $this->GetProject()->GetTag($name);
-                        if ($this->object) {
-                            $this->object->SetHash($objectHash);
-                        }
-                    }
-                }
-                break;
-            case 'blob':
-                $this->object = $this->GetProject()->GetBlob($objectHash);
-                break;
-        }
+        $this->ReadDataRaw();
     }
 
     /**
