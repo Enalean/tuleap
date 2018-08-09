@@ -63,8 +63,6 @@ class ArtifactActionButtonPresenterBuilder
 
     public function build(PFUser $user, Tracker_Artifact $artifact)
     {
-        $action_buttons = [];
-
         $original_email = $this->mail_button_builder->getIncomingEmailButton($user, $artifact);
         $copy_artifact  = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);
         $notification   = $this->notification_button_builder->getNotificationButton($user, $artifact);
