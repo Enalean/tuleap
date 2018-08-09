@@ -761,49 +761,51 @@ class ArtifactsResource extends AuthenticatedResource {
      * @return ArtifactPatchResponseRepresentation
      *
      * @throws 400
+     * @throws 403
+     * @throws 426
      * @throws 404 Artifact Not found
+     * @throws 500
      */
     protected function patchArtifact($id, ArtifactPatchRepresentation $patch)
     {
         $this->checkAccess();
 
-        $user     = $this->user_manager->getCurrentUser();
-        $artifact = $this->getArtifactById($user, $id);
-
-        $source_tracker = $artifact->getTracker();
-        $target_tracker = $this->tracker_factory->getTrackerById($patch->move->tracker_id);
-
-        if (! $target_tracker || $target_tracker->isDeleted()) {
-            throw new RestException(404, "Target tracker not found");
-        }
-
-        if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
-            throw new RestException(400, "User must be admin of both trackers");
-        }
-
-        if ($artifact->getTrackerId() === $target_tracker->getId()) {
-            throw new RestException(400, "An artifact cannot be moved in the same tracker");
-        }
-
-        if (count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
-            throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
-        }
-
-        $event = new ArtifactPartialUpdate($artifact);
-        $this->event_manager->processEvent($event);
-
-        if (! $event->isArtifactUpdatable()) {
-            throw new RestException(400, $event->getNotUpdatableMessage());
-        }
-
-        $remaining_deletions     = 0;
-        $limit                   = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
-        $move_action             = $this->getMoveAction($user);
-        $feedback_collector      = new FeedbackFieldCollector();
-        $response_representation = new ArtifactPatchResponseRepresentation();
-
         try {
+            $user                = $this->user_manager->getCurrentUser();
+            $limit               = $this->artifacts_deletion_config->getArtifactsDeletionLimit();
             $remaining_deletions = $this->getRemainingNumberOfDeletion($user);
+
+            $artifact = $this->getArtifactById($user, $id);
+
+            $source_tracker = $artifact->getTracker();
+            $target_tracker = $this->tracker_factory->getTrackerById($patch->move->tracker_id);
+
+            if (! $target_tracker || $target_tracker->isDeleted()) {
+                throw new RestException(404, "Target tracker not found");
+            }
+
+            if (! $source_tracker->userIsAdmin($user) || ! $target_tracker->userIsAdmin($user)) {
+                throw new RestException(400, "User must be admin of both trackers");
+            }
+
+            if ($artifact->getTrackerId() === $target_tracker->getId()) {
+                throw new RestException(400, "An artifact cannot be moved in the same tracker");
+            }
+
+            if (count($artifact->getLinkedAndReverseArtifacts($user)) > 0) {
+                throw new RestException(400, "An artifact with linked artifacts or reverse linked artifacts cannot be moved");
+            }
+
+            $event = new ArtifactPartialUpdate($artifact);
+            $this->event_manager->processEvent($event);
+
+            if (! $event->isArtifactUpdatable()) {
+                throw new RestException(400, $event->getNotUpdatableMessage());
+            }
+
+            $move_action             = $this->getMoveAction($user);
+            $feedback_collector      = new FeedbackFieldCollector();
+            $response_representation = new ArtifactPatchResponseRepresentation();
 
             if ($patch->move->dry_run) {
                 $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
@@ -814,8 +816,10 @@ class ArtifactsResource extends AuthenticatedResource {
 
             return $response_representation;
         } catch (DeletionOfArtifactsIsNotAllowedException $exception) {
+            $limit = $remaining_deletions = 0;
             throw new RestException(403, $exception->getMessage());
         } catch (ArtifactsDeletionLimitReachedException $limit_reached_exception) {
+            $remaining_deletions = 0;
             throw new RestException(429, $limit_reached_exception->getMessage());
         } catch (MoveArtifactNotDoneException $exception) {
             throw new RestException(500, $exception->getMessage());
