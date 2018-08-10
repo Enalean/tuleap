@@ -49,7 +49,8 @@ class UserGroupManagerTest extends TuleapTestCase
             $this->ldap_user_manager,
             $this->ldap_user_dao,
             $this->project_manager,
-            $logger
+            $logger,
+            new \Tuleap\LDAP\GroupSyncSilentNotificationsManager()
         );
 
         $this->manager->setProjectId(101);

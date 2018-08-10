@@ -20,6 +20,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\LDAP\GroupSyncNotificationsManager;
+
 /**
  * Define how a LDAP Group is manage and interaction with Codendi Groups.
  * 
@@ -58,29 +60,45 @@ abstract class LDAP_GroupManager
     protected $usersNotImpacted;
 
     /**
+     * @var GroupSyncNotificationsManager
+     * */
+    protected $notifications_manager;
+
+    /**
      * @var LDAP_UserManager
      */
     protected $ldap_user_manager;
+
+    /**
+     * @var ProjectManager
+     * */
+    private $project_manager;
 
     /**
      * Constructor
      * 
      * @param LDAP $ldap Ldap access object
      */
-    public function __construct(LDAP $ldap, LDAP_UserManager $ldap_user_manager)
-    {
-        $this->ldap              = $ldap;
-        $this->ldap_user_manager = $ldap_user_manager;
-        
+    public function __construct(
+        LDAP $ldap,
+        LDAP_UserManager $ldap_user_manager,
+        ProjectManager $project_manager,
+        GroupSyncNotificationsManager $notifications_manager
+    ) {
+        $this->ldap                  = $ldap;
+        $this->ldap_user_manager     = $ldap_user_manager;
+        $this->project_manager       = $project_manager;
+        $this->notifications_manager = $notifications_manager;
+
         // Current group to treat: the ldap group name the Codendi group id
         // and the list of user to add/remove. If you want to manipulate several
         // groups in the same time, instanciate several objects.
-        $this->groupName        = null;
-        $this->groupDn          = null;
-        $this->id               = null;
-        $this->usersToAdd       = null;
-        $this->usersToRemove    = null;
-        $this->usersNotImpacted = null;
+        $this->groupName             = null;
+        $this->groupDn               = null;
+        $this->id                    = null;
+        $this->usersToAdd            = null;
+        $this->usersToRemove         = null;
+        $this->usersNotImpacted      = null;
     }
 
     /**
@@ -130,7 +148,7 @@ abstract class LDAP_GroupManager
         }
         return $this->groupDn;
     }
-    
+
     /**
      * Link and synchronize a Codendi Group and an LDAP group
      *
@@ -177,6 +195,8 @@ abstract class LDAP_GroupManager
                 $this->removeUserFromGroup($this->id, $userId);
             }
         }
+
+        $this->notifications_manager->sendNotifications($this->project_manager->getProject($this->id), $toAdd, $toRemove);
 
         $this->resetUsersCollections();
 

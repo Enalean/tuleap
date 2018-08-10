@@ -19,14 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\LDAP\GroupSyncNotificationsManager;
+
 require_once dirname(__FILE__).'/../include/bootstrap.php';
 
 class LDAP_GroupManagerUmbrella extends LDAP_GroupManager {
     function addUserToGroup($id, $userId) { }
     function removeUserfromGroup($id, $userId) { }
-    function getDbGroupMembersIds($id) { }
-    function getDao() { }
+    function getDbGroupMembersIds($id)
+    {
+        return array(101,102);
+    }
+    function getDao()
+    {
+        $dao = mock('LDAP_ProjectGroupDao');
+        stub($dao)->searchByGroupId()->returns(array());
+        return $dao;
+    }
 }
+
 Mock::generatePartial('LDAP', 'LDAP4GroupManager', array('searchGroupMembers', 'searchDn', 'getLdapParam'));
 Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
@@ -40,7 +51,38 @@ class LDAP_GroupManagerTest extends TuleapTestCase {
         $ldapResIter->setReturnValue('current', $ldapRes);
         return $ldapResIter; 
     }
-    
+
+    public function testDoesBuildANotificationOnUpdate()
+    {
+        $ldapResIter = $this->getLdapResult('getGroupMembers', array(
+            'eduid=edA,ou=people,dc=codendi,dc=com',
+            'eduid=edE,ou=people,dc=codendi,dc=com'
+        ));
+
+        $ldap = new LDAP4GroupManager($this);
+        $ldap->setReturnValue('searchGroupMembers', $ldapResIter);
+
+        $ldap->setReturnValue('getLdapParam', 'ou=groups,dc=codendi,dc=com', array('grp_dn'));
+
+        $ldap_user_manager = \Mockery::spy(LDAP_UserManager::class);
+        $ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturn(array(101,102));
+        $ldap_user_manager->shouldReceive('getUserFromLdap')->andReturn(aUser()->withRealname("J. Doe")->withUserName("jdoe")->build());
+
+        $notm = \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class);
+        $notm->shouldReceive('sendNotifications')->once();
+
+        $prjm = \Mockery::spy(\ProjectManager::class);
+        $prjm->shouldReceive('getProject')->andReturn(\Mockery::spy(\Project::class));
+
+        $grpManager = new LDAP_GroupManagerUmbrella($ldap, $ldap_user_manager, $prjm, $notm);
+        $grpManager->setGroupDn('cn=whatever,ou=groups,dc=codendi,dc=com');
+        $grpManager->setId(42);
+
+        $toAdd = $grpManager->getUsersToBeAdded(LDAP_GroupManager::BIND_OPTION);
+        $this->assertIdentical(count($toAdd), 2);
+        $grpManager->bindWithLdap();
+    }
+
     public function testLdapGroupContainsOtherLdapGroups()
     {
         // Search for umbrella group
@@ -68,8 +110,16 @@ class LDAP_GroupManagerTest extends TuleapTestCase {
         $ldap->setReturnValueAt(0, 'searchDn', $ldapResIterUserA);
         $ldap->setReturnValueAt(1, 'searchDn', $ldapResIterUserE);
 
+        $prjm = \Mockery::spy(\ProjectManager::class);
+        $prjm->shouldReceive('getProject')->andReturn(\Mockery::spy(\Project::class));
+
         $ldap_user_manager = mock('LDAP_UserManager');
-        $grpManager        = new LDAP_GroupManagerUmbrella($ldap, $ldap_user_manager);
+        $grpManager        = new LDAP_GroupManagerUmbrella(
+            $ldap,
+            $ldap_user_manager,
+            $prjm,
+            \Mockery::spy(\Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager::class)
+        );
 
         $members = $grpManager->getLdapGroupMembers('cn=ABCDEF,ou=groups,dc=codendi,dc=com');
         

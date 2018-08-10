@@ -1,0 +1,19 @@
+<h1>{{# dgettext }} tuleap-ldap | LDAP Sync Results {{/ dgettext }}</h1>
+<h2>{{# dgettext }} tuleap-ldap | Users added {{/ dgettext }}</h2>
+<ul>
+    {{# users_added }}
+        <li>{{ getRealname }} ({{ getUserName }})</li>
+    {{/ users_added }}
+    {{^ users_added }}
+        <li>{{# dgettext }} tuleap-ldap | No users were added {{/ dgettext }}</li>
+    {{/ users_added }}
+</ul>
+<h2>{{# dgettext }} tuleap-ldap | Users removed {{/ dgettext }}</h2>
+<ul>
+    {{# users_removed }}
+        <li>{{ getRealname }} ({{ getUserName }})</li>
+    {{/ users_removed }}
+    {{^ users_removed }}
+        <li>{{# dgettext }} tuleap-ldap | No users were removed {{/ dgettext }}</li>
+    {{/ users_removed }}
+</ul>

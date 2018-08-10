@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -39,8 +39,20 @@ msgstr "Chaque nuit, le groupe sera synchronisé avec le groupe de l'annuaire."
 msgid "If you choose to synchronize with a group from the directory, it will:"
 msgstr "Lors de la synchronisation avec l'annuaire :"
 
+msgid "LDAP Sync Results"
+msgstr "Résultats LDAP Sync"
+
+msgid "LDAP Sync Results for %projectName%"
+msgstr "Résultats de synchronisation LDAP pour %projectName%"
+
 msgid "Link with Enterprise Directory Group"
 msgstr "Lier avec un groupe de l'annuaire"
+
+msgid "No users were added"
+msgstr "Aucun utilisateur n'a été ajouté"
+
+msgid "No users were removed"
+msgstr "Aucun utilisateur n'a été supprimé"
 
 msgid "Please select a LDAP group."
 msgstr "Veuillez sélectionner un groupe LDAP."
@@ -76,3 +88,9 @@ msgstr "Supprimer le lien avec l'annuaire"
 #, php-format
 msgid "Update directory group binding (%s)"
 msgstr "Mettre à jour le lien avec l'annuaire (%s)"
+
+msgid "Users added"
+msgstr "Utilisateurs ajoutés"
+
+msgid "Users removed"
+msgstr "Utilisateurs supprimés"
