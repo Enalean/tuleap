@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -122,7 +122,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
                 array()
             )
         );
-        $all_old_notifications = null;
+        $all_old_notifications = [];
 
         stub($this->mail_notification_manager)->getByRepository()->returns($all_old_notifications);
 

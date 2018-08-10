@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -158,7 +158,7 @@ class Project_SOAPServerTest extends TuleapTestCase {
         $new_project = new MockProject();
         $new_project->setReturnValue('getID', 3459);
         $this->pc->setReturnValue('create', $new_project, array('toto', 'Mon Toto', '*'));
-        $this->pm->setReturnValue('activate', $new_project, true);
+        stub($this->pm)->activate(true)->returns($new_project);
         
         return $server;
     }

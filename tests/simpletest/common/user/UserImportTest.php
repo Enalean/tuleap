@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,6 +136,7 @@ class UserImportTest extends TuleapTestCase
     public function itDoesNotImportUserIfUserNameDoesNotExist()
     {
         stub($this->user_manager)->findUser('zurg')->returns(null);
+        stub($this->user_manager)->getAllUsersByEmail()->returns([]);
 
         $user_collection = $this->user_import->parse($this->user_filename);
 

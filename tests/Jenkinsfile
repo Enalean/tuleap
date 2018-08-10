@@ -67,9 +67,9 @@ pipeline {
                     sh "make -C $WORKSPACE/sources simpletest11x-56-ci"
                     junit 'results/ut-simpletest11x-php-56/results.xml'
                 },
-                'UT SimpleTest PHP 7.0': {
-                    sh "make -C $WORKSPACE/sources simpletest-70-ci"
-                    junit 'results/ut-simpletest-php-70/results.xml'
+                'UT SimpleTest PHP 7.2': {
+                    sh "make -C $WORKSPACE/sources simpletest-72-ci"
+                    junit 'results/ut-simpletest-php-72/results.xml'
                 },
                 'UT PHPUnit PHP 5.6': {
                     sh "make -C $WORKSPACE/sources phpunit-ci-56"
