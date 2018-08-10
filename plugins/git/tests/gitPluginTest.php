@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -84,6 +84,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
 
         expect($this->logger)->error()->once();
 
+        stub($this->gerrit_server_factory)->getRemoteServersForUser()->returns([]);
+
         $this->plugin->getRemoteServersForUser($params);
     }
 
@@ -98,6 +100,8 @@ class GitPlugin_GetRemoteServersForUserTest extends TuleapTestCase {
         $response = mock('Response');
         $GLOBALS['Response'] = $response;
         expect($response)->addFeedback()->once();
+
+        stub($this->gerrit_server_factory)->getRemoteServersForUser()->returns([]);
 
         $this->plugin->getRemoteServersForUser($params);
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -95,7 +95,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
 
         $project = new MockProject();
         $project->setReturnValue('usesSVN', true);
-        $evt->setReturnValue('getProject', $project, 1);
+        stub($evt)->getProject(1)->returns($project);
 
         $backendSVN = new MockBackendSVN();
         $backendSVN->setReturnValue('updateSVNAccess', false);
@@ -125,7 +125,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TuleapTestCase {
 
         $project = new MockProject();
         $project->setReturnValue('usesSVN', true);
-        $evt->setReturnValue('getProject', $project, 1);
+        stub($evt)->getProject(1)->returns($project);
 
         $backendSVN = new MockBackendSVN();
         $backendSVN->setReturnValue('updateSVNAccess', true);
