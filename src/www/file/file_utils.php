@@ -297,7 +297,10 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) 
 
     <form action="'. $url .'" method="post">
     <table>
-    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td><input type="text" name="package[name]" CLASS="textfield_small" value="'. $hp->purify(util_unconvert_htmlspecialchars($package->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'">';
+    <tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','p_name').':</th>  <td>
+        <input type="text" name="package[name]" data-test="frs-create-package" CLASS="textfield_small" value="'.
+        $hp->purify
+        (util_unconvert_htmlspecialchars($package->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'">';
     //{{{ Rank
     $nb_siblings = count($siblings);
     if ($nb_siblings && ($nb_siblings > 1 || $siblings[0] != $package->getPackageId())) {
@@ -333,7 +336,13 @@ function frs_display_package_form(FRSPackage $package, $title, $url, $siblings) 
          $package_controller->displayUserGroups($project, FRSPackage::PERM_READ, $package->getPackageID());
          echo '</td></tr>';
      }
-     echo '<tr><td></td><td> <br><input class="btn btn-primary" type="submit" NAME="submit" VALUE="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /> ';
+     echo '<tr><td></td><td> <br>
+                <input class="btn btn-primary"
+                       type="submit"
+                       name="submit"
+                       value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'"
+                       data-test="frs-create-package-button"
+                 /> ';
      echo '<input class="btn" type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global','btn_cancel') .'" /></td></tr></table>
      </FORM>';
 
@@ -473,7 +482,14 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     <B><?php echo $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','release_name')); ?>: <span class="highlight"><strong>*</strong></span></B>
                 </TD>
                 <TD>
-                    <INPUT TYPE="TEXT" id="release_name" name="release[name]" onBlur="update_news()" value="<?php echo $hp->purify($release->getName()); ?>">
+                    <INPUT
+                            TYPE="TEXT"
+                            id="release_name"
+                            name="release[name]"
+                            onBlur="update_news()"
+                            data-test="release-name"
+                            value="<?php echo $hp->purify($release->getName()); ?>"
+                    >
                 </TD>
             </TR>
             <TR>
@@ -780,7 +796,12 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                 <TD ALIGN="CENTER">
 
                     <INPUT TYPE="HIDDEN" NAME="create" VALUE="bla">
-                    <INPUT TYPE="submit" ID="create_release"  VALUE="<?php echo $is_update ? $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release')) : $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'release_file')); ?>">
+                    <INPUT
+                            TYPE="submit"
+                            ID="create_release"
+                            data-test="create-release-button"
+                            VALUE="<?php echo $is_update ? $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'edit_release')) : $hp->purify($GLOBALS['Language']->getText('file_admin_qrs', 'release_file')); ?>"
+                    >
                     <input type="submit" ID="cancel_release" name="cancel" value="<?php echo  $hp->purify($GLOBALS['Language']->getText('global','btn_cancel'));?>" />
                 </TD>
             </TR>
