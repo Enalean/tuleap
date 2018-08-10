@@ -31,6 +31,6 @@ class PluginDescriptor extends \PluginDescriptor
             dgettext('tuleap-tuleap_synchro', 'Allows to replicate artifacts from one Tuleap instance to another')
         );
 
-        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
+        $this->setVersionFromFile(__DIR__ . '/../../../VERSION');
     }
 }

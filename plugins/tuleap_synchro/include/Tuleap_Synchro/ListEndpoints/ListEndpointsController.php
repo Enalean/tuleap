@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\TuleapSynchro;
+namespace Tuleap\TuleapSynchro\ListEndpoints;
 
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
@@ -28,7 +28,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-class ListTlpEndPointsController implements DispatchableWithRequest
+class ListEndpointsController implements DispatchableWithRequest
 {
     /**
      * @var AdminPageRenderer
@@ -55,16 +55,16 @@ class ListTlpEndPointsController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $include_assets = new IncludeAssets(__DIR__.'/../../../src/www/assets/tuleap_synchro/scripts', '/assets/tuleap_synchro/scripts');
+        $include_assets = new IncludeAssets(__DIR__.'/../../../../../src/www/assets/tuleap_synchro/scripts', '/assets/tuleap_synchro/scripts');
         $layout->includeFooterJavascriptFile(
             $include_assets->getFileURL('tuleap_synchro.js')
         );
 
         $this->admin_page_rendered->renderAPresenter(
             'tuleap_synchro',
-            __DIR__.'/../templates',
+            __DIR__.'/../../../templates',
             'list_endpoints',
-            []
+            new ListEndpointsPresenter([])
         );
     }
 }
