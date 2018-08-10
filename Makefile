@@ -228,7 +228,7 @@ deploy-githooks:
 	@if [ -e .git/hooks/pre-commit ]; then\
 		echo "pre-commit hook already exists";\
 	else\
-		hash phpcs 2>/dev/null && {\
+		{\
 			echo "Creating pre-commit hook";\
 			ln -s ../../tools/utils/githooks/hook-chain .git/hooks/pre-commit;\
 		}
