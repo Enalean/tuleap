@@ -56,3 +56,6 @@ msgstr ""
 
 msgid "Move artifact"
 msgstr ""
+
+msgid "Show more"
+msgstr ""
