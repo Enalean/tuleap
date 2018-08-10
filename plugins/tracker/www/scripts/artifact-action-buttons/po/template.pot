@@ -5,6 +5,9 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "An artifact cannot be moved in the same tracker"
+msgstr ""
+
 msgid "Choose project"
 msgstr ""
 

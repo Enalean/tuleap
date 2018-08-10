@@ -18,18 +18,23 @@
   -->
 
 <template>
-    <label for="move-artifact-tracker-selector">
+    <label for="move-artifact-tracker-selector"
+           v-bind:title="selector_title"
+    >
         <translate>Choose tracker</translate>
         <span class="highlight">*</span>
         <select id="move-artifact-tracker-selector"
                 name="move-artifact-tracker-selector"
-                v-bind:disabled="isTrackerListEmpty"
-                v-model="selectedTracker"
+                v-bind:disabled="is_tracker_list_empty"
+                v-model="selected_tracker"
         >
-            <option disabled="disabled" selected="selected" v-bind:value="{ tracker_id: null }">
+            <option disabled
+                selected="selected"
+                v-bind:value="{ tracker_id: null }"
+            >
                 <translate>Choose tracker...</translate>
             </option>
-            <option v-for="tracker of trackerList"
+            <option v-for="tracker of tracker_list_with_disabled_from"
                     v-bind:key="tracker.id"
                     v-bind:value="{
                         tracker_id: tracker.id,
@@ -37,6 +42,7 @@
                         project: tracker.project,
                         color_name: tracker.color_name
                     }"
+                    v-bind:disabled="tracker.disabled"
             >
                 {{ tracker.label }}
             </option>
@@ -45,18 +51,19 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
     name: "TrackerSelector",
     computed: {
-        ...mapState({
-            trackerList: state => state.trackers
-        }),
-        isTrackerListEmpty() {
-            return this.trackerList.length === 0;
+        ...mapGetters(["tracker_list_with_disabled_from"]),
+        is_tracker_list_empty() {
+            return this.tracker_list_with_disabled_from.length === 0;
         },
-        selectedTracker: {
+        does_tracker_list_contain_from_tracker() {
+            return this.tracker_list_with_disabled_from.some(({ disabled }) => disabled === true);
+        },
+        selected_tracker: {
             get() {
                 return this.$store.state.selected_tracker;
             },
@@ -64,6 +71,11 @@ export default {
                 this.$store.commit("setErrorMessage", "");
                 this.$store.commit("setSelectedTracker", tracker);
             }
+        },
+        selector_title() {
+            return this.does_tracker_list_contain_from_tracker
+                ? this.$gettext("An artifact cannot be moved in the same tracker")
+                : "";
         }
     }
 };

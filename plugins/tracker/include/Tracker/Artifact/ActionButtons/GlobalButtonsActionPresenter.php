@@ -29,6 +29,10 @@ class GlobalButtonsActionPresenter
      */
     public $has_at_least_one_action;
     /**
+     * @var int
+     */
+    public $tracker_id;
+    /**
      * @var string
      */
     public $tracker_name;
@@ -82,6 +86,7 @@ class GlobalButtonsActionPresenter
         ArtifactNotificationsButtonPresenter $artifact_notifications_button_presenter = null,
         ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null
     ) {
+        $this->tracker_id    = $artifact->getTrackerId();
         $this->tracker_name  = $artifact->getTracker()->getItemName();
         $this->tracker_color = $artifact->getTracker()->getColor();
         $this->artifact_id   = $artifact->getId();

@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getTrackerId } from "../from-tracker-presenter.js";
+
 export const hasError = state => state.error_message.length > 0;
 
 export const sortedProjects = state => {
@@ -24,3 +26,9 @@ export const sortedProjects = state => {
         return a.label.localeCompare(b.label);
     });
 };
+
+export const tracker_list_with_disabled_from = state =>
+    state.trackers.map(tracker => {
+        tracker.disabled = tracker.id === getTrackerId();
+        return tracker;
+    });

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="modal fade"
+    <div class="modal fade hide"
          id="move-artifact-modal"
          tabindex="-1"
          role="dialog"
