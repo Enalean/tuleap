@@ -21,8 +21,6 @@ setup_user() {
         groupadd -g $gid runner
         useradd -g $gid -u $uid -m runner
     fi
-
-    chown -R runner:runner /node_modules/cypress/dist/info.json
 }
 
 is_server_ready() {
