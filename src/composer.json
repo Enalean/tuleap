@@ -26,14 +26,16 @@
     "jimdo/prometheus_client_php": "^0.9.1",
     "php-http/guzzle6-adapter": "^1.1",
     "php-http/message": "^1.6",
-    "php-http/client-common": "^1.7"
+    "php-http/client-common": "^1.7",
+    "zendframework/zend-mail": "^2.10"
   },
   "config": {
     "platform": {
       "php": "5.6.25",
       "ext-bcmath": "0",
       "ext-mbstring": "0",
-      "ext-curl": "0"
+      "ext-curl": "0",
+      "ext-iconv": "0"
     }
   },
   "require-dev": {

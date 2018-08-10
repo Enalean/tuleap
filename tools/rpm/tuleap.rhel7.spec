@@ -39,8 +39,6 @@ Requires: php56-php, php56-php-mysql, php56-php-xml, php56-php-mbstring, php56-p
 
 Requires: highlight, forgeupgrade >= 1.6, ckeditor, jpgraph-tuleap, nginx, logrotate
 
-Requires: php-ZendFramework2-Mail
-
 # Unit file
 Requires: systemd
 

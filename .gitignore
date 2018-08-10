@@ -37,6 +37,7 @@ nbproject
 !src/www/themes/BurningParrot/vendor/**/*.css
 src/vendor/
 plugins/*/vendor/
+tools/Configuration/vendor/
 /.idea/
 npm-debug.log
 yarn-error.log

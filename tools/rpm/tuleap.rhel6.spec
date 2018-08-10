@@ -53,7 +53,6 @@ Requires: jpgraph-%{PKG_NAME}
 Requires: ckeditor >= 4.3.2
 
 Requires: curl
-Requires: php-ZendFramework2-Mail
 Requires: tuleap-core-subversion
 
 # PHPWiki

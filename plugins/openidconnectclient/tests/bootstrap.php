@@ -18,5 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/autoload_libs.php';
 require_once __DIR__ . '/../include/openidconnectclientPlugin.class.php';

@@ -27,9 +27,9 @@ if (PHP_VERSION_ID < 50600) {
     die('Tuleap must be run on a PHP 5.6 (or greater) engine.');
 }
 
-require_once('common/constants.php');
-require_once('common/autoload.php');
-require_once('common/autoload_libs.php');
+require_once __DIR__ . '/../../common/constants.php';
+require_once __DIR__ . '/../../common/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 

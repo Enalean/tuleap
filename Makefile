@@ -73,6 +73,8 @@ composer:  ## Install PHP dependencies with Composer
 	@composer install --working-dir=src/
 	@find plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
 		-exec echo "Processing {}" \; -execdir composer install \;
+	@echo "Processing tools/Configuration/composer.json"
+	@composer install --working-dir=tools/Configuration/
 
 ## RNG generation
 
