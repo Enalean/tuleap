@@ -31,6 +31,10 @@ class MirroringPresenter
     public $mirroring_mirror_url;
     public $mirroring_mirror_used;
     public $mirroring_update_mirroring;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    public $csrf_token;
 
     public function __construct(
         Project $project,
@@ -50,5 +54,7 @@ class MirroringPresenter
             'plugin_git',
             'mirroring_update_default_mirroring'
         );
+
+        $this->csrf_token = new \CSRFSynchronizerToken('?action=admin-default-settings&pane=mirroring&group_id=' . urlencode($this->project_id));
     }
 }

@@ -1,6 +1,9 @@
 <h2>{{ mirroring_title }}</h2>
 
 <form action="/plugins/git/?action=admin-default-settings&group_id={{ project_id }}&pane=mirroring" method="POST">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
     <p>{{{ mirroring_info }}}</p>
 
     <table class="table mirrors-list">
