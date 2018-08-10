@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "24457cd6152487df728c15fc84d7a82a",
+    "content-hash": "d76c7820e7e09afb42f3e68824a4df0c",
     "packages": [
         {
             "name": "geshi/geshi",
-            "version": "v1.0.8.13",
+            "version": "v1.0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/GeSHi/geshi-1.0.git",
-                "reference": "f2d33d24a098e625e8eaa2dca51e1928ab5e5130"
+                "reference": "5a7b461338d322d941986a656d4d1651452e73dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/f2d33d24a098e625e8eaa2dca51e1928ab5e5130",
-                "reference": "f2d33d24a098e625e8eaa2dca51e1928ab5e5130",
+                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/5a7b461338d322d941986a656d4d1651452e73dd",
+                "reference": "5a7b461338d322d941986a656d4d1651452e73dd",
                 "shasum": ""
             },
             "require-dev": {
@@ -44,7 +44,7 @@
             ],
             "description": "Generic Syntax Highlighter",
             "homepage": "http://qbnz.com/highlighter/",
-            "time": "2017-05-05T05:49:38+00:00"
+            "time": "2017-05-05T05:51:25+00:00"
         },
         {
             "name": "smarty/smarty",
