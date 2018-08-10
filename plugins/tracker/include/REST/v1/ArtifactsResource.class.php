@@ -765,6 +765,12 @@ class ArtifactsResource extends AuthenticatedResource {
      * }
      * </pre>
      *
+     * <br>
+     * Note for should_populate_feedback_on_success: this parameter is here to create (if true) a feedback in Tuleap UI
+     * in case of a successful move. The feedback will be displayed the next time the user browse Tuleap. If dry_run is
+     * true, then should_populate_feedback_on_success has no incidence since no move is really done.
+     * By default should_populate_feedback_on_success is false, no feedback will be created.
+     *
      * @url PATCH {id}
      *
      * @access protected
@@ -829,7 +835,9 @@ class ArtifactsResource extends AuthenticatedResource {
                 $feedback_collector  = new NoFeedbackFieldCollector();
                 $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
 
-                $this->post_move_action->addFeedback($source_tracker, $target_tracker, $artifact, $user);
+                if ($patch->move->should_populate_feedback_on_success) {
+                    $this->post_move_action->addFeedback($source_tracker, $target_tracker, $artifact, $user);
+                }
             }
 
             return $response_representation;

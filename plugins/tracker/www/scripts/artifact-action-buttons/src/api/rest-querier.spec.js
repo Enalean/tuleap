@@ -92,7 +92,7 @@ describe("API querier", () => {
         });
     });
 
-    describe("moveDryRunArtifact", () => {
+    describe("moveArtifact", () => {
         it("Given a tracker id, and a project id then it will process the move", () => {
             const artifact_id = 101;
             const tracker_id = 5;
@@ -101,12 +101,12 @@ describe("API querier", () => {
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
-                body: '{"move":{"tracker_id":' + tracker_id + ',"dry_run":false}}'
+                body: `{"move":{"tracker_id":${tracker_id},"dry_run":false,"should_populate_feedback_on_success":true}}`
             });
         });
     });
 
-    describe("moveArtifact", () => {
+    describe("moveDryRunArtifact", () => {
         it("Given a tracker id, and a project id then it will process the dry run move", () => {
             const artifact_id = 101;
             const tracker_id = 5;
@@ -115,7 +115,7 @@ describe("API querier", () => {
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
-                body: '{"move":{"tracker_id":' + tracker_id + ',"dry_run":true}}'
+                body: `{"move":{"tracker_id":${tracker_id},"dry_run":true,"should_populate_feedback_on_success":false}}`
             });
         });
     });
