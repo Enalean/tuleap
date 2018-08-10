@@ -25,7 +25,6 @@ use Tuleap\TuleapSynchro\Endpoint\Endpoint;
 
 class ListEndpointsPresenter
 {
-    public $endpoints;
     public $username_source;
     public $project_source;
     public $tracker_source;
