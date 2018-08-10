@@ -1,17 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
-
-/**
- * GitPHP Project
- *
- * Represents a single git project
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
 
 /**
  * Project class
@@ -597,28 +605,7 @@ class Project
     public function ReadHeadCommit() // @codingStandardsIgnoreLine
     {
         $this->readHeadRef = true;
-
-        if ($this->GetCompat()) {
-            $this->ReadHeadCommitGit();
-        } else {
-            $this->ReadHeadCommitRaw();
-        }
-    }
-
-    /**
-     * ReadHeadCommitGit
-     *
-     * Read head commit using git executable
-     *
-     * @access private
-     */
-    private function ReadHeadCommitGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this);
-        $args = array();
-        $args[] = '--verify';
-        $args[] = 'HEAD';
-        $this->head = trim($exe->Execute(GitExe::REV_PARSE, $args));
+        $this->ReadHeadCommitRaw();
     }
 
     /**
@@ -697,38 +684,7 @@ class Project
     private function ReadEpoch() // @codingStandardsIgnoreLine
     {
         $this->epochRead = true;
-
-        if ($this->GetCompat()) {
-            $this->ReadEpochGit();
-        } else {
-            $this->ReadEpochRaw();
-        }
-    }
-
-    /**
-     * ReadEpochGit
-     *
-     * Reads this project's epoch using git executable
-     *
-     * @access private
-     */
-    private function ReadEpochGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this);
-
-        $args = array();
-        $args[] = '--format="%(committer)"';
-        $args[] = '--sort=-committerdate';
-        $args[] = '--count=1';
-        $args[] = 'refs/heads';
-
-        $epochstr = trim($exe->Execute(GitExe::FOR_EACH_REF, $args));
-
-        if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
-            $this->epoch = $regs[1];
-        }
-
-        unset($exe);
+        $this->ReadEpochRaw();
     }
 
     /**
@@ -756,40 +712,6 @@ class Project
         if ($epoch > 0) {
             $this->epoch = $epoch;
         }
-    }
-
-/*}}}2*/
-
-/* compatibility accessors {{{2*/
-
-    /**
-     * GetCompat
-     *
-     * Gets whether this project is running in compatibility mode
-     *
-     * @access public
-     * @return boolean true if compatibilty mode
-     */
-    public function GetCompat() // @codingStandardsIgnoreLine
-    {
-        if ($this->compat !== null) {
-            return $this->compat;
-        }
-
-        return Config::GetInstance()->GetValue('compat', false);
-    }
-
-    /**
-     * SetCompat
-     *
-     * Sets whether this project is running in compatibility mode
-     *
-     * @access public
-     * @param boolean true if compatibility mode
-     */
-    public function SetCompat($compat) // @codingStandardsIgnoreLine
-    {
-        $this->compat = $compat;
     }
 
 /*}}}2*/
@@ -895,53 +817,7 @@ class Project
     protected function ReadRefList() // @codingStandardsIgnoreLine
     {
         $this->readRefs = true;
-
-        if ($this->GetCompat()) {
-            $this->ReadRefListGit();
-        } else {
-            $this->ReadRefListRaw();
-        }
-    }
-
-    /**
-     * ReadRefListGit
-     *
-     * Reads the list of refs for this project using the git executable
-     *
-     * @access private
-     */
-    private function ReadRefListGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this);
-        $args = array();
-        $args[] = '--heads';
-        $args[] = '--tags';
-        $args[] = '--dereference';
-        $ret = $exe->Execute(GitExe::SHOW_REF, $args);
-        unset($exe);
-
-        $lines = explode("\n", $ret);
-
-        foreach ($lines as $line) {
-            if (preg_match('/^([0-9a-fA-F]{40}) refs\/(tags|heads)\/([^^]+)(\^{})?$/', $line, $regs)) {
-                try {
-                    $key = 'refs/' . $regs[2] . '/' . $regs[3];
-                    if ($regs[2] == 'tags') {
-                        if ((!empty($regs[4])) && ($regs[4] == '^{}')) {
-                            $derefCommit = $this->GetCommit($regs[1]);
-                            if ($derefCommit && isset($this->tags[$key])) {
-                                $this->tags[$key]->SetCommit($derefCommit);
-                            }
-                        } elseif (!isset($this->tags[$key])) {
-                            $this->tags[$key] = $this->LoadTag($regs[3], $regs[1]);
-                        }
-                    } elseif ($regs[2] == 'heads') {
-                        $this->heads[$key] = new Head($this, $regs[3], $regs[1]);
-                    }
-                } catch (\Exception $e) {
-                }
-            }
-        }
+        $this->ReadRefListRaw();
     }
 
     /**
@@ -1072,48 +948,7 @@ class Project
         if (!$this->readRefs) {
             $this->ReadRefList();
         }
-
-        if ($this->GetCompat()) {
-            return $this->GetTagsGit($count);
-        } else {
-            return $this->GetTagsRaw($count);
-        }
-    }
-
-    /**
-     * GetTagsGit
-     *
-     * Gets list of tags for this project by age descending using git executable
-     *
-     * @access private
-     * @param integer $count number of tags to load
-     * @return array array of tags
-     */
-    private function GetTagsGit($count = 0) // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this);
-        $args = array();
-        $args[] = '--sort=-creatordate';
-        $args[] = '--format="%(refname)"';
-        if ($count > 0) {
-            $args[] = '--count=' . escapeshellarg($count);
-        }
-        $args[] = '--';
-        $args[] = 'refs/tags';
-        $ret = $exe->Execute(GitExe::FOR_EACH_REF, $args);
-        unset($exe);
-
-        $lines = explode("\n", $ret);
-
-        $tags = array();
-
-        foreach ($lines as $ref) {
-            if (isset($this->tags[$ref])) {
-                $tags[] = $this->tags[$ref];
-            }
-        }
-
-        return $tags;
+        return $this->GetTagsRaw($count);
     }
 
     /**
@@ -1201,48 +1036,7 @@ class Project
         if (!$this->readRefs) {
             $this->ReadRefList();
         }
-
-        if ($this->GetCompat()) {
-            return $this->GetHeadsGit($count);
-        } else {
-            return $this->GetHeadsRaw($count);
-        }
-    }
-
-    /**
-     * GetHeadsGit
-     *
-     * Gets the list of sorted heads using the git executable
-     *
-     * @access private
-     * @param integer $count number of tags to load
-     * @return array array of heads
-     */
-    private function GetHeadsGit($count = 0) // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this);
-        $args = array();
-        $args[] = '--sort=-committerdate';
-        $args[] = '--format="%(refname)"';
-        if ($count > 0) {
-            $args[] = '--count=' . escapeshellarg($count);
-        }
-        $args[] = '--';
-        $args[] = 'refs/heads';
-        $ret = $exe->Execute(GitExe::FOR_EACH_REF, $args);
-        unset($exe);
-
-        $lines = explode("\n", $ret);
-
-        $heads = array();
-
-        foreach ($lines as $ref) {
-            if (isset($this->heads[$ref])) {
-                $heads[] = $this->heads[$ref];
-            }
-        }
-
-        return $heads;
+        return $this->GetHeadsRaw($count);
     }
 
     /**
@@ -1326,7 +1120,7 @@ class Project
      */
     public function GetLog($hash, $count = 50, $skip = 0) // @codingStandardsIgnoreLine
     {
-        if ($this->GetCompat() || ($skip > Config::GetInstance()->GetValue('largeskip', 200))) {
+        if ($skip > Config::GetInstance()->GetValue('largeskip', 200)) {
             return $this->GetLogGit($hash, $count, $skip);
         } else {
             return $this->GetLogRaw($hash, $count, $skip);

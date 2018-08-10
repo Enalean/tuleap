@@ -1,17 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
-
-/**
- * GitPHP Tree
- *
- * Represents a single tree
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
 
 /**
  * Tree class
@@ -115,69 +123,7 @@ class Tree extends FilesystemObject implements GitObjectType
     protected function ReadContents() // @codingStandardsIgnoreLine
     {
         $this->contentsRead = true;
-
-        if ($this->GetProject()->GetCompat()) {
-            $this->ReadContentsGit();
-        } else {
-            $this->ReadContentsRaw();
-        }
-    }
-
-    /**
-     * ReadContentsGit
-     *
-     * Reads the tree contents using the git executable
-     *
-     * @access private
-     */
-    private function ReadContentsGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this->GetProject());
-
-        $args = array();
-        $args[] = '--full-name';
-        $args[] = '-l';
-        $args[] = '-t';
-        $args[] = escapeshellarg($this->hash);
-
-        $lines = explode("\n", $exe->Execute(GitExe::LS_TREE, $args));
-
-        foreach ($lines as $line) {
-            if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})(\s+[0-9]+|\s+-)?\t(.+)$/", $line, $regs)) {
-                switch ($regs[2]) {
-                    case 'tree':
-                        $t = $this->GetProject()->GetTree($regs[3]);
-                        $t->SetMode($regs[1]);
-                        $path = $regs[5];
-                        if (!empty($this->path)) {
-                            $path = $this->path . '/' . $path;
-                        }
-                        $t->SetPath($path);
-                        if ($this->commit) {
-                            $t->SetCommit($this->commit);
-                        }
-                        $this->contents[] = $t;
-                        break;
-                    case 'blob':
-                        $b = $this->GetProject()->GetBlob($regs[3]);
-                        $b->SetMode($regs[1]);
-                        $path = $regs[5];
-                        if (!empty($this->path)) {
-                            $path = $this->path . '/' . $path;
-                        }
-                        $b->SetPath($path);
-                        $size = trim($regs[4]);
-                        if (!empty($size)) {
-                            $b->SetSize($regs[4]);
-                        }
-                        if ($this->commit) {
-                            $b->SetCommit($this->commit);
-                        }
-                        $this->contents[] = $b;
-                        break;
-                }
-            }
-        }
+        $this->ReadContentsRaw();
     }
 
     /**

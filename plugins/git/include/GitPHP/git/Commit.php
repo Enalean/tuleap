@@ -1,17 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
-
-/**
- * GitPHP Commit
- *
- * Represents a single commit
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
 
 /**
  * Commit class
@@ -560,39 +568,12 @@ class Commit extends GitObject
         $this->dataRead = true;
 
         $lines = null;
-
-        if ($this->GetProject()->GetCompat()) {
-            /* get data from git_rev_list */
-            $exe = new GitExe($this->GetProject());
-            $args = array();
-            $args[] = '--header';
-            $args[] = '--parents';
-            $args[] = '--max-count=1';
-            $args[] = escapeshellarg($this->hash);
-            $ret = $exe->Execute(GitExe::REV_LIST, $args);
-            unset($exe);
-
-            $lines = explode("\n", $ret);
-
-            if (!isset($lines[0])) {
-                return;
-            }
-
-            /* In case we returned something unexpected */
-            $tok = strtok($lines[0], ' ');
-            if ($tok != $this->hash) {
-                return;
-            }
-
-            array_shift($lines);
-        } else {
-            $data = $this->GetProject()->GetObject($this->hash);
-            if (empty($data)) {
-                return;
-            }
-
-            $lines = explode("\n", $data);
+        $data  = $this->GetProject()->GetObject($this->hash);
+        if (empty($data)) {
+            return;
         }
+
+        $lines = explode("\n", $data);
 
         $header = true;
 
@@ -784,45 +765,7 @@ class Commit extends GitObject
     private function ReadHashPaths() // @codingStandardsIgnoreLine
     {
         $this->hashPathsRead = true;
-
-        if ($this->GetProject()->GetCompat()) {
-            $this->ReadHashPathsGit();
-        } else {
-            $this->ReadHashPathsRaw($this->GetTree());
-        }
-    }
-
-    /**
-     * ReadHashPathsGit
-     *
-     * Reads hash to path mappings using git exe
-     *
-     * @access private
-     */
-    private function ReadHashPathsGit() // @codingStandardsIgnoreLine
-    {
-        $exe = new GitExe($this->GetProject());
-
-        $args = array();
-        $args[] = '--full-name';
-        $args[] = '-r';
-        $args[] = '-t';
-        $args[] = escapeshellarg($this->hash);
-
-        $lines = explode("\n", $exe->Execute(GitExe::LS_TREE, $args));
-
-        foreach ($lines as $line) {
-            if (preg_match("/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/", $line, $regs)) {
-                switch ($regs[2]) {
-                    case 'tree':
-                        $this->treePaths[trim($regs[4])] = $regs[3];
-                        break;
-                    case 'blob':
-                        $this->blobPaths[trim($regs[4])] = $regs[3];
-                        break;
-                }
-            }
-        }
+        $this->ReadHashPathsRaw($this->GetTree());
     }
 
     /**
