@@ -55,6 +55,7 @@ export async function getAsyncRepositoryList(commit, getRepositories) {
         return handleGetRepositoryListError(e, commit);
     } finally {
         commit("setIsLoadingNext", false);
+        commit("setIsFirstLoadDone", true);
     }
 }
 

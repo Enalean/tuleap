@@ -18,7 +18,7 @@ msgstr[0] "%{ numberPullRequest } pull request"
 msgstr[1] "%{ numberPullRequest } pull requests"
 
 msgid "Add project repository"
-msgstr "Ajouter un dépôt projet"
+msgstr "Ajouter un dépôt"
 
 msgid "Administration"
 msgstr "Administration"
@@ -44,7 +44,7 @@ msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
 msgid "Forks:"
-msgstr "Forks :"
+msgstr "Forks :"
 
 msgid "Git plugin is not activated"
 msgstr "Le plugin Git est désactivé"

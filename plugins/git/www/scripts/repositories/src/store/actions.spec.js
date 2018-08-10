@@ -137,17 +137,19 @@ describe("Store actions", () => {
             getRepositories = jasmine.createSpy("getRepositories");
         });
 
-        it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", () => {
+        it("When I want to load the project repositories, Then it should fetch them asynchronously and put them in the store.", async () => {
             const repositories = [{ name: "VueX" }];
             getRepositories.and.callFake(callback => callback(repositories));
 
-            getAsyncRepositoryList(commit, getRepositories);
+            await getAsyncRepositoryList(commit, getRepositories);
 
             expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", true);
             expect(commit).toHaveBeenCalledWith("setIsLoadingNext", true);
-
             expect(commit).toHaveBeenCalledWith("pushRepositoriesForCurrentOwner", repositories);
+
             expect(commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
+            expect(commit).toHaveBeenCalledWith("setIsLoadingNext", false);
+            expect(commit).toHaveBeenCalledWith("setIsFirstLoadDone", true);
         });
 
         it("When the server responds with a 404, then the error for 'No git service' will be committed", async () => {
