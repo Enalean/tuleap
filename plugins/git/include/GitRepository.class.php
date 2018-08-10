@@ -1,22 +1,23 @@
 <?php
 /**
-  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-  *
-  * This file is a part of Codendi.
-  *
-  * Codendi is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  *
-  * Codendi is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with Codendi. If not, see <http://www.gnu.org/licenses/
-  */
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
 require_once 'PathJoinUtil.php';
@@ -27,9 +28,8 @@ require_once 'PathJoinUtil.php';
  * @author Guillaume Storchi
  */
 
-class GitRepository implements DVCSRepository {
-
-      
+class GitRepository implements DVCSRepository
+{
     const REPO_EXT       = '.git';
    
     const PRIVATE_ACCESS       = 'private';
@@ -896,15 +896,6 @@ class GitRepository implements DVCSRepository {
         return '<a href="'. $href .'">'. $label .'</a>';
     }
 
-    /**
-     * @return string html <a href="/path/to/repo">name</a>
-     */
-    public function getBasenameHTMLLink(Git_GitRepositoryUrlManager $url_manager) {
-        $href  = $url_manager->getRepositoryBaseUrl($this);
-        $label = basename($this->getName());
-        return '<a href="'. $href .'">'. $label .'</a>';
-    }
-
     public function setIsMirrored($is_mirrored) {
         $this->is_mirrored = (boolean)$is_mirrored;
     }
@@ -929,5 +920,22 @@ class GitRepository implements DVCSRepository {
     public function getLastPushDate()
     {
         return $this->last_push_date;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathWithoutProject()
+    {
+        $split_path = explode("/", $this->path);
+        array_shift($split_path);
+        array_pop($split_path);
+
+        return implode("/", $split_path);
+    }
+
+    public function getLabel()
+    {
+        return basename($this->getName());
     }
 }

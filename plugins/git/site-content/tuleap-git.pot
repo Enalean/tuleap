@@ -70,6 +70,9 @@ msgstr ""
 msgid "Repository does not exist"
 msgstr ""
 
+msgid "Settings"
+msgstr ""
+
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr ""

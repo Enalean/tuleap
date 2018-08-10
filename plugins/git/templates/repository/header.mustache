@@ -1,0 +1,15 @@
+<div class="tlp-framed">
+    <span class="git-repository-path">{{ repository_path }}</span>
+    <h1 class="git-repository-name">{{ repository_name }}</h1>
+    <div class="git-repository-actions">
+        <div class="git-repository-actions-spacer"></div>
+        {{# user_is_admin }}
+            <a href="{{ repository_admin_url }}"
+               class="tlp-button-primary tlp-button-outline git-repository-actions-button"
+               role="button"
+            >
+                <i class="fa fa-cog tlp-button-icon"></i> {{# dgettext }}tuleap-git | Settings{{/ dgettext }}
+            </a>
+        {{/ user_is_admin }}
+    </div>
+</div>

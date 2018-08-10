@@ -36,8 +36,6 @@ use HTTPRequest;
 use PFUser;
 use RepositoryClonePresenter;
 use TemplateRendererFactory;
-use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Layout\BaseLayout;
 
@@ -87,14 +85,6 @@ class RepoHeader
      * @var GitPermissionsManager
      */
     private $permissions_manager;
-    /**
-     * @var GitCrumbBuilder
-     */
-    private $service_crumb_builder;
-    /**
-     * @var RepositoryCrumbBuilder
-     */
-    private $repository_crumb_builder;
     /**
      * @var HeaderRenderer
      */
