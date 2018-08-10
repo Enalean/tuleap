@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2008
@@ -65,6 +65,8 @@ class StatisticsPlugin extends Plugin {
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(NavigationPresenter::NAME);
+
+        bindTextDomain('tuleap-statistics', STATISTICS_BASE_DIR . '/../site-content');
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */

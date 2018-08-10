@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -75,25 +75,4 @@ $services = $duMgr->getProjectServices();
 // Display graph
 $graph = new Statistics_DiskUsageGraph($duMgr);
 
-if ($func == 'usage') {
-    //Retreive the config param & convert it to bytes
-    $quota       = $duMgr->getProperty('allowed_quota');
-    $pqm         = new ProjectQuotaManager();
-    $customQuota = $pqm->getProjectCustomQuota($groupId);
-    if ($customQuota) {
-        $quota = $customQuota;
-    }
-    $allowed = $quota * (1024*1024*1024);
-    $used    = $request->get('size');
-
-    //In case of over usage
-    if ($used > $allowed) {
-        $used = $allowed;
-        //May be should display warning
-    }
-    $graph->displayProjectProportionUsage($used, $allowed);
-} else {
-    $graph->displayProjectTotalSizeGraph($groupId, 'Week', $startDate, $endDate);
-}
-
-?>
+$graph->displayProjectTotalSizeGraph($groupId, 'Week', $startDate, $endDate);

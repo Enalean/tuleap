@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageHtml.class.php';
 
+use Tuleap\Statistics\DiskUsagePie\DiskUsagePieDisplayer;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
@@ -62,29 +63,29 @@ if ($period === 'year') {
     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'querying_purged_data'));
 }
 
-$disk_usage_dao  = new Statistics_DiskUsageDao();
-$svn_log_dao     = new SVN_LogDao();
-$svn_retriever   = new SVNRetriever($disk_usage_dao);
-$svn_collector   = new SVNCollector($svn_log_dao, $svn_retriever);
-$cvs_history_dao = new FullHistoryDao();
-$cvs_retriever   = new CVSRetriever($disk_usage_dao);
-$cvs_collector   = new CVSCollector($cvs_history_dao, $cvs_retriever);
-$duMgr           = new Statistics_DiskUsageManager(
+$disk_usage_dao     = new Statistics_DiskUsageDao();
+$svn_log_dao        = new SVN_LogDao();
+$svn_retriever      = new SVNRetriever($disk_usage_dao);
+$svn_collector      = new SVNCollector($svn_log_dao, $svn_retriever);
+$cvs_history_dao    = new FullHistoryDao();
+$cvs_retriever      = new CVSRetriever($disk_usage_dao);
+$cvs_collector      = new CVSCollector($cvs_history_dao, $cvs_retriever);
+$disk_usage_manager = new Statistics_DiskUsageManager(
     $disk_usage_dao,
     $svn_collector,
     $cvs_collector,
     EventManager::instance()
 );
 
-$duHtml = new Statistics_DiskUsageHtml($duMgr);
+$duHtml = new Statistics_DiskUsageHtml($disk_usage_manager);
 
 // selected service
-$vServices = new Valid_WhiteList('services', array_keys($duMgr->getProjectServices(false)));
+$vServices = new Valid_WhiteList('services', array_keys($disk_usage_manager->getProjectServices(false)));
 $vServices->required();
 if ($request->validArray($vServices)) {
     $selectedServices = $request->get('services');
 } else {
-    $selectedServices = array_keys($duMgr->getProjectServices(false));
+    $selectedServices = array_keys($disk_usage_manager->getProjectServices(false));
 }
 
 if ($project && !$project->isError()) {
@@ -122,16 +123,25 @@ if ($project && !$project->isError()) {
     project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
 
     echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
-    $usedProportion = $duMgr->returnTotalProjectSize($groupId);
-    $allowedQuota   = $duMgr->getProperty('allowed_quota');
-    $pqm            = new ProjectQuotaManager();
-    $customQuota   = $pqm->getProjectCustomQuota($groupId);
+    $usedProportion        = $disk_usage_manager->returnTotalProjectSize($groupId);
+    $allowedQuota          = $disk_usage_manager->getProperty('allowed_quota');
+    $project_quota_manager = new ProjectQuotaManager();
+    $customQuota           = $project_quota_manager->getProjectCustomQuota($groupId);
     if ($customQuota) {
         $allowedQuota = $customQuota;
     }
     if ($allowedQuota) {
         echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota.'GiB')).'</div>';
-        echo '<p><img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$usedProportion.'&group_id='.$groupId.'" title="Disk usage percentage" /></p>';
+
+        $pie_displayer = new DiskUsagePieDisplayer(
+            $disk_usage_manager,
+            $project_quota_manager,
+            new Statistics_DiskUsageOutput(
+                $disk_usage_manager
+            )
+        );
+
+        $pie_displayer->displayDiskUsagePie($project);
     } else {
         echo '<LABEL><b>';
         echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
@@ -153,7 +163,7 @@ if ($project && !$project->isError()) {
 
     echo '<tr>';
     $services = array();
-    foreach ($duMgr->getProjectServices(false) as $service => $label) {
+    foreach ($disk_usage_manager->getProjectServices(false) as $service => $label) {
         $services[] = array('value' => $service, 'text' => $label);
     }
     echo '<td valign="top">';

@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { StatisticsPieChart } from "./statistics-chart.js";
+import { StatisticsPieChart } from "../charts-builders/statistics-pie-chart.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const PIE_CHART_MAX_HEIGHT = 250;
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         [].forEach.call(legend_li_elements, function(legend_li_element) {
-            legend_li_element.style["width"] = legend_max_width + PIE_CHART_LEGEND_MARGIN + "px";
+            legend_li_element.style.width = legend_max_width + PIE_CHART_LEGEND_MARGIN + "px";
         });
     }
 
