@@ -30,7 +30,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveSemanticChecker;
@@ -75,7 +75,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->contributor_semantic_checker
         );
 
-        $this->collector = new FeedbackFieldCollector();
+        $this->collector = new NoFeedbackFieldCollector();
 
         $this->submitter->shouldReceive('getId')->andReturn(101);
         $this->user->shouldReceive('getId')->andReturn(102);

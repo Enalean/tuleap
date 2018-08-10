@@ -26,9 +26,8 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Contributor;
 use Tracker_Semantic_ContributorFactory;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -55,7 +54,7 @@ class BeforeMoveArtifactTest extends TestCase
         $this->description_semantic_checker = new MoveDescriptionSemanticChecker($this->form_element_factory);
         $this->contributor_semantic_checker = new MoveContributorSemanticChecker($this->form_element_factory);
 
-        $this->feedback_field_collector = new FeedbackFieldCollector();
+        $this->feedback_field_collector = new NoFeedbackFieldCollector();
 
         $this->before_move_artifact = new BeforeMoveArtifact(
             $this->event_manager,

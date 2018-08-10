@@ -27,11 +27,10 @@ use Tracker_Artifact;
 use Tracker_Artifact_PriorityManager;
 use Tracker_Artifact_XMLImport;
 use Tracker_XML_Exporter_ArtifactXMLExporter;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
-use Tuleap\Tracker\Exception\MoveArtifactSemanticsMissingException;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 class MoveArtifact
@@ -90,7 +89,7 @@ class MoveArtifact
         Tracker_Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         try {
             $this->before_move_artifact->artifactCanBeMoved($artifact->getTracker(), $target_tracker, $feedback_field_collector);
@@ -111,7 +110,7 @@ class MoveArtifact
         Tracker_Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $this->artifact_priority_manager->startTransaction();
 
@@ -138,7 +137,7 @@ class MoveArtifact
         Tracker_Artifact $artifact,
         Tracker $target_tracker,
         PFUser $user,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $xml_artifacts = $this->getXMLRootNode();
         $this->xml_exporter->exportFullHistory(

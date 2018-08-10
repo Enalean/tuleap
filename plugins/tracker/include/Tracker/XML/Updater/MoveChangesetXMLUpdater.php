@@ -26,7 +26,7 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Action\MoveContributorSemanticChecker;
 use Tuleap\Tracker\Action\MoveDescriptionSemanticChecker;
 use Tuleap\Tracker\Action\MoveStatusSemanticChecker;
@@ -92,7 +92,7 @@ class MoveChangesetXMLUpdater
         PFUser $submitted_by,
         $submitted_on,
         $moved_time,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $artifact_xml['tracker_id'] = $target_tracker->getId();
 
@@ -133,7 +133,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $artifact_xml,
         PFUser $submitted_by,
         $submitted_on,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $last_index = $artifact_xml->changeset === null ? -1 : count($artifact_xml->changeset) - 1;
         for ($index = $last_index; $index >= 0; $index--) {
@@ -173,7 +173,7 @@ class MoveChangesetXMLUpdater
         Tracker $source_tracker,
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $title_semantic_can_be_moved = $this->title_semantic_checker->areSemanticsAligned(
             $source_tracker,
@@ -350,7 +350,7 @@ class MoveChangesetXMLUpdater
         Tracker_FormElement_Field $source_status_field,
         Tracker_FormElement_Field $target_status_field,
         $index,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $xml_value = (int) $changeset_xml->field_change[$index]->value;
 
@@ -377,7 +377,7 @@ class MoveChangesetXMLUpdater
         SimpleXMLElement $changeset_xml,
         Tracker_FormElement_Field_list $target_contributor_field,
         $field_change_index,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $last_index = count($changeset_xml->field_change[$field_change_index]->value) - 1;
         for ($value_index = $last_index; $value_index >= 0; $value_index--) {
@@ -417,7 +417,7 @@ class MoveChangesetXMLUpdater
         Tracker $target_tracker,
         SimpleXMLElement $changeset_xml,
         $index,
-        FeedbackFieldCollector $feedback_field_collector
+        FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
         $event = new MoveArtifactParseFieldChangeNodes(
             $source_tracker,

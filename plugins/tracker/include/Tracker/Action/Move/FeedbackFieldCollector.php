@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Action\Move;
 use Tracker;
 use Tracker_FormElement_Field;
 
-class FeedbackFieldCollector
+final class FeedbackFieldCollector implements FeedbackFieldCollectorInterface
 {
 
     /**
@@ -52,7 +52,7 @@ class FeedbackFieldCollector
         }
     }
 
-    private function addFieldInNotMigrated(Tracker_FormElement_Field $field)
+    public function addFieldInNotMigrated(Tracker_FormElement_Field $field)
     {
         $field_id = $field->getId();
 

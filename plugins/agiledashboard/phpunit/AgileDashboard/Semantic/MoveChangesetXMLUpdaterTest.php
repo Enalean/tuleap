@@ -30,7 +30,7 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
+use Tuleap\Tracker\Action\Move\NoFeedbackFieldCollector;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 
 require_once __DIR__.'/../../bootstrap.php';
@@ -57,7 +57,7 @@ class MoveChangesetXMLUpdaterTest extends TestCase
             $this->field_value_matcher
         );
 
-        $this->collector = new FeedbackFieldCollector();
+        $this->collector = new NoFeedbackFieldCollector();
 
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>'
             . '  <changeset>'
