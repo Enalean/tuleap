@@ -145,8 +145,8 @@ var Draggables = {
       this.eventKeypress  = this.keyPress.bindAsEventListener(this);
 
       if (Draggables.supportsTouch) {
-        Event.observe(document, "touchend", this.eventMouseUp);
-        Event.observe(document, "touchmove", this.eventMouseMove);
+        document.addEventListener('touchend', this.eventMouseUp, {passive: false});
+        document.addEventListener('touchmove', this.eventMouseMove, {passive: false});
       }
       Event.observe(document, "mouseup", this.eventMouseUp);
       Event.observe(document, "mousemove", this.eventMouseMove);
@@ -301,7 +301,7 @@ var Draggable = Class.create({
 
     this.eventMouseDown = this.initDrag.bindAsEventListener(this);
     if(Draggables.supportsTouch) {
-      Event.observe(this.handle, "touchstart", this.eventMouseDown);
+      this.handle.addEventListener('touchstart', this.eventMouseDown, {passive: false});
     }
     Event.observe(this.handle, "mousedown", this.eventMouseDown);
 
@@ -315,7 +315,7 @@ var Draggable = Class.create({
 
   destroy: function() {
     if(Draggables.supportsTouch) {
-      Event.stopObserving(this.handle, "touchstart", this.eventMouseDown);
+      this.handle.addEventListener('touchstart', this.eventMouseDown, {passive: false});
     }
     Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
     Draggables.unregister(this);
