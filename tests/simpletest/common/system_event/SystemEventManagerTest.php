@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 — 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 — 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -130,7 +130,7 @@ class SystemEventManagerTest extends TuleapTestCase {
 
 Mock::generate('EventManager');
 class MockEventManager_GetTypesForQueue extends MockEventManager {
-   function processEvent($event, $params) {
+   function processEvent($event, $params = []) {
        switch ($event) {
            case Event::SYSTEM_EVENT_GET_TYPES_FOR_CUSTOM_QUEUE:
                 if ($params['queue'] === SystemEventManagerGetTypesForQueueTest::CUSTOM_QUEUE) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,7 +34,7 @@ class MockedEventManager extends \MockEventManager
         $this->process_event_method = $process_event_method;
     }
 
-    public function processEvent($event, $params)
+    public function processEvent($event, $params = [])
     {
         call_user_func($this->process_event_method, $event, $params);
     }

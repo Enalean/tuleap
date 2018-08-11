@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/svn/SVN_Apache_Auth_Factory.class.php';
 
 class SVN_Apache_ModFromPlugin extends SVN_Apache {
     protected function getProjectAuthentication($row) {}
 }
 
 class SVN_Apache_Auth_FactoryTestEventManager extends EventManager {
-    public function processEvent($event_name, $params) {
+    public function processEvent($event_name, $params = []) {
         $project_row = array();
 
         $params['svn_apache_auth'] = new SVN_Apache_ModFromPlugin($project_row);

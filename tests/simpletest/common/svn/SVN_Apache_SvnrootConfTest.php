@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,12 @@
  */
 
 class SVN_Apache_SvnrootConfTestEventManager extends EventManager {
-    public function processEvent($event_name, $params) {
+    public function processEvent($event_name, $params = []) {
         $project_row = array();
 
         $params['svn_apache_auth'] = null;
     }
 }
-
-require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
 
 Mock::generate('EventManager');
 
