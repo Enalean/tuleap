@@ -156,7 +156,6 @@
 /usr/share/tuleap/tests/simpletest/common/collection/LinkedListTest.php
 /usr/share/tuleap/tests/simpletest/common/log/WrapperLoggerTest.php
 /usr/share/tuleap/tests/simpletest/common/log/TruncateLevelLoggerTest.php
-/usr/share/tuleap/tests/simpletest/common/session/Codendi_SessionTest.php
 /usr/share/tuleap/tests/simpletest/common/reference/ReferenceValidatorTest.php
 /usr/share/tuleap/tests/simpletest/common/JWT/generators/JWTGeneratorTest.php
 /usr/share/tuleap/tests/simpletest/common/Cryptography/KeyFactoryTest.php
