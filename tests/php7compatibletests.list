@@ -13,7 +13,6 @@
 /usr/share/tuleap/tests/simpletest/common/include/URLVerificationTest.php
 /usr/share/tuleap/tests/simpletest/common/include/SimpleSanitizerTest.php
 /usr/share/tuleap/tests/simpletest/common/include/ForgeUpgradeConfigTest.php
-/usr/share/tuleap/tests/simpletest/common/include/LoaderSchedulerTest.php
 /usr/share/tuleap/tests/simpletest/common/include/CSRFSynchronizerTokenTest.php
 /usr/share/tuleap/tests/simpletest/common/tour/TourFactoryTest.php
 /usr/share/tuleap/tests/simpletest/common/tour/CustomToursFactoryTest.php
