@@ -985,7 +985,7 @@ class LdapPlugin extends Plugin {
     {
         $this->getLogger()->info('LDAP daily synchronisation: project members');
 
-        $ldap_project_group_manager = $this->getLdapProjectGroupManager();
+        $ldap_project_group_manager = $this->buildLdapProjectGroupManager($this->getGroupSyncNotificationsManager());
         $ldap_project_group_manager->synchronize();
     }
 
@@ -1187,7 +1187,8 @@ class LdapPlugin extends Plugin {
     /**
      * @return \Tuleap\LDAP\GroupSyncNotificationsManager
      * */
-    private function getGroupSyncNotificationsManager() {
+    private function getGroupSyncNotificationsManager()
+    {
         if ($this->isGroupSyncAdminNotificationsEnabled()) {
             return new GroupSyncAdminEmailNotificationsManager(
                 $this->getLdapUserManager(),
@@ -1196,6 +1197,14 @@ class LdapPlugin extends Plugin {
                 \UserManager::instance()
             );
         }
+        return $this->getSilentNotificationsManager();
+    }
+
+    /**
+     * @return \Tuleap\LDAP\GroupSyncNotificationsManager
+     * */
+    private function getSilentNotificationsManager()
+    {
         return new \Tuleap\LDAP\GroupSyncSilentNotificationsManager();
     }
 
@@ -1210,7 +1219,7 @@ class LdapPlugin extends Plugin {
             $this->getUserGroupDao(),
             ProjectManager::instance(),
             $this->getLogger(),
-            new \Tuleap\LDAP\GroupSyncSilentNotificationsManager()
+            $this->getSilentNotificationsManager()
         );
     }
 
@@ -1224,8 +1233,16 @@ class LdapPlugin extends Plugin {
 
     /**
      * @return LDAP_ProjectGroupManager
-     */
+     * */
     public function getLdapProjectGroupManager()
+    {
+        return $this->buildLdapProjectGroupManager($this->getSilentNotificationsManager());
+    }
+
+    /**
+     * @return LDAP_ProjectGroupManager
+     */
+    private function buildLdapProjectGroupManager(\Tuleap\LDAP\GroupSyncNotificationsManager $notifications_manager)
     {
         $user_manager    = $this->getLdapUserManager();
         $project_manager = ProjectManager::instance();
@@ -1234,7 +1251,7 @@ class LdapPlugin extends Plugin {
             $user_manager,
             $this->getLdapProjectGroupDao(),
             $project_manager,
-            $this->getGroupSyncNotificationsManager()
+            $notifications_manager
         );
         return $manager;
     }
