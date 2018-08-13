@@ -9,7 +9,7 @@
         <ul class="dropdown-menu pull-right" id="tracker-action-button-section">
             {{> action-buttons/original-email }}
             {{> action-buttons/copy-artifact }}
-            {{> action-buttons/move-artifact }}
+            {{> action-buttons/move-artifact-button }}
             {{> action-buttons/graph-dependencies }}
             {{# divider }}
                 <li class="divider" id="tracker-move-artifact-divider"></li>
@@ -19,12 +19,6 @@
     </div>
 
     {{# should_load_modal }}
-        <div id="move-artifact-modal"
-             data-tracker-id="{{ tracker_id }}"
-             data-tracker-name="{{ tracker_name }}"
-             data-tracker-color="{{ tracker_color }}"
-             data-artifact-id="{{ artifact_id }}"
-             data-project-id="{{ project_id }}"
-        ></div>
+        {{> action-buttons/move-artifact-modal }}
     {{/ should_load_modal }}
 {{/ has_at_least_one_action }}

@@ -20,30 +20,12 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use Tracker_Artifact;
-
 class GlobalButtonsActionPresenter
 {
     /**
      * @var bool
      */
     public $has_at_least_one_action;
-    /**
-     * @var int
-     */
-    public $tracker_id;
-    /**
-     * @var string
-     */
-    public $tracker_name;
-    /**
-     * @var string
-     */
-    public $tracker_color;
-    /**
-     * @var int
-     */
-    public $artifact_id;
     /**
      * @var ArtifactMoveButtonPresenter
      */
@@ -72,32 +54,21 @@ class GlobalButtonsActionPresenter
      * @var bool
      */
     public $should_load_modal;
-
     /**
-     * @var string
+     * @var ArtifactMoveModalPresenter
      */
-    public $project_name;
-    /**
-     * @var int
-     */
-    public $project_id;
+    public $artifact_move_modal_presenter;
 
     public function __construct(
-        Tracker_Artifact $artifact,
         ArtifactMoveButtonPresenter $artifact_move_button_presenter = null,
+        ArtifactMoveModalPresenter $artifact_move_modal_presenter = null,
         ArtifactCopyButtonPresenter $artifact_copy_button_presenter = null,
         ArtifactGrapDependenciesButtonPresenter $artifact_graph_dependencies_button_presenter = null,
         ArtifactNotificationsButtonPresenter $artifact_notifications_button_presenter = null,
         ArtifactOriginalEmailButtonPresenter $artifact_original_email_button_presenter = null
     ) {
-        $this->tracker_id    = $artifact->getTrackerId();
-        $this->tracker_name  = $artifact->getTracker()->getItemName();
-        $this->tracker_color = $artifact->getTracker()->getColor();
-        $this->artifact_id   = $artifact->getId();
-        $this->project_name  = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
-        $this->project_id    = $artifact->getTracker()->getProject()->getID();
-
         $this->artifact_move_button_presenter               = $artifact_move_button_presenter;
+        $this->artifact_move_modal_presenter                = $artifact_move_modal_presenter;
         $this->artifact_copy_button_presenter               = $artifact_copy_button_presenter;
         $this->artifact_graph_dependencies_button_presenter = $artifact_graph_dependencies_button_presenter;
         $this->artifact_notifications_button_presenter      = $artifact_notifications_button_presenter;
