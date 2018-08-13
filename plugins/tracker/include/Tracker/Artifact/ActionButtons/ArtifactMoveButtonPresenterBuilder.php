@@ -82,6 +82,11 @@ class ArtifactMoveButtonPresenterBuilder
         );
     }
 
+    public function getMoveArtifactModal(Tracker_Artifact $artifact)
+    {
+        return new ArtifactMoveModalPresenter($artifact);
+    }
+
     /**
      * @param PFUser $user
      *

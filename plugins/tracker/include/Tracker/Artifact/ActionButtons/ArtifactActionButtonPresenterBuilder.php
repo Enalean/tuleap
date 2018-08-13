@@ -63,20 +63,22 @@ class ArtifactActionButtonPresenterBuilder
 
     public function build(PFUser $user, Tracker_Artifact $artifact)
     {
-        $original_email = $this->mail_button_builder->getIncomingEmailButton($user, $artifact);
-        $copy_artifact  = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);
-        $notification   = $this->notification_button_builder->getNotificationButton($user, $artifact);
-        $move_artifact  = null;
+        $original_email       = $this->mail_button_builder->getIncomingEmailButton($user, $artifact);
+        $copy_artifact        = $this->artifact_copy_button_builder->getCopyArtifactButton($user, $artifact);
+        $notification         = $this->notification_button_builder->getNotificationButton($user, $artifact);
+        $move_artifact_button = null;
+        $move_artifact_modal  = null;
 
         if (\ForgeConfig::get('tracker_move_artifact_ui')) {
-            $move_artifact  = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
+            $move_artifact_button = $this->move_button_builder->getMoveArtifactButton($user, $artifact);
+            $move_artifact_modal  = $this->move_button_builder->getMoveArtifactModal($artifact);
         }
 
         $graph_references = $this->graph_button_builder->getGraphReferencesButton($artifact);
 
         return new GlobalButtonsActionPresenter(
-            $artifact,
-            $move_artifact,
+            $move_artifact_button,
+            $move_artifact_modal,
             $copy_artifact,
             $graph_references,
             $notification,
