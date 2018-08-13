@@ -12,7 +12,7 @@
   "require": {
     "paragonie/random_compat": "<9.99",
     "mustache/mustache": "dev-feature/strict-variables",
-    "ezyang/htmlpurifier": "dev-master#89b3fe431e422fd06ce71ced8cfbd5a56c22b344",
+    "ezyang/htmlpurifier": "^4.10",
     "firebase/php-jwt": "^5.0.0",
     "paragonie/sodium_compat": "^1.6",
     "Luracast/Restler": "dev-3.0.0-RC6-July2018-FixURLDecoding",
