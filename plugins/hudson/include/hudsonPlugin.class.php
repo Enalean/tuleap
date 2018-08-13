@@ -24,6 +24,8 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Hudson\HudsonJobBuilder;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CurrentPage;
 
 require_once __DIR__ . '/autoload.php';
 require_once __DIR__ . '/constants.php';
@@ -55,6 +57,7 @@ class hudsonPlugin extends Plugin
         $this->addHook('statistics_collector',          'statistics_collector',       false);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
     public function burning_parrot_get_stylesheets($params)
@@ -63,6 +66,23 @@ class hudsonPlugin extends Plugin
             $variant = $params['variant'];
             $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
         }
+    }
+
+    public function burningParrotGetJavascriptFiles(array $params)
+    {
+        if ($this->isInDashboard()) {
+            $include_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/hudson/scripts',
+                '/assets/hudson/scripts'
+            );
+
+            $params['javascript_files'][] = $include_assets->getFileURL('test-results-pie.js');
+        }
+    }
+    private function isInDashboard()
+    {
+        $current_page = new CurrentPage();
+        return $current_page->isDashboard();
     }
 
     private function canIncludeStylsheets()

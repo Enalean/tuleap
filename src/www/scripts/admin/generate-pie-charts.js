@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pie_chart_element_sizes = getSizes(pie_chart_element);
 
             const pie_chart = new StatisticsPieChart({
+                id: pie_chart_element.id,
                 prefix: pie_chart_element.id,
                 general_prefix: "siteadmin-homepage-pie-chart",
                 data: JSON.parse(pie_chart_element.dataset.statistics),
