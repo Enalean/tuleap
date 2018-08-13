@@ -25,10 +25,10 @@
 
         <select id="move-artifact-project-selector"
                 name="move-artifact-project-selector"
-                v-model="selectedProjectId"
+                v-model="selected_project_id"
             >
             <option disabled="disabled" value="null" selected><translate>Choose project...</translate></option>
-            <option v-for="project in sortedProjects"
+            <option v-for="project in sorted_projects"
                     v-bind:key="project.id"
                     v-bind:value="project.id"
             >
@@ -44,8 +44,8 @@ import { getProjectId } from "../from-tracker-presenter.js";
 export default {
     name: "ProjectSelector",
     computed: {
-        ...mapGetters(["sortedProjects"]),
-        selectedProjectId: {
+        ...mapGetters(["sorted_projects"]),
+        selected_project_id: {
             get() {
                 return this.$store.state.selected_project_id;
             },

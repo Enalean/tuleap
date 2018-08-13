@@ -1,8 +1,8 @@
 <template>
     <div v-bind:class="selector_class">
-        <project-selector v-if="! this.isLoadingInitial"/>
+        <project-selector v-if="! this.is_loading_initial"/>
         <div v-bind:class="spinner_class"></div>
-        <tracker-selector v-if="! this.isLoadingInitial"/>
+        <tracker-selector v-if="! this.is_loading_initial"/>
     </div>
 </template>
 
@@ -18,19 +18,15 @@ export default {
         TrackerSelector
     },
     computed: {
-        ...mapState({
-            isLoadingInitial: state => state.is_loading_initial,
-            areTrackersLoading: state => state.are_trackers_loading,
-            hasProcessedDryRun: state => state.has_processed_dry_run
-        }),
+        ...mapState(["is_loading_initial", "are_trackers_loading", "has_processed_dry_run"]),
         spinner_class() {
-            if (this.areTrackersLoading) {
+            if (this.are_trackers_loading) {
                 return "move-artifact-tracker-loader move-artifact-tracker-loader-spinner";
             }
             return "move-artifact-tracker-loader";
         },
         selector_class() {
-            if (this.hasProcessedDryRun) {
+            if (this.has_processed_dry_run) {
                 return "move-artifact-selectors move-artifact-selectors-preview";
             }
 

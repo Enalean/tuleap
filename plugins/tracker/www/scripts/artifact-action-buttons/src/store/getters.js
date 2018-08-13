@@ -19,13 +19,10 @@
 
 import { getTrackerId } from "../from-tracker-presenter.js";
 
-export const hasError = state => state.error_message.length > 0;
+export const has_error = state => state.error_message.length > 0;
 
-export const sortedProjects = state => {
-    return state.projects.sort(function(a, b) {
-        return a.label.localeCompare(b.label);
-    });
-};
+export const sorted_projects = state =>
+    state.projects.sort((a, b) => a.label.localeCompare(b.label));
 
 export const tracker_list_with_disabled_from = state =>
     state.trackers.map(tracker => {
@@ -33,9 +30,9 @@ export const tracker_list_with_disabled_from = state =>
         return tracker;
     });
 
-export const getCountOfNotMigratedField = state => state.dry_run_fields.fields_not_migrated.length;
+export const not_migrated_fields_count = state => state.dry_run_fields.fields_not_migrated.length;
 
-export const getCountOfPartiallyMigratedField = state =>
+export const partially_migrated_fields_count = state =>
     state.dry_run_fields.fields_partially_migrated.length;
 
-export const getCountOfFullyMigratedField = state => state.dry_run_fields.fields_migrated.length;
+export const fully_migrated_fields_count = state => state.dry_run_fields.fields_migrated.length;

@@ -32,18 +32,18 @@
                     <move-modal-title />
                 </div>
                 <div class="modal-body move-artifact-modal-body">
-                    <div v-if="isLoadingInitial || is_processing_move" class="move-artifact-loader"></div>
-                    <div v-if="hasError" class="alert alert-error move-artifact-error">{{ getErrorMessage }}</div>
+                    <div v-if="is_loading_initial || is_processing_move" class="move-artifact-loader"></div>
+                    <div v-if="has_error" class="alert alert-error move-artifact-error">{{ error_message }}</div>
                     <move-modal-selectors v-show="! is_processing_move" />
-                    <dry-run-preview v-if="hasProcessedDryRun && ! is_processing_move" />
+                    <dry-run-preview v-if="has_processed_dry_run && ! is_processing_move"/>
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
                     <button type="button"
                             class="btn btn-primary"
                             v-on:click="moveDryRunArtifact()"
-                            v-bind:disabled="hasNoSelectedTracker || is_processing_move"
-                            v-show="! hasProcessedDryRun"
+                            v-bind:disabled="has_no_selected_tracker || is_processing_move"
+                            v-show="! has_processed_dry_run"
                     >
                         <i class="icon-share-alt"></i> <translate>Move artifact</translate>
                     </button>
@@ -51,7 +51,7 @@
                             class="btn btn-primary"
                             v-on:click="moveArtifact()"
                             v-bind:disabled="is_processing_move"
-                            v-show="hasProcessedDryRun"
+                            v-show="has_processed_dry_run"
                     >
                         <i class="icon-ok"></i> <translate>Confirm</translate>
                     </button>
@@ -83,15 +83,20 @@ export default {
         };
     },
     computed: {
-        ...mapState({
-            isLoadingInitial: state => state.is_loading_initial,
-            getErrorMessage: state => state.error_message,
-            hasNoSelectedTracker: state => state.selected_tracker.tracker_id === null,
-            getSelectedTrackerId: state => state.selected_tracker.tracker_id,
-            hasProcessedDryRun: state => state.has_processed_dry_run,
-            shouldRedirect: state => state.should_redirect
-        }),
-        ...mapGetters(["hasError"])
+        ...mapState([
+            "is_loading_initial",
+            "error_message",
+            "has_processed_dry_run",
+            "should_redirect",
+            "selected_tracker"
+        ]),
+        ...mapGetters(["has_error"]),
+        has_no_selected_tracker() {
+            return this.selected_tracker.tracker_id === null;
+        },
+        selected_tracker_id() {
+            return this.selected_tracker.tracker_id;
+        }
     },
     mounted() {
         const $modal = $(this.$el);
@@ -106,17 +111,17 @@ export default {
     methods: {
         async moveDryRunArtifact() {
             this.is_processing_move = true;
-            await this.$store.dispatch("moveDryRun", [getArtifactId(), this.getSelectedTrackerId]);
+            await this.$store.dispatch("moveDryRun", [getArtifactId(), this.selected_tracker_id]);
 
-            if (this.shouldRedirect) {
+            if (this.should_redirect) {
                 window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
             }
             this.is_processing_move = false;
         },
         async moveArtifact() {
             this.is_processing_move = true;
-            await this.$store.dispatch("move", [getArtifactId(), this.getSelectedTrackerId]);
-            if (this.getErrorMessage.length === 0) {
+            await this.$store.dispatch("move", [getArtifactId(), this.selected_tracker_id]);
+            if (this.error_message.length === 0) {
                 window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
             } else {
                 this.is_processing_move = false;
