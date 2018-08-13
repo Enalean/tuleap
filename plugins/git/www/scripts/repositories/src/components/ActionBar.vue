@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="git-repository-list-actions">
+    <div class="git-repository-list-actions" v-if="is_first_load_done">
         <button type="button"
                 class="tlp-button-primary git-repository-list-create-repository-button"
                 v-if="show_create_repository_button"
@@ -30,17 +30,16 @@
 
         <select-owner />
 
+        <div class="git-repository-list-actions-spacer"></div>
+
         <template v-if="! isCurrentRepositoryListEmpty">
-            <div class="git-repository-list-actions-spacer"></div>
-
             <display-mode-switcher />
-
             <list-filter />
         </template>
     </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapState } from "vuex";
 import ListFilter from "./ActionBar/ListFilter.vue";
 import SelectOwner from "./ActionBar/SelectOwner.vue";
 import DisplayModeSwitcher from "./ActionBar/DisplayModeSwitcher.vue";
@@ -54,9 +53,13 @@ export default {
     },
     computed: {
         show_create_repository_button() {
-            return getUserIsAdmin();
+            return (
+                getUserIsAdmin() &&
+                !(this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError)
+            );
         },
-        ...mapGetters(["isCurrentRepositoryListEmpty"])
+        ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
+        ...mapState(["is_first_load_done"])
     }
 };
 </script>

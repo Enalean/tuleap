@@ -30,6 +30,7 @@ const state = {
     is_loading_initial: true,
     is_loading_next: true,
     add_repository_modal: null,
-    display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE
+    display_mode: REPOSITORIES_SORTED_BY_LAST_UPDATE,
+    is_first_load_done: false
 };
 export default state;

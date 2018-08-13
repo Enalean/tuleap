@@ -53,6 +53,9 @@ export default {
             state.display_mode === REPOSITORIES_SORTED_BY_LAST_UPDATE
                 ? REPOSITORIES_SORTED_BY_PATH
                 : REPOSITORIES_SORTED_BY_LAST_UPDATE;
+    },
+    setIsFirstLoadDone(state, is_first_load_done) {
+        state.is_first_load_done = is_first_load_done;
     }
 };
 
