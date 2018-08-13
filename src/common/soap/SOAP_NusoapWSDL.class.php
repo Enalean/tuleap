@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,8 +43,7 @@ class SOAP_NusoapWSDL {
         $this->appendTypes($server);
 
         // Call the service method to initiate the transaction and send the response
-        $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
-        $server->service($HTTP_RAW_POST_DATA);
+        $server->service(file_get_contents('php://input'));
     }
     
     private function appendMethods(soap_server $server) {

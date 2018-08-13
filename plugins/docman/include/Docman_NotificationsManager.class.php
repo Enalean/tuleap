@@ -269,7 +269,7 @@ class Docman_NotificationsManager
         return $item;
     }
 
-    function _getMessageForUser(&$user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params) {
         $msg = '';
         switch($message_type) {
             case self::MESSAGE_MODIFIED:

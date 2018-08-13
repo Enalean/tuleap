@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -465,7 +465,7 @@ class ArtifactReport {
             $group_id = $ath->Group->getID();
             $ugroups = $u->getUgroups($group_id, $instances);
             
-            $pm          =& PermissionsManager::instance();
+            $pm          = PermissionsManager::instance();
             $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id);
             
             if(!$u->isSuperUser() && !$u->isTrackerAdmin($group_id,$this->group_artifact_id)) {

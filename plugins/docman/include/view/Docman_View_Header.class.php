@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,7 +45,7 @@
                 /** @var Tuleap\Docman\ServiceDocman $service */
                 $service = $project->getService($htmlParams['service_name']);
                 if ($service) {
-                    $service->displayHeader($htmlParams['title'], $this->getToolbar($params));
+                    $service->displayHeader($htmlParams['title'], [], $this->getToolbar($params));
                 } else {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, 'Service unavailable in project');
                     $GLOBALS['Response']->redirect('/');

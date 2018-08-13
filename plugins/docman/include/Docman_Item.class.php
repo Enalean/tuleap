@@ -220,7 +220,8 @@ class Docman_Item {
         return $row;
     }
     
-    public function accept(&$visitor, $params = array()) {
+    public function accept($visitor, $params = array())
+    {
     }
 
     public function addMetadata(&$metadata) {
@@ -291,7 +292,8 @@ class Docman_Item {
         $metadata_value = $this->getHardCodedMetadataValue($label);
         $metadata       = null; // can't refactor with early return as it returns value by ref :(
         if($metadata_value !== null) {
-            $metadata = Docman_MetadataFactory::getHardCodedMetadataFromLabel($label, $metadata_value);
+            $metadata_factory = new Docman_MetadataFactory($this->groupId);
+            $metadata = $metadata_factory->getHardCodedMetadataFromLabel($label, $metadata_value);
         } elseif (isset($this->_metadata[$label])) {
             $metadata = $this->_metadata[$label];
         }

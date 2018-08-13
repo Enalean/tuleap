@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -702,7 +702,7 @@ class ReferenceManager {
             $project = new Project($group_id);
             $tracker = new ArtifactType($project, $tracker_id);
             $tracker_short_name = $tracker->getItemName();
-            $reference_dao =& $this->_getReferenceDao();
+            $reference_dao      = $this->_getReferenceDao();
             $dar = $reference_dao->searchByKeywordAndGroupId($tracker_short_name, $group_id);
             if ($dar && $dar->rowCount() >= 1) {
                 return $tracker_short_name;

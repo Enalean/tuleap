@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -112,7 +112,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
             parent::sendNotifications($event, $params);
         }
     }
-    function _getMessageForUser(&$user, $message_type, $params)
+    function _getMessageForUser($user, $message_type, $params)
     {
         $msg = '';
         switch ($message_type) {

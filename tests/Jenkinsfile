@@ -23,6 +23,17 @@ def runKarmaTests(String name, String path) {
     junit "results/karma/test-$name-results.xml"
 }
 
+def runSOAPTests(String name, String image_version) {
+    sh """
+    cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${image_version})"
+    docker start --attach "\$cid" || true
+    mkdir -p 'results/api-soap'
+    docker cp "\$cid":/output/soap_tests.xml results/api-soap/soap_tests_${name}.xml || true
+    docker rm -fv "\$cid"
+    """
+    junit "results/api-soap/soap_tests_${name}.xml"
+}
+
 pipeline {
     agent {
         label 'docker'
@@ -90,18 +101,8 @@ pipeline {
                 'Karma Git plugin': { runKarmaTests('git', 'plugins/git/www/scripts') },
                 'REST CentOS 6 PHP 5.6 MySQL 5.6': { runRESTTests('c6-php56-mysql56') },
                 'REST CentOS 6 PHP 7.2 MySQL 5.6': { runRESTTests('c6-php72-mysql56') },
-                'SOAP': {
-                    sh """
-                    mkdir -p working_copy/api-soap
-                    cp -R sources/* working_copy/api-soap/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/usr/share/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap:3)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/api-soap'
-                    docker cp "\$cid":/output/soap_tests.xml results/api-soap/ || true
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/api-soap/soap_tests.xml'
-                },
+                'SOAP PHP 5.6': { runSOAPTests('php-56', '3') },
+                'SOAP PHP 7.2': { runSOAPTests('php-72', '4') },
                 'Distributed SVN integration': {
                     dir ('sources') {
                         sh """

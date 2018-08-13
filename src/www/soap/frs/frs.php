@@ -481,7 +481,7 @@ function getPackages($sessionKey,$group_id) {
         }
         $pkg_fact = new FRSPackageFactory();
         // we get only the active packages, even if we are project admin or file admin
-        $packages =& $pkg_fact->getActiveFRSPackages($group_id);
+        $packages = $pkg_fact->getActiveFRSPackages($group_id);
         return packages_to_soap($packages);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getPackages');
@@ -588,7 +588,7 @@ function getReleases($sessionKey,$group_id,$package_id) {
         }
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','getReleases');
         }
@@ -599,7 +599,7 @@ function getReleases($sessionKey,$group_id,$package_id) {
         
         $release_fact = new FRSReleaseFactory();
         // we get only the active releases, even if we are project admin or file admin
-        $releases =& $release_fact->getActiveFRSReleases($package_id, $group_id);
+        $releases = $release_fact->getActiveFRSReleases($package_id, $group_id);
         return releases_to_soap($releases);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getReleases');
@@ -672,7 +672,7 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
         }
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','addRelease');
         }
@@ -793,7 +793,7 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
         }
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','getFiles');
         }
@@ -804,7 +804,7 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','getFiles');
         }
@@ -813,7 +813,7 @@ function getFiles($sessionKey,$group_id,$package_id,$release_id) {
             return new SoapFault(invalid_release_fault,'Permission to this Release denied','getFiles');
         }
         
-        $files_arr =& $release->getFiles();
+        $files_arr = $release->getFiles();
         return files_to_soap($files_arr);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getFiles');
@@ -939,7 +939,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','getFile');
         }
@@ -950,7 +950,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','getFile');
         }
@@ -960,7 +960,7 @@ function getFile($sessionKey,$group_id,$package_id,$release_id,$file_id) {
         }
         
         $file_fact = new FRSFileFactory();
-        $file =& $file_fact->getFRSFileFromDb($file_id);
+        $file      = $file_fact->getFRSFileFromDb($file_id);
         if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
             return new SoapFault(invalid_file_fault,'Invalid File','getFile');
         }
@@ -1007,7 +1007,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->isDeleted() || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','getFileChunk');
         }
@@ -1018,7 +1018,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->isDeleted() || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','getFileChunk');
         }
@@ -1028,7 +1028,7 @@ function getFileChunk($sessionKey,$group_id,$package_id,$release_id,$file_id,$of
         }
         
         $file_fact = new FRSFileFactory();
-        $file =& $file_fact->getFRSFileFromDb($file_id);
+        $file      = $file_fact->getFRSFileFromDb($file_id);
         if (!$file || !$file->isActive() || $file->getReleaseID() != $release_id) {
             return new SoapFault(invalid_file_fault,'Invalid File','getFileChunk');
         }
@@ -1081,14 +1081,14 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','addFile');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','addFile');
         }
@@ -1147,14 +1147,14 @@ function addFile($sessionKey, $group_id, $package_id, $release_id, $filename, $b
 
             // retieve the package
             $pkg_fact = new FRSPackageFactory();
-            $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+            $package  = $pkg_fact->getFRSPackageFromDb($package_id);
             if (!$package || $package->getGroupID() != $group_id) {
                 return new SoapFault(invalid_package_fault,'Invalid Package','updateFileComment');
             }
 
             // retrieve the release
             $release_fact = new FRSReleaseFactory();
-            $release =& $release_fact->getFRSReleaseFromDb($release_id);
+            $release      = $release_fact->getFRSReleaseFromDb($release_id);
             if (!$release || $release->getPackageID() != $package_id) {
                 return new SoapFault(invalid_release_fault,'Invalid Release','updateFileComment');
             }
@@ -1256,14 +1256,14 @@ function addUploadedFile($sessionKey, $group_id, $package_id, $release_id, $file
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','addUploadedFile');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','addUploadedFile');
         }
@@ -1355,14 +1355,14 @@ function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) 
 
         // retieve the package
         $pkg_fact = new FRSPackageFactory();
-        $package =& $pkg_fact->getFRSPackageFromDb($package_id);
+        $package  = $pkg_fact->getFRSPackageFromDb($package_id);
         if (!$package || $package->getGroupID() != $group_id) {
             return new SoapFault(invalid_package_fault,'Invalid Package','deleteFile');
         }
         
         // retrieve the release
         $release_fact = new FRSReleaseFactory();
-        $release =& $release_fact->getFRSReleaseFromDb($release_id);
+        $release      = $release_fact->getFRSReleaseFromDb($release_id);
         if (!$release || $release->getPackageID() != $package_id) {
             return new SoapFault(invalid_release_fault,'Invalid Release','deleteFile');
         }
@@ -1370,7 +1370,7 @@ function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) 
         if ($release_fact->userCanUpdate($group_id, $release_id)) {
             // retrieve the file
             $file_fact = new FRSFileFactory();
-            $file_info =& $file_fact->getFRSFileInfoListFromDb($group_id, $file_id);
+            $file_info = $file_fact->getFRSFileInfoListFromDb($group_id, $file_id);
             if (count($file_info) == 0) {
                 return new SoapFault(invalid_file_fault,'Invalid File','deleteFile');
             }
