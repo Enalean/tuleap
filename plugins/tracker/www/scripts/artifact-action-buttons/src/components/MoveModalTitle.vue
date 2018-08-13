@@ -20,7 +20,7 @@
 <template>
     <h3 class="modal-title" id="modal-move-artifact-choose-trackers">
         <i class="icon-share-alt"></i>
-        <translate>Move</translate>
+        <translate class="modal-move-artifact-icon-title">Move</translate>
         <span v-bind:class="artifact_badge_class">
             {{ artifact_badge_tracker_name }} #{{ artifact_badge_artifact_id }}
         </span>

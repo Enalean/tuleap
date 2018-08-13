@@ -22,6 +22,10 @@
     font-weight: normal;
 }
 
+.modal-move-artifact-icon-title {
+    margin: 0 10px 0 0;
+}
+
 #tracker-move-artifact-divider {
     margin: 0 0 5px;
 }
@@ -59,8 +63,14 @@
     border-top: 1px solid #f3f3f3;
 }
 
-.move-artifact-error-icon {
+.move-artifact-icon {
     margin: 0 3px 0 0;
+}
+
+.move-artifact-error-icon {
+    margin: 0 5px 0 0;
+    font-size: 25px;
+    vertical-align: middle;
 }
 
 .move-artifact-display-more-field {
