@@ -24,9 +24,13 @@ import {
     moveArtifact
 } from "../api/rest-querier.js";
 
-export async function loadTrackerList(context) {
+export async function loadTrackerList(context, project_id) {
     try {
         context.commit("setAreTrackerLoading", true);
+        context.commit("saveSelectedProjectId", project_id);
+        context.commit("saveTrackers", []);
+        context.commit("resetSelectedTracker");
+        context.commit("setHasProcessedDryRun", false);
         const trackerList = await getTrackerList(context.state.selected_project_id);
 
         getAsyncTrackerList(context.commit, trackerList);

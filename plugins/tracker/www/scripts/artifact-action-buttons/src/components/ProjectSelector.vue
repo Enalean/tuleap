@@ -39,6 +39,7 @@
 </template>
 <script>
 import { mapGetters } from "vuex";
+import { getProjectId } from "../from-tracker-presenter.js";
 
 export default {
     name: "ProjectSelector",
@@ -49,13 +50,12 @@ export default {
                 return this.$store.state.selected_project_id;
             },
             set(project_id) {
-                this.$store.commit("saveSelectedProjectId", project_id);
-                this.$store.commit("saveTrackers", []);
-                this.$store.commit("resetSelectedTracker");
-                this.$store.commit("setHasProcessedDryRun", false);
-                this.$store.dispatch("loadTrackerList");
+                this.$store.dispatch("loadTrackerList", project_id);
             }
         }
+    },
+    mounted() {
+        this.$store.dispatch("loadTrackerList", getProjectId());
     }
 };
 </script>

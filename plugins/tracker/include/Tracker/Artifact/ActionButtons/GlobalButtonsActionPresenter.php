@@ -77,6 +77,10 @@ class GlobalButtonsActionPresenter
      * @var string
      */
     public $project_name;
+    /**
+     * @var int
+     */
+    public $project_id;
 
     public function __construct(
         Tracker_Artifact $artifact,
@@ -91,6 +95,7 @@ class GlobalButtonsActionPresenter
         $this->tracker_color = $artifact->getTracker()->getColor();
         $this->artifact_id   = $artifact->getId();
         $this->project_name  = $artifact->getTracker()->getProject()->getUnconvertedPublicName();
+        $this->project_id    = $artifact->getTracker()->getProject()->getID();
 
         $this->artifact_move_button_presenter               = $artifact_move_button_presenter;
         $this->artifact_copy_button_presenter               = $artifact_copy_button_presenter;
