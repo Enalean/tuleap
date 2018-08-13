@@ -19,7 +19,7 @@
 
 <template>
     <div v-if="getCountOfNotMigratedField > 0" class="alert alert-error">
-        <i class="icon-minus-sign move-artifact-error-icon"></i>
+        <i class="icon-exclamation-sign move-artifact-icon move-artifact-error-icon"></i>
         <translate v-bind:translate-n="getCountOfNotMigratedField"
                    translate-plural="%{ getCountOfNotMigratedField } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
         >%{ getCountOfNotMigratedField } field do not match with the targeted tracker. If you confirm your action, its value will be lost forever:</translate>

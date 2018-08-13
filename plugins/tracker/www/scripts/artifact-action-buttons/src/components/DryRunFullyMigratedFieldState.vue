@@ -19,7 +19,7 @@
 
 <template>
     <div v-if="getCountOfFullyMigratedField > 0" class="alert alert-info">
-        <i class="icon-info-sign move-artifact-error-icon"></i>
+        <i class="icon-info-sign move-artifact-icon"></i>
         <translate v-bind:translate-n="getCountOfFullyMigratedField"
                    translate-plural="%{ getCountOfFullyMigratedField } fields will be fully migrated:"
         >%{ getCountOfFullyMigratedField } field will be fully migrated:</translate>

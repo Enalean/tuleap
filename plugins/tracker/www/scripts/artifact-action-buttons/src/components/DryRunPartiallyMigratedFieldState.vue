@@ -19,7 +19,7 @@
 
 <template>
     <div v-if="getCountOfPartiallyMigratedField > 0" class="alert block">
-        <i class="icon-exclamation-sign move-artifact-error-icon"></i>
+        <i class="icon-exclamation-sign move-artifact-icon"></i>
         <translate v-bind:translate-n="getCountOfPartiallyMigratedField"
                    translate-plural="%{ getCountOfPartiallyMigratedField } fields do not fully match with the targeted tracker. One value of the fields has not been found in targeted tracker, if you confirm your action, this value will be lost forever:"
         >%{ getCountOfPartiallyMigratedField } field do not fully match with the targeted tracker. One value of the field has not been found in targeted tracker, if you confirm your action, this value will be lost forever:</translate>
