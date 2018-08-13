@@ -32,7 +32,7 @@
     "gulp-sass": "^4.0.1",
     "gulp-scss-lint": "^0.4.0",
     "http-server": "^0.11.1",
-    "jasmine-core": "^3.1.0",
+    "jasmine-core": "^3.2.0",
     "jasmine-fixture": "^2.0.0",
     "jasmine-promise-matchers": "^2.6.0",
     "json-loader": "^0.5.7",

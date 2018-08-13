@@ -77,25 +77,17 @@ export default {
         MoveModalTitle,
         MoveModalSelectors
     },
-    data() {
-        return {
-            is_processing_move: false
-        };
-    },
     computed: {
         ...mapState([
             "is_loading_initial",
             "error_message",
             "has_processed_dry_run",
-            "should_redirect",
-            "selected_tracker"
+            "selected_tracker",
+            "is_processing_move"
         ]),
         ...mapGetters(["has_error"]),
         has_no_selected_tracker() {
             return this.selected_tracker.tracker_id === null;
-        },
-        selected_tracker_id() {
-            return this.selected_tracker.tracker_id;
         }
     },
     mounted() {
@@ -109,23 +101,11 @@ export default {
         $modal.modal();
     },
     methods: {
-        async moveDryRunArtifact() {
-            this.is_processing_move = true;
-            await this.$store.dispatch("moveDryRun", [getArtifactId(), this.selected_tracker_id]);
-
-            if (this.should_redirect) {
-                window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
-            }
-            this.is_processing_move = false;
+        moveDryRunArtifact() {
+            return this.$store.dispatch("moveDryRun", getArtifactId());
         },
-        async moveArtifact() {
-            this.is_processing_move = true;
-            await this.$store.dispatch("move", [getArtifactId(), this.selected_tracker_id]);
-            if (this.error_message.length === 0) {
-                window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
-            } else {
-                this.is_processing_move = false;
-            }
+        moveArtifact() {
+            return this.$store.dispatch("move", getArtifactId());
         }
     }
 };

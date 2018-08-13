@@ -41,7 +41,7 @@ describe("API querier", () => {
     });
 
     describe("getProjectList", () => {
-        it("it will get all project user is tracker admin of", () => {
+        it("it will get all project user is tracker admin of", async () => {
             const return_json = [
                 {
                     id: 102,
@@ -50,23 +50,20 @@ describe("API querier", () => {
             ];
 
             mockFetchSuccess(recursiveGet, { return_json });
-            getProjectList();
+            await expectAsync(getProjectList()).toBeResolved();
 
-            expect(recursiveGet).toHaveBeenCalledWith(
-                "/api/projects",
-                jasmine.objectContaining({
-                    params: {
-                        query: '{"is_tracker_admin":"true"}',
-                        limit: 50,
-                        offset: 0
-                    }
-                })
-            );
+            expect(recursiveGet).toHaveBeenCalledWith("/api/projects", {
+                params: {
+                    query: '{"is_tracker_admin":"true"}',
+                    limit: 50,
+                    offset: 0
+                }
+            });
         });
     });
 
     describe("getTrackerList", () => {
-        it("Given a project id, then it will get all trackers user is admin of", () => {
+        it("Given a project id, then it will get all trackers user is admin of", async () => {
             const return_json = [
                 {
                     id: 10,
@@ -77,27 +74,26 @@ describe("API querier", () => {
             mockFetchSuccess(recursiveGet, { return_json });
             const project_id = 5;
 
-            getTrackerList(project_id);
+            await expectAsync(getTrackerList(project_id)).toBeResolved();
 
-            expect(recursiveGet).toHaveBeenCalledWith(
-                "/api/projects/5/trackers/",
-                jasmine.objectContaining({
-                    params: {
-                        query: '{"is_tracker_admin":"true"}',
-                        limit: 50,
-                        offset: 0
-                    }
-                })
-            );
+            expect(recursiveGet).toHaveBeenCalledWith("/api/projects/5/trackers/", {
+                params: {
+                    query: '{"is_tracker_admin":"true"}',
+                    limit: 50,
+                    offset: 0
+                }
+            });
         });
     });
 
     describe("moveArtifact", () => {
-        it("Given a tracker id, and a project id then it will process the move", () => {
+        it("Given a tracker id, and a project id then it will process the move", async () => {
             const artifact_id = 101;
             const tracker_id = 5;
 
-            moveArtifact(artifact_id, tracker_id);
+            mockFetchSuccess(patch);
+
+            await expectAsync(moveArtifact(artifact_id, tracker_id)).toBeResolved();
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
@@ -107,11 +103,13 @@ describe("API querier", () => {
     });
 
     describe("moveDryRunArtifact", () => {
-        it("Given a tracker id, and a project id then it will process the dry run move", () => {
+        it("Given a tracker id, and a project id then it will process the dry run move", async () => {
             const artifact_id = 101;
             const tracker_id = 5;
 
-            moveDryRunArtifact(artifact_id, tracker_id);
+            mockFetchSuccess(patch);
+
+            await expectAsync(moveDryRunArtifact(artifact_id, tracker_id)).toBeResolved();
 
             expect(patch).toHaveBeenCalledWith("/api/artifacts/" + artifact_id, {
                 headers: { "content-type": "application/json" },
