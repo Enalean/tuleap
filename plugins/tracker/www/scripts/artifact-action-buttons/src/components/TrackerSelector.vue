@@ -21,7 +21,7 @@
     <label for="move-artifact-tracker-selector"
            v-bind:title="selector_title"
     >
-        <translate>Choose tracker</translate>
+        <translate>Destination tracker</translate>
         <span class="highlight">*</span>
         <select id="move-artifact-tracker-selector"
                 name="move-artifact-tracker-selector"

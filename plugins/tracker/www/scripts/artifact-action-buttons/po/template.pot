@@ -33,13 +33,7 @@ msgstr[1] ""
 msgid "An artifact cannot be moved in the same tracker"
 msgstr ""
 
-msgid "Choose project"
-msgstr ""
-
 msgid "Choose project..."
-msgstr ""
-
-msgid "Choose tracker"
 msgstr ""
 
 msgid "Choose tracker..."
@@ -49,6 +43,12 @@ msgid "Close"
 msgstr ""
 
 msgid "Confirm"
+msgstr ""
+
+msgid "Destination project"
+msgstr ""
+
+msgid "Destination tracker"
 msgstr ""
 
 msgid "Move"
