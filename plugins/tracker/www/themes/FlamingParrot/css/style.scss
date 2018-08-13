@@ -1,6 +1,6 @@
 @import '../../default/css/style.scss';
 
-@mixin definitions($main, $main-background) {
+@mixin definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info) {
     .widget_content #tracker_report_table > thead > tr > th {
         border-bottom-color: #B2B2B2;
     }
@@ -107,34 +107,46 @@
     .alert-error.move-artifact-error {
         margin: 15px;
     }
+
+    .move-artifact-display-more-field-not-migrated {
+        color: $ui-color-danger;
+    }
+
+    .move-artifact-display-more-field-partially-migrated {
+        color: darken($ui-color-warning, 10%);
+    }
+
+    .move-artifact-display-more-field-fully-migrated {
+        color: darken($ui-color-info, 30%);
+    }
 }
 
 body {
     @import 'variables-orange';
-    @include definitions($main, $main-background);
+    @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
 
     &.FlamingParrot_Blue {
         @import 'variables-blue';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
 
     &.FlamingParrot_Green {
         @import 'variables-green';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
 
     &.FlamingParrot_BlueGrey {
         @import 'variables-bluegrey';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
 
     &.FlamingParrot_Purple {
         @import 'variables-purple';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
 
     &.FlamingParrot_Red {
         @import 'variables-red';
-        @include definitions($main, $main-background);
+        @include definitions($main, $main-background, $ui-color-danger, $ui-color-warning, $ui-color-info);
     }
 }

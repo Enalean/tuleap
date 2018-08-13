@@ -76,3 +76,6 @@ msgstr "Déplacer"
 
 msgid "Move artifact"
 msgstr "Déplacer l'artéfact"
+
+msgid "Show more"
+msgstr "Voir plus"

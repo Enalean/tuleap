@@ -23,17 +23,19 @@
         <translate v-bind:translate-n="getCountOfFullyMigratedField"
                    translate-plural="%{ getCountOfFullyMigratedField } fields will be fully migrated:"
         >%{ getCountOfFullyMigratedField } field will be fully migrated:</translate>
-        <ul>
-            <li v-for="field in getFullyMigratedFields" v-bind:key="field.field_id">{{ field.label }}</li>
-        </ul>
+        <field-error-message v-bind:fields="getFullyMigratedFields" v-bind:type="'fully-migrated'" />
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import FieldErrorMessage from "./FieldErrorMessage.vue";
 
 export default {
     name: "DryRunFullyMigratedFieldState",
+    components: {
+        FieldErrorMessage
+    },
     computed: {
         ...mapState({
             getFullyMigratedFields: state => state.dry_run_fields.fields_migrated

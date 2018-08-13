@@ -23,18 +23,19 @@
         <translate v-bind:translate-n="getCountOfPartiallyMigratedField"
                    translate-plural="%{ getCountOfPartiallyMigratedField } fields do not fully match with the targeted tracker. One value of the fields has not been found in targeted tracker, if you confirm your action, this value will be lost forever:"
         >%{ getCountOfPartiallyMigratedField } field do not fully match with the targeted tracker. One value of the field has not been found in targeted tracker, if you confirm your action, this value will be lost forever:</translate>
-        <ul>
-            <li v-for="field in getPartiallyMigratedFields" v-bind:key="field.field_id">{{ field.label }}</li>
-        </ul>
-
+        <field-error-message v-bind:fields="getPartiallyMigratedFields" v-bind:type="'partially-migrated'"/>
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import FieldErrorMessage from "./FieldErrorMessage.vue";
 
 export default {
     name: "DryRunPartiallyMigratedFieldState",
+    components: {
+        FieldErrorMessage
+    },
     computed: {
         ...mapState({
             getPartiallyMigratedFields: state => state.dry_run_fields.fields_partially_migrated

@@ -23,17 +23,19 @@
         <translate v-bind:translate-n="getCountOfNotMigratedField"
                    translate-plural="%{ getCountOfNotMigratedField } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
         >%{ getCountOfNotMigratedField } field do not match with the targeted tracker. If you confirm your action, its value will be lost forever:</translate>
-        <ul>
-            <li v-for="field in getNotMigratedFields" v-bind:key="field.field_id">{{ field.label }}</li>
-        </ul>
+        <field-error-message v-bind:fields="getNotMigratedFields" v-bind:type="'not-migrated'" />
     </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import FieldErrorMessage from "./FieldErrorMessage.vue";
 
 export default {
     name: "DryRunNotMigratedFieldState",
+    components: {
+        FieldErrorMessage
+    },
     computed: {
         ...mapState({
             getNotMigratedFields: state => state.dry_run_fields.fields_not_migrated
