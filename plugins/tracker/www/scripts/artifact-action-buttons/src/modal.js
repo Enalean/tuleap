@@ -35,9 +35,15 @@ export function init(vue_mount_point) {
 
     const RootComponent = Vue.extend(MoveModal);
 
-    const { trackerId, trackerName, trackerColor, artifactId } = vue_mount_point.dataset;
+    const { trackerId, trackerName, trackerColor, artifactId, projectId } = vue_mount_point.dataset;
 
-    setFromTracker(Number.parseInt(trackerId, 10), trackerName, trackerColor, artifactId);
+    setFromTracker(
+        Number.parseInt(trackerId, 10),
+        trackerName,
+        trackerColor,
+        artifactId,
+        projectId
+    );
 
     new RootComponent({}).$mount(vue_mount_point);
 }
