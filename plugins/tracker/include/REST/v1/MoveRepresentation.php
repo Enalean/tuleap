@@ -32,4 +32,9 @@ class MoveRepresentation
      * @var bool {@type bool} {@required false}
      */
     public $dry_run = false;
+
+    /**
+     * @var bool {@type bool} {@required false}
+     */
+    public $should_populate_feedback_on_success = false;
 }

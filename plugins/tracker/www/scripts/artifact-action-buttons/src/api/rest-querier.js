@@ -46,23 +46,20 @@ function getTrackerList(project_id) {
 }
 
 function moveDryRunArtifact(artifact_id, tracker_id) {
-    return processMove(artifact_id, tracker_id, true);
+    return processMove(artifact_id, tracker_id, true, false);
 }
 
 function moveArtifact(artifact_id, tracker_id) {
-    return processMove(artifact_id, tracker_id, false);
+    return processMove(artifact_id, tracker_id, false, true);
 }
 
-function processMove(artifact_id, tracker_id, dry_run) {
+function processMove(artifact_id, tracker_id, dry_run, should_populate_feedback_on_success) {
     const headers = {
         "content-type": "application/json"
     };
 
     const body = JSON.stringify({
-        move: {
-            tracker_id: tracker_id,
-            dry_run: dry_run
-        }
+        move: { tracker_id, dry_run, should_populate_feedback_on_success }
     });
 
     return patch("/api/artifacts/" + artifact_id, {
