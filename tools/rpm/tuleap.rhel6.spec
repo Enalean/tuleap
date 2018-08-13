@@ -356,7 +356,7 @@ Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: php-mediawiki-tuleap-123
+Requires: php-mediawiki-tuleap-123 >= 1.23.9-5
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
