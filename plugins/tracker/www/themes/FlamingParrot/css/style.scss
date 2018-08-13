@@ -103,6 +103,10 @@
             fill: $main;
         }
     }
+
+    .alert-error.move-artifact-error {
+        margin: 15px;
+    }
 }
 
 body {

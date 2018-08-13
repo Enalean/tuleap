@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.move-artifact-modal-body {
+    padding: 0;
+}
+
 #tracker-move-artifact-divider {
     margin: 0 0 5px;
 }
@@ -32,7 +36,6 @@
 
 .move-artifact-tracker-loader {
     width: 100%;
-    height: 100px;
     margin: 20px 10px 0;
 }
 
@@ -42,10 +45,19 @@
 
 .move-artifact-selectors {
     display: flex;
+    height: 100px;
+    padding: 15px;
+
+    &.move-artifact-selectors-preview {
+        height: auto;
+    }
 }
 
-.move-artifact-svg-project {
-    flex: 0 0 auto;
-    margin: 0 5px 0 0;
-    fill: $tlp-ui-white;
+.move-artifact-dry-run-messages {
+    padding: 15px;
+    border-top: 1px solid #f3f3f3;
+}
+
+.move-artifact-error-icon {
+    margin: 0 3px 0 0;
 }

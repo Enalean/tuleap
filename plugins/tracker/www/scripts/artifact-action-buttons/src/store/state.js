@@ -26,5 +26,12 @@ export default {
     selected_tracker: {
         tracker_id: null
     },
-    selected_project_id: null
+    selected_project_id: null,
+    dry_run_fields: {
+        fields_not_migrated: [],
+        fields_partially_migrated: [],
+        fields_migrated: []
+    },
+    has_processed_dry_run: false,
+    should_redirect: false
 };

@@ -19,7 +19,7 @@
 
 import { patch, recursiveGet } from "tlp-fetch";
 
-export { getProjectList, getTrackerList, moveArtifact };
+export { getProjectList, getTrackerList, moveDryRunArtifact, moveArtifact };
 
 function getProjectList() {
     return recursiveGet("/api/projects", {
@@ -45,14 +45,23 @@ function getTrackerList(project_id) {
     });
 }
 
+function moveDryRunArtifact(artifact_id, tracker_id) {
+    return processMove(artifact_id, tracker_id, true);
+}
+
 function moveArtifact(artifact_id, tracker_id) {
+    return processMove(artifact_id, tracker_id, false);
+}
+
+function processMove(artifact_id, tracker_id, dry_run) {
     const headers = {
         "content-type": "application/json"
     };
 
     const body = JSON.stringify({
         move: {
-            tracker_id: tracker_id
+            tracker_id: tracker_id,
+            dry_run: dry_run
         }
     });
 

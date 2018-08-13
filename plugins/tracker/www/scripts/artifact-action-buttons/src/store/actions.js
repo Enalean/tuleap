@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProjectList, getTrackerList, moveArtifact } from "../api/rest-querier.js";
+import {
+    getProjectList,
+    getTrackerList,
+    moveDryRunArtifact,
+    moveArtifact
+} from "../api/rest-querier.js";
 
 export async function loadTrackerList(context) {
     try {
@@ -52,6 +57,29 @@ function getAsyncProjectList(commit, projectList) {
 
 function getAsyncTrackerList(commit, trackerList) {
     commit("saveTrackers", trackerList);
+}
+
+export function moveDryRun(context, data) {
+    const [artifact_id, tracker_id] = data;
+
+    return moveDryRunArtifact(artifact_id, tracker_id)
+        .then(async response => {
+            const result = await response.json();
+
+            const { fields_partially_migrated, fields_not_migrated } = result.dry_run.fields;
+
+            if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
+                await move(context, data);
+                context.commit("setShouldRedirect", true);
+            } else {
+                context.commit("saveFields", result.dry_run.fields);
+                context.commit("setHasProcessedDryRun", true);
+            }
+        })
+        .catch(async e => {
+            const { error } = await e.response.json();
+            context.commit("setErrorMessage", error.message);
+        });
 }
 
 export function move(context, data) {

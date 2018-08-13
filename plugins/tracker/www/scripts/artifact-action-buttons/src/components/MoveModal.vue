@@ -32,19 +32,29 @@
                     <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
                     <move-modal-title />
                 </div>
-                <div class="modal-body">
+                <div class="modal-body move-artifact-modal-body">
                     <div v-if="isLoadingInitial || is_processing_move" class="move-artifact-loader"></div>
-                    <div v-if="hasError" class="alert alert-error">{{ getErrorMessage }}</div>
-                    <move-modal-selectors v-show="! is_processing_move"  />
+                    <div v-if="hasError" class="alert alert-error move-artifact-error">{{ getErrorMessage }}</div>
+                    <move-modal-selectors v-show="! is_processing_move" />
+                    <dry-run-preview v-if="hasProcessedDryRun && ! is_processing_move" />
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal"><translate>Close</translate></button>
                     <button type="button"
                             class="btn btn-primary"
-                            v-on:click="moveArtifact()"
+                            v-on:click="moveDryRunArtifact()"
                             v-bind:disabled="hasNoSelectedTracker || is_processing_move"
+                            v-show="! hasProcessedDryRun"
                     >
-                        <translate>Move</translate>
+                        <i class="icon-arrow-right"></i> <translate>Move artifact</translate>
+                    </button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            v-on:click="moveArtifact()"
+                            v-bind:disabled="is_processing_move"
+                            v-show="hasProcessedDryRun"
+                    >
+                        <i class="icon-ok"></i> <translate>Confirm</translate>
                     </button>
                 </div>
             </div>
@@ -54,6 +64,7 @@
 <script>
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
+import DryRunPreview from "./DryRunPreview.vue";
 import store from "../store/index.js";
 import { mapGetters, mapState } from "vuex";
 import $ from "jquery";
@@ -63,6 +74,7 @@ export default {
     name: "MoveModal",
     store,
     components: {
+        DryRunPreview,
         MoveModalTitle,
         MoveModalSelectors
     },
@@ -76,7 +88,9 @@ export default {
             isLoadingInitial: state => state.is_loading_initial,
             getErrorMessage: state => state.error_message,
             hasNoSelectedTracker: state => state.selected_tracker.tracker_id === null,
-            getSelectedTrackerId: state => state.selected_tracker.tracker_id
+            getSelectedTrackerId: state => state.selected_tracker.tracker_id,
+            hasProcessedDryRun: state => state.has_processed_dry_run,
+            shouldRedirect: state => state.should_redirect
         }),
         ...mapGetters(["hasError"])
     },
@@ -89,6 +103,15 @@ export default {
         });
     },
     methods: {
+        async moveDryRunArtifact() {
+            this.is_processing_move = true;
+            await this.$store.dispatch("moveDryRun", [getArtifactId(), this.getSelectedTrackerId]);
+
+            if (this.shouldRedirect) {
+                window.location.href = "/plugins/tracker/?aid=" + getArtifactId();
+            }
+            this.is_processing_move = false;
+        },
         async moveArtifact() {
             this.is_processing_move = true;
             await this.$store.dispatch("move", [getArtifactId(), this.getSelectedTrackerId]);

@@ -30,6 +30,9 @@ export default {
     saveTrackers(state, trackers) {
         state.trackers = trackers;
     },
+    saveFields(state, fields) {
+        state.dry_run_fields = fields;
+    },
     setErrorMessage(state, error_message) {
         state.error_message = error_message;
     },
@@ -40,6 +43,13 @@ export default {
         state.projects = [];
         state.trackers = [];
         state.selected_project_id = null;
+        state.dry_run_fields = {
+            fields_not_migrated: [],
+            fields_partially_migrated: [],
+            fields_migrated: []
+        };
+        state.has_processed_dry_run = false;
+        state.should_redirect = false;
 
         state.selected_tracker = {
             tracker_id: null
@@ -55,5 +65,11 @@ export default {
         state.selected_tracker = {
             tracker_id: null
         };
+    },
+    setHasProcessedDryRun(state, dry_run) {
+        state.has_processed_dry_run = dry_run;
+    },
+    setShouldRedirect(state, redirect) {
+        state.should_redirect = redirect;
     }
 };
