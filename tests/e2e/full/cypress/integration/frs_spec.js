@@ -46,10 +46,21 @@ describe("Frs", function() {
             cy.get("[data-test=frs-create-package-button]").click();
             cy.get("[data-test=feedback]").contains("Updated Package");
         });
+
+        it("can delete a package", function() {
+            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
+
+            cy.get("[data-test=remove-package]").click();
+            cy.get("[data-test=feedback]").contains("Package Deleted");
+        });
     });
 
     context("Frs releases", function() {
         it("can create a new release", function() {
+            cy.visit("/file/admin/package.php?func=add&group_id=" + this.projects.frs_project_id);
+            cy.get("[data-test=frs-create-package]").type("Package to test release");
+            cy.get("[data-test=frs-create-package-button]").click();
+
             cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
 
             cy.get("[data-test=create-release]").click({ force: true });
@@ -75,12 +86,5 @@ describe("Frs", function() {
 
             cy.get("[data-test=feedback]").contains("Release Deleted");
         });
-    });
-
-    it("can delete a package", function() {
-        cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
-
-        cy.get("[data-test=remove-package]").click();
-        cy.get("[data-test=feedback]").contains("Package Deleted");
     });
 });
