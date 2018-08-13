@@ -42,4 +42,4 @@ setup_user
 is_backend_svn_server_ready
 is_backend_web_server_ready
 
-su -c 'cypress run --project /tuleap/tests/e2e/distlp' -l runner
+su -c 'CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project /tuleap/tests/e2e/distlp' -l runner

@@ -6,6 +6,6 @@
     },
     "screenshotsFolder": "/output/screenshots",
     "videosFolder": "/output/videos",
-    "videoRecording": false,
+    "video": false,
     "pluginsFile": false
 }
