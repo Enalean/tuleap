@@ -621,7 +621,7 @@ class ReferenceManager {
      * Extract matches from input text according to the regexp
      */
     private function _extractMatches($html, $regexp) {
-        $locale = setlocale(LC_CTYPE, null);
+        $locale = setlocale(LC_CTYPE, "0");
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         $count = preg_match_all($regexp, $html, $matches, PREG_SET_ORDER);
         setlocale(LC_CTYPE, $locale);
