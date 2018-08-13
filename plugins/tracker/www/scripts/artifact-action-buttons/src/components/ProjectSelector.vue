@@ -19,7 +19,7 @@
 
 <template>
     <label for="move-artifact-project-selector">
-        <translate>Choose project</translate>
+        <translate>Destination project</translate>
         <span class="highlight">*</span>
 
 

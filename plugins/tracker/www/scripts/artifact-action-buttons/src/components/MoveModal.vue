@@ -46,7 +46,7 @@
                             v-bind:disabled="hasNoSelectedTracker || is_processing_move"
                             v-show="! hasProcessedDryRun"
                     >
-                        <i class="icon-arrow-right"></i> <translate>Move artifact</translate>
+                        <i class="icon-share-alt"></i> <translate>Move artifact</translate>
                     </button>
                     <button type="button"
                             class="btn btn-primary"
