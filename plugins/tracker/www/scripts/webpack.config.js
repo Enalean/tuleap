@@ -2,6 +2,7 @@ const path = require("path");
 const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
+const assets_public_path = "assets/";
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const path_to_tlp = path.resolve(__dirname, "../../../../src/www/themes/common/tlp/");
@@ -94,7 +95,9 @@ const webpack_config_for_artifacts = {
         MoveArtifactModal: "./artifact-action-buttons/src/index.js"
     },
     context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     externals: {
+        codendi: "codendi",
         jquery: "jQuery"
     },
     resolve: {
@@ -104,7 +107,6 @@ const webpack_config_for_artifacts = {
             webpack_configurator.jquery_mocks_alias
         )
     },
-    output: webpack_configurator.configureOutput(assets_dir_path),
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
@@ -121,7 +123,7 @@ const webpack_config_for_artifacts = {
 if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
     webpack_config_for_artifact_modal.devtool = "cheap-module-eval-source-map";
     webpack_config_for_burndown_chart.devtool = "cheap-module-eval-source-map";
-    webpack_config_for_artifacts.devtool      = "cheap-module-eval-source-map";
+    webpack_config_for_artifacts.devtool = "cheap-module-eval-source-map";
 }
 
 if (process.env.NODE_ENV === "production") {

@@ -17,30 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import MoveModal from "./components/MoveModal.vue";
-import { setFromTracker } from "./from-tracker-presenter.js";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import codendi from "codendi";
 
 document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
-    Vue.config.language = document.body.dataset.userLocale;
-
+    const move_link = document.getElementById("tracker-action-button-move");
     const vue_mount_point = document.getElementById("move-artifact-modal");
-    if (vue_mount_point) {
-        const RootComponent = Vue.extend(MoveModal);
+    const move_dropdown_icon = document.getElementById("tracker-artifact-action-icon");
 
-        const { trackerId, trackerName, trackerColor, artifactId } = vue_mount_point.dataset;
-
-        setFromTracker(Number.parseInt(trackerId, 10), trackerName, trackerColor, artifactId);
-
-        new RootComponent({}).$mount(vue_mount_point);
+    if (!move_link || !vue_mount_point || !move_dropdown_icon) {
+        return;
     }
+
+    move_link.addEventListener("click", async () => {
+        if (move_link.classList.contains("disabled") === true) {
+            return;
+        }
+
+        move_dropdown_icon.classList.add("icon-spin", "icon-spinner");
+        move_link.classList.add("disabled");
+        try {
+            const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal.js");
+
+            init(vue_mount_point);
+        } catch (e) {
+            codendi.feedback.log("error", "Error while loading the Move Artifact modal.");
+        } finally {
+            move_dropdown_icon.classList.remove("icon-spin", "icon-spinner");
+            move_link.classList.remove("disabled");
+        }
+    });
 });

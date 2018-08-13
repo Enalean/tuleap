@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const webpack = require('webpack');
-const WebpackAssetsManifest = require('webpack-assets-manifest');
-const AngularGettextPlugin = require('angular-gettext-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
-const rule_configurations = require('./webpack-rule-configs.js');
-const aliases = require('./webpack-aliases.js');
+const webpack = require("webpack");
+const WebpackAssetsManifest = require("webpack-assets-manifest");
+const AngularGettextPlugin = require("angular-gettext-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
+const rule_configurations = require("./webpack-rule-configs.js");
+const aliases = require("./webpack-aliases.js");
 
 function getManifestPlugin() {
     return new WebpackAssetsManifest({
-        output     : 'manifest.json',
-        merge      : true,
+        output: "manifest.json",
+        merge: true,
         writeToDisk: true
     });
 }
@@ -37,11 +37,17 @@ function getMomentLocalePlugin() {
     return new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /fr/);
 }
 
-function configureOutput(assets_dir_path) {
-    return {
+function configureOutput(assets_dir_path, public_path) {
+    const output = {
         path: assets_dir_path,
-        filename: '[name]-[chunkhash].js'
+        filename: "[name]-[chunkhash].js"
     };
+
+    if (public_path) {
+        output.publicPath = public_path;
+    }
+
+    return output;
 }
 
 function getVueLoaderPlugin() {
@@ -53,7 +59,7 @@ function getAngularGettextPlugin() {
         extractStrings: {
             input: "src/**/*.+(js|html)",
             lineNumbers: false,
-            destination: 'po/template.pot'
+            destination: "po/template.pot"
         }
     });
 }

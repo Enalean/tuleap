@@ -24,7 +24,6 @@
          role="dialog"
          aria-labelledby="modal-move-artifact-choose-trackers"
          aria-hidden="true"
-         ref="vuemodal"
     >
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -62,12 +61,12 @@
     </div>
 </template>
 <script>
+import { mapGetters, mapState } from "vuex";
+import $ from "jquery";
 import MoveModalTitle from "./MoveModalTitle.vue";
 import MoveModalSelectors from "./MoveModalSelectors.vue";
 import DryRunPreview from "./DryRunPreview.vue";
 import store from "../store/index.js";
-import { mapGetters, mapState } from "vuex";
-import $ from "jquery";
 import { getArtifactId } from "../from-tracker-presenter.js";
 
 export default {
@@ -95,12 +94,14 @@ export default {
         ...mapGetters(["hasError"])
     },
     mounted() {
-        $(this.$refs.vuemodal).on("show", () => {
+        const $modal = $(this.$el);
+        $modal.on("show", () => {
             this.$store.dispatch("loadProjectList");
         });
-        $(this.$refs.vuemodal).on("hidden", () => {
+        $modal.on("hidden", () => {
             this.$store.commit("resetState");
         });
+        $modal.modal();
     },
     methods: {
         async moveDryRunArtifact() {

@@ -1,7 +1,9 @@
 {{# has_at_least_one_action }}
     <div class="tracker-artifact-actions btn-group">
         <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-reorder"></i> {{# dgettext }} tuleap-tracker | Actions {{/ dgettext }}
+            <i class="icon-reorder"
+               id="tracker-artifact-action-icon"
+            ></i> {{# dgettext }} tuleap-tracker | Actions {{/ dgettext }}
             <span class="caret" id="tracker-action-icon"></span>
         </a>
         <ul class="dropdown-menu pull-right" id="tracker-action-button-section">

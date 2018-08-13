@@ -17,10 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BabelPresetEnv = require('babel-preset-env');
-const BabelPluginObjectRestSpread = require('babel-plugin-transform-object-rest-spread');
-const BabelPluginRewireExports = require('babel-plugin-rewire-exports').default;
-const BabelPluginIstanbul = require('babel-plugin-istanbul').default;
+const BabelPresetEnv = require("babel-preset-env");
+const BabelPluginObjectRestSpread = require("babel-plugin-transform-object-rest-spread");
+const BabelPluginSyntaxDynamicImport = require("babel-plugin-syntax-dynamic-import");
+const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
+const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
 
 const babel_preset_env_ie_config = [
     BabelPresetEnv,
@@ -36,7 +37,7 @@ const babel_preset_env_chrome_config = [
     BabelPresetEnv,
     {
         targets: {
-            browsers: ['last 2 Chrome versions']
+            browsers: ["last 2 Chrome versions"]
         },
         modules: false,
         useBuiltIns: true,
@@ -46,7 +47,7 @@ const babel_preset_env_chrome_config = [
 
 const babel_options_ie11 = {
     presets: [babel_preset_env_ie_config],
-    plugins: [BabelPluginObjectRestSpread]
+    plugins: [BabelPluginObjectRestSpread, BabelPluginSyntaxDynamicImport]
 };
 
 const babel_options_karma = {
@@ -55,17 +56,18 @@ const babel_options_karma = {
         production: babel_options_ie11,
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: [BabelPluginObjectRestSpread, BabelPluginRewireExports]
+            plugins: [BabelPluginObjectRestSpread, BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
             plugins: [
                 BabelPluginObjectRestSpread,
+                BabelPluginSyntaxDynamicImport,
                 BabelPluginRewireExports,
                 [
                     BabelPluginIstanbul,
                     {
-                        exclude: ['**/*.spec.js']
+                        exclude: ["**/*.spec.js"]
                     }
                 ]
             ]
@@ -79,7 +81,7 @@ function configureBabelRule(babel_options) {
         exclude: [/node_modules/, /vendor/, /bower_components/],
         use: [
             {
-                loader: 'babel-loader',
+                loader: "babel-loader",
                 options: babel_options
             }
         ]
@@ -89,19 +91,19 @@ function configureBabelRule(babel_options) {
 const rule_vue_loader = {
     test: /\.vue$/,
     exclude: /node_modules/,
-    use: [{ loader: 'vue-loader' }]
+    use: [{ loader: "vue-loader" }]
 };
 
 const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,
-    use: [{ loader: 'json-loader' }, { loader: 'po-gettext-loader' }]
+    use: [{ loader: "json-loader" }, { loader: "po-gettext-loader" }]
 };
 
 const rule_mustache_files = {
     test: /\.mustache$/,
     exclude: /node_modules/,
-    use: { loader: 'raw-loader' }
+    use: { loader: "raw-loader" }
 };
 
 const rule_ng_cache_loader = {
@@ -109,8 +111,8 @@ const rule_ng_cache_loader = {
     exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
         {
-            loader: 'ng-cache-loader',
-            query: '-url'
+            loader: "ng-cache-loader",
+            query: "-url"
         }
     ]
 };
@@ -120,8 +122,8 @@ const rule_angular_gettext_loader = {
     exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
         {
-            loader: 'angular-gettext-loader',
-            query: 'browserify=true'
+            loader: "angular-gettext-loader",
+            query: "browserify=true"
         }
     ]
 };
@@ -131,8 +133,8 @@ const rule_angular_gettext_extract_loader = {
     exclude: [/node_modules/, /vendor/, /bower_components/],
     use: [
         {
-            loader: 'angular-gettext-extract-loader',
-            query: 'pofile=po/template.pot'
+            loader: "angular-gettext-extract-loader",
+            query: "pofile=po/template.pot"
         }
     ]
 };
@@ -140,10 +142,7 @@ const rule_angular_gettext_extract_loader = {
 const rule_easygettext_loader = {
     test: /\.po$/,
     exclude: /node_modules/,
-    use: [
-        { loader: 'json-loader' },
-        { loader: 'easygettext-loader' }
-    ]
+    use: [{ loader: "json-loader" }, { loader: "easygettext-loader" }]
 };
 
 module.exports = {
