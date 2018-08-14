@@ -2,7 +2,7 @@
     "baseUrl": "https://reverse-proxy",
     "reporter": "junit",
     "reporterOptions": {
-        "mochaFile": "/output/results.xml"
+        "mochaFile": "/output/results-[hash].xml"
     },
     "screenshotsFolder": "/output/screenshots",
     "videosFolder": "/output/videos",

@@ -109,7 +109,7 @@ pipeline {
                         """
                     }
                     junit 'results/distlp-integration/distlp-svn-cli.xml'
-                    junit 'results/distlp-integration/results.xml'
+                    junit 'results/distlp-integration/results-*.xml'
                 },
                 'Build and run CentOS 6': {
                     dir ('sources') {
