@@ -154,7 +154,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $allowed = array('To', 'Cc', 'Bcc');
         if (in_array($recipient_type, $allowed)) {
             $headers = $this->message->getHeaders();
-            if ($headers->has('to')) {
+            if ($headers->has($recipient_type)) {
                 $recipient_header = $headers->get($recipient_type);
                 $list_addresses   = $recipient_header->getAddressList();
                 $addresses = array();
@@ -468,14 +468,12 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      */
     public function send()
     {
-        if ($this->getTo() === '') {
+        if (! $this->hasRecipients()) {
             return false;
         }
-
-        $params = array('mail'   => $this,
-                        'header' => $this->message->getHeaders());
-        $em = EventManager::instance();
-        $em->processEvent('mail_sendmail', $params);
+        if ($this->getTo() === '') {
+            $this->setTo('');
+        }
         $status = true;
 
         $mime_message = new MimeMessage();
@@ -494,6 +492,14 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         }
         $this->clearRecipients();
         return $status;
+    }
+
+    /**
+     * @return bool
+     */
+    private function hasRecipients()
+    {
+        return $this->getTo() !== '' || $this->getCc() !== '' || $this->getBcc() !== '';
     }
 
     private function getBodyPart()
