@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -137,15 +137,23 @@ class Tracker_Hierarchy {
      *
      * @return Array
      */
-    public function sortTrackerIds(array $tracker_ids) {
-        // God will kill plenty of kittens every day that this bug is not fixed:
-        // https://bugs.php.net/bug.php?id=50688
-        // Ignore all E_WARNING errors during the usort.
-        // Or use @usort()?
+    public function sortTrackerIds(array $tracker_ids)
+    {
+        // Due to a PHP bug for PHP version < 7, usage of exceptions
+        // in the callback of usort generate warnings (see https://bugs.php.net/bug.php?id=50688)
+        // Legend has it that many innocent kittens have been injured because of this bug.
+        // For PHP < 7, we ignore all E_WARNING errors during the usort.
         $old_level = error_reporting();
-        error_reporting($old_level ^ E_WARNING);
-        usort($tracker_ids, array($this, 'sortByLevel'));
-        error_reporting($old_level);
+        try {
+            if (\PHP_VERSION_ID < 70000) {
+                error_reporting($old_level ^ E_WARNING);
+            }
+            usort($tracker_ids, function ($tracker1_id, $tracker2_id) {
+                return $this->sortByLevel($tracker1_id, $tracker2_id);
+            });
+        } finally {
+            error_reporting($old_level);
+        }
         return $tracker_ids;
     }
 
@@ -175,7 +183,11 @@ class Tracker_Hierarchy {
         } catch (Exception $e) {
             return -1;
         }
-        return strcmp($level1, $level2);
+
+        if ($level1 === $level2) {
+            return 0;
+        }
+        return ($level1 < $level2) ? -1 : 1;
     }
 }
 ?>

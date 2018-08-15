@@ -395,14 +395,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      *
      * @return boolean
      */
-    public function canBeRemovedFromUsage() {
-        $container_sub_elements = count($this->getFormElements());
-
-        if ($container_sub_elements > 0) {
-            return false;
-        }
-
-        return true;
+    public function canBeRemovedFromUsage()
+    {
+        $form_elements = $this->getFormElements();
+        return $form_elements === null || count($form_elements) === 0;
     }
 
 

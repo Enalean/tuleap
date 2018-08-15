@@ -1,23 +1,24 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
@@ -32,7 +33,7 @@ class ValidTest extends TuleapTestCase {
     function testArgPropagate() {
         $v = new Valid();
         $v->disableFeedback();
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->expectOnce('isValid', array('value'));
         $v->addRule($r);
         $v->validate('value');
@@ -41,7 +42,7 @@ class ValidTest extends TuleapTestCase {
     function testRetPropagate() {
         $v = new Valid();
         $v->disableFeedback();
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', true);
         $v->addRule($r);
         $this->assertTrue($v->validate('value'));
@@ -52,15 +53,15 @@ class ValidTest extends TuleapTestCase {
         $v = new Valid();
         $v->disableFeedback();
 
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->setReturnValue('isValid', true);
         $v->addRule($r1);
 
-        $r2 =& new MockRule($this);
+        $r2 = new MockRule($this);
         $r2->setReturnValue('isValid', false);
         $v->addRule($r2);
 
-        $r3 =& new MockRule($this);
+        $r3 = new MockRule($this);
         $r3->setReturnValue('isValid', true);
         $v->addRule($r3);
 
@@ -72,17 +73,17 @@ class ValidTest extends TuleapTestCase {
         $v = new Valid();
         $v->disableFeedback();
 
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->setReturnValue('isValid', true);
         $r1->expectOnce('isValid');
         $v->addRule($r1);
 
-        $r2 =& new MockRule($this);
+        $r2 = new MockRule($this);
         $r2->setReturnValue('isValid', false);
         $r2->expectOnce('isValid');
         $v->addRule($r2);
 
-        $r3 =& new MockRule($this);
+        $r3 = new MockRule($this);
         $r3->setReturnValue('isValid', true);
         $r3->expectOnce('isValid');
         $v->addRule($r3);
@@ -95,7 +96,7 @@ class ValidTest extends TuleapTestCase {
         $v = new Valid();
         $v->disableFeedback();
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->expectOnce('getErrorMessage');
         $v->addRule($r);
@@ -107,7 +108,7 @@ class ValidTest extends TuleapTestCase {
         $v = new Valid();
         $v->disableFeedback();
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->expectNever('getErrorMessage');
         $v->addRule($r, 'warning', 'test');
@@ -116,20 +117,20 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testNotRequiredEmptyCall() {
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->expectNever('isValid');
         $v1 = new Valid();
         $v1->disableFeedback();
         $v1->addRule($r1);
         $v1->validate('');
 
-        $r2 =& new MockRule($this);
+        $r2 = new MockRule($this);
         $r2->expectNever('isValid');
         $v2 = new Valid();
         $v2->addRule($r2);
         $v2->validate(false);
 
-        $r3 =& new MockRule($this);
+        $r3 = new MockRule($this);
         $v3 = new Valid();
         $r3->expectNever('isValid');
         $v3->addRule($r3);
@@ -137,7 +138,7 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testRequiredEmptyCall() {
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->expectOnce('isValid');
         $v1 = new Valid();
         $v1->disableFeedback();
@@ -145,7 +146,7 @@ class ValidTest extends TuleapTestCase {
         $v1->addRule($r1);
         $v1->validate('');
 
-        $r2 =& new MockRule($this);
+        $r2 = new MockRule($this);
         $r2->expectOnce('isValid');
         $v2 = new Valid();
         $v2->disableFeedback();
@@ -153,7 +154,7 @@ class ValidTest extends TuleapTestCase {
         $v2->addRule($r2);
         $v2->validate(false);
 
-        $r3 =& new MockRule($this);
+        $r3 = new MockRule($this);
         $r3->expectOnce('isValid');
         $v3 = new Valid();
         $v3->disableFeedback();
@@ -167,7 +168,7 @@ class ValidTest extends TuleapTestCase {
      * even with empty values
      */
     function testRequiredAndPermissive() {
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', true);
 
         $v = new Valid();
@@ -186,11 +187,11 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testNoFeedback() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         $v->disableFeedback();
         $v->expectNever('addFeedback');
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $v->addRule($r);
 
@@ -198,12 +199,12 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testFeedback() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
         $v->expectOnce('addFeedback');
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->setReturnValue('getErrorMessage', 'error');
         $v->addRule($r);
@@ -212,13 +213,13 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testFeedbackErrorWhenRequired() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
         $v->required();
         $v->expectOnce('addFeedback', array('error', 'error message'));
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->setReturnValue('getErrorMessage', 'error message');
         $v->addRule($r);
@@ -227,12 +228,12 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testFeedbackWarning() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
         $v->expectOnce('addFeedback', array('warning', 'error message'));
 
-        $r =& new MockRule($this);
+        $r = new MockRule($this);
         $r->setReturnValue('isValid', false);
         $r->setReturnValue('getErrorMessage', 'error message');
         $v->addRule($r);
@@ -241,7 +242,7 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testFeedbackGlobal() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
         $v->expectOnce('addFeedback', array('warning', 'custom message'));
@@ -249,13 +250,13 @@ class ValidTest extends TuleapTestCase {
         $v->setErrorMessage('custom message');
 
         // Built-in message
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->setReturnValue('isValid', false);
         $r1->setReturnValue('getErrorMessage', 'built-in error message');
         $v->addRule($r1);
 
         // Developer message
-        $r2 =& new MockRule($this);
+        $r2 = new MockRule($this);
         $r2->setReturnValue('isValid', false);
         $v->addRule($r2, 'Just in time message');
 
@@ -263,7 +264,7 @@ class ValidTest extends TuleapTestCase {
     }
 
     function testFeedbackGlobalWithoutErrors() {
-        $v =& new ValidTestVersion($this);
+        $v = new ValidTestVersion($this);
         // Need to call the constructore manually
         $v->__construct();
         $v->expectNever('addFeedback');
@@ -271,7 +272,7 @@ class ValidTest extends TuleapTestCase {
         $v->setErrorMessage('custom message');
 
         // Built-in message
-        $r1 =& new MockRule($this);
+        $r1 = new MockRule($this);
         $r1->setReturnValue('isValid', true);
         $r1->setReturnValue('getErrorMessage', 'built-in error message');
         $v->addRule($r1);

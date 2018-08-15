@@ -97,8 +97,7 @@ class Tracker_FormElement_Container_FieldsetTest extends TuleapTestCase {
     public function testIsDeletableWithFields() {
         $fieldset = new Tracker_FormElement_Container_FieldsetTestVersion_for_afterSaveObject();
         $e1 = new MockTracker_FormElement_Field_Date();
-        $elements = array($e1);
-        $fieldset->setReturnReference('getFormElements', $e1);
+        $fieldset->setReturnValue('getFormElements', [$e1]);
         $this->assertFalse($fieldset->getCannotRemoveMessage());
     }
     

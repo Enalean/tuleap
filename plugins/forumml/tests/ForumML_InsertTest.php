@@ -1,8 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/ForumML_mimeDecode.class.php');
-require_once(dirname(__FILE__).'/../include/ForumMLInsert.class.php');
-require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
+require_once __DIR__ . '/../include/forummlPlugin.class.php';
 
 Mock::generatePartial('ForumMLInsert', 'ForumMLInsertTest', array('insertMessage', 'insertAttachment'));
 Mock::generate('ForumML_FileStorage');
@@ -15,6 +13,11 @@ class ForumML_InsertTest extends TuleapTestCase {
         parent::__construct($name);
         $this->_fixture     = dirname(__FILE__).'/_fixtures/samples';
 	}
+
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
 
 
     function getEmailStructure($path) {

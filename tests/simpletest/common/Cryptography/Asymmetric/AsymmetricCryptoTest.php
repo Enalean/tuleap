@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,23 +74,38 @@ class AsymmetricCryptoTest extends \TuleapTestCase
     {
         $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignatureSecretKey');
 
-        $this->expectException('\TypeError');
-        AsymmetricCrypto::sign(123456789, $secret_key);
+        try {
+            AsymmetricCrypto::sign(123456789, $secret_key);
+        } catch (\TypeError $error) {
+            $this->pass();
+            return;
+        }
+        $this->fail();
     }
 
     public function itRejectsSignatureVerificationOfNonStringMessage()
     {
         $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignaturePublicKey');
 
-        $this->expectException('\TypeError');
-        AsymmetricCrypto::verify(123456789, $secret_key, 'signature');
+        try {
+            AsymmetricCrypto::verify(123456789, $secret_key, 'signature');
+        } catch (\TypeError $error) {
+            $this->pass();
+            return;
+        }
+        $this->fail();
     }
 
     public function itRejectsSignatureVerificationOfNonStringSignature()
     {
         $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignaturePublicKey');
 
-        $this->expectException('\TypeError');
-        AsymmetricCrypto::verify('message', $secret_key, 123456789);
+        try {
+            AsymmetricCrypto::verify('message', $secret_key, 123456789);
+        } catch (\TypeError $error) {
+            $this->pass();
+            return;
+        }
+        $this->fail();
     }
 }

@@ -67,7 +67,6 @@ class MediawikiAdminController {
                     );
                 }
                 $service->renderInPage(
-                    $request,
                     $GLOBALS['Language']->getText('global', 'Administration'),
                     'language-pane-admin',
                     new MediawikiAdminLanguagePanePresenter(
@@ -79,7 +78,6 @@ class MediawikiAdminController {
             case 'permissions':
             default:
                 $service->renderInPage(
-                    $request,
                     $GLOBALS['Language']->getText('global', 'Administration'),
                     'permissions-pane-admin',
                     new MediawikiAdminPermissionsPanePresenter(

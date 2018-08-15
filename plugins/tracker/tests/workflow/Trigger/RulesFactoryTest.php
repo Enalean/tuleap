@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -160,9 +160,10 @@ class Tracker_Workflow_Trigger_RulesFactory_getRuleFromRequest_TriggerTest exten
 
         stub($this->formelement_factory)->getUsedFormElementFieldById("$this->trigger_field_id")->returns($this->trigger_field);
 
-        $rule = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
-        $this->assertCount($rule->getTriggers(), 1);
-        $rule1 = array_pop($rule->getTriggers());
+        $rule     = $this->factory->getRuleFromJson($this->tracker, $this->json_input);
+        $triggers = $rule->getTriggers();
+        $this->assertCount($triggers, 1);
+        $rule1 = array_pop($triggers);
         $this->assertEqual($rule1->getField(), $this->trigger_field);
         $this->assertEqual($rule1->getValue(), $this->trigger_field_value);
     }

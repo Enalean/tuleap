@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2016. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -91,7 +91,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
     /**
      * @var array
      */
-    private $trove_cats;
+    private $trove_cats = [];
 
     public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
         $this->request                         = $request;

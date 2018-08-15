@@ -223,7 +223,7 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
 
     public function itRejectsUnknownMail() {
         stub($this->tracker_factory)->getTrackerById(self::TRACKER_ID)->returns(mock('Tracker'));
-        stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
+        stub($this->user_manager)->getAllUsersByEmail()->returns([]);
 
         $incoming_message_builder = new Tracker_Artifact_IncomingMessageInsecureBuilder(
             $this->user_manager,

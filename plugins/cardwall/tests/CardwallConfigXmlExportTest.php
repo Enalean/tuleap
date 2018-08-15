@@ -63,6 +63,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
 
+        $this->cardwall_config2->shouldReceive('getDashboardColumns')->andReturn([]);
+
         $this->xml_exporter->export($this->root);
         $attributes = $this->root->cardwall->trackers->tracker->attributes();
         $this->assertEqual(count($this->root->cardwall->trackers->children()), 1);
@@ -86,6 +88,8 @@ class CardwallConfigXmlExportTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfXmlGeneratedIsNotValid() {
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker1)->once()->andReturn($this->cardwall_config);
         $this->config_factory->shouldReceive('getOnTopConfig')->with($this->tracker2)->once()->andReturn($this->cardwall_config2);
+
+        $this->cardwall_config2->shouldReceive('getDashboardColumns')->andReturn([]);
 
         $this->expectException();
 

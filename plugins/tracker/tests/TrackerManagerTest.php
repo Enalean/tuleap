@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -253,32 +254,30 @@ class TrackerManagerTest extends TuleapTestCase {
         $destinatnion_project_id = 120;
         $u_group_mapping         = array();
 
-        $tm = TestHelper::getPartialMock('TrackerManager', array('getTrackerFactory', 'getReferenceManager'));
+        $tm = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $tf = new MockTrackerFactory();
-        $tf->expectOnce('duplicate');
-        $tm->setReturnValue('getTrackerFactory', $tf);
-
+        $tf = Mockery::mock(TrackerFactory::class);
+        $tf->shouldReceive('duplicate')->once();
+        $tm->shouldReceive('getTrackerFactory')->andReturns($tf);
 
         $r1 = new Reference(101 , 'bug',   'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
         $r2 = new Reference(102 , 'issue', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
         $r3 = new Reference(103 , 'task',  'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
 
-        $rm = new MockReferenceManager();
-        $rm->expectOnce('getReferencesByGroupId', array($source_project_id));
-        $rm->setReturnValue('getReferencesByGroupId', array($r1, $r2, $r3));
-        $tm->setReturnValue('getReferenceManager', $rm);
+        $rm = Mockery::mock(ReferenceManager::class);
+        $rm->shouldReceive('getReferencesByGroupId')->with($source_project_id)->andReturns([$r1, $r2, $r3])->once();
+        $tm->shouldReceive('getReferenceManager')->andReturns($rm);
 
-        $t1 = new MockTracker();
-        $t1->setReturnValue('getItemName', 'bug');
-        $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
-        $t2 = new MockTracker();
-        $t2->setReturnValue('getItemName', 'task');
-        $t2->setReturnValue('mustBeInstantiatedForNewProjects', false);
+        $t1 = Mockery::mock(Tracker::class);
+        $t1->shouldReceive('getItemName')->andReturns('bug');
+        $t1->shouldReceive('mustBeInstantiatedForNewProjects')->andReturns(true);
+        $t2 = Mockery::mock(Tracker::class);
+        $t2->shouldReceive('getItemName')->andReturns('task');
+        $t2->shouldReceive('mustBeInstantiatedForNewProjects')->andReturns(false);
 
-        $tf->setReturnValue('getTrackersByGroupId', array($t1, $t2), $source_project_id);
+        $tf->shouldReceive('getTrackersByGroupId')->with($source_project_id)->andReturns([$t1, $t2]);
 
-        $rm->expectOnce('createReference', array($r2));
+        $rm->shouldReceive('createReference')->with($r2)->once();
 
         $tm->duplicate($source_project_id, $destinatnion_project_id, $u_group_mapping);
     }

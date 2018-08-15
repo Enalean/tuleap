@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,11 @@ use TuleapTestCase;
 
 class LoginUniqueAuthenticationUrlGeneratorTest extends TuleapTestCase
 {
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
+
     public function itGeneratesTheLoginUrlForTheProviderDefinedAsUniqueAuthenticationEndpoint()
     {
         $provider         = mock('Tuleap\OpenIDConnectClient\Provider\Provider');

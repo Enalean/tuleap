@@ -143,7 +143,7 @@ class Codendi_Request {
      * @param Valid  Validator to apply
      * @return boolean
      */
-    public function valid(&$validator) {
+    public function valid($validator) {
         return $validator->validate($this->get($validator->getKey()));
     }
 
@@ -153,7 +153,7 @@ class Codendi_Request {
      * @param Valid  Validator to apply
      * @return boolean
      */
-    public function validArray(&$validator) {
+    public function validArray($validator) {
         $isValid = true;
         $array = $this->get($validator->getKey());
         if (is_array($array)) {
@@ -179,7 +179,8 @@ class Codendi_Request {
      * @param Valid  Validator to apply
      * @return boolean
      */
-    public function validInArray($index, &$validator) {
+    public function validInArray($index, $validator)
+    {
         return $validator->validate($this->getInArray($index, $validator->getKey()));
     }
 
@@ -190,7 +191,7 @@ class Codendi_Request {
      * @param Rule  Validator to apply
      * @return boolean
      */
-    public function validKey($key, &$rule) {
+    public function validKey($key, $rule) {
         return $rule->isValid($this->get($key));
     }
 

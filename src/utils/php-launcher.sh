@@ -24,14 +24,24 @@
 
 set -e
 
+function findPHPCLI() {
+    local php56_remi_scl='/opt/remi/php56/root/usr/bin/php'
+    if [ -x "$php56_remi_scl" ]; then
+        echo "$php56_remi_scl"
+        return
+    fi
+    local php72_remi_scl='/opt/remi/php72/root/usr/bin/php'
+    if [ -x "$php72_remi_scl" ]; then
+        echo "$php72_remi_scl"
+        return
+    fi
+    echo "php"
+}
+
+
 # PHP path and parameters
 if [ -z "$PHP" ]; then
-    PHP="/opt/remi/php56/root/usr/bin/php"
-    if [ ! -x "$PHP" ]; then
-        if hash php 2> /dev/null; then
-            PHP="php"
-        fi
-    fi
+    PHP="$(findPHPCLI)"
 fi
 
 if [ -f "/usr/share/tuleap/VERSION" ]; then

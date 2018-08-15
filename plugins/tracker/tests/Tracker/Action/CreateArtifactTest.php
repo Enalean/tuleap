@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -133,6 +133,7 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->tracker)->returns($this->art_link_field);
         stub($this->art_link_field)->getId()->returns(333);
         stub($this->request)->get('artifact')->returns(array(333 => array('parent' => Tracker_FormElement_Field_ArtifactLink::CREATE_NEW_PARENT_VALUE)));
+        stub($this->new_artifact)->getAllAncestors($this->current_user)->returns([]);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect, $this->request);
         $this->assertNotNull($this->redirect->query_parameters);

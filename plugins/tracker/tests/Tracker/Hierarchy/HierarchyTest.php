@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -172,12 +172,28 @@ class Tracker_Hierarchy_SortTest extends TuleapTestCase {
         $this->assertEqual(array(111, 112, 113), $hierarchy->sortTrackerIds(array(112, 113, 111)));
     }
 
-    public function itReturnsTrackersFromTopToBottomAndTrackerNotInHierarchyAtTheEnd() {
+    public function itReturnsTrackersFromTopToBottomAndTrackerNotInHierarchyAtTheEnd()
+    {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 113);
         $hierarchy->addRelationship(111, 112);
 
-        $this->assertEqual(array(111, 112, 113, 667, 668, 666), $hierarchy->sortTrackerIds(array(667, 111, 666, 112, 668, 113)));
+        // Sorts in PHP are not expected to be stable (https://bugs.php.net/bug.php?id=69158)
+        // and since trackers 666, 667 and 668 are not hierarchy
+        // they can be placed at any positions at the end
+        // That means we can have something like [111, 112, 113, 667, 668, 666]
+        // or [111, 112, 113, 668, 666, 667] or …
+        $sorted_tracker_ids = $hierarchy->sortTrackerIds([667, 111, 666, 112, 668, 113]);
+        $this->assertEqual([111, 112, 113], array_slice($sorted_tracker_ids, 0, 3));
+        foreach ([666, 667, 668] as $not_in_hierarchy_tracker_id) {
+            $this->assertTrue(
+                in_array(
+                    $not_in_hierarchy_tracker_id,
+                    array_slice($sorted_tracker_ids, 3, 3),
+                    true
+                )
+            );
+        }
     }
 }
 

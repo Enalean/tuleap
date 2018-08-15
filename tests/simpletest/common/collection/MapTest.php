@@ -13,27 +13,27 @@ require_once('common/collection/Collection.class.php');
 class MapTest extends TuleapTestCase {
 
     function testEmptyMap() {
-        $m =& new Map();
+        $m = new Map();
         $this->assertTrue($m->isEmpty());
     }	
     function testNonEmptyMap() {
         $key = 'key';
-        $m =& new Map();
+        $m = new Map();
         $value = 'value';
         $m->put($key, $value);
         $this->assertFalse($m->isEmpty());
     }
     function testOneValue() {
         $key = 'key';
-        $m =& new Map();
+        $m = new Map();
         $value = new StdClass();
         $m->put($key, $value);
-        $this->assertReference($value, $m->get($key));
+        $this->assertEqual($value, $m->get($key));
     }
     function testNoValue() {
         $key = 'key';
         $false_key = 'false_key';
-        $m =& new Map();
+        $m = new Map();
         $value = new StdClass();
         $m->put($key, $value);
         $this->assertFalse($m->get($false_key));
@@ -41,18 +41,18 @@ class MapTest extends TuleapTestCase {
     function testTwoValues() {
         $key1 = 'key1';
         $key2 = 'key2';
-        $m =& new Map();
+        $m = new Map();
         $value1 = new StdClass();
         $m->put($key1, $value1);
         $value2 = new StdClass();
         $m->put($key2, $value2);
-        $this->assertReference($value1, $m->get($key1));
-        $this->assertReference($value2, $m->get($key2));
+        $this->assertEqual($value1, $m->get($key1));
+        $this->assertEqual($value2, $m->get($key2));
     }
     function testSize() {
         $key1 = 'key1';
         $key2 = 'key2';
-        $m =& new Map();
+        $m = new Map();
         $value1 = new StdClass();
         $m->put($key1, $value1);
         $value2 = new StdClass();
@@ -62,13 +62,13 @@ class MapTest extends TuleapTestCase {
     function testGetKeys() {
         $key1 = 'key1';
         $key2 = 'key2';
-        $m =& new Map();
+        $m = new Map();
         $value1 = new StdClass();
         $m->put($key1, $value1);
         $value2 = new StdClass();
         $m->put($key2, $value2);
-        $keys =& $m->getKeys();
-        $expected =& new Collection();
+        $keys = $m->getKeys();
+        $expected = new Collection();
         $expected->add($key1);
         $expected->add($key2);
         $this->assertTrue($keys->equals($expected));
@@ -77,7 +77,7 @@ class MapTest extends TuleapTestCase {
         $key            = 'key';
         $value          = 'value';
         $does_not_exist = 'does not exist';
-        $m =& new Map();
+        $m = new Map();
         $m->put($key, $value);
         $this->assertTrue($m->containsKey($key));
         $this->assertTrue($m->containsValue($value));
@@ -87,8 +87,8 @@ class MapTest extends TuleapTestCase {
     function testEquals() {
         $key            = 'key';
         $value          = new StdClass();
-        $m1 =& new Map();
-        $m2 =& new Map();
+        $m1 = new Map();
+        $m2 = new Map();
         $this->assertTrue($m1->equals($m2));
         $m1->put($key, $value);
         $this->assertFalse($m1->equals($m2));
@@ -102,7 +102,7 @@ class MapTest extends TuleapTestCase {
     function testRemove() {
         $key            = 'key';
         $value          = new StdClass();
-        $m =& new Map();
+        $m = new Map();
         $m->put($key, $value);
         $this->assertTrue($m->containsKey($key));
         $this->assertTrue($m->containsValue($value));
@@ -114,7 +114,7 @@ class MapTest extends TuleapTestCase {
         $key    = 'key';
         $value1 = 'value';
         $value2 = 'value';
-        $m =& new Map();
+        $m = new Map();
         $m->put($key, $value1);
         $this->assertTrue($m->remove($key, $value2));
     }

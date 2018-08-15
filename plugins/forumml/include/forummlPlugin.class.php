@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
+require_once __DIR__ . '/autoload.php';
 
 class ForumMLPlugin extends Plugin {
     const SEARCH_TYPE = 'mail';
@@ -57,11 +57,12 @@ class ForumMLPlugin extends Plugin {
     /**
      * Return true if current project has the right to use this plugin.
      */
-    function isAllowed() {
-        $request =& HTTPRequest::instance();
+    public function isAllowed($group_id)
+    {
+        $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if(!isset($this->allowedForProject[$group_id])) {
-            $pM =& PluginManager::instance();
+            $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -110,7 +111,7 @@ class ForumMLPlugin extends Plugin {
      * @see Event::SEARCH_TYPES_PRESENTERS
      */
     public function search_types_presenters($params) {
-        if ($this->isAllowed() && ! $params['project']->isError()) {
+        if ($this->isAllowed($params['project']->getId()) && ! $params['project']->isError()) {
             $lists = array();
             $dao = new MailingListDao();
             foreach ($dao->searchByProject($params['project']->getId()) as $row) {

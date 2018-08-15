@@ -47,7 +47,7 @@ class ReferenceManagerTest extends TuleapTestCase {
     }
     
     function testSingleton() {
-        $this->assertReference(ReferenceManager::instance(), ReferenceManager::instance());
+        $this->assertEqual(ReferenceManager::instance(), ReferenceManager::instance());
         $this->assertIsA(ReferenceManager::instance(), 'ReferenceManager');
     }
 
