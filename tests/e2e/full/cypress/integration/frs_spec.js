@@ -25,66 +25,69 @@ describe("Frs", function() {
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-
-        cy.loadProjectConfig();
+        cy.visitProjectService("frs-project", "Files");
     });
 
     context("Frs packages", function() {
         it("can create a new package", function() {
-            cy.visit("/file/admin/package.php?func=add&group_id=" + this.projects.frs_project_id);
-
+            cy.get("[data-test=create-new-package]").click();
             cy.get("[data-test=frs-create-package]").type("My first package");
             cy.get("[data-test=frs-create-package-button]").click();
-            cy.get("[data-test=feedback]").contains("Added Package");
+            cy.get("[data-test=feedback]").contains("Added Package", {
+                timeout: 30000
+            });
         });
 
         it("can update a package", function() {
-            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
-
             cy.get("[data-test=update-package]").click();
             cy.get("[data-test=frs-create-package]").type(" edited");
             cy.get("[data-test=frs-create-package-button]").click();
-            cy.get("[data-test=feedback]").contains("Updated Package");
+            cy.get("[data-test=feedback]").contains("Updated Package", {
+                timeout: 30000
+            });
         });
 
         it("can delete a package", function() {
-            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
-
             cy.get("[data-test=remove-package]").click();
-            cy.get("[data-test=feedback]").contains("Package Deleted");
+            cy.get("[data-test=feedback]").contains("Package Deleted", {
+                timeout: 30000
+            });
         });
     });
 
     context("Frs releases", function() {
         it("can create a new release", function() {
-            cy.visit("/file/admin/package.php?func=add&group_id=" + this.projects.frs_project_id);
+            cy.get("[data-test=create-new-package]").click();
             cy.get("[data-test=frs-create-package]").type("Package to test release");
             cy.get("[data-test=frs-create-package-button]").click();
 
-            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
+            cy.visitProjectService("frs-project", "Files");
 
             cy.get("[data-test=create-release]").click({ force: true });
             cy.get("[data-test=release-name]").type("My release name");
             cy.get("[data-test=create-release-button]").click();
 
-            cy.get("[data-test=feedback]").contains("Added Release");
+            cy.get("[data-test=feedback]").contains("Added Release", {
+                timeout: 30000
+            });
         });
 
         it("can update a release", function() {
-            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
-
             cy.get("[data-test=edit-release]").click({ force: true });
             cy.get("[data-test=release-name]").type(" edited");
             cy.get("[data-test=create-release-button]").click();
 
-            cy.get("[data-test=feedback]").contains("Updated Release");
+            cy.get("[data-test=feedback]").contains("Updated Release", {
+                timeout: 30000
+            });
         });
 
         it("can delete a release", function() {
-            cy.visit("/file/showfiles.php?group_id=" + this.projects.frs_project_id);
             cy.get("[data-test=release-delete-button]").click({ force: true });
 
-            cy.get("[data-test=feedback]").contains("Release Deleted");
+            cy.get("[data-test=feedback]").contains("Release Deleted", {
+                timeout: 30000
+            });
         });
     });
 });

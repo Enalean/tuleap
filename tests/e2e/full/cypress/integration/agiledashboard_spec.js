@@ -18,19 +18,17 @@
  */
 
 describe("Agiledashboard", () => {
-    beforeEach(function () {
-        cy.loadProjectConfig();
-    });
-
     it("should start scrum", function() {
         cy.login();
+        cy.visitProjectService("permissions-project-01", "Agile Dashboard");
 
-        cy.visit('/plugins/agiledashboard/?group_id=' +  this.projects.permission_project_id);
+        cy.get("[data-test=start-scrum]").click();
 
-        cy.get('[data-test=start-scrum]').click();
-
-        cy.get('[data-test=feedback]').contains('We created an initial scrum configuration for you. Enjoy!', {
-            timeout: 20000
-        });
+        cy.get("[data-test=feedback]").contains(
+            "We created an initial scrum configuration for you. Enjoy!",
+            {
+                timeout: 20000
+            }
+        );
     });
 });

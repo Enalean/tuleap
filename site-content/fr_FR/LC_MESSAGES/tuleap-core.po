@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -295,6 +295,9 @@ msgstr "Nom du tableau de bord"
 msgid "Dashboard of the project"
 msgstr "Dashboard du projet"
 
+msgid "Data"
+msgstr "Données"
+
 msgid "Date"
 msgstr "Date"
 
@@ -442,6 +445,9 @@ msgstr "Détails du groupe"
 
 msgid "Group members"
 msgstr "Membres du groupe"
+
+msgid "Groups"
+msgstr "Groupes"
 
 msgid "Heartbeat"
 msgstr "Activité"
@@ -788,6 +794,9 @@ msgstr "Rang"
 
 msgid "Recently"
 msgstr "Récemment"
+
+msgid "References"
+msgstr "Références"
 
 msgid "Remove"
 msgstr "Retirer"
@@ -1383,32 +1392,11 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 msgid "back to home page"
 msgstr "Retour à la page d'accueil"
 
-msgid "categories"
-msgstr "catégories"
-
-msgid "data"
-msgstr "données"
-
-msgid "details"
-msgstr "détails"
-
-msgid "groups"
-msgstr "groupes"
-
-msgid "labels"
-msgstr "labels"
-
 msgid "my_service"
 msgstr "mon_service"
 
 msgid "permissions"
 msgstr "permissions"
-
-msgid "references"
-msgstr "références"
-
-msgid "services"
-msgstr "services"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

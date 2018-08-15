@@ -25,8 +25,6 @@ describe("Project admin", function() {
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-
-        cy.loadProjectConfig();
     });
 
     context("project basic administration", function() {
@@ -41,9 +39,8 @@ describe("Project admin", function() {
         });
 
         it("should be able to add users to a public project", function() {
-            cy.visit(
-                "project/admin/members.php?group_id=" + this.projects.project_admin_project_id
-            );
+            cy.visitProjectService("project-admin-test", "Admin");
+            cy.contains("Members").click();
 
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
@@ -58,9 +55,7 @@ describe("Project admin", function() {
         });
 
         it("should verify that icon for project visibility is correct", function() {
-            cy.visit(
-                "project/admin/members.php?group_id=" + this.projects.project_admin_project_id
-            );
+            cy.visitProjectService("project-admin-test", "Admin");
 
             cy.get(".project-sidebar-title-icon").then($icon => {
                 expect($icon[0].className).to.contains("fa-unlock");
@@ -68,9 +63,8 @@ describe("Project admin", function() {
         });
 
         it("should verify that my project administrator can enable a new service", function() {
-            cy.visit(
-                "project/admin/servicebar.php?group_id=" + this.projects.project_admin_project_id
-            );
+            cy.visitProjectService("project-admin-test", "Admin");
+            cy.contains("Services").click();
 
             cy.get('[data-test="service-plugin_svn"]').click();
             cy.get('[data-test="service-plugin_svn-is-used"]').check();
