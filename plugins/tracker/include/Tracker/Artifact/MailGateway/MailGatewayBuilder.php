@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
 
 class Tracker_Artifact_MailGateway_MailGatewayBuilder {
@@ -26,11 +27,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
      * @var Tracker_Artifact_MailGateway_CitationStripper
      */
     private $citation_stripper;
-
-    /**
-     * @var Tracker_Artifact_MailGateway_Parser
-     */
-    private $parser;
 
     /**
      * @var Tracker_Artifact_MailGateway_IncomingMessageFactory
@@ -71,7 +67,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
     private $formelement_factory;
 
     public function __construct(
-        Tracker_Artifact_MailGateway_Parser $parser,
         Tracker_Artifact_MailGateway_IncomingMessageFactory $incoming_message_factory,
         Tracker_Artifact_MailGateway_CitationStripper $citation_stripper,
         Tracker_Artifact_MailGateway_Notifier $notifier,
@@ -83,7 +78,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         MailGatewayFilter $mail_filter
     ) {
         $this->logger                   = $logger;
-        $this->parser                   = $parser;
         $this->incoming_message_factory = $incoming_message_factory;
         $this->citation_stripper        = $citation_stripper;
         $this->notifier                 = $notifier;
@@ -94,11 +88,10 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         $this->mail_filter              = $mail_filter;
     }
 
-    public function build($raw_mail)
+    public function build(IncomingMail $incoming_mail)
     {
-        if ($this->isATokenMail($raw_mail)) {
+        if ($this->isATokenMail($incoming_mail)) {
             return new Tracker_Artifact_MailGateway_TokenMailGateway(
-                $this->parser,
                 $this->incoming_message_factory,
                 $this->citation_stripper,
                 $this->notifier,
@@ -112,7 +105,6 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         }
 
         return new Tracker_Artifact_MailGateway_InsecureMailGateway(
-            $this->parser,
             $this->incoming_message_factory,
             $this->citation_stripper,
             $this->notifier,
@@ -125,9 +117,16 @@ class Tracker_Artifact_MailGateway_MailGatewayBuilder {
         );
     }
 
-    private function isATokenMail($raw_mail) {
-        $raw_mail_parsed = $this->parser->parse($raw_mail);
-
-        return strpos($raw_mail_parsed['headers']['to'], trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE) !== false;
+    /**
+     * @return bool
+     */
+    private function isATokenMail(IncomingMail $mail)
+    {
+        foreach ($mail->getTo() as $address) {
+            if (strpos($address, trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }

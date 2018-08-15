@@ -1,7 +1,7 @@
 #!/usr/share/codendi/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,12 +53,10 @@ $incoming_message_factory = new Tracker_Artifact_MailGateway_IncomingMessageFact
 );
 $incoming_mail_dao = new Tracker_Artifact_Changeset_IncomingMailDao();
 
-$parser              = new Tracker_Artifact_MailGateway_Parser();
 $citation_stripper   = new Tracker_Artifact_MailGateway_CitationStripper();
 $notifier            = new Tracker_Artifact_MailGateway_Notifier();
 $filter              = new MailGatewayFilter();
 $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
-    $parser,
     $incoming_message_factory,
     $citation_stripper,
     $notifier,
@@ -69,10 +67,11 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $logger,
     $filter
 );
-$mailgateway = $mailgateway_builder->build($raw_mail);
+$incoming_mail = new \Tuleap\Tracker\Artifact\MailGateway\IncomingMail($raw_mail);
+$mailgateway   = $mailgateway_builder->build($incoming_mail);
 
 try {
-    $mailgateway->process($raw_mail);
+    $mailgateway->process($incoming_mail);
 } catch (Exception $e) {
     $logger->error($e->getMessage());
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 require_once __DIR__.'/../../../bootstrap.php';
 
@@ -47,17 +49,13 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => '',
-                'to'      => '',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([]);
 
         $this->expectException('Tracker_Artifact_MailGateway_InvalidMailHeadersException');
-        $incoming_message_builder->build($raw_mail);
+        $incoming_message_builder->build($incoming_mail);
     }
 
     public function itDoesNotAcceptInvalidToHeader() {
@@ -70,18 +68,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL,
-                'to'      => '',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '@example.com']);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $raw_mail['headers']['to'] = trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '@example.com';
         try {
-            $incoming_message_builder->build($raw_mail);
+            $incoming_message_builder->build($incoming_mail);
             $this->fail();
         } catch (Tracker_Artifact_MailGateway_TrackerIdMissingException $e) {}
     }
@@ -96,16 +91,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => self::TRACKER_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message = $incoming_message_builder->build($raw_mail);
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
         $user             = $incoming_message->getUser();
         $tracker          = $incoming_message->getTracker();
         $this->assertNotNull($user);
@@ -122,17 +115,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => '',
-                'cc'      => self::TRACKER_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([self::TRACKER_MAIL]);
 
-        $incoming_message = $incoming_message_builder->build($raw_mail);
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
         $user             = $incoming_message->getUser();
         $tracker          = $incoming_message->getTracker();
         $this->assertNotNull($user);
@@ -148,16 +138,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => self::TRACKER_MAIL  . ',' . 'unknown@example.com',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL, 'unknown@example.com']);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message = $incoming_message_builder->build($raw_mail);
+        $incoming_message = $incoming_message_builder->build($incoming_mail);
         $user             = $incoming_message->getUser();
         $tracker          = $incoming_message->getTracker();
         $this->assertNotNull($user);
@@ -175,16 +163,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => self::ARTIFACT_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::ARTIFACT_MAIL]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message  = $incoming_message_builder->build($raw_mail);
+        $incoming_message  = $incoming_message_builder->build($incoming_mail);
         $artifact          = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
@@ -200,17 +186,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => '',
-                'cc'      => self::ARTIFACT_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([self::ARTIFACT_MAIL]);
 
-        $incoming_message  = $incoming_message_builder->build($raw_mail);
+        $incoming_message  = $incoming_message_builder->build($incoming_mail);
         $artifact          = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
@@ -226,16 +209,14 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL . ' (User Name)',
-                'to'      => self::ARTIFACT_MAIL . ',' . 'unknown@example.com',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::ARTIFACT_MAIL, 'unknown@example.com']);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
-        $incoming_message  = $incoming_message_builder->build($raw_mail);
+        $incoming_message  = $incoming_message_builder->build($incoming_mail);
         $artifact          = $incoming_message->getArtifact();
         $this->assertNotNull($artifact);
     }
@@ -250,17 +231,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => 'unknown@example.com',
-                'to'      => self::TRACKER_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns(['unknown@example.com']);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
         $this->expectException('Tracker_Artifact_MailGateway_RecipientUserDoesNotExistException');
-        $incoming_message_builder->build($raw_mail);
+        $incoming_message_builder->build($incoming_mail);
     }
 
     public function itRejectsMailWithMultipleUsers() {
@@ -273,17 +252,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL,
-                'to'      => self::TRACKER_MAIL,
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([self::TRACKER_MAIL]);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
         $this->expectException('Tracker_Artifact_MailGateway_MultipleUsersExistException');
-        $incoming_message_builder->build($raw_mail);
+        $incoming_message_builder->build($incoming_mail);
     }
 
     public function itRejectsUnknownTracker() {
@@ -296,20 +273,18 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL,
-                'to'      => trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+99999999@example.com',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION . '+99999999@example.com']);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
         $this->expectException('Tracker_Artifact_MailGateway_TrackerDoesNotExistException');
-        $incoming_message_builder->build($raw_mail);
+        $incoming_message_builder->build($incoming_mail);
     }
 
-    public function itRejectsUnknowArtifact() {
+    public function itRejectsUnknownArtifact() {
         stub($this->artifact_factory)->getArtifactById(self::TRACKER_ID)->returns(mock('Tracker_Artifact'));
         stub($this->user_manager)->getAllUsersByEmail(self::USER_MAIL)->returns(array(mock('PFUser')));
 
@@ -319,17 +294,15 @@ class Tracker_Artifact_IncomingMessageInsecureBuilderTest extends TuleapTestCase
             $this->artifact_factory
         );
 
-        $raw_mail = array(
-            'headers' => array(
-                'from'    => self::USER_MAIL,
-                'to'      => trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+99999999@example.com',
-                'subject' => ''
-            ),
-            'body'    => ''
-        );
+        $incoming_mail = Mockery::mock(IncomingMail::class);
+        $incoming_mail->shouldReceive('getSubject')->andReturns('Subject');
+        $incoming_mail->shouldReceive('getBodyText')->andReturns('Body');
+        $incoming_mail->shouldReceive('getFrom')->andReturns([self::USER_MAIL]);
+        $incoming_mail->shouldReceive('getTo')->andReturns([trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE . '+99999999@example.com']);
+        $incoming_mail->shouldReceive('getCC')->andReturns([]);
 
         $this->expectException('Tracker_Artifact_MailGateway_ArtifactDoesNotExistException');
-        $incoming_message_builder->build($raw_mail);
+        $incoming_message_builder->build($incoming_mail);
     }
 
 }

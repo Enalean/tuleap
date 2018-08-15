@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 
 class Tracker_Artifact_MailGateway_IncomingMessageFactory {
@@ -43,13 +44,14 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactory {
     /**
      * @return Tracker_Artifact_MailGateway_IncomingMessage
      */
-    public function build(array $raw_mail) {
+    public function build(IncomingMail $incoming_mail)
+    {
         $incoming_message = null;
 
         if ($this->tracker_config->isTokenBasedEmailgatewayEnabled()) {
-            $incoming_message = $this->incoming_message_token_builder->build($raw_mail);
+            $incoming_message = $this->incoming_message_token_builder->build($incoming_mail);
         } elseif ($this->tracker_config->isInsecureEmailgatewayEnabled()) {
-            $incoming_message = $this->buildIncomingMessageInInsecureMode($raw_mail);
+            $incoming_message = $this->buildIncomingMessageInInsecureMode($incoming_mail);
         }
 
         return $incoming_message;
@@ -58,18 +60,24 @@ class Tracker_Artifact_MailGateway_IncomingMessageFactory {
     /**
      * @return Tracker_Artifact_MailGateway_IncomingMessage
      */
-    private function buildIncomingMessageInInsecureMode(array $raw_mail) {
-        if ($this->isATokenMail($raw_mail['headers']['to'])) {
-            return $this->incoming_message_token_builder->build($raw_mail);
-        } else {
-            return $this->incoming_message_insecure_builder->build($raw_mail);
+    private function buildIncomingMessageInInsecureMode(IncomingMail $incoming_mail)
+    {
+        if ($this->isATokenMail($incoming_mail)) {
+            return $this->incoming_message_token_builder->build($incoming_mail);
         }
+        return $this->incoming_message_insecure_builder->build($incoming_mail);
     }
 
     /**
      * @return bool
      */
-    private function isATokenMail($mail_header_to) {
-        return strpos($mail_header_to, trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE) !== false;
+    private function isATokenMail(IncomingMail $mail)
+    {
+        foreach ($mail->getTo() as $address) {
+            if (strpos($address, trackerPlugin::EMAILGATEWAY_TOKEN_ARTIFACT_UPDATE) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 }
