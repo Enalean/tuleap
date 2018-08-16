@@ -15,7 +15,7 @@ services:
 
   tuleap:
     container_name: ${BUILD_TAG}tuleap_runtests_backend-web-e2e
-    image: enalean/tuleap-test-rest:c6-php56-mysql56
+    image: enalean/tuleap-aio
     command: /usr/share/tuleap/tests/e2e/full/tuleap/setup.sh
     volumes:
       - .:/usr/share/tuleap
