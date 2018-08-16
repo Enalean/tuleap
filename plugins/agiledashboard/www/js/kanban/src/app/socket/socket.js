@@ -4,7 +4,6 @@ import jwt from '../jwt/jwt.js';
 import 'angular-gettext';
 
 import SocketConfig              from './socket-config.js';
-import SocketDisconnectDirective from './socket-disconnect-directive.js';
 import SocketFactory             from './socket-factory.js';
 import SocketService             from './socket-service.js';
 
@@ -15,7 +14,6 @@ angular.module('socket', [
     'gettext'
 ])
 .config(SocketConfig)
-.directive('socketDisconnect', SocketDisconnectDirective)
 .service('SocketFactory', SocketFactory)
 .service('SocketService', SocketService);
 

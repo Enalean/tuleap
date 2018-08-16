@@ -1,3 +1,5 @@
+import { setError } from "../feedback-state.js";
+
 export default SocketService;
 
 SocketService.$inject = [
@@ -5,6 +7,7 @@ SocketService.$inject = [
     '$q',
     'moment',
     'locker',
+    'gettextCatalog',
     'SocketFactory',
     'KanbanService',
     'KanbanColumnService',
@@ -21,6 +24,7 @@ function SocketService(
     $q,
     moment,
     locker,
+    gettextCatalog,
     SocketFactory,
     KanbanService,
     KanbanColumnService,
@@ -34,9 +38,6 @@ function SocketService(
     const self = this;
 
     Object.assign(self, {
-        checkDisconnect         : {
-            disconnect: false
-        },
         listenTokenExpired,
         listenNodeJSServer,
         listenKanbanFilteredUpdate,
@@ -95,8 +96,12 @@ function SocketService(
     }
 
     function listenToDisconnect() {
-        SocketFactory.on('disconnect', () => {
-            self.checkDisconnect.disconnect = true;
+        SocketFactory.on("disconnect", () => {
+            setError(
+                gettextCatalog.getString(
+                    "You are disconnected from real time. Please reload your page."
+                )
+            );
         });
     }
 

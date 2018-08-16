@@ -31,6 +31,7 @@
 @import 'kanban/diagram';
 @import 'kanban/add-to-dashboard';
 @import 'kanban/filter';
+@import 'kanban/feedback';
 
 $kanban-column-closed-width: 60px;
 $kanban-column-header-height: 50px;
@@ -51,10 +52,6 @@ $breadcrumb-height: 75px;
     display: flex;
     flex-direction: column;
     height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
-}
-
-kanban-filtered-updated-alert > .tlp-alert-warning:last-child {
-    margin: $tlp-spacing;
 }
 
 .kanban-header {
