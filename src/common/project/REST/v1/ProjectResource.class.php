@@ -31,7 +31,7 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ReferenceManager;
-use Tuealp\Project\Event\GetProjectWithTrackerAdministrationPermission;
+use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
