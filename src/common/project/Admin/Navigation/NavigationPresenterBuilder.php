@@ -110,7 +110,7 @@ class NavigationPresenterBuilder
         $entries = array();
 
         $entries['details'] = new NavigationItemPresenter(
-            _('details'),
+            _('Details'),
             '/project/admin/editgroupinfo.php?' . http_build_query(array('group_id' => $project_id)),
             'details',
             $current_pane_shortname
@@ -119,7 +119,7 @@ class NavigationPresenterBuilder
         $entries['members'] = $this->getMembersItemPresenter($project_id, $current_pane_shortname);
 
         $entries['groups'] = new NavigationItemPresenter(
-            _('groups'),
+            _('Groups'),
             '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $project_id)),
             'groups',
             $current_pane_shortname
@@ -131,33 +131,33 @@ class NavigationPresenterBuilder
         );
 
         $entries['services']                 = new NavigationItemPresenter(
-            _('services'),
+            _('Services'),
             '/project/admin/servicebar.php?' . http_build_query(array('group_id' => $project_id)),
             'services',
             $current_pane_shortname
         );
         if ($this->canLabelsBeUsedByProject($project)) {
             $entries['labels'] = new NavigationItemPresenter(
-                _('labels'),
+                _('Labels'),
                 '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
                 'labels',
                 $current_pane_shortname
             );
         }
         $entries['references']               = new NavigationItemPresenter(
-            _('references'),
+            _('References'),
             '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id)),
             'references',
             $current_pane_shortname
         );
         $entries['categories']               = new NavigationItemPresenter(
-            _('categories'),
+            _('Categories'),
             '/project/admin/group_trove.php?' . http_build_query(array('group_id' => $project_id)),
             'categories',
             $current_pane_shortname
         );
         $entries[self::DATA_ENTRY_SHORTNAME] = new NavigationDropdownPresenter(
-            _('data'),
+            _('Data'),
             self::DATA_ENTRY_SHORTNAME,
             $current_pane_shortname,
             array(

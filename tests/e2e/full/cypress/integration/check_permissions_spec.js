@@ -21,77 +21,99 @@ describe("Permissions", function() {
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
         cy.projectMemberLogin();
+        cy.visit("/projects/permissions-project-01/");
+        cy.get("[data-test=project-sidebar]")
+            .should("have.attr", "data-project-id")
+            .as("permission_project_id");
     });
 
     beforeEach(() => {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-
-        cy.loadProjectConfig();
     });
 
     it("should raise an error when user try to access to project admin page", function() {
-        cy.visit('/project/admin/?group_id=' + this.projects.permission_project_id);
+        cy.visit("/project/admin/?group_id=" + this.permission_project_id);
 
-        cy.get('[data-test=feedback]').contains('You do not have permission to view this page');
+        cy.get("[data-test=feedback]").contains("You do not have permission to view this page");
     });
 
     it("should raise an error when user try to access to docman admin page", function() {
-        cy.visit('/plugins/docman/?group_id=' + this.projects.permission_project_id + '&action=admin');
+        cy.visit("/plugins/docman/?group_id=" + this.permission_project_id + "&action=admin");
 
-        cy.get('[data-test=feedback]').contains('You do not have sufficient access rights to administrate the document manager.');
+        cy.get("[data-test=feedback]").contains(
+            "You do not have sufficient access rights to administrate the document manager."
+        );
     });
 
     it("should raise an error when user try to access to wiki admin page", function() {
-        cy.visit('/wiki/admin/index.php?group_id=' + this.projects.permission_project_id + '&view=wikiPerms');
+        cy.visit(
+            "/wiki/admin/index.php?group_id=" + this.permission_project_id + "&view=wikiPerms"
+        );
 
-        cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
+        cy.get("[data-test=feedback]").contains(
+            "You are not granted sufficient permission to perform this operation."
+        );
     });
 
     it("should raise an error when user try to access to plugin SVN admin page", function() {
-        cy.visit('/plugins/svn/?group_id=' + this.projects.permission_project_id + '&action=admin-groups');
+        cy.visit("/plugins/svn/?group_id=" + this.permission_project_id + "&action=admin-groups");
 
-        cy.get('[data-test=feedback]').contains('Permission Denied');
+        cy.get("[data-test=feedback]").contains("Permission Denied");
     });
 
     it("should raise an error when user try to access to plugin files admin page", function() {
-        cy.visit('/file/admin/?group_id=' + this.projects.permission_project_id + '&action=edit-permissions');
+        cy.visit(
+            "/file/admin/?group_id=" + this.permission_project_id + "&action=edit-permissions"
+        );
 
-        cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
+        cy.get("[data-test=feedback]").contains(
+            "You are not granted sufficient permission to perform this operation."
+        );
     });
 
     it("should raise an error when user try to access to plugin Tracker admin page", function() {
-        cy.visit('/plugins/tracker/?func=global-admin&group_id=' + this.projects.permission_project_id);
+        cy.visit("/plugins/tracker/?func=global-admin&group_id=" + this.permission_project_id);
 
-        cy.get('[data-test=feedback]').contains('Access denied. You don\'t have permissions to perform this action.');
+        cy.get("[data-test=feedback]").contains(
+            "Access denied. You don't have permissions to perform this action."
+        );
     });
 
     it("should raise an error when user try to access to plugin Git admin page", function() {
-        cy.visit('/plugins/git/?group_id=' + this.projects.permission_project_id + '&action=admin');
+        cy.visit("/plugins/git/?group_id=" + this.permission_project_id + "&action=admin");
 
-        cy.get('[data-test=git-administration-page]').should('not.exist');
+        cy.get("[data-test=git-administration-page]").should("not.exist");
     });
 
     it("should raise an error when user try to access to Forum admin page", function() {
-        cy.visit('/forum/admin/?group_id=' + this.projects.permission_project_id);
+        cy.visit("/forum/admin/?group_id=" + this.permission_project_id);
 
-        cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
+        cy.get("[data-test=feedback]").contains(
+            "You are not granted sufficient permission to perform this operation."
+        );
     });
 
     it("should raise an error when user try to access to List admin page", function() {
-        cy.visit('/mail/admin/?group_id=' + this.projects.permission_project_id);
+        cy.visit("/mail/admin/?group_id=" + this.permission_project_id);
 
-        cy.get('[data-test=feedback]').contains('You are not granted sufficient permission to perform this operation.');
+        cy.get("[data-test=feedback]").contains(
+            "You are not granted sufficient permission to perform this operation."
+        );
     });
 
     it("should raise an error when user try to access to News admin page", function() {
-        cy.visit('/news/admin/?group_id=' + this.projects.permission_project_id);
+        cy.visit("/news/admin/?group_id=" + this.permission_project_id);
 
-        cy.get('[data-test=feedback]').contains('Permission Denied. You have to be an admin on the News service of this project.');
+        cy.get("[data-test=feedback]").contains(
+            "Permission Denied. You have to be an admin on the News service of this project."
+        );
     });
 
     it("should redirect user to Agiledashboard home page when user try to access to Agiledashboard admin page", function() {
-        cy.visit('/plugins/agiledashboard/?group_id=' + this.projects.permission_project_id + '&action=admin');
+        cy.visit(
+            "/plugins/agiledashboard/?group_id=" + this.permission_project_id + "&action=admin"
+        );
 
-        cy.get('[data-test=scrum_title]').contains('Scrum');
+        cy.get("[data-test=scrum_title]").contains("Scrum");
     });
 });

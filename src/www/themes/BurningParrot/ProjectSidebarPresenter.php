@@ -32,10 +32,9 @@ class ProjectSidebarPresenter
     public $project_name;
     public $project_privacy;
     public $is_sidebar_collapsable;
-    /**
-     * @var Project
-     */
-    private $project;
+    public $project_id;
+    public $powered_by;
+    public $copyright;
 
     public function __construct(PFUser $current_user, Project $project, array $sidebar, $project_privacy)
     {
@@ -50,6 +49,7 @@ class ProjectSidebarPresenter
         $this->project_link           = '/projects/' . $project->getUnixName() . '/';
         $this->project_is_public      = $project->isPublic();
         $this->project_name           = $project->getUnconvertedPublicName();
+        $this->project_id             = $project->getID();
 
         $this->powered_by = $GLOBALS['Language']->getText('global', 'powered_by') . ' ' . $this->getVersion();
         $this->copyright  = $GLOBALS['Language']->getText('global', 'copyright');

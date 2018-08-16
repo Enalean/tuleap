@@ -122,7 +122,7 @@ $project->getService(Service::FILE)->displayFRSHeader($project, $params['title']
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
     if ($permission_manager->isAdmin($project, $user)) {
-        echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
+        echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'" data-test="create-new-package">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
     }
     file_utils_footer($params);
     exit;
@@ -152,7 +152,7 @@ $fmmf = new FileModuleMonitorFactory();
 $javascript_packages_array = array();
 
 if (!$pv && $permission_manager->isAdmin($project, $user)) {
-    $html .= '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
+    $html .= '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'" data-test="create-new-package">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
 
 $package_permission_manager = new PackagePermissionManager($permission_manager, $frspf);

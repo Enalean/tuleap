@@ -18,17 +18,34 @@
  */
 
 Cypress.Commands.add("login", () => {
-    cy.visit('/');
-    cy.get('#form_loginname').type('alice');
-    cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
+    cy.visit("/");
+    cy.get("#form_loginname").type("alice");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("projectMemberLogin", () => {
-    cy.visit('/');
-    cy.get('#form_loginname').type('bob');
-    cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
+    cy.visit("/");
+    cy.get("#form_loginname").type("bob");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });
 
-Cypress.Commands.add("loadProjectConfig", () => {
-    cy.fixture('project_config.json').as('projects');
+const cache_service_urls = {};
+Cypress.Commands.add("visitProjectService", (project_unixname, service_label) => {
+    if (
+        cache_service_urls.hasOwnProperty(project_unixname) &&
+        cache_service_urls[project_unixname].hasOwnProperty(service_label)
+    ) {
+        cy.visit(cache_service_urls[project_unixname][service_label]);
+        return;
+    }
+
+    cy.visit("/projects/" + project_unixname);
+    cy.get("[data-test=project-sidebar]")
+        .contains(service_label)
+        .should("have.attr", "href")
+        .then(href => {
+            cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
+            cache_service_urls[project_unixname][service_label] = href;
+            cy.visit(href);
+        });
 });
