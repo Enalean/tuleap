@@ -161,15 +161,20 @@
                 this.error_message = error;
             },
 
-            async showRestError(rest_error) {
-                try {
-                    const error_details = await rest_error.response.json();
+            showRestError(rest_error) {
+                if (!rest_error.response) {
+                    this.error_message = gettext_provider.gettext('An error occured');
+                    return;
+                }
+
+                return rest_error.response.json().then(error_details => {
                     if ('i18n_error_message' in error_details.error) {
                         this.error_message = error_details.error.i18n_error_message;
                     }
-                } catch (error) {
-                    this.error_message = gettext_provider.gettext('An error occured');
                 }
+                , error => {
+                    this.error_message = gettext_provider.gettext('An error occured');
+                });
             }
         }
     };

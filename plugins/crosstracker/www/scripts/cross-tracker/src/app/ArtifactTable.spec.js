@@ -17,26 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                       from 'vue';
-import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
-import ArtifactTable             from './ArtifactTable.vue';
+import Vue from "vue";
+import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
+import ArtifactTable from "./ArtifactTable.vue";
 import {
     rewire$getReportContent,
     rewire$getQueryResult,
-    restore
-} from './rest-querier.js';
+    restore as restoreRest
+} from "./rest-querier.js";
 
 describe("ArtifactTable", () => {
-    let Widget,
-        reportId,
-        writingCrossTrackerReport,
-        isReportSaved;
+    let Widget, reportId, writingCrossTrackerReport, isReportSaved, getReport, getQuery;
 
     beforeEach(() => {
-        Widget                    = Vue.extend(ArtifactTable);
+        Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        reportId                  = '86';
-        isReportSaved             = true;
+        reportId = "86";
+        isReportSaved = true;
+
+        getReport = jasmine.createSpy("getReportContent");
+        mockFetchSuccess(getReport);
+        rewire$getReportContent(getReport);
+
+        getQuery = jasmine.createSpy("getQueryResult");
+        rewire$getQueryResult(getQuery);
+    });
+
+    afterEach(() => {
+        restoreRest();
     });
 
     function instantiateComponent() {
@@ -44,7 +53,7 @@ describe("ArtifactTable", () => {
             propsData: {
                 isReportSaved,
                 reportId,
-                writingCrossTrackerReport,
+                writingCrossTrackerReport
             }
         });
         vm.$mount();
@@ -53,20 +62,6 @@ describe("ArtifactTable", () => {
     }
 
     describe("loadArtifacts() -", () => {
-        let getReport, getQuery;
-
-        beforeEach(() => {
-            getReport = jasmine.createSpy('getReportContent');
-            rewire$getReportContent(getReport);
-
-            getQuery = jasmine.createSpy('getQueryResult');
-            rewire$getQueryResult(getQuery);
-        });
-
-        afterEach(() => {
-            restore();
-        });
-
         it("Given report is saved, it loads artifacts of report", () => {
             isReportSaved = true;
             const vm = instantiateComponent();
@@ -86,14 +81,20 @@ describe("ArtifactTable", () => {
         });
 
         it("when there is a REST error, it will be displayed", () => {
-            getReport.and.returnValue(Promise.reject(500));
+            mockFetchError(getReport, { status: 500 });
             const vm = instantiateComponent();
 
-            vm.loadArtifacts().then(() => {
-                fail();
-            }, () => {
-                expect(vm.$emit).toHaveBeenCalledWith('restError', 'Error while fetching the query result');
-            });
+            vm.loadArtifacts().then(
+                () => {
+                    fail();
+                },
+                () => {
+                    expect(vm.$emit).toHaveBeenCalledWith(
+                        "restError",
+                        "Error while fetching the query result"
+                    );
+                }
+            );
         });
     });
 });

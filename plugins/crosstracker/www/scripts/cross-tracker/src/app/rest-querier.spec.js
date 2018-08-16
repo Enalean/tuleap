@@ -24,24 +24,22 @@ import {
     updateReport,
     getSortedProjectsIAmMemberOf,
     getTrackersOfProject
-} from './rest-querier.js';
-import tlp from 'tlp';
+} from "./rest-querier.js";
+import { tlp, mockFetchSuccess } from "tlp-mocks";
 
 describe("getReport() -", () => {
     it("the REST API will be queried and the report returned", async () => {
         const report = {
-            trackers    : [{ id: 63 }, { id: 100 }],
+            trackers: [{ id: 63 }, { id: 100 }],
             expert_query: '@title = "bla"'
         };
-        spyOn(tlp, "get").and.returnValue({
-            json() {
-                return report;
-            }
+        mockFetchSuccess(tlp.get, {
+            return_json: report
         });
 
         const result = await getReport(16);
 
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/cross_tracker_reports/16');
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/16");
         expect(result).toEqual(report);
     });
 });
@@ -49,23 +47,21 @@ describe("getReport() -", () => {
 describe("getReportContent() -", () => {
     it("the artifacts and the total number of artifacts will be returned", async () => {
         const artifacts = [{ id: 100 }, { id: 33 }];
-        const total     = 91;
-        spyOn(tlp, "get").and.returnValue({
-            headers: {
-                get() {
-                    return total;
-                }
-            },
-            json() {
-                return { artifacts };
-            }
+        const total = 91;
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => total
+        };
+        mockFetchSuccess(tlp.get, {
+            headers,
+            return_json: { artifacts }
         });
-        const limit  = 30;
+        const limit = 30;
         const offset = 30;
 
         const result = await getReportContent(57, limit, offset);
 
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/cross_tracker_reports/57/content', {
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/57/content", {
             params: { limit, offset }
         });
         expect(result).toEqual({ artifacts, total });
@@ -75,31 +71,23 @@ describe("getReportContent() -", () => {
 describe("getQueryResult() -", () => {
     it("the tracker ids and the expert query will be submitted to the REST API, and the artifacts and the total number of artifacts will be returned", async () => {
         const artifacts = [{ id: 26 }, { id: 89 }];
-        const total     = 69;
-        spyOn(tlp, "get").and.returnValue({
-            headers: {
-                get() {
-                    return total;
-                }
-            },
-            json() {
-                return { artifacts };
-            }
+        const total = 69;
+        const headers = {
+            /** 'X-PAGINATION-SIZE' */
+            get: () => total
+        };
+        mockFetchSuccess(tlp.get, {
+            headers,
+            return_json: { artifacts }
         });
-        const limit  = 30;
+        const limit = 30;
         const offset = 30;
 
-        const trackers_id  = [16, 80, 6];
+        const trackers_id = [16, 80, 6];
         const expert_query = '@title = "stalky"';
-        const result       = await getQueryResult(
-            72,
-            trackers_id,
-            expert_query,
-            limit,
-            offset
-        );
+        const result = await getQueryResult(72, trackers_id, expert_query, limit, offset);
 
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/cross_tracker_reports/72/content', {
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/cross_tracker_reports/72/content", {
             params: {
                 limit,
                 offset,
@@ -112,19 +100,20 @@ describe("getQueryResult() -", () => {
     describe("updateReport() -", () => {
         it("the REST API will be queried and the report returned", async () => {
             const expert_query = '@title = "dolous"';
-            const trackers_id  = [8, 3, 67];
-            spyOn(tlp, "put").and.returnValue({
-                json() {
-                    return {
-                        trackers_id,
-                        expert_query
-                    };
+            const trackers_id = [8, 3, 67];
+            mockFetchSuccess(tlp.put, {
+                return_json: {
+                    trackers_id,
+                    expert_query
                 }
             });
 
             const result = await updateReport(59, trackers_id, expert_query);
 
-            expect(tlp.put).toHaveBeenCalledWith('/api/v1/cross_tracker_reports/59', jasmine.any(Object));
+            expect(tlp.put).toHaveBeenCalledWith(
+                "/api/v1/cross_tracker_reports/59",
+                jasmine.any(Object)
+            );
             expect(result).toEqual({ trackers_id, expert_query });
         });
     });
@@ -132,41 +121,39 @@ describe("getQueryResult() -", () => {
     describe("getSortedProjectsIAmMemberOf() -", () => {
         it("the REST API will be queried and the list of projects will be sorted and returned", async () => {
             const projects = [
-                { id: 765, label: 'physicianless' },
-                { id: 239, label: 'spur' },
-                { id: 487, label: 'castellano' },
+                { id: 765, label: "physicianless" },
+                { id: 239, label: "spur" },
+                { id: 487, label: "castellano" }
             ];
-            spyOn(tlp, "recursiveGet").and.returnValue(projects);
+            tlp.recursiveGet.and.returnValue(projects);
 
             const result = await getSortedProjectsIAmMemberOf();
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith('/api/v1/projects', {
+            expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/v1/projects", {
                 params: {
                     limit: 50,
                     query: JSON.stringify({ is_member_of: true })
                 }
             });
             expect(result).toEqual([
-                { id: 487, label: 'castellano' },
-                { id: 765, label: 'physicianless' },
-                { id: 239, label: 'spur' },
+                { id: 487, label: "castellano" },
+                { id: 765, label: "physicianless" },
+                { id: 239, label: "spur" }
             ]);
         });
     });
 
     describe("getTrackersOfProject() -", () => {
         it("the REST API will be queried and the list of trackers returned", async () => {
-            const trackers = [
-                { id: 28 }, { id: 50 }
-            ];
-            spyOn(tlp, "recursiveGet").and.returnValue(trackers);
+            const trackers = [{ id: 28 }, { id: 50 }];
+            tlp.recursiveGet.and.returnValue(trackers);
 
             const result = await getTrackersOfProject(444);
 
-            expect(tlp.recursiveGet).toHaveBeenCalledWith('/api/v1/projects/444/trackers', {
+            expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/v1/projects/444/trackers", {
                 params: {
                     limit: 50,
-                    representation: 'minimal'
+                    representation: "minimal"
                 }
             });
             expect(result).toEqual(trackers);
