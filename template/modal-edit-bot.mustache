@@ -9,7 +9,7 @@
     <div class="modal-header">
         <a role="button" class="close" data-dismiss="modal">×</a>
         <h3 id="configuration-edit-bot-title" class="modal-configuration-bot-title">
-            <i class="icon-edit"></i> {{ modal_edit_title }}</h3>
+            <i class="fa fa-pencil-square-o"></i> {{ modal_edit_title }}</h3>
     </div>
 
     <form method="POST" action="/plugins/botmattermost_agiledashboard/?action=edit_bot" >
@@ -29,7 +29,7 @@
                        hidden
                        multiple
                 />
-                <p class="text-info"><i class="icon-info-sign"></i> {{{ purified_info_channels_handles }}}</p>
+                <p class="text-info"><i class="fa fa-info-circle"></i> {{{ purified_info_channels_handles }}}</p>
             </div>
             <div id="field-bot-mattermost-agiledashboard-send-time" class="form-group">
                 <label class="control-label" for="bot-mattermost-agiledashboard-send-time">{{ label_send_time }}</label>
@@ -45,17 +45,17 @@
                                 {{/ bot_assigned }}
                             />
                             <span class="add-on">
-                                <i class="icon-time"></i>
+                                <i class="fa fa-clock-o"></i>
                             </span>
                         </span>
                 </div>
-                <p class="text-warning"><i class="icon-warning-sign"></i> {{ alert_time_warning }}</p>
+                <p class="text-warning"><i class="fa fa-exclamation-triangle"></i> {{ alert_time_warning }}</p>
             </div>
         </div>
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
-            <button type="submit" class="btn btn-primary"><i class="icon-edit"></i> {{ button_edit }}</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i> {{ button_edit }}</button>
         </div>
     </form>
 
