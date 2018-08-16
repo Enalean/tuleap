@@ -85,7 +85,7 @@ class RepositoryCrumbBuilder
                         new BreadCrumbLinkWithIcon(
                             $GLOBALS['Language']->getText('global', 'Settings'),
                             $this->getRepositoryAdminUrl($repository),
-                            'fa-cog icon-cog'
+                            'fa-cog'
                         )
                     ]
                 )

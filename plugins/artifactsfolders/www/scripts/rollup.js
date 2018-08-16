@@ -32,7 +32,7 @@
             artifact_id = link.dataset.artifactId;
 
         cell.classList.add("artifacts-folders-rollup");
-        icon.classList.add("artifacts-folders-rollup-icon");
+        icon.classList.add("artifacts-folders-rollup-icon", "fa");
         cell.insertBefore(icon, link);
 
         loadChildrenRecursively();
@@ -54,7 +54,7 @@
         }
 
         function injectChildrenInTable(children_to_inject) {
-            icon.classList.add("icon-caret-right");
+            icon.classList.add("fa-caret-right");
 
             icon.addEventListener("click", function() {
                 simpleExpandCollapse(this, children_to_inject);
@@ -62,8 +62,8 @@
         }
 
         function simpleExpandCollapse(icon_clicked, children_to_inject) {
-            icon_clicked.classList.toggle("icon-caret-right");
-            icon_clicked.classList.toggle("icon-caret-down");
+            icon_clicked.classList.toggle("fa-caret-right");
+            icon_clicked.classList.toggle("fa-caret-down");
 
             var subrows = icon_clicked
                 .closest("tbody")
@@ -75,7 +75,7 @@
                     initRollupViewOfLink(row.querySelector("a.direct-link-to-artifact"), depth + 1);
                 });
             } else {
-                if (icon_clicked.classList.contains("icon-caret-right")) {
+                if (icon_clicked.classList.contains("fa-caret-right")) {
                     subrows.forEach(collapseRow);
                 } else {
                     subrows.forEach(expandRow);
@@ -137,7 +137,7 @@
 
         folder_hierarchy.forEach(function(folder) {
             html +=
-                '<i class="icon-angle-right"></i> \
+                '<i class="fa fa-angle-right"></i> \
                 <a class="direct-link-to-artifact" \
                 href="' +
                 tuleap.escaper.html(folder.url) +
@@ -157,8 +157,8 @@
 
     function expandRow(row) {
         var tr_rollup_view = row.querySelector(".artifacts-folders-rollup");
-        var icon_down = tr_rollup_view.querySelector(".icon-caret-down");
-        var icon_right = tr_rollup_view.querySelector(".icon-caret-right");
+        var icon_down = tr_rollup_view.querySelector(".fa-caret-down");
+        var icon_right = tr_rollup_view.querySelector(".fa-caret-right");
 
         if (icon_down && !icon_right) {
             var subrows = row.parentNode.querySelectorAll('[data-child-of="' + row.id + '"]');

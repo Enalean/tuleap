@@ -4,7 +4,7 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // http://www.codendi.com
 //
-// 
+//
 //
 //	Originally written by Laurent Julliard 2001, 2002, Codendi Team, Xerox
 //
@@ -38,7 +38,7 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     if ($old_pref_value) {
         list($old_hide,$old_count) = explode('|', $old_pref_value);
     }
-  
+
     // Make sure they are both 0 if never set before
     if ($old_count == false) { $old_count = 0; }
     if ($old_hide == false) { $old_hide = 0; }
@@ -68,10 +68,10 @@ function my_hide_url ($svc, $db_item_id, $item_id, $count, $hide, $dashboard_id)
     }
 
     if ($hide) {
-		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="icon-caret-right fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
+		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=0&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-right" title="'.$Language->getText('my_utils', 'expand').'"></i></a>&nbsp;';
 		$hide_now = true;
-    } else {		
-		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="icon-caret-down fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
+    } else {
+		$hide_url= '<a href="?dashboard_id='.urlencode($dashboard_id).'&hide_'.$svc.'=1&hide_item_id='.urlencode($db_item_id).'"><i class="fa fa-caret-down" title="'.$Language->getText('my_utils', 'collapse').'"></i></a>&nbsp;';
 		$hide_now = false;
     }
 
@@ -85,7 +85,7 @@ function my_hide($svc, $db_item_id, $item_id, $hide) {
 
     // Make sure they are both 0 if never set before
     if ($old_hide == false) { $old_hide = 0; }
-  
+
     if ($item_id == $db_item_id) {
 		if (!isset($hide)) {
 		    $hide = $old_hide;
@@ -100,7 +100,7 @@ function my_hide($svc, $db_item_id, $item_id, $hide) {
 function my_format_as_flag2($assignee, $submitter) {
     $AS_flag = '';
     if ($assignee) $AS_flag = 'A';
-    
+
     if ($submitter) $AS_flag .= 'S';
 
     if ($AS_flag != '') $AS_flag = '[<b>'.$AS_flag.'</b>]';

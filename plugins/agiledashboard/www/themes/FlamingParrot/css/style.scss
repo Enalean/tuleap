@@ -26,20 +26,6 @@
         }
     }
 
-    #planning-app {
-        li.backlog-item .backlog-item-details .moves > .icon-stack:hover > .icon-stack-base {
-            color: $main;
-        }
-
-        #backlog-items-selected-bar .label {
-            background: $main;
-        }
-
-        li.backlog-item.gu-transit {
-            background: $main;
-        }
-    }
-
     .tuleap-artifact-modal {
         .followups-title {
             color: $main;

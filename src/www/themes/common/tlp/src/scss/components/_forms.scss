@@ -383,13 +383,13 @@ $tlp-form-element-select-small-background-size: 6px;
                         font-size: 12px;
                         font-weight: 400;
                         text-align: center;
-                        content: '\f00d';
+                        content: '\f00d'; // fa-remove
                     }
 
                     &:hover::before {
                         width: 12px;
                         color: $tlp-theme-color;
-                        content: '\f057';
+                        content: '\f057'; // fa-times-circle
                     }
                 }
             }
@@ -493,7 +493,7 @@ $tlp-form-element-select-small-background-size: 6px;
                     top: 8px;
                     left: $tlp-form-element-padding-horizontal;
                     font-family: 'FontAwesome';
-                    content: '\f00c';
+                    content: '\f00c'; // fa-check
                 }
 
                 &.select2-results__option--highlighted {

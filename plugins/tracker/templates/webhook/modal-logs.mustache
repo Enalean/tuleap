@@ -25,13 +25,13 @@
                        <td>
                            {{# status_ok }}
                             <span class="text-success" title="{{ status_message }}">
-                               <i class="icon-ok-sign"></i> {{ status_message }}
+                               <i class="fa fa-check-circle"></i> {{ status_message }}
                             </span>
                            {{/ status_ok }}
 
                            {{^ status_ok }}
                             <span class="text-warning" title="{{ status_message }}">
-                                <i class="icon-warning-sign"></i> {{ status_message }}
+                                <i class="fa fa-exclamation-triangle"></i> {{ status_message }}
                             </span>
                            {{/ status_ok }}
                        </td>

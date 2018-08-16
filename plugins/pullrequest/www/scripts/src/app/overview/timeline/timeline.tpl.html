@@ -1,5 +1,5 @@
 <h3>
-    <i class="icon-comments-alt"></i> <span translate>Discussion</span>
+    <i class="fa fa-comments-o"></i> <span translate>Discussion</span>
 </h3>
 
 <p ng-if="timeline_controller.timeline.length === 0 && ! timeline_controller.loading_timeline"
@@ -24,9 +24,9 @@
 
                 <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
                     <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline_controller.pull_request.id }} , file_path: '{{ event.file_path }}'})">
-                        <i class="icon-file-text-alt"></i> {{ event.file_path }}
+                        <i class="fa fa-file-text-o"></i> {{ event.file_path }}
                     </a>
-                    <span ng-if="event.is_outdated"><i class="icon-file-text-alt"></i> {{ event.file_path }}</span>
+                    <span ng-if="event.is_outdated"><i class="fa fa-file-text-o"></i> {{ event.file_path }}</span>
                 </span>
             </div>
 
@@ -40,5 +40,5 @@
 
 <form ng-submit="timeline_controller.addComment()">
     <textarea ng-model="timeline_controller.new_comment.content" placeholder="{{ 'Say something…' | translate }}"></textarea>
-    <button type="submit" class="btn btn-primary" ng-disabled="timeline_controller.loading_timeline"><i class="icon-comment"></i> {{ 'Comment' | translate }}</button>
+    <button type="submit" class="btn btn-primary" ng-disabled="timeline_controller.loading_timeline"><i class="fa fa-comment"></i> {{ 'Comment' | translate }}</button>
 </form>

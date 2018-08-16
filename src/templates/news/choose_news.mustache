@@ -14,13 +14,13 @@
             <tr>
                 <td><input type="checkbox" name="promoted[]" value="{{ getId }}" {{# isDisplayed }}checked{{/ isDisplayed }}/></td>
                 <td class="news_item_title">{{ getSummary }}</td>
-                <td>{{# isDisplayed }}<i class="icon-ok"></i>{{/ isDisplayed }}</td>
+                <td>{{# isDisplayed }}<i class="fa fa-check"></i>{{/ isDisplayed }}</td>
             </tr>
         {{/ news_items }}
     </table>
     <br>
     <input type="hidden" name="action" value="update" />
-    <input type="submit" class="btn-primary btn" value="{{ update_news_list }}"/> <i class="icon-info-sign"></i>
+    <input type="submit" class="btn-primary btn" value="{{ update_news_list }}"/> <i class="fa fa-info-circle"></i>
     <span class="news_italic_text"> {{ info_text }}</span>
 </form>
 

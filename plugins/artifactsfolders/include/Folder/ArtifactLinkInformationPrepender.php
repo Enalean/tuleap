@@ -91,7 +91,7 @@ class ArtifactLinkInformationPrepender
             $folders[] = $link;
         }
 
-        return implode(' <i class="icon-angle-right"></i> ', $folders);
+        return implode(' <i class="fa fa-angle-right"></i> ', $folders);
     }
 
     private function fetchSelectBox(

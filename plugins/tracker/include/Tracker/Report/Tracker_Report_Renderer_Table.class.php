@@ -511,7 +511,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items = array('export' => '');
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
-        $my_items['export'] .= '<i class="icon-download-alt"></i> ';
+        $my_items['export'] .= '<i class="fa fa-download"></i> ';
         $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_report', 'export');
         $my_items['export'] .= ' <span class="caret"></span>';
         $my_items['export'] .= '</a>';
@@ -646,7 +646,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             '</a>';
                 }
             }
-            $html .= implode(' <i class="icon-angle-right"></i> ', $sort);
+            $html .= implode(' <i class="fa fa-angle-right"></i> ', $sort);
         }
         $html .= '</div>';
         return $html;
@@ -658,7 +658,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns'),
             $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns(), Tracker_Report::TYPE_TABLE)
         );
-        $add_columns_presenter->setIcon('icon-eye-close');
+        $add_columns_presenter->setIcon('fa fa-eye-slash');
 
         return $this->report->getTemplateRenderer()->renderToString('button_dropdowns', $add_columns_presenter);
     }
@@ -743,10 +743,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getDisabledPagerButton($direction) {
         $icons = array(
-            'begin' => 'icon-double-angle-left',
-            'end'   => 'icon-double-angle-right',
-            'prev'  => 'icon-angle-left',
-            'next'  => 'icon-angle-right',
+            'begin' => 'fa fa-angle-double-left',
+            'end'   => 'fa fa-angle-double-right',
+            'prev'  => 'fa fa-angle-left',
+            'next'  => 'fa fa-angle-right',
         );
         $html  = '';
         $html .= '<button
@@ -762,10 +762,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function getPagerButton($url, $direction) {
         $icons = array(
-            'begin' => 'icon-double-angle-left',
-            'end'   => 'icon-double-angle-right',
-            'prev'  => 'icon-angle-left',
-            'next'  => 'icon-angle-right',
+            'begin' => 'fa fa-angle-double-left',
+            'end'   => 'fa fa-angle-double-right',
+            'prev'  => 'fa fa-angle-left',
+            'next'  => 'fa fa-angle-right',
         );
         $html  = '';
         $html .= '<a
@@ -937,7 +937,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                 'tuleap-tracker',
                                 'The report was sorted against this column. This column can not be used to sort a report, the sort has been ignored. Please choose another column.'
                             );
-                            $html .= '<i class="icon-warning-sign" title="' . $warning_message . '"></i>';
+                            $html .= '<i class="fa fa-exclamation-triangle" title="' . $warning_message . '"></i>';
                         }
                         $html .= '</td>';
                     }
@@ -950,7 +950,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
 
                         $html .= '<td class="tracker_report_table_column_nature_editor">';
-                        $html .= '<a href="#" class="nature-column-editor" data-placement="'. $column_editor_popover_placement .'"><i class="icon-cog"></i></a>';
+                        $html .= '<a href="#" class="nature-column-editor" data-placement="'. $column_editor_popover_placement .'"><i class="fa fa-cog"></i></a>';
                         $html .= '</td>';
                     }
 
@@ -1119,7 +1119,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             class="direct-link-to-artifact"
                             href="'. $url .'"
                             title="'. $GLOBALS['Language']->getText('plugin_tracker_include_report', 'show') .' artifact #'. $row['id'] .'">';
-                        $html .= '<i class="icon-edit fa fa-edit"></i>';
+                        $html .= '<i class="fa fa-edit"></i>';
                         $html .= '</td>';
                     }
                     foreach ($columns as $key => $column) {
@@ -1377,7 +1377,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             class="btn btn-mini dropdown-toggle"
             title="'. $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'toggle') .'"
             data-toggle="dropdown">';
-        $html .= '<i class="icon-plus"></i> ';
+        $html .= '<i class="fa fa-plus"></i> ';
         $html .= '<span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="dropdown-menu '. ($is_first ? '' : 'pull-right') .'">';
@@ -1387,7 +1387,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '<li>';
             $html .= '<a href="'. $url .'">';
             if ($is_used) {
-                $html .= '<i class="icon-ok"></i> ';
+                $html .= '<i class="fa fa-check"></i> ';
             }
             $html .= $GLOBALS['Language']->getText('plugin_tracker_aggregate', $function);
             $html .= '</a>';
@@ -2373,11 +2373,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     private function getSortIcon($is_desc) {
-        return ' <i class="icon-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
+        return ' <i class="fa fa-caret-'. ( $is_desc ? 'down' : 'up' ) .'"></i>';
     }
 
     public function getIcon() {
-        return 'icon-list-ul';
+        return 'fa fa-list-ul';
     }
 
     private function fetchViewButtons($report_can_be_modified, PFUser $current_user) {
@@ -2392,7 +2392,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 'renderer_table[resetsort]' => 1
             );
             $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($reset_sort_params) .'">'
-                . '<i class="icon-reply"></i> '
+                . '<i class="fa fa-reply"></i> '
                 . $GLOBALS['Language']->getText('plugin_tracker_report','reset_sort')
                 . '</a></div> ';
 
@@ -2408,7 +2408,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $multisort_label = $GLOBALS['Language']->getText('plugin_tracker_report','disable_multisort');
             }
             $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($multisort_params) .'">'
-                . '<i class="icon-sort"></i> '
+                . '<i class="fa fa-sort"></i> '
                 . $multisort_label
                 . '</a></div> ';
 

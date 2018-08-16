@@ -9,14 +9,14 @@
             <input type="hidden" name="repo_id" value="{{ repository_id }}">
 
             <p>{{ default_text }}</p>
-            <p class="alert alert-warning"><i class="icon-warning-sign"></i> {{ permissions_warning }}</p>
+            <p class="alert alert-warning"><i class="fa fa-exclamation-triangle"></i> {{ permissions_warning }}</p>
 
             <div id="access-file-container">
                 <div id="current-access-file-container">
                     <h4>{{ current_version_title }}</h4>
                     <pre>{{ default_content }}</pre>
                     <textarea class="not_resizable" cols="50" rows="20" wrap="virtual" name="form_accessfile" id="form_accessfile">{{{ auth_file }}}</textarea>
-                    <button type="submit" name="submit_new_version" class="btn btn-primary"><i class="icon-save"></i> {{ button_new_version_label }}</button>
+                    <button type="submit" name="submit_new_version" class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{ button_new_version_label }}</button>
                 </div>
 
                 <div id="old-access-file-container">
@@ -33,7 +33,7 @@
                     <span id="old-access-file-form">
                         <pre>{{ default_content }}</pre>
                         <pre class="empty-version" id="other-version-content"></pre>
-                        <button type="submit" name="submit_other_version" class="btn"><i class="icon-save"></i> {{ use_version }}</button>
+                        <button type="submit" name="submit_other_version" class="btn"><i class="fa fa-floppy-o"></i> {{ use_version }}</button>
                     </span>
                 </div>
             </div>

@@ -45,21 +45,21 @@
 
         {{^ is_insecure_emailgateway_properly_configured }}
             <ul class="unstyled alert alert-warning" style="margin-left: 1em; display: inline-block; margin: 5px 20px;">
-                <li><i class="icon-ok"></i> {{ reply_possible }}</li>
-                <li class="text-error"><i class="icon-remove"></i> {{{ create_not_possible }}}</li>
+                <li><i class="fa fa-check"></i> {{ reply_possible }}</li>
+                <li class="text-error"><i class="fa fa-times"></i> {{{ create_not_possible }}}</li>
                 <ul class="unstyled" style="margin-left: 1em;">
                     {{# is_semantic_configured_for_insecure_emailgateway }}
-                        <li><i class="icon-ok"></i> {{ semantic_ok }}</li>
+                        <li><i class="fa fa-check"></i> {{ semantic_ok }}</li>
                     {{/ is_semantic_configured_for_insecure_emailgateway }}
                     {{^ is_semantic_configured_for_insecure_emailgateway }}
-                        <li class="text-error"><i class="icon-remove"></i> {{ semantic_ko }}</li>
+                        <li class="text-error"><i class="fa fa-times"></i> {{ semantic_ko }}</li>
                     {{/ is_semantic_configured_for_insecure_emailgateway }}
 
                     {{# are_required_fields_configured_for_insecure_emailgateway }}
-                        <li><i class="icon-ok"></i> {{ required_ok }}</li>
+                        <li><i class="fa fa-check"></i> {{ required_ok }}</li>
                     {{/ are_required_fields_configured_for_insecure_emailgateway }}
                     {{^ are_required_fields_configured_for_insecure_emailgateway }}
-                        <li class="text-error"><i class="icon-remove"></i> {{ required_ko }}</li>
+                        <li class="text-error"><i class="fa fa-times"></i> {{ required_ko }}</li>
                     {{/ are_required_fields_configured_for_insecure_emailgateway }}
                 </ul>
             </ul>

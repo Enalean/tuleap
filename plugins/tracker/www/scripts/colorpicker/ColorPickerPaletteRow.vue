@@ -25,7 +25,7 @@
               v-bind:class="[
                   'colorpicker-circular-color-' + color_name,
                   {
-                      'icon-ok': isCurrentColor(color_name)
+                      'fa fa-check': isCurrentColor(color_name)
                   }
               ]"
               v-bind:title="color_name"

@@ -32,7 +32,6 @@ nbproject
 !src/www/svn/repos-web/*.css
 !src/www/themes/common/css/bootstrap-2.3.0.min.css
 !src/www/themes/common/css/bootstrap-responsive-2.3.0.min.css
-!src/www/themes/common/css/font-awesome.css
 !src/www/themes/common/css/animate.min.css
 !src/www/themes/BurningParrot/vendor/**/*.css
 src/vendor/

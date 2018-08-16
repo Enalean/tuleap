@@ -67,7 +67,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</td>';
         $html .= '<td class="tracker_artifact_fieldset_alwayscollapsed '. $always_collapsed .'">';
         if ($current_user->isLoggedIn()) {
-            $html .= '<i class="icon-pushpin"></i>';
+            $html .= '<i class="fa fa-thumb-tack"></i>';
         }
         $html .= '</td></tr></table>';
         $html .= '</legend>';
@@ -75,13 +75,13 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
         return $html;
     }
-    
+
     protected function fetchArtifactSuffix() {
         $html = '</div>';
         $html .= '</fieldset>';
         return $html;
     }
-    
+
     protected function fetchArtifactReadOnlyPrefix() {
         return $this->fetchArtifactPrefix();
     }
@@ -105,7 +105,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                 </tr>';
         }
     }
-    
+
     protected function fetchMailArtifactSuffix($format) {
         if ($format == 'text') {
             return PHP_EOL;
@@ -113,7 +113,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             return '';
         }
     }
-    
+
     public function fetchAdmin($tracker) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
@@ -144,7 +144,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</fieldset>';
         return $html;
     }
-    
+
     /**
      * getLabel - the label of this Tracker_FormElement_FieldSet
      * The tracker label can be internationalized.
@@ -160,7 +160,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             return $this->label;
         }
     }
-    
+
     /**
      * getDescriptionText - the text of the description of this Tracker_FormElement_FieldSet
      * The tracker descripiton can be internationalized.
@@ -176,7 +176,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             return $this->description;
         }
     }
-    
+
     /**
      * Returns if the fieldset name must be localized or not.
      * The field set name must be localized if the name looks like fieldset_{$fieldset_id}_lbl_key
@@ -188,7 +188,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $pattern = "/fieldset_(.*)_lbl_key/";
         return preg_match($pattern, $this->label);
     }
-    
+
     /**
      * Returns if the fieldset description must be localized or not.
      * The field set description must be localized if the name looks like fieldset_{$fieldset_id}_desc_key
@@ -200,35 +200,35 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $pattern = "/fieldset_(.*)_desc_key/";
         return preg_match($pattern, $this->description);
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/application-form.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/application-form--plus.png');
     }
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -243,7 +243,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
         return $current_user->getPreference('fieldset_'. $this->getId());
     }
-    
+
     /**
      * getID - get this Tracker_FormElement_FieldSet ID.
      *

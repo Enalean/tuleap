@@ -15,7 +15,7 @@
 
         {{# can_scrum_mono_milestone_be_enabled }}
             <section>
-                <h3><i class="icon-cogs"></i> {{ scrum_monomilestone_title }}</h3>
+                <h3><i class="fa fa-cogs"></i> {{ scrum_monomilestone_title }}</h3>
                 <div class="agiledashboard-section-details">
                     <div class="alert alert-warning">
                         {{ warning_feature_under_construction }}
@@ -38,12 +38,12 @@
         <div class="agiledashboard-admin-section">
             {{# scrum_activated }}
                 <div class="alert alert-success">
-                    <i class="icon-ok-circle"></i> {{ scrum_activated_label }}
+                    <i class="fa fa-check-circle-o"></i> {{ scrum_activated_label }}
                 </div>
             {{/ scrum_activated }}
             {{^ scrum_activated }}
                 <div class="alert alert-warning admin-scrum-not-activated">
-                    <i class="icon-off"></i> {{ scrum_not_activated_label }}
+                    <i class="fa fa-power-off"></i> {{ scrum_not_activated_label }}
                     {{^ has_plannings }}
                         <p>{{ first_scrum_will_be_created }}</p>
                     {{/ has_plannings }}
@@ -51,7 +51,7 @@
             {{/ scrum_activated }}
 
             <section>
-                <h3><i class="icon-cogs"></i> {{ general_settings_section }}</h3>
+                <h3><i class="fa fa-cogs"></i> {{ general_settings_section }}</h3>
                 <div class="agiledashboard-section-details">
 
                     <label class="checkbox active-scrum">
@@ -60,25 +60,25 @@
                     </label>
                     <label class="control-label" for="scrum-title-admin">{{ title_label }}</label>
                     <input id="scrum-title-admin" name="scrum-title-admin" type="text" required value="{{ scrum_title }}" placeholder="{{ title_label }}">
-                    <p class="help-block"><i class="icon-info-sign"></i> {{ title_label_help }}</p>
+                    <p class="help-block"><i class="fa fa-info-circle"></i> {{ title_label_help }}</p>
                     {{{ token }}}
                     <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
                 </div>
             </section>
 
             <section>
-                <h3><i class="icon-exchange"></i> {{ import_export_section }}</h3>
+                <h3><i class="fa fa-exchange"></i> {{ import_export_section }}</h3>
 
                 <div class="agiledashboard-section-details">
                     <ul class="unstyled">
                         <li>
                             <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=import-form" id="template_import">
-                                <i class="icon-download-alt"></i> {{ import_template }}
+                                <i class="fa fa-download"></i> {{ import_template }}
                             </a>
                         </li>
                         <li>
                             <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=export-to-file" id="template_export">
-                                <i class="icon-upload-alt"></i> {{ export_template }}
+                                <i class="fa fa-upload"></i> {{ export_template }}
                             </a>
                         </li>
                     </ul>
@@ -86,7 +86,7 @@
             </section>
 
             <section>
-                <h3><i class="icon-signin"></i> {{ planning_section }}</h3>
+                <h3><i class="fa fa-sign-in"></i> {{ planning_section }}</h3>
                 <div class="agiledashboard-section-details">
                     {{# has_plannings }}
                     <table class="table plannings">
@@ -106,10 +106,10 @@
                                 </td>
                                 <td>
                                     <a href="{{ edit_url }}">
-                                        <i class="icon-edit"></i> {{ edit_action_label }}
+                                        <i class="fa fa-pencil-square-o"></i> {{ edit_action_label }}
                                     </a>
                                     <a href="{{ delete_url }}">
-                                        <i class="icon-trash"></i> {{ delete_action_label }}
+                                        <i class="fa fa-trash-o"></i> {{ delete_action_label }}
                                     </a>
                                 </td>
                             </tr>
@@ -120,14 +120,14 @@
                     {{/ has_plannings }}
                     {{# does_configuration_allows_planning_creation }}
                         <a href="/plugins/agiledashboard/?group_id={{ group_id }}&amp;action=new" id="planning_create">
-                            <i class="icon-plus"></i> {{ create_planning }}
+                            <i class="fa fa-plus"></i> {{ create_planning }}
                         </a>
                     {{/ does_configuration_allows_planning_creation }}
 
                     {{^ use_mono_milestone }}
                         {{^ can_create_planning }}
                             <div class="alert alert-info">
-                                <i class="icon-info-sign"></i> {{ cannot_create_planning }}
+                                <i class="fa fa-info-circle"></i> {{ cannot_create_planning }}
                                 <ul>
                                     <li>{{ cannot_create_planning_no_trackers }}</li>
                                     <li>{{ cannot_create_planning_hierarchy }}</li>
@@ -139,7 +139,7 @@
                     {{# use_mono_milestone }}
                         {{^ does_configuration_allows_planning_creation }}
                             <div class="alert alert-info">
-                                <i class="icon-info-sign"></i> {{ cannot_create_planning_in_scrum_v2 }}
+                                <i class="fa fa-info-circle"></i> {{ cannot_create_planning_in_scrum_v2 }}
                             </div>
                         {{/ does_configuration_allows_planning_creation }}
                     {{/ use_mono_milestone }}

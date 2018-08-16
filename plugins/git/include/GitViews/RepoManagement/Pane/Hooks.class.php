@@ -176,10 +176,10 @@ class Hooks extends Pane
     private function formatStatus($status)
     {
         $classname = 'text-success';
-        $icon      = 'icon-ok-sign';
+        $icon      = 'fa fa-check-circle';
         if ($status{0} !== '2') {
             $classname = 'text-warning';
-            $icon      = 'icon-warning-sign';
+            $icon      = 'fa fa-exclamation-triangle';
         }
 
         return '<span class="'. $classname .'" title="'. $this->hp->purify($status) .'">

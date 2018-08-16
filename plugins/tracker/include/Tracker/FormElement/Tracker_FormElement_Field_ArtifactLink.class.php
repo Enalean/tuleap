@@ -570,7 +570,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $parent_tracker = $this->getTracker()->getParent();
 
             if (! $is_submit) {
-                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="icon-plus"></i> Add artifacts</a>';
+                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="fa fa-plus"></i> Add artifacts</a>';
             }
 
             $html .= '</div>';

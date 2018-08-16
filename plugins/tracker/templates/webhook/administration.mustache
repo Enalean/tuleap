@@ -4,7 +4,7 @@
     <p class="tracker-webhooks-desc">
         {{# dgettext }} tuleap-tracker | You can define several webhooks that will be processed after each artifact creation and updates. {{/ dgettext }}
         <span class="tracker-webhooks-desc-warn text-warning">
-        <i class="icon-warning-sign"></i> {{# dgettext }} tuleap-tracker | Be careful, all the artifact content is sent in the payload without permission checks. {{/ dgettext }}
+        <i class="fa fa-exclamation-triangle"></i> {{# dgettext }} tuleap-tracker | Be careful, all the artifact content is sent in the payload without permission checks. {{/ dgettext }}
     </span>
     </p>
 
@@ -14,7 +14,7 @@
         data-toggle="modal"
         href="#modal-create-webhook"
     >
-        <i class="icon-plus"></i> {{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}
+        <i class="fa fa-plus"></i> {{# dgettext }} tuleap-tracker | Add webhook {{/ dgettext }}
     </button>
 
     <table class="table tracker-webhooks-list">
@@ -33,23 +33,23 @@
                     {{# last_log }}
                         {{# status_ok }}
                             <span class="text-success" title="{{ status_message }}">
-                            <i class="icon-ok-sign"></i> {{ status_message }}
+                            <i class="fa fa-check-circle"></i> {{ status_message }}
                          </span>
                         {{/ status_ok }}
 
                         {{^ status_ok }}
                             <span class="text-warning" title="{{ status_message }}">
-                            <i class="icon-warning-sign"></i> {{ status_message }}
+                            <i class="fa fa-exclamation-triangle"></i> {{ status_message }}
                          </span>
                         {{/ status_ok }}
                     {{/ last_log }}
                 </td>
                 <td class="action-buttons">
                     <a role="button" data-toggle="modal" href="#modal-logs-{{ webhook_id }}">
-                        <i class="icon-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
+                        <i class="fa fa-list"></i> {{# dgettext }} tuleap-tracker | Logs {{/ dgettext }}
                     </a>
                     <a role="button" data-toggle="modal" href="#modal-edit-webhook-{{ webhook_id }}">
-                        <i class="icon-edit"></i> {{# dgettext }} tuleap-tracker | Edit {{/ dgettext }}
+                        <i class="fa fa-pencil-square-o"></i> {{# dgettext }} tuleap-tracker | Edit {{/ dgettext }}
                     </a>
                     <a href="javascript:;"
                        class="remove-tracker-webhook"
@@ -59,7 +59,7 @@
                        data-html="true"
                        data-popover-id="remove-{{ webhook_id }}-popover"
                     >
-                        <i class="icon-trash"></i> {{# dgettext }} tuleap-tracker | Remove {{/ dgettext }}
+                        <i class="fa fa-trash-o"></i> {{# dgettext }} tuleap-tracker | Remove {{/ dgettext }}
                     </a>
 
                     {{> modal-logs }}

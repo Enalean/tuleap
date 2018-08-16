@@ -1,8 +1,8 @@
 <div id="account-shell">
     <h3 class="account-title">
-        <i class="icon-terminal"></i> {{ shell_account_title }}
+        <i class="fa fa-terminal"></i> {{ shell_account_title }}
         <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-            <i class="icon-question-sign help-button"></i>
+            <i class="fa fa-question-circle help-button"></i>
         </a>
     </h3>
 
@@ -46,7 +46,7 @@
 
     <div id="user-ssh-keys-action">
         <a class="btn btn-primary" href="#ssh-keys-modal" data-toggle="modal">
-            <i class="icon-plus"> </i> {{ add_ssh_key_button }}
+            <i class="fa fa-plus"> </i> {{ add_ssh_key_button }}
         </a>
 
         {{# has_ssh_key }}
@@ -56,7 +56,7 @@
                     id="button-delete-keys"
                     disabled
             >
-                <i class="icon-trash"> </i> {{ delete_ssh_key_button }}
+                <i class="fa fa-trash-o"> </i> {{ delete_ssh_key_button }}
             </button>
         {{/ has_ssh_key }}
     </div>

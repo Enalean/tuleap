@@ -1319,7 +1319,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $email = trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION .'+'. $this->id .'@'. $email_domain;
             $email = Codendi_HTMLPurifier::instance()->purify($email);
             $toolbar[] = array(
-                    'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="icon-envelope"></i></span>',
+                    'title'      => '<span class="email-tracker" data-email="'. $email .'"><i class="fa fa-envelope"></i></span>',
                     'url'        => 'javascript:;',
                     'submit-new' => 1
             );

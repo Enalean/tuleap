@@ -93,7 +93,7 @@ class GitCrumbBuilder
             new BreadCrumbLinkWithIcon(
                 $GLOBALS['Language']->getText('global', 'Administration'),
                 $admin_url,
-                'fa-cog icon-cog'
+                'fa-cog'
             )
         );
     }
@@ -110,7 +110,7 @@ class GitCrumbBuilder
             new BreadCrumbLinkWithIcon(
                 dgettext('tuleap-git', 'Fork repositories'),
                 $fork_repositories_url,
-                'fa-code-fork icon-code-fork'
+                'fa-code-fork'
             )
         );
     }

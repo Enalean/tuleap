@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        move_dropdown_icon.classList.add("icon-spin", "icon-spinner");
+        move_dropdown_icon.classList.add("fa-spin", "fa", "fa-spinner");
         move_link.classList.add("disabled");
         try {
             const { init } = await import(/* webpackChunkName: "move-modal" */ "./modal.js");
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (e) {
             codendi.feedback.log("error", "Error while loading the Move Artifact modal.");
         } finally {
-            move_dropdown_icon.classList.remove("icon-spin", "icon-spinner");
+            move_dropdown_icon.classList.remove("fa-spin", "fa", "fa-spinner");
             move_link.classList.remove("disabled");
         }
     });

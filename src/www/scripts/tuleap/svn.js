@@ -205,7 +205,7 @@
         }
 
         function displayTreeNode(element, root) {
-            var icon_folder = '<i class="icon-folder-open-alt"></i> ',
+            var icon_folder = '<i class="fa fa-folder-open-o"></i> ',
                 children_element = $("<div>").addClass("children"),
                 label_element = $("<span>")
                     .attr("title", root.path)

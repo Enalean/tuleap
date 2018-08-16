@@ -57,6 +57,6 @@ class AgileDashboardPaneInfo extends PaneInfo
 
     public function getIconName()
     {
-        return 'fa-files-o icon-copy';
+        return 'fa-files-o';
     }
 }

@@ -35,7 +35,7 @@
                     />
                     {{ name }}
                     {{# info }}
-                        <i class="icon-question-sign" title="{{ info }}"> </i>
+                        <i class="fa fa-question-circle" title="{{ info }}"> </i>
                     {{/ info }}
                 </li>
             {{/ document_types }}
@@ -80,9 +80,9 @@
         </div>
     {{/ maybe_more_results }}
     <div id="no_more_results" style="display:none;">
-        <p><i class="icon-frown"></i> {{ no_more_results }}</p>
+        <p><i class="fa fa-frown-o"></i> {{ no_more_results }}</p>
     </div>
 {{/ has_results }}
 {{^ has_results }}
-    <p class="no-result"><i class="icon-frown"></i> {{{ no_match_found_string }}}</p>
+    <p class="no-result"><i class="fa fa-frown-o"></i> {{{ no_match_found_string }}}</p>
 {{/ has_results }}

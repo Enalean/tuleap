@@ -100,11 +100,11 @@
         function updateButtonLabel() {
             if (isFullScreen) {
                 button.html(
-                    '<i class="icon-resize-small"></i>' + codendi.locales.cardwall.exit_fullscreen
+                    '<i class="fa fa-compress"></i>' + codendi.locales.cardwall.exit_fullscreen
                 );
             } else {
                 button.html(
-                    '<i class="icon-desktop"></i>' + codendi.locales.cardwall.go_to_fullscreen
+                    '<i class="fa fa-desktop"></i>' + codendi.locales.cardwall.go_to_fullscreen
                 );
             }
         }

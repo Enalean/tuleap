@@ -317,13 +317,13 @@ input[type="text"].search-in-cardwall {
     top: 5px;
 }
 
-.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .fa-minus-square-o,
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .fa-plus-square-o {
     display: inline;
 }
 
-.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .icon-collapse-alt,
-.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .icon-expand-alt {
+.cardwall-cell.cardwall-cell-stacked > .cardwall-cell-container > .cardwall-cell-controls > .fa-minus-square-o,
+.cardwall-cell > .cardwall-cell-container > .cardwall-cell-controls > .fa-plus-square-o {
     display: none;
 }
 

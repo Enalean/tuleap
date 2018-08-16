@@ -2,14 +2,14 @@
     <h3 class="account-title">
         <i class="tuleap-services-svn"></i>{{ svn_tokens_title }}
         <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-            <i class="icon-question-sign help-button"></i>
+            <i class="fa fa-question-circle help-button"></i>
         </a>
     </h3>
 
     <p class="help">{{{ svn_tokens_help }}}</p>
 
     {{# last_svn_token }}
-    <p class="alert alert-success"><i class="icon-ok"></i> {{ generated_svn_token }} <span class="svn-generated-token">{{ last_svn_token }}</span></p>
+    <p class="alert alert-success"><i class="fa fa-check"></i> {{ generated_svn_token }} <span class="svn-generated-token">{{ last_svn_token }}</span></p>
     {{/ last_svn_token }}
 
     {{# has_svn_tokens }}
@@ -50,7 +50,7 @@
 
     <div id="user-svn-tokens-action">
         <a class="btn btn-primary" href="#svn-tokens-generate-modal" data-toggle="modal">
-            <i class="icon-plus"></i> {{ generate_svn_token_button }}
+            <i class="fa fa-plus"></i> {{ generate_svn_token_button }}
         </a>
 
         {{# has_svn_tokens }}
@@ -60,7 +60,7 @@
                 class="btn btn-danger"
                 disabled
         >
-            <i class="icon-trash"></i> {{ delete_svn_tokens_button }}
+            <i class="fa fa-trash-o"></i> {{ delete_svn_tokens_button }}
         </button>
         {{/ has_svn_tokens }}
     </div>

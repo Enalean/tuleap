@@ -15,7 +15,7 @@
             {{^ are_trackers_available }}
                 <a id="add_kanban_button" data-toggle="tooltip" data-placement="right" title="{{ no_tracker_available }}" class="btn add-kanban disabled">
             {{/are_trackers_available }}
-            <i class="icon-plus"></i> {{ add_kanban }}
+            <i class="fa fa-plus"></i> {{ add_kanban }}
         </a>
         {{/ is_user_admin }}
     </div>
@@ -31,7 +31,7 @@
                 <div class="closed"><span class="number">{{ count_closed_kanban_items }}</span>{{ closed }}</div>
             </div>
             <div class="footer">
-                <a href="?group_id={{ group_id }}&action=showKanban&id={{ id }}"><i class="icon-th-large"></i> {{ cardwall }}</a>
+                <a href="?group_id={{ group_id }}&action=showKanban&id={{ id }}"><i class="fa fa-th-large"></i> {{ cardwall }}</a>
             </div>
         </div>
         {{/ kanban_summary_presenters }}

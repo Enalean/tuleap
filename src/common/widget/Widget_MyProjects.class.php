@@ -99,9 +99,9 @@ class Widget_MyProjects extends Widget {
                 // Privacy
                 if ($display_privacy) {
                     if ($row['access'] === Project::ACCESS_PRIVATE) {
-                        $privacy = 'icon-lock fa fa-lock';
+                        $privacy = 'fa fa-lock';
                     } else {
-                        $privacy = 'icon-unlock fa fa-unlock';
+                        $privacy = 'fa fa-unlock';
                     }
                     $html .= '<td class="widget_my_projects_privacy'.$tdClass.'"><i class="'.$privacy.' dashboard-widget-my-projects-icons"></i></td>';
                 }
@@ -120,7 +120,7 @@ class Widget_MyProjects extends Widget {
 
                 // Mailing tool
                 $html .= '<td class="'.$tdClass.'">';
-                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="icon-envelope-alt fa fa-envelope-o"></span></a>';
+                $html .= '<a class="massmail-project-member-link" href="#massmail-project-members" data-project-id="'.$row['group_id'].'" title="'.$GLOBALS['Language']->getText('my_index','send_mail',$row['group_name']).'" data-toggle="modal"><span class="fa fa-envelope-o fa fa-envelope-o"></span></a>';
                 $html .= '</td>';
 
                 // Remove from project
@@ -142,8 +142,8 @@ class Widget_MyProjects extends Widget {
                 $html .= '<tr>';
                 $html .= '<td colspan="5" class="widget_my_projects_legend">';
                 $html .= '<span class="widget_my_projects_legend_title dashboard-widget-my-projects-legend-title">'.$GLOBALS['Language']->getText('my_index', 'my_projects_legend').'</span>';
-                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="icon-lock fa fa-lock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'private').'</span> ';
-                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="icon-unlock fa fa-unlock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
+                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="fa fa-lock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'private').'</span> ';
+                $html .= '<span class="dashboard-widget-my-projects-legend-content"><i class="fa fa-unlock dashboard-widget-my-projects-icons"></i> '.$GLOBALS['Language']->getText('project_privacy', 'public').'</span>';
                 $html .= '</td>';
                 $html .= '</tr>';
             }

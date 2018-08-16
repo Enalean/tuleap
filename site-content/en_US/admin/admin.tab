@@ -44,7 +44,7 @@ admin_sidebar	collapse_sidebar_label	Collapse sidebar
 #
 admin_main	title		Site administration
 admin_main	header		Administrative functions
-admin_main	forgeupgrade	<h4><i class="icon-warning-sign fa fa-warning tlp-alert-icon"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
+admin_main	forgeupgrade	<h4><i class="fa fa-warning tlp-alert-icon"></i> ForgeUpgrade was not run!</h4><p>It seems that someone upgraded Tuleap RPMs without running forgeupgrade command. Please check <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">upgrade documentation</a>.</p>
 admin_main	header_user	Pending users
 admin_main	display_user	Display users beginning with :
 admin_main	search_user	User
@@ -168,7 +168,7 @@ admin_main	platform_access_control	Platform access control
 admin_main	projects_visibility	Projects visibility
 admin_main	projects_visibility_label	Project administrators can choose project visibility
 admin_main	projects_visibility_help	If, in your organization, the strict privacy of the projects must be preserved by 'design', then you should uncheck this option so that project admins cannot disclose confidential resources to other platform users.
-admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>$1</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>
+admin_main	localinc_obsolete_message	<h4><i class="fa fa-exclamation-triangle"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>$1</code> and remove the following variables: <code>$sys_allow_anon</code> and <code>$sys_allow_restricted_users</code>.</p>
 admin_main	access_anonymous_label	Anonymous users can access the platform
 admin_main	access_anonymous_desc	Anonymous users can browse the public part of the site without logging in.
 admin_main	access_regular_label	All users must be logged in

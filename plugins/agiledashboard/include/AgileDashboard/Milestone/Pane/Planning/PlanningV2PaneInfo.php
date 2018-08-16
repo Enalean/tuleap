@@ -57,6 +57,6 @@ class PlanningV2PaneInfo extends PaneInfo
 
     public function getIconName()
     {
-        return 'fa-sign-in icon-signin';
+        return 'fa-sign-in';
     }
 }

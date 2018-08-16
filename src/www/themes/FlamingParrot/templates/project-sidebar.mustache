@@ -2,10 +2,10 @@
     <div class="project-title-container" data-content="{{{ project_privacy }}}" data-placement="right">
         <a href="{{ projectLink }}" id="sidebar-dashboard" class="project-title">
             {{#projectIsPublic}}
-                <i class="icon-unlock"></i>
+                <i class="fa fa-unlock"></i>
             {{/projectIsPublic}}
             {{^projectIsPublic}}
-                <i class="icon-lock"></i>
+                <i class="fa fa-lock"></i>
             {{/projectIsPublic}}
 
             {{ projectName }}
@@ -19,7 +19,7 @@
         {{/sidebar}}
     </ul>
     {{# is_sidebar_collapsable }}
-        <i id="sidebar-collapser" class="icon-chevron-left sidebar-collapse"></i>
+        <i id="sidebar-collapser" class="fa fa-chevron-left sidebar-collapse"></i>
     {{/ is_sidebar_collapsable }}
     <div class="sidebar-about">
         <svg class="admin-sidebar-tuleap" width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">

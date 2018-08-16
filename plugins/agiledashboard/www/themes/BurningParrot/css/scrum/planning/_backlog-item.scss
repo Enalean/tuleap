@@ -107,7 +107,7 @@
     cursor: pointer;
 
     &::before {
-        content: '\f078';
+        content: '\f078'; // fa-chevron-down
         position: absolute;
         top: 50%;
         left: 50%;
@@ -118,7 +118,7 @@
     }
 
     &.closed::before {
-        content: '\f077';
+        content: '\f077'; // fa-chevron-up
     }
 
     &:hover {

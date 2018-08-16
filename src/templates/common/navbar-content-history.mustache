@@ -1,6 +1,6 @@
 <div id="nav-dropdown-content-user-history-loading" class="shown"></div>
 <div id="nav-dropdown-content-user-history-empty">
-    <i class="icon icon-time fa fa-history empty-history-icon"></i>
+    <i class="fa fa-history empty-history-icon"></i>
     <p class="empty-history-description">{{ empty_history }}</p>
 </div>
 <div id="nav-dropdown-content-user-history-error-message-fetch">
@@ -26,7 +26,7 @@
                         <div class="history-item-content-description-links">
                             {{# quick_links }}
                                 <span class="history-item-extra-link history-item-content-description-link" data-href="{{ html_url }}">
-                                    <i class="history-item-content-description-link-icon fa fa-long-arrow-right icon-long-arrow-right"></i>{{ name }}
+                                    <i class="history-item-content-description-link-icon fa fa-long-arrow-right"></i>{{ name }}
                                 </span>
                             {{/ quick_links }}
                         </div>
@@ -43,7 +43,7 @@
 </div>
 <div id="nav-dropdown-content-user-history-clear">
     <button type="button" class="btn btn-large btn-primary tlp-button-primary" id="nav-dropdown-content-user-history-clear-button">
-        <i class="icon icon-trash fa fa-trash-o tlp-button-icon"></i>
+        <i class="fa fa-trash-o tlp-button-icon"></i>
         {{ clear_history }}
     </button>
 </div>

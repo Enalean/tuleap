@@ -64,7 +64,7 @@ abstract class Tracker_Artifact_Followup_Item {
 
     public function getPermalink() {
         $html  = '<a class="tracker_artifact_followup_permalink" href="#followup_' . $this->getId() . '">';
-        $html .= '<i class="icon-link" title="Link to this followup - #' . $this->getId() . '"></i> ';
+        $html .= '<i class="fa fa-link" title="Link to this followup - #' . $this->getId() . '"></i> ';
         $html .= '</a>';
 
         return $html;

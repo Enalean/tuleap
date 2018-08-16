@@ -25,7 +25,7 @@ var tuleap = tuleap || {};
 
         if (type === "group") {
             return (
-                '<i class="icon-group autocompleter-icon-group"></i>' +
+                '<i class="fa fa-users autocompleter-icon-group"></i>' +
                 tuleap.escaper.html(item.text)
             );
         } else if (type === "user") {

@@ -163,7 +163,7 @@ var tuleap = tuleap || {};
     }
 
     function decorRedirectedSearch() {
-        var icon_html = ' <i class="icon-external-link"></i>';
+        var icon_html = ' <i class="fa fa-external-link"></i>';
 
         $("a.search-type, a.sub-facets").each(function() {
             if ($(this).attr("href") != "#") {

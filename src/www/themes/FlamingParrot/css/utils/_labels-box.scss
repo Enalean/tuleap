@@ -30,7 +30,7 @@
             position: relative;
 
             &::before {
-                content: '\f02b'; // tag
+                content: '\f02b'; // fa-tag
                 position: absolute;
                 top: 50%;
                 left: 10px;
@@ -75,7 +75,7 @@
             cursor: pointer;
 
             &::after {
-                content: '\f067'; // plus
+                content: '\f067'; // fa-plus
                 position: absolute;
                 top: 50%;
                 left: 8px;
@@ -88,7 +88,7 @@
 
             &:only-child {
                 &::after {
-                    content: '\f02c'; // tags
+                    content: '\f02c'; // fa-tags
                     right: 0;
                     left: auto;
                 }
@@ -142,7 +142,7 @@
                 background: none;
 
                 &::after {
-                    content: '\f02b'; // tag
+                    content: '\f02b'; // fa-tag
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
@@ -157,7 +157,7 @@
             }
 
             &:hover > .select2-search-choice-close::after {
-                content: '\f057'; // cross
+                content: '\f057'; // fa-times-circle
             }
         }
     }

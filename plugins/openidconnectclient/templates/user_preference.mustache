@@ -6,12 +6,12 @@
             <form action="{{ form_action }}" class="provider" method="post">
                 <input type="hidden" name="user_mapping_id" value="{{ user_mapping_id }}">
                 <div class="provider-header">
-                    <p class="provider-name"><i class="icon-{{ provider_icon }}"></i> {{ provider_name }}</p>
+                    <p class="provider-name"><i class="fa fa-{{ provider_icon }}"></i> {{ provider_name }}</p>
                 </div>
                 <div class="provider-content">
                     <p class="provider-last-login-date">{{ last_login }} {{ last_usage }}</p>
                     {{^ provider_unique_authentication_endpoint }}
-                    <button type="submit" class="btn btn-small"><i class="icon-unlink"></i> {{ unlink }}</button>
+                    <button type="submit" class="btn btn-small"><i class="fa fa-chain-broken"></i> {{ unlink }}</button>
                     {{/ provider_unique_authentication_endpoint }}
                 </div>
 

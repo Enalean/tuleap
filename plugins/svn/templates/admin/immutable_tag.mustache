@@ -65,20 +65,20 @@
                         </h4>
 
                         <div id="immutable-tags-console" class="well">
-                            <div class="empty-state"><i class="icon-hand-left"></i> {{ select_tag }}</div>
-                            <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
-                            <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="icon-remove"></i></div>
+                            <div class="empty-state"><i class="fa fa-hand-o-left"></i> {{ select_tag }}</div>
+                            <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-check"></i></div>
+                            <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="fa fa-times"></i></div>
                             <br>
                             <div>// {{ svn_status_style }}</div>
-                            <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
-                            <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
-                            <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
+                            <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-check"></i></div>
+                            <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-times"></i></div>
+                            <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-times"></i></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" name="submit" class="btn btn-primary"><i class="icon-save"></i> {{ save }}</button>
+            <button type="submit" name="submit" class="btn btn-primary"><i class="fa fa-floppy-o"></i> {{ save }}</button>
         </form>
     </div>
 </div>

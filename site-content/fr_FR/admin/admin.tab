@@ -36,7 +36,7 @@ admin_sidebar	collapse_sidebar_label	Réduire la barre latérale
 #
 admin_main	title		Administration du site
 admin_main	header		Fonctions d'administration
-admin_main	forgeupgrade	<h4><i class="icon-warning-sign fa fa-warning tlp-alert-icon"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
+admin_main	forgeupgrade	<h4><i class="fa fa-warning tlp-alert-icon"></i> ForgeUpgrade n'a pas été exécuté!</h4><p>Il semble que les paquets RPMs de Tuleap ont été mis à jour mais que forgeupgrade n'as pas été exécuté. Merci de vous référer à <a href="http://tuleap-documentation.readthedocs.org/en/latest/installation-guide/update.html">la documentation sur la procédure de mise à jour</a>.</p>
 admin_main	header_user	Utilisateurs en attente
 admin_main	display_user	Afficher les utilisateurs commençant par :
 admin_main	search_user	Utilisateur
@@ -160,7 +160,7 @@ admin_main	platform_access_control	Droits d'accès de la plateforme
 admin_main	projects_visibility	Visibilité des projets
 admin_main	projects_visibility_label	Les administrateurs de projet peuvent choisir la visibilité du projet
 admin_main	projects_visibility_help	Si, dans votre organisation, la confidentialité des projets doit être impérativement préservée, alors vous pouvez décocher cette option afin que les administrateurs projets ne puissent pas divulguer par mégarde des ressources confidentielles aux autres utilisateurs de la plateforme.
-admin_main	localinc_obsolete_message	<h4><i class="icon-warning-sign"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer les variables suivantes : <code>$sys_allow_anon</code> et <code>$sys_allow_restricted_users</code>.</p>
+admin_main	localinc_obsolete_message	<h4><i class="fa fa-exclamation-triangle"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer les variables suivantes : <code>$sys_allow_anon</code> et <code>$sys_allow_restricted_users</code>.</p>
 admin_main	access_anonymous_label	Accès anonyme autorisé
 admin_main	access_anonymous_desc	Les utilisateurs anonymes peuvent accéder aux parties publiques de la plateforme.
 admin_main	access_regular_label	Authentification requise

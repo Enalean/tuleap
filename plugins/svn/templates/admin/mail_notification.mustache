@@ -13,7 +13,7 @@
             <label>{{ label_subject_header }}</label>
             <div class="input-append">
                 <input type="text" name="form_mailing_header" value="{{ subject_header }}">
-                <button type="submit" name="submit" class="btn"><i class="icon-save"></i> {{ save_subject }}</button>
+                <button type="submit" name="submit" class="btn"><i class="fa fa-floppy-o"></i> {{ save_subject }}</button>
             </div>
         </form>
 
@@ -53,7 +53,7 @@
                                         <div class="svn-notification-email-list">
                                             {{# ugroups_to_be_notified }}
                                                 <span class="svn-notification-email-list-entry">
-                                                <i class="icon-group svn-notification-email-list-group-icon"></i>
+                                                <i class="fa fa-users svn-notification-email-list-group-icon"></i>
                                                     {{ label }}<span class="svn-notification-email-list-separator">, </span>
                                                 </span>
                                             {{/ ugroups_to_be_notified }}
@@ -111,7 +111,7 @@
                                     </div>
                                     <div class="svn-notifications-checkbox-cell-read">
                                         <a href="javascript:;" class="svn-notification-edit-show svn-notification-edit">
-                                            <i class="icon-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                             {{ edit }}
                                         </a>
                                         <a href="javascript:;"
@@ -122,7 +122,7 @@
                                            data-html="true"
                                            data-popover-id="svn-notification-delete-{{ notification_id }}-popover"
                                         >
-                                            <i class="icon-trash"></i>
+                                            <i class="fa fa-trash-o"></i>
                                             {{ delete }}
                                         </a>
                                         <div id="svn-notification-delete-{{ notification_id }}-popover"
@@ -195,7 +195,7 @@
                 </tbody>
             </table>
             <button type="button" class="btn" id="svn-notifications-add">
-                <i class="icon-plus"></i>
+                <i class="fa fa-plus"></i>
                 {{ add_notification }}
             </button>
 

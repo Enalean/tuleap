@@ -6,7 +6,7 @@
     <input type="hidden" name="func" value="immutable_tags">
     <input type="hidden" name="post_changes" value="y">
 
-    <h3><i class="icon-tags"></i> {{ immutable_tag_configuration }}</h3>
+    <h3><i class="fa fa-tags"></i> {{ immutable_tag_configuration }}</h3>
     <p class="immutable-tags-comment muted">{{ svn_allow_tag_immutable_comment }}</p>
     <div class="row-fluid immutable-tags-configuration">
         <div class="immutable-tags-path span6">
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <h3><i class="icon-eye-open"></i> {{ preview }}</h3>
+    <h3><i class="fa fa-eye"></i> {{ preview }}</h3>
 
     {{# exceeds_max_number_of_folders }}
     <div class="row-fluid">
@@ -59,14 +59,14 @@
                     <span class="empty-state">{{ impacted_svn_empty_state }}</span>
                 </h4>
                 <div id="immutable-tags-console" class="well">
-                    <div class="empty-state"><i class="icon-hand-left"></i> {{ select_tag }}</div>
-                    <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
-                    <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="icon-remove"></i></div>
+                    <div class="empty-state"><i class="fa fa-hand-o-left"></i> {{ select_tag }}</div>
+                    <div class="text-success add-command">$ svn cp ^/{{ some_path }} ^<span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-check"></i></div>
+                    <div class="text-danger update-command">$ svn cp ^/{{ some_path }}/README ^<span class="tag-path-example">/tags</span>/{{ my_tag }}/README <i class="fa fa-times"></i></div>
                     <br>
                     <div>// {{ svn_status_style }}</div>
-                    <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-ok"></i></div>
-                    <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
-                    <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="icon-remove"></i></div>
+                    <div class="text-success add-command">A <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-check"></i></div>
+                    <div class="text-danger update-command">U <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-times"></i></div>
+                    <div class="text-danger update-command">D <span class="tag-path-example">/tags</span>/{{ my_tag }} <i class="fa fa-times"></i></div>
                 </div>
             </div>
         </div>

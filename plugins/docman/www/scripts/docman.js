@@ -1159,7 +1159,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
                 var lock_icon = new Element("i", {
                     id: "docman_item_icon_locked_" + this.item_id,
                     title: this.docman.options.language.event_lock_add
-                }).addClassName("icon-lock");
+                }).addClassName("fa fa-lock");
                 $("docman_item_title_link_" + this.item_id)
                     .up()
                     .insert({ after: lock_icon });

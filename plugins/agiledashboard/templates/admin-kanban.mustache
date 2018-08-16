@@ -13,12 +13,12 @@
     <form action="?group_id={{ group_id }}&action=updateConfiguration" method="POST">
         {{# kanban_activated }}
             <div class="alert alert-success">
-                <i class="icon-ok-circle"></i> {{ kanban_activated_label }}
+                <i class="fa fa-check-circle-o"></i> {{ kanban_activated_label }}
             </div>
         {{/ kanban_activated }}
         {{^ kanban_activated }}
             <div class="alert alert-warning admin-kanban-not-activated">
-                <i class="icon-off"></i> {{ kanban_not_activated_label }}
+                <i class="fa fa-power-off"></i> {{ kanban_not_activated_label }}
                 {{^ has_kanban }}
                 <p> {{ first_kanban_will_be_created }} </p>
                 {{/ has_kanban }}
@@ -28,7 +28,7 @@
 
         <div class="agiledashboard-admin-section">
             <section>
-                <h3><i class="icon-cogs"></i> {{ general_settings_section }}</h3>
+                <h3><i class="fa fa-cogs"></i> {{ general_settings_section }}</h3>
                 <div class="agiledashboard-section-details">
                     <input type="hidden" name="activate-kanban" value="0">
                     <label class="checkbox active-kanban">
@@ -37,7 +37,7 @@
                     </label>
                     <label for="kanban-title-admin">{{ title_label }}</label>
                     <input id="kanban-title-admin" name="kanban-title-admin" type="text" required value="{{ kanban_title }}" placeholder="{{ title_label }}">
-                    <p class="help-block"><i class="icon-info-sign"></i> {{ title_label_help }}</p>
+                    <p class="help-block"><i class="fa fa-info-circle"></i> {{ title_label_help }}</p>
                     {{{ token }}}
                     <button type="submit" class="btn btn-primary" id="ad-service-submit">{{ config_submit_label }}</button>
                 </div>
