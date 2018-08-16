@@ -519,7 +519,8 @@ class Docman_MetadataFactory {
         return $deleted;
     }
 
-    function &getHardCodedMetadataFromLabel($label, $value=null) {
+    public function getHardCodedMetadataFromLabel($label, $value=null)
+    {
         $md = null;
         switch($label) {
         case 'title':

@@ -44,11 +44,10 @@ require_once('./tracker/tracker.php');
 require_once('./frs/frs.php');
 
 // include the <Plugin> API (only if plugin is available), not tracker v5
-$em =& EventManager::instance();
+$em = EventManager::instance();
 $em->processEvent('soap', array());
 
 // Call the service method to initiate the transaction and send the response
-$HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
-$server->service($HTTP_RAW_POST_DATA);
+$server->service(file_get_contents('php://input'));
 
 ?>

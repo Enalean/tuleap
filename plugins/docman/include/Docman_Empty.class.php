@@ -1,5 +1,6 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
@@ -28,7 +29,8 @@ class Docman_Empty extends Docman_Document {
         parent::__construct($data);
     }
 
-    function accept(&$visitor, $params = array()) {
+    public function accept($visitor, $params = array())
+    {
         return $visitor->visitEmpty($this, $params);
     }
 

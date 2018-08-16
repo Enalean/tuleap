@@ -4,7 +4,7 @@
  * Copyright 1999-2001 (c) VA Linux Systems
  * http://sourceforge.net
  *
- * Copyright (c) Enalean, 2012-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -478,13 +478,13 @@ class Artifact {
         //  Create the insert statement for standard field
         //
         //Reference manager for cross reference
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         reset($vfl);
         $vfl_cols = '';
         $vfl_values = '';
         $text_value_list=array();
-        while (list($field_name,$value) = each($vfl)) {
-            
+        foreach ($vfl as $field_name => $value) {
+
             //echo "<br>field_name=$field_name, value=$value";
             
             $field = $art_field_fact->getFieldFromName($field_name);
@@ -2862,7 +2862,7 @@ class Artifact {
 	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showAttachedFiles($group_id,$group_artifact_id,true);
 	    
         // Extract references from the message
-        $referenceManager =& ReferenceManager::instance();
+        $referenceManager = ReferenceManager::instance();
         $ref_array = $referenceManager->extractReferencesGrouped($body, $group_id);
         if (count($ref_array) > 0) {
             $body .= $GLOBALS['sys_lf'].$GLOBALS['sys_lf'].$Language->getText('tracker_include_artifact','references').$GLOBALS['sys_lf'];

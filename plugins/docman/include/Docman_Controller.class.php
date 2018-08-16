@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2015-2017. All rights reserved
+ * Copyright (c) Enalean, 2015-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -1323,9 +1323,14 @@ class Docman_Controller extends Controler {
                         //Validations
                         $new_item = $this->createItemFromUserInput();
 
-                        $valid = $this->_validateRequest(array_merge($new_item->accept(new Docman_View_GetFieldsVisitor()),
-                                                                     $new_item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request))));
-
+                        $fields = array_merge(
+                            $new_item->accept(new Docman_View_GetFieldsVisitor()),
+                            $new_item->accept(
+                                new Docman_View_GetSpecificFieldsVisitor(),
+                                ['request' => $this->request]
+                            )
+                        );
+                        $valid = $this->_validateRequest($fields);
                         if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
                             $news = $this->request->get('news');
                             if ($news) {

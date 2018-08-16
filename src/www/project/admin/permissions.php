@@ -78,7 +78,7 @@ function permission_get_name($permission_type) {
     } else if ($permission_type=='TRACKER_ARTIFACT_ACCESS') {
         return $Language->getText('project_admin_permissions','tracker_artifact_access');
     } else {
-        $em =& EventManager::instance();
+        $em   = EventManager::instance();
         $name = false;
         $em->processEvent('permission_get_name', array('permission_type' => $permission_type, 'name' => &$name));
         return $name ? $name : $permission_type;

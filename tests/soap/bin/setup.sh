@@ -80,7 +80,7 @@ setup_database() {
 load_project() {
     base_dir=$1
 
-    /usr/share/tuleap/src/utils/tuleap import-project-xml \
+    PHP=/opt/remi/php"$PHP_VERSION"/root/usr/bin/php /usr/share/tuleap/src/utils/tuleap import-project-xml \
         -u admin \
         -i $base_dir \
         -m $base_dir/user_map.csv
@@ -95,12 +95,12 @@ seed_data() {
     load_project /usr/share/tuleap/tests/soap/_fixtures/02-plugin-tracker
 
     echo "Load initial data"
-    /opt/remi/php56/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
+    /opt/remi/php"$PHP_VERSION"/root/usr/bin/php -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/soap/bin/init_data.php
 }
 
 setup_tuleap
-/usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
-service php56-php-fpm start
+/usr/share/tuleap/tools/utils/php"$PHP_VERSION"/run.php --modules=nginx,fpm
+service php"$PHP_VERSION"-php-fpm start
 service nginx start
 setup_database
 seed_data

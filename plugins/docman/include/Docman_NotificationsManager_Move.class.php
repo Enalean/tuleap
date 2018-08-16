@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,7 +73,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
             $this->getMessageLink($type, $params)
         );
     }
-    function _getMessageForUser(&$user, $message_type, $params) {
+    function _getMessageForUser($user, $message_type, $params) {
         $msg = '';
         $dpm = $this->_getPermissionsManager();
         switch($message_type) {

@@ -142,7 +142,7 @@ class Docman_MetadataHtml {
 
     function __construct(&$md, $formParams) {
         $this->md =& $md;
-        $this->hp =& Codendi_HTMLPurifier::instance();
+        $this->hp = Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams; 
     }
 

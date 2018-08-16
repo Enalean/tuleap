@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -107,7 +107,7 @@ class ArtifactType {
 	 *  @param	array	The associative array of data.
 	 *	@return boolean	success.
 	 */
-	function __construct(&$Group,$artifact_type_id=false, $arr=false) {
+	function __construct($Group,$artifact_type_id=false, $arr=false) {
 	  global $Language;
 
 		if (!$Group || !is_object($Group)) {
@@ -119,7 +119,7 @@ class ArtifactType {
 			return false;
 		}
 		
-		$this->Group =& $Group;
+		$this->Group = $Group;
 		if ($artifact_type_id) {
 			$res_events = $this->getNotificationEvents($artifact_type_id);
 			$this->num_events = db_numrows($res_events);
@@ -743,12 +743,12 @@ class ArtifactType {
 	 *	@return boolean
 	 */
 	function userIsAdmin($user_id = false) { 
-	    $um =& UserManager::instance();
+	    $um = UserManager::instance();
         if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
             $user_id = $user->getId();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
         if ($user->isTrackerAdmin($this->Group->getID(),$this->getID())) {
 		    return true;

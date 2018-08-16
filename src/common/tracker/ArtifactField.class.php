@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -1658,12 +1658,12 @@ class ArtifactField {
 	 * @param user_id: if not given or false take the current user
 	**/ 
 	function userCanRead($group_id,$group_artifact_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = PermissionsManager::instance();
+        $um = UserManager::instance();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
         $ok = $user->isSuperUser() 
               || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)))
@@ -1677,12 +1677,12 @@ class ArtifactField {
 	 * @param user_id: if not given or false take the current user
 	**/ 
 	function userCanUpdate($group_id,$group_artifact_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = PermissionsManager::instance();
+        $um = UserManager::instance();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
         $ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
@@ -1695,12 +1695,12 @@ class ArtifactField {
 	 * @param user_id: if not given or false take the current user
 	**/ 
 	function userCanSubmit($group_id,$group_artifact_id,$user_id=false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $pm = PermissionsManager::instance();
+        $um = UserManager::instance();
 	    if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
 	$ok = $user->isSuperUser() || $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $user->getUgroups($group_id, array('artifact_type' => $group_artifact_id)));
         return $ok;
@@ -1712,7 +1712,7 @@ class ArtifactField {
 	 * @param group_artifact_id: the trackers id this field is in
 	**/ 
 	function ugroupsCanRead($ugroups,$group_artifact_id) {
-	  $pm =& PermissionsManager::instance();
+	  $pm = PermissionsManager::instance();
 	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_READ', $ugroups);
 	  return $ok;
 	}
@@ -1723,7 +1723,7 @@ class ArtifactField {
 	 * @param group_artifact_id: the trackers id this field is in
 	**/ 
 	function ugroupsCanUpdate($ugroups,$group_artifact_id) {
-	  $pm =& PermissionsManager::instance();
+	  $pm = PermissionsManager::instance();
 	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_UPDATE', $ugroups);
 	  return $ok;
 	}
@@ -1734,7 +1734,7 @@ class ArtifactField {
 	 * @param group_artifact_id: the trackers id this field is in
 	**/ 
 	function ugroupsCanSubmit($ugroups,$group_artifact_id) {
-	  $pm =& PermissionsManager::instance();
+	  $pm = PermissionsManager::instance();
 	  $ok = $pm->userHasPermission($group_artifact_id."#".$this->field_id, 'TRACKER_FIELD_SUBMIT', $ugroups);
 	  return $ok;
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -307,7 +307,7 @@ class ArtifactTypeFactory {
         $art_report_fact->deleteReports($atid);
         
         //Generate an event 
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
 		$pref_params = array('atid'   => $atid);
 		$em->processEvent('artifactType_deleted',$pref_params);
         
@@ -652,7 +652,7 @@ class ArtifactTypeFactory {
                       $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
                       return false;
                     }
-                    $em =& EventManager::instance();
+                    $em = EventManager::instance();
                     $pref_params = array('atid_source'   => $atid_template,
                                          'atid_dest'     => $id);
                     $em->processEvent('artifactType_created',$pref_params);

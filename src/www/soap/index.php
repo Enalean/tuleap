@@ -52,7 +52,7 @@ try {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (LOG_SOAP_REQUESTS) {
         error_log('SOAP Request :');
-        error_log($HTTP_RAW_POST_DATA);
+        error_log(file_get_contents('php://input'));
     }
     $xml_security = new XML_Security();
     $xml_security->enableExternalLoadOfEntities();

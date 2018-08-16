@@ -1,23 +1,24 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2018. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  * 
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once('Docman_ItemFactory.class.php');
@@ -161,7 +162,7 @@ class Docman_CloneItemsVisitor {
     }
 
     function _clonePermissions($item, $newItemId, $ugroupsMapping) {
-        $dpm =& $this->_getPermissionsManager($item->getGroupId());
+        $dpm = $this->_getPermissionsManager($item->getGroupId());
         if($ugroupsMapping === false) {
             // ugroups mapping is not available.
             // use default values.
@@ -178,12 +179,12 @@ class Docman_CloneItemsVisitor {
         // * change the fieldId (use mapping between template metadata and
         //   project metadata)
         // * for list of values change the values (use mapping as behind).
-        $newMdvFactory =& $this->_getMetadataValueFactory($this->dstGroupId);
+        $newMdvFactory = $this->_getMetadataValueFactory($this->dstGroupId);
         
-        $oldMdFactory =& $this->_getMetadataFactory($item->getGroupId());
+        $oldMdFactory = $this->_getMetadataFactory($item->getGroupId());
         $oldMdFactory->appendItemMetadataList($item);
         
-        $oldMdIter =& $item->getMetadataIterator();
+        $oldMdIter = $item->getMetadataIterator();
         $oldMdIter->rewind();
         while($oldMdIter->valid()) {
             $oldMd = $oldMdIter->current();
@@ -230,8 +231,8 @@ class Docman_CloneItemsVisitor {
     
     function _metadataEnabled($srcGroupId, $mdLabel) {
         if(!isset($this->_cacheMetadataUsage[$mdLabel])) {
-            $srcSettingsBo =& $this->_getSettingsBo($srcGroupId);
-            $dstSettingsBo =& $this->_getSettingsBo($this->dstGroupId);
+            $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
+            $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel) 
                                                     && $dstSettingsBo->getMetadataUsage($mdLabel));
         }
@@ -247,39 +248,39 @@ class Docman_CloneItemsVisitor {
     }
 
     // Factory methods mandatate by tests.
-    function &_getItemFactory() {
-        $o = new Docman_ItemFactory();
-        return $o;
+    function _getItemFactory()
+    {
+        return new Docman_ItemFactory();
     }
 
-    function &_getPermissionsManager($groupId) {
-        $o =& Docman_PermissionsManager::instance($groupId);
-        return $o;
+    function _getPermissionsManager($groupId)
+    {
+        return Docman_PermissionsManager::instance($groupId);
     }
 
-    function &_getFileStorage($dataRoot) {
-        $o = new Docman_FileStorage($dataRoot);
-        return $o;
+    function _getFileStorage($dataRoot)
+    {
+        return new Docman_FileStorage($dataRoot);
     }
 
-    function &_getVersionFactory() {
-        $o = new Docman_VersionFactory();
-        return $o;
+    function _getVersionFactory()
+    {
+        return new Docman_VersionFactory();
     }
 
-    function &_getMetadataValueFactory($groupId) {
-        $o = new Docman_MetadataValueFactory($groupId);
-        return $o;
+    function _getMetadataValueFactory($groupId)
+    {
+        return new Docman_MetadataValueFactory($groupId);
     }
 
-    function &_getMetadataFactory($groupId) {
-        $o = new Docman_MetadataFactory($groupId);
-        return $o;
+    function _getMetadataFactory($groupId)
+    {
+        return new Docman_MetadataFactory($groupId);
     }
     
-    function &_getSettingsBo($groupId) {
-        $o =& Docman_SettingsBo::instance($groupId);
-        return $o;
+    function _getSettingsBo($groupId)
+    {
+        return Docman_SettingsBo::instance($groupId);
     }
 }
 
