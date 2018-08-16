@@ -1,5 +1,6 @@
+import reports_module from './reports-modal.spec.js';
 import kanban_module from '../app.js';
-import angular       from 'angular';
+import angular from 'angular';
 import 'angular-mocks';
 
 describe("DiagramRestService -", () => {
@@ -9,6 +10,7 @@ describe("DiagramRestService -", () => {
         $httpBackend;
 
     beforeEach(() => {
+        angular.mock.module(reports_module);
         angular.mock.module(kanban_module);
 
         angular.mock.inject(function(

@@ -1,6 +1,5 @@
 *.sw*
 *~
-dist/
 node_modules/
 vendor/
 src/**/*.css

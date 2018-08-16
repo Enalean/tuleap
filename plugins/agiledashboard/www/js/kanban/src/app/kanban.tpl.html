@@ -12,14 +12,18 @@
                 ng-click="kanban.editKanban()"
                 ng-show="kanban.showEditbutton()"
         >
-            <i class="fa fa-pencil tlp-button-icon"></i>
+            <i class="fa fa-pencil tlp-button-icon"
+                ng-class="{ 'fa-spinner fa-spin': kanban.is_edit_loading }"
+            ></i>
             <span translate>Edit this Kanban</span>
         </button>
         <button type="button"
                 class="tlp-button-primary tlp-button-outline tlp-button-small kanban-header-report-button"
                 ng-click="kanban.openReportModal()"
         >
-            <i class="fa fa-bar-chart tlp-button-icon"></i>
+            <i class="fa fa-bar-chart tlp-button-icon"
+                ng-class="{ 'fa-spinner fa-spin': kanban.is_report_loading }"
+            ></i>
             <span translate>Show reports</span>
         </button>
 

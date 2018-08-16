@@ -2,7 +2,9 @@ import angular from 'angular';
 import ngSanitize from 'angular-sanitize';
 import dragular from 'dragular';
 import angular_artifact_modal from 'angular-artifact-modal';
-import angular_tlp from 'angular-tlp';
+
+import angular_tlp from 'angular-tlp/index.js';
+import angular_async from 'angular-tlp/angular-async.js';
 
 import 'angular-locker';
 import 'angular-gettext';
@@ -10,13 +12,14 @@ import 'ng-scrollbar';
 import 'restangular';
 import '../../po/fr.po';
 
-import jwt                                 from './jwt/jwt.js';
-import kanban_item                         from './kanban-item/kanban-item.js';
-import shared_properties                   from './shared-properties/shared-properties.js';
-import uuid_generator                      from './uuid-generator/uuid-generator.js';
-import socket                              from './socket/socket.js';
-import user_preferences                    from './user-preferences/user-preferences.js';
-import error_modal                         from './error-modal/error-modal.js';
+import jwt               from './jwt/jwt.js';
+import kanban_item       from './kanban-item/kanban-item.js';
+import shared_properties from './shared-properties/shared-properties.js';
+import uuid_generator    from './uuid-generator/uuid-generator.js';
+import socket            from './socket/socket.js';
+import user_preferences  from './user-preferences/user-preferences.js';
+import error_modal       from './error-modal/error-modal.js';
+
 import ErrorCtrl                           from './error-modal/error-controller.js';
 import KanbanConfig                        from './app-config.js';
 import MainCtrl                            from './app-main-controller.js';
@@ -28,7 +31,6 @@ import AddInPlaceDirective                 from './add-in-place/add-in-place-dir
 import ResizeDirective                     from './resize-directive.js';
 import AddToDashboardDirective             from './add-to-dashboard/add-to-dashboard-directive.js';
 import FilterTrackerReportDirective        from './filter-tracker-report/filter-tracker-report-directive.js';
-import AutoFocusInputDirective             from './edit-kanban/edit-kanban-autofocus-directive.js';
 import GoToKanbanDirective                 from './go-to-kanban/go-to-kanban-directive.js';
 import EscKeyDirective                     from './esc-key/esc-key-directive.js';
 import KanbanFilteredUpdatedAlertDirective from './kanban-filtered-updated-alert/kanban-filtered-updated-alert-directive.js';
@@ -37,9 +39,6 @@ import KanbanColumnDirective               from './kanban-column/kanban-column-d
 import KanbanColumnService                 from './kanban-column/kanban-column-service.js';
 import KanbanItemRestService               from './kanban-item/kanban-item-rest-service.js';
 import KanbanFilteredUpdatedAlertService   from './kanban-filtered-updated-alert/kanban-filtered-updated-alert-service.js';
-import GraphDirective                      from './reports-modal/diagram-directive.js';
-import DiagramRestService                  from './reports-modal/diagram-rest-service.js';
-import ReportsModalController              from './reports-modal/reports-modal-controller.js';
 import FilterTrackerReportController       from './filter-tracker-report/filter-tracker-report-controller.js';
 import FilterTrackerReportService          from './filter-tracker-report/filter-tracker-report-service.js';
 import WipPopoverDirective                 from './wip-popover/wip-popover-directive.js';
@@ -54,6 +53,7 @@ export default angular.module('kanban', [
     'ngScrollbar',
     'restangular',
     angular_artifact_modal,
+    angular_async,
     angular_tlp,
     dragular,
     error_modal,
@@ -67,7 +67,6 @@ export default angular.module('kanban', [
 ])
 .config(KanbanConfig)
 .controller('MainCtrl', MainCtrl)
-.controller('ReportsModalController', ReportsModalController)
 .controller('FilterTrackerReportController', FilterTrackerReportController)
 .controller('KanbanColumnController', KanbanColumnController)
 .controller('ErrorCtrl', ErrorCtrl)
@@ -76,7 +75,6 @@ export default angular.module('kanban', [
 .service('DroppedService', DroppedService)
 .service('KanbanColumnService', KanbanColumnService)
 .service('KanbanItemRestService', KanbanItemRestService)
-.service('DiagramRestService', DiagramRestService)
 .service('FilterTrackerReportService', FilterTrackerReportService)
 .service('KanbanFilteredUpdatedAlertService', KanbanFilteredUpdatedAlertService)
 .directive('kanban', KanbanDirective)
@@ -84,10 +82,8 @@ export default angular.module('kanban', [
 .directive('resize', ResizeDirective)
 .directive('addToDashboard', AddToDashboardDirective)
 .directive('filterTrackerReport', FilterTrackerReportDirective)
-.directive('autoFocusInput', AutoFocusInputDirective)
 .directive('escKey', EscKeyDirective)
 .directive('kanbanColumn', KanbanColumnDirective)
-.directive('graph', GraphDirective)
 .directive('wipPopover', WipPopoverDirective)
 .directive('goToKanban', GoToKanbanDirective)
 .directive('kanbanFilteredUpdatedAlert', KanbanFilteredUpdatedAlertDirective)

@@ -1,7 +1,11 @@
 const path = require("path");
 const webpack_configurator = require("../../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "./dist");
+const assets_dir_path = path.resolve(
+    __dirname,
+    "../../../../../src/www/assets/agiledashboard/scripts"
+);
+const assets_public_path = "/assets/agiledashboard/scripts/";
 const path_to_tlp = path.resolve(__dirname, "../../../../../src/www/themes/common/tlp/");
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
@@ -10,7 +14,7 @@ const webpack_config_for_kanban = {
         kanban: "./src/app/app.js"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     externals: {
         tlp: "tlp",
         angular: "angular",

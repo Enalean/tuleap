@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.8\n"
 
 #: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
 msgid ""
@@ -124,11 +124,11 @@ msgstr "Configuration générale"
 msgid "Go to Kanban"
 msgstr "Aller sur le Kanban"
 
-#: src/app/app-kanban-controller.js
+#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In Kanban since:"
 msgstr "Dans le Kanban depuis :"
 
-#: src/app/app-kanban-controller.js
+#: src/app/kanban-item/time-info/time-info-component.js
 msgid "In column since:"
 msgstr "Dans la colonne depuis :"
 
@@ -239,6 +239,22 @@ msgstr ""
 "La suppression d'un Kanban est irréversible. Veuillez être certain de ce que "
 "vous faites."
 
+#: src/app/app-kanban-controller.js
+msgid ""
+"There was an error while loading the Edit Kanban modal. Please check your "
+"network connection."
+msgstr ""
+"Une erreur est survenue pendant le chargement de la modale d'édition du "
+"Kanban. Veuillez vérifier votre connexion au réseau."
+
+#: src/app/app-kanban-controller.js
+msgid ""
+"There was an error while loading the Reports modal. Please check your "
+"network connection."
+msgstr ""
+"Une erreur est survenue pendant le chargement de la modale des Rapports. "
+"Veuillez vérifier votre connexion au réseau."
+
 #: src/app/reports-modal/reports-modal.tpl.html
 msgid "Timeframe:"
 msgstr "Période de temps :"
@@ -259,7 +275,7 @@ msgstr "Basculer l'affichage de cette colonne"
 msgid "Tracker report filters"
 msgstr "Rapports de l'outil de suivi"
 
-#: src/app/socket/socket-disconnect.tpl.html
+#: src/app/socket/socket-service.js
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 

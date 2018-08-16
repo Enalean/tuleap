@@ -1,15 +1,15 @@
-import './edit-kanban/edit-kanban.tpl.html';
 import './error-modal/error.tpl.html';
-import './reports-modal/reports-modal.tpl.html';
-import EditKanbanController   from './edit-kanban/edit-kanban-controller.js';
-import ReportsModalController from './reports-modal/reports-modal-controller.js';
+import { setError, resetError } from './feedback-state.js';
+
 import _                      from 'lodash';
 import angular                from 'angular';
 
 export default KanbanCtrl;
 
 KanbanCtrl.$inject = [
+    '$q',
     '$scope',
+    'gettextCatalog',
     'SharedPropertiesService',
     'KanbanService',
     'KanbanItemRestService',
@@ -26,7 +26,9 @@ KanbanCtrl.$inject = [
 ];
 
 function KanbanCtrl(
+    $q,
     $scope,
+    gettextCatalog,
     SharedPropertiesService,
     KanbanService,
     KanbanItemRestService,
@@ -70,6 +72,8 @@ function KanbanCtrl(
             columns: kanban.columns
         },
         user_prefers_collapsed_cards: true,
+        is_report_loading: false,
+        is_edit_loading: false,
         $onInit: init,
         isColumnWipReached,
         userIsAdmin,
@@ -304,22 +308,56 @@ function KanbanCtrl(
     }
 
     function editKanban() {
-        TlpModalService.open({
-            templateUrl : 'edit-kanban.tpl.html',
-            controller  : EditKanbanController,
-            controllerAs: 'edit_modal',
-            resolve     : {
-                rebuild_scrollbars: reflowKustomScrollBars
-            }
-        });
+        self.is_edit_loading = true;
+        resetError();
+        $q.when(import(/* webpackChunkName: "edit-modal" */ "./edit-kanban/edit-kanban.js"))
+            .then(module => {
+                const { default: controller } = module;
+
+                TlpModalService.open({
+                    templateUrl: "edit-kanban.tpl.html",
+                    controller,
+                    controllerAs: "edit_modal",
+                    resolve: {
+                        rebuild_scrollbars: reflowKustomScrollBars
+                    }
+                });
+            })
+            .catch(() => {
+                setError(
+                    gettextCatalog.getString(
+                        "There was an error while loading the Edit Kanban modal. Please check your network connection."
+                    )
+                );
+            })
+            .finally(() => {
+                self.is_edit_loading = false;
+            });
     }
 
     function openReportModal() {
-        TlpModalService.open({
-            templateUrl : 'reports-modal.tpl.html',
-            controller  : ReportsModalController,
-            controllerAs: 'reports_modal'
-        });
+        self.is_report_loading = true;
+        resetError();
+        $q.when(import(/* webpackChunkName: "reports-modal" */ "./reports-modal/reports-modal.js"))
+            .then(module => {
+                const { default: controller } = module;
+
+                TlpModalService.open({
+                    templateUrl: "reports-modal.tpl.html",
+                    controller,
+                    controllerAs: "reports_modal"
+                });
+            })
+            .catch(() => {
+                setError(
+                    gettextCatalog.getString(
+                        "There was an error while loading the Reports modal. Please check your network connection."
+                    )
+                );
+            })
+            .finally(() => {
+                self.is_report_loading = false;
+            });
     }
 
     function loadColumns() {

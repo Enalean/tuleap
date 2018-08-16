@@ -1,7 +1,8 @@
 import kanban_module from '../app.js';
+import reports_module from './reports-modal.spec.js';
 import angular from 'angular';
-import { modal } from 'tlp';
 import 'angular-mocks';
+import BaseController from './reports-modal-controller.js';
 
 describe("ReportsModalController -", function() {
     var ReportsModalController,
@@ -13,7 +14,8 @@ describe("ReportsModalController -", function() {
         kanban_label,
         tlp_modal;
 
-    beforeEach(function() {
+    beforeEach(() => {
+        angular.mock.module(reports_module);
         angular.mock.module(kanban_module);
 
         var $controller,
@@ -54,7 +56,7 @@ describe("ReportsModalController -", function() {
         });
         spyOn(DiagramRestService, "getCumulativeFlowDiagram").and.returnValue($q(angular.noop));
 
-        ReportsModalController = $controller('ReportsModalController', {
+        ReportsModalController = $controller(BaseController, {
             $scope                 : $scope,
             modal_instance         : { tlp_modal: tlp_modal },
             SharedPropertiesService: SharedPropertiesService,

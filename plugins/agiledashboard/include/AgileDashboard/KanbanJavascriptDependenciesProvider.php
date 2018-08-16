@@ -27,8 +27,8 @@ class KanbanJavascriptDependenciesProvider implements JavascriptDependenciesProv
     public function getDependencies()
     {
         $kanban_include_assets = new IncludeAssets(
-            AGILEDASHBOARD_BASE_DIR . '/../www/js/kanban/dist',
-            AGILEDASHBOARD_BASE_URL . '/js/kanban/dist'
+            __DIR__. '/../../../../src/www/assets/agiledashboard/scripts',
+            '/assets/agiledashboard/scripts/'
         );
         $ckeditor_path = '/scripts/ckeditor-4.3.2/';
 
