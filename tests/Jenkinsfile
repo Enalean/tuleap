@@ -34,6 +34,10 @@ def runSOAPTests(String name, String image_version) {
     junit "results/api-soap/soap_tests_${name}.xml"
 }
 
+def runJavascriptCodingStandards() {
+    sh 'docker run --rm -v $WORKSPACE/sources:/sources:ro $DOCKER_REGISTRY/prettier-checker "**/*.{js,vue}"'
+}
+
 pipeline {
     agent {
         label 'docker'
@@ -127,6 +131,7 @@ pipeline {
                         sh 'tests/files_status_checker/verify.sh "translation files" "*.po\$"'
                     }
                 },
+                'Javascript coding standards': { runJavascriptCodingStandards() },
                 failFast: false
             }
             post {
