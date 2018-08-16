@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__.'/../../src/common/autoload.php';
-require_once __DIR__.'/../../src/common/autoload_libs.php';
+require_once __DIR__.'/../../src/vendor/autoload.php';
 require_once __DIR__.'/../../src/common/constants.php';
 require_once __DIR__.'/SimpleTest11x/TuleapTestCase.php';
 require_once __DIR__.'/SimpleTest11x/TuleapColorTextReporter.php';

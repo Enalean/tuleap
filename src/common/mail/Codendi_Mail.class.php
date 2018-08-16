@@ -468,12 +468,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      */
     public function send()
     {
-        if (! $this->hasRecipients()) {
-            return false;
-        }
-        if ($this->getTo() === '') {
-            $this->setTo('');
-        }
         $status = true;
 
         $mime_message = new MimeMessage();
@@ -492,14 +486,6 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         }
         $this->clearRecipients();
         return $status;
-    }
-
-    /**
-     * @return bool
-     */
-    private function hasRecipients()
-    {
-        return $this->getTo() !== '' || $this->getCc() !== '' || $this->getBcc() !== '';
     }
 
     private function getBodyPart()

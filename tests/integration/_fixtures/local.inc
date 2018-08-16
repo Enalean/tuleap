@@ -308,9 +308,6 @@ $sys_enable_avatars = 1;
 //User's avatar path
 $sys_avatar_path = $sys_data_dir . "/user/avatar/";
 
-//Zend Framework path
-$zend_path = "/usr/share/zend";
-
 //Markdown library path
 $markdown_path = "/usr/share/php-markdown";
 

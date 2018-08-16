@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,16 +19,7 @@
  *
  */
 
-require_once '/usr/share/php/Zend/autoload.php';
-
-$loader = new Zend\Loader\StandardAutoloader(
-    array(
-        'namespaces' => array(
-            'Tuleap\Configuration' => '/tuleap/tools/Configuration',
-        )
-    )
-);
-$loader->register();
+require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 
 $setup = new \Tuleap\Configuration\Setup\DistributedSVN();
 $setup->setTuleapBaseDir('/tuleap');

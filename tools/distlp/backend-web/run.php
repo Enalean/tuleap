@@ -18,16 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once '/usr/share/php/Zend/autoload.php';
-
-$loader = new Zend\Loader\StandardAutoloader(
-    array(
-        'namespaces' => array(
-            'Tuleap\Configuration' => '/usr/share/tuleap/tools/Configuration',
-        )
-    )
-);
-$loader->register();
+require_once __DIR__ . '/../../Configuration/vendor/autoload.php';
 
 // Make all warnings or notices fatal
 set_error_handler(function ($errno, $errstr, $errfile, $errline) {
