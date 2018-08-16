@@ -39,7 +39,7 @@
             class="btn"
             v-on:click="addStep"
         >
-            <i class="icon-plus"></i> <translate>Add step</translate>
+            <i class="fa fa-plus"></i> <translate>Add step</translate>
         </button>
     </div>
 </template>

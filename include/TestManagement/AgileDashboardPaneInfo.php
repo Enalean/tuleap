@@ -66,7 +66,7 @@ class AgileDashboardPaneInfo extends PaneInfo
 
     public function getIconName()
     {
-        return 'fa-check icon-check';
+        return 'fa-check';
     }
 }
 

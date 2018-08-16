@@ -35,7 +35,7 @@
                         type="button"
                         v-on:click="unmarkDeletion()"
                     >
-                        <i class="icon-undo"></i>
+                        <i class="fa fa-undo"></i>
                         <translate>Undo deletion</translate>
                     </button>
 
@@ -77,7 +77,7 @@
                         type="button"
                         v-on:click="markAsDeleted()"
                     >
-                        <i class="icon-trash"></i>
+                        <i class="fa fa-trash-o"></i>
                         <translate>Delete</translate>
                     </button>
                 </div>
