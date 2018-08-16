@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuealp\Project\Event\GetProjectWithTrackerAdministrationPermission;
+use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;

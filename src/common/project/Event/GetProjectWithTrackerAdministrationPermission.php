@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuealp\Project\Event;
+namespace Tuleap\Project\Event;
 
 use PFUser;
 use Tuleap\Event\Dispatchable;

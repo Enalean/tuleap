@@ -65,5 +65,5 @@ function autoload0eaa0f2b516ff01719305981e1c74a5e($class) {
         require dirname(__FILE__) . $classes[$cn];
     }
 }
-spl_autoload_register('autoload0eaa0f2b516ff01719305981e1c74a5e', true);
+spl_autoload_register('autoload0eaa0f2b516ff01719305981e1c74a5e');
 // @codeCoverageIgnoreEnd
