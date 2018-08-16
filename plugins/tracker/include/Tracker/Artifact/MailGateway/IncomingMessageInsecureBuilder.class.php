@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 
 class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
@@ -41,13 +43,12 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
     /**
      * @return Tracker_Artifact_MailGateway_IncomingMessage
      */
-    public function build(array $raw_mail) {
-        $subject        = isset($raw_mail['headers']['subject']) ? $raw_mail['headers']['subject'] : '';
-        $body           = $raw_mail['body'];
-        $user           = $this->getUserFromMailHeader($raw_mail['headers']['from']);
-        $to             = isset($raw_mail['headers']['to']) ? $raw_mail['headers']['to'] : '';
-        $cc             = isset($raw_mail['headers']['cc']) ? $raw_mail['headers']['cc'] : '';
-        $address_array  = array_merge($this->extractMailFromHeader($to), $this->extractMailFromHeader($cc));
+    public function build(IncomingMail $incoming_mail)
+    {
+        $subject        = $incoming_mail->getSubject();
+        $body           = $incoming_mail->getBodyText();
+        $user           = $this->getUserFromMailHeader($incoming_mail);
+        $address_array  = array_merge($incoming_mail->getTo(), $incoming_mail->getCC());
         $mail_receiver  = $this->searchRightMail($address_array);
         $is_a_followup  = $this->isAFollowUp($mail_receiver);
 
@@ -60,7 +61,6 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         }
 
         $incoming_message = new Tracker_Artifact_MailGateway_IncomingMessage(
-            $raw_mail['headers'],
             $subject,
             $body,
             $user,
@@ -71,13 +71,13 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         return $incoming_message;
     }
 
-    private function getUserFromMailHeader($mail_header) {
-        $arr_user_mail = $this->extractMailFromHeader($mail_header);
-        if (!is_array($arr_user_mail) || count($arr_user_mail) < 1) {
+    private function getUserFromMailHeader(IncomingMail $incoming_mail)
+    {
+        $arr_user_mail = $incoming_mail->getFrom();
+        if (count($arr_user_mail) < 1) {
             throw new Tracker_Artifact_MailGateway_InvalidMailHeadersException();
         }
-        $user_mail = $arr_user_mail[0]->mailbox . '@' . $arr_user_mail[0]->host;
-        $users     = $this->user_manager->getAllUsersByEmail($user_mail);
+        $users = $this->user_manager->getAllUsersByEmail($arr_user_mail[0]);
 
         if (count($users) > 1) {
             throw new Tracker_Artifact_MailGateway_MultipleUsersExistException();
@@ -145,24 +145,18 @@ class Tracker_Artifact_IncomingMessageInsecureBuilder {
         return strpos($mail_header, trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) !== false;
     }
 
-    private function extractMailFromHeader($mail_header) {
-        $mail_addresses = imap_rfc822_parse_adrlist($mail_header, '');
-
-        return $mail_addresses;
-    }
-
     /**
      * @return string
      */
     private function searchRightMail($address_array) {
         $mail_address = '';
         foreach ($address_array as $id => $value) {
-            if ((strpos($value->mailbox,
-                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) !== false) ||
-                (strpos($value->mailbox,
-                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION)!== false)
+            if ((strpos($value,
+                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE) === 0) ||
+                (strpos($value,
+                trackerPlugin::EMAILGATEWAY_INSECURE_ARTIFACT_CREATION) === 0)
                 ){
-                $mail_address = $value->mailbox . '@' . $value->host;
+                $mail_address = $value;
                 break;
             }
         }

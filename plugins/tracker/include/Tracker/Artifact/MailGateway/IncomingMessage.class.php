@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  */
 
 class Tracker_Artifact_MailGateway_IncomingMessage {
-    /** @var array */
-    private $headers;
 
     /** @var string */
     private $subject;
@@ -38,18 +36,17 @@ class Tracker_Artifact_MailGateway_IncomingMessage {
     private $artifact;
 
     public function __construct(
-        array $headers, $subject, $body, PFUser $user, Tracker $tracker, Tracker_Artifact $artifact = null
+        $subject,
+        $body,
+        PFUser $user,
+        Tracker $tracker,
+        Tracker_Artifact $artifact = null
     ) {
-        $this->headers      = $headers;
-        $this->subject      = $subject;
-        $this->body         = $body;
-        $this->user         = $user;
-        $this->tracker      = $tracker;
-        $this->artifact     = $artifact;
-    }
-
-    public function getHeaders() {
-        return $this->headers;
+        $this->subject = $subject;
+        $this->body = $body;
+        $this->user = $user;
+        $this->tracker = $tracker;
+        $this->artifact = $artifact;
     }
 
     /**

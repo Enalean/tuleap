@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
+
 class Tracker_Artifact_MailGateway_Notifier {
     private function sendErrorMail($to, $subject, $message) {
         $mail = new Codendi_Mail();
@@ -28,25 +30,26 @@ class Tracker_Artifact_MailGateway_Notifier {
         $mail->send();
     }
 
-    public function sendErrorMailMultipleUsers(array $raw_mail_parsed) {
-        $to      = $raw_mail_parsed['headers']['from'];
+    public function sendErrorMailMultipleUsers(IncomingMail $incoming_mail)
+    {
+        $to      = $this->getTo($incoming_mail);
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'creation_error');
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            $this->getSubjectFromRawMail($raw_mail_parsed)
+            $incoming_mail->getSubject()
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'multiple_users');
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    public function sendErrorMailNoUserMatch(array $raw_mail_parsed) {
-        $to      = $raw_mail_parsed['headers']['from'];
+    public function sendErrorMailNoUserMatch(IncomingMail $incoming_mail) {
+        $to      = $this->getTo($incoming_mail);
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'creation_error');
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            $this->getSubjectFromRawMail($raw_mail_parsed)
+            $incoming_mail->getSubject()
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'unknown_user');
         $this->sendErrorMail($to, $subject, $message);
@@ -74,19 +77,25 @@ class Tracker_Artifact_MailGateway_Notifier {
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    public function sendErrorMailTrackerGeneric(array $raw_mail_parsed) {
-        $to      = $raw_mail_parsed['headers']['from'];
+    public function sendErrorMailTrackerGeneric(IncomingMail $incoming_mail)
+    {
+        $to      = $this->getTo($incoming_mail);
         $subject = $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'creation_error');
         $message = $GLOBALS['Language']->getText(
             'plugin_tracker_emailgateway',
             'artifact_error_name',
-            $this->getSubjectFromRawMail($raw_mail_parsed)
+            $incoming_mail->getSubject()
         );
         $message .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'tracker_misconfiguration');
         $this->sendErrorMail($to, $subject, $message);
     }
 
-    private function getSubjectFromRawMail($raw_mail_parsed) {
-        return isset($raw_mail_parsed['headers']['subject']) ? $raw_mail_parsed['headers']['subject'] : '';
+    private function getTo(IncomingMail $incoming_mail)
+    {
+        $from_addresses = $incoming_mail->getFrom();
+        if (count($from_addresses) < 1) {
+            return '';
+        }
+        return $from_addresses[0];
     }
 }

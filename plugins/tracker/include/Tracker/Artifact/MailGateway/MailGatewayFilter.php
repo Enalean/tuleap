@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,27 +22,28 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 
 class MailGatewayFilter
 {
-    public function isAnAutoReplyMail($raw_mail)
+    public function isAnAutoReplyMail(IncomingMail $mail)
     {
-        return $this->isAutoSubmittedHeaderSent($raw_mail) === true
-            || $this->isReturnPathUndefined($raw_mail) === true;
+        return $this->isAutoSubmittedHeaderSent($mail) === true
+            || $this->isReturnPathUndefined($mail) === true;
     }
 
     /**
      * @see https://tools.ietf.org/search/rfc3834
      * @return bool
      */
-    private function isAutoSubmittedHeaderSent($raw_mail)
+    private function isAutoSubmittedHeaderSent(IncomingMail $mail)
     {
-        return isset($raw_mail['headers']['auto-submitted']) && $raw_mail['headers']['auto-submitted'] !== 'no';
+        $auto_submitted_header = $mail->getHeaderValue('auto-submitted');
+        return $auto_submitted_header !== false && $auto_submitted_header !== 'no';
     }
 
     /**
      * @see https://tools.ietf.org/search/rfc3834
      * @return bool
      */
-    private function isReturnPathUndefined($raw_mail)
+    private function isReturnPathUndefined(IncomingMail $mail)
     {
-        return isset($raw_mail['headers']['return-path']) && $raw_mail['headers']['return-path'] === '<>';
+        return $mail->getHeaderValue('return-path') === '<>';
     }
 }

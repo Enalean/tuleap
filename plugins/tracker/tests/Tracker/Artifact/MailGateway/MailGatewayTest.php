@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
+
 require_once __DIR__.'/../../../bootstrap.php';
 
 class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
@@ -25,7 +27,6 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
     protected $user;
     protected $mailgateway;
     protected $artifact;
-    protected $raw_email     = '...';
     protected $body          = 'justaucorps';
     protected $stripped_body = 'stripped justaucorps';
     protected $incoming_mail_dao;
@@ -33,6 +34,10 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
     protected $tracker;
     protected $incoming_message;
     protected $artifact_factory;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    protected $incoming_mail;
 
     public function setUp() {
         parent::setUp();
@@ -42,7 +47,6 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
         $this->incoming_message_factory = mock('Tracker_Artifact_MailGateway_IncomingMessageFactory');
         $this->artifact_factory         = mock('Tracker_ArtifactFactory');
         $this->formelement_factory      = mock('Tracker_FormElementFactory');
-        $this->parser                   = mock('Tracker_Artifact_MailGateway_Parser');
         $this->tracker_config           = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig');
         $this->logger                   = mock('Logger');
         $this->notifier                 = mock('Tracker_Artifact_MailGateway_Notifier');
@@ -60,7 +64,8 @@ class Tracker_Artifact_MailGateway_MailGateway_BaseTest extends TuleapTestCase {
 
         stub($this->incoming_message_factory)->build()->returns($this->incoming_message);
 
-        stub($this->parser)->parse()->returns(array());
+        $this->incoming_mail = Mockery::spy(IncomingMail::class);
+        $this->incoming_mail->shouldReceive('getRawMail')->andReturns('Raw mail');
     }
 }
 
@@ -72,7 +77,6 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         $filter = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter');
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_TokenMailGateway(
-            $this->parser,
             $this->incoming_message_factory,
             $this->citation_stripper,
             $this->notifier,
@@ -93,7 +97,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         stub($this->incoming_message)->isAFollowUp()->returns(false);
         expect($this->artifact_factory)->createArtifact()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itCreatesANewChangeset() {
@@ -104,7 +108,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset(array(), $this->stripped_body, $this->user, '*', '*')->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itCreatesANewChangesetEvenIfPlatformIsInInsecureMode() {
@@ -116,7 +120,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset(array(), $this->stripped_body, $this->user, '*', '*')->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itCreatesNothingWhenGatewayIsDisabled() {
@@ -127,7 +131,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itDoesNotCreateWhenUserCannotUpdate() {
@@ -138,7 +142,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itUpdatesArtifact() {
@@ -149,7 +153,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset()->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itDoesNotUpdateArtifactWhenMailGatewayIsDisabled() {
@@ -160,7 +164,7 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
 
         expect($this->artifact)->createNewChangeset()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itLinksRawEmailToCreatedChangeset() {
@@ -171,9 +175,9 @@ class Tracker_Artifact_MailGateway_MailGateway_TokenTest extends Tracker_Artifac
         stub($this->artifact)->userCanUpdate($this->user)->returns(true);
         stub($this->artifact)->createNewChangeset()->returns($changeset);
 
-        expect($this->incoming_mail_dao)->save(666, $this->raw_email)->once();
+        expect($this->incoming_mail_dao)->save(666, 'Raw mail')->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 }
 
@@ -193,7 +197,6 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         $filter = mock('Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter');
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_InsecureMailGateway(
-            $this->parser,
             $this->incoming_message_factory,
             $this->citation_stripper,
             $this->notifier,
@@ -216,7 +219,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
 
         expect($this->artifact)->createNewChangeset(array(), $this->stripped_body, $this->user, '*', '*')->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itDoesNotUpdatesArtifactWhenGatewayIsDisabled() {
@@ -228,7 +231,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
 
         expect($this->artifact)->createNewChangeset()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itCreatesArtifact() {
@@ -240,7 +243,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
 
         expect($this->artifact_factory)->createArtifact()->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itUsesDefaultValuesForFields()
@@ -257,7 +260,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
             $this->user
         )->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itDoesNotCreateArtifactWhenGatewayIsDisabled() {
@@ -269,7 +272,7 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
 
         expect($this->artifact_factory)->createArtifact()->never();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 
     public function itLinksRawEmailToCreatedChangeset() {
@@ -284,8 +287,8 @@ class Tracker_Artifact_MailGateway_MailGateway_InsecureTest extends Tracker_Arti
         stub($this->artifact_factory)->createArtifact()->returns($artifact);
         stub($this->tracker)->userCanSubmitArtifact()->returns(true);
 
-        expect($this->incoming_mail_dao)->save(666, $this->raw_email)->once();
+        expect($this->incoming_mail_dao)->save(666, 'Raw mail')->once();
 
-        $this->mailgateway->process($this->raw_email);
+        $this->mailgateway->process($this->incoming_mail);
     }
 }
