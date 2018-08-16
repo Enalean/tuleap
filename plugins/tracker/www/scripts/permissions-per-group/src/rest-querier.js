@@ -21,18 +21,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp-fetch';
+import { get } from "tlp-fetch";
 
-export {
-    getTrackerPermissions
-}
+export { getTrackerPermissions };
 
 async function getTrackerPermissions(project_id, selected_ugroup_id) {
-    const response = await get('/plugins/tracker/', {
+    const response = await get("/plugins/tracker/", {
         params: {
             group_id: project_id,
             selected_ugroup_id,
-            func: 'permissions-per-group'
+            func: "permissions-per-group"
         }
     });
 

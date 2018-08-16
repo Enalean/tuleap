@@ -29,13 +29,13 @@
 var tuleap = tuleap || {};
 tuleap.trackers = tuleap.trackers || {};
 
-(function ($) {
+(function($) {
     var submit_buttons = "form div input[type='submit'], .tuleap-modal input[type='submit']",
-        infos_element  = 'input#artifact_informations',
+        infos_element = "input#artifact_informations",
         last_viewed_changeset;
 
     tuleap.trackers.submissionKeeper = {
-        can_submit : true,
+        can_submit: true,
 
         init: function() {
             var self = this;
@@ -47,20 +47,20 @@ tuleap.trackers = tuleap.trackers || {};
             }
         },
 
-        isArtifactSubmittable : function(event) {
+        isArtifactSubmittable: function(event) {
             processSubmitQuery(event);
             return this.can_submit;
         }
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         tuleap.trackers.submissionKeeper.init();
     });
 
     function processSubmitQuery(event) {
-        var artifact_id       = getArtifactId(),
+        var artifact_id = getArtifactId(),
             last_changeset_id = getLastChangesetId(),
-            new_changesets    = getNewChangesets(artifact_id, last_changeset_id);
+            new_changesets = getNewChangesets(artifact_id, last_changeset_id);
 
         if (thereAreNewChangesets(new_changesets) || thereAreNotificationsPending()) {
             event.preventDefault();
@@ -71,15 +71,15 @@ tuleap.trackers = tuleap.trackers || {};
     }
 
     function thereAreNotificationsPending() {
-        if (! $(".artifact-event-popup")) {
+        if (!$(".artifact-event-popup")) {
             return false;
         }
         return $(".artifact-event-popup").length > 0;
     }
 
     function processNewChangesets(changesets) {
-        changesets.each(function (changeset) {
-            $('#notification-placeholder').append(changeset['html']);
+        changesets.each(function(changeset) {
+            $("#notification-placeholder").append(changeset["html"]);
         });
         $(".artifact-event-popup").fadeIn(500);
         $(".artifact-event-popup button").click(detachPopup);
@@ -89,9 +89,9 @@ tuleap.trackers = tuleap.trackers || {};
     }
 
     function reenableSubmitButtonsIfNeeded() {
-        if (! thereAreNotificationsPending()) {
+        if (!thereAreNotificationsPending()) {
             $(submit_buttons).each(function() {
-                $(this).removeAttr('disabled');
+                $(this).removeAttr("disabled");
                 tuleap.trackers.submissionKeeper.can_submit = true;
             });
         }
@@ -99,16 +99,18 @@ tuleap.trackers = tuleap.trackers || {};
 
     function disableSubmitButtons() {
         $(submit_buttons).each(function() {
-            $(this).attr('disabled','disabled');
+            $(this).attr("disabled", "disabled");
         });
     }
 
     function displayInfoMessage() {
-        $('#artifact-submit-keeper-message').show();
+        $("#artifact-submit-keeper-message").show();
     }
 
     function detachPopup() {
-        $(this).parents(".artifact-event-popup").detach();
+        $(this)
+            .parents(".artifact-event-popup")
+            .detach();
         reenableSubmitButtonsIfNeeded();
     }
 
@@ -118,13 +120,13 @@ tuleap.trackers = tuleap.trackers || {};
 
     function getNewChangesets(artifact_id, last_changeset_id) {
         var params = {
-            func         : 'get-new-changesets',
-            aid          : artifact_id,
-            changeset_id : last_changeset_id
+            func: "get-new-changesets",
+            aid: artifact_id,
+            changeset_id: last_changeset_id
         };
 
         var response = $.ajax({
-            url: codendi.tracker.base_url + '?' + $.param(params),
+            url: codendi.tracker.base_url + "?" + $.param(params),
             dataType: "json",
             async: false,
             cache: false
@@ -133,17 +135,16 @@ tuleap.trackers = tuleap.trackers || {};
         return $.parseJSON(response);
     }
 
-
     function thereAreNewChangesets(json) {
         return json.length > 0;
     }
 
     function getArtifactId() {
-        return $(infos_element).attr('data-artifact-id');
+        return $(infos_element).attr("data-artifact-id");
     }
 
     function getLastChangesetId() {
-        return last_viewed_changeset || $(infos_element).attr('data-changeset-id');
+        return last_viewed_changeset || $(infos_element).attr("data-changeset-id");
     }
 
     function isOnArtifactEditionView() {

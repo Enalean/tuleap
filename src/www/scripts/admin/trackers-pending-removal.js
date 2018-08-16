@@ -15,10 +15,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from 'tlp';
+import { modal as createModal } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const matching_buttons = document.querySelectorAll('.delete-tv3-button');
+document.addEventListener("DOMContentLoaded", () => {
+    const matching_buttons = document.querySelectorAll(".delete-tv3-button");
 
     [].forEach.call(matching_buttons, button => {
         const modal_element = document.getElementById(button.dataset.modalId);
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modal_element) {
             const modal = createModal(modal_element);
 
-            button.addEventListener('click', () => {
+            button.addEventListener("click", () => {
                 modal.toggle();
             });
         }

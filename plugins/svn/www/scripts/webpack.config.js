@@ -17,33 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const webpack_config = {
     entry: {
-        'permission-per-group': './permissions-per-group/src/index.js'
+        "permission-per-group": "./permissions-per-group/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ]
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()]
 };
 
 module.exports = webpack_config;

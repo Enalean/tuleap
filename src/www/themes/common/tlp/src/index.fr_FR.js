@@ -1,11 +1,11 @@
-import './vendor-i18n/fr_FR/flatpickr.l10n.fr.js';
+import "./vendor-i18n/fr_FR/flatpickr.l10n.fr.js";
 
-export * from './js/index.js';
+export * from "./js/index.js";
 
-import '../node_modules/select2/dist/js/i18n/fr.js';
+import "../node_modules/select2/dist/js/i18n/fr.js";
 
-import locale from './vendor-i18n/fr_FR/tlp.fr.js';
-import overrideSelect2 from './vendor-overrides/select2.js';
+import locale from "./vendor-i18n/fr_FR/tlp.fr.js";
+import overrideSelect2 from "./vendor-overrides/select2.js";
 
 function frenchSelect2(element, options) {
     options.language = options.language || locale;
@@ -13,7 +13,4 @@ function frenchSelect2(element, options) {
     return overrideSelect2(element, options);
 }
 
-export {
-    locale,
-    frenchSelect2 as select2
-};
+export { locale, frenchSelect2 as select2 };

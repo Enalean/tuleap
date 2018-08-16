@@ -17,27 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { select }               from 'd3-selection';
-import { axisLeft, axisBottom } from 'd3-axis';
-import { getYAxisTicksSize }    from './chart-layout-service.js';
+import { select } from "d3-selection";
+import { axisLeft, axisBottom } from "d3-axis";
+import { getYAxisTicksSize } from "./chart-layout-service.js";
 
 export { buildChartLayout };
 
-function buildChartLayout(
-    chart_container,
-    {
-        graph_width,
-        graph_height,
-        margins,
-    },
-    scales
-) {
+function buildChartLayout(chart_container, { graph_width, graph_height, margins }, scales) {
     const layout = drawSVG(chart_container, graph_width, graph_height);
-    const axes   = initAxis(
-        graph_width,
-        margins,
-        scales
-    );
+    const axes = initAxis(graph_width, margins, scales);
 
     drawAxis(layout, axes, graph_height, margins);
 
@@ -46,21 +34,13 @@ function buildChartLayout(
 
 function drawSVG(element, width, height) {
     return select(element)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height);
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
 }
 
-function initAxis(
-    graph_width,
-    margins,
-    { x_scale, y_scale }
-) {
-    const y_ticks_size = getYAxisTicksSize(
-        graph_width,
-        margins.right,
-        margins.left
-    );
+function initAxis(graph_width, margins, { x_scale, y_scale }) {
+    const y_ticks_size = getYAxisTicksSize(graph_width, margins.right, margins.left);
 
     return {
         x_axis: initXAxis(x_scale),
@@ -69,8 +49,7 @@ function initAxis(
 }
 
 function initXAxis(x_scale) {
-    return axisBottom(x_scale)
-        .tickPadding(20);
+    return axisBottom(x_scale).tickPadding(20);
 }
 
 function initYAxis(y_scale, y_ticks_size) {
@@ -80,24 +59,21 @@ function initYAxis(y_scale, y_ticks_size) {
         .tickPadding(20);
 }
 
-function drawAxis(
-    layout,
-    { x_axis, y_axis },
-    graph_height,
-    { left, bottom }
-) {
+function drawAxis(layout, { x_axis, y_axis }, graph_height, { left, bottom }) {
     const y_position = graph_height - bottom;
 
-    layout.append('g')
-        .attr('class', 'chart-x-axis')
-        .attr('transform', `translate(0, ${ y_position })`)
+    layout
+        .append("g")
+        .attr("class", "chart-x-axis")
+        .attr("transform", `translate(0, ${y_position})`)
         .call(x_axis);
 
-    layout.append('g')
-        .attr('class', 'chart-y-axis')
-        .attr('transform', `translate(${left}, 0)`)
+    layout
+        .append("g")
+        .attr("class", "chart-y-axis")
+        .attr("transform", `translate(${left}, 0)`)
         .call(y_axis);
 
-    layout.selectAll('.domain').remove();
-    layout.selectAll('.chart-x-axis > .tick > line').remove();
+    layout.selectAll(".domain").remove();
+    layout.selectAll(".chart-x-axis > .tick > line").remove();
 }

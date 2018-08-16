@@ -1,8 +1,8 @@
-import angular                   from 'angular';
-import tuleap_pullrequest_module from 'tuleap-pullrequest-module';
-import pullrequest_controller    from './pull-request-controller.js';
+import angular from "angular";
+import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import pullrequest_controller from "./pull-request-controller.js";
 
-import 'angular-mocks';
+import "angular-mocks";
 
 describe("PullRequestController -", function() {
     var $rootScope,
@@ -26,12 +26,12 @@ describe("PullRequestController -", function() {
             _PullRequestRestService_,
             _SharedPropertiesService_
         ) {
-            $controller                  = _$controller_;
-            $q                           = _$q_;
-            $rootScope                   = _$rootScope_;
-            $state                       = _$state_;
-            PullRequestRestService       = _PullRequestRestService_;
-            SharedPropertiesService      = _SharedPropertiesService_;
+            $controller = _$controller_;
+            $q = _$q_;
+            $rootScope = _$rootScope_;
+            $state = _$state_;
+            PullRequestRestService = _PullRequestRestService_;
+            SharedPropertiesService = _SharedPropertiesService_;
         });
 
         spyOn(SharedPropertiesService, "setPullRequest");
@@ -47,8 +47,8 @@ describe("PullRequestController -", function() {
     describe("init()", function() {
         it("Given I have a pull request id in $state.params.id and the pull requests had not been initially loaded, when I create the controller, then the pull_request will be loaded using the REST service and set in SharedPropertiesService", function() {
             var pull_request_id = 20;
-            $state.params.id   = pull_request_id;
-            var pull_request    = {
+            $state.params.id = pull_request_id;
+            var pull_request = {
                 id: pull_request_id
             };
 

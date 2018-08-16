@@ -1,7 +1,7 @@
-import kanban_module  from '../app.js';
-import angular        from 'angular';
-import 'angular-mocks';
-import BaseController from './edit-kanban-controller.js';
+import kanban_module from "../app.js";
+import angular from "angular";
+import "angular-mocks";
+import BaseController from "./edit-kanban-controller.js";
 
 describe("EditKanbanController -", () => {
     let $q,
@@ -16,8 +16,7 @@ describe("EditKanbanController -", () => {
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
-        let $controller,
-            $rootScope;
+        let $controller, $rootScope;
 
         angular.mock.inject(function(
             _$controller_,
@@ -26,15 +25,15 @@ describe("EditKanbanController -", () => {
             _KanbanService_,
             _FilterTrackerReportService_,
             _SharedPropertiesService_,
-            _RestErrorService_,
+            _RestErrorService_
         ) {
-            $controller                = _$controller_;
-            $rootScope                 = _$rootScope_;
-            $q                         = _$q_;
-            KanbanService              = _KanbanService_;
+            $controller = _$controller_;
+            $rootScope = _$rootScope_;
+            $q = _$q_;
+            KanbanService = _KanbanService_;
             FilterTrackerReportService = _FilterTrackerReportService_;
-            SharedPropertiesService    = _SharedPropertiesService_;
-            RestErrorService           = _RestErrorService_;
+            SharedPropertiesService = _SharedPropertiesService_;
+            RestErrorService = _RestErrorService_;
         });
 
         $scope = $rootScope.$new();
@@ -45,10 +44,10 @@ describe("EditKanbanController -", () => {
         const rebuild_scrollbars = angular.noop;
 
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
-            label  : 'boxman',
+            label: "boxman",
             tracker: {
-                id   : 48,
-                label: 'pinkwort'
+                id: 48,
+                label: "pinkwort"
             }
         });
 
@@ -59,7 +58,7 @@ describe("EditKanbanController -", () => {
             KanbanService,
             FilterTrackerReportService,
             modal_instance,
-            rebuild_scrollbars,
+            rebuild_scrollbars
         });
     });
 
@@ -85,8 +84,13 @@ describe("EditKanbanController -", () => {
 
             expect(EditKanbanController.saving).toBe(false);
             expect(EditKanbanController.saved).toBe(true);
-            expect(KanbanService.updateSelectableReports).toHaveBeenCalledWith(EditKanbanController.kanban.id, selectable_report_ids);
-            expect(FilterTrackerReportService.changeSelectableReports).toHaveBeenCalledWith(selectable_report_ids);
+            expect(KanbanService.updateSelectableReports).toHaveBeenCalledWith(
+                EditKanbanController.kanban.id,
+                selectable_report_ids
+            );
+            expect(FilterTrackerReportService.changeSelectableReports).toHaveBeenCalledWith(
+                selectable_report_ids
+            );
         });
 
         it("when there is a REST error, then the modal will be closed and the error modal will be shown", () => {

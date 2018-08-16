@@ -1,21 +1,13 @@
 export default TimelineService;
 
-TimelineService.$inject = [
-    '$sce',
-    'TimelineRestService',
-    'gettextCatalog'
-];
+TimelineService.$inject = ["$sce", "TimelineRestService", "gettextCatalog"];
 
-function TimelineService(
-    $sce,
-    TimelineRestService,
-    gettextCatalog
-) {
+function TimelineService($sce, TimelineRestService, gettextCatalog) {
     const self = this;
 
     Object.assign(self, {
         timeline_pagination: {
-            limit : 50,
+            limit: 50,
             offset: 0
         },
         getTimeline,
@@ -24,25 +16,27 @@ function TimelineService(
     });
 
     function getPaginatedTimeline(pull_request, accTimeline, limit, offset) {
-        return TimelineRestService.getTimeline(pull_request.id, limit, offset)
-            .then(function(response) {
-                accTimeline.push.apply(accTimeline, response.data.collection);
+        return TimelineRestService.getTimeline(pull_request.id, limit, offset).then(function(
+            response
+        ) {
+            accTimeline.push.apply(accTimeline, response.data.collection);
 
-                var headers = response.headers();
-                var total   = headers['x-pagination-size'];
+            var headers = response.headers();
+            var total = headers["x-pagination-size"];
 
-                if ((limit + offset) < total) {
-                    return getPaginatedTimeline(pull_request, accTimeline, limit, offset + limit);
-                }
+            if (limit + offset < total) {
+                return getPaginatedTimeline(pull_request, accTimeline, limit, offset + limit);
+            }
 
-                return accTimeline;
-            });
+            return accTimeline;
+        });
     }
 
     function getTimeline(pull_request, limit, offset) {
         var initialTimeline = [];
-        return getPaginatedTimeline(pull_request, initialTimeline, limit, offset)
-        .then(function(timeline) {
+        return getPaginatedTimeline(pull_request, initialTimeline, limit, offset).then(function(
+            timeline
+        ) {
             timeline.forEach(event => {
                 self.formatEvent(event, pull_request);
             });
@@ -60,22 +54,22 @@ function TimelineService(
     function getContentMessage(event) {
         var eventMessages = {
             comment: function(content) {
-                return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+                return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
             },
-            'inline-comment': function(content) {
-                return content.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+            "inline-comment": function(content) {
+                return content.replace(/(?:\r\n|\r|\n)/g, "<br/>");
             },
             update: function() {
-                return gettextCatalog.getString('Has updated the pull request.');
+                return gettextCatalog.getString("Has updated the pull request.");
             },
             rebase: function() {
-                return gettextCatalog.getString('Has rebased the pull request.');
+                return gettextCatalog.getString("Has rebased the pull request.");
             },
             merge: function() {
-                return gettextCatalog.getString('Has merged the pull request.');
+                return gettextCatalog.getString("Has merged the pull request.");
             },
             abandon: function() {
-                return gettextCatalog.getString('Has abandoned the pull request.');
+                return gettextCatalog.getString("Has abandoned the pull request.");
             }
         };
 
@@ -84,10 +78,9 @@ function TimelineService(
         return $sce.trustAsHtml(content);
     }
 
-
     function formatEvent(event, pull_request) {
-        event.isFromPRAuthor  = (event.user.id === pull_request.user_id);
-        event.isInlineComment = (event.type === 'inline-comment');
+        event.isFromPRAuthor = event.user.id === pull_request.user_id;
+        event.isInlineComment = event.type === "inline-comment";
 
         event.content = getContentMessage(event);
     }

@@ -1,39 +1,33 @@
-import open_list_field_module from './open-list-field.js';
-import angular from 'angular';
-import 'angular-mocks';
+import open_list_field_module from "./open-list-field.js";
+import angular from "angular";
+import "angular-mocks";
 
-import BaseStaticOpenListController from './static-open-list-field-controller.js';
-import tlp from 'tlp';
+import BaseStaticOpenListController from "./static-open-list-field-controller.js";
+import tlp from "tlp";
 
 describe("StaticOpenListFieldController", function() {
-    var $scope,
-        $rootScope,
-        $element,
-        StaticOpenListFieldController;
+    var $scope, $rootScope, $element, StaticOpenListFieldController;
 
     beforeEach(function() {
         angular.mock.module(open_list_field_module);
 
         var $controller;
-        angular.mock.inject(function(
-            _$controller_,
-            _$rootScope_
-        ) {
+        angular.mock.inject(function(_$controller_, _$rootScope_) {
             $controller = _$controller_;
-            $rootScope  = _$rootScope_;
+            $rootScope = _$rootScope_;
 
             $scope = $rootScope.$new();
         });
 
-        $element = angular.element('<div></div>');
+        $element = angular.element("<div></div>");
 
         StaticOpenListFieldController = $controller(BaseStaticOpenListController, {
             $element: $element,
-            $scope  : $scope
+            $scope: $scope
         });
 
         StaticOpenListFieldController.field = {
-            hint  : 'tottery',
+            hint: "tottery",
             values: []
         };
         StaticOpenListFieldController.value_model = {
@@ -45,15 +39,17 @@ describe("StaticOpenListFieldController", function() {
 
     describe("init() -", function() {
         it("When initializing the controller, then a select2 will be created and its events will be listened", function() {
-            $element.append(angular.element('<select class="tuleap-artifact-modal-open-list-static"></select>'));
+            $element.append(
+                angular.element('<select class="tuleap-artifact-modal-open-list-static"></select>')
+            );
             spyOn($element, "on");
             tlp.select2 = jasmine.createSpy("select2");
 
             StaticOpenListFieldController.init();
 
             expect(tlp.select2).toHaveBeenCalled();
-            expect($element.on).toHaveBeenCalledWith('select2:selecting', jasmine.any(Function));
-            expect($element.on).toHaveBeenCalledWith('select2:unselecting', jasmine.any(Function));
+            expect($element.on).toHaveBeenCalledWith("select2:selecting", jasmine.any(Function));
+            expect($element.on).toHaveBeenCalledWith("select2:unselecting", jasmine.any(Function));
         });
     });
 
@@ -68,8 +64,8 @@ describe("StaticOpenListFieldController", function() {
         it("Given that the field was required and the value model had a value, then it will return false", function() {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    id   : '565',
-                    label: 'pembina',
+                    id: "565",
+                    label: "pembina",
                     color: null
                 }
             ];
@@ -90,15 +86,15 @@ describe("StaticOpenListFieldController", function() {
         it("Given a value from the field's possible values that was in the value model, then it will return true", function() {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    id   : '640',
-                    label: 'subsecretarial',
+                    id: "640",
+                    label: "subsecretarial",
                     color: null
                 }
             ];
 
             var field_value = {
-                id       : 640,
-                label    : 'subsecretarial',
+                id: 640,
+                label: "subsecretarial",
                 is_hidden: false
             };
 
@@ -111,8 +107,8 @@ describe("StaticOpenListFieldController", function() {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [];
 
             var field_value = {
-                id       : 902,
-                label    : 'banket',
+                id: 902,
+                label: "banket",
                 is_hidden: false
             };
 
@@ -130,11 +126,11 @@ describe("StaticOpenListFieldController", function() {
         it("Given an event with a selection, then an object with 'id' and 'label' properties will be pushed in the value model", function() {
             var event = {
                 params: {
-                    name: 'select',
+                    name: "select",
                     args: {
                         data: {
-                            id   : 979,
-                            text: 'palpate'
+                            id: 979,
+                            text: "palpate"
                         }
                     }
                 }
@@ -144,8 +140,8 @@ describe("StaticOpenListFieldController", function() {
 
             expect(StaticOpenListFieldController.value_model.value.bind_value_objects).toEqual([
                 {
-                    id   : 979,
-                    label: 'palpate'
+                    id: 979,
+                    label: "palpate"
                 }
             ]);
         });
@@ -153,11 +149,11 @@ describe("StaticOpenListFieldController", function() {
         it("Given an event with a new 'tag' (not in possible values) selection, then an object with 'label' property will be pushed in the value model", function() {
             var event = {
                 params: {
-                    name: 'select',
+                    name: "select",
                     args: {
                         data: {
-                            id   : 'peptonuria',
-                            text : 'peptonuria',
+                            id: "peptonuria",
+                            text: "peptonuria",
                             isTag: true
                         }
                     }
@@ -167,7 +163,7 @@ describe("StaticOpenListFieldController", function() {
             StaticOpenListFieldController.handleStaticValueSelection(event);
 
             expect(StaticOpenListFieldController.value_model.value.bind_value_objects).toEqual([
-                { label: 'peptonuria' }
+                { label: "peptonuria" }
             ]);
         });
     });
@@ -176,19 +172,19 @@ describe("StaticOpenListFieldController", function() {
         it("Given an event with a static value unselection, then it will be removed from the value model", function() {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    id   : '470',
-                    label: 'unriddleable',
+                    id: "470",
+                    label: "unriddleable",
                     color: null
                 }
             ];
 
             var event = {
                 params: {
-                    name: 'unselect',
+                    name: "unselect",
                     args: {
                         data: {
-                            id: '470',
-                            text: 'unriddleable'
+                            id: "470",
+                            text: "unriddleable"
                         }
                     }
                 }
@@ -202,17 +198,17 @@ describe("StaticOpenListFieldController", function() {
         it("Given an event with a 'tag' (not in possible values) unselection, then it will be removed from the value model", function() {
             StaticOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    label: 'raticide',
+                    label: "raticide"
                 }
             ];
 
             var event = {
                 params: {
-                    name: 'unselect',
+                    name: "unselect",
                     args: {
                         data: {
-                            id   : 'raticide',
-                            text : 'raticide',
+                            id: "raticide",
+                            text: "raticide",
                             isTag: true
                         }
                     }
@@ -228,7 +224,7 @@ describe("StaticOpenListFieldController", function() {
     describe("newOpenListStaticValue() -", function() {
         it("Given blank space, then it returns null", function() {
             var new_open_value = {
-                term: '   '
+                term: "   "
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
@@ -238,28 +234,28 @@ describe("StaticOpenListFieldController", function() {
 
         it("Given a string, then it returns an object with 'id', 'text', and 'isTag' attributes", function() {
             var new_open_value = {
-                term: 'slopshop'
+                term: "slopshop"
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
 
             expect(result).toEqual({
-                id  : 'slopshop',
-                text: 'slopshop',
+                id: "slopshop",
+                text: "slopshop",
                 isTag: true
             });
         });
 
         it("Given a string with blank space, it trims it and returns an object", function() {
             var new_open_value = {
-                term: ' slopshop  '
+                term: " slopshop  "
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);
 
             expect(result).toEqual({
-                id  : 'slopshop',
-                text: 'slopshop',
+                id: "slopshop",
+                text: "slopshop",
                 isTag: true
             });
         });
@@ -268,15 +264,16 @@ describe("StaticOpenListFieldController", function() {
             StaticOpenListFieldController.field.values = [
                 {
                     id: 682,
-                    label: 'magnetotherapy'
-                }, {
+                    label: "magnetotherapy"
+                },
+                {
                     id: 815,
-                    label: 'extensometer'
+                    label: "extensometer"
                 }
             ];
 
             var new_open_value = {
-                term: 'extensometer'
+                term: "extensometer"
             };
 
             var result = StaticOpenListFieldController.newOpenListStaticValue(new_open_value);

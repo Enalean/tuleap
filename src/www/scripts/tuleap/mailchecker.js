@@ -17,20 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!function ($) {
-
-    var did_you_mean = new Template(codendi.getText('register', 'did_you_mean'));
+!(function($) {
+    var did_you_mean = new Template(codendi.getText("register", "did_you_mean"));
 
     function displaySuggestion(element, suggestion) {
         var text = did_you_mean.evaluate(suggestion);
 
         getEmailSuggestionPanel(element)
             .html(text)
-            .slideDown('fast');
+            .slideDown("fast");
     }
 
     function clearSuggestion(element) {
-        getEmailSuggestionPanel(element).slideUp('fast');
+        getEmailSuggestionPanel(element).slideUp("fast");
     }
 
     function checkEmailOnUserInput() {
@@ -38,36 +37,37 @@
 
         element.mailcheck({
             suggested: displaySuggestion,
-            empty:     clearSuggestion
+            empty: clearSuggestion
         });
     }
 
     function userAcceptsSuggestion() {
         var element = $(this);
 
-        element.parent('.email-suggestion')
-            .slideUp('fast')
-            .data('input_element')
-                .val(element.text());
+        element
+            .parent(".email-suggestion")
+            .slideUp("fast")
+            .data("input_element")
+            .val(element.text());
     }
 
     function getEmailSuggestionPanel(input_element) {
-        var id = input_element.data('email-suggestion');
+        var id = input_element.data("email-suggestion");
 
-        if (! id) {
+        if (!id) {
             return $();
         }
 
-        return $('#' + id);
+        return $("#" + id);
     }
 
-    $(document).ready(function () {
-        var element = $('input[type=email]');
+    $(document).ready(function() {
+        var element = $("input[type=email]");
 
-        element.on('blur', checkEmailOnUserInput);
+        element.on("blur", checkEmailOnUserInput);
 
         getEmailSuggestionPanel(element)
-            .data('input_element', element)
-            .delegate('.suggested-email', 'click', userAcceptsSuggestion);
+            .data("input_element", element)
+            .delegate(".suggested-email", "click", userAcceptsSuggestion);
     });
-}(window.jQuery);
+})(window.jQuery);

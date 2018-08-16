@@ -1,141 +1,144 @@
-import kanban_module from '../app.js';
-import angular from 'angular';
-import 'angular-mocks';
+import kanban_module from "../app.js";
+import angular from "angular";
+import "angular-mocks";
 
-describe('InPropertiesItemFilter', () => {
+describe("InPropertiesItemFilter", () => {
     var in_properties_filter,
-        list = [{
-            label      : 'Riri',
-            id         : 'nephew',
-            card_fields: []
-        }, {
-            label      : 'Fifi',
-            id         : 'nephew',
-            card_fields: []
-        }, {
-            label      : 'Loulou',
-            id         : 'nephew',
-            card_fields: []
-        }, {
-            label            : 'Donald',
-            id               : 'uncle',
-            card_fields      : [],
-            internal_property: 'has nephews'
-        }, {
-            label      : 'Donald & Daisy',
-            id         : 'significant others',
-            card_fields: []
-        }];
+        list = [
+            {
+                label: "Riri",
+                id: "nephew",
+                card_fields: []
+            },
+            {
+                label: "Fifi",
+                id: "nephew",
+                card_fields: []
+            },
+            {
+                label: "Loulou",
+                id: "nephew",
+                card_fields: []
+            },
+            {
+                label: "Donald",
+                id: "uncle",
+                card_fields: [],
+                internal_property: "has nephews"
+            },
+            {
+                label: "Donald & Daisy",
+                id: "significant others",
+                card_fields: []
+            }
+        ];
 
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
         var $filter, moment;
-        angular.mock.inject(function(
-            _$filter_,
-            _moment_
-        ) {
+        angular.mock.inject(function(_$filter_, _moment_) {
             $filter = _$filter_;
-            moment  = _moment_;
+            moment = _moment_;
         });
 
-        in_properties_filter = $filter('InPropertiesFilter');
-        (moment.locale || moment.lang)('en');
+        in_properties_filter = $filter("InPropertiesFilter");
+        (moment.locale || moment.lang)("en");
     });
 
-    it('has a InPropertiesFilter filter', function() {
+    it("has a InPropertiesFilter filter", function() {
         expect(in_properties_filter).not.toBeNull();
     });
 
-    it('filters on label', function() {
-        expect(in_properties_filter(list, 'Donald')).toContain({
-            label            : 'Donald',
-            id               : 'uncle',
-            card_fields      : [],
-            internal_property: 'has nephews'
+    it("filters on label", function() {
+        expect(in_properties_filter(list, "Donald")).toContain({
+            label: "Donald",
+            id: "uncle",
+            card_fields: [],
+            internal_property: "has nephews"
         });
-        expect(in_properties_filter(list, 'Donald')).toContain({
-            label      : 'Donald & Daisy',
-            id         : 'significant others',
+        expect(in_properties_filter(list, "Donald")).toContain({
+            label: "Donald & Daisy",
+            id: "significant others",
             card_fields: []
         });
-        expect(in_properties_filter(list, 'Donald')).not.toContain({
-            label      : 'Riri',
-            id         : 'nephew',
-            card_fields: []
-        });
-    });
-
-    it('is case insensitive', function() {
-        expect(in_properties_filter(list, 'RIRI')).toContain({
-            label      : 'Riri',
-            id         : 'nephew',
+        expect(in_properties_filter(list, "Donald")).not.toContain({
+            label: "Riri",
+            id: "nephew",
             card_fields: []
         });
     });
 
-    it('filters on id', function() {
-        expect(in_properties_filter(list, 'nephew')).toContain({
-            label      : 'Riri',
-            id         : 'nephew',
-            card_fields: []
-        });
-        expect(in_properties_filter(list, 'nephew')).toContain({
-            label      : 'Fifi',
-            id         : 'nephew',
-            card_fields: []
-        });
-        expect(in_properties_filter(list, 'nephew')).toContain({
-            label      : 'Loulou',
-            id         : 'nephew',
-            card_fields: []
-        });
-        expect(in_properties_filter(list, 'nephew')).not.toContain({
-            label      : 'Donald & Daisy',
-            id         : 'significant others',
+    it("is case insensitive", function() {
+        expect(in_properties_filter(list, "RIRI")).toContain({
+            label: "Riri",
+            id: "nephew",
             card_fields: []
         });
     });
 
-    it('does not filter on private properties', function() {
-        expect(in_properties_filter(list, 'nephew')).not.toContain({
-            label            : 'Donald',
-            id               : 'uncle',
-            card_fields      : [],
-            internal_property: 'has nephews'
+    it("filters on id", function() {
+        expect(in_properties_filter(list, "nephew")).toContain({
+            label: "Riri",
+            id: "nephew",
+            card_fields: []
         });
-    });
-
-    it('filters on both label and id', function() {
-        expect(in_properties_filter(list, 'nephew riri')).toContain({
-            label      : 'Riri',
-            id         : 'nephew',
+        expect(in_properties_filter(list, "nephew")).toContain({
+            label: "Fifi",
+            id: "nephew",
+            card_fields: []
+        });
+        expect(in_properties_filter(list, "nephew")).toContain({
+            label: "Loulou",
+            id: "nephew",
+            card_fields: []
+        });
+        expect(in_properties_filter(list, "nephew")).not.toContain({
+            label: "Donald & Daisy",
+            id: "significant others",
             card_fields: []
         });
     });
 
-    it('returns items that match all criteria', function() {
-        expect(in_properties_filter(list, 'donald daisy')).toContain({
-            label      : 'Donald & Daisy',
-            id         : 'significant others',
+    it("does not filter on private properties", function() {
+        expect(in_properties_filter(list, "nephew")).not.toContain({
+            label: "Donald",
+            id: "uncle",
+            card_fields: [],
+            internal_property: "has nephews"
+        });
+    });
+
+    it("filters on both label and id", function() {
+        expect(in_properties_filter(list, "nephew riri")).toContain({
+            label: "Riri",
+            id: "nephew",
             card_fields: []
         });
-        expect(in_properties_filter(list, 'donald daisy')).not.toContain({
-            label            : 'Donald',
-            id               : 'uncle',
-            card_fields      : [],
-            internal_property: 'has nephews'
-        });
-        expect(in_properties_filter(list, 'daisy donald')).toContain({
-            label      : 'Donald & Daisy',
-            id         : 'significant others',
+    });
+
+    it("returns items that match all criteria", function() {
+        expect(in_properties_filter(list, "donald daisy")).toContain({
+            label: "Donald & Daisy",
+            id: "significant others",
             card_fields: []
         });
-        expect(in_properties_filter(list, 'daisy donald')).not.toContain({
-            label            : 'Donald',
-            id               : 'uncle',
-            card_fields      : [],
-            internal_property: 'has nephews'
+        expect(in_properties_filter(list, "donald daisy")).not.toContain({
+            label: "Donald",
+            id: "uncle",
+            card_fields: [],
+            internal_property: "has nephews"
+        });
+        expect(in_properties_filter(list, "daisy donald")).toContain({
+            label: "Donald & Daisy",
+            id: "significant others",
+            card_fields: []
+        });
+        expect(in_properties_filter(list, "daisy donald")).not.toContain({
+            label: "Donald",
+            id: "uncle",
+            card_fields: [],
+            internal_property: "has nephews"
         });
     });
 
@@ -144,13 +147,11 @@ describe('InPropertiesItemFilter', () => {
             {
                 id: null,
                 label: null,
-                card_fields: [
-                    { type: 'text', format: 'text', value: 'Histoire de Toto' }
-                ]
+                card_fields: [{ type: "text", format: "text", value: "Histoire de Toto" }]
             }
         ];
 
-        const filtered_items = in_properties_filter(items, 'toto');
+        const filtered_items = in_properties_filter(items, "toto");
 
         expect(filtered_items).toEqual(items);
     });
@@ -161,12 +162,12 @@ describe('InPropertiesItemFilter', () => {
                 id: null,
                 label: null,
                 card_fields: [
-                    { type: 'text', format: 'html', value: 'Histoire <strong>de TOTO</strong>' }
+                    { type: "text", format: "html", value: "Histoire <strong>de TOTO</strong>" }
                 ]
             }
         ];
 
-        expect(in_properties_filter(items, 'toto')).toEqual(items);
+        expect(in_properties_filter(items, "toto")).toEqual(items);
     });
 
     it("Given an item with a text card field in HTML with &nbsp;, when I filter it with an &, then it won't be returned", () => {
@@ -174,174 +175,320 @@ describe('InPropertiesItemFilter', () => {
             {
                 id: null,
                 label: null,
-                card_fields: [
-                    { type: 'text', format: 'html', value: 'William&nbspWallace' }
-                ]
+                card_fields: [{ type: "text", format: "html", value: "William&nbspWallace" }]
             }
         ];
 
-        expect(in_properties_filter(items, '&')).toEqual([]);
+        expect(in_properties_filter(items, "&")).toEqual([]);
     });
 
-    it('returns items that have matching card_fields', function() {
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'string',
-                value: 'Histoire de Toto'
-            }]
-        }], 'toto').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'int',
-                value: 123
-            }]
-        }], '123').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'float',
-                value: 3.14
-            }]
-        }], '3.14').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'aid',
-                value: 42
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'atid',
-                value: 42
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'priority',
-                value: 42
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type             : 'file',
-                file_descriptions: [{
-                    name: 'Photo de Toto.png'
-                }]
-            }]
-        }], 'toto').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'cross',
-                value: [{
-                    ref: 'release #42'
-                }]
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type          : 'perm',
-                granted_groups: ['toto']
-            }]
-        }], 'toto').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'subby',
-                value: {
-                    display_name: 'Mr Toto'
-                }
-            }]
-        }], 'toto').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type : 'luby',
-                value: {
-                    display_name: 'Mr Pototo'
-                }
-            }]
-        }], 'toto').length).toBe(1);
-        ['sb', 'rb', 'cb', 'msb', 'tbl', 'shared'].forEach(function(list_type) {
-            expect(in_properties_filter([{
-                id         : null,
-                label      : null,
-                card_fields: [{
-                    type  : list_type,
-                    values: [{
-                        label: 'Reopen'
-                    }]
-                }]
-            }], 'open').length).toBe(1);
-            expect(in_properties_filter([{
-                id         : null,
-                label      : null,
-                card_fields: [{
-                    type  : list_type,
-                    values: [{
-                        display_name: 'Mr Toto'
-                    }]
-                }]
-            }], 'toto').length).toBe(1);
+    it("returns items that have matching card_fields", function() {
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "string",
+                                value: "Histoire de Toto"
+                            }
+                        ]
+                    }
+                ],
+                "toto"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "int",
+                                value: 123
+                            }
+                        ]
+                    }
+                ],
+                "123"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "float",
+                                value: 3.14
+                            }
+                        ]
+                    }
+                ],
+                "3.14"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "aid",
+                                value: 42
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "atid",
+                                value: 42
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "priority",
+                                value: 42
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "file",
+                                file_descriptions: [
+                                    {
+                                        name: "Photo de Toto.png"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "toto"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "cross",
+                                value: [
+                                    {
+                                        ref: "release #42"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "perm",
+                                granted_groups: ["toto"]
+                            }
+                        ]
+                    }
+                ],
+                "toto"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "subby",
+                                value: {
+                                    display_name: "Mr Toto"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "toto"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "luby",
+                                value: {
+                                    display_name: "Mr Pototo"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "toto"
+            ).length
+        ).toBe(1);
+        ["sb", "rb", "cb", "msb", "tbl", "shared"].forEach(function(list_type) {
+            expect(
+                in_properties_filter(
+                    [
+                        {
+                            id: null,
+                            label: null,
+                            card_fields: [
+                                {
+                                    type: list_type,
+                                    values: [
+                                        {
+                                            label: "Reopen"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "open"
+                ).length
+            ).toBe(1);
+            expect(
+                in_properties_filter(
+                    [
+                        {
+                            id: null,
+                            label: null,
+                            card_fields: [
+                                {
+                                    type: list_type,
+                                    values: [
+                                        {
+                                            display_name: "Mr Toto"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "toto"
+                ).length
+            ).toBe(1);
         });
-        ['date', 'lud', 'subon'].forEach(function(date_type) {
+        ["date", "lud", "subon"].forEach(function(date_type) {
             var today = new Date();
 
-            expect(in_properties_filter([{
-                id         : null,
-                label      : null,
-                card_fields: [{
-                    type : date_type,
-                    value: today.toJSON()
-                }]
-            }], 'today').length).toBe(1);
+            expect(
+                in_properties_filter(
+                    [
+                        {
+                            id: null,
+                            label: null,
+                            card_fields: [
+                                {
+                                    type: date_type,
+                                    value: today.toJSON()
+                                }
+                            ]
+                        }
+                    ],
+                    "today"
+                ).length
+            ).toBe(1);
         });
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type        : 'computed',
-                manual_value: null,
-                value       : 42
-            }]
-        }], '42').length).toBe(1);
-        expect(in_properties_filter([{
-            id         : null,
-            label      : null,
-            card_fields: [{
-                type        : 'computed',
-                manual_value: 42,
-                value       : null
-            }]
-        }], '42').length).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "computed",
+                                manual_value: null,
+                                value: 42
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
+        expect(
+            in_properties_filter(
+                [
+                    {
+                        id: null,
+                        label: null,
+                        card_fields: [
+                            {
+                                type: "computed",
+                                manual_value: 42,
+                                value: null
+                            }
+                        ]
+                    }
+                ],
+                "42"
+            ).length
+        ).toBe(1);
     });
 
     it("Given no terms to filter with, when I filter a list of items, then a copy of this list with the same items will be returned", function() {
-        var list = [
-            { id: 28 },
-            { id: 94 },
-            { id: 69 }
-        ];
+        var list = [{ id: 28 }, { id: 94 }, { id: 69 }];
 
-        var filtered_list = in_properties_filter(list, '');
+        var filtered_list = in_properties_filter(list, "");
 
         expect(filtered_list).toEqual(list);
         expect(filtered_list).not.toBe(list);

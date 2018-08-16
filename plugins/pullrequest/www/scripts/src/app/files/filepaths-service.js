@@ -18,11 +18,11 @@ function FilepathsService() {
 
     function previous(filepath) {
         const index = filepaths.indexOf(filepath);
-        return (index > 0) ? filepaths[index - 1] : '';
+        return index > 0 ? filepaths[index - 1] : "";
     }
 
     function next(filepath) {
         const index = filepaths.indexOf(filepath);
-        return (index < filepaths.length - 1) ? filepaths[index + 1] : '';
+        return index < filepaths.length - 1 ? filepaths[index + 1] : "";
     }
 }

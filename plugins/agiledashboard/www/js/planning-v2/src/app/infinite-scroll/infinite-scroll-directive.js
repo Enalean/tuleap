@@ -23,23 +23,23 @@
  * THE SOFTWARE.
  */
 
-import angular from 'angular';
+import angular from "angular";
 
 export default infiniteScroll;
 
-infiniteScroll.$inject = ['$window'];
+infiniteScroll.$inject = ["$window"];
 
 function infiniteScroll($window) {
     return {
-        restrict: 'A',
-        link    : link
+        restrict: "A",
+        link: link
     };
 
     function link(scope, element, attrs) {
         var threshold = parseInt(attrs.scrollThreshold, 10) || 0,
-            callback  = attrs.scrollCallback;
+            callback = attrs.scrollCallback;
 
-        angular.element($window).bind('scroll', function() {
+        angular.element($window).bind("scroll", function() {
             if (element[0].getBoundingClientRect().bottom < $window.innerHeight + threshold) {
                 scope.$apply(callback);
             }

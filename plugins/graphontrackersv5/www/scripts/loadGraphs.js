@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
-    if (! tuleap.graphontrackersv5.graphs) {
+document.addEventListener("DOMContentLoaded", function() {
+    if (!tuleap.graphontrackersv5.graphs) {
         return;
     }
 
-    Object.getOwnPropertyNames(tuleap.graphontrackersv5.graphs).forEach(function (id) {
+    Object.getOwnPropertyNames(tuleap.graphontrackersv5.graphs).forEach(function(id) {
         var graph = tuleap.graphontrackersv5.graphs[id];
 
         if (tuleap.graphontrackersv5.draw[graph.type] !== undefined) {

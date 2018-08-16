@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { findClosestElement } from './dom-walker.js';
+import { findClosestElement } from "./dom-walker.js";
 
-const TRANSITION_DURATION        = 75;
-const ESCAPE_CODE                = 27;
+const TRANSITION_DURATION = 75;
+const ESCAPE_CODE = 27;
 
-const EVENT_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
-const EVENT_TLP_DROPDOWN_HIDDEN  = 'tlp-dropdown-hidden';
+const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
+const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
 
-const CLASS_TLP_DROPDOWN_MENU    = 'tlp-dropdown-menu';
-const CLASS_TLP_DROPDOWN_SHOWN   = 'tlp-dropdown-shown';
+const CLASS_TLP_DROPDOWN_MENU = "tlp-dropdown-menu";
+const CLASS_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
 
 export default (trigger, options) => new Dropdown(trigger, options);
 
@@ -36,13 +36,17 @@ class Dropdown {
 
         let { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
 
-        this.body_element       = document.body;
-        this.dropdown_menu      = dropdown_menu;
-        this.is_shown           = false;
-        this.keyboard           = keyboard;
-        this.shown_event        = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, { detail: { target: this.dropdown_menu }});
-        this.hidden_event       = new CustomEvent(EVENT_TLP_DROPDOWN_HIDDEN, { detail: { target: this.dropdown_menu }});
-        this.event_listeners    = [];
+        this.body_element = document.body;
+        this.dropdown_menu = dropdown_menu;
+        this.is_shown = false;
+        this.keyboard = keyboard;
+        this.shown_event = new CustomEvent(EVENT_TLP_DROPDOWN_SHOWN, {
+            detail: { target: this.dropdown_menu }
+        });
+        this.hidden_event = new CustomEvent(EVENT_TLP_DROPDOWN_HIDDEN, {
+            detail: { target: this.dropdown_menu }
+        });
+        this.event_listeners = [];
 
         this.listenOpenEvents();
         this.listenCloseEvents();
@@ -51,7 +55,11 @@ class Dropdown {
     getDropdownMenu() {
         let dropdown_menu = this.trigger.nextSibling;
 
-        while (dropdown_menu && (dropdown_menu.nodeType !== Node.ELEMENT_NODE || ! dropdown_menu.classList.contains(CLASS_TLP_DROPDOWN_MENU))) {
+        while (
+            dropdown_menu &&
+            (dropdown_menu.nodeType !== Node.ELEMENT_NODE ||
+                !dropdown_menu.classList.contains(CLASS_TLP_DROPDOWN_MENU))
+        ) {
             dropdown_menu = dropdown_menu.nextSibling;
         }
 
@@ -85,30 +93,31 @@ class Dropdown {
     }
 
     listenOpenEvents() {
-        this.trigger.addEventListener('click', (event) => {
+        this.trigger.addEventListener("click", event => {
             event.preventDefault();
             this.toggle();
         });
     }
 
     listenCloseEvents() {
-        document.addEventListener('click', (event) => {
-            if (this.is_shown
-                && ! findClosestElement(event.target, this.dropdown_menu)
-                && ! findClosestElement(event.target, this.trigger)
+        document.addEventListener("click", event => {
+            if (
+                this.is_shown &&
+                !findClosestElement(event.target, this.dropdown_menu) &&
+                !findClosestElement(event.target, this.trigger)
             ) {
                 this.hide();
             }
         });
 
         if (this.keyboard) {
-            document.addEventListener('keyup', (event) => {
+            document.addEventListener("keyup", event => {
                 if (event.keyCode !== ESCAPE_CODE) {
                     return;
                 }
 
                 let tag_name = event.target.tagName.toUpperCase();
-                if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
+                if (tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA") {
                     return;
                 }
 

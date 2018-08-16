@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {get} from 'tlp';
+import { get } from "tlp";
 
-export {
-    getSVNPermissions
-}
+export { getSVNPermissions };
 
 async function getSVNPermissions(project_id) {
-    const response = await get('/plugins/svn/', {
+    const response = await get("/plugins/svn/", {
         params: {
             group_id: project_id,
-            action: 'permission-per-group',
+            action: "permission-per-group"
         }
     });
 

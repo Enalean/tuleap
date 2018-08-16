@@ -17,18 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { create } from './labels-box';
+import { create } from "./labels-box";
 
-document.addEventListener('dashboard-edit-widget-modal-content-loaded', (event) => initLabelsBox(event.detail.target));
-document.addEventListener('dashboard-add-widget-settings-loaded', (event) => initLabelsBox(event.detail.target));
+document.addEventListener("dashboard-edit-widget-modal-content-loaded", event =>
+    initLabelsBox(event.detail.target)
+);
+document.addEventListener("dashboard-add-widget-settings-loaded", event =>
+    initLabelsBox(event.detail.target)
+);
 
 function initLabelsBox(widget_container) {
-    const container = widget_container.querySelector('.project-labels');
-    if (! container) {
+    const container = widget_container.querySelector(".project-labels");
+    if (!container) {
         return;
     }
 
-    let selected_labels   = [];
+    let selected_labels = [];
 
     for (const option of container.options) {
         selected_labels.push({
@@ -38,5 +42,10 @@ function initLabelsBox(widget_container) {
             color: option.dataset.color
         });
     }
-    create(container, container.dataset.labelsEndpoint, selected_labels, container.dataset.placeholder);
+    create(
+        container,
+        container.dataset.labelsEndpoint,
+        selected_labels,
+        container.dataset.placeholder
+    );
 }

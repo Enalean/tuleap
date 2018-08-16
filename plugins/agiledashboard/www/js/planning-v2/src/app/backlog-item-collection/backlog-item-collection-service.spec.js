@@ -1,12 +1,10 @@
-import angular from 'angular';
-import 'angular-mocks';
+import angular from "angular";
+import "angular-mocks";
 
-import collection_module from './backlog-item-collection.js';
+import collection_module from "./backlog-item-collection.js";
 
 describe("BacklogItemCollectionService -", () => {
-    let $q,
-        BacklogItemCollectionService,
-        BacklogItemService;
+    let $q, BacklogItemCollectionService, BacklogItemService;
 
     beforeEach(() => {
         angular.mock.module(collection_module);
@@ -17,9 +15,9 @@ describe("BacklogItemCollectionService -", () => {
             _BacklogItemCollectionService_,
             _BacklogItemService_
         ) {
-            $q                           = _$q_;
+            $q = _$q_;
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            BacklogItemService           = _BacklogItemService_;
+            BacklogItemService = _BacklogItemService_;
         });
 
         spyOn(BacklogItemService, "getBacklogItem");
@@ -34,7 +32,7 @@ describe("BacklogItemCollectionService -", () => {
             beforeEach(() => {
                 initial_item = {
                     id: 7088,
-                    background_color_name: '',
+                    background_color_name: "",
                     card_fields: [],
                     children: {
                         data: [],
@@ -44,8 +42,8 @@ describe("BacklogItemCollectionService -", () => {
                     has_children: false,
                     initial_effort: 8,
                     remaining_effort: 7,
-                    label: 'hexapod',
-                    status: 'Review',
+                    label: "hexapod",
+                    status: "Review",
                     updating: false
                 };
 
@@ -58,23 +56,23 @@ describe("BacklogItemCollectionService -", () => {
                 const updated_item = {
                     backlog_item: {
                         id: 7088,
-                        background_color_name: 'glossopalatine_sophic',
+                        background_color_name: "glossopalatine_sophic",
                         card_fields: [
                             {
                                 field_id: 35,
-                                label: 'Remaining Story Points',
-                                type: 'float',
+                                label: "Remaining Story Points",
+                                type: "float",
                                 value: 1.5
                             }
                         ],
                         has_children: true,
                         initial_effort: 6,
                         remaining_effort: 3,
-                        label: 'unspeedy',
-                        status: 'Closed',
+                        label: "unspeedy",
+                        status: "Closed",
                         parent: {
                             id: 504,
-                            label: 'pretangible'
+                            label: "pretangible"
                         }
                     }
                 };
@@ -89,12 +87,12 @@ describe("BacklogItemCollectionService -", () => {
                 expect(BacklogItemService.getBacklogItem).toHaveBeenCalledWith(7088);
                 expect(BacklogItemCollectionService.items[7088]).toEqual({
                     id: 7088,
-                    background_color_name: 'glossopalatine_sophic',
+                    background_color_name: "glossopalatine_sophic",
                     card_fields: [
                         {
                             field_id: 35,
-                            label: 'Remaining Story Points',
-                            type: 'float',
+                            label: "Remaining Story Points",
+                            type: "float",
                             value: 1.5
                         }
                     ],
@@ -106,11 +104,11 @@ describe("BacklogItemCollectionService -", () => {
                     has_children: true,
                     initial_effort: 6,
                     remaining_effort: 3,
-                    label: 'unspeedy',
-                    status: 'Closed',
+                    label: "unspeedy",
+                    status: "Closed",
                     parent: {
                         id: 504,
-                        label: 'pretangible'
+                        label: "pretangible"
                     },
                     updating: false,
                     updated: true

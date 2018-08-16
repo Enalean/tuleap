@@ -1,22 +1,22 @@
-import _            from 'lodash';
-import { dropdown } from 'tlp';
+import _ from "lodash";
+import { dropdown } from "tlp";
 
 export default PlanningController;
 
 PlanningController.$inject = [
-    '$filter',
-    'SharedPropertiesService',
-    'BacklogService',
-    'BacklogItemService',
-    'MilestoneService',
-    'NewTuleapArtifactModalService',
-    'UserPreferencesService',
-    'RestErrorService',
-    'BacklogItemCollectionService',
-    'MilestoneCollectionService',
-    'BacklogItemSelectedService',
-    'EditItemService',
-    'ItemAnimatorService'
+    "$filter",
+    "SharedPropertiesService",
+    "BacklogService",
+    "BacklogItemService",
+    "MilestoneService",
+    "NewTuleapArtifactModalService",
+    "UserPreferencesService",
+    "RestErrorService",
+    "BacklogItemCollectionService",
+    "MilestoneCollectionService",
+    "BacklogItemSelectedService",
+    "EditItemService",
+    "ItemAnimatorService"
 ];
 
 function PlanningController(
@@ -37,19 +37,19 @@ function PlanningController(
     const self = this;
 
     Object.assign(self, {
-        backlog             : BacklogService.backlog,
-        items               : BacklogItemCollectionService.items,
-        milestones          : MilestoneCollectionService.milestones,
-        compact_view_key    : 'compact-view',
-        detailed_view_key   : 'detailed-view',
-        show_closed_view_key: 'show-closed-view',
-        hide_closed_view_key: 'hide-closed-view',
-        loading_modal       : NewTuleapArtifactModalService.loading,
+        backlog: BacklogService.backlog,
+        items: BacklogItemCollectionService.items,
+        milestones: MilestoneCollectionService.milestones,
+        compact_view_key: "compact-view",
+        detailed_view_key: "detailed-view",
+        show_closed_view_key: "show-closed-view",
+        hide_closed_view_key: "hide-closed-view",
+        loading_modal: NewTuleapArtifactModalService.loading,
 
-        getRestError                  : RestErrorService.getError,
+        getRestError: RestErrorService.getError,
         getNumberOfSelectedBacklogItem: BacklogItemSelectedService.getNumberOfSelectedBacklogItem,
-        showEditModal                 : EditItemService.showEditModal,
-        $onInit                       : init,
+        showEditModal: EditItemService.showEditModal,
+        $onInit: init,
         canShowBacklogItem,
         displayClosedMilestones,
         displayUserCantPrioritizeForMilestones,
@@ -70,16 +70,16 @@ function PlanningController(
     });
 
     function init() {
-        self.user_id               = SharedPropertiesService.getUserId();
-        self.project_id            = SharedPropertiesService.getProjectId();
-        self.milestone_id          = parseInt(SharedPropertiesService.getMilestoneId(), 10);
+        self.user_id = SharedPropertiesService.getUserId();
+        self.project_id = SharedPropertiesService.getProjectId();
+        self.milestone_id = parseInt(SharedPropertiesService.getMilestoneId(), 10);
 
         initViewModes(SharedPropertiesService.getViewMode());
         self.loadInitialMilestones(SharedPropertiesService.getInitialMilestones());
     }
 
     function initViewModes(view_mode) {
-        self.current_view_class        = self.compact_view_key;
+        self.current_view_class = self.compact_view_key;
         self.current_closed_view_class = self.show_closed_view_key;
 
         if (view_mode) {
@@ -91,7 +91,7 @@ function PlanningController(
         self.current_view_class = view_mode;
         UserPreferencesService.setPreference(
             self.user_id,
-            'agiledashboard_planning_item_view_mode_' + self.project_id,
+            "agiledashboard_planning_item_view_mode_" + self.project_id,
             view_mode
         );
     }
@@ -101,7 +101,7 @@ function PlanningController(
     }
 
     function isMilestoneContext() {
-        return ! isNaN(self.milestone_id);
+        return !isNaN(self.milestone_id);
     }
 
     function loadInitialMilestones(initial_milestones) {
@@ -110,10 +110,14 @@ function PlanningController(
                 MilestoneService.augmentMilestone(milestone, self.items);
             });
 
-            self.milestones.content                                                 = initial_milestones.milestones_representations;
-            MilestoneCollectionService.milestones.open_milestones_pagination.offset = MilestoneCollectionService.milestones.open_milestones_pagination.limit;
+            self.milestones.content = initial_milestones.milestones_representations;
+            MilestoneCollectionService.milestones.open_milestones_pagination.offset =
+                MilestoneCollectionService.milestones.open_milestones_pagination.limit;
 
-            if (MilestoneCollectionService.milestones.open_milestones_pagination.offset < initial_milestones.total_size) {
+            if (
+                MilestoneCollectionService.milestones.open_milestones_pagination.offset <
+                initial_milestones.total_size
+            ) {
                 displayOpenMilestones();
             } else {
                 self.milestones.loading = false;
@@ -124,93 +128,120 @@ function PlanningController(
     }
 
     function displayOpenMilestones() {
-        if (! self.isMilestoneContext()) {
-            fetchOpenMilestones(self.project_id, MilestoneCollectionService.milestones.open_milestones_pagination.limit, MilestoneCollectionService.milestones.open_milestones_pagination.offset);
+        if (!self.isMilestoneContext()) {
+            fetchOpenMilestones(
+                self.project_id,
+                MilestoneCollectionService.milestones.open_milestones_pagination.limit,
+                MilestoneCollectionService.milestones.open_milestones_pagination.offset
+            );
         } else {
-            fetchOpenSubMilestones(self.milestone_id, MilestoneCollectionService.milestones.open_milestones_pagination.limit, MilestoneCollectionService.milestones.open_milestones_pagination.offset);
+            fetchOpenSubMilestones(
+                self.milestone_id,
+                MilestoneCollectionService.milestones.open_milestones_pagination.limit,
+                MilestoneCollectionService.milestones.open_milestones_pagination.offset
+            );
         }
     }
 
     function displayClosedMilestones() {
         self.milestones.loading = true;
 
-        if (! self.isMilestoneContext()) {
-            fetchClosedMilestones(self.project_id, MilestoneCollectionService.milestones.closed_milestones_pagination.limit, MilestoneCollectionService.milestones.closed_milestones_pagination.offset);
+        if (!self.isMilestoneContext()) {
+            fetchClosedMilestones(
+                self.project_id,
+                MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
+                MilestoneCollectionService.milestones.closed_milestones_pagination.offset
+            );
         } else {
-            fetchClosedSubMilestones(self.milestone_id, MilestoneCollectionService.milestones.closed_milestones_pagination.limit, MilestoneCollectionService.milestones.closed_milestones_pagination.offset);
+            fetchClosedSubMilestones(
+                self.milestone_id,
+                MilestoneCollectionService.milestones.closed_milestones_pagination.limit,
+                MilestoneCollectionService.milestones.closed_milestones_pagination.offset
+            );
         }
     }
 
     function fetchOpenMilestones(project_id, limit, offset) {
         self.milestones.loading = true;
 
-        return MilestoneService.getOpenMilestones(project_id, limit, offset, self.items).then(function(data) {
-            var milestones          = [].concat(self.milestones.content).concat(data.results);
-            self.milestones.content = _.sortBy(milestones, 'id').reverse();
+        return MilestoneService.getOpenMilestones(project_id, limit, offset, self.items).then(
+            function(data) {
+                var milestones = [].concat(self.milestones.content).concat(data.results);
+                self.milestones.content = _.sortBy(milestones, "id").reverse();
 
-            if ((offset + limit) < data.total) {
-                fetchOpenMilestones(project_id, limit, offset + limit);
-            } else {
-                self.milestones.loading                      = false;
-                self.milestones.open_milestones_fully_loaded = true;
+                if (offset + limit < data.total) {
+                    fetchOpenMilestones(project_id, limit, offset + limit);
+                } else {
+                    self.milestones.loading = false;
+                    self.milestones.open_milestones_fully_loaded = true;
+                }
             }
-        });
+        );
     }
 
     function fetchOpenSubMilestones(milestone_id, limit, offset) {
         self.milestones.loading = true;
 
-        return MilestoneService.getOpenSubMilestones(milestone_id, limit, offset, self.items).then(function(data) {
-            var milestones          = [].concat(self.milestones.content).concat(data.results);
-            self.milestones.content = _.sortBy(milestones, 'id').reverse();
+        return MilestoneService.getOpenSubMilestones(milestone_id, limit, offset, self.items).then(
+            function(data) {
+                var milestones = [].concat(self.milestones.content).concat(data.results);
+                self.milestones.content = _.sortBy(milestones, "id").reverse();
 
-            if ((offset + limit) < data.total) {
-                fetchOpenSubMilestones(milestone_id, limit, offset + limit);
-            } else {
-                self.milestones.loading                      = false;
-                self.milestones.open_milestones_fully_loaded = true;
+                if (offset + limit < data.total) {
+                    fetchOpenSubMilestones(milestone_id, limit, offset + limit);
+                } else {
+                    self.milestones.loading = false;
+                    self.milestones.open_milestones_fully_loaded = true;
+                }
             }
-        });
+        );
     }
 
     function fetchClosedMilestones(project_id, limit, offset) {
         self.milestones.loading = true;
 
-        return MilestoneService.getClosedMilestones(project_id, limit, offset, self.items).then(function(data) {
-            var milestones            = [].concat(self.milestones.content).concat(data.results);
-            self.milestones.content = _.sortBy(milestones, 'id').reverse();
+        return MilestoneService.getClosedMilestones(project_id, limit, offset, self.items).then(
+            function(data) {
+                var milestones = [].concat(self.milestones.content).concat(data.results);
+                self.milestones.content = _.sortBy(milestones, "id").reverse();
 
-            if ((offset + limit) < data.total) {
-                fetchClosedMilestones(project_id, limit, offset + limit);
-            } else {
-                self.milestones.loading                        = false;
-                self.milestones.closed_milestones_fully_loaded = true;
+                if (offset + limit < data.total) {
+                    fetchClosedMilestones(project_id, limit, offset + limit);
+                } else {
+                    self.milestones.loading = false;
+                    self.milestones.closed_milestones_fully_loaded = true;
+                }
             }
-        });
+        );
     }
 
     function fetchClosedSubMilestones(milestone_id, limit, offset) {
         self.milestones.loading = true;
 
-        return MilestoneService.getClosedSubMilestones(milestone_id, limit, offset, self.items).then(function(data) {
-            var milestones            = [].concat(self.milestones.content).concat(data.results);
-            self.milestones.content = _.sortBy(milestones, 'id').reverse();
+        return MilestoneService.getClosedSubMilestones(
+            milestone_id,
+            limit,
+            offset,
+            self.items
+        ).then(function(data) {
+            var milestones = [].concat(self.milestones.content).concat(data.results);
+            self.milestones.content = _.sortBy(milestones, "id").reverse();
 
-            if ((offset + limit) < data.total) {
+            if (offset + limit < data.total) {
                 fetchClosedSubMilestones(milestone_id, limit, offset + limit);
             } else {
-                self.milestones.loading                        = false;
+                self.milestones.loading = false;
                 self.milestones.closed_milestones_fully_loaded = true;
             }
         });
     }
 
     function getOpenMilestones() {
-        return $filter('filter')(self.milestones.content, { semantic_status: 'open' });
+        return $filter("filter")(self.milestones.content, { semantic_status: "open" });
     }
 
     function getClosedMilestones() {
-        return $filter('filter')(self.milestones.content, { semantic_status: 'closed' });
+        return $filter("filter")(self.milestones.content, { semantic_status: "closed" });
     }
 
     function thereAreOpenMilestonesLoaded() {
@@ -226,7 +257,16 @@ function PlanningController(
     }
 
     function generateMilestoneLinkUrl(milestone, pane) {
-        return '?group_id=' + self.project_id + '&planning_id=' + milestone.planning.id + '&action=show&aid=' + milestone.id + '&pane=' + pane;
+        return (
+            "?group_id=" +
+            self.project_id +
+            "&planning_id=" +
+            milestone.planning.id +
+            "&action=show&aid=" +
+            milestone.id +
+            "&pane=" +
+            pane
+        );
     }
 
     function showEditSubmilestoneModal($event, submilestone) {
@@ -245,18 +285,24 @@ function PlanningController(
         $event.preventDefault();
 
         function callback(submilestone_id) {
-            if (! self.isMilestoneContext()) {
+            if (!self.isMilestoneContext()) {
                 return prependSubmilestoneToSubmilestoneList(submilestone_id);
             }
 
             return addSubmilestoneToSubmilestone(submilestone_id);
         }
 
-        NewTuleapArtifactModalService.showCreation(submilestone_type.id, self.milestone_id, callback);
+        NewTuleapArtifactModalService.showCreation(
+            submilestone_type.id,
+            self.milestone_id,
+            callback
+        );
     }
 
     function addSubmilestoneToSubmilestone(submilestone_id) {
-        return MilestoneService.patchSubMilestones(self.backlog.rest_route_id, [submilestone_id]).then(function() {
+        return MilestoneService.patchSubMilestones(self.backlog.rest_route_id, [
+            submilestone_id
+        ]).then(function() {
             return prependSubmilestoneToSubmilestoneList(submilestone_id);
         });
     }
@@ -265,10 +311,11 @@ function PlanningController(
         return MilestoneService.getMilestone(submilestone_id, self.items).then(function(data) {
             var milestone = data.results;
 
-            if (milestone.semantic_status === 'closed'
-                && ! self.thereAreClosedMilestonesLoaded()
-                && ! self.milestones.loading
-                && ! self.milestones.closed_milestones_fully_loaded
+            if (
+                milestone.semantic_status === "closed" &&
+                !self.thereAreClosedMilestonesLoaded() &&
+                !self.milestones.loading &&
+                !self.milestones.closed_milestones_fully_loaded
             ) {
                 self.displayClosedMilestones();
             } else {
@@ -279,17 +326,21 @@ function PlanningController(
 
     function showAddItemToSubMilestoneModal(item_type, parent_item) {
         let compared_to;
-        if (! _.isEmpty(parent_item.content)) {
+        if (!_.isEmpty(parent_item.content)) {
             compared_to = {
                 direction: "before",
-                item_id  : parent_item.content[0].id
+                item_id: parent_item.content[0].id
             };
         }
 
         function callback(item_id) {
             let promise;
             if (compared_to) {
-                promise = MilestoneService.addReorderToContent(parent_item.id, [item_id], compared_to);
+                promise = MilestoneService.addReorderToContent(
+                    parent_item.id,
+                    [item_id],
+                    compared_to
+                );
             } else {
                 promise = MilestoneService.addToContent(parent_item.id, [item_id]);
             }
@@ -318,19 +369,22 @@ function PlanningController(
         submilestone.updating = true;
 
         return MilestoneService.getMilestone(submilestone_id).then(function(data) {
-            submilestone.label           = data.results.label;
-            submilestone.capacity        = data.results.capacity;
+            submilestone.label = data.results.label;
+            submilestone.capacity = data.results.capacity;
             submilestone.semantic_status = data.results.semantic_status;
-            submilestone.status_value    = data.results.status_value;
-            submilestone.start_date      = data.results.start_date;
-            submilestone.end_date        = data.results.end_date;
-            submilestone.updating        = false;
+            submilestone.status_value = data.results.status_value;
+            submilestone.start_date = data.results.start_date;
+            submilestone.end_date = data.results.end_date;
+            submilestone.updating = false;
         });
     }
 
     function canShowBacklogItem(backlog_item) {
         if (angular.isFunction(backlog_item.isOpen)) {
-            return backlog_item.isOpen() || self.current_closed_view_class === self.show_closed_view_key;
+            return (
+                backlog_item.isOpen() ||
+                self.current_closed_view_class === self.show_closed_view_key
+            );
         }
 
         return true;
@@ -345,6 +399,6 @@ function PlanningController(
     }
 
     function displayUserCantPrioritizeForMilestones() {
-        return ! hideUserCantPrioritizeForMilestones();
+        return !hideUserCantPrioritizeForMilestones();
     }
 }

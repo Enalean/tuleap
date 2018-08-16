@@ -1,1 +1,1 @@
-import './tlp-modal-service.spec.js';
+import "./tlp-modal-service.spec.js";

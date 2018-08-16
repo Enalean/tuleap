@@ -16,7 +16,6 @@
  */
 
 !(function($) {
-
     var ESC_KEYCODE = 27;
 
     $(function() {
@@ -28,13 +27,13 @@
     });
 
     function bindAllowAllEvent() {
-        $('#allowed-projects-all-allowed').on('change', function() {
-            $('#' + $(this).attr('data-form-id')).submit();
+        $("#allowed-projects-all-allowed").on("change", function() {
+            $("#" + $(this).attr("data-form-id")).submit();
         });
     }
 
     function bindFilterEvent() {
-        var filter = document.getElementById('filter-projects');
+        var filter = document.getElementById("filter-projects");
         if (filter) {
             tlp.filterInlineTable(filter);
         }
@@ -42,18 +41,17 @@
 
     function bindCheckboxesEvent() {
         var checkboxes = $('#allowed-projects-list input[type="checkbox"]:not(#check-all)'),
-            select_all = $('#check-all');
+            select_all = $("#check-all");
 
         (function toggleAll() {
             select_all.change(function() {
-                if($(this).is(':checked')) {
+                if ($(this).is(":checked")) {
                     checkboxes.each(function() {
-                        $(this).prop('checked', 'checked');
+                        $(this).prop("checked", "checked");
                     });
-
                 } else {
                     checkboxes.each(function() {
-                        $(this).prop('checked', '');
+                        $(this).prop("checked", "");
                     });
                 }
 
@@ -63,48 +61,52 @@
 
         (function projectCheckboxesEvent() {
             checkboxes.change(function() {
-                select_all.prop('checked', '');
+                select_all.prop("checked", "");
                 toggleRevokeSelectedButton();
             });
         })();
 
         function toggleRevokeSelectedButton() {
-            if ($('#allowed-projects-list input[type="checkbox"]:not(#check-all):checked').length > 0) {
-                $('#revoke-project').prop('disabled', '');
+            if (
+                $('#allowed-projects-list input[type="checkbox"]:not(#check-all):checked').length >
+                0
+            ) {
+                $("#revoke-project").prop("disabled", "");
             } else {
-                $('#revoke-project').prop('disabled', 'disabled');
+                $("#revoke-project").prop("disabled", "disabled");
             }
         }
     }
 
     function bindDeleteEvent() {
-        var dom_natures_modal_create = document.getElementById('revoke-modal');
+        var dom_natures_modal_create = document.getElementById("revoke-modal");
 
         if (dom_natures_modal_create) {
             var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
 
-            $('#revoke-project').on('click', function () {
+            $("#revoke-project").on("click", function() {
                 tlp_natures_modal_create.toggle();
             });
 
-            $('#revoke-confirm').click(function() {
-                $('<input>')
-                    .attr('type', 'hidden')
-                    .attr('name', 'revoke-project')
-                    .attr('value', '1')
-                    .appendTo('#projects-allowed-form');
+            $("#revoke-confirm").click(function() {
+                $("<input>")
+                    .attr("type", "hidden")
+                    .attr("name", "revoke-project")
+                    .attr("value", "1")
+                    .appendTo("#projects-allowed-form");
 
-                $('#projects-allowed-form').submit();
+                $("#projects-allowed-form").submit();
             });
         }
     }
 
     function projectAutocompleter() {
-        var autocompleter = document.getElementById('project-to-allow');
+        var autocompleter = document.getElementById("project-to-allow");
 
         if (autocompleter) {
-            tuleap.autocomplete_projects_for_select2(autocompleter, { include_private_projects: 1 });
+            tuleap.autocomplete_projects_for_select2(autocompleter, {
+                include_private_projects: 1
+            });
         }
     }
-
 })(window.jQuery);

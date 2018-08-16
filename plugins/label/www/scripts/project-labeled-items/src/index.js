@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
-import GetTextPlugin from 'vue-gettext';
-import french_translations from '../po/fr.po';
-import LabeledItemsList from './LabeledItemsList.vue';
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
+import french_translations from "../po/fr.po";
+import LabeledItemsList from "./LabeledItemsList.vue";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
-    const widgets = document.getElementsByClassName('labeled-items-widget');
+    const widgets = document.getElementsByClassName("labeled-items-widget");
     const RootComponent = Vue.extend(LabeledItemsList);
 
     const widgets_array = [...widgets];

@@ -17,37 +17,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!function ($) {
-
+!(function($) {
     function forceWidthToCurrentWidth($element) {
         $element.width($element.width());
     }
 
     function widthIsNotAnymoreForced($element) {
-        $element.width('');
+        $element.width("");
     }
 
     function saveState(evt, toggler, is_collapsing) {
-        var id = $(toggler).attr('data-id');
-        if (! $(evt.target).hasClass('icon-pushpin')) {
+        var id = $(toggler).attr("data-id");
+        if (!$(evt.target).hasClass("icon-pushpin")) {
             return;
         }
 
         $.ajax({
-            url: codendi.tracker.base_url + '?func=toggle-collapse&formElement=' + id
+            url: codendi.tracker.base_url + "?func=toggle-collapse&formElement=" + id
         }).done(function() {
-            var $always_collapsed = $(toggler).find('.tracker_artifact_fieldset_alwayscollapsed');
+            var $always_collapsed = $(toggler).find(".tracker_artifact_fieldset_alwayscollapsed");
             if (is_collapsing) {
-                $always_collapsed.addClass('active');
+                $always_collapsed.addClass("active");
             } else {
-                $always_collapsed.removeClass('active');
+                $always_collapsed.removeClass("active");
             }
         });
     }
 
     function onTogglerBefore(evt, toggler, is_collapsing) {
         var $parent = $(toggler).parent();
-        if (! $parent.hasClass('tracker_artifact_fieldset')) {
+        if (!$parent.hasClass("tracker_artifact_fieldset")) {
             return;
         }
 
@@ -61,16 +60,19 @@
     }
 
     function generateTooltipOnTogglerIcon() {
-        $('.tracker_artifact_fieldset_alwayscollapsed > i').hover(function () {
-            var key = $(this).parent().hasClass('active') ? 'always_expand_fieldset' : 'always_collapse_fieldset';
+        $(".tracker_artifact_fieldset_alwayscollapsed > i").hover(function() {
+            var key = $(this)
+                .parent()
+                .hasClass("active")
+                ? "always_expand_fieldset"
+                : "always_collapse_fieldset";
 
             this.title = codendi.locales.tracker_artifact[key];
         });
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         codendi.Toggler.addBeforeListener(onTogglerBefore);
         generateTooltipOnTogglerIcon();
     });
-
-}(window.jQuery);
+})(window.jQuery);

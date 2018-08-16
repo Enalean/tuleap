@@ -1,66 +1,75 @@
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-*
-* Originally written by Nicolas Terray, 2009
-*
-* This file is a part of Codendi.
-*
-* Codendi is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Codendi is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Codendi; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-*
-*
-*/
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Originally written by Nicolas Terray, 2009
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *
+ */
 
-var codendi = codendi || { };
-codendi.tracker = codendi.tracker || { };
-codendi.tracker.report = codendi.tracker.report || { };
+var codendi = codendi || {};
+codendi.tracker = codendi.tracker || {};
+codendi.tracker.report = codendi.tracker.report || {};
 
-var tuleap = tuleap || { };
-tuleap.tracker = tuleap.tracker || { };
-tuleap.tracker.report = tuleap.tracker.report || { };
+var tuleap = tuleap || {};
+tuleap.tracker = tuleap.tracker || {};
+tuleap.tracker.report = tuleap.tracker.report || {};
 
-codendi.tracker.report.setHasChanged = function () {
-    var save_or_revert = $('tracker_report_save_or_revert');
-    save_or_revert.setStyle('display: inline;');
-    if (!save_or_revert.hasClassName('tracker_report_haschanged') && !save_or_revert.hasClassName('tracker_report_haschanged_and_isobsolete')) {
-        if (save_or_revert.hasClassName('tracker_report_isobsolete')) {
-            save_or_revert.removeClassName('tracker_report_isobsolete')
-            save_or_revert.addClassName('tracker_report_haschanged_and_isobsolete');
+codendi.tracker.report.setHasChanged = function() {
+    var save_or_revert = $("tracker_report_save_or_revert");
+    save_or_revert.setStyle("display: inline;");
+    if (
+        !save_or_revert.hasClassName("tracker_report_haschanged") &&
+        !save_or_revert.hasClassName("tracker_report_haschanged_and_isobsolete")
+    ) {
+        if (save_or_revert.hasClassName("tracker_report_isobsolete")) {
+            save_or_revert.removeClassName("tracker_report_isobsolete");
+            save_or_revert.addClassName("tracker_report_haschanged_and_isobsolete");
         } else {
-            save_or_revert.addClassName('tracker_report_haschanged');
+            save_or_revert.addClassName("tracker_report_haschanged");
         }
     }
 };
 Ajax.Responders.register({
-    onComplete: function (response) {
-        if (response.getHeader('X-Codendi-Tracker-Report-IsObsolete')) {
-            var save_or_revert = $('tracker_report_save_or_revert');
+    onComplete: function(response) {
+        if (response.getHeader("X-Codendi-Tracker-Report-IsObsolete")) {
+            var save_or_revert = $("tracker_report_save_or_revert");
             if (save_or_revert) {
-                $$('.tracker_report_updated_by').invoke('update', response.getHeader('X-Codendi-Tracker-Report-IsObsolete'));
-                if (!save_or_revert.hasClassName('tracker_report_isobsolete') && !save_or_revert.hasClassName('tracker_report_haschanged_and_isobsolete')) {
-                    if (save_or_revert.hasClassName('tracker_report_haschanged')) {
-                        save_or_revert.removeClassName('tracker_report_haschanged')
-                        save_or_revert.addClassName('tracker_report_haschanged_and_isobsolete');
+                $$(".tracker_report_updated_by").invoke(
+                    "update",
+                    response.getHeader("X-Codendi-Tracker-Report-IsObsolete")
+                );
+                if (
+                    !save_or_revert.hasClassName("tracker_report_isobsolete") &&
+                    !save_or_revert.hasClassName("tracker_report_haschanged_and_isobsolete")
+                ) {
+                    if (save_or_revert.hasClassName("tracker_report_haschanged")) {
+                        save_or_revert.removeClassName("tracker_report_haschanged");
+                        save_or_revert.addClassName("tracker_report_haschanged_and_isobsolete");
                     } else {
-                        save_or_revert.addClassName('tracker_report_isobsolete');
+                        save_or_revert.addClassName("tracker_report_isobsolete");
                     }
                 }
             }
         }
-    }
+    },
     //TODO: REMOVE THIS DEBUG FEATURE ---v
-    ,onException: function (request, e) {
+    onException: function(request, e) {
         if (console && console.debug) {
             console.error(e);
         } else {
@@ -69,26 +78,28 @@ Ajax.Responders.register({
     }
 });
 
-codendi.tracker.report.table = codendi.tracker.report.table || { };
+codendi.tracker.report.table = codendi.tracker.report.table || {};
 
-codendi.tracker.report.table.saveColumnsWidth = function (table, onComplete) {
+codendi.tracker.report.table.saveColumnsWidth = function(table, onComplete) {
     var total = table.offsetWidth - 16;
     var parameters = {
-        func:     'renderer',
-        renderer: $('tracker_report_renderer_current').readAttribute('data-renderer-id')
+        func: "renderer",
+        renderer: $("tracker_report_renderer_current").readAttribute("data-renderer-id")
     };
     var cells = table.rows[0].cells;
     var n = cells.length;
-    for (var i = 1 ; i < n ; i++) {
-        var id = cells[i].readAttribute('data-column-id');
+    for (var i = 1; i < n; i++) {
+        var id = cells[i].readAttribute("data-column-id");
         if (id) {
-            parameters['renderer_table[resize-column][' + id + ']'] = Math.round(cells[i].offsetWidth * 100 / total);
+            parameters["renderer_table[resize-column][" + id + "]"] = Math.round(
+                (cells[i].offsetWidth * 100) / total
+            );
         }
     }
     var onComplete = onComplete || Prototype.emptyFunction;
     var req = new Ajax.Request(location.href, {
         parameters: parameters,
-        onComplete: function (transport) {
+        onComplete: function(transport) {
             onComplete();
             codendi.tracker.report.setHasChanged();
         }
@@ -99,20 +110,25 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     /**
      * Constructor
      */
-    initialize: function (selectbox, actions) {
+    initialize: function(selectbox, actions) {
         this.actions = actions;
-        selectbox.select('li').each(function (criterion) {
-           criterion.observe('click', function (event) {
-               this.toggle(criterion);
-               event.stop();
-           }.bind(this));
-        }.bind(this));
+        selectbox.select("li").each(
+            function(criterion) {
+                criterion.observe(
+                    "click",
+                    function(event) {
+                        this.toggle(criterion);
+                        event.stop();
+                    }.bind(this)
+                );
+            }.bind(this)
+        );
     },
     /**
      * event listener to toggle a column
      */
-    toggle: function (li) {
-        if (li.readAttribute('data-field-is-used') === '0') {
+    toggle: function(li) {
+        if (li.readAttribute("data-field-is-used") === "0") {
             this.actions.add(this, li);
         } else {
             this.actions.remove(this, li);
@@ -121,19 +137,19 @@ tuleap.tracker.report.FieldsDropDown = Class.create({
     /**
      * Set the class name of the li to used and clear waiting
      */
-    setUsed: function (li) {
-        li.writeAttribute('data-field-is-used', '1');
-        li.select('a').each(function (element) {
-           element.insert({top: new Element('i', {"class": "icon-ok"})});
+    setUsed: function(li) {
+        li.writeAttribute("data-field-is-used", "1");
+        li.select("a").each(function(element) {
+            element.insert({ top: new Element("i", { class: "icon-ok" }) });
         });
     },
     /**
      * Set the class name of the li to unused and clear waiting
      */
-    setUnused: function (li) {
-        li.writeAttribute('data-field-is-used', '0');
-        li.select('i').each(function (element) {
-           element.remove();
+    setUnused: function(li) {
+        li.writeAttribute("data-field-is-used", "0");
+        li.select("i").each(function(element) {
+            element.remove();
         });
     }
 });
@@ -142,145 +158,176 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
     /**
      * Add a column to the table
      */
-    add: function (dropdown, li) {
-        var column_id        = li.readAttribute('data-column-id'),
-            field_id         = li.readAttribute('data-field-id'),
-            artlink_nature   = li.readAttribute('data-field-artlink-nature'),
-            matching_columns = $$('th[data-column-id=' + column_id +']');
+    add: function(dropdown, li) {
+        var column_id = li.readAttribute("data-column-id"),
+            field_id = li.readAttribute("data-field-id"),
+            artlink_nature = li.readAttribute("data-field-artlink-nature"),
+            matching_columns = $$("th[data-column-id=" + column_id + "]");
 
         if (matching_columns.length > 0) {
-            matching_columns.invoke('show');
-            $$('td[data-column-id=' + column_id +']').invoke('show');
+            matching_columns.invoke("show");
+            $$("td[data-column-id=" + column_id + "]").invoke("show");
 
-            codendi.tracker.report.table.saveColumnsWidth($('tracker_report_table'));
+            codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"));
 
             dropdown.setUsed(li);
         } else {
-            var url = codendi.tracker.base_url
-                    + '?report=' + $('tracker-report-normal-query').readAttribute('data-report-id')
-                    + '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id'),
+            var url =
+                    codendi.tracker.base_url +
+                    "?report=" +
+                    $("tracker-report-normal-query").readAttribute("data-report-id") +
+                    "&renderer=" +
+                    $("tracker_report_renderer_current").readAttribute("data-renderer-id"),
                 parameters = {
-                    func     : 'renderer',
-                    renderer : $('tracker_report_renderer_current').readAttribute('data-renderer-id'),
-                    'renderer_table[add-column][field-id]' : field_id
+                    func: "renderer",
+                    renderer: $("tracker_report_renderer_current").readAttribute(
+                        "data-renderer-id"
+                    ),
+                    "renderer_table[add-column][field-id]": field_id
                 };
             if (artlink_nature !== null) {
-                parameters['renderer_table[add-column][artlink-nature]'] = artlink_nature;
+                parameters["renderer_table[add-column][artlink-nature]"] = artlink_nature;
             }
 
-            var req = new Ajax.Request(
-                url,
-                {
-                    parameters: parameters,
-                    onSuccess: function onSuccessAddColumn(transport) {
-                        var div = new Element('div').update(transport.responseText);
-                        var new_column = div.down('thead').down('th');
-                        $('tracker_report_table').down('thead').down('tr').insert({bottom: new_column});
-                        var new_trs = div.down('tbody').childElements().reverse();
-                        $$('#tracker_report_table > tbody > tr').each(function (tr) {
-                            if (!tr.hasClassName('tracker_report_table_no_result')) {
-                                tr.insert(new_trs.pop().down('td'));
-                            }
-                        });
-
-                        $$('tr.tracker_report_table_no_result td').each( function (td) {
-                            td.colSpan = td.up('table').rows[0].cells.length;
-                        });
-
-                        codendi.tracker.report.table.saveColumnsWidth($('tracker_report_table'));
-
-                        //Remove entry from the selectbox
-                        dropdown.setUsed(li);
-
-                        //eval scripts now (prototype defer scripts eval but we need them now for decorators)
-                        //transport.responseText.evalScripts();
-
-                        //load aggregates
-                        var selectbox = $('tracker_report_table').down('select[name="tracker_aggregate_function_add['+field_id+']"]');
-                        if (selectbox) {
-                            var report_id   = $F($('tracker_report_query_form')['report']);
-                            var renderer_id = $('tracker_report_renderer_current').readAttribute('data-renderer-id');
-                            codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
+            var req = new Ajax.Request(url, {
+                parameters: parameters,
+                onSuccess: function onSuccessAddColumn(transport) {
+                    var div = new Element("div").update(transport.responseText);
+                    var new_column = div.down("thead").down("th");
+                    $("tracker_report_table")
+                        .down("thead")
+                        .down("tr")
+                        .insert({ bottom: new_column });
+                    var new_trs = div
+                        .down("tbody")
+                        .childElements()
+                        .reverse();
+                    $$("#tracker_report_table > tbody > tr").each(function(tr) {
+                        if (!tr.hasClassName("tracker_report_table_no_result")) {
+                            tr.insert(new_trs.pop().down("td"));
                         }
+                    });
 
-                        codendi.tracker.report.setHasChanged();
+                    $$("tr.tracker_report_table_no_result td").each(function(td) {
+                        td.colSpan = td.up("table").rows[0].cells.length;
+                    });
 
-                        tuleap.trackers.report.table.fixAggregatesHeights();
+                    codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"));
 
-                        //reorder
-                        codendi.reorder_columns[$('tracker_report_table').identify()].register(new_column);
+                    //Remove entry from the selectbox
+                    dropdown.setUsed(li);
 
-                        //resize
-                        TableKit.reload();
+                    //eval scripts now (prototype defer scripts eval but we need them now for decorators)
+                    //transport.responseText.evalScripts();
 
-                        if (artlink_nature !== null) {
-                            codendi.tracker.report.table.initNatureColumnEditor(new_column.down('.nature-column-editor'));
-                        }
+                    //load aggregates
+                    var selectbox = $("tracker_report_table").down(
+                        'select[name="tracker_aggregate_function_add[' + field_id + ']"]'
+                    );
+                    if (selectbox) {
+                        var report_id = $F($("tracker_report_query_form")["report"]);
+                        var renderer_id = $("tracker_report_renderer_current").readAttribute(
+                            "data-renderer-id"
+                        );
+                        codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
+                    }
 
-                    }.bind(this)
-                }
-            );
+                    codendi.tracker.report.setHasChanged();
+
+                    tuleap.trackers.report.table.fixAggregatesHeights();
+
+                    //reorder
+                    codendi.reorder_columns[$("tracker_report_table").identify()].register(
+                        new_column
+                    );
+
+                    //resize
+                    TableKit.reload();
+
+                    if (artlink_nature !== null) {
+                        codendi.tracker.report.table.initNatureColumnEditor(
+                            new_column.down(".nature-column-editor")
+                        );
+                    }
+                }.bind(this)
+            });
         }
     },
     /**
      * remove a column to the table
      */
-    remove: function (dropdown, li) {
-        var column_id = li.readAttribute('data-column-id'),
-            field_id  = li.readAttribute('data-field-id');
-        if ($('tracker_report_table_sort_by_' + field_id)) {
+    remove: function(dropdown, li) {
+        var column_id = li.readAttribute("data-column-id"),
+            field_id = li.readAttribute("data-field-id");
+        if ($("tracker_report_table_sort_by_" + field_id)) {
             //If the column is used to sort, we need to refresh all the page
             //Because we need to resort all the table
             // but before, save the new size of the remaining columns
-            var col = $('tracker_report_table_column_' + field_id);
+            var col = $("tracker_report_table_column_" + field_id);
             if (col.nextSiblings()[0]) {
                 col.nextSiblings()[0].setStyle({
-                    width: (col.nextSiblings()[0].offsetWidth + col.offsetWidth) + 'px'
+                    width: col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px"
                 });
             } else if (col.previousSiblings()[0].id) {
                 col.previousSiblings()[0].setStyle({
-                    width: (col.previousSiblings()[0].offsetWidth + col.offsetWidth) + 'px'
+                    width: col.previousSiblings()[0].offsetWidth + col.offsetWidth + "px"
                 });
             }
             col.hide();
-            $$('.tracker_report_table_column_' + field_id).invoke('hide');
+            $$(".tracker_report_table_column_" + field_id).invoke("hide");
 
-            codendi.tracker.report.table.saveColumnsWidth($('tracker_report_table'), function () {
-                location.href = location.href +
-                                '&func=renderer' +
-                                '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id') +
-                                '&renderer_table[remove-column]=' + column_id;
+            codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"), function() {
+                location.href =
+                    location.href +
+                    "&func=renderer" +
+                    "&renderer=" +
+                    $("tracker_report_renderer_current").readAttribute("data-renderer-id") +
+                    "&renderer_table[remove-column]=" +
+                    column_id;
             });
         } else {
-            var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + $('tracker-report-normal-query').readAttribute('data-report-id') + '&renderer=' + $('tracker_report_renderer_current').readAttribute('data-renderer-id'), {
-                parameters: {
-                    func                           : 'renderer',
-                    renderer                       : $('tracker_report_renderer_current').readAttribute('data-renderer-id'),
-                    'renderer_table[remove-column]': column_id
-                },
-                onSuccess: function () {
-                    $$('th[data-column-id=' + column_id +']').each(function (col) {
-                        if (col.nextSiblings()[0]) {
-                            col.nextSiblings()[0].setStyle({
-                                width: (col.nextSiblings()[0].offsetWidth + col.offsetWidth) + 'px'
-                            });
-                        } else if (col.previousSiblings()[0].id) {
-                            col.previousSiblings()[0].setStyle({
-                                width: (col.previousSiblings()[0].offsetWidth + col.offsetWidth) + 'px'
-                            });
-                        }
-                        col.hide();
-                    });
-                    $$('td[data-column-id=' + column_id +']').invoke('hide');
+            var req = new Ajax.Request(
+                codendi.tracker.base_url +
+                    "?report=" +
+                    $("tracker-report-normal-query").readAttribute("data-report-id") +
+                    "&renderer=" +
+                    $("tracker_report_renderer_current").readAttribute("data-renderer-id"),
+                {
+                    parameters: {
+                        func: "renderer",
+                        renderer: $("tracker_report_renderer_current").readAttribute(
+                            "data-renderer-id"
+                        ),
+                        "renderer_table[remove-column]": column_id
+                    },
+                    onSuccess: function() {
+                        $$("th[data-column-id=" + column_id + "]").each(function(col) {
+                            if (col.nextSiblings()[0]) {
+                                col.nextSiblings()[0].setStyle({
+                                    width:
+                                        col.nextSiblings()[0].offsetWidth + col.offsetWidth + "px"
+                                });
+                            } else if (col.previousSiblings()[0].id) {
+                                col.previousSiblings()[0].setStyle({
+                                    width:
+                                        col.previousSiblings()[0].offsetWidth +
+                                        col.offsetWidth +
+                                        "px"
+                                });
+                            }
+                            col.hide();
+                        });
+                        $$("td[data-column-id=" + column_id + "]").invoke("hide");
 
-                    codendi.tracker.report.table.saveColumnsWidth($('tracker_report_table'));
+                        codendi.tracker.report.table.saveColumnsWidth($("tracker_report_table"));
 
-                    tuleap.trackers.report.table.fixAggregatesHeights();
+                        tuleap.trackers.report.table.fixAggregatesHeights();
 
-                    dropdown.setUnused(li);
-                    codendi.tracker.report.setHasChanged();
-                }.bind(this)
-            });
+                        dropdown.setUnused(li);
+                        codendi.tracker.report.setHasChanged();
+                    }.bind(this)
+                }
+            );
         }
     }
 });
@@ -292,20 +339,20 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
     /**
      * Add a column to the table: criterion
      */
-    add: function (dropdown, li) {
+    add: function(dropdown, li) {
         var self = this;
 
-        if (! this.request_sent) {
+        if (!this.request_sent) {
             this.request_sent = true;
-            var field_id = li.readAttribute('data-field-id');
-            if ($('tracker_report_crit_' + field_id)) {
-                $$('.tracker_report_crit_' + field_id).invoke('show');
-                $('tracker_report_crit_' + field_id).show();
+            var field_id = li.readAttribute("data-field-id");
+            if ($("tracker_report_crit_" + field_id)) {
+                $$(".tracker_report_crit_" + field_id).invoke("show");
+                $("tracker_report_crit_" + field_id).show();
                 dropdown.setUsed(li);
                 codendi.tracker.report.setHasChanged();
                 new Ajax.Request(location.href, {
                     parameters: {
-                        func: 'add-criteria',
+                        func: "add-criteria",
                         field: field_id
                     },
                     onComplete: function() {
@@ -315,15 +362,17 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
             } else {
                 new Ajax.Request(location.href, {
                     parameters: {
-                        func: 'add-criteria',
+                        func: "add-criteria",
                         field: field_id
                     },
                     onComplete: function() {
                         self.request_sent = false;
                     },
-                    onSuccess: function (transport) {
-                        var crit = new Element('li', {id: 'tracker_report_crit_' + field_id}).update(transport.responseText);
-                        $('tracker_query').insert(crit);
+                    onSuccess: function(transport) {
+                        var crit = new Element("li", {
+                            id: "tracker_report_crit_" + field_id
+                        }).update(transport.responseText);
+                        $("tracker_query").insert(crit);
 
                         //Remove entry from the selectbox
                         dropdown.setUsed(li);
@@ -334,28 +383,29 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                         transport.responseText.evalScripts();
 
                         //initialize events and other dynamic stuffs
-                        codendi.tracker.report.loadAdvancedCriteria(crit.down('img.tracker_report_criteria_advanced_toggle'));
+                        codendi.tracker.report.loadAdvancedCriteria(
+                            crit.down("img.tracker_report_criteria_advanced_toggle")
+                        );
 
                         tuleap.dateTimePicker.init();
                     }.bind(this)
                 });
             }
         }
-
     },
     /**
      * remove a criteria
      */
-    remove: function (dropdown, li) {
-        var field_id = li.readAttribute('data-field-id');
+    remove: function(dropdown, li) {
+        var field_id = li.readAttribute("data-field-id");
         new Ajax.Request(location.href, {
             parameters: {
-                func: 'remove-criteria',
+                func: "remove-criteria",
                 field: field_id
             },
-            onSuccess: function () {
-                $$('.tracker_report_crit_' + field_id).invoke('hide');
-                $('tracker_report_crit_' + field_id).hide();
+            onSuccess: function() {
+                $$(".tracker_report_crit_" + field_id).invoke("hide");
+                $("tracker_report_crit_" + field_id).hide();
                 dropdown.setUnused(li);
 
                 codendi.tracker.report.setHasChanged();
@@ -365,28 +415,32 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
 });
 
 // Advanced criteria
-codendi.tracker.report.loadAdvancedCriteria = function (element) {
+codendi.tracker.report.loadAdvancedCriteria = function(element) {
     if (element) {
-        var li = element.up('li');
-        element.observe('click', function (evt) {
+        var li = element.up("li");
+        element.observe("click", function(evt) {
             if (/toggle_plus.png$/.test(element.src)) {
                 //switch to advanced
-                element.src = element.src.gsub('toggle_plus.png', 'toggle_minus.png');
+                element.src = element.src.gsub("toggle_plus.png", "toggle_minus.png");
             } else {
                 //toggle off advanced
-                element.src = element.src.gsub('toggle_minus.png', 'toggle_plus.png');
+                element.src = element.src.gsub("toggle_minus.png", "toggle_plus.png");
             }
-            var field_id = element.up('td').next().down('label').htmlFor.match(/_(\d+)$/)[1];
+            var field_id = element
+                .up("td")
+                .next()
+                .down("label")
+                .htmlFor.match(/_(\d+)$/)[1];
             var req = new Ajax.Updater(li, location.href, {
                 parameters: {
-                    func: 'toggle-advanced',
+                    func: "toggle-advanced",
                     field: field_id
                 },
-                onComplete: function (transport) {
+                onComplete: function(transport) {
                     //Force refresh of decorators and calendar
-                    li.select('input', 'select').each(function (el) {
-                        if (el.id && $('fd-' + el.id)) {
-                            delete $('fd-' + el.id).remove();
+                    li.select("input", "select").each(function(el) {
+                        if (el.id && $("fd-" + el.id)) {
+                            delete $("fd-" + el.id).remove();
                             //delete datePickerController.datePickers[el.id];
                         }
                     });
@@ -397,7 +451,9 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                     transport.responseText.evalScripts();
 
                     //initialize events and other dynamic stuffs
-                    codendi.tracker.report.loadAdvancedCriteria(li.down('img.tracker_report_criteria_advanced_toggle'));
+                    codendi.tracker.report.loadAdvancedCriteria(
+                        li.down("img.tracker_report_criteria_advanced_toggle")
+                    );
                     tuleap.dateTimePicker.init();
                 }
             });
@@ -408,20 +464,22 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
 };
 
 //Aggregates
-codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer_id) {
-    var prefix = 'tracker_aggregate_function_add_',
+codendi.tracker.report.loadAggregates = function(selectbox, report_id, renderer_id) {
+    var prefix = "tracker_aggregate_function_add_",
         parameters = {
-            func: 'renderer',
+            func: "renderer",
             report: report_id,
             renderer: renderer_id
         },
-        field_id = selectbox.name.split('[')[1].gsub(/\]/, ''),
-        toggle = function (evt) {
+        field_id = selectbox.name.split("[")[1].gsub(/\]/, ""),
+        toggle = function(evt) {
             var li = evt.element();
-            li.addClassName(prefix + 'waiting');
-            parameters['renderer_table[add_aggregate]['+ field_id +']'] = li.id.match(/\d_(\w+)$/)[1];
+            li.addClassName(prefix + "waiting");
+            parameters["renderer_table[add_aggregate][" + field_id + "]"] = li.id.match(
+                /\d_(\w+)$/
+            )[1];
             new Ajax.Request(location.href, {
-                method: 'POST',
+                method: "POST",
                 parameters: parameters,
                 onComplete: function() {
                     window.location.reload(true);
@@ -430,34 +488,39 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
         }.bindAsEventListener();
 
     function buildCol(id, className, label) {
-        return new Element('li',
-            {
-                id: prefix + id
-            }).addClassName(className)
+        return new Element("li", {
+            id: prefix + id
+        })
+            .addClassName(className)
             .update(label)
-            .observe('click', toggle);
+            .observe("click", toggle);
     }
 
-    var panel = new Element('table').addClassName('dropdown_panel').setStyle({
-        textAlign: 'left',
+    var panel = new Element("table").addClassName("dropdown_panel").setStyle({
+        textAlign: "left",
         opacity: 0.9
     });
-    var ul = new Element('ul');
-    var btn_label = '';
-    selectbox.childElements().each((function (el, index) {
-        if (index) {
-            if (el.tagName.toLowerCase() === 'option') {
-                ul.appendChild(buildCol(field_id + '_' + el.value, el.className, el.innerHTML));
+    var ul = new Element("ul");
+    var btn_label = "";
+    selectbox.childElements().each(
+        function(el, index) {
+            if (index) {
+                if (el.tagName.toLowerCase() === "option") {
+                    ul.appendChild(buildCol(field_id + "_" + el.value, el.className, el.innerHTML));
+                }
+            } else {
+                //the first one, "-- Add column". don't need it.
+                btn_label = el.text.gsub(/^--\s*/, "");
             }
-        } else { //the first one, "-- Add column". don't need it.
-            btn_label = el.text.gsub(/^--\s*/, '');
-        }
-    }).bind(this));
-    var handle = new Element('a', {
-        href: '#',
+        }.bind(this)
+    );
+    var handle = new Element("a", {
+        href: "#",
         title: btn_label,
         style: "font-size: 0.8em;"
-    }).update('<img src="' + codendi.imgroot + 'ic/sum--plus.png" style="vertical-align: middle;" />');
+    }).update(
+        '<img src="' + codendi.imgroot + 'ic/sum--plus.png" style="vertical-align: middle;" />'
+    );
 
     Element.remove(
         selectbox.insert({
@@ -467,11 +530,9 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
     ul.id = selectbox.id;
     handle.insert({
         after: panel.insert(
-            new Element('tbody').insert(
-                new Element('tr').insert(
-                    new Element('td').insert(
-                        new Element('strong').update(btn_label)
-                    ).insert(ul)
+            new Element("tbody").insert(
+                new Element("tr").insert(
+                    new Element("td").insert(new Element("strong").update(btn_label)).insert(ul)
                 )
             )
         )
@@ -479,64 +540,87 @@ codendi.tracker.report.loadAggregates = function (selectbox, report_id, renderer
     new codendi.DropDownPanel(panel, handle);
 };
 
-document.observe('dom:loaded', function () {
-    if ($('tracker_query')) {
-        $$('img.tracker_report_criteria_advanced_toggle').map(codendi.tracker.report.loadAdvancedCriteria);
+document.observe("dom:loaded", function() {
+    if ($("tracker_query")) {
+        $$("img.tracker_report_criteria_advanced_toggle").map(
+            codendi.tracker.report.loadAdvancedCriteria
+        );
 
         //User add criteria
-        if ($('tracker_report_add_criteria_dropdown')) {
+        if ($("tracker_report_add_criteria_dropdown")) {
             new tuleap.tracker.report.FieldsDropDown(
-                $('tracker_report_add_criteria_dropdown'),
+                $("tracker_report_add_criteria_dropdown"),
                 new codendi.tracker.report.AddRemoveCriteria()
             );
         }
 
         //User add/remove column
-        if ($('tracker_report_add_columns_dropdown')) {
+        if ($("tracker_report_add_columns_dropdown")) {
             new tuleap.tracker.report.FieldsDropDown(
-                $('tracker_report_add_columns_dropdown'),
+                $("tracker_report_add_columns_dropdown"),
                 new codendi.tracker.report.table.AddRemoveColumn()
             );
         }
 
         // Masschange
-        var button      = $$('input[name="renderer_table[masschange_all]"]')[0];
-        var mc_panel    = $('tracker_report_table_masschange_panel');
-        var mc_all_form = $('tracker_report_table_masschange_form');
+        var button = $$('input[name="renderer_table[masschange_all]"]')[0];
+        var mc_panel = $("tracker_report_table_masschange_panel");
+        var mc_all_form = $("tracker_report_table_masschange_form");
         if (button) {
-            mc_panel.up('.tracker_report_renderer').addClassName('tracker_report_table_hide_masschange');
-            mc_panel.up('.tracker_report_renderer').removeClassName('tracker_report_table_show_masschange');
-            $$('.tracker_report_table_masschange').invoke('hide');
-            mc_panel.insert({
-                top: new Element('br')
-            }).insert({
-                top: new Element('a', {
-                    href: '#uncheck-all'
-                }).observe('click', function (evt) {
-                    $$('.tracker_report_table_masschange input[type=checkbox]').each(function (cb) {
-                        cb.checked = false;
-                    });
-                    Event.stop(evt);
-                }).update(codendi.locales.tracker_artifact.masschange_uncheck_all)
-            }).insert({
-                top: new Element('span')
-                .update('&nbsp;|&nbsp;')
-            }).insert({
-                top: new Element('a', {
-                    href: '#check-all'
-                }).observe('click', function (evt) {
-                    $$('.tracker_report_table_masschange input[type=checkbox]').each(function (cb) {
-                        cb.checked = true;
-                    });
-                    Event.stop(evt);
-                }).update(codendi.locales.tracker_artifact.masschange_check_all)
-            });
+            mc_panel
+                .up(".tracker_report_renderer")
+                .addClassName("tracker_report_table_hide_masschange");
+            mc_panel
+                .up(".tracker_report_renderer")
+                .removeClassName("tracker_report_table_show_masschange");
+            $$(".tracker_report_table_masschange").invoke("hide");
+            mc_panel
+                .insert({
+                    top: new Element("br")
+                })
+                .insert({
+                    top: new Element("a", {
+                        href: "#uncheck-all"
+                    })
+                        .observe("click", function(evt) {
+                            $$(".tracker_report_table_masschange input[type=checkbox]").each(
+                                function(cb) {
+                                    cb.checked = false;
+                                }
+                            );
+                            Event.stop(evt);
+                        })
+                        .update(codendi.locales.tracker_artifact.masschange_uncheck_all)
+                })
+                .insert({
+                    top: new Element("span").update("&nbsp;|&nbsp;")
+                })
+                .insert({
+                    top: new Element("a", {
+                        href: "#check-all"
+                    })
+                        .observe("click", function(evt) {
+                            $$(".tracker_report_table_masschange input[type=checkbox]").each(
+                                function(cb) {
+                                    cb.checked = true;
+                                }
+                            );
+                            Event.stop(evt);
+                        })
+                        .update(codendi.locales.tracker_artifact.masschange_check_all)
+                });
             //get checked artifacts
-            $('masschange_btn_checked').observe('click', function (evt) {
+            $("masschange_btn_checked").observe("click", function(evt) {
                 var mc_aids = new Array();
-                $$('input[name="masschange_aids[]"]').each( function (e) {
-                    if ( $(e).checked ) {
-                        mc_all_form.appendChild( new Element('input', {type:'hidden', name:'masschange_aids[]',value:$(e).value}) );
+                $$('input[name="masschange_aids[]"]').each(function(e) {
+                    if ($(e).checked) {
+                        mc_all_form.appendChild(
+                            new Element("input", {
+                                type: "hidden",
+                                name: "masschange_aids[]",
+                                value: $(e).value
+                            })
+                        );
                     }
                 });
                 //$('masschange_form').;
@@ -544,55 +628,77 @@ document.observe('dom:loaded', function () {
             });
 
             if (location.href.match(/#masschange$/)) {
-                mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_hide_masschange');
-                mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_show_masschange');
-                $$('.tracker_report_table_masschange').invoke('show');
+                mc_panel
+                    .up(".tracker_report_renderer")
+                    .toggleClassName("tracker_report_table_hide_masschange");
+                mc_panel
+                    .up(".tracker_report_renderer")
+                    .toggleClassName("tracker_report_table_show_masschange");
+                $$(".tracker_report_table_masschange").invoke("show");
             } else {
-                var masschange_button = new Element('div', { className: 'btn-group' })
-                    .update(
-                        new Element('a', {
-                            href: '#masschange'
-                        }).addClassName('btn btn-mini')
-                        .observe('click', function (evt) {
-                            codendi.dropdown_panels.invoke('reset');
-                            $$('.tracker_report_table_masschange').invoke('show');
-                            mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_hide_masschange');
-                            mc_panel.up('.tracker_report_renderer').toggleClassName('tracker_report_table_show_masschange');
-                            if (mc_panel.up('.tracker_report_renderer').hasClassName('tracker_report_table_show_masschange')) {
+                var masschange_button = new Element("div", { className: "btn-group" }).update(
+                    new Element("a", {
+                        href: "#masschange"
+                    })
+                        .addClassName("btn btn-mini")
+                        .observe("click", function(evt) {
+                            codendi.dropdown_panels.invoke("reset");
+                            $$(".tracker_report_table_masschange").invoke("show");
+                            mc_panel
+                                .up(".tracker_report_renderer")
+                                .toggleClassName("tracker_report_table_hide_masschange");
+                            mc_panel
+                                .up(".tracker_report_renderer")
+                                .toggleClassName("tracker_report_table_show_masschange");
+                            if (
+                                mc_panel
+                                    .up(".tracker_report_renderer")
+                                    .hasClassName("tracker_report_table_show_masschange")
+                            ) {
                                 Element.scrollTo(mc_panel);
                             }
                             Event.stop(evt);
                         })
-                        .update('<i class="icon-pencil"></i> ' + codendi.locales.tracker_artifact.masschange)
+                        .update(
+                            '<i class="icon-pencil"></i> ' +
+                                codendi.locales.tracker_artifact.masschange
+                        )
                 );
 
-                $('tracker_renderer_options').insert({ top: ' ' });
-                $('tracker_renderer_options').insert({ top: masschange_button });
+                $("tracker_renderer_options").insert({ top: " " });
+                $("tracker_renderer_options").insert({ top: masschange_button });
             }
         }
 
         //Export
-        if ($('tracker_report_table_export_panel') && !location.href.match(/#export$/)) {
-            var export_panel = $('tracker_report_table_export_panel');
-            export_panel.childElements().invoke('hide');
-            export_panel.up('form').insert(
-                {
-                    before: new Element('a', {
-                            href: '#export'
-                        }).observe('click', function (evt) {
-                            export_panel.childElements().invoke('toggle');
-                            Event.stop(evt);
-                        }).update('<img src="'+ codendi.imgroot +'ic/clipboard-paste.png" style="vertical-align:top" /> export')
-                        .setStyle({
-                            marginLeft: '1em'
-                        })
-                }
-            );
+        if ($("tracker_report_table_export_panel") && !location.href.match(/#export$/)) {
+            var export_panel = $("tracker_report_table_export_panel");
+            export_panel.childElements().invoke("hide");
+            export_panel.up("form").insert({
+                before: new Element("a", {
+                    href: "#export"
+                })
+                    .observe("click", function(evt) {
+                        export_panel.childElements().invoke("toggle");
+                        Event.stop(evt);
+                    })
+                    .update(
+                        '<img src="' +
+                            codendi.imgroot +
+                            'ic/clipboard-paste.png" style="vertical-align:top" /> export'
+                    )
+                    .setStyle({
+                        marginLeft: "1em"
+                    })
+            });
         }
 
         if (TableKit) {
-            TableKit.options.observers.onResizeEnd = function (table) {
-                if (TableKit.Resizable._cell && TableKit.Resizable._cell.readAttribute('data-column-id')) {
+            TableKit.options.observers.onResizeEnd = function(table) {
+                if (
+                    TableKit.Resizable._cell &&
+                    TableKit.Resizable._cell.readAttribute("data-column-id")
+                ) {
                     codendi.tracker.report.table.saveColumnsWidth(table);
                     tuleap.trackers.report.table.fixAggregatesHeights();
                 }
@@ -600,35 +706,39 @@ document.observe('dom:loaded', function () {
         }
     }
 
-    if ($('tracker_select_report')) {
-        $('tracker_select_report').observe('change', function () {
+    if ($("tracker_select_report")) {
+        $("tracker_select_report").observe("change", function() {
             this.form.submit();
         });
     }
-    if ($('tracker_report_query_form')) {
+    if ($("tracker_report_query_form")) {
+        var report_id = $("tracker-report-normal-query").readAttribute("data-report-id");
+        var renderer_id = $("tracker_report_renderer_current").readAttribute("data-renderer-id");
 
-        var report_id   = $('tracker-report-normal-query').readAttribute('data-report-id');
-        var renderer_id = $('tracker_report_renderer_current').readAttribute('data-renderer-id');
-
-        if ($('tracker_report_renderers')) {
+        if ($("tracker_report_renderers")) {
             var renderers_sorting = false;
-            Sortable.create('tracker_report_renderers', {
-                constraint: 'horizontal',
-                only: 'tracker_report_renderer_tab',
-                onUpdate: function (container) {
+            Sortable.create("tracker_report_renderers", {
+                constraint: "horizontal",
+                only: "tracker_report_renderer_tab",
+                onUpdate: function(container) {
                     renderers_sorting = true;
-                    var parameters = Sortable.serialize(container) + '&func=move-renderer&report=' + report_id + '&renderer=' + renderer_id;
+                    var parameters =
+                        Sortable.serialize(container) +
+                        "&func=move-renderer&report=" +
+                        report_id +
+                        "&renderer=" +
+                        renderer_id;
 
                     var req = new Ajax.Request(location.href, {
                         parameters: parameters,
-                        onComplete: function (transport) {
+                        onComplete: function(transport) {
                             codendi.tracker.report.setHasChanged();
                         }
                     });
                 }
             });
-            $$('#tracker_report_renderers li a').each(function (a) {
-                a.observe('click', function (evt) {
+            $$("#tracker_report_renderers li a").each(function(a) {
+                a.observe("click", function(evt) {
                     if (renderers_sorting) {
                         evt.stop();
                         renderers_sorting = false;
@@ -637,14 +747,14 @@ document.observe('dom:loaded', function () {
             });
         }
 
-        $$('select[name^=tracker_aggregate_function_add]').each(function (selectbox) {
-                codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
+        $$("select[name^=tracker_aggregate_function_add]").each(function(selectbox) {
+            codendi.tracker.report.loadAggregates(selectbox, report_id, renderer_id);
         });
     }
 
-    if($('tracker_report_updater_delete')) {
-        $('tracker_report_updater_delete').observe('click', function (event) {
-            if (! confirm(codendi.locales.tracker_report.delete_report)) {
+    if ($("tracker_report_updater_delete")) {
+        $("tracker_report_updater_delete").observe("click", function(event) {
+            if (!confirm(codendi.locales.tracker_report.delete_report)) {
                 event.stop();
             }
         });

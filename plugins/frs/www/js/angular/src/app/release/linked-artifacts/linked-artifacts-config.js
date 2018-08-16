@@ -1,14 +1,10 @@
 export default LinkedArtifactsConfig;
 
-LinkedArtifactsConfig.$inject = [
-    '$stateProvider'
-];
+LinkedArtifactsConfig.$inject = ["$stateProvider"];
 
-function LinkedArtifactsConfig(
-    $stateProvider
-) {
-    $stateProvider.state('linked-artifacts', {
-        url     : '/linked-artifacts',
+function LinkedArtifactsConfig($stateProvider) {
+    $stateProvider.state("linked-artifacts", {
+        url: "/linked-artifacts",
         template: '<div linked-artifacts id="linked-artifacts"></div>'
     });
 }

@@ -17,22 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-
+document.observe("dom:loaded", function() {
     function displayMode(mode) {
-        mode.up('h3').next('.tracker_create_mode').show();
+        mode.up("h3")
+            .next(".tracker_create_mode")
+            .show();
     }
 
     function hideAllModes() {
-        $$('.tracker_create_mode').invoke('hide');
+        $$(".tracker_create_mode").invoke("hide");
     }
 
     hideAllModes();
-    $$('input[name=create_mode]').each(function (mode) {
+    $$("input[name=create_mode]").each(function(mode) {
         if (mode.checked) {
             displayMode(mode);
         }
-        mode.observe('click', function (evt) {
+        mode.observe("click", function(evt) {
             hideAllModes();
             displayMode(mode);
         });
@@ -40,27 +41,33 @@ document.observe('dom:loaded', function () {
 
     // read xml template that has been choosen and prefill the form (name, desc, …)
     // Depends on presence of FileReader api (bye bye IE)
-    var input_file = $('tracker_new_xml_file');
-    if (!! window.FileReader && input_file) {
+    var input_file = $("tracker_new_xml_file");
+    if (!!window.FileReader && input_file) {
         var file_reader = new FileReader(),
-            filter      = /^text\/xml$/;
+            filter = /^text\/xml$/;
 
-        file_reader.onload = function (event) {
-            var parsed   = new DOMParser().parseFromString(event.target.result, "text/xml"),
-                trackers = parsed.getElementsByTagName('tracker'),
-                tracker  = trackers[0] || undefined;
+        file_reader.onload = function(event) {
+            var parsed = new DOMParser().parseFromString(event.target.result, "text/xml"),
+                trackers = parsed.getElementsByTagName("tracker"),
+                tracker = trackers[0] || undefined;
 
-            if (! tracker) {
+            if (!tracker) {
                 alert("You must select a valid template xml file!");
                 return;
             }
 
-            $('newtracker_name').highlight().value        = tracker.getElementsByTagName('name')[0].textContent;
-            $('newtracker_description').highlight().value = tracker.getElementsByTagName('description')[0].textContent;
-            $('newtracker_itemname').highlight().value    = tracker.getElementsByTagName('item_name')[0].textContent;
-        }
+            $("newtracker_name").highlight().value = tracker.getElementsByTagName(
+                "name"
+            )[0].textContent;
+            $("newtracker_description").highlight().value = tracker.getElementsByTagName(
+                "description"
+            )[0].textContent;
+            $("newtracker_itemname").highlight().value = tracker.getElementsByTagName(
+                "item_name"
+            )[0].textContent;
+        };
 
-        input_file.observe('change', function (evt) {
+        input_file.observe("change", function(evt) {
             if (input_file.files.length === 0) {
                 return;
             }
@@ -74,4 +81,3 @@ document.observe('dom:loaded', function () {
         });
     }
 });
-

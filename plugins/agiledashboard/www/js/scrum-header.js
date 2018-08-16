@@ -19,9 +19,9 @@
 
 import { dropdown } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const menu = document.getElementById('agiledashboard-scrum-milestone-menu');
-    if (! menu) {
+document.addEventListener("DOMContentLoaded", () => {
+    const menu = document.getElementById("agiledashboard-scrum-milestone-menu");
+    if (!menu) {
         return;
     }
 

@@ -1,7 +1,7 @@
-import angular           from 'angular';
-import tuleap_frs_module from 'tuleap-frs-module';
+import angular from "angular";
+import tuleap_frs_module from "tuleap-frs-module";
 
-import 'angular-mocks';
+import "angular-mocks";
 
 describe("ReleaseRestService -", function() {
     var $q, $httpBackend, ReleaseRestService, RestErrorService;
@@ -15,10 +15,10 @@ describe("ReleaseRestService -", function() {
             _ReleaseRestService_,
             _RestErrorService_
         ) {
-            $httpBackend       = _$httpBackend_;
-            $q                 = _$q_;
+            $httpBackend = _$httpBackend_;
+            $q = _$q_;
             ReleaseRestService = _ReleaseRestService_;
-            RestErrorService   = _RestErrorService_;
+            RestErrorService = _RestErrorService_;
         });
 
         spyOn(RestErrorService, "setError");
@@ -37,19 +37,22 @@ describe("ReleaseRestService -", function() {
                 {
                     shortname: "_is_child",
                     direction: "forward",
-                    label    : "Is Child",
-                    uri      : "feminity/unman?a=taysaam&b=hebdomadally#downstreet"
-                }, {
+                    label: "Is Child",
+                    uri: "feminity/unman?a=taysaam&b=hebdomadally#downstreet"
+                },
+                {
                     shortname: "",
                     direction: "reverse",
-                    label    : "",
-                    uri      : "subcentral/updraw?a=enmoss&b=monoicous#masterlily"
+                    label: "",
+                    uri: "subcentral/updraw?a=enmoss&b=monoicous#masterlily"
                 }
             ];
 
-            $httpBackend.expectGET('/api/v1/artifacts/752/links').respond(angular.toJson({
-                natures: natures
-            }));
+            $httpBackend.expectGET("/api/v1/artifacts/752/links").respond(
+                angular.toJson({
+                    natures: natures
+                })
+            );
 
             var promise = ReleaseRestService.getReleaseLinkNatures(752);
             $httpBackend.flush();
@@ -58,14 +61,14 @@ describe("ReleaseRestService -", function() {
         });
 
         it("when the server responds with an error, then the error will be set in the error service", function() {
-            $httpBackend.expectGET('/api/v1/artifacts/286/links').respond(403, 'Forbidden');
+            $httpBackend.expectGET("/api/v1/artifacts/286/links").respond(403, "Forbidden");
 
             var promise = ReleaseRestService.getReleaseLinkNatures(286);
             $httpBackend.flush();
 
             expect(RestErrorService.setError).toHaveBeenCalledWith({
-                code   : 403,
-                message: 'Forbidden'
+                code: 403,
+                message: "Forbidden"
             });
             expect(promise).toBeRejected();
         });
@@ -75,44 +78,55 @@ describe("ReleaseRestService -", function() {
         it("Given a URI, a limit and offset, when I get the linked artifacts at the URI, then a GET request will be sent to Tuleap and an object containing the total number of artifacts and a collection of artifacts will be returned", function() {
             var total_linked_artifacts = 21;
             var headers = {
-                'X-Pagination-Size': total_linked_artifacts
+                "X-Pagination-Size": total_linked_artifacts
             };
 
             var linked_artifacts = [
                 {
                     id: 459
-                }, {
+                },
+                {
                     id: 194
                 }
             ];
 
-            $httpBackend.expectGET('/api/v1/artifacts/392/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0')
-            .respond(angular.toJson({
-                collection: linked_artifacts
-            }), headers);
+            $httpBackend
+                .expectGET(
+                    "/api/v1/artifacts/392/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0"
+                )
+                .respond(
+                    angular.toJson({
+                        collection: linked_artifacts
+                    }),
+                    headers
+                );
 
-            var uri = 'artifacts/392/linked_artifacts?nature=elflock&direction=forward';
+            var uri = "artifacts/392/linked_artifacts?nature=elflock&direction=forward";
 
             var promise = ReleaseRestService.getLinkedArtifacts(uri, 50, 0);
             $httpBackend.flush();
 
             expect(promise).toBeResolvedWith({
                 results: linked_artifacts,
-                total  : total_linked_artifacts
+                total: total_linked_artifacts
             });
         });
 
         it("when the server responds with an error, then the error will be set in the error service", function() {
-            $httpBackend.expectGET('/api/v1/artifacts/676/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0').respond(403, 'Forbidden');
+            $httpBackend
+                .expectGET(
+                    "/api/v1/artifacts/676/linked_artifacts?nature=elflock&direction=forward&limit=50&offset=0"
+                )
+                .respond(403, "Forbidden");
 
-            var uri = 'artifacts/676/linked_artifacts?nature=elflock&direction=forward';
+            var uri = "artifacts/676/linked_artifacts?nature=elflock&direction=forward";
 
             var promise = ReleaseRestService.getLinkedArtifacts(uri, 50, 0);
             $httpBackend.flush();
 
             expect(RestErrorService.setError).toHaveBeenCalledWith({
-                code   : 403,
-                message: 'Forbidden'
+                code: 403,
+                message: "Forbidden"
             });
             expect(promise).toBeRejected();
         });
@@ -123,7 +137,8 @@ describe("ReleaseRestService -", function() {
             var first_artifacts = [
                 {
                     id: 153
-                }, {
+                },
+                {
                     id: 356
                 }
             ];
@@ -131,28 +146,33 @@ describe("ReleaseRestService -", function() {
             var second_artifacts = [
                 {
                     id: 433
-                }, {
+                },
+                {
                     id: 422
                 }
             ];
-            spyOn(ReleaseRestService, "getLinkedArtifacts").and.callFake(function(uri, limit, offset) {
+            spyOn(ReleaseRestService, "getLinkedArtifacts").and.callFake(function(
+                uri,
+                limit,
+                offset
+            ) {
                 if (offset === 0) {
                     return $q.when({
                         results: first_artifacts,
-                        total  : 4
+                        total: 4
                     });
                 } else if (offset === 2) {
                     return $q.when({
                         results: second_artifacts,
-                        total  : 4
+                        total: 4
                     });
                 }
             });
 
             ReleaseRestService.linked_artifacts_pagination_limit = 2;
-            var uri               = 'artifacts/417/linked_artifacts?nature=neurokeratin&direction=reverse';
+            var uri = "artifacts/417/linked_artifacts?nature=neurokeratin&direction=reverse";
             var progress_callback = jasmine.createSpy("progress_callback");
-            var promise           = ReleaseRestService.getAllLinkedArtifacts(uri, progress_callback);
+            var promise = ReleaseRestService.getAllLinkedArtifacts(uri, progress_callback);
 
             var all_artifacts = first_artifacts.concat(second_artifacts);
 

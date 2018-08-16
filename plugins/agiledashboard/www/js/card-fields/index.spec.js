@@ -1,1 +1,1 @@
-import './highlight-filter.spec.js';
+import "./highlight-filter.spec.js";

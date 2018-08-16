@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                       from 'vue';
-import AgileDashboardPermissions from './AgileDashboardPermissions.vue';
-import { gettext_provider }      from './gettext-provider.js';
+import Vue from "vue";
+import AgileDashboardPermissions from "./AgileDashboardPermissions.vue";
+import { gettext_provider } from "./gettext-provider.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_point = document.getElementById('agile-dashboard-permission-per-group');
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_point = document.getElementById("agile-dashboard-permission-per-group");
 
     if (vue_mount_point) {
         const RootComponent = Vue.extend(AgileDashboardPermissions);
-        const locale        = document.body.dataset.userLocale;
+        const locale = document.body.dataset.userLocale;
 
         gettext_provider.setLocale(locale);
 

@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
+!(function($) {
     $(document).ready(createTooltipForProjectPrivacy);
 
     function createTooltipForProjectPrivacy() {
-        $('.project-title-container').popover({
+        $(".project-title-container").popover({
             html: true,
-            container: 'body',
-            trigger: 'hover',
-            delay: {show: 1000, hide: 300}
+            container: "body",
+            trigger: "hover",
+            delay: { show: 1000, hide: 300 }
         });
     }
 })(jQuery);

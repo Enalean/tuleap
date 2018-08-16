@@ -1,11 +1,11 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ValidateService;
 
 ValidateService.$inject = [
-    'TuleapArtifactModalComputedFieldValidateService',
-    'TuleapArtifactModalPermissionFieldValidateService',
-    'TuleapArtifactModalOpenListFieldValidateService'
+    "TuleapArtifactModalComputedFieldValidateService",
+    "TuleapArtifactModalPermissionFieldValidateService",
+    "TuleapArtifactModalOpenListFieldValidateService"
 ];
 
 function ValidateService(
@@ -24,12 +24,18 @@ function ValidateService(
             })
             .map(function(field) {
                 switch (field.type) {
-                    case 'computed':
-                        return TuleapArtifactModalComputedFieldValidateService.validateFieldValue(field);
-                    case 'perm':
-                        return TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(field);
-                    case 'tbl':
-                        return TuleapArtifactModalOpenListFieldValidateService.validateFieldValue(field);
+                    case "computed":
+                        return TuleapArtifactModalComputedFieldValidateService.validateFieldValue(
+                            field
+                        );
+                    case "perm":
+                        return TuleapArtifactModalPermissionFieldValidateService.validateFieldValue(
+                            field
+                        );
+                    case "tbl":
+                        return TuleapArtifactModalOpenListFieldValidateService.validateFieldValue(
+                            field
+                        );
                     default:
                         return validateOtherFields(field);
                 }
@@ -43,15 +49,15 @@ function ValidateService(
         if (field === undefined) {
             return false;
         }
-        var necessary_permission = (creation_mode) ? 'create' : 'update';
+        var necessary_permission = creation_mode ? "create" : "update";
         return _(field.permissions).contains(necessary_permission);
     }
 
     function validateOtherFields(field) {
-        if (! filterAtLeastOneAttribute(field)) {
+        if (!filterAtLeastOneAttribute(field)) {
             return;
         }
-        if (! filterEmptyFileFieldValue(field)) {
+        if (!filterEmptyFileFieldValue(field)) {
             return;
         }
 
@@ -71,26 +77,26 @@ function ValidateService(
             return false;
         }
 
-        var value_defined          = (field.value !== undefined);
+        var value_defined = field.value !== undefined;
         var bind_value_ids_present = Boolean(field.bind_value_ids);
-        var links_present          = Boolean(field.links);
+        var links_present = Boolean(field.links);
 
         // This is a logical XOR: only one of those 3 attributes may be present at the same time on a given field
         return (
-            ( value_defined && !bind_value_ids_present && !links_present) ||
-            (!value_defined &&  bind_value_ids_present && !links_present) ||
-            (!value_defined && !bind_value_ids_present &&  links_present)
+            (value_defined && !bind_value_ids_present && !links_present) ||
+            (!value_defined && bind_value_ids_present && !links_present) ||
+            (!value_defined && !bind_value_ids_present && links_present)
         );
     }
 
     function validateValue(field) {
         switch (field.type) {
-            case 'date':
-            case 'int':
-            case 'float':
-            case 'string':
+            case "date":
+            case "int":
+            case "float":
+            case "string":
                 if (field.value === null) {
-                    field.value = '';
+                    field.value = "";
                 }
                 break;
             default:
@@ -100,21 +106,21 @@ function ValidateService(
     }
 
     function filterEmptyFileFieldValue(field) {
-        if (field.type !== 'file') {
+        if (field.type !== "file") {
             return true;
         }
 
-        return ! _.isEmpty(field.value);
+        return !_.isEmpty(field.value);
     }
 
     function buildLinks(field) {
         // Merge the text field with the selectbox to create the list of links
         if (_.isString(field.unformatted_links)) {
-            var ids = field.unformatted_links.split(',');
+            var ids = field.unformatted_links.split(",");
             var objects = _.map(ids, function(link_id) {
                 return { id: parseInt(link_id, 10) };
             });
-            field.links             = field.links.concat(objects);
+            field.links = field.links.concat(objects);
             field.unformatted_links = undefined;
         }
         // Then, filter out all the invalid id values (null, undefined, etc)
@@ -127,11 +133,11 @@ function ValidateService(
     function removeUnusedAttributes(field) {
         var attributes_to_keep = _.pick(field, function(property, key) {
             switch (key) {
-                case 'bind_value_ids':
-                case 'field_id':
-                case 'links':
-                case 'value':
-                    return ! _.isUndefined(property);
+                case "bind_value_ids":
+                case "field_id":
+                case "links":
+                case "value":
+                    return !_.isUndefined(property);
                 default:
                     return false;
             }

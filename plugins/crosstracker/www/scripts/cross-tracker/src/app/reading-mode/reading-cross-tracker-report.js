@@ -19,8 +19,8 @@
 
 export default class ReadingCrossTrackerReport {
     constructor() {
-        this.trackers     = new Map();
-        this.expert_query = '';
+        this.trackers = new Map();
+        this.expert_query = "";
     }
 
     getTrackers() {
@@ -36,7 +36,7 @@ export default class ReadingCrossTrackerReport {
     }
 
     duplicateFromReport(report) {
-        this.trackers     = new Map(report.trackers);
+        this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }
 }

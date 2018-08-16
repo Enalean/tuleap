@@ -19,21 +19,21 @@
 
 var escaper = {
     entityMap: {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;',
-        '/': '&#x2F;'
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+        "/": "&#x2F;"
     },
-    html: function (text) {
+    html: function(text) {
         return String(text).replace(/[&<>"'\/]/g, function fromEntityMap(s) {
             return escaper.entityMap[s];
         });
     }
 };
 
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = {
         escaper: escaper
     };

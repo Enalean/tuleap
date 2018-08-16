@@ -1,5 +1,5 @@
-import { copy } from 'angular';
-import _ from 'lodash';
+import { copy } from "angular";
+import _ from "lodash";
 
 export default WorkflowService;
 
@@ -12,7 +12,7 @@ function WorkflowService() {
     function enforceWorkflowTransitions(source_value_id, field, workflow) {
         var field_values = getPossibleValues(source_value_id, field.values, workflow.transitions);
 
-        field.values          = field_values;
+        field.values = field_values;
         field.filtered_values = copy(field_values);
         field.has_transitions = true;
 
@@ -33,7 +33,8 @@ function WorkflowService() {
         return _(transitions)
             .filter(function(transition) {
                 return transition.from_id === source_value_id;
-            }).pluck('to_id')
+            })
+            .pluck("to_id")
             .push(source_value_id)
             .compact()
             .value();

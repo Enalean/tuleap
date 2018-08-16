@@ -6,7 +6,11 @@ function KanbanFilteredUpdatedAlertService() {
     };
 
     return {
-        setCardHasBeenUpdated() { property.updated = true; },
-        isCardUpdated() { return property.updated; }
+        setCardHasBeenUpdated() {
+            property.updated = true;
+        },
+        isCardUpdated() {
+            return property.updated;
+        }
     };
 }

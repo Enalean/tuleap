@@ -1,18 +1,18 @@
-import './backlog-item-details.tpl.html';
-import BacklogItemDetailsController from './backlog-item-details-controller.js';
+import "./backlog-item-details.tpl.html";
+import BacklogItemDetailsController from "./backlog-item-details-controller.js";
 
 export default function BacklogItemDetails() {
     return {
-        restrict: 'EA',
-        scope   : {
-            backlog_item     : '=backlogItemDetails',
-            moveToTop        : '&',
-            moveToBottom     : '&',
-            current_milestone: '=currentMilestone'
+        restrict: "EA",
+        scope: {
+            backlog_item: "=backlogItemDetails",
+            moveToTop: "&",
+            moveToBottom: "&",
+            current_milestone: "=currentMilestone"
         },
-        controller      : BacklogItemDetailsController,
-        controllerAs    : 'details',
+        controller: BacklogItemDetailsController,
+        controllerAs: "details",
         bindToController: true,
-        templateUrl     : 'backlog-item-details.tpl.html',
+        templateUrl: "backlog-item-details.tpl.html"
     };
 }

@@ -65,12 +65,12 @@ const variable_definition = {
     token: "variable"
 };
 
-function buildModeDefinition({ additional_keywords = []}) {
+function buildModeDefinition({ additional_keywords = [] }) {
     if (additional_keywords.length > 0) {
-        const keywords_regex                 = additional_keywords.join('|');
+        const keywords_regex = additional_keywords.join("|");
         const additional_keywords_definition = {
-            regex: new RegExp('(?:' + keywords_regex + ')\\b', 'i'),
-            token: 'variable-2'
+            regex: new RegExp("(?:" + keywords_regex + ")\\b", "i"),
+            token: "variable-2"
         };
         TQL_mode_definition.start.push(additional_keywords_definition);
     }
@@ -79,17 +79,14 @@ function buildModeDefinition({ additional_keywords = []}) {
 }
 
 const TQL_autocomplete_keywords = [
-    'AND',
-    'OR',
-    'BETWEEN(',
-    'NOW()',
-    'IN(',
-    'NOT',
-    'MYSELF()',
-    '@comments'
+    "AND",
+    "OR",
+    "BETWEEN(",
+    "NOW()",
+    "IN(",
+    "NOT",
+    "MYSELF()",
+    "@comments"
 ];
 
-export {
-    buildModeDefinition,
-    TQL_autocomplete_keywords
-};
+export { buildModeDefinition, TQL_autocomplete_keywords };

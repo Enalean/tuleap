@@ -23,9 +23,9 @@
  */
 
 var tuleap = tuleap || {};
-tuleap.cardwall = tuleap.cardwall || { };
+tuleap.cardwall = tuleap.cardwall || {};
 
-(function ($) {
+(function($) {
     var overlay_window;
 
     function displayIframeOverlay(event, link) {
@@ -38,17 +38,16 @@ tuleap.cardwall = tuleap.cardwall || { };
             finalAnimationDelay: 0
         });
 
-        var artifact_id = link.attr('data-artifact-id');
+        var artifact_id = link.attr("data-artifact-id");
         var params = {
-            aid  : artifact_id,
-            func : 'show-in-overlay'
+            aid: artifact_id,
+            func: "show-in-overlay"
         };
 
-
         overlay_window.activateWindow({
-                href        : codendi.tracker.base_url + '?' + $.param(params),
-                title       : codendi.locales['cardwall']['edit_card'],
-                iframeEmbed : true
+            href: codendi.tracker.base_url + "?" + $.param(params),
+            title: codendi.locales["cardwall"]["edit_card"],
+            iframeEmbed: true
         });
 
         bindCancelEvent();
@@ -56,9 +55,9 @@ tuleap.cardwall = tuleap.cardwall || { };
 
     function getNewCardData(artifact_id, planning_id) {
         var params = {
-            id          : artifact_id,
-            planning_id : planning_id,
-            action : 'get-card'
+            id: artifact_id,
+            planning_id: planning_id,
+            action: "get-card"
         };
 
         $.ajax({
@@ -68,42 +67,41 @@ tuleap.cardwall = tuleap.cardwall || { };
     }
 
     function getConcernedPlanningId() {
-        return $('div.hidden[data-planning-id]').attr('data-planning-id');
+        return $("div.hidden[data-planning-id]").attr("data-planning-id");
     }
-
 
     function disableOverlay() {
         overlay_window.deactivate();
     }
 
     function bindCancelEvent() {
-        var iframe = $('#lightwindow_iframe').get(0);
+        var iframe = $("#lightwindow_iframe").get(0);
         $(iframe).load(function() {
             var content = iframe.contentWindow.document;
-            $('button[name=cancel]',content).each(function(){
-                $(this).on('click', function(e){
-                   disableOverlay();
-                   e.preventDefault();
+            $("button[name=cancel]", content).each(function() {
+                $(this).on("click", function(e) {
+                    disableOverlay();
+                    e.preventDefault();
                 });
             });
         });
     }
 
     tuleap.cardwall.isOnAgiledashboard = function() {
-        return $('div.hidden[data-planning-id]').length > 0;
-    }
+        return $("div.hidden[data-planning-id]").length > 0;
+    };
 
     tuleap.cardwall.cardsEditInPlace = {
         init: function() {
             var self = this;
-            if (! tuleap.cardwall.isOnAgiledashboard()) {
+            if (!tuleap.cardwall.isOnAgiledashboard()) {
                 return;
             }
 
-            $('div.cardwall_board div.card li > a.edit-card').click(function(event){
+            $("div.cardwall_board div.card li > a.edit-card").click(function(event) {
                 event.preventDefault();
 
-                var artifact_id = $(this).attr('data-artifact-id');
+                var artifact_id = $(this).attr("data-artifact-id");
                 var callback;
 
                 if (tuleap.browserCompatibility.isIE7()) {
@@ -111,7 +109,10 @@ tuleap.cardwall = tuleap.cardwall || { };
                     return;
                 }
 
-                tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(artifact_id, self.moveCardCallback(artifact_id));
+                tuleap.tracker.artifactModalInPlace.loadEditArtifactModal(
+                    artifact_id,
+                    self.moveCardCallback(artifact_id)
+                );
             });
         },
 
@@ -127,7 +128,7 @@ tuleap.cardwall = tuleap.cardwall || { };
         }
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         tuleap.cardwall.cardsEditInPlace.init();
     });
 })(jQuery);

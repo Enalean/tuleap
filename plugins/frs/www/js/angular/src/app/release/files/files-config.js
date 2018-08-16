@@ -1,14 +1,10 @@
 export default FilesConfig;
 
-FilesConfig.$inject = [
-    '$stateProvider'
-];
+FilesConfig.$inject = ["$stateProvider"];
 
-function FilesConfig(
-    $stateProvider
-) {
-    $stateProvider.state('files', {
-        url     : '/',
+function FilesConfig($stateProvider) {
+    $stateProvider.state("files", {
+        url: "/",
         template: '<div files id="files"></div>'
     });
 }

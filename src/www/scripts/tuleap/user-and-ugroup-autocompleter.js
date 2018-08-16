@@ -19,16 +19,17 @@
 
 var tuleap = tuleap || {};
 
-(function ($) {
+(function($) {
     function formatItem(item) {
-        var type = item.type ? item.type : 'other';
+        var type = item.type ? item.type : "other";
 
-        if (type === 'group') {
-            return '<i class="icon-group autocompleter-icon-group"></i>' + tuleap.escaper.html(item.text);
-
-        } else if (type === 'user') {
+        if (type === "group") {
+            return (
+                '<i class="icon-group autocompleter-icon-group"></i>' +
+                tuleap.escaper.html(item.text)
+            );
+        } else if (type === "user") {
             return formatUser(item);
-
         } else {
             return tuleap.escaper.html(item.text);
         }
@@ -39,10 +40,15 @@ var tuleap = tuleap || {};
             return tuleap.escaper.html(user.text);
         }
 
-        return '<div class="avatar autocompleter-avatar"> \
-                ' + (user.has_avatar ? '<img src="' + tuleap.escaper.html(user.avatar_url) +'">' : '') +' \
+        return (
+            '<div class="avatar autocompleter-avatar"> \
+                ' +
+            (user.has_avatar ? '<img src="' + tuleap.escaper.html(user.avatar_url) + '">' : "") +
+            " \
             </div> \
-            ' + tuleap.escaper.html(user.text);
+            " +
+            tuleap.escaper.html(user.text)
+        );
     }
 
     function createSearchChoice(term, data) {
@@ -58,26 +64,26 @@ var tuleap = tuleap || {};
         }
     }
 
-    tuleap.addDataToAutocompleter = function (input, items) {
-        $(input).select2('data', items);
+    tuleap.addDataToAutocompleter = function(input, items) {
+        $(input).select2("data", items);
     };
 
-    tuleap.enableAutocompleter = function (input) {
-        $(input).select2('enable', true);
+    tuleap.enableAutocompleter = function(input) {
+        $(input).select2("enable", true);
     };
 
-    tuleap.resetPlaceholder = function (input) {
-        $(input).select2('val', null);
+    tuleap.resetPlaceholder = function(input) {
+        $(input).select2("val", null);
     };
 
-    tuleap.loadUserAndUgroupAutocompleter = function (input) {
-        if (! input) {
+    tuleap.loadUserAndUgroupAutocompleter = function(input) {
+        if (!input) {
             return;
         }
 
         $(input).select2({
-            width: '100%',
-            dropdownCssClass: 'autocompleter-users-and-ugroups-dropdown',
+            width: "100%",
+            dropdownCssClass: "autocompleter-users-and-ugroups-dropdown",
             tags: true,
             multiple: true,
             tokenSeparators: [",", " "],
@@ -85,17 +91,17 @@ var tuleap = tuleap || {};
             placeholder: input.dataset.placeholder,
             ajax: {
                 url: "/user/autocomplete.php",
-                dataType: 'json',
+                dataType: "json",
                 quietMillis: 250,
-                data: function (term, page) {
+                data: function(term, page) {
                     return {
-                        return_type                        : 'json_for_select_2',
-                        'with-groups-of-user-in-project-id': input.dataset.projectId,
-                        'additional-information'           : input.dataset.additionalInfo,
+                        return_type: "json_for_select_2",
+                        "with-groups-of-user-in-project-id": input.dataset.projectId,
+                        "additional-information": input.dataset.additionalInfo,
                         name: term
                     };
                 },
-                results: function (data, page) {
+                results: function(data, page) {
                     return {
                         results: data.results
                     };
@@ -104,7 +110,9 @@ var tuleap = tuleap || {};
             createSearchChoice: createSearchChoice,
             formatResult: formatItem,
             formatSelection: formatItem,
-            escapeMarkup: function (m) { return m; }
+            escapeMarkup: function(m) {
+                return m;
+            }
         });
     };
 })(jQuery);

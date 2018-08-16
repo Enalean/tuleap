@@ -1,12 +1,12 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ReportsModalController;
 
 ReportsModalController.$inject = [
-    'moment',
-    'SharedPropertiesService',
-    'DiagramRestService',
-    'modal_instance'
+    "moment",
+    "SharedPropertiesService",
+    "DiagramRestService",
+    "modal_instance"
 ];
 
 function ReportsModalController(
@@ -17,44 +17,46 @@ function ReportsModalController(
 ) {
     var self = this;
 
-    var ISO_DATE_FORMAT  = 'YYYY-MM-DD';
+    var ISO_DATE_FORMAT = "YYYY-MM-DD";
 
-    self.loading      = true;
-    self.data         = [];
+    self.loading = true;
+    self.data = [];
     self.kanban_label = "";
 
-    self.params  = {
+    self.params = {
         last_seven_days: {
-            number                 : 7,
-            time_unit              : 'day',
+            number: 7,
+            time_unit: "day",
             interval_between_points: 1
         },
         last_month: {
-            number                 : 1,
-            time_unit              : 'month',
+            number: 1,
+            time_unit: "month",
             interval_between_points: 1
         },
         last_three_months: {
-            number                 : 3,
-            time_unit              : 'month',
+            number: 3,
+            time_unit: "month",
             interval_between_points: 7
         },
         last_six_months: {
-            number                 : 6,
-            time_unit              : 'month',
+            number: 6,
+            time_unit: "month",
             interval_between_points: 7
         },
         last_year: {
-            number                 : 1,
-            time_unit              : 'year',
+            number: 1,
+            time_unit: "year",
             interval_between_points: 7
         }
     };
     self.value_last_data = self.params.last_seven_days;
-    self.key_last_data   = 'last_seven_days';
+    self.key_last_data = "last_seven_days";
 
-    self.close    = function() { modal_instance.tlp_modal.hide(); };
-    self.$onInit  = init;
+    self.close = function() {
+        modal_instance.tlp_modal.hide();
+    };
+    self.$onInit = init;
     self.loadData = loadData;
 
     function init() {
@@ -62,33 +64,40 @@ function ReportsModalController(
     }
 
     function loadData() {
-        self.loading         = true;
+        self.loading = true;
         self.value_last_data = self.params[self.key_last_data];
-        self.kanban_label    = SharedPropertiesService.getKanban().label;
-        var kanban_id        = SharedPropertiesService.getKanban().id;
-        var start_date       = moment().subtract(self.value_last_data.number, self.value_last_data.time_unit).format(ISO_DATE_FORMAT);
-        var end_date         = moment().add(1, 'days').format(ISO_DATE_FORMAT);
+        self.kanban_label = SharedPropertiesService.getKanban().label;
+        var kanban_id = SharedPropertiesService.getKanban().id;
+        var start_date = moment()
+            .subtract(self.value_last_data.number, self.value_last_data.time_unit)
+            .format(ISO_DATE_FORMAT);
+        var end_date = moment()
+            .add(1, "days")
+            .format(ISO_DATE_FORMAT);
 
         DiagramRestService.getCumulativeFlowDiagram(
             kanban_id,
             start_date,
             end_date,
             self.value_last_data.interval_between_points
-        ).then(setGraphData)
-        .finally(function() {
-            self.loading = false;
-        });
+        )
+            .then(setGraphData)
+            .finally(function() {
+                self.loading = false;
+            });
     }
 
     function setGraphData(cumulative_flow_data) {
         var closed_columns_id = getCollapsedKanbanColumnsIds();
 
-        _.forEach(cumulative_flow_data.columns, function (column) {
-            var data_for_today        = _.last(column.values);
-            data_for_today.start_date = moment(data_for_today.start_date).subtract(12, 'hours').format();
+        _.forEach(cumulative_flow_data.columns, function(column) {
+            var data_for_today = _.last(column.values);
+            data_for_today.start_date = moment(data_for_today.start_date)
+                .subtract(12, "hours")
+                .format();
         });
 
-        _.forEach(cumulative_flow_data.columns, function (column) {
+        _.forEach(cumulative_flow_data.columns, function(column) {
             if (_.contains(closed_columns_id, column.id)) {
                 column.activated = false;
             }
@@ -106,7 +115,7 @@ function ReportsModalController(
 
         return _(all_columns)
             .filter({ is_open: false })
-            .map(function (column) {
+            .map(function(column) {
                 return column.id.toString();
             })
             .value();

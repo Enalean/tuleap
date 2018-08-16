@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-    $(document).ready(function(){
-        $('.massmail-project-member-link').click(function () {
-            var project_id = $(this).attr('data-project-id');
+!(function($) {
+    $(document).ready(function() {
+        $(".massmail-project-member-link").click(function() {
+            var project_id = $(this).attr("data-project-id");
 
-            $('#massmail-project-members-project-id').val(project_id);
+            $("#massmail-project-members-project-id").val(project_id);
         });
     });
 })(window.jQuery);

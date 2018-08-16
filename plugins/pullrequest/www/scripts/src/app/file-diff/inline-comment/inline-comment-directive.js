@@ -1,13 +1,13 @@
-import './inline-comment.tpl.html';
+import "./inline-comment.tpl.html";
 
 export default InlineCommentDirective;
 
 function InlineCommentDirective() {
     return {
-        restrict: 'AE',
-        scope   : {
-            comment: '='
+        restrict: "AE",
+        scope: {
+            comment: "="
         },
-        templateUrl: 'inline-comment.tpl.html'
+        templateUrl: "inline-comment.tpl.html"
     };
 }

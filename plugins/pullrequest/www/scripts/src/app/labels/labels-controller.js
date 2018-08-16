@@ -1,16 +1,10 @@
-import { create } from 'labels-box';
+import { create } from "labels-box";
 
 export default LabelsController;
 
-LabelsController.$inject = [
-    '$element',
-    'SharedPropertiesService'
-];
+LabelsController.$inject = ["$element", "SharedPropertiesService"];
 
-function LabelsController(
-    $element,
-    SharedPropertiesService
-) {
+function LabelsController($element, SharedPropertiesService) {
     const self = this;
 
     initLabels();
@@ -35,8 +29,8 @@ function LabelsController(
     function createLabelsBox(pull_request_id, project_id, user_can_update_labels) {
         create(
             $element[0],
-            '/api/v1/pull_requests/' + pull_request_id + '/labels',
-            '/api/v1/projects/' + project_id + '/labels',
+            "/api/v1/pull_requests/" + pull_request_id + "/labels",
+            "/api/v1/projects/" + project_id + "/labels",
             user_can_update_labels
         );
     }

@@ -1,16 +1,16 @@
-import './card-fields.tpl.html';
-import controller from './card-fields-controller.js';
+import "./card-fields.tpl.html";
+import controller from "./card-fields-controller.js";
 
 export default () => {
     return {
-        restrict        : 'AE',
+        restrict: "AE",
         controller,
-        controllerAs    : 'card_ctrl',
+        controllerAs: "card_ctrl",
         bindToController: true,
-        templateUrl     : 'card-fields.tpl.html',
-        scope           : {
-            item        : '=item',
-            filter_terms: '=filterTerms'
+        templateUrl: "card-fields.tpl.html",
+        scope: {
+            item: "=item",
+            filter_terms: "=filterTerms"
         }
     };
 };

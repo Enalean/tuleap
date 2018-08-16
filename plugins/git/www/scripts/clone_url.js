@@ -21,12 +21,12 @@
 !(function($) {
     var viewing_ssh_mirror = false;
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         selectFirstProtocol();
-        $('.plugin_git_transport').click(function () {
+        $(".plugin_git_transport").click(function() {
             changeCloneURL($(this));
         });
-        $('.repo_mirror_option').click(changeMirror);
+        $(".repo_mirror_option").click(changeMirror);
 
         toggleContextualHelpForCloneUrl();
         autoSelectGitCloneUrl();
@@ -34,48 +34,49 @@
 
     function selectFirstProtocol() {
         var first = true;
-        $('.plugin_git_transport').filter(':visible').each(function() {
-            if (first) {
-                $(this).addClass('active git_first_protocol');
-                first = false;
-            } else {
-                $(this).removeClass('active git_first_protocol');
-            }
-        });
-        changeCloneURL($('.plugin_git_transport.active'));
-    };
+        $(".plugin_git_transport")
+            .filter(":visible")
+            .each(function() {
+                if (first) {
+                    $(this).addClass("active git_first_protocol");
+                    first = false;
+                } else {
+                    $(this).removeClass("active git_first_protocol");
+                }
+            });
+        changeCloneURL($(".plugin_git_transport.active"));
+    }
 
     function changeCloneURL(transport_button) {
-        var current_protocol = transport_button.attr('data-protocol'),
-            current_url      = transport_button.attr('data-url');
+        var current_protocol = transport_button.attr("data-protocol"),
+            current_url = transport_button.attr("data-url");
 
         if (shouldDisplayReadOnlyLabel()) {
-            $('#gitclone_urls_readonly').show();
+            $("#gitclone_urls_readonly").show();
         } else {
-            $('#gitclone_urls_readonly').hide();
+            $("#gitclone_urls_readonly").hide();
         }
 
-        $('#plugin_git_clone_field').val(current_url);
-        $('.plugin_git_example_url').html(current_url);
+        $("#plugin_git_clone_field").val(current_url);
+        $(".plugin_git_example_url").html(current_url);
 
         function shouldDisplayReadOnlyLabel() {
-            return viewingSSHMirror()
-                || gerritIsActive() && ! viewingGerrit();
+            return viewingSSHMirror() || (gerritIsActive() && !viewingGerrit());
         }
 
         function viewingGerrit() {
-            return current_protocol === 'gerrit';
+            return current_protocol === "gerrit";
         }
 
         function viewingSSHMirror() {
-            return current_protocol === 'ssh' && viewing_ssh_mirror;
+            return current_protocol === "ssh" && viewing_ssh_mirror;
         }
     }
 
     function changeMirror(event) {
         var selected_mirror = $(this),
-            ssh_url         = selected_mirror.attr('data-ssh-url'),
-            name            = selected_mirror.attr('data-name');
+            ssh_url = selected_mirror.attr("data-ssh-url"),
+            name = selected_mirror.attr("data-name");
 
         markMirrorAsSelected();
         updateUrlData();
@@ -83,35 +84,38 @@
         event.preventDefault();
 
         function markMirrorAsSelected() {
-            selected_mirror.parents('ul').children('.is_selected').removeClass('is_selected');
-            selected_mirror.parent().addClass('is_selected');
-            $('.current-location-name').html(name);
+            selected_mirror
+                .parents("ul")
+                .children(".is_selected")
+                .removeClass("is_selected");
+            selected_mirror.parent().addClass("is_selected");
+            $(".current-location-name").html(name);
 
-            viewing_ssh_mirror = selected_mirror.attr('data-is-mirror');
+            viewing_ssh_mirror = selected_mirror.attr("data-is-mirror");
         }
 
         function updateUrlData() {
-            $('#gitclone_urls_protocol_ssh').attr('data-url', ssh_url);
+            $("#gitclone_urls_protocol_ssh").attr("data-url", ssh_url);
         }
 
         function simulateClickOnSSHProtocol() {
-            $('#gitclone_urls_protocol_ssh').click();
+            $("#gitclone_urls_protocol_ssh").click();
         }
     }
 
     function gerritIsActive() {
-        return $('#plugin_git_is_gerrit_active').val();
+        return $("#plugin_git_is_gerrit_active").val();
     }
 
     function toggleContextualHelpForCloneUrl() {
-        $('#plugin_git_example').hide();
-        $('#plugin_git_example-handle').on('click', function () {
-            $('#plugin_git_example').toggle();
+        $("#plugin_git_example").hide();
+        $("#plugin_git_example-handle").on("click", function() {
+            $("#plugin_git_example").toggle();
         });
     }
 
     function autoSelectGitCloneUrl() {
-        $('#plugin_git_clone_field').on('click', function () {
+        $("#plugin_git_clone_field").on("click", function() {
             $(this).select();
         });
     }

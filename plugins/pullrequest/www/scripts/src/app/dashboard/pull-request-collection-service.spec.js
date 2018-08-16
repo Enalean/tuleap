@@ -1,13 +1,10 @@
-import angular                   from 'angular';
-import tuleap_pullrequest_module from 'tuleap-pullrequest-module';
+import angular from "angular";
+import tuleap_pullrequest_module from "tuleap-pullrequest-module";
 
-import 'angular-mocks';
+import "angular-mocks";
 
-describe('PullRequestCollectionService -', function() {
-    var $q,
-        PullRequestCollectionService,
-        SharedPropertiesService,
-        PullRequestCollectionRestService;
+describe("PullRequestCollectionService -", function() {
+    var $q, PullRequestCollectionService, SharedPropertiesService, PullRequestCollectionRestService;
 
     beforeEach(function() {
         angular.mock.module(tuleap_pullrequest_module);
@@ -18,10 +15,10 @@ describe('PullRequestCollectionService -', function() {
             _PullRequestCollectionService_,
             _SharedPropertiesService_
         ) {
-            $q                               = _$q_;
+            $q = _$q_;
             PullRequestCollectionRestService = _PullRequestCollectionRestService_;
-            PullRequestCollectionService     = _PullRequestCollectionService_;
-            SharedPropertiesService          = _SharedPropertiesService_;
+            PullRequestCollectionService = _PullRequestCollectionService_;
+            SharedPropertiesService = _SharedPropertiesService_;
         });
 
         spyOn(PullRequestCollectionRestService, "getAllPullRequests");
@@ -32,59 +29,65 @@ describe('PullRequestCollectionService -', function() {
         installPromiseMatchers();
     });
 
-    describe('loadAllPullRequests()', function() {
+    describe("loadAllPullRequests()", function() {
         beforeEach(function() {
             SharedPropertiesService.getRepositoryId.and.returnValue(1);
         });
 
         it("When I load all pull requests, then the REST service will be called, the open pull requests will be stored before the closed pull requests and all pull requests will be stored by reverse order of creation date", function() {
             var pull_requests = [
-                { id: 1, status: 'merge' },
-                { id: 2, status: 'review' },
-                { id: 3, status: 'abandon' },
-                { id: 4, status: 'review' }
+                { id: 1, status: "merge" },
+                { id: 2, status: "review" },
+                { id: 3, status: "abandon" },
+                { id: 4, status: "review" }
             ];
-            PullRequestCollectionRestService.getAllPullRequests.and.returnValue($q.when(pull_requests));
+            PullRequestCollectionRestService.getAllPullRequests.and.returnValue(
+                $q.when(pull_requests)
+            );
 
             var promise = PullRequestCollectionService.loadAllPullRequests();
 
             var reversed_and_ordered_pull_requests = [
-                { id: 4, status: 'review' },
-                { id: 2, status: 'review' },
-                { id: 3, status: 'abandon' },
-                { id: 1, status: 'merge' }
+                { id: 4, status: "review" },
+                { id: 2, status: "review" },
+                { id: 3, status: "abandon" },
+                { id: 1, status: "merge" }
             ];
 
             expect(promise).toBeResolved();
-            expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_and_ordered_pull_requests);
+            expect(PullRequestCollectionService.all_pull_requests).toEqual(
+                reversed_and_ordered_pull_requests
+            );
             expect(PullRequestCollectionService.areAllPullRequestsFullyLoaded()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneClosedPullRequest()).toBe(true);
             expect(PullRequestCollectionService.isThereAtLeastOneOpenpullRequest()).toBe(true);
         });
 
         it("Given that pull requests had already been loaded once, when I load all pull requests again, then the stored pull requests will be emptied and stored again", function() {
-            var all_pr_reference = PullRequestCollectionService.all_pull_requests = [
-                { id: 1, status: 'merge' },
-                { id: 2, status: 'review' }
-            ];
+            var all_pr_reference = (PullRequestCollectionService.all_pull_requests = [
+                { id: 1, status: "merge" },
+                { id: 2, status: "review" }
+            ]);
 
             var updated_pull_requests = [
-                { id: 1, status: 'merge' },
-                { id: 2, status: 'merge' },
-                { id: 3, status: 'abandon' },
-                { id: 4, status: 'review' }
+                { id: 1, status: "merge" },
+                { id: 2, status: "merge" },
+                { id: 3, status: "abandon" },
+                { id: 4, status: "review" }
             ];
-            PullRequestCollectionRestService.getAllPullRequests.and.returnValue($q.when(updated_pull_requests));
+            PullRequestCollectionRestService.getAllPullRequests.and.returnValue(
+                $q.when(updated_pull_requests)
+            );
 
             var promise = PullRequestCollectionService.loadAllPullRequests();
 
             expect(promise).toBeResolved();
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
             expect(PullRequestCollectionService.all_pull_requests).toEqual([
-                { id: 4, status: 'review' },
-                { id: 3, status: 'abandon' },
-                { id: 2, status: 'merge' },
-                { id: 1, status: 'merge' }
+                { id: 4, status: "review" },
+                { id: 3, status: "abandon" },
+                { id: 2, status: "merge" },
+                { id: 1, status: "merge" }
             ]);
         });
     });
@@ -95,21 +98,18 @@ describe('PullRequestCollectionService -', function() {
         });
 
         it("When I load open pull requests, then the REST service will be called and the open pull requests will be progressively loaded", function() {
-            var open_pull_requests = [
-                { id: 1, status: 'review' },
-                { id: 2, status: 'review' }
-            ];
-            PullRequestCollectionRestService.getAllOpenPullRequests.and.callFake(function(repository_id, callback) {
+            var open_pull_requests = [{ id: 1, status: "review" }, { id: 2, status: "review" }];
+            PullRequestCollectionRestService.getAllOpenPullRequests.and.callFake(function(
+                repository_id,
+                callback
+            ) {
                 callback(open_pull_requests);
                 return $q.when(open_pull_requests);
             });
 
             var promise = PullRequestCollectionService.loadOpenPullRequests();
 
-            var reversed_pull_requests = [
-                { id: 2, status: 'review' },
-                { id: 1, status: 'review' }
-            ];
+            var reversed_pull_requests = [{ id: 2, status: "review" }, { id: 1, status: "review" }];
 
             expect(promise).toBeResolved();
             expect(PullRequestCollectionService.all_pull_requests).toEqual(reversed_pull_requests);
@@ -118,27 +118,30 @@ describe('PullRequestCollectionService -', function() {
         });
 
         it("Given that all open pull requests had already been loaded once but closed pull requests had not been loaded, when I load the open pull requests again, then the stored pull requests will be emptied and stored again", function() {
-            spyOn(PullRequestCollectionService, "areOpenPullRequestsFullyLoaded").and.returnValue(true);
-            spyOn(PullRequestCollectionService, "areClosedPullRequestsFullyLoaded").and.returnValue(false);
+            spyOn(PullRequestCollectionService, "areOpenPullRequestsFullyLoaded").and.returnValue(
+                true
+            );
+            spyOn(PullRequestCollectionService, "areClosedPullRequestsFullyLoaded").and.returnValue(
+                false
+            );
 
-            var all_pr_reference = PullRequestCollectionService.all_pull_requests = [
-                { id: 1, status: 'review' },
-                { id: 2, status: 'review' }
-            ];
+            var all_pr_reference = (PullRequestCollectionService.all_pull_requests = [
+                { id: 1, status: "review" },
+                { id: 2, status: "review" }
+            ]);
 
-            var updated_pull_requests = [
-                { id: 3, status: 'review' },
-                { id: 4, status: 'review' }
-            ];
-            PullRequestCollectionRestService.getAllOpenPullRequests.and.returnValue($q.when(updated_pull_requests));
+            var updated_pull_requests = [{ id: 3, status: "review" }, { id: 4, status: "review" }];
+            PullRequestCollectionRestService.getAllOpenPullRequests.and.returnValue(
+                $q.when(updated_pull_requests)
+            );
 
             var promise = PullRequestCollectionService.loadOpenPullRequests();
 
             expect(promise).toBeResolved();
             expect(PullRequestCollectionService.all_pull_requests).toBe(all_pr_reference);
             expect(PullRequestCollectionService.all_pull_requests).toEqual([
-                { id: 4, status: 'review' },
-                { id: 3, status: 'review' }
+                { id: 4, status: "review" },
+                { id: 3, status: "review" }
             ]);
         });
     });
@@ -149,16 +152,16 @@ describe('PullRequestCollectionService -', function() {
         });
 
         it("When I load closed pull requests, then the REST service will be called and the closed pull requests will be progressively loaded and added to all the pull requests", function() {
-            var all_pr_reference = PullRequestCollectionService.all_pull_requests = [
-                { id: 2, status: 'review' },
-                { id: 1, status: 'review' }
-            ];
+            var all_pr_reference = (PullRequestCollectionService.all_pull_requests = [
+                { id: 2, status: "review" },
+                { id: 1, status: "review" }
+            ]);
 
-            var closed_pull_requests = [
-                { id: 3, status: 'merge' },
-                { id: 4, status: 'abandon' }
-            ];
-            PullRequestCollectionRestService.getAllClosedPullRequests.and.callFake(function(repository_id, callback) {
+            var closed_pull_requests = [{ id: 3, status: "merge" }, { id: 4, status: "abandon" }];
+            PullRequestCollectionRestService.getAllClosedPullRequests.and.callFake(function(
+                repository_id,
+                callback
+            ) {
                 callback(closed_pull_requests);
                 return $q.when(closed_pull_requests);
             });
@@ -166,10 +169,10 @@ describe('PullRequestCollectionService -', function() {
             var promise = PullRequestCollectionService.loadClosedPullRequests();
 
             var reversed_pull_requests = [
-                { id: 2, status: 'review' },
-                { id: 1, status: 'review' },
-                { id: 4, status: 'abandon' },
-                { id: 3, status: 'merge' }
+                { id: 2, status: "review" },
+                { id: 1, status: "review" },
+                { id: 4, status: "abandon" },
+                { id: 3, status: "merge" }
             ];
 
             expect(promise).toBeResolved();

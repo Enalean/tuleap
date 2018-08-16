@@ -1,12 +1,10 @@
-import angular                   from 'angular';
-import tuleap_pullrequest_module from 'tuleap-pullrequest-module';
+import angular from "angular";
+import tuleap_pullrequest_module from "tuleap-pullrequest-module";
 
-import 'angular-mocks';
+import "angular-mocks";
 
 describe("PullRequestRestService -", function() {
-    var $httpBackend,
-        PullRequestRestService,
-        ErrorModalService;
+    var $httpBackend, PullRequestRestService, ErrorModalService;
 
     beforeEach(function() {
         angular.mock.module(tuleap_pullrequest_module);
@@ -17,8 +15,8 @@ describe("PullRequestRestService -", function() {
             _ErrorModalService_,
             _PullRequestRestService_
         ) {
-            $httpBackend           = _$httpBackend_;
-            ErrorModalService      = _ErrorModalService_;
+            $httpBackend = _$httpBackend_;
+            ErrorModalService = _ErrorModalService_;
             PullRequestRestService = _PullRequestRestService_;
         });
 
@@ -37,23 +35,24 @@ describe("PullRequestRestService -", function() {
             var pull_request_id = 83;
 
             var pull_request = {
-                id         : pull_request_id,
-                title      : 'Asking a PR',
-                user_id    : 101,
-                branch_src : 'sample-pr',
-                branch_dest: 'master',
-                repository : {
+                id: pull_request_id,
+                title: "Asking a PR",
+                user_id: 101,
+                branch_src: "sample-pr",
+                branch_dest: "master",
+                repository: {
                     id: 1
                 },
                 repository_dest: {
                     id: 2
                 },
-                status       : 'review',
-                creation_date: '2016-04-19T09:20:21+00:00'
+                status: "review",
+                creation_date: "2016-04-19T09:20:21+00:00"
             };
 
-            $httpBackend.expectGET('/api/v1/pull_requests/' + pull_request_id)
-            .respond(angular.toJson(pull_request));
+            $httpBackend
+                .expectGET("/api/v1/pull_requests/" + pull_request_id)
+                .respond(angular.toJson(pull_request));
 
             var promise = PullRequestRestService.getPullRequest(pull_request_id);
             $httpBackend.flush();
@@ -64,17 +63,20 @@ describe("PullRequestRestService -", function() {
         it("when the server responds with an error, then the error modal will be shown", function() {
             var pull_request_id = 48;
 
-            $httpBackend.expectGET('/api/v1/pull_requests/' + pull_request_id)
-            .respond(403, 'Forbidden');
+            $httpBackend
+                .expectGET("/api/v1/pull_requests/" + pull_request_id)
+                .respond(403, "Forbidden");
 
             var promise = PullRequestRestService.getPullRequest(pull_request_id);
             $httpBackend.flush();
 
             expect(promise).toBeRejected();
-            expect(ErrorModalService.showError).toHaveBeenCalledWith(jasmine.objectContaining({
-                status    : 403,
-                statusText: ''
-            }));
+            expect(ErrorModalService.showError).toHaveBeenCalledWith(
+                jasmine.objectContaining({
+                    status: 403,
+                    statusText: ""
+                })
+            );
         });
     });
 });

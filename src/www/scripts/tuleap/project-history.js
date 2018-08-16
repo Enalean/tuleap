@@ -15,24 +15,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
-    $(document).ready(function(){
-        $('#events_box').change(function() {
-            if (this.value === 'any') {
+!(function($) {
+    $(document).ready(function() {
+        $("#events_box").change(function() {
+            if (this.value === "any") {
                 hideSubEventsBox();
             } else {
-               showSubEventsBox();
+                showSubEventsBox();
             }
         });
     });
 
     function showSubEventsBox() {
-         $('#sub_events_box').css('display', 'block');
+        $("#sub_events_box").css("display", "block");
     }
 
     function hideSubEventsBox() {
-         $('#sub_events_box').css('display', 'none');
+        $("#sub_events_box").css("display", "none");
     }
-
 })(window.jQuery);

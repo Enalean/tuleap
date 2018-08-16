@@ -20,35 +20,43 @@
 /**
  * Handle navbar dropdown events
  */
-import  { listFilter } from '../tuleap/listFilter.js';
+import { listFilter } from "../tuleap/listFilter.js";
 
 export { init };
 
-const nav_dropdow_selector_name                                    = 'nav-dropdown';
-const nav_dropdow_projects_selector_name                           = 'nav-dropdown-projects';
-const nav_dropdown_content_visible_name                            = 'nav-dropdown-content-visible';
-const nav_dropdown_content_projects_filter_projects_name           = 'nav-dropdown-content-projects-filter-projects';
-const nav_dropdown_content_projects_list_project_hover_name        = 'nav-dropdown-content-projects-list-project-hover';
-const nav_dropdown_content_projects_list_project_name              = 'nav-dropdown-content-projects-list-project';
-const nav_dropdown_content_projects_list_project_name_name         = 'nav-dropdown-content-projects-list-project-name';
-const nav_dropdown_content_projects_list_project_name_hover_name   = 'nav-dropdown-content-projects-list-project-name-hover';
-const nav_dropdown_content_projects_list_project_config_hover_name = 'nav-dropdown-content-projects-list-project-config-hover';
-const nav_dropdown_content_projects_list_project_config_name       = 'nav-dropdown-content-projects-list-project-config';
+const nav_dropdow_selector_name = "nav-dropdown";
+const nav_dropdow_projects_selector_name = "nav-dropdown-projects";
+const nav_dropdown_content_visible_name = "nav-dropdown-content-visible";
+const nav_dropdown_content_projects_filter_projects_name =
+    "nav-dropdown-content-projects-filter-projects";
+const nav_dropdown_content_projects_list_project_hover_name =
+    "nav-dropdown-content-projects-list-project-hover";
+const nav_dropdown_content_projects_list_project_name =
+    "nav-dropdown-content-projects-list-project";
+const nav_dropdown_content_projects_list_project_name_name =
+    "nav-dropdown-content-projects-list-project-name";
+const nav_dropdown_content_projects_list_project_name_hover_name =
+    "nav-dropdown-content-projects-list-project-name-hover";
+const nav_dropdown_content_projects_list_project_config_hover_name =
+    "nav-dropdown-content-projects-list-project-config-hover";
+const nav_dropdown_content_projects_list_project_config_name =
+    "nav-dropdown-content-projects-list-project-config";
 
-const dropdown_selector                                   = '.nav-dropdown-content';
-const nav_dropdown_content_projects_list_project_selector = '.nav-dropdown-content-projects-list-project';
+const dropdown_selector = ".nav-dropdown-content";
+const nav_dropdown_content_projects_list_project_selector =
+    ".nav-dropdown-content-projects-list-project";
 
 const tab_code_value = 9;
 
 function init() {
-    if (! document.getElementById(nav_dropdown_content_projects_filter_projects_name)) {
+    if (!document.getElementById(nav_dropdown_content_projects_filter_projects_name)) {
         return;
     }
 
     initFilter();
     focusOnFilter();
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener("keyup", event => {
         if (event.keyCode === tab_code_value) {
             underlineProject(event);
         }
@@ -58,8 +66,8 @@ function init() {
 function focusOnFilter() {
     const nav_dropdow_element = document.getElementById(nav_dropdow_projects_selector_name);
 
-    nav_dropdow_element.addEventListener('click', event => {
-        const target           = event.target;
+    nav_dropdow_element.addEventListener("click", event => {
+        const target = event.target;
         const dropdown_element = getDropdownElement(target);
 
         if (dropdown_element.classList.contains(nav_dropdown_content_visible_name)) {
@@ -69,8 +77,10 @@ function focusOnFilter() {
 }
 
 function initFilter() {
-    const input_filter = document.getElementById(nav_dropdown_content_projects_filter_projects_name);
-    const filter       = new listFilter();
+    const input_filter = document.getElementById(
+        nav_dropdown_content_projects_filter_projects_name
+    );
+    const filter = new listFilter();
     filter.init(input_filter, nav_dropdown_content_projects_list_project_selector);
     input_filter.focus();
 }
@@ -91,13 +101,19 @@ function underlineProject(event) {
 }
 
 function removeUnderlineProject() {
-    const elements = document.getElementsByClassName(nav_dropdown_content_projects_list_project_hover_name);
+    const elements = document.getElementsByClassName(
+        nav_dropdown_content_projects_list_project_hover_name
+    );
     for (let i = 0, n = elements.length; i < n; i++) {
         const children = elements[i].children;
 
         for (let j = 0, m = children.length; j < m; j++) {
-            children[j].classList.remove(nav_dropdown_content_projects_list_project_name_hover_name);
-            children[j].classList.remove(nav_dropdown_content_projects_list_project_config_hover_name);
+            children[j].classList.remove(
+                nav_dropdown_content_projects_list_project_name_hover_name
+            );
+            children[j].classList.remove(
+                nav_dropdown_content_projects_list_project_config_hover_name
+            );
         }
         elements[i].classList.remove(nav_dropdown_content_projects_list_project_hover_name);
     }
@@ -108,12 +124,14 @@ function getDropdownElement(element) {
     if (element.classList.contains(nav_dropdow_selector_name)) {
         dropdown_element = element.querySelector(dropdown_selector);
     } else {
-        dropdown_element = findAncestor(element, nav_dropdow_selector_name).querySelector(dropdown_selector);
+        dropdown_element = findAncestor(element, nav_dropdow_selector_name).querySelector(
+            dropdown_selector
+        );
     }
     return dropdown_element;
 }
 
 function findAncestor(element, cls) {
-    while ((element = element.parentElement) && ! element.classList.contains(cls)) {}
+    while ((element = element.parentElement) && !element.classList.contains(cls)) {}
     return element;
 }

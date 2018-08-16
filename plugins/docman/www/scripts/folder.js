@@ -1,59 +1,58 @@
 function folder_expand(caller, node) {
-  caller.src = "20_joinbottom_minus.gif";
-  caller.onclick = jsCollapseFolder;
-  //alert('ok');
+    caller.src = "20_joinbottom_minus.gif";
+    caller.onclick = jsCollapseFolder;
+    //alert('ok');
 
-  match = node.id.split('_');
-  nodeId = match[1];
+    match = node.id.split("_");
+    nodeId = match[1];
 
-  expandUrl = '/plugins/docman/index.php?group_id=101&view=rawDisplay&act=expandFolder&id='+nodeId;
+    expandUrl =
+        "/plugins/docman/index.php?group_id=101&view=rawDisplay&act=expandFolder&id=" + nodeId;
 
-  new Ajax.Updater('subdir_'+nodeId, 
-		   expandUrl, 
-  {asynchronous:true});  
+    new Ajax.Updater("subdir_" + nodeId, expandUrl, { asynchronous: true });
 }
 
 function jsExpandFolder(e) {
-  if (!e) var e = window.event;
-  if (e.target) targ = e.target;
-  else if (e.srcElement) targ = e.srcElement;
-  
-  var parentN = targ.parentNode;
-  match = parentN.id.split('_');
-  nodeId = match[1];  
+    if (!e) var e = window.event;
+    if (e.target) targ = e.target;
+    else if (e.srcElement) targ = e.srcElement;
 
-  folder_expand(targ, $('subdir_'+nodeId));
+    var parentN = targ.parentNode;
+    match = parentN.id.split("_");
+    nodeId = match[1];
+
+    folder_expand(targ, $("subdir_" + nodeId));
 }
 
 function jsCollapseFolder(e) {
-  if (!e) var e = window.event;
-  if (e.target) targ = e.target;
-  else if (e.srcElement) targ = e.srcElement;
-  
-  var parentN = targ.parentNode;
-  match = parentN.id.split('_');
-  nodeId = match[1];  
+    if (!e) var e = window.event;
+    if (e.target) targ = e.target;
+    else if (e.srcElement) targ = e.srcElement;
 
-  folder_collapse(targ, $('subdir_'+nodeId));
+    var parentN = targ.parentNode;
+    match = parentN.id.split("_");
+    nodeId = match[1];
+
+    folder_collapse(targ, $("subdir_" + nodeId));
 }
 
-function folder_collapse(caller, node) {  
-  var div = document.createElement("div");
-  div.className="subdir";
-  div.id=node.id;
+function folder_collapse(caller, node) {
+    var div = document.createElement("div");
+    div.className = "subdir";
+    div.id = node.id;
 
-  match = node.id.split('_');
-  nodeId = match[1];
-  
-  collapseUrl = '/plugins/docman/?group_id=101&act=collapseFolder&id='+nodeId;
-  
-  new Ajax.Request(collapseUrl, {method: 'get'});
-  
-  var parentN = node.parentNode;
-  parentN.replaceChild(div, node);
+    match = node.id.split("_");
+    nodeId = match[1];
 
-  caller.src = "20_joinbottom_plus.gif";
-  caller.onclick = jsExpandFolder;
+    collapseUrl = "/plugins/docman/?group_id=101&act=collapseFolder&id=" + nodeId;
+
+    new Ajax.Request(collapseUrl, { method: "get" });
+
+    var parentN = node.parentNode;
+    parentN.replaceChild(div, node);
+
+    caller.src = "20_joinbottom_plus.gif";
+    caller.onclick = jsExpandFolder;
 }
 
 /**
@@ -62,92 +61,88 @@ function folder_collapse(caller, node) {
  */
 
 function HTTPRequest() {
-  this.request = window.location.search;
-  this.params = new Array();
+    this.request = window.location.search;
+    this.params = new Array();
 
-  paramArray = this.request.slice(1).split('&');
-  for(i=0;i<paramArray.length;i++) {
-    name  = paramArray[i].slice(0, paramArray[i].indexOf('='));
-    value = paramArray[i].slice(paramArray[i].indexOf('=')+1,paramArray[i].length);
-    this.params[name] = value;
-  }
+    paramArray = this.request.slice(1).split("&");
+    for (i = 0; i < paramArray.length; i++) {
+        name = paramArray[i].slice(0, paramArray[i].indexOf("="));
+        value = paramArray[i].slice(paramArray[i].indexOf("=") + 1, paramArray[i].length);
+        this.params[name] = value;
+    }
 }
 
 HTTPRequest.prototype.get = function(param) {
-  return this.params[param];
-}
+    return this.params[param];
+};
 
 function LI_folder_expand(node) {
-  // retreive nodeid
-  match = node.id.split('_');
-  nodeId = match[1];
-  
-  // retreive group_id
-  request = new HTTPRequest();
-  groupId = request.get('group_id');
+    // retreive nodeid
+    match = node.id.split("_");
+    nodeId = match[1];
 
-  expandUrl = '/plugins/docman/index.php?group_id='+groupId;
-  expandUrl += '&view=ulsubfolder&act=expandFolder';
-  expandUrl += '&id='+nodeId;
+    // retreive group_id
+    request = new HTTPRequest();
+    groupId = request.get("group_id");
 
-  // Due to Ajax.Update, we have to create an empty div to be filled
-  var div = document.createElement("div");
-  div.id='fakediv_ul_'+nodeId;
-  node.appendChild(div);
+    expandUrl = "/plugins/docman/index.php?group_id=" + groupId;
+    expandUrl += "&view=ulsubfolder&act=expandFolder";
+    expandUrl += "&id=" + nodeId;
 
-  // Toggle behaviour of "onclick"
-  node.onclick=LI_jsCollapseFolder;
+    // Due to Ajax.Update, we have to create an empty div to be filled
+    var div = document.createElement("div");
+    div.id = "fakediv_ul_" + nodeId;
+    node.appendChild(div);
 
-  // Update div
-  new Ajax.Updater('fakediv_ul_'+nodeId, 
-		   expandUrl, 
-  {asynchronous:true});  
-  }
+    // Toggle behaviour of "onclick"
+    node.onclick = LI_jsCollapseFolder;
 
-function LI_jsExpandFolder(e) {
-  if (!e) var e = window.event;
-  if (e.target) targ = e.target;
-  else if (e.srcElement) targ = e.srcElement;
-
-  LI_folder_expand(targ);
+    // Update div
+    new Ajax.Updater("fakediv_ul_" + nodeId, expandUrl, { asynchronous: true });
 }
 
-function  LI_collapse_folder(caller, node) {
-  match = node.id.split('_');
-  nodeId = match[1];
+function LI_jsExpandFolder(e) {
+    if (!e) var e = window.event;
+    if (e.target) targ = e.target;
+    else if (e.srcElement) targ = e.srcElement;
 
-  request = new HTTPRequest();
-  groupId = request.get('group_id');
+    LI_folder_expand(targ);
+}
 
-  collapseUrl = '/plugins/docman/index.php?group_id='+groupId;
-  collapseUrl += '&act=collapseFolder';
-  collapseUrl += '&id='+nodeId;
+function LI_collapse_folder(caller, node) {
+    match = node.id.split("_");
+    nodeId = match[1];
 
-  new Ajax.Request(collapseUrl, {method: 'get'});
-  
-  var parentN = node.parentNode;
-  parentN.removeChild(node);
- 
-  //node.className="hidden";
-  caller.onclick = LI_jsExpandFolder;
+    request = new HTTPRequest();
+    groupId = request.get("group_id");
+
+    collapseUrl = "/plugins/docman/index.php?group_id=" + groupId;
+    collapseUrl += "&act=collapseFolder";
+    collapseUrl += "&id=" + nodeId;
+
+    new Ajax.Request(collapseUrl, { method: "get" });
+
+    var parentN = node.parentNode;
+    parentN.removeChild(node);
+
+    //node.className="hidden";
+    caller.onclick = LI_jsExpandFolder;
 }
 
 function LI_jsCollapseFolder(e) {
-  if (!e) var e = window.event;
-  if (e.target) targ = e.target;
-  else if (e.srcElement) targ = e.srcElement;
-  
-  ularray = targ.getElementsByTagName('ul');
-  if(ularray.length != 1) {
-    divarray = targ.getElementsByTagName('div');
-    if(divarray.length != 1) {
-      LI_collapse_folder(targ, divarray[0]);
+    if (!e) var e = window.event;
+    if (e.target) targ = e.target;
+    else if (e.srcElement) targ = e.srcElement;
+
+    ularray = targ.getElementsByTagName("ul");
+    if (ularray.length != 1) {
+        divarray = targ.getElementsByTagName("div");
+        if (divarray.length != 1) {
+            LI_collapse_folder(targ, divarray[0]);
+        } else {
+            alert("Error");
+        }
+    } else {
+        LI_collapse_folder(targ, ularray[0]);
     }
-    else {
-      alert('Error');
-    }
-  }
-  else {
-    LI_collapse_folder(targ, ularray[0]);
-  }
 }

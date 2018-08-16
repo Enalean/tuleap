@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
+import { get } from "tlp";
 
-export {
-    getAgiledashboardPermissions
-}
+export { getAgiledashboardPermissions };
 
 async function getAgiledashboardPermissions(project_id, selected_ugroup_id) {
-    const response = await get('/plugins/agiledashboard/', {
+    const response = await get("/plugins/agiledashboard/", {
         params: {
             group_id: project_id,
             selected_ugroup_id: selected_ugroup_id,
-            action: 'permission-per-group',
+            action: "permission-per-group"
         }
     });
 

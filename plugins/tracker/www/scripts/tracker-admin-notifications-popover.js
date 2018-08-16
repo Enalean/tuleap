@@ -17,49 +17,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
+(function($) {
     function confirmDeletionPopover() {
-        $('.tracker-notification-delete').each(function() {
-            var id = $(this).data('popover-id');
+        $(".tracker-notification-delete").each(function() {
+            var id = $(this).data("popover-id");
 
             $(this).popover({
-                container: $('.tracker-global-notifications'),
-                title: $('#' + id).data('title'),
-                content: $('#' + id).html()
+                container: $(".tracker-global-notifications"),
+                title: $("#" + id).data("title"),
+                content: $("#" + id).html()
             });
         });
     }
 
     function dismissPopover() {
-        $('.tracker-notification-delete').popover('hide');
+        $(".tracker-notification-delete").popover("hide");
     }
 
     function bindShowPopover() {
-        $('.tracker-notification-delete').click(function(event) {
+        $(".tracker-notification-delete").click(function(event) {
             event.preventDefault();
 
             dismissPopover();
 
-            $(this).popover('show');
+            $(this).popover("show");
         });
     }
 
-    $(function () {
+    $(function() {
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $('body').on('click', function(event) {
-            if ($(event.target).hasClass('dismiss-popover')) {
+        $("body").on("click", function(event) {
+            if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }
 
-            if ($(event.target).data('toggle') !== 'popover' &&
-                $(event.target).parents('.popover.in').length === 0 &&
+            if (
+                $(event.target).data("toggle") !== "popover" &&
+                $(event.target).parents(".popover.in").length === 0 &&
                 $(event.target).parents('[data-toggle="popover"]').length === 0
             ) {
                 dismissPopover();
             }
         });
     });
-}(jQuery));
+})(jQuery);

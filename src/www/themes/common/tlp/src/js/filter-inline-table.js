@@ -19,7 +19,7 @@
 
 export default filterInlineTable;
 
-const reset_search_term = '';
+const reset_search_term = "";
 
 function filterInlineTable(filter) {
     const target_table = getTargetTable(filter);
@@ -43,7 +43,7 @@ function filterInlineTable(filter) {
     function filterTable() {
         let nb_displayed;
 
-        const search    = filter.value.toUpperCase(),
+        const search = filter.value.toUpperCase(),
             has_section = target_table.querySelector(".tlp-table-cell-section");
 
         if (has_section) {
@@ -56,20 +56,22 @@ function filterInlineTable(filter) {
     }
 
     function toggleLinesWithSections(search) {
-        const tbodies = target_table.querySelectorAll('tbody');
+        const tbodies = target_table.querySelectorAll("tbody");
 
         let nb_total_displayed = 0,
             current_section,
             should_force_current_section_to_be_displayed;
 
-
         for (const tbody of tbodies) {
-            const is_section = tbody.querySelector('.tlp-table-cell-section');
+            const is_section = tbody.querySelector(".tlp-table-cell-section");
 
             if (is_section) {
                 current_section = tbody;
 
-                should_force_current_section_to_be_displayed = toggleSection(current_section, search);
+                should_force_current_section_to_be_displayed = toggleSection(
+                    current_section,
+                    search
+                );
             } else {
                 nb_total_displayed += toggleLineInSection(
                     tbody,
@@ -94,24 +96,29 @@ function filterInlineTable(filter) {
 
         if (empty_state) {
             if (nb_displayed < 1) {
-                empty_state.classList.add('tlp-table-empty-filter-shown');
+                empty_state.classList.add("tlp-table-empty-filter-shown");
             } else {
-                empty_state.classList.remove('tlp-table-empty-filter-shown');
+                empty_state.classList.remove("tlp-table-empty-filter-shown");
             }
         }
     }
 }
 
-function toggleLineInSection(tbody, should_force_current_section_to_be_displayed, search, current_section) {
-    const lines            = tbody.querySelectorAll("tr:not(.tlp-table-empty-filter)"),
-        search_term        = should_force_current_section_to_be_displayed ? reset_search_term : search,
+function toggleLineInSection(
+    tbody,
+    should_force_current_section_to_be_displayed,
+    search,
+    current_section
+) {
+    const lines = tbody.querySelectorAll("tr:not(.tlp-table-empty-filter)"),
+        search_term = should_force_current_section_to_be_displayed ? reset_search_term : search,
         nb_lines_displayed = toggleLines(lines, search_term);
 
     if (current_section) {
         if (nb_lines_displayed > 0) {
-            current_section.classList.remove('tlp-table-tbody-hidden');
+            current_section.classList.remove("tlp-table-tbody-hidden");
         } else {
-            current_section.classList.add('tlp-table-tbody-hidden');
+            current_section.classList.add("tlp-table-tbody-hidden");
         }
     }
 
@@ -119,14 +126,17 @@ function toggleLineInSection(tbody, should_force_current_section_to_be_displayed
 }
 
 function toggleSection(current_section, search) {
-    const is_filterable = current_section.querySelector('.tlp-table-cell-filterable');
+    const is_filterable = current_section.querySelector(".tlp-table-cell-filterable");
 
     let should_force_current_section_to_be_displayed;
 
     if (is_filterable) {
-        should_force_current_section_to_be_displayed = shouldTheLineBeDisplayed(current_section.children[0], search);
+        should_force_current_section_to_be_displayed = shouldTheLineBeDisplayed(
+            current_section.children[0],
+            search
+        );
         if (should_force_current_section_to_be_displayed) {
-            current_section.classList.remove('tlp-table-tbody-hidden');
+            current_section.classList.remove("tlp-table-tbody-hidden");
         }
     } else {
         should_force_current_section_to_be_displayed = false;
@@ -143,20 +153,20 @@ function toggleLines(lines, search) {
     for (const line of lines) {
         const should_be_displayed = shouldTheLineBeDisplayed(line, search);
 
-        line.classList.remove('tlp-table-last-row');
+        line.classList.remove("tlp-table-last-row");
 
         if (should_be_displayed) {
-            line.classList.remove('tlp-table-row-hidden');
+            line.classList.remove("tlp-table-row-hidden");
 
             last_line_displayed = line;
         } else {
-            line.classList.add('tlp-table-row-hidden');
-            nb_displayed --;
+            line.classList.add("tlp-table-row-hidden");
+            nb_displayed--;
         }
     }
 
     if (last_line_displayed) {
-        last_line_displayed.classList.add('tlp-table-last-row');
+        last_line_displayed.classList.add("tlp-table-last-row");
     }
 
     return nb_displayed;
@@ -182,13 +192,15 @@ function getTargetTable(filter) {
     let target_table_id, target_table;
 
     target_table_id = filter.dataset.targetTableId;
-    if (! target_table_id) {
+    if (!target_table_id) {
         throw new Error("Filter input does not have data-target-table-id attribute");
     }
 
     target_table = document.getElementById(target_table_id);
-    if (! target_table) {
-        throw new Error("Filter input attribute references an unknown table \"" + target_table_id + '"');
+    if (!target_table) {
+        throw new Error(
+            'Filter input attribute references an unknown table "' + target_table_id + '"'
+        );
     }
 
     return target_table;

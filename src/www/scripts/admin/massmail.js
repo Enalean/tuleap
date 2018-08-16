@@ -15,41 +15,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from 'tlp';
+import { modal as createModal } from "tlp";
 
-import {
-    autocomplete_users_for_select2 as autocomplete
-} from '../tuleap/autocomplete-for-select2.js';
+import { autocomplete_users_for_select2 as autocomplete } from "../tuleap/autocomplete-for-select2.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    var warning_element     = document.getElementById('massmail-warning'),
-        destination_element = document.getElementById('massmail-destination'),
-        submit_button       = document.getElementById('massmail-submit'),
-        preview_button      = document.getElementById('massmail-preview-destination-submit'),
-        preview_feedback    = document.getElementById('massmail-preview-feedback'),
-        confirm_element     = document.getElementById('massmail-modal-warning'),
-        confirm_button      = document.getElementById('massmail-confirm-sending'),
-        confirm_modal       = createModal(confirm_element),
-        form                = preview_button.form,
+document.addEventListener("DOMContentLoaded", () => {
+    var warning_element = document.getElementById("massmail-warning"),
+        destination_element = document.getElementById("massmail-destination"),
+        submit_button = document.getElementById("massmail-submit"),
+        preview_button = document.getElementById("massmail-preview-destination-submit"),
+        preview_feedback = document.getElementById("massmail-preview-feedback"),
+        confirm_element = document.getElementById("massmail-modal-warning"),
+        confirm_button = document.getElementById("massmail-confirm-sending"),
+        confirm_modal = createModal(confirm_element),
+        form = preview_button.form,
         preview_timeout,
         editor;
 
-    if (! warning_element || ! destination_element) {
+    if (!warning_element || !destination_element) {
         return;
     }
 
     changeWarningTextAccordinglyToDestination();
-    destination_element.addEventListener('change', changeWarningTextAccordinglyToDestination);
-    preview_button.addEventListener('click', sendAPreview);
-    form.addEventListener('submit', openConfirmationModal);
-    confirm_button.addEventListener('click', confirmationSubmitsTheForm);
+    destination_element.addEventListener("change", changeWarningTextAccordinglyToDestination);
+    preview_button.addEventListener("click", sendAPreview);
+    form.addEventListener("submit", openConfirmationModal);
+    confirm_button.addEventListener("click", confirmationSubmitsTheForm);
     initHTMLEditor();
     initSelect2();
 
     function changeWarningTextAccordinglyToDestination() {
-        warning_element.innerHTML = destination_element[destination_element.selectedIndex].dataset.warning;
+        warning_element.innerHTML =
+            destination_element[destination_element.selectedIndex].dataset.warning;
 
-        submit_button.disabled = (destination_element[destination_element.selectedIndex].dataset.nbUsers < 1);
+        submit_button.disabled =
+            destination_element[destination_element.selectedIndex].dataset.nbUsers < 1;
     }
 
     function openConfirmationModal(event) {
@@ -62,14 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initHTMLEditor() {
-        editor = CKEDITOR.replace('mail_message', {
+        editor = CKEDITOR.replace("mail_message", {
             toolbar: tuleap.ckeditor.toolbar
         });
     }
 
     function initSelect2() {
-        var preview = document.getElementById('massmail-preview-destination');
-        if (! preview) {
+        var preview = document.getElementById("massmail-preview-destination");
+        if (!preview) {
             return;
         }
 
@@ -77,16 +77,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function sendAPreview() {
-        document.getElementById('mail_message').value = editor.getData();
+        document.getElementById("mail_message").value = editor.getData();
 
         var data = new FormData(form);
 
         clearFeedback();
 
-        data.append('destination', 'preview');
+        data.append("destination", "preview");
 
         var req = new XMLHttpRequest();
-        req.open('POST', form.action);
+        req.open("POST", form.action);
         req.onload = previewResponseHandler;
         req.send(data);
     }
@@ -100,14 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // ignore SyntaxError
         }
 
-        if (! response) {
-            preview_feedback.classList.add('tlp-alert-danger');
-            preview_feedback.innerHTML = 'Something is wrong with your request';
-        } else if (! response.success) {
-            preview_feedback.classList.add('tlp-alert-danger');
+        if (!response) {
+            preview_feedback.classList.add("tlp-alert-danger");
+            preview_feedback.innerHTML = "Something is wrong with your request";
+        } else if (!response.success) {
+            preview_feedback.classList.add("tlp-alert-danger");
             preview_feedback.innerHTML = response.message;
         } else {
-            preview_feedback.classList.add('tlp-alert-success');
+            preview_feedback.classList.add("tlp-alert-success");
             preview_feedback.innerHTML = response.message;
         }
 
@@ -115,9 +115,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function clearFeedback() {
-        preview_feedback.innerHTML = '';
-        preview_feedback.classList.remove('tlp-alert-success');
-        preview_feedback.classList.remove('tlp-alert-danger');
+        preview_feedback.innerHTML = "";
+        preview_feedback.classList.remove("tlp-alert-success");
+        preview_feedback.classList.remove("tlp-alert-danger");
 
         window.clearTimeout(preview_timeout);
         preview_timeout = undefined;

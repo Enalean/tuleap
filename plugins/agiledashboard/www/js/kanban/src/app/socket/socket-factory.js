@@ -1,23 +1,19 @@
-import 'angular-socket-io';
-import io from 'socket.io-client';
+import "angular-socket-io";
+import io from "socket.io-client";
 
 export default SocketFactory;
 
-SocketFactory.$inject = [
-    'socketFactory',
-    'SharedPropertiesService'
-];
+SocketFactory.$inject = ["socketFactory", "SharedPropertiesService"];
 
-function SocketFactory(
-    socketFactory,
-    SharedPropertiesService
-) {
+function SocketFactory(socketFactory, SharedPropertiesService) {
     if (SharedPropertiesService.getNodeServerAddress()) {
-        var io_socket = io.connect('https://' + SharedPropertiesService.getNodeServerAddress(),
+        var io_socket = io.connect(
+            "https://" + SharedPropertiesService.getNodeServerAddress(),
             {
                 secure: true,
-                path: '/socket.io'
-            });
+                path: "/socket.io"
+            }
+        );
 
         return socketFactory({
             ioSocket: io_socket

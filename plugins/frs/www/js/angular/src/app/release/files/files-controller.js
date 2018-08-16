@@ -1,12 +1,8 @@
 export default FilesController;
 
-FilesController.$inject = [
-    'SharedPropertiesService'
-];
+FilesController.$inject = ["SharedPropertiesService"];
 
-function FilesController(
-    SharedPropertiesService
-) {
+function FilesController(SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {

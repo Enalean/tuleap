@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const easygettextCompile = require('easygettext/src/compile.js');
+const easygettextCompile = require("easygettext/src/compile.js");
 
 /**
  * "Compiles" po files to easygettext json format

@@ -1,32 +1,29 @@
-import open_list_field_module from './open-list-field.js';
-import angular from 'angular';
-import 'angular-mocks';
+import open_list_field_module from "./open-list-field.js";
+import angular from "angular";
+import "angular-mocks";
 
-import BaseUgroupsOpenListController from './ugroups-open-list-field-controller.js';
-import tlp from 'tlp';
+import BaseUgroupsOpenListController from "./ugroups-open-list-field-controller.js";
+import tlp from "tlp";
 
 describe("UgroupsOpenListFieldController", function() {
-    var $element,
-        UgroupsOpenListFieldController;
+    var $element, UgroupsOpenListFieldController;
 
     beforeEach(function() {
         angular.mock.module(open_list_field_module);
 
         var $controller;
-        angular.mock.inject(function(
-            _$controller_
-        ) {
+        angular.mock.inject(function(_$controller_) {
             $controller = _$controller_;
         });
 
-        $element = angular.element('<div></div>');
+        $element = angular.element("<div></div>");
 
         UgroupsOpenListFieldController = $controller(BaseUgroupsOpenListController, {
             $element: $element
         });
         UgroupsOpenListFieldController.field = {
-            hint: 'trapezium'
-        }
+            hint: "trapezium"
+        };
         UgroupsOpenListFieldController.value_model = {
             value: {
                 bind_value_objects: []
@@ -36,7 +33,9 @@ describe("UgroupsOpenListFieldController", function() {
 
     describe("init() -", function() {
         it("When initializing the controller, then a select2 will be created", function() {
-            $element.append(angular.element('<select class="tuleap-artifact-modal-open-list-ugroups"></select>'));
+            $element.append(
+                angular.element('<select class="tuleap-artifact-modal-open-list-ugroups"></select>')
+            );
             tlp.select2 = jasmine.createSpy("select2");
 
             UgroupsOpenListFieldController.init();
@@ -56,12 +55,12 @@ describe("UgroupsOpenListFieldController", function() {
         it("Given that the field was required and the value model had a value, then it will return false", function() {
             UgroupsOpenListFieldController.value_model.value.bind_value_objects = [
                 {
-                    id            : '772',
-                    key           : 'unquestioningness',
-                    label         : 'unquestioningness',
-                    short_name    : 'unquestioningness',
-                    uri           : 'user_groups/772',
-                    users_uri     : 'user_groups/772/users',
+                    id: "772",
+                    key: "unquestioningness",
+                    label: "unquestioningness",
+                    short_name: "unquestioningness",
+                    uri: "user_groups/772",
+                    users_uri: "user_groups/772/users"
                 }
             ];
             UgroupsOpenListFieldController.field.required = true;

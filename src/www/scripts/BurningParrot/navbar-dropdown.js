@@ -19,12 +19,12 @@
 
 export { init };
 
-const escape_code_value                        = 27,
-    nav_dropdown_content_classname           = 'nav-dropdown-content',
-    nav_dropdown_link_classname              = 'nav-dropdown-link',
-    nav_dropdown_content_hidden_classname    = 'nav-dropdown-content-hidden',
-    nav_dropdown_content_disappear_classname = 'nav-dropdown-content-disappear',
-    nav_dropdown_content_visible_classname   = 'nav-dropdown-content-visible';
+const escape_code_value = 27,
+    nav_dropdown_content_classname = "nav-dropdown-content",
+    nav_dropdown_link_classname = "nav-dropdown-link",
+    nav_dropdown_content_hidden_classname = "nav-dropdown-content-hidden",
+    nav_dropdown_content_disappear_classname = "nav-dropdown-content-disappear",
+    nav_dropdown_content_visible_classname = "nav-dropdown-content-visible";
 
 function init() {
     bindToggleDropdown();
@@ -36,18 +36,19 @@ function bindToggleDropdown() {
     const nav_dropdown_links = document.getElementsByClassName(nav_dropdown_link_classname);
 
     for (const nav_dropdown_link of nav_dropdown_links) {
-        nav_dropdown_link.addEventListener('click', () => {
+        nav_dropdown_link.addEventListener("click", () => {
             toggleDropdown(nav_dropdown_link.dataset.navDropdownContentId);
         });
     }
 }
 
 function bindCloseOnClickOutsideDropdown() {
-    document.addEventListener('click', event => {
+    document.addEventListener("click", event => {
         const target = event.target;
 
-        if (! findClosest(target, nav_dropdown_content_classname)
-            && ! findClosest(target, nav_dropdown_link_classname)
+        if (
+            !findClosest(target, nav_dropdown_content_classname) &&
+            !findClosest(target, nav_dropdown_link_classname)
         ) {
             hideAllDropdowns();
         }
@@ -55,11 +56,12 @@ function bindCloseOnClickOutsideDropdown() {
 }
 
 function bindCloseOnEscape() {
-    document.addEventListener('keyup', event => {
+    document.addEventListener("keyup", event => {
         const target = event.target;
 
-        if (target.tagName.toLowerCase() === 'input'
-            && findAncestor(target, nav_dropdown_content_classname)
+        if (
+            target.tagName.toLowerCase() === "input" &&
+            findAncestor(target, nav_dropdown_content_classname)
         ) {
             return;
         }
@@ -116,15 +118,15 @@ function findClosest(element, classname) {
 }
 
 function findAncestor(element, classname) {
-    while ((element = element.parentElement) && ! hasClassNamed(element, classname)) {}
+    while ((element = element.parentElement) && !hasClassNamed(element, classname)) {}
     return element;
 }
 
 function hasClassNamed(element, classname) {
     if (element.classList) {
         return element.classList.contains(classname);
-    // IE11 SVG elements don't have classList
-    } else if (element.getAttribute('class')) {
-        return (element.getAttribute('class').indexOf(classname) !== -1);
+        // IE11 SVG elements don't have classList
+    } else if (element.getAttribute("class")) {
+        return element.getAttribute("class").indexOf(classname) !== -1;
     }
 }

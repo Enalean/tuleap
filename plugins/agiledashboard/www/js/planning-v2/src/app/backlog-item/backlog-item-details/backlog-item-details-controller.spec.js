@@ -1,8 +1,8 @@
-import angular from 'angular';
-import 'angular-mocks';
+import angular from "angular";
+import "angular-mocks";
 
-import details_module                   from './backlog-item-details.js';
-import BaseBacklogItemDetailsController from './backlog-item-details-controller.js';
+import details_module from "./backlog-item-details.js";
+import BaseBacklogItemDetailsController from "./backlog-item-details-controller.js";
 
 describe("BacklogItemDetailsController -", function() {
     var $q,
@@ -23,11 +23,11 @@ describe("BacklogItemDetailsController -", function() {
             _BacklogItemService_,
             _NewTuleapArtifactModalService_
         ) {
-            $q     = _$q_;
+            $q = _$q_;
             $scope = $rootScope.$new();
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
-            spyOn(BacklogItemCollectionService, 'refreshBacklogItem');
+            spyOn(BacklogItemCollectionService, "refreshBacklogItem");
 
             BacklogItemService = _BacklogItemService_;
             spyOn(BacklogItemService, "getBacklogItem");
@@ -35,11 +35,11 @@ describe("BacklogItemDetailsController -", function() {
             spyOn(BacklogItemService, "removeAddBacklogItemChildren");
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
-            spyOn(NewTuleapArtifactModalService, 'showCreation');
+            spyOn(NewTuleapArtifactModalService, "showCreation");
 
             BacklogItemDetailsController = $controller(BaseBacklogItemDetailsController, {
-                BacklogItemCollectionService : BacklogItemCollectionService,
-                BacklogItemService           : BacklogItemService,
+                BacklogItemCollectionService: BacklogItemCollectionService,
+                BacklogItemService: BacklogItemService,
                 NewTuleapArtifactModalService: NewTuleapArtifactModalService
             });
         });
@@ -48,16 +48,14 @@ describe("BacklogItemDetailsController -", function() {
     describe("showAddChildModal() -", () => {
         let event, item_type;
         beforeEach(() => {
-            event       = jasmine.createSpyObj("Click event", ["preventDefault"]);
-            item_type   = { id: 7 };
+            event = jasmine.createSpyObj("Click event", ["preventDefault"]);
+            item_type = { id: 7 };
             BacklogItemDetailsController.backlog_item = {
-                id          : 53,
+                id: 53,
                 has_children: true,
-                children    : {
+                children: {
                     loaded: true,
-                    data  : [
-                        { id: 352 }
-                    ]
+                    data: [{ id: 352 }]
                 },
                 updating: false
             };
@@ -78,7 +76,9 @@ describe("BacklogItemDetailsController -", function() {
         describe("callback -", () => {
             let artifact;
             beforeEach(() => {
-                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) => callback(207));
+                NewTuleapArtifactModalService.showCreation.and.callFake((a, b, callback) =>
+                    callback(207)
+                );
                 artifact = {
                     backlog_item: {
                         id: 207
@@ -102,14 +102,16 @@ describe("BacklogItemDetailsController -", function() {
                 expect(BacklogItemCollectionService.items[207].id).toEqual(207);
                 expect(BacklogItemCollectionService.items[207].parent.id).toEqual(53);
                 expect(BacklogItemCollectionService.refreshBacklogItem).toHaveBeenCalledWith(53);
-                const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(({ id }) => id);
+                const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
+                    ({ id }) => id
+                );
                 expect(children_ids).toEqual([352, 207]);
             });
 
             it("Given that the current backlog item did not have children, when the new artifact modal calls its callback, then the artifact will be appended to the current backlog item's children and the children will be marked as loaded", () => {
                 BacklogItemDetailsController.backlog_item.children = {
                     loaded: false,
-                    data  : []
+                    data: []
                 };
                 BacklogItemDetailsController.backlog_item.has_children = false;
                 BacklogItemService.getBacklogItem.and.returnValue($q.when(artifact));
@@ -118,7 +120,9 @@ describe("BacklogItemDetailsController -", function() {
                 BacklogItemDetailsController.showAddChildModal(event, item_type);
                 $scope.$apply();
 
-                const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(({ id }) => id);
+                const children_ids = BacklogItemDetailsController.backlog_item.children.data.map(
+                    ({ id }) => id
+                );
                 expect(children_ids).toEqual([207]);
                 expect(BacklogItemDetailsController.backlog_item.children.loaded).toBeTruthy();
             });
@@ -129,7 +133,7 @@ describe("BacklogItemDetailsController -", function() {
         it("Given that the current backlog item had no child, it appends the newly created child", function() {
             BacklogItemDetailsController.backlog_item = {
                 has_children: false,
-                children    : {}
+                children: {}
             };
             var created_item = {
                 id: 8
@@ -143,13 +147,9 @@ describe("BacklogItemDetailsController -", function() {
         it("Given that the current backlog item had already loaded children, it appends the newly created child if not already present", function() {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
-                children    : {
+                children: {
                     loaded: true,
-                    data  : [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 3 }
-                    ]
+                    data: [{ id: 1 }, { id: 2 }, { id: 3 }]
                 }
             };
             var created_item = {
@@ -164,13 +164,9 @@ describe("BacklogItemDetailsController -", function() {
         it("Given that the current backlog item had already loaded children, it doesn't append the newly created child if already present", function() {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
-                children    : {
+                children: {
                     loaded: true,
-                    data  : [
-                        { id: 1 },
-                        { id: 2 },
-                        { id: 8 }
-                    ]
+                    data: [{ id: 1 }, { id: 2 }, { id: 8 }]
                 }
             };
             var created_item = {
@@ -185,9 +181,9 @@ describe("BacklogItemDetailsController -", function() {
         it("Given that the current backlog item didn't have already loaded children, it doesn't append the newly created child", function() {
             BacklogItemDetailsController.backlog_item = {
                 has_children: true,
-                children    : {
+                children: {
                     loaded: false,
-                    data  : []
+                    data: []
                 }
             };
             var created_item = {

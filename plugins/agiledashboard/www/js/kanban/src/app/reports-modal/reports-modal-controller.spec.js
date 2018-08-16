@@ -1,8 +1,8 @@
-import kanban_module from '../app.js';
-import reports_module from './reports-modal.spec.js';
-import angular from 'angular';
-import 'angular-mocks';
-import BaseController from './reports-modal-controller.js';
+import kanban_module from "../app.js";
+import reports_module from "./reports-modal.spec.js";
+import angular from "angular";
+import "angular-mocks";
+import BaseController from "./reports-modal-controller.js";
 
 describe("ReportsModalController -", function() {
     var ReportsModalController,
@@ -18,8 +18,7 @@ describe("ReportsModalController -", function() {
         angular.mock.module(reports_module);
         angular.mock.module(kanban_module);
 
-        var $controller,
-            $rootScope;
+        var $controller, $rootScope;
 
         angular.mock.inject(function(
             _$controller_,
@@ -28,39 +27,39 @@ describe("ReportsModalController -", function() {
             _SharedPropertiesService_,
             _DiagramRestService_
         ) {
-            $controller             = _$controller_;
-            $q                      = _$q_;
-            $rootScope              = _$rootScope_;
+            $controller = _$controller_;
+            $q = _$q_;
+            $rootScope = _$rootScope_;
             SharedPropertiesService = _SharedPropertiesService_;
-            DiagramRestService      = _DiagramRestService_;
+            DiagramRestService = _DiagramRestService_;
         });
 
         $scope = $rootScope.$new();
 
-        kanban_id    = 2;
+        kanban_id = 2;
         kanban_label = "Italy Kanban";
-        tlp_modal    = jasmine.createSpy("modal_instance");
+        tlp_modal = jasmine.createSpy("modal_instance");
 
         spyOn(SharedPropertiesService, "getKanban").and.returnValue({
-            id     : kanban_id,
-            label  : kanban_label,
+            id: kanban_id,
+            label: kanban_label,
             columns: [],
             backlog: {
-                id    : 'backlog',
-                label : 'Backlog'
+                id: "backlog",
+                label: "Backlog"
             },
             archive: {
-                id    : 'archive',
-                label : 'Archive'
+                id: "archive",
+                label: "Archive"
             }
         });
         spyOn(DiagramRestService, "getCumulativeFlowDiagram").and.returnValue($q(angular.noop));
 
         ReportsModalController = $controller(BaseController, {
-            $scope                 : $scope,
-            modal_instance         : { tlp_modal: tlp_modal },
+            $scope: $scope,
+            modal_instance: { tlp_modal: tlp_modal },
             SharedPropertiesService: SharedPropertiesService,
-            DiagramRestService     : DiagramRestService
+            DiagramRestService: DiagramRestService
         });
     });
 
@@ -69,33 +68,38 @@ describe("ReportsModalController -", function() {
             var cumulative_flow_data = {
                 columns: [
                     {
-                        id    : 'backlog',
-                        label : 'Backlog',
+                        id: "backlog",
+                        label: "Backlog",
                         values: [
                             {
-                                start_date        : '2012-12-07',
+                                start_date: "2012-12-07",
                                 kanban_items_count: 4
-                            }, {
-                                start_date        : '2012-09-02',
+                            },
+                            {
+                                start_date: "2012-09-02",
                                 kanban_items_count: 5
                             }
                         ]
-                    }, {
-                        id    : 'archive',
-                        label : 'Archive',
+                    },
+                    {
+                        id: "archive",
+                        label: "Archive",
                         values: [
                             {
-                                start_date        : '2012-12-07',
+                                start_date: "2012-12-07",
                                 kanban_items_count: 3
-                            }, {
-                                start_date        : '2012-09-02',
+                            },
+                            {
+                                start_date: "2012-09-02",
                                 kanban_items_count: 9
                             }
                         ]
                     }
                 ]
             };
-            DiagramRestService.getCumulativeFlowDiagram.and.returnValue($q.when(cumulative_flow_data));
+            DiagramRestService.getCumulativeFlowDiagram.and.returnValue(
+                $q.when(cumulative_flow_data)
+            );
 
             ReportsModalController.$onInit();
             expect(ReportsModalController.loading).toBe(true);
@@ -116,17 +120,18 @@ describe("ReportsModalController -", function() {
             expect(ReportsModalController.kanban_label).toEqual(kanban_label);
             expect(ReportsModalController.data).toEqual([
                 {
-                    id      : 'backlog',
-                    label   : 'Backlog',
-                    values  : [
-                        { start_date: '2012-12-07', kanban_items_count: 4 },
+                    id: "backlog",
+                    label: "Backlog",
+                    values: [
+                        { start_date: "2012-12-07", kanban_items_count: 4 },
                         { start_date: jasmine.any(String), kanban_items_count: 5 }
                     ]
-                }, {
-                    id    : 'archive',
-                    label : 'Archive',
+                },
+                {
+                    id: "archive",
+                    label: "Archive",
                     values: [
-                        { start_date: '2012-12-07', kanban_items_count: 3 },
+                        { start_date: "2012-12-07", kanban_items_count: 3 },
                         { start_date: jasmine.any(String), kanban_items_count: 9 }
                     ]
                 }

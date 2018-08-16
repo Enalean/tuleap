@@ -20,28 +20,30 @@
 /**
  * Handle navbar events
  */
-import $      from 'jquery';
-import tuleap from 'tuleap';
+import $ from "jquery";
+import tuleap from "tuleap";
 
 function initCustomScrollbar() {
-    $('.projects-nav .dropdown-menu').jScrollPane({
-        autoReinitialise: true,
-        hideFocus: true,
-        verticalGutter: 0
-    }).bind('mousewheel', function(e) {
-        e.preventDefault();
-    });
+    $(".projects-nav .dropdown-menu")
+        .jScrollPane({
+            autoReinitialise: true,
+            hideFocus: true,
+            verticalGutter: 0
+        })
+        .bind("mousewheel", function(e) {
+            e.preventDefault();
+        });
 }
 
 $(document).ready(function() {
-    var input_filter          = document.getElementById('filter-projects');
-    var list_element_selector = '.projects-nav .dropdown-menu li.project';
-    var filter                = new tuleap.core.listFilter();
+    var input_filter = document.getElementById("filter-projects");
+    var list_element_selector = ".projects-nav .dropdown-menu li.project";
+    var filter = new tuleap.core.listFilter();
 
     filter.init(input_filter, list_element_selector);
 
-    $('.projects-nav').click(function(event) {
-        if (! $(this).hasClass('open')) {
+    $(".projects-nav").click(function(event) {
+        if (!$(this).hasClass("open")) {
             input_filter.focus();
             initCustomScrollbar();
         }

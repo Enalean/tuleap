@@ -18,163 +18,169 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var codendi = codendi || { };
+var codendi = codendi || {};
 
-codendi.RTE = Class.create(
-    {
-        initialize: function (element, options) {
-            this.element = $(element);
-            this.options = Object.extend({
-                toolbar: 'tuleap', //basic | full | minimal | tuleap
+codendi.RTE = Class.create({
+    initialize: function(element, options) {
+        this.element = $(element);
+        this.options = Object.extend(
+            {
+                toolbar: "tuleap", //basic | full | minimal | tuleap
                 onLoad: Prototype.emptyFunction,
                 toggle: false,
                 default_in_html: true,
                 autoresize_when_ready: true
-            }, options || { });
-            
-            this.rte = false;
+            },
+            options || {}
+        );
 
-            if (!this.options.toggle || this.options.default_in_html) {
-                this.init_rte();
-            }
-        },
+        this.rte = false;
 
-        can_be_resized : function () {
-            var resize_enabled = this.options.resize_enabled;
-            return (typeof(resize_enabled) == 'undefined' || resize_enabled);
-        },
+        if (!this.options.toggle || this.options.default_in_html) {
+            this.init_rte();
+        }
+    },
 
-        init_rte: function () {
-            var replace_options = {
-                resize_enabled : true
-            };
+    can_be_resized: function() {
+        var resize_enabled = this.options.resize_enabled;
+        return typeof resize_enabled == "undefined" || resize_enabled;
+    },
 
-            if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
-                CKEDITOR.instances[this.element.id].destroy(true);
-            }
-            if (this.options.toolbar == 'basic') {
-                var toolbar = [
-                                  ['Styles', 'Format', 'Font', 'FontSize'],
-                                  ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
-                                  '/',
-                                  ['TextColor', 'BGColor'],
-                                  ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
-                                  ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-                                  ['Link', 'Unlink', 'Anchor', 'Image']
-                              ];
-            } else if (this.options.toolbar == 'minimal') {
-                var toolbar = [
-                                  ['Bold', 'Italic', 'Underline'],
-                                  ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
-                                  ['Link', 'Unlink', 'Anchor', 'Image']
-                              ];
-            } else if (this.options.toolbar == 'tuleap') {
-                var toolbar = [
-                                  ['Bold', 'Italic', 'Underline'],
-                                  ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
-                                  ['Link', 'Unlink', 'Anchor', 'Image'],
-                                  ['Source']
-                              ];
-            } else {
-                var toolbar = 'Full'
-            }
+    init_rte: function() {
+        var replace_options = {
+            resize_enabled: true
+        };
 
-            /*
+        if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
+            CKEDITOR.instances[this.element.id].destroy(true);
+        }
+        if (this.options.toolbar == "basic") {
+            var toolbar = [
+                ["Styles", "Format", "Font", "FontSize"],
+                ["Bold", "Italic", "Underline", "Strike", "-", "Subscript", "Superscript"],
+                "/",
+                ["TextColor", "BGColor"],
+                ["NumberedList", "BulletedList", "-", "Outdent", "Indent", "Blockquote"],
+                ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"],
+                ["Link", "Unlink", "Anchor", "Image"]
+            ];
+        } else if (this.options.toolbar == "minimal") {
+            var toolbar = [
+                ["Bold", "Italic", "Underline"],
+                ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                ["Link", "Unlink", "Anchor", "Image"]
+            ];
+        } else if (this.options.toolbar == "tuleap") {
+            var toolbar = [
+                ["Bold", "Italic", "Underline"],
+                ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                ["Link", "Unlink", "Anchor", "Image"],
+                ["Source"]
+            ];
+        } else {
+            var toolbar = "Full";
+        }
+
+        /*
              This is done for IE
              If we load the page and the RTE is displayed, IE will not
              catch the instanceCreated event on load (it will catch it later if we change
              the format between Text and HTML). So we have to set this option when loading
              */
 
-            replace_options.toolbar = toolbar;
-            if (! this.can_be_resized()) {
-                replace_options.resize_enabled = false;
-            }
+        replace_options.toolbar = toolbar;
+        if (!this.can_be_resized()) {
+            replace_options.resize_enabled = false;
+        }
 
-            this.rte = CKEDITOR.replace(this.element.id, replace_options);
+        this.rte = CKEDITOR.replace(this.element.id, replace_options);
 
-            /*CKEDITOR filters HTML tags
+        /*CKEDITOR filters HTML tags
               So, if your default text is like <blabla>, this will not be displayed.
               To "fix" this, we escape the textarea content.
               However, we don't need to espace this for non default values.
             */
 
-            if (this.element.readAttribute('data-field-default-value') !== null) {
-                var escaped_value = tuleap.escaper.html(this.element.value);
-                this.rte.setData(escaped_value);
+        if (this.element.readAttribute("data-field-default-value") !== null) {
+            var escaped_value = tuleap.escaper.html(this.element.value);
+            this.rte.setData(escaped_value);
+        }
+
+        CKEDITOR.on("dialogDefinition", function(ev) {
+            var tab,
+                dialog = ev.data.name,
+                definition = ev.data.definition;
+
+            if (dialog === "link") {
+                definition.removeContents("target");
             }
 
-            CKEDITOR.on('dialogDefinition', function (ev) {
-                var tab,
-                    dialog     = ev.data.name,
-                    definition = ev.data.definition;
+            if (dialog === "image") {
+                tab = definition.getContents("Link");
+                tab.remove("cmbTarget");
+            }
+        });
 
-                if (dialog === 'link') {
-                   definition.removeContents('target');
-                }
+        this.rte.on("instanceReady", function(evt) {
+            this.document.getBody().$.contentEditable = true;
+            tuleap.mention.init(this.document.getBody().$);
+        });
 
-                if (dialog === 'image') {
-                    tab = definition.getContents('Link');
-                    tab.remove('cmbTarget');
-                }
-            });
-
-            this.rte.on('instanceReady', function (evt) {
-                this.document.getBody().$.contentEditable = true;
-                tuleap.mention.init(this.document.getBody().$);
-            });
-
-            CKEDITOR.on('instanceCreated', function (evt) {
+        CKEDITOR.on(
+            "instanceCreated",
+            function(evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();
                 }
 
-                if (! this.can_be_resized()) {
-                      evt.editor.config.resize_enabled = false;
+                if (!this.can_be_resized()) {
+                    evt.editor.config.resize_enabled = false;
                 }
+            }.bind(this)
+        );
 
-            }.bind(this));
-
-            CKEDITOR.on('instanceReady', function (evt) {
+        CKEDITOR.on(
+            "instanceReady",
+            function(evt) {
                 if (evt.editor !== this.rte) {
                     return;
                 }
 
-                if (! this.options.autoresize_when_ready) {
+                if (!this.options.autoresize_when_ready) {
                     return;
                 }
 
                 if (undefined != this.options.full_width && this.options.full_width) {
-                    evt.editor.resize('100%', this.element.getHeight(), true);
-
-                } else if (this.element.getWidth() > 0 && (typeof(this.options.no_resize) == 'undefined' || ! this.options.no_resize)) {
+                    evt.editor.resize("100%", this.element.getHeight(), true);
+                } else if (
+                    this.element.getWidth() > 0 &&
+                    (typeof this.options.no_resize == "undefined" || !this.options.no_resize)
+                ) {
                     evt.editor.resize(this.element.getWidth(), this.element.getHeight(), true);
                 }
-            }.bind(this));
-
-        },
-        toggle: function (evt, option) {
-            if (option == 'html' && !this.rte) {
-                this.init_rte();
-            } else {
-                this.rte.destroy();
-                this.rte = null;
-            }
-            Event.stop(evt);
-            return false;
-        },
-        destroy: function () {
-            try {
-                this.rte.destroy(false);
-            } catch (e) {
-            }
+            }.bind(this)
+        );
+    },
+    toggle: function(evt, option) {
+        if (option == "html" && !this.rte) {
+            this.init_rte();
+        } else {
+            this.rte.destroy();
             this.rte = null;
-        },
-        getContent: function() {
-            return this.rte.getData();
-        },
-        isInstantiated: function() {
-            return typeof this.rte === 'object';
         }
+        Event.stop(evt);
+        return false;
+    },
+    destroy: function() {
+        try {
+            this.rte.destroy(false);
+        } catch (e) {}
+        this.rte = null;
+    },
+    getContent: function() {
+        return this.rte.getData();
+    },
+    isInstantiated: function() {
+        return typeof this.rte === "object";
     }
-);
+});

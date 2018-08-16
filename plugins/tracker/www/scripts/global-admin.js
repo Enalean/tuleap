@@ -17,8 +17,8 @@
 
 !(function($) {
     $(document).ready(function() {
-        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on('change', function() {
-            $('#' + $(this).attr('data-form-id')).submit();
+        $('#tracker-artifact-link-type-usages input[type="checkbox"]').on("change", function() {
+            $("#" + $(this).attr("data-form-id")).submit();
         });
     });
 })(window.jQuery);

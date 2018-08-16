@@ -21,19 +21,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getCaptionGroupFromLayout } from './chart-legend-service.js';
+import { getCaptionGroupFromLayout } from "./chart-legend-service.js";
 
-export function addTextCaption({
-    legend_y_position,
-    content,
-    layout
-}) {
+export function addTextCaption({ legend_y_position, content, layout }) {
     const caption = getCaptionGroupFromLayout(layout);
 
-    const caption_content = caption.append('g')
-        .attr('class', 'legend-left');
+    const caption_content = caption.append("g").attr("class", "legend-left");
 
-    caption_content.append('text')
-        .attr('y', legend_y_position)
+    caption_content
+        .append("text")
+        .attr("y", legend_y_position)
         .text(content);
 }

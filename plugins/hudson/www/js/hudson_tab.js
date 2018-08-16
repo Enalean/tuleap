@@ -19,6 +19,6 @@
 
 (function($) {
     toggle_addurlform = function() {
-        $('#hudson_add_job').slideToggle(300);
+        $("#hudson_add_job").slideToggle(300);
     };
 })(jQuery);

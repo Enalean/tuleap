@@ -18,8 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-(function ($, window, document) {
-
+(function($, window, document) {
     var popovers = [];
 
     /**
@@ -47,7 +46,7 @@
 
     function clearSelection() {
         var selection = window.getSelection ? window.getSelection() : document.selection;
-        if (! selection) {
+        if (!selection) {
             return;
         }
 
@@ -59,23 +58,24 @@
     }
 
     function initTrackerEmail() {
-        var title, description,
+        var title,
+            description,
             envelope = $(this);
 
         title = codendi.getText(
-            'tracker_email',
-            envelope.hasClass('email-tracker-reply') ? 'title_reply' : 'title'
+            "tracker_email",
+            envelope.hasClass("email-tracker-reply") ? "title_reply" : "title"
         );
         description = codendi.getText(
-            'tracker_email',
-            envelope.hasClass('email-tracker-reply') ? 'description_reply' : 'description'
+            "tracker_email",
+            envelope.hasClass("email-tracker-reply") ? "description_reply" : "description"
         );
 
         envelope.popover({
-            placement: 'right',
+            placement: "right",
             html: true,
-            trigger: 'click',
-            container: '#submit-new-by-mail-popover-container',
+            trigger: "click",
+            container: "#submit-new-by-mail-popover-container",
             title: title,
             content: buildPopoverContent
         });
@@ -83,72 +83,79 @@
         popovers.push(envelope);
 
         function buildPopoverContent() {
-            var content = $('<div><p>'+ description +'</p></div>'),
-                email   = envelope.data('email');
+            var content = $("<div><p>" + description + "</p></div>"),
+                email = envelope.data("email");
 
             if (isCopyToClipboardSupported()) {
                 addCopyButtonToContent(content, email);
             } else {
-                var link = $('<a href="mailto:'+ email +'" title="'+ email +'">'+ email +'</a>');
-
-                content.append(
-                    $('<p class="submit-new-by-mail-copy-fallback"></p>').append(link)
+                var link = $(
+                    '<a href="mailto:' + email + '" title="' + email + '">' + email + "</a>"
                 );
+
+                content.append($('<p class="submit-new-by-mail-copy-fallback"></p>').append(link));
             }
 
             return content;
         }
 
         function addCopyButtonToContent(content, email) {
-            var input     = $('<input type="text" value="'+ email +'" readonly />'),
-                button    = $('<button class="btn"><i class="icon-copy"></i></button>'),
-                copied    = $('<p class="text-info">'+ codendi.getText('tracker_email', 'copied') +'</p>'),
-                container = $('<div class="input-append" id="tracker-email-copy-to-clipboard"></div>')
+            var input = $('<input type="text" value="' + email + '" readonly />'),
+                button = $('<button class="btn"><i class="icon-copy"></i></button>'),
+                copied = $(
+                    '<p class="text-info">' + codendi.getText("tracker_email", "copied") + "</p>"
+                ),
+                container = $(
+                    '<div class="input-append" id="tracker-email-copy-to-clipboard"></div>'
+                )
                     .append(input)
                     .append(button);
 
-            button
+            button;
 
-            input.click(function (evt) {
+            input.click(function(evt) {
                 $(this).select();
             });
 
-            content
-                .append(container)
-                .append(copied);
+            content.append(container).append(copied);
 
             button
                 .tooltip({
-                    title:     codendi.getText('tracker_email', 'copy'),
-                    placement: 'bottom'
+                    title: codendi.getText("tracker_email", "copy"),
+                    placement: "bottom"
                 })
-                .click(function (evt) {
+                .click(function(evt) {
                     evt.preventDefault();
                     input.select();
                     document.execCommand("copy");
                     clearSelection();
-                    copied.addClass('copied');
+                    copied.addClass("copied");
                 });
         }
     }
 
-    $(function () {
-        $('.email-tracker').each(initTrackerEmail);
+    $(function() {
+        $(".email-tracker").each(initTrackerEmail);
 
-        $('body').click(function(event) {
-            if ($(event.target).parents('.email-tracker').length === 0 && $(event.target).parents('.popover.in').length === 0) {
-                popovers.forEach(function (popover) { popover.popover('hide'); });
+        $("body").click(function(event) {
+            if (
+                $(event.target).parents(".email-tracker").length === 0 &&
+                $(event.target).parents(".popover.in").length === 0
+            ) {
+                popovers.forEach(function(popover) {
+                    popover.popover("hide");
+                });
                 return;
             }
 
-            if ($(event.target).parents('.email-tracker').length === 1) {
-                var clicked = $(event.target).parents('.email-tracker')[0];
-                $('.email-tracker').each(function (index, element) {
+            if ($(event.target).parents(".email-tracker").length === 1) {
+                var clicked = $(event.target).parents(".email-tracker")[0];
+                $(".email-tracker").each(function(index, element) {
                     if (element !== clicked) {
-                        $(element).popover('hide');
+                        $(element).popover("hide");
                     }
-                })
+                });
             }
         });
     });
-}(jQuery, window, document));
+})(jQuery, window, document);

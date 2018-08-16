@@ -15,15 +15,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
+var tuleap = tuleap || {};
 
 // Search for a class in loaded stylesheets
-(function ($) {
+(function($) {
     tuleap.browserCompatibility = {
-        isIE7 : function() {
-            if (typeof(navigator) == 'undefined'
-                || typeof(navigator.appVersion) == 'undefined'
-                || navigator.appVersion.indexOf( "MSIE 7." ) != -1
+        isIE7: function() {
+            if (
+                typeof navigator == "undefined" ||
+                typeof navigator.appVersion == "undefined" ||
+                navigator.appVersion.indexOf("MSIE 7.") != -1
             ) {
                 return true;
             }
@@ -31,22 +32,22 @@ var tuleap = tuleap || { };
             return false;
         },
 
-        isIE : function() {
+        isIE: function() {
             var user_agent = window.navigator.userAgent;
 
-            var msie = user_agent.indexOf('MSIE ');
+            var msie = user_agent.indexOf("MSIE ");
             if (msie > 0) {
                 return true;
             }
 
-            var trident = user_agent.indexOf('Trident/');
+            var trident = user_agent.indexOf("Trident/");
             if (trident > 0) {
                 return true;
             }
 
-            var edge = user_agent.indexOf('Edge/');
+            var edge = user_agent.indexOf("Edge/");
             if (edge > 0) {
-               return true;
+                return true;
             }
 
             return false;

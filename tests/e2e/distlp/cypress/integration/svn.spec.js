@@ -23,15 +23,19 @@ describe("SVN", () => {
     });
 
     it("should display display repository content", () => {
-        cy.visit('/plugins/svn/?group_id=102');
-        cy.title().should('contain', 'SVN');
+        cy.visit("/plugins/svn/?group_id=102");
+        cy.title().should("contain", "SVN");
 
-        cy.get('a').contains('sample').click();
+        cy.get("a")
+            .contains("sample")
+            .click();
 
-        cy.get('.tuleap-viewvc-body').should('be.visible').within(() => {
-            cy.get('a').contains('branches');
-            cy.get('a').contains('tags');
-            cy.get('a').contains('trunk');
-        });
+        cy.get(".tuleap-viewvc-body")
+            .should("be.visible")
+            .within(() => {
+                cy.get("a").contains("branches");
+                cy.get("a").contains("tags");
+                cy.get("a").contains("trunk");
+            });
     });
 });

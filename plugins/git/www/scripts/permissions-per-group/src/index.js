@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                  from 'vue';
-import GitPermissions       from './GitPermissions.vue';
-import { gettext_provider } from './gettext-provider.js';
+import Vue from "vue";
+import GitPermissions from "./GitPermissions.vue";
+import { gettext_provider } from "./gettext-provider.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_points = document.getElementById('git-permission-per-group');
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_points = document.getElementById("git-permission-per-group");
 
     if (vue_mount_points) {
         const rootComponent = Vue.extend(GitPermissions);
-        const locale        = document.body.dataset.userLocale;
+        const locale = document.body.dataset.userLocale;
 
         gettext_provider.setLocale(locale);
 

@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import '../navbar-history/index-flamingparrot.js';
-import './navbar.js';
-import './sidebar.js';
-import './motd.js';
-import './keyboard-navigation.js';
+import "../navbar-history/index-flamingparrot.js";
+import "./navbar.js";
+import "./sidebar.js";
+import "./motd.js";
+import "./keyboard-navigation.js";

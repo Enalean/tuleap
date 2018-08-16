@@ -1,23 +1,18 @@
 export default FilesController;
 
 FilesController.$inject = [
-    '$state',
-    'SharedPropertiesService',
-    'FilesRestService',
-    'FilepathsService'
+    "$state",
+    "SharedPropertiesService",
+    "FilesRestService",
+    "FilepathsService"
 ];
 
-function FilesController(
-    $state,
-    SharedPropertiesService,
-    FilesRestService,
-    FilepathsService
-) {
+function FilesController($state, SharedPropertiesService, FilesRestService, FilepathsService) {
     const self = this;
 
     Object.assign(self, {
-        pull_request : {},
-        files        : [],
+        pull_request: {},
+        files: [],
         selected_file: {},
         loading_files: true,
         loadFile
@@ -29,20 +24,22 @@ function FilesController(
     });
 
     function getFiles() {
-        FilesRestService.getFiles(self.pull_request.id).then(files => {
-            self.files = files;
-            FilepathsService.setFilepaths(files);
+        FilesRestService.getFiles(self.pull_request.id)
+            .then(files => {
+                self.files = files;
+                FilepathsService.setFilepaths(files);
 
-            setSelectedFile();
-        }).finally(() => {
-            self.loading_files = false;
-        });
+                setSelectedFile();
+            })
+            .finally(() => {
+                self.loading_files = false;
+            });
     }
 
     function setSelectedFile() {
         self.selected_file = self.files[0];
 
-        if ($state.includes('diff')) {
+        if ($state.includes("diff")) {
             self.selected_file = self.files.find({ path: $state.params.file_path });
         }
 
@@ -50,8 +47,8 @@ function FilesController(
     }
 
     function loadFile(file) {
-        $state.go('diff', {
-            id       : self.pull_request.id,
+        $state.go("diff", {
+            id: self.pull_request.id,
             file_path: file.path
         });
     }

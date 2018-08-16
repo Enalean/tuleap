@@ -22,9 +22,9 @@
  */
 
 export function getCaptionGroupFromLayout(layout) {
-    const caption = layout.select('.chart-legend');
+    const caption = layout.select(".chart-legend");
 
-    if (layout.select('.chart-legend').empty()) {
+    if (layout.select(".chart-legend").empty()) {
         return addCaptionGroupToLayout(layout);
     }
 
@@ -32,6 +32,5 @@ export function getCaptionGroupFromLayout(layout) {
 }
 
 function addCaptionGroupToLayout(layout) {
-    return layout.append('g')
-        .attr('class', 'chart-legend chart-text-grey');
+    return layout.append("g").attr("class", "chart-legend chart-text-grey");
 }

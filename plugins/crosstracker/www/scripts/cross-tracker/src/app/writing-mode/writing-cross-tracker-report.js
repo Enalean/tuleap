@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import ExtendableError from 'extendable-error';
+import ExtendableError from "extendable-error";
 
 export default class WritingCrossTrackerReport {
     constructor() {
-        this.trackers     = new Map();
-        this.expert_query = '';
+        this.trackers = new Map();
+        this.expert_query = "";
     }
 
     addTracker(project, tracker) {
@@ -44,7 +44,7 @@ export default class WritingCrossTrackerReport {
     }
 
     duplicateFromReport(report) {
-        this.trackers     = new Map(report.trackers);
+        this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }
 

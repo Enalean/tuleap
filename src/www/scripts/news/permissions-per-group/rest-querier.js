@@ -21,20 +21,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
+import { get } from "tlp";
 
-export {
-    getNewsPermissions
-}
+export { getNewsPermissions };
 
 async function getNewsPermissions(project_id, selected_ugroup_id) {
-    const response = await get('/new/news_permissions_per_group.php/', {
+    const response = await get("/new/news_permissions_per_group.php/", {
         params: {
             group_id: project_id,
             selected_ugroup_id: selected_ugroup_id
         }
     });
-
 
     return await response.json();
 }

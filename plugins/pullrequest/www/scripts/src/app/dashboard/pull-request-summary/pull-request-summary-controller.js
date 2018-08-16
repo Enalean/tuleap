@@ -1,16 +1,8 @@
 export default PullRequestSummaryController;
 
-PullRequestSummaryController.$inject = [
-    '$state',
-    'PullRequestService',
-    'UserRestService'
-];
+PullRequestSummaryController.$inject = ["$state", "PullRequestService", "UserRestService"];
 
-function PullRequestSummaryController(
-    $state,
-    PullRequestService,
-    UserRestService
-) {
+function PullRequestSummaryController($state, PullRequestService, UserRestService) {
     const self = this;
 
     Object.assign(self, {
@@ -31,14 +23,14 @@ function PullRequestSummaryController(
     }
 
     function isAbandoned() {
-        return (self.pull_request.status === PullRequestService.valid_status_keys.abandon);
+        return self.pull_request.status === PullRequestService.valid_status_keys.abandon;
     }
 
     function isMerged() {
-        return (self.pull_request.status === PullRequestService.valid_status_keys.merge);
+        return self.pull_request.status === PullRequestService.valid_status_keys.merge;
     }
 
     function goToOverview() {
-        $state.go('overview', { id: self.pull_request.id });
+        $state.go("overview", { id: self.pull_request.id });
     }
 }

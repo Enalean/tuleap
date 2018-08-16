@@ -19,10 +19,7 @@
 
 let is_in_creation_mode = true;
 
-export {
-    isInCreationMode,
-    setCreationMode
-};
+export { isInCreationMode, setCreationMode };
 
 function isInCreationMode() {
     return is_in_creation_mode;

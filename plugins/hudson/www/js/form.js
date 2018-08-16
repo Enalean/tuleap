@@ -21,7 +21,7 @@
     var svn_paths_textarea, svn_checkbox;
 
     function changeSVNPathsTextareVisibility() {
-        if (svn_checkbox.is(':checked')) {
+        if (svn_checkbox.is(":checked")) {
             svn_paths_textarea.show();
         } else {
             svn_paths_textarea.hide();
@@ -29,14 +29,13 @@
     }
 
     $(document).ready(function() {
-        svn_paths_textarea = $('#hudson_svn_paths');
-        svn_checkbox       = $('#hudson_use_svn_trigger');
+        svn_paths_textarea = $("#hudson_svn_paths");
+        svn_checkbox = $("#hudson_use_svn_trigger");
 
         changeSVNPathsTextareVisibility();
 
-        svn_checkbox.change(function () {
+        svn_checkbox.change(function() {
             changeSVNPathsTextareVisibility();
         });
     });
-
 })(window.jQuery);

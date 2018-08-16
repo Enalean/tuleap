@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-(function ($, codendi) {
-    $(document).ready(function(){
-        $('.widget_myprojects_editor').each(function(){
+(function($, codendi) {
+    $(document).ready(function() {
+        $(".widget_myprojects_editor").each(function() {
             var element = $(this),
                 options = {
-                    toolbar: 'minimal',
+                    toolbar: "minimal",
                     onLoad: $.noop(),
                     toggle: false,
                     default_in_html: true
                 },
-                rte = new codendi.RTE(element.attr('id'),options);
+                rte = new codendi.RTE(element.attr("id"), options);
         });
     });
 })(jQuery, codendi || {});

@@ -1,15 +1,11 @@
 export default UserPreferencesService;
 
-UserPreferencesService.$inject = [
-    'Restangular'
-];
+UserPreferencesService.$inject = ["Restangular"];
 
-function UserPreferencesService(
-    Restangular
-) {
+function UserPreferencesService(Restangular) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
+        RestangularConfigurer.setBaseUrl("/api/v1");
     });
 
     return {
@@ -18,10 +14,10 @@ function UserPreferencesService(
 
     function setPreference(user_id, key, value) {
         return rest
-            .one('users', user_id)
-            .all('preferences')
+            .one("users", user_id)
+            .all("preferences")
             .patch({
-                key  : key,
+                key: key,
                 value: value
             });
     }

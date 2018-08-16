@@ -1,12 +1,8 @@
 export default PullRequestRefsController;
 
-PullRequestRefsController.$inject = [
-    'SharedPropertiesService'
-];
+PullRequestRefsController.$inject = ["SharedPropertiesService"];
 
-function PullRequestRefsController(
-    SharedPropertiesService
-) {
+function PullRequestRefsController(SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
@@ -15,7 +11,7 @@ function PullRequestRefsController(
     });
 
     function isCurrentRepository(repository) {
-        if (! repository) {
+        if (!repository) {
             return false;
         }
 
@@ -23,7 +19,7 @@ function PullRequestRefsController(
     }
 
     function isRepositoryAFork() {
-        if (! self.pull_request.repository) {
+        if (!self.pull_request.repository) {
             return false;
         }
 

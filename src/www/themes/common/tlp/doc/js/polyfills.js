@@ -17,14 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (! Element.prototype.matches) {
+if (!Element.prototype.matches) {
     Element.prototype.matches =
         Element.prototype.matchesSelector ||
         Element.prototype.mozMatchesSelector ||
         Element.prototype.msMatchesSelector ||
         Element.prototype.oMatchesSelector ||
         Element.prototype.webkitMatchesSelector ||
-
         function(s) {
             var matches = (this.document || this.ownerDocument).querySelectorAll(s),
                 i = matches.length;
@@ -33,7 +32,7 @@ if (! Element.prototype.matches) {
         };
 }
 
-if (typeof Element.prototype.closest !== 'function') {
+if (typeof Element.prototype.closest !== "function") {
     Element.prototype.closest = function closest(selector) {
         var element = this;
 

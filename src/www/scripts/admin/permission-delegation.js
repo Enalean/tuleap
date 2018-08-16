@@ -15,54 +15,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from 'tlp';
+import { modal as createModal } from "tlp";
 
-import {
-    autocomplete_users_for_select2 as autocomplete
-} from '../tuleap/autocomplete-for-select2.js';
+import { autocomplete_users_for_select2 as autocomplete } from "../tuleap/autocomplete-for-select2.js";
 
-document.addEventListener('DOMContentLoaded', function () {
-    const add_group                  = document.querySelector('#siteadmin-permission-delegation-add-group'),
-          add_group_modal_element    = document.querySelector('#siteadmin-permission-delegation-add-group-modal'),
-          delete_group               = document.querySelector('#siteadmin-permission-delegation-group-actions-delete'),
-          delete_group_modal_element = document.querySelector('#siteadmin-permission-delegation-delete-group-modal'),
-          edit_group                 = document.querySelector('#siteadmin-permission-delegation-group-actions-edit'),
-          edit_group_modal_element   = document.querySelector('#siteadmin-permission-delegation-edit-group-modal'),
-          add_perm                   = document.querySelector('#siteadmin-permission-delegation-group-details-perms-actions-add'),
-          add_perm_modal_element     = document.querySelector('#siteadmin-permission-delegation-add-perm-modal'),
-          add_user                   = document.getElementById('siteadmin-permission-delegation-group-details-users-actions-add-input'),
-          modal_add_group            = createModal(
-              add_group_modal_element,
-              {keyboard: true}
-          );
+document.addEventListener("DOMContentLoaded", function() {
+    const add_group = document.querySelector("#siteadmin-permission-delegation-add-group"),
+        add_group_modal_element = document.querySelector(
+            "#siteadmin-permission-delegation-add-group-modal"
+        ),
+        delete_group = document.querySelector(
+            "#siteadmin-permission-delegation-group-actions-delete"
+        ),
+        delete_group_modal_element = document.querySelector(
+            "#siteadmin-permission-delegation-delete-group-modal"
+        ),
+        edit_group = document.querySelector("#siteadmin-permission-delegation-group-actions-edit"),
+        edit_group_modal_element = document.querySelector(
+            "#siteadmin-permission-delegation-edit-group-modal"
+        ),
+        add_perm = document.querySelector(
+            "#siteadmin-permission-delegation-group-details-perms-actions-add"
+        ),
+        add_perm_modal_element = document.querySelector(
+            "#siteadmin-permission-delegation-add-perm-modal"
+        ),
+        add_user = document.getElementById(
+            "siteadmin-permission-delegation-group-details-users-actions-add-input"
+        ),
+        modal_add_group = createModal(add_group_modal_element, { keyboard: true });
 
-    add_group.addEventListener('click', () => {
+    add_group.addEventListener("click", () => {
         modal_add_group.toggle();
         initFocus(add_group_modal_element);
     });
 
     if (delete_group && delete_group_modal_element) {
-        const modal_delete_group = createModal(delete_group_modal_element, {keyboard: true});
+        const modal_delete_group = createModal(delete_group_modal_element, { keyboard: true });
 
-        delete_group.addEventListener('click', () => {
+        delete_group.addEventListener("click", () => {
             modal_delete_group.toggle();
             initFocus(delete_group_modal_element);
         });
     }
 
     if (edit_group && edit_group_modal_element) {
-        const modal_edit_group = createModal(edit_group_modal_element, {keyboard: true});
+        const modal_edit_group = createModal(edit_group_modal_element, { keyboard: true });
 
-        edit_group.addEventListener('click', () => {
+        edit_group.addEventListener("click", () => {
             modal_edit_group.toggle();
             initFocus(edit_group_modal_element);
         });
     }
 
     if (add_perm && add_perm_modal_element) {
-        const modal_add_perm = createModal(add_perm_modal_element, {keyboard: true});
+        const modal_add_perm = createModal(add_perm_modal_element, { keyboard: true });
 
-        add_perm.addEventListener('click', () => {
+        add_perm.addEventListener("click", () => {
             modal_add_perm.toggle();
             initFocus(add_perm_modal_element);
         });
@@ -74,37 +83,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     handlePrimaryButtonState(
         '#siteadmin-permission-delegation-group-details-perms input[type="checkbox"][name="permissions[]"]',
-        '#siteadmin-permission-delegation-group-details-perms-actions-delete'
+        "#siteadmin-permission-delegation-group-details-perms-actions-delete"
     );
 
     handlePrimaryButtonState(
         '#siteadmin-permission-delegation-add-perm-modal input[type="checkbox"][name="permissions[]"]',
-        '#siteadmin-permission-delegation-add-perm-modal-submit'
+        "#siteadmin-permission-delegation-add-perm-modal-submit"
     );
 
     handlePrimaryButtonState(
         'input[type="checkbox"][name="user-ids[]"]',
-        '#siteadmin-permission-delegation-group-details-users-actions-delete'
+        "#siteadmin-permission-delegation-group-details-users-actions-delete"
     );
 
     function handlePrimaryButtonState(source_selector, target_button_selector) {
         const source_elements = document.querySelectorAll(source_selector),
-            target_button     = document.querySelector(target_button_selector);
+            target_button = document.querySelector(target_button_selector);
 
         for (const source of source_elements) {
-            source.addEventListener('change', () => {
-                target_button.disabled = document.querySelectorAll(source_selector + ':checked').length === 0;
+            source.addEventListener("change", () => {
+                target_button.disabled =
+                    document.querySelectorAll(source_selector + ":checked").length === 0;
             });
         }
     }
 
     function initFocus(target_modal) {
-        let first_element = target_modal.querySelector('input:nth-child(2)');
-        if (! first_element) {
+        let first_element = target_modal.querySelector("input:nth-child(2)");
+        if (!first_element) {
             first_element = target_modal.querySelector('input[type="submit"]');
         }
 
-        if (! first_element) {
+        if (!first_element) {
             first_element = target_modal.querySelector('button[type="submit"]');
         }
 

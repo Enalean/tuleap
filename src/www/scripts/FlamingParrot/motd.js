@@ -21,20 +21,22 @@
  * I make sure that the sidebar and the main content are not hidden under the
  * top navbar whent the motd is displayed
  */
-import $ from 'jquery';
+import $ from "jquery";
 
-$(document).ready(function () {
-    $('.navbar > .motd').each(updateTopMarginAccordinglyToMOTDHeight);
+$(document).ready(function() {
+    $(".navbar > .motd").each(updateTopMarginAccordinglyToMOTDHeight);
 });
 
 function updateTopMarginAccordinglyToMOTDHeight() {
     var motd_element = this,
-        main_content_element = $(motd_element).parents('.wrapper').find('.main'),
-        initial_margin_top   = parseInt($(main_content_element).css('margin-top'), 10);
+        main_content_element = $(motd_element)
+            .parents(".wrapper")
+            .find(".main"),
+        initial_margin_top = parseInt($(main_content_element).css("margin-top"), 10);
 
     function motdResized() {
         var height_of_motd = $(motd_element).outerHeight();
-        main_content_element.css('margin-top', (initial_margin_top + height_of_motd) + 'px');
+        main_content_element.css("margin-top", initial_margin_top + height_of_motd + "px");
     }
 
     $(window).resize(motdResized);

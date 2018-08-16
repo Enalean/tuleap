@@ -1,7 +1,7 @@
-import angular                   from 'angular';
-import tuleap_pullrequest_module from 'tuleap-pullrequest-module';
+import angular from "angular";
+import tuleap_pullrequest_module from "tuleap-pullrequest-module";
 
-import 'angular-mocks';
+import "angular-mocks";
 
 describe("PullRequestService -", function() {
     var PullRequestService;
@@ -10,9 +10,7 @@ describe("PullRequestService -", function() {
         angular.mock.module(tuleap_pullrequest_module);
 
         // eslint-disable-next-line angular/di
-        angular.mock.inject(function(
-            _PullRequestService_
-        ) {
+        angular.mock.inject(function(_PullRequestService_) {
             PullRequestService = _PullRequestService_;
         });
     });
@@ -20,7 +18,7 @@ describe("PullRequestService -", function() {
     describe("isPullRequestClosed()", function() {
         it("Given a pull request with the 'merge' status, then it will return true", function() {
             var pull_request = {
-                status: 'merge'
+                status: "merge"
             };
 
             var result = PullRequestService.isPullRequestClosed(pull_request);
@@ -30,7 +28,7 @@ describe("PullRequestService -", function() {
 
         it("Given a pull request with the 'abandon' status, then it will return true", function() {
             var pull_request = {
-                status: 'abandon'
+                status: "abandon"
             };
 
             var result = PullRequestService.isPullRequestClosed(pull_request);
@@ -40,7 +38,7 @@ describe("PullRequestService -", function() {
 
         it("Given a pull request with the 'review' status, then it will return false", function() {
             var pull_request = {
-                status: 'review'
+                status: "review"
             };
 
             var result = PullRequestService.isPullRequestClosed(pull_request);

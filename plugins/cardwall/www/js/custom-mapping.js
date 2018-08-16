@@ -24,24 +24,27 @@
 /**
  * This script manage the admin/config of cardwall in tracker administration
  */
-!function ($) {
-
-    $(document).ready(function () {
-        var selector = '.cardwall_admin_ontop_mappings input[name^=custom_mapping]';
+!(function($) {
+    $(document).ready(function() {
+        var selector = ".cardwall_admin_ontop_mappings input[name^=custom_mapping]";
         $(selector).each(registerClickHandlerOnCustomMappingCheckbox);
     });
 
     function registerClickHandlerOnCustomMappingCheckbox() {
-        $(this).on('click', toggleDisabledStateOfCorrespondingSelectboxField);
+        $(this).on("click", toggleDisabledStateOfCorrespondingSelectboxField);
     }
 
     function toggleDisabledStateOfCorrespondingSelectboxField() {
-        var select = $(this).parents('td').find('select');
+        var select = $(this)
+            .parents("td")
+            .find("select");
 
         if (this.checked) {
-            $(select).prop('disabled', false).focus();
+            $(select)
+                .prop("disabled", false)
+                .focus();
         } else {
-            $(select).prop('disabled', true);
+            $(select).prop("disabled", true);
         }
     }
-}(jQuery);
+})(jQuery);

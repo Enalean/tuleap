@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import flatpickr from 'flatpickr';
+import flatpickr from "flatpickr";
 
 flatpickr.init.prototype.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
 flatpickr.init.prototype.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
@@ -32,14 +32,14 @@ function datePicker(element, options) {
     options = options || {};
 
     options.weekNumbers = true;
-    options.timeFormat  = 'H:i';
-    options.time_24hr   = true;
+    options.timeFormat = "H:i";
+    options.time_24hr = true;
 
-    var placeholder = 'yyyy-mm-dd';
-    if (element.hasAttribute('data-enabletime')) {
-        placeholder += ' HH:mm';
+    var placeholder = "yyyy-mm-dd";
+    if (element.hasAttribute("data-enabletime")) {
+        placeholder += " HH:mm";
     }
-    element.setAttribute('placeholder', placeholder);
+    element.setAttribute("placeholder", placeholder);
 
     return flatpickr(element, options);
 }

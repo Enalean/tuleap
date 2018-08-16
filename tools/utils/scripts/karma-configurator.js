@@ -20,13 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const karma_config = require('./karma-common-config.js');
+const karma_config = require("./karma-common-config.js");
 
-function setupBaseKarmaConfig(
-    config,
-    webpack_config,
-    coverage_path
-) {
+function setupBaseKarmaConfig(config, webpack_config, coverage_path) {
     return Object.assign(
         karma_config.getBaseConfig(config),
         configureWebpackConfig(webpack_config),
@@ -36,9 +32,9 @@ function setupBaseKarmaConfig(
 
 function configureWebpackConfig(webpack_config) {
     return {
-        webpack          : webpack_config,
+        webpack: webpack_config,
         webpackMiddleware: {
-            stats: 'errors-only'
+            stats: "errors-only"
         }
     };
 }
@@ -46,10 +42,10 @@ function configureWebpackConfig(webpack_config) {
 function configureKarmaForSingleTest() {
     return {
         singleRun: true,
-        reporters: ['dots', 'junit'],
+        reporters: ["dots", "junit"],
         junitReporter: {
-            outputDir     : process.env.REPORT_OUTPUT_FOLDER || '',
-            outputFile    : 'test-results.xml',
+            outputDir: process.env.REPORT_OUTPUT_FOLDER || "",
+            outputFile: "test-results.xml",
             useBrowserName: false
         }
     };
@@ -57,7 +53,7 @@ function configureKarmaForSingleTest() {
 
 function configureKarmaForWatchMode() {
     return {
-        reporters: ['dots'],
+        reporters: ["dots"],
         autoWatch: true
     };
 }
@@ -65,23 +61,21 @@ function configureKarmaForWatchMode() {
 function configureKarmaCoverage(coverage_directory) {
     return {
         singleRun: true,
-        reporters: ['dots', 'coverage'],
+        reporters: ["dots", "coverage"],
         coverageReporter: {
-            dir      : coverage_directory,
-            reporters: [
-                { type: 'html'}
-            ]
+            dir: coverage_directory,
+            reporters: [{ type: "html" }]
         }
     };
 }
 
 function configureKarmaServer(coverage_directory) {
-    if (process.env.NODE_ENV === 'test') {
+    if (process.env.NODE_ENV === "test") {
         return configureKarmaForSingleTest();
-    } else if (process.env.NODE_ENV === 'watch') {
-        process.env.BABEL_ENV = 'test';
+    } else if (process.env.NODE_ENV === "watch") {
+        process.env.BABEL_ENV = "test";
         return configureKarmaForWatchMode();
-    } else if (process.env.NODE_ENV === 'coverage') {
+    } else if (process.env.NODE_ENV === "coverage") {
         return configureKarmaCoverage(coverage_directory);
     }
 }

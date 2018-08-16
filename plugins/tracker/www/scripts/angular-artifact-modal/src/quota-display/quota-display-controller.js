@@ -1,4 +1,4 @@
-import { file_upload_rules } from '../tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js';
+import { file_upload_rules } from "../tuleap-artifact-modal-fields/file-field/file-upload-rules-state.js";
 
 export default TuleapArtifactModalQuotaDisplayController;
 
@@ -17,10 +17,6 @@ function TuleapArtifactModalQuotaDisplayController() {
     }
 
     function getDiskUsagePercentage() {
-        return (
-            self.file_upload_rules.disk_usage /
-            self.file_upload_rules.disk_quota *
-            100
-        );
+        return (self.file_upload_rules.disk_usage / self.file_upload_rules.disk_quota) * 100;
     }
 }

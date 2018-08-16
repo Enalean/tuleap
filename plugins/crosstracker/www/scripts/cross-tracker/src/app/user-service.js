@@ -17,21 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import phptomoment from 'phptomoment';
-import moment      from 'moment';
+import phptomoment from "phptomoment";
+import moment from "moment";
 
-export {
-    init,
-    isAnonymous,
-    getUserPreferredDateFormat
-};
+export { init, isAnonymous, getUserPreferredDateFormat };
 
 let user_is_anonymous;
 let date_format;
 
 function init(is_anonymous, localized_php_date_format, locale) {
     user_is_anonymous = is_anonymous;
-    date_format       = phptomoment(localized_php_date_format);
+    date_format = phptomoment(localized_php_date_format);
     moment.locale(locale);
 }
 

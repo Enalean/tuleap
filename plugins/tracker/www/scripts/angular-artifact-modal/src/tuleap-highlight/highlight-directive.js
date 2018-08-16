@@ -1,31 +1,30 @@
 export default TuleapHighlightDirective;
 
-TuleapHighlightDirective.$inject = [
-    '$timeout'
-];
+TuleapHighlightDirective.$inject = ["$timeout"];
 
-function TuleapHighlightDirective(
-    $timeout
-) {
+function TuleapHighlightDirective($timeout) {
     var promise;
 
     return {
-        restrict: 'A',
+        restrict: "A",
         scope: {
-            watched: '=*tuleapHighlightDirective'
+            watched: "=*tuleapHighlightDirective"
         },
         link: function($scope, element) {
-            $scope.$watch(function() {
-                return $scope.watched;
-            }, function(new_value, old_value) {
-                if (new_value === old_value) {
-                    return;
+            $scope.$watch(
+                function() {
+                    return $scope.watched;
+                },
+                function(new_value, old_value) {
+                    if (new_value === old_value) {
+                        return;
+                    }
+
+                    applyHighlight(element);
                 }
+            );
 
-                applyHighlight(element);
-            });
-
-            $scope.$on('$destroy', function() {
+            $scope.$on("$destroy", function() {
                 destroy();
             });
         }
@@ -46,18 +45,18 @@ function TuleapHighlightDirective(
     }
 
     function addTransition(element) {
-        element.addClass('tuleap-highlight-transition');
+        element.addClass("tuleap-highlight-transition");
     }
 
     function removeTransition(element) {
-        element.removeClass('tuleap-highlight-transition');
+        element.removeClass("tuleap-highlight-transition");
     }
 
     function highlight(element) {
-        element.addClass('tuleap-highlight');
+        element.addClass("tuleap-highlight");
     }
 
     function lowlight(element) {
-        element.removeClass('tuleap-highlight');
+        element.removeClass("tuleap-highlight");
     }
 }

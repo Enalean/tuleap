@@ -1,14 +1,14 @@
-import '../in-properties-filter/in-properties-filter.js';
-import _ from 'lodash';
+import "../in-properties-filter/in-properties-filter.js";
+import _ from "lodash";
 
 export default KanbanColumnService;
 
 KanbanColumnService.$inject = [
-    '$q',
-    '$filter',
-    'KanbanFilterValue',
-    'KanbanItemRestService',
-    'SharedPropertiesService'
+    "$q",
+    "$filter",
+    "KanbanFilterValue",
+    "KanbanItemRestService",
+    "SharedPropertiesService"
 ];
 
 function KanbanColumnService(
@@ -27,12 +27,7 @@ function KanbanColumnService(
         findItemAndReorderItems
     });
 
-    function moveItem(
-        item,
-        source_column,
-        destination_column,
-        compared_to
-    ) {
+    function moveItem(item, source_column, destination_column, compared_to) {
         removeItem(item, source_column);
         if (hasColumnChanged(item, destination_column.id)) {
             updateItem(item, destination_column.id);
@@ -44,13 +39,13 @@ function KanbanColumnService(
     function findItem(id, source_column) {
         var promised_item = findItemInColumnById(id, source_column);
 
-        if (! promised_item && source_column.is_open) {
+        if (!promised_item && source_column.is_open) {
             return;
         }
 
-        if (! promised_item) {
+        if (!promised_item) {
             promised_item = KanbanItemRestService.getItem(id).then(function(item) {
-                if (! item) {
+                if (!item) {
                     return;
                 }
 
@@ -70,18 +65,13 @@ function KanbanColumnService(
         const promised_item = findItem(id, source_column);
 
         $q.when(promised_item).then(function(item) {
-            if (! item) {
+            if (!item) {
                 return;
             }
 
             item.updating = false;
 
-            self.moveItem(
-                item,
-                source_column,
-                destination_column,
-                null
-            );
+            self.moveItem(item, source_column, destination_column, null);
 
             reorderItemsByItemsIds(ordered_destination_column_items_ids, destination_column);
 
@@ -92,7 +82,7 @@ function KanbanColumnService(
     }
 
     function findItemInColumnById(item_id, column) {
-        return _.find(column.content, {'id': item_id});
+        return _.find(column.content, { id: item_id });
     }
 
     function removeItem(item, column) {
@@ -118,7 +108,7 @@ function KanbanColumnService(
             column.nb_items_at_kanban_init++;
         }
 
-        if (! column.is_open) {
+        if (!column.is_open) {
             emptyArray(column.filtered_content);
         }
     }
@@ -128,13 +118,7 @@ function KanbanColumnService(
     }
 
     function updateItemContent(item, item_updated) {
-        const {
-            background_color_name,
-            color,
-            item_name,
-            label,
-            card_fields
-        } = item_updated;
+        const { background_color_name, color, item_name, label, card_fields } = item_updated;
         Object.assign(item, {
             background_color_name,
             color,
@@ -148,14 +132,14 @@ function KanbanColumnService(
 
     function updateItem(item, destination_column_id) {
         if (movedFromBacklogToAnotherColumn(item.in_column, destination_column_id)) {
-            updateTimeInfo(item, 'kanban');
+            updateTimeInfo(item, "kanban");
         }
         updateTimeInfo(item, destination_column_id);
         updateItemColumn(item, destination_column_id);
     }
 
     function movedFromBacklogToAnotherColumn(source_column_id, destination_column_id) {
-        return source_column_id === 'backlog' && destination_column_id !== 'backlog';
+        return source_column_id === "backlog" && destination_column_id !== "backlog";
     }
 
     function updateItemColumn(item, column_id) {
@@ -168,14 +152,14 @@ function KanbanColumnService(
 
     function addItemInCollectionComparedToAnotherItem(item, collection, compared_to) {
         var compared_to_index = -1;
-        if (! _.isNull(compared_to)) {
+        if (!_.isNull(compared_to)) {
             compared_to_index = _.findIndex(collection, {
                 id: compared_to.item_id
             });
         }
 
         if (compared_to_index !== -1) {
-            if (compared_to.direction === 'after') {
+            if (compared_to.direction === "after") {
                 collection.splice(compared_to_index + 1, 0, item);
             } else {
                 collection.splice(compared_to_index, 0, item);
@@ -187,8 +171,8 @@ function KanbanColumnService(
 
     function reorderItemsByItemsIds(ordered_destination_column_items_ids, column) {
         const content = [];
-        ordered_destination_column_items_ids.forEach((item_id) => {
-            const item = column.content.find((item) => (item.id === item_id));
+        ordered_destination_column_items_ids.forEach(item_id => {
+            const item = column.content.find(item => item.id === item_id);
             if (item) {
                 content.push(item);
             }
@@ -197,7 +181,7 @@ function KanbanColumnService(
     }
 
     function filterItems(column) {
-        var filtered_items = $filter('InPropertiesFilter')(column.content, KanbanFilterValue.terms);
+        var filtered_items = $filter("InPropertiesFilter")(column.content, KanbanFilterValue.terms);
 
         emptyArray(column.filtered_content);
         _.forEach(filtered_items, function(item) {

@@ -17,51 +17,63 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($, window) {
-
+(function($, window) {
     $(function() {
-        $('.artifact-incoming-mail-button, .tracker_artifact_followup_comment_controls_raw_email').click(function(event) {
+        $(
+            ".artifact-incoming-mail-button, .tracker_artifact_followup_comment_controls_raw_email"
+        ).click(function(event) {
             event.stopPropagation();
             event.preventDefault();
 
-            var new_window = window.open('', '_blank');
-            new_window.document.write('<pre></pre>');
-            $(new_window.document.getElementsByTagName('pre')).text($(this).attr('data-raw-email'));
+            var new_window = window.open("", "_blank");
+            new_window.document.write("<pre></pre>");
+            $(new_window.document.getElementsByTagName("pre")).text($(this).attr("data-raw-email"));
         });
 
-
-        $('.tracker-artifact-notification').click(function(event) {
+        $(".tracker-artifact-notification").click(function(event) {
             event.preventDefault();
 
-            var button      = $(this);
-            var artifact_id = $('#artifact_informations').attr('data-artifact-id');
+            var button = $(this);
+            var artifact_id = $("#artifact_informations").attr("data-artifact-id");
 
-            $.get(
-                codendi.tracker.base_url + "?aid="+ artifact_id +"&func=manage-subscription",
-                {
-                    artifact: artifact_id
-                }
-            ).done(function(data) {
+            $.get(codendi.tracker.base_url + "?aid=" + artifact_id + "&func=manage-subscription", {
+                artifact: artifact_id
+            })
+                .done(function(data) {
                     codendi.feedback.clear();
-                    codendi.feedback.log('info', data.message);
+                    codendi.feedback.log("info", data.message);
 
                     updateButtonLabel(button, data.notification);
-            }).fail(function(data) {
-                codendi.feedback.clear();
-                codendi.feedback.log('error', codendi.locales.tracker_artifact.notification_update_error);
-            });
+                })
+                .fail(function(data) {
+                    codendi.feedback.clear();
+                    codendi.feedback.log(
+                        "error",
+                        codendi.locales.tracker_artifact.notification_update_error
+                    );
+                });
 
             function updateButtonLabel(button, notification) {
                 if (notification === true) {
-                    button.attr('title', codendi.locales.tracker_artifact.disable_notifications_alternate_text);
-                    button.html('<i class="icon-bell-alt"></i> ' + codendi.locales.tracker_artifact.disable_notifications);
+                    button.attr(
+                        "title",
+                        codendi.locales.tracker_artifact.disable_notifications_alternate_text
+                    );
+                    button.html(
+                        '<i class="icon-bell-alt"></i> ' +
+                            codendi.locales.tracker_artifact.disable_notifications
+                    );
                 } else {
-                    button.attr('title', codendi.locales.tracker_artifact.enable_notifications_alternate_text);
-                    button.html('<i class="icon-bell-alt"></i> ' + codendi.locales.tracker_artifact.enable_notifications);
+                    button.attr(
+                        "title",
+                        codendi.locales.tracker_artifact.enable_notifications_alternate_text
+                    );
+                    button.html(
+                        '<i class="icon-bell-alt"></i> ' +
+                            codendi.locales.tracker_artifact.enable_notifications
+                    );
                 }
             }
         });
     });
-
-
 })(jQuery, window);

@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
+var tuleap = tuleap || {};
 
 // Search for a class in loaded stylesheets
 tuleap.getStyleClass = function(className) {
@@ -24,7 +24,10 @@ tuleap.getStyleClass = function(className) {
     if (document.all) {
         for (var s = 0; s < document.styleSheets.length; s++) {
             for (var r = 0; r < document.styleSheets[s].rules.length; r++) {
-                if (document.styleSheets[s].rules[r].selectorText && document.styleSheets[s].rules[r].selectorText.search(re) != -1) {
+                if (
+                    document.styleSheets[s].rules[r].selectorText &&
+                    document.styleSheets[s].rules[r].selectorText.search(re) != -1
+                ) {
                     return document.styleSheets[s].rules[r].style;
                 }
             }
@@ -32,7 +35,10 @@ tuleap.getStyleClass = function(className) {
     } else if (document.getElementById) {
         for (var s = 0; s < document.styleSheets.length; s++) {
             for (var r = 0; r < document.styleSheets[s].cssRules.length; r++) {
-                if (document.styleSheets[s].cssRules[r].selectorText && document.styleSheets[s].cssRules[r].selectorText.search(re) != -1) {
+                if (
+                    document.styleSheets[s].cssRules[r].selectorText &&
+                    document.styleSheets[s].cssRules[r].selectorText.search(re) != -1
+                ) {
                     document.styleSheets[s].cssRules[r].sheetIndex = s;
                     document.styleSheets[s].cssRules[r].ruleIndex = s;
                     return document.styleSheets[s].cssRules[r].style;
@@ -43,13 +49,11 @@ tuleap.getStyleClass = function(className) {
         return document.classes[className].all;
     }
     return null;
-}
+};
 
 // Search for a property for a class in loaded stylesheets
-tuleap.getStyleClassProperty = function (className, propertyName) {
+tuleap.getStyleClassProperty = function(className, propertyName) {
     var styleClass = tuleap.getStyleClass(className);
-    if (styleClass)
-      return styleClass[propertyName];
-    else
-      return null;
-}
+    if (styleClass) return styleClass[propertyName];
+    else return null;
+};

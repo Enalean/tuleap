@@ -34,38 +34,25 @@ const tlp = jasmine.createSpyObj("tlp", [
 // Because TLP is set up as external in webpack configs
 window.tlp = tlp;
 
-export {
-    tlp,
-    mockFetchSuccess,
-    mockFetchError
-};
+export { tlp, mockFetchSuccess, mockFetchError };
 
-function mockFetchSuccess(
-    spy_function,
-    {
-        headers,
-        return_json
-    } = {}
-) {
-    spy_function.and.returnValue(Promise.resolve({
-        headers,
-        json: () => Promise.resolve(return_json)
-    }));
+function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
+    spy_function.and.returnValue(
+        Promise.resolve({
+            headers,
+            json: () => Promise.resolve(return_json)
+        })
+    );
 }
 
-function mockFetchError(
-    spy_function,
-    {
-        status,
-        statusText,
-        error_json
-    } = {}
-) {
-    spy_function.and.returnValue(Promise.reject({
-        response: {
-            status,
-            statusText,
-            json: () => Promise.resolve(error_json)
-        }
-    }));
+function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
+    spy_function.and.returnValue(
+        Promise.reject({
+            response: {
+                status,
+                statusText,
+                json: () => Promise.resolve(error_json)
+            }
+        })
+    );
 }

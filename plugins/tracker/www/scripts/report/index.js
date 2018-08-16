@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { init } from './expert-mode.js';
+import { init } from "./expert-mode.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     init();
 });

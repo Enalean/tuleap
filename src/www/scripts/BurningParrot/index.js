@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { init as initNavbarDropdown }        from './navbar-dropdown.js';
-import { init as initProjectNavbarDropdown } from './navbar-dropdown-projects.js';
-import { init as initMotd }                  from './motd.js';
-import { init as initSidebar }               from './sidebar.js';
-import { init as initScrollbar }             from './scrollbar.js';
-import { init as initNavbarHistory }         from '../navbar-history/index-burningparrot.js';
-import * as autocomplete                     from '../tuleap/autocomplete-for-select2.js';
+import { init as initNavbarDropdown } from "./navbar-dropdown.js";
+import { init as initProjectNavbarDropdown } from "./navbar-dropdown-projects.js";
+import { init as initMotd } from "./motd.js";
+import { init as initSidebar } from "./sidebar.js";
+import { init as initScrollbar } from "./scrollbar.js";
+import { init as initNavbarHistory } from "../navbar-history/index-burningparrot.js";
+import * as autocomplete from "../tuleap/autocomplete-for-select2.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     initNavbarDropdown();
     initProjectNavbarDropdown();
     initSidebar();

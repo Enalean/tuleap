@@ -1,9 +1,7 @@
-import angular from 'angular';
+import angular from "angular";
 
-import HighlightDirective from './highlight-directive.js';
+import HighlightDirective from "./highlight-directive.js";
 
-angular.module('tuleap-highlight', [
-])
-.directive('tuleapHighlightDirective', HighlightDirective);
+angular.module("tuleap-highlight", []).directive("tuleapHighlightDirective", HighlightDirective);
 
-export default 'tuleap-highlight';
+export default "tuleap-highlight";

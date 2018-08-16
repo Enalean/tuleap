@@ -19,8 +19,8 @@
 
 describe("Tuleap", () => {
     it("has a welcome page", () => {
-        cy.visit('/');
+        cy.visit("/");
 
-        cy.title().should('contain', 'Welcome - Tuleap');
+        cy.title().should("contain", "Welcome - Tuleap");
     });
 });

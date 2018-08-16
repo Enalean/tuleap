@@ -16,17 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import Vue                                 from 'vue';
-import { rewire$getLabeledItems, restore } from './rest-querier.js';
-import LabeledItemsList                    from './LabeledItemsList.vue';
-import { mockFetchError }                  from 'tlp-mocks';
+import Vue from "vue";
+import { rewire$getLabeledItems, restore } from "./rest-querier.js";
+import LabeledItemsList from "./LabeledItemsList.vue";
+import { mockFetchError } from "tlp-mocks";
 
-describe('LabeledItemsList', () => {
+describe("LabeledItemsList", () => {
     let getLabeledItems;
     let LabeledItemsListVueElement;
 
     beforeEach(() => {
-        getLabeledItems = jasmine.createSpy('getLabeledItems');
+        getLabeledItems = jasmine.createSpy("getLabeledItems");
         rewire$getLabeledItems(getLabeledItems);
 
         LabeledItemsListVueElement = Vue.extend(LabeledItemsList);
@@ -36,7 +36,7 @@ describe('LabeledItemsList', () => {
         restore();
     });
 
-    it('Should display an error when no labels id are provided', () => {
+    it("Should display an error when no labels id are provided", () => {
         const vm = new LabeledItemsListVueElement({
             propsData: {
                 labelsId: "[]",
@@ -49,11 +49,11 @@ describe('LabeledItemsList', () => {
         expect(vm.error).toBe(true);
     });
 
-    it('Should display an error when REST route fails', async () => {
+    it("Should display an error when REST route fails", async () => {
         const error_json = {
             error: {
                 code: 404,
-                message: 'Not Found'
+                message: "Not Found"
             }
         };
         mockFetchError(getLabeledItems, { error_json });
@@ -69,13 +69,11 @@ describe('LabeledItemsList', () => {
 
         await Vue.nextTick();
         await Vue.nextTick();
-        expect(vm.error).toEqual('404 Not Found');
+        expect(vm.error).toEqual("404 Not Found");
     });
 
-    it('Should display an empty state when no items are found', async () => {
-        getLabeledItems.and.returnValue(Promise.resolve(
-            { labeled_items: []}
-        ));
+    it("Should display an empty state when no items are found", async () => {
+        getLabeledItems.and.returnValue(Promise.resolve({ labeled_items: [] }));
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -90,16 +88,19 @@ describe('LabeledItemsList', () => {
         expect(vm.items).toEqual([]);
     });
 
-    it('Should display a list of items.', async () => {
-        getLabeledItems.and.returnValue(Promise.resolve({
-            labeled_items: [
-                {
-                    title: 'test 1'
-                }, {
-                    title: 'test 2'
-                }
-            ]
-        }));
+    it("Should display a list of items.", async () => {
+        getLabeledItems.and.returnValue(
+            Promise.resolve({
+                labeled_items: [
+                    {
+                        title: "test 1"
+                    },
+                    {
+                        title: "test 2"
+                    }
+                ]
+            })
+        );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -111,17 +112,16 @@ describe('LabeledItemsList', () => {
         vm.$mount();
 
         await Vue.nextTick();
-        expect(vm.items).toEqual([
-            { title: 'test 1' },
-            { title: 'test 2' }
-        ]);
+        expect(vm.items).toEqual([{ title: "test 1" }, { title: "test 2" }]);
     });
 
-    it('Displays a [load more] button, if there is more items to display', async () => {
-        getLabeledItems.and.returnValue(Promise.resolve({
-            labeled_items: [{title: 'test 1'}],
-            has_more: true
-        }));
+    it("Displays a [load more] button, if there is more items to display", async () => {
+        getLabeledItems.and.returnValue(
+            Promise.resolve({
+                labeled_items: [{ title: "test 1" }],
+                has_more: true
+            })
+        );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -136,11 +136,13 @@ describe('LabeledItemsList', () => {
         expect(vm.has_more_items).toEqual(true);
     });
 
-    it('Does not display a [load more] button, if there is not more items to display', async () => {
-        getLabeledItems.and.returnValue(Promise.resolve({
-            labeled_items: [{title: 'test 1'}],
-            has_more: false
-        }));
+    it("Does not display a [load more] button, if there is not more items to display", async () => {
+        getLabeledItems.and.returnValue(
+            Promise.resolve({
+                labeled_items: [{ title: "test 1" }],
+                has_more: false
+            })
+        );
 
         const vm = new LabeledItemsListVueElement({
             propsData: {
@@ -155,15 +157,15 @@ describe('LabeledItemsList', () => {
         expect(vm.has_more_items).toEqual(false);
     });
 
-    it('Loads the next page of items', async () => {
+    it("Loads the next page of items", async () => {
         getLabeledItems.and.returnValues(
             Promise.resolve({
-                labeled_items: [{title: 'test 1'}],
+                labeled_items: [{ title: "test 1" }],
                 offset: 0,
                 has_more: true
             }),
             Promise.resolve({
-                labeled_items: [{title: 'test 2'}],
+                labeled_items: [{ title: "test 2" }],
                 offset: 50,
                 has_more: false
             })

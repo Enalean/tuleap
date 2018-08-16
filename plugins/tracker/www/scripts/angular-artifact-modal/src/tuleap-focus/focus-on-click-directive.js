@@ -1,26 +1,22 @@
-import angular from 'angular';
+import angular from "angular";
 
 export default focusOnClickDirective;
 
-focusOnClickDirective.$inject = [
-    '$timeout'
-];
+focusOnClickDirective.$inject = ["$timeout"];
 
-function focusOnClickDirective(
-    $timeout
-) {
+function focusOnClickDirective($timeout) {
     return {
-        restrict: 'A',
-        link    : linkFunction
+        restrict: "A",
+        link: linkFunction
     };
 
     function linkFunction(scope, element, attributes) {
-        element.on('click', function() {
+        element.on("click", function() {
             focus(attributes.tuleapFocusOnClick);
         });
 
-        scope.$on('$destroy', function() {
-            element.off('click');
+        scope.$on("$destroy", function() {
+            element.off("click");
         });
     }
 
@@ -28,7 +24,7 @@ function focusOnClickDirective(
         // Timeout ensures that other events have run, e.g. the click event that
         // triggered it
         $timeout(function() {
-            var element = angular.element('#' + id);
+            var element = angular.element("#" + id);
             if (element) {
                 element.focus();
             }

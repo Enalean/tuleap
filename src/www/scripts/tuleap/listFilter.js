@@ -17,18 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * Handle lists filtering
  */
 
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
     module.exports = {
         listFilter: listFilterFactory
     };
 } else {
-    var tuleap  = tuleap || { };
-    tuleap.core = tuleap.core || { };
+    var tuleap = tuleap || {};
+    tuleap.core = tuleap.core || {};
     tuleap.core.listFilter = listFilterFactory;
 }
 
@@ -38,20 +37,20 @@ function listFilterFactory() {
     var filter_element;
     var excluded_element;
 
-    var filterProjects = function (value) {
+    var filterProjects = function(value) {
         var matching_elements = document.querySelectorAll(list_element);
 
         [].forEach.call(matching_elements, function(element) {
             if (caseInsensitiveContains(getChildTagAWithText(element), value)) {
-                element.style.display = 'inherit';
+                element.style.display = "inherit";
             } else {
-                element.style.display = 'none';
+                element.style.display = "none";
             }
         });
     };
 
     var getChildTagAWithText = function(parent) {
-        var elements_tag_a = parent.getElementsByTagName('a');
+        var elements_tag_a = parent.getElementsByTagName("a");
         for (var i = 0, n = elements_tag_a.length; i < n; i++) {
             if (elements_tag_a[i].textContent) {
                 return elements_tag_a[i].textContent;
@@ -60,18 +59,17 @@ function listFilterFactory() {
     };
 
     var caseInsensitiveContains = function(element, value) {
-        return element.toUpperCase()
-                .indexOf(value.toUpperCase()) >= 0;
+        return element.toUpperCase().indexOf(value.toUpperCase()) >= 0;
     };
 
-    var clearFilterProjects = function () {
-        filter_element.value = '';
-        filterProjects('');
+    var clearFilterProjects = function() {
+        filter_element.value = "";
+        filterProjects("");
     };
 
-    var bindClickEventOnFilter = function (filter_element_selected) {
+    var bindClickEventOnFilter = function(filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener('click', function (event) {
+            filter_element_selected.addEventListener("click", function(event) {
                 event.stopPropagation();
             });
         }
@@ -79,7 +77,7 @@ function listFilterFactory() {
 
     var bindKeyUpEventOnFilter = function(filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener('keyup', function (event) {
+            filter_element_selected.addEventListener("keyup", function(event) {
                 if (event.keyCode === esc_keycode) {
                     clearFilterProjects();
                 } else {
@@ -91,8 +89,8 @@ function listFilterFactory() {
 
     var bindInputEventOnFilter = function(filter_element_selected) {
         if (filter_element_selected) {
-            filter_element_selected.addEventListener('input', function (event) {
-                if (event.target && event.target.value === '') {
+            filter_element_selected.addEventListener("input", function(event) {
+                if (event.target && event.target.value === "") {
                     clearFilterProjects();
                 }
             });
@@ -100,8 +98,8 @@ function listFilterFactory() {
     };
 
     var init = function(filter_element_selected, list_element_selector, excluded_element_selector) {
-        filter_element   = filter_element_selected;
-        list_element     = list_element_selector;
+        filter_element = filter_element_selected;
+        list_element = list_element_selector;
         excluded_element = excluded_element_selector;
 
         bindClickEventOnFilter(filter_element_selected);
@@ -109,5 +107,5 @@ function listFilterFactory() {
         bindInputEventOnFilter(filter_element_selected);
     };
 
-    return {init: init};
+    return { init: init };
 }

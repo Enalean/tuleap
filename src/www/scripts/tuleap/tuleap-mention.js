@@ -18,22 +18,23 @@
 /**
  * Handle @user
  */
-(function ($) {
+(function($) {
     tuleap.mention = {
         init: function(selector) {
             $(selector).atwho({
-                at: '@',
-                tpl: '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
+                at: "@",
+                tpl:
+                    '<li data-value="${atwho-at}${username}"><img class="user-avatar" src="${avatar_url}"> ${real_name} (${username})</li>',
                 callbacks: {
                     remote_filter: function(query, callback) {
                         if (query.length > 2) {
-                            $.getJSON("/api/v1/users", {query: query}, function(data) {
+                            $.getJSON("/api/v1/users", { query: query }, function(data) {
                                 let minimal_and_html_sanitized_user_representation = [];
                                 data.forEach(function(user) {
                                     minimal_and_html_sanitized_user_representation.push({
-                                        'username': tuleap.escaper.html(user.username),
-                                        'real_name': tuleap.escaper.html(user.real_name),
-                                        'avatar_url': tuleap.escaper.html(user.avatar_url)
+                                        username: tuleap.escaper.html(user.username),
+                                        real_name: tuleap.escaper.html(user.real_name),
+                                        avatar_url: tuleap.escaper.html(user.avatar_url)
                                     });
                                 });
 
@@ -57,7 +58,7 @@
         }
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         tuleap.mention.init('input[type="text"].user-mention, textarea.user-mention');
     });
 })(jQuery);

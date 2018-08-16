@@ -1,7 +1,7 @@
-import moment from 'moment';
-import { isBacklog } from '../../kanban-column/kanban-column-identifier.js';
+import moment from "moment";
+import { isBacklog } from "../../kanban-column/kanban-column-identifier.js";
 
-controller.$inject = ['$sce', 'gettextCatalog'];
+controller.$inject = ["$sce", "gettextCatalog"];
 
 function controller($sce, gettextCatalog) {
     const self = this;
@@ -12,31 +12,31 @@ function controller($sce, gettextCatalog) {
     });
 
     function getTimeInfo(item) {
-        let timeinfo = '';
+        let timeinfo = "";
 
-        if (! item.in_column || ! item.timeinfo) {
-            return '';
+        if (!item.in_column || !item.timeinfo) {
+            return "";
         }
 
         timeinfo += getTimeInfoEntry(
             item.timeinfo.kanban,
-            gettextCatalog.getString('In Kanban since:')
+            gettextCatalog.getString("In Kanban since:")
         );
-        timeinfo += '\u000a\u000a';
+        timeinfo += "\u000a\u000a";
         timeinfo += getTimeInfoEntry(
             item.timeinfo[item.in_column],
-            gettextCatalog.getString('In column since:')
+            gettextCatalog.getString("In column since:")
         );
 
         return $sce.trustAsHtml(timeinfo);
     }
 
     function getTimeInfoEntry(entry_date, label) {
-        if (! entry_date) {
-            return '';
+        if (!entry_date) {
+            return "";
         }
 
-        return `${ label } ${ moment().calendar(entry_date) }`;
+        return `${label} ${moment().calendar(entry_date)}`;
     }
 }
 
@@ -50,6 +50,6 @@ export default {
         </span>`,
     controller,
     bindings: {
-        item: '<'
+        item: "<"
     }
 };

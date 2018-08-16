@@ -1,12 +1,8 @@
 export default MergeModalController;
 
-MergeModalController.$inject = [
-    '$modalInstance'
-];
+MergeModalController.$inject = ["$modalInstance"];
 
-function MergeModalController(
-    $modalInstance
-) {
+function MergeModalController($modalInstance) {
     const self = this;
 
     Object.assign(self, {

@@ -21,55 +21,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, modal as createModal } from 'tlp';
-import { initLdapBindingPreview }    from './preview-for-select2.js';
+import { get, modal as createModal } from "tlp";
+import { initLdapBindingPreview } from "./preview-for-select2.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     initModal();
     initLdapGroupsAutocompleter();
 });
 
 function initModal() {
-    const button = document.getElementById('project-admin-ugroup-add-ldap-binding');
+    const button = document.getElementById("project-admin-ugroup-add-ldap-binding");
 
-    if (! button) {
+    if (!button) {
         return;
     }
 
     const modal = createModal(document.getElementById(button.dataset.targetModalId));
 
-    button.addEventListener('click', () => {
+    button.addEventListener("click", () => {
         modal.show();
     });
 }
 
 function initLdapGroupsAutocompleter() {
-    const select   = document.getElementById('project-admin-ugroup-binding-ldap-group');
-    if (! select) {
+    const select = document.getElementById("project-admin-ugroup-binding-ldap-group");
+    if (!select) {
         return;
     }
-    const preserve     = document.getElementById('project-admin-ugroup-binding-ldap-group-preserve');
-    const button       = document.getElementById('project-admin-ugroup-ldap-binding-modal-link-button');
-    const preview      = document.getElementById('project-admin-ugroup-ldap-binding-modal-preview');
-    const ugroup_id    = select.dataset.ugroupId;
+    const preserve = document.getElementById("project-admin-ugroup-binding-ldap-group-preserve");
+    const button = document.getElementById("project-admin-ugroup-ldap-binding-modal-link-button");
+    const preview = document.getElementById("project-admin-ugroup-ldap-binding-modal-preview");
+    const ugroup_id = select.dataset.ugroupId;
     const display_name = select.dataset.ugroupName;
-    const base_url     = '/plugins/ldap/bind_ugroup_confirm.php';
+    const base_url = "/plugins/ldap/bind_ugroup_confirm.php";
 
-    initLdapBindingPreview({
-        preserve,
-        button,
-        preview,
-        display_name,
-        select
-    },
+    initLdapBindingPreview(
+        {
+            preserve,
+            button,
+            preview,
+            display_name,
+            select
+        },
         getUsersToConfirm
     );
 
     async function getUsersToConfirm(chosen_ldap_group) {
         const params = {
-            bind_with_group : chosen_ldap_group,
-            ugroup_id       : ugroup_id,
-            preserve_members: (preserve.checked ? 1 : 0)
+            bind_with_group: chosen_ldap_group,
+            ugroup_id: ugroup_id,
+            preserve_members: preserve.checked ? 1 : 0
         };
 
         const response = await get(base_url, { params });

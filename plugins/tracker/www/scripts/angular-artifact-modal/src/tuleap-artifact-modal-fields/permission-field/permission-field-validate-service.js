@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default PermissionFieldValidateService;
 
@@ -18,6 +18,6 @@ function PermissionFieldValidateService() {
     }
 
     function removeUnusedAttributesPermission(field) {
-        return _.pick(field, ['field_id', 'value']);
+        return _.pick(field, ["field_id", "value"]);
     }
 }

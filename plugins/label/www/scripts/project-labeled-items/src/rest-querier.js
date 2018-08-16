@@ -17,14 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
+import { get } from "tlp";
 
-export {
-    getLabeledItems
-}
+export { getLabeledItems };
 
 async function getLabeledItems(project_id, labels_id, offset, limit) {
-    const response = await get('/api/projects/' + project_id + '/labeled_items', {
+    const response = await get("/api/projects/" + project_id + "/labeled_items", {
         params: {
             query: JSON.stringify({ labels_id }),
             limit,
@@ -32,11 +30,11 @@ async function getLabeledItems(project_id, labels_id, offset, limit) {
         }
     });
 
-    const total = Number.parseInt(response.headers.get('X-PAGINATION-SIZE'), 10);
-    const json  = await response.json();
+    const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+    const json = await response.json();
 
     json.has_more = limit + offset < total;
-    json.offset   = offset;
+    json.offset = offset;
 
     if (json.has_more && json.are_there_items_user_cannot_see && json.labeled_items.length === 0) {
         return getLabeledItems(project_id, labels_id, offset + limit, limit);

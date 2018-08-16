@@ -18,28 +18,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { modal as createModal } from 'tlp';
+import { modal as createModal } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const details_buttons = document.querySelectorAll('.systemevents-display-edit-modal');
+document.addEventListener("DOMContentLoaded", () => {
+    const details_buttons = document.querySelectorAll(".systemevents-display-edit-modal");
     for (const button of details_buttons) {
         const modal_element = document.getElementById(button.dataset.modalId),
-            modal           = createModal(modal_element);
+            modal = createModal(modal_element);
 
-        button.addEventListener('click', () => {
+        button.addEventListener("click", () => {
             modal.toggle();
         });
     }
 
-    const types_selectors = document.querySelectorAll('.systemevents-types');
-    document.getElementById('queue').addEventListener('change', function() {
+    const types_selectors = document.querySelectorAll(".systemevents-types");
+    document.getElementById("queue").addEventListener("change", function() {
         const selected_queue = this.value;
         for (const selector of types_selectors) {
             if (selector.dataset.queue === selected_queue) {
-                selector.classList.add('systemevents-types-for-current-queue');
+                selector.classList.add("systemevents-types-for-current-queue");
                 selector.disabled = false;
             } else {
-                selector.classList.remove('systemevents-types-for-current-queue');
+                selector.classList.remove("systemevents-types-for-current-queue");
                 selector.disabled = true;
             }
         }

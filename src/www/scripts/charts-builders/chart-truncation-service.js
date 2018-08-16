@@ -26,16 +26,16 @@ export { truncate };
 function truncate(max_size, node) {
     const svg_text_element = node.select("text");
 
-    let substring        = svg_text_element.text();
-    let slice            = substring.length;
-    let substring_size   = svg_text_element.node().getSubStringLength(0, slice);
+    let substring = svg_text_element.text();
+    let slice = substring.length;
+    let substring_size = svg_text_element.node().getSubStringLength(0, slice);
 
     while (substring_size > max_size) {
         substring_size = svg_text_element.node().getSubStringLength(0, slice);
-        slice --;
+        slice--;
     }
 
-    const truncated_string = substring.substring(0, slice) + '...';
+    const truncated_string = substring.substring(0, slice) + "...";
 
     svg_text_element.text(truncated_string);
 }

@@ -17,64 +17,69 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
+(function($) {
     function confirmDeletionPopover() {
-        $('.svn-notification-delete').each(function() {
-            var id = $(this).data('popover-id');
+        $(".svn-notification-delete").each(function() {
+            var id = $(this).data("popover-id");
 
-            $(this).popover({
-                container: $('#svn-admin-notifications-form'),
-                title: $('#' + id).data('title'),
-                content: $('#' + id).html()
-            }).addClass('popover-danger');
+            $(this)
+                .popover({
+                    container: $("#svn-admin-notifications-form"),
+                    title: $("#" + id).data("title"),
+                    content: $("#" + id).html()
+                })
+                .addClass("popover-danger");
         });
     }
 
     function cannotSavePopover() {
-        $('.svn-notification-save').each(function() {
-            var id              = $(this).data('popover-id');
-            var popover_content = $('#' + id);
+        $(".svn-notification-save").each(function() {
+            var id = $(this).data("popover-id");
+            var popover_content = $("#" + id);
 
-            $(this).popover({
-                container: $('#svn-notification-cannot-save-popover-container'),
-                title    : popover_content.data('title'),
-                content  : popover_content.html()
-            }).addClass('popover-warning');
+            $(this)
+                .popover({
+                    container: $("#svn-notification-cannot-save-popover-container"),
+                    title: popover_content.data("title"),
+                    content: popover_content.html()
+                })
+                .addClass("popover-warning");
         });
     }
 
     function dismissPopover() {
-        $('.svn-notification-delete').popover('hide');
-        $('.svn-notification-save').popover('hide');
+        $(".svn-notification-delete").popover("hide");
+        $(".svn-notification-save").popover("hide");
     }
 
     function bindShowPopover() {
-        $('.svn-notification-delete').click(function(event) {
+        $(".svn-notification-delete").click(function(event) {
             event.preventDefault();
 
             dismissPopover();
 
-            $(this).popover('show');
+            $(this).popover("show");
         });
     }
 
-    $(function () {
+    $(function() {
         confirmDeletionPopover();
         cannotSavePopover();
 
         bindShowPopover();
 
-        $('body').on('click', function(event) {
-            if ($(event.target).hasClass('dismiss-popover')) {
+        $("body").on("click", function(event) {
+            if ($(event.target).hasClass("dismiss-popover")) {
                 dismissPopover();
             }
 
-            if ($(event.target).data('toggle') !== 'popover' &&
-                $(event.target).parents('.popover.in').length === 0 &&
+            if (
+                $(event.target).data("toggle") !== "popover" &&
+                $(event.target).parents(".popover.in").length === 0 &&
                 $(event.target).parents('[data-toggle="popover"]').length === 0
             ) {
                 dismissPopover();
             }
         });
     });
-}(jQuery));
+})(jQuery);

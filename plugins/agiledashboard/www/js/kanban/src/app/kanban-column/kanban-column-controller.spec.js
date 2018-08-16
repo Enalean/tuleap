@@ -1,6 +1,6 @@
-import kanban_module from '../app.js';
-import angular from 'angular';
-import 'angular-mocks';
+import kanban_module from "../app.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("KanbanColumnController -", function() {
     var $rootScope,
@@ -15,8 +15,7 @@ describe("KanbanColumnController -", function() {
     beforeEach(function() {
         angular.mock.module(kanban_module);
 
-        var $controller,
-            $element;
+        var $controller, $element;
 
         angular.mock.inject(function(
             _$controller_,
@@ -27,13 +26,13 @@ describe("KanbanColumnController -", function() {
             _ColumnCollectionService_,
             _DroppedService_
         ) {
-            $controller             = _$controller_;
-            $rootScope              = _$rootScope_;
-            $q                      = _$q_;
+            $controller = _$controller_;
+            $rootScope = _$rootScope_;
+            $q = _$q_;
             SharedPropertiesService = _SharedPropertiesService_;
-            KanbanColumnService     = _KanbanColumnService_;
+            KanbanColumnService = _KanbanColumnService_;
             ColumnCollectionService = _ColumnCollectionService_;
-            DroppedService          = _DroppedService_;
+            DroppedService = _DroppedService_;
         });
 
         spyOn(KanbanColumnService, "moveItem");
@@ -44,13 +43,13 @@ describe("KanbanColumnController -", function() {
         spyOn(SharedPropertiesService, "getKanban");
 
         $scope = $rootScope.$new();
-        $element = affix('div');
+        $element = affix("div");
 
-        KanbanColumnController = $controller('KanbanColumnController', {
-            $scope                 : $scope,
-            $element               : $element,
-            DroppedService         : DroppedService,
-            KanbanColumnService    : KanbanColumnService,
+        KanbanColumnController = $controller("KanbanColumnController", {
+            $scope: $scope,
+            $element: $element,
+            DroppedService: DroppedService,
+            KanbanColumnService: KanbanColumnService,
             ColumnCollectionService: ColumnCollectionService,
             SharedPropertiesService: SharedPropertiesService
         });
@@ -92,10 +91,10 @@ describe("KanbanColumnController -", function() {
                 id: 8
             };
             SharedPropertiesService.getKanban.and.returnValue(current_kanban);
-            $target_element = affix('ul');
+            $target_element = affix("ul");
 
             source_column = {
-                id              : 69,
+                id: 69,
                 filtered_content: []
             };
             KanbanColumnController.column = source_column;
@@ -105,23 +104,21 @@ describe("KanbanColumnController -", function() {
 
         it("When I reorder an item in the same column, then the item will be reordered using DroppedService", function() {
             dropped_item = { id: 968 };
-            source_model = [
-                dropped_item,
-                { id: 482 }
-            ];
+            source_model = [dropped_item, { id: 482 }];
             target_model = null;
             target_index = 0;
-            compared_to  = {
-                direction: 'before',
-                item_id  : 482
+            compared_to = {
+                direction: "before",
+                item_id: 482
             };
-            angular.element($target_element).data('column-id', source_column.id);
+            angular.element($target_element).data("column-id", source_column.id);
 
             DroppedService.getComparedTo.and.returnValue(compared_to);
             DroppedService.reorderColumn.and.returnValue($q.when());
             ColumnCollectionService.getColumn.and.returnValue(source_column);
 
-            $scope.$emit('dragulardrop',
+            $scope.$emit(
+                "dragulardrop",
                 $dropped_item_element,
                 $target_element,
                 $source_element,
@@ -150,33 +147,29 @@ describe("KanbanColumnController -", function() {
                 compared_to
             );
 
-            expect($rootScope.$broadcast).toHaveBeenCalledWith('rebuild:kustom-scroll');
+            expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
         });
 
         it("When I move an item to the archive, then the item will be move using DroppedService", function() {
             dropped_item = { id: 655 };
-            source_model = [
-                { id: 338 }
-            ];
-            target_model = [
-                { id: 462 },
-                dropped_item
-            ];
+            source_model = [{ id: 338 }];
+            target_model = [{ id: 462 }, dropped_item];
             target_index = 1;
             compared_to = {
-                direction: 'after',
-                item_id  : 462
+                direction: "after",
+                item_id: 462
             };
             target_column = {
                 id: 23
             };
-            angular.element($target_element).data('column-id', target_column.id);
+            angular.element($target_element).data("column-id", target_column.id);
 
             DroppedService.getComparedTo.and.returnValue(compared_to);
             DroppedService.moveToColumn.and.returnValue($q.when());
             ColumnCollectionService.getColumn.and.returnValue(target_column);
 
-            $scope.$emit('dragulardrop',
+            $scope.$emit(
+                "dragulardrop",
                 $dropped_item_element,
                 $target_element,
                 $source_element,
@@ -206,7 +199,7 @@ describe("KanbanColumnController -", function() {
                 compared_to
             );
 
-            expect($rootScope.$broadcast).toHaveBeenCalledWith('rebuild:kustom-scroll');
+            expect($rootScope.$broadcast).toHaveBeenCalledWith("rebuild:kustom-scroll");
         });
     });
 
@@ -215,20 +208,18 @@ describe("KanbanColumnController -", function() {
             spyOn(ColumnCollectionService, "cancelWipEditionOnAllColumns");
             KanbanColumnController.dragularOptions().onInit();
 
-            $scope.$emit('dragulardrag');
+            $scope.$emit("dragulardrag");
 
             expect(ColumnCollectionService.cancelWipEditionOnAllColumns).toHaveBeenCalled();
         });
     });
 
     describe("isItemDraggable() -", function() {
-        var $element_to_drag,
-            $container,
-            $handle_element;
+        var $element_to_drag, $container, $handle_element;
 
         it("Given a handle element that had an ancestor with data-nodrag='true', when I check if it is draggable, then false will be returned", function() {
-            var $parent_element = affix('a[data-nodrag=true]');
-            $handle_element     = $parent_element.affix('span');
+            var $parent_element = affix("a[data-nodrag=true]");
+            $handle_element = $parent_element.affix("span");
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -240,7 +231,7 @@ describe("KanbanColumnController -", function() {
         });
 
         it("Given a handle element that had itself data-nodrag='true', when I check if it is draggable, then false will be returned", function() {
-            $handle_element = affix('div[data-nodrag=true]');
+            $handle_element = affix("div[data-nodrag=true]");
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -252,8 +243,8 @@ describe("KanbanColumnController -", function() {
         });
 
         it("Given a handle element that did not have any ancestor with data-nodrag='true', when I check if it is draggable, then true will be returned", function() {
-            var $parent_element = affix('div');
-            $handle_element     = $parent_element.affix('span');
+            var $parent_element = affix("div");
+            $handle_element = $parent_element.affix("span");
 
             var result = KanbanColumnController.dragularOptions().moves(
                 $element_to_drag,
@@ -269,7 +260,7 @@ describe("KanbanColumnController -", function() {
         it("Given that the column was loading items, then false will be returned", function() {
             KanbanColumnController.column = {
                 loading_items: true,
-                content      : []
+                content: []
             };
 
             var result = KanbanColumnController.isColumnLoadedAndEmpty();
@@ -280,9 +271,7 @@ describe("KanbanColumnController -", function() {
         it("Given that the column had some content in it, then false will be returned", function() {
             KanbanColumnController.column = {
                 loading_items: false,
-                content      : [
-                    { id: 573 }
-                ]
+                content: [{ id: 573 }]
             };
 
             var result = KanbanColumnController.isColumnLoadedAndEmpty();
@@ -293,7 +282,7 @@ describe("KanbanColumnController -", function() {
         it("Given that the column was not loading items and had no content in it, then true will be returned", function() {
             KanbanColumnController.column = {
                 loading_items: false,
-                content      : []
+                content: []
             };
 
             var result = KanbanColumnController.isColumnLoadedAndEmpty();

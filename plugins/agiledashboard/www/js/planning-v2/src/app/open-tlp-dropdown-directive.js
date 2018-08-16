@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown } from 'tlp';
+import { dropdown } from "tlp";
 
 export default function OpenTlpDropdown() {
     return {
-        restrict: 'A',
+        restrict: "A",
         link(scope, element) {
             dropdown(element[0]);
         }

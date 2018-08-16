@@ -21,34 +21,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(
     __dirname,
-    '../../../../src/www/assets/admindelegation/scripts'
+    "../../../../src/www/assets/admindelegation/scripts"
 );
 
 const webpack_config = {
     entry: {
-        'admin-delegation': './admindelegation.js'
+        "admin-delegation": "./admindelegation.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
     },
     resolve: {
         alias: {
-            tuleap: '../../../../src/www/scripts/tuleap/'
+            tuleap: "../../../../src/www/scripts/tuleap/"
         }
     },
     module: {
-        rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            )
-        ]
+        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
     },
     plugins: [webpack_configurator.getManifestPlugin()]
 };

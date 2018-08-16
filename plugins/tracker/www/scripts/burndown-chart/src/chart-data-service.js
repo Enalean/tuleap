@@ -17,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFormattedDates } from 'charts-builders/chart-dates-service.js';
+import { getFormattedDates } from "charts-builders/chart-dates-service.js";
 
-export {
-    getLastDayData,
-    getDisplayableData,
-};
+export { getLastDayData, getDisplayableData };
 
 function getLastDayData(dataset) {
-    if (! dataset.length) {
+    if (!dataset.length) {
         return {};
     }
 
-    return dataset[ dataset.length - 1 ];
+    return dataset[dataset.length - 1];
 }
 
 function getDisplayableData(dataset) {

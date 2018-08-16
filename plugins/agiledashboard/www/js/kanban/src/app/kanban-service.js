@@ -1,14 +1,14 @@
 export default KanbanService;
 
 KanbanService.$inject = [
-    'Restangular',
-    '$http',
-    '$q',
-    '$window',
-    'gettextCatalog',
-    'SharedPropertiesService',
-    'RestErrorService',
-    'FilterTrackerReportService'
+    "Restangular",
+    "$http",
+    "$q",
+    "$window",
+    "gettextCatalog",
+    "SharedPropertiesService",
+    "RestErrorService",
+    "FilterTrackerReportService"
 ];
 
 function KanbanService(
@@ -22,7 +22,7 @@ function KanbanService(
     FilterTrackerReportService
 ) {
     Object.assign(Restangular.configuration.defaultHeaders, {
-        'X-Client-UUID': SharedPropertiesService.getUUID()
+        "X-Client-UUID": SharedPropertiesService.getUUID()
     });
 
     return {
@@ -53,16 +53,15 @@ function KanbanService(
         editColumn,
         updateKanbanName,
         removeKanban,
-        updateSelectableReports,
+        updateSelectableReports
     };
 
     function getKanban(id) {
         var data = $q.defer();
 
-        Restangular
-            .one('kanban', id)
+        Restangular.one("kanban", id)
             .get()
-            .then(function (response) {
+            .then(function(response) {
                 data.resolve(response.data);
             });
 
@@ -70,7 +69,7 @@ function KanbanService(
     }
 
     function getBacklog(id, limit, offset) {
-        const data       = $q.defer();
+        const data = $q.defer();
         let query_params = {
             limit: limit,
             offset: offset
@@ -78,14 +77,13 @@ function KanbanService(
 
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        Restangular
-            .one('kanban', id)
-            .one('backlog')
+        Restangular.one("kanban", id)
+            .one("backlog")
             .get(query_params)
-            .then(function (response) {
+            .then(function(response) {
                 var result = {
-                    results : augmentItems(response.data.collection),
-                    total   : response.headers('X-PAGINATION-SIZE')
+                    results: augmentItems(response.data.collection),
+                    total: response.headers("X-PAGINATION-SIZE")
                 };
 
                 data.resolve(result);
@@ -98,18 +96,17 @@ function KanbanService(
         let query_params = {};
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        return Restangular
-            .one('kanban', kanban_id)
-            .one('backlog')
+        return Restangular.one("kanban", kanban_id)
+            .one("backlog")
             .head(query_params)
             .then(response => {
                 var headers = response.headers();
-                return parseInt(headers['x-pagination-size'], 10);
+                return parseInt(headers["x-pagination-size"], 10);
             });
     }
 
     function getArchive(id, limit, offset) {
-        const data       = $q.defer();
+        const data = $q.defer();
         let query_params = {
             limit: limit,
             offset: offset
@@ -117,14 +114,13 @@ function KanbanService(
 
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        Restangular
-            .one('kanban', id)
-            .one('archive')
+        Restangular.one("kanban", id)
+            .one("archive")
             .get(query_params)
-            .then(function (response) {
+            .then(function(response) {
                 var result = {
                     results: augmentItems(response.data.collection),
-                    total: response.headers('X-PAGINATION-SIZE')
+                    total: response.headers("X-PAGINATION-SIZE")
                 };
 
                 data.resolve(result);
@@ -137,18 +133,17 @@ function KanbanService(
         let query_params = {};
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        return Restangular
-            .one('kanban', kanban_id)
-            .one('archive')
+        return Restangular.one("kanban", kanban_id)
+            .one("archive")
             .head(query_params)
             .then(response => {
                 var headers = response.headers();
-                return parseInt(headers['x-pagination-size'], 10);
+                return parseInt(headers["x-pagination-size"], 10);
             });
     }
 
     function getItems(id, column_id, limit, offset) {
-        const data       = $q.defer();
+        const data = $q.defer();
         let query_params = {
             column_id: column_id,
             limit: limit,
@@ -157,14 +152,13 @@ function KanbanService(
 
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        Restangular
-            .one('kanban', id)
-            .one('items')
+        Restangular.one("kanban", id)
+            .one("items")
             .get(query_params)
-            .then(function (response) {
+            .then(function(response) {
                 var result = {
                     results: augmentItems(response.data.collection),
-                    total: response.headers('X-PAGINATION-SIZE')
+                    total: response.headers("X-PAGINATION-SIZE")
                 };
 
                 data.resolve(result);
@@ -179,19 +173,18 @@ function KanbanService(
         };
         augmentQueryParamsWithFilterTrackerReport(query_params);
 
-        return Restangular
-            .one('kanban', kanban_id)
-            .one('items')
+        return Restangular.one("kanban", kanban_id)
+            .one("items")
             .head(query_params)
             .then(response => {
                 var headers = response.headers();
-                return parseInt(headers['x-pagination-size'], 10);
+                return parseInt(headers["x-pagination-size"], 10);
             });
     }
 
     function augmentItems(collection) {
         var is_collapsed = SharedPropertiesService.doesUserPrefersCompactCards();
-        collection.forEach(function (item) {
+        collection.forEach(function(item) {
             item.is_collapsed = is_collapsed;
         });
 
@@ -199,19 +192,22 @@ function KanbanService(
     }
 
     function reorderColumn(kanban_id, column_id, dropped_item_id, compared_to) {
-        return Restangular.one('kanban', kanban_id)
-            .all('items')
-            .patch({
-                order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
-            }, {
-                column_id: column_id
-            })
+        return Restangular.one("kanban", kanban_id)
+            .all("items")
+            .patch(
+                {
+                    order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
+                },
+                {
+                    column_id: column_id
+                }
+            )
             .catch(catchRestError);
     }
 
     function reorderBacklog(kanban_id, dropped_item_id, compared_to) {
-        return Restangular.one('kanban', kanban_id)
-            .all('backlog')
+        return Restangular.one("kanban", kanban_id)
+            .all("backlog")
             .patch({
                 order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
             })
@@ -219,8 +215,8 @@ function KanbanService(
     }
 
     function reorderArchive(kanban_id, dropped_item_id, compared_to) {
-        return Restangular.one('kanban', kanban_id)
-            .all('archive')
+        return Restangular.one("kanban", kanban_id)
+            .all("archive")
             .patch({
                 order: getOrderArgumentsFromComparedTo(dropped_item_id, compared_to)
             })
@@ -238,8 +234,8 @@ function KanbanService(
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
-        return Restangular.one('kanban', kanban_id)
-            .all('backlog')
+        return Restangular.one("kanban", kanban_id)
+            .all("backlog")
             .patch(patch_arguments)
             .catch(catchRestError);
     }
@@ -255,8 +251,8 @@ function KanbanService(
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
-        return Restangular.one('kanban', kanban_id)
-            .all('archive')
+        return Restangular.one("kanban", kanban_id)
+            .all("archive")
             .patch(patch_arguments)
             .catch(catchRestError);
     }
@@ -272,35 +268,32 @@ function KanbanService(
             patch_arguments.order = getOrderArgumentsFromComparedTo(dropped_item_id, compared_to);
         }
 
-        return Restangular.one('kanban', kanban_id)
-            .all('items')
-            .patch(
-                patch_arguments,
-                { column_id: column_id }
-            )
+        return Restangular.one("kanban", kanban_id)
+            .all("items")
+            .patch(patch_arguments, { column_id: column_id })
             .catch(catchRestError);
     }
 
     function getOrderArgumentsFromComparedTo(dropped_item_id, compared_to) {
         return {
-            ids        : [dropped_item_id],
-            direction  : compared_to.direction,
+            ids: [dropped_item_id],
+            direction: compared_to.direction,
             compared_to: compared_to.item_id
         };
     }
 
     function updateKanbanLabel(kanban_id, kanban_label) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             label: kanban_label
         });
     }
 
     function deleteKanban(kanban_id) {
-        return Restangular.one('kanban', kanban_id).remove();
+        return Restangular.one("kanban", kanban_id).remove();
     }
 
     function expandColumn(kanban_id, column_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_column: {
                 column_id: column_id,
                 value: false
@@ -309,7 +302,7 @@ function KanbanService(
     }
 
     function collapseColumn(kanban_id, column_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_column: {
                 column_id: column_id,
                 value: true
@@ -318,61 +311,57 @@ function KanbanService(
     }
 
     function expandBacklog(kanban_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_backlog: false
         });
     }
 
     function collapseBacklog(kanban_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_backlog: true
         });
     }
 
     function expandArchive(kanban_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_archive: false
         });
     }
 
     function collapseArchive(kanban_id) {
-        return Restangular.one('kanban', kanban_id).patch({
+        return Restangular.one("kanban", kanban_id).patch({
             collapse_archive: true
         });
     }
 
     function addColumn(kanban_id, column_label) {
-        return Restangular
-            .one('kanban', kanban_id)
-            .post('columns', {
-                label: column_label
-            });
+        return Restangular.one("kanban", kanban_id).post("columns", {
+            label: column_label
+        });
     }
 
     function reorderColumns(kanban_id, sorted_columns_ids) {
-        return Restangular
-            .one('kanban', kanban_id)
-            .all('columns')
+        return Restangular.one("kanban", kanban_id)
+            .all("columns")
             .customPUT(sorted_columns_ids);
     }
 
     function removeColumn(kanban_id, column_id) {
-        return Restangular
-            .one('kanban_columns', column_id)
-            .remove({
-                kanban_id: kanban_id
-            });
+        return Restangular.one("kanban_columns", column_id).remove({
+            kanban_id: kanban_id
+        });
     }
 
     function editColumn(kanban_id, column) {
-        return Restangular
-            .one('kanban_columns', column.id)
-            .patch({
-                label    : column.label,
+        return Restangular.one("kanban_columns", column.id).patch(
+            {
+                label: column.label,
                 wip_limit: column.limit_input || 0
-            }, {
+            },
+            {
                 kanban_id: kanban_id
-            });
+            }
+        );
     }
 
     function catchRestError(data) {
@@ -386,12 +375,12 @@ function KanbanService(
     }
 
     function removeKanban() {
-        var message = gettextCatalog.getString(
-            'Kanban {{ label }} successfuly deleted',
-            { label: SharedPropertiesService.getKanban().label }
-        );
-        $window.sessionStorage.setItem('tuleap_feedback', message);
-        $window.location.href = '/plugins/agiledashboard/?group_id=' + SharedPropertiesService.getProjectId();
+        var message = gettextCatalog.getString("Kanban {{ label }} successfuly deleted", {
+            label: SharedPropertiesService.getKanban().label
+        });
+        $window.sessionStorage.setItem("tuleap_feedback", message);
+        $window.location.href =
+            "/plugins/agiledashboard/?group_id=" + SharedPropertiesService.getProjectId();
     }
 
     function augmentQueryParamsWithFilterTrackerReport(query_params) {
@@ -403,7 +392,7 @@ function KanbanService(
     }
 
     function updateSelectableReports(kanban_id, selectable_report_ids) {
-        return $http.put('/api/v1/kanban/' + kanban_id + '/tracker_reports', {
+        return $http.put("/api/v1/kanban/" + kanban_id + "/tracker_reports", {
             tracker_report_ids: selectable_report_ids
         });
     }

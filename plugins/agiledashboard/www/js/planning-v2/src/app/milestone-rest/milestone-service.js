@@ -1,47 +1,42 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default MilestoneService;
 
-MilestoneService.$inject = [
-    'Restangular',
-    'BacklogItemFactory'
-];
+MilestoneService.$inject = ["Restangular", "BacklogItemFactory"];
 
-function MilestoneService(
-    Restangular,
-    BacklogItemFactory
-) {
+function MilestoneService(Restangular, BacklogItemFactory) {
     var self = this,
         rest = Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl('/api/v1');
+            RestangularConfigurer.setBaseUrl("/api/v1");
         });
 
     _.extend(self, {
-        milestone_content_pagination : { limit: 50, offset: 0 },
-        getMilestone                 : getMilestone,
-        getOpenMilestones            : getOpenMilestones,
-        getOpenSubMilestones         : getOpenSubMilestones,
-        getClosedMilestones          : getClosedMilestones,
-        getClosedSubMilestones       : getClosedSubMilestones,
-        putSubMilestones             : putSubMilestones,
-        patchSubMilestones           : patchSubMilestones,
-        getContent                   : getContent,
-        reorderBacklog               : reorderBacklog,
-        removeAddReorderToBacklog    : removeAddReorderToBacklog,
-        removeAddToBacklog           : removeAddToBacklog,
-        reorderContent               : reorderContent,
-        addReorderToContent          : addReorderToContent,
-        addToContent                 : addToContent,
-        removeAddReorderToContent    : removeAddReorderToContent,
-        removeAddToContent           : removeAddToContent,
-        updateInitialEffort          : updateInitialEffort,
+        milestone_content_pagination: { limit: 50, offset: 0 },
+        getMilestone: getMilestone,
+        getOpenMilestones: getOpenMilestones,
+        getOpenSubMilestones: getOpenSubMilestones,
+        getClosedMilestones: getClosedMilestones,
+        getClosedSubMilestones: getClosedSubMilestones,
+        putSubMilestones: putSubMilestones,
+        patchSubMilestones: patchSubMilestones,
+        getContent: getContent,
+        reorderBacklog: reorderBacklog,
+        removeAddReorderToBacklog: removeAddReorderToBacklog,
+        removeAddToBacklog: removeAddToBacklog,
+        reorderContent: reorderContent,
+        addReorderToContent: addReorderToContent,
+        addToContent: addToContent,
+        removeAddReorderToContent: removeAddReorderToContent,
+        removeAddToContent: removeAddToContent,
+        updateInitialEffort: updateInitialEffort,
         defineAllowedBacklogItemTypes: defineAllowedBacklogItemTypes,
-        augmentMilestone             : augmentMilestone
+        augmentMilestone: augmentMilestone
     });
 
     function getMilestone(milestone_id, scope_items) {
-        var promise = rest.one('milestones', milestone_id)
+        var promise = rest
+            .one("milestones", milestone_id)
             .get()
             .then(function(response) {
                 defineAllowedBacklogItemTypes(response.data);
@@ -58,32 +53,49 @@ function MilestoneService(
     }
 
     function getOpenMilestones(project_id, limit, offset, scope_items) {
-        return getMilestones('projects', project_id, limit, offset, 'desc', 'open', scope_items);
+        return getMilestones("projects", project_id, limit, offset, "desc", "open", scope_items);
     }
 
     function getOpenSubMilestones(milestone_id, limit, offset, scope_items) {
-        return getMilestones('milestones', milestone_id, limit, offset, 'desc', 'open', scope_items);
+        return getMilestones(
+            "milestones",
+            milestone_id,
+            limit,
+            offset,
+            "desc",
+            "open",
+            scope_items
+        );
     }
 
     function getClosedMilestones(project_id, limit, offset, scope_items) {
-        return getMilestones('projects', project_id, limit, offset, 'desc', 'closed', scope_items);
+        return getMilestones("projects", project_id, limit, offset, "desc", "closed", scope_items);
     }
 
     function getClosedSubMilestones(milestone_id, limit, offset, scope_items) {
-        return getMilestones('milestones', milestone_id, limit, offset, 'desc', 'closed', scope_items);
+        return getMilestones(
+            "milestones",
+            milestone_id,
+            limit,
+            offset,
+            "desc",
+            "closed",
+            scope_items
+        );
     }
 
     function getMilestones(parent_type, parent_id, limit, offset, order, status, scope_items) {
-        var promise = rest.one(parent_type, parent_id)
-            .all('milestones')
+        var promise = rest
+            .one(parent_type, parent_id)
+            .all("milestones")
             .getList({
-                limit : limit,
+                limit: limit,
                 offset: offset,
-                order : order,
-                query : {
+                order: order,
+                query: {
                     status: status
                 },
-                fields: 'slim'
+                fields: "slim"
             })
             .then(function(response) {
                 _.forEach(response.data, function(milestone) {
@@ -92,7 +104,7 @@ function MilestoneService(
 
                 var result = {
                     results: response.data,
-                    total  : response.headers('X-PAGINATION-SIZE')
+                    total: response.headers("X-PAGINATION-SIZE")
                 };
 
                 return result;
@@ -102,19 +114,19 @@ function MilestoneService(
     }
 
     function putSubMilestones(milestone_id, submilestone_ids) {
-        return rest.one('milestones', milestone_id)
-            .customPUT(
+        return rest.one("milestones", milestone_id).customPUT(
             {
-                id : milestone_id,
+                id: milestone_id,
                 ids: submilestone_ids
             },
-            'milestones'
-            );
+            "milestones"
+        );
     }
 
     function patchSubMilestones(milestone_id, submilestone_ids) {
-        return rest.one('milestones', milestone_id)
-            .all('milestones')
+        return rest
+            .one("milestones", milestone_id)
+            .all("milestones")
             .patch({
                 add: _.map(submilestone_ids, function(submilestone_id) {
                     return {
@@ -125,16 +137,17 @@ function MilestoneService(
     }
 
     function getContent(milestone_id, limit, offset) {
-        var promise = rest.one('milestones', milestone_id)
-            .all('content')
+        var promise = rest
+            .one("milestones", milestone_id)
+            .all("content")
             .getList({
-                limit : limit,
+                limit: limit,
                 offset: offset
             })
             .then(function(response) {
                 var result = {
                     results: response.data,
-                    total  : response.headers('X-PAGINATION-SIZE')
+                    total: response.headers("X-PAGINATION-SIZE")
                 };
 
                 return result;
@@ -153,13 +166,16 @@ function MilestoneService(
         }
 
         function addContentDataToMilestone(milestone) {
-            milestone.content       = [];
+            milestone.content = [];
             milestone.initialEffort = 0;
-            milestone.getContent    = function() {
+            milestone.getContent = function() {
                 milestone.loadingContent = true;
-                milestone.alreadyLoaded  = true;
+                milestone.alreadyLoaded = true;
 
-                return fetchMilestoneContent(self.milestone_content_pagination.limit, self.milestone_content_pagination.offset);
+                return fetchMilestoneContent(
+                    self.milestone_content_pagination.limit,
+                    self.milestone_content_pagination.offset
+                );
             };
 
             function fetchMilestoneContent(limit, offset) {
@@ -173,7 +189,7 @@ function MilestoneService(
 
                     updateInitialEffort(milestone);
 
-                    if ((limit + offset) < data.total) {
+                    if (limit + offset < data.total) {
                         return fetchMilestoneContent(limit, offset + limit);
                     } else {
                         milestone.loadingContent = false;
@@ -200,18 +216,18 @@ function MilestoneService(
 
     function defineAllowedBacklogItemTypes(milestone) {
         const allowed_trackers = milestone.resources.backlog.accept.trackers;
-        const parent_trackers  = milestone.resources.backlog.accept.parent_trackers;
+        const parent_trackers = milestone.resources.backlog.accept.parent_trackers;
 
         milestone.backlog_accepted_types = {
-            content : allowed_trackers,
+            content: allowed_trackers,
             parent_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {
-                    accept.push('trackerId' + allowed_tracker.id);
+                    accept.push("trackerId" + allowed_tracker.id);
                 });
 
-                return accept.join('|');
+                return accept.join("|");
             }
         };
     }
@@ -220,42 +236,49 @@ function MilestoneService(
         var allowed_trackers = milestone.resources.content.accept.trackers;
 
         milestone.content_accepted_types = {
-            content : allowed_trackers,
+            content: allowed_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {
-                    accept.push('trackerId' + allowed_tracker.id);
+                    accept.push("trackerId" + allowed_tracker.id);
                 });
 
-                return accept.join('|');
+                return accept.join("|");
             }
         };
     }
 
     function reorderBacklog(milestone_id, dropped_item_ids, compared_to) {
-        return rest.one('milestones', milestone_id)
-            .all('backlog')
+        return rest
+            .one("milestones", milestone_id)
+            .all("backlog")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 }
             });
     }
 
-    function removeAddReorderToBacklog(source_milestone_id, dest_milestone_id, dropped_item_ids, compared_to) {
-        return rest.one('milestones', dest_milestone_id)
-            .all('backlog')
+    function removeAddReorderToBacklog(
+        source_milestone_id,
+        dest_milestone_id,
+        dropped_item_ids,
+        compared_to
+    ) {
+        return rest
+            .one("milestones", dest_milestone_id)
+            .all("backlog")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: source_milestone_id
                     };
                 })
@@ -263,12 +286,13 @@ function MilestoneService(
     }
 
     function removeAddToBacklog(source_milestone_id, dest_milestone_id, dropped_item_ids) {
-        return rest.one('milestones', dest_milestone_id)
-            .all('backlog')
+        return rest
+            .one("milestones", dest_milestone_id)
+            .all("backlog")
             .patch({
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: source_milestone_id
                     };
                 })
@@ -276,24 +300,26 @@ function MilestoneService(
     }
 
     function reorderContent(milestone_id, dropped_item_ids, compared_to) {
-        return rest.one('milestones', milestone_id)
-            .all('content')
+        return rest
+            .one("milestones", milestone_id)
+            .all("content")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 }
             });
     }
 
     function addReorderToContent(milestone_id, dropped_item_ids, compared_to) {
-        return rest.one('milestones', milestone_id)
-            .all('content')
+        return rest
+            .one("milestones", milestone_id)
+            .all("content")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
@@ -303,8 +329,9 @@ function MilestoneService(
     }
 
     function addToContent(milestone_id, dropped_item_ids) {
-        return rest.one('milestones', milestone_id)
-            .all('content')
+        return rest
+            .one("milestones", milestone_id)
+            .all("content")
             .patch({
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return { id: dropped_item_id };
@@ -312,18 +339,24 @@ function MilestoneService(
             });
     }
 
-    function removeAddReorderToContent(source_milestone_id, dest_milestone_id, dropped_item_ids, compared_to) {
-        return rest.one('milestones', dest_milestone_id)
-            .all('content')
+    function removeAddReorderToContent(
+        source_milestone_id,
+        dest_milestone_id,
+        dropped_item_ids,
+        compared_to
+    ) {
+        return rest
+            .one("milestones", dest_milestone_id)
+            .all("content")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: source_milestone_id
                     };
                 })
@@ -331,12 +364,13 @@ function MilestoneService(
     }
 
     function removeAddToContent(source_milestone_id, dest_milestone_id, dropped_item_ids) {
-        return rest.one('milestones', dest_milestone_id)
-            .all('content')
+        return rest
+            .one("milestones", dest_milestone_id)
+            .all("content")
             .patch({
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: source_milestone_id
                     };
                 })

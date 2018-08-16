@@ -1,29 +1,23 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default MilestoneCollectionService;
 
-MilestoneCollectionService.$inject = [
-    'MilestoneService',
-    'BacklogItemCollectionService'
-];
+MilestoneCollectionService.$inject = ["MilestoneService", "BacklogItemCollectionService"];
 
-function MilestoneCollectionService(
-    MilestoneService,
-    BacklogItemCollectionService
-) {
+function MilestoneCollectionService(MilestoneService, BacklogItemCollectionService) {
     var self = this;
     _.extend(self, {
         milestones: {
-            content                       : [],
-            loading                       : false,
-            open_milestones_fully_loaded  : false,
+            content: [],
+            loading: false,
+            open_milestones_fully_loaded: false,
             closed_milestones_fully_loaded: false,
-            open_milestones_pagination    : { limit: 50, offset: 0 },
-            closed_milestones_pagination  : { limit: 50, offset: 0 }
+            open_milestones_pagination: { limit: 50, offset: 0 },
+            closed_milestones_pagination: { limit: 50, offset: 0 }
         },
-        getMilestone                              : getMilestone,
-        refreshMilestone                          : refreshMilestone,
-        removeBacklogItemsFromMilestoneContent    : removeBacklogItemsFromMilestoneContent,
+        getMilestone: getMilestone,
+        refreshMilestone: refreshMilestone,
+        removeBacklogItemsFromMilestoneContent: removeBacklogItemsFromMilestoneContent,
         addOrReorderBacklogItemsInMilestoneContent: addOrReorderBacklogItemsInMilestoneContent
     });
 
@@ -42,12 +36,19 @@ function MilestoneCollectionService(
     function removeBacklogItemsFromMilestoneContent(milestone_id, backlog_items) {
         var milestone = getMilestone(milestone_id);
 
-        BacklogItemCollectionService.removeBacklogItemsFromCollection(milestone.content, backlog_items);
+        BacklogItemCollectionService.removeBacklogItemsFromCollection(
+            milestone.content,
+            backlog_items
+        );
     }
 
     function addOrReorderBacklogItemsInMilestoneContent(milestone_id, backlog_items, compared_to) {
         var milestone = getMilestone(milestone_id);
 
-        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(milestone.content, backlog_items, compared_to);
+        BacklogItemCollectionService.addOrReorderBacklogItemsInCollection(
+            milestone.content,
+            backlog_items,
+            compared_to
+        );
     }
 }

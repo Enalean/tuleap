@@ -1,29 +1,23 @@
-import { dropdown } from 'tlp';
+import { dropdown } from "tlp";
 
 export default AddToDashboardController;
 
-AddToDashboardController.$inject = [
-    '$element',
-    'SharedPropertiesService',
-];
+AddToDashboardController.$inject = ["$element", "SharedPropertiesService"];
 
-function AddToDashboardController(
-    $element,
-    SharedPropertiesService
-) {
+function AddToDashboardController($element, SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
-        $onInit           : init,
+        $onInit: init,
         dashboard_dropdown: SharedPropertiesService.getDashboardDropdown(),
-        report_id         : SharedPropertiesService.getSelectedTrackerReportId(),
+        report_id: SharedPropertiesService.getSelectedTrackerReportId(),
 
         showProjectDashboards,
         showDashboardDropdown
     });
 
     function init() {
-        const dashboard_dropdown = $element[0].querySelector('#dashboard-dropdown-button');
+        const dashboard_dropdown = $element[0].querySelector("#dashboard-dropdown-button");
         if (dashboard_dropdown) {
             dropdown(dashboard_dropdown);
         }
@@ -34,7 +28,7 @@ function AddToDashboardController(
     }
 
     function showDashboardDropdown() {
-        return ! userIsOnWdiget();
+        return !userIsOnWdiget();
     }
 
     function userIsOnWdiget() {

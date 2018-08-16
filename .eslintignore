@@ -6,9 +6,6 @@
 **/dist/*
 **/node_modules/*
 **/vendor/*
-plugins/mediawiki/www/
-plugins/tests/www/bootstrap/
-plugins/tests/www/jquery-hotkeys/
 src/common/wiki/phpwiki/
 src/www/api/explorer/
 src/www/scripts/bootstrap/
@@ -30,4 +27,7 @@ src/www/scripts/tablekit/
 src/www/scripts/textboxlist/
 src/www/scripts/vendor/
 src/www/themes/common/tlp/doc/codemirror/
+src/www/themes/common/tlp/src/vendor-i18n/
 src/www/viewportchecker/
+tests/simpletest/common/include/_fixtures
+plugins/mediawiki/www/

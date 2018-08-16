@@ -17,9 +17,9 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-(function () {
-    'use strict';
+(function() {
+    "use strict";
 
-    var user_logging_date_picker_element = document.getElementById('user-logging-date-picker');
+    var user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
     tlp.datePicker(user_logging_date_picker_element);
-} ());
+})();

@@ -17,21 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    get,
-    patch,
-    put,
-    post,
-    recursiveGet,
-    options
-};
+export { get, patch, put, post, recursiveGet, options };
 
 async function get(input, init = {}) {
-    const method = 'GET';
-    const {
-        credentials = 'same-origin',
-        params
-    } = init;
+    const method = "GET";
+    const { credentials = "same-origin", params } = init;
 
     let url = input;
     if (params) {
@@ -46,33 +36,27 @@ async function get(input, init = {}) {
     return checkResponse(response);
 }
 
-const encodeAllParamsToURI = (params) => {
-    let url_params = '';
+const encodeAllParamsToURI = params => {
+    let url_params = "";
     const [first_param, ...other_params] = Object.entries(params);
 
-    url_params += '?' + encodeParamToURI(first_param);
+    url_params += "?" + encodeParamToURI(first_param);
 
     for (const param of other_params) {
-        url_params += '&' + encodeParamToURI(param);
+        url_params += "&" + encodeParamToURI(param);
     }
 
     return url_params;
 };
 
 const encodeParamToURI = ([key, value]) => {
-    return encodeURIComponent(key) + '=' + encodeURIComponent(value);
+    return encodeURIComponent(key) + "=" + encodeURIComponent(value);
 };
 
 async function recursiveGet(input, init = {}) {
-    const {
-        params,
-        getCollectionCallback = (json) => [].concat(json)
-    } = init;
+    const { params, getCollectionCallback = json => [].concat(json) } = init;
 
-    const {
-        limit = 100,
-        offset = 0
-    } = params;
+    const { limit = 100, offset = 0 } = params;
 
     const response = await get(input, {
         ...init,
@@ -82,10 +66,10 @@ async function recursiveGet(input, init = {}) {
             offset
         }
     });
-    const json    = await response.json();
+    const json = await response.json();
     const results = getCollectionCallback(json);
 
-    const total      = Number.parseInt(response.headers.get('X-PAGINATION-SIZE'), 10);
+    const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
     const new_offset = offset + limit;
 
     if (new_offset >= total) {
@@ -105,29 +89,29 @@ async function recursiveGet(input, init = {}) {
 }
 
 function put(input, init = {}) {
-    const method = 'PUT',
-        { credentials = 'same-origin' } = init;
+    const method = "PUT",
+        { credentials = "same-origin" } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
 }
 
-function patch (input, init = {}) {
-    const method = 'PATCH',
-        { credentials = 'same-origin' } = init;
+function patch(input, init = {}) {
+    const method = "PATCH",
+        { credentials = "same-origin" } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
 }
 
 function post(input, init = {}) {
-    const method = 'POST',
-        { credentials = 'same-origin' } = init;
+    const method = "POST",
+        { credentials = "same-origin" } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
 }
 
 function options(input, init = {}) {
-    const method = 'OPTIONS',
-        { credentials = 'same-origin' } = init;
+    const method = "OPTIONS",
+        { credentials = "same-origin" } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);
 }

@@ -21,14 +21,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                  from 'vue';
-import NewsPermissions      from './BaseNewsPermissions.vue';
-import { gettext_provider } from './gettext-provider.js';
+import Vue from "vue";
+import NewsPermissions from "./BaseNewsPermissions.vue";
+import { gettext_provider } from "./gettext-provider.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_point = document.getElementById('news-permission-per-group');
-    const rootComponent   = Vue.extend(NewsPermissions);
-    const locale          = document.body.dataset.userLocale;
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_point = document.getElementById("news-permission-per-group");
+    const rootComponent = Vue.extend(NewsPermissions);
+    const locale = document.body.dataset.userLocale;
 
     gettext_provider.setLocale(locale);
 

@@ -1,9 +1,7 @@
-import angular from 'angular';
+import angular from "angular";
 
-import focusOnClickDirective from './focus-on-click-directive.js';
+import focusOnClickDirective from "./focus-on-click-directive.js";
 
-angular.module('tuleap-focus', [
-])
-.directive('tuleapFocusOnClick', focusOnClickDirective);
+angular.module("tuleap-focus", []).directive("tuleapFocusOnClick", focusOnClickDirective);
 
-export default 'tuleap-focus';
+export default "tuleap-focus";

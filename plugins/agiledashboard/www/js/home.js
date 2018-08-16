@@ -34,9 +34,9 @@
             burndown.display(d3.select("#" + placeholder));
         });
 
-        var height = $('#home').css('height');
-        $('.kanban-block').css('min-height', height);
+        var height = $("#home").css("height");
+        $(".kanban-block").css("min-height", height);
 
-        $('#add_kanban_button').tooltip();
+        $("#add_kanban_button").tooltip();
     });
 })(window.jQuery);

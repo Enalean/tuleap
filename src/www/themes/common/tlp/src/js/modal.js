@@ -17,37 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const TRANSITION_DURATION            = 300;
-const ESCAPE_CODE                    = 27;
+const TRANSITION_DURATION = 300;
+const ESCAPE_CODE = 27;
 
-const EVENT_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
-const EVENT_TLP_MODAL_HIDDEN         = 'tlp-modal-hidden';
+const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
+const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
 
-const CLASS_TLP_MODAL_SHOWN          = 'tlp-modal-shown';
-const CLASS_TLP_MODAL_BACKDROP_SHOWN = 'tlp-modal-backdrop-shown';
-const CLASS_TLP_MODAL_DISPLAY        = 'tlp-modal-display';
+const CLASS_TLP_MODAL_SHOWN = "tlp-modal-shown";
+const CLASS_TLP_MODAL_BACKDROP_SHOWN = "tlp-modal-backdrop-shown";
+const CLASS_TLP_MODAL_DISPLAY = "tlp-modal-display";
 
-const ID_TLP_MODAL_BACKDROP          = 'tlp-modal-backdrop';
+const ID_TLP_MODAL_BACKDROP = "tlp-modal-backdrop";
 
 export default (element, options) => new Modal(element, options);
 
 class Modal {
     constructor(element, options = { keyboard: true }) {
-        const {
-            keyboard        = true,
-            destroy_on_hide = false
-        } = options;
+        const { keyboard = true, destroy_on_hide = false } = options;
         this.body_element = document.body;
-        this.element      = element;
-        this.is_shown     = false;
-        this.options      = {
+        this.element = element;
+        this.is_shown = false;
+        this.options = {
             keyboard,
             destroy_on_hide
         };
-        this.shown_event        = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {detail: { target: this.element}});
-        this.hidden_event       = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {detail: { target: this.element}});
-        this.event_listeners    = [];
-        this.eventHandler       = new ModalEventHandler(this);
+        this.shown_event = new CustomEvent(EVENT_TLP_MODAL_SHOWN, {
+            detail: { target: this.element }
+        });
+        this.hidden_event = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {
+            detail: { target: this.element }
+        });
+        this.event_listeners = [];
+        this.eventHandler = new ModalEventHandler(this);
         this.listenCloseEvents();
     }
 
@@ -86,14 +87,14 @@ class Modal {
     }
 
     addBackdrop() {
-        this.backdrop_element    = document.createElement('div');
+        this.backdrop_element = document.createElement("div");
         this.backdrop_element.id = ID_TLP_MODAL_BACKDROP;
         this.body_element.appendChild(this.backdrop_element);
 
         reflowElement(this.backdrop_element);
 
         this.backdrop_element.classList.add(CLASS_TLP_MODAL_BACKDROP_SHOWN);
-        this.backdrop_element.addEventListener('click', () => {
+        this.backdrop_element.addEventListener("click", () => {
             this.hide();
         });
     }
@@ -108,21 +109,21 @@ class Modal {
 
     listenCloseEvents() {
         this.close_elements.forEach(close_element => {
-            close_element.addEventListener('click', this.eventHandler);
+            close_element.addEventListener("click", this.eventHandler);
         });
 
         if (this.options.keyboard) {
-            document.addEventListener('keyup', this.eventHandler);
+            document.addEventListener("keyup", this.eventHandler);
         }
     }
 
     destroy() {
         this.close_elements.forEach(close_element => {
-            close_element.removeEventListener('click', this.eventHandler);
+            close_element.removeEventListener("click", this.eventHandler);
         });
 
         if (this.options.keyboard) {
-            document.removeEventListener('keyup', this.eventHandler);
+            document.removeEventListener("keyup", this.eventHandler);
         }
     }
 
@@ -148,10 +149,10 @@ class Modal {
     }
 
     get close_elements() {
-        let children       = this.element.querySelectorAll('[data-dismiss="modal"]');
+        let children = this.element.querySelectorAll('[data-dismiss="modal"]');
         let close_elements = [];
 
-        [].forEach.call(children, (child) => {
+        [].forEach.call(children, child => {
             close_elements.push(child);
         });
 
@@ -169,9 +170,9 @@ class ModalEventHandler {
     }
 
     handleEvent(event) {
-        if (event.type === 'click') {
+        if (event.type === "click") {
             this.closeElementCallback();
-        } else if (event.type === 'keyup') {
+        } else if (event.type === "keyup") {
             this.keyupCallback(event);
         }
     }
@@ -186,7 +187,7 @@ class ModalEventHandler {
         }
 
         let tag_name = event.target.tagName.toUpperCase();
-        if (tag_name === 'INPUT' || tag_name === 'SELECT' || tag_name === 'TEXTAREA') {
+        if (tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA") {
             return;
         }
 

@@ -1,29 +1,29 @@
 export default function SharedPropertiesService() {
     var property = {
-        user_id              : undefined,
-        view_mode            : undefined,
-        project_id           : undefined,
-        milestone_id         : undefined,
-        milestone            : undefined,
+        user_id: undefined,
+        view_mode: undefined,
+        project_id: undefined,
+        milestone_id: undefined,
+        milestone: undefined,
         initial_backlog_items: undefined,
-        initial_milestones   : undefined
+        initial_milestones: undefined
     };
 
     return {
-        getUserId             : getUserId,
-        setUserId             : setUserId,
-        getViewMode           : getViewMode,
-        setViewMode           : setViewMode,
-        getProjectId          : getProjectId,
-        setProjectId          : setProjectId,
-        getMilestoneId        : getMilestoneId,
-        setMilestoneId        : setMilestoneId,
-        getMilestone          : getMilestone,
-        setMilestone          : setMilestone,
+        getUserId: getUserId,
+        setUserId: setUserId,
+        getViewMode: getViewMode,
+        setViewMode: setViewMode,
+        getProjectId: getProjectId,
+        setProjectId: setProjectId,
+        getMilestoneId: getMilestoneId,
+        setMilestoneId: setMilestoneId,
+        getMilestone: getMilestone,
+        setMilestone: setMilestone,
         getInitialBacklogItems: getInitialBacklogItems,
         setInitialBacklogItems: setInitialBacklogItems,
-        getInitialMilestones  : getInitialMilestones,
-        setInitialMilestones  : setInitialMilestones
+        getInitialMilestones: getInitialMilestones,
+        setInitialMilestones: setInitialMilestones
     };
 
     function getUserId() {

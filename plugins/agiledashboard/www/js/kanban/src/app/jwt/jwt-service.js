@@ -1,29 +1,23 @@
 export default JWTService;
 
-JWTService.$inject = [
-    'Restangular',
-    'jwtHelper'
-];
+JWTService.$inject = ["Restangular", "jwtHelper"];
 
-function JWTService(
-    Restangular,
-    jwtHelper
-) {
+function JWTService(Restangular, jwtHelper) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
+        RestangularConfigurer.setBaseUrl("/api/v1");
     });
 
     return {
-        getJWT             : getJWT,
+        getJWT: getJWT,
         getTokenExpiredDate: getTokenExpiredDate
     };
 
     function getJWT() {
         return rest
-            .one('jwt')
+            .one("jwt")
             .get()
-            .then(function (response) {
+            .then(function(response) {
                 return response.data;
             });
     }

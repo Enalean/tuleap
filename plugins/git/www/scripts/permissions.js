@@ -17,66 +17,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
-
+(function($) {
     function bindAddPermission() {
-        $('.add-fine-grained-permission').click(function(event) {
+        $(".add-fine-grained-permission").click(function(event) {
             event.preventDefault();
 
             $(this).blur();
 
-            var type                 = $(this).attr('data-type'),
-                regexp               = $(this).attr('data-regexp-enabled'),
-                table                = $('.git-fine-grained-permissions-' + type),
-                tbody                = table.children('tbody'),
-                permission_template  = $('#add-fine-grained-permission-template'),
-                index                = getNewIndex(type)
+            var type = $(this).attr("data-type"),
+                regexp = $(this).attr("data-regexp-enabled"),
+                table = $(".git-fine-grained-permissions-" + type),
+                tbody = table.children("tbody"),
+                permission_template = $("#add-fine-grained-permission-template"),
+                index = getNewIndex(type);
 
-                new_row              = '',
-                input_tag            = '<input type="text" name="add-' + type + '-name['+index+']" placeholder="' + codendi.getText('git', 'add_' + type + '_permission_placeholder') + '">',
-                label_regexp_enabled = '<p class="text-info">' + codendi.getText('git', 'regexp_permission_enabled_info') + '</p>'
-                write_permission_tag = permission_template
+            (new_row = ""),
+                (input_tag =
+                    '<input type="text" name="add-' +
+                    type +
+                    "-name[" +
+                    index +
+                    ']" placeholder="' +
+                    codendi.getText("git", "add_" + type + "_permission_placeholder") +
+                    '">'),
+                (label_regexp_enabled =
+                    '<p class="text-info">' +
+                    codendi.getText("git", "regexp_permission_enabled_info") +
+                    "</p>");
+            (write_permission_tag = permission_template
+                .clone()
+                .removeAttr("id")
+                .attr("name", "add-" + type + "-write[" + index + "][]")[0].outerHTML),
+                (rewind_permission_tag = permission_template
                     .clone()
-                    .removeAttr('id')
-                    .attr('name', 'add-' + type + '-write['+index+'][]')
-                    [0].outerHTML,
-                rewind_permission_tag = permission_template
-                    .clone()
-                    .removeAttr('id')
-                    .attr('name', 'add-' + type + '-rewind['+index+'][]')
-                    [0].outerHTML;
+                    .removeAttr("id")
+                    .attr("name", "add-" + type + "-rewind[" + index + "][]")[0].outerHTML);
 
-            new_row += '<tr>';
+            new_row += "<tr>";
 
-            new_row += '<td>' + input_tag;
+            new_row += "<td>" + input_tag;
             if (regexp) {
-                new_row += label_regexp_enabled
+                new_row += label_regexp_enabled;
             }
-            '</td>';
-            new_row += '<td>' + write_permission_tag + '</td>';
-            new_row += '<td>' + rewind_permission_tag + '</td>';
-            new_row += '<td/>';
-            new_row += '</tr>';
+            ("</td>");
+            new_row += "<td>" + write_permission_tag + "</td>";
+            new_row += "<td>" + rewind_permission_tag + "</td>";
+            new_row += "<td/>";
+            new_row += "</tr>";
 
             tbody.append($(new_row));
         });
     }
 
     function bindToggleFineGrainedPermissions() {
-        $('.toggle-fine-grained-permissions').change(function(event) {
-            $('.plugin_git_write_permissions_select, .plugin_git_rewind_permissions_select')
-                .prop('disabled', function(index, value) {
-                    return ! value;
+        $(".toggle-fine-grained-permissions").change(function(event) {
+            $(".plugin_git_write_permissions_select, .plugin_git_rewind_permissions_select")
+                .prop("disabled", function(index, value) {
+                    return !value;
                 })
                 .filter(function() {
                     if (isViewingDefaultAccessControlAdmin()) {
-                        return $(this).hasClass('plugin_git_write_permissions_select')
+                        return $(this).hasClass("plugin_git_write_permissions_select");
                     }
 
                     return true;
                 })
-                .prop('required', function(index, value) {
-                    return ! value;
+                .prop("required", function(index, value) {
+                    return !value;
                 });
         });
     }
@@ -86,46 +93,49 @@
     }
 
     function getNewIndex(type) {
-        return $('input[name^="add-'+type+'-name"]').length;
+        return $('input[name^="add-' + type + '-name"]').length;
     }
 
     function confirmDeletionPopover() {
-       $('.remove-fine-grained-permission').each(function() {
-           var id          = $(this).data('popover-id');
-           var form_action = $(this).data('form-action');
+        $(".remove-fine-grained-permission").each(function() {
+            var id = $(this).data("popover-id");
+            var form_action = $(this).data("form-action");
 
-           $(this).popover({
-               container: '.git-per-tags-branches-permissions',
-               title: codendi.getText('git', 'remove_webhook_title'),
-               content: '<form method="POST" action="' + form_action + '">'
-                  + $('#' + id).html()
-                  + '</form>'
-           });
+            $(this).popover({
+                container: ".git-per-tags-branches-permissions",
+                title: codendi.getText("git", "remove_webhook_title"),
+                content:
+                    '<form method="POST" action="' +
+                    form_action +
+                    '">' +
+                    $("#" + id).html() +
+                    "</form>"
+            });
 
-           $('#' + id).remove();
-       });
+            $("#" + id).remove();
+        });
     }
 
     function dismissPopover() {
-       $('.remove-fine-grained-permission').popover('hide');
+        $(".remove-fine-grained-permission").popover("hide");
     }
 
     function bindShowPopover() {
-        $('.remove-fine-grained-permission').click(function(event) {
+        $(".remove-fine-grained-permission").click(function(event) {
             event.preventDefault();
 
             dismissPopover();
 
-            $(this).popover('show');
+            $(this).popover("show");
         });
     }
 
     function bindToggleEnableRegexp() {
-        $('#use-fine-grained-permissions').change(function () {
-            if($(this).is(":checked")) {
-                $('.regexp_permission_activated').show();
+        $("#use-fine-grained-permissions").change(function() {
+            if ($(this).is(":checked")) {
+                $(".regexp_permission_activated").show();
             } else {
-                $('.regexp_permission_activated').hide();
+                $(".regexp_permission_activated").hide();
             }
         });
     }
@@ -133,29 +143,31 @@
     function bindToogleModalWarningDisableRegexp() {
         var already_check_modal = false;
 
-        $('.save-permissions-with-regexp').click(function(event) {
+        $(".save-permissions-with-regexp").click(function(event) {
             if (already_check_modal === true) {
                 return;
             }
 
-            if (! $('.use-regexp').is(":checked") &&
-                $('.save-permissions-with-regexp').attr('data-are-regexp-enabled') == 1
+            if (
+                !$(".use-regexp").is(":checked") &&
+                $(".save-permissions-with-regexp").attr("data-are-regexp-enabled") == 1
             ) {
                 event.preventDefault();
-                $('#modal-regexp-delete').modal('toggle');
-            } else if ($('.use-regexp').is(":checked") &&
-                $('.save-permissions-with-regexp').attr('data-are-regexp-confliting') == 1
+                $("#modal-regexp-delete").modal("toggle");
+            } else if (
+                $(".use-regexp").is(":checked") &&
+                $(".save-permissions-with-regexp").attr("data-are-regexp-confliting") == 1
             ) {
                 event.preventDefault();
-                $('#modal-regexp-delete').modal('toggle');
-                $('.use-regexp').attr('checked', false);
+                $("#modal-regexp-delete").modal("toggle");
+                $(".use-regexp").attr("checked", false);
             } else {
                 already_check_modal = true;
             }
         });
 
-        $('.dismiss-popover').click(function () {
-            $('#modal-regexp-delete').modal('toggle');
+        $(".dismiss-popover").click(function() {
+            $("#modal-regexp-delete").modal("toggle");
         });
     }
 
@@ -170,18 +182,18 @@
 
         bindShowPopover();
 
-        $('body').on('click', function(event) {
-           if ($(event.target).hasClass('dismiss-popover')) {
-               dismissPopover();
-           }
+        $("body").on("click", function(event) {
+            if ($(event.target).hasClass("dismiss-popover")) {
+                dismissPopover();
+            }
 
-           if ($(event.target).data('toggle') !== 'popover' &&
-               $(event.target).parents('.popover.in').length === 0 &&
-               $(event.target).parents('[data-toggle="popover"]').length === 0
-           ) {
-               dismissPopover();
-           }
+            if (
+                $(event.target).data("toggle") !== "popover" &&
+                $(event.target).parents(".popover.in").length === 0 &&
+                $(event.target).parents('[data-toggle="popover"]').length === 0
+            ) {
+                dismissPopover();
+            }
         });
     });
-
-}(jQuery));
+})(jQuery);

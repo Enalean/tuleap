@@ -1,9 +1,9 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default function TuleapArtifactModalFieldDependenciesService() {
     var self = this;
     _.extend(self, {
-        getTargetFieldPossibleValues : getTargetFieldPossibleValues,
+        getTargetFieldPossibleValues: getTargetFieldPossibleValues,
         setUpFieldDependenciesActions: setUpFieldDependenciesActions
     });
 
@@ -11,7 +11,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
         var field_dependencies_rules = getFieldDependenciesRules(tracker);
 
         _(field_dependencies_rules)
-            .unique(false, 'target_field_id')
+            .unique(false, "target_field_id")
             .forEach(function(rule) {
                 var target_field = _.find(tracker.fields, { field_id: rule.target_field_id });
 
@@ -22,10 +22,11 @@ export default function TuleapArtifactModalFieldDependenciesService() {
     }
 
     function getFieldDependenciesRules(tracker) {
-        if (_.has(tracker, 'workflow') &&
-            _.has(tracker.workflow, 'rules') &&
-            _.has(tracker.workflow.rules, 'lists')
-            ) {
+        if (
+            _.has(tracker, "workflow") &&
+            _.has(tracker.workflow, "rules") &&
+            _.has(tracker.workflow.rules, "lists")
+        ) {
             return tracker.workflow.rules.lists;
         }
 
@@ -50,7 +51,11 @@ export default function TuleapArtifactModalFieldDependenciesService() {
         return filtered_values;
     }
 
-    function getPossibleTargetValueIds(source_value_ids, target_field_id, field_dependencies_rules) {
+    function getPossibleTargetValueIds(
+        source_value_ids,
+        target_field_id,
+        field_dependencies_rules
+    ) {
         return _(field_dependencies_rules)
             .filter(function(rule) {
                 return (
@@ -58,7 +63,7 @@ export default function TuleapArtifactModalFieldDependenciesService() {
                     rule.target_field_id === target_field_id
                 );
             })
-            .pluck('target_value_id')
+            .pluck("target_value_id")
             .value();
     }
 }

@@ -1,16 +1,8 @@
 export default PullRequestController;
 
-PullRequestController.$inject = [
-    '$state',
-    'PullRequestRestService',
-    'SharedPropertiesService'
-];
+PullRequestController.$inject = ["$state", "PullRequestRestService", "SharedPropertiesService"];
 
-function PullRequestController(
-    $state,
-    PullRequestRestService,
-    SharedPropertiesService
-) {
+function PullRequestController($state, PullRequestRestService, SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {

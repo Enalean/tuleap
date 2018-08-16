@@ -18,37 +18,12 @@
  */
 
 export default [
-    [
-        'inca-silver',
-        'chrome-silver',
-        'firemist-silver'
-    ], [
-        'red-wine',
-        'fiesta-red',
-        'coral-pink'
-    ], [
-        'teddy-brown',
-        'clockwork-orange',
-        'graffiti-yellow'
-    ], [
-        'army-green',
-        'neon-green',
-        'acid-green'
-    ], [
-        'sherwood-green',
-        'ocean-turquoise',
-        'surf-green'
-    ], [
-        'deep-blue',
-        'lake-placid-blue',
-        'daphne-blue'
-    ], [
-        'plum-crazy',
-        'ultra-violet',
-        'lilac-purple'
-    ], [
-        'panther-pink',
-        'peggy-pink',
-        'flamingo-pink',
-    ]
+    ["inca-silver", "chrome-silver", "firemist-silver"],
+    ["red-wine", "fiesta-red", "coral-pink"],
+    ["teddy-brown", "clockwork-orange", "graffiti-yellow"],
+    ["army-green", "neon-green", "acid-green"],
+    ["sherwood-green", "ocean-turquoise", "surf-green"],
+    ["deep-blue", "lake-placid-blue", "daphne-blue"],
+    ["plum-crazy", "ultra-violet", "lilac-purple"],
+    ["panther-pink", "peggy-pink", "flamingo-pink"]
 ];

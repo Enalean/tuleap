@@ -1,29 +1,25 @@
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const webpack_config = {
     entry: {
-        'tuleap-pullrequest': './src/app/app.js',
-        'move-button-back': './move-button-back.js'
+        "tuleap-pullrequest": "./src/app/app.js",
+        "move-button-back": "./move-button-back.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        jquery: 'jQuery'
+        jquery: "jQuery"
     },
     resolve: {
-        modules: ['node_modules', 'bower_components'],
+        modules: ["node_modules", "bower_components"],
         alias: webpack_configurator.extendAliases(
             {
-                'tuleap-pullrequest-module': path.resolve(
-                    __dirname,
-                    './src/app/app.js'
-                ),
-                'angular-ui-bootstrap-templates':
-                    'angular-ui-bootstrap-bower/ui-bootstrap-tpls.js',
-                'angular-ui-select': 'ui-select/dist/select.js'
+                "tuleap-pullrequest-module": path.resolve(__dirname, "./src/app/app.js"),
+                "angular-ui-bootstrap-templates": "angular-ui-bootstrap-bower/ui-bootstrap-tpls.js",
+                "angular-ui-select": "ui-select/dist/select.js"
             },
             webpack_configurator.flaming_parrot_labels_box_aliases,
             webpack_configurator.tuleap_core_alias
@@ -31,9 +27,7 @@ const webpack_config = {
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_karma
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_angular_gettext_loader
         ]
@@ -44,7 +38,7 @@ const webpack_config = {
     ]
 };
 
-if (process.env.NODE_ENV === 'watch') {
+if (process.env.NODE_ENV === "watch") {
     webpack_config.plugins.push(webpack_configurator.getAngularGettextPlugin());
 }
 

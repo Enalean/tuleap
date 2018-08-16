@@ -1,17 +1,11 @@
-import moment from 'moment';
+import moment from "moment";
 
 export default CardFieldsService;
 
-CardFieldsService.$inject = [
-    '$sce',
-    '$filter'
-];
+CardFieldsService.$inject = ["$sce", "$filter"];
 
-function CardFieldsService(
-    $sce,
-    $filter
-) {
-    const highlight = $filter('tuleapHighlight');
+function CardFieldsService($sce, $filter) {
+    const highlight = $filter("tuleapHighlight");
 
     return {
         cardFieldIsSimpleValue,
@@ -33,59 +27,59 @@ function CardFieldsService(
 
     function cardFieldIsSimpleValue(type) {
         switch (type) {
-            case 'string':
-            case 'int':
-            case 'float':
-            case 'aid':
-            case 'atid':
-            case 'priority':
+            case "string":
+            case "int":
+            case "float":
+            case "aid":
+            case "atid":
+            case "priority":
                 return true;
         }
     }
 
     function cardFieldIsList(type) {
         switch (type) {
-            case 'sb':
-            case 'msb':
-            case 'rb':
-            case 'cb':
-            case 'tbl':
-            case 'shared':
+            case "sb":
+            case "msb":
+            case "rb":
+            case "cb":
+            case "tbl":
+            case "shared":
                 return true;
         }
     }
 
     function cardFieldIsDate(type) {
         switch (type) {
-            case 'date':
-            case 'lud':
-            case 'subon':
+            case "date":
+            case "lud":
+            case "subon":
                 return true;
         }
     }
 
     function cardFieldIsText(type) {
-        return type === 'text';
+        return type === "text";
     }
 
     function cardFieldIsFile(type) {
-        return type === 'file';
+        return type === "file";
     }
 
     function cardFieldIsCross(type) {
-        return type === 'cross';
+        return type === "cross";
     }
 
     function cardFieldIsPermissions(type) {
-        return type === 'perm';
+        return type === "perm";
     }
 
     function cardFieldIsComputed(type) {
-        return type === 'computed';
+        return type === "computed";
     }
 
     function cardFieldIsUser(type) {
-        return type === 'subby' || type === 'luby';
+        return type === "subby" || type === "luby";
     }
 
     function getCardFieldListValues(values, filter_terms) {
@@ -102,22 +96,24 @@ function CardFieldsService(
         }
 
         function getValueRenderedWithColor(value, filter_terms) {
-            const r     = parseInt(value.color.r);
-            const g     = parseInt(value.color.g);
-            const b     = parseInt(value.color.b);
+            const r = parseInt(value.color.r);
+            const g = parseInt(value.color.g);
+            const b = parseInt(value.color.b);
             const color = $sce.getTrustedHtml(`<span class="extra-card-field-color"
-                style="background: rgb(${ r }, ${ g }, ${ b })"></span>`);
+                style="background: rgb(${r}, ${g}, ${b})"></span>`);
 
             return color + highlight(value.label, filter_terms);
         }
 
         function getValueRenderedWithTlpColor({ label, tlp_color }, filter_terms) {
-            const color = $sce.getTrustedHtml(`<span class="extra-card-field-color card-field-${ tlp_color }"></span>`);
+            const color = $sce.getTrustedHtml(
+                `<span class="extra-card-field-color card-field-${tlp_color}"></span>`
+            );
 
             return color + highlight(label, filter_terms);
         }
 
-        return $sce.trustAsHtml(values.map(getValueRendered).join(', '));
+        return $sce.trustAsHtml(values.map(getValueRendered).join(", "));
     }
 
     function getCardFieldDateValue(value) {
@@ -126,20 +122,35 @@ function CardFieldsService(
 
     function getCardFieldFileValue(artifact_id, field_id, file_descriptions, filter_terms) {
         function getFileUrl(file) {
-            return '/plugins/tracker/?aid=' + artifact_id + '&field=' + field_id + '&func=show-attachment&attachment=' + file.id;
+            return (
+                "/plugins/tracker/?aid=" +
+                artifact_id +
+                "&field=" +
+                field_id +
+                "&func=show-attachment&attachment=" +
+                file.id
+            );
         }
 
         function getFileLink(file) {
             var file_name = highlight(file.name, filter_terms);
 
-            return '<a data-nodrag="true" href="' + getFileUrl(file) + '" title="' + file.description + '"><i class="fa fa-file-text"></i> ' + file_name + '</a>';
+            return (
+                '<a data-nodrag="true" href="' +
+                getFileUrl(file) +
+                '" title="' +
+                file.description +
+                '"><i class="fa fa-file-text"></i> ' +
+                file_name +
+                "</a>"
+            );
         }
 
-        return file_descriptions.map(getFileLink).join(', ');
+        return file_descriptions.map(getFileLink).join(", ");
     }
 
     function getCardFieldPermissionsValue(values) {
-        return values.join(', ');
+        return values.join(", ");
     }
 
     function getCardFieldUserValue(value, filter_terms) {
@@ -147,16 +158,18 @@ function CardFieldsService(
 
         if (value.user_url === null) {
             display_name = highlight(value.display_name, filter_terms);
-            return `<div class="tlp-avatar-mini"> </div><span>${ display_name }</span>`;
+            return `<div class="tlp-avatar-mini"> </div><span>${display_name}</span>`;
         }
 
         display_name = highlight(value.display_name, filter_terms);
-        return `<a data-nodrag="true" class="extra-card-field-user" href="${ value.user_url }">
-                            <div class="tlp-avatar-mini"><img src="${ value.avatar_url }" /></div><span>${ display_name }</span>
+        return `<a data-nodrag="true" class="extra-card-field-user" href="${value.user_url}">
+                            <div class="tlp-avatar-mini"><img src="${
+                                value.avatar_url
+                            }" /></div><span>${display_name}</span>
                         </a>`;
     }
 
     function isListBoundToAValueDifferentFromNone(values) {
-        return values.find(value => (value.id !== null));
+        return values.find(value => value.id !== null);
     }
 }

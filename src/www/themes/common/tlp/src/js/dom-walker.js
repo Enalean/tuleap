@@ -17,9 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    findClosestElement
-};
+export { findClosestElement };
 
 function findAncestorElement(element, ancestor) {
     while ((element = element.parentElement) && element != ancestor) {}

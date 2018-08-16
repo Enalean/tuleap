@@ -1,10 +1,7 @@
-import 'angular-jwt';
+import "angular-jwt";
 
-import JWTService from './jwt-service.js';
+import JWTService from "./jwt-service.js";
 
-angular.module('jwt', [
-    'angular-jwt'
-])
-.service('JWTService', JWTService);
+angular.module("jwt", ["angular-jwt"]).service("JWTService", JWTService);
 
-export default 'jwt';
+export default "jwt";

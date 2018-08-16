@@ -20,34 +20,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(
-    __dirname,
-    '../../../../src/www/assets/velocity/scripts'
-);
+const assets_dir_path = path.resolve(__dirname, "../../../../src/www/assets/velocity/scripts");
 
 const webpack_config_for_charts = {
     entry: {
-        'velocity-chart': './velocity-chart/src/index.js'
+        "velocity-chart": "./velocity-chart/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
-        modules: [path.resolve(__dirname, 'node_modules')],
+        modules: [path.resolve(__dirname, "node_modules")],
         alias: {
-            'charts-builders': path.resolve(
+            "charts-builders": path.resolve(
                 __dirname,
-                '../../../../src/www/scripts/charts-builders/'
+                "../../../../src/www/scripts/charts-builders/"
             )
         }
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files
         ]
     },

@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
+import { get } from "tlp";
 
-export {
-    getGitPermissions
-}
+export { getGitPermissions };
 
 async function getGitPermissions(project_id, selected_ugroup_id) {
-    const response = await get('/plugins/git/', {
+    const response = await get("/plugins/git/", {
         params: {
             group_id: project_id,
             selected_ugroup_id: selected_ugroup_id,
-            action: 'permission-per-group',
+            action: "permission-per-group"
         }
     });
-
 
     return await response.json();
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put, recursiveGet } from 'tlp';
+import { get, put, recursiveGet } from "tlp";
 
 export {
     getReport,
@@ -29,38 +29,38 @@ export {
 };
 
 async function getReport(report_id) {
-    const response = await get('/api/v1/cross_tracker_reports/' + report_id);
+    const response = await get("/api/v1/cross_tracker_reports/" + report_id);
     return await response.json();
 }
 
 async function getReportContent(report_id, limit, offset) {
-    const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
+    const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
             limit,
             offset
         }
     });
-    const total         = response.headers.get('X-PAGINATION-SIZE');
+    const total = response.headers.get("X-PAGINATION-SIZE");
     const { artifacts } = await response.json();
     return { artifacts, total };
 }
 
 async function getQueryResult(report_id, trackers_id, expert_query, limit, offset) {
-    const response = await get('/api/v1/cross_tracker_reports/' + report_id + '/content', {
+    const response = await get("/api/v1/cross_tracker_reports/" + report_id + "/content", {
         params: {
             limit,
             offset,
             query: JSON.stringify({ trackers_id, expert_query })
         }
     });
-    const total         = response.headers.get('X-PAGINATION-SIZE');
+    const total = response.headers.get("X-PAGINATION-SIZE");
     const { artifacts } = await response.json();
 
     return { artifacts, total };
 }
 
 async function updateReport(report_id, trackers_id, expert_query) {
-    const response = await put('/api/v1/cross_tracker_reports/' + report_id, {
+    const response = await put("/api/v1/cross_tracker_reports/" + report_id, {
         headers: {
             "Content-Type": "application/json"
         },
@@ -70,23 +70,21 @@ async function updateReport(report_id, trackers_id, expert_query) {
 }
 
 async function getSortedProjectsIAmMemberOf() {
-    const json = await recursiveGet('/api/v1/projects', {
+    const json = await recursiveGet("/api/v1/projects", {
         params: {
             limit: 50,
             query: JSON.stringify({ is_member_of: true })
         }
     });
 
-    return json.sort(
-        ({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b)
-    );
+    return json.sort(({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b));
 }
 
 async function getTrackersOfProject(project_id) {
-    return await recursiveGet('/api/v1/projects/' + project_id + '/trackers', {
+    return await recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,
-            representation: 'minimal'
+            representation: "minimal"
         }
     });
 }

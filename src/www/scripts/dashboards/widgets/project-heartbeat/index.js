@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loadHeartbeat from './project-heartbeat.js';
+import loadHeartbeat from "./project-heartbeat.js";
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function() {
     loadHeartbeat();
 });

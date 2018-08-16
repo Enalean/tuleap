@@ -3,12 +3,12 @@ import { setAccessibilityMode } from "./user-accessibility-mode.js";
 export default MainCtrl;
 
 MainCtrl.$inject = [
-    '$element',
-    'gettextCatalog',
-    'SharedPropertiesService',
-    'amMoment',
-    'UUIDGeneratorService',
-    'FilterTrackerReportService'
+    "$element",
+    "gettextCatalog",
+    "SharedPropertiesService",
+    "amMoment",
+    "UUIDGeneratorService",
+    "FilterTrackerReportService"
 ];
 
 function MainCtrl(
@@ -22,7 +22,7 @@ function MainCtrl(
     this.$onInit = init;
 
     function init() {
-        const kanban_init_data = $element[0].querySelector('.kanban-init-data').dataset;
+        const kanban_init_data = $element[0].querySelector(".kanban-init-data").dataset;
 
         const user_id = kanban_init_data.userId;
         SharedPropertiesService.setUserId(user_id);
@@ -46,7 +46,7 @@ function MainCtrl(
 
         let selected_report = tracker_reports.find(({ selected }) => selected === true);
 
-        if (! selected_report) {
+        if (!selected_report) {
             selected_report = { id: 0 };
         }
 

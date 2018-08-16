@@ -17,22 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from 'tlp';
-import { sanitize } from 'dompurify';
-import { init as togglerInit } from '../tuleap/toggler.js';
-import { loadTooltips } from '../codendi/Tooltip.js';
+import { get } from "tlp";
+import { sanitize } from "dompurify";
+import { init as togglerInit } from "../tuleap/toggler.js";
+import { loadTooltips } from "../codendi/Tooltip.js";
 
 export default async function init() {
-    const widgets = document.querySelectorAll('.dashboard-widget-asynchronous');
+    const widgets = document.querySelectorAll(".dashboard-widget-asynchronous");
 
     for (const widget of widgets) {
-        const response = await get(widget.dataset.ajaxUrl)
+        const response = await get(widget.dataset.ajaxUrl);
         const html = await response.text();
 
         widget.innerHTML = sanitize(html);
-        widget.classList.remove(
-            'dashboard-widget-asynchronous-loading'
-        );
+        widget.classList.remove("dashboard-widget-asynchronous-loading");
         loadTooltips();
         togglerInit(widget);
     }
