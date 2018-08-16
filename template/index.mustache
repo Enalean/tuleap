@@ -6,7 +6,7 @@
             {{# has_bots }}
                 <p class="git-notification-mattermost-configuration-description">{{ any_configured_notification_tips }}</p>
                 <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-add">
-                    <i class="icon-plus"></i> {{ button_config }}
+                    <i class="fa fa-plus"></i> {{ button_config }}
                 </button>
             {{/ has_bots }}
             {{^ has_bots }}
@@ -35,10 +35,10 @@
                 </section>
                 <section class="panel-section panel-section-actions button-group">
                     <button class="btn btn-primary" data-toggle="modal" href="#admin-config-bot-edit-{{ id }}">
-                        <i class="icon-edit"></i> {{ button_edit }}
+                        <i class="fa fa-pencil-square-o"></i> {{ button_edit }}
                     </button>
                     <button class="btn btn-danger" data-toggle="modal" href="#admin-config-bot-delete-{{ id }}">
-                        <i class="icon-trash"></i> {{ button_delete }}
+                        <i class="fa fa-trash-o"></i> {{ button_delete }}
                     </button>
                     {{> modal-edit-bot }}
                     {{> modal-delete-bot }}

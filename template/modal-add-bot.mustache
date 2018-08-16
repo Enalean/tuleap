@@ -9,7 +9,7 @@
     <div class="modal-header">
         <a role="button" class="close" data-dismiss="modal">×</a>
         <h3 id="configuration-add-bot-title">
-            <i class="icon-plus"></i> {{ modal_add_title }}</h3>
+            <i class="fa fa-plus"></i> {{ modal_add_title }}</h3>
     </div>
 
 
@@ -31,7 +31,7 @@
                                         value="{{ getId }}">{{ getName }}</option>
                             {{/ bots}}
                         </select>
-                        <p class="text-info"><i class="icon-info-sign"></i> {{ description }}</p>
+                        <p class="text-info"><i class="fa fa-info-circle"></i> {{ description }}</p>
                         <p class="text-info">{{ description_create_bot }}</p>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
                                hidden
                                multiple
                         />
-                        <p class="text-info"><i class="icon-info-sign"></i> {{{ purified_info_channels_handles }}}</p>
+                        <p class="text-info"><i class="fa fa-info-circle"></i> {{{ purified_info_channels_handles }}}</p>
                     </div>
                 </div>
             {{/ has_bots }}
@@ -56,7 +56,7 @@
 
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">{{ button_close }}</button>
-            <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> {{ button_confirm }}</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> {{ button_confirm }}</button>
         </div>
     </form>
 
