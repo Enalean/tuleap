@@ -1,26 +1,26 @@
-/**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
- *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
+<!--
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(<template>
+<template>
     <div class="cross-tracker-selector">
         <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': is_project_select_disabled }">
-            <label class="tlp-label" for="project">{{ project_label }} <i class="fa fa-asterisk"></i></label>
+            <label class="tlp-label" for="project"><translate>Project</translate> <i class="fa fa-asterisk"></i></label>
             <select
                 class="cross-tracker-selector-project-input tlp-select"
                 id="project"
@@ -34,7 +34,7 @@
             </select>
         </div>
         <div class="tlp-form-element" v-bind:class="{ 'tlp-form-element-disabled': is_tracker_select_disabled }">
-            <label class="tlp-label" for="tracker">{{ tracker_label }} <i class="fa fa-asterisk"></i></label>
+            <label class="tlp-label" for="tracker"><translate>Tracker</translate> <i class="fa fa-asterisk"></i></label>
             <div class="tlp-form-element tlp-form-element-append">
                 <select
                     class="cross-tracker-selector-tracker-input tlp-select"
@@ -57,20 +57,21 @@
                     v-on:click="addTrackerToSelection"
                 >
                     <i v-if="is_loader_shown" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                    <i v-else class="tlp-button-icon fa fa-plus"></i> {{ add_button_label }}
+                    <i v-else class="tlp-button-icon fa fa-plus"></i> <translate>Add</translate>
                 </button>
             </div>
         </div>
     </div>
-</template>)
-(<script>
-import { gettext_provider } from "../gettext-provider.js";
+</template>
+<script>
 import { getSortedProjectsIAmMemberOf } from "./projects-cache.js";
 import { getTrackersOfProject } from "../rest-querier.js";
 
 export default {
     name: "TrackerSelection",
-    props: ["selectedTrackers"],
+    props: {
+        selectedTrackers: Array
+    },
     data() {
         return {
             selected_project: null,
@@ -88,10 +89,9 @@ export default {
         }
     },
     computed: {
-        project_label: () => gettext_provider.gettext("Project"),
-        tracker_label: () => gettext_provider.gettext("Tracker"),
-        add_button_label: () => gettext_provider.gettext("Add"),
-        please_choose_label: () => gettext_provider.gettext("Please choose..."),
+        please_choose_label() {
+            return this.$gettext("Please choose...");
+        },
         is_project_select_disabled() {
             return this.projects.length === 0;
         },
@@ -123,9 +123,7 @@ export default {
             } catch (error) {
                 this.$emit(
                     "error",
-                    gettext_provider.gettext(
-                        "Error while fetching the list of projects you are member of"
-                    )
+                    this.$gettext("Error while fetching the list of projects you are member of")
                 );
                 throw error;
             } finally {
@@ -140,9 +138,7 @@ export default {
             } catch (error) {
                 this.$emit(
                     "error",
-                    gettext_provider.gettext(
-                        "Error while fetching the list of trackers of this project"
-                    )
+                    this.$gettext("Error while fetching the list of trackers of this project")
                 );
                 throw error;
             } finally {
@@ -162,4 +158,4 @@ export default {
         this.loadProjects();
     }
 };
-</script>)
+</script>

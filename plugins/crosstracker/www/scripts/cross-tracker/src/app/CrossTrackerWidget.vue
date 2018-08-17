@@ -1,23 +1,23 @@
-/**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
- *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
+<!--
+  - Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(<template>
+<template>
     <div>
         <div class="tlp-alert-danger cross-tracker-report-error" v-if="has_error === true">
             {{ error_message }}
@@ -55,24 +55,23 @@
             v-on:restError="showRestError"
         ></artifact-table>
     </div>
-</template>)
-(<script>
+</template>
+<script>
 import ArtifactTable from "./ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
-import { gettext_provider } from "./gettext-provider.js";
 import { isAnonymous } from "./user-service.js";
 import { getReport } from "./rest-querier.js";
 
 export default {
     components: { ArtifactTable, ReadingMode, WritingMode },
     name: "CrossTrackerWidget",
-    props: [
-        "backendCrossTrackerReport",
-        "readingCrossTrackerReport",
-        "writingCrossTrackerReport",
-        "reportId"
-    ],
+    props: {
+        backendCrossTrackerReport: Object,
+        readingCrossTrackerReport: Object,
+        writingCrossTrackerReport: Object,
+        reportId: String
+    },
     data() {
         return {
             is_loading: true,
@@ -149,7 +148,7 @@ export default {
             this.initReports();
             this.hideFeedbacks();
             this.is_saved = true;
-            this.success_message = gettext_provider.gettext("Report has been successfully saved");
+            this.success_message = this.$gettext("Report has been successfully saved");
         },
 
         reportCancelled() {
@@ -163,7 +162,7 @@ export default {
 
         showRestError(rest_error) {
             if (!rest_error.response) {
-                this.error_message = gettext_provider.gettext("An error occured");
+                this.error_message = this.$gettext("An error occured");
                 return;
             }
 
@@ -174,10 +173,10 @@ export default {
                     }
                 },
                 error => {
-                    this.error_message = gettext_provider.gettext("An error occured");
+                    this.error_message = this.$gettext("An error occured");
                 }
             );
         }
     }
 };
-</script>)
+</script>

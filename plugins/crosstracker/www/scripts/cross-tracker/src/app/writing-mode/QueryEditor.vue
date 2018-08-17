@@ -1,26 +1,26 @@
-/**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
- *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
+<!--
+  - Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(<template>
+<template>
     <div class="cross-tracker-expert-content">
         <div class="cross-tracker-expert-content-query tlp-form-element">
-            <label class="tlp-label" for="expert-query-textarea">{{ query_label }}</label>
+            <label class="tlp-label" for="expert-query-textarea" v-translate>Query</label>
             <textarea
                 ref="query_textarea"
                 type="text"
@@ -29,10 +29,13 @@
                 id="expert-query-textarea"
                 v-bind:placeholder="placeholder"
             >{{ writingCrossTrackerReport.expert_query }}</textarea>
-            <p class="tlp-text-muted"><i class="fa fa-info-circle"></i> {{ tql_tips }}</p>
+            <p class="tlp-text-muted">
+                <i class="fa fa-info-circle"></i>
+                <translate>You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.</translate>
+            </p>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="expert-query-allowed-fields">{{ allowed_fields_label }}</label>
+            <label class="tlp-label" for="expert-query-allowed-fields" v-translate>Allowed fields</label>
             <select
                 class="cross-tracker-expert-content-query-allowed-fields tlp-select"
                 name="allowed-fields"
@@ -51,9 +54,8 @@
             </select>
         </div>
     </div>
-</template>)
-(<script>
-import { gettext_provider } from "../gettext-provider.js";
+</template>
+<script>
 import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition
@@ -72,21 +74,33 @@ export default {
         };
     },
     computed: {
-        query_label: () => gettext_provider.gettext("Query"),
-        allowed_fields_label: () => gettext_provider.gettext("Allowed fields"),
-        title_semantic_label: () => gettext_provider.gettext("Title"),
-        description_semantic_label: () => gettext_provider.gettext("Description"),
-        status_semantic_label: () => gettext_provider.gettext("Status"),
-        submitted_on_label: () => gettext_provider.gettext("Submitted on"),
-        lud_label: () => gettext_provider.gettext("Last update date"),
-        submitted_by_label: () => gettext_provider.gettext("Submitted by"),
-        luby_label: () => gettext_provider.gettext("Last update by"),
-        assigned_to_label: () => gettext_provider.gettext("Assigned to"),
-        placeholder: () => gettext_provider.gettext("Example: @title = 'value'"),
-        tql_tips: () =>
-            gettext_provider.gettext(
-                "You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space."
-            )
+        title_semantic_label() {
+            return this.$gettext("Title");
+        },
+        description_semantic_label() {
+            return this.$gettext("Description");
+        },
+        status_semantic_label() {
+            return this.$gettext("Status");
+        },
+        submitted_on_label() {
+            return this.$gettext("Submitted on");
+        },
+        lud_label() {
+            return this.$gettext("Last update date");
+        },
+        submitted_by_label() {
+            return this.$gettext("Submitted by");
+        },
+        luby_label() {
+            return this.$gettext("Last update by");
+        },
+        assigned_to_label() {
+            return this.$gettext("Assigned to");
+        },
+        placeholder() {
+            return this.$gettext("Example: @title = 'value'");
+        }
     },
     created() {
         initializeTQLMode(TQL_cross_tracker_mode_definition);

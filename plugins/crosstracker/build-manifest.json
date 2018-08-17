@@ -31,9 +31,9 @@
     "components": [
         "www/scripts/"
     ],
-    "gettext-js": {
+    "gettext-vue": {
         "cross-tracker": {
-            "src": "www/scripts/cross-tracker/src",
+            "scripts": "www/scripts/",
             "po": "www/scripts/cross-tracker/po"
         }
     }

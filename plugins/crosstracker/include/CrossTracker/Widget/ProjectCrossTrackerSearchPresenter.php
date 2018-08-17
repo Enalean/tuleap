@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,14 +24,12 @@ class ProjectCrossTrackerSearchPresenter
 {
     /** @var  int */
     public $report_id;
-    public $locale;
     public $date_format;
     public $is_anonymous;
 
     public function __construct($report_id, \PFUser $user)
     {
         $this->report_id    = $report_id;
-        $this->locale       = $user->getLocale();
         $this->date_format  = $GLOBALS['Language']->getText('system', 'datefmt_short');
         $this->is_anonymous = $user->isAnonymous() ? 'true' : 'false';
     }
