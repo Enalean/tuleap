@@ -9,6 +9,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <file>../../src/common/Dashboard/Dashboard.php</file>
             <file>../../src/common/include/LoaderScheduler.php</file>
+            <file>../../src/common/include/CookieManager.class.php</file>
             <file>../../plugins/git/include/Git/HTTP/HTTPAccessControl.php</file>
             <directory suffix=".php">../../src/common/user</directory>
             <directory suffix=".php">../../src/common/frs/PermissionsPerGroup</directory>
