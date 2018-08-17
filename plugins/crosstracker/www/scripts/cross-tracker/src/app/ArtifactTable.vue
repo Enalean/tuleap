@@ -68,115 +68,113 @@
 </template>)
 
 (<script>
-    import { gettext_provider }                 from './gettext-provider.js';
-    import ArtifactTableRow                     from './ArtifactTableRow.vue';
-    import { getReportContent, getQueryResult } from './rest-querier.js';
-    import moment                               from 'moment';
-    import { getUserPreferredDateFormat }       from './user-service.js';
+import { gettext_provider } from "./gettext-provider.js";
+import ArtifactTableRow from "./ArtifactTableRow.vue";
+import { getReportContent, getQueryResult } from "./rest-querier.js";
+import moment from "moment";
+import { getUserPreferredDateFormat } from "./user-service.js";
 
-    export default {
-        name: 'ArtifactTable',
-        components: { ArtifactTableRow },
-        props: {
-            isReportSaved: Boolean,
-            isReportInReadingMode: Boolean,
-            reportId: String,
-            writingCrossTrackerReport: Object
-        },
-        data() {
-            return {
-                is_loading: true,
-                artifacts: [],
-                is_load_more_displayed:false,
-                is_loading_more: false,
-                current_offset: 0,
-                limit: 30
-            };
-        },
-        computed: {
-            artifact_label: ()     => gettext_provider.gettext("Artifact"),
-            project_label: ()      => gettext_provider.gettext("Project"),
-            status_label: ()       => gettext_provider.gettext("Status"),
-            last_update_label: ()  => gettext_provider.gettext("Last update date"),
-            submitted_by_label: () => gettext_provider.gettext("Submitted by"),
-            assigned_to_label: ()  => gettext_provider.gettext("Assigned to"),
-            artifacts_empty: ()    => gettext_provider.gettext("No matching artifacts found"),
-            load_more_label: ()    => gettext_provider.gettext("Load more"),
-            report_state() {
-                // We just need to react to certain changes in this
-                return [this.isReportInReadingMode, this.isReportSaved];
-            },
-        },
-        watch: {
-            report_state() {
-                if (this.isReportInReadingMode === true) {
-                    this.refreshArtifactList();
-                }
-            }
-        },
-        mounted() {
-            this.is_loading = true;
-            this.loadArtifacts();
-        },
-        methods: {
-            loadMoreArtifacts() {
-                this.is_loading_more = true;
-                this.loadArtifacts();
-            },
-
-            refreshArtifactList() {
-                this.artifacts              = [];
-                this.current_offset         = 0;
-                this.is_loading             = true;
-                this.is_load_more_displayed = false;
-
-                this.loadArtifacts();
-            },
-
-            async loadArtifacts() {
-                try {
-                    const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
-
-                    this.current_offset        += artifacts.length;
-                    this.is_load_more_displayed = this.current_offset < total;
-
-                    const new_artifacts = this.formatArtifacts(artifacts);
-                    this.artifacts      = this.artifacts.concat(new_artifacts);
-                }  catch (error) {
-                    this.is_load_more_displayed = false;
-                    this.$emit('restError', error);
-                    throw error;
-                } finally {
-                    this.is_loading      = false;
-                    this.is_loading_more = false;
-                }
-            },
-
-            getArtifactsFromReportOrUnsavedQuery() {
-                if (this.isReportSaved === true) {
-                    return getReportContent(
-                        this.reportId,
-                        this.limit,
-                        this.current_offset
-                    );
-                }
-
-                return getQueryResult(
-                    this.reportId,
-                    this.writingCrossTrackerReport.getTrackerIds(),
-                    this.writingCrossTrackerReport.expert_query,
-                    this.limit,
-                    this.current_offset
-                );
-            },
-
-            formatArtifacts(artifacts) {
-                return artifacts.map(artifact => {
-                    artifact.formatted_last_update_date = moment(artifact.last_update_date).format(getUserPreferredDateFormat());
-
-                    return artifact;
-                });
+export default {
+    name: "ArtifactTable",
+    components: { ArtifactTableRow },
+    props: {
+        isReportSaved: Boolean,
+        isReportInReadingMode: Boolean,
+        reportId: String,
+        writingCrossTrackerReport: Object
+    },
+    data() {
+        return {
+            is_loading: true,
+            artifacts: [],
+            is_load_more_displayed: false,
+            is_loading_more: false,
+            current_offset: 0,
+            limit: 30
+        };
+    },
+    computed: {
+        artifact_label: () => gettext_provider.gettext("Artifact"),
+        project_label: () => gettext_provider.gettext("Project"),
+        status_label: () => gettext_provider.gettext("Status"),
+        last_update_label: () => gettext_provider.gettext("Last update date"),
+        submitted_by_label: () => gettext_provider.gettext("Submitted by"),
+        assigned_to_label: () => gettext_provider.gettext("Assigned to"),
+        artifacts_empty: () => gettext_provider.gettext("No matching artifacts found"),
+        load_more_label: () => gettext_provider.gettext("Load more"),
+        report_state() {
+            // We just need to react to certain changes in this
+            return [this.isReportInReadingMode, this.isReportSaved];
+        }
+    },
+    watch: {
+        report_state() {
+            if (this.isReportInReadingMode === true) {
+                this.refreshArtifactList();
             }
         }
-    };
+    },
+    mounted() {
+        this.is_loading = true;
+        this.loadArtifacts();
+    },
+    methods: {
+        loadMoreArtifacts() {
+            this.is_loading_more = true;
+            this.loadArtifacts();
+        },
+
+        refreshArtifactList() {
+            this.artifacts = [];
+            this.current_offset = 0;
+            this.is_loading = true;
+            this.is_load_more_displayed = false;
+
+            this.loadArtifacts();
+        },
+
+        async loadArtifacts() {
+            try {
+                const { artifacts, total } = await this.getArtifactsFromReportOrUnsavedQuery();
+
+                this.current_offset += artifacts.length;
+                this.is_load_more_displayed = this.current_offset < total;
+
+                const new_artifacts = this.formatArtifacts(artifacts);
+                this.artifacts = this.artifacts.concat(new_artifacts);
+            } catch (error) {
+                this.is_load_more_displayed = false;
+                this.$emit("restError", error);
+                throw error;
+            } finally {
+                this.is_loading = false;
+                this.is_loading_more = false;
+            }
+        },
+
+        getArtifactsFromReportOrUnsavedQuery() {
+            if (this.isReportSaved === true) {
+                return getReportContent(this.reportId, this.limit, this.current_offset);
+            }
+
+            return getQueryResult(
+                this.reportId,
+                this.writingCrossTrackerReport.getTrackerIds(),
+                this.writingCrossTrackerReport.expert_query,
+                this.limit,
+                this.current_offset
+            );
+        },
+
+        formatArtifacts(artifacts) {
+            return artifacts.map(artifact => {
+                artifact.formatted_last_update_date = moment(artifact.last_update_date).format(
+                    getUserPreferredDateFormat()
+                );
+
+                return artifact;
+            });
+        }
+    }
+};
 </script>)

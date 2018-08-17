@@ -44,11 +44,11 @@
     </div>
 </template>
 <script>
-import LabeledItem from './LabeledItem.vue';
-import { getLabeledItems } from './rest-querier.js';
+import LabeledItem from "./LabeledItem.vue";
+import { getLabeledItems } from "./rest-querier.js";
 
 export default {
-    name: 'LabeledItemsList',
+    name: "LabeledItemsList",
     components: { LabeledItem },
     props: {
         labelsId: String,
@@ -91,21 +91,16 @@ export default {
                     are_there_items_user_cannot_see,
                     has_more,
                     offset
-                } = await getLabeledItems(
-                    this.projectId,
-                    this.labels_id,
-                    this.offset,
-                    this.limit
-                );
+                } = await getLabeledItems(this.projectId, this.labels_id, this.offset, this.limit);
 
-                this.offset         = offset;
+                this.offset = offset;
                 this.has_more_items = has_more;
-                this.items          = this.items.concat(labeled_items);
+                this.items = this.items.concat(labeled_items);
 
                 this.are_there_items_user_cannot_see = are_there_items_user_cannot_see;
             } catch (e) {
                 const { error } = await e.response.json();
-                this.error      = error.code + ' ' + error.message;
+                this.error = error.code + " " + error.message;
             } finally {
                 this.loading = false;
             }

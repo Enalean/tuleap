@@ -18,27 +18,25 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider } from '../gettext-provider.js';
+import { gettext_provider } from "../gettext-provider.js";
 
-    export default {
-        name: 'TrackerListReadingMode',
-        props: [
-            'readingCrossTrackerReport',
-        ],
-        computed: {
-            trackers_empty: () => gettext_provider.gettext("No trackers selected"),
-            no_trackers_in_report() {
-                return this.readingCrossTrackerReport.areTrackersEmpty();
-            },
-            trackers() {
-                const trackers = [...this.readingCrossTrackerReport.getTrackers()];
-                return trackers.map(({ tracker, project }) => {
-                    return {
-                        tracker_label: tracker.label,
-                        project_label: project.label
-                    };
-                });
-            },
+export default {
+    name: "TrackerListReadingMode",
+    props: ["readingCrossTrackerReport"],
+    computed: {
+        trackers_empty: () => gettext_provider.gettext("No trackers selected"),
+        no_trackers_in_report() {
+            return this.readingCrossTrackerReport.areTrackersEmpty();
         },
+        trackers() {
+            const trackers = [...this.readingCrossTrackerReport.getTrackers()];
+            return trackers.map(({ tracker, project }) => {
+                return {
+                    tracker_label: tracker.label,
+                    project_label: project.label
+                };
+            });
+        }
     }
+};
 </script>)

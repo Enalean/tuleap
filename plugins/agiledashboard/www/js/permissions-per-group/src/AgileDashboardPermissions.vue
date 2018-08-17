@@ -70,57 +70,68 @@
 </template>)
 (
 <script>
-    import AgileDashboardPermissionsBadge   from 'permission-badge/PermissionsPerGroupBadge.vue';
-    import { gettext_provider }             from './gettext-provider.js';
-    import { getAgiledashboardPermissions } from './rest-querier.js';
-    import { sprintf }                      from 'sprintf-js';
+import AgileDashboardPermissionsBadge from "permission-badge/PermissionsPerGroupBadge.vue";
+import { gettext_provider } from "./gettext-provider.js";
+import { getAgiledashboardPermissions } from "./rest-querier.js";
+import { sprintf } from "sprintf-js";
 
-    export default {
-        components: {AgileDashboardPermissionsBadge},
-        name: 'AgileDashboardPermissions',
-        data() {
-            return {
-                is_loaded  : false,
-                is_loading : false,
-                permissions: [],
-                error      : null,
-            };
-        },
-        props: {
-            selectedUgroupId  : String,
-            selectedProjectId : String,
-            selectedUgroupName: String
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading                 = true;
-                    const { plannings_permissions } = await getAgiledashboardPermissions(this.selectedProjectId, this.selectedUgroupId);
-                    this.is_loaded                  = true;
-                    this.permissions                = plannings_permissions;
-                } catch (e) {
-                    const {error} = await e.response.json();
-                    this.error    = error;
-                } finally {
-                    this.is_loading = false;
-                }
-            }
-        },
-        computed: {
-            planning_permissions: () => gettext_provider.gettext("See all plannings permissions"),
-            planning: ()             => gettext_provider.gettext("Planning"),
-            prioritizers: ()         => gettext_provider.gettext("Who can prioritize?"),
-            empty_state: ()          => gettext_provider.gettext("Agiledashboard has no planning defined"),
-            ugroup_empty_state()   {
-                return sprintf(
-                    gettext_provider.gettext("%s has no permission for agiledashboard plannings"),
-                    this.selectedUgroupName
+export default {
+    components: { AgileDashboardPermissionsBadge },
+    name: "AgileDashboardPermissions",
+    data() {
+        return {
+            is_loaded: false,
+            is_loading: false,
+            permissions: [],
+            error: null
+        };
+    },
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
+                const { plannings_permissions } = await getAgiledashboardPermissions(
+                    this.selectedProjectId,
+                    this.selectedUgroupId
                 );
-            },
-            isEmpty() { return this.permissions.length === 0; },
-            hasError() { return this.error !== null; },
-            displayButtonLoadAll() { return ! this.is_loaded && ! this.is_loading },
-            hasASelectedUGroup() { return this.selectedUgroupName === '' }
+                this.is_loaded = true;
+                this.permissions = plannings_permissions;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.error = error;
+            } finally {
+                this.is_loading = false;
+            }
         }
-    };
+    },
+    computed: {
+        planning_permissions: () => gettext_provider.gettext("See all plannings permissions"),
+        planning: () => gettext_provider.gettext("Planning"),
+        prioritizers: () => gettext_provider.gettext("Who can prioritize?"),
+        empty_state: () => gettext_provider.gettext("Agiledashboard has no planning defined"),
+        ugroup_empty_state() {
+            return sprintf(
+                gettext_provider.gettext("%s has no permission for agiledashboard plannings"),
+                this.selectedUgroupName
+            );
+        },
+        isEmpty() {
+            return this.permissions.length === 0;
+        },
+        hasError() {
+            return this.error !== null;
+        },
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        },
+        hasASelectedUGroup() {
+            return this.selectedUgroupName === "";
+        }
+    }
+};
 </script>)

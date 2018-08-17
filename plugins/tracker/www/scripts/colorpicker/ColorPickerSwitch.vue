@@ -36,34 +36,34 @@
 </template>
 
 <script>
-    export default {
-        name: "ColorPickerSwitch",
-        props: {
-            isOldPaletteShown        : Boolean,
-            switchDefaultPaletteLabel: String,
-            switchOldPaletteLabel    : String,
-            switchDisabledTitle      : String,
-            isSwitchDisabled         : Boolean
-        },
-        computed: {
-            getSwitchTitle() {
-                if (this.isSwitchDisabled) {
-                    return this.switchDisabledTitle
-                }
-
-                return '';
+export default {
+    name: "ColorPickerSwitch",
+    props: {
+        isOldPaletteShown: Boolean,
+        switchDefaultPaletteLabel: String,
+        switchOldPaletteLabel: String,
+        switchDisabledTitle: String,
+        isSwitchDisabled: Boolean
+    },
+    computed: {
+        getSwitchTitle() {
+            if (this.isSwitchDisabled) {
+                return this.switchDisabledTitle;
             }
-        },
-        methods: {
-            switchPalette(event) {
-                event.stopPropagation();
 
-                if (this.isSwitchDisabled) {
-                    return;
-                }
+            return "";
+        }
+    },
+    methods: {
+        switchPalette(event) {
+            event.stopPropagation();
 
-                this.$emit('switch-palette')
+            if (this.isSwitchDisabled) {
+                return;
             }
+
+            this.$emit("switch-palette");
         }
     }
+};
 </script>

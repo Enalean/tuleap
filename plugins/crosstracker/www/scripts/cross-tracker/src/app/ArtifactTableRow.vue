@@ -37,17 +37,17 @@
     </tr>
 </template>
 (<script>
-import ListBindUser from './ListBindUser.vue';
+import ListBindUser from "./ListBindUser.vue";
 
 export default {
-    name: 'ArtifactTableRow',
+    name: "ArtifactTableRow",
     components: { ListBindUser },
     props: {
         artifact: Object
     },
     computed: {
         badge_color() {
-            return 'tlp-badge-' + this.artifact.badge.color;
+            return "tlp-badge-" + this.artifact.badge.color;
         }
     }
 };

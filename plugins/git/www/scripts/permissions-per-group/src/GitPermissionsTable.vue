@@ -51,71 +51,71 @@
 )
 (
 <script>
-    import GitPermissionsTableRepository from './GitPermissionsTableRepository.vue';
-    import { gettext_provider }          from './gettext-provider.js';
-    import { sprintf }                   from 'sprintf-js';
+import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
+import { gettext_provider } from "./gettext-provider.js";
+import { sprintf } from "sprintf-js";
 
-    export default {
-        name: 'GitPermissionsTable',
-        components: {
-            GitPermissionsTableRepository
-        },
-        props: {
-            repositories: Array,
-            selectedUgroupName: String,
-            filter: String
-        },
-        data() {
-            return {
-                nb_repo_hidden: 0
-            }
-        },
-        methods: {
-            togglePermission(event) {
-                if (event.hidden) {
-                    this.nb_repo_hidden++;
-                }
-            }
-        },
-        computed: {
-            no_repo_empty_state: ()  => gettext_provider.gettext("No repository found for project"),
-            filter_empty_state: ()   => gettext_provider.gettext("There isn't any matching repository"),
-            repository_label: ()     => gettext_provider.gettext("Repository"),
-            branch_label: ()         => gettext_provider.gettext("Branch"),
-            tag_label: ()            => gettext_provider.gettext("Tag"),
-            readers_label: ()        => gettext_provider.gettext("Readers"),
-            writers_label: ()        => gettext_provider.gettext("Writers"),
-            rewinders_label: ()      => gettext_provider.gettext("Rewinders"),
-            ugroup_empty_state() {
-                return sprintf(
-                    gettext_provider.gettext("%s has no permission for any repository in this project"),
-                    this.selectedUgroupName
-                );
-            },
-            is_empty() {
-                return this.repositories.length === 0;
-            },
-            has_a_selected_ugroup() {
-                return this.selectedUgroupName !== ''
-            },
-            are_all_repositories_hidden() {
-                return ! this.is_empty && this.nb_repo_hidden === this.repositories.length;
-            },
-            is_empty_state_shown() {
-                return this.is_empty || this.are_all_repositories_hidden;
-            },
-            empty_state() {
-                return (this.are_all_repositories_hidden)
-                    ? this.filter_empty_state
-                    : (this.has_a_selected_ugroup)
-                    ? this.ugroup_empty_state
-                    : this.no_repo_empty_state;
-            },
-        },
-        watch: {
-            filter() {
-                this.nb_repo_hidden = 0;
+export default {
+    name: "GitPermissionsTable",
+    components: {
+        GitPermissionsTableRepository
+    },
+    props: {
+        repositories: Array,
+        selectedUgroupName: String,
+        filter: String
+    },
+    data() {
+        return {
+            nb_repo_hidden: 0
+        };
+    },
+    methods: {
+        togglePermission(event) {
+            if (event.hidden) {
+                this.nb_repo_hidden++;
             }
         }
-    };
+    },
+    computed: {
+        no_repo_empty_state: () => gettext_provider.gettext("No repository found for project"),
+        filter_empty_state: () => gettext_provider.gettext("There isn't any matching repository"),
+        repository_label: () => gettext_provider.gettext("Repository"),
+        branch_label: () => gettext_provider.gettext("Branch"),
+        tag_label: () => gettext_provider.gettext("Tag"),
+        readers_label: () => gettext_provider.gettext("Readers"),
+        writers_label: () => gettext_provider.gettext("Writers"),
+        rewinders_label: () => gettext_provider.gettext("Rewinders"),
+        ugroup_empty_state() {
+            return sprintf(
+                gettext_provider.gettext("%s has no permission for any repository in this project"),
+                this.selectedUgroupName
+            );
+        },
+        is_empty() {
+            return this.repositories.length === 0;
+        },
+        has_a_selected_ugroup() {
+            return this.selectedUgroupName !== "";
+        },
+        are_all_repositories_hidden() {
+            return !this.is_empty && this.nb_repo_hidden === this.repositories.length;
+        },
+        is_empty_state_shown() {
+            return this.is_empty || this.are_all_repositories_hidden;
+        },
+        empty_state() {
+            return this.are_all_repositories_hidden
+                ? this.filter_empty_state
+                : this.has_a_selected_ugroup
+                    ? this.ugroup_empty_state
+                    : this.no_repo_empty_state;
+        }
+    },
+    watch: {
+        filter() {
+            this.nb_repo_hidden = 0;
+        }
+    }
+};
 </script>)

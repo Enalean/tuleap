@@ -31,25 +31,25 @@
     </td>
 </template>)
 (<script>
-    import { sprintf }          from 'sprintf-js';
-    import { gettext_provider } from './gettext-provider.js';
+import { sprintf } from "sprintf-js";
+import { gettext_provider } from "./gettext-provider.js";
 
-    export default {
-        name : 'TrackerPermissionsTableEmptyState',
-        props: {
-            selectedUgroupName: String
+export default {
+    name: "TrackerPermissionsTableEmptyState",
+    props: {
+        selectedUgroupName: String
+    },
+    computed: {
+        hasASelectedUserGroup() {
+            return this.selectedUgroupName !== "";
         },
-        computed: {
-            hasASelectedUserGroup() {
-                return this.selectedUgroupName !== '';
-            },
-            no_permission_empty_state() {
-                return sprintf(
-                    gettext_provider.gettext('%s has no permission for trackers'),
-                    this.selectedUgroupName
-                );
-            },
-            no_tracker_empty_state: () => gettext_provider.gettext('Project has no tracker')
-        }
-    };
+        no_permission_empty_state() {
+            return sprintf(
+                gettext_provider.gettext("%s has no permission for trackers"),
+                this.selectedUgroupName
+            );
+        },
+        no_tracker_empty_state: () => gettext_provider.gettext("Project has no tracker")
+    }
+};
 </script>)

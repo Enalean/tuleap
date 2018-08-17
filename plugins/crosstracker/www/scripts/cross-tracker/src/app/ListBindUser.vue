@@ -22,7 +22,7 @@
 </template>
 (<script>
 export default {
-    name: 'ListBindUser',
+    name: "ListBindUser",
     props: {
         user: Object
     }

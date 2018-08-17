@@ -29,22 +29,22 @@
 </template>
 
 <script>
-    export default {
-        name: "OldColorPickerPaletteRow",
-        props: {
-            shades: Array
+export default {
+    name: "OldColorPickerPaletteRow",
+    props: {
+        shades: Array
+    },
+    methods: {
+        getStyle(shade) {
+            return {
+                "background-color": shade,
+                color: shade,
+                background: shade
+            };
         },
-        methods: {
-            getStyle(shade) {
-                return {
-                    'background-color': shade,
-                    color             : shade,
-                    background        : shade
-                }
-            },
-            updateColor(color) {
-                this.$emit('color-update', color);
-            }
+        updateColor(color) {
+            this.$emit("color-update", color);
         }
     }
+};
 </script>

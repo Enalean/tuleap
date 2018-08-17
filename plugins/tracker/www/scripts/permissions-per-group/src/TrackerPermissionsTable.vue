@@ -36,22 +36,22 @@
     </table>
 </template>)
 (<script>
-    import { gettext_provider } from './gettext-provider.js';
-    import TableContent         from './TrackerPermissionsTableContent.vue';
+import { gettext_provider } from "./gettext-provider.js";
+import TableContent from "./TrackerPermissionsTableContent.vue";
 
-    export default {
-        name : 'TrackerPermissionsTable',
-        components: {
-            TableContent
-        },
-        props: {
-            trackerPermissions: Array,
-            selectedUgroupName: String
-        },
-        computed: {
-            tracker_label   : () => gettext_provider.gettext('Tracker name'),
-            permission_label: () => gettext_provider.gettext('Permissions'),
-            group_label     : () => gettext_provider.gettext('Granted groups'),
-        }
-    };
+export default {
+    name: "TrackerPermissionsTable",
+    components: {
+        TableContent
+    },
+    props: {
+        trackerPermissions: Array,
+        selectedUgroupName: String
+    },
+    computed: {
+        tracker_label: () => gettext_provider.gettext("Tracker name"),
+        permission_label: () => gettext_provider.gettext("Permissions"),
+        group_label: () => gettext_provider.gettext("Granted groups")
+    }
+};
 </script>)

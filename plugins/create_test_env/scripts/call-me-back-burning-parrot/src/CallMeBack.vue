@@ -81,22 +81,22 @@
 </template>
 
 <script>
-import { dropdown, datePicker }                    from 'tlp';
-import { getCallMeBackMessage, askToBeCalledBack } from '../../call-me-back-rest-querier.js';
-import { DateTime }                                from 'luxon';
-import { sanitize }                                from 'dompurify';
+import { dropdown, datePicker } from "tlp";
+import { getCallMeBackMessage, askToBeCalledBack } from "../../call-me-back-rest-querier.js";
+import { DateTime } from "luxon";
+import { sanitize } from "dompurify";
 
 export default {
-    name: 'CallMeBack',
+    name: "CallMeBack",
     data() {
         return {
-            loading           : false,
-            error             : false,
-            dropdown_open     : false,
-            save_the_date     : false,
-            message           : '',
-            call_me_back_phone: '',
-            call_me_back_date : ''
+            loading: false,
+            error: false,
+            dropdown_open: false,
+            save_the_date: false,
+            message: "",
+            call_me_back_phone: "",
+            call_me_back_date: ""
         };
     },
     computed: {
@@ -119,37 +119,31 @@ export default {
         bindDropdown() {
             const call_me_back_dropdown = dropdown(this.$refs.call_me_back_button);
 
-            call_me_back_dropdown.addEventListener('tlp-dropdown-shown', () => {
+            call_me_back_dropdown.addEventListener("tlp-dropdown-shown", () => {
                 this.dropdown_open = true;
             });
-            call_me_back_dropdown.addEventListener('tlp-dropdown-hidden', () => {
+            call_me_back_dropdown.addEventListener("tlp-dropdown-hidden", () => {
                 this.dropdown_open = false;
             });
         },
         bindCalendar() {
-            datePicker(
-                this.$refs.call_me_back_date,
-                {
-                    static: true,
-                    onValueUpdate: (date, string_value) => {
-                        this.call_me_back_date = string_value;
-                    }
+            datePicker(this.$refs.call_me_back_date, {
+                static: true,
+                onValueUpdate: (date, string_value) => {
+                    this.call_me_back_date = string_value;
                 }
-            );
+            });
         },
         async callMeBack() {
             this.loading = true;
 
             try {
-                await askToBeCalledBack(
-                    this.call_me_back_phone,
-                    this.call_me_back_date
-                );
+                await askToBeCalledBack(this.call_me_back_phone, this.call_me_back_date);
 
                 this.save_the_date = true;
             } catch (e) {
                 const { error } = await e.response.json();
-                this.error      = error.code + ' ' + error.message;
+                this.error = error.code + " " + error.message;
             } finally {
                 this.loading = false;
             }
