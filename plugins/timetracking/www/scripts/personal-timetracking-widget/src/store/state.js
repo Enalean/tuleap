@@ -24,7 +24,13 @@ const state = {
         .toISODate(),
     end_date: DateTime.local().toISODate(),
     reading_mode: true,
-    query_has_changed: false
+    total_times: 0,
+    pagination_offset: 0,
+    pagination_limit: 50,
+    is_loaded: false,
+    times: [],
+    error_message: "",
+    is_loading: false
 };
 
 export default state;

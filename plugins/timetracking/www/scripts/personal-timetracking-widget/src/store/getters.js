@@ -17,18 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import mutations from "./mutations.js";
-import * as getters from "./getters.js";
-import * as actions from "./actions.js";
-import state from "./state.js";
+import { formatMinutes } from "../time-formatters.js";
 
-Vue.use(Vuex);
+export function get_formatted_total_sum(state) {
+    const sum = [].concat(...state.times).reduce((sum, { minutes }) => minutes + sum, 0);
+    return formatMinutes(sum);
+}
 
-export default new Vuex.Store({
-    getters,
-    actions,
-    state,
-    mutations
-});
+export const get_formatted_aggregated_time = () => times => {
+    const minutes = times.reduce((sum, { minutes }) => minutes + sum, 0);
+    return formatMinutes(minutes);
+};
+
+export const has_rest_error = state => state.error_message !== "";
+
+export const can_results_be_displayed = state => state.is_loaded && state.error_message === "";
+
+export const can_load_more = state => state.pagination_offset < state.total_times;

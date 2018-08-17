@@ -11,7 +11,6 @@
         </div>
         <widget-modal-content
             v-bind:time-data="timeData"
-            v-bind:total-time="totalTime"
         />
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
@@ -27,19 +26,13 @@ export default {
     name: "WidgetModalTimes",
     components: { WidgetModalContent },
     props: {
-        timeData: Array,
-        totalTime: String
-    },
-    data() {
-        return {
-            artifact: this.timeData[0].artifact
-        };
+        timeData: Array
     },
     computed: {
         close_label: () => gettext_provider.gettext("Close"),
         edit_time: () => gettext_provider.gettext("Detailed times"),
         new_id() {
-            return "timetracking-artifact-details-modal-" + this.artifact.id;
+            return "timetracking-artifact-details-modal-" + this.timeData[0].artifact.id;
         }
     }
 };

@@ -34,10 +34,50 @@ export default {
         state.query_has_changed = has_changed;
     },
 
-    setDates(state, [start_date, end_date]) {
+    setParametersForNewQuery(state, [start_date, end_date]) {
         state.start_date = start_date;
         state.end_date = end_date;
         state.reading_mode = !state.reading_mode;
-        state.query_has_changed = true;
+        state.times = [];
+        state.pagination_offset = 0;
+    },
+
+    setIsLoaded(state, is_loaded) {
+        state.is_loaded = is_loaded;
+    },
+
+    setTotalTimes(state, total_times) {
+        state.total_times = total_times;
+    },
+
+    setPaginationOffset(state, pagination_offset) {
+        state.pagination_offset = pagination_offset;
+    },
+
+    setPaginationLimit(state, pagination_limit) {
+        state.pagination_limit = pagination_limit;
+    },
+
+    loadAChunkOfTimes(state, [times, total]) {
+        state.times = state.times.concat(Object.values(times));
+        state.pagination_offset += state.pagination_limit;
+        state.total_times = total;
+        state.is_loaded = true;
+    },
+
+    resetErrorMessage(state) {
+        state.error_message = "";
+    },
+
+    setErrorMessage(state, error_message) {
+        state.error_message = error_message;
+    },
+
+    setTimes(state, times) {
+        state.times = state.times.concat(Object.values(times));
+    },
+
+    setIsLoading(state, isLoading) {
+        state.is_loading = isLoading;
     }
 };

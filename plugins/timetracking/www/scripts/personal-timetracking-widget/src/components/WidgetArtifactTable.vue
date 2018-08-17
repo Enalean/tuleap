@@ -19,11 +19,11 @@
 
 (<template>
     <div class="timetracking-artifacts-table">
-        <div v-if="hasRestError" class="tlp-alert-danger">
-            {{ this.rest_error }}
+        <div v-if="has_rest_error" class="tlp-alert-danger">
+            {{ error_message }}
         </div>
         <div v-if="is_loading" class="timetracking-loader"></div>
-        <table v-if="canResultsBeDisplayed" class="tlp-table">
+        <table v-if="can_results_be_displayed" class="tlp-table">
             <thead>
                 <tr>
                     <th>{{ artifact_label }}</th>
@@ -41,21 +41,21 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="! hasDataToDisplay">
+                <tr v-if="! has_data_to_display">
                     <td colspan="4" class="tlp-table-cell-empty">
                         {{ empty_state }}
                     </td>
                 </tr>
-                <artifact-table-row v-for="(time, index) in tracked_times"
-                    v-bind:key="index"
+                <artifact-table-row v-for="time in times"
+                    v-bind:key="time.id"
                     v-bind:time-data="time"
                 />
             </tbody>
-            <tfoot v-if="hasDataToDisplay">
+            <tfoot v-if="has_data_to_display">
                 <tr>
                     <th></th>
                     <th></th>
-                    <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ getFormattedTotalSum() }}</th>
+                    <th class="tlp-table-cell-numeric timetracking-total-sum">∑ {{ get_formatted_total_sum }}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -64,7 +64,7 @@
             <button
                 class="tlp-button-primary tlp-button-outline tlp-button-small"
                 type="button"
-                v-if="canLoadMore"
+                v-if="can_load_more"
                 v-on:click="loadMore"
                 v-bind:disabled="is_loading_more"
             >
@@ -76,9 +76,7 @@
 </template>)
 (<script>
 import { gettext_provider } from "../gettext-provider.js";
-import { getTrackedTimes } from "../api/rest-querier.js";
-import { mapState } from "vuex";
-import { formatMinutes } from "../time-formatters.js";
+import { mapState, mapGetters } from "vuex";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 
 export default {
@@ -86,32 +84,19 @@ export default {
     components: { ArtifactTableRow },
     data() {
         return {
-            tracked_times: [],
-            rest_error: "",
-            is_loading: false,
-            is_loaded: false,
-            is_loading_more: false,
-            total_times: 0,
-            pagination_offset: 0,
-            pagination_limit: 50
+            is_loading_more: false
         };
     },
     computed: {
-        ...mapState(["start_date", "end_date", "reading_mode", "query_has_changed"]),
-        hasRestError() {
-            return this.rest_error !== "";
-        },
-        hasDataToDisplay() {
-            return this.tracked_times.length > 0;
-        },
-        canResultsBeDisplayed() {
-            return this.is_loaded && !this.hasRestError;
-        },
-        report_state() {
-            return [this.reading_mode, this.query_has_changed];
-        },
-        canLoadMore() {
-            return this.pagination_offset < this.total_times && !this.rest_error;
+        ...mapState(["reading_mode", "error_message", "times", "is_loading"]),
+        ...mapGetters([
+            "get_formatted_total_sum",
+            "has_rest_error",
+            "can_results_be_displayed",
+            "can_load_more"
+        ]),
+        has_data_to_display() {
+            return this.times.length > 0;
         },
         time_format_tooltip: () =>
             gettext_provider.gettext("The time is displayed in hours:minutes"),
@@ -122,69 +107,14 @@ export default {
         time_label: () => gettext_provider.gettext("Time"),
         load_more_label: () => gettext_provider.gettext("Load more")
     },
-    watch: {
-        report_state() {
-            if (this.reading_mode && this.query_has_changed) {
-                this.pagination_offset = 0;
-                this.tracked_times.length = 0;
-                this.loadFirstBatchOfTimes();
-            }
-        }
-    },
     mounted() {
-        this.loadFirstBatchOfTimes();
+        this.$store.dispatch("loadFirstBatchOfTimes");
     },
     methods: {
-        getFormattedTotalSum() {
-            const sum = []
-                .concat(...this.tracked_times)
-                .reduce((sum, { minutes }) => minutes + sum, 0);
-
-            return formatMinutes(sum);
-        },
-        async loadTimes() {
-            try {
-                this.rest_error = "";
-
-                const { times, total } = await getTrackedTimes(
-                    this.start_date,
-                    this.end_date,
-                    this.pagination_limit,
-                    this.pagination_offset
-                );
-
-                this.tracked_times = this.tracked_times.concat(Object.values(times));
-
-                this.pagination_offset += this.pagination_limit;
-
-                this.total_times = total;
-                this.is_loaded = true;
-            } catch (error) {
-                await this.showRestError(error);
-            }
-        },
-        async showRestError(rest_error) {
-            try {
-                const { error } = await rest_error.response.json();
-
-                this.rest_error = error.code + " " + error.message;
-            } catch (error) {
-                this.rest_error = gettext_provider.gettext("An error occured");
-            }
-        },
         async loadMore() {
             this.is_loading_more = true;
-
-            await this.loadTimes();
-
+            await this.$store.dispatch("getTimes");
             this.is_loading_more = false;
-        },
-        async loadFirstBatchOfTimes() {
-            this.is_loading = true;
-
-            await this.loadTimes();
-
-            this.is_loading = false;
         }
     }
 };
