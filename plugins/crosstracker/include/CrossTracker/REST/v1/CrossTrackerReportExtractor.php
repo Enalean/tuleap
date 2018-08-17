@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -33,6 +33,13 @@ class CrossTrackerReportExtractor
         $this->tracker_factory = $tracker_factory;
     }
 
+    /**
+     * @param array $trackers_id
+     *
+     * @return array
+     * @throws TrackerDuplicateException
+     * @throws TrackerNotFoundException
+     */
     public function extractTrackers(array $trackers_id)
     {
         $invalid_tracker = array();
@@ -47,13 +54,21 @@ class CrossTrackerReportExtractor
         }
 
         if (count($invalid_tracker) > 0) {
-            throw new TrackerNotFoundException('One tracker or more are not found: ' . implode(',', $invalid_tracker));
+            throw new TrackerNotFoundException(
+                sprintf(
+                    dgettext('tuleap-crosstracker', 'One tracker or more are not found: %s'),
+                    implode(',', $invalid_tracker)
+                )
+            );
         }
 
         $duplicates = array_diff_key($list, array_unique($list));
         if (count($duplicates) > 0) {
             throw new TrackerDuplicateException(
-                'One tracker or more is duplicated in list: ' . implode(',', $duplicates)
+                sprintf(
+                    dgettext('tuleap-crosstracker', 'One tracker or more is duplicated in list: %s'),
+                    implode(',', $duplicates)
+                )
             );
         }
 

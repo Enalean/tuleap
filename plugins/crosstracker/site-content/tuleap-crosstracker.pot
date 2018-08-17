@@ -134,6 +134,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+#, php-format
+msgid "One tracker or more are not found: %s"
+msgstr ""
+
+#, php-format
+msgid "One tracker or more is duplicated in list: %s"
+msgstr ""
+
 msgid "Search artifacts that are in different trackers"
 msgstr ""
 
