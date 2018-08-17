@@ -16,5 +16,6 @@
             ],
             "target_dir": "www/themes/FlamingParrot/css"
         }
-    }
+    },
+    "components": ["www/scripts"]
 }

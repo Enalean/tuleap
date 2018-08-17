@@ -1,9 +1,0 @@
-{
-  "name": "tuleap-pullrequest",
-  "version": "0.0.1",
-  "dependencies": {
-    "angular": "~1.4.9",
-    "angular-ui-bootstrap-bower": "~0.8.0"
-  },
-  "devDependencies": {}
-}

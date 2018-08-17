@@ -104,7 +104,7 @@ const fat_combined_files = [
             }
         }
     },
-    bower_app_paths = ["plugins/frs/www/js/angular", "plugins/pullrequest/www/scripts/"],
+    bower_app_paths = ["plugins/frs/www/js/angular"],
     asset_dir = "www/assets";
 
 tuleap.declare_plugin_tasks(asset_dir);

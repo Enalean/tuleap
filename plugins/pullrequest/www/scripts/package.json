@@ -20,8 +20,6 @@
   },
   "devDependencies": {
     "angular-mocks": "^1.4.14",
-    "bower": "^1.8.2",
-    "concurrently": "^3.5.1",
     "gulp": "^3.9.1",
     "gulp-sass": "^4.0.1",
     "jquery": "^3.3.1"
@@ -30,10 +28,9 @@
     "bin": "../../../../node_modules/.bin/"
   },
   "scripts": {
-    "bower": "bower install --allow-root --config.interactive=false",
     "build": "rm -rf ../assets/* && gulp build && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "coverage": "rm -rf ./coverage && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'"
   }
 }
