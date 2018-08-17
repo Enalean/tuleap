@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use DateInterval;
 use DateTime;
 use EventManager;
 use Statistics_Event;
+use Tuleap\Statistics\Frequencies\FrequenciesSearchFieldsPresenter;
 
 class SearchFieldsPresenterBuilder
 {
