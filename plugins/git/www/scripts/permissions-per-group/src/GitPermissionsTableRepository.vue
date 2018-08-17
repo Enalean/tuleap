@@ -21,38 +21,38 @@
 )
 (
 <script>
-    import GitRepositoryTableSimplePermissions                from './GitRepositoryTableSimplePermissions.vue';
-    import GitRepositoryTableFineGrainedPermissionsRepository from './GitRepositoryTableFineGrainedPermissionsRepository.vue';
-    import GitRepositoryTableFineGrainedPermission            from './GitRepositoryTableFineGrainedPermission.vue';
+import GitRepositoryTableSimplePermissions from "./GitRepositoryTableSimplePermissions.vue";
+import GitRepositoryTableFineGrainedPermissionsRepository from "./GitRepositoryTableFineGrainedPermissionsRepository.vue";
+import GitRepositoryTableFineGrainedPermission from "./GitRepositoryTableFineGrainedPermission.vue";
 
-    export default {
-        name: 'GitPermissionsTableGlobal',
-        components: {
-            GitRepositoryTableSimplePermissions,
-            GitRepositoryTableFineGrainedPermissionsRepository,
-            GitRepositoryTableFineGrainedPermission,
-        },
-        data() {
-            return  {
-                is_hidden: false
-            };
-        },
-        props: {
-            repository: Object,
-            filter    : String
-        },
-        watch: {
-            filter(new_value) {
-                if (! new_value || this.repository.name.includes(new_value)) {
-                    this.is_hidden = false;
-                    this.$emit('filtered', { hidden: this.is_hidden });
-                    return;
-                }
-
-                this.is_hidden = true;
-                this.$emit('filtered', { hidden: this.is_hidden });
+export default {
+    name: "GitPermissionsTableGlobal",
+    components: {
+        GitRepositoryTableSimplePermissions,
+        GitRepositoryTableFineGrainedPermissionsRepository,
+        GitRepositoryTableFineGrainedPermission
+    },
+    data() {
+        return {
+            is_hidden: false
+        };
+    },
+    props: {
+        repository: Object,
+        filter: String
+    },
+    watch: {
+        filter(new_value) {
+            if (!new_value || this.repository.name.includes(new_value)) {
+                this.is_hidden = false;
+                this.$emit("filtered", { hidden: this.is_hidden });
+                return;
             }
+
+            this.is_hidden = true;
+            this.$emit("filtered", { hidden: this.is_hidden });
         }
-    };
+    }
+};
 </script>
 )

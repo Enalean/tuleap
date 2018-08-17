@@ -45,77 +45,77 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider }             from '../gettext-provider.js';
-    import QueryEditor                      from './QueryEditor.vue';
-    import TrackerSelection                 from './TrackerSelection.vue';
-    import TrackerListWritingMode           from './TrackerListWritingMode.vue';
-    import { TooManyTrackersSelectedError } from './writing-cross-tracker-report.js';
+import { gettext_provider } from "../gettext-provider.js";
+import QueryEditor from "./QueryEditor.vue";
+import TrackerSelection from "./TrackerSelection.vue";
+import TrackerListWritingMode from "./TrackerListWritingMode.vue";
+import { TooManyTrackersSelectedError } from "./writing-cross-tracker-report.js";
 
-    export default {
-        name: 'WritingMode',
-        components: {
-            QueryEditor,
-            TrackerSelection,
-            TrackerListWritingMode
+export default {
+    name: "WritingMode",
+    components: {
+        QueryEditor,
+        TrackerSelection,
+        TrackerListWritingMode
+    },
+    props: ["writingCrossTrackerReport"],
+    data() {
+        return {
+            selected_trackers: []
+        };
+    },
+    computed: {
+        search_label: () => gettext_provider.gettext("Search"),
+        cancel_label: () => gettext_provider.gettext("Cancel"),
+        project_label: () => gettext_provider.gettext("Project"),
+        tracker_label: () => gettext_provider.gettext("Tracker"),
+        search_label: () => gettext_provider.gettext("Search"),
+        cancel_label: () => gettext_provider.gettext("Cancel"),
+        add_button_label: () => gettext_provider.gettext("Add")
+    },
+    methods: {
+        cancel() {
+            this.$emit("switchToReadingMode", { saved_state: true });
         },
-        props: [
-            'writingCrossTrackerReport',
-        ],
-        data() {
-            return {
-                selected_trackers: []
-            };
+        search() {
+            this.$emit("switchToReadingMode", { saved_state: false });
         },
-        computed: {
-            search_label: () => gettext_provider.gettext("Search"),
-            cancel_label: () => gettext_provider.gettext("Cancel"),
-            project_label   : () => gettext_provider.gettext("Project"),
-            tracker_label   : () => gettext_provider.gettext("Tracker"),
-            search_label    : () => gettext_provider.gettext("Search"),
-            cancel_label    : () => gettext_provider.gettext("Cancel"),
-            add_button_label: () => gettext_provider.gettext("Add"),
 
-        },
-        methods: {
-            cancel() {
-                this.$emit('switchToReadingMode', { saved_state: true});
-            },
-            search() {
-                this.$emit('switchToReadingMode', { saved_state: false });
-            },
-
-            addTrackerToSelection({ selected_project, selected_tracker }) {
-                try {
-                    this.writingCrossTrackerReport.addTracker(selected_project, selected_tracker);
-                    this.updateSelectedTrackers();
-                } catch (error) {
-                    if (error instanceof TooManyTrackersSelectedError) {
-                        this.$emit('error', gettext_provider.gettext('Tracker selection is limited to 10 trackers'));
-                    } else {
-                        throw error;
-                    }
-                }
-            },
-
-            removeTrackerFromSelection({ tracker_id }) {
-                this.writingCrossTrackerReport.removeTracker(tracker_id);
+        addTrackerToSelection({ selected_project, selected_tracker }) {
+            try {
+                this.writingCrossTrackerReport.addTracker(selected_project, selected_tracker);
                 this.updateSelectedTrackers();
-                this.$emit('clearErrors');
-            },
-
-            updateSelectedTrackers() {
-                const trackers = [...this.writingCrossTrackerReport.getTrackers()];
-                this.selected_trackers = trackers.map(({ tracker, project }) => {
-                    return {
-                        tracker_id   : tracker.id,
-                        tracker_label: tracker.label,
-                        project_label: project.label
-                    };
-                });
-            },
+            } catch (error) {
+                if (error instanceof TooManyTrackersSelectedError) {
+                    this.$emit(
+                        "error",
+                        gettext_provider.gettext("Tracker selection is limited to 10 trackers")
+                    );
+                } else {
+                    throw error;
+                }
+            }
         },
-        mounted() {
+
+        removeTrackerFromSelection({ tracker_id }) {
+            this.writingCrossTrackerReport.removeTracker(tracker_id);
             this.updateSelectedTrackers();
+            this.$emit("clearErrors");
+        },
+
+        updateSelectedTrackers() {
+            const trackers = [...this.writingCrossTrackerReport.getTrackers()];
+            this.selected_trackers = trackers.map(({ tracker, project }) => {
+                return {
+                    tracker_id: tracker.id,
+                    tracker_label: tracker.label,
+                    project_label: project.label
+                };
+            });
         }
+    },
+    mounted() {
+        this.updateSelectedTrackers();
     }
+};
 </script>)

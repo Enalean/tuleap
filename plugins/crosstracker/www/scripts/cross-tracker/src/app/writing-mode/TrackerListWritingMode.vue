@@ -39,15 +39,15 @@
     </div>
 </template>)
 (<script>
-    export default {
-        name: 'TrackerListWritingMode',
-        props: {
-            trackers: Array
-        },
-        methods: {
-            removeTracker(tracker) {
-                this.$emit('trackerRemoved', tracker)
-            }
+export default {
+    name: "TrackerListWritingMode",
+    props: {
+        trackers: Array
+    },
+    methods: {
+        removeTracker(tracker) {
+            this.$emit("trackerRemoved", tracker);
         }
     }
+};
 </script>)

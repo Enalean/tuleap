@@ -53,21 +53,18 @@
     </div>
 </template>)
 (<script>
-import { gettext_provider } from '../gettext-provider.js';
+import { gettext_provider } from "../gettext-provider.js";
 import {
     TQL_cross_tracker_autocomplete_keywords,
     TQL_cross_tracker_mode_definition
-} from './tql-configuration.js';
-import { insertAllowedFieldInCodeMirror } from 'plugin-tracker-TQL/allowed-field-inserter.js';
-import {
-    initializeTQLMode,
-    codeMirrorify
-} from 'plugin-tracker-TQL/builder.js';
+} from "./tql-configuration.js";
+import { insertAllowedFieldInCodeMirror } from "plugin-tracker-TQL/allowed-field-inserter.js";
+import { initializeTQLMode, codeMirrorify } from "plugin-tracker-TQL/builder.js";
 
 export default {
-    name: 'QueryEditor',
+    name: "QueryEditor",
     props: {
-        'writingCrossTrackerReport': Object
+        writingCrossTrackerReport: Object
     },
     data() {
         return {
@@ -75,20 +72,21 @@ export default {
         };
     },
     computed: {
-        query_label                      : () => gettext_provider.gettext('Query'),
-        allowed_fields_label             : () => gettext_provider.gettext('Allowed fields'),
-        title_semantic_label             : () => gettext_provider.gettext('Title'),
-        description_semantic_label       : () => gettext_provider.gettext('Description'),
-        status_semantic_label            : () => gettext_provider.gettext('Status'),
-        submitted_on_label               : () => gettext_provider.gettext('Submitted on'),
-        lud_label                        : () => gettext_provider.gettext('Last update date'),
-        submitted_by_label               : () => gettext_provider.gettext('Submitted by'),
-        luby_label                       : () => gettext_provider.gettext('Last update by'),
-        assigned_to_label                : () => gettext_provider.gettext('Assigned to'),
-        placeholder                      : () => gettext_provider.gettext("Example: @title = 'value'"),
-        tql_tips                         : () => gettext_provider.gettext(
-            'You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.'
-        )
+        query_label: () => gettext_provider.gettext("Query"),
+        allowed_fields_label: () => gettext_provider.gettext("Allowed fields"),
+        title_semantic_label: () => gettext_provider.gettext("Title"),
+        description_semantic_label: () => gettext_provider.gettext("Description"),
+        status_semantic_label: () => gettext_provider.gettext("Status"),
+        submitted_on_label: () => gettext_provider.gettext("Submitted on"),
+        lud_label: () => gettext_provider.gettext("Last update date"),
+        submitted_by_label: () => gettext_provider.gettext("Submitted by"),
+        luby_label: () => gettext_provider.gettext("Last update by"),
+        assigned_to_label: () => gettext_provider.gettext("Assigned to"),
+        placeholder: () => gettext_provider.gettext("Example: @title = 'value'"),
+        tql_tips: () =>
+            gettext_provider.gettext(
+                "You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space."
+            )
     },
     created() {
         initializeTQLMode(TQL_cross_tracker_mode_definition);
@@ -104,7 +102,7 @@ export default {
             submitFormCallback
         });
 
-        this.code_mirror_instance.on('change', () => {
+        this.code_mirror_instance.on("change", () => {
             this.writingCrossTrackerReport.expert_query = this.code_mirror_instance.getValue();
         });
     },
@@ -113,7 +111,7 @@ export default {
             insertAllowedFieldInCodeMirror(event, this.code_mirror_instance);
         },
         search() {
-            this.$emit('triggerSearch');
+            this.$emit("triggerSearch");
         }
     }
 };

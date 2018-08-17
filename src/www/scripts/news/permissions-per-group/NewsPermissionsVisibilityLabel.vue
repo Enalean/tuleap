@@ -33,16 +33,16 @@
     </td>
 </template>)
 (<script>
-    import { gettext_provider } from './gettext-provider.js';
+import { gettext_provider } from "./gettext-provider.js";
 
-    export default {
-        name : 'VisibilityLabel',
-        props: {
-            isVisibilityPublic: Boolean
-        },
-        computed: {
-            private_news_label: () => gettext_provider.gettext('Private'),
-            public_news_label : () => gettext_provider.gettext('Public')
-        }
-    };
+export default {
+    name: "VisibilityLabel",
+    props: {
+        isVisibilityPublic: Boolean
+    },
+    computed: {
+        private_news_label: () => gettext_provider.gettext("Private"),
+        public_news_label: () => gettext_provider.gettext("Public")
+    }
+};
 </script>)

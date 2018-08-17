@@ -81,25 +81,25 @@
 </template>
 
 <script>
-import { getCallMeBackMessage, askToBeCalledBack } from '../../call-me-back-rest-querier.js';
-import { DateTime }                                from 'luxon';
-import { sanitize }                                from 'dompurify';
-import jQuery                                      from "jquery";
+import { getCallMeBackMessage, askToBeCalledBack } from "../../call-me-back-rest-querier.js";
+import { DateTime } from "luxon";
+import { sanitize } from "dompurify";
+import jQuery from "jquery";
 
 export default {
-    name: 'CallMeBack',
+    name: "CallMeBack",
     props: {
         locale: String
     },
     data() {
         return {
-            loading           : false,
-            error             : false,
-            dropdown_open     : false,
-            save_the_date     : false,
-            message           : '',
-            call_me_back_phone: '',
-            call_me_back_date : ''
+            loading: false,
+            error: false,
+            dropdown_open: false,
+            save_the_date: false,
+            message: "",
+            call_me_back_phone: "",
+            call_me_back_date: ""
         };
     },
     computed: {
@@ -120,9 +120,9 @@ export default {
             this.message = await getCallMeBackMessage();
         },
         observeDropdown() {
-            const observer = new MutationObserver((mutations) => {
-                for(const mutation of mutations) {
-                    if (mutation.target.classList.contains('open')) {
+            const observer = new MutationObserver(mutations => {
+                for (const mutation of mutations) {
+                    if (mutation.target.classList.contains("open")) {
                         this.dropdown_open = true;
                     } else {
                         this.dropdown_open = false;
@@ -134,23 +134,20 @@ export default {
         },
         bindCalendar() {
             jQuery(this.$refs.form_element_date).datetimepicker({
-                 language: this.locale,
-                 pickTime: false
-            })
+                language: this.locale,
+                pickTime: false
+            });
         },
         async callMeBack() {
             this.loading = true;
 
             try {
-                await askToBeCalledBack(
-                    this.call_me_back_phone,
-                    this.call_me_back_date
-                );
+                await askToBeCalledBack(this.call_me_back_phone, this.call_me_back_date);
 
                 this.save_the_date = true;
             } catch (e) {
                 const { error } = await e.response.json();
-                this.error      = error.code + ' ' + error.message;
+                this.error = error.code + " " + error.message;
             } finally {
                 this.loading = false;
             }

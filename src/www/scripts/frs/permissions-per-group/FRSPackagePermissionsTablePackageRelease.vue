@@ -14,15 +14,15 @@
     </tr>
 </template>)
 (<script>
-    import UgroupBadge from '../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue';
+import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
 
-    export default {
-        name : "ReleasePermissions",
-        props: {
-            release: Object
-        },
-        components: {
-            UgroupBadge
-        }
-    };
+export default {
+    name: "ReleasePermissions",
+    props: {
+        release: Object
+    },
+    components: {
+        UgroupBadge
+    }
+};
 </script>)

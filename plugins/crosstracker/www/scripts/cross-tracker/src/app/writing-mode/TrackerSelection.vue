@@ -64,92 +64,102 @@
     </div>
 </template>)
 (<script>
-    import { gettext_provider }             from '../gettext-provider.js';
-    import { getSortedProjectsIAmMemberOf } from './projects-cache.js';
-    import { getTrackersOfProject }         from '../rest-querier.js';
+import { gettext_provider } from "../gettext-provider.js";
+import { getSortedProjectsIAmMemberOf } from "./projects-cache.js";
+import { getTrackersOfProject } from "../rest-querier.js";
 
-    export default {
-        name: 'TrackerSelection',
-        props: [
-            'selectedTrackers'
-        ],
-        data() {
-            return {
-                selected_project: null,
-                selected_tracker: null,
-                projects: [],
-                trackers: [],
-                is_loader_shown: false
-            }
-        },
-        watch: {
-            selected_project: function(new_value) {
-                this.selected_tracker = null;
-                this.trackers         = [];
-                this.loadTrackers(new_value.id);
-            }
-        },
-        computed: {
-            project_label      : () => gettext_provider.gettext("Project"),
-            tracker_label      : () => gettext_provider.gettext("Tracker"),
-            add_button_label   : () => gettext_provider.gettext("Add"),
-            please_choose_label: () => gettext_provider.gettext('Please choose...'),
-            is_project_select_disabled() {
-                return this.projects.length === 0;
-            },
-            is_tracker_select_disabled() {
-                return this.trackers.length === 0;
-            },
-            is_add_button_disabled() {
-                return this.selected_tracker === null;
-            },
-            tracker_options() {
-                return this.trackers.map(({ id, label }) => {
-                    const is_already_selected = this.selectedTrackers.find(({ tracker_id }) => id === tracker_id);
-                    return {
-                        id,
-                        label,
-                        disabled: is_already_selected !== undefined
-                    }
-                });
-            }
-        },
-        methods: {
-            async loadProjects() {
-                this.is_loader_shown = true;
-                try {
-                    this.projects         = await getSortedProjectsIAmMemberOf();
-                    this.selected_project = this.projects[0];
-                } catch (error) {
-                    this.$emit('error', gettext_provider.gettext('Error while fetching the list of projects you are member of'));
-                    throw error;
-                } finally {
-                    this.is_loader_shown = false;
-                }
-            },
-
-            async loadTrackers(project_id) {
-                this.is_loader_shown = true;
-                try {
-                    this.trackers = await getTrackersOfProject(project_id);
-                } catch (error) {
-                    this.$emit('error', gettext_provider.gettext('Error while fetching the list of trackers of this project'));
-                    throw error;
-                } finally {
-                    this.is_loader_shown = false;
-                }
-            },
-
-            addTrackerToSelection() {
-                this.$emit('trackerAdded', {
-                    selected_project: this.selected_project,
-                    selected_tracker: this.selected_tracker
-                });
-                this.selected_tracker = null;
-            },
-        },
-        mounted() {
-            this.loadProjects();
+export default {
+    name: "TrackerSelection",
+    props: ["selectedTrackers"],
+    data() {
+        return {
+            selected_project: null,
+            selected_tracker: null,
+            projects: [],
+            trackers: [],
+            is_loader_shown: false
+        };
+    },
+    watch: {
+        selected_project: function(new_value) {
+            this.selected_tracker = null;
+            this.trackers = [];
+            this.loadTrackers(new_value.id);
         }
+    },
+    computed: {
+        project_label: () => gettext_provider.gettext("Project"),
+        tracker_label: () => gettext_provider.gettext("Tracker"),
+        add_button_label: () => gettext_provider.gettext("Add"),
+        please_choose_label: () => gettext_provider.gettext("Please choose..."),
+        is_project_select_disabled() {
+            return this.projects.length === 0;
+        },
+        is_tracker_select_disabled() {
+            return this.trackers.length === 0;
+        },
+        is_add_button_disabled() {
+            return this.selected_tracker === null;
+        },
+        tracker_options() {
+            return this.trackers.map(({ id, label }) => {
+                const is_already_selected = this.selectedTrackers.find(
+                    ({ tracker_id }) => id === tracker_id
+                );
+                return {
+                    id,
+                    label,
+                    disabled: is_already_selected !== undefined
+                };
+            });
+        }
+    },
+    methods: {
+        async loadProjects() {
+            this.is_loader_shown = true;
+            try {
+                this.projects = await getSortedProjectsIAmMemberOf();
+                this.selected_project = this.projects[0];
+            } catch (error) {
+                this.$emit(
+                    "error",
+                    gettext_provider.gettext(
+                        "Error while fetching the list of projects you are member of"
+                    )
+                );
+                throw error;
+            } finally {
+                this.is_loader_shown = false;
+            }
+        },
+
+        async loadTrackers(project_id) {
+            this.is_loader_shown = true;
+            try {
+                this.trackers = await getTrackersOfProject(project_id);
+            } catch (error) {
+                this.$emit(
+                    "error",
+                    gettext_provider.gettext(
+                        "Error while fetching the list of trackers of this project"
+                    )
+                );
+                throw error;
+            } finally {
+                this.is_loader_shown = false;
+            }
+        },
+
+        addTrackerToSelection() {
+            this.$emit("trackerAdded", {
+                selected_project: this.selected_project,
+                selected_tracker: this.selected_tracker
+            });
+            this.selected_tracker = null;
+        }
+    },
+    mounted() {
+        this.loadProjects();
     }
+};
 </script>)

@@ -30,21 +30,21 @@
 </template>
 
 <script>
-    export default {
-        name: "ColorPickerNoColorOption",
-        props: {
-            selectedColor: String,
-            noColorLabel : String
-        },
-        computed: {
-            isSelected() {
-                return this.selectedColor === '';
-            }
-        },
-        methods: {
-            updateColor() {
-                this.$emit('color-update');
-            }
+export default {
+    name: "ColorPickerNoColorOption",
+    props: {
+        selectedColor: String,
+        noColorLabel: String
+    },
+    computed: {
+        isSelected() {
+            return this.selectedColor === "";
+        }
+    },
+    methods: {
+        updateColor() {
+            this.$emit("color-update");
         }
     }
+};
 </script>

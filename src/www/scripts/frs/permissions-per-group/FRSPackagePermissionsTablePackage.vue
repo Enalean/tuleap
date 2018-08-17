@@ -27,25 +27,25 @@
     </tbody>
 </template>)
 (<script>
-    import UgroupBadge          from '../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue';
-    import EmptyState           from './FRSPackagePermissionsTablePackageEmptyState.vue';
-    import ReleasePermissions   from './FRSPackagePermissionsTablePackageRelease.vue';
+import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPerGroupBadge.vue";
+import EmptyState from "./FRSPackagePermissionsTablePackageEmptyState.vue";
+import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 
-    export default {
-        name : "PackagePermissions",
-        props: {
-            packagePermissions: Array,
-            selectedUgroupName: String
-        },
-        components: {
-            EmptyState,
-            UgroupBadge,
-            ReleasePermissions
-        },
-        computed: {
-            has_permissions() {
-                return this.packagePermissions.length > 0;
-            }
+export default {
+    name: "PackagePermissions",
+    props: {
+        packagePermissions: Array,
+        selectedUgroupName: String
+    },
+    components: {
+        EmptyState,
+        UgroupBadge,
+        ReleasePermissions
+    },
+    computed: {
+        has_permissions() {
+            return this.packagePermissions.length > 0;
         }
-    };
+    }
+};
 </script>)

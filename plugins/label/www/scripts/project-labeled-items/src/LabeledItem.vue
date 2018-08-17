@@ -5,20 +5,20 @@
     </a>
 </template>
 <script>
-    import { sanitize } from 'dompurify';
+import { sanitize } from "dompurify";
 
-    export default {
-        name: 'LabeledItem',
-        props: [ 'item' ],
-        computed: {
-            purified_icon: function() {
-                return sanitize(this.item.small_icon, {
-                    USE_PROFILES: { svg: true }
-                });
-            },
-            purified_title: function() {
-                return sanitize(this.item.title);
-            }
+export default {
+    name: "LabeledItem",
+    props: ["item"],
+    computed: {
+        purified_icon: function() {
+            return sanitize(this.item.small_icon, {
+                USE_PROFILES: { svg: true }
+            });
+        },
+        purified_title: function() {
+            return sanitize(this.item.title);
         }
-    };
+    }
+};
 </script>

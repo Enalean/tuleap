@@ -34,20 +34,20 @@
 </template>)
 (
 <script>
-    import { gettext_provider }  from './gettext-provider.js';
+import { gettext_provider } from "./gettext-provider.js";
 
-    export default {
-        name: 'GitInlineFilter',
-        props: {
-            value: String
-        },
-        methods: {
-            search(event) {
-                this.$emit('input', event.target.value);
-            }
-        },
-        computed: {
-            placeholder: () => gettext_provider.gettext("Repository name")
+export default {
+    name: "GitInlineFilter",
+    props: {
+        value: String
+    },
+    methods: {
+        search(event) {
+            this.$emit("input", event.target.value);
         }
-    };
+    },
+    computed: {
+        placeholder: () => gettext_provider.gettext("Repository name")
+    }
+};
 </script>)

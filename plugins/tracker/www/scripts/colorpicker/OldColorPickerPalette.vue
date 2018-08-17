@@ -26,21 +26,21 @@
 </template>
 
 <script>
-    import colors                   from './old-color-palette.js';
-    import OldColorPickerPaletteRow from "./OldColorPickerPaletteRow.vue";
+import colors from "./old-color-palette.js";
+import OldColorPickerPaletteRow from "./OldColorPickerPaletteRow.vue";
 
-    export default {
-        name: "OldColorPickerPalette",
-        components: { OldColorPickerPaletteRow },
-        data() {
-            return {
-                palette: colors
-            }
-        },
-        methods: {
-            colorChanged(color) {
-                this.$emit('color-update', color);
-            }
+export default {
+    name: "OldColorPickerPalette",
+    components: { OldColorPickerPaletteRow },
+    data() {
+        return {
+            palette: colors
+        };
+    },
+    methods: {
+        colorChanged(color) {
+            this.$emit("color-update", color);
         }
     }
+};
 </script>

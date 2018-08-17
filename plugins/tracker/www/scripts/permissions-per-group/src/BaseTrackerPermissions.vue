@@ -45,55 +45,56 @@
     </section>
 </template>)
 (<script>
-    import { getTrackerPermissions } from './rest-querier.js';
-    import { gettext_provider }      from './gettext-provider.js';
-    import TrackerPermissionsTable   from './TrackerPermissionsTable.vue';
+import { getTrackerPermissions } from "./rest-querier.js";
+import { gettext_provider } from "./gettext-provider.js";
+import TrackerPermissionsTable from "./TrackerPermissionsTable.vue";
 
-    export default {
-        name : 'TrackerPermissions',
-        components: {
-            TrackerPermissionsTable
+export default {
+    name: "TrackerPermissions",
+    components: {
+        TrackerPermissionsTable
+    },
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
+    data() {
+        return {
+            is_loaded: false,
+            is_loading: false,
+            error: null,
+            tracker_permissions: []
+        };
+    },
+    computed: {
+        hasError() {
+            return this.error !== null;
         },
-        props: {
-            selectedUgroupId  : String,
-            selectedProjectId : String,
-            selectedUgroupName: String
+        isButtonLoadAllDisplayed() {
+            return !this.is_loaded && !this.is_loading;
         },
-        data() {
-            return {
-                is_loaded               : false,
-                is_loading              : false,
-                error                   : null,
-                tracker_permissions: []
-            };
-        },
-        computed: {
-            hasError() {
-                return this.error !== null;
-            },
-            isButtonLoadAllDisplayed() {
-                return ! this.is_loaded && ! this.is_loading
-            },
-            button_tracker_permissions_label: () => gettext_provider.gettext('See all tracker permissions')
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading = true;
+        button_tracker_permissions_label: () =>
+            gettext_provider.gettext("See all tracker permissions")
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
 
-                    this.tracker_permissions = await getTrackerPermissions(
-                        this.selectedProjectId,
-                        this.selectedUgroupId
-                    );
+                this.tracker_permissions = await getTrackerPermissions(
+                    this.selectedProjectId,
+                    this.selectedUgroupId
+                );
 
-                    this.is_loaded = true;
-                } catch (e) {
-                    const { error } = await e.response.json();
-                    this.error      = error;
-                } finally {
-                    this.is_loading = false;
-                }
+                this.is_loaded = true;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.error = error;
+            } finally {
+                this.is_loading = false;
             }
         }
-    };
+    }
+};
 </script>)

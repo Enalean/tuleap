@@ -35,19 +35,19 @@
 </template>
 
 <script>
-    export default {
-        name: "ColorPickerPaletteRow",
-        props: {
-            colors       : Array,
-            selectedColor: String
+export default {
+    name: "ColorPickerPaletteRow",
+    props: {
+        colors: Array,
+        selectedColor: String
+    },
+    methods: {
+        updateColor(color) {
+            this.$emit("color-update", color);
         },
-        methods: {
-            updateColor(color) {
-                this.$emit('color-update', color);
-            },
-            isCurrentColor(color_name) {
-                return this.selectedColor === color_name;
-            }
+        isCurrentColor(color_name) {
+            return this.selectedColor === color_name;
         }
     }
+};
 </script>

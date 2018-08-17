@@ -76,69 +76,69 @@
 </template>)
 
 (<script>
-    import { sprintf }            from 'sprintf-js';
-    import { gettext_provider }   from './gettext-provider.js';
-    import { getNewsPermissions } from './rest-querier.js';
-    import VisibilityLabel        from './NewsPermissionsVisibilityLabel.vue';
+import { sprintf } from "sprintf-js";
+import { gettext_provider } from "./gettext-provider.js";
+import { getNewsPermissions } from "./rest-querier.js";
+import VisibilityLabel from "./NewsPermissionsVisibilityLabel.vue";
 
-    export default {
-        name      : 'NewsPermissions',
-        props     : {
-            selectedUgroupId  : String,
-            selectedProjectId : String,
-            selectedUgroupName: String
+export default {
+    name: "NewsPermissions",
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
+    components: {
+        VisibilityLabel
+    },
+    data() {
+        return {
+            is_loaded: false,
+            is_loading: false,
+            rest_error: null,
+            news_list: []
+        };
+    },
+    computed: {
+        hasNewsToDisplay() {
+            return this.news_list.length > 0;
         },
-        components: {
-            VisibilityLabel
+        hasASelectedUserGroup() {
+            return this.selectedUgroupId.length > 0;
         },
-        data() {
-            return {
-                is_loaded : false,
-                is_loading: false,
-                rest_error: null,
-                news_list : []
-            }
+        user_group_no_news_empty_state() {
+            return sprintf(
+                gettext_provider.gettext("%s can't see any news"),
+                this.selectedUgroupName
+            );
         },
-        computed : {
-            hasNewsToDisplay() {
-                return this.news_list.length > 0;
-            },
-            hasASelectedUserGroup() {
-                return this.selectedUgroupId.length > 0;
-            },
-            user_group_no_news_empty_state() {
-                return sprintf(
-                    gettext_provider.gettext("%s can't see any news"),
-                    this.selectedUgroupName
+        hasRestError() {
+            return this.rest_error !== null;
+        },
+        project_no_news_empty_state: () => gettext_provider.gettext("The project hasn't any news"),
+        news_label: () => gettext_provider.gettext("News"),
+        visibility_label: () => gettext_provider.gettext("Visibility"),
+        load_all_label: () => gettext_provider.gettext("See all news"),
+        news_are_loading: () => gettext_provider.gettext("News are loading")
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
+
+                this.news_list = await getNewsPermissions(
+                    this.selectedProjectId,
+                    this.selectedUgroupId
                 );
-            },
-            hasRestError() {
-                return this.rest_error !== null;
-            },
-            project_no_news_empty_state: () => gettext_provider.gettext("The project hasn't any news"),
-            news_label                 : () => gettext_provider.gettext('News'),
-            visibility_label           : () => gettext_provider.gettext('Visibility'),
-            load_all_label             : () => gettext_provider.gettext('See all news'),
-            news_are_loading           : () => gettext_provider.gettext('News are loading')
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading = true;
 
-                    this.news_list = await getNewsPermissions(
-                        this.selectedProjectId,
-                        this.selectedUgroupId
-                    );
-
-                    this.is_loaded = true;
-                } catch (e) {
-                    const { error } = await e.response.json();
-                    this.rest_error    = error.code + ' ' + error.message;
-                } finally {
-                    this.is_loading = false;
-                }
+                this.is_loaded = true;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.rest_error = error.code + " " + error.message;
+            } finally {
+                this.is_loading = false;
             }
         }
     }
+};
 </script>)

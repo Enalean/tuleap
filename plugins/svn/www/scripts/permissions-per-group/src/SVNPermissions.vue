@@ -63,47 +63,53 @@
 
 (
 <script>
-    import {gettext_provider}  from './gettext-provider.js';
-    import {get}               from 'tlp';
-    import {getSVNPermissions} from './rest-querier.js';
+import { gettext_provider } from "./gettext-provider.js";
+import { get } from "tlp";
+import { getSVNPermissions } from "./rest-querier.js";
 
-    export default {
-        name: 'SVNPermissions',
-        data() {
-            return {
-                is_loading : false,
-                is_loaded  : false,
-                permissions: [],
-                error      : null
-            };
-        },
-        props: {
-            'projectId': String
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading                        = true;
-                    const { repositories_representation } = await getSVNPermissions(this.projectId);
+export default {
+    name: "SVNPermissions",
+    data() {
+        return {
+            is_loading: false,
+            is_loaded: false,
+            permissions: [],
+            error: null
+        };
+    },
+    props: {
+        projectId: String
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
+                const { repositories_representation } = await getSVNPermissions(this.projectId);
 
-                    this.permissions = repositories_representation;
-                    this.is_loaded  = true;
-                } catch (e) {
-                    const {error} = await e.response.json();
-                    this.error    = error;
-                } finally {
-                    this.is_loading = false;
-                }
+                this.permissions = repositories_representation;
+                this.is_loaded = true;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.error = error;
+            } finally {
+                this.is_loading = false;
             }
-        },
-        computed: {
-            load_repositories_button: () =>  gettext_provider.gettext("See all repositories"),
-            repository: ()               =>  gettext_provider.gettext("Repository"),
-            empty_state: ()              => gettext_provider.gettext("No repository found for project"),
-            pane_title: ()               => gettext_provider.gettext("Repositories permissions"),
-            displayButtonLoadAll()       { return ! this.is_loaded && ! this.is_loading },
-            isEmpty()                    { return this.permissions.length === 0; },
-            hasError()                   { return this.error !== null; },
         }
-    };
+    },
+    computed: {
+        load_repositories_button: () => gettext_provider.gettext("See all repositories"),
+        repository: () => gettext_provider.gettext("Repository"),
+        empty_state: () => gettext_provider.gettext("No repository found for project"),
+        pane_title: () => gettext_provider.gettext("Repositories permissions"),
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        },
+        isEmpty() {
+            return this.permissions.length === 0;
+        },
+        hasError() {
+            return this.error !== null;
+        }
+    }
+};
 </script>)

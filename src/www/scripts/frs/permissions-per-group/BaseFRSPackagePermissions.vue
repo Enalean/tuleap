@@ -42,53 +42,53 @@
     </section>
 </template>)
 (<script>
-    import { gettext_provider }       from './gettext-provider';
-    import { getPackagesPermissions } from './rest-querier.js';
-    import PackagePermissionsTable    from './FRSPackagePermissionsTable.vue';
+import { gettext_provider } from "./gettext-provider";
+import { getPackagesPermissions } from "./rest-querier.js";
+import PackagePermissionsTable from "./FRSPackagePermissionsTable.vue";
 
-    export default {
-        name : "FrsPackagesPermissions",
-        props: {
-            selectedUgroupId  : String,
-            selectedProjectId : String,
-            selectedUgroupName: String
+export default {
+    name: "FrsPackagesPermissions",
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
+    components: {
+        PackagePermissionsTable
+    },
+    data() {
+        return {
+            is_loaded: false,
+            is_loading: false,
+            rest_error: null,
+            packages_list: []
+        };
+    },
+    computed: {
+        hasRestError() {
+            return this.rest_error !== null;
         },
-        components: {
-            PackagePermissionsTable
-        },
-        data() {
-            return {
-                is_loaded     : false,
-                is_loading    : false,
-                rest_error    : null,
-                packages_list : []
-            };
-        },
-        computed: {
-            hasRestError() {
-                return this.rest_error !== null;
-            },
-            load_all_label      : () => gettext_provider.gettext('See all packages permissions'),
-            packages_are_loading: () => gettext_provider.gettext('Packages are loading')
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading = true;
+        load_all_label: () => gettext_provider.gettext("See all packages permissions"),
+        packages_are_loading: () => gettext_provider.gettext("Packages are loading")
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
 
-                    this.packages_list = await getPackagesPermissions(
-                        this.selectedProjectId,
-                        this.selectedUgroupId
-                    );
+                this.packages_list = await getPackagesPermissions(
+                    this.selectedProjectId,
+                    this.selectedUgroupId
+                );
 
-                    this.is_loaded = true;
-                } catch (e) {
-                    const { error } = await e.response.json();
-                    this.rest_error = error;
-                } finally {
-                    this.is_loading = false;
-                }
+                this.is_loaded = true;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.rest_error = error;
+            } finally {
+                this.is_loading = false;
             }
         }
-    };
+    }
+};
 </script>)

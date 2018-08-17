@@ -46,50 +46,58 @@
 </template>)
 (
 <script>
-    import GitPermissionsTable   from './GitPermissionsTable.vue';
-    import GitInlineFilter       from './GitInlineFilter.vue';
-    import { gettext_provider }  from './gettext-provider.js';
-    import { getGitPermissions } from './rest-querier.js';
+import GitPermissionsTable from "./GitPermissionsTable.vue";
+import GitInlineFilter from "./GitInlineFilter.vue";
+import { gettext_provider } from "./gettext-provider.js";
+import { getGitPermissions } from "./rest-querier.js";
 
-    export default {
-        components: {
-            GitInlineFilter,
-            GitPermissionsTable,
-        },
-        name: 'GitPermissions',
-        data() {
-            return {
-                is_loaded  : false,
-                is_loading : false,
-                repositories: [],
-                error      : null,
-                filter     : ""
-            };
-        },
-        props: {
-            selectedUgroupId  : String,
-            selectedProjectId : String,
-            selectedUgroupName: String
-        },
-        methods: {
-            async loadAll() {
-                try {
-                    this.is_loading        = true;
-                    const { repositories } = await getGitPermissions(this.selectedProjectId, this.selectedUgroupId);
-                    this.is_loaded         = true;
-                    this.repositories      = repositories;
-                } catch (e) {
-                    const {error} = await e.response.json();
-                    this.error    = error;
-                } finally {
-                    this.is_loading = false;
-                }
+export default {
+    components: {
+        GitInlineFilter,
+        GitPermissionsTable
+    },
+    name: "GitPermissions",
+    data() {
+        return {
+            is_loaded: false,
+            is_loading: false,
+            repositories: [],
+            error: null,
+            filter: ""
+        };
+    },
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
+    methods: {
+        async loadAll() {
+            try {
+                this.is_loading = true;
+                const { repositories } = await getGitPermissions(
+                    this.selectedProjectId,
+                    this.selectedUgroupId
+                );
+                this.is_loaded = true;
+                this.repositories = repositories;
+            } catch (e) {
+                const { error } = await e.response.json();
+                this.error = error;
+            } finally {
+                this.is_loading = false;
             }
-        },
-        computed: {
-            repositories_permissions:     () => gettext_provider.gettext("See all repositories permissions"),
-            hasError() { return this.error !== null; },
-            displayButtonLoadAll() { return ! this.is_loaded && ! this.is_loading },
         }
-    };
+    },
+    computed: {
+        repositories_permissions: () =>
+            gettext_provider.gettext("See all repositories permissions"),
+        hasError() {
+            return this.error !== null;
+        },
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        }
+    }
+};
 </script>)

@@ -34,26 +34,26 @@
 </template>
 
 <script>
-    import tlp_colors               from "./new-color-palette.js";
-    import ColorPickerPaletteRow    from "./ColorPickerPaletteRow.vue";
-    import ColorPickerNoColorOption from "./ColorPickerNoColorOption.vue";
+import tlp_colors from "./new-color-palette.js";
+import ColorPickerPaletteRow from "./ColorPickerPaletteRow.vue";
+import ColorPickerNoColorOption from "./ColorPickerNoColorOption.vue";
 
-    export default {
-        name: "ColorPickerPalette",
-        components: { ColorPickerPaletteRow, ColorPickerNoColorOption },
-        props: {
-            currentColor: String,
-            noColorLabel: String
-        },
-        data() {
-            return {
-                tlp_colors
-            }
-        },
-        methods: {
-            updateColor(color) {
-                this.$emit('color-update', color);
-            }
+export default {
+    name: "ColorPickerPalette",
+    components: { ColorPickerPaletteRow, ColorPickerNoColorOption },
+    props: {
+        currentColor: String,
+        noColorLabel: String
+    },
+    data() {
+        return {
+            tlp_colors
+        };
+    },
+    methods: {
+        updateColor(color) {
+            this.$emit("color-update", color);
         }
     }
+};
 </script>

@@ -28,30 +28,30 @@
 </template>
 
 <script>
-    export default {
-        name: "OldColorPickerPreview",
-        props: {
-            color: String
-        },
-        computed: {
-            previewImage() {
-                const base_url = '/themes/FlamingParrot/images/';
+export default {
+    name: "OldColorPickerPreview",
+    props: {
+        color: String
+    },
+    computed: {
+        previewImage() {
+            const base_url = "/themes/FlamingParrot/images/";
 
-                if (this.color.length) {
-                    return base_url + 'blank16x16.png';
-                }
-
-                return base_url + 'ic/layer-transparent.png';
+            if (this.color.length) {
+                return base_url + "blank16x16.png";
             }
-        },
-        methods: {
-            setTransparent() {
-                if (this.color.length) {
-                    return;
-                }
 
-                this.$emit('color-update');
-            }
+            return base_url + "ic/layer-transparent.png";
         }
-    };
+    },
+    methods: {
+        setTransparent() {
+            if (this.color.length) {
+                return;
+            }
+
+            this.$emit("color-update");
+        }
+    }
+};
 </script>

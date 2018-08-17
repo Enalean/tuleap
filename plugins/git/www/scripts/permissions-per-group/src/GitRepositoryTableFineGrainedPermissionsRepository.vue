@@ -34,13 +34,13 @@
     </tr>
 </template>)
 (<script>
-    import GitPermissionsBadge from 'permission-badge/PermissionsPerGroupBadge.vue';
+import GitPermissionsBadge from "permission-badge/PermissionsPerGroupBadge.vue";
 
-    export default {
-        components: { GitPermissionsBadge },
-        name: 'GitRepositoryTableFineGrainedPermissionsRepository',
-        props: {
-            repositoryPermission: Object
-        }
-    };
+export default {
+    components: { GitPermissionsBadge },
+    name: "GitRepositoryTableFineGrainedPermissionsRepository",
+    props: {
+        repositoryPermission: Object
+    }
+};
 </script>)

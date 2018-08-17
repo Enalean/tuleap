@@ -57,125 +57,127 @@
     </div>
 </template>)
 (<script>
-    import ArtifactTable        from './ArtifactTable.vue';
-    import ReadingMode          from './reading-mode/ReadingMode.vue';
-    import WritingMode          from './writing-mode/WritingMode.vue';
-    import { gettext_provider } from './gettext-provider.js';
-    import { isAnonymous }      from './user-service.js';
-    import { getReport }        from './rest-querier.js';
+import ArtifactTable from "./ArtifactTable.vue";
+import ReadingMode from "./reading-mode/ReadingMode.vue";
+import WritingMode from "./writing-mode/WritingMode.vue";
+import { gettext_provider } from "./gettext-provider.js";
+import { isAnonymous } from "./user-service.js";
+import { getReport } from "./rest-querier.js";
 
-    export default {
-        components: { ArtifactTable, ReadingMode, WritingMode },
-        name: 'CrossTrackerWidget',
-        props: [
-            'backendCrossTrackerReport',
-            'readingCrossTrackerReport',
-            'writingCrossTrackerReport',
-            'reportId'
-        ],
-        data() {
-            return {
-                is_loading     : true,
-                reading_mode   : true,
-                is_saved       : true,
-                error_message  : null,
-                success_message: null,
-            };
+export default {
+    components: { ArtifactTable, ReadingMode, WritingMode },
+    name: "CrossTrackerWidget",
+    props: [
+        "backendCrossTrackerReport",
+        "readingCrossTrackerReport",
+        "writingCrossTrackerReport",
+        "reportId"
+    ],
+    data() {
+        return {
+            is_loading: true,
+            reading_mode: true,
+            is_saved: true,
+            error_message: null,
+            success_message: null
+        };
+    },
+    computed: {
+        is_user_anonymous() {
+            return isAnonymous();
         },
-        computed: {
-            is_user_anonymous() {
-                return isAnonymous();
-            },
-            is_reading_mode_shown() {
-                return this.reading_mode === true && ! this.is_loading;
-            },
-            has_error() {
-                return this.error_message !== null;
-            },
-            has_success_message() {
-                return this.success_message !== null;
+        is_reading_mode_shown() {
+            return this.reading_mode === true && !this.is_loading;
+        },
+        has_error() {
+            return this.error_message !== null;
+        },
+        has_success_message() {
+            return this.success_message !== null;
+        }
+    },
+    mounted() {
+        this.loadBackendReport();
+    },
+    methods: {
+        switchToWritingMode() {
+            if (this.is_user_anonymous) {
+                return;
+            }
+
+            this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+            this.hideFeedbacks();
+            this.reading_mode = false;
+        },
+
+        switchToReadingMode({ saved_state }) {
+            if (saved_state === true) {
+                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
+            } else {
+                this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
+            }
+            this.hideFeedbacks();
+            this.is_saved = saved_state;
+            this.reading_mode = true;
+        },
+
+        async loadBackendReport() {
+            this.is_loading = true;
+            try {
+                const { trackers, expert_query } = await getReport(this.reportId);
+                this.backendCrossTrackerReport.init(trackers, expert_query);
+                this.initReports();
+            } catch (error) {
+                this.showRestError(error);
+                throw error;
+            } finally {
+                this.is_loading = false;
             }
         },
-        mounted() {
-            this.loadBackendReport();
+
+        initReports() {
+            this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
+            this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
         },
-        methods: {
-            switchToWritingMode() {
-                if (this.is_user_anonymous) {
-                    return;
-                }
 
-                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-                this.hideFeedbacks();
-                this.reading_mode = false;
-            },
+        hideFeedbacks() {
+            this.error_message = null;
+            this.success_message = null;
+        },
 
-            switchToReadingMode({ saved_state }) {
-                if (saved_state === true) {
-                    this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-                } else {
-                    this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
-                }
-                this.hideFeedbacks();
-                this.is_saved     = saved_state;
-                this.reading_mode = true;
-            },
+        reportSaved() {
+            this.initReports();
+            this.hideFeedbacks();
+            this.is_saved = true;
+            this.success_message = gettext_provider.gettext("Report has been successfully saved");
+        },
 
-            async loadBackendReport() {
-                this.is_loading = true;
-                try {
-                    const { trackers, expert_query } = await getReport(this.reportId);
-                    this.backendCrossTrackerReport.init(trackers, expert_query);
-                    this.initReports();
-                } catch (error) {
-                    this.showRestError(error);
-                    throw error;
-                } finally {
-                    this.is_loading = false;
-                }
-            },
+        reportCancelled() {
+            this.hideFeedbacks();
+            this.is_saved = true;
+        },
 
-            initReports() {
-                this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-                this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
-            },
+        showError(error) {
+            this.error_message = error;
+        },
 
-            hideFeedbacks() {
-                this.error_message   = null;
-                this.success_message = null;
-            },
+        showRestError(rest_error) {
+            if (!rest_error.response) {
+                this.error_message = gettext_provider.gettext("An error occured");
+                return;
+            }
 
-            reportSaved() {
-                this.initReports();
-                this.hideFeedbacks();
-                this.is_saved = true;
-                this.success_message = gettext_provider.gettext('Report has been successfully saved');
-            },
-
-            reportCancelled() {
-                this.hideFeedbacks();
-                this.is_saved = true;
-            },
-
-            showError(error) {
-                this.error_message = error;
-            },
-
-            showRestError(rest_error) {
-                if (!rest_error.response) {
-                    this.error_message = gettext_provider.gettext('An error occured');
-                    return;
-                }
-
-                return rest_error.response.json().then(error_details => {
-                    if ('i18n_error_message' in error_details.error) {
+            return rest_error.response.json().then(
+                error_details => {
+                    if ("i18n_error_message" in error_details.error) {
                         this.error_message = error_details.error.i18n_error_message;
                     }
+                },
+                error => {
+                    this.error_message = gettext_provider.gettext("An error occured");
                 }
-                , error => {
-                    this.error_message = gettext_provider.gettext('An error occured');
-                });
-            }
+            );
         }
-    };
+    }
+};
 </script>)

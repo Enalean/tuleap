@@ -24,13 +24,13 @@
 </template>)
 
 (<script>
-    export default {
-        name: 'PermissionsPerGroupBadge',
-        props: {
-            isProjectAdmin: Boolean,
-            isStatic: Boolean,
-            isCustom: Boolean,
-            groupName: String
-        },
-    };
+export default {
+    name: "PermissionsPerGroupBadge",
+    props: {
+        isProjectAdmin: Boolean,
+        isStatic: Boolean,
+        isCustom: Boolean,
+        groupName: String
+    }
+};
 </script>)

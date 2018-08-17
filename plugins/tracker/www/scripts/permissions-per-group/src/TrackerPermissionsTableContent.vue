@@ -55,24 +55,24 @@
     </tbody>
 </template>)
 (<script>
-    import { gettext_provider }          from './gettext-provider.js';
-    import TrackerPermissionsUgroupBadge from 'permission-badge/PermissionsPerGroupBadge.vue';
-    import EmptyState                    from './TrackerPermissionTableEmptyState.vue';
+import { gettext_provider } from "./gettext-provider.js";
+import TrackerPermissionsUgroupBadge from "permission-badge/PermissionsPerGroupBadge.vue";
+import EmptyState from "./TrackerPermissionTableEmptyState.vue";
 
-    export default {
-        name : 'TrackerPermissionsTableContent',
-        components: {
-            TrackerPermissionsUgroupBadge,
-            EmptyState
-        },
-        props: {
-            trackerPermissions: Array,
-            selectedUgroupName: String
-        },
-        computed: {
-            hasTrackerPermissions() {
-                return this.trackerPermissions.length > 0;
-            }
+export default {
+    name: "TrackerPermissionsTableContent",
+    components: {
+        TrackerPermissionsUgroupBadge,
+        EmptyState
+    },
+    props: {
+        trackerPermissions: Array,
+        selectedUgroupName: String
+    },
+    computed: {
+        hasTrackerPermissions() {
+            return this.trackerPermissions.length > 0;
         }
-    };
+    }
+};
 </script>)
