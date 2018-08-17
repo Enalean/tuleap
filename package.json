@@ -22,9 +22,7 @@
     "del": "^2.2.1",
     "easygettext": "^2.5.0",
     "eslint": "^5.1.0",
-    "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-cypress": "^2.0.1",
-    "eslint-plugin-prettier": "^2.6.2",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.3.1",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.0",
@@ -67,6 +65,7 @@
     "js": "gulp js",
     "sass": "gulp sass",
     "scss-lint": "gulp scss-lint",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "prettier": "prettier --config .prettierrc --ignore-path .eslintignore"
   }
 }
