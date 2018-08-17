@@ -12,6 +12,28 @@ def runRESTTests(String version) {
     junit "results/api-$version/rest_tests.xml"
 }
 
+def runKarmaTests(String name, String path) {
+    sh """
+    cid="\$(docker create -v \$WORKSPACE/sources:/sources:ro --security-opt seccomp=\$WORKSPACE/sources/tests/karma/seccomp_chrome.json \$DOCKER_REGISTRY/enalean/tuleap-test-karma:latest --path $path)"
+    docker start --attach "\$cid" || true
+    mkdir -p 'results/karma'
+    docker cp "\$cid":/output/test-results.xml results/karma/test-$name-results.xml
+    docker rm -fv "\$cid"
+    """
+    junit "results/karma/test-$name-results.xml"
+}
+
+def runSOAPTests(String name, String image_version) {
+    sh """
+    cid="\$(docker create -v \$WORKSPACE/sources:/usr/share/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-test-soap:${image_version})"
+    docker start --attach "\$cid" || true
+    mkdir -p 'results/api-soap'
+    docker cp "\$cid":/output/soap_tests.xml results/api-soap/soap_tests_${name}.xml || true
+    docker rm -fv "\$cid"
+    """
+    junit "results/api-soap/soap_tests_${name}.xml"
+}
+
 pipeline {
     agent {
         label 'docker'
@@ -53,37 +75,26 @@ pipeline {
 
         stage('Tests') {
             steps {
-                parallel 'UT SimpleTest PHP 5.6': {
-                    sh """
-                    cid="\$(docker create -v \$WORKSPACE/sources:/tuleap:ro \$DOCKER_REGISTRY/enalean/tuleap-simpletest:c6-php56)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/ut-simpletest-php-56'
-                    docker cp "\$cid":/output/unit_tests_report.xml results/ut-simpletest-php-56/
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/ut-simpletest-php-56/unit_tests_report.xml'
+                parallel 'UT SimpleTest 1.1.x PHP 5.6': {
+                    sh "make -C $WORKSPACE/sources simpletest11x-56-ci"
+                    junit 'results/ut-simpletest11x-php-56/results.xml'
+                },
+                'UT SimpleTest PHP 7.2': {
+                    sh "make -C $WORKSPACE/sources simpletest-72-ci"
+                    junit 'results/ut-simpletest-php-72/results.xml'
                 },
                 'UT PHPUnit PHP 5.6': {
                     sh "make -C $WORKSPACE/sources phpunit-ci-56"
                     junit 'results/ut-phpunit-php-56/phpunit_tests_results.xml'
                 },
-                'UT PHPUnit PHP 7.0': {
-                    sh "make -C $WORKSPACE/sources phpunit-ci-70"
-                    junit 'results/ut-phpunit-php-70/phpunit_tests_results.xml'
+                'UT PHPUnit PHP 7.2': {
+                    sh "make -C $WORKSPACE/sources phpunit-ci-72"
+                    junit 'results/ut-phpunit-php-72/phpunit_tests_results.xml'
                 },
-                'REST CentOS 6 PHP 5.6 Apache 2.4 MySQL 5.6': { runRESTTests('c6-php56-httpd24-mysql56') },
-                'SOAP': {
-                    sh """
-                    mkdir -p working_copy/api-soap
-                    cp -R sources/* working_copy/api-soap/
-                    cid="\$(docker create -v \$WORKSPACE/working_copy/api-soap:/usr/share/tuleap \$DOCKER_REGISTRY/enalean/tuleap-test-soap:3)"
-                    docker start --attach "\$cid" || true
-                    mkdir -p 'results/api-soap'
-                    docker cp "\$cid":/output/soap_tests.xml results/api-soap/ || true
-                    docker rm -fv "\$cid"
-                    """
-                    junit 'results/api-soap/soap_tests.xml'
-                },
+                'REST CentOS 6 PHP 5.6 MySQL 5.6': { runRESTTests('c6-php56-mysql56') },
+                'REST CentOS 6 PHP 7.2 MySQL 5.6': { runRESTTests('c6-php72-mysql56') },
+                'SOAP PHP 5.6': { runSOAPTests('php-56', '3') },
+                'SOAP PHP 7.2': { runSOAPTests('php-72', '4') },
                 'Distributed SVN integration': {
                     dir ('sources') {
                         sh """
@@ -91,11 +102,11 @@ pipeline {
                         """
                     }
                     junit 'results/distlp-integration/distlp-svn-cli.xml'
-                    junit 'results/distlp-integration/results.xml'
+                    junit 'results/distlp-integration/results-*.xml'
                 },
                 'Check translation files': {
-                    dir ('sources/plugins/enalean_licensemanager') {
-                        sh '../../tests/files_status_checker/verify.sh "translation files" "*.po\$"'
+                    dir ('sources') {
+                        sh 'tests/files_status_checker/verify.sh "translation files" "*.po\$"'
                     }
                 },
                 failFast: false
