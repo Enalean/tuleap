@@ -17,35 +17,34 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-(function () {
-    'use strict';
+(function() {
+    "use strict";
 
     initModalAddBot();
     initModalsWithId();
 
     function initModalAddBot() {
-        var modal_element = document.getElementById('modal-add-bot');
+        var modal_element = document.getElementById("modal-add-bot");
 
         var modal_simple_content = tlp.modal(modal_element, {});
-        document.getElementById('button-modal-add-bot').addEventListener('click', function () {
+        document.getElementById("button-modal-add-bot").addEventListener("click", function() {
             modal_simple_content.toggle();
         });
     }
 
     function initModalsWithId() {
-        var modal_buttons = document.querySelectorAll('[data-modal-id]');
-        [].forEach.call(modal_buttons, function (button) {
+        var modal_buttons = document.querySelectorAll("[data-modal-id]");
+        [].forEach.call(modal_buttons, function(button) {
             var modal_element = document.getElementById(button.dataset.modalId);
-            if (! modal_element) {
+            if (!modal_element) {
                 throw "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'";
             }
 
             var modal = tlp.modal(modal_element);
 
-            button.addEventListener('click', function () {
+            button.addEventListener("click", function() {
                 modal.toggle();
             });
         });
     }
-}());
-
+})();
