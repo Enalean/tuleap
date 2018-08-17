@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
 class LDAP_BackendSVNTestEventManager extends EventManager {
-    public function processEvent($event_name, $params) {
+    public function processEvent($event_name, $params = []) {
         $ldap             = mock('LDAP');
         $cache_parameters = mock('Tuleap\SvnCore\Cache\Parameters');
 

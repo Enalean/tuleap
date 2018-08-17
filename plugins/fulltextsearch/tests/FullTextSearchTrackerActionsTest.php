@@ -45,7 +45,9 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
         stub($this->tracker_data_factory)->getFormattedArtifact($this->artifact)->returns(array('formatted artifact'));
     }
 
-    public function itSetsMappingOnNewFollowUp() {
+    public function itSetsMappingOnNewFollowUp()
+    {
+        $this->client->shouldReceive('getMapping')->andReturns([]);
         stub($this->tracker_data_factory)->getTrackerMapping($this->tracker)->returns(array('dat result'));
 
         expect($this->client)->setMapping('455', array('dat result'))->once();
@@ -53,7 +55,9 @@ class FullTextSearchTrackerActions_DefineMappingTest extends TuleapTestCase {
         $this->actions->indexArtifactUpdate($this->artifact);
     }
 
-    public function itLogsMappingUpdates() {
+    public function itLogsMappingUpdates()
+    {
+        $this->client->shouldReceive('getMapping')->andReturns([]);
         stub($this->tracker_data_factory)->getTrackerMapping($this->tracker)->returns(array('dat result'));
 
         expect($this->logger)->debug()->count(2);

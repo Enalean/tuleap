@@ -34,7 +34,7 @@ Mock::generate('CookieManager');
 Mock::generate('EventManager', 'BaseMockEventManager');
 
 class MockEM4UserManager extends BaseMockEventManager {
-   function processEvent($event, $params) {
+   function processEvent($event, $params = []) {
        foreach(parent::processEvent($event, $params) as $key => $value) {
            $params[$key] = $value;
        }
@@ -202,7 +202,7 @@ class UserManagerTest extends TuleapTestCase
         $dao->expectNever('storeLoginFailure');
 
         $user_manager->setReturnReference('getDao', $dao);
-        $this->assertReference($user123, $user_manager->login('user_123', self::PASSWORD, 0));
+        $this->assertEqual($user123, $user_manager->login('user_123', self::PASSWORD, 0));
     }
 
     function testBadLogin() {
@@ -237,7 +237,7 @@ class UserManagerTest extends TuleapTestCase
         $dao->expectOnce('storeLoginFailure');
 
         $um->setReturnReference('getDao', $dao);
-        $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
+        $this->assertEqual($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
     }
 
     function testSuspenedUserGetSession() {
@@ -397,8 +397,9 @@ class UserManagerTest extends TuleapTestCase
 
 
     	// True
-    	$daotrue = new MockUserDao($this);
-        $daotrue->setReturnValue('updateByRow', true);
+        $daotrue = Mockery::mock(UserDao::class);
+        $daotrue->shouldReceive('updateByRow')->andReturns(true);
+        $daotrue->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
         $session_manager_true = mock('Tuleap\User\SessionManager');
         $session_manager_true->expectNever('destroyAllSessions');
     	$umtrue = new UserManagerTestVersion($this);
@@ -408,8 +409,9 @@ class UserManagerTest extends TuleapTestCase
         $this->assertTrue($umtrue->updateDb($user));
 
         // False
-        $daofalse = new MockUserDao($this);
-        $daofalse->setReturnValue('updateByRow', false);
+        $daofalse = Mockery::mock(UserDao::class);
+        $daofalse->shouldReceive('updateByRow')->andReturns(false);
+        $daofalse->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
         $session_manager_false = mock('Tuleap\User\SessionManager');
         $session_manager_false->expectNever('destroyAllSessions');
         $umfalse = new UserManagerTestVersion($this);
@@ -426,8 +428,9 @@ class UserManagerTest extends TuleapTestCase
         $user->setReturnValue('getPassword', self::PASSWORD);
         $user->setReturnValue('getUserPw', 'mustfail');
 
-        $dao = new MockUserDao($this);
-        $dao->expect('updateByRow', array(array('clear_password' => self::PASSWORD, 'user_pw' => '')));
+        $dao = Mockery::mock(UserDao::class);
+        $dao->shouldReceive('updateByRow')->with(['clear_password' => self::PASSWORD, 'user_pw' => ''])->once()->andReturns(false);
+        $dao->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
 
         $um = new UserManagerTestVersion($this);
         $um->setReturnReference('getDao', $dao);
@@ -442,8 +445,9 @@ class UserManagerTest extends TuleapTestCase
         $user->setReturnValue('getPassword', self::PASSWORD);
         $user->setReturnValue('getUserPw', $password_handler->computeHashPassword(self::PASSWORD));
 
-        $dao = new MockUserDao($this);
-        $dao->expect('updateByRow', array(array('user_pw' => '')));
+        $dao = Mockery::mock(UserDao::class);
+        $dao->shouldReceive('updateByRow')->with(['user_pw' => ''])->once()->andReturns(false);
+        $dao->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
 
         $um = new UserManagerTestVersion($this);
         $um->setReturnReference('getDao', $dao);
@@ -457,8 +461,9 @@ class UserManagerTest extends TuleapTestCase
         $user->setReturnValue('isSuspended', true);
         $user->setReturnValue('toRow',       array());
 
-        $dao = new MockUserDao($this);
-        $dao->setReturnValue('updateByRow', true);
+        $dao = Mockery::mock(UserDao::class);
+        $dao->shouldReceive('updateByRow')->andReturns(true);
+        $dao->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
 
         $session_manager = mock('Tuleap\User\SessionManager');
         $session_manager->expectOnce('destroyAllSessions', array($user));
@@ -478,8 +483,9 @@ class UserManagerTest extends TuleapTestCase
         $user->setReturnValue('isDeleted', true);
         $user->setReturnValue('toRow',       array());
 
-        $dao = new MockUserDao($this);
-        $dao->setReturnValue('updateByRow', true);
+        $dao = Mockery::mock(UserDao::class);
+        $dao->shouldReceive('updateByRow')->andReturns(true);
+        $dao->shouldReceive('searchByUserId')->andReturns(new DataAccessResultEmpty());
 
         $session_manager = mock('Tuleap\User\SessionManager');
         $session_manager->expectOnce('destroyAllSessions', array($user));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -126,7 +126,7 @@ class UserAccountValidityTest extends TuleapTestCase
 
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
-        $dao->setReturnReference('getLogger', mock('BackendLogger'));
+        $dao->setReturnValue('getLogger', mock('BackendLogger'));
         
         $darRemovedDate = new MockDataAccessResult($this); 
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
@@ -156,7 +156,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
-        $dao->setReturnReference('getLogger', mock('BackendLogger'));
+        $dao->setReturnValue('getLogger', mock('BackendLogger'));
         
         $darRemovedDate = new MockDataAccessResult($this); 
         $darRemovedDate->setReturnValueAt(0, 'valid', true);
@@ -181,7 +181,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
-        $dao->setReturnReference('getLogger', mock('BackendLogger'));
+        $dao->setReturnValue('getLogger', mock('BackendLogger'));
                 
         $darNewMember = new MockDataAccessResult($this); 
         $darNewMember->setReturnValueAt(0, 'valid', true);
@@ -219,7 +219,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao = new UserDaoTestValidity($this);
         $dao->expectOnce('returnNotProjectMembers');
         $dao->setReturnReference('returnNotProjectMembers',$darUser);
-        $dao->setReturnReference('getLogger', mock('BackendLogger'));
+        $dao->setReturnValue('getLogger', mock('BackendLogger'));
                 
         $darNewMember = new MockDataAccessResult($this); 
         $darNewMember->setReturnValueAt(0, 'valid', true);

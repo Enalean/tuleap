@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 – 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 – 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2008.
@@ -48,14 +48,14 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testOk() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError', '');
         $this->assertTrue($r->isValid($this->file));
     }
 
     function testErrorIniSize() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError', UPLOAD_ERR_INI_SIZE);
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_INI_SIZE));
@@ -65,7 +65,7 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testErrorFormSize() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError',UPLOAD_ERR_FORM_SIZE );
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_FORM_SIZE));
@@ -75,7 +75,7 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testErrorPartial() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError', UPLOAD_ERR_PARTIAL);
         $r->expectOnce('geti18nError', array('error_upload_partial', UPLOAD_ERR_PARTIAL));
@@ -85,7 +85,7 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testErrorNoFile() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError', UPLOAD_ERR_NO_FILE);
         $r->expectOnce('geti18nError', array('error_upload_nofile', UPLOAD_ERR_NO_FILE));
@@ -95,7 +95,7 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testErrorMaxSize() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('5');
         $r->setReturnValue('geti18nError', UPLOAD_ERR_INI_SIZE);
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_INI_SIZE));
@@ -104,7 +104,7 @@ class Rule_FileTest extends TuleapTestCase {
     }
 
     function testNoName() {
-        $r =& new Rule_FileTestVersion($this);
+        $r = new Rule_FileTestVersion($this);
         $r->setMaxSize('1000');
         $r->setReturnValue('geti18nError', '');
         $this->file['name'] = '';

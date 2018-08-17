@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,12 @@ class ConcealedStringTest extends \TuleapTestCase
 
     public function itCannotBeConstructedFromADifferentScalarThanAString()
     {
-        $this->expectException('\TypeError');
-        new ConcealedString(true);
+        try {
+            new ConcealedString(true);
+        } catch (\TypeError $error) {
+            $this->pass();
+            return;
+        }
+        $this->fail();
     }
 }

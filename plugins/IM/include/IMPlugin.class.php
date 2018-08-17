@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -69,7 +69,7 @@ class IMPlugin extends Plugin
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'IMPluginInfo')) {
             require_once('IMPluginInfo.class.php');
-            $this->pluginInfo =& new IMPluginInfo($this);
+            $this->pluginInfo = new IMPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -145,7 +145,7 @@ class IMPlugin extends Plugin
         require_once("IMDao.class.php");
 		require_once('IMDataAccess.class.php');
         $controler = new IM($this);
-		$dao= & new IMDao(IMDataAccess::instance($controler));
+		$dao    = new IMDao(IMDataAccess::instance($controler));
 		$roomID = $dao->get_room_id_by_unix_name ($unix_project_name);
 		return (isset($roomID)&&$roomID);
 	}
@@ -643,7 +643,7 @@ class IMPlugin extends Plugin
 
 	function process() {
         require_once('IM.class.php');
-        $controler =& new IM($this);
+        $controler = new IM($this);
         $controler->process();
     }
 

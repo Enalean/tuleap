@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,8 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE extends SystemEvent_FULLTEXTSEARC
         return true;
     }
 
-    protected function getItem($item_id) {
+    protected function getItem($item_id,  $params = [])
+    {
         return parent::getItem($item_id, array('ignore_deleted' => true));
     }
 }

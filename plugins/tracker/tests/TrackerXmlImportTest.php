@@ -607,7 +607,8 @@ class Tracker_FormElementFactoryForXMLTests extends Tracker_FormElementFactory {
         $this->mapping = $mapping;
     }
 
-    public function getInstanceFromXML($tracker, $elem, &$xmlMapping) {
+    public function getInstanceFromXML(Tracker $tracker, $elem, &$xmlMapping, User\XML\Import\IFindUserFromXMLReference $user_finder)
+    {
         $xmlMapping = $this->mapping;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -429,7 +429,11 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation {
         $this->trigger_rule = $trigger_rule;
     }
 
-    public function test(Tracker_Workflow_Trigger_TriggerRule $candidate) {
+    public function test($candidate)
+    {
+        if (! $candidate instanceof Tracker_Workflow_Trigger_TriggerRule) {
+            throw new InvalidArgumentException('Expected ' . Tracker_Workflow_Trigger_TriggerRule::class . 'got ' . get_class($candidate));
+        }
         try {
             $this->isConditionEqual($candidate->getCondition());
             $this->isTargetEqual($candidate->getTarget());
@@ -476,7 +480,11 @@ class TriggerRuleComparatorExpectaction extends SimpleExpectation {
                $reference->getValue()->getId() == $candidate->getValue()->getId();
     }
 
-    public function testMessage(Tracker_Workflow_Trigger_TriggerRule $candidate) {
+    public function testMessage($candidate)
+    {
+        if (! $candidate instanceof Tracker_Workflow_Trigger_TriggerRule) {
+            throw new InvalidArgumentException('Expected ' . Tracker_Workflow_Trigger_TriggerRule::class . 'got ' . get_class($candidate));
+        }
         try {
             $this->isConditionEqual($candidate->getCondition());
             $this->isTargetEqual($candidate->getTarget());

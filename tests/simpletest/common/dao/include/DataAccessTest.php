@@ -23,6 +23,11 @@
  */
 class DataAccessTest extends TuleapTestCase {
 
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
+
     function testConnection() {
         
         $sys_dbhost   = 'host';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,8 @@ class ElasticSearch_SearchAdminClientFacade extends ElasticSearch_SearchClientFa
         return $status;
     }
 
-    protected function filterQueryWithPermissions(array &$query, PFUser $user) {
+    protected function filterQueryWithPermissions(array &$query, PFUser $user, $terms, $facets)
+    {
         /* do not filter since site admin has full power */
     }
 

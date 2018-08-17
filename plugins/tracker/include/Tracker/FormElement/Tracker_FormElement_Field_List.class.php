@@ -704,7 +704,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                     $from = null;
                     $to = $value;
                 } else {
-                    list(, $from) = each ($last_changeset->getValue($this)->getListValues());
+                    $list_values = $last_changeset->getValue($this)->getListValues();
+                    $from        = reset($list_values);
                     if (!is_string($value)) {
                         $to = $value->getId();
                     }else {

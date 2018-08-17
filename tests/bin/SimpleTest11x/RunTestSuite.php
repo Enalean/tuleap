@@ -45,21 +45,16 @@ class RunTestSuite
     public function main()
     {
         $test_suite = new TestSuite();
-        if (count($this->targets) === 0) {
-            foreach ($this->getCompatibleTestFiles() as $test_file) {
-                $test_suite->addFile($test_file);
-            }
-        } else {
-            foreach ($this->targets as $dir) {
-                if (is_dir($dir)) {
-                    foreach ($this->collectFiles($dir) as $file) {
-                        $test_suite->addFile($file->getPathname());
-                    }
-                } elseif (is_file($dir)) {
-                    $test_suite->addFile($dir);
+        foreach ($this->targets as $dir) {
+            if (is_dir($dir)) {
+                foreach ($this->collectFiles($dir) as $file) {
+                    $test_suite->addFile($file->getPathname());
                 }
+            } elseif (is_file($dir)) {
+                $test_suite->addFile($dir);
             }
         }
+
         $reporter = new \Tuleap\Test\TuleapColorTextReporter();
         if ($this->junit_file !== null) {
             $reporter = new \Tuleap\Test\TuleapJunitXMLReporter();
@@ -75,25 +70,6 @@ class RunTestSuite
             exit(0);
         }
         exit(1);
-    }
-
-    private function getCompatibleTestFiles()
-    {
-        foreach (file(__DIR__.'/../../'.FindCompatibleTests::COMPATIBLE_TESTS_FILE) as $file) {
-            yield trim($file);
-        }
-        $directory_iterator = new \DirectoryIterator(__DIR__.'/../../../plugins');
-        foreach ($directory_iterator as $directory) {
-            if ($directory->isDot()) {
-                continue;
-            }
-            $compatibility_file = $directory->getPathname().'/tests/'.FindCompatibleTests::COMPATIBLE_TESTS_FILE;
-            if (is_file($compatibility_file)) {
-                foreach (file($compatibility_file) as $file) {
-                    yield trim($file);
-                }
-            }
-        }
     }
 
     private function collectFiles($path)

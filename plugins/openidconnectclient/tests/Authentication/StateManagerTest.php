@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,11 @@ use Tuleap\OpenIDConnectClient\Authentication\State;
 require_once(__DIR__ . '/../bootstrap.php');
 
 class StateManagerTest extends TuleapTestCase {
+
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
 
     public function itValidatesValidState() {
         $key           = 'Tuleap_key';

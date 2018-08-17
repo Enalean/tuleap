@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
@@ -51,7 +51,8 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
 }
 
 class ReferenceManagerTestMakeLinks extends MockReferenceManager {
-    function insertReferences(&$data) {
+    function insertReferences(&$data, $group_id)
+    {
         $data = preg_replace('/art #1/', '<a href="link-to-art-1">art #1</a>', $data);
     }
 }
@@ -62,7 +63,7 @@ class ReferenceManagerTestMakeLinks extends MockReferenceManager {
 class Codendi_HTMLPurifierTest extends TuleapTestCase {
 
     function testPurifySimple() {
-        $p =& Codendi_HTMLPurifier::instance();
+        $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual('&lt;script&gt;alert(1);&lt;/script&gt;', $p->purify('<script>alert(1);</script>'));
     }
 
@@ -82,7 +83,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     }
 
     function anchorJsInjection($level) {
-        $p =& Codendi_HTMLPurifierTestVersion::instance();
+        $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onblur="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" onclick="evil">Text</a>', $level));
         $this->assertEqual('<a href="http://php.net">Text</a>', $p->purify('<a href="http://php.net" ondbclick="evil">Text</a>', $level));
@@ -98,7 +99,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     }
 
     function testStripLightAllowed() {
-        $p =& Codendi_HTMLPurifierTestVersion::instance();
+        $p = Codendi_HTMLPurifierTestVersion::instance();
 
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text</p>', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br />', CODENDI_PURIFIER_LIGHT));
@@ -109,7 +110,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     }
 
     function testStripLightTidy() {
-        $p =& Codendi_HTMLPurifierTestVersion::instance();
+        $p = Codendi_HTMLPurifierTestVersion::instance();
         $this->assertEqual('<p>Text</p>', $p->purify('<p>Text', CODENDI_PURIFIER_LIGHT));
         $this->assertEqual('Text<br />', $p->purify('Text<br>', CODENDI_PURIFIER_LIGHT));
 
@@ -118,7 +119,7 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     }
 
     function testPurifyArraySimple() {
-        $p =& Codendi_HTMLPurifier::instance();
+        $p = Codendi_HTMLPurifier::instance();
 
         $vRef = array('<script>alert(1);</script>',
                       'toto',
@@ -132,14 +133,14 @@ class Codendi_HTMLPurifierTest extends TuleapTestCase {
     }
 
     function testSingleton() {
-        $p1 =& Codendi_HTMLPurifier::instance();
-        $p2 =& Codendi_HTMLPurifier::instance();
+        $p1 = Codendi_HTMLPurifier::instance();
+        $p2 = Codendi_HTMLPurifier::instance();
         $this->assertReference($p1, $p2);
         $this->assertIsA($p1, 'Codendi_HTMLPurifier');
     }
 
     function testPurifyJsQuoteAndDQuote() {
-        $p =& Codendi_HTMLPurifier::instance();
+        $p = Codendi_HTMLPurifier::instance();
         $this->assertEqual('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
         $this->assertEqual('\u0022a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));

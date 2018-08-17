@@ -1,9 +1,0 @@
-/usr/share/tuleap/plugins/ldap/tests/LdapEscapeTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAP_UserDaoTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAP_UserManagerTest.php
-/usr/share/tuleap/plugins/ldap/tests/UserGroupManagerTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAP_UserSyncTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAP_GroupManagerTest.php
-/usr/share/tuleap/plugins/ldap/tests/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAPTest.php
-/usr/share/tuleap/plugins/ldap/tests/LDAP_DirectorySynchronizationTest.php

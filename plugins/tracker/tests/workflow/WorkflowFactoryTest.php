@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,8 +73,13 @@ class WorkflowFactoryTest extends TuleapTestCase {
         
         stub($third_transition)->getPostActions()->returns(array($date_post_action));
 
-        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[0], $mapping, $this->project)->at(0)->returns(mock('Transition'));
-        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping, $this->project)->at(1)->returns(mock('Transition'));
+        $first_transition = Mockery::mock(Transition::class);
+        $first_transition->shouldReceive('getPostActions')->andReturns([]);
+        $second_transition = Mockery::mock(Transition::class);
+        $second_transition->shouldReceive('getPostActions')->andReturns([]);
+
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[0], $mapping, $this->project)->at(0)->returns($first_transition);
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping, $this->project)->at(1)->returns($second_transition);
         stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[2], $mapping, $this->project)->at(2)->returns($third_transition);
 
         $workflow_factory   = new WorkflowFactory(

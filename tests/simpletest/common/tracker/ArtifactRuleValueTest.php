@@ -1,17 +1,29 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 require_once('common/tracker/ArtifactRuleValue.class.php');
 
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
- * 
- *
- * Tests the class ArtifactRuleValue
- */
 class ArtifactRuleValueTest extends TuleapTestCase {
 
     function testApplyTo() {
-        $arv =& new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
+        $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
         
         $this->assertTrue( $arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));
         $this->assertFalse($arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'false_target_value'));
@@ -25,7 +37,7 @@ class ArtifactRuleValueTest extends TuleapTestCase {
         $this->assertFalse($arv->applyTo('group_artifact_id',       'source_field',        'source_value',       'false_target_field', 'false_target_value'));
     }
     function testCanApplyTo() {
-        $arv =& new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
+        $arv = new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
         
         $this->assertTrue( $arv->canApplyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));
         $this->assertTrue( $arv->canApplyTo('group_artifact_id',       'source_field',        'source_value',       'target_field',       'false_target_value'));

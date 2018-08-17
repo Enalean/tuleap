@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -187,10 +187,12 @@ class Git_Driver_GerritLegacy implements Git_Driver_Gerrit {
         }
     }
 
-    private function getAccountGroupsInfo(Git_RemoteServer_GerritServer $server, $group_full_name) {
-        $sql = "SELECT * FROM account_groups WHERE name='".$group_full_name."'";
-        $command_result = $this->executeQuery($server, $sql);
-        return json_decode(array_shift(explode("\n", $command_result)));
+    private function getAccountGroupsInfo(Git_RemoteServer_GerritServer $server, $group_full_name)
+    {
+        $sql                     = "SELECT * FROM account_groups WHERE name='".$group_full_name."'";
+        $command_result          = $this->executeQuery($server, $sql);
+        $exploded_command_result = explode("\n", $command_result);
+        return json_decode(array_shift($exploded_command_result));
     }
 
     public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name) {

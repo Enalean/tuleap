@@ -145,6 +145,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
         $server                = mock('Git_RemoteServer_GerritServer');
         $gerrit_server_factory = stub('Git_RemoteServer_GerritServerFactory')->getServerById()->returns($server);
         $can_migrate_checker   = stub('Tuleap\Git\GerritCanMigrateChecker')->canMigrate()->returns(true);
+        $mirror_data_mapper    = Mockery::mock(Git_Mirror_MirrorDataMapper::class);
+        $mirror_data_mapper->shouldReceive('fetchAllForProject')->andReturns([]);
 
         $git                   = partial_mock(
             Git::class,
@@ -165,7 +167,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 $this->git_permissions_manager,
                 $url_manager,
                 mock('Logger'),
-                mock('Git_Mirror_MirrorDataMapper'),
+                $mirror_data_mapper,
                 mock('Git_Driver_Gerrit_ProjectCreatorStatus'),
                 $can_migrate_checker,
                 mock('Tuleap\Git\Permissions\FineGrainedUpdater'),
@@ -255,7 +257,8 @@ class Git_DisconnectFromGerritRouteTest extends Git_RouteBaseTestCase {
         $this->assertItNeedsAValidRepoId($factory);
     }
 
-    protected function getGit($request, $factory) {
+    protected function getGit($request, $factory, $template_factory = null)
+    {
         $git = parent::getGit($request, $factory);
         $git->setAction('disconnect_gerrit');
         return $git;

@@ -63,7 +63,7 @@ class PluginManagerTest extends TuleapTestCase {
             mock('Tuleap\Markdown\ContentInterpretor')
         );
 
-        $this->assertReference($pm->getAllPlugins(), $plugins);
+        $this->assertEqual($pm->getAllPlugins(), $plugins);
     }
 
     function testIsPluginAvailable() {
@@ -168,7 +168,7 @@ class PluginManagerTest extends TuleapTestCase {
             mock('Tuleap\Markdown\ContentInterpretor')
         );
 
-        $this->assertReference($pm->installPlugin('New_Plugin'), $plugin);
+        $this->assertEqual($pm->installPlugin('New_Plugin'), $plugin);
 
         // plugin manager must call postInstall 1 time on plugin after its creation
         $plugin->expectCallCount('postInstall', 1);

@@ -25,6 +25,11 @@ class CookieManagerTest extends TuleapTestCase
      */
     private $save_existing_headers;
 
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
+
     public function setUp()
     {
         parent::setUp();

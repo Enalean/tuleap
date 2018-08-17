@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -71,7 +71,11 @@ class LDAP_BackendSVN extends BackendSVN {
      *
      * @return String
      */
-    function getSVNAccessProjectMembers(Project $project) {
+    function getSVNAccessProjectMembers($project)
+    {
+        if (! $project instanceof Project) {
+            throw new InvalidArgumentException('Expected Project, got ' . get_class($project));
+        }
         $ldapPrjMgr = $this->getLDAPProjectManager();
         if ($ldapPrjMgr->hasSVNLDAPAuth($project->getID())) {
             return $this->getSVNGroupDef('members', $project->getMembersId());

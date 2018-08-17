@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,7 +32,11 @@ class Test_ArtifactNode_Builder extends Test_TreeNode_Builder {
     private $data = null;
     private $artifact;
 
-    public function withArtifact(Tracker_Artifact $artifact) {
+    public function withArtifact($artifact)
+    {
+        if (! $artifact instanceof Tracker_Artifact) {
+            throw new InvalidArgumentException('Expected ' . Tracker_Artifact::class . 'got ' . get_class($artifact));
+        }
         $this->artifact = $artifact;
         return $this;
     }

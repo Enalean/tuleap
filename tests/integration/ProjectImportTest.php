@@ -52,6 +52,11 @@ class ProjectImportTest extends TuleapDbTestCase
         // $this->markThisTestUnderDevelopment();
     }
 
+    public function skip()
+    {
+        $this->skipIf(PHP_VERSION_ID > 70000);
+    }
+
     public function setUp()
     {
         parent::setUp();
@@ -342,7 +347,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $mediawikilanguage_dao = new MediawikiLanguageDao();
 
         $res = $mediawiki_dao->getMediawikiPagesNumberOfAProject($project);
-        $this->assertEqual(4, $res['result']);
+        $this->assertEqual(4, (int) $res['result']);
 
         $res = $mediawikilanguage_dao->getUsedLanguageForProject($project->getGroupId());
         $this->assertEqual('fr_FR', $res['language']);
@@ -351,7 +356,7 @@ class ProjectImportTest extends TuleapDbTestCase
         $escaped_mw_st_path = escapeshellarg($mediawiki_storage_path);
         $find_cmd = "find $escaped_mw_st_path -type 'f' -iname 'tuleap.png' -printf '%f'";
         $find_res = $this->sys_command->exec($find_cmd);
-        $this->assertEqual(1, count($find_res[0]));
+        $this->assertEqual(1, count($find_res));
 
         $owner = posix_getpwuid(fileowner($mediawiki_storage_path));
         $this->assertEqual("codendiadm", $owner['name']);

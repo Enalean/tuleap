@@ -64,10 +64,10 @@ class ArtifactRuleFactory {
         if (!isset($this->rules[$id])) {
             $this->rules[$id] = null;
             //We retrieve rule
-            $dar =& $this->rules_dao->searchById($id);
+            $dar = $this->rules_dao->searchById($id);
             if ($dar && ($rule_row = $dar->getRow())) {
                 $rule_row['id'] = $id;
-                $this->rules[$id] =& $this->_buildRuleInstance($rule_row);
+                $this->rules[$id] = $this->_buildRuleInstance($rule_row);
             }
         }
         return $this->rules[$id];
@@ -79,7 +79,7 @@ class ArtifactRuleFactory {
         while($rule_row = $dar->getRow()) {
             if (!isset($this->rules[$rule_row['id']])) {
                 $rule_row['group_artifact_id'] = $artifact_type;
-                $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row);
+                $this->rules[$rule_row['id']] = $this->_buildRuleInstance($rule_row);
             }
             $rules[] = $this->rules[$rule_row['id']];
         }
@@ -89,7 +89,7 @@ class ArtifactRuleFactory {
     /**
     * @return ArtifactRule
     */
-    function &_buildRuleInstance($data) {
+    function _buildRuleInstance($data) {
         //We create Rule
         switch ($data['rule_type']) {
             case $this->RULETYPE_HIDDEN:

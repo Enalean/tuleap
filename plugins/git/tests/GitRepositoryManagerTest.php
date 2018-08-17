@@ -269,7 +269,11 @@ class GitRepositoryIdMatchExpectation extends SimpleExpectation {
         $this->repository_id = $repository_id;
     }
 
-    public function test(GitRepository $compare) {
+    public function test($compare)
+    {
+        if (! $compare instanceof GitRepository) {
+            throw new InvalidArgumentException('Expected ' . GitRepository::class . 'got ' . get_class($compare));
+        }
         return $compare->getId() === $this->repository_id;
     }
 

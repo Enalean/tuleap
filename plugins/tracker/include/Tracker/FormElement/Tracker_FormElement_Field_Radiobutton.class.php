@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  * Copyright (c) Jtekt, Jason Team, 2014. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -62,7 +63,8 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
-    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue_List $previous_changesetvalue, $new_value) {
+    public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
+    {
         return parent::hasChanges($artifact, $previous_changesetvalue, $this->filterZeroWhenArray($new_value));
     }
 

@@ -40,7 +40,8 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
         $this->UserTestVersion_MockPreferences_hash[$key] = $value;
     }
 
-    public function delPreference($key, $value) {
+    public function delPreference($key)
+    {
         if (isset($this->UserTestVersion_MockPreferences_hash[$key])) {
             unset($this->UserTestVersion_MockPreferences_hash[$key]);
         }

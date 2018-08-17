@@ -1266,7 +1266,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     function delPreference($preference_name) {
         $this->_preferences[$preference_name] = false;
         if ($this->isLoggedIn()) {
-            $dao =& $this->getPreferencesDao();
+            $dao = $this->getPreferencesDao();
             if ( ! $dao->delete($this->getId(), $preference_name)) {
                 return false;
             }

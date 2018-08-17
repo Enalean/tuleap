@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2012 - 2015. All rights reserved
+  * Copyright (c) Enalean, 2012 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -298,7 +298,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
 
         $trm->exportToXML($root, $array_xml_mapping, 666);
-        $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
+        $this->assertNull($root->dependencies->rule);
     }
 
     public function itDelegatesSaveToDao() {
