@@ -1,4 +1,4 @@
-controller.$inject = ['$scope'];
+controller.$inject = ["$scope"];
 
 export default function controller($scope) {
     const self = this;
@@ -6,10 +6,13 @@ export default function controller($scope) {
         $onInit: init
     });
     function init() {
-        $scope.$watch(() => self.execution.definition.steps, steps => {
-            if (steps !== undefined) {
-                steps.sort((a, b) => a.rank - b.rank);
+        $scope.$watch(
+            () => self.execution.definition.steps,
+            steps => {
+                if (steps !== undefined) {
+                    steps.sort((a, b) => a.rank - b.rank);
+                }
             }
-        })
+        );
     }
 }

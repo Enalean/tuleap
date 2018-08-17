@@ -1,16 +1,20 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ExecutionListFilter;
 
-ExecutionListFilter.$inject = ['$filter'];
+ExecutionListFilter.$inject = ["$filter"];
 
 function ExecutionListFilter($filter) {
     return function(list, keywords, status) {
-        var keyword_list  = _.compact(keywords.split(' ')),
-            status_list   = _.compact(_.map(status, function(value, key) { return (value) ? key : false; })),
-            all_results   = [];
+        var keyword_list = _.compact(keywords.split(" ")),
+            status_list = _.compact(
+                _.map(status, function(value, key) {
+                    return value ? key : false;
+                })
+            ),
+            all_results = [];
 
-        if (! hasAtLeastOneFilter(keyword_list, status_list)) {
+        if (!hasAtLeastOneFilter(keyword_list, status_list)) {
             return list;
         }
 
@@ -48,16 +52,16 @@ function ExecutionListFilter($filter) {
     }
 
     function keywordsMatcher(keyword_list, list) {
-        var result     = [],
-            lookup     = '',
-            properties = ['summary', 'id', 'category', '_uncategorized'];
+        var result = [],
+            lookup = "",
+            properties = ["summary", "id", "category", "_uncategorized"];
 
         keyword_list.forEach(function(keyword) {
             properties.forEach(function(property) {
                 var expression = {};
                 expression[property] = keyword;
 
-                lookup = $filter('filter')(list, { definition: expression });
+                lookup = $filter("filter")(list, { definition: expression });
                 if (lookup.length > 0) {
                     result = result.concat(lookup);
                 }
@@ -69,10 +73,10 @@ function ExecutionListFilter($filter) {
 
     function statusMatcher(status_list, list) {
         var result = [],
-            lookup = '';
+            lookup = "";
 
         status_list.forEach(function(status) {
-            lookup = $filter('filter')(list, { status: status });
+            lookup = $filter("filter")(list, { status: status });
             if (lookup.length > 0) {
                 result = result.concat(lookup);
             }
@@ -81,4 +85,3 @@ function ExecutionListFilter($filter) {
         return result;
     }
 }
-

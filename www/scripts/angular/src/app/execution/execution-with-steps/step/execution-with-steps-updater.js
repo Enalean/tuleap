@@ -22,7 +22,7 @@ import {
     FAILED_STATUS,
     BLOCKED_STATUS,
     NOT_RUN_STATUS
-} from '../../execution-constants.js';
+} from "../../execution-constants.js";
 
 function updateStatusWithStepResults(execution) {
     execution.status = computeTestStatusFromStepStatus(
@@ -32,7 +32,7 @@ function updateStatusWithStepResults(execution) {
 }
 
 function updateStepResults(execution, step_id, status) {
-    if (typeof execution.steps_results[step_id] === 'undefined') {
+    if (typeof execution.steps_results[step_id] === "undefined") {
         execution.steps_results[step_id] = {};
     }
     Object.assign(execution.steps_results[step_id], { step_id, status });

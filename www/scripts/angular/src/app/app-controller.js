@@ -1,13 +1,13 @@
-import { moveBreadCrumbs } from './move-breadcrumb.js';
+import { moveBreadCrumbs } from "./move-breadcrumb.js";
 
 export default TestManagementCtrl;
 
 TestManagementCtrl.$inject = [
-    '$element',
-    'amMoment',
-    'gettextCatalog',
-    'SharedPropertiesService',
-    'UUIDGeneratorService'
+    "$element",
+    "amMoment",
+    "gettextCatalog",
+    "SharedPropertiesService",
+    "UUIDGeneratorService"
 ];
 
 function TestManagementCtrl(
@@ -18,7 +18,8 @@ function TestManagementCtrl(
     UUIDGeneratorService
 ) {
     this.$onInit = function() {
-        const testmanagement_init_data = $element[0].querySelector('.testmanagement-init-data').dataset;
+        const testmanagement_init_data = $element[0].querySelector(".testmanagement-init-data")
+            .dataset;
 
         const uuid = UUIDGeneratorService.generateUUID();
         SharedPropertiesService.setUUID(uuid);

@@ -1,13 +1,13 @@
-import _ from 'lodash';
-import './artifact-links-graph.tpl.html';
+import _ from "lodash";
+import "./artifact-links-graph.tpl.html";
 
 export default ArtifactLinksGraphService;
 
 ArtifactLinksGraphService.$inject = [
-    'TlpModalService',
-    'ArtifactLinksGraphModalLoading',
-    'ArtifactLinksGraphRestService',
-    'ArtifactLinksModelService'
+    "TlpModalService",
+    "ArtifactLinksGraphModalLoading",
+    "ArtifactLinksGraphRestService",
+    "ArtifactLinksModelService"
 ];
 
 function ArtifactLinksGraphService(
@@ -20,16 +20,16 @@ function ArtifactLinksGraphService(
 
     _.extend(self, {
         showGraphModal: showGraphModal,
-        showGraph     : showGraph
+        showGraph: showGraph
     });
 
     function showGraphModal(execution) {
         ArtifactLinksGraphModalLoading.loading.is_loading = true;
 
         return TlpModalService.open({
-            templateUrl : 'artifact-links-graph.tpl.html',
-            controller  : 'ArtifactLinksGraphCtrl',
-            controllerAs: 'modal',
+            templateUrl: "artifact-links-graph.tpl.html",
+            controller: "ArtifactLinksGraphCtrl",
+            controllerAs: "modal",
             resolve: {
                 modal_model: self.showGraph(execution.id)
             }
@@ -42,4 +42,3 @@ function ArtifactLinksGraphService(
         });
     }
 }
-

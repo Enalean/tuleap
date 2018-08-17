@@ -1,13 +1,13 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ExecutionService;
 
 ExecutionService.$inject = [
-    '$q',
-    '$rootScope',
-    'ExecutionConstants',
-    'ExecutionRestService',
-    'SharedPropertiesService',
+    "$q",
+    "$rootScope",
+    "ExecutionConstants",
+    "ExecutionRestService",
+    "SharedPropertiesService"
 ];
 
 function ExecutionService(
@@ -51,16 +51,16 @@ function ExecutionService(
 
     function initialization() {
         _.extend(self, {
-            UNCATEGORIZED                        : ExecutionConstants.UNCATEGORIZED,
-            campaign                             : {},
+            UNCATEGORIZED: ExecutionConstants.UNCATEGORIZED,
+            campaign: {},
             executions_by_categories_by_campaigns: {},
-            executions                           : {},
-            categories                           : {},
-            loading                              : {},
-            presences_loaded                     : false,
-            executions_loaded                    : false,
-            presences_by_execution               : {},
-            presences_on_campaign                : []
+            executions: {},
+            categories: {},
+            loading: {},
+            presences_loaded: false,
+            executions_loaded: false,
+            presences_by_execution: {},
+            presences_on_campaign: []
         });
     }
 
@@ -69,18 +69,17 @@ function ExecutionService(
             limit = 50,
             offset = 0;
 
-        return getAllRemoteExecutions(campaign_id, limit, offset)
-            .then(function(remote_executions) {
-                var executions_to_remove = _.select(self.executions, function(execution) {
-                    return ! _.some(remote_executions, { id: execution.id });
-                });
-                var executions_to_add = _.select(remote_executions, function(execution) {
-                    return ! _.some(self.executions, { id: execution.id });
-                });
-
-                _.forEach(executions_to_remove, removeTestExecutionWithoutUpdateCampaignStatus);
-                _.forEach(executions_to_add, addTestExecutionWithoutUpdateCampaignStatus);
+        return getAllRemoteExecutions(campaign_id, limit, offset).then(function(remote_executions) {
+            var executions_to_remove = _.select(self.executions, function(execution) {
+                return !_.some(remote_executions, { id: execution.id });
             });
+            var executions_to_add = _.select(remote_executions, function(execution) {
+                return !_.some(self.executions, { id: execution.id });
+            });
+
+            _.forEach(executions_to_remove, removeTestExecutionWithoutUpdateCampaignStatus);
+            _.forEach(executions_to_add, addTestExecutionWithoutUpdateCampaignStatus);
+        });
     }
 
     function loadExecutions(campaign_id) {
@@ -91,8 +90,8 @@ function ExecutionService(
         }
 
         var remote_executions = [],
-            limit             = 50,
-            offset            = 0;
+            limit = 50,
+            offset = 0;
 
         self.loading[campaign_id] = true;
         self.executions_by_categories_by_campaigns[campaign_id] = {};
@@ -105,19 +104,21 @@ function ExecutionService(
     function getAllRemoteExecutions(campaign_id, limit, offset, remote_executions) {
         remote_executions = remote_executions || [];
 
-        return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(data) {
-          var total_executions = data.total;
+        return ExecutionRestService.getRemoteExecutions(campaign_id, limit, offset).then(function(
+            data
+        ) {
+            var total_executions = data.total;
 
-          groupExecutionsByCategory(campaign_id, data.results);
-          $rootScope.$emit('bunchOfExecutionsLoaded', data.results);
-          remote_executions = remote_executions.concat(data.results);
+            groupExecutionsByCategory(campaign_id, data.results);
+            $rootScope.$emit("bunchOfExecutionsLoaded", data.results);
+            remote_executions = remote_executions.concat(data.results);
 
-          offset = offset + limit;
-          if (offset < total_executions) {
-              return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
-          } else {
-              return remote_executions;
-          }
+            offset = offset + limit;
+            if (offset < total_executions) {
+                return getAllRemoteExecutions(campaign_id, limit, offset, remote_executions);
+            } else {
+                return remote_executions;
+            }
         });
     }
 
@@ -130,23 +131,23 @@ function ExecutionService(
 
         _.forEach(executions, function(execution) {
             var category = execution.definition.category;
-            if (! category) {
+            if (!category) {
                 category = ExecutionConstants.UNCATEGORIZED;
                 execution.definition._uncategorized = category;
             }
 
-            if (! _.has(executions, execution.id)) {
+            if (!_.has(executions, execution.id)) {
                 self.executions[execution.id] = execution;
             }
 
             if (typeof categories[category] === "undefined") {
                 categories[category] = {
-                    label     : category,
+                    label: category,
                     executions: []
                 };
             }
 
-            if (! _.some(categories[category].executions, { id: execution.id })) {
+            if (!_.some(categories[category].executions, { id: execution.id })) {
                 categories[category].executions.push(execution);
             }
         });
@@ -155,7 +156,7 @@ function ExecutionService(
     }
 
     function getExecutionsByDefinitionId(artifact_id) {
-        var executions = _.flatten(_.map(self.categories, 'executions'));
+        var executions = _.flatten(_.map(self.categories, "executions"));
 
         return _.filter(executions, { definition: { id: artifact_id } });
     }
@@ -165,7 +166,7 @@ function ExecutionService(
         var status = execution.status;
 
         groupExecutionsByCategory(self.campaign_id, executions);
-        self.campaign['nb_of_' + status]++;
+        self.campaign["nb_of_" + status]++;
         self.campaign.total++;
     }
 
@@ -177,7 +178,7 @@ function ExecutionService(
 
     function removeTestExecution(execution_to_remove) {
         removeTestExecutionByCategories(execution_to_remove.id);
-        self.campaign['nb_of_' + execution_to_remove.status]--;
+        self.campaign["nb_of_" + execution_to_remove.status]--;
         self.campaign.total--;
     }
 
@@ -186,7 +187,9 @@ function ExecutionService(
     }
 
     function removeTestExecutionByCategories(execution_to_remove_id) {
-        for (const category of Object.values(self.executions_by_categories_by_campaigns[self.campaign_id])) {
+        for (const category of Object.values(
+            self.executions_by_categories_by_campaigns[self.campaign_id]
+        )) {
             _.remove(category.executions, { id: execution_to_remove_id });
         }
         delete self.executions[execution_to_remove_id];
@@ -194,9 +197,10 @@ function ExecutionService(
 
     function updateTestExecution(execution_updated, updated_by) {
         const execution = self.executions[execution_updated.id];
-        if (isCurrentUserViewingExecution(execution)
-            && hasDefinitionChanged(execution, execution_updated)
-            && ! isCurrentUserOriginatorOfTheUpdate(updated_by)
+        if (
+            isCurrentUserViewingExecution(execution) &&
+            hasDefinitionChanged(execution, execution_updated) &&
+            !isCurrentUserOriginatorOfTheUpdate(updated_by)
         ) {
             execution.userCanReloadTestBecauseDefinitionIsUpdated = () => {
                 delete execution.userCanReloadTestBecauseDefinitionIsUpdated;
@@ -208,8 +212,10 @@ function ExecutionService(
     }
 
     function hasDefinitionChanged(execution, execution_updated) {
-        return execution.definition.summary !== execution_updated.definition.summary
-            || execution.definition.description !== execution_updated.definition.description;
+        return (
+            execution.definition.summary !== execution_updated.definition.summary ||
+            execution.definition.description !== execution_updated.definition.description
+        );
     }
 
     function isCurrentUserOriginatorOfTheUpdate(updated_by) {
@@ -217,25 +223,29 @@ function ExecutionService(
     }
 
     function isCurrentUserViewingExecution(execution) {
-        return execution.viewed_by
-            && execution.viewed_by.find(user => user.uuid === SharedPropertiesService.getCurrentUser().uuid);
+        return (
+            execution.viewed_by &&
+            execution.viewed_by.find(
+                user => user.uuid === SharedPropertiesService.getCurrentUser().uuid
+            )
+        );
     }
 
     function updateTestExecutionNow(execution, execution_updated) {
         const previous_status = execution.previous_result.status;
-        const status          = execution_updated.status;
+        const status = execution_updated.status;
 
         Object.assign(execution, execution_updated);
 
         execution.previous_result.has_been_run_at_least_once = true;
 
-        execution.saving       = false;
+        execution.saving = false;
         execution.submitted_by = null;
-        execution.error        = '';
-        execution.results      = '';
+        execution.error = "";
+        execution.results = "";
 
-        self.campaign['nb_of_' + status]++;
-        self.campaign['nb_of_' + previous_status]--;
+        self.campaign["nb_of_" + status]++;
+        self.campaign["nb_of_" + previous_status]--;
     }
 
     function updatePresenceOnCampaign(user) {
@@ -243,7 +253,7 @@ function ExecutionService(
             return presence.id === user.id;
         });
 
-        if (user_on_campaign && ! _.has(user_on_campaign, 'score')) {
+        if (user_on_campaign && !_.has(user_on_campaign, "score")) {
             _.extend(user_on_campaign, user.score);
         }
 
@@ -251,7 +261,7 @@ function ExecutionService(
             user_on_campaign.score = user.score;
         }
 
-        if (! user_on_campaign) {
+        if (!user_on_campaign) {
             addPresenceCampaign(user);
         }
     }
@@ -265,9 +275,9 @@ function ExecutionService(
             return presence.id === user.id;
         });
 
-        if (! user_id_exists) {
+        if (!user_id_exists) {
             self.presences_on_campaign.push(user);
-        } else if (_.has(user, 'score')) {
+        } else if (_.has(user, "score")) {
             _.extend(user_id_exists, user.score);
         }
     }
@@ -276,7 +286,7 @@ function ExecutionService(
         if (_.has(self.executions, execution_id)) {
             var execution = self.executions[execution_id];
 
-            if (! _.has(execution, 'viewed_by')) {
+            if (!_.has(execution, "viewed_by")) {
                 execution.viewed_by = [];
             }
 
@@ -284,7 +294,7 @@ function ExecutionService(
                 return presence.uuid === user.uuid;
             });
 
-            if (! user_uuid_exists) {
+            if (!user_uuid_exists) {
                 execution.viewed_by.push(user);
             }
         }
@@ -325,10 +335,10 @@ function ExecutionService(
 
     function displayPresencesForAllExecutions() {
         if (self.presences_loaded && self.executions_loaded) {
-            self.presences_loaded  = false;
+            self.presences_loaded = false;
             self.executions_loaded = false;
-            _.forEach(self.presences_by_execution, function (presences, execution_id) {
-                _.forEach(presences, function (presence) {
+            _.forEach(self.presences_by_execution, function(presences, execution_id) {
+                _.forEach(presences, function(presence) {
                     viewTestExecution(execution_id, presence);
                     addPresenceCampaign(presence);
                 });
@@ -338,23 +348,24 @@ function ExecutionService(
 
     function displayError(execution, response) {
         execution.saving = false;
-        execution.error  = response.status + ': ' + response.data.error.message;
+        execution.error = response.status + ": " + response.data.error.message;
     }
 
     function displayErrorMessage(execution, message) {
         execution.saving = false;
-        execution.error  = message;
+        execution.error = message;
     }
 
     function executionsForCampaign(campaign_id) {
         var executions = _.map(
-            self.executions_by_categories_by_campaigns[campaign_id], 'executions'
+            self.executions_by_categories_by_campaigns[campaign_id],
+            "executions"
         );
         return _.flatten(executions);
     }
 
     function addArtifactLink(execution_id, artifact_link) {
-        if (! _.has(self.executions, execution_id)) {
+        if (!_.has(self.executions, execution_id)) {
             return;
         }
         const execution = self.executions[execution_id];

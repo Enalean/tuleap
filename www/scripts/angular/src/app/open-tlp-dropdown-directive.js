@@ -1,15 +1,13 @@
-import * as tlp from 'tlp';
+import * as tlp from "tlp";
 
 export default OpenTlpDropdown;
 
-OpenTlpDropdown.$inject = [
-];
+OpenTlpDropdown.$inject = [];
 
-function OpenTlpDropdown(
-) {
+function OpenTlpDropdown() {
     return {
-        restrict: 'A',
-        link: function (scope, element) {
+        restrict: "A",
+        link: function(scope, element) {
             tlp.dropdown(element[0]);
         }
     };

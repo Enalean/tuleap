@@ -45,40 +45,40 @@
 </template>
 
 <script>
-    import StepDefinitionEntry from "./StepDefinitionEntry.vue";
-    import uuid                from 'uuid/v4';
+import StepDefinitionEntry from "./StepDefinitionEntry.vue";
+import uuid from "uuid/v4";
 
-    export default {
-        name: "StepDefinitionField",
-        components: {StepDefinitionEntry},
-        props: {
-            steps: Array,
-            fieldId: Number,
-            emptyStep: Object
-        },
-        created() {
-            for (const step of this.steps) {
-                step.uuid = uuid();
+export default {
+    name: "StepDefinitionField",
+    components: { StepDefinitionEntry },
+    props: {
+        steps: Array,
+        fieldId: Number,
+        emptyStep: Object
+    },
+    created() {
+        for (const step of this.steps) {
+            step.uuid = uuid();
+        }
+    },
+    computed: {
+        isThereAtLeastOneStep() {
+            return this.steps.length !== 0;
+        }
+    },
+    methods: {
+        deleteStep(step) {
+            const index = this.steps.indexOf(step);
+            if (index > -1) {
+                this.steps.splice(index, 1);
             }
         },
-        computed: {
-            isThereAtLeastOneStep() {
-                return this.steps.length !== 0;
-            }
-        },
-        methods: {
-            deleteStep(step) {
-                const index = this.steps.indexOf(step);
-                if (index > -1) {
-                    this.steps.splice(index, 1);
-                }
-            },
-            addStep() {
-                const step = Object.assign({}, this.emptyStep);
-                step.uuid = uuid();
+        addStep() {
+            const step = Object.assign({}, this.emptyStep);
+            step.uuid = uuid();
 
-                this.steps.push(step);
-            }
+            this.steps.push(step);
         }
     }
+};
 </script>

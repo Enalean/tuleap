@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import Vue                 from 'vue';
-import GetTextPlugin       from 'vue-gettext';
-import french_translations from './po/fr.po';
-import StepDefinitionField from './StepDefinitionField.vue';
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
+import french_translations from "./po/fr.po";
+import StepDefinitionField from "./StepDefinitionField.vue";
 
 const StepDefinitionFieldComponent = Vue.extend(StepDefinitionField);
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     Vue.config.language = document.body.dataset.userLocale;
 
-    for (const mount_point of document.querySelectorAll('.ttm-definition-step-mount-point')) {
+    for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
         new StepDefinitionFieldComponent({
             propsData: {
                 steps: JSON.parse(mount_point.dataset.steps),

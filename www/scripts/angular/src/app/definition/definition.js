@@ -1,15 +1,12 @@
-import angular from 'angular';
+import angular from "angular";
 
-import 'restangular';
+import "restangular";
 
-import DefinitionService from './definition-service.js';
+import DefinitionService from "./definition-service.js";
 
-export default angular.module('definition', [
-    'restangular'
-])
-.service('DefinitionService', DefinitionService)
-.constant('DefinitionConstants', {
-    'UNCATEGORIZED': 'Uncategorized'
-})
-.name;
-
+export default angular
+    .module("definition", ["restangular"])
+    .service("DefinitionService", DefinitionService)
+    .constant("DefinitionConstants", {
+        UNCATEGORIZED: "Uncategorized"
+    }).name;

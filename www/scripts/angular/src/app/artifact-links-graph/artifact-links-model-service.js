@@ -1,26 +1,25 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ArtifactLinksModelService;
 
-function ArtifactLinksModelService () {
+function ArtifactLinksModelService() {
     var self = this;
 
     _.extend(self, {
         getGraphStructure: getGraphStructure
-
     });
 
     function getGraphStructure(artifact) {
         var modal_model = {
             errors: [],
-            graph : {
+            graph: {
                 links: [],
                 nodes: []
             },
             title: artifact.title
         };
 
-        if (artifact.hasOwnProperty('error')) {
+        if (artifact.hasOwnProperty("error")) {
             modal_model.errors.push(artifact.error.message);
         } else {
             var outgoing_artifact_links = artifact.links,
@@ -30,7 +29,7 @@ function ArtifactLinksModelService () {
             createNodesAndLinksForOutgoingLinks(modal_model, artifact, outgoing_artifact_links);
             createNodesAndLinksForIncomingLinks(modal_model, artifact, incoming_artifact_links);
 
-            modal_model.graph.nodes = _.uniq(modal_model.graph.nodes, 'id');
+            modal_model.graph.nodes = _.uniq(modal_model.graph.nodes, "id");
         }
 
         return modal_model;
@@ -44,11 +43,11 @@ function ArtifactLinksModelService () {
     }
 
     function createNodesAndLinksForOutgoingLinks(model, artifact, outgoing_links) {
-        _(outgoing_links).forEach(function (outgoing_link) {
+        _(outgoing_links).forEach(function(outgoing_link) {
             var link = {
                 source: artifact.id,
                 target: outgoing_link.id,
-                type: 'arrow'
+                type: "arrow"
             };
 
             model.graph.links.push(link);
@@ -65,7 +64,7 @@ function ArtifactLinksModelService () {
             var link = {
                 source: incoming_link.id,
                 target: artifact.id,
-                type: 'arrow'
+                type: "arrow"
             };
 
             model.graph.links.push(link);
@@ -73,4 +72,3 @@ function ArtifactLinksModelService () {
         });
     }
 }
-

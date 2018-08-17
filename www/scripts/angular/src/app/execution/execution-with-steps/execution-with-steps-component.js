@@ -1,11 +1,11 @@
-import './execution-with-steps.tpl.html';
+import "./execution-with-steps.tpl.html";
 
-import controller from './execution-with-steps-controller.js';
+import controller from "./execution-with-steps-controller.js";
 
 export default {
-    templateUrl: 'execution-with-steps.tpl.html',
+    templateUrl: "execution-with-steps.tpl.html",
     controller,
     bindings: {
-        execution: '<'
+        execution: "<"
     }
-}
+};

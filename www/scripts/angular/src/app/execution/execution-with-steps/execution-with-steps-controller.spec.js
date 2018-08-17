@@ -1,9 +1,9 @@
-import execution_module from '../execution.js';
-import angular from 'angular';
-import 'angular-mocks';
-import BaseController from './execution-with-steps-controller.js';
+import execution_module from "../execution.js";
+import angular from "angular";
+import "angular-mocks";
+import BaseController from "./execution-with-steps-controller.js";
 
-describe('ExecutionWithStepsController -', () => {
+describe("ExecutionWithStepsController -", () => {
     let ExecutionWithStepsController, $scope;
 
     beforeEach(() => {
@@ -21,8 +21,8 @@ describe('ExecutionWithStepsController -', () => {
         });
     });
 
-    describe('init() -', () => {
-        it('Given an execution, then the steps data will be sorted by rank for easier display', () => {
+    describe("init() -", () => {
+        it("Given an execution, then the steps data will be sorted by rank for easier display", () => {
             const execution = {
                 id: 802,
                 definition: {
@@ -30,12 +30,12 @@ describe('ExecutionWithStepsController -', () => {
                     steps: [
                         {
                             id: 12,
-                            description: 'apodema Canarsee Onmun toaster Rosamond',
+                            description: "apodema Canarsee Onmun toaster Rosamond",
                             rank: 9
                         },
                         {
                             id: 44,
-                            description: 'acroamatics tragicness malleate bissextile',
+                            description: "acroamatics tragicness malleate bissextile",
                             rank: 8
                         }
                     ]
@@ -43,11 +43,11 @@ describe('ExecutionWithStepsController -', () => {
                 steps_results: {
                     12: {
                         step_id: 12,
-                        status: 'notrun'
+                        status: "notrun"
                     },
                     44: {
                         step_id: 44,
-                        status: 'passed'
+                        status: "passed"
                     }
                 }
             };
@@ -59,12 +59,12 @@ describe('ExecutionWithStepsController -', () => {
 
             expect(execution.definition.steps[0]).toEqual({
                 id: 44,
-                description: 'acroamatics tragicness malleate bissextile',
+                description: "acroamatics tragicness malleate bissextile",
                 rank: 8
             });
             expect(execution.definition.steps[1]).toEqual({
                 id: 12,
-                description: 'apodema Canarsee Onmun toaster Rosamond',
+                description: "apodema Canarsee Onmun toaster Rosamond",
                 rank: 9
             });
         });

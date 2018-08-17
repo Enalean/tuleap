@@ -1,18 +1,18 @@
-import moment from 'moment';
+import moment from "moment";
 
-import './execution-timer-directive.tpl.html';
+import "./execution-timer-directive.tpl.html";
 
 export default TimerDirective;
 
-TimerDirective.$inject = ['$interval'];
+TimerDirective.$inject = ["$interval"];
 
 function TimerDirective($interval) {
     return {
-        restrict   : 'AE',
-        templateUrl: 'execution-timer-directive.tpl.html',
-        require    : 'ngModel',
-        scope      : {
-            execution_time: '=ngModel'
+        restrict: "AE",
+        templateUrl: "execution-timer-directive.tpl.html",
+        require: "ngModel",
+        scope: {
+            execution_time: "=ngModel"
         },
         link: linkFunction
     };
@@ -21,12 +21,12 @@ function TimerDirective($interval) {
         var timer = null;
         startTimeButton();
 
-        scope.$watch('execution_time_format', function() {
+        scope.$watch("execution_time_format", function() {
             ngModelCtrl.$setViewValue(scope.execution_time_format);
         });
 
         scope.toggleTimer = function() {
-            if (! scope.time_is_started) {
+            if (!scope.time_is_started) {
                 startTimeButton();
             } else {
                 stopTimeButton();
@@ -34,12 +34,12 @@ function TimerDirective($interval) {
         };
 
         ngModelCtrl.$formatters.push(function(modelValue) {
-            var duration = moment.duration(modelValue, 'seconds');
-            var hours    = zeroPadding(duration.hours());
-            var minutes  = zeroPadding(duration.minutes());
-            var seconds  = zeroPadding(duration.seconds());
+            var duration = moment.duration(modelValue, "seconds");
+            var hours = zeroPadding(duration.hours());
+            var minutes = zeroPadding(duration.minutes());
+            var seconds = zeroPadding(duration.seconds());
 
-            scope.execution_time_format  = hours +':'+ minutes +':'+ seconds;
+            scope.execution_time_format = hours + ":" + minutes + ":" + seconds;
             return scope.execution_time_format;
         });
 
@@ -62,10 +62,9 @@ function TimerDirective($interval) {
 
         function zeroPadding(number) {
             if (number.toString().length < 2) {
-                number = '0' + number;
+                number = "0" + number;
             }
             return number;
         }
     }
 }
-

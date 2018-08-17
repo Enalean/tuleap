@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { updateStatusWithStepResults, updateStepResults } from './execution-with-steps-updater.js';
+import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
 import {
     PASSED_STATUS,
     FAILED_STATUS,
     BLOCKED_STATUS,
     NOT_RUN_STATUS
-} from '../../execution-constants.js';
+} from "../../execution-constants.js";
 
 describe("ExecutionWithStepsUpdater", () => {
     describe("updateStepResults()", () => {
@@ -123,7 +123,7 @@ describe("ExecutionWithStepsUpdater", () => {
             expect(execution.status).toBe(NOT_RUN_STATUS);
         });
 
-        it('Given all steps are passed and their number matches the number of step definitions, then the test will be passed', () => {
+        it("Given all steps are passed and their number matches the number of step definitions, then the test will be passed", () => {
             const execution = {
                 definition: {
                     steps: [{ step_id: 16 }, { step_id: 48 }]

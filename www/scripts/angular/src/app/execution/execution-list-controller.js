@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import angular from 'angular';
+import _ from "lodash";
+import angular from "angular";
 
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
@@ -45,7 +45,10 @@ function ExecutionListCtrl(
     });
 
     function checkActiveClassOnExecution(execution) {
-        return $state.includes('campaigns.executions.detail', { execid: execution.id, defid: execution.definition.id });
+        return $state.includes("campaigns.executions.detail", {
+            execid: execution.id,
+            defid: execution.definition.id
+        });
     }
 
     function toggleStatus(executionStatus) {
@@ -54,13 +57,13 @@ function ExecutionListCtrl(
 
     function viewTestExecution(current_execution) {
         var old_execution,
-            old_execution_id = '';
+            old_execution_id = "";
 
         if (_.has(ExecutionService.executions, $scope.execution_id)) {
             old_execution = ExecutionService.executions[$scope.execution_id];
         }
 
-        if (! _.isEmpty(old_execution)) {
+        if (!_.isEmpty(old_execution)) {
             if (current_execution.id !== old_execution.id) {
                 old_execution_id = old_execution.id;
                 updateViewTestExecution(current_execution.id, old_execution_id);
@@ -70,50 +73,56 @@ function ExecutionListCtrl(
         }
     }
 
-    $scope.$on('$destroy', function() {
-        var toolbar = angular.element('.toolbar');
+    $scope.$on("$destroy", function() {
+        var toolbar = angular.element(".toolbar");
         if (toolbar) {
-            toolbar.removeClass('hide-toolbar');
+            toolbar.removeClass("hide-toolbar");
         }
 
         if ($scope.execution_id) {
             ExecutionRestService.leaveTestExecution($scope.execution_id);
-            ExecutionService.removeViewTestExecution($scope.execution_id, SharedPropertiesService.getCurrentUser());
+            ExecutionService.removeViewTestExecution(
+                $scope.execution_id,
+                SharedPropertiesService.getCurrentUser()
+            );
         }
 
         ExecutionService.removeAllPresencesOnCampaign();
     });
 
-    $scope.$on('execution-detail-destroy', function() {
-        $scope.execution_id = '';
+    $scope.$on("execution-detail-destroy", function() {
+        $scope.execution_id = "";
     });
 
-    $scope.$on('controller-reload', function() {
+    $scope.$on("controller-reload", function() {
         initialization();
     });
 
-    SocketService.listenNodeJSServer().then(function() {
-        SocketService.listenToUserScore();
-        SocketService.listenTokenExpired();
-        SocketService.listenToExecutionViewed();
-        SocketService.listenToExecutionCreated();
-        SocketService.listenToExecutionUpdated();
-        SocketService.listenToExecutionDeleted(function(execution) {
-            hideDetailsForRemovedTestExecution();
-        });
-        SocketService.listenToExecutionLeft();
-        SocketService.listenToCampaignUpdated(function(campaign) {
-            $scope.campaign = campaign;
-            ExecutionService.updateCampaign(campaign);
-        });
-    }, () => {
-        // ignore the fact that there is no nodejs server
-    });
+    SocketService.listenNodeJSServer().then(
+        function() {
+            SocketService.listenToUserScore();
+            SocketService.listenTokenExpired();
+            SocketService.listenToExecutionViewed();
+            SocketService.listenToExecutionCreated();
+            SocketService.listenToExecutionUpdated();
+            SocketService.listenToExecutionDeleted(function(execution) {
+                hideDetailsForRemovedTestExecution();
+            });
+            SocketService.listenToExecutionLeft();
+            SocketService.listenToCampaignUpdated(function(campaign) {
+                $scope.campaign = campaign;
+                ExecutionService.updateCampaign(campaign);
+            });
+        },
+        () => {
+            // ignore the fact that there is no nodejs server
+        }
+    );
 
     function initialization() {
-        var toolbar = angular.element('.toolbar');
+        var toolbar = angular.element(".toolbar");
         if (toolbar) {
-            toolbar.addClass('hide-toolbar');
+            toolbar.addClass("hide-toolbar");
         }
 
         $scope.campaign_id = $state.params.id;
@@ -176,20 +185,29 @@ function ExecutionListCtrl(
     function updateViewTestExecution(current_execution_id, old_execution_id) {
         ExecutionService.addPresenceCampaign(SharedPropertiesService.getCurrentUser());
 
-        ExecutionRestService.changePresenceOnTestExecution(current_execution_id, old_execution_id).then(function() {
-            ExecutionService.removeViewTestExecution(old_execution_id, SharedPropertiesService.getCurrentUser());
-            ExecutionService.viewTestExecution(current_execution_id, SharedPropertiesService.getCurrentUser());
+        ExecutionRestService.changePresenceOnTestExecution(
+            current_execution_id,
+            old_execution_id
+        ).then(function() {
+            ExecutionService.removeViewTestExecution(
+                old_execution_id,
+                SharedPropertiesService.getCurrentUser()
+            );
+            ExecutionService.viewTestExecution(
+                current_execution_id,
+                SharedPropertiesService.getCurrentUser()
+            );
             $scope.execution_id = current_execution_id;
         });
     }
 
     function hideDetailsForRemovedTestExecution() {
-        if ($state.includes('campaigns.executions.detail')) {
+        if ($state.includes("campaigns.executions.detail")) {
             var campaign_executions = ExecutionService.executionsForCampaign($scope.campaign_id),
                 current_execution_exists = _.any(campaign_executions, checkActiveClassOnExecution);
 
-            if (! current_execution_exists) {
-                $state.go('^');
+            if (!current_execution_exists) {
+                $state.go("^");
             }
         }
     }
@@ -199,7 +217,7 @@ function ExecutionListCtrl(
     }
 
     function canCategoryBeDisplayed(category) {
-        var filtered_executions = $filter('ExecutionListFilter')(
+        var filtered_executions = $filter("ExecutionListFilter")(
             category.executions,
             $scope.search,
             $scope.status

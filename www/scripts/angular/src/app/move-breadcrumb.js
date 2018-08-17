@@ -19,20 +19,20 @@
 
 export function moveBreadCrumbs() {
     window.setTimeout(function() {
-        const origin = document.getElementById('testmanagement-breadcrumb');
-        if (! origin) {
+        const origin = document.getElementById("testmanagement-breadcrumb");
+        if (!origin) {
             return;
         }
 
-        const main = document.querySelector('main');
-        if (! main) {
+        const main = document.querySelector("main");
+        if (!main) {
             return;
         }
 
         main.insertBefore(origin, main.firstElementChild);
-        origin.removeAttribute('id');
+        origin.removeAttribute("id");
 
-        const breadcrumbs = origin.querySelectorAll('.breadcrumb-item');
+        const breadcrumbs = origin.querySelectorAll(".breadcrumb-item");
         if (breadcrumbs.length === 0) {
             origin.remove();
         }

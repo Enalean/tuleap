@@ -1,31 +1,31 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-import './execution-link-issue.tpl.html';
-import ExecutionLinkIssueCtrl from './execution-link-issue-controller.js';
+import "./execution-link-issue.tpl.html";
+import ExecutionLinkIssueCtrl from "./execution-link-issue-controller.js";
 import { theTestHasJustBeenUpdated } from "./execution-detail-just-updated-state.js";
 import {
     PASSED_STATUS,
     FAILED_STATUS,
     BLOCKED_STATUS,
     NOT_RUN_STATUS
-} from './execution-constants.js';
+} from "./execution-constants.js";
 
 export default ExecutionDetailCtrl;
 
 ExecutionDetailCtrl.$inject = [
-    '$scope',
-    '$state',
-    '$sce',
-    '$rootScope',
-    'gettextCatalog',
-    'ExecutionService',
-    'DefinitionService',
-    'SharedPropertiesService',
-    'ArtifactLinksGraphService',
-    'ArtifactLinksGraphModalLoading',
-    'NewTuleapArtifactModalService',
-    'ExecutionRestService',
-    'TlpModalService',
+    "$scope",
+    "$state",
+    "$sce",
+    "$rootScope",
+    "gettextCatalog",
+    "ExecutionService",
+    "DefinitionService",
+    "SharedPropertiesService",
+    "ArtifactLinksGraphService",
+    "ArtifactLinksGraphModalLoading",
+    "NewTuleapArtifactModalService",
+    "ExecutionRestService",
+    "TlpModalService"
 ];
 
 function ExecutionDetailCtrl(
@@ -41,25 +41,25 @@ function ExecutionDetailCtrl(
     ArtifactLinksGraphModalLoading,
     NewTuleapArtifactModalService,
     ExecutionRestService,
-    TlpModalService,
+    TlpModalService
 ) {
     var execution_id,
         campaign_id,
         issue_config = SharedPropertiesService.getIssueTrackerConfig();
 
-    $scope.pass                        = pass;
-    $scope.fail                        = fail;
-    $scope.block                       = block;
-    $scope.notrun                      = notrun;
-    $scope.getStatusLabel              = getStatusLabel;
-    $scope.linkMenuIsVisible           = issue_config.permissions.create && issue_config.permissions.link;
-    $scope.canCreateIssue              = issue_config.permissions.create;
-    $scope.canLinkIssue                = issue_config.permissions.link;
+    $scope.pass = pass;
+    $scope.fail = fail;
+    $scope.block = block;
+    $scope.notrun = notrun;
+    $scope.getStatusLabel = getStatusLabel;
+    $scope.linkMenuIsVisible = issue_config.permissions.create && issue_config.permissions.link;
+    $scope.canCreateIssue = issue_config.permissions.create;
+    $scope.canLinkIssue = issue_config.permissions.link;
     $scope.showArtifactLinksGraphModal = showArtifactLinksGraphModal;
-    $scope.showEditArtifactModal       = showEditArtifactModal;
-    $scope.closeLinkedIssueAlert       = closeLinkedIssueAlert;
-    $scope.linkedIssueId               = null;
-    $scope.linkedIssueAlertVisible     = false;
+    $scope.showEditArtifactModal = showEditArtifactModal;
+    $scope.closeLinkedIssueAlert = closeLinkedIssueAlert;
+    $scope.linkedIssueId = null;
+    $scope.linkedIssueAlertVisible = false;
 
     Object.assign($scope, {
         showLinkToExistingBugModal,
@@ -68,22 +68,25 @@ function ExecutionDetailCtrl(
 
     this.$onInit = initialization;
 
-    $scope.$on('controller-reload', function() {
+    $scope.$on("controller-reload", function() {
         initialization();
     });
 
-    $scope.$on('$destroy', function() {
+    $scope.$on("$destroy", function() {
         var future_execution_id = parseInt($state.params.execid, 10);
-        if (! _.isFinite(future_execution_id)) {
-            $rootScope.$broadcast('execution-detail-destroy');
+        if (!_.isFinite(future_execution_id)) {
+            $rootScope.$broadcast("execution-detail-destroy");
             ExecutionRestService.leaveTestExecution(execution_id);
-            ExecutionService.removeViewTestExecution(execution_id, SharedPropertiesService.getCurrentUser());
+            ExecutionService.removeViewTestExecution(
+                execution_id,
+                SharedPropertiesService.getCurrentUser()
+            );
         }
     });
 
     function initialization() {
         execution_id = parseInt($state.params.execid, 10);
-        campaign_id  = parseInt($state.params.id, 10);
+        campaign_id = parseInt($state.params.id, 10);
 
         ExecutionService.loadExecutions(campaign_id);
 
@@ -94,7 +97,7 @@ function ExecutionDetailCtrl(
         }
 
         $scope.artifact_links_graph_modal_loading = ArtifactLinksGraphModalLoading.loading;
-        $scope.edit_artifact_modal_loading        = NewTuleapArtifactModalService.loading;
+        $scope.edit_artifact_modal_loading = NewTuleapArtifactModalService.loading;
         resetTimer();
     }
 
@@ -106,59 +109,77 @@ function ExecutionDetailCtrl(
 
     function showLinkToNewBugModal() {
         function callback(artifact_id) {
-            return ExecutionRestService
-                .linkIssueWithoutComment(artifact_id, $scope.execution)
+            return ExecutionRestService.linkIssueWithoutComment(artifact_id, $scope.execution)
                 .then(() => {
-                    $scope.linkedIssueId           = artifact_id;
+                    $scope.linkedIssueId = artifact_id;
                     $scope.linkedIssueAlertVisible = true;
                     return ExecutionRestService.getArtifactById(artifact_id);
                 })
-                .then((artifact) => {
-                    artifact.tracker.color_name = SharedPropertiesService.getIssueTrackerConfig().xref_color;
-                    return ExecutionService.addArtifactLink($scope.execution.id, artifact);
-                }, () => {
-                    ExecutionService.displayErrorMessage(
-                        $scope.execution,
-                        gettextCatalog.getString('Error while refreshing the list of linked bugs')
-                    );
-                });
+                .then(
+                    artifact => {
+                        artifact.tracker.color_name = SharedPropertiesService.getIssueTrackerConfig().xref_color;
+                        return ExecutionService.addArtifactLink($scope.execution.id, artifact);
+                    },
+                    () => {
+                        ExecutionService.displayErrorMessage(
+                            $scope.execution,
+                            gettextCatalog.getString(
+                                "Error while refreshing the list of linked bugs"
+                            )
+                        );
+                    }
+                );
         }
 
         var current_definition = $scope.execution.definition;
-        var issue_details = gettextCatalog.getString('Campaign') + ' <em>' + $scope.campaign.label + '</em><br/>'
-            + gettextCatalog.getString('Test summary') + ' <em>' + current_definition.summary + '</em><br/>'
-            + gettextCatalog.getString('Test description') + '<br/>'
-            + '<blockquote>' + current_definition.description + '</blockquote>';
+        var issue_details =
+            gettextCatalog.getString("Campaign") +
+            " <em>" +
+            $scope.campaign.label +
+            "</em><br/>" +
+            gettextCatalog.getString("Test summary") +
+            " <em>" +
+            current_definition.summary +
+            "</em><br/>" +
+            gettextCatalog.getString("Test description") +
+            "<br/>" +
+            "<blockquote>" +
+            current_definition.description +
+            "</blockquote>";
 
         if ($scope.execution.previous_result.result) {
-            issue_details = '<p>' + $scope.execution.previous_result.result + '</p>' + issue_details;
+            issue_details =
+                "<p>" + $scope.execution.previous_result.result + "</p>" + issue_details;
         }
 
-        var prefill_values = [{
-            name  : 'details',
-            value : issue_details,
-            format: 'html'
-        }];
+        var prefill_values = [
+            {
+                name: "details",
+                value: issue_details,
+                format: "html"
+            }
+        ];
 
         NewTuleapArtifactModalService.showCreation(
             SharedPropertiesService.getIssueTrackerId(),
             null,
             callback,
-            prefill_values);
+            prefill_values
+        );
     }
 
     function showLinkToExistingBugModal() {
         function callback(artifact) {
-            $scope.linkedIssueId           = artifact.id;
+            $scope.linkedIssueId = artifact.id;
             $scope.linkedIssueAlertVisible = true;
             ExecutionService.addArtifactLink($scope.execution.id, artifact);
         }
 
         return TlpModalService.open({
-            templateUrl : 'execution-link-issue.tpl.html',
-            controller  : ExecutionLinkIssueCtrl,
-            controllerAs: 'modal',
-            resolve     : {
+            templateUrl: "execution-link-issue.tpl.html",
+            controller: ExecutionLinkIssueCtrl,
+            controllerAs: "modal",
+            resolve: {
                 modal_model: {
                     test_execution: $scope.execution
                 },
@@ -178,7 +199,7 @@ function ExecutionDetailCtrl(
     function showEditArtifactModal($event, definition) {
         var when_left_mouse_click = 1;
 
-        var old_category    = $scope.execution.definition.category;
+        var old_category = $scope.execution.definition.category;
         var current_user_id = SharedPropertiesService.getCurrentUser().id;
 
         function callback(artifact_id) {
@@ -217,22 +238,22 @@ function ExecutionDetailCtrl(
     }
 
     function waitForExecutionToBeLoaded() {
-        var unbind = $rootScope.$on('bunchOfExecutionsLoaded', function () {
+        var unbind = $rootScope.$on("bunchOfExecutionsLoaded", function() {
             if (isCurrentExecutionLoaded()) {
                 retrieveCurrentExecution();
             }
         });
-        $scope.$on('$destroy', unbind);
+        $scope.$on("$destroy", unbind);
     }
 
     function retrieveCurrentExecution() {
-        $scope.execution         = ExecutionService.executions[execution_id];
-        $scope.execution.results = '';
-        $scope.execution.saving  = false;
+        $scope.execution = ExecutionService.executions[execution_id];
+        $scope.execution.results = "";
+        $scope.execution.saving = false;
     }
 
     function isCurrentExecutionLoaded() {
-        return typeof ExecutionService.executions[execution_id] !== 'undefined';
+        return typeof ExecutionService.executions[execution_id] !== "undefined";
     }
 
     function pass(execution) {
@@ -261,26 +282,36 @@ function ExecutionDetailCtrl(
     }
 
     function setNewStatus(execution, new_status) {
-        execution.saving   = true;
+        execution.saving = true;
         var execution_time = null;
 
         if (execution.time) {
             execution_time = execution.time;
         }
-        ExecutionRestService.putTestExecution(execution.id, new_status, execution_time, execution.results).then(function(data) {
-            ExecutionService.updateTestExecution(data, SharedPropertiesService.getCurrentUser());
-            resetTimer();
-        }).catch(function(response) {
-            ExecutionService.displayError(execution, response);
-        });
+        ExecutionRestService.putTestExecution(
+            execution.id,
+            new_status,
+            execution_time,
+            execution.results
+        )
+            .then(function(data) {
+                ExecutionService.updateTestExecution(
+                    data,
+                    SharedPropertiesService.getCurrentUser()
+                );
+                resetTimer();
+            })
+            .catch(function(response) {
+                ExecutionService.displayError(execution, response);
+            });
     }
 
     function getStatusLabel(status) {
         var labels = {
-            passed: 'Passed',
-            failed: 'Failed',
-            blocked: 'Blocked',
-            notrun: 'Not Run'
+            passed: "Passed",
+            failed: "Failed",
+            blocked: "Blocked",
+            notrun: "Not Run"
         };
 
         return labels[status];
@@ -297,16 +328,20 @@ function ExecutionDetailCtrl(
             old_category = ExecutionService.UNCATEGORIZED;
         }
 
-        var category_exist           = categoryExists(ExecutionService.categories, category_updated);
-        var execution_already_placed = executionAlreadyPlaced($scope.execution, ExecutionService.categories, category_updated);
+        var category_exist = categoryExists(ExecutionService.categories, category_updated);
+        var execution_already_placed = executionAlreadyPlaced(
+            $scope.execution,
+            ExecutionService.categories,
+            category_updated
+        );
 
-        if (! execution_already_placed) {
+        if (!execution_already_placed) {
             removeCategory(ExecutionService.categories[old_category].executions, $scope.execution);
         }
 
-        if (category_exist && ! execution_already_placed) {
+        if (category_exist && !execution_already_placed) {
             ExecutionService.categories[category_updated].executions.push($scope.execution);
-        } else if (! category_exist && ! execution_already_placed) {
+        } else if (!category_exist && !execution_already_placed) {
             ExecutionService.categories[category_updated] = {
                 label: category_updated,
                 executions: [$scope.execution]

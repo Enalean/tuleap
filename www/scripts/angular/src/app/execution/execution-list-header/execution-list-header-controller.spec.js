@@ -1,14 +1,14 @@
-import execution_module from '../execution.js';
-import angular from 'angular';
-import 'angular-mocks';
-import BaseController from './execution-list-header-controller.js';
+import execution_module from "../execution.js";
+import angular from "angular";
+import "angular-mocks";
+import BaseController from "./execution-list-header-controller.js";
 
 import {
     rewire$setSuccess,
     rewire$setError,
     rewire$resetError,
     restore
-} from '../../feedback-state.js';
+} from "../../feedback-state.js";
 
 describe("ExecutionListHeaderController -", () => {
     let ExecutionListHeaderController,
@@ -61,11 +61,11 @@ describe("ExecutionListHeaderController -", () => {
     describe("launchAutomatedTests() -", () => {
         beforeEach(() => {
             ExecutionService.campaign = {
-                        id: 42,
-                        job_configuration: {
-                            url: 'https://wambly.com/doghood/follow?a=menald&b=rebirth#coabode'
-                        }
-                    }
+                id: 42,
+                job_configuration: {
+                    url: "https://wambly.com/doghood/follow?a=menald&b=rebirth#coabode"
+                }
+            };
         });
 
         it("When the REST call succeeds, then the loader will be hidden and a success message will be shown", () => {
@@ -81,14 +81,18 @@ describe("ExecutionListHeaderController -", () => {
         });
 
         it("When the REST call fails, then the loader will be hidden and an error message will be shown", () => {
-            CampaignService.triggerAutomatedTests.and.returnValue($q.reject({
-                message: 'Message: The requested URL returned error: 403 Forbidden'
-            }))
+            CampaignService.triggerAutomatedTests.and.returnValue(
+                $q.reject({
+                    message: "Message: The requested URL returned error: 403 Forbidden"
+                })
+            );
 
             ExecutionListHeaderController.launchAutomatedTests();
             $rootScope.$apply();
 
-            expect(setError).toHaveBeenCalledWith('Message: The requested URL returned error: 403 Forbidden');
+            expect(setError).toHaveBeenCalledWith(
+                "Message: The requested URL returned error: 403 Forbidden"
+            );
             expect(ExecutionListHeaderController.triggered).toBe(false);
         });
     });

@@ -1,13 +1,9 @@
-import execution_collection_module from './execution-collection.js';
-import angular                     from 'angular';
-import 'angular-mocks';
+import execution_collection_module from "./execution-collection.js";
+import angular from "angular";
+import "angular-mocks";
 
-describe ('ExecutionService - ', () => {
-    let $q,
-        $rootScope,
-        ExecutionRestService,
-        SharedPropertiesService,
-        ExecutionService;
+describe("ExecutionService - ", () => {
+    let $q, $rootScope, ExecutionRestService, SharedPropertiesService, ExecutionService;
 
     beforeEach(() => {
         angular.mock.module(execution_collection_module);
@@ -17,13 +13,13 @@ describe ('ExecutionService - ', () => {
             _$rootScope_,
             _ExecutionRestService_,
             _SharedPropertiesService_,
-            _ExecutionService_,
+            _ExecutionService_
         ) {
-            $q                      = _$q_;
-            $rootScope              = _$rootScope_;
-            ExecutionRestService    = _ExecutionRestService_;
+            $q = _$q_;
+            $rootScope = _$rootScope_;
+            ExecutionRestService = _ExecutionRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
-            ExecutionService        = _ExecutionService_;
+            ExecutionService = _ExecutionService_;
         });
 
         installPromiseMatchers();
@@ -109,8 +105,8 @@ describe ('ExecutionService - ', () => {
         });
     });
 
-    describe('getAllRemoteExecutions() -', function() {
-        it('Given that I have more remote executions than the given fetching limit, when I get all remote executions, then all the remote executions are fetched', function() {
+    describe("getAllRemoteExecutions() -", function() {
+        it("Given that I have more remote executions than the given fetching limit, when I get all remote executions, then all the remote executions are fetched", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -137,7 +133,9 @@ describe ('ExecutionService - ', () => {
             };
 
             var get_remote_executions_request = $q.defer();
-            spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_remote_executions_request.promise);
+            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue(
+                get_remote_executions_request.promise
+            );
 
             var promise = ExecutionService.getAllRemoteExecutions(campaign.id, 1, 0);
             get_remote_executions_request.resolve(response);
@@ -148,10 +146,10 @@ describe ('ExecutionService - ', () => {
         });
     });
 
-    describe('synchronizeExecutions() -', function() {
+    describe("synchronizeExecutions() -", function() {
         var campaign_id = 6,
-            execution_1 = { id: 1, definition: { category: 'Security' } },
-            execution_2 = { id: 2, definition: { category: 'NonRegression' } },
+            execution_1 = { id: 1, definition: { category: "Security" } },
+            execution_2 = { id: 2, definition: { category: "NonRegression" } },
             service_executions = null,
             service_categories = null,
             get_remote_executions = null,
@@ -175,11 +173,11 @@ describe ('ExecutionService - ', () => {
             };
             ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
                 Security: {
-                    label: 'Security',
+                    label: "Security",
                     executions: [execution_1]
                 },
                 NonRegression: {
-                    label: 'NonRegression',
+                    label: "NonRegression",
                     executions: [execution_2]
                 }
             };
@@ -193,13 +191,17 @@ describe ('ExecutionService - ', () => {
             };
 
             get_remote_executions = $q.defer();
-            spyOn(ExecutionRestService, 'getRemoteExecutions').and.returnValue(get_remote_executions.promise);
+            spyOn(ExecutionRestService, "getRemoteExecutions").and.returnValue(
+                get_remote_executions.promise
+            );
 
             get_all_remote_executions = $q.defer();
-            spyOn(ExecutionService, 'getAllRemoteExecutions').and.returnValue(get_all_remote_executions.promise);
+            spyOn(ExecutionService, "getAllRemoteExecutions").and.returnValue(
+                get_all_remote_executions.promise
+            );
         });
 
-        it('Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present remotely are unloaded', function() {
+        it("Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present remotely are unloaded", function() {
             var remote_executions = [execution_1];
 
             ExecutionService.synchronizeExecutions(campaign_id).then(function() {
@@ -212,12 +214,12 @@ describe ('ExecutionService - ', () => {
             $rootScope.$apply();
         });
 
-        it('Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present locally are loaded', function() {
+        it("Given that I have different sets of loaded and remote executions, when I synchronize them, then the executions not present locally are loaded", function() {
             var remote_executions = [execution_1, execution_2];
 
             ExecutionService.executions = { 1: execution_1 };
             ExecutionService.executions_by_categories_by_campaigns[campaign_id] = {
-                Security: { label: 'Security', executions: [execution_1] }
+                Security: { label: "Security", executions: [execution_1] }
             };
 
             ExecutionService.synchronizeExecutions(campaign_id).then(function() {
@@ -230,7 +232,7 @@ describe ('ExecutionService - ', () => {
             $rootScope.$apply();
         });
 
-        it('Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated', function() {
+        it("Given that I have the same sets of loaded and remote executions, when I synchronize them, then the local executions are not duplicated", function() {
             var remote_executions = [execution_1, execution_2];
 
             ExecutionService.synchronizeExecutions(campaign_id).then(function() {
@@ -246,7 +248,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("getExecutionsByDefinitionId() -", function() {
-        it("Given that categories, when I get executions by definition id, then only execution with definition id selected are returned", function () {
+        it("Given that categories, when I get executions by definition id, then only execution with definition id selected are returned", function() {
             var categories = {
                 Svn: {
                     executions: [
@@ -285,7 +287,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("addTestExecution() -", function() {
-        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -311,9 +313,9 @@ describe ('ExecutionService - ', () => {
                 6: categories
             };
 
-            ExecutionService.campaign_id                           = 6;
-            ExecutionService.campaign                              = campaign;
-            ExecutionService.categories                            = categories;
+            ExecutionService.campaign_id = 6;
+            ExecutionService.campaign = campaign;
+            ExecutionService.categories = categories;
             ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
             ExecutionService.addTestExecution(execution);
             expect(ExecutionService.executions[4]).toEqual({
@@ -337,7 +339,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("addTestExecutionWithoutUpdateCampaignStatus() -", function() {
-        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function () {
+        it("Given that campaign, when I add an execution, then it's added with values and campaign with correct numbers", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -363,9 +365,9 @@ describe ('ExecutionService - ', () => {
                 6: categories
             };
 
-            ExecutionService.campaign_id                           = 6;
-            ExecutionService.campaign                              = campaign;
-            ExecutionService.categories                            = categories;
+            ExecutionService.campaign_id = 6;
+            ExecutionService.campaign = campaign;
+            ExecutionService.categories = categories;
             ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
             ExecutionService.addTestExecutionWithoutUpdateCampaignStatus(execution);
             expect(ExecutionService.executions[4]).toEqual({
@@ -381,7 +383,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("updateTestExecution() -", function() {
-        it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function () {
+        it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -418,7 +420,7 @@ describe ('ExecutionService - ', () => {
                 total: 1
             };
 
-            ExecutionService.campaign   = campaign;
+            ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save);
 
@@ -426,7 +428,7 @@ describe ('ExecutionService - ', () => {
             expect(ExecutionService.campaign).toEqual(campaign_results);
         });
 
-        it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function () {
+        it("Given that campaign, when I update an execution with different values, then the execution and the campaign must change", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -454,23 +456,23 @@ describe ('ExecutionService - ', () => {
 
             var campaign_copy = _.clone(campaign);
 
-            ExecutionService.campaign   = campaign;
+            ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save);
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
-            expect(Object.keys(ExecutionService.campaign).length).toEqual(Object.keys(campaign_copy).length);
+            expect(Object.keys(ExecutionService.campaign).length).toEqual(
+                Object.keys(campaign_copy).length
+            );
         });
 
         it("Given that user is on a test that has just been updated by someone else, it postpone the update of the execution", () => {
             const current_user = {
                 id: 101,
-                uri: 'users/101',
-                uuid: 'uuid-101'
+                uri: "users/101",
+                uuid: "uuid-101"
             };
-            spyOn(SharedPropertiesService, 'getCurrentUser').and.returnValue(
-                current_user
-            );
+            spyOn(SharedPropertiesService, "getCurrentUser").and.returnValue(current_user);
 
             const campaign = {
                 id: "6",
@@ -490,7 +492,7 @@ describe ('ExecutionService - ', () => {
                         status: "blocked"
                     },
                     definition: {
-                        description: 'Version A'
+                        description: "Version A"
                     },
                     viewed_by: [current_user]
                 }
@@ -500,32 +502,36 @@ describe ('ExecutionService - ', () => {
                 id: 4,
                 status: "notrun",
                 definition: {
-                    description: 'Version B'
+                    description: "Version B"
                 }
             };
 
             const updated_by = {
                 id: 102,
-                uri: 'users/102',
-                uuid: 'uuid-102'
+                uri: "users/102",
+                uuid: "uuid-102"
             };
 
-            ExecutionService.campaign   = campaign;
+            ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
             ExecutionService.updateTestExecution(execution_to_save, updated_by);
 
-            expect(ExecutionService.executions[4].definition.description).toEqual('Version A');
-            expect(ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated).toBeTruthy();
+            expect(ExecutionService.executions[4].definition.description).toEqual("Version A");
+            expect(
+                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
+            ).toBeTruthy();
 
             ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated();
 
-            expect(ExecutionService.executions[4].definition.description).toEqual('Version B');
-            expect(ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated).toBeFalsy();
+            expect(ExecutionService.executions[4].definition.description).toEqual("Version B");
+            expect(
+                ExecutionService.executions[4].userCanReloadTestBecauseDefinitionIsUpdated
+            ).toBeFalsy();
         });
     });
 
     describe("removeTestExecution() -", function() {
-        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -556,23 +562,25 @@ describe ('ExecutionService - ', () => {
                 6: categories
             };
 
-            ExecutionService.campaign_id                           = 6;
-            ExecutionService.campaign                              = campaign;
-            ExecutionService.categories                            = categories;
+            ExecutionService.campaign_id = 6;
+            ExecutionService.campaign = campaign;
+            ExecutionService.categories = categories;
             ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
             ExecutionService.executions = { 4: execution };
 
             ExecutionService.removeTestExecution(execution);
 
             expect(ExecutionService.executions[4]).toEqual(undefined);
-            expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
+            expect(
+                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
+            ).toEqual(undefined);
             expect(ExecutionService.campaign.nb_of_notrun).toEqual(0);
             expect(ExecutionService.campaign.total).toEqual(0);
         });
     });
 
     describe("removeTestExecutionWithoutUpdateCampaignStatus() -", function() {
-        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function () {
+        it("Given that campaign, when I remove an execution, then it's removed from executions and categories and campaign numbers are updated", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -603,23 +611,25 @@ describe ('ExecutionService - ', () => {
                 6: categories
             };
 
-            ExecutionService.campaign_id                           = 6;
-            ExecutionService.campaign                              = campaign;
-            ExecutionService.categories                            = categories;
+            ExecutionService.campaign_id = 6;
+            ExecutionService.campaign = campaign;
+            ExecutionService.categories = categories;
             ExecutionService.executions_by_categories_by_campaigns = executions_by_categories_by_campaigns;
             ExecutionService.executions = { 4: execution };
 
             ExecutionService.removeTestExecutionWithoutUpdateCampaignStatus(execution);
 
             expect(ExecutionService.executions[4]).toEqual(undefined);
-            expect(ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]).toEqual(undefined);
+            expect(
+                ExecutionService.executions_by_categories_by_campaigns[6].Svn.executions[4]
+            ).toEqual(undefined);
             expect(ExecutionService.campaign.nb_of_notrun).toEqual(1);
             expect(ExecutionService.campaign.total).toEqual(1);
         });
     });
 
     describe("updateCampaign() -", function() {
-        it("Given that campaign, when I update it, then it's updated with new values", function () {
+        it("Given that campaign, when I update it, then it's updated with new values", function() {
             var campaign = {
                 id: "6",
                 label: "Release 1",
@@ -642,7 +652,7 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("viewTestExecution() -", function() {
-        it("Given that executions with no users on, when I user views a test, then there is user on", function () {
+        it("Given that executions with no users on, when I user views a test, then there is user on", function() {
             var executions = {
                 4: {
                     id: 4,
@@ -658,14 +668,12 @@ describe ('ExecutionService - ', () => {
 
             var user = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 0
             };
 
-            var results = [
-                user
-            ];
+            var results = [user];
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user);
@@ -673,20 +681,20 @@ describe ('ExecutionService - ', () => {
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
-        it("Given that executions with user_one on, when I user_two views a test, then there is user_one and user_two on", function () {
+        it("Given that executions with user_one on, when I user_two views a test, then there is user_one and user_two on", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '456',
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "456",
                 score: 0
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '123',
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "123",
                 score: 0
             };
 
@@ -704,9 +712,7 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            var results = [
-                user_one, user_two
-            ];
+            var results = [user_one, user_two];
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_two);
@@ -714,19 +720,19 @@ describe ('ExecutionService - ', () => {
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
-        it("Given that executions with user_one on, when I user_one views a test, then there is twice user_one on but once on campaign", function () {
+        it("Given that executions with user_one on, when I user_one views a test, then there is twice user_one on but once on campaign", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '456'
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "456"
             };
 
             var user_one_bis = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '123'
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "123"
             };
 
             var executions = {
@@ -743,9 +749,7 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            var results = [
-                user_one, user_one_bis
-            ];
+            var results = [user_one, user_one_bis];
 
             ExecutionService.executions = executions;
             ExecutionService.viewTestExecution(4, user_one_bis);
@@ -755,17 +759,17 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("removeViewTestExecution() -", function() {
-        it("Given that executions with two users on, when I remove view of user_one, then there is only user_two on", function () {
+        it("Given that executions with two users on, when I remove view of user_one, then there is only user_two on", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var executions = {
@@ -792,19 +796,19 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("removeViewTestExecutionByUUID() -", function() {
-        it("Given that executions with two users on, when I remove by user uuid, then the corresponding user is removed", function () {
+        it("Given that executions with two users on, when I remove by user uuid, then the corresponding user is removed", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '123'
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "123"
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url',
-                uuid: '456'
+                real_name: "Test",
+                avatar_url: "url",
+                uuid: "456"
             };
 
             var executions = {
@@ -832,12 +836,12 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            var results                      = [user_one];
+            var results = [user_one];
             var result_presences_on_campaign = [user_one, user_two];
 
             ExecutionService.executions = executions;
             ExecutionService.presences_on_campaign = [user_one, user_two];
-            ExecutionService.removeViewTestExecutionByUUID('456');
+            ExecutionService.removeViewTestExecutionByUUID("456");
 
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
             expect(ExecutionService.executions[5].viewed_by).toEqual(results);
@@ -846,17 +850,17 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("removeAllViewTestExecution() -", function() {
-        it("Given that executions with two users on, when I remove all views, then there is nobody on executions", function () {
+        it("Given that executions with two users on, when I remove all views, then there is nobody on executions", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var executions = {
@@ -895,18 +899,18 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("addPresenceCampaign() -", function() {
-        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function () {
+        it("Given that presences on campaign, when I add user_two with a score, then user_two is on campaign", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 0
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 0
             };
 
@@ -920,19 +924,18 @@ describe ('ExecutionService - ', () => {
             expect(ExecutionService.presences_on_campaign).toEqual(results);
         });
 
-        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function () {
+        it("Given that presences on campaign, when I add user_two with no score, then user_two is on campaign with score 0", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 0
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
-
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var presences_on_campaign = [user_one];
@@ -947,17 +950,17 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("removeAllPresencesOnCampaign() -", function() {
-        it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function () {
+        it("Given that executions with user_two on, when I remove all from campaign, then there is nobody on campaign", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             var user_two = {
                 id: 102,
-                real_name: 'Test',
-                avatar_url: 'url'
+                real_name: "Test",
+                avatar_url: "url"
             };
 
             ExecutionService.presences_on_campaign = [user_one, user_two];
@@ -968,18 +971,18 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("updatePresenceOnCampaign() -", function() {
-        it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function () {
+        it("Given that executions with user_one on, when I update user_one on campaign, then the score is updated", function() {
             var user_one = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 0
             };
 
             var user_one_updated = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 1
             };
 
@@ -999,12 +1002,12 @@ describe ('ExecutionService - ', () => {
 
             var user_one_result = {
                 id: 101,
-                real_name: 'Test',
-                avatar_url: 'url',
+                real_name: "Test",
+                avatar_url: "url",
                 score: 1
             };
 
-            ExecutionService.executions            = executions;
+            ExecutionService.executions = executions;
             ExecutionService.presences_on_campaign = [user_one];
             ExecutionService.updatePresenceOnCampaign(user_one_updated);
 
@@ -1013,36 +1016,36 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("displayPresencesForAllExecutions() -", function() {
-        it("Given that executions, when I display all users, then there users are on the associate execution", function () {
+        it("Given that executions, when I display all users, then there users are on the associate execution", function() {
             var user_one = {
-                id: '101',
-                real_name: 'name',
-                avatar_url: 'avatar',
-                uuid: '1234'
+                id: "101",
+                real_name: "name",
+                avatar_url: "avatar",
+                uuid: "1234"
             };
 
             var user_two = {
-                id: '102',
-                real_name: 'name',
-                avatar_url: 'avatar',
-                uuid: '4567'
+                id: "102",
+                real_name: "name",
+                avatar_url: "avatar",
+                uuid: "4567"
             };
 
             var presences = {
                 4: [
                     {
-                        id: '101',
-                        real_name: 'name',
-                        avatar_url: 'avatar',
-                        uuid: '1234'
+                        id: "101",
+                        real_name: "name",
+                        avatar_url: "avatar",
+                        uuid: "1234"
                     }
                 ],
                 5: [
                     {
-                        id: '102',
-                        real_name: 'name',
-                        avatar_url: 'avatar',
-                        uuid: '4567'
+                        id: "102",
+                        real_name: "name",
+                        avatar_url: "avatar",
+                        uuid: "4567"
                     }
                 ]
             };
@@ -1095,9 +1098,9 @@ describe ('ExecutionService - ', () => {
                 }
             };
 
-            ExecutionService.executions             = executions;
-            ExecutionService.executions_loaded      = true;
-            ExecutionService.presences_loaded       = true;
+            ExecutionService.executions = executions;
+            ExecutionService.executions_loaded = true;
+            ExecutionService.presences_loaded = true;
             ExecutionService.presences_by_execution = presences;
             ExecutionService.displayPresencesForAllExecutions();
 
@@ -1106,19 +1109,19 @@ describe ('ExecutionService - ', () => {
     });
 
     describe("displayPresencesByExecution() -", function() {
-        it("Given that executions, when I display all users on one execution, then there users are on", function () {
+        it("Given that executions, when I display all users on one execution, then there users are on", function() {
             var user_one = {
-                id: '101',
-                real_name: 'name',
-                avatar_url: 'avatar',
-                uuid: '1234'
+                id: "101",
+                real_name: "name",
+                avatar_url: "avatar",
+                uuid: "1234"
             };
 
             var user_two = {
-                id: '102',
-                real_name: 'name',
-                avatar_url: 'avatar',
-                uuid: '4567'
+                id: "102",
+                real_name: "name",
+                avatar_url: "avatar",
+                uuid: "4567"
             };
 
             var executions = {
@@ -1161,19 +1164,14 @@ describe ('ExecutionService - ', () => {
         it("Given an execution id and an artifact to link to it, then the artifact will be added to the execution's linked_bugs", () => {
             let execution = {
                 id: 74,
-                linked_bugs: [
-                    { id: 38, title: 'thanan' }
-                ]
+                linked_bugs: [{ id: 38, title: "thanan" }]
             };
-            const artifact_to_link = { id: 88, title: 'paragraphically' };
+            const artifact_to_link = { id: 88, title: "paragraphically" };
             ExecutionService.executions[74] = execution;
 
             ExecutionService.addArtifactLink(execution.id, artifact_to_link);
 
-            expect(execution.linked_bugs).toEqual([
-                { id: 38, title: 'thanan' },
-                artifact_to_link
-            ]);
+            expect(execution.linked_bugs).toEqual([{ id: 38, title: "thanan" }, artifact_to_link]);
         });
     });
 });

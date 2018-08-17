@@ -1,11 +1,11 @@
 export default ArtifactLinksGraphRestService;
 
-ArtifactLinksGraphRestService.$inject = ['Restangular'];
+ArtifactLinksGraphRestService.$inject = ["Restangular"];
 
 function ArtifactLinksGraphRestService(Restangular) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
+        RestangularConfigurer.setBaseUrl("/api/v1");
     });
 
     return {
@@ -14,13 +14,15 @@ function ArtifactLinksGraphRestService(Restangular) {
 
     function getArtifactGraph(artifact_id) {
         return rest
-            .one('testmanagement_nodes', artifact_id)
+            .one("testmanagement_nodes", artifact_id)
             .get()
-            .then(function(response) {
-                return response.data;
-            }, function(error) {
-                return error.data;
-            });
+            .then(
+                function(response) {
+                    return response.data;
+                },
+                function(error) {
+                    return error.data;
+                }
+            );
     }
 }
-

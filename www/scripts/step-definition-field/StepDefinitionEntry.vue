@@ -117,89 +117,83 @@
 </template>
 
 <script>
-    import {RTE} from 'codendi';
-    import {sanitize} from 'dompurify';
+import { RTE } from "codendi";
+import { sanitize } from "dompurify";
 
-    export default {
-        name: "StepDefinitionEntry",
-        data() {
-            return {
-                is_marked_as_deleted: false,
-                format: 'text',
-                editors: []
+export default {
+    name: "StepDefinitionEntry",
+    data() {
+        return {
+            is_marked_as_deleted: false,
+            format: "text",
+            editors: []
+        };
+    },
+    props: {
+        step: Object,
+        dynamicRank: Number,
+        fieldId: Number,
+        deleteStep: Function
+    },
+    mounted() {
+        this.format = this.step.description_format;
+        this.editors = [this.loadRTE("expected_results"), this.loadRTE("description")];
+        this.removeDeletedStepsOnFormSubmission();
+    },
+    computed: {
+        sanitized_description() {
+            return sanitize(this.step.raw_description);
+        },
+        sanitized_expected_results() {
+            return sanitize(this.step.raw_expected_results);
+        },
+        is_text() {
+            return this.format === "text";
+        }
+    },
+    methods: {
+        toggleRTE(event) {
+            this.format = this.$refs.format.value;
+
+            for (const editor of this.editors) {
+                editor.toggle(event, this.format);
             }
         },
-        props: {
-            step: Object,
-            dynamicRank: Number,
-            fieldId: Number,
-            deleteStep: Function
+        loadRTE(field) {
+            const element = this.$refs[field];
+            const is_html = !this.is_text;
+            const editor = new RTE(element, {
+                toggle: true,
+                default_in_html: false,
+                id: element.id,
+                htmlFormat: is_html,
+                autoresize_when_ready: false
+            });
+
+            if (is_html) {
+                editor.init_rte();
+            }
+
+            return editor;
         },
-        mounted() {
-            this.format  = this.step.description_format;
-            this.editors = [
-                this.loadRTE('expected_results'),
-                this.loadRTE('description')
-            ];
-            this.removeDeletedStepsOnFormSubmission();
-        },
-        computed: {
-            sanitized_description() {
-                return sanitize(this.step.raw_description);
-            },
-            sanitized_expected_results() {
-                return sanitize(this.step.raw_expected_results);
-            },
-            is_text() {
-                return this.format === 'text';
+        markAsDeleted() {
+            if (this.step.raw_description.length === 0) {
+                this.deleteStep(this.step);
+            } else {
+                this.is_marked_as_deleted = true;
             }
         },
-        methods: {
-            toggleRTE(event) {
-                this.format = this.$refs.format.value;
-
-                for (const editor of this.editors) {
-                    editor.toggle(event, this.format);
-                }
-            },
-            loadRTE(field) {
-                const element = this.$refs[field];
-                const is_html = ! this.is_text;
-                const editor  = new RTE(
-                    element,
-                    {
-                        toggle: true,
-                        default_in_html: false,
-                        id: element.id,
-                        htmlFormat: is_html,
-                        autoresize_when_ready: false
-                    }
-                );
-
-                if (is_html) {
-                    editor.init_rte();
-                }
-
-                return editor;
-            },
-            markAsDeleted() {
-                if (this.step.raw_description.length === 0) {
+        unmarkDeletion() {
+            this.is_marked_as_deleted = false;
+        },
+        removeDeletedStepsOnFormSubmission() {
+            const form = this.$refs.description.form;
+            form.addEventListener("submit", () => {
+                if (this.is_marked_as_deleted) {
                     this.deleteStep(this.step);
-                } else {
-                    this.is_marked_as_deleted = true;
                 }
-            },
-            unmarkDeletion() {
-                this.is_marked_as_deleted = false;
-            },
-            removeDeletedStepsOnFormSubmission() {
-                const form = this.$refs.description.form;
-                form.addEventListener('submit', () => {
-                    if (this.is_marked_as_deleted) {
-                        this.deleteStep(this.step);
-                    }
-                })
-            }
+            });
         }
     }
+};
 </script>

@@ -1,20 +1,20 @@
-import _ from 'lodash';
+import _ from "lodash";
 
-import { sortAlphabetically } from '../ksort.js';
+import { sortAlphabetically } from "../ksort.js";
 
 export default CampaignEditCtrl;
 
 CampaignEditCtrl.$inject = [
-    'modal_instance',
-    '$scope',
-    '$q',
-    '$state',
-    'SharedPropertiesService',
-    'CampaignService',
-    'DefinitionService',
-    'ExecutionService',
-    'NewTuleapArtifactModalService',
-    'editCampaignCallback'
+    "modal_instance",
+    "$scope",
+    "$q",
+    "$state",
+    "SharedPropertiesService",
+    "CampaignService",
+    "DefinitionService",
+    "ExecutionService",
+    "NewTuleapArtifactModalService",
+    "editCampaignCallback"
 ];
 
 function CampaignEditCtrl(
@@ -37,19 +37,19 @@ function CampaignEditCtrl(
     });
 
     _.extend($scope, {
-        tests_list            : {},
-        test_reports          : [],
-        filters               : {},
-        selectReportTests     : selectReportTests,
-        showAddTestModal      : showAddTestModal,
-        toggleCategory        : toggleCategory,
-        toggleTest            : toggleTest,
-        addedTests            : addedTests,
-        removedTests          : removedTests,
-        editCampaign          : editCampaign,
-        categoryCheckmark     : categoryCheckmark,
-        testCheckmark         : testCheckmark,
-        diffState             : diffState,
+        tests_list: {},
+        test_reports: [],
+        filters: {},
+        selectReportTests: selectReportTests,
+        showAddTestModal: showAddTestModal,
+        toggleCategory: toggleCategory,
+        toggleTest: toggleTest,
+        addedTests: addedTests,
+        removedTests: removedTests,
+        editCampaign: editCampaign,
+        categoryCheckmark: categoryCheckmark,
+        testCheckmark: testCheckmark,
+        diffState: diffState
     });
 
     function init() {
@@ -58,22 +58,19 @@ function CampaignEditCtrl(
 
         SharedPropertiesService.setCampaignId(campaign_id);
 
-        CampaignService.getCampaign(campaign_id).then((campaign) => {
-            $scope.campaign       = campaign;
-            $scope.filters.search = '';
+        CampaignService.getCampaign(campaign_id).then(campaign => {
+            $scope.campaign = campaign;
+            $scope.filters.search = "";
 
             loadTestReports();
 
-            $q.all([
-                loadDefinitions(),
-                loadExecutions()
-            ]).then(function(results) {
+            $q.all([loadDefinitions(), loadExecutions()]).then(function(results) {
                 var definitions = results[0],
                     executions = results[1];
                 $scope.tests_list = buildInitialTestsList(definitions, executions);
             });
         });
-    };
+    }
 
     function loadTestReports() {
         DefinitionService.getDefinitionReports().then(function(reports) {
@@ -98,7 +95,7 @@ function CampaignEditCtrl(
         _.forEach(definitions, function(definition) {
             var category = definition.category;
 
-            if (! _.has(tests_list, category)) {
+            if (!_.has(tests_list, category)) {
                 tests_list[category] = buildCategory(category);
             }
 
@@ -141,9 +138,13 @@ function CampaignEditCtrl(
 
     function toggleCategory(category) {
         if (selectedTests(category).length === _.size(category.tests)) {
-            _.forEach(category.tests, function(test) { test.selected = false; });
+            _.forEach(category.tests, function(test) {
+                test.selected = false;
+            });
         } else {
-            _.forEach(category.tests, function(test) { test.selected = true; });
+            _.forEach(category.tests, function(test) {
+                test.selected = true;
+            });
         }
     }
 
@@ -153,28 +154,28 @@ function CampaignEditCtrl(
 
     function categoryCheckmark(category) {
         switch (selectedTests(category).length) {
-          case 0:
-              return 'fa-square-o';
-          case _.size(category.tests):
-              return 'fa-check-square-o';
-          default:
-              return 'fa-minus-square-o';
+            case 0:
+                return "fa-square-o";
+            case _.size(category.tests):
+                return "fa-check-square-o";
+            default:
+                return "fa-minus-square-o";
         }
     }
 
     function testCheckmark(test) {
-        return test.selected ? 'fa-check-square-o' : 'fa-square-o';
+        return test.selected ? "fa-check-square-o" : "fa-square-o";
     }
 
     function diffState(test) {
         if (test.execution !== null && test.selected) {
-            return 'selected';
+            return "selected";
         } else if (test.execution !== null) {
-            return 'removed';
+            return "removed";
         } else if (test.selected) {
-            return 'added';
+            return "added";
         } else {
-            return 'unselected';
+            return "unselected";
         }
     }
 
@@ -220,13 +221,17 @@ function CampaignEditCtrl(
             DefinitionService.getDefinitionById(definition_id).then(addTest);
         };
 
-        NewTuleapArtifactModalService.showCreation(SharedPropertiesService.getDefinitionTrackerId(), null, callback);
+        NewTuleapArtifactModalService.showCreation(
+            SharedPropertiesService.getDefinitionTrackerId(),
+            null,
+            callback
+        );
     }
 
     function addTest(definition) {
         var category = definition.category || DefinitionService.UNCATEGORIZED;
 
-        if (! _.has($scope.tests_list, category)) {
+        if (!_.has($scope.tests_list, category)) {
             $scope.tests_list[category] = buildCategory(category);
         }
 
@@ -236,24 +241,29 @@ function CampaignEditCtrl(
     function editCampaign(campaign) {
         $scope.submitting_changes = true;
 
-        const definition_ids = _.map(addedTests(), (test) => { return test.definition.id; });
-        const execution_ids  = _.map(removedTests(), (test) => { return test.execution.id; });
-
-        CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids).then(() => {
-            return CampaignService.patchCampaign(
-                campaign.id,
-                campaign.label,
-                campaign.job_configuration
-            );
-        }).then(response => {
-            $scope.submitting_changes = false;
-
-            if (editCampaignCallback) {
-                editCampaignCallback(response);
-            }
-
-            modal_instance.tlp_modal.hide();
+        const definition_ids = _.map(addedTests(), test => {
+            return test.definition.id;
         });
+        const execution_ids = _.map(removedTests(), test => {
+            return test.execution.id;
+        });
+
+        CampaignService.patchExecutions(campaign.id, definition_ids, execution_ids)
+            .then(() => {
+                return CampaignService.patchCampaign(
+                    campaign.id,
+                    campaign.label,
+                    campaign.job_configuration
+                );
+            })
+            .then(response => {
+                $scope.submitting_changes = false;
+
+                if (editCampaignCallback) {
+                    editCampaignCallback(response);
+                }
+
+                modal_instance.tlp_modal.hide();
+            });
     }
 }
-

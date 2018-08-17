@@ -1,11 +1,11 @@
 export default CampaignNewCtrl;
 
 CampaignNewCtrl.$inject = [
-    'modal_instance',
-    '$state',
-    'CampaignService',
-    'DefinitionService',
-    'SharedPropertiesService'
+    "modal_instance",
+    "$state",
+    "CampaignService",
+    "DefinitionService",
+    "SharedPropertiesService"
 ];
 
 function CampaignNewCtrl(
@@ -15,7 +15,7 @@ function CampaignNewCtrl(
     DefinitionService,
     SharedPropertiesService
 ) {
-    var project_id   = SharedPropertiesService.getProjectId(),
+    var project_id = SharedPropertiesService.getProjectId(),
         milestone_id = SharedPropertiesService.getCurrentMilestone().id;
 
     var self = this;
@@ -24,12 +24,12 @@ function CampaignNewCtrl(
         $onInit,
         createCampaign,
         submitting_campaign: false,
-        has_milestone      : Boolean(milestone_id),
-        campaign           : {
-            label: ''
+        has_milestone: Boolean(milestone_id),
+        campaign: {
+            label: ""
         },
         test_params: {
-            selector: 'all'
+            selector: "all"
         },
         test_reports: []
     });
@@ -43,24 +43,23 @@ function CampaignNewCtrl(
 
         var campaign_data = {
             project_id: project_id,
-            label:      self.campaign.label,
+            label: self.campaign.label
         };
 
         var test_selector = self.test_params.selector;
-        var report_id     = null;
+        var report_id = null;
 
-        if (! isNaN(self.test_params.selector)) {
-            test_selector = 'report';
-            report_id     = self.test_params.selector;
+        if (!isNaN(self.test_params.selector)) {
+            test_selector = "report";
+            report_id = self.test_params.selector;
         }
 
-        CampaignService
-            .createCampaign(campaign_data, test_selector, milestone_id, report_id)
-            .then(function () {
+        CampaignService.createCampaign(campaign_data, test_selector, milestone_id, report_id)
+            .then(function() {
                 modal_instance.tlp_modal.hide();
-                $state.go('campaigns.list', {}, {reload: true});
+                $state.go("campaigns.list", {}, { reload: true });
             })
-            .finally(function () {
+            .finally(function() {
                 self.submitting_campaign = false;
             });
     }
@@ -72,4 +71,3 @@ function CampaignNewCtrl(
         });
     }
 }
-

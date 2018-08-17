@@ -1,19 +1,19 @@
-import angular                                                    from 'angular';
-import { find, remove, has }                                      from 'lodash';
-import { zoom as d3_zoom, zoomIdentity }                          from 'd3-zoom';
-import { drag }                                                   from 'd3-drag';
-import { forceSimulation, forceCenter, forceLink, forceManyBody } from 'd3-force';
-import { selectAll, select, event as d3_event }                   from 'd3-selection';
+import angular from "angular";
+import { find, remove, has } from "lodash";
+import { zoom as d3_zoom, zoomIdentity } from "d3-zoom";
+import { drag } from "d3-drag";
+import { forceSimulation, forceCenter, forceLink, forceManyBody } from "d3-force";
+import { selectAll, select, event as d3_event } from "d3-selection";
 
 export default Graph;
 
 Graph.$inject = [
-    '$window',
-    'ArtifactLinksGraphRestService',
-    'ArtifactLinksModelService',
-    'ArtifactLinksArtifactsList',
-    '$q',
-    '$timeout'
+    "$window",
+    "ArtifactLinksGraphRestService",
+    "ArtifactLinksModelService",
+    "ArtifactLinksArtifactsList",
+    "$q",
+    "$timeout"
 ];
 
 function Graph(
@@ -25,11 +25,11 @@ function Graph(
     $timeout
 ) {
     return {
-        restrict: 'E',
+        restrict: "E",
         scope: {
-            model: '='
+            model: "="
         },
-        link: function (scope, element) {
+        link: function(scope, element) {
             var complements_graph = {};
             var nodes_duplicate = {};
 
@@ -60,15 +60,15 @@ function Graph(
                     graphd3.reset();
                 }
 
-                angular.element($window).bind('resize', function() {
+                angular.element($window).bind("resize", function() {
                     resize();
                 });
 
                 return graphd3;
             }
 
-            graphd3.init = function () {
-                var links      = scope.model.links;
+            graphd3.init = function() {
+                var links = scope.model.links;
                 var data_nodes = scope.model.nodes;
 
                 graphd3.initLoader();
@@ -76,24 +76,27 @@ function Graph(
                 graphd3.initData(links, data_nodes);
                 graphd3.initLayout();
 
-                graphd3.graph()
-                    .nodes(Object.values(graphd3.nodes()));
+                graphd3.graph().nodes(Object.values(graphd3.nodes()));
 
-                graphd3.graph().force('link')
+                graphd3
+                    .graph()
+                    .force("link")
                     .links(graphd3.links());
 
                 graphd3.initGraph();
                 graphd3.initEvent();
             };
 
-            graphd3.initData = function (links, data_nodes) {
+            graphd3.initData = function(links, data_nodes) {
                 var figures = getAllFigures(links);
 
                 var nodes = {};
 
                 links.forEach(function(link) {
-                    link.source = nodes[link.source] || (nodes[link.source] = findNode(link.source));
-                    link.target = nodes[link.target] || (nodes[link.target] = findNode(link.target));
+                    link.source =
+                        nodes[link.source] || (nodes[link.source] = findNode(link.source));
+                    link.target =
+                        nodes[link.target] || (nodes[link.target] = findNode(link.target));
                 });
 
                 graphd3.links(links);
@@ -109,7 +112,7 @@ function Graph(
                 function getAllFigures(links) {
                     var data = [];
                     links.forEach(function(link) {
-                        if(data.indexOf(link.type) === -1) {
+                        if (data.indexOf(link.type) === -1) {
                             data.push(link.type);
                         }
                     });
@@ -117,7 +120,7 @@ function Graph(
                 }
             };
 
-            graphd3.initGraph = function () {
+            graphd3.initGraph = function() {
                 graphd3.initPath();
                 graphd3.initCircle();
                 graphd3.initText();
@@ -127,58 +130,103 @@ function Graph(
                 graphd3.graph(
                     forceSimulation()
                         .velocityDecay(0.7)
-                        .force('link', forceLink().id(function (d) { return d.index; }).distance(100))
-                        .force('charge', forceManyBody().strength(-150))
-                        .force('center', forceCenter(graphd3.width() / 2, graphd3.height() / 2))
+                        .force(
+                            "link",
+                            forceLink()
+                                .id(function(d) {
+                                    return d.index;
+                                })
+                                .distance(100)
+                        )
+                        .force("charge", forceManyBody().strength(-150))
+                        .force("center", forceCenter(graphd3.width() / 2, graphd3.height() / 2))
                 );
 
-                graphd3.graph()
-                    .on('tick', display);
+                graphd3.graph().on("tick", display);
 
                 function display() {
-                    graphd3.circle()
-                        .attr('transform', function (d) { return 'translate(' + d.x + ','  + d.y + ')'; });
-
-                    graphd3.path().attr('d', function(d) {
-                        var radius         = 6,
-                            arrow_length   = 10,
-                            theta          = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x),
-                            half_PI        = Math.PI / 2,
-                            first_x_point  = d.target.x - radius * Math.cos(theta),
-                            first_y_point  = d.target.y - radius * Math.sin(theta),
-                            first_dx_point = radius * Math.cos(half_PI - theta) - arrow_length * Math.cos(theta),
-                            first_dy_point = -radius * Math.sin(half_PI - theta) - arrow_length * Math.sin(theta),
-                            second_x_point = first_x_point - radius * Math.cos(half_PI - theta) - arrow_length * Math.cos(theta),
-                            second_y_point = first_y_point + radius * Math.sin(half_PI - theta) - arrow_length * Math.sin(theta);
-                        return 'M' + d.source.x + ',' + d.source.y
-                            + 'L' + d.target.x + ',' + d.target.y
-                            + 'M' + first_x_point + "," + first_y_point
-                            +  'l' + first_dx_point + ',' + first_dy_point
-                            + 'L' + second_x_point + ',' + second_y_point
-                            + 'z';
+                    graphd3.circle().attr("transform", function(d) {
+                        return "translate(" + d.x + "," + d.y + ")";
                     });
 
-                    selectAll('.graph-label')
-                        .attr('transform', function(d) { return 'translate(' + d.x + ',' + d.y + ')'});
-                    graphd3.g().style('display', 'initial');
-                    graphd3.gClickable().style('display', 'initial');
+                    graphd3.path().attr("d", function(d) {
+                        var radius = 6,
+                            arrow_length = 10,
+                            theta = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x),
+                            half_PI = Math.PI / 2,
+                            first_x_point = d.target.x - radius * Math.cos(theta),
+                            first_y_point = d.target.y - radius * Math.sin(theta),
+                            first_dx_point =
+                                radius * Math.cos(half_PI - theta) - arrow_length * Math.cos(theta),
+                            first_dy_point =
+                                -radius * Math.sin(half_PI - theta) -
+                                arrow_length * Math.sin(theta),
+                            second_x_point =
+                                first_x_point -
+                                radius * Math.cos(half_PI - theta) -
+                                arrow_length * Math.cos(theta),
+                            second_y_point =
+                                first_y_point +
+                                radius * Math.sin(half_PI - theta) -
+                                arrow_length * Math.sin(theta);
+                        return (
+                            "M" +
+                            d.source.x +
+                            "," +
+                            d.source.y +
+                            "L" +
+                            d.target.x +
+                            "," +
+                            d.target.y +
+                            "M" +
+                            first_x_point +
+                            "," +
+                            first_y_point +
+                            "l" +
+                            first_dx_point +
+                            "," +
+                            first_dy_point +
+                            "L" +
+                            second_x_point +
+                            "," +
+                            second_y_point +
+                            "z"
+                        );
+                    });
+
+                    selectAll(".graph-label").attr("transform", function(d) {
+                        return "translate(" + d.x + "," + d.y + ")";
+                    });
+                    graphd3.g().style("display", "initial");
+                    graphd3.gClickable().style("display", "initial");
                 }
             };
 
             graphd3.initPath = function() {
                 graphd3.path(
-                    graphd3.g()
-                        .append('g')
-                        .attr('class', 'updatable')
-                        .selectAll('path')
-                        .data(graphd3.graph().force('link').links(), function(d){ return d.source.id + '-' + d.target.id; })
+                    graphd3
+                        .g()
+                        .append("g")
+                        .attr("class", "updatable")
+                        .selectAll("path")
+                        .data(
+                            graphd3
+                                .graph()
+                                .force("link")
+                                .links(),
+                            function(d) {
+                                return d.source.id + "-" + d.target.id;
+                            }
+                        )
                         .enter()
-                        .append('path')
-                        .attr('class', function(d) {
+                        .append("path")
+                        .attr("class", function(d) {
                             if (d.id) {
-                                return 'link ' + d.type + ' link_' + d.source.id + '_' + d.target.id;
+                                return (
+                                    "link " + d.type + " link_" + d.source.id + "_" + d.target.id
+                                );
                             } else {
-                                return 'link ' + d.type;
+                                return "link " + d.type;
                             }
                         })
                 );
@@ -186,30 +234,39 @@ function Graph(
 
             graphd3.initCircle = function() {
                 graphd3.circle(
-                    graphd3.gClickable()
-                        .append('g')
-                        .attr('class', 'updatable')
-                        .selectAll('circle')
-                        .data(graphd3.graph().nodes(), function(d) { return d.id; })
+                    graphd3
+                        .gClickable()
+                        .append("g")
+                        .attr("class", "updatable")
+                        .selectAll("circle")
+                        .data(graphd3.graph().nodes(), function(d) {
+                            return d.id;
+                        })
                         .enter()
-                        .append('circle')
+                        .append("circle")
                         .attrs({
-                            'class': d => d.id
-                                ? normalizeColor(d.color) + " circle_" + d.id
-                                : normalizeColor(d.color),
-                            'r': 8
+                            class: d =>
+                                d.id
+                                    ? normalizeColor(d.color) + " circle_" + d.id
+                                    : normalizeColor(d.color),
+                            r: 8
                         })
                         .call(
                             drag()
-                                .on('start', function() {
-                                    if (! d3_event.active) {
-                                        graphd3.graph().alphaTarget(0.3).restart();
+                                .on("start", function() {
+                                    if (!d3_event.active) {
+                                        graphd3
+                                            .graph()
+                                            .alphaTarget(0.3)
+                                            .restart();
                                     }
                                 })
-                                .on('drag', function(d) {
+                                .on("drag", function(d) {
                                     var position = calculatePosition(
-                                        document.getElementsByClassName('graph-container')[0],
-                                        document.getElementsByClassName('graph-elements-clickable')[0],
+                                        document.getElementsByClassName("graph-container")[0],
+                                        document.getElementsByClassName(
+                                            "graph-elements-clickable"
+                                        )[0],
                                         d3_event.x,
                                         d3_event.y,
                                         graphd3.width(),
@@ -218,18 +275,18 @@ function Graph(
                                     d.fx = position.x;
                                     d.fy = position.y;
                                 })
-                                .on('end', function() {
-                                    if (! d3_event.active) {
+                                .on("end", function() {
+                                    if (!d3_event.active) {
                                         graphd3.graph().alphaTarget(0);
                                     }
                                 })
                         )
-                        .on('click', function(d) {
+                        .on("click", function(d) {
                             if (d.clicked && d.has_children) {
                                 graphd3.remove(d);
                             } else {
                                 select(".loader-node").style("visibility", "visible");
-                                d.clicked      = true;
+                                d.clicked = true;
                                 d.has_children = false;
                                 var complement = complements_graph[d.id];
                                 if (complement) {
@@ -252,61 +309,72 @@ function Graph(
 
             graphd3.initText = function() {
                 graphd3.text(
-                    graphd3.gClickable()
-                        .append('g')
-                        .attr('class', 'updatable')
-                        .selectAll('a')
-                        .data(graphd3.graph().nodes(), function (d) { return d.id; })
+                    graphd3
+                        .gClickable()
+                        .append("g")
+                        .attr("class", "updatable")
+                        .selectAll("a")
+                        .data(graphd3.graph().nodes(), function(d) {
+                            return d.id;
+                        })
                         .enter()
-                        .append('a')
+                        .append("a")
                         .attrs({
-                            'class': function (d) {
+                            class: function(d) {
                                 if (d.id) {
-                                    return 'graph-label updatable text_' + d.id;
+                                    return "graph-label updatable text_" + d.id;
                                 }
                             },
-                            'xlink:href': function(d) { return d.url; }
-                        })
-                        .append('text')
-                        .attrs({
-                            'class': 'ref-name ',
-                            'x': 13,
-                            'y': '.31em',
-                            'id': function (d) {
-                                return d.ref_name + '_' + d.id;
+                            "xlink:href": function(d) {
+                                return d.url;
                             }
                         })
-                        .text(function (d) {
-                            return d.ref_name + ' ' + d.id;
+                        .append("text")
+                        .attrs({
+                            class: "ref-name ",
+                            x: 13,
+                            y: ".31em",
+                            id: function(d) {
+                                return d.ref_name + "_" + d.id;
+                            }
+                        })
+                        .text(function(d) {
+                            return d.ref_name + " " + d.id;
                         })
                 );
 
-                selectAll('.graph-label')
-                    .insert('rect', ':first-child')
+                selectAll(".graph-label")
+                    .insert("rect", ":first-child")
                     .attrs({
-                        'width': function(d) {
-                            return angular.element('#' + d.ref_name + '_' + d.id)[0].getBBox().width + 6;
+                        width: function(d) {
+                            return (
+                                angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().width +
+                                6
+                            );
                         },
-                        'height': function(d) {
-                            return angular.element('#' + d.ref_name + "_" + d.id)[0].getBBox().height + 4;
+                        height: function(d) {
+                            return (
+                                angular.element("#" + d.ref_name + "_" + d.id)[0].getBBox().height +
+                                4
+                            );
                         },
-                        'class': function(d) {
-                            return 'ref-name-background ' + d.color.replace('_', '-');
+                        class: function(d) {
+                            return "ref-name-background " + d.color.replace("_", "-");
                         },
-                        'x': 10,
-                        'y': -9,
-                        'rx': 3,
-                        'ry': 3
+                        x: 10,
+                        y: -9,
+                        rx: 3,
+                        ry: 3
                     });
 
-                selectAll('.graph-label')
-                    .append('text')
+                selectAll(".graph-label")
+                    .append("text")
                     .attrs({
-                        'x': 10,
-                        'y': 20
+                        x: 10,
+                        y: 20
                     })
-                    .text(function (d) {
-                        return d.title + ' ';
+                    .text(function(d) {
+                        return d.title + " ";
                     });
             };
 
@@ -314,9 +382,9 @@ function Graph(
                 graphd3.zoom(
                     d3_zoom()
                         .scaleExtent([0.5, 8])
-                        .on('zoom', function () {
-                            graphd3.g().attr('transform', d3_event.transform);
-                            graphd3.gClickable().attr('transform', d3_event.transform);
+                        .on("zoom", function() {
+                            graphd3.g().attr("transform", d3_event.transform);
+                            graphd3.gClickable().attr("transform", d3_event.transform);
                         })
                 );
 
@@ -327,98 +395,128 @@ function Graph(
 
                 graphd3.svg(
                     select(element[0])
-                        .append('svg')
+                        .append("svg")
                         .attrs({
-                            'class': 'graph-container',
-                            'width': graphd3.width(),
-                            'height': graphd3.height()
+                            class: "graph-container",
+                            width: graphd3.width(),
+                            height: graphd3.height()
                         })
                 );
 
                 graphd3.g(
-                    graphd3.svg()
-                        .append('g')
-                        .attr('class', 'graph-elements')
+                    graphd3
+                        .svg()
+                        .append("g")
+                        .attr("class", "graph-elements")
                 );
 
                 graphd3.rect(
-                    graphd3.svg()
-                        .append('rect')
-                        .attr('class', 'overlay')
-                        .attr('width', graphd3.width())
-                        .attr('height', graphd3.height())
+                    graphd3
+                        .svg()
+                        .append("rect")
+                        .attr("class", "overlay")
+                        .attr("width", graphd3.width())
+                        .attr("height", graphd3.height())
                         .call(graphd3.zoom())
-                        .on('wheel.zoom', null)
-                        .on('dblclick.zoom', null)
+                        .on("wheel.zoom", null)
+                        .on("dblclick.zoom", null)
                 );
 
                 graphd3.gClickable(
-                    graphd3.svg()
-                        .append('g')
-                        .attr('class', 'graph-elements-clickable')
+                    graphd3
+                        .svg()
+                        .append("g")
+                        .attr("class", "graph-elements-clickable")
                 );
             };
 
             graphd3.initEvent = function() {
-                select('#focus-graph')
-                    .on('click', function() {
-                        graphd3.reset();
-
-                    });
-                select('#zoomin-graph')
-                    .on('click', function() {
-                        graphd3.rect().transition().call(graphd3.zoom().scaleBy, 1.2);
-                    });
-                select('#zoomout-graph')
-                    .on('click', function() {
-                        graphd3.rect().transition().call(graphd3.zoom().scaleBy, 0.8);
-                    });
+                select("#focus-graph").on("click", function() {
+                    graphd3.reset();
+                });
+                select("#zoomin-graph").on("click", function() {
+                    graphd3
+                        .rect()
+                        .transition()
+                        .call(graphd3.zoom().scaleBy, 1.2);
+                });
+                select("#zoomout-graph").on("click", function() {
+                    graphd3
+                        .rect()
+                        .transition()
+                        .call(graphd3.zoom().scaleBy, 0.8);
+                });
             };
 
             graphd3.initLoader = function() {
                 graphd3.loader(
-                    select('.graph')
-                        .append('img')
+                    select(".graph")
+                        .append("img")
                         .attrs({
-                            'src': '/themes/BurningParrot/images/spinner.gif',
-                            'class': 'loader loader-node'
+                            src: "/themes/BurningParrot/images/spinner.gif",
+                            class: "loader loader-node"
                         })
                 );
             };
 
             graphd3.redraw = function() {
-                graphd3.graph()
-                    .nodes(graphd3.graph().nodes());
+                graphd3.graph().nodes(graphd3.graph().nodes());
 
-                graphd3.graph().force('link')
-                    .links(graphd3.graph().force('link').links());
+                graphd3
+                    .graph()
+                    .force("link")
+                    .links(
+                        graphd3
+                            .graph()
+                            .force("link")
+                            .links()
+                    );
 
-                graphd3.graph().alpha(0.9).restart();
+                graphd3
+                    .graph()
+                    .alpha(0.9)
+                    .restart();
             };
 
-            graphd3.resize = function (height, width) {
+            graphd3.resize = function(height, width) {
                 graphd3.height(height);
                 graphd3.width(width);
 
-                graphd3.svg().attr('width', graphd3.width()).attr('height', graphd3.height());
-                graphd3.graph().force('center').x(graphd3.width() / 2).y(graphd3.height() / 2);
+                graphd3
+                    .svg()
+                    .attr("width", graphd3.width())
+                    .attr("height", graphd3.height());
+                graphd3
+                    .graph()
+                    .force("center")
+                    .x(graphd3.width() / 2)
+                    .y(graphd3.height() / 2);
             };
 
-            graphd3.reset = function () {
+            graphd3.reset = function() {
                 graphd3.resetNodes();
                 graphd3.resetZoom();
-                graphd3.graph().alpha(0.9).restart();
+                graphd3
+                    .graph()
+                    .alpha(0.9)
+                    .restart();
             };
 
-            graphd3.resetNodes = function () {
-                graphd3.circle().data().forEach(function(d) {
-                    d.fx = null;
-                    d.fy = null;
-                });
+            graphd3.resetNodes = function() {
+                graphd3
+                    .circle()
+                    .data()
+                    .forEach(function(d) {
+                        d.fx = null;
+                        d.fy = null;
+                    });
             };
 
-            graphd3.resetZoom = function () {
-                graphd3.rect().transition().call(graphd3.zoom().transform, zoomIdentity);
+            graphd3.resetZoom = function() {
+                graphd3
+                    .rect()
+                    .transition()
+                    .call(graphd3.zoom().transform, zoomIdentity);
             };
 
             graphd3.update = function(graph, node_event) {
@@ -431,26 +529,42 @@ function Graph(
                     var node_exist = find(graphd3.graph().nodes(), function(d3_node) {
                         return d3_node.id === node.id;
                     });
-                    if (! node_exist) {
+                    if (!node_exist) {
                         graphd3.nodes()[node.id] = node;
-                        graphd3.graph().nodes().push(node);
+                        graphd3
+                            .graph()
+                            .nodes()
+                            .push(node);
                     }
                 });
 
                 _(graph.links).forEach(function(link) {
-                    var link_exist = find(graphd3.graph().force('link').links(), function(d3_link) {
-                        return d3_link.source.id === link.source && d3_link.target.id === link.target;
-                    });
+                    var link_exist = find(
+                        graphd3
+                            .graph()
+                            .force("link")
+                            .links(),
+                        function(d3_link) {
+                            return (
+                                d3_link.source.id === link.source &&
+                                d3_link.target.id === link.target
+                            );
+                        }
+                    );
 
                     var d3_link = {
-                        source  : graphd3.nodes()[link.source],
-                        target  : graphd3.nodes()[link.target],
-                        type    : link.type,
-                        id      : graphd3.nodes()[link.source].id + "_" + graphd3.nodes()[link.target].id
+                        source: graphd3.nodes()[link.source],
+                        target: graphd3.nodes()[link.target],
+                        type: link.type,
+                        id: graphd3.nodes()[link.source].id + "_" + graphd3.nodes()[link.target].id
                     };
 
-                    if (! link_exist) {
-                        graphd3.graph().force('link').links().push(d3_link);
+                    if (!link_exist) {
+                        graphd3
+                            .graph()
+                            .force("link")
+                            .links()
+                            .push(d3_link);
                         complement.links.push(d3_link);
 
                         var link_node;
@@ -478,11 +592,15 @@ function Graph(
 
                 complements_graph[node_event.id] = complement;
 
-                select('.graph-elements').selectAll('.updatable').remove();
-                select('.graph-elements-clickable').selectAll('.updatable').remove();
+                select(".graph-elements")
+                    .selectAll(".updatable")
+                    .remove();
+                select(".graph-elements-clickable")
+                    .selectAll(".updatable")
+                    .remove();
                 graphd3.initGraph();
 
-                select('.loader-node').style('visibility', 'hidden');
+                select(".loader-node").style("visibility", "hidden");
                 graphd3.redraw();
             };
 
@@ -493,51 +611,69 @@ function Graph(
              * on this node
              */
             graphd3.updateDataReady = function(complement) {
-                _(complement.nodes).compact().forEach(function(node) {
-                    nodes_duplicate[node.id].in_graph_counter++;
-                });
-                _(complement.links).compact().forEach(function(link) {
-                    var node_source_exist = find(graphd3.graph().nodes(), function(d3_node) {
-                        return d3_node.id === link.source.id;
+                _(complement.nodes)
+                    .compact()
+                    .forEach(function(node) {
+                        nodes_duplicate[node.id].in_graph_counter++;
                     });
+                _(complement.links)
+                    .compact()
+                    .forEach(function(link) {
+                        var node_source_exist = find(graphd3.graph().nodes(), function(d3_node) {
+                            return d3_node.id === link.source.id;
+                        });
 
-                    if (nodes_duplicate[link.source.id]) {
-                        link.source = nodes_duplicate[link.source.id].node;
-                    }
+                        if (nodes_duplicate[link.source.id]) {
+                            link.source = nodes_duplicate[link.source.id].node;
+                        }
 
-                    if (! node_source_exist) {
-                        graphd3.nodes()[link.source.id] = link.source;
-                        graphd3.graph().nodes().push(link.source);
-                    }
+                        if (!node_source_exist) {
+                            graphd3.nodes()[link.source.id] = link.source;
+                            graphd3
+                                .graph()
+                                .nodes()
+                                .push(link.source);
+                        }
 
-                    var node_target_exist = find(graphd3.graph().nodes(), function(d3_node) {
-                        return d3_node.id === link.target.id;
+                        var node_target_exist = find(graphd3.graph().nodes(), function(d3_node) {
+                            return d3_node.id === link.target.id;
+                        });
+
+                        if (nodes_duplicate[link.target.id]) {
+                            link.target = nodes_duplicate[link.target.id].node;
+                        }
+
+                        if (!node_target_exist) {
+                            graphd3.nodes()[link.target.id] = link.target;
+                            graphd3
+                                .graph()
+                                .nodes()
+                                .push(link.target);
+                        }
+
+                        graphd3
+                            .graph()
+                            .force("link")
+                            .links()
+                            .push(link);
                     });
-
-                    if (nodes_duplicate[link.target.id]){
-                        link.target = nodes_duplicate[link.target.id].node;
-                    }
-
-                    if (! node_target_exist) {
-                        graphd3.nodes()[link.target.id] = link.target;
-                        graphd3.graph().nodes().push(link.target);
-                    }
-
-                    graphd3.graph().force('link').links().push(link);
-                });
-                select('.graph-elements').selectAll('.updatable').remove();
-                select('.graph-elements-clickable').selectAll('.updatable').remove();
+                select(".graph-elements")
+                    .selectAll(".updatable")
+                    .remove();
+                select(".graph-elements-clickable")
+                    .selectAll(".updatable")
+                    .remove();
                 graphd3.initGraph();
 
-                select('.loader-node').style('visibility', 'hidden');
+                select(".loader-node").style("visibility", "hidden");
                 graphd3.redraw();
             };
 
             graphd3.remove = function(node_event) {
                 graphd3.nodeRemove(node_event);
 
-                delete node_event['clicked'];
-                delete node_event['has_children'];
+                delete node_event["clicked"];
+                delete node_event["has_children"];
                 graphd3.redraw();
             };
 
@@ -551,7 +687,7 @@ function Graph(
 
                 // Decrement counter
                 while (is_there_an_operation) {
-                    view      = [];
+                    view = [];
                     neighbors = [];
                     neighbors.push(node_event);
                     view[node_event.id] = true;
@@ -561,7 +697,10 @@ function Graph(
                         node = neighbors.shift();
                         removeLinks(node);
                         addNeighborsNode(node);
-                        if (nodes_duplicate[node.id] && nodes_duplicate[node.id].in_graph_counter > 0) {
+                        if (
+                            nodes_duplicate[node.id] &&
+                            nodes_duplicate[node.id].in_graph_counter > 0
+                        ) {
                             if (artifactMustBeRemoved(node)) {
                                 nodes_duplicate[node.id].in_graph_counter--;
                                 is_there_an_operation = true;
@@ -570,7 +709,7 @@ function Graph(
                     }
                 }
 
-                view      = [];
+                view = [];
                 neighbors = [];
                 neighbors.push(node_event);
                 view[node_event.id] = true;
@@ -580,17 +719,20 @@ function Graph(
                     node = neighbors.shift();
                     addNeighborsNode(node);
 
-                    if (nodes_duplicate[node.id] && nodes_duplicate[node.id].in_graph_counter === 0) {
+                    if (
+                        nodes_duplicate[node.id] &&
+                        nodes_duplicate[node.id].in_graph_counter === 0
+                    ) {
                         removeNode(node);
                         removeLinks(node);
 
-                        delete node['clicked'];
-                        delete node['has_children'];
+                        delete node["clicked"];
+                        delete node["has_children"];
                     }
                 }
 
                 function removeNode(node) {
-                    remove(graphd3.graph().nodes(), function (d3_node) {
+                    remove(graphd3.graph().nodes(), function(d3_node) {
                         if (d3_node.id === node.id) {
                             selectAll(".circle_" + node.id).remove();
                             selectAll(".text_" + node.id).remove();
@@ -604,49 +746,68 @@ function Graph(
                 function addNeighborsNode(node) {
                     var complement = complements_graph[node.id];
                     if (complement) {
-                        _(complement.nodes).compact().forEach(function(d3_node) {
-                            if (! view[d3_node.id]) {
-                                neighbors.push(d3_node);
-                                view[d3_node.id] = true;
-                            }
-                        });
+                        _(complement.nodes)
+                            .compact()
+                            .forEach(function(d3_node) {
+                                if (!view[d3_node.id]) {
+                                    neighbors.push(d3_node);
+                                    view[d3_node.id] = true;
+                                }
+                            });
                     }
                 }
 
                 function removeLinks(node) {
                     var complement = complements_graph[node.id];
                     if (complement) {
-                        _(complement.links).compact().forEach(function (link) {
-                            remove(graphd3.graph().force('link').links(), function (d3_link) {
-                                if (d3_link.source.id === link.source.id && d3_link.target.id === link.target.id) {
-                                    selectAll(".link_" + link.id).remove();
-                                    return true;
-                                } else {
-                                    return false;
-                                }
+                        _(complement.links)
+                            .compact()
+                            .forEach(function(link) {
+                                remove(
+                                    graphd3
+                                        .graph()
+                                        .force("link")
+                                        .links(),
+                                    function(d3_link) {
+                                        if (
+                                            d3_link.source.id === link.source.id &&
+                                            d3_link.target.id === link.target.id
+                                        ) {
+                                            selectAll(".link_" + link.id).remove();
+                                            return true;
+                                        } else {
+                                            return false;
+                                        }
+                                    }
+                                );
                             });
-                        });
                     }
                 }
 
                 function artifactMustBeRemoved(node) {
-                    var link_exist = find(graphd3.graph().force('link').links(), function(link) {
-                        return link.source.id === node.id || link.target.id === node.id;
-                    });
+                    var link_exist = find(
+                        graphd3
+                            .graph()
+                            .force("link")
+                            .links(),
+                        function(link) {
+                            return link.source.id === node.id || link.target.id === node.id;
+                        }
+                    );
 
-                    return ! link_exist;
+                    return !link_exist;
                 }
             };
 
-            graphd3.svg = function (new_svg) {
-                if (! arguments.length) {
+            graphd3.svg = function(new_svg) {
+                if (!arguments.length) {
                     return svg;
                 }
                 svg = new_svg;
                 return graphd3;
             };
 
-            graphd3.g = function (new_g) {
+            graphd3.g = function(new_g) {
                 if (!arguments.length) {
                     return g;
                 }
@@ -654,7 +815,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.gClickable = function (new_g_clickable) {
+            graphd3.gClickable = function(new_g_clickable) {
                 if (!arguments.length) {
                     return g_clickable;
                 }
@@ -662,15 +823,15 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.rect = function (new_rect) {
-                if (! arguments.length) {
+            graphd3.rect = function(new_rect) {
+                if (!arguments.length) {
                     return rect;
                 }
                 rect = new_rect;
                 return graphd3;
             };
 
-            graphd3.graph = function (newGraph) {
+            graphd3.graph = function(newGraph) {
                 if (!arguments.length) {
                     return graph;
                 }
@@ -678,7 +839,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.links = function (newLinks) {
+            graphd3.links = function(newLinks) {
                 if (!arguments.length) {
                     return links;
                 }
@@ -686,7 +847,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.nodes = function (newNodes) {
+            graphd3.nodes = function(newNodes) {
                 if (!arguments.length) {
                     return nodes;
                 }
@@ -694,7 +855,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.figures = function (newFigures) {
+            graphd3.figures = function(newFigures) {
                 if (!arguments.length) {
                     return figures;
                 }
@@ -702,7 +863,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.path = function (newPath) {
+            graphd3.path = function(newPath) {
                 if (!arguments.length) {
                     return path;
                 }
@@ -710,7 +871,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.circle = function (newCircle) {
+            graphd3.circle = function(newCircle) {
                 if (!arguments.length) {
                     return circle;
                 }
@@ -718,7 +879,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.text = function (newText) {
+            graphd3.text = function(newText) {
                 if (!arguments.length) {
                     return text;
                 }
@@ -726,7 +887,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.width = function (newWidth) {
+            graphd3.width = function(newWidth) {
                 if (!arguments.length) {
                     return width;
                 }
@@ -734,7 +895,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.height = function (newHeight) {
+            graphd3.height = function(newHeight) {
                 if (!arguments.length) {
                     return height;
                 }
@@ -742,7 +903,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.zoom = function (newZoom) {
+            graphd3.zoom = function(newZoom) {
                 if (!arguments.length) {
                     return zoom;
                 }
@@ -750,7 +911,7 @@ function Graph(
                 return graphd3;
             };
 
-            graphd3.loader = function (newloader) {
+            graphd3.loader = function(newloader) {
                 if (!arguments.length) {
                     return loader;
                 }
@@ -763,9 +924,13 @@ function Graph(
     };
 
     function showGraph(artifact_id) {
-        if (! artifactExist(artifact_id)) {
-            return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function(artifact) {
-                ArtifactLinksArtifactsList.artifacts[artifact_id] = ArtifactLinksModelService.getGraphStructure(artifact);
+        if (!artifactExist(artifact_id)) {
+            return ArtifactLinksGraphRestService.getArtifactGraph(artifact_id).then(function(
+                artifact
+            ) {
+                ArtifactLinksArtifactsList.artifacts[
+                    artifact_id
+                ] = ArtifactLinksModelService.getGraphStructure(artifact);
                 return ArtifactLinksArtifactsList.artifacts[artifact_id];
             });
         } else {
@@ -788,7 +953,7 @@ function Graph(
             is_y_changed = false;
 
         if (svg && element) {
-            relative_point = getRelativeXY(svg, element, x, y)
+            relative_point = getRelativeXY(svg, element, x, y);
         }
 
         if (relative_point.x < 10) {
@@ -817,11 +982,11 @@ function Graph(
             new_y = transformed_point.y;
         }
 
-        return  { x: new_x, y: new_y };
+        return { x: new_x, y: new_y };
     }
 
     function getRelativeXY(svg, element, x, y) {
-        var point                     = svg.createSVGPoint(),
+        var point = svg.createSVGPoint(),
             element_coordinate_system = element.getCTM();
 
         point.x = x;
@@ -831,7 +996,7 @@ function Graph(
     }
 
     function getTransformedX(svg, element, x) {
-        var point                             = svg.createSVGPoint(),
+        var point = svg.createSVGPoint(),
             element_coordinate_system_inverse = element.getCTM().inverse();
 
         point.x = x;
@@ -840,7 +1005,7 @@ function Graph(
     }
 
     function getTransformedY(svg, element, y) {
-        var point                             = svg.createSVGPoint(),
+        var point = svg.createSVGPoint(),
             element_coordinate_system_inverse = element.getCTM().inverse();
 
         point.y = y;
@@ -851,6 +1016,6 @@ function Graph(
     function normalizeColor(color) {
         const all_underscores = /_/g;
 
-        return color.replace(all_underscores, '-');
+        return color.replace(all_underscores, "-");
     }
 }

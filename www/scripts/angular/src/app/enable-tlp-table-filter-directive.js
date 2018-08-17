@@ -1,16 +1,12 @@
-import * as tlp from 'tlp';
+import * as tlp from "tlp";
 
 export default EnableTlpTableFilter;
 
-EnableTlpTableFilter.$inject = [
-    '$timeout'
-];
+EnableTlpTableFilter.$inject = ["$timeout"];
 
-function EnableTlpTableFilter(
-    $timeout
-) {
+function EnableTlpTableFilter($timeout) {
     function preventSubmit(event) {
-        var event    = event || window.event;
+        var event = event || window.event;
         var key_code = event.charCode;
 
         if (event.keyCode) {
@@ -31,12 +27,12 @@ function EnableTlpTableFilter(
     }
 
     return {
-        restrict: 'A',
-        link: function (scope, element) {
+        restrict: "A",
+        link: function(scope, element) {
             $timeout(function() {
                 var filterField = element[0];
                 tlp.filterInlineTable(filterField);
-                filterField.addEventListener('keydown', preventSubmit);
+                filterField.addEventListener("keydown", preventSubmit);
             });
         }
     };

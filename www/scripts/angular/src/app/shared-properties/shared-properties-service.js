@@ -1,42 +1,41 @@
 export default SharedPropertiesService;
 
 function SharedPropertiesService() {
-
     var property = {
-        campaign_id          : undefined,
-        project_id           : undefined,
-        user                 : undefined,
-        nodejs_server        : undefined,
+        campaign_id: undefined,
+        project_id: undefined,
+        user: undefined,
+        nodejs_server: undefined,
         nodejs_server_version: undefined,
-        uuid                 : undefined,
-        milestone            : undefined
+        uuid: undefined,
+        milestone: undefined
     };
 
     return {
-        getProjectId          : getProjectId,
-        setProjectId          : setProjectId,
-        getCampaignId         : getCampaignId,
-        setCampaignId         : setCampaignId,
-        getCurrentUser        : getCurrentUser,
-        setCurrentUser        : setCurrentUser,
-        getNodeServerAddress  : getNodeServerAddress,
-        setNodeServerAddress  : setNodeServerAddress,
-        getUUID               : getUUID,
-        setUUID               : setUUID,
-        setNodeServerVersion  : setNodeServerVersion,
-        getNodeServerVersion  : getNodeServerVersion,
-        setCampaignTrackerId  : setCampaignTrackerId,
-        getCampaignTrackerId  : getCampaignTrackerId,
+        getProjectId: getProjectId,
+        setProjectId: setProjectId,
+        getCampaignId: getCampaignId,
+        setCampaignId: setCampaignId,
+        getCurrentUser: getCurrentUser,
+        setCurrentUser: setCurrentUser,
+        getNodeServerAddress: getNodeServerAddress,
+        setNodeServerAddress: setNodeServerAddress,
+        getUUID: getUUID,
+        setUUID: setUUID,
+        setNodeServerVersion: setNodeServerVersion,
+        getNodeServerVersion: getNodeServerVersion,
+        setCampaignTrackerId: setCampaignTrackerId,
+        getCampaignTrackerId: getCampaignTrackerId,
         setDefinitionTrackerId: setDefinitionTrackerId,
         getDefinitionTrackerId: getDefinitionTrackerId,
-        setExecutionTrackerId : setExecutionTrackerId,
-        getExecutionTrackerId : getExecutionTrackerId,
-        setIssueTrackerId     : setIssueTrackerId,
-        getIssueTrackerId     : getIssueTrackerId,
-        setIssueTrackerConfig : setIssueTrackerConfig,
-        getIssueTrackerConfig : getIssueTrackerConfig,
-        getCurrentMilestone   : getCurrentMilestone,
-        setCurrentMilestone   : setCurrentMilestone
+        setExecutionTrackerId: setExecutionTrackerId,
+        getExecutionTrackerId: getExecutionTrackerId,
+        setIssueTrackerId: setIssueTrackerId,
+        getIssueTrackerId: getIssueTrackerId,
+        setIssueTrackerConfig: setIssueTrackerConfig,
+        getIssueTrackerConfig: getIssueTrackerConfig,
+        getCurrentMilestone: getCurrentMilestone,
+        setCurrentMilestone: setCurrentMilestone
     };
 
     function getProjectId() {
@@ -71,7 +70,7 @@ function SharedPropertiesService() {
         property.nodejs_server = nodejs_server;
     }
 
-    function setUUID(uuid){
+    function setUUID(uuid) {
         property.uuid = uuid;
     }
 
@@ -135,4 +134,3 @@ function SharedPropertiesService() {
         property.milestone = milestone;
     }
 }
-

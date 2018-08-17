@@ -1,25 +1,15 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
 
 export default DefinitionService;
 
-DefinitionService.$inject = [
-    'Restangular',
-    '$q',
-    'DefinitionConstants',
-    'SharedPropertiesService'
-];
+DefinitionService.$inject = ["Restangular", "$q", "DefinitionConstants", "SharedPropertiesService"];
 
-function DefinitionService(
-    Restangular,
-    $q,
-    DefinitionConstants,
-    SharedPropertiesService
-) {
+function DefinitionService(Restangular, $q, DefinitionConstants, SharedPropertiesService) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
-        RestangularConfigurer.setBaseUrl('/api/v1');
+        RestangularConfigurer.setBaseUrl("/api/v1");
     });
 
     return {
@@ -46,11 +36,11 @@ function DefinitionService(
     }
 
     function getDefinitionReports() {
-        var data           = $q.defer();
+        var data = $q.defer();
         var def_tracker_id = SharedPropertiesService.getDefinitionTrackerId();
 
-        rest.one('trackers', def_tracker_id)
-            .all('tracker_reports')
+        rest.one("trackers", def_tracker_id)
+            .all("tracker_reports")
             .getList()
             .then(function(response) {
                 data.resolve(response.data);
@@ -61,7 +51,7 @@ function DefinitionService(
 
     function getArtifactById(artifact_id) {
         return rest
-            .one('artifacts', artifact_id)
+            .one("artifacts", artifact_id)
             .get()
             .then(function(response) {
                 return response.data;
@@ -70,7 +60,7 @@ function DefinitionService(
 
     function getDefinitionById(artifact_id) {
         return rest
-            .one('testmanagement_definitions', artifact_id)
+            .one("testmanagement_definitions", artifact_id)
             .get()
             .then(function(response) {
                 return response.data;
@@ -79,7 +69,7 @@ function DefinitionService(
 
     function getTracker(tracker_id) {
         return rest
-            .one('trackers', tracker_id)
+            .one("trackers", tracker_id)
             .get()
             .then(function(response) {
                 return response.data;

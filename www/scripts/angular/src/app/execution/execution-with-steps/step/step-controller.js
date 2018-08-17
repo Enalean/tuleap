@@ -3,22 +3,14 @@ import {
     FAILED_STATUS,
     BLOCKED_STATUS,
     NOT_RUN_STATUS
-} from '../../execution-constants.js';
-import { dropdown } from 'tlp';
-import { setError, resetError } from '../../../feedback-state.js';
-import { updateStatusWithStepResults, updateStepResults } from './execution-with-steps-updater.js';
+} from "../../execution-constants.js";
+import { dropdown } from "tlp";
+import { setError, resetError } from "../../../feedback-state.js";
+import { updateStatusWithStepResults, updateStepResults } from "./execution-with-steps-updater.js";
 
-controller.$inject = [
-    '$element',
-    'gettextCatalog',
-    'ExecutionRestService'
-];
+controller.$inject = ["$element", "gettextCatalog", "ExecutionRestService"];
 
-export default function controller(
-    $element,
-    gettextCatalog,
-    ExecutionRestService
-) {
+export default function controller($element, gettextCatalog, ExecutionRestService) {
     const self = this;
     Object.assign(self, {
         saving: false,
@@ -43,11 +35,13 @@ export default function controller(
     });
 
     function init() {
-        self.step_result = (self.step_result) ? self.step_result : {
-            status: 'notrun'
-        };
-        const $trigger = $element.find('.steps-step-action-dropdown');
-        const $dropdown_menu = $element.find('.tlp-dropdown-menu');
+        self.step_result = self.step_result
+            ? self.step_result
+            : {
+                  status: "notrun"
+              };
+        const $trigger = $element.find(".steps-step-action-dropdown");
+        const $dropdown_menu = $element.find(".tlp-dropdown-menu");
 
         self.dropdown = dropdown($trigger[0], {
             dropdown_menu: $dropdown_menu[0]
@@ -77,7 +71,7 @@ export default function controller(
                 error =>
                     setError(
                         gettextCatalog.getString(
-                            'An error occurred while executing this step. Please try again later. {{ error }}',
+                            "An error occurred while executing this step. Please try again later. {{ error }}",
                             { error }
                         )
                     )

@@ -1,22 +1,14 @@
-import './breadcrumb.tpl.html';
+import "./breadcrumb.tpl.html";
 
 export default TestManagementConfig;
 
-TestManagementConfig.$inject = [
-    '$urlRouterProvider',
-    '$breadcrumbProvider',
-    '$compileProvider'
-];
+TestManagementConfig.$inject = ["$urlRouterProvider", "$breadcrumbProvider", "$compileProvider"];
 
-function TestManagementConfig(
-    $urlRouterProvider,
-    $breadcrumbProvider,
-    $compileProvider
-) {
-    $urlRouterProvider.otherwise('/campaigns');
+function TestManagementConfig($urlRouterProvider, $breadcrumbProvider, $compileProvider) {
+    $urlRouterProvider.otherwise("/campaigns");
     $breadcrumbProvider.setOptions({
-        prefixStateName: 'campaigns.milestone',
-        templateUrl: 'breadcrumb.tpl.html'
+        prefixStateName: "campaigns.milestone",
+        templateUrl: "breadcrumb.tpl.html"
     });
 
     // To remove this setting, move all init() code
