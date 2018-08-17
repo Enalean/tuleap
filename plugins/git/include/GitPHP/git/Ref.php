@@ -13,6 +13,8 @@ namespace Tuleap\Git\GitPHP;
  * @subpackage Git
  */
 
+use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
+
 /**
  * Git Ref class
  *
@@ -70,6 +72,7 @@ abstract class Ref extends GitObject
      *
      * @access public
      * @return string object hash
+     * @throws GitRepoRefNotFoundException
      */
     public function GetHash() // @codingStandardsIgnoreLine
     {
@@ -86,7 +89,7 @@ abstract class Ref extends GitObject
      * Looks up the hash for the ref
      *
      * @access protected
-     * @throws Exception if hash is not found
+     * @throws GitRepoRefNotFoundException if hash is not found
      */
     protected function FindHash() // @codingStandardsIgnoreLine
     {
@@ -98,7 +101,7 @@ abstract class Ref extends GitObject
         $hash = trim($exe->Execute(GitExe::SHOW_REF, $args));
 
         if (empty($hash)) {
-            throw new \Exception('Invalid ref ' . $this->GetRefPath());
+            throw new GitRepoRefNotFoundException(sprintf('Invalid ref : %s', $this->GetRefPath()));
         }
 
         $this->SetHash($hash);
