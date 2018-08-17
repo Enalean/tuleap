@@ -17,22 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from 'jquery';
-import 'select2';
+import jQuery from "jquery";
+import "select2";
 
-import default_locale from '../js/default_locale.js';
+import default_locale from "../js/default_locale.js";
 
 export default function overrideSelect2(element, options) {
     options = options || {};
 
     options.language = options.language || default_locale;
 
-    options.theme = 'tlp-select2';
+    options.theme = "tlp-select2";
 
-    if (element && element.classList.contains('tlp-select-small')) {
-        options.theme = 'tlp-select2-small';
-    } else if (element && element.classList.contains('tlp-select-large')) {
-        options.theme = 'tlp-select2-large';
+    if (element && element.classList.contains("tlp-select-small")) {
+        options.theme = "tlp-select2-small";
+    } else if (element && element.classList.contains("tlp-select-large")) {
+        options.theme = "tlp-select2-large";
     }
 
     return jQuery(element).select2(options);

@@ -1,26 +1,25 @@
 export default DashboardController;
 
 DashboardController.$inject = [
-    'PullRequestCollectionService',
-    'PullRequestService',
-    'TooltipService'
+    "PullRequestCollectionService",
+    "PullRequestService",
+    "TooltipService"
 ];
 
-function DashboardController(
-    PullRequestCollectionService,
-    PullRequestService,
-    TooltipService
-) {
+function DashboardController(PullRequestCollectionService, PullRequestService, TooltipService) {
     const self = this;
 
     Object.assign(self, {
-        areClosedPullRequestsFullyLoaded  : PullRequestCollectionService.areClosedPullRequestsFullyLoaded,
-        areOpenPullRequestsFullyLoaded    : PullRequestCollectionService.areOpenPullRequestsFullyLoaded,
-        isThereAtLeastOneClosedPullRequest: PullRequestCollectionService.isThereAtLeastOneClosedPullRequest,
-        isThereAtLeastOneOpenpullRequest  : PullRequestCollectionService.isThereAtLeastOneOpenpullRequest,
-        pull_requests                     : PullRequestCollectionService.all_pull_requests,
-        isPullRequestClosed               : PullRequestService.isPullRequestClosed,
-        valid_status_keys                 : PullRequestService.valid_status_keys,
+        areClosedPullRequestsFullyLoaded:
+            PullRequestCollectionService.areClosedPullRequestsFullyLoaded,
+        areOpenPullRequestsFullyLoaded: PullRequestCollectionService.areOpenPullRequestsFullyLoaded,
+        isThereAtLeastOneClosedPullRequest:
+            PullRequestCollectionService.isThereAtLeastOneClosedPullRequest,
+        isThereAtLeastOneOpenpullRequest:
+            PullRequestCollectionService.isThereAtLeastOneOpenpullRequest,
+        pull_requests: PullRequestCollectionService.all_pull_requests,
+        isPullRequestClosed: PullRequestService.isPullRequestClosed,
+        valid_status_keys: PullRequestService.valid_status_keys,
 
         loading_pull_requests: true,
 
@@ -34,7 +33,7 @@ function DashboardController(
     self.init();
 
     function init() {
-        self.loading_pull_requests  = true;
+        self.loading_pull_requests = true;
         closed_pull_requests_hidden = true;
 
         let promise;
@@ -45,12 +44,12 @@ function DashboardController(
         }
 
         return promise
-        .then(() => {
-            TooltipService.setupTooltips();
-        })
-        .finally(() => {
-            self.loading_pull_requests = false;
-        });
+            .then(() => {
+                TooltipService.setupTooltips();
+            })
+            .finally(() => {
+                self.loading_pull_requests = false;
+            });
     }
 
     function loadClosedPullRequests() {
@@ -62,13 +61,13 @@ function DashboardController(
         self.loading_pull_requests = true;
 
         return PullRequestCollectionService.loadClosedPullRequests()
-        .then(() => {
-            TooltipService.setupTooltips();
-            closed_pull_requests_hidden = false;
-        })
-        .finally(() => {
-            self.loading_pull_requests = false;
-        });
+            .then(() => {
+                TooltipService.setupTooltips();
+                closed_pull_requests_hidden = false;
+            })
+            .finally(() => {
+                self.loading_pull_requests = false;
+            });
     }
 
     function areClosedPullRequestsHidden() {

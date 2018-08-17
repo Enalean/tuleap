@@ -17,38 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const selector = document.getElementById('call-me-back-message-select-language');
+document.addEventListener("DOMContentLoaded", () => {
+    const selector = document.getElementById("call-me-back-message-select-language");
 
     initCKEditor();
-    selector.addEventListener('change', switchLanguage);
+    selector.addEventListener("change", switchLanguage);
 
     function initCKEditor() {
         const messages = document.querySelectorAll('textarea[id^="call-me-back-message-"]');
 
-        for(const message of messages) {
-            const textarea_id = message.getAttribute('id');
+        for (const message of messages) {
+            const textarea_id = message.getAttribute("id");
 
             CKEDITOR.replace(textarea_id, {
                 toolbar: tuleap.ckeditor.toolbar
             });
 
-            CKEDITOR.on('instanceReady', function() {
+            CKEDITOR.on("instanceReady", function() {
                 switchLanguage();
             });
         }
     }
 
     function switchLanguage() {
-        const language_id  = selector.value,
-              cke_messages = document.querySelectorAll('div[id^="cke_call-me-back-message-"]');
+        const language_id = selector.value,
+            cke_messages = document.querySelectorAll('div[id^="cke_call-me-back-message-"]');
 
         for (const cke_message of cke_messages) {
-            if (cke_message.getAttribute('id') === "cke_call-me-back-message-" + language_id) {
-                cke_message.classList.remove('hidden');
+            if (cke_message.getAttribute("id") === "cke_call-me-back-message-" + language_id) {
+                cke_message.classList.remove("hidden");
                 cke_message.focus();
             } else {
-                cke_message.classList.add('hidden');
+                cke_message.classList.add("hidden");
             }
         }
     }

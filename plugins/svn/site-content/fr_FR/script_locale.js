@@ -1,3 +1,3 @@
-codendi.locales['plugin_svn'] = {
-    empty_version: 'Cette version est vide'
+codendi.locales["plugin_svn"] = {
+    empty_version: "Cette version est vide"
 };

@@ -1,19 +1,17 @@
-import model_module from './model.js';
-import angular      from 'angular';
-import moment       from 'moment';
-import 'angular-mocks';
+import model_module from "./model.js";
+import angular from "angular";
+import moment from "moment";
+import "angular-mocks";
 
 describe("TuleapArtifactFieldValuesService", () => {
     let FieldValuesService;
     beforeEach(() => {
         angular.mock.module(model_module);
 
-        angular.mock.inject(function(
-            _TuleapArtifactFieldValuesService_
-        ) {
+        angular.mock.inject(function(_TuleapArtifactFieldValuesService_) {
             FieldValuesService = _TuleapArtifactFieldValuesService_;
 
-            spyOn(moment.fn, 'format');
+            spyOn(moment.fn, "format");
         });
     });
 
@@ -23,43 +21,42 @@ describe("TuleapArtifactFieldValuesService", () => {
                 const artifact_values = {
                     655: { field_id: 655, value: "alumna Aurora Arpin" },
                     378: { field_id: 378, bind_value_ids: [667, 967] },
-                    320: { field_id: 320, links: [
-                        { id: 158 },
-                        { id: 434 }
-                    ]}
+                    320: {
+                        field_id: 320,
+                        links: [{ id: 158 }, { id: 434 }]
+                    }
                 };
                 const tracker = {
                     fields: [
                         {
-                            field_id     : 655,
-                            label        : "antithetically",
-                            name         : "arbusterol",
-                            type         : "string",
-                            permissions  : ["read", "update", "create"],
+                            field_id: 655,
+                            label: "antithetically",
+                            name: "arbusterol",
+                            type: "string",
+                            permissions: ["read", "update", "create"],
                             default_value: "yogasana"
-                        }, {
-                            field_id     : 728,
-                            label        : "turus",
-                            name         : "hemicycle",
-                            type         : "rb",
-                            permissions  : ["read", "update", "create"],
-                            default_value: [
-                                { id: 422, label: "unilinear" }
-                            ]
-                        }, {
-                            field_id     : 378,
-                            label        : "overplay",
-                            name         : "awaredom",
-                            type         : "sb",
-                            permissions  : ["read", "update", "create"],
-                            default_value: [
-                                { id: 967, label: "intertransmission" }
-                            ]
-                        }, {
-                            field_id   : 320,
-                            label      : "rani",
-                            name       : "troot",
-                            type       : "art_link",
+                        },
+                        {
+                            field_id: 728,
+                            label: "turus",
+                            name: "hemicycle",
+                            type: "rb",
+                            permissions: ["read", "update", "create"],
+                            default_value: [{ id: 422, label: "unilinear" }]
+                        },
+                        {
+                            field_id: 378,
+                            label: "overplay",
+                            name: "awaredom",
+                            type: "sb",
+                            permissions: ["read", "update", "create"],
+                            default_value: [{ id: 967, label: "intertransmission" }]
+                        },
+                        {
+                            field_id: 320,
+                            label: "rani",
+                            name: "troot",
+                            type: "art_link",
                             permissions: ["read", "update", "create"]
                         }
                     ]
@@ -69,29 +66,29 @@ describe("TuleapArtifactFieldValuesService", () => {
 
                 expect(output).toEqual({
                     655: {
-                        field_id   : 655,
-                        type       : "string",
+                        field_id: 655,
+                        type: "string",
                         permissions: ["read", "update", "create"],
-                        value      : "alumna Aurora Arpin"
+                        value: "alumna Aurora Arpin"
                     },
                     728: {
-                        field_id      : 728,
+                        field_id: 728,
                         bind_value_ids: [422],
-                        type          : "rb",
-                        permissions   : ["read", "update", "create"]
+                        type: "rb",
+                        permissions: ["read", "update", "create"]
                     },
                     378: {
-                        field_id      : 378,
+                        field_id: 378,
                         bind_value_ids: [667, 967],
-                        type          : "sb",
-                        permissions   : ["read", "update", "create"]
+                        type: "sb",
+                        permissions: ["read", "update", "create"]
                     },
                     320: {
-                        field_id         : 320,
-                        links            : [{}],
-                        unformatted_links: '158, 434',
-                        type             : "art_link",
-                        permissions      : ["read", "update", "create"]
+                        field_id: 320,
+                        links: [{}],
+                        unformatted_links: "158, 434",
+                        type: "art_link",
+                        permissions: ["read", "update", "create"]
                     }
                 });
             });
@@ -101,21 +98,28 @@ describe("TuleapArtifactFieldValuesService", () => {
                     280: { field_id: 280, value: 271 },
                     973: { field_id: 973, value: 436 },
                     9: { field_id: 9, value: "2015-06-10T13:38:57+02:00" },
-                    316: { field_id: 316, value: {
-                        duration: 85,
-                        capacity: 79,
-                        points: [11.52, 87.50, 70.65]
-                    } },
+                    316: {
+                        field_id: 316,
+                        value: {
+                            duration: 85,
+                            capacity: 79,
+                            points: [11.52, 87.5, 70.65]
+                        }
+                    },
                     188: { field_id: 188, value: 691 },
                     183: { field_id: 183, value: "Juli Devens" },
                     586: { field_id: 586, value: "Gizmo Gremlin" },
                     89: { field_id: 89, value: "2015-06-10T13:26:51+02:00" },
-                    906: { field_id: 906, value: [
-                        {
-                            ref: "story #973",
-                            url: "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid"
-                        }
-                    ]}
+                    906: {
+                        field_id: 906,
+                        value: [
+                            {
+                                ref: "story #973",
+                                url:
+                                    "https://onychotrophy.com/wealden/organing?a=pharmacometer&b=terribleness#viscid"
+                            }
+                        ]
+                    }
                 };
                 var tracker = {
                     fields: [
@@ -199,31 +203,31 @@ describe("TuleapArtifactFieldValuesService", () => {
                 var artifact_values = {
                     901: {
                         field_id: 901,
-                        format  : "HTML",
-                        type    : "text",
-                        value   : "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
+                        format: "HTML",
+                        type: "text",
+                        value: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>"
                     }
                 };
                 var tracker = {
                     fields: [
                         {
-                            field_id   : 901,
-                            label      : "holard",
-                            name       : "flueless",
+                            field_id: 901,
+                            label: "holard",
+                            name: "flueless",
                             permissions: ["read", "update", "create"],
-                            type       : "text"
+                            type: "text"
                         }
                     ]
                 };
                 var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
                 expect(output).toEqual({
                     901: {
-                        field_id   : 901,
-                        type       : "text",
+                        field_id: 901,
+                        type: "text",
                         permissions: ["read", "update", "create"],
-                        value      : {
+                        value: {
                             content: "<p><b>Cleta</b> Goetsch bicipital <em>xylophagid</em></p>",
-                            format : "HTML"
+                            format: "HTML"
                         }
                     }
                 });
@@ -296,7 +300,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "loft",
                             permissions: ["read", "update", "create"],
                             type: "int"
-                        }, {
+                        },
+                        {
                             field_id: 775,
                             label: "phalacrocoracine",
                             name: "unvariant",
@@ -332,7 +337,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                             permissions: ["read", "update", "create"],
                             type: "float",
                             default_value: "68.8596"
-                        }, {
+                        },
+                        {
                             field_id: 220,
                             label: "formel",
                             name: "hodograph",
@@ -387,7 +393,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             it("with the time displayed and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the formatted artifact value will be returned", function() {
                 var artifact_values = {
                     609: { field_id: 609, value: "2015-06-02T18:09:43+03:00" }
-               };
+                };
                 var tracker = {
                     fields: [
                         {
@@ -451,7 +457,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                 };
                 var output = FieldValuesService.getSelectedValues({}, tracker);
                 expect(output).toEqual({
-                    87:  {
+                    87: {
                         field_id: 87,
                         bind_value_ids: [100],
                         type: "sb",
@@ -469,9 +475,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "boatmaster",
                             permissions: ["read", "update", "create"],
                             type: "sb",
-                            default_value: [
-                                { id: 941, label: "hair" }
-                            ]
+                            default_value: [{ id: 941, label: "hair" }]
                         }
                     ]
                 };
@@ -495,9 +499,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                             name: "university",
                             permissions: ["read", "update", "create"],
                             type: "sb",
-                            default_value: [
-                                { id: 807, label: "uniflow" }
-                            ],
+                            default_value: [{ id: 807, label: "uniflow" }],
                             values: [
                                 { id: 412, label: "entosphenoid" },
                                 { id: 182, label: "trisul" }
@@ -581,8 +583,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                             permissions: ["read", "update", "create"],
                             type: "msb",
                             default_value: [
-                                { id: 196, label: "Polythalamia"},
-                                { id: 800, label: "teleanemograph"}
+                                { id: 196, label: "Polythalamia" },
+                                { id: 800, label: "teleanemograph" }
                             ]
                         }
                     ]
@@ -799,19 +801,19 @@ describe("TuleapArtifactFieldValuesService", () => {
         it("and given a map of artifact field values containing that field, when I get the fields' selected values, then a map of objects containing the artifact's granted groups and is_used_by_default will be returned", function() {
             var artifact_values = {
                 904: {
-                    field_id      : 904,
+                    field_id: 904,
                     granted_groups: ["2", "101_3", "103"]
                 }
             };
             var tracker = {
                 fields: [
                     {
-                        field_id   : 904,
-                        label      : "unrenownedly",
-                        name       : "recolonize",
+                        field_id: 904,
+                        label: "unrenownedly",
+                        name: "recolonize",
                         permissions: ["read", "update", "create"],
-                        type       : "perm",
-                        values     : {
+                        type: "perm",
+                        values: {
                             is_used_by_default: false
                         }
                     }
@@ -820,12 +822,12 @@ describe("TuleapArtifactFieldValuesService", () => {
             var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 904: {
-                    field_id   : 904,
-                    type       : "perm",
+                    field_id: 904,
+                    type: "perm",
                     permissions: ["read", "update", "create"],
-                    value      : {
+                    value: {
                         is_used_by_default: false,
-                        granted_groups    : ["2", "101_3", "103"]
+                        granted_groups: ["2", "101_3", "103"]
                     }
                 }
             });
@@ -835,12 +837,12 @@ describe("TuleapArtifactFieldValuesService", () => {
             var tracker = {
                 fields: [
                     {
-                        field_id   : 662,
-                        label      : "disprobabilization",
-                        name       : "melanosed",
+                        field_id: 662,
+                        label: "disprobabilization",
+                        name: "melanosed",
                         permissions: ["read", "update", "create"],
-                        type       : "perm",
-                        values     : {
+                        type: "perm",
+                        values: {
                             is_used_by_default: true
                         }
                     }
@@ -849,12 +851,12 @@ describe("TuleapArtifactFieldValuesService", () => {
             var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 662: {
-                    field_id   : 662,
-                    type       : "perm",
+                    field_id: 662,
+                    type: "perm",
                     permissions: ["read", "update", "create"],
-                    value      : {
+                    value: {
                         is_used_by_default: true,
-                        granted_groups    : []
+                        granted_groups: []
                     }
                 }
             });
@@ -866,10 +868,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             var artifact_values = {
                 103: {
                     field_id: 103,
-                    file_descriptions: [
-                        { id: 4 },
-                        { id: 9 }
-                    ],
+                    file_descriptions: [{ id: 4 }, { id: 9 }],
                     type: "file"
                 }
             };
@@ -888,10 +887,7 @@ describe("TuleapArtifactFieldValuesService", () => {
             expect(output).toEqual({
                 103: {
                     field_id: 103,
-                    file_descriptions: [
-                        { id: 4 },
-                        { id: 9 }
-                    ],
+                    file_descriptions: [{ id: 4 }, { id: 9 }],
                     type: "file",
                     temporary_files: [
                         {
@@ -939,32 +935,32 @@ describe("TuleapArtifactFieldValuesService", () => {
         it("and given a map of artifact field values containing that field, when I get the field's selected values, then a map of objects containing the fields' id and its value will be returned", function() {
             var artifact_values = {
                 665: {
-                    field_id       : 665,
+                    field_id: 665,
                     is_autocomputed: false,
-                    manual_value   : 5,
-                    type           : "computed",
-                    value          : null
+                    manual_value: 5,
+                    type: "computed",
+                    value: null
                 }
             };
             var tracker = {
                 fields: [
                     {
-                        field_id   : 665,
-                        label      : "propolis",
-                        name       : "chrysobull",
+                        field_id: 665,
+                        label: "propolis",
+                        name: "chrysobull",
                         permissions: ["read", "update", "create"],
-                        type       : "computed"
+                        type: "computed"
                     }
                 ]
             };
             var output = FieldValuesService.getSelectedValues(artifact_values, tracker);
             expect(output).toEqual({
                 665: {
-                    field_id       : 665,
+                    field_id: 665,
                     is_autocomputed: false,
-                    manual_value   : 5,
-                    permissions    : ["read", "update", "create"],
-                    type           : "computed"
+                    manual_value: 5,
+                    permissions: ["read", "update", "create"],
+                    type: "computed"
                 }
             });
         });
@@ -973,22 +969,22 @@ describe("TuleapArtifactFieldValuesService", () => {
             var tracker = {
                 fields: [
                     {
-                        field_id   : 304,
-                        label      : "pommey",
-                        name       : "peepy",
+                        field_id: 304,
+                        label: "pommey",
+                        name: "peepy",
                         permissions: ["read", "update", "create"],
-                        type       : "computed"
+                        type: "computed"
                     }
                 ]
             };
             var output = FieldValuesService.getSelectedValues({}, tracker);
             expect(output).toEqual({
                 304: {
-                    field_id       : 304,
+                    field_id: 304,
                     is_autocomputed: true,
-                    permissions    : ["read", "update", "create"],
-                    type           : "computed",
-                    manual_value   : null
+                    permissions: ["read", "update", "create"],
+                    type: "computed",
+                    manual_value: null
                 }
             });
         });
@@ -1004,7 +1000,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                             id: 689,
                             label: "periscopism",
                             is_hidden: false
-                        }, {
+                        },
+                        {
                             id: 145,
                             label: "distinguisher",
                             is_hidden: false
@@ -1026,7 +1023,7 @@ describe("TuleapArtifactFieldValuesService", () => {
                         type: "tbl",
                         values: [
                             { id: 689, label: "periscopism", is_hidden: false },
-                            { id: 145, label: "distinguisher", is_hidden: false}
+                            { id: 145, label: "distinguisher", is_hidden: false }
                         ]
                     }
                 ]
@@ -1044,7 +1041,8 @@ describe("TuleapArtifactFieldValuesService", () => {
                                 id: 689,
                                 label: "periscopism",
                                 is_hidden: false
-                            }, {
+                            },
+                            {
                                 id: 145,
                                 label: "distinguisher",
                                 is_hidden: false

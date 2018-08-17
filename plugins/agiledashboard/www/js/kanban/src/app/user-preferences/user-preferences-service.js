@@ -1,6 +1,6 @@
 export default UserPreferencesService;
 
-UserPreferencesService.$inject = ['Restangular', '$q'];
+UserPreferencesService.$inject = ["Restangular", "$q"];
 
 function UserPreferencesService(Restangular, $q) {
     return {
@@ -8,11 +8,10 @@ function UserPreferencesService(Restangular, $q) {
     };
 
     function setPreference(user_id, key, value) {
-        return Restangular
-            .one('users', user_id)
-            .all('preferences')
+        return Restangular.one("users", user_id)
+            .all("preferences")
             .patch({
-                key  : key,
+                key: key,
                 value: value
             });
     }

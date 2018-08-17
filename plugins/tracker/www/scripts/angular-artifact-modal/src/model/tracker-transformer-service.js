@@ -1,12 +1,12 @@
-import _ from 'lodash';
-import { copy, isUndefined } from 'angular';
+import _ from "lodash";
+import { copy, isUndefined } from "angular";
 
 export default TuleapArtifactModalTrackerTransformerService;
 
 TuleapArtifactModalTrackerTransformerService.$inject = [
-    '$filter',
-    'TuleapArtifactModalAwkwardCreationFields',
-    'TuleapArtifactModalStructuralFields'
+    "$filter",
+    "TuleapArtifactModalAwkwardCreationFields",
+    "TuleapArtifactModalStructuralFields"
 ];
 
 function TuleapArtifactModalTrackerTransformerService(
@@ -16,7 +16,7 @@ function TuleapArtifactModalTrackerTransformerService(
 ) {
     var self = this;
     self.addFieldValuesToTracker = addFieldValuesToTracker;
-    self.transform               = transform;
+    self.transform = transform;
 
     function transform(tracker, creation_mode) {
         var transformed_tracker = copy(tracker);
@@ -26,7 +26,9 @@ function TuleapArtifactModalTrackerTransformerService(
         }
 
         if (hasFieldDependenciesRules(transformed_tracker)) {
-            transformed_tracker.workflow.rules.lists = transformFieldDependenciesRules(transformed_tracker);
+            transformed_tracker.workflow.rules.lists = transformFieldDependenciesRules(
+                transformed_tracker
+            );
         }
 
         transformed_tracker.fields = transformFields(transformed_tracker.fields);
@@ -38,17 +40,18 @@ function TuleapArtifactModalTrackerTransformerService(
         var filtered_fields = _.reject(all_fields, function(field) {
             return _(TuleapArtifactModalAwkwardCreationFields).contains(field.type);
         });
-        var filtered_fields_without_creation_permissions = excludeFieldsWithoutCreationPermissions(filtered_fields);
+        var filtered_fields_without_creation_permissions = excludeFieldsWithoutCreationPermissions(
+            filtered_fields
+        );
 
         return filtered_fields_without_creation_permissions;
     }
 
-
     function excludeFieldsWithoutCreationPermissions(fields) {
         var fields_with_create_permissions = _.filter(fields, function(field) {
             var structural_field = fieldIsAStructuralField(field);
-            if (! structural_field) {
-                return _.contains(field.permissions, 'create');
+            if (!structural_field) {
+                return _.contains(field.permissions, "create");
             }
             return true;
         });
@@ -68,30 +71,30 @@ function TuleapArtifactModalTrackerTransformerService(
 
     function transformField(field) {
         switch (field.type) {
-            case 'sb':
-                field.values          = filterHiddenValues(field.values);
-                field.values          = displayI18NLabelIfAvailable(field.values);
-                field.values          = addNoneValue(field);
+            case "sb":
+                field.values = filterHiddenValues(field.values);
+                field.values = displayI18NLabelIfAvailable(field.values);
+                field.values = addNoneValue(field);
                 field.filtered_values = copy(field.values);
                 break;
-            case 'msb':
-                field.values          = filterHiddenValues(field.values);
-                field.values          = displayI18NLabelIfAvailable(field.values);
-                field.values          = addNoneValue(field);
+            case "msb":
+                field.values = filterHiddenValues(field.values);
+                field.values = displayI18NLabelIfAvailable(field.values);
+                field.values = addNoneValue(field);
                 field.filtered_values = copy(field.values);
                 break;
-            case 'cb':
-            case 'rb':
+            case "cb":
+            case "rb":
                 field.values = filterHiddenValues(field.values);
                 field.values = displayI18NLabelIfAvailable(field.values);
                 break;
-            case 'tbl':
-                if (field.bindings.type === 'users' || ! field.values) {
+            case "tbl":
+                if (field.bindings.type === "users" || !field.values) {
                     field.values = [];
                 }
                 field.loading = false;
                 break;
-            case 'computed':
+            case "computed":
                 field.value = null;
                 break;
             default:
@@ -109,9 +112,8 @@ function TuleapArtifactModalTrackerTransformerService(
         _.map(field_values, function(value) {
             if (value.user_reference !== undefined) {
                 value.label = value.user_reference.real_name;
-
             } else if (value.ugroup_reference !== undefined) {
-                value.id    = value.ugroup_reference.id;
+                value.id = value.ugroup_reference.id;
                 value.label = value.ugroup_reference.label;
             }
         });
@@ -120,11 +122,11 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function addNoneValue(field) {
-        if (! field.required && ! field.has_transitions) {
-            var translateFilter = $filter('translate');
+        if (!field.required && !field.has_transitions) {
+            var translateFilter = $filter("translate");
             field.values.unshift({
                 id: 100,
-                label: translateFilter('None')
+                label: translateFilter("None")
             });
         }
 
@@ -133,46 +135,46 @@ function TuleapArtifactModalTrackerTransformerService(
 
     function hasFieldDependenciesRules(tracker) {
         return (
-            _.has(tracker, 'workflow') &&
-            _.has(tracker.workflow, 'rules') &&
-            _.has(tracker.workflow.rules, 'lists')
+            _.has(tracker, "workflow") &&
+            _.has(tracker.workflow, "rules") &&
+            _.has(tracker.workflow.rules, "lists")
         );
     }
 
     function transformFieldDependenciesRules(tracker) {
-        var new_rules               = copy(tracker.workflow.rules.lists);
-        var fields                  = copy(tracker.fields);
+        var new_rules = copy(tracker.workflow.rules.lists);
+        var fields = copy(tracker.fields);
         var fields_bound_to_ugroups = getListFieldsBoundToUgroups(fields);
 
-        _(new_rules)
-            .map(function(rule) {
-                var source_field = fields_bound_to_ugroups[rule.source_field_id];
-                rule             = replaceSourceFieldValueIdWithUgroupReferenceId(rule, source_field);
+        _(new_rules).map(function(rule) {
+            var source_field = fields_bound_to_ugroups[rule.source_field_id];
+            rule = replaceSourceFieldValueIdWithUgroupReferenceId(rule, source_field);
 
-                var target_field = fields_bound_to_ugroups[rule.target_field_id];
-                rule             = replaceTargetFieldValueIdWithUgroupReferenceId(rule, target_field);
+            var target_field = fields_bound_to_ugroups[rule.target_field_id];
+            rule = replaceTargetFieldValueIdWithUgroupReferenceId(rule, target_field);
 
-                return rule;
-            });
+            return rule;
+        });
 
         return new_rules;
     }
 
     function getListFieldsBoundToUgroups(fields) {
         return _(fields)
-            .filter({ bindings: { type: 'ugroups' } })
+            .filter({ bindings: { type: "ugroups" } })
             .map(function(field) {
-                field.values = _.indexBy(field.values, 'id');
+                field.values = _.indexBy(field.values, "id");
 
                 return field;
             })
-            .indexBy('field_id')
+            .indexBy("field_id")
             .value();
     }
 
     function replaceSourceFieldValueIdWithUgroupReferenceId(field_dependency_rule, source_field) {
         if (source_field && field_dependency_rule.source_value_id !== 100) {
-            field_dependency_rule.source_value_id = source_field.values[field_dependency_rule.source_value_id].ugroup_reference.id;
+            field_dependency_rule.source_value_id =
+                source_field.values[field_dependency_rule.source_value_id].ugroup_reference.id;
         }
 
         return field_dependency_rule;
@@ -180,7 +182,8 @@ function TuleapArtifactModalTrackerTransformerService(
 
     function replaceTargetFieldValueIdWithUgroupReferenceId(field_dependency_rule, target_field) {
         if (target_field && field_dependency_rule.target_value_id !== 100) {
-            field_dependency_rule.target_value_id = target_field.values[field_dependency_rule.target_value_id].ugroup_reference.id;
+            field_dependency_rule.target_value_id =
+                target_field.values[field_dependency_rule.target_value_id].ugroup_reference.id;
         }
 
         return field_dependency_rule;
@@ -190,7 +193,7 @@ function TuleapArtifactModalTrackerTransformerService(
         var transformed_fields = _.map(tracker.fields, function(field) {
             var artifact_value = artifact_values[field.field_id];
 
-            if (! artifact_value) {
+            if (!artifact_value) {
                 return field;
             }
 
@@ -198,11 +201,11 @@ function TuleapArtifactModalTrackerTransformerService(
             switch (true) {
                 case isAwkwardFieldForCration(field.type):
                     return addReadOnlyFieldValueToTracker(field, artifact_value);
-                case (field.type === 'perm'):
+                case field.type === "perm":
                     return addPermissionFieldValueToTracker(field, artifact_value);
-                case (field.type === 'file'):
+                case field.type === "file":
                     return addFileFieldValueToTracker(field, artifact_value);
-                case (field.type === 'computed'):
+                case field.type === "computed":
                     return addComputedFieldValueToTracker(field, artifact_value);
                 default:
                     break;
@@ -230,14 +233,14 @@ function TuleapArtifactModalTrackerTransformerService(
 
     function addPermissionFieldValueToTracker(field, artifact_value) {
         if (artifact_value.granted_groups) {
-            field.values.is_used_by_default = ! _.isEmpty(artifact_value.granted_groups);
+            field.values.is_used_by_default = !_.isEmpty(artifact_value.granted_groups);
         }
 
         return field;
     }
 
     function addFileFieldValueToTracker(field, artifact_value) {
-        if (! artifact_value.file_descriptions) {
+        if (!artifact_value.file_descriptions) {
             return field;
         }
 

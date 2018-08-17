@@ -22,40 +22,47 @@
  * it inserts the given string into the first element of class feedback_ in the current page
  */
 
-var codendi = codendi || { };
+var codendi = codendi || {};
 
 codendi.feedback = {
-    log: function (level, msg) {
-        var feedback = $('feedback');
+    log: function(level, msg) {
+        var feedback = $("feedback");
 
-        if (! feedback) {
-            var main = $$('main')[0];
-            feedback = new Element('div', {id: 'feedback'});
+        if (!feedback) {
+            var main = $$("main")[0];
+            feedback = new Element("div", { id: "feedback" });
 
             if (main) {
-                main.insert({top: feedback});
-
+                main.insert({ top: feedback });
             } else {
-                var content = $$('.main .content')[0];
+                var content = $$(".main .content")[0];
 
                 if (content) {
-                    content.insert({before: feedback});
+                    content.insert({ before: feedback });
                 } else {
-                    alert(level + ': ' + msg);
+                    alert(level + ": " + msg);
                     return;
                 }
             }
         }
 
         var current = null;
-        if (feedback.childElements().size() && (current = feedback.childElements().reverse(0)[0]) && current.hasClassName('feedback_' + level)) {
-            current.insert(new Element('li').update(msg));
+        if (
+            feedback.childElements().size() &&
+            (current = feedback.childElements().reverse(0)[0]) &&
+            current.hasClassName("feedback_" + level)
+        ) {
+            current.insert(new Element("li").update(msg));
         } else {
-            feedback.insert(new Element('ul').addClassName('feedback_'+level).insert(new Element('li').update(msg)));
+            feedback.insert(
+                new Element("ul")
+                    .addClassName("feedback_" + level)
+                    .insert(new Element("li").update(msg))
+            );
         }
     },
-    clear: function () {
-        var feedback = $('feedback');
+    clear: function() {
+        var feedback = $("feedback");
         if (feedback) {
             feedback.remove();
         }

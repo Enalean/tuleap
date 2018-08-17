@@ -16,43 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import moment from 'moment';
+import moment from "moment";
 
-export {
-    getDaysToDisplay,
-    getGranularity,
-    getDifference,
-    getFormattedDates
-};
+export { getDaysToDisplay, getGranularity, getDifference, getFormattedDates };
 
 function getDaysToDisplay({ opening_days, duration, points_with_date, start_date }) {
-    const dates           = [];
-    const start           = (points_with_date.length) ? points_with_date[0].date : start_date;
+    const dates = [];
+    const start = points_with_date.length ? points_with_date[0].date : start_date;
     const moment_iterator = moment(start, moment.ISO_8601);
 
     let i = 0;
 
     do {
         if (opening_days.includes(moment_iterator.isoWeekday())) {
-            dates.push(moment_iterator.format('YYYY-MM-DD'));
+            dates.push(moment_iterator.format("YYYY-MM-DD"));
             i++;
         }
 
-        moment_iterator.add(1, 'day');
+        moment_iterator.add(1, "day");
     } while (i <= duration);
 
     return dates;
 }
 
 function getGranularity(start_date, end_date) {
-    const DAY = 'day',
-        WEEK  = 'week',
-        MONTH = 'month';
+    const DAY = "day",
+        WEEK = "week",
+        MONTH = "month";
 
-    const {
-        weeks,
-        months
-    } = getDifference(start_date, end_date);
+    const { weeks, months } = getDifference(start_date, end_date);
 
     switch (true) {
         case months >= 3:
@@ -65,22 +57,22 @@ function getGranularity(start_date, end_date) {
 }
 
 function getDifference(start_date, end_date) {
-    const start      = moment(start_date, moment.ISO_8601);
-    const end        = moment(end_date, moment.ISO_8601);
-    const difference = moment.duration(end.diff(start, 'days'), 'days');
+    const start = moment(start_date, moment.ISO_8601);
+    const end = moment(end_date, moment.ISO_8601);
+    const difference = moment.duration(end.diff(start, "days"), "days");
 
     return {
-        days  : Math.trunc(difference.as('days')),
-        weeks : Math.trunc(difference.as('weeks')),
-        months: Math.trunc(difference.as('months'))
+        days: Math.trunc(difference.as("days")),
+        weeks: Math.trunc(difference.as("weeks")),
+        months: Math.trunc(difference.as("months"))
     };
 }
 
 function getFormattedDates(dataset) {
     dataset.forEach(data => {
         data.date = moment(data.date, moment.ISO_8601)
-            .endOf('day')
-            .format('YYYY-MM-DD');
+            .endOf("day")
+            .format("YYYY-MM-DD");
     });
 
     return dataset;

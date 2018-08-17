@@ -1,6 +1,6 @@
-import artifact_modal_module from './tuleap-artifact-modal.js';
-import angular from 'angular';
-import 'angular-mocks';
+import artifact_modal_module from "./tuleap-artifact-modal.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", function() {
     var ValidateService, creation_mode;
@@ -23,20 +23,20 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     field_id: 620,
                     permissions: ["read"],
                     value: "Meg Hinkston"
-                }, {
+                },
+                {
                     field_id: 17,
                     permissions: ["create"],
                     value: "Sharen Wikstrom"
-                }, {
+                },
+                {
                     field_id: 503,
                     permissions: ["update"],
                     value: "Kasie Steppello"
                 }
             ];
             var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-            expect(output).toEqual([
-                { field_id: 503, value: "Kasie Steppello" }
-            ]);
+            expect(output).toEqual([{ field_id: 503, value: "Kasie Steppello" }]);
         });
 
         it("and given an array containing field data including empty string, null and undefined values, when I validate the fields data, then an object containing only fields whose value is defined will be returned", function() {
@@ -45,23 +45,28 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     field_id: 422,
                     permissions: ["update"],
                     value: null
-                }, {
+                },
+                {
                     field_id: 967,
                     permissions: ["update"],
                     value: "petrogenic"
-                }, {
+                },
+                {
                     field_id: 768,
                     permissions: ["update"],
                     value: undefined
-                }, {
+                },
+                {
                     field_id: 847,
                     permissions: ["update"],
                     value: 1.37765
-                }, {
+                },
+                {
                     field_id: 328,
                     permissions: ["update"],
                     value: ""
-                }, {
+                },
+                {
                     field_id: 898,
                     permissions: ["update"]
                 }
@@ -87,20 +92,20 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     field_id: 907,
                     permissions: ["read"],
                     value: "Claud Shein"
-                }, {
+                },
+                {
                     field_id: 939,
                     permissions: ["create"],
                     value: "Tyesha Schatzman"
-                }, {
+                },
+                {
                     field_id: 597,
                     permissions: ["update"],
                     value: "Malorie Labossiere"
                 }
             ];
             var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-            expect(output).toEqual([
-                { field_id: 939, value: "Tyesha Schatzman" }
-            ]);
+            expect(output).toEqual([{ field_id: 939, value: "Tyesha Schatzman" }]);
         });
 
         it("and given an array containing date, int, fload and string fields with null values, when I validate the fields data, then an object containing all the fields' values as empty strings will be returned", function() {
@@ -110,17 +115,20 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     type: "int",
                     permissions: ["create"],
                     value: null
-                }, {
+                },
+                {
                     field_id: 257,
                     type: "float",
                     permissions: ["create"],
                     value: null
-                }, {
+                },
+                {
                     field_id: 195,
                     type: "date",
                     permissions: ["create"],
                     value: null
-                }, {
+                },
+                {
                     field_id: 461,
                     type: "string",
                     permissions: ["create"],
@@ -142,15 +150,18 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     field_id: 87,
                     bind_value_ids: null,
                     permissions: ["create"]
-                }, {
+                },
+                {
                     field_id: 597,
                     bind_value_ids: [],
                     permissions: ["create"]
-                }, {
+                },
+                {
                     field_id: 785,
                     bind_value_ids: [787, 857],
                     permissions: ["create"]
-                }, {
+                },
+                {
                     field_id: 180,
                     permissions: ["create"]
                 }
@@ -171,9 +182,7 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                 }
             ];
             var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-            expect(output).toEqual([
-                { field_id: 643, bind_value_ids: [840, 959] }
-            ]);
+            expect(output).toEqual([{ field_id: 643, bind_value_ids: [840, 959] }]);
         });
 
         it("and given an array containing a file field with an empty value array, when I validate the fields, then the returned object will not contain the file field", function() {
@@ -183,7 +192,8 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                     type: "int",
                     permissions: ["create"],
                     value: 1
-                },{
+                },
+                {
                     field_id: 837,
                     type: "file",
                     permissions: ["create"],
@@ -191,9 +201,7 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                 }
             ];
             var output = ValidateService.validateArtifactFieldsValues(input, creation_mode);
-            expect(output).toEqual([
-                { field_id: 166, value: 1 }
-            ]);
+            expect(output).toEqual([{ field_id: 166, value: 1 }]);
         });
 
         describe("and given an array containing an artifact link field and", function() {
@@ -215,10 +223,7 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                 expect(output).toEqual([
                     {
                         field_id: 986,
-                        links: [
-                            { id: 202 },
-                            { id: 584 }
-                        ]
+                        links: [{ id: 202 }, { id: 584 }]
                     }
                 ]);
             });
@@ -227,9 +232,7 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                 var input = [
                     {
                         field_id: 162,
-                        links: [
-                            { id: 18 }
-                        ],
+                        links: [{ id: 18 }],
                         permissions: ["create"],
                         unformatted_links: "text,650, 673"
                     }
@@ -238,11 +241,7 @@ describe("TuleapArtifactModalValidateService validateArtifactFieldsValues() -", 
                 expect(output).toEqual([
                     {
                         field_id: 162,
-                        links: [
-                            { id: 18 },
-                            { id: 650 },
-                            { id: 673 }
-                        ]
+                        links: [{ id: 18 }, { id: 650 }, { id: 673 }]
                     }
                 ]);
             });

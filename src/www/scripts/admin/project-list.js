@@ -15,10 +15,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { dropdown } from 'tlp';
+import { dropdown } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const dropdown_triggers = document.querySelectorAll('.siteadmin-projectlist-result-project-more');
+document.addEventListener("DOMContentLoaded", () => {
+    const dropdown_triggers = document.querySelectorAll(
+        ".siteadmin-projectlist-result-project-more"
+    );
 
     [].forEach.call(dropdown_triggers, dropdown_trigger => {
         dropdown(dropdown_trigger);

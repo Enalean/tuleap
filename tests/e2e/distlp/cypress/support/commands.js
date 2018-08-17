@@ -18,7 +18,7 @@
  */
 
 Cypress.Commands.add("login", () => {
-    cy.visit('/');
-    cy.get('#form_loginname').type('alice');
-    cy.get('#form_pw').type('Correct Horse Battery Staple{enter}');
+    cy.visit("/");
+    cy.get("#form_loginname").type("alice");
+    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
 });

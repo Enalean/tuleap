@@ -1,7 +1,6 @@
-import angular from 'angular';
+import angular from "angular";
 
-import ItemAnimatorService from './item-animator-service.js';
+import ItemAnimatorService from "./item-animator-service.js";
 
-export default angular.module('animator', [])
-.service('ItemAnimatorService', ItemAnimatorService)
-.name;
+export default angular.module("animator", []).service("ItemAnimatorService", ItemAnimatorService)
+    .name;

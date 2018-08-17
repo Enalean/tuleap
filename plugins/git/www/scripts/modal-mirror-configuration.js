@@ -17,24 +17,25 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-(function () {
-    'use strict';
+(function() {
+    "use strict";
 
-    var button_selectors = '#button-modal-mirror-configuration, \
+    var button_selectors =
+            "#button-modal-mirror-configuration, \
             .mirror-show-repositories, \
             .mirror-action-delete-button, \
-            .mirror-action-edit-button',
+            .mirror-action-edit-button",
         matching_buttons = document.querySelectorAll(button_selectors);
 
-    [].forEach.call(matching_buttons, function (button) {
+    [].forEach.call(matching_buttons, function(button) {
         var modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
             var modal = tlp.modal(modal_element);
 
-            button.addEventListener('click', function () {
+            button.addEventListener("click", function() {
                 modal.toggle();
             });
         }
     });
-} ());
+})();

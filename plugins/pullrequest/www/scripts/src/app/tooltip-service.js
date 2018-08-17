@@ -1,14 +1,10 @@
-import { loadTooltips } from 'tuleap-core/codendi/Tooltip.js';
+import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 
 export default TooltipService;
 
-TooltipService.$inject = [
-    '$timeout'
-];
+TooltipService.$inject = ["$timeout"];
 
-function TooltipService(
-    $timeout
-) {
+function TooltipService($timeout) {
     const self = this;
 
     self.setupTooltips = function() {

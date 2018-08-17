@@ -1,44 +1,42 @@
 export default ProjectService;
 
-ProjectService.$inject = [
-    'Restangular'
-];
+ProjectService.$inject = ["Restangular"];
 
-function ProjectService(
-    Restangular
-) {
+function ProjectService(Restangular) {
     return {
-        reorderBacklog           : reorderBacklog,
-        getProject               : getProject,
-        getProjectBacklog        : getProjectBacklog,
+        reorderBacklog: reorderBacklog,
+        getProject: getProject,
+        getProjectBacklog: getProjectBacklog,
         removeAddReorderToBacklog: removeAddReorderToBacklog,
-        removeAddToBacklog       : removeAddToBacklog
+        removeAddToBacklog: removeAddToBacklog
     };
 
     function reorderBacklog(project_id, dropped_item_ids, compared_to) {
-        return getRest('v1').one('projects', project_id)
-            .all('backlog')
+        return getRest("v1")
+            .one("projects", project_id)
+            .all("backlog")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 }
             });
     }
 
     function removeAddReorderToBacklog(milestone_id, project_id, dropped_item_ids, compared_to) {
-        return getRest('v1').one('projects', project_id)
-            .all('backlog')
+        return getRest("v1")
+            .one("projects", project_id)
+            .all("backlog")
             .patch({
                 order: {
-                    ids        : dropped_item_ids,
-                    direction  : compared_to.direction,
+                    ids: dropped_item_ids,
+                    direction: compared_to.direction,
                     compared_to: compared_to.item_id
                 },
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: milestone_id
                     };
                 })
@@ -46,12 +44,13 @@ function ProjectService(
     }
 
     function removeAddToBacklog(milestone_id, project_id, dropped_item_ids) {
-        return getRest('v1').one('projects', project_id)
-            .all('backlog')
+        return getRest("v1")
+            .one("projects", project_id)
+            .all("backlog")
             .patch({
                 add: _.map(dropped_item_ids, function(dropped_item_id) {
                     return {
-                        id         : dropped_item_id,
+                        id: dropped_item_id,
                         remove_from: milestone_id
                     };
                 })
@@ -59,7 +58,9 @@ function ProjectService(
     }
 
     function getProject(project_id) {
-        return getRest('v1').one('projects', project_id).get();
+        return getRest("v1")
+            .one("projects", project_id)
+            .get();
     }
 
     function getProjectBacklog(project_id) {
@@ -67,17 +68,20 @@ function ProjectService(
          * Use a string for the limit so that the server doesn't recognise a false value
          * and replace it with the default value. This means the response time is much faster.
          */
-        var limit = '00';
+        var limit = "00";
 
-        var promise = getRest('v2').one('projects', project_id)
-            .one('backlog').get({
-                limit : limit,
+        var promise = getRest("v2")
+            .one("projects", project_id)
+            .one("backlog")
+            .get({
+                limit: limit,
                 offset: 0
             })
             .then(function(response) {
                 var result = {
-                    allowed_backlog_item_types         : getAllowedBacklogItemTypes(response.data),
-                    has_user_priority_change_permission: response.data.has_user_priority_change_permission
+                    allowed_backlog_item_types: getAllowedBacklogItemTypes(response.data),
+                    has_user_priority_change_permission:
+                        response.data.has_user_priority_change_permission
                 };
 
                 return result;
@@ -88,18 +92,18 @@ function ProjectService(
 
     function getAllowedBacklogItemTypes(data) {
         const allowed_trackers = data.accept.trackers;
-        const parent_trackers  = data.accept.parent_trackers;
+        const parent_trackers = data.accept.parent_trackers;
 
         const accepted_types = {
-            content : allowed_trackers,
+            content: allowed_trackers,
             parent_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {
-                    accept.push('trackerId' + allowed_tracker.id);
+                    accept.push("trackerId" + allowed_tracker.id);
                 });
 
-                return accept.join('|');
+                return accept.join("|");
             }
         };
 
@@ -109,7 +113,7 @@ function ProjectService(
     function getRest(version) {
         return Restangular.withConfig(function(RestangularConfigurer) {
             RestangularConfigurer.setFullResponse(true);
-            RestangularConfigurer.setBaseUrl('/api/' + version);
+            RestangularConfigurer.setBaseUrl("/api/" + version);
         });
     }
 }

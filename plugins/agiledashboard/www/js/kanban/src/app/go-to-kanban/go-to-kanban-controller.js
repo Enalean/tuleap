@@ -1,12 +1,8 @@
 export default GoToKanbanController;
 
-GoToKanbanController.$inject = [
-    'SharedPropertiesService',
-];
+GoToKanbanController.$inject = ["SharedPropertiesService"];
 
-function GoToKanbanController(
-    SharedPropertiesService
-) {
+function GoToKanbanController(SharedPropertiesService) {
     var self = this;
 
     self.kanban_url = SharedPropertiesService.getKanbanUrl();

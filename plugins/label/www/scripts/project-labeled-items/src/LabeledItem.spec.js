@@ -17,25 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
-import LabeledItem from './LabeledItem.vue';
+import Vue from "vue";
+import LabeledItem from "./LabeledItem.vue";
 
-describe('LabeledItem', function() {
-    it('Given a svg icon, then it should purify it.', function() {
+describe("LabeledItem", function() {
+    it("Given a svg icon, then it should purify it.", function() {
         const LabeledItemVueElement = Vue.extend(LabeledItem);
 
         const vm = new LabeledItemVueElement({
             propsData: {
                 item: {
-                    small_icon: '<svg><g/onload=alert(2)//<p>'
+                    small_icon: "<svg><g/onload=alert(2)//<p>"
                 }
             }
         });
 
         vm.$mount();
 
-        const labeled_item_icon      = vm.$el.querySelector('.labeled-item-icon').innerHTML;
-        const expected_sanitized_svg = '<svg><g></g></svg>';
+        const labeled_item_icon = vm.$el.querySelector(".labeled-item-icon").innerHTML;
+        const expected_sanitized_svg = "<svg><g></g></svg>";
 
         expect(labeled_item_icon).toEqual(expected_sanitized_svg);
     });

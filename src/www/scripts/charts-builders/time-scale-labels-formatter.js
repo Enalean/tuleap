@@ -21,30 +21,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import moment               from "moment";
-import { select }           from "d3-selection";
-import { sprintf }          from "sprintf-js";
+import moment from "moment";
+import { select } from "d3-selection";
+import { sprintf } from "sprintf-js";
 import { gettext_provider } from "./gettext-provider.js";
-import { getDifference }    from "./chart-dates-service.js";
-import { getGranularity }   from './chart-dates-service.js';
+import { getDifference } from "./chart-dates-service.js";
+import { getGranularity } from "./chart-dates-service.js";
 
-const DAY  = 'day';
-const WEEK = 'week';
+const DAY = "day";
+const WEEK = "week";
 
 export class TimeScaleLabelsFormatter {
-    constructor({
-        layout,
-        first_date,
-        last_date
-    }) {
+    constructor({ layout, first_date, last_date }) {
         gettext_provider.setLocale(document.body.dataset.userLocale);
 
         const localized_date_formats = {
-            day        : gettext_provider.gettext('ddd DD'),
-            month      : gettext_provider.gettext('MMM YYYY'),
-            week       : gettext_provider.gettext('WW'),
+            day: gettext_provider.gettext("ddd DD"),
+            month: gettext_provider.gettext("MMM YYYY"),
+            week: gettext_provider.gettext("WW"),
             /// Week format prefix. Chart ticks will be rendered like W01 for week 01, W02 for week 02 and so on.
-            week_prefix: gettext_provider.gettext('W %s')
+            week_prefix: gettext_provider.gettext("W %s")
         };
 
         Object.assign(this, {
@@ -56,10 +52,10 @@ export class TimeScaleLabelsFormatter {
 
     formatTicks() {
         const all_ticks = this.layout.selectAll(`.chart-x-axis > .tick`).nodes();
-        const format    = this.getFormatter();
+        const format = this.getFormatter();
 
         all_ticks.forEach(function(tick) {
-            const text_element    = select(tick).select('text');
+            const text_element = select(tick).select("text");
             const formatted_label = format(text_element.text());
 
             text_element.text(formatted_label);
@@ -73,10 +69,10 @@ export class TimeScaleLabelsFormatter {
 
         let previous_label;
 
-        all_ticks.forEach((node) => {
+        all_ticks.forEach(node => {
             const label = select(node).text();
 
-            if (! previous_label) {
+            if (!previous_label) {
                 previous_label = label;
                 return;
             }
@@ -91,32 +87,27 @@ export class TimeScaleLabelsFormatter {
 
         const displayed_ticks = this.layout.selectAll(`.chart-x-axis > .tick`).nodes();
 
-        if (
-            this.canFirstLabelOverlapSecondLabel(
-                displayed_ticks[ 0 ],
-                displayed_ticks[ 1 ]
-            )
-        ) {
-            select(displayed_ticks[ 0 ]).remove();
+        if (this.canFirstLabelOverlapSecondLabel(displayed_ticks[0], displayed_ticks[1])) {
+            select(displayed_ticks[0]).remove();
         }
     }
 
     getFormatter() {
-        if (! this.timeframe_granularity) {
+        if (!this.timeframe_granularity) {
             return tick_label => tick_label;
         }
 
-        const tick_format = this.localized_date_formats[ this.timeframe_granularity ];
+        const tick_format = this.localized_date_formats[this.timeframe_granularity];
 
         if (this.timeframe_granularity === WEEK) {
             const prefix = this.localized_date_formats.week_prefix;
 
-            return function (date) {
+            return function(date) {
                 return sprintf(prefix, moment(date, moment.ISO_8601).format(tick_format));
             };
         }
 
-        return function (date) {
+        return function(date) {
             return moment(date, moment.ISO_8601).format(tick_format);
         };
     }
@@ -126,7 +117,7 @@ export class TimeScaleLabelsFormatter {
             return false;
         }
 
-        const first_label  = select(first_tick);
+        const first_label = select(first_tick);
         const second_label = select(second_tick);
 
         const { weeks, days } = getDifference(first_label.datum(), second_label.datum());

@@ -18,33 +18,33 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { StatisticsPieChart } from './statistics-chart.js';
+import { StatisticsPieChart } from "./statistics-chart.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const PIE_CHART_MAX_HEIGHT    = 250;
-    const PIE_CHART_MARGIN        = 50;
+document.addEventListener("DOMContentLoaded", () => {
+    const PIE_CHART_MAX_HEIGHT = 250;
+    const PIE_CHART_MARGIN = 50;
     const PIE_CHART_LEGEND_MARGIN = 10;
 
     initializePieCharts();
 
     function initializePieCharts() {
-        const pie_chart_elements = document.getElementsByClassName('siteadmin-homepage-pie-chart');
+        const pie_chart_elements = document.getElementsByClassName("siteadmin-homepage-pie-chart");
 
         [].forEach.call(pie_chart_elements, function(pie_chart_element) {
             const pie_chart_element_sizes = getSizes(pie_chart_element);
 
             const pie_chart = new StatisticsPieChart({
-                prefix        : pie_chart_element.id,
-                general_prefix: 'siteadmin-homepage-pie-chart',
-                data          : JSON.parse(pie_chart_element.dataset.statistics),
-                width         : pie_chart_element_sizes.width,
-                height        : pie_chart_element_sizes.height,
-                radius        : pie_chart_element_sizes.radius
+                prefix: pie_chart_element.id,
+                general_prefix: "siteadmin-homepage-pie-chart",
+                data: JSON.parse(pie_chart_element.dataset.statistics),
+                width: pie_chart_element_sizes.width,
+                height: pie_chart_element_sizes.height,
+                radius: pie_chart_element_sizes.radius
             });
 
             pie_chart.init();
 
-            window.addEventListener('resize', function() {
+            window.addEventListener("resize", function() {
                 const sizes = getSizes(pie_chart_element);
                 pie_chart.redraw(sizes);
             });
@@ -54,8 +54,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function initializePieChartsLegendSize() {
-        let legend_max_width     = 0;
-        const legend_li_elements = document.querySelectorAll('.siteadmin-homepage-pie-chart-legend > li');
+        let legend_max_width = 0;
+        const legend_li_elements = document.querySelectorAll(
+            ".siteadmin-homepage-pie-chart-legend > li"
+        );
 
         [].forEach.call(legend_li_elements, function(li_element) {
             const li_width = li_element.getBoundingClientRect().width;
@@ -66,17 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         [].forEach.call(legend_li_elements, function(legend_li_element) {
-            legend_li_element.style['width'] = legend_max_width + PIE_CHART_LEGEND_MARGIN + 'px';
+            legend_li_element.style["width"] = legend_max_width + PIE_CHART_LEGEND_MARGIN + "px";
         });
     }
 
     function getSizes(element) {
         const client_rect_width = element.getBoundingClientRect().width,
-            width             = client_rect_width / 2,
-            height            = PIE_CHART_MAX_HEIGHT > client_rect_width / 2 ?
-                client_rect_width / 2 : PIE_CHART_MAX_HEIGHT,
-            radius            = Math.min(width - PIE_CHART_MARGIN, height - PIE_CHART_MARGIN);
+            width = client_rect_width / 2,
+            height =
+                PIE_CHART_MAX_HEIGHT > client_rect_width / 2
+                    ? client_rect_width / 2
+                    : PIE_CHART_MAX_HEIGHT,
+            radius = Math.min(width - PIE_CHART_MARGIN, height - PIE_CHART_MARGIN);
 
-        return {width: width, height: height, radius: radius};
+        return { width: width, height: height, radius: radius };
     }
 });

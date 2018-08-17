@@ -1,6 +1,6 @@
-import artifact_modal_module from './tuleap-artifact-modal.js';
-import angular from 'angular';
-import 'angular-mocks';
+import artifact_modal_module from "./tuleap-artifact-modal.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("TuleapArtifactModalFieldDependenciesService", function() {
     var FieldDependenciesService;
@@ -17,13 +17,9 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
             describe("and given there was one source value", function() {
                 it("and given there was only one rule for this source value, when I get the possible values for the target field, then an array containing only the target value corresponding to the source value will be returned", function() {
                     var source_value_ids = [841];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 32,
-                        values: [
-                            { id: 748 },
-                            { id: 778 },
-                            { id: 358 }
-                        ]
+                        values: [{ id: 748 }, { id: 778 }, { id: 358 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -40,18 +36,14 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         field_dependencies_rules
                     );
 
-                    expect(filtered_values).toEqual([
-                        { id: 778 }
-                    ]);
+                    expect(filtered_values).toEqual([{ id: 778 }]);
                 });
 
                 it("and given there were no rules for this source value, when I get the possible values for the target field, then an empty array will be returned", function() {
                     var source_value_ids = [753];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 91,
-                        values: [
-                            { id: 863 }
-                        ]
+                        values: [{ id: 863 }]
                     };
                     var field_dependencies_rules = [];
 
@@ -66,13 +58,9 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
 
                 it("and given there were two rules for this source value, when I get the possible values for the target field, then an array containing two target values will be returned", function() {
                     var source_value_ids = [293];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 66,
-                        values: [
-                            { id: 964 },
-                            { id: 197 },
-                            { id: 520 }
-                        ]
+                        values: [{ id: 964 }, { id: 197 }, { id: 520 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -80,7 +68,8 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                             source_value_id: 293,
                             target_field_id: 66,
                             target_value_id: 964
-                        }, {
+                        },
+                        {
                             source_field_id: 46,
                             source_value_id: 293,
                             target_field_id: 66,
@@ -94,22 +83,16 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         field_dependencies_rules
                     );
 
-                    expect(filtered_values).toEqual([
-                        { id: 964 },
-                        { id: 197 }
-                    ]);
+                    expect(filtered_values).toEqual([{ id: 964 }, { id: 197 }]);
                 });
             });
 
             describe("and given there was no source value (empty array)", function() {
                 it("when I get the possible values for the target field, then an empty array will be returned", function() {
                     var source_value_ids = [];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 13,
-                        values: [
-                            { id: 750 },
-                            { id: 881 }
-                        ]
+                        values: [{ id: 750 }, { id: 881 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -133,12 +116,9 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
             describe("and given there were two source values", function() {
                 it("and given there was a rule for only one of the source values, when I get the possible values for the target field, then an array containing only the target value for the defined rule will be returned", function() {
                     var source_value_ids = [432, 574];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 16,
-                        values: [
-                            { id: 197 },
-                            { id: 736 }
-                        ]
+                        values: [{ id: 197 }, { id: 736 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -155,20 +135,14 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         field_dependencies_rules
                     );
 
-                    expect(filtered_values).toEqual([
-                        { id: 197 }
-                    ]);
+                    expect(filtered_values).toEqual([{ id: 197 }]);
                 });
 
                 it("and given there were two rules with no target value in common, when I get the possible values for the target field, then an array containing two target values will be returned", function() {
                     var source_value_ids = [464, 597];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 24,
-                        values: [
-                            { id: 344 },
-                            { id: 979 },
-                            { id: 549 }
-                        ]
+                        values: [{ id: 344 }, { id: 979 }, { id: 549 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -176,7 +150,8 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                             source_value_id: 597,
                             target_field_id: 24,
                             target_value_id: 344
-                        }, {
+                        },
+                        {
                             source_field_id: 38,
                             source_value_id: 464,
                             target_field_id: 24,
@@ -190,20 +165,14 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         field_dependencies_rules
                     );
 
-                    expect(filtered_values).toEqual([
-                        { id: 344 },
-                        { id: 979 }
-                    ]);
+                    expect(filtered_values).toEqual([{ id: 344 }, { id: 979 }]);
                 });
 
                 it("and given there were two rules which had a target value in common, when I get the possible values for the target field, then the common target value will not be duplicated in the returned array", function() {
                     var source_value_ids = [738, 851];
-                    var target_field     = {
+                    var target_field = {
                         field_id: 41,
-                        values: [
-                            { id: 781 },
-                            { id: 150 }
-                        ]
+                        values: [{ id: 781 }, { id: 150 }]
                     };
                     var field_dependencies_rules = [
                         {
@@ -211,7 +180,8 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                             source_value_id: 738,
                             target_field_id: 41,
                             target_value_id: 781
-                        }, {
+                        },
+                        {
                             source_field_id: 50,
                             source_value_id: 851,
                             target_field_id: 41,
@@ -225,15 +195,13 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                         field_dependencies_rules
                     );
 
-                    expect(filtered_values).toEqual([
-                        { id: 781 }
-                    ]);
+                    expect(filtered_values).toEqual([{ id: 781 }]);
                 });
             });
         });
 
         it("Given no target field object, when I get the possible values for the target field, then it will throw an exception", function() {
-            var source_value_ids         = [469];
+            var source_value_ids = [469];
             var field_dependencies_rules = [
                 {
                     source_field_id: 17,
@@ -254,11 +222,9 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
 
         it("Given no collection representing the field dependencies rules, when I get the possible values for the target field, then an empty array will be returned", function() {
             var source_value_ids = [166];
-            var target_field     = {
+            var target_field = {
                 field_id: 83,
-                values: [
-                    { id: 993 }
-                ]
+                values: [{ id: 993 }]
             };
 
             var filtered_values = FieldDependenciesService.getTargetFieldPossibleValues(
@@ -288,9 +254,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             ];
             var tracker = {
-                fields: [
-                    target_field
-                ],
+                fields: [target_field],
                 workflow: {
                     rules: {
                         lists: field_dependencies_rules
@@ -300,11 +264,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
 
             FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
-            expect(callback).toHaveBeenCalledWith(
-                43,
-                target_field,
-                field_dependencies_rules
-            );
+            expect(callback).toHaveBeenCalledWith(43, target_field, field_dependencies_rules);
             expect(callback.calls.count()).toEqual(1);
         });
 
@@ -315,7 +275,8 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                     source_value_id: 171,
                     target_field_id: 69,
                     target_value_id: 940
-                }, {
+                },
+                {
                     source_field_id: 94,
                     source_value_id: 938,
                     target_field_id: 51,
@@ -323,10 +284,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                 }
             ];
             var tracker = {
-                fields: [
-                    { field_id: 69 },
-                    { field_id: 51 }
-                ],
+                fields: [{ field_id: 69 }, { field_id: 51 }],
                 workflow: {
                     rules: {
                         lists: field_dependencies_rules
@@ -337,23 +295,13 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
             FieldDependenciesService.setUpFieldDependenciesActions(tracker, callback);
 
             expect(callback.calls.count()).toEqual(2);
-            expect(callback).toHaveBeenCalledWith(
-                81,
-                { field_id: 69 },
-                field_dependencies_rules
-            );
-            expect(callback).toHaveBeenCalledWith(
-                94,
-                { field_id: 51 },
-                field_dependencies_rules
-            );
+            expect(callback).toHaveBeenCalledWith(81, { field_id: 69 }, field_dependencies_rules);
+            expect(callback).toHaveBeenCalledWith(94, { field_id: 51 }, field_dependencies_rules);
         });
 
         it("Given field dependencies were defined in the tracker and given there were two rules for the same source field and given a callback, when I set up field dependencies actions, then the callback will be called twice", function() {
             var tracker = {
-                fields: [
-                    { field_id: 10 }
-                ],
+                fields: [{ field_id: 10 }],
                 workflow: {
                     rules: {
                         lists: [
@@ -362,7 +310,8 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
                                 source_value_id: 752,
                                 target_field_id: 22,
                                 target_value_id: 519
-                            }, {
+                            },
+                            {
                                 source_field_id: 43,
                                 source_value_id: 723,
                                 target_field_id: 59,
@@ -381,9 +330,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
 
         it("Given no field dependencies were defined in the tracker, when I set up field dependencies actions, then the callback will never be called", function() {
             var tracker = {
-                fields: [
-                    { field_id: 3 }
-                ],
+                fields: [{ field_id: 3 }],
                 workflow: {}
             };
 
@@ -394,9 +341,7 @@ describe("TuleapArtifactModalFieldDependenciesService", function() {
 
         it("Given no callback, when I set up field dependencies actions, then there won't be an error", function() {
             var tracker = {
-                fields: [
-                    { field_id: 22 }
-                ],
+                fields: [{ field_id: 22 }],
                 workflow: {
                     rules: {
                         lists: [

@@ -17,18 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    getElementSpacing,
-    getElementsWidth,
-    getYAxisTicksSize
-};
+export { getElementSpacing, getElementsWidth, getYAxisTicksSize };
 
-function getElementSpacing(
-    elements_widths,
-    element_index,
-    element_padding,
-    base_padding
-) {
+function getElementSpacing(elements_widths, element_index, element_padding, base_padding) {
     if (element_index === 0) {
         return base_padding;
     }
@@ -36,7 +27,7 @@ function getElementSpacing(
     let sum = base_padding;
 
     for (let index = 0; index < element_index; index++) {
-        sum += elements_widths[ index ] + element_padding;
+        sum += elements_widths[index] + element_padding;
     }
 
     return sum;
@@ -44,13 +35,9 @@ function getElementSpacing(
 
 function getElementsWidth(selection) {
     const nodes = selection.nodes();
-    return nodes.map((node) => node.getBBox().width);
+    return nodes.map(node => node.getBBox().width);
 }
 
-function getYAxisTicksSize(
-    graph_width,
-    margins_right,
-    margins_left
-) {
+function getYAxisTicksSize(graph_width, margins_right, margins_left) {
     return graph_width - margins_right - margins_left;
 }

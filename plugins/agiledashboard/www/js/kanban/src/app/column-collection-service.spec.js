@@ -1,24 +1,20 @@
-import kanban_module from './app.js';
-import angular from 'angular';
-import 'angular-mocks';
+import kanban_module from "./app.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("ColumnCollectionService -", function() {
-    var ColumnCollectionService,
-        SharedPropertiesService;
+    var ColumnCollectionService, SharedPropertiesService;
 
     beforeEach(function() {
         angular.mock.module(kanban_module, function($provide) {
-            $provide.decorator('SharedPropertiesService', function($delegate) {
+            $provide.decorator("SharedPropertiesService", function($delegate) {
                 spyOn($delegate, "getKanban");
 
                 return $delegate;
             });
         });
 
-        angular.mock.inject(function(
-            _ColumnCollectionService_,
-            _SharedPropertiesService_
-        ) {
+        angular.mock.inject(function(_ColumnCollectionService_, _SharedPropertiesService_) {
             ColumnCollectionService = _ColumnCollectionService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
@@ -27,35 +23,35 @@ describe("ColumnCollectionService -", function() {
     describe("getColumn() -", function() {
         it("Given the id 'archive', when I get this column, then the archive model object will be returned", function() {
             var archive = {
-                id     : 'archive',
+                id: "archive",
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
                 archive: archive
             });
 
-            var result = ColumnCollectionService.getColumn('archive');
+            var result = ColumnCollectionService.getColumn("archive");
 
             expect(result).toBe(archive);
         });
 
         it("Given the id 'backlog', when I get this column, then the backlog model object will be returned", function() {
             var backlog = {
-                id     : 'backlog',
+                id: "backlog",
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
                 backlog: backlog
             });
 
-            var result = ColumnCollectionService.getColumn('backlog');
+            var result = ColumnCollectionService.getColumn("backlog");
 
             expect(result).toBe(backlog);
         });
 
         it("Given a numeric id of a column, when I get this column, then the column's model object will be returned", function() {
             var column = {
-                id     : 68,
+                id: 68,
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
@@ -90,11 +86,11 @@ describe("ColumnCollectionService -", function() {
     describe("addColumn()", function() {
         it("Given a column, when I add a column, then the column is added on kanban's columns", function() {
             var column = {
-                id     : 68,
+                id: 68,
                 content: []
             };
             var column_to_add = {
-                id     : 69,
+                id: 69,
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
@@ -110,11 +106,11 @@ describe("ColumnCollectionService -", function() {
     describe("removeColumn()", function() {
         it("Given an column id, when I remove a column, then the column is removed on kanban's columns", function() {
             var column = {
-                id     : 68,
+                id: 68,
                 content: []
             };
             var column_to_remove = {
-                id     : 69,
+                id: 69,
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
@@ -130,11 +126,11 @@ describe("ColumnCollectionService -", function() {
     describe("reorderColumns()", function() {
         it("Given columns, when I reorder columns, then kanban's columns are updated", function() {
             var first_column = {
-                id     : 68,
+                id: 68,
                 content: []
             };
             var second_column = {
-                id     : 69,
+                id: 69,
                 content: []
             };
             SharedPropertiesService.getKanban.and.returnValue({
@@ -143,7 +139,10 @@ describe("ColumnCollectionService -", function() {
 
             ColumnCollectionService.reorderColumns([69, 68]);
 
-            expect(SharedPropertiesService.getKanban().columns).toEqual([second_column, first_column]);
+            expect(SharedPropertiesService.getKanban().columns).toEqual([
+                second_column,
+                first_column
+            ]);
         });
     });
 
@@ -154,23 +153,15 @@ describe("ColumnCollectionService -", function() {
             };
             var columns = [
                 {
-                    id     : 68,
+                    id: 68,
                     content: [item]
                 }
             ];
             var backlog = {
-                content: [
-                    { id: 46 },
-                    { id: 37 },
-                    { id: 62 }
-                ]
+                content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
             var archive = {
-                content: [
-                    { id: 46 },
-                    { id: 37 },
-                    { id: 62 }
-                ]
+                content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
 
             SharedPropertiesService.getKanban.and.returnValue({
@@ -189,18 +180,10 @@ describe("ColumnCollectionService -", function() {
                 }
             ];
             var backlog = {
-                content: [
-                    { id: 46 },
-                    { id: 37 },
-                    { id: 62 }
-                ]
+                content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
             var archive = {
-                content: [
-                    { id: 46 },
-                    { id: 37 },
-                    { id: 62 }
-                ]
+                content: [{ id: 46 }, { id: 37 }, { id: 62 }]
             };
 
             SharedPropertiesService.getKanban.and.returnValue({

@@ -17,33 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal, filterInlineTable, select2 } from 'tlp';
-import { sprintf } from 'sprintf-js';
+import { modal, filterInlineTable, select2 } from "tlp";
+import { sprintf } from "sprintf-js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const labels_table = document.getElementById('project-labels-table');
-    if (! labels_table) {
+document.addEventListener("DOMContentLoaded", () => {
+    const labels_table = document.getElementById("project-labels-table");
+    if (!labels_table) {
         return;
     }
 
     initColorSelectors();
 
-    const filter = document.getElementById('project-labels-table-filter');
+    const filter = document.getElementById("project-labels-table-filter");
     if (filter) {
         filterInlineTable(filter);
     }
 
     const buttons = document.querySelectorAll(
-        '.project-labels-table-delete-button, .project-labels-table-edit-button, .project-labels-table-add-button'
+        ".project-labels-table-delete-button, .project-labels-table-edit-button, .project-labels-table-add-button"
     );
     for (const button of buttons) {
         const modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
-            const la_modal        = modal(modal_element);
-            const edit_name_input = modal_element.querySelector('.project-label-edit-name');
+            const la_modal = modal(modal_element);
+            const edit_name_input = modal_element.querySelector(".project-label-edit-name");
 
-            button.addEventListener('click', () => {
+            button.addEventListener("click", () => {
                 if (edit_name_input) {
                     hideWarning(edit_name_input);
                     edit_name_input.value = edit_name_input.dataset.originalValue;
@@ -53,18 +53,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (edit_name_input) {
-                la_modal.addEventListener('tlp-modal-hidden', () => {
+                la_modal.addEventListener("tlp-modal-hidden", () => {
                     modal_element.reset();
                     // force select2 to display the current color
-                    modal_element.querySelector('.project-label-color-selector').dispatchEvent(new Event('change'))
+                    modal_element
+                        .querySelector(".project-label-color-selector")
+                        .dispatchEvent(new Event("change"));
                 });
             }
         }
     }
 
-    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map(label => label.toLowerCase());
-    for (const input of document.querySelectorAll('.project-label-edit-name')) {
-        input.addEventListener('input', onLabelChange);
+    const existing_labels = JSON.parse(labels_table.dataset.existingLabelsNames).map(label =>
+        label.toLowerCase()
+    );
+    for (const input of document.querySelectorAll(".project-label-edit-name")) {
+        input.addEventListener("input", onLabelChange);
     }
 
     let timer;
@@ -83,43 +87,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function hideWarning(input) {
-        document.getElementById(input.dataset.targetCancelId).classList.remove('tlp-button-warning');
-        document.getElementById(input.dataset.targetWarningId).classList.remove('shown');
+        document
+            .getElementById(input.dataset.targetCancelId)
+            .classList.remove("tlp-button-warning");
+        document.getElementById(input.dataset.targetWarningId).classList.remove("shown");
 
         const save = document.getElementById(input.dataset.targetSaveId);
-        save.classList.remove('tlp-button-warning');
+        save.classList.remove("tlp-button-warning");
         save.disabled = false;
     }
 
     function showWarning(input) {
-        document.getElementById(input.dataset.targetCancelId).classList.add('tlp-button-warning');
+        document.getElementById(input.dataset.targetCancelId).classList.add("tlp-button-warning");
 
         const save = document.getElementById(input.dataset.targetSaveId);
-        save.classList.add('tlp-button-warning');
-        if (! JSON.parse(input.dataset.isSaveAllowedOnDuplicate)) {
+        save.classList.add("tlp-button-warning");
+        if (!JSON.parse(input.dataset.isSaveAllowedOnDuplicate)) {
             save.disabled = true;
         }
 
         const warning = document.getElementById(input.dataset.targetWarningId);
-        warning.classList.add('shown');
+        warning.classList.add("shown");
         warning.textContent = sprintf(input.dataset.warningMessage, input.value);
     }
 
     function formatOptionColor({ id }) {
-        const element = document.createElement('span');
+        const element = document.createElement("span");
         element.classList.add(id);
 
         return element;
     }
 
     function initColorSelectors() {
-        for (const color_selector of document.querySelectorAll('.project-label-color-selector')) {
+        for (const color_selector of document.querySelectorAll(".project-label-color-selector")) {
             select2(color_selector, {
-                containerCssClass      : 'project-label-color-container',
-                dropdownCssClass       : 'project-label-color-results',
+                containerCssClass: "project-label-color-container",
+                dropdownCssClass: "project-label-color-results",
                 minimumResultsForSearch: Infinity,
-                templateResult         : formatOptionColor,
-                templateSelection      : formatOptionColor
+                templateResult: formatOptionColor,
+                templateSelection: formatOptionColor
             });
         }
     }

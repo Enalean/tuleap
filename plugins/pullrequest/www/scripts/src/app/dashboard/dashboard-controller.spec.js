@@ -1,15 +1,11 @@
-import angular              from 'angular';
-import tuleap_pullrequest   from 'tuleap-pullrequest-module';
-import dashboard_controller from './dashboard-controller.js';
+import angular from "angular";
+import tuleap_pullrequest from "tuleap-pullrequest-module";
+import dashboard_controller from "./dashboard-controller.js";
 
-import 'angular-mocks';
+import "angular-mocks";
 
-describe('DashboardController', function() {
-    var $q,
-        $rootScope,
-        DashboardController,
-        PullRequestCollectionService,
-        TooltipService;
+describe("DashboardController", function() {
+    var $q, $rootScope, DashboardController, PullRequestCollectionService, TooltipService;
 
     beforeEach(function() {
         var $controller;
@@ -23,11 +19,11 @@ describe('DashboardController', function() {
             _PullRequestCollectionService_,
             _TooltipService_
         ) {
-            $controller                  = _$controller_;
-            $q                           = _$q_;
-            $rootScope                   = _$rootScope_;
+            $controller = _$controller_;
+            $q = _$q_;
+            $rootScope = _$rootScope_;
             PullRequestCollectionService = _PullRequestCollectionService_;
-            TooltipService               = _TooltipService_;
+            TooltipService = _TooltipService_;
         });
 
         spyOn(PullRequestCollectionService, "loadOpenPullRequests").and.returnValue($q.when());

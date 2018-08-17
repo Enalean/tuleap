@@ -2,16 +2,16 @@ export default SharedPropertiesService;
 
 function SharedPropertiesService() {
     var property = {
-        project_id           : null,
-        release              : null,
+        project_id: null,
+        release: null,
         platform_license_info: null
     };
 
     return {
-        getProjectId          : getProjectId,
-        setProjectId          : setProjectId,
-        getRelease            : getRelease,
-        setRelease            : setRelease,
+        getProjectId: getProjectId,
+        setProjectId: setProjectId,
+        getRelease: getRelease,
+        setRelease: setRelease,
         getPlatformLicenseInfo: getPlatformLicenseInfo,
         setPlatformLicenseInfo: setPlatformLicenseInfo
     };
@@ -53,7 +53,7 @@ function SharedPropertiesService() {
                 return;
             }
 
-            link.displayed_link = link.link.substr(0, 23) + '...' + link.link.substr(-23);
+            link.displayed_link = link.link.substr(0, 23) + "..." + link.link.substr(-23);
         });
     }
 }

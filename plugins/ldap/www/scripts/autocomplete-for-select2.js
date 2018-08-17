@@ -21,22 +21,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { select2 } from 'tlp';
-import { escaper } from 'escaper';
+import { select2 } from "tlp";
+import { escaper } from "escaper";
 
-export {
-    autocomplete_groups_for_select2
-};
+export { autocomplete_groups_for_select2 };
 
 function autocomplete_groups_for_select2(element, options) {
     const real_options = {
-        placeholder: element.dataset.placeholder || '',
+        placeholder: element.dataset.placeholder || "",
         minimumInputLength: 3,
         tags: true,
         ajax: {
-            url     : '/plugins/ldap/autocomplete.php',
-            dataType: 'json',
-            delay   : 250,
+            url: "/plugins/ldap/autocomplete.php",
+            dataType: "json",
+            delay: 250,
             data: function({ term, page = 1 }) {
                 return {
                     ldap_group_name: term,
@@ -44,17 +42,21 @@ function autocomplete_groups_for_select2(element, options) {
                 };
             }
         },
-        escapeMarkup  : markup => markup,
-        templateResult: (ldap_group) => {
+        escapeMarkup: markup => markup,
+        templateResult: ldap_group => {
             if (ldap_group.loading) {
                 return ldap_group.text;
             }
             // If no distinct display name, just show the ID (cn).
             if (!ldap_group.text || ldap_group.text === ldap_group.id) {
-                return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${ escaper.html(ldap_group.id) }`;
+                return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${escaper.html(
+                    ldap_group.id
+                )}`;
             }
 
-            return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${ escaper.html(ldap_group.text) } <span style="float:right"> ${ escaper.html(ldap_group.id) } </span>`;
+            return `<i class="autocomplete-ldap-group-icon fa fa-group"></i> ${escaper.html(
+                ldap_group.text
+            )} <span style="float:right"> ${escaper.html(ldap_group.id)} </span>`;
         },
         ...options
     };

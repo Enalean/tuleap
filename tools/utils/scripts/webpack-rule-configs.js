@@ -56,7 +56,11 @@ const babel_options_karma = {
         production: babel_options_ie11,
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: [BabelPluginObjectRestSpread, BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
+            plugins: [
+                BabelPluginObjectRestSpread,
+                BabelPluginSyntaxDynamicImport,
+                BabelPluginRewireExports
+            ]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],

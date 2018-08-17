@@ -1,12 +1,11 @@
-import angular                     from 'angular';
-import tuleap_pullrequest_module   from 'tuleap-pullrequest-module';
-import pullrequest_refs_controller from './pull-request-refs-controller.js';
+import angular from "angular";
+import tuleap_pullrequest_module from "tuleap-pullrequest-module";
+import pullrequest_refs_controller from "./pull-request-refs-controller.js";
 
-import 'angular-mocks';
+import "angular-mocks";
 
 describe("PullRequestRefsController -", function() {
-    let SharedPropertiesService,
-        PullRequestRefsController;
+    let SharedPropertiesService, PullRequestRefsController;
 
     beforeEach(function() {
         let $controller;
@@ -14,11 +13,8 @@ describe("PullRequestRefsController -", function() {
         angular.mock.module(tuleap_pullrequest_module);
 
         // eslint-disable-next-line angular/di
-        angular.mock.inject(function(
-            _$controller_,
-            _SharedPropertiesService_
-        ) {
-            $controller             = _$controller_;
+        angular.mock.inject(function(_$controller_, _SharedPropertiesService_) {
+            $controller = _$controller_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 

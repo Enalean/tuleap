@@ -17,12 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import CodeMirror from 'codemirror';
+import CodeMirror from "codemirror";
 
 export { getHint };
 
 function getHint(editor, options) {
-    const cursor = editor.getCursor(), token  = editor.getTokenAt(cursor);
+    const cursor = editor.getCursor(),
+        token = editor.getTokenAt(cursor);
 
     if (isAutocompletable(token)) {
         return getAutocompletableHint(editor, options, cursor, token);
@@ -30,15 +31,15 @@ function getHint(editor, options) {
 }
 
 function isAutocompletable(token) {
-    return (token.type === null || token.type === 'variable');
+    return token.type === null || token.type === "variable";
 }
 
 function getAutocompletableHint(editor, options, cursor, token) {
     const start = getStartOfToken(editor);
-    const end   = cursor.ch;
-    const from  = CodeMirror.Pos(cursor.line, start);
-    const to    = CodeMirror.Pos(cursor.line, end);
-    const text  = new RegExp(token.string.trim(), 'i');
+    const end = cursor.ch;
+    const from = CodeMirror.Pos(cursor.line, start);
+    const to = CodeMirror.Pos(cursor.line, end);
+    const text = new RegExp(token.string.trim(), "i");
 
     return {
         list: options.words.filter(field_name => text.test(field_name)),
@@ -49,8 +50,8 @@ function getAutocompletableHint(editor, options, cursor, token) {
 
 function getStartOfToken(editor) {
     const cursor = editor.getCursor();
-    const line   = editor.getLine(cursor.line);
-    let start    = cursor.ch;
+    const line = editor.getLine(cursor.line);
+    let start = cursor.ch;
     const a_word = /[@\w]+/;
 
     while (start && a_word.test(line.charAt(start - 1))) {

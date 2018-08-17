@@ -21,31 +21,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const webpack_config = {
     entry: {
-        'project-admin-members': './project-admin/project-admin-members.js',
-        'project-admin-ugroups': './project-admin/project-admin-ugroups.js'
+        "project-admin-members": "./project-admin/project-admin-members.js",
+        "project-admin-ugroups": "./project-admin/project-admin-ugroups.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
     },
     resolve: {
         alias: {
-            escaper$: '../../../../src/www/scripts/tuleap/escaper.js'
+            escaper$: "../../../../src/www/scripts/tuleap/escaper.js"
         }
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_mustache_files,
             webpack_configurator.rule_po_files
         ]

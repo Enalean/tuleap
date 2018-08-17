@@ -1,6 +1,5 @@
-import UUIDGeneratorService from './uuid-generator-service.js';
+import UUIDGeneratorService from "./uuid-generator-service.js";
 
-angular.module('uuid-generator', [])
-    .service('UUIDGeneratorService', UUIDGeneratorService);
+angular.module("uuid-generator", []).service("UUIDGeneratorService", UUIDGeneratorService);
 
-export default 'uuid-generator';
+export default "uuid-generator";

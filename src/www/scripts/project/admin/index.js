@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import '../../labels/project-admin/project-admin-labels.js';
-import './project-admin.js';
-import './project-admin-ugroups.js';
-import './project-admin-members.js';
-import './services.js';
+import "../../labels/project-admin/project-admin-labels.js";
+import "./project-admin.js";
+import "./project-admin-ugroups.js";
+import "./project-admin-members.js";
+import "./services.js";

@@ -19,16 +19,16 @@
 
 export default class BackendCrossTrackerReport {
     constructor() {
-        this.loaded       = false;
-        this.trackers     = new Map();
-        this.expert_query = '';
+        this.loaded = false;
+        this.trackers = new Map();
+        this.expert_query = "";
     }
 
     init(trackers, expert_query) {
         if (trackers) {
             this.clearTrackers();
             for (const { id, label, project } of trackers) {
-                const tracker       = { id, label };
+                const tracker = { id, label };
                 const light_project = { id: project.id, label: project.label };
                 this.trackers.set(id, {
                     project: light_project,
@@ -45,7 +45,7 @@ export default class BackendCrossTrackerReport {
     }
 
     duplicateFromReport(report) {
-        this.trackers     = new Map(report.trackers);
+        this.trackers = new Map(report.trackers);
         this.expert_query = report.expert_query;
     }
 

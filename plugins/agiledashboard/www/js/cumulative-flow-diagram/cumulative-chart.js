@@ -17,7 +17,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-export default function (chart) {
+export default function(chart) {
     var div_graph,
         width,
         height,
@@ -43,7 +43,7 @@ export default function (chart) {
         localized_format,
         legend_text;
 
-    chart.divGraph = function (new_div_graph) {
+    chart.divGraph = function(new_div_graph) {
         if (!arguments.length) {
             return div_graph;
         }
@@ -51,7 +51,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.svg = function (new_svg) {
+    chart.svg = function(new_svg) {
         if (!arguments.length) {
             return svg;
         }
@@ -59,7 +59,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.g = function (new_g) {
+    chart.g = function(new_g) {
         if (!arguments.length) {
             return g;
         }
@@ -67,7 +67,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.stack = function (new_stack) {
+    chart.stack = function(new_stack) {
         if (!arguments.length) {
             return stack;
         }
@@ -75,7 +75,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.area = function (new_area) {
+    chart.area = function(new_area) {
         if (!arguments.length) {
             return area;
         }
@@ -83,7 +83,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.line = function (new_line) {
+    chart.line = function(new_line) {
         if (!arguments.length) {
             return line;
         }
@@ -91,7 +91,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.graph = function (new_graph) {
+    chart.graph = function(new_graph) {
         if (!arguments.length) {
             return graph;
         }
@@ -99,7 +99,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.width = function (new_width) {
+    chart.width = function(new_width) {
         if (!arguments.length) {
             return width;
         }
@@ -107,7 +107,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.height = function (new_height) {
+    chart.height = function(new_height) {
         if (!arguments.length) {
             return height;
         }
@@ -115,7 +115,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.margin = function (new_margin) {
+    chart.margin = function(new_margin) {
         if (!arguments.length) {
             return margin;
         }
@@ -123,7 +123,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.colorScale = function (new_color_scale) {
+    chart.colorScale = function(new_color_scale) {
         if (!arguments.length) {
             return color_scale;
         }
@@ -131,7 +131,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.yMax = function (new_y_max) {
+    chart.yMax = function(new_y_max) {
         if (!arguments.length) {
             return y_max;
         }
@@ -139,7 +139,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.xAxis = function (new_x_axis) {
+    chart.xAxis = function(new_x_axis) {
         if (!arguments.length) {
             return x_axis;
         }
@@ -147,7 +147,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.yAxis = function (new_y_axis) {
+    chart.yAxis = function(new_y_axis) {
         if (!arguments.length) {
             return y_axis;
         }
@@ -155,7 +155,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.xScale = function (new_x_scale) {
+    chart.xScale = function(new_x_scale) {
         if (!arguments.length) {
             return x_scale;
         }
@@ -163,7 +163,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.yScale = function (new_y_scale) {
+    chart.yScale = function(new_y_scale) {
         if (!arguments.length) {
             return y_scale;
         }
@@ -171,7 +171,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.columns = function (new_columns) {
+    chart.columns = function(new_columns) {
         if (!arguments.length) {
             return columns;
         }
@@ -179,7 +179,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.data = function (new_data) {
+    chart.data = function(new_data) {
         if (!arguments.length) {
             return data;
         }
@@ -187,7 +187,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.stackData = function (new_stack_data) {
+    chart.stackData = function(new_stack_data) {
         if (!arguments.length) {
             return stack_data;
         }
@@ -195,7 +195,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.keys = function (new_keys) {
+    chart.keys = function(new_keys) {
         if (!arguments.length) {
             return keys;
         }
@@ -203,7 +203,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.tooltip = function (new_tooltip) {
+    chart.tooltip = function(new_tooltip) {
         if (!arguments.length) {
             return tooltip;
         }
@@ -211,7 +211,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.bisectDate = function (new_bisect_date) {
+    chart.bisectDate = function(new_bisect_date) {
         if (!arguments.length) {
             return bisect_date;
         }
@@ -219,7 +219,7 @@ export default function (chart) {
         return chart;
     };
 
-    chart.localizedFormat = function (new_localized_format) {
+    chart.localizedFormat = function(new_localized_format) {
         if (!arguments.length) {
             return localized_format;
         }
@@ -227,11 +227,11 @@ export default function (chart) {
         return chart;
     };
 
-    chart.legendText = function (new_legend_text) {
+    chart.legendText = function(new_legend_text) {
         if (!arguments.length) {
             return legend_text;
         }
         legend_text = new_legend_text;
         return chart;
     };
-};
+}

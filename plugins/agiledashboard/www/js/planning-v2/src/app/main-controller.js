@@ -1,25 +1,15 @@
-import moment from 'moment';
+import moment from "moment";
 import { setAccessibilityMode } from "./user-accessibility-mode.js";
 
 export default MainController;
 
-MainController.$inject = [
-    '$element',
-    'SharedPropertiesService',
-    'amMoment',
-    'gettextCatalog'
-];
+MainController.$inject = ["$element", "SharedPropertiesService", "amMoment", "gettextCatalog"];
 
-function MainController(
-    $element,
-    SharedPropertiesService,
-    amMoment,
-    gettextCatalog
-) {
+function MainController($element, SharedPropertiesService, amMoment, gettextCatalog) {
     init();
 
     function init() {
-        const planning_init_data = $element[0].querySelector('.planning-init-data').dataset;
+        const planning_init_data = $element[0].querySelector(".planning-init-data").dataset;
 
         const user_id = planning_init_data.userId;
         SharedPropertiesService.setUserId(user_id);

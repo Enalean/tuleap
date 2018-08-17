@@ -1,14 +1,8 @@
 export default KanbanFilteredUpdatedAlertController;
 
-KanbanFilteredUpdatedAlertController.$inject = [
-    '$window',
-    'KanbanFilteredUpdatedAlertService'
-];
+KanbanFilteredUpdatedAlertController.$inject = ["$window", "KanbanFilteredUpdatedAlertService"];
 
-function KanbanFilteredUpdatedAlertController(
-    $window,
-    KanbanFilteredUpdatedAlertService
-) {
+function KanbanFilteredUpdatedAlertController($window, KanbanFilteredUpdatedAlertService) {
     const self = this;
 
     Object.assign(self, {

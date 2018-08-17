@@ -1,22 +1,15 @@
 export default FilesRestService;
 
-FilesRestService.$inject = [
-    '$http',
-    '$q',
-    'ErrorModalService'
-];
+FilesRestService.$inject = ["$http", "$q", "ErrorModalService"];
 
-function FilesRestService(
-    $http,
-    $q,
-    ErrorModalService
-) {
+function FilesRestService($http, $q, ErrorModalService) {
     const self = this;
 
     Object.assign(self, { getFiles });
 
     function getFiles(pull_request_id) {
-        return $http.get('/api/v1/pull_requests/' + pull_request_id + '/files')
+        return $http
+            .get("/api/v1/pull_requests/" + pull_request_id + "/files")
             .then(({ data }) => data)
             .catch(response => {
                 ErrorModalService.showError(response);

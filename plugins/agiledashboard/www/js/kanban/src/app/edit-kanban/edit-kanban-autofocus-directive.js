@@ -1,12 +1,12 @@
 export default AutoFocusInput;
 
-AutoFocusInput.$inject = ['$timeout'];
+AutoFocusInput.$inject = ["$timeout"];
 
 function AutoFocusInput($timeout) {
     return {
-        restrict: 'A',
+        restrict: "A",
         scope: {},
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
             $timeout(autoFocusInput);
 
             function autoFocusInput() {

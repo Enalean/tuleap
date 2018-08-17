@@ -15,62 +15,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
+!(function($) {
     $(document).ready(function() {
-        $('#select-all').click(function() {
+        $("#select-all").click(function() {
             updateRepositoriesCheckboxesState(this.checked);
             updateMassChangeButtonState();
         });
 
-        $('.repository-ids').click(function() {
+        $(".repository-ids").click(function() {
             updateMassChangeButtonState();
-            updateSelectAllCheckboxState()
+            updateSelectAllCheckboxState();
         });
 
-        $('body').click(function(event) {
-            if ($(event.target).parents('.update-n-repositories').length === 0 && $(event.target).parents('.popover.in').length === 0) {
-                $('.update-n-repositories > span').popover('hide');
+        $("body").click(function(event) {
+            if (
+                $(event.target).parents(".update-n-repositories").length === 0 &&
+                $(event.target).parents(".popover.in").length === 0
+            ) {
+                $(".update-n-repositories > span").popover("hide");
             }
         });
 
-        $('.check-repository-mirror').on('change', changeCheckboxChangeState);
+        $(".check-repository-mirror").on("change", changeCheckboxChangeState);
 
-        $('.check-all-mirror').on('click', function (evt) {
-            var mirror_id  = $(this).data('id');
+        $(".check-all-mirror").on("click", function(evt) {
+            var mirror_id = $(this).data("id");
 
-            $('[data-mirror-id='+ mirror_id +']')
-                .prop('checked', true)
+            $("[data-mirror-id=" + mirror_id + "]")
+                .prop("checked", true)
                 .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
 
-        $('.uncheck-all-mirror').on('click', function (evt) {
-            var mirror_id  = $(this).data('id');
+        $(".uncheck-all-mirror").on("click", function(evt) {
+            var mirror_id = $(this).data("id");
 
-            $('[data-mirror-id='+ mirror_id +']')
-                .prop('checked', false)
+            $("[data-mirror-id=" + mirror_id + "]")
+                .prop("checked", false)
                 .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
 
-        $('.check-all-repository').on('click', function (evt) {
-            var repository_id  = $(this).data('id');
+        $(".check-all-repository").on("click", function(evt) {
+            var repository_id = $(this).data("id");
 
-            $('[data-repository-id='+ repository_id +']')
-                .prop('checked', true)
+            $("[data-repository-id=" + repository_id + "]")
+                .prop("checked", true)
                 .each(changeCheckboxChangeState);
 
             evt.preventDefault();
         });
 
-        $('.uncheck-all-repository').on('click', function (evt) {
-            var repository_id  = $(this).data('id');
+        $(".uncheck-all-repository").on("click", function(evt) {
+            var repository_id = $(this).data("id");
 
-            $('[data-repository-id='+ repository_id +']')
-                .prop('checked', false)
+            $("[data-repository-id=" + repository_id + "]")
+                .prop("checked", false)
                 .each(changeCheckboxChangeState);
 
             evt.preventDefault();
@@ -78,52 +80,63 @@
     });
 
     function changeCheckboxChangeState() {
-        var has_changed = $(this).is(':checked') && $(this).parent('td').hasClass('was-unused')
-            || (! $(this).is(':checked') && $(this).parent('td').hasClass('was-used'));
+        var has_changed =
+            ($(this).is(":checked") &&
+                $(this)
+                    .parent("td")
+                    .hasClass("was-unused")) ||
+            (!$(this).is(":checked") &&
+                $(this)
+                    .parent("td")
+                    .hasClass("was-used"));
 
         if (has_changed) {
-            $(this).parent('td').addClass('has-changed');
+            $(this)
+                .parent("td")
+                .addClass("has-changed");
         } else {
-            $(this).parent('td').removeClass('has-changed');
+            $(this)
+                .parent("td")
+                .removeClass("has-changed");
         }
     }
 
     function checkMirrorIfNeeded(mirror_id) {
         var check_mirror = true;
 
-        $('[data-mirror-id='+ mirror_id +']').each(function () {
-            if (! $(this).is(':checked')) {
+        $("[data-mirror-id=" + mirror_id + "]").each(function() {
+            if (!$(this).is(":checked")) {
                 check_mirror = false;
             }
         });
 
-        $('.checkall-mirror[value='+ mirror_id +']').prop('checked', check_mirror);
+        $(".checkall-mirror[value=" + mirror_id + "]").prop("checked", check_mirror);
     }
 
     function checkRepositoryIfNeeded(repository_id) {
-        var check_repository = $('[data-repository-id='+ repository_id +']:not(:checked)').length === 0;
+        var check_repository =
+            $("[data-repository-id=" + repository_id + "]:not(:checked)").length === 0;
 
-        $('.checkall-repository[value='+ repository_id +']').prop('checked', check_repository);
+        $(".checkall-repository[value=" + repository_id + "]").prop("checked", check_repository);
     }
 
     function updateRepositoriesCheckboxesState(state) {
-        $('.repository-ids').prop('checked', state);
+        $(".repository-ids").prop("checked", state);
     }
 
     function updateMassChangeButtonState() {
-        if ($('.repository-ids:checked').length === 0) {
-            $('#go-to-mass-change').prop('disabled', true);
+        if ($(".repository-ids:checked").length === 0) {
+            $("#go-to-mass-change").prop("disabled", true);
         } else {
-            $('#go-to-mass-change').prop('disabled', false);
+            $("#go-to-mass-change").prop("disabled", false);
         }
     }
 
     function updateSelectAllCheckboxState() {
-        if($('.repository-ids').length === $('.repository-ids:checked').length) {
-            $('#select-all').prop('checked', true);
+        if ($(".repository-ids").length === $(".repository-ids:checked").length) {
+            $("#select-all").prop("checked", true);
         } else {
-            $('#select-all').prop('checked', false);
+            $("#select-all").prop("checked", false);
         }
     }
-
 })(window.jQuery);

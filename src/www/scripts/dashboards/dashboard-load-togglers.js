@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { init as togglerInit } from '../tuleap/toggler.js';
+import { init as togglerInit } from "../tuleap/toggler.js";
 
 export default init;
 
 function init() {
-    togglerInit(document.querySelector('.dashboard-widgets-container'));
+    togglerInit(document.querySelector(".dashboard-widgets-container"));
 }

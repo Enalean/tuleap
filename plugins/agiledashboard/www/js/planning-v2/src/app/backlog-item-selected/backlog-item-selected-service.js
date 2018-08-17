@@ -1,25 +1,25 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default BacklogItemSelectedService;
 
 BacklogItemSelectedService.$inject = [];
 
 function BacklogItemSelectedService() {
-    var self                   = this,
+    var self = this,
         selected_backlog_items = [];
 
     _.extend(self, {
-        getCompactedSelectedBacklogItem    : getCompactedSelectedBacklogItem,
-        getNumberOfSelectedBacklogItem     : getNumberOfSelectedBacklogItem,
-        addSelectedItem                    : addSelectedItem,
-        removeSelectedItem                 : removeSelectedItem,
-        removeAllSelectedItems             : removeAllSelectedItems,
-        getFirstSelectedItem               : getFirstSelectedItem,
+        getCompactedSelectedBacklogItem: getCompactedSelectedBacklogItem,
+        getNumberOfSelectedBacklogItem: getNumberOfSelectedBacklogItem,
+        addSelectedItem: addSelectedItem,
+        removeSelectedItem: removeSelectedItem,
+        removeAllSelectedItems: removeAllSelectedItems,
+        getFirstSelectedItem: getFirstSelectedItem,
         areThereMultipleSelectedBaklogItems: areThereMultipleSelectedBaklogItems,
-        isDraggedBacklogItemSelected       : isDraggedBacklogItemSelected,
-        multipleBacklogItemsAreDragged     : multipleBacklogItemsAreDragged,
-        deselectAllBacklogItems            : deselectAllBacklogItems,
-        reselectBacklogItems               : reselectBacklogItems
+        isDraggedBacklogItemSelected: isDraggedBacklogItemSelected,
+        multipleBacklogItemsAreDragged: multipleBacklogItemsAreDragged,
+        deselectAllBacklogItems: deselectAllBacklogItems,
+        reselectBacklogItems: reselectBacklogItems
     });
 
     function getCompactedSelectedBacklogItem() {
@@ -61,13 +61,13 @@ function BacklogItemSelectedService() {
     }
 
     function multipleBacklogItemsAreDragged(dragged_element) {
-        var dragged_backlog_item_id = angular.element(dragged_element).data('item-id');
+        var dragged_backlog_item_id = angular.element(dragged_element).data("item-id");
 
         _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
             backlog_item.hidden = true;
 
             if (backlog_item.id === dragged_backlog_item_id) {
-                backlog_item.hidden   = false;
+                backlog_item.hidden = false;
                 backlog_item.selected = false;
                 backlog_item.multiple = true;
             }
@@ -76,7 +76,7 @@ function BacklogItemSelectedService() {
 
     function deselectAllBacklogItems() {
         _.forEach(getCompactedSelectedBacklogItem(), function(backlog_item) {
-            backlog_item.hidden   = false;
+            backlog_item.hidden = false;
             backlog_item.selected = false;
             backlog_item.multiple = false;
         });

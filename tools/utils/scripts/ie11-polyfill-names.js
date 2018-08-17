@@ -17,10 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-var polyfills_for_fetch = [
-    'babel-polyfill',
-    'whatwg-fetch'
-];
+var polyfills_for_fetch = ["babel-polyfill", "whatwg-fetch"];
 
 module.exports = {
     polyfills_for_fetch

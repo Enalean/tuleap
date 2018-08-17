@@ -1,4 +1,7 @@
-new Insertion.After('form_pw','<input type="button" name="generate" class="btn" value="Generate" onclick="setPwd()">');
+new Insertion.After(
+    "form_pw",
+    '<input type="button" name="generate" class="btn" value="Generate" onclick="setPwd()">'
+);
 
 function generate(entropy_bits) {
     const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&%#|-!{?*+";
@@ -8,7 +11,7 @@ function generate(entropy_bits) {
         }
 
         const random_byte = new Uint8Array(1);
-        const crypto      = window.crypto || window.msCrypto;
+        const crypto = window.crypto || window.msCrypto;
         crypto.getRandomValues(random_byte);
 
         if (random_byte[0] >= charset.length) {
@@ -19,13 +22,13 @@ function generate(entropy_bits) {
     }
 
     const pass_length = Math.ceil(entropy_bits / (Math.log(charset.length) / Math.LN2));
-    let pass          = "";
-    for (let i  = 0; i < pass_length; i++) {
+    let pass = "";
+    for (let i = 0; i < pass_length; i++) {
         pass += getRandomChar();
     }
     return pass;
 }
 
 function setPwd() {
-    $('form_pw').value = generate(128);
+    $("form_pw").value = generate(128);
 }

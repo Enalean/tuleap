@@ -17,13 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, put }                from 'tlp';
-import initNavbarHistoryController from './navbar-history-controller.js';
+import { get, put } from "tlp";
+import initNavbarHistoryController from "./navbar-history-controller.js";
 
 export function init() {
-    const user_history_dropdown_trigger = document.querySelector('#nav-dropdown-user-history > .nav-dropdown-link');
+    const user_history_dropdown_trigger = document.querySelector(
+        "#nav-dropdown-user-history > .nav-dropdown-link"
+    );
 
-    if (! user_history_dropdown_trigger) {
+    if (!user_history_dropdown_trigger) {
         return;
     }
 

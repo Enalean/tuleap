@@ -17,31 +17,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
-tuleap.trackers = tuleap.trackers || { };
-tuleap.trackers.report = tuleap.trackers.report || { };
-tuleap.trackers.report.table = tuleap.trackers.report.table || { };
+var tuleap = tuleap || {};
+tuleap.trackers = tuleap.trackers || {};
+tuleap.trackers.report = tuleap.trackers.report || {};
+tuleap.trackers.report.table = tuleap.trackers.report.table || {};
 
-!function ($) {
-
+!(function($) {
     function fixAggregatesHeight(container) {
-        var container_selector = '.tracker_report_table_aggregates > td > table > ' + container,
-            tr_selector        = container_selector + ' > tr',
-            $elements          = $(container_selector),
+        var container_selector = ".tracker_report_table_aggregates > td > table > " + container,
+            tr_selector = container_selector + " > tr",
+            $elements = $(container_selector),
             all_heights,
             max_height;
 
         $(tr_selector).height(0);
 
-        all_heights = $.map($elements, function(el){ return $(el).height(); });
-        max_height  = Math.max.apply(Math, all_heights);
+        all_heights = $.map($elements, function(el) {
+            return $(el).height();
+        });
+        max_height = Math.max.apply(Math, all_heights);
 
         $(tr_selector).height(max_height);
     }
 
     tuleap.trackers.report.table.fixAggregatesHeights = function() {
-        fixAggregatesHeight('thead');
-        fixAggregatesHeight('tbody');
+        fixAggregatesHeight("thead");
+        fixAggregatesHeight("tbody");
     };
 
     var resize_timeout;
@@ -51,4 +52,4 @@ tuleap.trackers.report.table = tuleap.trackers.report.table || { };
         clearTimeout(resize_timeout);
         resize_timeout = setTimeout(tuleap.trackers.report.table.fixAggregatesHeights, 10);
     });
-}(window.jQuery);
+})(window.jQuery);

@@ -17,29 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
+var tuleap = tuleap || {};
 
-(function ($) {
+(function($) {
     /**
      * @see http://tarruda.github.io/bootstrap-datetimepicker/
      */
     tuleap.dateTimePicker = {
         init: function() {
-            $('.tuleap_field_date').datetimepicker({
-                 language: codendi.locale,
-                 pickTime: false
+            $(".tuleap_field_date").datetimepicker({
+                language: codendi.locale,
+                pickTime: false
             });
 
-            $('.tuleap_field_datetime').datetimepicker({
-                 language: codendi.locale,
-                 pickTime: true,
-                 pickSeconds: false
+            $(".tuleap_field_datetime").datetimepicker({
+                language: codendi.locale,
+                pickTime: true,
+                pickSeconds: false
             });
         }
     };
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         tuleap.dateTimePicker.init();
     });
-
 })(window.jQuery);

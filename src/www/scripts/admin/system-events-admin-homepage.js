@@ -17,12 +17,15 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-document.addEventListener('DOMContentLoaded', () => {
-    const admin_homepage_queues = document.querySelectorAll('.siteadmin-homepage-system-events-queue');
+document.addEventListener("DOMContentLoaded", () => {
+    const admin_homepage_queues = document.querySelectorAll(
+        ".siteadmin-homepage-system-events-queue"
+    );
     for (const admin_homepage_queue of admin_homepage_queues) {
-        admin_homepage_queue.addEventListener('click', event => {
-            if (! event.target.classList.contains('system-event-type-count')
-                && ! event.target.parentNode.classList.contains('system-event-type-count')
+        admin_homepage_queue.addEventListener("click", event => {
+            if (
+                !event.target.classList.contains("system-event-type-count") &&
+                !event.target.parentNode.classList.contains("system-event-type-count")
             ) {
                 window.location = window.location.origin + admin_homepage_queue.dataset.href;
             }

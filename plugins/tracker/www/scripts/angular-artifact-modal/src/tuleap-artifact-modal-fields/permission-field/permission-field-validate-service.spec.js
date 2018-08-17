@@ -1,6 +1,6 @@
-import permission_field_module from './permission-field.js';
-import angular from 'angular';
-import 'angular-mocks';
+import permission_field_module from "./permission-field.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
     var PermissionFieldValidateService;
@@ -8,9 +8,7 @@ describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
     beforeEach(function() {
         angular.mock.module(permission_field_module);
 
-        angular.mock.inject(function(
-            _TuleapArtifactModalPermissionFieldValidateService_
-        ) {
+        angular.mock.inject(function(_TuleapArtifactModalPermissionFieldValidateService_) {
             PermissionFieldValidateService = _TuleapArtifactModalPermissionFieldValidateService_;
         });
     });
@@ -24,12 +22,12 @@ describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
 
         it("Given a field value object, it will only keep field_id and value attributes", function() {
             var field_value = {
-                field_id   : 166,
-                label      : "stallboard",
+                field_id: 166,
+                label: "stallboard",
                 permissions: ["read", "update", "create"],
-                value      : {
+                value: {
                     is_used_by_default: true,
-                    granted_groups    : ["1", "101"]
+                    granted_groups: ["1", "101"]
                 }
             };
 
@@ -37,9 +35,9 @@ describe("TuleapArtifactModalPermissionFieldValidateService -", function() {
 
             expect(result).toEqual({
                 field_id: 166,
-                value   : {
+                value: {
                     is_used_by_default: true,
-                    granted_groups    : ["1", "101"]
+                    granted_groups: ["1", "101"]
                 }
             });
         });

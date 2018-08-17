@@ -1,15 +1,11 @@
-import { isInCreationMode } from './modal-creation-mode-state.js';
+import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
-import {
-    createArtifact,
-    editArtifact,
-    getFollowupsComments
-} from './rest/rest-service.js';
+import { createArtifact, editArtifact, getFollowupsComments } from "./rest/rest-service.js";
 import {
     getAllFileFields,
     isThereAtLeastOneFileField
-} from './tuleap-artifact-modal-fields/file-field/file-field-detector.js';
-import { loadTooltips } from 'tuleap-core/codendi/Tooltip.js';
+} from "./tuleap-artifact-modal-fields/file-field/file-field-detector.js";
+import { loadTooltips } from "tuleap-core/codendi/Tooltip.js";
 import { uploadAllTemporaryFiles } from "./tuleap-artifact-modal-fields/file-field/file-uploader.js";
 
 export default ArtifactModalController;
@@ -39,29 +35,30 @@ function ArtifactModalController(
     TuleapArtifactModalLoading,
     TuleapArtifactModalFieldDependenciesService
 ) {
-    const self  = this,
+    const self = this,
         user_id = modal_model.user_id;
 
     Object.assign(self, {
-        artifact_id        : modal_model.artifact_id,
-        color              : formatColor(modal_model.color),
-        creation_mode      : isInCreationMode(),
-        ordered_fields     : modal_model.ordered_fields,
-        parent             : null,
-        parent_artifact_id : modal_model.parent_artifact_id,
-        title              : (modal_model.title.content !== undefined) ? modal_model.title.content : modal_model.title,
-        tracker            : modal_model.tracker,
-        values             : modal_model.values,
-        text_formats       : modal_model.text_formats,
-        followups_comments : {
-            content         : [],
+        artifact_id: modal_model.artifact_id,
+        color: formatColor(modal_model.color),
+        creation_mode: isInCreationMode(),
+        ordered_fields: modal_model.ordered_fields,
+        parent: null,
+        parent_artifact_id: modal_model.parent_artifact_id,
+        title:
+            modal_model.title.content !== undefined ? modal_model.title.content : modal_model.title,
+        tracker: modal_model.tracker,
+        values: modal_model.values,
+        text_formats: modal_model.text_formats,
+        followups_comments: {
+            content: [],
             loading_comments: true,
-            invert_order    : (modal_model.invert_followups_comments_order) ? 'asc' : 'desc'
+            invert_order: modal_model.invert_followups_comments_order ? "asc" : "desc"
         },
         formatColor,
         getDropdownAttribute,
         getRestErrorMessage: getErrorMessage,
-        hasRestError       : hasError,
+        hasRestError: hasError,
         initCkeditorConfig,
         isDisabled,
         isFollowupCommentFormDisplayed,
@@ -71,24 +68,18 @@ function ArtifactModalController(
         submit,
         toggleFieldset,
         followup_comment: {
-            body  : '',
+            body: "",
             format: modal_model.text_fields_format
         },
         ckeditor_options: {
             default_ckeditor: {
                 toolbar: [
-                    ['Bold', 'Italic', 'Underline'],
-                    [
-                        'NumberedList',
-                        'BulletedList',
-                        '-',
-                        'Blockquote',
-                        'Format'
-                    ],
-                    ['Link', 'Unlink', 'Anchor', 'Image'],
-                    ['Source']
+                    ["Bold", "Italic", "Underline"],
+                    ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                    ["Link", "Unlink", "Anchor", "Image"],
+                    ["Source"]
                 ],
-                height: '100px'
+                height: "100px"
             }
         }
     });
@@ -101,35 +92,24 @@ function ArtifactModalController(
         TuleapArtifactModalLoading.loading = false;
         self.setupTooltips();
 
-        if (! isInCreationMode()) {
-            fetchFollowupsComments(
-                self.artifact_id,
-                50,
-                0,
-                self.followups_comments.invert_order
-            );
+        if (!isInCreationMode()) {
+            fetchFollowupsComments(self.artifact_id, 50, 0, self.followups_comments.invert_order);
         }
     }
 
     function initCkeditorConfig(field) {
-        var id = 'default_ckeditor';
+        var id = "default_ckeditor";
         if (field) {
             id = field.field_id;
-            if (! self.ckeditor_options[id]) {
+            if (!self.ckeditor_options[id]) {
                 self.ckeditor_options[id] = {
                     toolbar: [
-                        ['Bold', 'Italic', 'Underline'],
-                        [
-                            'NumberedList',
-                            'BulletedList',
-                            '-',
-                            'Blockquote',
-                            'Format'
-                        ],
-                        ['Link', 'Unlink', 'Anchor', 'Image'],
-                        ['Source']
+                        ["Bold", "Italic", "Underline"],
+                        ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+                        ["Link", "Unlink", "Anchor", "Image"],
+                        ["Source"]
                     ],
-                    height: '100px',
+                    height: "100px",
                     readOnly: self.isDisabled(field)
                 };
             }
@@ -145,20 +125,24 @@ function ArtifactModalController(
     }
 
     function isFollowupCommentFormDisplayed() {
-        return ! isInCreationMode() && user_id !== 0;
+        return !isInCreationMode() && user_id !== 0;
     }
 
     function fetchFollowupsComments(artifact_id, limit, offset, order) {
-        return $q.when(getFollowupsComments(artifact_id, limit, offset, order)).then(function(data) {
-            self.followups_comments.content = self.followups_comments.content.concat(data.results);
+        return $q
+            .when(getFollowupsComments(artifact_id, limit, offset, order))
+            .then(function(data) {
+                self.followups_comments.content = self.followups_comments.content.concat(
+                    data.results
+                );
 
-            if (offset + limit < data.total) {
-                fetchFollowupsComments(artifact_id, limit, offset + limit, order);
-            } else {
-                self.followups_comments.loading_comments = false;
-                self.setupTooltips();
-            }
-        });
+                if (offset + limit < data.total) {
+                    fetchFollowupsComments(artifact_id, limit, offset + limit, order);
+                } else {
+                    self.followups_comments.loading_comments = false;
+                    self.setupTooltips();
+                }
+            });
     }
 
     function submit() {
@@ -251,43 +235,50 @@ function ArtifactModalController(
     }
 
     function isDisabled(field) {
-        var necessary_permission = (isInCreationMode()) ? 'create' : 'update';
-        return ! _(field.permissions).contains(necessary_permission);
+        var necessary_permission = isInCreationMode() ? "create" : "update";
+        return !_(field.permissions).contains(necessary_permission);
     }
 
     function getDropdownAttribute(field) {
-        return (self.isDisabled(field)) ? '' : 'dropdown';
+        return self.isDisabled(field) ? "" : "dropdown";
     }
 
     function toggleFieldset(fieldset) {
-        fieldset.collapsed = ! fieldset.collapsed;
+        fieldset.collapsed = !fieldset.collapsed;
     }
 
     function formatColor(color) {
-        return color.split('_').join('-');
+        return color.split("_").join("-");
     }
 
     function setFieldDependenciesWatchers() {
-        TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(self.tracker, setFieldDependenciesWatcher);
+        TuleapArtifactModalFieldDependenciesService.setUpFieldDependenciesActions(
+            self.tracker,
+            setFieldDependenciesWatcher
+        );
     }
 
     function setFieldDependenciesWatcher(source_field_id, target_field, field_dependencies_rules) {
-        $scope.$watch(function() {
-            return self.values[source_field_id].bind_value_ids;
-        }, function(new_value, old_value) {
-            if (new_value === old_value) {
-                return;
-            }
+        $scope.$watch(
+            function() {
+                return self.values[source_field_id].bind_value_ids;
+            },
+            function(new_value, old_value) {
+                if (new_value === old_value) {
+                    return;
+                }
 
-            var source_value_ids = [].concat(new_value);
+                var source_value_ids = [].concat(new_value);
 
-            changeTargetFieldPossibleValuesAndResetSelectedValue(
-                source_field_id,
-                source_value_ids,
-                target_field,
-                field_dependencies_rules
-            );
-        }, true);
+                changeTargetFieldPossibleValuesAndResetSelectedValue(
+                    source_field_id,
+                    source_value_ids,
+                    target_field,
+                    field_dependencies_rules
+                );
+            },
+            true
+        );
     }
 
     function changeTargetFieldPossibleValuesAndResetSelectedValue(

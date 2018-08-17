@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!function($) {
+!(function($) {
     $(document).ready(function() {
-        var key = 'tuleap_feedback';
+        var key = "tuleap_feedback";
         if (sessionStorage[key]) {
-            codendi.feedback.log('info', sessionStorage[key]);
+            codendi.feedback.log("info", sessionStorage[key]);
             delete sessionStorage[key];
         }
     });
-}(window.jQuery);
+})(window.jQuery);

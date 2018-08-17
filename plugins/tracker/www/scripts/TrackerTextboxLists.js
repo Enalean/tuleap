@@ -16,28 +16,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-var codendi = codendi || { };
-codendi.tracker = codendi.tracker || { };
+var codendi = codendi || {};
+codendi.tracker = codendi.tracker || {};
 
 codendi.tracker.textboxlist = {
-    init: function () {
-        $$('.textboxlist-auto').each(function (textbox) {
+    init: function() {
+        $$(".textboxlist-auto").each(function(textbox) {
             if (textbox.id && textbox.id.match(/_\d+$/)) {
                 var id = textbox.id.match(/_(\d+)$/)[1];
-                if ($('tracker_field_' + id)) {
-                    codendi.tracker.textboxlist[id] = new ProtoMultiSelect('tracker_field_' + id, textbox.id, {
-                        fetchFile: codendi.tracker.base_url + '?formElement=' + id + '&func=textboxlist',
-                        loadOnInit: false,
-                        newValues: true,
-                        newValuePrefix: '!'
-                    });
+                if ($("tracker_field_" + id)) {
+                    codendi.tracker.textboxlist[id] = new ProtoMultiSelect(
+                        "tracker_field_" + id,
+                        textbox.id,
+                        {
+                            fetchFile:
+                                codendi.tracker.base_url +
+                                "?formElement=" +
+                                id +
+                                "&func=textboxlist",
+                            loadOnInit: false,
+                            newValues: true,
+                            newValuePrefix: "!"
+                        }
+                    );
                 }
             }
         });
     }
 };
 
-document.observe('dom:loaded', function () {
+document.observe("dom:loaded", function() {
     codendi.tracker.textboxlist.init();
 });
-

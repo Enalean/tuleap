@@ -17,13 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    getSortedProjectsIAmMemberOf as getProjects
-} from '../rest-querier.js';
+import { getSortedProjectsIAmMemberOf as getProjects } from "../rest-querier.js";
 
-export {
-    getSortedProjectsIAmMemberOf
-};
+export { getSortedProjectsIAmMemberOf };
 
 let cached_projects = [];
 
@@ -33,7 +29,7 @@ async function getSortedProjectsIAmMemberOf() {
     }
 
     const sorted_projects = await getProjects();
-    cached_projects       = sorted_projects.map(({ id, label }) => {
+    cached_projects = sorted_projects.map(({ id, label }) => {
         return { id, label };
     });
 

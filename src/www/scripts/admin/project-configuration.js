@@ -18,16 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { modal as createModal } from 'tlp';
+import { modal as createModal } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const logs_buttons = document.querySelectorAll('.project-webhook-modal');
+document.addEventListener("DOMContentLoaded", () => {
+    const logs_buttons = document.querySelectorAll(".project-webhook-modal");
 
-    [].forEach.call(logs_buttons, function (button) {
+    [].forEach.call(logs_buttons, function(button) {
         const modal_element = document.getElementById(button.dataset.modalId),
-            modal           = createModal(modal_element);
+            modal = createModal(modal_element);
 
-        button.addEventListener('click', function () {
+        button.addEventListener("click", function() {
             modal.toggle();
         });
     });

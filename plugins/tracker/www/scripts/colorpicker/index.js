@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue         from 'vue';
+import Vue from "vue";
 import ColorPicker from "./ColorPicker.vue";
 
 const ColorPickerComponent = Vue.extend(ColorPicker);

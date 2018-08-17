@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
-    $(function () {
-        var selector = $('#admin-headline-select-language');
+!(function($) {
+    $(function() {
+        var selector = $("#admin-headline-select-language");
 
         bindSwitchStandardHomepage();
         initCKEditor();
@@ -28,13 +27,13 @@
 
         function initCKEditor() {
             $('textarea[id^="admin-headline-"]').each(function() {
-                var textarea_id = $(this).attr('id');
+                var textarea_id = $(this).attr("id");
 
                 CKEDITOR.replace(textarea_id, {
                     toolbar: tuleap.ckeditor.toolbar
                 });
 
-                CKEDITOR.on('instanceReady', function() {
+                CKEDITOR.on("instanceReady", function() {
                     switchHeadline();
                 });
             });
@@ -46,7 +45,7 @@
             $('div[id^="cke_admin-headline-"]').each(function() {
                 var cke_instance = $(this);
 
-                if (cke_instance.attr('id') === "cke_admin-headline-" + language_id) {
+                if (cke_instance.attr("id") === "cke_admin-headline-" + language_id) {
                     cke_instance.show().focus();
                 } else {
                     cke_instance.hide();
@@ -55,10 +54,9 @@
         }
 
         function bindSwitchStandardHomepage() {
-            $('#use_standard_homepage').on('change', function() {
-                $('#admin-homepage').submit();
+            $("#use_standard_homepage").on("change", function() {
+                $("#admin-homepage").submit();
             });
         }
     });
-
 })(window.jQuery);

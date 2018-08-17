@@ -1,25 +1,17 @@
-import { fromJson } from 'angular';
+import { fromJson } from "angular";
 
 export default AppController;
 
-AppController.$inject = [
-    '$element',
-    'gettextCatalog',
-    'SharedPropertiesService'
-];
+AppController.$inject = ["$element", "gettextCatalog", "SharedPropertiesService"];
 
-function AppController(
-    $element,
-    gettextCatalog,
-    SharedPropertiesService
-) {
+function AppController($element, gettextCatalog, SharedPropertiesService) {
     const self = this;
 
     self.init = init;
     self.init();
 
     function init() {
-        const frs_init_data = $element[0].querySelector('.frs-init-data').dataset;
+        const frs_init_data = $element[0].querySelector(".frs-init-data").dataset;
 
         const release = fromJson(frs_init_data.release);
         SharedPropertiesService.setProjectId(release.project.id);

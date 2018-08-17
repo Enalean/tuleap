@@ -1,13 +1,13 @@
-import { noop }     from 'angular';
-import partition    from 'lodash.partition';
-import forEachRight from 'lodash.foreachright';
+import { noop } from "angular";
+import partition from "lodash.partition";
+import forEachRight from "lodash.foreachright";
 
 export default PullRequestCollectionService;
 
 PullRequestCollectionService.$inject = [
-    'SharedPropertiesService',
-    'PullRequestService',
-    'PullRequestCollectionRestService'
+    "SharedPropertiesService",
+    "PullRequestService",
+    "PullRequestCollectionRestService"
 ];
 
 function PullRequestCollectionService(
@@ -31,28 +31,32 @@ function PullRequestCollectionService(
         all_pull_requests: []
     });
 
-    let open_pull_requests_loaded                 = false;
-    let closed_pull_requests_loaded               = false;
-    let there_is_at_least_one_open_pull_request   = false;
+    let open_pull_requests_loaded = false;
+    let closed_pull_requests_loaded = false;
+    let there_is_at_least_one_open_pull_request = false;
     let there_is_at_least_one_closed_pull_request = false;
 
     function loadAllPullRequests() {
         const repository_id = SharedPropertiesService.getRepositoryId();
 
-        const promise = PullRequestCollectionRestService.getAllPullRequests(repository_id)
-        .then((pull_requests) => {
-            const all_pull_requests    = partition(pull_requests, PullRequestService.isPullRequestClosed);
-            const closed_pull_requests = all_pull_requests[0];
-            const open_pull_requests   = all_pull_requests[1];
+        const promise = PullRequestCollectionRestService.getAllPullRequests(repository_id).then(
+            pull_requests => {
+                const all_pull_requests = partition(
+                    pull_requests,
+                    PullRequestService.isPullRequestClosed
+                );
+                const closed_pull_requests = all_pull_requests[0];
+                const open_pull_requests = all_pull_requests[1];
 
-            there_is_at_least_one_open_pull_request   = (open_pull_requests.length > 0);
-            there_is_at_least_one_closed_pull_request = (closed_pull_requests.length > 0);
+                there_is_at_least_one_open_pull_request = open_pull_requests.length > 0;
+                there_is_at_least_one_closed_pull_request = closed_pull_requests.length > 0;
 
-            resetAllPullRequests(closed_pull_requests.concat(open_pull_requests));
+                resetAllPullRequests(closed_pull_requests.concat(open_pull_requests));
 
-            open_pull_requests_loaded   = true;
-            closed_pull_requests_loaded = true;
-        });
+                open_pull_requests_loaded = true;
+                closed_pull_requests_loaded = true;
+            }
+        );
 
         return promise;
     }
@@ -65,14 +69,16 @@ function PullRequestCollectionService(
             callback = noop;
         }
 
-        const promise = PullRequestCollectionRestService.getAllOpenPullRequests(repository_id, callback)
-        .then(function(open_pull_requests) {
-            if (! self.areClosedPullRequestsFullyLoaded()) {
+        const promise = PullRequestCollectionRestService.getAllOpenPullRequests(
+            repository_id,
+            callback
+        ).then(function(open_pull_requests) {
+            if (!self.areClosedPullRequestsFullyLoaded()) {
                 resetAllPullRequests(open_pull_requests);
             }
 
-            there_is_at_least_one_open_pull_request = (open_pull_requests.length > 0);
-            open_pull_requests_loaded               = true;
+            there_is_at_least_one_open_pull_request = open_pull_requests.length > 0;
+            open_pull_requests_loaded = true;
         });
 
         return promise;
@@ -81,10 +87,12 @@ function PullRequestCollectionService(
     function loadClosedPullRequests() {
         var repository_id = SharedPropertiesService.getRepositoryId();
 
-        var promise = PullRequestCollectionRestService.getAllClosedPullRequests(repository_id, progressivelyLoadCallback)
-        .then(function(closed_pull_requests) {
-            there_is_at_least_one_closed_pull_request = (closed_pull_requests.length > 0);
-            closed_pull_requests_loaded               = true;
+        var promise = PullRequestCollectionRestService.getAllClosedPullRequests(
+            repository_id,
+            progressivelyLoadCallback
+        ).then(function(closed_pull_requests) {
+            there_is_at_least_one_closed_pull_request = closed_pull_requests.length > 0;
+            closed_pull_requests_loaded = true;
         });
 
         return promise;
@@ -113,8 +121,7 @@ function PullRequestCollectionService(
     }
 
     function areAllPullRequestsFullyLoaded() {
-        return (self.areOpenPullRequestsFullyLoaded()
-            && self.areClosedPullRequestsFullyLoaded());
+        return self.areOpenPullRequestsFullyLoaded() && self.areClosedPullRequestsFullyLoaded();
     }
 
     function areOpenPullRequestsFullyLoaded() {

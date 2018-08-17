@@ -1,20 +1,10 @@
-import {
-    remove,
-    some,
-    find
-} from 'lodash';
+import { remove, some, find } from "lodash";
 
 export default BacklogItemCollectionService;
 
-BacklogItemCollectionService.$inject = [
-    'BacklogItemService',
-    'ItemAnimatorService'
-];
+BacklogItemCollectionService.$inject = ["BacklogItemService", "ItemAnimatorService"];
 
-function BacklogItemCollectionService(
-    BacklogItemService,
-    ItemAnimatorService
-) {
+function BacklogItemCollectionService(BacklogItemService, ItemAnimatorService) {
     const self = this;
     Object.assign(self, {
         items: {},
@@ -52,7 +42,7 @@ function BacklogItemCollectionService(
 
             ItemAnimatorService.animateUpdated(self.items[backlog_item_id]);
 
-            if (! backlog_item.has_children) {
+            if (!backlog_item.has_children) {
                 self.items[backlog_item_id].children.collapsed = true;
             }
         });
@@ -64,17 +54,24 @@ function BacklogItemCollectionService(
         });
     }
 
-    function addOrReorderBacklogItemsInCollection(backlog_items_collection, backlog_items_to_add_or_reorder, compared_to) {
+    function addOrReorderBacklogItemsInCollection(
+        backlog_items_collection,
+        backlog_items_to_add_or_reorder,
+        compared_to
+    ) {
         var index = 0;
 
-        self.removeBacklogItemsFromCollection(backlog_items_collection, backlog_items_to_add_or_reorder);
+        self.removeBacklogItemsFromCollection(
+            backlog_items_collection,
+            backlog_items_to_add_or_reorder
+        );
 
         if (compared_to) {
             index = backlog_items_collection.indexOf(
                 find(backlog_items_collection, { id: compared_to.item_id })
             );
 
-            if (compared_to.direction === 'after') {
+            if (compared_to.direction === "after") {
                 index = index + 1;
             }
         }

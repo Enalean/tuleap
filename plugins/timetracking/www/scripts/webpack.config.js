@@ -16,48 +16,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require('path');
-const webpack_configurator = require('../../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, '../assets');
+const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const webpack_config = {
     entry: {
-        'widget-timetracking': './personal-timetracking-widget/src/index.js'
+        "widget-timetracking": "./personal-timetracking-widget/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
         alias: {
-            'tlp-mocks': path.resolve(
+            "tlp-mocks": path.resolve(
                 __dirname,
-                '../../../../src/www/themes/common/tlp/mocks/index.js'
+                "../../../../src/www/themes/common/tlp/mocks/index.js"
             )
         }
     },
     externals: {
-        tlp: 'tlp'
+        tlp: "tlp"
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_karma
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
             webpack_configurator.rule_po_files,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ]
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()]
 };
 
-if (
-    process.env.NODE_ENV === 'test' ||
-    process.env.NODE_ENV === 'watch'
-) {
-    webpack_config.devtool = 'cheap-eval-source-map';
+if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "watch") {
+    webpack_config.devtool = "cheap-eval-source-map";
 }
 
 module.exports = webpack_config;

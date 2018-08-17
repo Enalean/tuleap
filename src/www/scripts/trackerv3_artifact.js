@@ -17,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap      = tuleap || {};
+var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
-document.observe('dom:loaded', function () {
-    var newFollowup = $('tracker_artifact_comment');
+document.observe("dom:loaded", function() {
+    var newFollowup = $("tracker_artifact_comment");
     if (newFollowup) {
-        new tuleap.textarea.RTE(
-            newFollowup,
-            {
-                toggle: true,
-                default_in_html: false,
-                id : ''
-            }
-        );
+        new tuleap.textarea.RTE(newFollowup, {
+            toggle: true,
+            default_in_html: false,
+            id: ""
+        });
     }
 });

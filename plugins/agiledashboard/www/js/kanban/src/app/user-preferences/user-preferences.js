@@ -1,6 +1,5 @@
-import UserPreferencesService from './user-preferences-service.js';
+import UserPreferencesService from "./user-preferences-service.js";
 
-angular.module('user-preferences', [])
-    .service('UserPreferencesService', UserPreferencesService);
+angular.module("user-preferences", []).service("UserPreferencesService", UserPreferencesService);
 
-export default 'user-preferences';
+export default "user-preferences";

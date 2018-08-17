@@ -1,10 +1,10 @@
 export default EditItemService;
 
 EditItemService.$inject = [
-    'BacklogItemCollectionService',
-    'NewTuleapArtifactModalService',
-    'MilestoneService',
-    'SharedPropertiesService'
+    "BacklogItemCollectionService",
+    "NewTuleapArtifactModalService",
+    "MilestoneService",
+    "SharedPropertiesService"
 ];
 
 function EditItemService(

@@ -1,16 +1,16 @@
-import { element } from 'angular';
-import { isNull } from 'lodash';
+import { element } from "angular";
+import { isNull } from "lodash";
 
 export default KanbanColumnController;
 
 KanbanColumnController.$inject = [
-    '$rootScope',
-    '$scope',
-    '$element',
-    'DroppedService',
-    'KanbanColumnService',
-    'SharedPropertiesService',
-    'ColumnCollectionService'
+    "$rootScope",
+    "$scope",
+    "$element",
+    "DroppedService",
+    "KanbanColumnService",
+    "SharedPropertiesService",
+    "ColumnCollectionService"
 ];
 
 function KanbanColumnController(
@@ -23,37 +23,37 @@ function KanbanColumnController(
     ColumnCollectionService
 ) {
     var self = this;
-    self.appending_item         = false;
-    self.cancelDrag             = cancelDrag;
-    self.dragularOptions        = dragularOptions;
+    self.appending_item = false;
+    self.cancelDrag = cancelDrag;
+    self.dragularOptions = dragularOptions;
     self.isColumnLoadedAndEmpty = isColumnLoadedAndEmpty;
 
     function dragularOptions() {
         return {
             containersModel: self.column.filtered_content,
-            scope          : $scope,
-            revertOnSpill  : true,
-            moves          : isItemDraggable,
-            onInit         : initDragular
+            scope: $scope,
+            revertOnSpill: true,
+            moves: isItemDraggable,
+            onInit: initDragular
         };
     }
 
     function initDragular(drake) {
         self.drake = drake;
 
-        $element.on('dragularenter', dragularEnter);
-        $element.on('dragularleave', dragularLeave);
-        $element.on('dragularrelease', dragularRelease);
-        $scope.$on('dragulardrag', dragularDrag);
-        $scope.$on('dragulardrop', dragularDrop);
+        $element.on("dragularenter", dragularEnter);
+        $element.on("dragularleave", dragularLeave);
+        $element.on("dragularrelease", dragularRelease);
+        $scope.$on("dragulardrag", dragularDrag);
+        $scope.$on("dragulardrop", dragularDrop);
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {
-        return ! ancestorCannotBeDragged(handle_element);
+        return !ancestorCannotBeDragged(handle_element);
     }
 
     function ancestorCannotBeDragged(handle_element) {
-        return (element(handle_element).closest('[data-nodrag="true"]').length > 0);
+        return element(handle_element).closest('[data-nodrag="true"]').length > 0;
     }
 
     function dragularEnter() {
@@ -91,13 +91,13 @@ function KanbanColumnController(
     ) {
         event.stopPropagation();
 
-        var target_column_id   = getColumnId(element(target_element));
-        var source_column      = self.column;
-        var target_column      = ColumnCollectionService.getColumn(target_column_id);
-        var target_model_items = (! isNull(target_model)) ? target_model : source_model;
-        var current_kanban     = SharedPropertiesService.getKanban();
-        var dropped_item       = target_model_items[target_index];
-        var compared_to        = DroppedService.getComparedTo(target_model_items, target_index);
+        var target_column_id = getColumnId(element(target_element));
+        var source_column = self.column;
+        var target_column = ColumnCollectionService.getColumn(target_column_id);
+        var target_model_items = !isNull(target_model) ? target_model : source_model;
+        var current_kanban = SharedPropertiesService.getKanban();
+        var dropped_item = target_model_items[target_index];
+        var compared_to = DroppedService.getComparedTo(target_model_items, target_index);
 
         dropped_item.updating = true;
 
@@ -123,12 +123,7 @@ function KanbanColumnController(
             dropped_item.updating = false;
         });
 
-        KanbanColumnService.moveItem(
-            dropped_item,
-            source_column,
-            target_column,
-            compared_to
-        );
+        KanbanColumnService.moveItem(dropped_item, source_column, target_column, compared_to);
 
         reflowKustomScrollBars();
     }
@@ -138,15 +133,15 @@ function KanbanColumnController(
     }
 
     function getColumnId(html_element) {
-        return html_element.data('column-id');
+        return html_element.data("column-id");
     }
 
     function isColumnLoadedAndEmpty() {
-        return ! self.column.loading_items && self.column.content.length === 0;
+        return !self.column.loading_items && self.column.content.length === 0;
     }
 
     function reflowKustomScrollBars() {
-        $rootScope.$broadcast('rebuild:kustom-scroll');
+        $rootScope.$broadcast("rebuild:kustom-scroll");
     }
 
     function cancelDrag() {

@@ -17,51 +17,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
+(function($) {
     function confirmDeletionPopover() {
-        $('.remove-hook').each(function() {
-           var id = $(this).data('popover-id');
+        $(".remove-hook").each(function() {
+            var id = $(this).data("popover-id");
 
-           $(this).popover({
-               container: '.git_webhook',
-               title: codendi.getText('git', 'remove_webhook_title'),
-               content: $('#' + id).html()
-           });
+            $(this).popover({
+                container: ".git_webhook",
+                title: codendi.getText("git", "remove_webhook_title"),
+                content: $("#" + id).html()
+            });
         });
     }
 
     function dismissPopover() {
-        $('.remove-hook').popover('hide');
+        $(".remove-hook").popover("hide");
     }
 
     function bindShowPopover() {
-        $('.remove-hook').click(function(event) {
+        $(".remove-hook").click(function(event) {
             event.preventDefault();
 
             dismissPopover();
 
-            $(this).popover('show');
+            $(this).popover("show");
         });
     }
 
-    $(function () {
-        $('.only-one-webhook').tooltip();
+    $(function() {
+        $(".only-one-webhook").tooltip();
 
         confirmDeletionPopover();
 
         bindShowPopover();
 
-        $('body').on('click', function(event) {
-            if ($(event.target).hasClass('dismiss-popover')) {
-               dismissPopover();
+        $("body").on("click", function(event) {
+            if ($(event.target).hasClass("dismiss-popover")) {
+                dismissPopover();
             }
 
-            if ($(event.target).data('toggle') !== 'popover' &&
-               $(event.target).parents('.popover.in').length === 0 &&
-               $(event.target).parents('[data-toggle="popover"]').length === 0
+            if (
+                $(event.target).data("toggle") !== "popover" &&
+                $(event.target).parents(".popover.in").length === 0 &&
+                $(event.target).parents('[data-toggle="popover"]').length === 0
             ) {
-               dismissPopover();
+                dismissPopover();
             }
         });
     });
-}(jQuery));
+})(jQuery);

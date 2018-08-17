@@ -1,13 +1,6 @@
-import {
-    tlp,
-    mockFetchSuccess,
-    mockFetchError
-} from 'tlp-mocks';
-import * as RestService from './rest-service.js';
-import {
-    rewire$setError,
-    restore as restoreErrorState
-} from './rest-error-state.js';
+import { tlp, mockFetchSuccess, mockFetchError } from "tlp-mocks";
+import * as RestService from "./rest-service.js";
+import { rewire$setError, restore as restoreErrorState } from "./rest-error-state.js";
 
 describe("rest-service", () => {
     let setError;
@@ -23,7 +16,7 @@ describe("rest-service", () => {
 
     it("getTracker() - Given a tracker id, when I get the tracker, then a promise will be resolved with the tracker", async () => {
         const return_json = {
-            id   : 84,
+            id: 84,
             label: "Functionize recklessly"
         };
         mockFetchSuccess(tlp.get, { return_json });
@@ -31,23 +24,24 @@ describe("rest-service", () => {
         const tracker = await RestService.getTracker(84);
 
         expect(tracker).toEqual({
-            id   : 84,
+            id: 84,
             label: "Functionize recklessly"
         });
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/trackers/84');
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/trackers/84");
     });
 
     it("getArtifact() - Given an artifact id, when I get the artifact, then a promise will be resolved with an artifact object", async () => {
         const return_json = {
-            id    : 792,
+            id: 792,
             values: [
                 {
                     field_id: 74,
-                    label   : "Kartvel",
-                    value   : "ruralize"
-                }, {
-                    field_id      : 31,
-                    label         : "xenium",
+                    label: "Kartvel",
+                    value: "ruralize"
+                },
+                {
+                    field_id: 31,
+                    label: "xenium",
                     bind_value_ids: [96, 81]
                 }
             ]
@@ -57,24 +51,25 @@ describe("rest-service", () => {
         const artifact = await RestService.getArtifact(792);
 
         expect(artifact).toEqual(return_json);
-        expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/792');
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/artifacts/792");
     });
 
     it("getArtifactFieldValues() - given an artifact id, when I get the artifact's field values, then a promise will be resolved with a map of field values indexed by their field id", async () => {
         const return_json = {
-            id    : 40,
+            id: 40,
             values: [
                 {
                     field_id: 866,
-                    label   : "unpredisposed",
-                    value   : "ectogenous"
-                }, {
+                    label: "unpredisposed",
+                    value: "ectogenous"
+                },
+                {
                     field_id: 468,
-                    label   : "coracler",
-                    value   : "caesaropapism"
+                    label: "coracler",
+                    value: "caesaropapism"
                 }
             ],
-            title: 'coincoin'
+            title: "coincoin"
         };
         mockFetchSuccess(tlp.get, { return_json });
 
@@ -83,33 +78,30 @@ describe("rest-service", () => {
         expect(values).toEqual({
             866: {
                 field_id: 866,
-                label   : "unpredisposed",
-                value   : "ectogenous"
+                label: "unpredisposed",
+                value: "ectogenous"
             },
             468: {
                 field_id: 468,
-                label   : "coracler",
-                value   : "caesaropapism"
+                label: "coracler",
+                value: "caesaropapism"
             },
-            title: 'coincoin'
+            title: "coincoin"
         });
     });
 
     describe("getAllOpenParentArtifacts() -", () => {
         it("Given the id of a child tracker, when I get all the open parents for this tracker, then a promise will be resolved with the artifacts", async () => {
             const tracker_id = 49;
-            const limit      = 30;
-            const offset     = 0;
-            const artifacts  = [
-                { id: 21, title: 'equationally' },
-                { id: 82, title: 'brachiator' }
-            ];
+            const limit = 30;
+            const offset = 0;
+            const artifacts = [{ id: 21, title: "equationally" }, { id: 82, title: "brachiator" }];
             tlp.recursiveGet.and.returnValue(artifacts);
 
             const values = await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset);
 
             expect(values).toEqual(artifacts);
-            expect(tlp.recursiveGet).toHaveBeenCalledWith('/api/v1/trackers/49/parent_artifacts', {
+            expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/v1/trackers/49/parent_artifacts", {
                 params: {
                     limit,
                     offset
@@ -119,11 +111,11 @@ describe("rest-service", () => {
 
         it("When there is a REST error, then it will be shown", async () => {
             const tracker_id = 12;
-            const limit      = 30;
-            const offset     = 0;
+            const limit = 30;
+            const offset = 0;
             const error_json = {
                 error: {
-                    message: 'No you cannot'
+                    message: "No you cannot"
                 }
             };
 
@@ -132,24 +124,24 @@ describe("rest-service", () => {
             await RestService.getAllOpenParentArtifacts(tracker_id, limit, offset).then(
                 () => Promise.reject(new Error("Promise should be rejected")),
                 () => {
-                    expect(setError).toHaveBeenCalledWith('No you cannot');
-                });
+                    expect(setError).toHaveBeenCalledWith("No you cannot");
+                }
+            );
         });
     });
 
     describe("searchUsers() -", () => {
         it("Given a query, when I search for a username containing the query, then a promise will be resolved with an array of user representations", async () => {
-            const return_json = [
-                { id: 629, label: "Blue" },
-                { id: 593, label: "Blurred" }
-            ];
+            const return_json = [{ id: 629, label: "Blue" }, { id: 593, label: "Blurred" }];
             mockFetchSuccess(tlp.get, { return_json });
 
-            const { results: [first_user, second_user] } = await RestService.searchUsers("Blu");
+            const {
+                results: [first_user, second_user]
+            } = await RestService.searchUsers("Blu");
 
             expect(first_user).toEqual({ id: 629, label: "Blue" });
             expect(second_user).toEqual({ id: 593, label: "Blurred" });
-            expect(tlp.get).toHaveBeenCalledWith('/api/v1/users', {
+            expect(tlp.get).toHaveBeenCalledWith("/api/v1/users", {
                 params: { query: "Blu" }
             });
         });
@@ -158,15 +150,15 @@ describe("rest-service", () => {
     describe("createArtifact() -", () => {
         it("Given a tracker id and an array of fields containing their id and selected values, when I create an artifact, then the field values will be sent using the artifact creation REST route and a promise will be resolved with the new artifact's id", async () => {
             const return_json = {
-                id     : 286,
+                id: 286,
                 tracker: {
-                    id   : 3,
+                    id: 3,
                     label: "Enkidu slanderfully"
                 }
             };
             const field_values = [
                 { field_id: 38, value: "fingerroot" },
-                { field_id: 140, bind_value_ids: [253]}
+                { field_id: 140, bind_value_ids: [253] }
             ];
             mockFetchSuccess(tlp.post, { return_json });
 
@@ -174,9 +166,9 @@ describe("rest-service", () => {
 
             expect(id).toEqual(286);
 
-            expect(tlp.post).toHaveBeenCalledWith('/api/v1/artifacts', {
+            expect(tlp.post).toHaveBeenCalledWith("/api/v1/artifacts", {
                 headers: {
-                    'content-type': 'application/json'
+                    "content-type": "application/json"
                 },
                 body: JSON.stringify({
                     tracker: {
@@ -192,13 +184,14 @@ describe("rest-service", () => {
         it("Given an artifact id, a limit, an offset and an order, when I get the artifact's followup comments, then a promise will be resolved with an object containing the comments in a 'results' property and the total number of comments in a 'total' property", async () => {
             const return_json = [
                 {
-                    id          : 629,
+                    id: 629,
                     last_comment: {
                         body: "orometer",
                         format: "text"
                     }
-                }, {
-                    id          : 593,
+                },
+                {
+                    id: 593,
                     last_comment: {
                         body: "mystagogic",
                         format: "html"
@@ -215,17 +208,17 @@ describe("rest-service", () => {
                 return_json
             });
 
-            const followup_comments = await RestService.getFollowupsComments(148, 66, 23, 'desc');
+            const followup_comments = await RestService.getFollowupsComments(148, 66, 23, "desc");
 
             expect(followup_comments.total).toEqual(74);
             expect(followup_comments.results[0]).toEqual(first_response);
             expect(followup_comments.results[1]).toEqual(second_response);
-            expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/148/changesets', {
+            expect(tlp.get).toHaveBeenCalledWith("/api/v1/artifacts/148/changesets", {
                 params: {
-                    fields: 'comments',
-                    limit : 66,
+                    fields: "comments",
+                    limit: 66,
                     offset: 23,
-                    order : 'desc'
+                    order: "desc"
                 }
             });
         });
@@ -283,18 +276,21 @@ describe("rest-service", () => {
     describe("getUserPreference() -", () => {
         it(" Given a key, when I search for a preference, then a promise will be resolved with an object of user preference representation", async () => {
             const return_json = {
-                key  : 'tracker_comment_invertorder_93',
-                value: '1'
+                key: "tracker_comment_invertorder_93",
+                value: "1"
             };
             mockFetchSuccess(tlp.get, { return_json });
 
-            const result = await RestService.getUserPreference(102, 'tracker_comment_invertorder_93');
+            const result = await RestService.getUserPreference(
+                102,
+                "tracker_comment_invertorder_93"
+            );
 
             expect(result).toEqual(return_json);
-            expect(tlp.get).toHaveBeenCalledWith('/api/v1/users/102/preferences', {
-                cache : 'force-cache',
+            expect(tlp.get).toHaveBeenCalledWith("/api/v1/users/102/preferences", {
+                cache: "force-cache",
                 params: {
-                    key: 'tracker_comment_invertorder_93'
+                    key: "tracker_comment_invertorder_93"
                 }
             });
         });
@@ -303,8 +299,8 @@ describe("rest-service", () => {
     describe("editArtifact() -", () => {
         it("Given an artifact id and an array of fields containing their id and selected value, when I edit an artifact, then the field values will be sent using the edit REST route and a promise will be resolved with the edited artifact's id", async () => {
             const followup_comment = {
-                value : '',
-                format: 'text'
+                value: "",
+                format: "text"
             };
             const field_values = [
                 { field_id: 47, value: "unpensionableness" },
@@ -312,22 +308,26 @@ describe("rest-service", () => {
             ];
             mockFetchSuccess(tlp.put, {
                 return_json: {
-                    values : field_values,
+                    values: field_values,
                     comment: followup_comment
                 }
             });
 
-            const artifact_edition = await RestService.editArtifact(8354, field_values, followup_comment);
+            const artifact_edition = await RestService.editArtifact(
+                8354,
+                field_values,
+                followup_comment
+            );
 
             expect(artifact_edition).toEqual({
                 id: 8354
             });
-            expect(tlp.put).toHaveBeenCalledWith('/api/v1/artifacts/8354', {
+            expect(tlp.put).toHaveBeenCalledWith("/api/v1/artifacts/8354", {
                 headers: {
-                    'content-type': 'application/json'
+                    "content-type": "application/json"
                 },
                 body: JSON.stringify({
-                    values : field_values,
+                    values: field_values,
                     comment: followup_comment
                 })
             });
@@ -337,9 +337,9 @@ describe("rest-service", () => {
     describe("getFileUploadRules() -", () => {
         it("When I get the file upload rules, then a promise will be resolved with an object containing the disk quota for the logged user, her disk usage and the max chunk size that can be sent when uploading a file", async () => {
             const headers = {
-                'X-QUOTA'                    : '2229535',
-                'X-DISK-USAGE'               : '596878',
-                'X-UPLOAD-MAX-FILE-CHUNKSIZE': '732798'
+                "X-QUOTA": "2229535",
+                "X-DISK-USAGE": "596878",
+                "X-UPLOAD-MAX-FILE-CHUNKSIZE": "732798"
             };
 
             mockFetchSuccess(tlp.options, {
@@ -350,20 +350,20 @@ describe("rest-service", () => {
 
             const rules = await RestService.getFileUploadRules();
 
-            expect(tlp.options).toHaveBeenCalledWith('/api/v1/artifact_temporary_files');
+            expect(tlp.options).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
             expect(rules).toEqual({
-                disk_quota    : 2229535,
-                disk_usage    : 596878,
+                disk_quota: 2229535,
+                disk_usage: 596878,
                 max_chunk_size: 732798
             });
-            expect(tlp.options).toHaveBeenCalledWith('/api/v1/artifact_temporary_files');
+            expect(tlp.options).toHaveBeenCalledWith("/api/v1/artifact_temporary_files");
         });
     });
 
     describe("getFirstReverseIsChildLink() -", () => {
         it("Given an artifact id, then an array containing the first reverse _is_child linked artifact will be returned", async () => {
             const artifact_id = 20;
-            const collection  = [{ id: 46 }];
+            const collection = [{ id: 46 }];
             mockFetchSuccess(tlp.get, {
                 return_json: { collection }
             });
@@ -371,19 +371,19 @@ describe("rest-service", () => {
             const result = await RestService.getFirstReverseIsChildLink(artifact_id);
 
             expect(result).toEqual(collection);
-            expect(tlp.get).toHaveBeenCalledWith('/api/v1/artifacts/20/linked_artifacts', {
+            expect(tlp.get).toHaveBeenCalledWith("/api/v1/artifacts/20/linked_artifacts", {
                 params: {
-                    direction: 'reverse',
-                    nature   : '_is_child',
-                    limit    : 1,
-                    offset   : 0
+                    direction: "reverse",
+                    nature: "_is_child",
+                    limit: 1,
+                    offset: 0
                 }
             });
         });
 
         it("Given an artifact id and given there weren't any linked _is_child artifacts, then an empty array will be returned", async () => {
             const artifact_id = 78;
-            const collection  = [];
+            const collection = [];
             mockFetchSuccess(tlp.get, {
                 return_json: { collection }
             });
@@ -395,18 +395,19 @@ describe("rest-service", () => {
 
         it("When there is a REST error, then it will be shown", async () => {
             const artifact_id = 9;
-            const error_json  = {
+            const error_json = {
                 error: {
-                    message: 'Invalid artifact id'
+                    message: "Invalid artifact id"
                 }
             };
             mockFetchError(tlp.get, { error_json });
 
             await RestService.getFirstReverseIsChildLink(artifact_id).then(
-                () => Promise.reject(new Error('Promise should be rejected')),
+                () => Promise.reject(new Error("Promise should be rejected")),
                 () => {
-                    expect(setError).toHaveBeenCalledWith('Invalid artifact id');
-                });
+                    expect(setError).toHaveBeenCalledWith("Invalid artifact id");
+                }
+            );
         });
     });
 });

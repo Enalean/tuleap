@@ -1,22 +1,24 @@
-const gulp        = require('gulp');
-const runSequence = require('run-sequence');
-const map         = require('lodash.map');
-const readPkg     = require('read-pkg');
-const path        = require('path');
-const exec        = require('child_process').exec;
-const spawn       = require('child_process').spawn;
+const gulp = require("gulp");
+const runSequence = require("run-sequence");
+const map = require("lodash.map");
+const readPkg = require("read-pkg");
+const path = require("path");
+const exec = require("child_process").exec;
+const spawn = require("child_process").spawn;
 
 function verifyPackageJsonFile(component_path) {
-    var package_json_path = path.join(component_path, 'package.json');
+    var package_json_path = path.join(component_path, "package.json");
 
     return readPkg(package_json_path)
-        .then(function (pkg) {
-            if (! pkg.name) {
+        .then(function(pkg) {
+            if (!pkg.name) {
                 throw new Error("package.json file should have a 'name' " + package_json_path);
             }
 
-            if (! pkg.scripts || ! pkg.scripts.build) {
-                throw new Error("package.json file should have a 'build' script " + package_json_path);
+            if (!pkg.scripts || !pkg.scripts.build) {
+                throw new Error(
+                    "package.json file should have a 'build' script " + package_json_path
+                );
             }
 
             return {
@@ -30,7 +32,7 @@ function verifyPackageJsonFile(component_path) {
 }
 
 function findComponentsWithPackageAndBuildScript(component_paths) {
-    var promises = map(component_paths, function (component_path) {
+    var promises = map(component_paths, function(component_path) {
         return verifyPackageJsonFile(component_path);
     });
 
@@ -38,92 +40,121 @@ function findComponentsWithPackageAndBuildScript(component_paths) {
 }
 
 function installNpmComponent(component) {
-    var task_name = 'install-' + component.name;
-    gulp.task(task_name, function (callback) {
-        exec('npm install', {
-            cwd: component.path
-        }, function(error) {
-            if (error) {
-                return callback(error);
+    var task_name = "install-" + component.name;
+    gulp.task(task_name, function(callback) {
+        exec(
+            "npm install",
+            {
+                cwd: component.path
+            },
+            function(error) {
+                if (error) {
+                    return callback(error);
+                }
+                callback();
             }
-            callback();
-        });
+        );
     });
 
     return task_name;
 }
 
 function buildNpmComponent(component, dependent_tasks) {
-    var task_name = 'build-' + component.name;
-    gulp.task(task_name, dependent_tasks, function (callback) {
-        var child_process = spawn('npm', ['run', 'build'], {
-            stdio: 'inherit',
-            cwd  : component.path
+    var task_name = "build-" + component.name;
+    gulp.task(task_name, dependent_tasks, function(callback) {
+        var child_process = spawn("npm", ["run", "build"], {
+            stdio: "inherit",
+            cwd: component.path
         });
 
-        child_process.on('close', function(code) {
+        child_process.on("close", function(code) {
             if (code !== 0) {
                 return callback(code);
             }
             callback();
-        })
+        });
     });
 
     return task_name;
 }
 
 function installBowerComponent(component, dependent_tasks) {
-    var task_name = 'bower-install-' + component.name;
-    gulp.task(task_name, dependent_tasks, function (callback) {
-        exec('npm run bower install', {
-            cwd: component.path
-        }, function(error) {
-            if (error) {
-                return callback(error);
+    var task_name = "bower-install-" + component.name;
+    gulp.task(task_name, dependent_tasks, function(callback) {
+        exec(
+            "npm run bower install",
+            {
+                cwd: component.path
+            },
+            function(error) {
+                if (error) {
+                    return callback(error);
+                }
+                callback();
             }
-            callback();
-        });
+        );
     });
 
     return task_name;
 }
 
-function installAndBuildNpmComponents(base_dir, component_paths, components_task_name, dependent_tasks) {
+function installAndBuildNpmComponents(
+    base_dir,
+    component_paths,
+    components_task_name,
+    dependent_tasks
+) {
     const build_tasks = [];
     const full_component_paths = component_paths.map(p => path.join(base_dir, p));
 
-    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function (components) {
+    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function(
+        components
+    ) {
         components.forEach(function(component) {
             var install_task_name = installNpmComponent(component);
-            var build_task_name   = buildNpmComponent(component, [install_task_name]);
+            var build_task_name = buildNpmComponent(component, [install_task_name]);
             build_tasks.push(build_task_name);
         });
     });
 
     gulp.task(components_task_name, dependent_tasks, function(callback) {
-        promise.then(() => {
-            return runSequence(...build_tasks, callback);
-        }).catch(error => callback(error));
+        promise
+            .then(() => {
+                return runSequence(...build_tasks, callback);
+            })
+            .catch(error => callback(error));
     });
 }
 
-function installAndBuildBowerComponents(base_dir, component_paths, components_task_name, dependent_tasks) {
+function installAndBuildBowerComponents(
+    base_dir,
+    component_paths,
+    components_task_name,
+    dependent_tasks
+) {
     const build_tasks = [];
     const full_component_paths = component_paths.map(p => path.join(base_dir, p));
 
-    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function (components) {
+    var promise = findComponentsWithPackageAndBuildScript(full_component_paths).then(function(
+        components
+    ) {
         components.forEach(function(component) {
-            var install_task_name       = installNpmComponent(component);
+            var install_task_name = installNpmComponent(component);
             var bower_install_task_name = installBowerComponent(component, [install_task_name]);
-            var build_task_name         = buildNpmComponent(component, [install_task_name, bower_install_task_name]);
+            var build_task_name = buildNpmComponent(component, [
+                install_task_name,
+                bower_install_task_name
+            ]);
             build_tasks.push(build_task_name);
         });
     });
 
     gulp.task(components_task_name, dependent_tasks, function(callback) {
-        promise.then(() => {
-            return runSequence(...build_tasks, callback);
-        }).catch(error => callback(error));
+        promise
+            .then(() => {
+                return runSequence(...build_tasks, callback);
+            })
+            .catch(error => callback(error));
     });
 }
 

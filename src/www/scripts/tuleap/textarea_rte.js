@@ -17,43 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap      = tuleap || {};
+var tuleap = tuleap || {};
 tuleap.textarea = tuleap.textarea || {};
 
 tuleap.textarea.RTE = Class.create(codendi.RTE, {
-    initialize: function ($super, element, options) {
-        options = Object.extend({toolbar: 'tuleap'}, options || { });
-        this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
+    initialize: function($super, element, options) {
+        options = Object.extend({ toolbar: "tuleap" }, options || {});
+        this.options = Object.extend({ htmlFormat: false, id: 0 }, options || {});
         $super(element, options);
         // This div contains comment format selection buttons
-        var div = Builder.node('div');
-        var select_container = Builder.node('div', {'class' : 'rte_format'});
+        var div = Builder.node("div");
+        var select_container = Builder.node("div", { class: "rte_format" });
         select_container.appendChild(document.createTextNode("Format : "));
         div.appendChild(select_container);
 
-        var div_clear = Builder.node('div', {'class' : 'rte_clear'});
-        div.appendChild(div_clear)
+        var div_clear = Builder.node("div", { class: "rte_clear" });
+        div.appendChild(div_clear);
 
         if (undefined == this.options.name) {
-            this.options.name = 'comment_format'+this.options.id;
+            this.options.name = "comment_format" + this.options.id;
         }
 
-        var selectbox = Builder.node('select', {'id' : 'rte_format_selectbox'+this.options.id, 'name' : this.options.name, 'class' : 'input-small'});
+        var selectbox = Builder.node("select", {
+            id: "rte_format_selectbox" + this.options.id,
+            name: this.options.name,
+            class: "input-small"
+        });
         select_container.appendChild(selectbox);
 
-        var text_value = 'text';
-        var html_value = 'html';
+        var text_value = "text";
+        var html_value = "html";
 
-        if (element.id === 'tracker_artifact_comment') {
-            text_value = '0';
-            html_value = '1';
+        if (element.id === "tracker_artifact_comment") {
+            text_value = "0";
+            html_value = "1";
         }
 
         // Add an option that tells that the content format is text
         // The value is defined in Artifact class.
         var text_option = Builder.node(
-            'option',
-            {'value' : text_value, 'id' : 'comment_format_text'+this.options.id},
+            "option",
+            { value: text_value, id: "comment_format_text" + this.options.id },
             "Text"
         );
         selectbox.appendChild(text_option);
@@ -61,13 +65,13 @@ tuleap.textarea.RTE = Class.create(codendi.RTE, {
         // Add an option that tells that the content format is HTML
         // The value is defined in Artifact class.
         var html_option = Builder.node(
-            'option',
-            {'value': html_value, 'id' : 'comment_format_html'+this.options.id},
+            "option",
+            { value: html_value, id: "comment_format_html" + this.options.id },
             "HTML"
         );
         selectbox.appendChild(html_option);
 
-        Element.insert(this.element, {before: div});
+        Element.insert(this.element, { before: div });
 
         div.appendChild(this.element);
 
@@ -81,34 +85,34 @@ tuleap.textarea.RTE = Class.create(codendi.RTE, {
             text_option.selected = true;
         }
 
-        if ($('comment_format_html'+this.options.id).selected == true) {
+        if ($("comment_format_html" + this.options.id).selected == true) {
             this.init_rte();
         }
 
         if (this.options.toggle) {
-           selectbox.observe('change', this.toggle.bindAsEventListener(this, selectbox));
+            selectbox.observe("change", this.toggle.bindAsEventListener(this, selectbox));
         }
     },
 
-    toggle: function ($super, event, selectbox) {
+    toggle: function($super, event, selectbox) {
         var option = selectbox.options[selectbox.selectedIndex].value,
-            id     = this.element.id;
+            id = this.element.id;
 
-            if (option === '0') {
-                option = 'text';
-            } else if (option === '1') {
-                option = 'html';
-            }
+        if (option === "0") {
+            option = "text";
+        } else if (option === "1") {
+            option = "html";
+        }
 
-            if ($(id).hasAttribute("data-required") && option == 'text' && this.rte) {
-                $(id).removeAttribute("data-required");
-                $(id).writeAttribute("required", true);
-            };
+        if ($(id).hasAttribute("data-required") && option == "text" && this.rte) {
+            $(id).removeAttribute("data-required");
+            $(id).writeAttribute("required", true);
+        }
 
         $super(event, option);
     },
 
-    init_rte : function($super) {
+    init_rte: function($super) {
         var id = this.element.id;
 
         $super();

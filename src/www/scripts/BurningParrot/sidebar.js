@@ -17,37 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post } from 'tlp';
+import { post } from "tlp";
 
 export { init };
 
 function init() {
-    const sidebar_collapsers = document.querySelectorAll('.sidebar-collapser'),
-        sidebar              = document.querySelector('.sidebar');
+    const sidebar_collapsers = document.querySelectorAll(".sidebar-collapser"),
+        sidebar = document.querySelector(".sidebar");
 
-    if (! sidebar) {
+    if (!sidebar) {
         return;
     }
 
     bindSidebarEvent();
 
     function bindSidebarEvent() {
-        sidebar.addEventListener('click', event => {
-            const clicked_element                      = event.target,
-                is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(clicked_element),
-                sidebar_collapsed_class                = clicked_element.dataset.collapsedClass,
-                user_preference_name                   = clicked_element.dataset.userPreferenceName;
+        sidebar.addEventListener("click", event => {
+            const clicked_element = event.target,
+                is_clicked_element_a_sidebar_collapser = isClickedElementASidebarCollapser(
+                    clicked_element
+                ),
+                sidebar_collapsed_class = clicked_element.dataset.collapsedClass,
+                user_preference_name = clicked_element.dataset.userPreferenceName;
 
-            if (! is_clicked_element_a_sidebar_collapser) {
+            if (!is_clicked_element_a_sidebar_collapser) {
                 return;
             }
 
-
             if (document.body.classList.contains(sidebar_collapsed_class)) {
                 document.body.classList.remove(sidebar_collapsed_class);
-                updateUserPreferences(user_preference_name, 'sidebar-expanded');
+                updateUserPreferences(user_preference_name, "sidebar-expanded");
             } else {
-                document.body.classList.remove('sidebar-expanded', sidebar_collapsed_class);
+                document.body.classList.remove("sidebar-expanded", sidebar_collapsed_class);
                 document.body.classList.add(sidebar_collapsed_class);
                 updateUserPreferences(user_preference_name, sidebar_collapsed_class);
             }
@@ -69,8 +70,8 @@ function init() {
 
 function updateUserPreferences(user_preference_name, state) {
     const headers = { "Content-Type": "application/x-www-form-urlencoded; charset=utf-8" };
-    const body    = `user_preference_name=${ user_preference_name }&sidebar_state=${ state }`;
-    post('/account/update-sidebar-preference.php', {
+    const body = `user_preference_name=${user_preference_name}&sidebar_state=${state}`;
+    post("/account/update-sidebar-preference.php", {
         headers,
         body
     });

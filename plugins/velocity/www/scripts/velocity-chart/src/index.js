@@ -21,35 +21,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { gettext_provider }    from './gettext-provider.js';
-import { VelocityChartDrawer } from './velocity-chart-drawer.js';
+import { gettext_provider } from "./gettext-provider.js";
+import { VelocityChartDrawer } from "./velocity-chart-drawer.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const mount_point = document.getElementById('velocity-chart');
+    const mount_point = document.getElementById("velocity-chart");
 
-    if (! mount_point) {
+    if (!mount_point) {
         return;
     }
 
-    const locale          = document.body.dataset.userLocale;
-    const sprints_data    = JSON.parse(mount_point.dataset.sprints);
+    const locale = document.body.dataset.userLocale;
+    const sprints_data = JSON.parse(mount_point.dataset.sprints);
     const container_width = mount_point.clientWidth;
 
     gettext_provider.setLocale(locale);
 
     const chart_props = {
-        graph_width          : container_width,
-        graph_height         : container_width / 1.33,
-        bands_paddings       : 0.5,
-        default_max_velocity : 5,
-        minimum_bar_height   : 2, // To have a tiny bar when velocity worth 0
-        tooltip_date_format  : gettext_provider.gettext('MM/DD'),
+        graph_width: container_width,
+        graph_height: container_width / 1.33,
+        bands_paddings: 0.5,
+        default_max_velocity: 5,
+        minimum_bar_height: 2, // To have a tiny bar when velocity worth 0
+        tooltip_date_format: gettext_provider.gettext("MM/DD"),
         abcissa_labels_margin: 20,
         margins: {
-            top   : 50,
-            right : 80,
+            top: 50,
+            right: 80,
             bottom: 100,
-            left  : 80
+            left: 80
         }
     };
 

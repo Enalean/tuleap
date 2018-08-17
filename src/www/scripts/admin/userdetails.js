@@ -15,20 +15,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, datePicker } from 'tlp';
+import { modal as createModal, datePicker } from "tlp";
 
-document.addEventListener('DOMContentLoaded', function() {
-    const expiry_element = document.querySelector('#expiry');
+document.addEventListener("DOMContentLoaded", function() {
+    const expiry_element = document.querySelector("#expiry");
     if (expiry_element) {
         datePicker(expiry_element);
     }
 
-    const dom_user_change_password_modal = document.getElementById('user-change-password-modal');
+    const dom_user_change_password_modal = document.getElementById("user-change-password-modal");
     const tlp_user_change_password_modal = createModal(dom_user_change_password_modal, {});
 
-    document.getElementById('siteadmin-user-details-change-password').addEventListener('click', () => {
-        tlp_user_change_password_modal.toggle();
-    });
+    document
+        .getElementById("siteadmin-user-details-change-password")
+        .addEventListener("click", () => {
+            tlp_user_change_password_modal.toggle();
+        });
 
     const url_params = location.search;
     if (url_params.indexOf("show-change-user-password-modal") !== -1) {

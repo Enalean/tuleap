@@ -21,26 +21,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path               = require('path');
-const webpack_config     = require('./webpack.config.js');
-const karma_configurator = require('../../../../tools/utils/scripts/karma-configurator.js');
+const path = require("path");
+const webpack_config = require("./webpack.config.js");
+const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
 
-webpack_config.mode = 'development';
+webpack_config.mode = "development";
 
 module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, './coverage');
-    const base_config  = karma_configurator.setupBaseKarmaConfig(
+    const coverage_dir = path.resolve(__dirname, "./coverage");
+    const base_config = karma_configurator.setupBaseKarmaConfig(
         config,
         webpack_config,
         coverage_dir
     );
 
     Object.assign(base_config, {
-        files  : [
-            './personal-timetracking-widget/src/app.spec.js'
-        ],
+        files: ["./personal-timetracking-widget/src/app.spec.js"],
         preprocessors: {
-            './personal-timetracking-widget/src/app.spec.js': ['webpack']
+            "./personal-timetracking-widget/src/app.spec.js": ["webpack"]
         }
     });
 

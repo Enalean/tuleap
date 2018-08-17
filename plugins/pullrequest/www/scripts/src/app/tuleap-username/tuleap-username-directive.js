@@ -1,13 +1,13 @@
-import './tuleap-username.tpl.html';
+import "./tuleap-username.tpl.html";
 
 export default TuleapUsernameDirective;
 
 function TuleapUsernameDirective() {
     return {
-        restrict: 'AE',
-        scope   : {
-            username: '='
+        restrict: "AE",
+        scope: {
+            username: "="
         },
-        templateUrl: 'tuleap-username.tpl.html'
+        templateUrl: "tuleap-username.tpl.html"
     };
 }

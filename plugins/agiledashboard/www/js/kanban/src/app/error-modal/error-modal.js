@@ -1,11 +1,8 @@
-import angular from 'angular';
-import angular_tlp from 'angular-tlp';
+import angular from "angular";
+import angular_tlp from "angular-tlp";
 
-import RestErrorService from './rest-error-service.js';
+import RestErrorService from "./rest-error-service.js";
 
-angular.module('rest-error', [
-    angular_tlp
-])
-.service('RestErrorService', RestErrorService);
+angular.module("rest-error", [angular_tlp]).service("RestErrorService", RestErrorService);
 
-export default 'rest-error';
+export default "rest-error";

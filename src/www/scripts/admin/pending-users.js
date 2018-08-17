@@ -17,9 +17,8 @@
 
 import { datePicker } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    const expiry_elements = document.querySelectorAll('input[id^=expiry-]');
+document.addEventListener("DOMContentLoaded", () => {
+    const expiry_elements = document.querySelectorAll("input[id^=expiry-]");
 
     for (const expiry_element of expiry_elements) {
         datePicker(expiry_element);

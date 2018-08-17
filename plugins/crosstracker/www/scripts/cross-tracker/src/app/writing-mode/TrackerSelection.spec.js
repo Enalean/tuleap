@@ -17,31 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue              from 'vue';
-import TrackerSelection from './TrackerSelection.vue';
-import {
-    rewire$getSortedProjectsIAmMemberOf,
-    restore
-} from './projects-cache.js';
-import {
-    rewire$getTrackersOfProject,
-    restore as restoreRest
-} from '../rest-querier.js';
+import Vue from "vue";
+import TrackerSelection from "./TrackerSelection.vue";
+import { rewire$getSortedProjectsIAmMemberOf, restore } from "./projects-cache.js";
+import { rewire$getTrackersOfProject, restore as restoreRest } from "../rest-querier.js";
 
 describe("TrackerSelection", () => {
-    let Selection,
-        errorDisplayer,
-        selectedTrackers;
+    let Selection, errorDisplayer, selectedTrackers;
 
     beforeEach(() => {
-        Selection        = Vue.extend(TrackerSelection);
+        Selection = Vue.extend(TrackerSelection);
         selectedTrackers = [];
     });
 
     function instantiateComponent() {
         const vm = new Selection({
             propsData: {
-                selectedTrackers,
+                selectedTrackers
             }
         });
         vm.$mount();
@@ -63,7 +55,7 @@ describe("TrackerSelection", () => {
         let getProjects;
 
         beforeEach(() => {
-            getProjects = jasmine.createSpy('getSortedProjectsIAmMemberOf');
+            getProjects = jasmine.createSpy("getSortedProjectsIAmMemberOf");
             rewire$getSortedProjectsIAmMemberOf(getProjects);
             spyOn(TrackerSelection.methods, "loadTrackers");
         });
@@ -73,8 +65,8 @@ describe("TrackerSelection", () => {
         });
 
         it("when I load projects, the loader will be shown and the first project fetched will be set as selected", async () => {
-            const first_project  = { id: 543, label: 'unheroically' };
-            const second_project = { id: 554, label: 'cycler' };
+            const first_project = { id: 543, label: "unheroically" };
+            const second_project = { id: 554, label: "cycler" };
             getProjects.and.returnValue(Promise.resolve([first_project, second_project]));
             const vm = instantiateComponent();
 
@@ -93,13 +85,16 @@ describe("TrackerSelection", () => {
             const vm = instantiateComponent();
             spyOn(vm, "$emit");
 
-            vm.loadProjects().then(() => {
-                fail();
-            }, () => {
-                expect(vm.$emit).toHaveBeenCalledWith('error', jasmine.any(String));
-                expect(errorDisplayer.displayError).toHaveBeenCalled();
-                expect(vm.is_loader_shown).toBe(false);
-            });
+            vm.loadProjects().then(
+                () => {
+                    fail();
+                },
+                () => {
+                    expect(vm.$emit).toHaveBeenCalledWith("error", jasmine.any(String));
+                    expect(errorDisplayer.displayError).toHaveBeenCalled();
+                    expect(vm.is_loader_shown).toBe(false);
+                }
+            );
         });
     });
 
@@ -107,7 +102,7 @@ describe("TrackerSelection", () => {
         let getTrackers;
 
         beforeEach(() => {
-            getTrackers = jasmine.createSpy('getTrackersOfProject');
+            getTrackers = jasmine.createSpy("getTrackersOfProject");
             rewire$getTrackersOfProject(getTrackers);
         });
 
@@ -116,10 +111,10 @@ describe("TrackerSelection", () => {
         });
 
         it("when I load trackers, the loader will be shown and the trackers options will be disabled if already selected", async () => {
-            const first_tracker  = { id: 8, label: 'coquettish' };
-            const second_tracker = { id: 26, label: 'unfruitfully' };
-            const trackers       = [first_tracker, second_tracker];
-            selectedTrackers     = [{ tracker_id: 26 }];
+            const first_tracker = { id: 8, label: "coquettish" };
+            const second_tracker = { id: 26, label: "unfruitfully" };
+            const trackers = [first_tracker, second_tracker];
+            selectedTrackers = [{ tracker_id: 26 }];
             getTrackers.and.returnValue(Promise.resolve(trackers));
             const project_id = 20;
             const vm = instantiateComponent();
@@ -132,8 +127,8 @@ describe("TrackerSelection", () => {
             expect(vm.is_loader_shown).toBe(false);
             expect(vm.trackers).toEqual(trackers);
             expect(vm.tracker_options).toEqual([
-                { id: 8, label: 'coquettish', disabled: false },
-                { id: 26, label: 'unfruitfully', disabled: true },
+                { id: 8, label: "coquettish", disabled: false },
+                { id: 26, label: "unfruitfully", disabled: true }
             ]);
         });
 
@@ -143,12 +138,15 @@ describe("TrackerSelection", () => {
             const vm = instantiateComponent();
             spyOn(vm, "$emit");
 
-            vm.loadTrackers(project_id).then(() => {
-                fail();
-            }, () => {
-                expect(vm.$emit).toHaveBeenCalledWith('error', jasmine.any(String));
-                expect(vm.is_loader_shown).toBe(false);
-            });
+            vm.loadTrackers(project_id).then(
+                () => {
+                    fail();
+                },
+                () => {
+                    expect(vm.$emit).toHaveBeenCalledWith("error", jasmine.any(String));
+                    expect(vm.is_loader_shown).toBe(false);
+                }
+            );
         });
     });
 
@@ -156,15 +154,18 @@ describe("TrackerSelection", () => {
         it("when I add a tracker, then an event will be emitted", () => {
             spyOn(TrackerSelection.methods, "loadTrackers");
             const vm = instantiateComponent();
-            const selected_project = { id: 972, label: 'unmortised' };
-            const selected_tracker = { id: 97, label: 'acinus' };
+            const selected_project = { id: 972, label: "unmortised" };
+            const selected_tracker = { id: 97, label: "acinus" };
             vm.selected_project = selected_project;
             vm.selected_tracker = selected_tracker;
             spyOn(vm, "$emit");
 
             vm.addTrackerToSelection();
 
-            expect(vm.$emit).toHaveBeenCalledWith('trackerAdded', { selected_project, selected_tracker });
+            expect(vm.$emit).toHaveBeenCalledWith("trackerAdded", {
+                selected_project,
+                selected_tracker
+            });
             expect(vm.selected_tracker).toBe(null);
         });
     });

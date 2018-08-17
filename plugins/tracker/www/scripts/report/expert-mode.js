@@ -17,20 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import codendi    from 'codendi';
-import CodeMirror from 'codemirror';
-import { post }    from 'tlp-fetch';
-import {
-    buildModeDefinition,
-    TQL_autocomplete_keywords
-} from './TQL-CodeMirror/configuration.js';
-import {
-    insertAllowedFieldInCodeMirror
-} from './TQL-CodeMirror/allowed-field-inserter.js';
-import {
-    initializeTQLMode,
-    codeMirrorify
-} from './TQL-CodeMirror/builder.js';
+import codendi from "codendi";
+import CodeMirror from "codemirror";
+import { post } from "tlp-fetch";
+import { buildModeDefinition, TQL_autocomplete_keywords } from "./TQL-CodeMirror/configuration.js";
+import { insertAllowedFieldInCodeMirror } from "./TQL-CodeMirror/allowed-field-inserter.js";
+import { initializeTQLMode, codeMirrorify } from "./TQL-CodeMirror/builder.js";
 
 export { init };
 
@@ -43,50 +35,57 @@ function init() {
 }
 
 function initializeTrackerReportQuery() {
-    const tracker_report_expert_query_button = document.getElementById('tracker-report-expert-query-button');
-    const tracker_report_normal_query_button = document.getElementById('tracker-report-normal-query-button');
-    const tracker_report_expert_query        = document.getElementById('tracker-report-expert-query');
-    const tracker_report_normal_query        = document.getElementById('tracker-report-normal-query');
+    const tracker_report_expert_query_button = document.getElementById(
+        "tracker-report-expert-query-button"
+    );
+    const tracker_report_normal_query_button = document.getElementById(
+        "tracker-report-normal-query-button"
+    );
+    const tracker_report_expert_query = document.getElementById("tracker-report-expert-query");
+    const tracker_report_normal_query = document.getElementById("tracker-report-normal-query");
 
-    if (! tracker_report_expert_query_button
-        || ! tracker_report_normal_query_button
-        || ! tracker_report_expert_query
-        || ! tracker_report_normal_query
+    if (
+        !tracker_report_expert_query_button ||
+        !tracker_report_normal_query_button ||
+        !tracker_report_expert_query ||
+        !tracker_report_normal_query
     ) {
         return;
     }
 
-    tracker_report_expert_query_button.addEventListener('click', () => {
-        tracker_report_normal_query.classList.add('tracker-report-query-undisplayed');
-        tracker_report_expert_query.classList.remove('tracker-report-query-undisplayed');
+    tracker_report_expert_query_button.addEventListener("click", () => {
+        tracker_report_normal_query.classList.add("tracker-report-query-undisplayed");
+        tracker_report_expert_query.classList.remove("tracker-report-query-undisplayed");
 
         codeMirrorifyQueryArea();
 
-        sendRequestNewMode('store-expert-mode');
+        sendRequestNewMode("store-expert-mode");
     });
 
-    tracker_report_normal_query_button.addEventListener('click', () => {
-        tracker_report_normal_query.classList.remove('tracker-report-query-undisplayed');
-        tracker_report_expert_query.classList.add('tracker-report-query-undisplayed');
+    tracker_report_normal_query_button.addEventListener("click", () => {
+        tracker_report_normal_query.classList.remove("tracker-report-query-undisplayed");
+        tracker_report_expert_query.classList.add("tracker-report-query-undisplayed");
 
-        sendRequestNewMode('store-normal-mode');
+        sendRequestNewMode("store-normal-mode");
     });
 }
 
 function initializeTrackerReportAllowedFields() {
-    const tracker_report_expert_allowed_fields = document.getElementById('allowed-fields');
-    if (! tracker_report_expert_allowed_fields) {
+    const tracker_report_expert_allowed_fields = document.getElementById("allowed-fields");
+    if (!tracker_report_expert_allowed_fields) {
         return;
     }
 
-    tracker_report_expert_allowed_fields.addEventListener('click', (event) => insertAllowedFieldInCodeMirror(event, query_rich_editor));
+    tracker_report_expert_allowed_fields.addEventListener("click", event =>
+        insertAllowedFieldInCodeMirror(event, query_rich_editor)
+    );
 }
 
 async function sendRequestNewMode(mode) {
-    let url = location.href + '&func=' + mode;
+    let url = location.href + "&func=" + mode;
 
     if (location.search === "") {
-        url = location.href + '?func=' + mode;
+        url = location.href + "?func=" + mode;
     }
 
     await post(url);
@@ -94,20 +93,20 @@ async function sendRequestNewMode(mode) {
 }
 
 function initializeCodeMirror() {
-    const tracker_report_expert_query = document.getElementById('tracker-report-expert-query');
-    if (! tracker_report_expert_query) {
+    const tracker_report_expert_query = document.getElementById("tracker-report-expert-query");
+    if (!tracker_report_expert_query) {
         return;
     }
 
-    const TQL_simple_mode_definition = buildModeDefinition({ additional_keywords: ['@comments']});
+    const TQL_simple_mode_definition = buildModeDefinition({ additional_keywords: ["@comments"] });
     initializeTQLMode(TQL_simple_mode_definition);
-    if (! tracker_report_expert_query.classList.contains('tracker-report-query-undisplayed')) {
+    if (!tracker_report_expert_query.classList.contains("tracker-report-query-undisplayed")) {
         codeMirrorifyQueryArea();
     }
 }
 
 function codeMirrorifyQueryArea() {
-    const tracker_query  = document.getElementById('tracker-report-expert-query-textarea');
+    const tracker_query = document.getElementById("tracker-report-expert-query-textarea");
     const allowed_fields = JSON.parse(tracker_query.dataset.allowedFields);
 
     if (query_rich_editor instanceof CodeMirror) {

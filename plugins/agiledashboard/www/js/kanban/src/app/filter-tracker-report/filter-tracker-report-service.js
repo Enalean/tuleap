@@ -1,16 +1,12 @@
 export default FilterTrackerReportService;
 
-FilterTrackerReportService.$inject = [
-    'SharedPropertiesService'
-];
+FilterTrackerReportService.$inject = ["SharedPropertiesService"];
 
-function FilterTrackerReportService(
-    SharedPropertiesService
-) {
+function FilterTrackerReportService(SharedPropertiesService) {
     const self = this;
 
     Object.assign(self, {
-        tracker_reports   : [],
+        tracker_reports: [],
         selectable_reports: [],
 
         getSelectedFilterTrackerReportId,
@@ -21,12 +17,16 @@ function FilterTrackerReportService(
         areNotCardsAndWIPUpdated,
         isNotWIPUpdated,
         initTrackerReports,
-        getTrackerReports() { return self.tracker_reports; },
-        getSelectableReports() { return self.selectable_reports; },
+        getTrackerReports() {
+            return self.tracker_reports;
+        },
+        getSelectableReports() {
+            return self.selectable_reports;
+        }
     });
 
     function initTrackerReports(tracker_reports) {
-        self.tracker_reports    = tracker_reports;
+        self.tracker_reports = tracker_reports;
         self.selectable_reports = self.tracker_reports.filter(report => report.selectable);
     }
 
@@ -35,7 +35,9 @@ function FilterTrackerReportService(
             return 0;
         }
 
-        const selected_filter_tracker_report = self.selectable_reports.find(report => report.selected);
+        const selected_filter_tracker_report = self.selectable_reports.find(
+            report => report.selected
+        );
 
         if (selected_filter_tracker_report) {
             return parseInt(selected_filter_tracker_report.id, 10);
@@ -56,22 +58,26 @@ function FilterTrackerReportService(
     }
 
     function areCardsAndWIPUpdated() {
-        return (SharedPropertiesService.thereIsNodeServerAddress() &&
-            ! isFiltersTrackerReportSelected());
+        return (
+            SharedPropertiesService.thereIsNodeServerAddress() && !isFiltersTrackerReportSelected()
+        );
     }
 
     function isWIPUpdated() {
-        return (! SharedPropertiesService.thereIsNodeServerAddress() &&
-            ! isFiltersTrackerReportSelected());
+        return (
+            !SharedPropertiesService.thereIsNodeServerAddress() && !isFiltersTrackerReportSelected()
+        );
     }
 
     function areNotCardsAndWIPUpdated() {
-        return (SharedPropertiesService.thereIsNodeServerAddress() &&
-            isFiltersTrackerReportSelected());
+        return (
+            SharedPropertiesService.thereIsNodeServerAddress() && isFiltersTrackerReportSelected()
+        );
     }
 
     function isNotWIPUpdated() {
-        return (! SharedPropertiesService.thereIsNodeServerAddress() &&
-            isFiltersTrackerReportSelected());
+        return (
+            !SharedPropertiesService.thereIsNodeServerAddress() && isFiltersTrackerReportSelected()
+        );
     }
 }

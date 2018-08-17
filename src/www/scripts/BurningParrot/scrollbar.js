@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Scrollbar from 'smooth-scrollbar';
+import Scrollbar from "smooth-scrollbar";
 
 export { init };
 
 function init() {
     Scrollbar.initAll({
-        damping            : 1,
+        damping: 1,
         continuousScrolling: false,
-        alwaysShowTracks   : true
+        alwaysShowTracks: true
     });
 }

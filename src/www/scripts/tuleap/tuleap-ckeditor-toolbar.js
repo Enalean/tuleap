@@ -15,12 +15,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap      = tuleap || {};
+var tuleap = tuleap || {};
 tuleap.ckeditor = tuleap.ckeditor || {};
 
 tuleap.ckeditor.toolbar = [
-    ['Bold', 'Italic', 'Underline'],
-    ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
-    ['Link', 'Unlink', 'Anchor', 'Image'],
-    ['Source']
+    ["Bold", "Italic", "Underline"],
+    ["NumberedList", "BulletedList", "-", "Blockquote", "Format"],
+    ["Link", "Unlink", "Anchor", "Image"],
+    ["Source"]
 ];

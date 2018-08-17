@@ -1,23 +1,20 @@
-import angular from 'angular';
-import 'angular-mocks';
-import error_modal_module from './error-modal.js';
+import angular from "angular";
+import "angular-mocks";
+import error_modal_module from "./error-modal.js";
 
 describe("RestErrorService -", function() {
-    var RestErrorService,
-        TlpModalService;
+    var RestErrorService, TlpModalService;
 
     beforeEach(function() {
         angular.mock.module(error_modal_module, function($provide) {
-            $provide.decorator('TlpModalService', function($delegate) {
+            $provide.decorator("TlpModalService", function($delegate) {
                 spyOn($delegate, "open");
 
                 return $delegate;
             });
         });
 
-        angular.mock.inject(function(_TlpModalService_,
-                                     _RestErrorService_
-        ) {
+        angular.mock.inject(function(_TlpModalService_, _RestErrorService_) {
             TlpModalService = _TlpModalService_;
             RestErrorService = _RestErrorService_;
         });
@@ -28,8 +25,8 @@ describe("RestErrorService -", function() {
             var response = {
                 data: {
                     error: {
-                        code   : 401,
-                        message: 'Unauthorized'
+                        code: 401,
+                        message: "Unauthorized"
                     }
                 }
             };

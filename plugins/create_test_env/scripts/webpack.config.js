@@ -20,50 +20,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require('path');
-const webpack_configurator = require('../../../tools/utils/scripts/webpack-configurator.js');
+const path = require("path");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(
-    __dirname,
-    '../../../src/www/assets/create_test_env/scripts'
-);
+const assets_dir_path = path.resolve(__dirname, "../../../src/www/assets/create_test_env/scripts");
 
 const webpack_config = {
     entry: {
-        'call-me-back-burning-parrot' : './call-me-back-burning-parrot/src/index.js',
-        'call-me-back-flaming-parrot' : './call-me-back-flaming-parrot/src/index.js',
-        'call-me-back-admin'          : './call-me-back-admin.js'
+        "call-me-back-burning-parrot": "./call-me-back-burning-parrot/src/index.js",
+        "call-me-back-flaming-parrot": "./call-me-back-flaming-parrot/src/index.js",
+        "call-me-back-admin": "./call-me-back-admin.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        tlp: 'tlp',
+        tlp: "tlp",
         jquery: "jQuery"
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(
-            {},
-            webpack_configurator.tlp_fetch_alias
-        )
+        alias: webpack_configurator.extendAliases({}, webpack_configurator.tlp_fetch_alias)
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(
-                webpack_configurator.babel_options_ie11
-            ),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [
-        webpack_configurator.getManifestPlugin(),
-        webpack_configurator.getVueLoaderPlugin()
-    ],
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases(
-            {},
-            webpack_configurator.easygettext_loader_alias
-        )
+        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
     }
 };
 

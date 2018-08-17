@@ -1,20 +1,16 @@
-import kanban_module from '../app.js';
-import angular from 'angular';
-import 'angular-mocks';
+import kanban_module from "../app.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("FilterTrackerReportService -", () => {
-    let FilterTrackerReportService,
-        SharedPropertiesService;
+    let FilterTrackerReportService, SharedPropertiesService;
 
     beforeEach(() => {
         angular.mock.module(kanban_module);
 
-        angular.mock.inject(function(
-            _FilterTrackerReportService_,
-            _SharedPropertiesService_
-        ) {
+        angular.mock.inject(function(_FilterTrackerReportService_, _SharedPropertiesService_) {
             FilterTrackerReportService = _FilterTrackerReportService_;
-            SharedPropertiesService    = _SharedPropertiesService_;
+            SharedPropertiesService = _SharedPropertiesService_;
         });
     });
 
@@ -22,16 +18,17 @@ describe("FilterTrackerReportService -", () => {
         it("Given filters tracker report array with a selected report, then the selected filter tracker report will be retrieved", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true,
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
@@ -41,15 +38,16 @@ describe("FilterTrackerReportService -", () => {
         it("Given filters tracker report array with no selected report, then 0 is returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true,
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             const selected_tracker_report_id = FilterTrackerReportService.getSelectedFilterTrackerReportId();
@@ -61,16 +59,17 @@ describe("FilterTrackerReportService -", () => {
         it("Given filters tracker report array with a selected report, then true is returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true,
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(true);
@@ -79,15 +78,16 @@ describe("FilterTrackerReportService -", () => {
         it("Given filters tracker report array with no selected report, then false is returned", () => {
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.isFiltersTrackerReportSelected()).toEqual(false);
@@ -99,16 +99,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
@@ -118,16 +119,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
@@ -137,15 +139,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(false);
@@ -155,15 +158,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.areCardsAndWIPUpdated()).toEqual(true);
@@ -175,16 +179,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
@@ -194,15 +199,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(true);
@@ -212,16 +218,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
@@ -231,15 +238,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.isWIPUpdated()).toEqual(false);
@@ -251,16 +259,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(true);
@@ -270,16 +279,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
@@ -289,15 +299,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
@@ -307,15 +318,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.areNotCardsAndWIPUpdated()).toEqual(false);
@@ -327,16 +339,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(true);
@@ -346,15 +359,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(false);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
@@ -364,16 +378,17 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
-                    selected   : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true,
+                    selected: true
                 }
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
@@ -383,15 +398,16 @@ describe("FilterTrackerReportService -", () => {
             spyOn(SharedPropertiesService, "thereIsNodeServerAddress").and.returnValue(true);
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                    selectable : true,
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me",
+                    selectable: true
                 }
             ]);
             expect(FilterTrackerReportService.isNotWIPUpdated()).toEqual(false);
@@ -402,28 +418,32 @@ describe("FilterTrackerReportService -", () => {
         beforeEach(() => {
             FilterTrackerReportService.initTrackerReports([
                 {
-                    id         : 305,
-                    description: 'The system default artifact report',
-                    name       : 'Default',
-                    selectable : true
-                }, {
-                    id         : 306,
-                    description: 'Custom Assigned to me report',
-                    name       : 'Assigned to me',
-                }, {
-                    id         : 307,
-                    description: 'cacoethic anazoturia',
-                    name       : 'Achill rorqual',
-                }, {
-                    id         : 308,
-                    description: 'fundable ironheartedly',
-                    name       : 'Paratactically',
-                    selectable : true
-                }, {
-                    id         : 309,
-                    description: 'Diplochlamydeous',
-                    name       : 'Reopposition',
-                    selectable : true
+                    id: 305,
+                    description: "The system default artifact report",
+                    name: "Default",
+                    selectable: true
+                },
+                {
+                    id: 306,
+                    description: "Custom Assigned to me report",
+                    name: "Assigned to me"
+                },
+                {
+                    id: 307,
+                    description: "cacoethic anazoturia",
+                    name: "Achill rorqual"
+                },
+                {
+                    id: 308,
+                    description: "fundable ironheartedly",
+                    name: "Paratactically",
+                    selectable: true
+                },
+                {
+                    id: 309,
+                    description: "Diplochlamydeous",
+                    name: "Reopposition",
+                    selectable: true
                 }
             ]);
         });

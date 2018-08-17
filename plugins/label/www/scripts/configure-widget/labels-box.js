@@ -17,31 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, patch, select2 } from 'tlp';
-import { render } from 'mustache';
+import { get, patch, select2 } from "tlp";
+import { render } from "mustache";
 
 export async function create(container, labels_endpoint, selected_labels) {
     initiateSelect2(container, selected_labels, labels_endpoint);
 }
 
-const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({ id, text: label, is_outline, color });
+const convertLabelToSelect2Entry = ({ id, label, is_outline, color }) => ({
+    id,
+    text: label,
+    is_outline,
+    color
+});
 
 function initiateSelect2(container, selected_labels, labels_endpoint, placeholder) {
     const options = {
-        multiple         : true,
-        allowClear       : true,
-        placeholder      : placeholder,
-        initSelection    : (container, callback) => callback(selected_labels),
-        containerCssClass: 'item-labels-box-select2',
-        dropdownCssClass : 'item-labels-box-select2-results',
-        templateResult   : formatLabel,
+        multiple: true,
+        allowClear: true,
+        placeholder: placeholder,
+        initSelection: (container, callback) => callback(selected_labels),
+        containerCssClass: "item-labels-box-select2",
+        dropdownCssClass: "item-labels-box-select2-results",
+        templateResult: formatLabel,
         templateSelection: formatLabelSelected,
-        escapeMarkup     : function (markup) { return markup; },
-        ajax             : {
-            url           : labels_endpoint,
-            dataType      : 'json',
-            delay         : 250,
-            data          : data => ({ query: data.term }),
+        escapeMarkup: function(markup) {
+            return markup;
+        },
+        ajax: {
+            url: labels_endpoint,
+            dataType: "json",
+            delay: 250,
+            data: data => ({ query: data.term }),
             processResults: data => ({ results: data.labels.map(convertLabelToSelect2Entry) })
         }
     };
@@ -51,33 +58,35 @@ function initiateSelect2(container, selected_labels, labels_endpoint, placeholde
 
 function formatLabel(label, li_element) {
     if (label.color) {
-        const bullet_class = label.is_outline ? 'fa fa-circle-o' : 'fa fa-circle';
+        const bullet_class = label.is_outline ? "fa fa-circle-o" : "fa fa-circle";
         li_element.classList.add(`select-item-label-color-${label.color}`);
 
         return render(
             '<span class="select-item-label-title"><i class="select-item-label-bullet {{ bullet_class }}"></i>{{ label }}</span>',
-            {bullet_class: bullet_class, label: label.text}
+            { bullet_class: bullet_class, label: label.text }
         );
     }
 
-    return render('<span class="select-item-label-title">{{ label }}</span>', {label: label.text});
+    return render('<span class="select-item-label-title">{{ label }}</span>', {
+        label: label.text
+    });
 }
 
 function formatLabelSelected(label, li_elements) {
-    const color    = getColor(label),
+    const color = getColor(label),
         is_outline = getIsOutline(label),
         li_element = li_elements[0];
 
     li_element.classList.add(`select-item-label-color-${color}`);
 
     if (is_outline) {
-        li_element.classList.add('select-item-label-outline');
+        li_element.classList.add("select-item-label-outline");
     }
-    return render('<span>{{ label }}</span>', { label: label.text });
+    return render("<span>{{ label }}</span>", { label: label.text });
 }
 
 function getColor(label) {
-    let color = '';
+    let color = "";
 
     if (label.color) {
         color = label.color;

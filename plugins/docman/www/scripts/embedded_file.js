@@ -15,25 +15,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var codendi = codendi || { };
+var codendi = codendi || {};
 
-(function ($, codendi) {
+(function($, codendi) {
     $(document).ready(function() {
-        var embedded_content = $('#embedded_content'),
-            rte              = null,
-            options          = null;
+        var embedded_content = $("#embedded_content"),
+            rte = null,
+            options = null;
 
         if (embedded_content.length > 0) {
             options = {
-                toolbar: 'full',
+                toolbar: "full",
                 onLoad: $.noop(),
                 toggle: false,
                 default_in_html: true
             };
 
-            rte = new codendi.RTE(embedded_content.attr('id'), options);
+            rte = new codendi.RTE(embedded_content.attr("id"), options);
         }
-
     });
-
-})(jQuery, codendi || { });
+})(jQuery, codendi || {});

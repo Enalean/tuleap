@@ -17,62 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
-    $(function () {
-        var form = $('#siteadmin-access-anonymous');
+!(function($) {
+    $(function() {
+        var form = $("#siteadmin-access-anonymous");
         if (form.length === 0) {
             return;
         }
 
-        var current_access_mode = form.attr('data-current-access-mode'),
-            nb_restricted_users = form.attr('data-nb-restricted-users');
+        var current_access_mode = form.attr("data-current-access-mode"),
+            nb_restricted_users = form.attr("data-nb-restricted-users");
 
-        form.find('[name=access_mode]').click(function () {
+        form.find("[name=access_mode]").click(function() {
             enableSubmitButton();
 
-            if (current_access_mode === 'restricted' && nb_restricted_users > 0) {
+            if (current_access_mode === "restricted" && nb_restricted_users > 0) {
                 if ($(this).val() !== current_access_mode) {
-                    $('#siteadmin-access-submit-panel-message').addClass('tlp-alert-warning');
+                    $("#siteadmin-access-submit-panel-message").addClass("tlp-alert-warning");
                 } else {
-                    $('#siteadmin-access-submit-panel-message').removeClass('tlp-alert-warning');
+                    $("#siteadmin-access-submit-panel-message").removeClass("tlp-alert-warning");
                 }
             }
 
-            if ($(this).val() === 'restricted') {
-                $('#siteadmin-access-customize-ugroup-labels').show();
+            if ($(this).val() === "restricted") {
+                $("#siteadmin-access-customize-ugroup-labels").show();
             } else {
-                $('#siteadmin-access-customize-ugroup-labels').hide();
+                $("#siteadmin-access-customize-ugroup-labels").hide();
             }
         });
 
-        form.find('[name=project_admin_can_choose_visibility]').click(function () {
+        form.find("[name=project_admin_can_choose_visibility]").click(function() {
             enableSubmitButton();
         });
 
-        form.find('[type=text]').keydown(function () {
+        form.find("[type=text]").keydown(function() {
             enableSubmitButton();
         });
 
-        if (current_access_mode === 'restricted') {
-            $('#siteadmin-access-customize-ugroup-labels').show();
+        if (current_access_mode === "restricted") {
+            $("#siteadmin-access-customize-ugroup-labels").show();
         }
 
-        $('#toggle-project-admin-can-choose-visibility').change(function () {
+        $("#toggle-project-admin-can-choose-visibility").change(function() {
             $(this)[0].form.submit();
         });
 
-        $('#toggle-anonymous-can-see-site-homepage').change(function () {
+        $("#toggle-anonymous-can-see-site-homepage").change(function() {
             $(this)[0].form.submit();
         });
 
-        $('#toggle-anonymous-can-see-contact').change(function () {
+        $("#toggle-anonymous-can-see-contact").change(function() {
             $(this)[0].form.submit();
         });
 
         function enableSubmitButton() {
-            form.find('[type=submit]').prop('disabled', false);
+            form.find("[type=submit]").prop("disabled", false);
         }
     });
-
 })(window.jQuery);

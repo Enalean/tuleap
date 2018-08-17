@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default ComputedFieldValidateService;
 
@@ -16,7 +16,7 @@ function ComputedFieldValidateService() {
 
         var is_autocomputed = Boolean(field_value.is_autocomputed);
 
-        if (! is_autocomputed && _.isNull(field_value.manual_value)) {
+        if (!is_autocomputed && _.isNull(field_value.manual_value)) {
             return null;
         }
 
@@ -32,10 +32,10 @@ function ComputedFieldValidateService() {
     function removeUnusedAttributesComputed(field) {
         var attributes_to_keep = _.pick(field, function(property, key) {
             switch (key) {
-                case 'manual_value':
-                case 'field_id':
-                case 'is_autocomputed':
-                    return ! _.isUndefined(property);
+                case "manual_value":
+                case "field_id":
+                case "is_autocomputed":
+                    return !_.isUndefined(property);
                 default:
                     return false;
             }

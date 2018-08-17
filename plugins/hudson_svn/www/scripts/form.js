@@ -17,29 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
+!(function($) {
     var svn_checkbox, form;
 
     function changeSVNFormVisibility() {
-        console.log(svn_checkbox.is(':checked'));
+        console.log(svn_checkbox.is(":checked"));
 
-        if (svn_checkbox.is(':checked')) {
+        if (svn_checkbox.is(":checked")) {
             form.show();
         } else {
             form.hide();
         }
     }
 
-    $(document).ready(function(){
-        svn_checkbox = $('#hudson_use_plugin_svn_trigger_checkbox');
-        form         = $('#hudson_use_plugin_svn_trigger_form');
+    $(document).ready(function() {
+        svn_checkbox = $("#hudson_use_plugin_svn_trigger_checkbox");
+        form = $("#hudson_use_plugin_svn_trigger_form");
 
         changeSVNFormVisibility();
 
-        svn_checkbox.change(function () {
+        svn_checkbox.change(function() {
             changeSVNFormVisibility();
         });
-
     });
 })(jQuery);

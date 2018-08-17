@@ -21,10 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-    scaleLinear,
-    scaleBand
-} from 'd3-scale';
+import { scaleLinear, scaleBand } from "d3-scale";
 
 export { buildBarChartScales };
 
@@ -44,23 +41,14 @@ function buildBarChartScales({
     function initXScale() {
         return scaleBand()
             .domain(x_axis_tick_values)
-            .range([
-                margins.left,
-                graph_width - margins.right
-            ])
+            .range([margins.left, graph_width - margins.right])
             .padding(bands_paddings);
     }
 
     function initYScale() {
         return scaleLinear()
-            .domain([
-                0,
-                y_axis_maximum
-            ])
-            .range([
-                graph_height - margins.bottom,
-                margins.top
-            ])
+            .domain([0, y_axis_maximum])
+            .range([graph_height - margins.bottom, margins.top])
             .nice()
             .clamp(true);
     }

@@ -1,6 +1,6 @@
-import model_module from './model.js';
-import angular from 'angular';
-import 'angular-mocks';
+import model_module from "./model.js";
+import angular from "angular";
+import "angular-mocks";
 
 describe("TuleapArtifactModalWorkflowService", function() {
     var WorkflowService;
@@ -20,13 +20,7 @@ describe("TuleapArtifactModalWorkflowService", function() {
                     field_id: 764,
                     permissions: ["read", "update", "create"],
                     type: "sb",
-                    values: [
-                        { id: 448 },
-                        { id: 6 },
-                        { id: 23 },
-                        { id: 908 },
-                        { id: 71 }
-                    ]
+                    values: [{ id: 448 }, { id: 6 }, { id: 23 }, { id: 908 }, { id: 71 }]
                 };
                 var workflow = {
                     field_id: 764,
@@ -35,10 +29,12 @@ describe("TuleapArtifactModalWorkflowService", function() {
                         {
                             from_id: 448,
                             to_id: 6
-                        }, {
+                        },
+                        {
                             from_id: 448,
                             to_id: 23
-                        }, {
+                        },
+                        {
                             from_id: 908,
                             to_id: 71
                         }
@@ -47,11 +43,7 @@ describe("TuleapArtifactModalWorkflowService", function() {
 
                 WorkflowService.enforceWorkflowTransitions(448, field, workflow);
 
-                expect(field.values).toEqual([
-                    { id: 448 },
-                    { id: 6 },
-                    { id: 23 }
-                ]);
+                expect(field.values).toEqual([{ id: 448 }, { id: 6 }, { id: 23 }]);
                 expect(field.has_transitions).toBeTruthy();
             });
         });

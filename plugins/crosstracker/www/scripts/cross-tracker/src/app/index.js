@@ -17,25 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
+import Vue from "vue";
 
-import { gettext_provider }      from './gettext-provider.js';
-import { init as initUser }      from './user-service.js';
-import ReadingCrossTrackerReport from './reading-mode/reading-cross-tracker-report.js';
-import WritingCrossTrackerReport from './writing-mode/writing-cross-tracker-report.js';
-import BackendCrossTrackerReport from './backend-cross-tracker-report.js';
-import CrossTrackerWidget        from './CrossTrackerWidget.vue';
+import { gettext_provider } from "./gettext-provider.js";
+import { init as initUser } from "./user-service.js";
+import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
+import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
+import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
+import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const widget_cross_tracker_elements = document.getElementsByClassName('dashboard-widget-content-cross-tracker');
+document.addEventListener("DOMContentLoaded", () => {
+    const widget_cross_tracker_elements = document.getElementsByClassName(
+        "dashboard-widget-content-cross-tracker"
+    );
 
     const Widget = Vue.extend(CrossTrackerWidget);
 
     for (const widget_element of widget_cross_tracker_elements) {
-        const report_id                 = widget_element.dataset.reportId;
-        const locale                    = widget_element.dataset.locale;
+        const report_id = widget_element.dataset.reportId;
+        const locale = widget_element.dataset.locale;
         const localized_php_date_format = widget_element.dataset.dateFormat;
-        const is_anonymous              = (widget_element.dataset.isAnonymous === 'true');
+        const is_anonymous = widget_element.dataset.isAnonymous === "true";
 
         gettext_provider.setLocale(locale);
         initUser(is_anonymous, localized_php_date_format, locale);
@@ -44,13 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const reading_cross_tracker_report = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
 
-        const vue_mount_point = widget_element.querySelector('.vue-mount-point');
+        const vue_mount_point = widget_element.querySelector(".vue-mount-point");
         new Widget({
             propsData: {
                 backendCrossTrackerReport: backend_cross_tracker_report,
                 readingCrossTrackerReport: reading_cross_tracker_report,
                 writingCrossTrackerReport: writing_cross_tracker_report,
-                reportId                 : report_id
+                reportId: report_id
             }
         }).$mount(vue_mount_point);
     }

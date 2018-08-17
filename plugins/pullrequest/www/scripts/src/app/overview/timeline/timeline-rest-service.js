@@ -1,16 +1,8 @@
 export default TimelineRestService;
 
-TimelineRestService.$inject = [
-    '$http',
-    '$q',
-    'ErrorModalService'
-];
+TimelineRestService.$inject = ["$http", "$q", "ErrorModalService"];
 
-function TimelineRestService(
-    $http,
-    $q,
-    ErrorModalService
-) {
+function TimelineRestService($http, $q, ErrorModalService) {
     const self = this;
 
     Object.assign(self, {
@@ -19,7 +11,15 @@ function TimelineRestService(
     });
 
     function getTimeline(pull_request_id, limit, offset) {
-        return $http.get('/api/v1/pull_requests/' + pull_request_id + '/timeline?limit=' + limit + '&offset=' + offset)
+        return $http
+            .get(
+                "/api/v1/pull_requests/" +
+                    pull_request_id +
+                    "/timeline?limit=" +
+                    limit +
+                    "&offset=" +
+                    offset
+            )
             .catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
@@ -32,10 +32,12 @@ function TimelineRestService(
             user_id: comment.user_id
         };
 
-        return $http.post('/api/v1/pull_requests/' + pull_request_id + '/comments', data)
+        return $http
+            .post("/api/v1/pull_requests/" + pull_request_id + "/comments", data)
             .then(function(response) {
                 return response.data;
-            }).catch(function(response) {
+            })
+            .catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
             });

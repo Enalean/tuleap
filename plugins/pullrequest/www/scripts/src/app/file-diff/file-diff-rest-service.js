@@ -1,16 +1,8 @@
 export default FileDiffRestService;
 
-FileDiffRestService.$inject = [
-    '$q',
-    '$http',
-    'ErrorModalService'
-];
+FileDiffRestService.$inject = ["$q", "$http", "ErrorModalService"];
 
-function FileDiffRestService(
-    $q,
-    $http,
-    ErrorModalService
-) {
+function FileDiffRestService($q, $http, ErrorModalService) {
     const self = this;
 
     Object.assign(self, {
@@ -19,26 +11,28 @@ function FileDiffRestService(
     });
 
     function getUnidiff(pull_request_id, file_path) {
-        return $http.get('/api/v1/pull_requests/' + pull_request_id + '/file_diff?path=' + file_path)
-        .then(({ data }) => data)
-        .catch(response => {
-            ErrorModalService.showError(response);
-            return $q.reject(response);
-        });
+        return $http
+            .get("/api/v1/pull_requests/" + pull_request_id + "/file_diff?path=" + file_path)
+            .then(({ data }) => data)
+            .catch(response => {
+                ErrorModalService.showError(response);
+                return $q.reject(response);
+            });
     }
 
     function postInlineComment(pull_request_id, file_path, unidiff_offset, content) {
         const data = {
-            file_path     : file_path,
+            file_path: file_path,
             unidiff_offset: unidiff_offset,
-            content       : content
+            content: content
         };
 
-        return $http.post('/api/v1/pull_requests/' + pull_request_id + '/inline-comments', data)
-        .then(({ data }) => data)
-        .catch(response => {
-            ErrorModalService.showError(response);
-            return $q.reject(response);
-        });
+        return $http
+            .post("/api/v1/pull_requests/" + pull_request_id + "/inline-comments", data)
+            .then(({ data }) => data)
+            .catch(response => {
+                ErrorModalService.showError(response);
+                return $q.reject(response);
+            });
     }
 }

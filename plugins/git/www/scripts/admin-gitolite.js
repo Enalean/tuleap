@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-tuleap.autocomplete_projects_for_select2(
-    document.getElementById('gitolite-project-selector'),
-    { include_private_projects: 1 }
-);
+tuleap.autocomplete_projects_for_select2(document.getElementById("gitolite-project-selector"), {
+    include_private_projects: 1
+});

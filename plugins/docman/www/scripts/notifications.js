@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function() {
     var input = document.querySelector("#listeners_to_add");
 
-    if (! input) {
+    if (!input) {
         return;
     }
 

@@ -17,40 +17,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-!(function ($) {
-
+!(function($) {
     var themes_list,
         popover_is_displayed = false;
 
-    $(document).ready(function(){
-        var ssh_keys_delete_button   = $('#button-delete-keys'),
-            svn_tokens_delete_button = $('#button-delete-svn-tokens'),
-            ssk_keys_checkboxes      = $('input[type="checkbox"][name="ssh_key_selected[]"]');
-            svn_tokens_checkboxes    = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
+    $(document).ready(function() {
+        var ssh_keys_delete_button = $("#button-delete-keys"),
+            svn_tokens_delete_button = $("#button-delete-svn-tokens"),
+            ssk_keys_checkboxes = $('input[type="checkbox"][name="ssh_key_selected[]"]');
+        svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
 
         loadAvatarReset();
         loadAvatarPreview();
         updateHeightValue();
 
-        changeDeleteButtonStatusDependingCheckboxesStatus(ssh_keys_delete_button, ssk_keys_checkboxes);
-        changeDeleteButtonStatusDependingCheckboxesStatus(svn_tokens_delete_button, svn_tokens_checkboxes);
+        changeDeleteButtonStatusDependingCheckboxesStatus(
+            ssh_keys_delete_button,
+            ssk_keys_checkboxes
+        );
+        changeDeleteButtonStatusDependingCheckboxesStatus(
+            svn_tokens_delete_button,
+            svn_tokens_checkboxes
+        );
 
         ssk_keys_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(ssh_keys_delete_button, ssk_keys_checkboxes);
+            changeDeleteButtonStatusDependingCheckboxesStatus(
+                ssh_keys_delete_button,
+                ssk_keys_checkboxes
+            );
         });
 
         svn_tokens_checkboxes.change(function() {
-            changeDeleteButtonStatusDependingCheckboxesStatus(svn_tokens_delete_button, svn_tokens_checkboxes);
+            changeDeleteButtonStatusDependingCheckboxesStatus(
+                svn_tokens_delete_button,
+                svn_tokens_checkboxes
+            );
         });
 
-        $('[data-ssh_key_value]').one('click', displayFullSSHKey);
+        $("[data-ssh_key_value]").one("click", displayFullSSHKey);
         $(window).resize(updateHeightValue);
 
         initThemeVariantSelection();
     });
 
     function getResizedImageUrl(url) {
-        var tmp_img = document.createElement('img');
+        var tmp_img = document.createElement("img");
         tmp_img.src = url;
 
         var canvas = document.createElement("canvas"),
@@ -72,58 +83,72 @@
         canvas.width = max_size;
         canvas.height = max_size;
         var ctx = canvas.getContext("2d");
-        ctx.drawImage(tmp_img, source_x, source_y, source_width, source_height, 0, 0, max_size, max_size);
+        ctx.drawImage(
+            tmp_img,
+            source_x,
+            source_y,
+            source_width,
+            source_height,
+            0,
+            0,
+            max_size,
+            max_size
+        );
 
         return canvas.toDataURL("image/png");
     }
 
     function setAvatarPreviewUrl(url) {
-        var preview = document.querySelector('.change-avatar-modal-content > .avatar > img');
-        if (! preview) {
-            preview = document.createElement('img');
-            document.querySelector('.change-avatar-modal-content > .avatar').appendChild(preview);
+        var preview = document.querySelector(".change-avatar-modal-content > .avatar > img");
+        if (!preview) {
+            preview = document.createElement("img");
+            document.querySelector(".change-avatar-modal-content > .avatar").appendChild(preview);
         }
 
         preview.src = url;
     }
 
     function loadAvatarReset() {
-        var btn = document.getElementById('use-default-avatar-btn');
+        var btn = document.getElementById("use-default-avatar-btn");
 
-        if (! btn) {
+        if (!btn) {
             return;
         }
 
-        btn.addEventListener('click', function () {
-            document.querySelector('.change-avatar-modal-content').classList.remove('change-avatar-modal-content-preview');
-            document.querySelector('.change-avatar-modal-content > .avatar > img').remove();
+        btn.addEventListener("click", function() {
+            document
+                .querySelector(".change-avatar-modal-content")
+                .classList.remove("change-avatar-modal-content-preview");
+            document.querySelector(".change-avatar-modal-content > .avatar > img").remove();
 
-            var use_default_avatar = document.getElementById('use-default-avatar');
+            var use_default_avatar = document.getElementById("use-default-avatar");
             use_default_avatar.form.reset();
             use_default_avatar.value = 1;
         });
     }
 
     function useImageInPreviewIfItIsValid(url) {
-        var img = document.createElement('img');
+        var img = document.createElement("img");
 
-        img.onload = function () {
+        img.onload = function() {
             var resized_image_url = getResizedImageUrl(url);
             setAvatarPreviewUrl(resized_image_url);
-            document.querySelector('.change-avatar-modal-content').classList.add('change-avatar-modal-content-preview');
-            document.getElementById('use-default-avatar').value = 0;
+            document
+                .querySelector(".change-avatar-modal-content")
+                .classList.add("change-avatar-modal-content-preview");
+            document.getElementById("use-default-avatar").value = 0;
         };
         img.src = url;
     }
 
     function loadAvatarPreview() {
-        var input_file = document.getElementById('change-avatar-modal-actions-select-file');
+        var input_file = document.getElementById("change-avatar-modal-actions-select-file");
 
-        if (! input_file) {
+        if (!input_file) {
             return;
         }
 
-        input_file.addEventListener('change', function () {
+        input_file.addEventListener("change", function() {
             var url = URL.createObjectURL(this.files[0]);
             useImageInPreviewIfItIsValid(url);
         });
@@ -131,22 +156,22 @@
 
     function displayFullSSHKey() {
         var $element = $(this);
-        $element.html($element.attr('data-ssh_key_value'));
-        $element.css('cursor', 'auto');
+        $element.html($element.attr("data-ssh_key_value"));
+        $element.css("cursor", "auto");
 
         updateHeightValue();
     }
 
     function updateHeightValue() {
-        $('#account-maintenance, #account-preferences').height('auto');
+        $("#account-maintenance, #account-preferences").height("auto");
 
         var new_height = Math.max(
-            $('#account-maintenance').height(),
-            $('#account-preferences').height()
+            $("#account-maintenance").height(),
+            $("#account-preferences").height()
         );
 
-        $('#account-preferences').height(new_height);
-    };
+        $("#account-preferences").height(new_height);
+    }
 
     function changeDeleteButtonStatusDependingCheckboxesStatus(button, checkboxes) {
         var at_least_one_checkbox_is_checked = false;
@@ -161,9 +186,9 @@
         var nb_checked = $('input[type="checkbox"][name="ssh_key_selected[]"]:checked').length;
 
         if (at_least_one_checkbox_is_checked) {
-            button.removeAttr('disabled');
+            button.removeAttr("disabled");
         } else {
-            button.attr('disabled', true);
+            button.attr("disabled", true);
         }
     }
 
@@ -172,11 +197,14 @@
             bindThemeSelect();
             fetchThemeVariants();
 
-            if (! tuleap.browserCompatibility.isIE7()) {
-                $('.navbar-inner').attr('data-content',codendi.locales.account.theme_variant_preview);
-                $('.navbar-inner').popover({
-                    placement: 'bottom',
-                    trigger: 'manual'
+            if (!tuleap.browserCompatibility.isIE7()) {
+                $(".navbar-inner").attr(
+                    "data-content",
+                    codendi.locales.account.theme_variant_preview
+                );
+                $(".navbar-inner").popover({
+                    placement: "bottom",
+                    trigger: "manual"
                 });
             }
         }
@@ -187,7 +215,7 @@
 
         theme_selector.change(function() {
             fetchThemeVariants();
-            $('.navbar-inner').popover('hide');
+            $(".navbar-inner").popover("hide");
             popover_is_displayed = false;
         });
     }
@@ -196,12 +224,12 @@
         var theme_selector = $('.select-user-preferences[name="user_theme"]');
 
         $.ajax({
-            url: '/account/get_available_theme_variants.php',
+            url: "/account/get_available_theme_variants.php",
             data: {
                 theme: theme_selector.val()
             },
             cache: false,
-            dataType: 'json',
+            dataType: "json",
             success: listThemeVariantsIfExist,
             error: function() {
                 listThemeVariantsIfExist([]);
@@ -212,45 +240,41 @@
     function listThemeVariantsIfExist(themes) {
         themes_list = themes.values;
         var i,
-            selected_theme_variant       = themes.selected,
-            themes_length        = themes_list.length,
-            theme_variant_group = $('#theme_variant_group'),
-            theme_variant_list  = $('#theme_variant_list'),
+            selected_theme_variant = themes.selected,
+            themes_length = themes_list.length,
+            theme_variant_group = $("#theme_variant_group"),
+            theme_variant_list = $("#theme_variant_list"),
             theme_picker,
             theme_picker_container;
 
         theme_variant_list.empty();
-        theme_variant_group.css('display', 'none');
+        theme_variant_group.css("display", "none");
 
         if (themes_length > 0) {
-            if (! tuleap.browserCompatibility.isIE7()) {
+            if (!tuleap.browserCompatibility.isIE7()) {
                 addCSSFilestoDOM(themes.css_files);
             }
 
-            theme_variant_group.css('display', 'block');
+            theme_variant_group.css("display", "block");
             for (i = 0; i < themes_length; ++i) {
-                theme_picker_container = $('<span></span>')
-                    .addClass('theme_picker_container')
+                theme_picker_container = $("<span></span>")
+                    .addClass("theme_picker_container")
                     .val(themes_list[i])
                     .click(selectThemeVariant);
 
                 if (themes_list[i] === selected_theme_variant) {
-                    theme_picker_container.addClass('checked');
-                    $('#current_theme_variant').val(themes_list[i]);
+                    theme_picker_container.addClass("checked");
+                    $("#current_theme_variant").val(themes_list[i]);
                     applyThemeVariantToBody(themes_list[i]);
                 }
 
-                theme_picker = $('<span></span>')
-                    .addClass('theme_variant')
+                theme_picker = $("<span></span>")
+                    .addClass("theme_variant")
                     .addClass(themes_list[i]);
 
-                theme_variant_list.append(
-                    theme_picker_container.append(
-                        theme_picker
-                    )
-                );
+                theme_variant_list.append(theme_picker_container.append(theme_picker));
                 if ((i + 1) % 6 === 0) {
-                    theme_variant_list.append('<br />');
+                    theme_variant_list.append("<br />");
                 }
             }
         }
@@ -259,30 +283,30 @@
     }
 
     function addCSSFilestoDOM(css_files) {
-        if ($('body[class*=FlamingParrot_]').length === 0) {
+        if ($("body[class*=FlamingParrot_]").length === 0) {
             return;
         }
 
         css_files.forEach(function(file) {
-            if ($('link[rel*=style][href="'+file+'"]').length === 0) {
-                $("head").append('<link rel="stylesheet" type="text/css" href="'+file+'"/>');
+            if ($('link[rel*=style][href="' + file + '"]').length === 0) {
+                $("head").append('<link rel="stylesheet" type="text/css" href="' + file + '"/>');
             }
         });
     }
 
     function selectThemeVariant() {
-        var current_theme_variant = $('#current_theme_variant'),
-            theme_variant_list    = $('#theme_variant_list');
+        var current_theme_variant = $("#current_theme_variant"),
+            theme_variant_list = $("#theme_variant_list");
 
         theme_variant_list.children().each(function(i, element) {
-            $(element).removeClass('checked');
+            $(element).removeClass("checked");
         });
-        $(this).addClass('checked');
+        $(this).addClass("checked");
         current_theme_variant.val(this.value);
 
         applyThemeVariantToBody(this.value);
         if (!popover_is_displayed) {
-            $('.navbar-inner').popover('show');
+            $(".navbar-inner").popover("show");
             popover_is_displayed = true;
         }
     }
@@ -292,10 +316,9 @@
             return;
         }
 
-        for (var i = 0, themes_length = themes_list.length ; i < themes_length; ++i) {
+        for (var i = 0, themes_length = themes_list.length; i < themes_length; ++i) {
             $(document.body).removeClass(themes_list[i]);
         }
         $(document.body).addClass(theme_variant);
     }
-
 })(window.jQuery);

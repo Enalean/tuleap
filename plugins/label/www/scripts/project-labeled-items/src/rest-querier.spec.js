@@ -17,18 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp, mockFetchSuccess } from 'tlp-mocks';
-import { getLabeledItems }       from './rest-querier.js';
+import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { getLabeledItems } from "./rest-querier.js";
 
-describe('getLabeledItems', () => {
+describe("getLabeledItems", () => {
     const project_id = 101;
-    const labels_id  = [3, 4];
+    const labels_id = [3, 4];
 
     beforeEach(() => {
         tlp.get.calls.reset();
     });
 
-    it('Returns the items', async () => {
+    it("Returns the items", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
             get: () => 10
@@ -44,7 +44,7 @@ describe('getLabeledItems', () => {
         expect(labeled_items).toEqual([{ title: "Le title" }]);
     });
 
-    it('Returns the are_there_items_user_cannot_see flag', async () => {
+    it("Returns the are_there_items_user_cannot_see flag", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
             get: () => 10
@@ -55,12 +55,17 @@ describe('getLabeledItems', () => {
         };
         mockFetchSuccess(tlp.get, { headers, return_json });
 
-        const { are_there_items_user_cannot_see } = await getLabeledItems(project_id, labels_id, 0, 1);
+        const { are_there_items_user_cannot_see } = await getLabeledItems(
+            project_id,
+            labels_id,
+            0,
+            1
+        );
 
         expect(are_there_items_user_cannot_see).toEqual(false);
     });
 
-    it('Sets has_more to true if there are still elements to fetch', async () => {
+    it("Sets has_more to true if there are still elements to fetch", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
             get: () => 10
@@ -76,7 +81,7 @@ describe('getLabeledItems', () => {
         expect(has_more).toEqual(true);
     });
 
-    it('Sets has_more to false if there are no more elements to fetch', async () => {
+    it("Sets has_more to false if there are no more elements to fetch", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
             get: () => 10
@@ -92,7 +97,7 @@ describe('getLabeledItems', () => {
         expect(has_more).toEqual(false);
     });
 
-    it('Returns the offset so that the caller update its offset in case of recursive calls', async () => {
+    it("Returns the offset so that the caller update its offset in case of recursive calls", async () => {
         const headers = {
             /** 'X-PAGINATION-SIZE' */
             get: () => 10
@@ -108,79 +113,76 @@ describe('getLabeledItems', () => {
         expect(offset).toEqual(9);
     });
 
-    it('Fetches items recursively until it finds at least one readable', async () => {
+    it("Fetches items recursively until it finds at least one readable", async () => {
         tlp.get.and.returnValues(
             Promise.resolve({
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
                     get: () => 10
                 },
-                json: () => Promise.resolve({
-                    labeled_items: [],
-                    are_there_items_user_cannot_see: true
-                })
+                json: () =>
+                    Promise.resolve({
+                        labeled_items: [],
+                        are_there_items_user_cannot_see: true
+                    })
             }),
             Promise.resolve({
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
                     get: () => 10
                 },
-                json: () => Promise.resolve({
-                    labeled_items: [],
-                    are_there_items_user_cannot_see: true
-                })
+                json: () =>
+                    Promise.resolve({
+                        labeled_items: [],
+                        are_there_items_user_cannot_see: true
+                    })
             }),
             Promise.resolve({
                 headers: {
                     /** 'X-PAGINATION-SIZE' */
                     get: () => 10
                 },
-                json: () => Promise.resolve({
-                    labeled_items: [{ title: "Le title" }],
-                    are_there_items_user_cannot_see: false
-                })
+                json: () =>
+                    Promise.resolve({
+                        labeled_items: [{ title: "Le title" }],
+                        are_there_items_user_cannot_see: false
+                    })
             })
         );
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
 
         expect(tlp.get.calls.count()).toEqual(3);
-        expect(tlp.get.calls.argsFor(0)).toEqual(
-            [
-                '/api/projects/' + project_id + '/labeled_items',
-                {
-                    params: {
-                        query: JSON.stringify({labels_id}),
-                        offset: 0,
-                        limit: 1
-                    }
+        expect(tlp.get.calls.argsFor(0)).toEqual([
+            "/api/projects/" + project_id + "/labeled_items",
+            {
+                params: {
+                    query: JSON.stringify({ labels_id }),
+                    offset: 0,
+                    limit: 1
                 }
-            ]
-        );
-        expect(tlp.get.calls.argsFor(1)).toEqual(
-            [
-                '/api/projects/' + project_id + '/labeled_items',
-                {
-                    params: {
-                        query: JSON.stringify({labels_id}),
-                        offset: 1,
-                        limit: 1
-                    }
+            }
+        ]);
+        expect(tlp.get.calls.argsFor(1)).toEqual([
+            "/api/projects/" + project_id + "/labeled_items",
+            {
+                params: {
+                    query: JSON.stringify({ labels_id }),
+                    offset: 1,
+                    limit: 1
                 }
-            ]
-        );
-        expect(tlp.get.calls.argsFor(2)).toEqual(
-            [
-                '/api/projects/' + project_id + '/labeled_items',
-                {
-                    params: {
-                        query: JSON.stringify({labels_id}),
-                        offset: 2,
-                        limit: 1
-                    }
+            }
+        ]);
+        expect(tlp.get.calls.argsFor(2)).toEqual([
+            "/api/projects/" + project_id + "/labeled_items",
+            {
+                params: {
+                    query: JSON.stringify({ labels_id }),
+                    offset: 2,
+                    limit: 1
                 }
-            ]
-        );
+            }
+        ]);
         expect(offset).toEqual(2);
         expect(labeled_items).toEqual([{ title: "Le title" }]);
     });

@@ -19,17 +19,19 @@
 
 (function($) {
     $(document).ready(function() {
-        $('#copy_children_button').on('click', function (e) {
+        $("#copy_children_button").on("click", function(e) {
             e.preventDefault();
             activateCopyChildrenOption();
             submitForm();
 
             function activateCopyChildrenOption() {
-                $('#copy_children').val(1);
+                $("#copy_children").val(1);
             }
 
             function submitForm() {
-                $('#copy_children').closest('form').submit();
+                $("#copy_children")
+                    .closest("form")
+                    .submit();
             }
         });
     });

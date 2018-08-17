@@ -16,64 +16,66 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-codendi.Tree       = { };
-codendi.Tree.nodes = { };
+
+codendi.Tree = {};
+codendi.Tree.nodes = {};
 
 /**
  * Allow expand/collapse of TreeNodes
  *
- * /!\ This works only for TreeNode contained in a <table>. 
+ * /!\ This works only for TreeNode contained in a <table>.
  *     <ul> is not supported for now.
  */
-codendi.Tree.Node  = Class.create({
-    initialize: function (node) {
-        this.node          = $(node);
-        this.siblings      = { };
-        this.id            = this.extractId(node);
-        this.level         = this.node.previousSiblings().size();
-        this.toggleEvent   = this.toggle.bindAsEventListener(this);
-        this.collapse_icon = '<img src="'+ codendi.imgroot +'ic/toggle-small.png" />';
-        this.expand_icon   = '<img src="'+ codendi.imgroot +'ic/toggle-small-expand.png" />';
-        this.node.observe('click', this.toggleEvent);
+codendi.Tree.Node = Class.create({
+    initialize: function(node) {
+        this.node = $(node);
+        this.siblings = {};
+        this.id = this.extractId(node);
+        this.level = this.node.previousSiblings().size();
+        this.toggleEvent = this.toggle.bindAsEventListener(this);
+        this.collapse_icon = '<img src="' + codendi.imgroot + 'ic/toggle-small.png" />';
+        this.expand_icon = '<img src="' + codendi.imgroot + 'ic/toggle-small-expand.png" />';
+        this.node.observe("click", this.toggleEvent);
         this.displayCollapseIcon();
         codendi.Tree.nodes[this.id] = this;
     },
-    extractId: function (node) {
+    extractId: function(node) {
         return node.id.match(/-(\d+)$/)[1];
     },
-    displayCollapseIcon: function () {
+    displayCollapseIcon: function() {
         this.node.update(this.collapse_icon);
-        this.method = 'hide';
+        this.method = "hide";
     },
-    displayExpandIcon: function () {
+    displayExpandIcon: function() {
         this.node.update(this.expand_icon);
-        this.method = 'show';
+        this.method = "show";
     },
-    toggle: function (evt) {
+    toggle: function(evt) {
         this.getSiblings().map(this.toggleSibling.bind(this));
         this.toggleIconForNodeAccordinglyToMethod(this, this.method);
-        
+
         Event.stop(evt);
         return false;
     },
-    getSiblings: function () {
+    getSiblings: function() {
         if (!this.siblings[this.id]) {
             this.a_sibling_has_been_found = false;
             this.siblings = this.node
-                .up('tr')
+                .up("tr")
                 .nextSiblings()
                 .findAll(this.isDescendant.bind(this));
         }
         return this.siblings;
     },
-    isDescendant: function (tr) {
+    isDescendant: function(tr) {
         var is_a_child_or_subchild = false;
         if (!this.a_sibling_has_been_found) {
             this.a_sibling_has_been_found = true;
-            var div_at_the_same_level = tr.down('td').down('div', this.level);
+            var div_at_the_same_level = tr.down("td").down("div", this.level);
             if (div_at_the_same_level) {
-                is_a_child_or_subchild = this.divAtSameLevelTellsThatNodeIsAChildOrSubchild(div_at_the_same_level);
+                is_a_child_or_subchild = this.divAtSameLevelTellsThatNodeIsAChildOrSubchild(
+                    div_at_the_same_level
+                );
                 if (is_a_child_or_subchild) {
                     this.a_sibling_has_been_found = false;
                 }
@@ -82,10 +84,10 @@ codendi.Tree.Node  = Class.create({
         return is_a_child_or_subchild;
     },
     divAtSameLevelTellsThatNodeIsAChildOrSubchild: function(div) {
-        return ! (div.hasClassName('tree-last') || div.hasClassName('tree-node'));
+        return !(div.hasClassName("tree-last") || div.hasClassName("tree-node"));
     },
-    toggleSibling: function (tr) {
-        var collapsable = tr.down('td').down('.tree-collapsable');
+    toggleSibling: function(tr) {
+        var collapsable = tr.down("td").down(".tree-collapsable");
         if (collapsable) {
             var id = this.extractId(collapsable);
             if (codendi.Tree.nodes[id]) {
@@ -94,8 +96,8 @@ codendi.Tree.Node  = Class.create({
         }
         tr[this.method].apply(tr);
     },
-    toggleIconForNodeAccordinglyToMethod: function (treenode, method) {
-        if (method == 'hide') {
+    toggleIconForNodeAccordinglyToMethod: function(treenode, method) {
+        if (method == "hide") {
             treenode.displayExpandIcon();
         } else {
             treenode.displayCollapseIcon();
@@ -103,9 +105,8 @@ codendi.Tree.Node  = Class.create({
     }
 });
 
-
-document.observe('dom:loaded', function () {
-    $$('.tree-collapsable').each(function (node) {
+document.observe("dom:loaded", function() {
+    $$(".tree-collapsable").each(function(node) {
         new codendi.Tree.Node(node);
     });
 });

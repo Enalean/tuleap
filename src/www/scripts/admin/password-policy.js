@@ -15,11 +15,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    const blockBreachedPasswordCheckbox = document.getElementById('block-breached-password-checkbox');
+document.addEventListener("DOMContentLoaded", () => {
+    const blockBreachedPasswordCheckbox = document.getElementById(
+        "block-breached-password-checkbox"
+    );
     if (blockBreachedPasswordCheckbox) {
-        blockBreachedPasswordCheckbox.addEventListener('change', () => {
-            document.getElementById('form-breached-password').submit();
+        blockBreachedPasswordCheckbox.addEventListener("change", () => {
+            document.getElementById("form-breached-password").submit();
         });
     }
 });

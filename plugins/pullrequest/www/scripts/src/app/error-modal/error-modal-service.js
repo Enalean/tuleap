@@ -1,14 +1,10 @@
-import './error-modal.tpl.html';
+import "./error-modal.tpl.html";
 
 export default ErrorModalService;
 
-ErrorModalService.$inject = [
-    '$modal'
-];
+ErrorModalService.$inject = ["$modal"];
 
-function ErrorModalService(
-    $modal
-) {
+function ErrorModalService($modal) {
     const self = this;
 
     Object.assign(self, {
@@ -17,16 +13,16 @@ function ErrorModalService(
 
     function showError(response) {
         $modal.open({
-            keyboard    : false,
-            backdrop    : 'static',
-            templateUrl : 'error-modal.tpl.html',
-            controller  : 'ErrorModalController as error_modal',
-            resolve     : {
+            keyboard: false,
+            backdrop: "static",
+            templateUrl: "error-modal.tpl.html",
+            controller: "ErrorModalController as error_modal",
+            resolve: {
                 message: () => {
-                    let message = response.status + ' ' + response.statusText;
+                    let message = response.status + " " + response.statusText;
 
                     if (response.data.error) {
-                        message = response.data.error.code + ' ' + response.data.error.message;
+                        message = response.data.error.code + " " + response.data.error.message;
                     }
 
                     return message;

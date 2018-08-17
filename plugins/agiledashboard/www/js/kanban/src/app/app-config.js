@@ -1,18 +1,12 @@
 export default KanbanConfig;
 
-KanbanConfig.$inject = [
-    '$compileProvider',
-    'RestangularProvider'
-];
+KanbanConfig.$inject = ["$compileProvider", "RestangularProvider"];
 
-function KanbanConfig(
-    $compileProvider,
-    RestangularProvider
-) {
+function KanbanConfig($compileProvider, RestangularProvider) {
     RestangularProvider.setFullResponse(true);
-    RestangularProvider.setBaseUrl('/api/v1');
+    RestangularProvider.setBaseUrl("/api/v1");
     RestangularProvider.setDefaultHeaders({
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
     });
 
     // To remove this setting, move all init() code

@@ -24,12 +24,9 @@
         if (currentRequest !== null) {
             currentRequest.abort();
         }
-        currentRequest = $.post(
-            '/include/check_pw.php',
-            {
-                form_pw:$(this).val()
-            }
-        ).done(function (data) {
+        currentRequest = $.post("/include/check_pw.php", {
+            form_pw: $(this).val()
+        }).done(function(data) {
             if (toggleErrorMessages(data)) {
                 setRobustnessToBad();
             } else {
@@ -41,21 +38,21 @@
 
     function toggleErrorMessages(data) {
         var has_errors = false;
-        window.password_validators.forEach(function (key) {
-            $('.password_validator_msg_' + key +' > i').each(function() {
-                if(data.indexOf(key) >= 0) {
+        window.password_validators.forEach(function(key) {
+            $(".password_validator_msg_" + key + " > i").each(function() {
+                if (data.indexOf(key) >= 0) {
                     has_errors = true;
                     $(this)
-                        .addClass('icon-remove')
-                        .addClass('password_strategy_bad')
-                        .removeClass('icon-ok')
-                        .removeClass('password_strategy_good');
+                        .addClass("icon-remove")
+                        .addClass("password_strategy_bad")
+                        .removeClass("icon-ok")
+                        .removeClass("password_strategy_good");
                 } else {
                     $(this)
-                        .addClass('icon-ok')
-                        .addClass('password_strategy_good')
-                        .removeClass('icon-remove')
-                        .removeClass('password_strategy_bad');
+                        .addClass("icon-ok")
+                        .addClass("password_strategy_good")
+                        .removeClass("icon-remove")
+                        .removeClass("password_strategy_bad");
                 }
             });
         });
@@ -64,15 +61,15 @@
     }
 
     function setRobustnessToGood() {
-        $('.robustness .password_strategy_bad').hide();
-        $('.robustness .password_strategy_good').show();
-        $('.robustness .password_validators_loading').hide();
+        $(".robustness .password_strategy_bad").hide();
+        $(".robustness .password_strategy_good").show();
+        $(".robustness .password_validators_loading").hide();
     }
 
     function setRobustnessToBad() {
-        $('.robustness .password_strategy_bad').show();
-        $('.robustness .password_strategy_good').hide();
-        $('.robustness .password_validators_loading').hide();
+        $(".robustness .password_strategy_bad").show();
+        $(".robustness .password_strategy_good").hide();
+        $(".robustness .password_validators_loading").hide();
     }
 
     /**
@@ -83,7 +80,8 @@
     function debounce(func, wait) {
         let timeout;
         return function() {
-            const context = this, args = arguments;
+            const context = this,
+                args = arguments;
             clearTimeout(timeout);
             timeout = setTimeout(function() {
                 timeout = null;
@@ -97,9 +95,9 @@
 
         const debouncedCheckPassword = debounce(checkPassword, 300);
 
-        $('#form_pw').on('paste keyup', debouncedCheckPassword);
-        $('#form_pw').on('paste keyup', function() {
-            $('.robustness .password_validators_loading').show();
+        $("#form_pw").on("paste keyup", debouncedCheckPassword);
+        $("#form_pw").on("paste keyup", function() {
+            $(".robustness .password_validators_loading").show();
         });
     });
 })(jQuery);

@@ -21,19 +21,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                  from 'vue';
-import NewsPermissions      from './BaseFRSPackagePermissions.vue';
-import { gettext_provider } from './gettext-provider.js';
+import Vue from "vue";
+import NewsPermissions from "./BaseFRSPackagePermissions.vue";
+import { gettext_provider } from "./gettext-provider.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const vue_mount_point = document.getElementById('frs-packages-permissions-per-group');
+document.addEventListener("DOMContentLoaded", () => {
+    const vue_mount_point = document.getElementById("frs-packages-permissions-per-group");
 
-    if (! vue_mount_point) {
+    if (!vue_mount_point) {
         return;
     }
 
     const rootComponent = Vue.extend(NewsPermissions);
-    const locale        = document.body.dataset.userLocale;
+    const locale = document.body.dataset.userLocale;
 
     gettext_provider.setLocale(locale);
 

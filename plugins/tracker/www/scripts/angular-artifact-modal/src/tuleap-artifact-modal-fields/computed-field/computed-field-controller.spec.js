@@ -1,8 +1,8 @@
-import computed_field_module from './computed-field.js';
-import angular from 'angular';
-import 'angular-mocks';
+import computed_field_module from "./computed-field.js";
+import angular from "angular";
+import "angular-mocks";
 
-import BaseComputedFieldController from './computed-field-controller.js';
+import BaseComputedFieldController from "./computed-field-controller.js";
 
 describe("ComputedFieldController", function() {
     var ComputedFieldController;
@@ -12,15 +12,13 @@ describe("ComputedFieldController", function() {
 
         var $controller;
 
-        angular.mock.inject(function(
-            _$controller_
-        ) {
+        angular.mock.inject(function(_$controller_) {
             $controller = _$controller_;
         });
 
         ComputedFieldController = $controller(BaseComputedFieldController, {});
         ComputedFieldController.value_model = {
-            value          : null,
+            value: null,
             is_autocomputed: false
         };
         ComputedFieldController.field = {
@@ -30,7 +28,7 @@ describe("ComputedFieldController", function() {
 
     describe("switchToAutocomputed() -", function() {
         it("When I switch the computed field to autocomputed, then its manual_value will be set to null and its is_autocomputed flag will be true", function() {
-            ComputedFieldController.value_model.manual_value    = 6;
+            ComputedFieldController.value_model.manual_value = 6;
             ComputedFieldController.value_model.is_autocomputed = false;
 
             ComputedFieldController.switchToAutocomputed();

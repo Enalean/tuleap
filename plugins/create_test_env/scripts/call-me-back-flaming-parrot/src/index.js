@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from 'vue';
-import GetTextPlugin from 'vue-gettext';
-import french_translations from '../../po/fr.po';
-import CallMeBack from './CallMeBack.vue';
-import { Settings } from 'luxon';
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
+import french_translations from "../../po/fr.po";
+import CallMeBack from "./CallMeBack.vue";
+import { Settings } from "luxon";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -31,13 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         silent: true
     });
 
-
-    const locale           = document.body.dataset.userLocale;
-    const short_locale     = locale.substring(0, 2);
-    Vue.config.language    = locale;
+    const locale = document.body.dataset.userLocale;
+    const short_locale = locale.substring(0, 2);
+    Vue.config.language = locale;
     Settings.defaultLocale = short_locale;
 
-    const call_me_back     = document.createElement('div');
+    const call_me_back = document.createElement("div");
 
     document.body.appendChild(call_me_back);
     const RootComponent = Vue.extend(CallMeBack);

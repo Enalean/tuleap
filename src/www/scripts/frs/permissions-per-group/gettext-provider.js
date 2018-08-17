@@ -21,11 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Gettext             from 'node-gettext';
-import french_translations from '../po/fr.po';
+import Gettext from "node-gettext";
+import french_translations from "../po/fr.po";
 
 const gettext_provider = new Gettext();
-gettext_provider.addTranslations('fr_FR', 'frs', french_translations);
-gettext_provider.setTextDomain('frs');
+gettext_provider.addTranslations("fr_FR", "frs", french_translations);
+gettext_provider.setTextDomain("frs");
 
 export { gettext_provider };

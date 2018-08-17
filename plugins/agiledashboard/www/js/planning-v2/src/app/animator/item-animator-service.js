@@ -1,6 +1,6 @@
 export default ItemAnimatorService;
 
-ItemAnimatorService.$inject = ['$timeout'];
+ItemAnimatorService.$inject = ["$timeout"];
 
 function ItemAnimatorService($timeout) {
     const self = this;

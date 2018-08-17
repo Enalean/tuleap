@@ -18,10 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { filterInlineTable } from 'tlp';
+import { filterInlineTable } from "tlp";
 
-document.addEventListener('DOMContentLoaded', () => {
-    const filter = document.getElementById('most-recent-logins-filter');
+document.addEventListener("DOMContentLoaded", () => {
+    const filter = document.getElementById("most-recent-logins-filter");
 
     if (filter) {
         filterInlineTable(filter);

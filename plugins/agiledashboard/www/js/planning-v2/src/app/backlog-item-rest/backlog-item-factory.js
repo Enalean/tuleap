@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default BacklogItemFactory;
 
@@ -10,38 +10,38 @@ function BacklogItemFactory() {
     };
 
     function augment(backlog_item) {
-        backlog_item.updating           = false;
-        backlog_item.shaking            = false;
-        backlog_item.selected           = false;
-        backlog_item.hidden             = false;
-        backlog_item.multiple           = false;
-        backlog_item.moving_to          = false;
+        backlog_item.updating = false;
+        backlog_item.shaking = false;
+        backlog_item.selected = false;
+        backlog_item.hidden = false;
+        backlog_item.multiple = false;
+        backlog_item.moving_to = false;
 
-        backlog_item.children           = {};
-        backlog_item.children.data      = [];
-        backlog_item.children.loaded    = false;
+        backlog_item.children = {};
+        backlog_item.children.data = [];
+        backlog_item.children.loaded = false;
         backlog_item.children.collapsed = true;
 
         backlog_item.isOpen = function() {
-            return backlog_item.status === 'Open';
+            return backlog_item.status === "Open";
         };
 
         defineAllowedBacklogItemTypes(backlog_item);
     }
 
     function defineAllowedBacklogItemTypes(backlog_item) {
-        var tracker_id       = backlog_item.artifact.tracker.id;
+        var tracker_id = backlog_item.artifact.tracker.id;
         var allowed_trackers = backlog_item.accept.trackers;
 
         backlog_item.accepted_types = {
-            content : allowed_trackers,
+            content: allowed_trackers,
             toString: function() {
                 var accept = [];
                 _.forEach(this.content, function(allowed_tracker) {
-                    accept.push('trackerId' + allowed_tracker.id);
+                    accept.push("trackerId" + allowed_tracker.id);
                 });
 
-                return accept.join('|');
+                return accept.join("|");
             }
         };
 
@@ -49,7 +49,7 @@ function BacklogItemFactory() {
     }
 
     function getTrackerType(tracker_id) {
-        var prefix = 'trackerId';
+        var prefix = "trackerId";
         return prefix.concat(tracker_id);
     }
 }

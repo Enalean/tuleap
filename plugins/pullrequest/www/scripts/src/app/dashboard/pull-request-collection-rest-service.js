@@ -1,20 +1,12 @@
-import { noop } from 'angular';
-import partial  from 'lodash.partial';
-import isString from 'lodash.isstring';
+import { noop } from "angular";
+import partial from "lodash.partial";
+import isString from "lodash.isstring";
 
 export default PullRequestCollectionRestService;
 
-PullRequestCollectionRestService.$inject = [
-    '$http',
-    '$q',
-    'ErrorModalService'
-];
+PullRequestCollectionRestService.$inject = ["$http", "$q", "ErrorModalService"];
 
-function PullRequestCollectionRestService(
-    $http,
-    $q,
-    ErrorModalService
-) {
+function PullRequestCollectionRestService($http, $q, ErrorModalService) {
     const self = this;
 
     Object.assign(self, {
@@ -24,7 +16,7 @@ function PullRequestCollectionRestService(
         getAllClosedPullRequests,
 
         pull_requests_pagination: {
-            limit : 50,
+            limit: 50,
             offset: 0
         }
     });
@@ -40,30 +32,33 @@ function PullRequestCollectionRestService(
             };
         }
 
-        var params = Object.assign({
-            limit : limit,
-            offset: offset
-        }, status_param);
+        var params = Object.assign(
+            {
+                limit: limit,
+                offset: offset
+            },
+            status_param
+        );
 
-        return $http.get('/api/v1/git/' + repository_id + '/pull_requests', {
-            params : params,
-            timeout: 20000
-        })
-        .then(function(response) {
-            return {
-                results: response.data.collection,
-                total  : Number.parseInt(response.headers('X-PAGINATION-SIZE'), 10)
-            };
-        })
-        .catch(function(error) {
-            ErrorModalService.showError(error);
-            return $q.reject(error);
-        });
+        return $http
+            .get("/api/v1/git/" + repository_id + "/pull_requests", {
+                params: params,
+                timeout: 20000
+            })
+            .then(function(response) {
+                return {
+                    results: response.data.collection,
+                    total: Number.parseInt(response.headers("X-PAGINATION-SIZE"), 10)
+                };
+            })
+            .catch(function(error) {
+                ErrorModalService.showError(error);
+                return $q.reject(error);
+            });
     }
 
     function recursiveGet(getFunction, limit, offset, callback) {
-        return getFunction(limit, offset)
-        .then(function(response) {
+        return getFunction(limit, offset).then(function(response) {
             var results = [].concat(response.results);
 
             var progress_callback = callback || noop;
@@ -73,19 +68,16 @@ function PullRequestCollectionRestService(
                 return results;
             }
 
-            return recursiveGet(
-                getFunction,
-                limit,
-                offset + limit,
-                progress_callback
-            ).then(function(second_response) {
-                return results.concat(second_response);
-            });
+            return recursiveGet(getFunction, limit, offset + limit, progress_callback).then(
+                function(second_response) {
+                    return results.concat(second_response);
+                }
+            );
         });
     }
 
     function getAllPullRequestsWithStatus(repository_id, status, callback) {
-        var limit  = self.pull_requests_pagination.limit;
+        var limit = self.pull_requests_pagination.limit;
         var offset = self.pull_requests_pagination.offset;
 
         var getOnePagePullRequests = partial(
@@ -96,12 +88,7 @@ function PullRequestCollectionRestService(
             status
         );
 
-        return recursiveGet(
-            getOnePagePullRequests,
-            limit,
-            offset,
-            callback
-        );
+        return recursiveGet(getOnePagePullRequests, limit, offset, callback);
     }
 
     function getAllPullRequests(repository_id, callback) {
@@ -111,13 +98,13 @@ function PullRequestCollectionRestService(
     }
 
     function getAllOpenPullRequests(repository_id, callback) {
-        var status = 'open';
+        var status = "open";
 
         return getAllPullRequestsWithStatus(repository_id, status, callback);
     }
 
     function getAllClosedPullRequests(repository_id, callback) {
-        var status = 'closed';
+        var status = "closed";
 
         return getAllPullRequestsWithStatus(repository_id, status, callback);
     }

@@ -19,15 +19,21 @@
 
 (function($) {
     $(document).ready(function() {
-        $(".tracker_color_selector").on('click', function() {
-            var old_color = $('input[name=tracker_color]').val();
-            var new_color = $(this).children(".icon-sign-blank").attr("data-color");
+        $(".tracker_color_selector").on("click", function() {
+            var old_color = $("input[name=tracker_color]").val();
+            var new_color = $(this)
+                .children(".icon-sign-blank")
+                .attr("data-color");
 
-            $("i.icon-ok.selected").removeClass('selected');
-            $(this).children(".icon-ok").addClass('selected');
+            $("i.icon-ok.selected").removeClass("selected");
+            $(this)
+                .children(".icon-ok")
+                .addClass("selected");
 
-            $('input[name=tracker_color]').val(new_color);
-            $('span.tracker_color_preview .xref-in-title').removeClass(old_color).addClass(new_color);
+            $("input[name=tracker_color]").val(new_color);
+            $("span.tracker_color_preview .xref-in-title")
+                .removeClass(old_color)
+                .addClass(new_color);
         });
     });
 })(window.jQuery);

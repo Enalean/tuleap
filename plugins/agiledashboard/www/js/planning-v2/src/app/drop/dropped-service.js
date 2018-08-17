@@ -1,13 +1,13 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default DroppedService;
 
 DroppedService.$inject = [
-    '$q',
-    'ProjectService',
-    'MilestoneService',
-    'BacklogItemService',
-    'RestErrorService'
+    "$q",
+    "ProjectService",
+    "MilestoneService",
+    "BacklogItemService",
+    "RestErrorService"
 ];
 
 function DroppedService(
@@ -18,22 +18,22 @@ function DroppedService(
     RestErrorService
 ) {
     return {
-        defineComparedTo                  : defineComparedTo,
-        defineComparedToBeFirstItem       : defineComparedToBeFirstItem,
-        defineComparedToBeLastItem        : defineComparedToBeLastItem,
-        reorderBacklog                    : reorderBacklog,
-        reorderSubmilestone               : reorderSubmilestone,
-        reorderBacklogItemChildren        : reorderBacklogItemChildren,
-        moveFromBacklogToSubmilestone     : moveFromBacklogToSubmilestone,
-        moveFromChildrenToChildren        : moveFromChildrenToChildren,
-        moveFromSubmilestoneToBacklog     : moveFromSubmilestoneToBacklog,
+        defineComparedTo: defineComparedTo,
+        defineComparedToBeFirstItem: defineComparedToBeFirstItem,
+        defineComparedToBeLastItem: defineComparedToBeLastItem,
+        reorderBacklog: reorderBacklog,
+        reorderSubmilestone: reorderSubmilestone,
+        reorderBacklogItemChildren: reorderBacklogItemChildren,
+        moveFromBacklogToSubmilestone: moveFromBacklogToSubmilestone,
+        moveFromChildrenToChildren: moveFromChildrenToChildren,
+        moveFromSubmilestoneToBacklog: moveFromSubmilestoneToBacklog,
         moveFromSubmilestoneToSubmilestone: moveFromSubmilestoneToSubmilestone
     };
 
     function defineComparedTo(item_list, dragged_item, dropped_items) {
         var diff_item_list = angular.copy(item_list);
-        var compared_to    = {};
-        var index          = 0;
+        var compared_to = {};
+        var index = 0;
 
         _.remove(diff_item_list, function(item) {
             return _.some(dropped_items, item) && dragged_item.id !== item.id;
@@ -48,14 +48,14 @@ function DroppedService(
         }
 
         if (index === 0) {
-            compared_to.direction = 'before';
-            compared_to.item_id   = diff_item_list[index + 1].id;
+            compared_to.direction = "before";
+            compared_to.item_id = diff_item_list[index + 1].id;
 
             return compared_to;
         }
 
-        compared_to.direction = 'after';
-        compared_to.item_id   = diff_item_list[index - 1].id;
+        compared_to.direction = "after";
+        compared_to.item_id = diff_item_list[index - 1].id;
 
         return compared_to;
     }
@@ -68,8 +68,8 @@ function DroppedService(
         }
 
         return {
-            direction: 'before',
-            item_id  : diff_item_list[0].id
+            direction: "before",
+            item_id: diff_item_list[0].id
         };
     }
 
@@ -81,8 +81,8 @@ function DroppedService(
         }
 
         return {
-            direction: 'after',
-            item_id  : diff_item_list[diff_item_list.length - 1].id
+            direction: "after",
+            item_id: diff_item_list[diff_item_list.length - 1].id
         };
     }
 
@@ -99,10 +99,18 @@ function DroppedService(
     function reorderBacklog(dropped_item_ids, compared_to, backlog) {
         var promise;
 
-        if (backlog.rest_base_route === 'projects' && compared_to) {
-            promise = ProjectService.reorderBacklog(backlog.rest_route_id, dropped_item_ids, compared_to);
-        } else if (backlog.rest_base_route === 'milestones' && compared_to) {
-            promise = MilestoneService.reorderBacklog(backlog.rest_route_id, dropped_item_ids, compared_to);
+        if (backlog.rest_base_route === "projects" && compared_to) {
+            promise = ProjectService.reorderBacklog(
+                backlog.rest_route_id,
+                dropped_item_ids,
+                compared_to
+            );
+        } else if (backlog.rest_base_route === "milestones" && compared_to) {
+            promise = MilestoneService.reorderBacklog(
+                backlog.rest_route_id,
+                dropped_item_ids,
+                compared_to
+            );
         }
 
         promise = $q.when(promise);
@@ -112,7 +120,11 @@ function DroppedService(
     }
 
     function reorderSubmilestone(dropped_item_ids, compared_to, submilestone_id) {
-        var promise = MilestoneService.reorderContent(submilestone_id, dropped_item_ids, compared_to);
+        var promise = MilestoneService.reorderContent(
+            submilestone_id,
+            dropped_item_ids,
+            compared_to
+        );
 
         catchRestError(promise);
 
@@ -120,7 +132,11 @@ function DroppedService(
     }
 
     function reorderBacklogItemChildren(dropped_item_ids, compared_to, backlog_item_id) {
-        var promise = BacklogItemService.reorderBacklogItemChildren(backlog_item_id, dropped_item_ids, compared_to);
+        var promise = BacklogItemService.reorderBacklogItemChildren(
+            backlog_item_id,
+            dropped_item_ids,
+            compared_to
+        );
 
         catchRestError(promise);
 
@@ -131,7 +147,11 @@ function DroppedService(
         var promise;
 
         if (compared_to) {
-            promise = MilestoneService.addReorderToContent(submilestone_id, dropped_item_ids, compared_to);
+            promise = MilestoneService.addReorderToContent(
+                submilestone_id,
+                dropped_item_ids,
+                compared_to
+            );
         } else {
             promise = MilestoneService.addToContent(submilestone_id, dropped_item_ids);
         }
@@ -141,13 +161,27 @@ function DroppedService(
         return promise;
     }
 
-    function moveFromChildrenToChildren(dropped_item_ids, compared_to, source_backlog_item_id, dest_backlog_item_id) {
+    function moveFromChildrenToChildren(
+        dropped_item_ids,
+        compared_to,
+        source_backlog_item_id,
+        dest_backlog_item_id
+    ) {
         var promise;
 
         if (compared_to) {
-            promise = BacklogItemService.removeAddReorderBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_ids, compared_to);
+            promise = BacklogItemService.removeAddReorderBacklogItemChildren(
+                source_backlog_item_id,
+                dest_backlog_item_id,
+                dropped_item_ids,
+                compared_to
+            );
         } else {
-            promise = BacklogItemService.removeAddBacklogItemChildren(source_backlog_item_id, dest_backlog_item_id, dropped_item_ids);
+            promise = BacklogItemService.removeAddBacklogItemChildren(
+                source_backlog_item_id,
+                dest_backlog_item_id,
+                dropped_item_ids
+            );
         }
 
         catchRestError(promise);
@@ -155,20 +189,43 @@ function DroppedService(
         return promise;
     }
 
-    function moveFromSubmilestoneToBacklog(dropped_item_ids, compared_to, submilestone_id, backlog) {
+    function moveFromSubmilestoneToBacklog(
+        dropped_item_ids,
+        compared_to,
+        submilestone_id,
+        backlog
+    ) {
         var promise;
 
-        if (backlog.rest_base_route === 'projects') {
+        if (backlog.rest_base_route === "projects") {
             if (compared_to) {
-                promise = ProjectService.removeAddReorderToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_ids, compared_to);
+                promise = ProjectService.removeAddReorderToBacklog(
+                    submilestone_id,
+                    backlog.rest_route_id,
+                    dropped_item_ids,
+                    compared_to
+                );
             } else {
-                promise = ProjectService.removeAddToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_ids);
+                promise = ProjectService.removeAddToBacklog(
+                    submilestone_id,
+                    backlog.rest_route_id,
+                    dropped_item_ids
+                );
             }
-        } else if (backlog.rest_base_route === 'milestones') {
+        } else if (backlog.rest_base_route === "milestones") {
             if (compared_to) {
-                promise = MilestoneService.removeAddReorderToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_ids, compared_to);
+                promise = MilestoneService.removeAddReorderToBacklog(
+                    submilestone_id,
+                    backlog.rest_route_id,
+                    dropped_item_ids,
+                    compared_to
+                );
             } else {
-                promise = MilestoneService.removeAddToBacklog(submilestone_id, backlog.rest_route_id, dropped_item_ids);
+                promise = MilestoneService.removeAddToBacklog(
+                    submilestone_id,
+                    backlog.rest_route_id,
+                    dropped_item_ids
+                );
             }
         }
 
@@ -178,13 +235,27 @@ function DroppedService(
         return promise;
     }
 
-    function moveFromSubmilestoneToSubmilestone(dropped_item_ids, compared_to, source_submilestone_id, dest_submilestone_id) {
+    function moveFromSubmilestoneToSubmilestone(
+        dropped_item_ids,
+        compared_to,
+        source_submilestone_id,
+        dest_submilestone_id
+    ) {
         var promise;
 
         if (compared_to) {
-            promise = MilestoneService.removeAddReorderToContent(source_submilestone_id, dest_submilestone_id, dropped_item_ids, compared_to);
+            promise = MilestoneService.removeAddReorderToContent(
+                source_submilestone_id,
+                dest_submilestone_id,
+                dropped_item_ids,
+                compared_to
+            );
         } else {
-            promise = MilestoneService.removeAddToContent(source_submilestone_id, dest_submilestone_id, dropped_item_ids);
+            promise = MilestoneService.removeAddToContent(
+                source_submilestone_id,
+                dest_submilestone_id,
+                dropped_item_ids
+            );
         }
 
         catchRestError(promise);

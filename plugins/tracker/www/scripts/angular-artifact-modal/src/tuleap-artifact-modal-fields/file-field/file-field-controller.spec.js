@@ -1,8 +1,8 @@
-import file_field_module from './file-field.js';
-import angular from 'angular';
-import 'angular-mocks';
+import file_field_module from "./file-field.js";
+import angular from "angular";
+import "angular-mocks";
 
-import BaseFileFieldController from './file-field-controller.js';
+import BaseFileFieldController from "./file-field-controller.js";
 
 describe("TuleapArtifactModalFileFieldController", function() {
     var TuleapArtifactModalFileFieldController;
@@ -10,9 +10,7 @@ describe("TuleapArtifactModalFileFieldController", function() {
     beforeEach(function() {
         angular.mock.module(file_field_module);
 
-        angular.mock.inject(function(
-            $controller
-        ) {
+        angular.mock.inject(function($controller) {
             TuleapArtifactModalFileFieldController = $controller(BaseFileFieldController, {});
             TuleapArtifactModalFileFieldController.value_model = {
                 value: [],
@@ -50,12 +48,14 @@ describe("TuleapArtifactModalFileFieldController", function() {
                         filename: "Tristram"
                     },
                     description: "one"
-                }, {
+                },
+                {
                     file: {
                         filename: "foreconsent"
                     },
                     description: "two"
-                }, {
+                },
+                {
                     file: {
                         filename: "nondisciplinary"
                     },
@@ -71,10 +71,12 @@ describe("TuleapArtifactModalFileFieldController", function() {
                         filename: "Tristram"
                     },
                     description: "one"
-                }, {
+                },
+                {
                     file: {},
                     description: ""
-                }, {
+                },
+                {
                     file: {
                         filename: "nondisciplinary"
                     },
@@ -103,7 +105,9 @@ describe("TuleapArtifactModalFileFieldController", function() {
 
             TuleapArtifactModalFileFieldController.toggleMarkedForRemoval(file, index);
 
-            expect(TuleapArtifactModalFileFieldController.value_model.value[index]).toEqual(file.id);
+            expect(TuleapArtifactModalFileFieldController.value_model.value[index]).toEqual(
+                file.id
+            );
             expect(file.marked_for_removal).toBeFalsy();
         });
 

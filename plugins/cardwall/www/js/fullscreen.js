@@ -1,30 +1,28 @@
 /**
-  * Copyright (c) Enalean, 2013. All rights reserved
-  *
-  * This file is a part of Tuleap.
-  *
-  * Tuleap is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation; either version 2 of the License, or
-  * (at your option) any later version.
-  *
-  * Tuleap is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
-  */
+ * Copyright (c) Enalean, 2013. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ */
 
- /**
-  * This script manage the fullscreen mode of the cardwall
-  */
+/**
+ * This script manage the fullscreen mode of the cardwall
+ */
 
- (function($) {
-
-    $(document).ready( function() {
-
+(function($) {
+    $(document).ready(function() {
         var isFullScreen = false;
         var body = $("body");
         var main = $(".main");
@@ -33,22 +31,21 @@
 
         function defineFullscreenClasses() {
             if (isFullScreen) {
-                body.addClass('fullscreen');
-                info.removeClass('mini');
-
+                body.addClass("fullscreen");
+                info.removeClass("mini");
             } else {
-                body.removeClass('fullscreen');
-                info.addClass('mini');
-                main.css('margin-left', getSidebarSize());
+                body.removeClass("fullscreen");
+                info.addClass("mini");
+                main.css("margin-left", getSidebarSize());
             }
         }
 
         function getSidebarSize() {
-            if ($('body').hasClass('sidebar-collapsed')) {
-                return '45px';
+            if ($("body").hasClass("sidebar-collapsed")) {
+                return "45px";
             }
 
-            return '200px';
+            return "200px";
         }
 
         /**
@@ -65,13 +62,15 @@
             while (position < prefix.length && !obj[method_name]) {
                 method_name = method;
                 if (prefix[position] == "") {
-                    method_name = method_name.substr(0,1).toLowerCase() + method_name.substr(1);
+                    method_name = method_name.substr(0, 1).toLowerCase() + method_name.substr(1);
                 }
                 method_name = prefix[position] + method_name;
                 type = typeof obj[method_name];
                 if (type != "undefined") {
                     prefix = [prefix[position]];
-                    return (type == "function" ? obj[method_name](Element.ALLOW_KEYBOARD_INPUT) : obj[method_name]);
+                    return type == "function"
+                        ? obj[method_name](Element.ALLOW_KEYBOARD_INPUT)
+                        : obj[method_name];
                 }
                 position++;
             }
@@ -79,29 +78,39 @@
 
         function defineMilestoneInfoBlockSize() {
             if (isFullScreen) {
-                main.css('margin-left', 0);
-                $('.milestone-name').addClass('span3');
-                $('.milestone-days').removeClass('span5').addClass('span3');
-                $('.milestone-capacity').removeClass('span5').addClass('span4');
-
+                main.css("margin-left", 0);
+                $(".milestone-name").addClass("span3");
+                $(".milestone-days")
+                    .removeClass("span5")
+                    .addClass("span3");
+                $(".milestone-capacity")
+                    .removeClass("span5")
+                    .addClass("span4");
             } else {
-                $('.milestone-name').removeClass('span3');
-                $('.milestone-days').removeClass('span3').addClass('span5');
-                $('.milestone-capacity').removeClass('span4').addClass('span5');
+                $(".milestone-name").removeClass("span3");
+                $(".milestone-days")
+                    .removeClass("span3")
+                    .addClass("span5");
+                $(".milestone-capacity")
+                    .removeClass("span4")
+                    .addClass("span5");
             }
         }
 
         function updateButtonLabel() {
             if (isFullScreen) {
-                button.html('<i class="icon-resize-small"></i>' + codendi.locales.cardwall.exit_fullscreen);
-
+                button.html(
+                    '<i class="icon-resize-small"></i>' + codendi.locales.cardwall.exit_fullscreen
+                );
             } else {
-                button.html('<i class="icon-desktop"></i>' + codendi.locales.cardwall.go_to_fullscreen);
+                button.html(
+                    '<i class="icon-desktop"></i>' + codendi.locales.cardwall.go_to_fullscreen
+                );
             }
         }
 
         function scrollToTop() {
-            $('html, body').scrollTop(0);
+            $("html, body").scrollTop(0);
         }
 
         function exitFullScreen() {
@@ -125,11 +134,16 @@
         }
 
         function browserIsIE() {
-            return eval('/*@cc_on !@*/false');
+            return eval("/*@cc_on !@*/false");
         }
 
-        $(document).on('webkitfullscreenchange mozfullscreenchange fullscreenchange', function (evt) {
-            var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function(
+            evt
+        ) {
+            var fullscreenElement =
+                document.fullscreenElement ||
+                document.mozFullScreenElement ||
+                document.webkitFullscreenElement;
 
             if (fullscreenElement == null) {
                 exitFullScreen();
@@ -138,16 +152,19 @@
 
         if (browserIsIE()) {
             button.popover({
-                trigger: 'hover',
-                placement: 'left',
+                trigger: "hover",
+                placement: "left",
                 html: true,
                 title: codendi.locales.cardwall.no_fullscreen_title,
                 content: codendi.locales.cardwall.no_fullscreen_content
             });
         } else {
-            button.on('click', function (evt) {
+            button.on("click", function(evt) {
                 (function fullscreen() {
-                    if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+                    if (
+                        RunPrefixMethod(document, "FullScreen") ||
+                        RunPrefixMethod(document, "IsFullScreen")
+                    ) {
                         exitFullScreen();
                     } else {
                         requestFullScreen();
@@ -156,4 +173,4 @@
             });
         }
     });
- })(jQuery);
+})(jQuery);

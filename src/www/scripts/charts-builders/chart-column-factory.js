@@ -18,12 +18,7 @@
  */
 
 export class ColumnFactory {
-    constructor({
-        x_scale,
-        y_scale,
-        column_width,
-        column_height
-    }) {
+    constructor({ x_scale, y_scale, column_width, column_height }) {
         Object.assign(this, {
             x_scale,
             y_scale,
@@ -35,9 +30,10 @@ export class ColumnFactory {
     }
 
     addColumn(container, date) {
-        container.append('rect')
-            .attr('class', 'chart-column')
-            .attr('x', () => {
+        container
+            .append("rect")
+            .attr("class", "chart-column")
+            .attr("x", () => {
                 const x_position = this.x_scale(date);
 
                 if (this.isFirstColumn(date)) {
@@ -46,15 +42,15 @@ export class ColumnFactory {
 
                 return x_position - this.column_width / 2;
             })
-            .attr('y', this.y_scale(this.y_domain[1]))
-            .attr('width', () => {
+            .attr("y", this.y_scale(this.y_domain[1]))
+            .attr("width", () => {
                 if (this.isFirstColumn(date) || this.isLastColumn(date)) {
                     return this.column_width / 2;
                 }
 
                 return this.column_width;
             })
-            .attr('height', this.column_height);
+            .attr("height", this.column_height);
     }
 
     isFirstColumn(date) {
@@ -64,7 +60,7 @@ export class ColumnFactory {
     }
 
     isLastColumn(date) {
-        const x_maximum = this.x_domain[ this.x_domain.length - 1 ];
+        const x_maximum = this.x_domain[this.x_domain.length - 1];
 
         return date === x_maximum;
     }

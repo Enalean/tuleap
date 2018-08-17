@@ -17,111 +17,116 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
-    document.addEventListener('DOMContentLoaded', function () {
-        var add_button = document.getElementById('svn-notifications-add'),
-            add_row    = document.getElementById('svn-notifications-row-add');
+(function($) {
+    document.addEventListener("DOMContentLoaded", function() {
+        var add_button = document.getElementById("svn-notifications-add"),
+            add_row = document.getElementById("svn-notifications-row-add");
 
-        if (! add_button || ! add_row) {
+        if (!add_button || !add_row) {
             return;
         }
 
-        var show_edit_mode_buttons = document.querySelectorAll('.svn-notification-edit-show');
-        [].forEach.call(show_edit_mode_buttons, function (button) {
-            button.addEventListener('click', showEditMode);
+        var show_edit_mode_buttons = document.querySelectorAll(".svn-notification-edit-show");
+        [].forEach.call(show_edit_mode_buttons, function(button) {
+            button.addEventListener("click", showEditMode);
         });
 
-        var hide_edit_mode_buttons = document.querySelectorAll('.svn-notification-edit-hide');
-        [].forEach.call(hide_edit_mode_buttons, function (button) {
-            button.addEventListener('click', hideEditMode);
+        var hide_edit_mode_buttons = document.querySelectorAll(".svn-notification-edit-hide");
+        [].forEach.call(hide_edit_mode_buttons, function(button) {
+            button.addEventListener("click", hideEditMode);
         });
 
-        var timeouts           = [];
+        var timeouts = [];
         var all_existing_paths = [];
-        var paths              = document.getElementsByClassName('input-path');
-        [].forEach.call(paths, function (path) {
-            if (path.classList.contains('edit-path')) {
+        var paths = document.getElementsByClassName("input-path");
+        [].forEach.call(paths, function(path) {
+            if (path.classList.contains("edit-path")) {
                 all_existing_paths.push({
                     notification_id: path.dataset.notificationId,
-                    value          : path.value
+                    value: path.value
                 });
             }
-            path.addEventListener('input', function(event) {
-                timeouts.push(setTimeout(function() {
-                    clearTimeouts();
-                    checkPathExists(event);
-                }, 1000));
+            path.addEventListener("input", function(event) {
+                timeouts.push(
+                    setTimeout(function() {
+                        clearTimeouts();
+                        checkPathExists(event);
+                    }, 1000)
+                );
             });
         });
 
-        initializeAutocompleter('#add_email');
-        initializeAutocompleter('.edit_email');
+        initializeAutocompleter("#add_email");
+        initializeAutocompleter(".edit_email");
         initializeAddNotification();
 
         function initializeAddNotification() {
-            add_button.addEventListener('click', function () {
+            add_button.addEventListener("click", function() {
                 hideEditMode();
-                add_row.classList.remove('svn-notifications-row-add-hidden');
-                add_button.classList.add('svn-notifications-add-hidden');
-                tuleap.resetPlaceholder('#add_email');
+                add_row.classList.remove("svn-notifications-row-add-hidden");
+                add_button.classList.add("svn-notifications-add-hidden");
+                tuleap.resetPlaceholder("#add_email");
             });
         }
 
         function hideEditMode() {
-            var form         = document.getElementById('svn-admin-notifications-form'),
-                read_cells   = document.querySelectorAll('.svn-notifications-checkbox-cell-read'),
-                edit_cells   = document.querySelectorAll('.svn-notifications-checkbox-cell-write'),
-                buttons_save = document.querySelectorAll('.svn-notification-save');
+            var form = document.getElementById("svn-admin-notifications-form"),
+                read_cells = document.querySelectorAll(".svn-notifications-checkbox-cell-read"),
+                edit_cells = document.querySelectorAll(".svn-notifications-checkbox-cell-write"),
+                buttons_save = document.querySelectorAll(".svn-notification-save");
 
             form.reset();
 
-            [].forEach.call(read_cells, function (cell) {
-                cell.classList.remove('svn-notifications-checkbox-cell-hidden');
+            [].forEach.call(read_cells, function(cell) {
+                cell.classList.remove("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(edit_cells, function (cell) {
-                cell.classList.add('svn-notifications-checkbox-cell-hidden');
+            [].forEach.call(edit_cells, function(cell) {
+                cell.classList.add("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(buttons_save, function (button_save) {
+            [].forEach.call(buttons_save, function(button_save) {
                 button_save.disabled = false;
             });
-            add_row.classList.add('svn-notifications-row-add-hidden');
-            add_button.classList.remove('svn-notifications-add-hidden');
+            add_row.classList.add("svn-notifications-row-add-hidden");
+            add_button.classList.remove("svn-notifications-add-hidden");
         }
 
         function showEditMode() {
             hideEditMode();
 
-            var tr         = this.parentNode.parentNode.parentNode,
-                read_cells = tr.querySelectorAll('.svn-notifications-checkbox-cell-read'),
-                edit_cells = tr.querySelectorAll('.svn-notifications-checkbox-cell-write');
+            var tr = this.parentNode.parentNode.parentNode,
+                read_cells = tr.querySelectorAll(".svn-notifications-checkbox-cell-read"),
+                edit_cells = tr.querySelectorAll(".svn-notifications-checkbox-cell-write");
 
-            [].forEach.call(read_cells, function (cell) {
-                cell.classList.add('svn-notifications-checkbox-cell-hidden');
+            [].forEach.call(read_cells, function(cell) {
+                cell.classList.add("svn-notifications-checkbox-cell-hidden");
             });
-            [].forEach.call(edit_cells, function (cell) {
-                cell.classList.remove('svn-notifications-checkbox-cell-hidden');
-                var inputs = cell.getElementsByTagName('input');
-                [].forEach.call(inputs, function (input) {
+            [].forEach.call(edit_cells, function(cell) {
+                cell.classList.remove("svn-notifications-checkbox-cell-hidden");
+                var inputs = cell.getElementsByTagName("input");
+                [].forEach.call(inputs, function(input) {
                     input.disabled = false;
                 });
             });
 
-            var input            = document.getElementById(tr.dataset.targetInputId),
+            var input = document.getElementById(tr.dataset.targetInputId),
                 selected_ugroups = JSON.parse(input.dataset.ugroups),
-                selected_users   = JSON.parse(input.dataset.users),
-                selected_emails  = JSON.parse(input.dataset.emails);
-            tuleap.addDataToAutocompleter(input, selected_ugroups.concat(selected_users).concat(selected_emails));
+                selected_users = JSON.parse(input.dataset.users),
+                selected_emails = JSON.parse(input.dataset.emails);
+            tuleap.addDataToAutocompleter(
+                input,
+                selected_ugroups.concat(selected_users).concat(selected_emails)
+            );
             tuleap.enableAutocompleter(input);
         }
 
         function initializeAutocompleter(input_id) {
             var inputs = document.querySelectorAll(input_id);
 
-            if (! inputs) {
+            if (!inputs) {
                 return;
             }
 
-            [].forEach.call(inputs, function (input) {
+            [].forEach.call(inputs, function(input) {
                 tuleap.loadUserAndUgroupAutocompleter(input);
                 tuleap.addDataToAutocompleter(input);
             });
@@ -160,19 +165,19 @@
                 }
             }
             if (notification_id !== 0) {
-                save_button = $('#svn-notification-save-' + notification_id);
+                save_button = $("#svn-notification-save-" + notification_id);
             } else {
-                save_button = $('#svn-notification-save-adding-notification');
+                save_button = $("#svn-notification-save-adding-notification");
             }
 
             if (isAnExistingPath(notification_id, event.target.value)) {
-                if (! save_button.attr('disabled')) {
-                    save_button.popover('show');
-                    save_button.attr('disabled', true);
+                if (!save_button.attr("disabled")) {
+                    save_button.popover("show");
+                    save_button.attr("disabled", true);
                 }
             } else {
-                save_button.popover('hide');
-                save_button.attr('disabled', false);
+                save_button.popover("hide");
+                save_button.attr("disabled", false);
             }
         }
     });

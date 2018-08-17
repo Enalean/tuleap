@@ -18,19 +18,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-(function () {
-    'use strict';
+(function() {
+    "use strict";
 
-    var modal_gerrit_delete_buttons = document.querySelectorAll('.gerrit-action-delete-button');
-    [].forEach.call(modal_gerrit_delete_buttons, function (button) {
+    var modal_gerrit_delete_buttons = document.querySelectorAll(".gerrit-action-delete-button");
+    [].forEach.call(modal_gerrit_delete_buttons, function(button) {
         var modal_element = document.getElementById(button.dataset.modalId);
 
         if (modal_element) {
             var modal = tlp.modal(modal_element);
 
-            button.addEventListener('click', function () {
+            button.addEventListener("click", function() {
                 modal.toggle();
             });
         }
     });
-} ());
+})();

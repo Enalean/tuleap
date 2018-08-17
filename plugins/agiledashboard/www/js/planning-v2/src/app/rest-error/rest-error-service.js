@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default RestErrorService;
 
@@ -12,7 +12,7 @@ function RestErrorService() {
     });
 
     var error = {
-        rest_error        : '',
+        rest_error: "",
         rest_error_occured: false
     };
 
@@ -22,6 +22,6 @@ function RestErrorService() {
 
     function setError(rest_error) {
         error.rest_error_occured = true;
-        error.rest_error         = rest_error.code + ' ' + rest_error.message;
+        error.rest_error = rest_error.code + " " + rest_error.message;
     }
 }

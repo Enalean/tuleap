@@ -18,17 +18,15 @@
  *
  */
 
-!(function ($) {
-
-    $(function () {
-        var form = $('#siteadmin-project-creation-moderation');
+!(function($) {
+    $(function() {
+        var form = $("#siteadmin-project-creation-moderation");
         if (form.length === 0) {
             return;
         }
 
-        $('#toggle-projects-must-be-approved').change(function () {
+        $("#toggle-projects-must-be-approved").change(function() {
             $(this)[0].form.submit();
         });
     });
-
 })(window.jQuery);

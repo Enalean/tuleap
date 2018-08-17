@@ -1,18 +1,18 @@
-import './permission-field.tpl.html';
-import PermissionFieldController from './permission-field-controller.js';
+import "./permission-field.tpl.html";
+import PermissionFieldController from "./permission-field-controller.js";
 
 export default function PermissionFieldDirective() {
     return {
-        restrict        : 'EA',
-        replace         : false,
-        scope           : {
-            field      : '=tuleapArtifactModalPermissionField',
-            isDisabled : '&isDisabled',
-            value_model: '=valueModel'
+        restrict: "EA",
+        replace: false,
+        scope: {
+            field: "=tuleapArtifactModalPermissionField",
+            isDisabled: "&isDisabled",
+            value_model: "=valueModel"
         },
-        controller      : PermissionFieldController,
-        controllerAs    : 'permission_field',
+        controller: PermissionFieldController,
+        controllerAs: "permission_field",
         bindToController: true,
-        templateUrl     : 'permission-field.tpl.html'
+        templateUrl: "permission-field.tpl.html"
     };
 }

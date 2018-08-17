@@ -19,13 +19,13 @@
 
 var select2;
 var escaper;
-if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    select2 = require('tlp').select2;
-    escaper = require('./escaper.js').escaper;
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    select2 = require("tlp").select2;
+    escaper = require("./escaper.js").escaper;
 
     module.exports = {
         autocomplete_projects_for_select2: autocomplete_projects_for_select2,
-        autocomplete_users_for_select2   : autocomplete_users_for_select2
+        autocomplete_users_for_select2: autocomplete_users_for_select2
     };
 } else {
     var tuleap = window.tuleap || {};
@@ -33,27 +33,27 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     select2 = window.tlp.select2;
     escaper = tuleap.escaper;
     tuleap.autocomplete_projects_for_select2 = autocomplete_projects_for_select2;
-    tuleap.autocomplete_users_for_select2    = autocomplete_users_for_select2;
+    tuleap.autocomplete_users_for_select2 = autocomplete_users_for_select2;
 }
 
 function autocomplete_projects_for_select2(element, options) {
     options = options || {};
 
     options.include_private_projects = options.include_private_projects || 0;
-    options.placeholder              = element.dataset.placeholder || '';
-    options.minimumInputLength       = 3;
-    options.allowClear               = true;
-    options.debug                    = true;
-    options.ajax                     = {
-        url     : '/project/autocomplete.php',
-        dataType: 'json',
-        delay   : 250,
-        data    : function(params) {
+    options.placeholder = element.dataset.placeholder || "";
+    options.minimumInputLength = 3;
+    options.allowClear = true;
+    options.debug = true;
+    options.ajax = {
+        url: "/project/autocomplete.php",
+        dataType: "json",
+        delay: 250,
+        data: function(params) {
             return {
-                return_type: 'json_for_select_2',
-                name       : params.term,
-                page       : params.page || 1,
-                private    : options.include_private_projects ? 1 : 0
+                return_type: "json_for_select_2",
+                name: params.term,
+                page: params.page || 1,
+                private: options.include_private_projects ? 1 : 0
             };
         }
     };
@@ -65,23 +65,25 @@ function autocomplete_users_for_select2(element, options) {
     options = options || {};
 
     options.internal_users_only = options.internal_users_only || 0;
-    options.placeholder         = element.dataset.placeholder || '';
-    options.minimumInputLength  = 3;
-    options.allowClear          = true;
-    options.ajax                = {
-        url     : '/user/autocomplete.php',
-        dataType: 'json',
-        delay   : 250,
-        data    : function(params) {
+    options.placeholder = element.dataset.placeholder || "";
+    options.minimumInputLength = 3;
+    options.allowClear = true;
+    options.ajax = {
+        url: "/user/autocomplete.php",
+        dataType: "json",
+        delay: 250,
+        data: function(params) {
             return {
-                return_type      : 'json_for_select_2',
-                name             : params.term,
-                page             : params.page || 1,
+                return_type: "json_for_select_2",
+                name: params.term,
+                page: params.page || 1,
                 codendi_user_only: options.internal_users_only
             };
         }
     };
-    options.escapeMarkup = function (markup) { return markup; };
+    options.escapeMarkup = function(markup) {
+        return markup;
+    };
     options.templateResult = formatUser;
     options.templateSelection = formatUserWhenSelected;
 
@@ -92,12 +94,17 @@ function autocomplete_users_for_select2(element, options) {
             return escaper.html(user.text);
         }
 
-        var markup = '<div class="select2-result-user"> \
+        var markup =
+            '<div class="select2-result-user"> \
             <div class="tlp-avatar select2-result-user__avatar"> \
-                ' + (user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : '') +' \
+                ' +
+            (user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "") +
+            " \
             </div> \
-            ' + escaper.html(user.text) +' \
-        </div>';
+            " +
+            escaper.html(user.text) +
+            " \
+        </div>";
 
         return markup;
     }

@@ -24,20 +24,18 @@
  */
 
 (function($) {
-    $(document).ready(function () {
-
-        var tracker_reminder_element = $('#tracker_reminder');
+    $(document).ready(function() {
+        var tracker_reminder_element = $("#tracker_reminder");
 
         if (tracker_reminder_element !== undefined) {
             tracker_reminder_element.show();
-            $('#add_reminder').click(function () {
-
+            $("#add_reminder").click(function() {
                 $.ajax({
-                    url: '?func=display_reminder_form',
-                    type: 'get',
-                    success: function(html_form){
+                    url: "?func=display_reminder_form",
+                    type: "get",
+                    success: function(html_form) {
                         tracker_reminder_element.html(html_form);
-                    },
+                    }
                 });
             });
         }

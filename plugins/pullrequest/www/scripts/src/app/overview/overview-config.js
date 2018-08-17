@@ -1,20 +1,16 @@
 export default OverviewConfig;
 
-OverviewConfig.$inject = [
-    '$stateProvider'
-];
+OverviewConfig.$inject = ["$stateProvider"];
 
-function OverviewConfig(
-    $stateProvider
-) {
-    $stateProvider.state('overview', {
-        url   : '/overview',
-        parent: 'pull-request',
-        views : {
-            'overview@pull-request': {
+function OverviewConfig($stateProvider) {
+    $stateProvider.state("overview", {
+        url: "/overview",
+        parent: "pull-request",
+        views: {
+            "overview@pull-request": {
                 template: '<div overview id="overview"></div>'
             },
-            'timeline@overview': {
+            "timeline@overview": {
                 template: '<div timeline id="timeline"></div>'
             }
         }

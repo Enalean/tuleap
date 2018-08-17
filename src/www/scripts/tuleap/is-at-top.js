@@ -15,19 +15,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-(function ($) {
-
-    $(document).ready(function () {
+(function($) {
+    $(document).ready(function() {
         setIsAtTop();
         $(window).scroll(setIsAtTop);
 
         function setIsAtTop() {
             if (window.pageYOffset === 0) {
-                $(document.body).addClass('is-at-top');
+                $(document.body).addClass("is-at-top");
             } else {
-                $(document.body).removeClass('is-at-top');
+                $(document.body).removeClass("is-at-top");
             }
         }
     });
-
 })(jQuery);

@@ -17,16 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'babel-polyfill';
-import 'tlp-mocks';
-import Vue           from 'vue';
-import GetTextPlugin from 'vue-gettext';
+import "babel-polyfill";
+import "tlp-mocks";
+import Vue from "vue";
+import GetTextPlugin from "vue-gettext";
 
 Vue.use(GetTextPlugin, {
     translations: {},
     silent: true
 });
 
-import './LabeledItemsList.spec.js';
-import './LabeledItem.spec.js';
-import './rest-querier.spec.js';
+import "./LabeledItemsList.spec.js";
+import "./LabeledItem.spec.js";
+import "./rest-querier.spec.js";

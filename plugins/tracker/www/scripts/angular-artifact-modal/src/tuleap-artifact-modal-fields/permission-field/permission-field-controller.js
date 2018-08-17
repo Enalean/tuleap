@@ -5,7 +5,7 @@ PermissionFieldController.$inject = [];
 function PermissionFieldController() {
     var self = this;
 
-    self.clearSelectBox      = clearSelectBox;
+    self.clearSelectBox = clearSelectBox;
     self.isSelectBoxDisabled = isSelectBoxDisabled;
     self.isSelectBoxRequired = isSelectBoxRequired;
 
@@ -20,7 +20,7 @@ function PermissionFieldController() {
             return self.isDisabled();
         }
 
-        return (! self.value_model.value.is_used_by_default || self.isDisabled());
+        return !self.value_model.value.is_used_by_default || self.isDisabled();
     }
 
     function isSelectBoxRequired() {

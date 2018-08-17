@@ -1,7 +1,7 @@
-import angular from 'angular';
-import 'angular-mocks';
+import angular from "angular";
+import "angular-mocks";
 
-import drop_module from './drop.js';
+import drop_module from "./drop.js";
 
 describe("DroppedService -", function() {
     var $q,
@@ -25,13 +25,13 @@ describe("DroppedService -", function() {
             _BacklogItemService_,
             _RestErrorService_
         ) {
-            $q                 = _$q_;
-            $scope             = $rootScope.$new();
-            DroppedService     = _DroppedService_;
-            ProjectService     = _ProjectService_;
-            MilestoneService   = _MilestoneService_;
+            $q = _$q_;
+            $scope = $rootScope.$new();
+            DroppedService = _DroppedService_;
+            ProjectService = _ProjectService_;
+            MilestoneService = _MilestoneService_;
             BacklogItemService = _BacklogItemService_;
-            RestErrorService   = _RestErrorService_;
+            RestErrorService = _RestErrorService_;
 
             var returnPromise = function(method) {
                 var self = this;
@@ -39,11 +39,10 @@ describe("DroppedService -", function() {
             };
 
             ProjectService = _ProjectService_;
-            _([
-                "reorderBacklog",
-                "removeAddReorderToBacklog",
-                "removeAddToBacklog"
-            ]).forEach(returnPromise, ProjectService);
+            _(["reorderBacklog", "removeAddReorderToBacklog", "removeAddToBacklog"]).forEach(
+                returnPromise,
+                ProjectService
+            );
 
             MilestoneService = _MilestoneService_;
             _([
@@ -73,7 +72,7 @@ describe("DroppedService -", function() {
             data: {
                 error: {
                     code: 404,
-                    message: 'Not Found'
+                    message: "Not Found"
                 }
             }
         };
@@ -81,92 +80,118 @@ describe("DroppedService -", function() {
 
     describe("defineComparedTo() - ", function() {
         describe("when only one element is dragged, ", function() {
-            var dragged_item  = { id: 4 };
+            var dragged_item = { id: 4 };
             var dropped_items = [{ id: 4 }];
 
             it("should return before the first item", function() {
                 var item_list = [{ id: 4 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'before', item_id: 1 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "before", item_id: 1 });
             });
 
             it("should return after the first item", function() {
                 var item_list = [{ id: 1 }, { id: 4 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 1 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "after", item_id: 1 });
             });
 
             it("should return after the last item", function() {
                 var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 5 }, { id: 6 }, { id: 4 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 6 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "after", item_id: 6 });
             });
         });
 
         describe("when multiple elements are dragged, ", function() {
-            var dragged_item  = { id: 5 };
+            var dragged_item = { id: 5 };
             var dropped_items = [{ id: 2 }, { id: 5 }];
 
             it("should return before the first item", function() {
                 var item_list = [{ id: 5 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'before', item_id: 1 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "before", item_id: 1 });
             });
 
             it("should return after the first item", function() {
                 var item_list = [{ id: 1 }, { id: 5 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 1 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "after", item_id: 1 });
             });
 
             it("should return after the last item", function() {
                 var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 6 }, { id: 5 }];
 
-                expect(DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)).toEqual({ direction: 'after', item_id: 6 });
+                expect(
+                    DroppedService.defineComparedTo(item_list, dragged_item, dropped_items)
+                ).toEqual({ direction: "after", item_id: 6 });
             });
         });
     });
 
     describe("defineComparedToBeFirstItem() - ", function() {
         it("should return before the first item", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 2 }, { id: 5 }];
 
-            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({ direction: 'before', item_id: 1 });
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({
+                direction: "before",
+                item_id: 1
+            });
         });
 
         it("should return before the first item not in selection", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 1 }, { id: 5 }];
 
-            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({ direction: 'before', item_id: 2 });
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual({
+                direction: "before",
+                item_id: 2
+            });
         });
 
         it("should return null if all items are selected", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
-            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual(null);
+            expect(DroppedService.defineComparedToBeFirstItem(item_list, moved_items)).toEqual(
+                null
+            );
         });
     });
 
     describe("defineComparedToBeLastItem() - ", function() {
         it("should return after the last item", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 2 }, { id: 5 }];
 
-            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({ direction: 'after', item_id: 6 });
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({
+                direction: "after",
+                item_id: 6
+            });
         });
 
         it("should return after the last item not in selection", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 4 }, { id: 6 }];
 
-            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({ direction: 'after', item_id: 5 });
+            expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual({
+                direction: "after",
+                item_id: 5
+            });
         });
 
         it("should return null if all items are selected", function() {
-            var item_list   = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+            var item_list = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
             var moved_items = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
             expect(DroppedService.defineComparedToBeLastItem(item_list, moved_items)).toEqual(null);
@@ -175,15 +200,23 @@ describe("DroppedService -", function() {
 
     describe("reorderBacklog() -", function() {
         it("should call the REST route that reorder project backlog", function() {
-            DroppedService.reorderBacklog(1, {}, {
-                rest_base_route: 'projects',
-                rest_route_id: 2
-            });
+            DroppedService.reorderBacklog(
+                1,
+                {},
+                {
+                    rest_base_route: "projects",
+                    rest_route_id: 2
+                }
+            );
             expect(ProjectService.reorderBacklog).toHaveBeenCalledWith(2, 1, {});
         });
 
         it("should call the REST route that reorder milestone backlog", function() {
-            DroppedService.reorderBacklog(1, {}, { rest_base_route: 'milestones', rest_route_id: 2 });
+            DroppedService.reorderBacklog(
+                1,
+                {},
+                { rest_base_route: "milestones", rest_route_id: 2 }
+            );
             expect(MilestoneService.reorderBacklog).toHaveBeenCalledWith(2, 1, {});
         });
 
@@ -191,10 +224,14 @@ describe("DroppedService -", function() {
             var reorder_request = $q.defer();
             ProjectService.reorderBacklog.and.returnValue(reorder_request.promise);
 
-            var promise = DroppedService.reorderBacklog(1, {}, {
-                rest_base_route: 'projects',
-                rest_route_id: 2
-            });
+            var promise = DroppedService.reorderBacklog(
+                1,
+                {},
+                {
+                    rest_base_route: "projects",
+                    rest_route_id: 2
+                }
+            );
             reorder_request.reject(rest_error);
 
             expect(promise).toBeRejected();
@@ -264,7 +301,12 @@ describe("DroppedService -", function() {
     describe("moveFromChildrenToChildren() -", function() {
         it("should call the REST route that remove a child from a BI, add it to another BI and reorder the new parent BI", function() {
             DroppedService.moveFromChildrenToChildren(1, {}, 2, 3);
-            expect(BacklogItemService.removeAddReorderBacklogItemChildren).toHaveBeenCalledWith(2, 3, 1, {});
+            expect(BacklogItemService.removeAddReorderBacklogItemChildren).toHaveBeenCalledWith(
+                2,
+                3,
+                1,
+                {}
+            );
         });
 
         it("should call the REST route that remove a child from a BI, add it to another empty BI", function() {
@@ -274,7 +316,9 @@ describe("DroppedService -", function() {
 
         it("Given that the server was unreachable, when I move a child from an item to another item, then an error will be displayed", function() {
             var move_request = $q.defer();
-            BacklogItemService.removeAddReorderBacklogItemChildren.and.returnValue(move_request.promise);
+            BacklogItemService.removeAddReorderBacklogItemChildren.and.returnValue(
+                move_request.promise
+            );
 
             var promise = DroppedService.moveFromChildrenToChildren(1, {}, 2, 3);
             move_request.reject(rest_error);
@@ -286,22 +330,34 @@ describe("DroppedService -", function() {
 
     describe("moveFromSubmilestoneToBacklog() -", function() {
         it("should call the REST route that remove a BI from a milestone and add it to the project backlog and reorder it", function() {
-            DroppedService.moveFromSubmilestoneToBacklog(1, {}, 2, { rest_base_route: 'projects', rest_route_id: 3 });
+            DroppedService.moveFromSubmilestoneToBacklog(1, {}, 2, {
+                rest_base_route: "projects",
+                rest_route_id: 3
+            });
             expect(ProjectService.removeAddReorderToBacklog).toHaveBeenCalledWith(2, 3, 1, {});
         });
 
         it("should call the REST route that remove a BI from a milestone and add it to the project backlog", function() {
-            DroppedService.moveFromSubmilestoneToBacklog(1, undefined, 2, { rest_base_route: 'projects', rest_route_id: 3 });
+            DroppedService.moveFromSubmilestoneToBacklog(1, undefined, 2, {
+                rest_base_route: "projects",
+                rest_route_id: 3
+            });
             expect(ProjectService.removeAddToBacklog).toHaveBeenCalledWith(2, 3, 1);
         });
 
         it("should call the REST route that remove a BI from a milestone and add it to the project backlog and reorder it", function() {
-            DroppedService.moveFromSubmilestoneToBacklog(1, {}, 2, { rest_base_route: 'milestones', rest_route_id: 3 });
+            DroppedService.moveFromSubmilestoneToBacklog(1, {}, 2, {
+                rest_base_route: "milestones",
+                rest_route_id: 3
+            });
             expect(MilestoneService.removeAddReorderToBacklog).toHaveBeenCalledWith(2, 3, 1, {});
         });
 
         it("should call the REST route that remove a BI from a milestone and add it to the project backlog", function() {
-            DroppedService.moveFromSubmilestoneToBacklog(1, undefined, 2, { rest_base_route: 'milestones', rest_route_id: 3 });
+            DroppedService.moveFromSubmilestoneToBacklog(1, undefined, 2, {
+                rest_base_route: "milestones",
+                rest_route_id: 3
+            });
             expect(MilestoneService.removeAddToBacklog).toHaveBeenCalledWith(2, 3, 1);
         });
 
@@ -310,7 +366,7 @@ describe("DroppedService -", function() {
             ProjectService.removeAddReorderToBacklog.and.returnValue(move_request.promise);
 
             var promise = DroppedService.moveFromSubmilestoneToBacklog(1, {}, 2, {
-                rest_base_route: 'projects',
+                rest_base_route: "projects",
                 rest_route_id: 3
             });
             move_request.reject(rest_error);

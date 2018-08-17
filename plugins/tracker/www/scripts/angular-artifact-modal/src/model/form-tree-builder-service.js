@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _ from "lodash";
 
 export default FormTreeBuilderService;
 
@@ -57,11 +57,11 @@ function FormTreeBuilderService() {
             return false;
         }
 
-        if (! white_listed_field.includes(complete_field.type)) {
+        if (!white_listed_field.includes(complete_field.type)) {
             return false;
         }
 
-        complete_field.template_url = 'field-' + complete_field.type + '.tpl.html';
+        complete_field.template_url = "field-" + complete_field.type + ".tpl.html";
 
         if (structure_field.content !== null) {
             complete_field.content = _(structure_field.content)

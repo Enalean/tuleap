@@ -21,8 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-
+document.observe("dom:loaded", function() {
     function disableFeedback(check_consistency_feedback) {
         check_consistency_feedback.hide();
     }
@@ -42,9 +41,9 @@ document.observe('dom:loaded', function () {
     }
 
     function observeCreateModeChanges(modes, check_consistency_feedback) {
-        modes.each(function (mode) {
-            mode.observe('click', function () {
-                if (mode.value == 'gallery' && mode.checked) {
+        modes.each(function(mode) {
+            mode.observe("click", function() {
+                if (mode.value == "gallery" && mode.checked) {
                     disableFeedback(check_consistency_feedback);
                 } else {
                     enableFeedback(check_consistency_feedback);
@@ -54,54 +53,64 @@ document.observe('dom:loaded', function () {
     }
 
     function observeProjectSelectorChanges(select_project) {
-        select_project.observe('change', function () {
+        select_project.observe("change", function() {
             disableFeedback(check_consistency_feedback);
         });
     }
 
-    function observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback, initial_btn_label) {
-        select_template.observe('change', function () {
-            var template_group_id   = $F(select_project),
+    function observeTemplateSelectorChanges(
+        group_id,
+        select_template,
+        select_project,
+        create_new_tracker_btn,
+        check_consistency_feedback,
+        initial_btn_label
+    ) {
+        select_template.observe("change", function() {
+            var template_group_id = $F(select_project),
                 template_tracker_id = $F(select_template);
 
             disableCreateBtn(create_new_tracker_btn, initial_btn_label);
-            new Ajax.Updater(
-                check_consistency_feedback,
-                '/plugins/tracker/index.php',
-                {
-                    parameters: {
-                        group_id: group_id,
-                        func: 'check_ugroup_consistency',
-                        template_group_id: template_group_id,
-                        template_tracker_id: template_tracker_id
-                    },
-                    onComplete: function (transport) {
-                        var label = initial_btn_label;
+            new Ajax.Updater(check_consistency_feedback, "/plugins/tracker/index.php", {
+                parameters: {
+                    group_id: group_id,
+                    func: "check_ugroup_consistency",
+                    template_group_id: template_group_id,
+                    template_tracker_id: template_tracker_id
+                },
+                onComplete: function(transport) {
+                    var label = initial_btn_label;
 
-                        if (transport.responseText.length) {
-                            label = codendi.locales.tracker.create_anyway;
-                        }
-                        enableFeedback(check_consistency_feedback);
-                        enableCreateBtn(create_new_tracker_btn, label);
+                    if (transport.responseText.length) {
+                        label = codendi.locales.tracker.create_anyway;
                     }
+                    enableFeedback(check_consistency_feedback);
+                    enableCreateBtn(create_new_tracker_btn, label);
                 }
-            );
+            });
         });
     }
 
-    var select_template = $('tracker_list_trackers_from_project');
+    var select_template = $("tracker_list_trackers_from_project");
 
     if (select_template) {
-        var form                       = select_template.up('form'),
-            modes                      = form.select('input[name=create_mode]'),
-            select_project             = $('tracker_new_project_list'),
-            create_new_tracker_btn     = $('create_new_tracker_btn'),
-            initial_btn_label          = create_new_tracker_btn.value,
-            group_id                   = form.down('input[name=group_id]').value,
-            check_consistency_feedback = $('check_consistency_feedback');
+        var form = select_template.up("form"),
+            modes = form.select("input[name=create_mode]"),
+            select_project = $("tracker_new_project_list"),
+            create_new_tracker_btn = $("create_new_tracker_btn"),
+            initial_btn_label = create_new_tracker_btn.value,
+            group_id = form.down("input[name=group_id]").value,
+            check_consistency_feedback = $("check_consistency_feedback");
 
         observeCreateModeChanges(modes, check_consistency_feedback);
         observeProjectSelectorChanges(select_project);
-        observeTemplateSelectorChanges(group_id, select_template, select_project, create_new_tracker_btn, check_consistency_feedback, initial_btn_label);
+        observeTemplateSelectorChanges(
+            group_id,
+            select_template,
+            select_project,
+            create_new_tracker_btn,
+            check_consistency_feedback,
+            initial_btn_label
+        );
     }
 });

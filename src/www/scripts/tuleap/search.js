@@ -19,14 +19,12 @@
 
 var tuleap = tuleap || {};
 
-!(function ($) {
-
+!(function($) {
     tuleap.search = {
+        init: function() {
+            var type_of_search = $("input[name=type_of_search]").val();
 
-        init : function() {
-            var type_of_search = $('input[name=type_of_search]').val();
-
-            if (typeof(tuleap.search.fulltext) !== 'undefined') {
+            if (typeof tuleap.search.fulltext !== "undefined") {
                 tuleap.search.fulltext.handleFulltextFacets(type_of_search);
             }
 
@@ -39,20 +37,20 @@ var tuleap = tuleap || {};
             highlightSearchCategory(type_of_search);
         },
 
-        enableSearchMoreResults : function() {
-            $('#search-more-button').unbind("click");
-            $('#search-more-button').click(function() {
-                tuleap.search.offset += parseInt($('input[name=number_of_page_results]').val());
+        enableSearchMoreResults: function() {
+            $("#search-more-button").unbind("click");
+            $("#search-more-button").click(function() {
+                tuleap.search.offset += parseInt($("input[name=number_of_page_results]").val());
                 searchFromSidebar(tuleap.search.type_of_search, true);
             });
         },
 
-        didUserClickOnDefaultSearch : function(link) {
-            return link.parent().attr('data-search-type') == 'default';
+        didUserClickOnDefaultSearch: function(link) {
+            return link.parent().attr("data-search-type") == "default";
         },
 
-        isPaneFullText : function () {
-            return $('#type_of_search').val() == 'fulltext';
+        isPaneFullText: function() {
+            return $("#type_of_search").val() == "fulltext";
         }
     };
 
@@ -61,12 +59,12 @@ var tuleap = tuleap || {};
     });
 
     function switchSearchType() {
-        $('[data-search-type]').click(function(e) {
-            if ($(this).attr('href') == '#') {
+        $("[data-search-type]").click(function(e) {
+            if ($(this).attr("href") == "#") {
                 e.preventDefault();
 
                 tuleap.search.facet = $(this);
-                var type_of_search  = $(this).attr('data-search-type');
+                var type_of_search = $(this).attr("data-search-type");
 
                 resetSearchResults(type_of_search);
                 codendi.feedback.clear();
@@ -76,93 +74,99 @@ var tuleap = tuleap || {};
         });
     }
 
-    function resetSearchResults(type_of_search){
+    function resetSearchResults(type_of_search) {
         tuleap.search.type_of_search = type_of_search;
-        tuleap.search.offset         = 0;
+        tuleap.search.offset = 0;
     }
 
     function highlightSearchCategory(type_of_search) {
-        var highlighted_class = 'active';
+        var highlighted_class = "active";
 
-        $('.search-type, .additional-search-tabs > li').each(function() {
+        $(".search-type, .additional-search-tabs > li").each(function() {
             highlightElement($(this));
         });
 
-        if ($('.additional-search-tabs > li.active').length == 0) {
-            $('.additional-search-tabs > li:first-child').addClass(highlighted_class);
+        if ($(".additional-search-tabs > li.active").length == 0) {
+            $(".additional-search-tabs > li:first-child").addClass(highlighted_class);
         }
 
         function highlightElement(element) {
             element.removeClass(highlighted_class);
 
-            if (element.attr('data-search-type') == type_of_search) {
+            if (element.attr("data-search-type") == type_of_search) {
                 element.addClass(highlighted_class);
             }
         }
     }
 
     function handleAdditionalSearchTabs() {
-        $('.additional-search-tabs > li > a').click(function(event) {
+        $(".additional-search-tabs > li > a").click(function(event) {
             event.preventDefault();
 
-            if (tuleap.search.didUserClickOnDefaultSearch($(this)) || ! tuleap.search.isPaneFullText()) {
-                window.location.href = $(this).attr("href") + '&words=' + $('#words').val();
+            if (
+                tuleap.search.didUserClickOnDefaultSearch($(this)) ||
+                !tuleap.search.isPaneFullText()
+            ) {
+                window.location.href = $(this).attr("href") + "&words=" + $("#words").val();
             }
         });
     }
 
     function searchFromSidebar(type_of_search, append_to_results) {
-        var keywords       = $('#words').val(),
-            element        = tuleap.search.facet;
+        var keywords = $("#words").val(),
+            element = tuleap.search.facet;
 
         (function beforeSend() {
-            if (! append_to_results) {
-                $('#search-results').html('');
+            if (!append_to_results) {
+                $("#search-results").html("");
             }
-            $('#search-results').addClass('loading');
-        })()
-        $.getJSON(getSearchUrl(element, type_of_search, keywords)
-        ).done(function(json) {
-            if (append_to_results) {
-                $('#search_results_list').append(json.html);
-            } else {
-                 $('#search-results').html(json.html);
-            }
+            $("#search-results").addClass("loading");
+        })();
+        $.getJSON(getSearchUrl(element, type_of_search, keywords))
+            .done(function(json) {
+                if (append_to_results) {
+                    $("#search_results_list").append(json.html);
+                } else {
+                    $("#search-results").html(json.html);
+                }
 
-            if (json.has_more == true ) {
-                $('#search-more-button').show();
-            } else {
-                $('#search-more-button').hide();
-            }
+                if (json.has_more == true) {
+                    $("#search-more-button").show();
+                } else {
+                    $("#search-more-button").hide();
+                }
 
-            if (json.results_count == 0) {
-                $('#no_more_results').show();
-            } else {
-                $('#no_more_results').hide();
-            }
+                if (json.results_count == 0) {
+                    $("#no_more_results").show();
+                } else {
+                    $("#no_more_results").hide();
+                }
 
-            if (typeof(tuleap.search.fulltext) !== 'undefined') {
-                tuleap.search.fulltext.handleFulltextFacets(type_of_search);
-            }
+                if (typeof tuleap.search.fulltext !== "undefined") {
+                    tuleap.search.fulltext.handleFulltextFacets(type_of_search);
+                }
 
-            tuleap.search.enableSearchMoreResults();
-
-        }).fail(function(error) {
-              codendi.feedback.clear();
-              codendi.feedback.log('error', codendi.locales.search.error + ' : ' + JSON.parse(error.responseText));
-
-        }).always(function() {
-              $('#search-results').removeClass('loading');
-              $('.search-bar input[name="type_of_search"]').attr('value', type_of_search);
-              resetAdditionnalInformations(type_of_search, element);
-        });
+                tuleap.search.enableSearchMoreResults();
+            })
+            .fail(function(error) {
+                codendi.feedback.clear();
+                codendi.feedback.log(
+                    "error",
+                    codendi.locales.search.error + " : " + JSON.parse(error.responseText)
+                );
+            })
+            .always(function() {
+                $("#search-results").removeClass("loading");
+                $('.search-bar input[name="type_of_search"]').attr("value", type_of_search);
+                resetAdditionnalInformations(type_of_search, element);
+            });
     }
 
     function decorRedirectedSearch() {
         var icon_html = ' <i class="icon-external-link"></i>';
 
-        $('a.search-type, a.sub-facets').each(function() {
-            if ($(this).attr('href') != '#') {
+        $("a.search-type, a.sub-facets").each(function() {
+            if ($(this).attr("href") != "#") {
                 $(this).html($(this).html() + icon_html);
             }
         });
@@ -170,17 +174,21 @@ var tuleap = tuleap || {};
 
     function getSearchUrl(element, type_of_search, keywords) {
         var offset = tuleap.search.offset,
-            url    = '/search/?type_of_search='+type_of_search+
-                '&words='+keywords+
-                '&offset='+offset;
+            url =
+                "/search/?type_of_search=" +
+                type_of_search +
+                "&words=" +
+                keywords +
+                "&offset=" +
+                offset;
 
         return enrichUrlIfNeeded(element, type_of_search, url);
     }
 
     function enrichUrlIfNeeded(element, type_of_search, url) {
-        if (type_of_search === 'tracker' || type_of_search === 'wiki') {
-            url += '&atid=' + getArtifactTypeId(element);
-            url += '&group_id=' + getGroupId();
+        if (type_of_search === "tracker" || type_of_search === "wiki") {
+            url += "&atid=" + getArtifactTypeId(element);
+            url += "&group_id=" + getGroupId();
         }
 
         return url;
@@ -204,21 +212,22 @@ var tuleap = tuleap || {};
     }
 
     function addArtifactTypeIdToSearchFieldIfNeeded(type_of_search, element) {
-        if (type_of_search === 'tracker') {
-            $('.search-bar .input-append').prepend(
+        if (type_of_search === "tracker") {
+            $(".search-bar .input-append").prepend(
                 "<input name='atid' type='hidden' value='" + getArtifactTypeId(element) + "'>"
             );
         }
     }
 
     function getArtifactTypeId(element) {
-        return $(element).attr('data-atid');
+        return $(element).attr("data-atid");
     }
 
     function toggleFacets() {
-        $('.search-panes').on('click', '.search-type', function() {
-            $(this).siblings('ul').toggle();
+        $(".search-panes").on("click", ".search-type", function() {
+            $(this)
+                .siblings("ul")
+                .toggle();
         });
     }
-
 })(window.jQuery);

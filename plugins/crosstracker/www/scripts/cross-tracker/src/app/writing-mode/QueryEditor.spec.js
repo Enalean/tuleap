@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue                       from 'vue';
-import QueryEditor               from './QueryEditor.vue';
-import WritingCrossTrackerReport from './writing-cross-tracker-report.js';
+import Vue from "vue";
+import QueryEditor from "./QueryEditor.vue";
+import WritingCrossTrackerReport from "./writing-cross-tracker-report.js";
 
 describe("QueryEditor", () => {
-    let QueryEditorElement,
-        writingCrossTrackerReport;
+    let QueryEditorElement, writingCrossTrackerReport;
 
     beforeEach(() => {
-        QueryEditorElement        = Vue.extend(QueryEditor);
+        QueryEditorElement = Vue.extend(QueryEditor);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
 
@@ -59,7 +58,7 @@ describe("QueryEditor", () => {
 
             vm.search();
 
-            expect(vm.$emit).toHaveBeenCalledWith('triggerSearch');
+            expect(vm.$emit).toHaveBeenCalledWith("triggerSearch");
         });
     });
 });
