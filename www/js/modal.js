@@ -17,73 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-var tuleap  = tuleap || { };
+var tuleap = tuleap || {};
 
 tuleap.contact_support_modal_shown = function contactSupportModalShown() {
-    var contact_support_modal_forms = document.querySelectorAll('.contact-support-modal-form');
+    var contact_support_modal_forms = document.querySelectorAll(".contact-support-modal-form");
 
     [].forEach.call(contact_support_modal_forms, function(contact_support_modal_form) {
-            contact_support_modal_form.addEventListener('submit', function(event) {
+        contact_support_modal_form.addEventListener("submit", function(event) {
             event.preventDefault();
 
-            var contact_support_modal_submit          = contact_support_modal_form.querySelector('.contact-support-modal-submit'),
-                contact_support_modal_success_message = contact_support_modal_form.querySelector('.contact-support-modal-success-message'),
-                contact_support_modal_error_message   = contact_support_modal_form.querySelector('.contact-support-modal-error-message');
+            var contact_support_modal_submit = contact_support_modal_form.querySelector(
+                    ".contact-support-modal-submit"
+                ),
+                contact_support_modal_success_message = contact_support_modal_form.querySelector(
+                    ".contact-support-modal-success-message"
+                ),
+                contact_support_modal_error_message = contact_support_modal_form.querySelector(
+                    ".contact-support-modal-error-message"
+                );
 
             switchSubmitButtonToSendingState(contact_support_modal_submit);
 
-            jQuery.post(
-                contact_support_modal_form.getAttribute('action'),
-                jQuery(contact_support_modal_form).serialize()
+            jQuery
+                .post(
+                    contact_support_modal_form.getAttribute("action"),
+                    jQuery(contact_support_modal_form).serialize()
+                )
+                .success(function(data) {
+                    hideErrorMessage(contact_support_modal_error_message);
+                    switchSubmitButtonToThankYouState(contact_support_modal_submit);
+                    showSuccessMessage(contact_support_modal_success_message);
 
-            ).success(function(data) {
-                hideErrorMessage(contact_support_modal_error_message);
-                switchSubmitButtonToThankYouState(contact_support_modal_submit);
-                showSuccessMessage(contact_support_modal_success_message);
-
-                setTimeout(function() {
-                    contact_support_modal_form.reset();
+                    setTimeout(function() {
+                        contact_support_modal_form.reset();
+                        switchSubmitButtonToNormalState(contact_support_modal_submit);
+                        hideSuccessMessage(contact_support_modal_success_message);
+                    }, 5000);
+                })
+                .error(function(data) {
                     switchSubmitButtonToNormalState(contact_support_modal_submit);
-                    hideSuccessMessage(contact_support_modal_success_message);
-                }, 5000);
-
-            }).error(function(data) {
-                switchSubmitButtonToNormalState(contact_support_modal_submit);
-                showErrorMessage(contact_support_modal_error_message);
-            });
+                    showErrorMessage(contact_support_modal_error_message);
+                });
         });
     });
 
     function switchSubmitButtonToSendingState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = true;
-        contact_support_modal_submit.classList.remove('thank-you');
-        contact_support_modal_submit.classList.add('sending');
+        contact_support_modal_submit.classList.remove("thank-you");
+        contact_support_modal_submit.classList.add("sending");
     }
 
     function switchSubmitButtonToThankYouState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = true;
-        contact_support_modal_submit.classList.remove('sending');
-        contact_support_modal_submit.classList.add('thank-you');
+        contact_support_modal_submit.classList.remove("sending");
+        contact_support_modal_submit.classList.add("thank-you");
     }
 
     function switchSubmitButtonToNormalState(contact_support_modal_submit) {
         contact_support_modal_submit.disabled = false;
-        contact_support_modal_submit.classList.remove('sending', 'thank-you');
+        contact_support_modal_submit.classList.remove("sending", "thank-you");
     }
 
     function showErrorMessage(contact_support_modal_error_message) {
-        contact_support_modal_error_message.classList.add('shown');
+        contact_support_modal_error_message.classList.add("shown");
     }
 
     function hideErrorMessage(contact_support_modal_error_message) {
-        contact_support_modal_error_message.classList.remove('shown');
+        contact_support_modal_error_message.classList.remove("shown");
     }
 
     function showSuccessMessage(contact_support_modal_success_message) {
-        contact_support_modal_success_message.classList.add('shown');
+        contact_support_modal_success_message.classList.add("shown");
     }
 
     function hideSuccessMessage(contact_support_modal_success_message) {
-        contact_support_modal_success_message.classList.remove('shown');
+        contact_support_modal_success_message.classList.remove("shown");
     }
-}
+};

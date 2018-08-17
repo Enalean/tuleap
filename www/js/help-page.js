@@ -17,4 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-document.addEventListener('DOMContentLoaded', tuleap.contact_support_modal_shown);
+document.addEventListener("DOMContentLoaded", tuleap.contact_support_modal_shown);

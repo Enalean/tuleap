@@ -5,44 +5,13 @@ msgstr ""
 msgid "Hello %s,"
 msgstr ""
 
-msgid "Help"
-msgstr ""
-
-msgid "I have a question about the tracker reports"
-msgstr ""
-
-msgid "I need help to configure my own report in order to..."
-msgstr ""
-
-msgid "Message"
-msgstr ""
-
 msgid "Message:"
 msgstr ""
 
 msgid "More information about Tuleap"
 msgstr ""
 
-#, php-format
-msgid "Ooops, an error has occured. Please contact your administrator %s."
-msgstr ""
-
-msgid "Send a message to the myTuleap team"
-msgstr ""
-
-msgid "Send my message"
-msgstr ""
-
-msgid "Sending..."
-msgstr ""
-
-msgid "Subject"
-msgstr ""
-
 msgid "Subject:"
-msgstr ""
-
-msgid "Thank you"
 msgstr ""
 
 msgid "Thank you for your confidence,"
@@ -54,11 +23,6 @@ msgstr ""
 msgid ""
 "We have well received your message. We will do our best to get back to you "
 "as soon as possible. You can find below a copy of your message:"
-msgstr ""
-
-msgid ""
-"Your message has been sent to the myTuleap team. You will receive an answer "
-"as soon as possible."
 msgstr ""
 
 msgid "myTuleap Team"

@@ -19,26 +19,30 @@
 
 (function($) {
     $(function() {
-        var help_modal_trigger = document.querySelector('#dropdown-help > li:first-child > a[href="/help/"]');
+        var help_modal_trigger = document.querySelector(
+            '#dropdown-help > li:first-child > a[href="/help/"]'
+        );
         var contact_support_modal;
 
-        help_modal_trigger.addEventListener('click', function(event) {
+        help_modal_trigger.addEventListener("click", function(event) {
             event.preventDefault();
 
-            if (! contact_support_modal) {
-                $.get('/plugins/mytuleap_contact_support/index.php?action=get-modal-conten&is-burning-parrot-compatible=0').then(function(data) {
-                    var modal_container = document.createElement('div');
+            if (!contact_support_modal) {
+                $.get(
+                    "/plugins/mytuleap_contact_support/index.php?action=get-modal-conten&is-burning-parrot-compatible=0"
+                ).then(function(data) {
+                    var modal_container = document.createElement("div");
                     modal_container.innerHTML = data;
 
-                    contact_support_modal = modal_container.querySelector('.contact-support-modal')
+                    contact_support_modal = modal_container.querySelector(".contact-support-modal");
                     document.body.appendChild(contact_support_modal);
 
                     $(contact_support_modal)
-                        .on('shown', tuleap.contact_support_modal_shown)
-                        .modal('show');
+                        .on("shown", tuleap.contact_support_modal_shown)
+                        .modal("show");
                 });
             } else {
-                $(contact_support_modal).modal('show');
+                $(contact_support_modal).modal("show");
             }
         });
     });

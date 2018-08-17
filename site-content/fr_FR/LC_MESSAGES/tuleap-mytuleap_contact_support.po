@@ -3,13 +3,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.1\n"
 
 msgid "Display a contact support modal"
 msgstr "Affiche une modale pour contacter le support"
@@ -18,46 +18,14 @@ msgstr "Affiche une modale pour contacter le support"
 msgid "Hello %s,"
 msgstr "Bonjour %s,"
 
-msgid "Help"
-msgstr "Aide"
-
-msgid "I have a question about the tracker reports"
-msgstr "J’ai une question à propos de l’outil de suivi"
-
-msgid "I need help to configure my own report in order to..."
-msgstr "J’ai besoin d’aide pour configurer mon propre rapport de façon à…"
-
-msgid "Message"
-msgstr "Message"
-
 msgid "Message:"
 msgstr "Message:"
 
 msgid "More information about Tuleap"
 msgstr "Plus d’informations à propos de Tuleap"
 
-#, php-format
-msgid "Ooops, an error has occured. Please contact your administrator %s."
-msgstr ""
-"Oups, une erreur est survenue. Veuillez contacter votre administrateur %s."
-
-msgid "Send a message to the myTuleap team"
-msgstr "Envoyer un message à l’équipe myTuleap"
-
-msgid "Send my message"
-msgstr "Envoyer mon message"
-
-msgid "Sending..."
-msgstr "Envoi…"
-
-msgid "Subject"
-msgstr "Sujet"
-
 msgid "Subject:"
 msgstr "Sujet:"
-
-msgid "Thank you"
-msgstr "Merci"
 
 msgid "Thank you for your confidence,"
 msgstr "Merci de votre confiance,"
@@ -72,13 +40,6 @@ msgstr ""
 "Nous avons bien reçu votre message. Nous ferons de notre mieux pour vous "
 "répondre dès que possible. Veuillez trouver ci-dessous une copie de votre "
 "message :"
-
-msgid ""
-"Your message has been sent to the myTuleap team. You will receive an answer "
-"as soon as possible."
-msgstr ""
-"Votre message a été envoyé à l’équipe myTuleap. Vous recevrez une réponse "
-"dès que possible."
 
 msgid "myTuleap Team"
 msgstr "L’équipe myTuleap"
