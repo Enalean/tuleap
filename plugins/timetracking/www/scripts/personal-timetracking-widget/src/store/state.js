@@ -30,6 +30,7 @@ const state = {
     is_loaded: false,
     times: [],
     error_message: "",
+    current_times: [],
     is_loading: false
 };
 
