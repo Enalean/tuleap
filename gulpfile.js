@@ -104,7 +104,6 @@ const fat_combined_files = [
             }
         }
     },
-    bower_app_paths = ["plugins/frs/www/js/angular"],
     asset_dir = "www/assets";
 
 tuleap.declare_plugin_tasks(asset_dir);
@@ -115,7 +114,6 @@ component_builder.installAndBuildNpmComponents(
     "components-core",
     ["clean-js-core"]
 );
-component_builder.installAndBuildBowerComponents(base_dir, bower_app_paths, "bower-apps");
 sass_builder.cleanAndBuildSass("sass-core-select2", base_dir, select2_scss);
 sass_builder.cleanAndBuildSass("sass-core-themes", base_dir, core_build_manifest);
 sass_builder.lintSass("scss-lint-core-select2", base_dir, select2_scss);
@@ -180,7 +178,7 @@ gulp.task("watch", function() {
 gulp.task("core", ["js-core", "sass-core"]);
 
 gulp.task("build", [], callback => {
-    runSequence("components-core", "bower-apps", "core", "plugins", callback);
+    runSequence("components-core", "core", "plugins", callback);
 });
 
 gulp.task("default", ["build"]);
