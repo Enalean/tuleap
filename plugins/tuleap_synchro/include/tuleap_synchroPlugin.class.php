@@ -21,9 +21,14 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\TuleapSynchro\Dao\TuleapSynchroDao;
+use Tuleap\TuleapSynchro\Endpoint\EndpointBuilder;
 use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsController;
+use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsPresenterBuilder;
+use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once 'constants.php';
 
 class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
 {
@@ -57,7 +62,11 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get('/admin/tuleap_synchro', function () {
-            return new ListEndpointsController(new AdminPageRenderer());
+            return new ListEndpointsController(
+                new AdminPageRenderer(),
+                new ListEndpointsRetriever(new TuleapSynchroDao(), new EndpointBuilder()),
+                new ListEndpointsPresenterBuilder()
+            );
         });
     }
 

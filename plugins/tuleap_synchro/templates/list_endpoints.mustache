@@ -13,19 +13,44 @@
                         data-modal-id="add-import-endpoint"
                 ><i class="tlp-button-icon fa fa-plus"></i> {{# dgettext }} tuleap-tuleap_synchro | Add endpoint{{/ dgettext }}</button>
             </div>
-            <table class="tlp-table">
+            <table class="tlp-table tuleap-synchro-table">
                 <thead>
                 <tr>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username ("Source" Project){{/ dgettext }}</th>
+                    <th class="tuleap-synchro-column-label">{{# dgettext }} tuleap-tuleap_synchro | Username ("Source" Project){{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-tuleap_synchro | "Source" Project's Shortname{{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-tuleap_synchro | "Source" Tracker{{/ dgettext }}</th>
                     <th>{{# dgettext }} tuleap-tuleap_synchro | Base URI's "Source" Project{{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username ("Target" Project){{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | "Target" Project's Shortname{{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Webhook{{/ dgettext }}</th>
+                    <th class="tuleap-synchro-column-label">{{# dgettext }} tuleap-tuleap_synchro | Username ("Target" Project){{/ dgettext }}</th>
+                    <th class="tuleap-synchro-column-label">{{# dgettext }} tuleap-tuleap_synchro | "Target" Project's Shortname{{/ dgettext }}</th>
+                    <th class="tuleap-synchro-column-label">{{# dgettext }} tuleap-tuleap_synchro | Webhook{{/ dgettext }}</th>
                 </tr>
                 </thead>
                 <tbody>
+                {{# endpoints}}
+                    <tr>
+                        <td class="tuleap-synchro-column" title="{{ username_source }}">
+                             {{ username_source }}
+                        </td>
+                        <td title="{{ project_source }}">
+                            {{ project_source }}
+                        </td>
+                        <td title="{{ tracker_source }}">
+                            {{ tracker_source }}
+                        </td>
+                        <td title="{{ base_uri }}">
+                            {{ base_uri }}
+                        </td>
+                        <td class="tuleap-synchro-column" title="{{ username_target }}">
+                            {{ username_target }}
+                        </td>
+                        <td class="tuleap-synchro-column" title="{{ project_target }}">
+                            {{ project_target }}
+                        </td>
+                        <td class="tuleap-synchro-column" title="{{ webhook }}">
+                            {{ webhook }}
+                        </td>
+                    </tr>
+                {{/endpoints}}
                 {{^endpoints}}
                     <tr>
                         <td colspan="7" class="tlp-table-cell-empty">

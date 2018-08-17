@@ -21,27 +21,18 @@
 
 namespace Tuleap\TuleapSynchro\ListEndpoints;
 
-use Tuleap\TuleapSynchro\Endpoint\Endpoint;
-
-class ListEndpointsPresenter
+class ListEndpointsPresenterBuilder
 {
-    public $endpoints;
-    public $username_source;
-    public $project_source;
-    public $tracker_source;
-    public $username_target;
-    public $project_target;
-    public $base_uri;
-    public $webhook;
-
-    public function __construct(Endpoint $endpoint)
+    /**
+     * @param array $list_endpoints
+     * @return ListEndpointsPresenter[]
+     */
+    public function build(array $list_endpoints)
     {
-        $this->username_source = $endpoint->getUsernameSource();
-        $this->project_source  = $endpoint->getProjectSource();
-        $this->tracker_source  = $endpoint->getTrackerSource();
-        $this->username_target = $endpoint->getUsernameTarget();
-        $this->project_target  = $endpoint->getProjectTarget();
-        $this->base_uri        = $endpoint->getBaseUri();
-        $this->webhook         = $endpoint->getWebhook();
+        $endpoints = [];
+        foreach ($list_endpoints as $key => $endpoint) {
+            $endpoints["endpoints"][] = new ListEndpointsPresenter($endpoint);
+        }
+        return $endpoints;
     }
 }

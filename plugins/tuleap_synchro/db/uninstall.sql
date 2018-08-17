@@ -1,0 +1,1 @@
+DROP TABLE IF EXISTS plugin_tuleap_synchro_endpoint;
