@@ -1,11 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "7750be4a8d8a6a171ac3289810c44e5a",
-    "content-hash": "a33a16ac30e568e17569fa0936206090",
+    "content-hash": "c2818b3e60a7b12aad31532cda31f0b7",
     "packages": [
         {
             "name": "guzzle/guzzle",
@@ -101,7 +100,7 @@
                 "web service"
             ],
             "abandoned": "guzzlehttp/guzzle",
-            "time": "2015-03-18 18:23:50"
+            "time": "2015-03-18T18:23:50+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -161,7 +160,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03 07:36:31"
+            "time": "2018-01-03T07:36:31+00:00"
         }
     ],
     "packages-dev": [],
@@ -171,5 +170,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "ext-curl": "0"
+    }
 }
