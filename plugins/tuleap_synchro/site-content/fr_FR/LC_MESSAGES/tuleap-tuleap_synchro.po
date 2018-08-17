@@ -12,6 +12,15 @@ msgstr ""
 "X-Generator: Poedit 2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "\"Source\" Project's Shortname"
+msgstr "Nom court du Projet \"Source\""
+
+msgid "\"Source\" Tracker"
+msgstr "Outils de suivi du Projet \"Source\""
+
+msgid "\"Target\" Project's Shortname"
+msgstr "Nom court du Projet \"Cible\""
+
 msgid "Add endpoint"
 msgstr "Ajouter un point d'accès"
 
@@ -21,6 +30,9 @@ msgstr "Ajouter un nouveau point d'accès pour l'importation"
 msgid "Allows to replicate artifacts from one Tuleap instance to another"
 msgstr "Permet de recopier les artefacts d'une instance Tuleap sur une autre"
 
+msgid "Base URI's \"Source\" Project"
+msgstr "URI du Projet \"Source\""
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -29,12 +41,6 @@ msgstr "Fermer"
 
 msgid "List of import endpoints"
 msgstr "Liste les points d'accès pour l'importation"
-
-msgid "Password"
-msgstr "Mot de passe"
-
-msgid "Shortname of the source project"
-msgstr "Nom court du projet source"
 
 msgid "There isn't any matching webhook"
 msgstr "Aucun webhook trouvé"
@@ -48,8 +54,11 @@ msgstr "Synchronisation de Tuleap vers Tuleap"
 msgid "Under implementation"
 msgstr "En cours d'implémentation"
 
-msgid "Username"
-msgstr "Nom d'utilisateur"
+msgid "Username (\"Source\" Project)"
+msgstr "Nom d'utilisateur (Projet \"Source\")"
+
+msgid "Username (\"Target\" Project)"
+msgstr "Nom d'utilisateur (Projet \"Cible\")"
 
 msgid "Webhook"
 msgstr "Webhook"

@@ -21,6 +21,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsController;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -33,12 +34,12 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
         parent::__construct($id);
         $this->setScope(self::SCOPE_SYSTEM);
 
-        bindtextdomain('tuleap-tuleap_synchro', __DIR__.'/../site-content');
+        bindtextdomain('tuleap-tuleap_synchro', __DIR__ . '/../site-content');
     }
 
     public function getPluginInfo()
     {
-        if (! $this->pluginInfo) {
+        if (!$this->pluginInfo) {
             $this->pluginInfo = new \Tuleap\TuleapSynchro\Plugin\PluginInfo($this);
         }
 
@@ -56,9 +57,7 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->get('/admin/tuleap_synchro', function () {
-            return new \Tuleap\TuleapSynchro\ListTlpEndPointsController(
-                new AdminPageRenderer()
-            );
+            return new ListEndpointsController(new AdminPageRenderer());
         });
     }
 

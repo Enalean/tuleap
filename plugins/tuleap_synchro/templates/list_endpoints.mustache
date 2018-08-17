@@ -16,23 +16,28 @@
             <table class="tlp-table">
                 <thead>
                 <tr>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Password {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Shortname of the source project {{/ dgettext }}</th>
-                    <th>{{# dgettext }} tuleap-tuleap_synchro | Webhook {{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username ("Source" Project){{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | "Source" Project's Shortname{{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | "Source" Tracker{{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Base URI's "Source" Project{{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Username ("Target" Project){{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | "Target" Project's Shortname{{/ dgettext }}</th>
+                    <th>{{# dgettext }} tuleap-tuleap_synchro | Webhook{{/ dgettext }}</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td colspan="4" class="tlp-table-cell-empty">
-                        {{# dgettext }} tuleap-tuleap_synchro | There isn't any matching webhook {{/ dgettext }}
-                    </td>
-                </tr>
+                {{^endpoints}}
+                    <tr>
+                        <td colspan="7" class="tlp-table-cell-empty">
+                            {{# dgettext }} tuleap-tuleap_synchro | There isn't any matching webhook {{/ dgettext }}
+                        </td>
+                    </tr>
+                {{/endpoints}}
                 </tbody>
             </table>
 
         </section>
 
-        {{>add_new_endpoint}}
+        {{> add_new_endpoint }}
     </div>
 </section>
