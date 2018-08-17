@@ -14,11 +14,13 @@ const webpack_config = {
         jquery: "jQuery"
     },
     resolve: {
-        modules: ["node_modules", "bower_components"],
         alias: webpack_configurator.extendAliases(
             {
                 "tuleap-pullrequest-module": path.resolve(__dirname, "./src/app/app.js"),
-                "angular-ui-bootstrap-templates": "angular-ui-bootstrap-bower/ui-bootstrap-tpls.js",
+                "angular-ui-bootstrap-templates": path.resolve(
+                    __dirname,
+                    "vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"
+                ),
                 "angular-ui-select": "ui-select/dist/select.js"
             },
             webpack_configurator.flaming_parrot_labels_box_aliases,
