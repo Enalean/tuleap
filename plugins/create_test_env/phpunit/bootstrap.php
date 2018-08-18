@@ -16,19 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-require_once __DIR__.'/../../src/common/autoload.php';
-require_once __DIR__.'/../../src/www/themes/BurningParrot/autoload.php';
-require_once __DIR__.'/../../src/common/constants.php';
-
-$basedir      = dirname(dirname(__DIR__));
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
-
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
-
-foreach (glob(__DIR__ . '/../../plugins/*/phpunit/bootstrap.php') as $bootstrap_plugin) {
-    require_once $bootstrap_plugin;
-}
+require_once __DIR__ . '/../include/create_test_envPlugin.class.php';
