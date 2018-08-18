@@ -185,7 +185,7 @@ require_once('common/date/DateHelper.class.php');
         }
         return $content_id;
     }
-    function updatePreferences($request) {
+    function updatePreferences(Codendi_Request $request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

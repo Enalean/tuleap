@@ -551,7 +551,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
      * Display all the syndication feeds (rss for now) for the current page
      */
     public function displaySyndicationElements() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 
         //Basic feeds
         echo $this->getRssFeed(

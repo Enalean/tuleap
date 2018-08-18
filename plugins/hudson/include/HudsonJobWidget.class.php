@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 
 require_once('HudsonWidget.class.php');
@@ -111,7 +112,7 @@ abstract class HudsonJobWidget extends HudsonWidget {
         return $html;
     }
 
-    function updatePreferences(&$request) {
+    function updatePreferences(Codendi_Request $request) {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
             $job_id = $request->get($this->widget_id . '_job_id');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -37,11 +37,11 @@ class Widget_ProjectDescription extends Widget {
         return $GLOBALS['Language']->getText('include_project_home','project_description');
     }
     public function getContent() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 
         $html = '';
 

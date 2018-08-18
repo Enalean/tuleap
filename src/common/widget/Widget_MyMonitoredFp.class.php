@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -46,8 +46,8 @@ class Widget_MyMonitoredFp extends Widget {
             "AND frs_package.status_id !=". db_ei($frsrf->STATUS_DELETED) ." ".
             "AND frs_package.package_id=filemodule_monitor.filemodule_id ".
             "AND filemodule_monitor.user_id='". db_ei(user_getid()) ."' ";
-        $um =& UserManager::instance();
-        $current_user =& $um->getCurrentUser();
+        $um = UserManager::instance();
+        $current_user = $um->getCurrentUser();
         if ($current_user->isRestricted()) {
             $projects = $current_user->getProjects();
             $sql .= "AND groups.group_id IN (". db_ei_implode($projects) .") ";
@@ -60,7 +60,7 @@ class Widget_MyMonitoredFp extends Widget {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
             $html_my_monitored_fp .= '<table class="tlp-table" style="width:100%">';
-            $request =& HTTPRequest::instance();
+            $request = HTTPRequest::instance();
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
 

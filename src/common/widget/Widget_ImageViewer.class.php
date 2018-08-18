@@ -168,7 +168,7 @@ class Widget_ImageViewer extends Widget {
         }
         return $content_id;
     }
-    function updatePreferences(&$request) {
+    function updatePreferences(Codendi_Request $request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

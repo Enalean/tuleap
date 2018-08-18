@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -126,7 +126,7 @@ class Widget_MyAdmin extends Widget {
         );
 
         $pendings = array();
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('widget_myadmin', array('result' => &$pendings));
         foreach($pendings as $entry) {
             $html_my_admin .= $this->_get_admin_row(

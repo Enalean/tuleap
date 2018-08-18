@@ -269,7 +269,7 @@ abstract class Kanban extends Widget
         );
     }
 
-    public function updatePreferences(&$request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $this->widget_kanban_config_updater->updateConfiguration(
             $this->content_id,

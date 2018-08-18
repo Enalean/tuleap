@@ -102,7 +102,7 @@ class ProjectNote extends \Widget
         );
     }
 
-    public function updatePreferences(&$request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $content_id = $request->getValidated('content_id', 'uint', 0);
 
