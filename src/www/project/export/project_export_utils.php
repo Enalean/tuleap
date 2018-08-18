@@ -116,6 +116,8 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
     $title_arr[]=$Language->getText('project_export_utils','sample_val');
     $title_arr[]=$Language->getText('project_admin_editugroup','desc');
 
+    $purifier = Codendi_HTMLPurifier::instance();
+
     echo html_build_list_table_top ($title_arr);
     reset($col_list);
     $cnt = 0;
@@ -123,7 +125,7 @@ function display_exported_fields($col_list,$lbl_list,$dsc_list,$sample_val,$mand
       $star = (($mand_list && isset($mand_list[$col]) && $mand_list[$col]) ? ' <span class="highlight"><big>*</big></b></span>':'');
       echo '<tr class="'.util_get_alt_row_color($cnt++).'">'.
 	'<td><b>'.$lbl_list[$col].'</b>'.$star.
-	'</td><td>'.nl2br($sample_val[$col]).'</td><td>'.$dsc_list[$col].'</td></tr>';
+	'</td><td>'.nl2br($purifier->purify($sample_val[$col])).'</td><td>'.$purifier->purify($dsc_list[$col]).'</td></tr>';
     }
 
     echo '</table>';
