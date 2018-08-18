@@ -1,11 +1,24 @@
 <?php
-//
-// Codendi
-// Copyright (c) Enalean, 2015. All Rights Reserved.
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
+/**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 require_once('pre.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('www/project/admin/include/ReferenceAdministrationViews.class.php');
@@ -36,8 +49,8 @@ function getReferencesTable($groupId) {
     $title_arr[]=$GLOBALS['Language']->getText('project_reference','r_link');
     $html .= html_build_list_table_top($title_arr, false, false, true);
     
-    $referenceManager =& ReferenceManager::instance();
-    $references =& $referenceManager->getReferencesByGroupId($groupId); // References are sorted by scope first
+    $referenceManager = ReferenceManager::instance();
+    $references = $referenceManager->getReferencesByGroupId($groupId); // References are sorted by scope first
     $row_num = 0;
     foreach ($references as $ref) {
         $html .= getReferenceRow($ref, $row_num);

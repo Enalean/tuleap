@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,11 @@
  */
 require_once 'pre.php';
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('svn');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('svn');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $request = new HTTPRequest();
     $p->process($request);
 } else {
     header('Location: '.get_server_url());
 }
-?>
