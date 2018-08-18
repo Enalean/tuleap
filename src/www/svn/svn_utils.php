@@ -1,19 +1,29 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-//      Originally written by Laurent Julliard 2004 Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Originally written by Laurent Julliard 2004 Codendi Team, Xerox
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/user/UserHelper.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('common/reference/ReferenceManager.class.php');
-
-
 
 function svn_header($params) {
     global $group_id, $Language, $there_are_specific_permissions;
@@ -709,7 +719,7 @@ function svn_utils_check_access($username, $project_svnroot, $svnpath) {
 
   if ( (user_getname()==$username) && (user_is_super_user())) return true;
 
-  $em =& EventManager::instance();
+  $em = EventManager::instance();
   $em->processEvent('svn_check_access_username', array('username'        => &$username,
                                                        'project_svnroot' => $project_svnroot));
   $username = strtolower($username);

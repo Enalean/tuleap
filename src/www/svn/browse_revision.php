@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if (!$request->valid($vGroupId)) {
@@ -27,7 +26,7 @@ if (!$request->valid($vGroupId)) {
 } else {
     $group_id = $request->get('group_id');
 
-    $hp =& Codendi_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 
     svn_header(array ('title'=>$Language->getText('svn_browse_revision','browsing'),
                       'help' => 'svn.html#the-subversion-browsing-interface'));

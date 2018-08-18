@@ -1,9 +1,9 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
  *
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Originally written by Laurent Julliard 2001- 2003 Codendi Team, Xerox
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ if (!$request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 }
 
-$hp =& Codendi_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 svn_header(array ('title'=>$Language->getText('svn_intro','info')));
 
