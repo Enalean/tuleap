@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,7 +37,7 @@ require_once('common/event/EventManager.class.php');
 ini_set('max_execution_time', 3600);
 ini_set('memory_limit', '256M');
 
-$em       =& EventManager::instance();
+$em       = EventManager::instance();
 $request  = HTTPRequest::instance();
 $export   = $request->get('export');
 $group_id = $request->get('group_id');

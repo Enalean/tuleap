@@ -1,17 +1,26 @@
 <?php
-//
-// Codendi
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// http://www.codendi.com
-//
-// 
-//
-// Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
-//
+/**
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Originally written by Nicolas Guerin 2004, Codendi Team, Xerox
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-//
-// Define various functions for user group management
-//
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
@@ -533,7 +542,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     }
     
     // raise an event for ugroup edition
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $em->processEvent('project_admin_ugroup_edition', array(
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id,

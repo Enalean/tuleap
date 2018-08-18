@@ -186,9 +186,9 @@ class UserManager {
             return null;
         }
         if (!isset($this->_userid_byldapid[$ldapId])) {
-            $dar =& $this->getDao()->searchByLdapId($ldapId);
+            $dar = $this->getDao()->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
-                $u =& $this->getUserInstanceFromRow($row);
+                $u = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()] = $u;
                 $this->_userid_byldapid[$ldapId] = $u->getId();
             } else {
@@ -197,7 +197,7 @@ class UserManager {
         }
         $user = null;
         if ($this->_userid_byldapid[$ldapId] !== null) {
-            $user =& $this->_users[$this->_userid_byldapid[$ldapId]];
+            $user = $this->_users[$this->_userid_byldapid[$ldapId]];
         }
         return $user;
     }

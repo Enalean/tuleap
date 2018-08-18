@@ -206,7 +206,7 @@ function permission_get_object_name($permission_type,$object_id) {
  * Return the full name for a given object
  */
 function permission_get_object_fullname($permission_type,$object_id) {
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $object_fullname = false;
     $em->processEvent('permission_get_object_fullname', array(
         'permission_type' => $permission_type, 

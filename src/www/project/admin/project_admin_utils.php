@@ -308,7 +308,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
                 $val .= util_translate_name_ugroup($ugroup);
             }
         } else if ($msg_key == "group_type") {
-            $template =& TemplateSingleton::instance();
+            $template = TemplateSingleton::instance();
             $val = $template->getLabel($val);
         }
         $event = new GetProjectHistoryEntryValue($row, $val);
