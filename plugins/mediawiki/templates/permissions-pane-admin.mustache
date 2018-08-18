@@ -30,6 +30,7 @@
                 multiple="multiple"
                 name="read_ugroups[]"
                 size="8"
+                data-test="mediawiki-read-ugroups"
             >
                 {{# read_ugroups }}
                 <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>
@@ -44,6 +45,7 @@
                 multiple="multiple"
                 name="write_ugroups[]"
                 size="8"
+                data-test="mediawiki-write-ugroups"
             >
                 {{# write_ugroups }}
                 <option value="{{ value }}" {{# selected }}selected="selected"{{/ selected }}>{{ label }}</option>

@@ -1,0 +1,93 @@
+<mediawiki xmlns="http://www.mediawiki.org/xml/export-0.8/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.8/ http://www.mediawiki.org/xml/export-0.8.xsd" version="0.8" xml:lang="en">
+  <siteinfo>
+    <sitename>mw123 Wiki</sitename>
+    <base>https://tuleap-web.tuleap-aio-dev.docker/plugins/mediawiki/wiki/mw123/index.php/Main_Page</base>
+    <generator>MediaWiki 1.23.9</generator>
+    <case>first-letter</case>
+    <namespaces>
+      <namespace key="-2" case="first-letter">Media</namespace>
+      <namespace key="-1" case="first-letter">Special</namespace>
+      <namespace key="0" case="first-letter" />
+      <namespace key="1" case="first-letter">Talk</namespace>
+      <namespace key="2" case="first-letter">User</namespace>
+      <namespace key="3" case="first-letter">User talk</namespace>
+      <namespace key="4" case="first-letter">mw123 Wiki</namespace>
+      <namespace key="5" case="first-letter">mw123 Wiki talk</namespace>
+      <namespace key="6" case="first-letter">File</namespace>
+      <namespace key="7" case="first-letter">File talk</namespace>
+      <namespace key="8" case="first-letter">MediaWiki</namespace>
+      <namespace key="9" case="first-letter">MediaWiki talk</namespace>
+      <namespace key="10" case="first-letter">Template</namespace>
+      <namespace key="11" case="first-letter">Template talk</namespace>
+      <namespace key="12" case="first-letter">Help</namespace>
+      <namespace key="13" case="first-letter">Help talk</namespace>
+      <namespace key="14" case="first-letter">Category</namespace>
+      <namespace key="15" case="first-letter">Category talk</namespace>
+    </namespaces>
+  </siteinfo>
+  <page>
+    <title>Main Page</title>
+    <ns>0</ns>
+    <id>1</id>
+    <revision>
+      <id>1</id>
+      <timestamp>2018-08-17T08:27:37Z</timestamp>
+      <contributor>
+        <username>alice</username>
+        <id>1</id>
+      </contributor>
+      <comment>Created page with &quot;content&quot;</comment>
+      <text xml:space="preserve" bytes="7">content</text>
+      <sha1>0h2fofojaknvp78327hi3cq6oej59zc</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+    <revision>
+      <id>2</id>
+      <parentid>1</parentid>
+      <timestamp>2018-08-17T11:34:47Z</timestamp>
+      <contributor>
+        <username>alice</username>
+        <id>1</id>
+      </contributor>
+      <text xml:space="preserve" bytes="37">My custom content
+
+[[File:Tueap.png]]</text>
+      <sha1>6sjbc98ps6aq9bhkw2ar2lgjmueqp02</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+    <revision>
+      <id>3</id>
+      <parentid>2</parentid>
+      <timestamp>2018-08-17T11:34:56Z</timestamp>
+      <contributor>
+        <username>alice</username>
+        <id>1</id>
+      </contributor>
+      <text xml:space="preserve" bytes="38">My custom content
+
+[[File:Tuleap.png]]</text>
+      <sha1>nph5ajq9dqtv5hdenvxsfrk9ebnhymm</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+  </page>
+  <page>
+    <title>File:Tuleap.png</title>
+    <ns>6</ns>
+    <id>2</id>
+    <revision>
+      <id>4</id>
+      <timestamp>2018-08-17T11:38:02Z</timestamp>
+      <contributor>
+        <username>alice</username>
+        <id>1</id>
+      </contributor>
+      <text xml:space="preserve" bytes="0" />
+      <sha1>phoiac9h4m842xq45sp7s6u21eteeq1</sha1>
+      <model>wikitext</model>
+      <format>text/x-wiki</format>
+    </revision>
+  </page>
+</mediawiki>

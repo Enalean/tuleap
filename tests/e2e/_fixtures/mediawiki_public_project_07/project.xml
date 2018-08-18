@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project access="public" description="" full-name="MW public project" unix-name="mediawiki-public-project">
+    <long-description/>
+    <ugroups>
+        <ugroup name="project_members" description="">
+            <members>
+                <member format="username">alice</member>
+                <member format="username">bob</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_admins" description="">
+            <members>
+                <member format="username">alice</member>
+            </members>
+        </ugroup>
+    </ugroups>
+
+    <services>
+        <service shortname="summary" enabled="true"/>
+        <service shortname="plugin_mediawiki" enabled="true"/>
+    </services>
+
+    <mediawiki pages-backup="wiki_pages.xml" language="en_US" files-folder-backup="files">
+        <read-access>
+            <ugroup>project_members</ugroup>
+        </read-access>
+        <write-access>
+            <ugroup>project_admins</ugroup>
+        </write-access>
+    </mediawiki>
+</project>
