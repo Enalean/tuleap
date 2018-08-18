@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright © STMicroelectronics, 2006. All Rights Reserved.
  * Copyright © Enalean, 2018. All Rights Reserved.
+ * Copyright © STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2006.
  * 
@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- * 
  */
 
 require_once('Docman_View_Extra.class.php');
@@ -55,7 +53,7 @@ class Docman_View_Admin_Metadata extends Docman_View_Extra {
 
         $mdIter->rewind();
         while($mdIter->valid()) {
-            $md =& $mdIter->current();
+            $md = $mdIter->current();
 
             $canDelete = false;
             if($mdFactory->isRealMetadata($md->getLabel())) {

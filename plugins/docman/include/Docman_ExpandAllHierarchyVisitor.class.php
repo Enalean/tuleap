@@ -27,9 +27,9 @@ class Docman_ExpandAllHierarchyVisitor /* implements Visitor */ {
         }
         $items = $item->getAllItems();
         if ($items->size()) {
-            $it =& $items->iterator();
+            $it = $items->iterator();
             while($it->valid()) {
-                $o =& $it->current();
+                $o = $it->current();
                 $o->accept($this, $params);
                 $it->next();
             }

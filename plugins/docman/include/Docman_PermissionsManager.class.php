@@ -373,7 +373,7 @@ class Docman_PermissionsManager {
     function _getItemTreeForPermChecking($itemId, $user) {
         $itemFactory = $this->_getItemFactory($this->groupId);
         $srcItem = $itemFactory->getItemFromDb($itemId);
-        $item =& $itemFactory->getItemSubTree($srcItem, $user, true, true);
+        $item = $itemFactory->getItemSubTree($srcItem, $user, true, true);
         return $item;
     }
 

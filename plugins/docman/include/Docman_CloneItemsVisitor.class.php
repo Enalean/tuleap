@@ -44,14 +44,14 @@ class Docman_CloneItemsVisitor {
             $params['parentId'] = $newItemId;
             
             // Recurse
-            $items =& $item->getAllItems();
+            $items = $item->getAllItems();
             if($items) {
                 $nb = $items->size();
                 if($nb) {
-                    $iter =& $items->iterator();
+                    $iter = $items->iterator();
                     $iter->rewind();
                     while($iter->valid()) {
-                        $child =& $iter->current();
+                        $child = $iter->current();
                         $child->accept($this, $params);
                         $iter->next();
                     }

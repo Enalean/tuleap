@@ -123,11 +123,11 @@ class Docman_Log { /* implements EventListener */
                             $_new_v = $row['new_value'];
     
                             $mdFactory = new Docman_MetadataFactory($row['group_id']);
-                            $md =& $mdFactory->getFromLabel($row['field']);
+                            $md = $mdFactory->getFromLabel($row['field']);
                             if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                                 $mdlovebo = new Docman_MetadataListOfValuesElementFactory();
-                                $_old_e =& $mdlovebo->getByElementId($row['old_value'], $md->getLabel());
-                                $_new_e =& $mdlovebo->getByElementId($row['new_value'], $md->getLabel());
+                                $_old_e = $mdlovebo->getByElementId($row['old_value'], $md->getLabel());
+                                $_new_e = $mdlovebo->getByElementId($row['new_value'], $md->getLabel());
                                 if($_old_e !== null) {
                                     $_old_v = $_old_e->getName();
                                 }

@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2013-2017. All rights reserved
+/**
+ * Copyright (c) Enalean, 2013-201*. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -20,8 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *
  */
 
 use Tuleap\Docman\Notifications\CollectionOfUgroupMonitoredItemsBuilder;
@@ -43,9 +41,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     private $ugroups_to_be_notified_builder;
 
     function __construct(
-        &$item,
+        $item,
         $url,
-        &$notificationsManager,
+        $notificationsManager,
         $token,
         CollectionOfUgroupMonitoredItemsBuilder $ugroups_to_be_notified_builder
     ) {
@@ -55,11 +53,11 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             'notifications',
             $GLOBALS['Language']->getText('plugin_docman', 'details_notifications')
         );
-        $this->notificationsManager           =& $notificationsManager;
+        $this->notificationsManager           = $notificationsManager;
         $this->token                          = $token;
         $this->ugroups_to_be_notified_builder = $ugroups_to_be_notified_builder;
     }
-    function getContent() {
+    function getContent($params = []) {
         $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
@@ -69,8 +67,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         }
         $content .= '<input type="hidden" name="action" value="monitor" />';
         $content .= '<input type="hidden" name="id" value="'. $this->item->getId() .'" />';
-        $um   =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+        $um   = UserManager::instance();
+        $user = $um->getCurrentUser();
         $checked  = !$user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $disabled = $user->isAnonymous() ? 'disabled="disabled"' : '';
         $content .= '<input type="hidden" name="monitor" value="0" />';

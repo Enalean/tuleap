@@ -30,7 +30,7 @@ class Docman_View_Empty extends Docman_View_Display {
     function _content($params) {
         $item = $params['item'];
 
-        $dPm =& Docman_PermissionsManager::instance($item->getGroupId());
+        $dPm = Docman_PermissionsManager::instance($item->getGroupId());
 
         $html  = '';
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Copyright (c) Enalean, 2015-2018. All rights reserved
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -47,7 +47,13 @@ class Docman_Controller extends Controler {
     var $reportId;
     var $hierarchy;
 
-    function __construct(&$plugin, $pluginPath, $themePath, &$request) {
+    /**
+     * @var Docman_NotificationsManager
+     */
+    public $notificationsManager;
+
+    public function __construct($plugin, $pluginPath, $themePath, $request)
+    {
         $this->request        = $request;
         $this->user           = null;
         $this->groupId        = null;
@@ -1795,10 +1801,12 @@ class Docman_Controller extends Controler {
         return $nb;
     }
 
-    function &getItemHierarchy($rootItem) {
+    private function getItemHierarchy($rootItem)
+    {
         if(!isset($this->hierarchy[$rootItem->getId()])) {
             $itemFactory = new Docman_ItemFactory($rootItem->getGroupId());
-            $this->hierarchy[$rootItem->getId()] = $itemFactory->getItemTree($rootItem, $this->getUser(), false, true);
+            $user = $this->getUser();
+            $this->hierarchy[$rootItem->getId()] = $itemFactory->getItemTree($rootItem, $user, false, true);
         }
         return $this->hierarchy[$rootItem->getId()];
     }

@@ -238,7 +238,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
         if ($id) {
             $dar = $this->serachByValueId($id);
             if (!$dar->isError() && $dar->valid()) {
-                $current =& $dar->current();
+                $current = $dar->current();
                 $set_array = array();
                 foreach($row as $key => $value) {
                     if ($key != 'value_id' && isset($current[$key]) && $value != $current[$key]) {

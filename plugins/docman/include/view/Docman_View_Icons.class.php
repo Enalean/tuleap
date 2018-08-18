@@ -19,7 +19,7 @@ class Docman_View_Icons extends Docman_View_Browse {
         $html = '';
         
         $itemFactory = new Docman_ItemFactory($params['group_id']);
-        $itemTree =& $itemFactory->getItemSubTree($params['item'], $params['user']);
+        $itemTree = $itemFactory->getItemSubTree($params['item'], $params['user']);
         
         $items = $itemTree->getAllItems();
         $nb = $items->size();

@@ -485,7 +485,7 @@ class Docman_ItemDao extends DataAccessObject {
         if ($id) {
             $dar = $this->searchById($id);
             if (!$dar->isError() && $dar->valid()) {
-                $current =& $dar->current();
+                $current = $dar->current();
                 $set_array = array();
                 foreach($row as $key => $value) {
                     if ($key != 'id' && $value != $current[$key]) {

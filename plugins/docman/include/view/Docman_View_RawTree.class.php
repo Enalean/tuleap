@@ -19,7 +19,7 @@ class Docman_View_RawTree extends Docman_View_View {
         
         $itemFactory = new Docman_ItemFactory($params['group_id']);
 
-        $itemTree =& $itemFactory->getItemSubTree($params['item'], $params['user']);
+        $itemTree = $itemFactory->getItemSubTree($params['item'], $params['user']);
 
         $displayItemTreeVisitor = new Docman_View_ItemTreeUlVisitor($this, array(
             'theme_path'             => $params['theme_path'],

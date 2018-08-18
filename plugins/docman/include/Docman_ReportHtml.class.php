@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Tuleap, 2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  * 
@@ -136,7 +136,7 @@ class Docman_ReportHtml
         // Display filters fields
         $fi->rewind();
         while($fi->valid()) {
-            $f =& $fi->current();
+            $f = $fi->current();
             $html .= $this->_getFilterDisplayBox($f, $params, $trashLinkBase, $displayedFilters);
             $fi->next();
         }
@@ -174,7 +174,7 @@ class Docman_ReportHtml
         $mdIter = $mdFactory->getMetadataForGroup(true);
         $mdIter->rewind();
         while($mdIter->valid()) {
-            $md =& $mdIter->current();
+            $md = $mdIter->current();
             if(!in_array($md->getLabel(), $displayedFilters)) {
                 $html .= $this->getSelectOption($md->getLabel(), $md->getName(), '');
             }
@@ -228,7 +228,7 @@ class Docman_ReportHtml
         $html = '';
 
         $user = $this->getCurrentUser();
-        $dpm  =& Docman_PermissionsManager::instance($this->report->getGroupId());
+        $dpm  = Docman_PermissionsManager::instance($this->report->getGroupId());
 
         $html .= '<div id="docman_report_save">';
         $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_docman', 'report_reports_options').'</strong>&nbsp;';
@@ -367,8 +367,8 @@ class Docman_ReportHtml
                 $item = $itemFactory->getItemFromDb($itemId);
                 if($item !== null) {
                     // Check perms
-                    $dPm =& Docman_PermissionsManager::instance($item->getGroupId());
-                    $user =& $this->getCurrentUser();
+                    $dPm = Docman_PermissionsManager::instance($item->getGroupId());
+                    $user = $this->getCurrentUser();
                     $html .= "<div style=\"text-align:center\">\n";
                     if($dPm->userCanRead($user, $item->getId())) {
                         $html .= '<img src="'.$this->defaultUrl.'&id='.$itemId.'" >';
@@ -382,7 +382,8 @@ class Docman_ReportHtml
         return $html;
     }
 
-    function getReportCustomization($params) {
+    public function getReportCustomization()
+    {
         $html = '';
 
         if($this->report->getDescription() !== null) {
@@ -393,15 +394,13 @@ class Docman_ReportHtml
         return $html;
     }
 
-    //
-    // Accessors
-    //
-
-    function &getCurrentUser() {
-        $um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
+    /**
+     * @return PFUser
+     */
+    private function getCurrentUser()
+    {
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
         return $user;
     }
 }
-
-?>

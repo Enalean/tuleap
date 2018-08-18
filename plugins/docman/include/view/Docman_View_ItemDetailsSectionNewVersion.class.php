@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
  *
@@ -20,9 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
  */
+
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 require_once('Docman_View_ItemDetailsSectionApprovalCreate.class.php');
 require_once('Docman_View_GetSpecificFieldsVisitor.class.php');
@@ -31,19 +30,19 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
     
     var $force;
     var $token;
-    function __construct(&$item, $url, &$controller, $force, $token) {
+    function __construct($item, $url, $controller, $force, $token) {
         parent::__construct($item, $url, false, true, $controller);
         $this->force    = $force;
         $this->token = $token;
     }
-    function getContent() {
+    function getContent($params = []) {
         return $this->item->accept($this);
     }
 
     function _getApprovalTable() {
         $html = '';
 
-        $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
+        $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         if($atf->tableExistsForItem()) {
             $html .= '<dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_actions_update_apptable') .'</dt><dd>';
             $html .= '<dd>';
@@ -66,21 +65,21 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder($item, $params = array()) {
         return "";
     }
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument($item, $params = array()) {
         return "";
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki($item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 
-    function visitLink(&$item, $params = array()) {
+    function visitLink($item, $params = array()) {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    function visitFile(&$item, $params = array()) {
+    function visitFile($item, $params = array()) {
         return $this->visitVersionnedItem($item, $params);
     }
 
@@ -140,12 +139,11 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile($item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty($item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 }
-?>

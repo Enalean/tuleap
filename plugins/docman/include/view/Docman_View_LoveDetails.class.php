@@ -29,7 +29,7 @@ class Docman_View_LoveDetails {
 
     function __construct($md) {
         $this->md = $md;
-        $this->hp =& Codendi_HTMLPurifier::instance();
+        $this->hp = Codendi_HTMLPurifier::instance();
     }
 
     function getNameField($value='') {
@@ -70,10 +70,10 @@ class Docman_View_LoveDetails {
                        '----');
         $i = 3;
 
-        $vIter =& $this->md->getListOfValueIterator();
+        $vIter = $this->md->getListOfValueIterator();
         $vIter->rewind();
         while($vIter->valid()) {
-            $e =& $vIter->current();
+            $e = $vIter->current();
                 
             if($e->getStatus() == 'A' 
                || $e->getStatus() == 'P') {

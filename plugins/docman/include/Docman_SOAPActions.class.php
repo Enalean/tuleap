@@ -27,7 +27,7 @@ class Docman_SOAPActions extends Docman_Actions {
      * Append a chunk of data to a file
      */
     function appendFileChunk() {
-        $request =& $this->_controler->request;
+        $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
             $item_id = $request->get('item_id');
@@ -64,7 +64,7 @@ class Docman_SOAPActions extends Docman_Actions {
      * Returns the MD5 checksum of a file (last version)
      */
     function getFileMD5sum() {
-        $request =& $this->_controler->request;
+        $request = $this->_controler->request;
 
         if ($request->exist('item_id')) {
             $item_id = $request->get('item_id');
@@ -120,7 +120,7 @@ class Docman_SOAPActions extends Docman_Actions {
      * Returns the (used) metadata of the given project 
      */
     function getProjectMetadata() {
-        $request =& $this->_controler->request;
+        $request = $this->_controler->request;
         $groupId = $request->get('group_id');
         $metadataFactory = new Docman_MetadataFactory($groupId);
         $metadataList = array_merge($metadataFactory->getRealMetadataList(true), $metadataFactory->getHardCodedMetadataList(true));
@@ -131,7 +131,7 @@ class Docman_SOAPActions extends Docman_Actions {
      * Returns the list of values for the given list metadata.
      */
     function getMetadataListOfValues() {
-        $request =& $this->_controler->request;
+        $request = $this->_controler->request;
         $groupId = $request->get('group_id');
         $metadataFactory = new Docman_MetadataFactory($groupId);
         $metadataLovFactory = new Docman_MetadataListOfValuesElementFactory();
@@ -155,7 +155,7 @@ class Docman_SOAPActions extends Docman_Actions {
      * The items are summarized by the following attributes: id, parent_id, title, type, update_date, nb_versions
      */
     function getTreeInfo() {
-        $request =& $this->_controler->request;
+        $request = $this->_controler->request;
         $groupId = $request->get('group_id');
         
         $itemFactory = $this->_getItemFactory($groupId);

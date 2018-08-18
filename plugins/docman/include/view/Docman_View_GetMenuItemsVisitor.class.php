@@ -24,9 +24,9 @@ require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
 class Docman_View_GetMenuItemsVisitor /* implements Visitor*/ {
     var $actions;
     function __construct(&$user, $groupId) {
-        $this->dPm =& Docman_PermissionsManager::instance($groupId);
-        $this->user =& $user;
-        $this->if =& Docman_ItemFactory::instance($groupId);
+        $this->dPm = Docman_PermissionsManager::instance($groupId);
+        $this->user = $user;
+        $this->if = Docman_ItemFactory::instance($groupId);
         $this->actions = array();
     }
 

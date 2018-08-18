@@ -149,7 +149,7 @@ class Docman_Report {
     //
 
     function addColumn(&$c) {
-        $this->columns[] =& $c;
+        $this->columns[] = $c;
     }
 
     function &getColumnIterator() {
@@ -165,7 +165,7 @@ class Docman_Report {
     }
 
     function addFilter(&$f) {
-        $this->filters[] =& $f;
+        $this->filters[] = $f;
     }
 
     function &getFilterIterator() {

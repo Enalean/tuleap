@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -88,18 +88,21 @@ class Docman_View_Details extends Docman_View_Display {
         }
         if ($user_can_manage) {
             $sections['permissions'] = true;
-            $details->addSection(new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url'], $token));
+            $permissions = new Docman_View_ItemDetailsSectionPermissions($params['item'], $params['default_url']);
+            $details->addSection($permissions);
         }
 
         if ($user_can_read) {
+            $notifications_manager = $this->_controller->notificationsManager;
+
             $sections['notifications'] = true;
             $details->addSection(
                 new Docman_View_ItemDetailsSectionNotifications(
                     $params['item'],
                     $params['default_url'],
-                    $this->_controller->notificationsManager,
+                    $notifications_manager,
                     $token,
-                    new CollectionOfUgroupMonitoredItemsBuilder($this->_controller->notificationsManager)
+                    new CollectionOfUgroupMonitoredItemsBuilder($notifications_manager)
                 )
             );
         }

@@ -93,11 +93,11 @@ class Docman_HTTPController extends Docman_Controller {
         $itemIter = $itemFactory->findFuturObsoleteItems();
         $itemIter->rewind();
         while($itemIter->valid()) {
-            $item =& $itemIter->current();
+            $item = $itemIter->current();
 
             // Users
-            $um    =& UserManager::instance();
-            $owner =& $um->getUserById($item->getOwnerId());
+            $um    = UserManager::instance();
+            $owner = $um->getUserById($item->getOwnerId());
 
             // Project
             $group = $pm->getProject($item->getGroupId());

@@ -16,7 +16,7 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */ {
         if (isset($params['redirect_to'])) {
             $url = $params['redirect_to'];
         } else if(isset($params['item'])) {
-            $event_manager =& EventManager::instance();
+            $event_manager = EventManager::instance();
             $event_manager->processEvent('plugin_docman_event_access', array(
                 'group_id' => $params['group_id'],
                 'item'     => &$params['item'],

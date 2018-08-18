@@ -50,7 +50,7 @@ class Docman_SettingsBo {
 
     function _cacheGroupSettings() {
         if($this->row === null) {
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dar = $dao->searchByGroupId($this->groupId);
             if($dar && !$dar->isError() && $dar->valid()) {
                 $this->row = $dar->current();
@@ -91,7 +91,7 @@ class Docman_SettingsBo {
     }
 
     function updateView($view) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         if($this->settingsExist()) {
             return $dao->updateViewForGroupId($this->groupId, $view);
         }
@@ -101,7 +101,7 @@ class Docman_SettingsBo {
     }
     
     function updateMetadataUsage($label, $useIt) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         if(!$this->settingsExist()) {            
             $dao->create($this->groupId, 'Tree');
         }
@@ -110,7 +110,7 @@ class Docman_SettingsBo {
 
     function cloneMetadataSettings($targetGroupId) {
         if($this->settingsExist()) {
-            $dao =& $this->getDao();
+            $dao = $this->getDao();
             $dao->create($targetGroupId,
                          $this->getView(),
                          $this->getMetadataUsage('obsolescence_date'),
@@ -129,7 +129,7 @@ class Docman_SettingsBo {
      * @access: public
      */
     function exportMetadataUsage($dstGroupId) {
-        $dstBo =& Docman_SettingsBo::instance($dstGroupId);
+        $dstBo = Docman_SettingsBo::instance($dstGroupId);
         $dstBo->_importMetadataUsage($this, 'obsolescence_date');
         $dstBo->_importMetadataUsage($this, 'status');
     }

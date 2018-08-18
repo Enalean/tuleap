@@ -1,5 +1,5 @@
 <?php
-/* 
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
@@ -75,7 +75,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         return $html;
     }
 
-    function getContent() {
+    function getContent($params = []) {
         return $this->item->accept($this);
     }
     
@@ -152,5 +152,4 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         $icons = new Docman_Icons($this->_controller->getThemePath().'/images/ic/');
         return $icons;
     }
-
 }

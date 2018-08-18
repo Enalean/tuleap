@@ -238,10 +238,12 @@
      * 
      * @param Docman_Item $item
      */
-    function getActionForItem($item) {
+    public function getActionForItem(Docman_Item $item)
+    {
         $js = 'docman.addActionForItem('.$item->getId().', ';
         $params = array();
-        $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($this->_controller->getUser(), $item->getGroupId());
+        $user = $this->_controller->getUser();
+        $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($user, $item->getGroupId());
         $user_actions = $item->accept($itemMenuVisitor, $params);
         $js .= $this->phpArrayToJsArray($user_actions);
         $js .= ");\n";
@@ -293,5 +295,3 @@
         return $output;
     }
 }
-
-?>

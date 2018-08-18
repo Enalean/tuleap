@@ -60,14 +60,14 @@ class Docman_FilterFactory {
                     $itemTypeSearchSearch = true;
                 } else {
                     if(isset($filtersArray[$row['label']])) {
-                        $f =& $filtersArray[$row['label']];
+                        $f = $filtersArray[$row['label']];
                         $f->initFromRow($row);
                     }
                     else {
                         $md = $metadataFactory->getFromLabel($row['label']);
                         $f = $this->createFromMetadata($md, $report->getAdvancedSearch());
                         $f->initFromRow($row);
-                        $filtersArray[$row['label']] =& $f;
+                        $filtersArray[$row['label']] = $f;
                     }
                     unset($f);
                 }
@@ -249,7 +249,7 @@ class Docman_FilterFactory {
     }
 
     function createFilter($reportId, $filter) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         
         if(is_a($filter, 'Docman_FilterDateAdvanced')) {
             $dao->createFilterDateAdvanced($reportId, $filter->md->getLabel(), $filter->getValueStart(), $filter->getValueEnd());
@@ -274,7 +274,7 @@ class Docman_FilterFactory {
      * Delete all the filters of the given report.
      */
     function truncateFilters($report) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         return $dao->truncateFilters($report->getId());
     }
 
@@ -294,7 +294,7 @@ class Docman_FilterFactory {
     function copy($srcReport, $dstReport, $metadataMapping) {
         $this->addFiltersToReport($srcReport);
 
-        $fi =& $srcReport->getFilterIterator();
+        $fi = $srcReport->getFilterIterator();
         $fi->rewind();
         while($fi->valid()) {
             $srcFilter = $fi->current();
