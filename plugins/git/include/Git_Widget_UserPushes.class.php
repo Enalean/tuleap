@@ -165,7 +165,7 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return Boolean
      */
-    function updatePreferences($request) {
+    function updatePreferences(Codendi_Request $request) {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
         $vOffset->required();

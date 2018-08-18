@@ -1,32 +1,48 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
+/**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 
-$reference_manager =& ReferenceManager::instance();
-$request =& HTTPRequest::instance();
+$reference_manager = ReferenceManager::instance();
+$request = HTTPRequest::instance();
 
 $vGroupId = new Valid_GroupId();
-if (!$request->valid($vGroupId))
-    $group_id=100;
- else $group_id=$request->get('group_id');
+if (! $request->valid($vGroupId)) {
+    $group_id = 100;
+} else {
+    $group_id = $request->get('group_id');
+}
 
 $vKey = new Valid_String('key');
 $vKey->required();
 $vVal = new Valid_String('val');
 $vVal->required();
-if ((!$request->valid($vKey))
-    ||(!$request->valid($vVal))) {
-    exit_error($GLOBALS['Language']->getText('global','error'),
-               $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
- }
+if ((!$request->valid($vKey)) ||(!$request->valid($vVal))) {
+    exit_error(
+        $GLOBALS['Language']->getText('global', 'error'),
+        $GLOBALS['Language']->getText('include_exit', 'missing_param_err')
+    );
+}
 
 $keyword = $request->get('key');
 $value   = $request->get('val');
@@ -36,7 +52,7 @@ if ($keyword == 'wiki') {
     $wiki = new WikiDao();
     // Wiki Specific
     //If wiki page exists, we keep the value to handle 'toto/titi' wiki page
-    //If wiki page does not exist, we check if there is a version number in the 
+    //If wiki page does not exist, we check if there is a version number in the
     //wiki page name to handle 'toto/titi/1' (1 is the version number)
     if ($wiki->retrieveWikiPageId($value, $group_id) != null) {
         $args = array($value);
@@ -84,13 +100,15 @@ if ($ref) {
     }
     $ref->replaceLink($args, $project_name);
 } else {
-    exit_error($GLOBALS['Language']->getText('global','error'),
-               $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
+    exit_error(
+        $GLOBALS['Language']->getText('global', 'error'),
+        $GLOBALS['Language']->getText('include_exit', 'missing_param_err')
+    );
 }
 
 if ($request->isAjax()) {
     $html_purifier = Codendi_HTMLPurifier::instance();
-    switch($ref->getServiceShortName()) {
+    switch ($ref->getServiceShortName()) {
         case 'tracker':
             $user_id = UserManager::instance()->getCurrentUser()->getId();
             $aid = $request->get('val');
@@ -108,19 +126,17 @@ if ($request->isAjax()) {
                 $values = null;
                 if (!$at->isError() && $at->isValid()) {
                     $art_field_fact = new ArtifactFieldFactory($at);
-                    $ah=new ArtifactHtml($at,$aid);
-                    
+                    $ah = new ArtifactHtml($at, $aid);
                     $uh = new UserHelper();
                     
                     $values = array();
-                    foreach(array('summary', 'submitted_by', 'status_id') as $field_name) {
+                    foreach (array('summary', 'submitted_by', 'status_id') as $field_name) {
                         $field = $art_field_fact->getFieldFromName($field_name);
                         if ($field->userCanRead($group_id, $atid)) {
-                            
-                            if ( $field->isMultiSelectBox() ) {
-                                    $field_value = $field->getValues($ah->getID());
+                            if ($field->isMultiSelectBox()) {
+                                $field_value = $field->getValues($ah->getID());
                             } else {
-                                    $field_value = $ah->getValue($field_name);
+                                $field_value = $ah->getValue($field_name);
                             }
                             
                             $field_html = new ArtifactFieldHtml($field);
@@ -133,7 +149,7 @@ if ($request->isAjax()) {
                                     $value .= $html_purifier->purify(', '. util_time_ago_in_words($ah->getValue('open_date')));
                                 }
                             } else {
-                                $value = $field_html->display($at->getID(),$field_value,false,false,true);
+                                $value = $field_html->display($at->getID(), $field_value, false, false, true);
                             }
                             
                             $html = $ah->_getFieldLabelAndValueForUser($group_id, $atid, $field, $user_id, true);
@@ -162,11 +178,11 @@ if ($request->isAjax()) {
 
             echo '<table>';
             echo ' <tr>';
-            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils','date') . ':</strong></td>';
+            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_utils', 'date') . ':</strong></td>';
             echo '  <td>' . $html_purifier->purify($date) . '</td>';
             echo ' </tr>';
             echo ' <tr>';
-            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_browse_revision','log_message') . ':</strong></td>';
+            echo '  <td><strong>' . $GLOBALS['Language']->getText('svn_browse_revision', 'log_message') . ':</strong></td>';
             echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
             echo ' </tr>';
             echo '</table>';
@@ -176,17 +192,17 @@ if ($request->isAjax()) {
             $commit_id = $request->get('val');
             $result =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
-                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound',array($commit_id));
+                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', array($commit_id));
             } else {
                 $date = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
                 $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);
                 echo '<table>';
                 echo ' <tr>';
-                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_commit_utils','date') . ':</strong></td>';
+                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'date') . ':</strong></td>';
                 echo '  <td>' . $html_purifier->purify($date) . '</td>';
                 echo ' </tr>';
                 echo ' <tr>';
-                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_browse_commit','log_message') . ':</strong></td>';
+                echo '  <td><strong>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'log_message') . ':</strong></td>';
                 echo '  <td>' . $html_purifier->purify($list_log) . '</td>';
                 echo ' </tr>';
                 echo '</table>';

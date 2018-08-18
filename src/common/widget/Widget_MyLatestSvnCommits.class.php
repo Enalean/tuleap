@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
  * This file is a part of Tuleap.
@@ -152,7 +152,7 @@ class Widget_MyLatestSvnCommits extends Widget {
             ';
     }
 
-    function updatePreferences(&$request) {
+    function updatePreferences(Codendi_Request $request) {
         $request->valid(new Valid_String('cancel'));
         $nbShow = new Valid_UInt('nb_svn_commits');
         $nbShow->required();

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -48,7 +48,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
         return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', strtolower($this->artifact_show)) . ']';
     }
 
-    function updatePreferences(&$request)
+    function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'AS'));

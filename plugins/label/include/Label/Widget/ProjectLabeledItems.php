@@ -170,13 +170,13 @@ class ProjectLabeledItems extends Widget
         $this->content_id = $this->dao->create();
     }
 
-    public function updatePreferences(&$request)
+    public function updatePreferences(Codendi_Request $request)
     {
         $project_labels = $this->getProjectAllLabelsPresenter();
         $this->storeLabelsConfiguration($request, $project_labels);
     }
 
-    private function storeLabelsConfiguration(HTTPRequest $request, $project_labels)
+    private function storeLabelsConfiguration(Codendi_Request $request, $project_labels)
     {
         try {
             $this->project_data_validator->validateDataFromRequest($request, $project_labels);

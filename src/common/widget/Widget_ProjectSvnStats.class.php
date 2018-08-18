@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean 2017 - 2018. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
- * Copyright (c) Enalean 2017. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
  *
@@ -59,7 +59,7 @@ class Widget_ProjectSvnStats extends Widget
     protected $tmp_nb_of_commit;
     public function process($owner_type, $owner_id)
     {
-        $dao = new SvnCommitsDao(CodendiDataAccess::instance());
+        $dao = new SvnCommitsDao();
         $colors_for_charts = new ColorsForCharts();
 
         //The default duration is 3 months back

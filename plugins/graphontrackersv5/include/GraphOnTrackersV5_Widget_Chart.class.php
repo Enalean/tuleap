@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
@@ -161,7 +161,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         }
         return $content_id;
     }
-    function updatePreferences(&$request) {
+    function updatePreferences(Codendi_Request $request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

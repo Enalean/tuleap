@@ -83,9 +83,11 @@ use Tuleap\Dashboard\User\UserDashboardController;
         return '';
     }
 
-    function updatePreferences(&$request) {
+    public function updatePreferences(Codendi_Request $request)
+    {
         return true;
     }
+
     function hasRss() {
         return false;
     }

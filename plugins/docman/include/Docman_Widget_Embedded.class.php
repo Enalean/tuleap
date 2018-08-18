@@ -219,7 +219,7 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
      * @param Codendi_Request $request
      * @return boolean true if something has been updated
      */
-    function updatePreferences($request) {
+    function updatePreferences(Codendi_Request $request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

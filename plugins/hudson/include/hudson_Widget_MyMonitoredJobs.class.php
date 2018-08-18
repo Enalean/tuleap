@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
@@ -70,7 +69,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return $GLOBALS['Language']->getText('plugin_hudson', 'widget_description_myjobs');
     }
 
-    function updatePreferences(&$request) {
+    function updatePreferences(Codendi_Request $request) {
         $request->valid(new Valid_String('cancel'));
         if (!$request->exist('cancel')) {
             $monitored_jobs = $request->get('myhudsonjobs');

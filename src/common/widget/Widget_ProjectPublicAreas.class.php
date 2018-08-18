@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -37,7 +37,7 @@ class Widget_ProjectPublicAreas extends Widget {
         return $GLOBALS['Language']->getText('include_project_home','public_areas');
     }
     function getContent() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = db_ei($request->get('group_id'));
         $pm = ProjectManager::instance();
         $project = $pm->getProject($group_id);
