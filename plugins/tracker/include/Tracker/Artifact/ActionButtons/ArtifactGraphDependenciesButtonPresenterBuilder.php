@@ -36,7 +36,7 @@ class ArtifactGraphDependenciesButtonPresenterBuilder
 
     public function getGraphReferencesButton(Tracker_Artifact $artifact)
     {
-        $reference_information = "";
+        $reference_information = [];
         $this->event_manager->processEvent(
             TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION,
             [

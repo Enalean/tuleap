@@ -743,9 +743,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function checkThatAtLeastOneFileIsUploaded($files) {
         $r = new Rule_File();
         $a_file_is_sent = false;
-        reset($files);
-        while (!$a_file_is_sent && (list($action, $attachment) = each($files))) {
-            if ("$action" != 'delete') {
+        foreach ($files as $action => $attachment) {
+            if ($a_file_is_sent) {
+                break;
+            }
+            if ((string) $action !== 'delete') {
                 $a_file_is_sent = $r->isValid($attachment);
             }
         }

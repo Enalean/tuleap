@@ -379,8 +379,7 @@ class Workflow {
         if ($oldValues) {
             if ($v = $oldValues->getValue()) {
                 // Todo: what about multiple values in the changeset?
-                list(,$from) = each($v);
-                $from = (int)$from;
+                $from = (int) current($v);
             }
         }
         if (isset($fields_data[$this->getFieldId()])) {

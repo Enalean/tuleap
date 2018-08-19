@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
@@ -248,9 +249,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             }
 
             if (isset($renderer_parameters['delete_chart']) && is_array($renderer_parameters['delete_chart']) && ! $current_user->isAnonymous()) {
-                list($chart_id,) = each($renderer_parameters['delete_chart']);
-                if ($chart_id) {
-                    $this->getChartFactory()->deleteChart($this, $chart_id, $this->report->userCanUpdate($current_user));
+                foreach ($renderer_parameters['delete_chart'] as $chart_id => $chart) {
+                    if ($chart_id) {
+                        $this->getChartFactory()->deleteChart($this, $chart_id, $this->report->userCanUpdate($current_user));
+                    }
                 }
             }
 

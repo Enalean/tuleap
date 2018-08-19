@@ -784,7 +784,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
         $current_renderer = null;
         //search for the current renderer
         if (is_array($request->get('renderer'))) {
-            list($renderer_id, ) = each($request->get('renderer'));
+            $renderer_id = key($request->get('renderer'));
             if (isset($renderers[$renderer_id])) {
                 $current_renderer = $renderers[$renderer_id];
             }
@@ -799,7 +799,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             }
         }
         if (!$current_renderer) {
-            list(,$current_renderer) = each($renderers);
+            $current_renderer = current($renderers);
         }
         if ($current_renderer && $current_user->getPreference($renderer_preference_key) != $current_renderer->id) {
             $current_user->setPreference($renderer_preference_key, $current_renderer->id);
@@ -1821,7 +1821,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             }
             $type .= '</select>';
         } else {
-            list(,$type) = each($types);
+            $type = current($types);
         }
         $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('plugin_tracker_report','add_new') . ' ' . $type .'</strong></p>';
         $add_renderer .= '<p>';

@@ -1137,8 +1137,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getFirstChangeset() {
         $changesets = $this->getChangesets();
         reset($changesets);
-        list(,$c) = each($changesets);
-        return $c;
+        return current($changesets);
     }
 
     public function hasMoreThanOneChangeset()
@@ -1311,8 +1310,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getPreviousChangeset($changeset_id) {
         $previous = null;
         $changesets = $this->getChangesets();
-        reset($changesets);
-        while ((list(,$changeset) = each($changesets)) && $changeset->id != $changeset_id) {
+        foreach ($changesets as $changeset) {
+            if ($changeset->getId() == $changeset_id) {
+                break;
+            }
             $previous = $changeset;
         }
         return $previous;
