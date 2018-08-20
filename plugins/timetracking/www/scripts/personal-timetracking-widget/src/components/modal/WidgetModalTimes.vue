@@ -1,5 +1,24 @@
+/**
+* Copyright (c) Enalean, 2018. All Rights Reserved.
+*
+* This file is a part of Tuleap.
+*
+* Tuleap is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Tuleap is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 (<template>
-    <div v-bind:id="new_id" class="tlp-modal" role="dialog">
+    <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
                 <i class="fa fa-pencil tlp-modal-title-icon"></i>
@@ -9,9 +28,7 @@
                 &times;
             </div>
         </div>
-        <widget-modal-content
-            v-bind:time-data="timeData"
-        />
+        <widget-modal-content v-if="current_artifact"/>
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{ close_label }}
@@ -20,20 +37,16 @@
     </div>
 </template>)
 (<script>
+import { mapGetters } from "vuex";
 import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalContent from "./WidgetModalContent.vue";
 export default {
     name: "WidgetModalTimes",
     components: { WidgetModalContent },
-    props: {
-        timeData: Array
-    },
     computed: {
+        ...mapGetters(["current_artifact"]),
         close_label: () => gettext_provider.gettext("Close"),
-        edit_time: () => gettext_provider.gettext("Detailed times"),
-        new_id() {
-            return "timetracking-artifact-details-modal-" + this.timeData[0].artifact.id;
-        }
+        edit_time: () => gettext_provider.gettext("Detailed times")
     }
 };
 </script>)

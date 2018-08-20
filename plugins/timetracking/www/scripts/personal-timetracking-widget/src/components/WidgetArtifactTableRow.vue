@@ -20,7 +20,6 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-
 (<template>
     <tr>
         <td>
@@ -37,8 +36,7 @@
             {{ show_times_label }}
         </td>
         <widget-modal-times
-            v-bind:key="timeData.id"
-            v-bind:time-data="timeData"
+            ref="timetracking_modal"
         />
     </tr>
 </template>)
@@ -71,13 +69,12 @@ export default {
     },
     methods: {
         show_modal() {
+            this.$store.commit("setCurrentTimes", this.timeData);
             this.modal_simple_content.toggle();
         }
     },
     mounted() {
-        const modal = document.getElementById(
-            "timetracking-artifact-details-modal-" + this.artifact.id
-        );
+        const modal = this.$refs.timetracking_modal.$el;
         this.modal_simple_content = createModal(modal);
     }
 };

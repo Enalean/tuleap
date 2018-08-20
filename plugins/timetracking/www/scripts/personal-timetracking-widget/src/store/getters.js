@@ -34,3 +34,17 @@ export const has_rest_error = state => state.error_message !== "";
 export const can_results_be_displayed = state => state.is_loaded && state.error_message === "";
 
 export const can_load_more = state => state.pagination_offset < state.total_times;
+
+export const current_artifact = state => {
+    if (state.current_times.length === 0) {
+        return;
+    }
+    return state.current_times[0].artifact;
+};
+
+export const current_project = state => {
+    if (state.current_times.length === 0) {
+        return;
+    }
+    return state.current_times[0].project;
+};

@@ -46,6 +46,11 @@ export default {
         state.is_loaded = is_loaded;
     },
 
+    setCurrentTimes(state, times) {
+        state.current_times = times.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date);
+        });
+    },
     setTotalTimes(state, total_times) {
         state.total_times = total_times;
     },

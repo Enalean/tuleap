@@ -1,3 +1,22 @@
+/**
+* Copyright (c) Enalean, 2018. All Rights Reserved.
+*
+* This file is a part of Tuleap.
+*
+* Tuleap is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* Tuleap is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+*/
+
 (<template>
     <div class="timetracking-details-modal-artifact-infos-container">
         <div class="timetracking-details-modal-artifact-infos">
@@ -17,29 +36,27 @@
                 </svg>{{ label_project }}
             </span>
             <span class="timetracking-details-modal-artifact-infos-project-name">
-                <a v-bind:href="project_link">{{ project.label }}</a>
+                <a v-bind:href="project_link">{{ current_project.label }}</a>
             </span>
         </div>
     </div>
 </template>)
 
 (<script>
+import { mapGetters } from "vuex";
 import { gettext_provider } from "../../gettext-provider.js";
 import { formatDateDayMonthYear } from "../../time-formatters.js";
 export default {
     name: "WidgetModalArtifactInfo",
-    props: {
-        artifact: Object,
-        project: Object
-    },
     computed: {
+        ...mapGetters(["current_artifact", "current_project"]),
         label_project: () => gettext_provider.gettext("Project"),
         submission_label: () => gettext_provider.gettext("Submission date"),
         project_link() {
-            return "/projects/" + this.project.shortname;
+            return "/projects/" + this.current_project.shortname;
         },
         submission_date() {
-            return formatDateDayMonthYear(this.artifact.submission_date);
+            return formatDateDayMonthYear(this.current_artifact.submission_date);
         }
     }
 };
