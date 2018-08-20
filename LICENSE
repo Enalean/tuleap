@@ -1,4 +1,4 @@
-Enalean (c)2011, 2012, 2013. All rights reserved. Tuleap and Enalean are registered
+Enalean (c) 2011-2018. All rights reserved. Tuleap and Enalean are registered
 trademarks and logos of Enalean SAS. All other trademarks, logos and copyrights
 are property of the respective owners.
 
@@ -12,7 +12,7 @@ The Tuleap software is provided under the GNU GPL License v2, except:
 - Some icons in Tuleap were borrowed from http://www.famfamfam.com/lab/icons/silk/
   They are licensed under Creative Commons Attribution 2.5 License.
 
-   
+
 
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
@@ -354,4 +354,3 @@ proprietary programs.  If your program is a subroutine library, you may
 consider it more useful to permit linking proprietary applications with the
 library.  If this is what you want to do, use the GNU Library General
 Public License instead of this License.
-
