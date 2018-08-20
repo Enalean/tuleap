@@ -20,9 +20,11 @@
 import { bar } from "./graphs-bar.js";
 import { groupedbar } from "./graphs-groupedbar.js";
 import { pie } from "./graphs-pie.js";
+import { cumulativeflow } from "./graph-cumulative-flow.js";
 
 export default {
     bar,
     groupedbar,
-    pie
+    pie,
+    cumulativeflow
 };

@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Color\TlpColorMapper;
-
 abstract class ChartDataBuilderV5 {
 
     protected $chart;
@@ -44,18 +42,6 @@ abstract class ChartDataBuilderV5 {
     protected function getColor(array $data) {
         if (isset($data['tlp_color_name'])) {
             return $data['tlp_color_name'];
-        }
-
-        if (! isset($data['red'])) {
-            return array(null, null, null);
-        }
-
-        return array($data['red'], $data['green'], $data['blue']);
-    }
-
-    protected function getColorForJPGraph(array $data) {
-        if (isset($data['tlp_color_name'])) {
-            return TlpColorMapper::getRGBColor($data['tlp_color_name']);
         }
 
         if (! isset($data['red'])) {

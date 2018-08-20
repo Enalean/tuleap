@@ -54,6 +54,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
 
+        bindTextDomain('tuleap-graphontrackersv5', __DIR__. '/../site-content');
+
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('cssfile',                           'cssFile',                           false);

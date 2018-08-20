@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe SAS.
  *
@@ -21,8 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
-
+class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine
+{
     public $scale;
     public $stop_date;
     public $start_date;
@@ -30,118 +30,104 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     public $keys;
     public $nbOpt;
     public $error;
+    public $title;
+    public $height;
+    public $width;
+    public $data;
 
-    const WIDTH_PER_POINT = 100;
-    const MARGIN = 200;
-
-    public function validData(){
-
-        if (($this->hasStart() && $this->hasData()) || $this->hasError()){
-            return true;
-        } else {
-            $GLOBALS['Response']->addFeedback(
-                'info',
-                $GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))
+    public function validData()
+    {
+        if (! $this->hasStart()) {
+            $this->setError(
+                dgettext('tuleap-graphontrackersv5', "No start date defined.")
             );
 
-            return false;
+            return true;
         }
+
+        if (! $this->isStartDateBeforeEndDate()) {
+            $this->setError(
+                dgettext('tuleap-graphontrackersv5', "Start date must be before the end date.")
+            );
+
+            return true;
+        }
+
+        if (! $this->hasData()) {
+            if (! $this->hasError()) {
+                $this->setError(
+                    dgettext('tuleap-graphontrackersv5', 'No data to display.')
+                );
+            }
+
+            return true;
+        }
+
+        return ! $this->hasError();
     }
 
     /**
-     * @return Chart
+     * @return null
      */
-    public function buildGraph() {
-        require_once('common/chart/Chart.class.php');
-
-        if($this->error == NULL) {
-            if ($this->width == 0) {
-                $this->width = (count($this->data)* self::WIDTH_PER_POINT)+(self::MARGIN);
-            }
-
-            if($this->scale == GraphOnTrackersV5_Chart_CumulativeFlow::SCALE_DAY) {
-                foreach ($this->data as $date => $label)
-                    $dates[] = date('M-d', $date);
-            } else {
-                foreach ($this->data as $date => $label)
-                    $dates[] = date('M-Y', $date);
-            }
-
-            $this->graph = new Chart($this->width,$this->height);
-            $colors = $this->getColors();
-            $this->graph->SetScale("datlin");
-            $this->graph->title->Set($this->title);
-            $this->graph->xaxis->SetTickLabels($dates);
-            $this->graph->yaxis->scale->SetAutoMin(0);
-
-            if (is_null($this->description)) {
-                $this->description = "";
-            }
-            $this->graph->subtitle->Set($this->description);
-            $this->keys = array_keys($this->data[$this->start_date]);
-            $this->nbOpt = count($this->keys);
-            $this->stackDataCount();
-            $this->graph->ygrid->SetFill(true,'#F3FFFF@0.5','#FFFFFF@0.5');
-
-            for($i = $this->nbOpt-1; $i >= 0; $i--) {
-                $lineData = array();
-                foreach ($this->data as $data => $row) {
-                    $lineData[] = $row[$this->keys[$i]];
-                }
-                $line = new LinePlot($lineData);
-                $line->SetFillColor($colors[$this->keys[$i]]);
-                $line->SetColor('#000');
-                $line->SetLegend($this->keys[$i]);
-                $this->graph->Add($line);
-            }
-
-            try {
-                $legend_line_height  = 20;
-                $graph_margin_bottom = 70;
-                $margin_size         = $this->nbOpt * $legend_line_height + $graph_margin_bottom;
-
-                $this->graph->img->SetMargin(70, 30, 30, $margin_size);
-
-            } catch(Exception $e) {
-                // do nothing, JPGraph displays the error by itself
-            }
-
-            $this->graph->legend->SetAbsPos(0, $this->height, 'left', 'bottom');
-
-        } else {
-            $this->graph = $this->error;
-        }
-        return $this->graph;
+    public function buildGraph()
+    {
+        return null;
     }
 
-    function hasData() {
+    private function hasData()
+    {
+        if ($this->data === null || count($this->data) === 0) {
+            return false;
+        }
+
         $sumData = 0;
+
         foreach ($this->data as $row) {
-            $sumData += array_sum($row);
+            $sumData += count($row);
         }
         return (count(reset($this->data)) > 0) && $sumData > 0;
     }
 
-    function hasError() {
-        return $this->error != null;
+    private function hasError()
+    {
+        return $this->error !== null;
     }
 
-    function hasStart() {
+    private function hasStart()
+    {
         return $this->start_date && $this->start_date > 0;
     }
 
-    /**
-     *
-     * Stack the counts to see each line on top of each other.
-     */
-    private function stackDataCount() {
-        foreach ($this->data as $date => $row) {
-            for($i = 1; $i < $this->nbOpt ;$i++) {
-                if($this->data[$date][$this->keys[$i]]!==null){
-                    $this->data[$date][$this->keys[$i]] += $this->data[$date][$this->keys[$i-1]];
-                }
-            }
+    private function hasEnd()
+    {
+        return $this->stop_date && $this->stop_date > 0;
+    }
+
+    private function isStartDateBeforeEndDate()
+    {
+        if (! $this->hasEnd()) {
+            return true;
         }
+
+        return $this->start_date <= $this->stop_date;
+    }
+
+    public function toArray()
+    {
+        return parent::toArray() + [
+            'type'   => 'cumulativeflow',
+            'height' => $this->height,
+            'width'  => $this->width,
+            'data'   => $this->data,
+            'error'  => $this->error
+        ];
+    }
+
+    public function setError($error)
+    {
+        $this->error = [
+            "message" => dgettext('tuleap-graphontrackersv5', 'Unable to render the chart'),
+            "cause" => $error
+        ];
     }
 }
-?>

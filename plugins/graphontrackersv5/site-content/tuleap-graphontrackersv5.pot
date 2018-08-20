@@ -1,0 +1,14 @@
+msgid "No data to display."
+msgstr ""
+
+msgid "No start date defined."
+msgstr ""
+
+msgid "Please choose a smaller period, or increase the scale."
+msgstr ""
+
+msgid "Start date must be before the end date."
+msgstr ""
+
+msgid "Unable to render the chart"
+msgstr ""

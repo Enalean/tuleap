@@ -112,7 +112,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= '</form>';
         } else {
             $in_dashboard = false;
-            $html .= $this->fetchCharts($this->report->getMatchingIds(), $user, $in_dashboard, $readonly);
+            $html .= $this->fetchCharts($user, $in_dashboard, $readonly);
         }
         return $html;
     }
@@ -127,14 +127,14 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         if ($in_dashboard) {
             $html .= $this->fetchAdditionalButton($this->report->getTracker());
         }
-        $html .= $this->fetchCharts($this->report->getMatchingIds(), $user, $in_dashboard, $readonly, $store_in_session);
+        $html .= $this->fetchCharts($user, $in_dashboard, $readonly, $store_in_session);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }
 
-    protected function fetchCharts($matching_ids, PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
+    protected function fetchCharts(PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
         $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+
         if (!$readonly) {
             $html .= '<div id="tracker_report_renderer_view_controls">';
             $html .= '<div class="btn-group">';
@@ -168,14 +168,16 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
 
         $chart_array = array();
         $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
-        foreach($this->getChartFactory()
-                     ->getCharts($this) as $chart) {
+
+        foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $html .= '<div class="widget_report_graph">';
             $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
             $html .= '</div>';
             $chart_array[$chart->id] = $chart->fetchAsArray();
         }
+
         $html .= '</div>';
+
         if (!$readonly) {
             $html .='</form>';
         }
