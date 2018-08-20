@@ -425,7 +425,7 @@ function util_make_links ($data='',$group_id = 0) {
 
 function util_make_reference_links ($data,$group_id) {
     if(empty($data)) { return $data; }
-    $reference_manager =& ReferenceManager::instance();
+    $reference_manager = ReferenceManager::instance();
     if ($group_id)
         $reference_manager->insertReferences($data,$group_id);
 
