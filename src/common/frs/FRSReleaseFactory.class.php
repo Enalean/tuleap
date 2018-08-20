@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean 2017 - 2018. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -191,7 +191,7 @@ class FRSReleaseFactory {
 
 	function isActiveReleases($package_id) {
 		$_id = (int) $package_id;
-		$dao = & $this->_getFRSReleaseDao();
+        $dao = $this->_getFRSReleaseDao();
 		$dar = $dao->searchActiveReleasesByPackageId($_id, $this->STATUS_ACTIVE);
 
 		if ($dar->isError()) {
@@ -218,7 +218,7 @@ class FRSReleaseFactory {
         if(!$dar->valid()){
         	return;
         }else{
-        	$res =& $dar->current();
+            $res = $dar->current();
         	return $res['release_id'];
         }
     }
@@ -588,4 +588,3 @@ class FRSReleaseFactory {
         return $this->file_factory;
     }
 }
-?>
