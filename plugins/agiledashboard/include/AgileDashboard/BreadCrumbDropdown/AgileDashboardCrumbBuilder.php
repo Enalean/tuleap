@@ -54,7 +54,7 @@ class AgileDashboardCrumbBuilder
             new BreadCrumbLinkWithIcon(
                 dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
                 $this->plugin_path . '/?' . http_build_query(['group_id' => $project->getID()]),
-                'fa-table icon-table'
+                'fa-table'
             )
         );
 

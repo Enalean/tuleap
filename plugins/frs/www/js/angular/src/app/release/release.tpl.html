@@ -1,11 +1,11 @@
 <h4 class="package-name">
-    <i class="icon-archive" aria-hidden="true"></i>
+    <i class="fa fa-archive" aria-hidden="true"></i>
     <a ng-href="/file/?group_id={{ $ctrl.project_id }}">
         <span translate>Package {{ $ctrl.release.package.name }}</span>
     </a>
 </h4>
 <h1 class="release-name">
-    <i class="icon-level-up icon-rotate-90" aria-hidden="true"></i>
+    <i class="fa fa-level-up fa-rotate-90" aria-hidden="true"></i>
     <span>{{ $ctrl.release.name }}</span>
 </h1>
 
@@ -35,7 +35,7 @@
         <a
                 ng-href="/plugins/agiledashboard/?group_id={{ $ctrl.milestone.project.id }}&planning_id={{ $ctrl.milestone.planning.id }}&action=show&aid={{ $ctrl.milestone.id }}"
         >
-            <span translate>Milestone</span> <i class="icon-external-link"></i>
+            <span translate>Milestone</span> <i class="fa fa-external-link"></i>
         </a>
     </li>
     <li
@@ -44,7 +44,7 @@
         <a
             ng-href="/plugins/tracker/?aid={{ $ctrl.release.artifact.id }}"
         >
-            <span translate>Artifact</span> <i class="icon-external-link"></i>
+            <span translate>Artifact</span> <i class="fa fa-external-link"></i>
         </a>
     </li>
 </ul>

@@ -27,7 +27,7 @@ class Templating_Presenter_ButtonDropdowns {
      * @var Templating_Presenter_ButtonDropdownsOption[]
      */
     private $options;
-    private $icon = 'icon-cog';
+    private $icon = 'fa fa-cog';
     private $class_names = array();
 
     public function __construct($id, $label, array $options) {

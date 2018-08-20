@@ -342,7 +342,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($is_disabled) {
             $disabled = 'disabled="disabled"';
         }
-        $html  = '<a class="btn auto-compute" ' . $disabled . '><i class="icon-repeat icon-flip-horizontal"></i>';
+        $html  = '<a class="btn auto-compute" ' . $disabled . '><i class="fa fa-repeat fa-flip-horizontal"></i>';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute');
         $html .= '</a>';
 
@@ -808,7 +808,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                     </td>
                     <td class="autocomputed_override">'.
                         $this->fetchComputedValueWithLabel($computed_value).
-                        '<a href="#" '. $data_field_id. '><i class="icon-repeat icon-flip-horizontal"></i>'.
+                        '<a href="#" '. $data_field_id. '><i class="fa fa-repeat fa-flip-horizontal"></i>'.
                         $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute')
                         .'</a>'.
                     '</td>

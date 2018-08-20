@@ -352,7 +352,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $service_tracker_breadcrumb = [
             'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
             'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
-            'icon_name' => 'fa-list-ol icon-list-ol'
+            'icon_name' => 'fa-list-ol'
         ];
 
         if ($this->getCurrentUser()->isAdmin($project->getID())) {
@@ -821,7 +821,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                     }
                     $html .= '<div class="tracker_homepage_info">';
                     $html .= '<a class="link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'">';
-                    $html .= '<i class="icon-circle tracker_color_info '. $tracker->getColor() .'"></i>';
+                    $html .= '<i class="fa fa-circle tracker_color_info '. $tracker->getColor() .'"></i>';
                     $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
                     $html .= '</a>';
 

@@ -50,7 +50,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.row_template = new Template(
             '<tr data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
-                    <a href="#" class="toggle-child"><i class="icon-caret-right icon-fixed-width"></i></a> \
+                    <a href="#" class="toggle-child"><i class="fa fa-caret-right fa-fw"></i></a> \
                     <a href="#{url}">#{xref}</a> \
                 </td> \
                 <td>#{title}</td> \
@@ -268,12 +268,12 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
     },
 
     useShowIcon: function() {
-        this.icon.classList.remove("icon-caret-down");
-        this.icon.classList.add("icon-caret-right");
+        this.icon.classList.remove("fa-caret-down");
+        this.icon.classList.add("fa-caret-right");
     },
 
     useHideIcon: function() {
-        this.icon.classList.add("icon-caret-down");
-        this.icon.classList.remove("icon-caret-right");
+        this.icon.classList.add("fa-caret-down");
+        this.icon.classList.remove("fa-caret-right");
     }
 });

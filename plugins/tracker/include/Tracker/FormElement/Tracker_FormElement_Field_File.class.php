@@ -286,7 +286,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             foreach ($values as $fileinfo) {
                 $query_link = $this->getFileHTMLUrl($fileinfo);
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
-               
+
                 $link_show = '<a href="'. $query_link .'"'.
                                  $this->getVisioningAttributeForLink($fileinfo, $read_only, $lytebox_id) .'
                                  title="'. $sanitized_description .'">';
@@ -303,8 +303,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 }
                 $add .= '<div class="tracker_artifact_attachment_size">('. $fileinfo->getHumanReadableFilesize() .')</div>';
                 $add .= '<div>';
-                $add .= $link_show . '<i class="icon-eye-open"></i></a>';
-                $add .= '<a href="'. $query_link .'" download><i class="icon-download-alt"></i></a>';
+                $add .= $link_show . '<i class="fa fa-eye"></i></a>';
+                $add .= '<a href="'. $query_link .'" download><i class="fa fa-download"></i></a>';
                 $add .= '</div>';
                 $add .= '</div>';
 

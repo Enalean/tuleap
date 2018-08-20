@@ -21,6 +21,9 @@
 @import '../../../common/css/utils/utils';
 @import 'variables-common';
 
+$fa-font-path: '../../common/tlp/dist/fonts/font-awesome-4.7.0/fonts';
+@import '../../../common/tlp/src/fonts/font-awesome-4.7.0/scss/font-awesome';
+
 html, body {
     height: 100%;
 }

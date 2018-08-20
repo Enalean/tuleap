@@ -28,7 +28,7 @@
 
     function saveState(evt, toggler, is_collapsing) {
         var id = $(toggler).attr("data-id");
-        if (!$(evt.target).hasClass("icon-pushpin")) {
+        if (!$(evt.target).hasClass("fa-thumb-tack")) {
             return;
         }
 

@@ -5,7 +5,7 @@
         color: #999999;
     }
 
-    .icon-angle-right:first-child {
+    .fa-angle-right:first-child {
         display: none;
     }
 }
@@ -19,11 +19,11 @@
     font-size: 14px;
     cursor: pointer;
 
-    &.icon-caret-right {
+    &.fa-caret-right {
         padding: 0 8px 0 3px;
     }
 
-    &.icon-caret-down {
+    &.fa-caret-down {
         padding: 0 6px 0 2px;
     }
 }

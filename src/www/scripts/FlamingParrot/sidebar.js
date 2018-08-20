@@ -90,8 +90,8 @@ function updateNavbarLogo(new_width) {
 
 function updateSidebarIcon(direction, show_only_icon) {
     $(".sidebar-collapse")
-        .removeClass("icon-chevron-left icon-chevron-right")
-        .addClass("icon-chevron-" + direction);
+        .removeClass("fa-chevron-left fa-chevron-right")
+        .addClass("fa-chevron-" + direction);
 }
 
 function updateSidebarTitle(show_only_icon) {

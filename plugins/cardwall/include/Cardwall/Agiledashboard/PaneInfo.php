@@ -56,6 +56,6 @@ class CardwallPaneInfo extends PaneInfo
 
     public function getIconName()
     {
-        return 'fa-table icon-table';
+        return 'fa-table';
     }
 }

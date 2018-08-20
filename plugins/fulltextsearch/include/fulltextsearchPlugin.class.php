@@ -190,7 +190,7 @@ class fulltextsearchPlugin extends Plugin {
     public function fetch_additional_search_tabs($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
             $params['additional_search_tabs'][] = new Search_AdditionalSearchTabsPresenter(
-                '<i class="icon-beaker"></i> ' . $GLOBALS['Language']->getText('plugin_fulltextsearch', 'additional_search_tab'),
+                '<i class="fa fa-flask"></i> ' . $GLOBALS['Language']->getText('plugin_fulltextsearch', 'additional_search_tab'),
                 '/search?type_of_search=' . self::SEARCH_TYPE,
                 self::SEARCH_TYPE
             );
@@ -500,7 +500,7 @@ class fulltextsearchPlugin extends Plugin {
 
             $additional_criteria  = '';
             $additional_criteria .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_tooltip').'" for="tracker_report_crit_fulltext_search">';
-            $additional_criteria .= '<i class="icon-beaker"></i> '. $GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_label');
+            $additional_criteria .= '<i class="fa fa-flask"></i> '. $GLOBALS['Language']->getText('plugin_fulltextsearch', 'global_search_label');
             $additional_criteria .= '</label>';
             $additional_criteria .= '<input id="tracker_report_crit_fulltext_search" type="text" name="search_fulltext" value="'.$filter.'" />';
 

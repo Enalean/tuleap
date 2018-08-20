@@ -112,7 +112,7 @@ class Widget_MyMonitoredForums extends Widget {
                         stripslashes(db_result($result2,$i,'forum_name')).'</A></TD>'.
                         '<TD ALIGN="center"><A HREF="/my/stop_monitor.php?forum_id='.$group_forum_id.
                         '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_forum').'\')">'.
-                        '<i class="icon-trash fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
+                        '<i class="fa fa-trash-o" title="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></i></A></TD></TR>';
                     }
                 }
 

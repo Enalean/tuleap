@@ -29,7 +29,7 @@ use Tuleap\Widget\WidgetFactory;
 
 abstract class Tracker_Report_Renderer
 {
-    
+
     public $id;
 
     /**
@@ -39,17 +39,17 @@ abstract class Tracker_Report_Renderer
     public $name;
     public $description;
     public $rank;
-    
+
     /**
      * A table renderer. This is the legacy display of the results
      */
     const TABLE = 'table';
-    
+
     /**
      * A "Board" renderer. Display artifacts grouped by columns.
      */
     const BOARD = 'board';
-    
+
     /**
      * Constructor
      *
@@ -66,7 +66,7 @@ abstract class Tracker_Report_Renderer
         $this->description = $description;
         $this->rank        = $rank;
     }
-    
+
     /**
      * Return the id of the renderer
      *
@@ -85,7 +85,7 @@ abstract class Tracker_Report_Renderer
      * Delete the renderer
      */
     public abstract function delete();
-    
+
     /**
      * Fetch content of the renderer
      *
@@ -97,23 +97,23 @@ abstract class Tracker_Report_Renderer
      * @return string
      */
     public abstract function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user);
-    
+
     /**
      * Process the request
      * @param Request $request
      */
     public abstract function processRequest(TrackerManager $tracker_manager, $request, $current_user);
-    
+
     /**
      * Fetch content to be displayed in widget
      */
     public abstract function fetchWidget(PFUser $user);
-    
+
     /**
      * Returns the type of this renderer
      */
     public abstract function getType();
-    
+
     public abstract function initiateSession();
     /**
      * Update the renderer
@@ -121,19 +121,19 @@ abstract class Tracker_Report_Renderer
      * @return bool true if success, false if failure
      */
     public abstract function update();
-    
+
     /**
      * Finishes import by saving specific properties
-     * 
+     *
      * @param Object $renderer containig the parameters to save
      */
     public abstract function afterSaveObject($renderer);
-    
+
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         $this->processRequest($tracker_manager, $request, $current_user);
         $this->afterProcessRequest($tracker_manager, $request, $current_user);
     }
-    
+
     public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user) {
         if (!$request->isAjax()) {
             $params = array(
@@ -146,9 +146,9 @@ abstract class Tracker_Report_Renderer
             $GLOBALS['Response']->redirect('?'. http_build_query($params));
         }
     }
-    
+
     /**
-     * Get the item of the menu options. 
+     * Get the item of the menu options.
      *
      * If no items is returned, the menu won't be displayed.
      *
@@ -162,7 +162,7 @@ abstract class Tracker_Report_Renderer
                     'renderer' => $this->id,
                     'pv'       => 1,
                 )
-            ) .'"><i class="icon-print"></i> '. $GLOBALS['Language']->getText('global', 'printer_version') .'</a></div>'
+            ) .'"><i class="fa fa-print"></i> '. $GLOBALS['Language']->getText('global', 'printer_version') .'</a></div>'
         );
         $this->addDashboardButtons($items);
 
@@ -212,16 +212,16 @@ abstract class Tracker_Report_Renderer
 
     /**
      * Create a renderer - add in db
-     *     
+     *
      * @return bool true if success, false if failure
      */
     public abstract function create();
-    
+
     /**
      * Duplicate the renderer
      */
     public abstract function duplicate($from_report_id, $field_mapping);
-    
+
     /**
      * Display a link to let the user go back to report
      * Main usage is in widget
@@ -233,7 +233,7 @@ abstract class Tracker_Report_Renderer
     public function fetchWidgetGoToReport() {
         return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget','go_to_report') .']');
     }
-    
+
     /**
      * Display a link to let the user go to the tracker
      * Used in ArtifactLink
@@ -249,7 +249,7 @@ abstract class Tracker_Report_Renderer
         $html .= '</div>';
         return $html;
     }
-    
+
     /**
      * Display a link to let the user go to the tracker
      *
@@ -272,17 +272,17 @@ abstract class Tracker_Report_Renderer
         $html .= '>'. $msg .'</a>';
         return $html;
     }
-    
-    
+
+
     /**
      * Transforms Tracker_Renderer into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $root->addAttribute('type', $this->getType());
-        $root->addAttribute('rank', $this->rank);    
-        // if old ids are important, modify code here 
+        $root->addAttribute('rank', $this->rank);
+        // if old ids are important, modify code here
         if (false) {
             $root->addAttribute('id', $this->id);
             $root->addAttribute('report', $this->report->id);

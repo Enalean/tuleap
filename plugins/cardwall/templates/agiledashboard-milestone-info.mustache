@@ -1,16 +1,16 @@
 <div class="cardwall_board-fullscreen-bar">
-    <button class="btn" id="go-to-fullscreen"><i class="icon-desktop"></i>{{ go_to_fullscreen }}</button>
+    <button class="btn" id="go-to-fullscreen"><i class="fa fa-desktop"></i>{{ go_to_fullscreen }}</button>
 </div>
 
 <div class="row-fluid cardwall_board-milestone-info mini">
     <div class="milestone-name">
-        <a href="{{milestone_edit_url}}">{{ milestone_title }} <i class="icon-edit"></i></a>
+        <a href="{{milestone_edit_url}}">{{ milestone_title }} <i class="fa fa-pencil-square-o"></i></a>
     </div>
 
     <div class="span5 milestone-days">
         {{# milestone_has_dates_info }}
         <div class="date-info">
-           {{ milestone_start_date }} <i class="icon-angle-right"></i> {{ milestone_end_date }}
+           {{ milestone_start_date }} <i class="fa fa-angle-right"></i> {{ milestone_end_date }}
         </div>
         <div class="progress-bar">
             <div class="progress">

@@ -523,7 +523,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
 
         $html .= '<div align="center">';
         $html .= '<button type="submit" name="tracker_query_submit" class="btn btn-primary">';
-        $html .= '<i class="icon-search"></i> ';
+        $html .= '<i class="fa fa-search"></i> ';
         $html .= $GLOBALS['Language']->getText('global', 'btn_search');
         $html .= '</button>';
         $html .= '</div>';
@@ -592,7 +592,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
     private function getExpertModeButton()
     {
         $html  = '<button id="tracker-report-expert-query-button" type="button" class="btn btn-mini tracker-report-query-button">';
-        $html .= '<i class="icon-random"></i> ';
+        $html .= '<i class="fa fa-random"></i> ';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'btn_report_expert_mode');
         $html .= '</button>';
 
@@ -605,7 +605,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
             $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
             $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used, self::TYPE_CRITERIA)
         );
-        $add_criteria_presenter->setIcon('icon-eye-close');
+        $add_criteria_presenter->setIcon('fa fa-eye-slash');
 
         return $this->getTemplateRenderer()->renderToString('button_dropdowns',  $add_criteria_presenter);
     }
@@ -888,7 +888,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface {
                        href="#"
                        class="dropdown-toggle"
                        data-toggle="dropdown">';
-                $html .=  '<i class="icon-plus"></i>' ;
+                $html .=  '<i class="fa fa-plus"></i>' ;
                 $html .= '</a>';
                 $html .= '<div class="dropdown-menu">'. $this->fetchAddRendererForm($current_renderer) .'</div>';
                 $html .= '</li>';

@@ -19,7 +19,7 @@
                                     <div class="tracker-notification-email-list">
                                         {{# ugroups_to_be_notified }}
                                             <span class="tracker-notification-email-list-entry">
-                                                <i class="icon-group tracker-notification-email-list-group-icon"></i>
+                                                <i class="fa fa-users tracker-notification-email-list-group-icon"></i>
                                                 {{ label }}<span class="tracker-notification-email-list-separator">, </span>
                                             </span>
                                         {{/ ugroups_to_be_notified }}
@@ -56,7 +56,7 @@
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">
                                 <div class="tracker-global-notifications-checkbox-cell-read">
-                                    {{# all_updates }}<i class="icon-ok"></i>{{/ all_updates }}
+                                    {{# all_updates }}<i class="fa fa-check"></i>{{/ all_updates }}
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
                                     <input type="hidden" name="global_notification[{{ notification_id }}][all_updates]" value="0" disabled />
@@ -69,7 +69,7 @@
                             </td>
                             <td class="tracker-global-notifications-checkbox-cell">
                                 <div class="tracker-global-notifications-checkbox-cell-read">
-                                    {{# check_permissions }}<i class="icon-ok"></i>{{/ check_permissions }}
+                                    {{# check_permissions }}<i class="fa fa-check"></i>{{/ check_permissions }}
                                 </div>
                                 <div class="tracker-global-notifications-checkbox-cell-write tracker-global-notifications-checkbox-cell-hidden">
                                     <input type="hidden" name="global_notification[{{ notification_id }}][check_permissions]" value="0" disabled />
@@ -83,7 +83,7 @@
                             <td class="tracker-notification-edit">
                                 <div class="tracker-global-notifications-checkbox-cell-read">
                                     <a href="javascript:;" class="tracker-notification-edit-show tracker-notification-edit">
-                                        <i class="icon-pencil"></i>
+                                        <i class="fa fa-pencil"></i>
                                         {{ edit }}
                                     </a>
                                     <a href="javascript:;"
@@ -94,7 +94,7 @@
                                        data-html="true"
                                        data-popover-id="tracker-notification-delete-{{ notification_id }}-popover"
                                     >
-                                        <i class="icon-trash"></i>
+                                        <i class="fa fa-trash-o"></i>
                                         {{ delete }}
                                     </a>
                                     <div id="tracker-notification-delete-{{ notification_id }}-popover"
@@ -155,7 +155,7 @@
         </tbody>
     </table>
     <button type="button" class="btn" id="tracker-global-notifications-add">
-        <i class="icon-plus"></i>
+        <i class="fa fa-plus"></i>
         {{ add_notification }}
     </button>
 </div>

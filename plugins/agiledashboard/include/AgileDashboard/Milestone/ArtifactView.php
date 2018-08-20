@@ -44,7 +44,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Milestone')
-            . ' <i class="icon-external-link"></i>';
+            . ' <i class="fa fa-external-link"></i>';
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

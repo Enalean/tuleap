@@ -101,7 +101,7 @@
 
         function addCopyButtonToContent(content, email) {
             var input = $('<input type="text" value="' + email + '" readonly />'),
-                button = $('<button class="btn"><i class="icon-copy"></i></button>'),
+                button = $('<button class="btn"><i class="fa fa-files-o"></i></button>'),
                 copied = $(
                     '<p class="text-info">' + codendi.getText("tracker_email", "copied") + "</p>"
                 ),

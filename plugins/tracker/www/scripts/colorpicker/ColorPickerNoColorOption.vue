@@ -23,7 +23,7 @@
     >
         <span class="colorpicker-circular-color colorpicker-circular-no-color"
               v-bind:title="noColorLabel"
-              v-bind:class="{ 'colorpicker-no-color-selected icon-ok': isSelected }"
+              v-bind:class="{ 'colorpicker-no-color-selected fa fa-check': isSelected }"
         ></span>
         <span class="colorpicker-row-no-color-label">{{ noColorLabel }}</span>
     </div>

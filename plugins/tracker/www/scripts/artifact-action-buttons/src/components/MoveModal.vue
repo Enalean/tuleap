@@ -45,7 +45,7 @@
                             v-bind:disabled="has_no_selected_tracker || is_processing_move"
                             v-show="! has_processed_dry_run"
                     >
-                        <i class="icon-share-alt"></i> <translate>Move artifact</translate>
+                        <i class="fa fa-share"></i> <translate>Move artifact</translate>
                     </button>
                     <button type="button"
                             class="btn btn-primary"
@@ -53,7 +53,7 @@
                             v-bind:disabled="is_processing_move"
                             v-show="has_processed_dry_run"
                     >
-                        <i class="icon-ok"></i> <translate>Confirm</translate>
+                        <i class="fa fa-check"></i> <translate>Confirm</translate>
                     </button>
                 </div>
             </div>

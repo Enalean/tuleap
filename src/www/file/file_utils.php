@@ -651,7 +651,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             <?php
                 if ($notes_in_markdown) {
                     echo '<p class="help">
-                            <i class="icon-info-sign"></i>
+                            <i class="fa fa-info-circle"></i>
                             '. $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases','notes_in_markdown')) .'
                         </p>';
                 }

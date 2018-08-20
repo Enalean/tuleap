@@ -43,7 +43,7 @@ class ArtifactView extends Tracker_Artifact_View_View
     public function getTitle()
     {
         return $GLOBALS['Language']->getText('plugin_frs', 'File_release')
-        . ' <i class="icon-external-link"></i>';
+        . ' <i class="fa fa-external-link"></i>';
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

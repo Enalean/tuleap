@@ -281,7 +281,7 @@ body > .select2-drop {
             }
 
             &:before {
-                content: '\F105';
+                content: '\f105'; // fa-angle-right
                 font-family: 'FontAwesome';
                 left: 0;
                 top: 6px;

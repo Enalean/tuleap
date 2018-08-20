@@ -22,12 +22,12 @@
         $(".tracker_color_selector").on("click", function() {
             var old_color = $("input[name=tracker_color]").val();
             var new_color = $(this)
-                .children(".icon-sign-blank")
+                .children(".fa-square")
                 .attr("data-color");
 
-            $("i.icon-ok.selected").removeClass("selected");
+            $("i.fa-check.selected").removeClass("selected");
             $(this)
-                .children(".icon-ok")
+                .children(".fa-check")
                 .addClass("selected");
 
             $("input[name=tracker_color]").val(new_color);

@@ -191,7 +191,7 @@
         createA: function(text, classes, inline) {
             return '<a tabindex="0" class="'+classes+'" style="'+inline+'">' +
                  text +
-                 '<i class="glyphicon glyphicon-ok icon-ok check-mark"></i>' +
+                 '<i class="glyphicon glyphicon-ok fa fa-check check-mark"></i>' +
                  '</a>';
         },
 
@@ -402,7 +402,7 @@
             this.checkDisabled();
             this.liHeight();
         },
-        
+
         update: function() {
             this.reloadLi();
             this.setWidth();

@@ -77,6 +77,6 @@ class HTMLOutputStrategy implements OutputStrategy
         $title = $this->purifier->purify($warning);
 
         return $artifact_link_info->getLink() .
-            ' <i class="icon-warning-sign format-warning" title="'. $title .'"></i>';
+            ' <i class="fa fa-exclamation-triangle format-warning" title="'. $title .'"></i>';
     }
 }

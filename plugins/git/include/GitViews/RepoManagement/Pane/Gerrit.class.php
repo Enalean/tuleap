@@ -243,7 +243,7 @@ class Gerrit extends Pane
         $html .= '<legend class="gerrit_disconnect">' . $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_title') . '</legend>';
         $html .= $this->getDisconnectFromGerritOptions();
         $html .= '<button type="submit" class="btn" name="'. $btn_name .'" value="1">';
-        $html .= '<i class="icon-off"></i> ' . $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_button');
+        $html .= '<i class="fa fa-power-off"></i> ' . $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_button');
         $html .= '</button>';
         $html .= '</fieldset>';
         $html .= '</form>';

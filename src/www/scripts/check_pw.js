@@ -43,15 +43,15 @@
                 if (data.indexOf(key) >= 0) {
                     has_errors = true;
                     $(this)
-                        .addClass("icon-remove")
+                        .addClass("fa fa-times")
                         .addClass("password_strategy_bad")
-                        .removeClass("icon-ok")
+                        .removeClass("fa fa-check")
                         .removeClass("password_strategy_good");
                 } else {
                     $(this)
-                        .addClass("icon-ok")
+                        .addClass("fa fa-check")
                         .addClass("password_strategy_good")
-                        .removeClass("icon-remove")
+                        .removeClass("fa fa-times")
                         .removeClass("password_strategy_bad");
                 }
             });

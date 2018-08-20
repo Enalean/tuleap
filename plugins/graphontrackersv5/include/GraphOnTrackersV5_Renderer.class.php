@@ -138,7 +138,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= '<div id="tracker_report_renderer_view_controls">';
             $html .= '<div class="btn-group">';
             $html .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
-            $html .= '<i class="icon-plus"></i> ';
+            $html .= '<i class="fa fa-plus"></i> ';
             $html .= $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','add_chart');
             $html .= ' <span class="caret"></span>';
             $html .= '</a>';
@@ -386,6 +386,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     }
 
     public function getIcon() {
-        return 'icon-bar-chart';
+        return 'fa fa-bar-chart-o';
     }
 }

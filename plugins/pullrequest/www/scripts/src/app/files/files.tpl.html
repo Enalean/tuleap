@@ -1,5 +1,5 @@
 <div id="modified-files">
-    <h3><i class="icon-copy"></i> <span translate>Modified Files</span> <span class="badge">{{ files.files.length }}</span></h3>
+    <h3><i class="fa fa-files-o"></i> <span translate>Modified Files</span> <span class="badge">{{ files.files.length }}</span></h3>
 
     <div class="file-switcher">
         <ui-select ng-if="! files_controller.loading_files" ng-model="files_controller.selected_file" search-enabled="false" on-select="files_controller.loadFile($item)">

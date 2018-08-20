@@ -124,8 +124,6 @@ class FlamingParrot_Theme extends Layout {
 
     protected function displayCommonStylesheetElements($params)
     {
-        $this->displayFontAwesomeStylesheetElements();
-
         $core_flaming_parrot_include_assets = new IncludeAssets(
             ForgeConfig::get('tuleap_dir') . '/src/www/themes/FlamingParrot/assets',
             '/themes/FlamingParrot/assets'

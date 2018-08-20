@@ -74,7 +74,7 @@ document.observe("dom:loaded", function() {
             header.observe("click", function(evt) {
                 if (
                     Event.element(evt).hasClassName("tracker_artifact_followup_permalink") ||
-                    Event.element(evt).hasClassName("icon-link")
+                    Event.element(evt).hasClassName("fa-link")
                 ) {
                     header.nextSiblings().invoke("show");
                 } else {

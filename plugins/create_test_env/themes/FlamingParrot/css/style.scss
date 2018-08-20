@@ -157,7 +157,7 @@
                 color: #666666;
                 font-weight: 600;
 
-                > .icon-asterisk {
+                > .fa-asterisk {
                     position: relative;
                     top: -4px;
                     color: $ui-color-danger;
@@ -170,7 +170,7 @@
                 margin: 0 0 20px;
             }
 
-            .icon-calendar {
+            .fa-calendar {
                 cursor: pointer;
             }
 
@@ -186,7 +186,7 @@
         flex-direction: column;
         align-items: center;
 
-        > .icon-thumbs-up-alt {
+        > .fa-thumbs-o-up {
             margin: 0 0 20px;
             color: $ui-color-success;
             font-size: 65px;

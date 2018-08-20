@@ -74,15 +74,15 @@ function FileDiffDirective(
             var elt = document.createElement("div");
             elt.innerHTML =
                 '<div class="new-inline-comment">' +
-                '<i class="icon-plus-sign"></i>' +
+                '<i class="fa fa-plus-circle"></i>' +
                 '<div class="arrow"></div>' +
                 '<div class="new-inline-comment-content">' +
                 "<form>" +
                 "<textarea></textarea>" +
                 "</form>" +
                 '<div class="controls">' +
-                '<button type="submit" class="btn btn-primary"><i class="icon-comment"></i> Comment</button>' +
-                '<button type="button" class="btn"><i class="icon-remove"></i> Cancel</button>' +
+                '<button type="submit" class="btn btn-primary"><i class="fa fa-comment"></i> Comment</button>' +
+                '<button type="button" class="btn"><i class="fa fa-times"></i> Cancel</button>' +
                 "</div></div></div>";
             var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
                 coverGutter: true

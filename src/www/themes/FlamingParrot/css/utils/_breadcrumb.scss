@@ -128,7 +128,7 @@ $switch-menu-item-hover-color: $main;
     }
 
     &::after {
-        content: '\f0d7'; // icon-caret-down
+        content: '\f0d7'; // fa-caret-down
         position: absolute;
         z-index: 1;
         top: 8px;

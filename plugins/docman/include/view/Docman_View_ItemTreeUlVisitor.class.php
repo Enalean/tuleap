@@ -20,7 +20,7 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * 
+ *
  */
 require_once('Docman_View_GetActionOnIconVisitor.class.php');
 require_once('Docman_View_GetClassForLinkVisitor.class.php');
@@ -55,25 +55,25 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
     function toHtml() {
         return $this->html;
     }
-  
+
     function getJavascript() {
         return $this->js;
     }
-    
+
     function _canDisplayItem($item) {
         return true;
     }
     function _canDisplaySubItems($item) {
         return true;
     }
-    
+
     function visitFolder(&$item, $params = array()) {
         $li_displayed = $this->_displayItem($item, $params);
         if($this->_canDisplaySubItems($item)) {
             $items = $item->getAllItems();
             if ($items) {
                 $nb = $items->size();
-                if ($nb) { 
+                if ($nb) {
                     $this->html .= '<ul id="subitems_'.$item->getId().'" class="docman_items">'."\n";
                     $i = 0;
                     $iter = $items->iterator();
@@ -83,12 +83,12 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                         $child->accept($this, array('is_last' => (++$i == $nb)));
                         $iter->next();
                     }
-                    
+
                     $this->html .= '</ul>'."\n";
                 }
             }
         }
-        
+
         if($li_displayed) {
             $this->html .= '</li>'."\n";
         }
@@ -163,29 +163,29 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 }
                 $this->html .=  '<span class="docman_item_title">';
                 if ($action) {
-                    $url = Docman_View_View::buildActionUrl($this->params, 
+                    $url = Docman_View_View::buildActionUrl($this->params,
                                                             array('action' => 'show',
                                                                   'id' => $item->getId()),
                                                             false,
                                                             isset($params['popup_doc']) ? true : false);
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
-                
+
                 $this->html .=   $this->hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 if ($action) {
                     $this->html .= '</a>';
                 }
                 $this->html .=  '</span>';
-                
+
                 if($dpm->getLockFactory()->itemIsLocked($item)) {
                     $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman','event_lock_add').'" class="icon-lock"></i>';
+                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman','event_lock_add').'" class="fa fa-lock"></i>';
                     $this->html .=  $lockIcon;
                 }
                 $this->html .= $this->view->getItemMenu($item, $this->params);
                 $this->js .= $this->view->getActionForItem($item);
                 $this->html .= '</div>';
-                
+
                 if (trim($item->getDescription()) != '') {
                     $this->html .= '<div class="docman_item_description">'. $this->hp->purify($item->getDescription(), CODENDI_PURIFIER_BASIC, $item->getGroupId()) .'</div>';
             }

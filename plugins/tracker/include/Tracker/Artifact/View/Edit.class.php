@@ -145,17 +145,17 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html = '<div class="tracker_artifact_followup_comments_display_settings">';
         $html .= '<div class="btn-group">';
         $html .= '<a href="#" class="btn dropdown-toggle" data-toggle="dropdown">';
-        $html .= '<i class="icon-cog"></i> ' . $settings_label . ' <span class="caret"></span>';
+        $html .= '<i class="fa fa-cog"></i> ' . $settings_label . ' <span class="caret"></span>';
         $html .= '</a>';
         $html .= '<ul class="dropdown-menu pull-right">';
         $html .= '<li>';
         $html .= '<a href="#invert-order" id="invert-order-menu-item">';
-        $html .= '<i class="icon-ok" '. $invert_order_style .'></i> ' . $invert_comment_label;
+        $html .= '<i class="fa fa-check" '. $invert_order_style .'></i> ' . $invert_comment_label;
         $html .= '</a>';
         $html .= '</li>';
         $html .= '<li>';
         $html .= '<a href="#" id="display-changes-menu-item">';
-        $html .= '<i class="icon-ok"  '. $display_changes_style .'></i> ' . $display_changes_label;
+        $html .= '<i class="fa fa-check"  '. $display_changes_style .'></i> ' . $display_changes_label;
         $html .= '</a>';
         $html .= '</li>';
         $html .= '</ul>';
@@ -227,7 +227,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         $html = '';
         if ($this->canUpdateArtifactByMail()) {
             $email = Codendi_HTMLPurifier::instance()->purify($this->artifact->getInsecureEmailAddress());
-            $html .= '<p class="email-tracker-help"><i class="icon-info-sign"></i> ';
+            $html .= '<p class="email-tracker-help"><i class="fa fa-info-circle"></i> ';
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'reply_by_mail_help', $email);
             $html .= '</p>';
         }

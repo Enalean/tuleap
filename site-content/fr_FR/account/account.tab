@@ -274,10 +274,10 @@ account_register	send_email	Envoyer un mail de bienvenue à l'utilisateur
 account_register	msg_redirect	Aller sur la page d'accueil
 account_register	msg_redirect_admin	Aller sur la page d'administration
 account_register	msg_thanks	Nous vous remercions d'utiliser Tuleap
-account_register	msg_confirm	Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i class="icon-envelope-alt"></i>
+account_register	msg_confirm	Pour cela cliquez sur le bouton de confirmation présent dans le mail.<i class="fa fa-envelope-o"></i>
 account_register	msg_confirm_admin	Veuillez noter son login <span class="confirmation-user">$3</span> et son mot de passe <span class="confirmation-user">$4</span>
 account_register	title_approval	Votre compte a été crée, </br>il doit être approuvé par un administrateur.
-account_register	msg_approval	Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email.<i class="icon-envelope-alt"></i>
+account_register	msg_approval	Une fois approuvé cliquez sur le bouton de confirmation présent dans l'email.<i class="fa fa-envelope-o"></i>
 account_register	mail_approval_subject	Création du nouveau compte : $1
 account_register	mail_approval_title	Création de compte !
 account_register	mail_approval_section_one	Un nouveau compte utilisateur vient juste d'être créé sur $1.\n\nNom de l'utilisateur :

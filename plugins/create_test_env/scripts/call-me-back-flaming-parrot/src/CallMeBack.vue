@@ -20,11 +20,11 @@
     <div class="call-me-back dropup" ref="dropdown">
         <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
-            <i class="icon-comments-alt"></i>
+            <i class="fa fa-comments-o"></i>
         </button>
         <div class="call-me-back-form dropdown-menu pull-right dropup" v-on:click.stop>
             <div class="call-me-back-save-the-date" v-if="save_the_date">
-                <i class="icon-thumbs-up-alt"></i>
+                <i class="fa fa-thumbs-o-up"></i>
                 <p class="call-me-back-save-the-date-text" v-translate>
                     We will call you back on
                 </p>
@@ -39,11 +39,11 @@
                     Ooops something went wrong. Please try again later.
                 </div>
                 <label for="call-me-back-phone-number">
-                    <translate>Phone number</translate> <i class="icon-asterisk"></i>
+                    <translate>Phone number</translate> <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="input-prepend">
                     <span class="add-on">
-                        <i class="icon-phone"></i>
+                        <i class="fa fa-phone"></i>
                     </span>
                     <input type="text"
                         id="call-me-back-phone-number"
@@ -53,11 +53,11 @@
                     >
                 </div>
                 <label for="call-me-back-date">
-                    <translate>Call me back on</translate> <i class="icon-asterisk"></i>
+                    <translate>Call me back on</translate> <i class="fa fa-asterisk"></i>
                 </label>
                 <div class="input-prepend" ref="form_element_date">
                     <span class="add-on">
-                        <i class="icon-calendar"></i>
+                        <i class="fa fa-calendar"></i>
                     </span>
                     <input type="text"
                         id="call-me-back-date"
@@ -72,7 +72,7 @@
                     v-on:click="callMeBack"
                     v-bind:disabled="loading"
                 >
-                    <i class="icon-spinner icon-spin" v-if="loading"></i>
+                    <i class="fa fa-spinner fa-spin" v-if="loading"></i>
                     <translate>Call me back</translate>
                 </button>
             </form>

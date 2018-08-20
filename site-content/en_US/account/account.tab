@@ -281,10 +281,10 @@ account_register	send_email	Send a welcome email to the user
 account_register	msg_redirect	Go to the home page
 account_register	msg_redirect_admin	Go to the admin page
 account_register	msg_thanks	Thank you for using Tuleap
-account_register	msg_confirm	To do this click the confirm button in the email. <i class="icon-envelope-alt"></i>
+account_register	msg_confirm	To do this click the confirm button in the email. <i class="fa fa-envelope-o"></i>
 account_register	msg_confirm_admin	Please note the login <span class="confirmation-user">$3</span> and password <span class="confirmation-user">$4</span>
 account_register	title_approval	Your account has been created,</br> it must be approved by an administrator.
-account_register	msg_approval	Once approved click the confirm button in this email.<i class="icon-envelope-alt"></i>
+account_register	msg_approval	Once approved click the confirm button in this email.<i class="fa fa-envelope-o"></i>
 account_register	mail_approval_subject	New User Registered: $1
 account_register	mail_approval_title	Account creation!
 account_register	mail_approval_section_one	A new user has just registered on $1.\n\nUser Name:

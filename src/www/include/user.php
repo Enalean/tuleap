@@ -85,7 +85,7 @@ function user_getname($user_id = 0) {
 //Deprecated. Use User->getRealName() instead
 function user_getrealname($user_id) {
 	global $Language;
-        $result = user_get_result_set($user_id); 
+        $result = user_get_result_set($user_id);
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"realname");
 	} else {
@@ -98,7 +98,7 @@ function user_getrealname($user_id) {
 //Deprecated. Use User->getEmail() instead
 function user_getemail($user_id) {
 	global $Language;
-        $result = user_get_result_set($user_id); 
+        $result = user_get_result_set($user_id);
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
@@ -119,7 +119,7 @@ function user_getid_from_email($email) {
 //Deprectaed. Use User->getEmail() and UserManager->getUserByUserName() instead
 function user_getemail_from_unix($user_name) {
 	global $Language;
-        $result = user_get_result_set_from_unix($user_name); 
+        $result = user_get_result_set_from_unix($user_name);
 	if ($result && db_numrows($result) > 0) {
 		return db_result($result,0,"email");
 	} else {
@@ -145,24 +145,24 @@ function user_get_result_set($user_id) {
 function user_get_result_set_from_unix($user_name) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time
-		
+
 	global $USER_RES;
 	$res = db_query("SELECT * FROM user WHERE user_name='".db_es($user_name)."'");
 	$user_id = db_result($res,0,'user_id');
 	$USER_RES["_".$user_id."_"] = $res;
 	return $USER_RES["_".$user_id."_"];
-}       
+}
 function user_get_result_set_from_email($email) {
 	//create a common set of user result sets,
 	//so it doesn't have to be fetched each time
-		
+
 	global $USER_RES;
     $sql = "SELECT * FROM user WHERE (user_name='".db_es($email)."' or email='".db_es($email)."')";
 	$res = db_query($sql);
 	$user_id = db_result($res,0,'user_id');
 	$USER_RES["_".$user_id."_"] = $res;
 	return $USER_RES["_".$user_id."_"];
-}       
+}
 
 //Deprecated. Use user->getTimezone() instead
 function user_get_timezone() {
@@ -217,7 +217,7 @@ function user_get_preference($preference_name) {
 			//we haven't returned prefs - go to the db
 			$result=db_query("SELECT preference_name,preference_value FROM user_preferences ".
 				"WHERE user_id='".user_getid()."'");
-	
+
 			if (db_numrows($result) < 1) {
 				return false;
 			} else {
@@ -273,8 +273,8 @@ function user_display_choose_password($page,$user_id = false) {
 ?>:
      <br><div class="input-append"><input type="text" value="" id="form_pw" name="form_pw"></div>
      <script type="text/javascript" src="/scripts/user.js"></script>
-     
-    
+
+
     <? } else { echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password')); ?>:
     <br><input type="password" value="" id="form_pw" name="form_pw">
     <p><? echo $purifier->purify($GLOBALS['Language']->getText('account_change_pw', 'new_password2')); ?>:
@@ -293,7 +293,7 @@ function user_display_choose_password($page,$user_id = false) {
         $password_strategy                = new PasswordStrategy($password_configuration);
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         foreach($password_strategy->validators as $key => $v) {
-            echo '<p class="password_validator_msg_'. $purifier->purify($key) .'"><i class="icon-remove password_strategy_bad"></i> '. $purifier->purify($v->description()) .'</p>';
+            echo '<p class="password_validator_msg_'. $purifier->purify($key) .'"><i class="fa fa-times password_strategy_bad"></i> '. $purifier->purify($v->description()) .'</p>';
         }
         ?>
     </blockquote>

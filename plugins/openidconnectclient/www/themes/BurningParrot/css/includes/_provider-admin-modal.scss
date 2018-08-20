@@ -207,14 +207,14 @@
     text-align: center;
 }
 
-// Shim fa-circle-blank from FontAwesome 3
+// Shim fa-circle-o from FontAwesome 4
 #provider-admin-modal-icon,
 .provider-icon-results,
 #provider-admin-modal-provider-button {
     .fa-circle-blank::before {
         font-family: FontAwesome;
         font-style: normal;
-        content: '\f10c';
+        content: '\f10c'; // fa-circle-o
     }
 }
 

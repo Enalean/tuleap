@@ -123,7 +123,7 @@ textarea.not_resizable {
         position: relative;
 
         &:after {
-            content: '\f0a4';
+            content: '\f0a4'; // fa-hand-o-right
             font-family: FontAwesome;
             font-size: 13px;
             position: absolute;
@@ -192,13 +192,13 @@ textarea.not_resizable {
             color: #333333;
 
             &.label-success:before {
-                content: '\f058';
+                content: '\f058'; // fa-check-circle
                 color: #468847;
                 font-size: 16px;
             }
 
             &.label-important:before {
-                content: '\f057';
+                content: '\f057'; // fa-times-circle
                 color: #b94a48;
                 font-size: 16px;
                 right: 2px;
@@ -208,7 +208,7 @@ textarea.not_resizable {
 
     > .label-important:before,
     > .label-success:before {
-        content: '\f00c';
+        content: '\f00c'; // fa-check
         font-family: FontAwesome;
         font-size: 13px;
         position: absolute;
@@ -217,7 +217,7 @@ textarea.not_resizable {
     }
 
     > .label-important:before {
-        content: '\f00d';
+        content: '\f00d'; // fa-remove
         right: 4px;
     }
 }

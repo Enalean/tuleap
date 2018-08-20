@@ -91,11 +91,11 @@ function initiateSelect2(
                 return escapeMarkup(text);
             },
             formatResult: ({ is_outline, text }, container, query, escapeMarkup) => {
-                const bullet_class = is_outline ? "icon-circle-blank" : "icon-circle";
+                const bullet_class = is_outline ? "fa-circle-o" : "fa-circle";
                 const escaped_text = escapeMarkup(text);
 
                 return `<span class="select-item-label-title">
-                    <i class="select-item-label-bullet ${bullet_class}"></i>${escaped_text}
+                    <i class="select-item-label-bullet fa ${bullet_class}"></i>${escaped_text}
                 </span>`;
             },
             formatResultCssClass: ({ color }) => {

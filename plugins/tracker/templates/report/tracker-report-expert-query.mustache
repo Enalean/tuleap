@@ -5,7 +5,7 @@
         <div class="pull-right">
             {{# is_normal_mode_button_displayed }}
                 <button id="tracker-report-normal-query-button" type="button" class="btn btn-mini tracker-report-query-button">
-                    <i class="icon-random"></i> {{ btn_report_normal_mode }}
+                    <i class="fa fa-random"></i> {{ btn_report_normal_mode }}
                 </button>
             {{/ is_normal_mode_button_displayed }}
         </div>
@@ -18,7 +18,7 @@
                           data-allowed-fields="{{ allowed_fields_names_json_encoded }}"
                           {{^ is_query_modifiable }}readonly{{/ is_query_modifiable }}
                 >{{ expert_query }}</textarea>
-                <p class="help"><i class="icon-question-sign"></i> {{ query_tooltip }}</p>
+                <p class="help"><i class="fa fa-question-circle"></i> {{ query_tooltip }}</p>
             </div>
             <div class="tracker-report-expert-content-fields">
                 <label for="allowed-fields">{{ allowed_fields_label }}</label>
@@ -37,7 +37,7 @@
         </div>
         <div class="tracker-report-search">
             <button type="submit" name="tracker_expert_query_submit" class="btn btn-primary">
-                <i class="icon-search"></i> {{ btn_search }}
+                <i class="fa fa-search"></i> {{ btn_search }}
             </button>
         </div>
     </form>

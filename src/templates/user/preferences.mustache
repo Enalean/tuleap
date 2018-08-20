@@ -4,7 +4,7 @@
     {{{ csrf_input_html }}}
 
         <fieldset id="account-email-settings">
-            <h3><i class="icon-envelope"></i> {{ email_settings }}</h3>
+            <h3><i class="fa fa-envelope"></i> {{ email_settings }}</h3>
             <label class="checkbox">
                 <input type="checkbox"
                      name="form_mail_site"
@@ -37,7 +37,7 @@
         </fieldset>
 
         <fieldset>
-            <h3><i class="icon-user"></i> {{ session_label }}</h3>
+            <h3><i class="fa fa-user"></i> {{ session_label }}</h3>
             <label class="checkbox">
                 <input type="checkbox"
                        name="form_sticky_login"
@@ -49,7 +49,7 @@
         </fieldset>
 
         <fieldset>
-            <h3><i class="icon-desktop"></i> {{ appearance_title }}</h3>
+            <h3><i class="fa fa-desktop"></i> {{ appearance_title }}</h3>
             {{^ has_only_flamingparrot }}
                 <div class="control-group user-account-group">
                     <label class="control-label user-account-label">{{ theme_label }}</label>
@@ -130,7 +130,7 @@
         </fieldset>
 
         <fieldset>
-            <h3><i class="icon-edit"></i> {{ edition_title }} </h3>
+            <h3><i class="fa fa-pencil-square-o"></i> {{ edition_title }} </h3>
             <div class="control-group user-account-group">
                 <p>{{ default_format_intro }}</p>
                 <label class="control-label user-account-label">{{ default_format_label }}</label>
@@ -147,7 +147,7 @@
         </fieldset>
 
         <fieldset>
-            <h3><i class="icon-exchange"></i> {{ import_export_title }}</h3>
+            <h3><i class="fa fa-exchange"></i> {{ import_export_title }}</h3>
             <div class="control-group user-account-group">
                 <label class="control-label user-account-label">{{{ csv_separator_label }}}</label>
                 <div class="controls">
@@ -161,7 +161,7 @@
                     </select>
 
                     <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-                        <i class="icon-question-sign help-button"></i>
+                        <i class="fa fa-question-circle help-button"></i>
                     </a>
                 </div>
             </div>
@@ -179,14 +179,14 @@
                     </select>
 
                     <a href="javascript:help_window('/doc/{{ user_language }}/user-guide/citizen.html#account-maintenance')">
-                        <i class="icon-question-sign help-button"></i>
+                        <i class="fa fa-question-circle help-button"></i>
                     </a>
                 </div>
             </div>
         </fieldset>
 
     <fieldset>
-        <h3><i class="icon-eye-close"></i> {{# gettext }}Accessibility{{/ gettext }}</h3>
+        <h3><i class="fa fa-eye-slash"></i> {{# gettext }}Accessibility{{/ gettext }}</h3>
         <p>
             {{# gettext }}This option displays special patterns on colored cards in Agiledashboard and Cardwall tracker reports. This helps distinguish between colors and their variants.{{/ gettext }}
         </p>
@@ -201,7 +201,7 @@
     </fieldset>
 
         <fieldset>
-            <h3><i class="icon-beaker"></i> {{ lab_features_title }}</h3>
+            <h3><i class="fa fa-flask"></i> {{ lab_features_title }}</h3>
             <p>{{ lab_features_description }}</p>
             <p>
                 <label class="checkbox">

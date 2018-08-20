@@ -24,7 +24,7 @@
            v-on:click="switchPalette"
            href="javascript:;"
         >
-            <i class="icon-random"></i>
+            <i class="fa fa-random"></i>
             <span v-if="isOldPaletteShown">
                 {{ switchDefaultPaletteLabel }}
             </span>

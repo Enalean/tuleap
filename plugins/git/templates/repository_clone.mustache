@@ -35,7 +35,7 @@
                                    data-name="{{ name }}"
                                    data-is-mirror="{{ is_mirror }}"
                                    >
-                                    <i class="icon-ok"></i> {{ name }}
+                                    <i class="fa fa-check"></i> {{ name }}
                                 </a>
                             </li>
                         {{/ mirrors }}
@@ -65,7 +65,7 @@
     {{# user_is_admin }}
         <a href="{{ getRepoAdminUrl }}"
            class="btn plugin_git_admin_button">
-            <i class="icon-cog"></i>
+            <i class="fa fa-cog"></i>
             {{ settings_text }}
         </a>
     {{/ user_is_admin }}

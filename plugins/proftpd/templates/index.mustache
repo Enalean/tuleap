@@ -5,7 +5,7 @@
             </li>
         {{# parent_directories }}
             <li>
-                <i class="icon-angle-right"></i>
+                <i class="fa fa-angle-right"></i>
             </li>
             <li>
                 <a href="{{ nav_url }}{{ path_to_part }}">{{ path_part_name }}</a>
@@ -13,7 +13,7 @@
         {{/ parent_directories }}
         {{# is_in_subdirectory }}
             <li>
-                <i class="icon-angle-right"></i>
+                <i class="fa fa-angle-right"></i>
             </li>
             <li class="active">
                 <a href="">{{ current_directory }}</a>
@@ -34,7 +34,7 @@
             {{# folder_list }}
                 <tr>
                     <td>
-                        <i class="icon-folder-close"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
+                        <i class="fa fa-folder"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
                     </td>
                     <td>{{ getSize }}</td>
                     <td>{{ getLastModifiedDate }}</td>
@@ -43,7 +43,7 @@
             {{# file_list }}
                 <tr>
                     <td>
-                        <i class="icon-file-text-alt"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
+                        <i class="fa fa-file-text-o"></i> <a href="{{ current_directory_url }}{{ getName }}">{{ getName }}</a>
                     </td>
                     <td>{{ getSize }}</td>
                     <td>{{ getLastModifiedDate }}</td>

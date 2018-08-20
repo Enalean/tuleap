@@ -642,7 +642,7 @@ body.sidebar-expanded .mass-mirrors-list-update-bar {
 }
 
 #gitclone_urls_protocol_ssh {
-    + .dropdown-toggle + .dropdown-menu > li:not(.is_selected) > a > .icon-ok {
+    + .dropdown-toggle + .dropdown-menu > li:not(.is_selected) > a > .fa-check {
         visibility: hidden;
     }
 }
@@ -652,7 +652,7 @@ body.sidebar-expanded .mass-mirrors-list-update-bar {
 }
 
 h1, h2, h3 {
-    .icon-question-sign {
+    .fa-question-circle {
         color: #AAA;
         font-size: 0.8em;
 
@@ -935,6 +935,9 @@ h1, h2, h3 {
     display: none;
 }
 
+.remove-fine-grained-permission {
+    white-space: nowrap;
+}
 
 .remove-fine-grained-permission-popover {
     display: none;

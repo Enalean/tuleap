@@ -260,7 +260,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '<div class="widget_titlebar_title">'. $purifier->purify($widget->getTitle()) .'</div>';
 
         if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss" title="'. $GLOBALS['Language']->getText('widget', 'rss_title') .'"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'" class="icon-rss"></a></div>';
+            echo '<div class="widget_titlebar_rss" title="'. $GLOBALS['Language']->getText('widget', 'rss_title') .'"><a href="'.$widget->getRssUrl($owner_id, $owner_type).'" class="fa fa-rss"></a></div>';
         }
         echo '</div>';
         echo '<div class="widget_content">';
@@ -533,7 +533,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        $this->displayFontAwesomeStylesheetElements();
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
@@ -541,10 +540,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/vendor/at/css/atwho.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
-    }
-
-    protected function displayFontAwesomeStylesheetElements() {
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
     }
 
     /**
@@ -663,7 +658,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
                        value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '">
                 </input>
                 <span class="add-on add-on-calendar">
-                  <i class="icon-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                  <i class="fa fa-calendar" data-time-icon="fa-clock-o" data-date-icon="fa-calendar"></i>
                 </span>
             </span>
         </div>';

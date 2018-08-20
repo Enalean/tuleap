@@ -275,7 +275,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $selected = $this->default_value;
         echo '<p class="add_new_rule">';
         echo '<span class="add_new_rule_title">';
-        echo '<i class="icon-plus"></i> ';
+        echo '<i class="fa fa-plus"></i> ';
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
         echo '</span>';
         echo '<span>';

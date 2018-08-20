@@ -130,7 +130,7 @@ class MilestoneCrumbBuilder
         $links[] = new BreadCrumbLinkWithIcon(
             $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact'),
             $this->getArtifactUrl($milestone),
-            'fa-list-ol icon-list-ol'
+            'fa-list-ol'
         );
         $sub_items->addSection(
             new SubItemsUnlabelledSection(

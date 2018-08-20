@@ -1,12 +1,12 @@
 <div id="pull-request-overview">
-    <h3><i class="icon-list"></i> <span translate>Details</span></h3>
+    <h3><i class="fa fa-list"></i> <span translate>Details</span></h3>
     <div class="pull-request-top-actions">
         <button class="btn btn-small pull-request-top-actions-edition" ng-click="overview.showEditionForm = true">
-            <i class="icon-edit"></i> {{ ::'Edit message' | translate }}
+            <i class="fa fa-pencil-square-o"></i> {{ ::'Edit message' | translate }}
         </button>
         <div class="dropdown pull-request-checkout-dropdown">
             <button class="btn btn-small dropdown-toggle" type="button" data-toggle="dropdown">
-                <i class="icon-download"></i> {{ ::'Checkout' | translate }} <b class="caret"></b>
+                <i class="fa fa-arrow-circle-o-down"></i> {{ ::'Checkout' | translate }} <b class="caret"></b>
             </button>
             <div class="dropdown-menu pull-request-checkout-menu"
                 ng-click="$event.stopPropagation()"
@@ -59,37 +59,37 @@
 
         <div class="pull-request-author-date">
             <div class="pull-request-author">
-                <span class="pull-request-label"><i class="icon-user"></i> {{ 'Requester' | translate }}</span>
+                <span class="pull-request-label"><i class="fa fa-user"></i> {{ 'Requester' | translate }}</span>
                 <tuleap-username username="overview.author"></tuleap-username>
             </div>
             <div class="pull-request-date">
-                <span class="pull-request-label"><i class="icon-calendar"></i> {{ 'Date' | translate }}</span>
+                <span class="pull-request-label"><i class="fa fa-calendar"></i> {{ 'Date' | translate }}</span>
                 <p>{{ overview.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</p>
             </div>
         </div>
 
         <div class="pull-request-changes-ci">
             <div class="pull-request-changes">
-                <span class="pull-request-label"><i class="icon-copy"></i> {{ 'Changes' | translate }}</span>
+                <span class="pull-request-label"><i class="fa fa-files-o"></i> {{ 'Changes' | translate }}</span>
                 <div>
                     <span class="text-success">+{{ overview.pull_request.short_stat.lines_added }}</span>
                     <span class="text-error">-{{ overview.pull_request.short_stat.lines_removed }}</span>
                 </div>
             </div>
             <div class="pull-request-ci">
-                <span class="pull-request-label"><i class="icon-refresh"></i> {{ 'Last CI Status' | translate }}</span>
+                <span class="pull-request-label"><i class="fa fa-refresh"></i> {{ 'Last CI Status' | translate }}</span>
                 <p class="text-success" ng-if="overview.buildStatusIs('success')">
-                    <i class="icon-ok-sign"></i> <span translate>Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+                    <i class="fa fa-check-circle"></i> <span translate>Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
                 </p>
                 <p class="text-error" ng-if="overview.buildStatusIs('fail')">
-                    <i class="icon-remove-sign"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
+                    <i class="fa fa-times-circle"></i> <span translate>Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}</span>
                 </p>
                 <p class="text-warning" ng-if="overview.buildStatusIs('unknown')">
-                    <i class="icon-warning-sign"></i> <span translate>Unknown</span>
+                    <i class="fa fa-exclamation-triangle"></i> <span translate>Unknown</span>
                 </p>
                 <p class="text-warning warning-deprecation-build-status-rest-route"
                    ng-if="overview.pull_request.build_status_with_deprecated_route">
-                    <i class="icon-warning-sign"></i> <span translate>
+                    <i class="fa fa-exclamation-triangle"></i> <span translate>
                     Your CI job is using a deprecated REST route to publish the build result and must be updated.
                     Consult the documentation or the API Explorer for more information.
                 </span>
@@ -103,58 +103,58 @@
 
         <div ng-if="overview.isNonFastForwardMerge() && overview.is_merge_commit_allowed">
             <button ng-if="overview.hasMergeRight()" class="btn btn-large btn-warning" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
-                <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                <i class="fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
             </button>
             <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                <i class="fa fa-trash-o"></i> {{ 'Abandon' | translate }}
             </button>
         </div>
 
         <div ng-if="overview.isNonFastForwardMerge() && ! overview.is_merge_commit_allowed" class="alert alert-error">
-            <i class="icon-remove-sign"></i>
+            <i class="fa fa-times-circle"></i>
             {{ "Merge commits are forbidden in the repository configuration (fast-forward only). Please rebase the commit and update the pull request." | translate }}
             <p>
                 <button class="btn btn-large btn-warning" disabled="true">
-                    <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                    <i class="fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
                 <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                    <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                    <i class="fa fa-trash-o"></i> {{ 'Abandon' | translate }}
                 </button>
             </p>
         </div>
 
         <div ng-if="overview.isConflictingMerge()" class="alert alert-error">
-            <i class="icon-remove-sign"></i>
+            <i class="fa fa-times-circle"></i>
             {{ 'Pull request can not be merged automatically due to conflicts with destination. Resolve conflicts on the command line and update the pull request.' | translate }}
             <p>
                 <button ng-if="overview.hasMergeRight()" class="btn btn-large btn-primary" disabled="true">
-                    <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                    <i class="fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
                 <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                    <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                    <i class="fa fa-trash-o"></i> {{ 'Abandon' | translate }}
                 </button>
             </p>
         </div>
 
         <div ng-if="overview.isUnknownMerge()" class="alert alert-error">
-            <i class="icon-remove-sign"></i>
+            <i class="fa fa-times-circle"></i>
             {{ 'Pull request mergeability with destination is not determined. You can merge on the command line and push to destination.' | translate }}
             <p>
                 <button ng-if="overview.hasMergeRight()" class="btn btn-large btn-primary" disabled="true">
-                    <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                    <i class="fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
                 </button>
                 <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                    <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                    <i class="fa fa-trash-o"></i> {{ 'Abandon' | translate }}
                 </button>
             </p>
         </div>
 
         <div ng-if="! overview.isConflictingMerge() && ! overview.isUnknownMerge() && ! overview.isNonFastForwardMerge()">
             <button ng-if="overview.hasMergeRight()" class="btn btn-large btn-primary" ng-disabled="overview.operationInProgress" ng-click="overview.checkMerge()">
-                <i class="icon-code-fork icon-rotate-270"></i> {{ 'Merge' | translate }}
+                <i class="fa fa-code-fork fa-rotate-270"></i> {{ 'Merge' | translate }}
             </button>
             <button ng-if="overview.hasAbandonRight()" class="btn btn-large btn-danger" ng-disabled="overview.operationInProgress" ng-click="overview.abandon()">
-                <i class="icon-trash"></i> {{ 'Abandon' | translate }}
+                <i class="fa fa-trash-o"></i> {{ 'Abandon' | translate }}
             </button>
         </div>
 

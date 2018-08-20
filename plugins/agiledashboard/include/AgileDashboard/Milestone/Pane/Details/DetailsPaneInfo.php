@@ -54,6 +54,6 @@ class DetailsPaneInfo extends PaneInfo
 
     public function getIconName()
     {
-        return 'fa-bar-chart icon-bar-chart';
+        return 'fa-bar-chart';
     }
 }

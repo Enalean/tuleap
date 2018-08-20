@@ -2,7 +2,7 @@
     <div class="tracker_artifact_fieldset_content timetracking-from">
         {{# user_can_add_time }}
             <a class="btn btn-primary timetracking-add-button" href="#timetracking-add-time-modal" data-toggle="modal">
-                <i class="icon-plus"></i> {{# dgettext }} tuleap-timetracking | Add {{/ dgettext }}
+                <i class="fa fa-plus"></i> {{# dgettext }} tuleap-timetracking | Add {{/ dgettext }}
             </a>
         {{/ user_can_add_time }}
         <table class="table">
@@ -36,7 +36,7 @@
                                        data-toggle="modal"
                                        href="#timetracking-edit-{{ id }}"
                                     >
-                                        <i class="icon-pencil"></i> {{# dgettext }} tuleap-timetracking | Update {{/ dgettext }}
+                                        <i class="fa fa-pencil"></i> {{# dgettext }} tuleap-timetracking | Update {{/ dgettext }}
                                     </a>
                                     {{# time_belongs_to_user }}
                                         {{> timetracking-edit-modal }}
@@ -45,7 +45,7 @@
                                         data-toggle="modal"
                                         href="#timetracking-delete-{{ id }}"
                                     >
-                                        <i class="icon-trash"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
+                                        <i class="fa fa-trash-o"></i> {{# dgettext }} tuleap-timetracking | Delete {{/ dgettext }}
                                     </a>
                                     {{# time_belongs_to_user }}
                                         {{> timetracking-delete-modal }}

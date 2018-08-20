@@ -37,14 +37,14 @@
 .toggler,
 .toggler-noajax {
     &::before {
-        content: '\f147';
+        content: '\f147'; // fa-minus-square-o
     }
 }
 
 .toggler-hide,
 .toggler-hide-noajax {
     &::before {
-        content: '\f196';
+        content: '\f196'; // fa-minus-square-o
     }
 
     ~ * {

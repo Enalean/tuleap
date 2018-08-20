@@ -69,7 +69,7 @@ $tlp-switch-button-padding: 1px;
         font-weight: 600;
         line-height: $tlp-switch-height - $tlp-switch-button-padding;
         text-align: center;
-        content: '\f00c';
+        content: '\f00c'; // fa-check
     }
 
 }

@@ -19,7 +19,7 @@
 
 <template>
     <div v-if="not_migrated_fields_count > 0" class="alert alert-error">
-        <i class="icon-exclamation-sign move-artifact-icon move-artifact-error-icon"></i>
+        <i class="fa fa-exclamation-circle move-artifact-icon move-artifact-error-icon"></i>
         <translate v-bind:translate-n="not_migrated_fields_count"
                    translate-plural="%{ not_migrated_fields_count } fields do not match with the targeted tracker. If you confirm your action, their values will be lost forever:"
         >1 field does not match with the targeted tracker. If you confirm your action, its value will be lost forever:</translate>
