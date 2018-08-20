@@ -1,10 +1,23 @@
 <?php
-//
-// SourceForge: Breaking Down the Barriers to Open Source Development
-// Copyright 1999-2000 (c) The SourceForge Crew
-// http://sourceforge.net
-//
-// 
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright 1999-2000 (c) The SourceForge Crew
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('../mail/mail_utils.php');
@@ -18,7 +31,7 @@ function display_ml_details($group_id, $list_server, $result, $i) {
     echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">&nbsp;<b>'.db_result($result, $i, 'list_name').'</b> [';
     $list_is_public = db_result($result, $i, 'is_public');
     $html_a = '';
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $em->processEvent('browse_archives', array('html' => &$html_a,
                                                'group_list_id' => db_result($result, $i, 'group_list_id')
                                             ));
@@ -53,7 +66,7 @@ if ($group_id) {
 	} else {
 		$public_flag='1';
 	}
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
     if ($request->exist('action')) {
         if ($request->exist('id')) {
             $sql="SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag) AND group_list_id = ". (int)$request->get('id');
@@ -130,5 +143,3 @@ if ($group_id) {
 		<H1>'.$Language->getText('mail_index','group_err').'</H1>';
 }
 mail_footer(array('pv'   => $pv)); 
-
-?>
