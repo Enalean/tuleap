@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,16 @@
 
 namespace Tuleap\Git\Statistics;
 
-use Sample;
 use DateTime;
+use Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample;
 
 class FrequenciesSample extends Sample
 {
     public function __construct()
     {
-        parent::Sample();
         $this->field = 'day';
         $this->table = 'plugin_git_log_read_daily';
+        parent::__construct();
     }
 
     protected function getDataSQLQuery($filter, $startDate, $endDate)

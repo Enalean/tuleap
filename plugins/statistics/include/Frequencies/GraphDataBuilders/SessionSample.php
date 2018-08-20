@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Statistics\Frequencies\GraphDataBuilder\Sample;
+namespace Tuleap\Statistics\Frequencies\GraphDataBuilder;
 
 /**
- * @see Statisticts plugin
+ * Sessions processing
+ *
+ * @package   Sample
+ * @author    Arnaud Salvucci <arnaud.salvucci@st.com>
+ * @copyright 2007 STMicroelectronics
+ * @license   http://opensource.org/licenses/gpl-license.php GPL
  */
-class Tracker_Sample extends Sample {
-
-    function __construct() {
-        $this->field = 'submitted_on';
-        $this->table = 'tracker_artifact';
+class SessionSample extends Sample
+{
+    public function __construct()
+    {
+        $this->field = 'time';
+        $this->table = 'plugin_statistics_user_session';
         parent::__construct();
     }
 }
