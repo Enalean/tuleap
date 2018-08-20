@@ -22,6 +22,7 @@
  */
 
 import * as actions from "./actions.js";
+import { rewire$loadFirstBatchOfTimes } from "./actions.js";
 import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
 
 describe("Store actions", () => {
@@ -80,7 +81,7 @@ describe("Store actions", () => {
         });
 
         describe("getTimes - rest errors", () => {
-            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_error private property.", async () => {
+            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
                 mockFetchError(tlp.get, {
                     error_json: {
                         error: {
@@ -95,12 +96,100 @@ describe("Store actions", () => {
                 expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "403 Forbidden");
             });
 
-            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_error private property.", async () => {
+            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's error_message private property.", async () => {
                 mockFetchError(tlp.get, {});
 
                 await actions.getTimes(context);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
                 expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "An error occured");
+            });
+        });
+
+        describe("addTime - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
+                mockFetchError(tlp.post, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
+                    "403 Forbidden",
+                    "danger"
+                ]);
+            });
+
+            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
+                mockFetchError(tlp.post, {});
+
+                await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
+                    "An error occured",
+                    "danger"
+                ]);
+            });
+        });
+
+        describe("addTime - succes", () => {
+            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
+                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
+                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+
+                let time = {
+                    artifact: {},
+                    project: {},
+                    minutes: 20
+                };
+                mockFetchSuccess(tlp.post, {
+                    return_json: time
+                });
+
+                await actions.addTime(context, ["2018-01-01", 1, "00:20", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("pushCurrentTimes", [
+                    [time],
+                    "Time successfully added"
+                ]);
+                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback", [
+                    "An error occured",
+                    "danger"
+                ]);
+            });
+        });
+
+        describe("reloadTimes", () => {
+            it("Given a succes response, When times are received, Then no message error is reveived and reloadTimes' mutations are called", async () => {
+                let times = [
+                    [
+                        {
+                            artifact: {},
+                            project: {},
+                            minutes: 20
+                        }
+                    ]
+                ];
+                context.state.times = times;
+
+                mockFetchSuccess(tlp.get, {
+                    headers: {
+                        get: header_name => {
+                            const headers = {
+                                "X-PAGINATION-SIZE": 1
+                            };
+
+                            return headers[header_name];
+                        }
+                    },
+                    return_json: times
+                });
+
+                await actions.reloadTimes(context);
+                expect(context.commit).toHaveBeenCalledWith("resetTimes");
+                expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });
     });
