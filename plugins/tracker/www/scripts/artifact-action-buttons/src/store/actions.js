@@ -23,74 +23,68 @@ import {
     moveDryRunArtifact,
     moveArtifact
 } from "../api/rest-querier.js";
+import { redirectTo } from "../window-helper.js";
 
 export async function loadTrackerList(context, project_id) {
     try {
-        context.commit("setAreTrackerLoading", true);
-        context.commit("saveSelectedProjectId", project_id);
-        context.commit("saveTrackers", []);
-        context.commit("resetSelectedTracker");
-        context.commit("setHasProcessedDryRun", false);
-        const trackerList = await getTrackerList(context.state.selected_project_id);
-
-        getAsyncTrackerList(context.commit, trackerList);
+        context.commit("loadingTrackersAfterProjectSelected", project_id);
+        const tracker_list = await getTrackerList(context.state.selected_project_id);
+        context.commit("saveTrackers", tracker_list);
     } catch (e) {
-        const { error } = await e.response.json();
-        context.commit("setErrorMessage", error.message);
+        return handleError(context, e);
     } finally {
-        context.commit("setAreTrackerLoading", false);
+        context.commit("resetTrackersLoading");
     }
 }
 
 export async function loadProjectList(context) {
     try {
-        const projectList = await getProjectList();
-
-        getAsyncProjectList(context.commit, projectList);
+        const project_list = await getProjectList();
+        context.commit("saveProjects", project_list);
     } catch (e) {
-        const { error } = await e.response.json();
-        context.commit("setErrorMessage", error.message);
+        return handleError(context, e);
     } finally {
-        context.commit("setIsLoadingInitial", false);
+        context.commit("resetProjectLoading");
     }
 }
 
-function getAsyncProjectList(commit, projectList) {
-    commit("saveProjects", projectList);
+export async function moveDryRun(context, artifact_id) {
+    context.commit("switchToProcessingMove");
+
+    try {
+        const response = await moveDryRunArtifact(
+            artifact_id,
+            context.state.selected_tracker.tracker_id
+        );
+        const result = await response.json();
+
+        const { fields_partially_migrated, fields_not_migrated } = result.dry_run.fields;
+
+        if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
+            return await move(context, artifact_id);
+        }
+
+        context.commit("hasProcessedDryRun", result.dry_run.fields);
+    } catch (e) {
+        return handleError(context, e);
+    } finally {
+        context.commit("resetProcessingMove");
+    }
 }
 
-function getAsyncTrackerList(commit, trackerList) {
-    commit("saveTrackers", trackerList);
+export async function move(context, artifact_id) {
+    context.commit("switchToProcessingMove");
+
+    try {
+        await moveArtifact(artifact_id, context.state.selected_tracker.tracker_id);
+        redirectTo("/plugins/tracker/?aid=" + artifact_id);
+    } catch (e) {
+        context.commit("resetProcessingMove");
+        return handleError(context, e);
+    }
 }
 
-export function moveDryRun(context, data) {
-    const [artifact_id, tracker_id] = data;
-
-    return moveDryRunArtifact(artifact_id, tracker_id)
-        .then(async response => {
-            const result = await response.json();
-
-            const { fields_partially_migrated, fields_not_migrated } = result.dry_run.fields;
-
-            if (fields_partially_migrated.length === 0 && fields_not_migrated.length === 0) {
-                await move(context, data);
-                context.commit("setShouldRedirect", true);
-            } else {
-                context.commit("saveFields", result.dry_run.fields);
-                context.commit("setHasProcessedDryRun", true);
-            }
-        })
-        .catch(async e => {
-            const { error } = await e.response.json();
-            context.commit("setErrorMessage", error.message);
-        });
-}
-
-export function move(context, data) {
-    const [artifact_id, tracker_id] = data;
-
-    return moveArtifact(artifact_id, tracker_id).catch(async e => {
-        const { error } = await e.response.json();
-        context.commit("setErrorMessage", error.message);
-    });
+async function handleError(context, e) {
+    const { error } = await e.response.json();
+    context.commit("setErrorMessage", error.message);
 }

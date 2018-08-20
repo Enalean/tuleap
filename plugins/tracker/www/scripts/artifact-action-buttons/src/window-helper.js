@@ -17,11 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "babel-polyfill";
-import "tlp-mocks";
-import "jquery-mocks";
-import "./codendi-mock.spec.js";
-
-import "./modal.js"; // To have actual coverage
-import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
+export function redirectTo(new_href) {
+    window.location.href = new_href;
+}

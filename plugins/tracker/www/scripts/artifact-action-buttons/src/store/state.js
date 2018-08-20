@@ -33,5 +33,5 @@ export default {
         fields_migrated: []
     },
     has_processed_dry_run: false,
-    should_redirect: false
+    is_processing_move: false
 };

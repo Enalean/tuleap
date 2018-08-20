@@ -68,9 +68,7 @@ export default {
                 return this.$store.state.selected_tracker;
             },
             set(tracker) {
-                this.$store.commit("setErrorMessage", "");
-                this.$store.commit("setHasProcessedDryRun", false);
-                this.$store.commit("setSelectedTracker", tracker);
+                this.$store.commit("saveSelectedTracker", tracker);
             }
         },
         selector_title() {

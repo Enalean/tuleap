@@ -17,59 +17,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import state from "./state.js";
+
+const initial_state = { ...state };
+
 export default {
-    setIsLoadingInitial(state, is_loading_initial) {
-        state.is_loading_initial = is_loading_initial;
+    resetProjectLoading(state) {
+        state.is_loading_initial = false;
+    },
+    loadingTrackersAfterProjectSelected(state, project_id) {
+        state.are_trackers_loading = true;
+        state.selected_project_id = project_id;
+        state.trackers = [];
+        state.selected_tracker = {
+            tracker_id: null
+        };
+        state.has_processed_dry_run = false;
+    },
+    resetTrackersLoading(state) {
+        state.are_trackers_loading = false;
     },
     saveProjects(state, projects) {
         state.projects = projects;
     },
-    saveSelectedProjectId(state, project_id) {
-        state.selected_project_id = project_id;
-    },
     saveTrackers(state, trackers) {
         state.trackers = trackers;
     },
-    saveFields(state, fields) {
-        state.dry_run_fields = fields;
+    saveSelectedTracker(state, tracker) {
+        state.selected_tracker = tracker;
+        state.has_processed_dry_run = false;
+        resetError(state);
     },
+    hasProcessedDryRun(state, fields) {
+        state.dry_run_fields = fields;
+        state.has_processed_dry_run = true;
+    },
+    resetError,
     setErrorMessage(state, error_message) {
         state.error_message = error_message;
     },
+    switchToProcessingMove(state) {
+        state.is_processing_move = true;
+    },
+    resetProcessingMove(state) {
+        state.is_processing_move = false;
+    },
     resetState(state) {
-        state.is_loading_initial = true;
-        state.are_trackers_loading = false;
-        state.error_message = "";
-        state.projects = [];
-        state.trackers = [];
-        state.selected_project_id = null;
-        state.dry_run_fields = {
-            fields_not_migrated: [],
-            fields_partially_migrated: [],
-            fields_migrated: []
-        };
-        state.has_processed_dry_run = false;
-        state.should_redirect = false;
-
-        state.selected_tracker = {
-            tracker_id: null
-        };
-    },
-    setAreTrackerLoading(state, status) {
-        state.are_trackers_loading = status;
-    },
-    setSelectedTracker(state, tracker) {
-        state.selected_tracker = tracker;
-    },
-    resetSelectedTracker(state) {
-        state.selected_tracker = {
-            tracker_id: null
-        };
-    },
-    setHasProcessedDryRun(state, dry_run) {
-        state.has_processed_dry_run = dry_run;
-    },
-    setShouldRedirect(state, redirect) {
-        state.should_redirect = redirect;
+        Object.assign(state, initial_state);
     }
 };
+
+function resetError(state) {
+    state.error_message = "";
+}

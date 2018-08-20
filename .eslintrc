@@ -73,6 +73,8 @@
                 "jasmine": true
             },
             "globals": {
+                // jasmine 3.2
+                "expectAsync": true,
                 // jasmine-fixture
                 "affix": true,
                 // jasmine-promise-matchers,

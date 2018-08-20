@@ -26,36 +26,45 @@ import {
     rewire$moveArtifact,
     rewire$moveDryRunArtifact
 } from "../api/rest-querier.js";
+import { restore as restoreWindow, rewire$redirectTo } from "../window-helper.js";
 
 describe("Store actions", () => {
+    let context, redirectTo;
+    beforeEach(() => {
+        context = {
+            commit: jasmine.createSpy("commit"),
+            state: {}
+        };
+        redirectTo = jasmine.createSpy("redirectTo");
+        rewire$redirectTo(redirectTo);
+    });
+
+    afterEach(() => {
+        restoreFetch();
+        restoreWindow();
+    });
+
     describe("loadProjectList", () => {
-        let getProjectList, context;
+        let getProjectList;
         beforeEach(() => {
             getProjectList = jasmine.createSpy("getProjectList");
             rewire$getProjectList(getProjectList);
-            context = {
-                commit: jasmine.createSpy("commit")
-            };
-        });
-
-        afterEach(() => {
-            restoreFetch();
         });
 
         it("When I want to load the project, Then it should fetch them asynchronously and put them in the store.", async () => {
-            const json = [
+            const projects = [
                 {
                     id: 102,
                     label: "Project name"
                 }
             ];
 
-            getProjectList.and.returnValue(Promise.resolve(json));
+            getProjectList.and.returnValue(Promise.resolve(projects));
 
             await loadProjectList(context);
 
-            expect(context.commit).toHaveBeenCalledWith("saveProjects", json);
-            expect(context.commit).toHaveBeenCalledWith("setIsLoadingInitial", false);
+            expect(context.commit).toHaveBeenCalledWith("saveProjects", projects);
+            expect(context.commit).toHaveBeenCalledWith("resetProjectLoading");
         });
 
         it("When the server responds with an error the error message is stored", async () => {
@@ -73,37 +82,34 @@ describe("Store actions", () => {
     });
 
     describe("loadTrackerList", () => {
-        let getTrackerList, context;
+        let getTrackerList;
         beforeEach(() => {
             getTrackerList = jasmine.createSpy("getTrackerList");
             rewire$getTrackerList(getTrackerList);
-            context = {
-                commit: jasmine.createSpy("commit"),
-                state: {
-                    selected_project_id: 101
-                }
+            context.state = {
+                selected_project_id: 101
             };
         });
 
-        afterEach(() => {
-            restoreFetch();
-        });
-
         it("When I want to load the tracker, Then it should fetch them asynchronously and put them in the store.", async () => {
-            const return_json = [
+            const trackers = [
                 {
                     id: 10,
                     label: "Tracker name"
                 }
             ];
+            const project_id = 106;
 
-            getTrackerList.and.returnValue(Promise.resolve(return_json));
+            getTrackerList.and.returnValue(Promise.resolve(trackers));
 
-            await loadTrackerList(context);
+            await loadTrackerList(context, project_id);
 
-            expect(context.commit).toHaveBeenCalledWith("setAreTrackerLoading", true);
-            expect(context.commit).toHaveBeenCalledWith("saveTrackers", return_json);
-            expect(context.commit).toHaveBeenCalledWith("setAreTrackerLoading", false);
+            expect(context.commit).toHaveBeenCalledWith(
+                "loadingTrackersAfterProjectSelected",
+                project_id
+            );
+            expect(context.commit).toHaveBeenCalledWith("saveTrackers", trackers);
+            expect(context.commit).toHaveBeenCalledWith("resetTrackersLoading");
         });
 
         it("When the server responds with an error the error message is stored", async () => {
@@ -121,26 +127,23 @@ describe("Store actions", () => {
     });
 
     describe("move", () => {
-        let moveArtifact, context;
+        let moveArtifact;
         beforeEach(() => {
             moveArtifact = jasmine.createSpy("moveArtifact");
             rewire$moveArtifact(moveArtifact);
-            context = {
-                commit: jasmine.createSpy("commit")
-            };
-        });
-
-        afterEach(() => {
-            restoreFetch();
         });
 
         it("When I want to process the move, Then it should process move.", async () => {
             moveArtifact.and.returnValue(Promise.resolve());
             const artifact_id = 101;
             const tracker_id = 5;
+            context.state.selected_tracker = {
+                tracker_id
+            };
 
-            await move(context, [artifact_id, tracker_id]);
+            await move(context, artifact_id);
             expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
+            expect(redirectTo).toHaveBeenCalledWith("/plugins/tracker/?aid=" + artifact_id);
         });
 
         it("When the server responds with an error the error message is stored", async () => {
@@ -154,37 +157,35 @@ describe("Store actions", () => {
 
             const artifact_id = 101;
             const tracker_id = 5;
+            context.state.selected_tracker = {
+                tracker_id
+            };
 
-            await move(context, [artifact_id, tracker_id]);
+            await move(context, artifact_id);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "error");
+            expect(redirectTo).not.toHaveBeenCalled();
         });
     });
 
     describe("move dry run", () => {
-        let moveDryRunArtifact, moveArtifact, context;
+        let moveDryRunArtifact, moveArtifact;
         beforeEach(() => {
             moveDryRunArtifact = jasmine.createSpy("moveDryRunArtifact");
             rewire$moveDryRunArtifact(moveDryRunArtifact);
 
             moveArtifact = jasmine.createSpy("moveArtifact");
             rewire$moveArtifact(moveArtifact);
-            context = {
-                commit: jasmine.createSpy("commit")
-            };
-        });
-
-        afterEach(() => {
-            restoreFetch();
         });
 
         it("When I process move in Dry run, if at least one field has en error, I store dry run has been processed in store", async () => {
+            const fields = {
+                fields_not_migrated: ["not_migrated"],
+                fields_partially_migrated: [],
+                fields_migrated: []
+            };
             const return_json = {
                 dry_run: {
-                    fields: {
-                        fields_not_migrated: ["not_migrated"],
-                        fields_partially_migrated: [],
-                        fields_migrated: []
-                    }
+                    fields
                 }
             };
 
@@ -192,12 +193,18 @@ describe("Store actions", () => {
 
             const artifact_id = 101;
             const tracker_id = 5;
+            context.state.selected_tracker = {
+                tracker_id
+            };
 
-            await moveDryRun(context, [artifact_id, tracker_id]);
-            expect(context.commit).toHaveBeenCalledWith("setHasProcessedDryRun", true);
+            await moveDryRun(context, artifact_id);
+            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
+            expect(context.commit).toHaveBeenCalledWith("hasProcessedDryRun", fields);
+            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
+            expect(redirectTo).not.toHaveBeenCalled();
         });
 
-        it("When I process move in Dry run, if all field can mmigrated, I process the move", async () => {
+        it("When I process move in Dry run, if all field can be migrated, I process the move", async () => {
             const return_json = {
                 dry_run: {
                     fields: {
@@ -213,11 +220,16 @@ describe("Store actions", () => {
 
             const artifact_id = 101;
             const tracker_id = 5;
+            context.state.selected_tracker = {
+                tracker_id
+            };
 
-            await moveDryRun(context, [artifact_id, tracker_id]);
+            await moveDryRun(context, artifact_id);
 
+            expect(context.commit).toHaveBeenCalledWith("switchToProcessingMove");
             expect(moveArtifact).toHaveBeenCalledWith(artifact_id, tracker_id);
-            expect(context.commit).toHaveBeenCalledWith("setShouldRedirect", true);
+            expect(context.commit).toHaveBeenCalledWith("resetProcessingMove");
+            expect(redirectTo).toHaveBeenCalledWith("/plugins/tracker/?aid=" + artifact_id);
         });
     });
 });
