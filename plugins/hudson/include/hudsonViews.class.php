@@ -33,7 +33,7 @@ class hudsonViews extends Views {
     }
 
     function header() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'hudson'));
         echo $this->_getHelp();
         echo '<h2>'.$this->_getTitle().'</h2>';
@@ -97,7 +97,7 @@ class hudsonViews extends Views {
     }
 
     function job_details() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ($request->exist('job_id')) {
@@ -123,7 +123,7 @@ class hudsonViews extends Views {
     }
 
     function build_number() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         if ($request->exist('build')) {
             $build_id = $request->get('build');
@@ -166,7 +166,7 @@ class hudsonViews extends Views {
     }
 
     function last_test_result() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
@@ -186,7 +186,7 @@ class hudsonViews extends Views {
     }
 
     function test_trend() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
@@ -206,7 +206,7 @@ class hudsonViews extends Views {
     }
 
     function editJob() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_id = $request->get('job_id');
         $user = UserManager::instance()->getCurrentUser();
