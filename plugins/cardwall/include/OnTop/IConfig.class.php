@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +34,8 @@ interface Cardwall_OnTop_IConfig {
     public function getDashboardColumns();
 
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field);
+
+    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter);
     
     public function getMappings();
 
@@ -51,4 +52,3 @@ interface Cardwall_OnTop_IConfig {
     public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
                                                   Cardwall_OnTop_Config_ColumnCollection $columns);
 }
-?>

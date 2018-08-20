@@ -134,7 +134,22 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         } else {
             $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
-            $columns             = $this->config->getRendererColumns($field, $column_preferences);
+
+            $filter = '';
+            if (! $this->report->is_in_expert_mode) {
+                foreach ($this->report->getCriteria() as $criterion) {
+                    if ($criterion->field->id === $field->getId()) {
+                        $filter = $field->getCriteriaValue($criterion);
+                        break;
+                    }
+                }
+            }
+
+            if (is_array($filter)) {
+                $columns = $this->config->getFilteredRendererColumns($field, $filter);
+            } else {
+                $columns = $this->config->getRendererColumns($field);
+            }
 
             $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
             $column_autostack->setAutostack($columns, $column_preferences);

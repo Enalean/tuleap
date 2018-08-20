@@ -52,33 +52,40 @@ class Cardwall_OnTop_Config_ColumnFactory {
      * Get Columns from the values of a $field
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getRendererColumns(Tracker_FormElement_Field_List $field) {
-        // TODO use cache of $columns
+    public function getRendererColumns(Tracker_FormElement_Field_List $field)
+    {
         $columns = new Cardwall_OnTop_Config_ColumnCollection();
-        $this->fillColumnsFor($columns, $field);
+        $this->fillColumnsFor($columns, $field, []);
         return $columns;
     }
 
-    private function fillColumnsFor(&$columns, $field) {
+    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $field, array $filter)
+    {
+        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $this->fillColumnsFor($columns, $field, $filter);
+        return $columns;
+    }
+
+    private function fillColumnsFor(
+        Cardwall_OnTop_Config_ColumnCollection&$columns,
+        Tracker_FormElement_Field_List $field,
+        array $filter
+    ) {
+
+        if (count($filter) === 0) {
+            $field_values = $field->getVisibleValuesPlusNoneIfAny();
+        } else {
+            foreach ($filter as $value_id) {
+                $field_values[] = $field->getListValueById($value_id);
+            }
+        }
+
         $decorators = $field->getDecorators();
-        foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+        foreach ($field_values as $value) {
             $header_color = $this->getColumnHeaderColor($value, $decorators);
             $columns[]    = new Cardwall_Column($value->getId(), $value->getLabel(), $header_color);
         }
     }
-
-    /**
-     * @return Cardwall_OnTop_Config_ColumnCollection
-     */
-    private function getColumnsFromStatusField(Tracker $tracker) {
-        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
-        $field   = $tracker->getStatusField();
-        if ($field) {
-            $this->fillColumnsFor($columns, $field);
-        }
-        return $columns;
-    }
-
 
     /**
      * @return Cardwall_OnTop_Config_ColumnCollection
