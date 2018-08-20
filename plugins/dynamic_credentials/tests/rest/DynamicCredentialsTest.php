@@ -79,7 +79,8 @@ class DynamicCredentialsTest extends \RestBase
         $uri = 'dynamic_credentials/' . urlencode(self::USERNAME) . '?' . http_build_query([
                 'signature'  => $this->getSignatureForDeleteAction(self::USERNAME)
             ]);
-        $this->getResponseWithoutAuth($this->client->delete($uri));
+        $response = $this->getResponseWithoutAuth($this->client->delete($uri));
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testDELETEInvalidSignatureRejected()
@@ -135,7 +136,7 @@ class DynamicCredentialsTest extends \RestBase
 
     private function login(string $username, string $password)
     {
-        $this->getResponseWithoutAuth($this->client->post(
+        $response = $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
             json_encode([
@@ -143,6 +144,7 @@ class DynamicCredentialsTest extends \RestBase
                 'password' => $password
             ])
         ));
+        $this->assertSame(201, $response->getStatusCode());
     }
 
     private function ensureLoginFail(string $username, string $password)

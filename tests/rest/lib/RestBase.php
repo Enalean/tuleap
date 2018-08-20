@@ -20,11 +20,11 @@
  */
 
 use Guzzle\Http\Client;
+use PHPUnit\Framework\TestCase;
 use Test\Rest\RequestWrapper;
 use Test\Rest\Cache;
-use Tuleap\Project\ProjectStatusMapper;
 
-class RestBase extends PHPUnit_Framework_TestCase // phpcs:ignore
+class RestBase extends TestCase // phpcs:ignore
 {
     protected $base_url = 'https://localhost/api/v1';
     private $setup_url  = 'https://localhost/api/v1';
@@ -166,7 +166,7 @@ class RestBase extends PHPUnit_Framework_TestCase // phpcs:ignore
 
         $this->getProjectsIdsWithQuery($query_for_active_projects, $limit);
 
-        $deleted_status_label       = Project::STATUS_DELETED_LABEL;
+        $deleted_status_label       = 'deleted';
         $query_for_deleted_projects = http_build_query([
             'limit'  => $limit,
             'offset' => $offset,
@@ -175,7 +175,7 @@ class RestBase extends PHPUnit_Framework_TestCase // phpcs:ignore
 
         $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
 
-        $suspended_status_label     = Project::STATUS_SUSPENDED_LABEL;
+        $suspended_status_label       = 'suspended';
         $query_for_suspended_projects = http_build_query([
             'limit'  => $limit,
             'offset' => $offset,

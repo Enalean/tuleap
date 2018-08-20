@@ -116,10 +116,10 @@ class RepositoryTest extends TestBase
     /**
      * @depends testGETRepositoryForProjectAdmin
      * @depends testGETRepositoryForProjectMember
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testDELETERepositoryForProjectMember()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponseWithProjectMember(
             $this->client->delete(
                 'svn/1'
@@ -251,6 +251,9 @@ class RepositoryTest extends TestBase
         );
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testPOSTRepositoryForProjectMember()
     {
         $params = json_encode(
@@ -260,7 +263,6 @@ class RepositoryTest extends TestBase
             )
         );
 
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponseWithProjectMember($this->client->post('svn', null, $params));
         $this->assertEquals($response->getStatusCode(), 401);
     }
