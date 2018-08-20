@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Originally written by Nouha Terzi, 2009
  *
@@ -29,7 +29,7 @@ require_once 'Statistics_DiskUsageOutput.class.php';
 class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
     /**
-     * 
+     *
      * @param Array $services
      * @param unknown_type $groupBy
      * @param unknown_type $startDate
@@ -141,7 +141,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
             $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
         }
     }
-     
+
     /**
      *
      * @param Integer $groupId
@@ -268,26 +268,6 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
     }
 
-    /**
-     *
-     * @param Integer $used
-     * @param Integer $total
-     */
-    function displayProjectProportionUsage($used, $total) {
-        $graph = new Chart_Pie(350 ,250 , "auto");
-
-        $data = array($used, $total-$used);
-
-        $usage = new PiePlot($data);
-        $usage->SetSliceColors(array('#44697D','#ACBBA4'));
-        $usage->SetLegends(array("Used proportion", "Allowed quota"));
-        $graph->legend->SetPos(0.01,0,'right','top');
-        $graph->add($usage);
-
-        //graph display
-        $graph->stroke();
-    }
-
     function displayError($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
@@ -335,5 +315,3 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
     }
 
 }
-
-?>

@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -14,8 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 import { select } from "d3-selection";
@@ -150,9 +149,15 @@ export class StatisticsPieChart {
             })
             .attr("dy", ".35em")
             .text(d => {
+                if (d.data.value && d.data.value.length > 0) {
+                    return d.data.value;
+                }
+
                 if (d.value > 0) {
                     return d.value;
                 }
+
+                return "";
             });
 
         arc_elements
@@ -346,10 +351,11 @@ export class StatisticsPieChart {
 
                     if (angle > Math.PI) {
                         return "translate(-2,2)";
-                    } else {
-                        return "translate(2,2)";
                     }
+                    return "translate(2,2)";
                 }
+
+                return "";
             });
 
         this.group
@@ -372,6 +378,8 @@ export class StatisticsPieChart {
                 if (sliceEqualsTo180Degrees(d)) {
                     return "translate(0,0)";
                 }
+
+                return "";
             });
 
         this.group
@@ -388,7 +396,8 @@ export class StatisticsPieChart {
 
 function sliceEqualsTo180Degrees(slice_data) {
     return (
-        (slice_data.startAngle === 0 && parseInt(slice_data.endAngle) === parseInt(Math.PI, 10)) ||
+        (slice_data.startAngle === 0 &&
+            parseInt(slice_data.endAngle, 10) === parseInt(Math.PI, 10)) ||
         (parseInt(slice_data.startAngle, 10) === parseInt(Math.PI, 10) &&
             parseInt(slice_data.endAngle, 10) === parseInt(2 * Math.PI, 10))
     );
