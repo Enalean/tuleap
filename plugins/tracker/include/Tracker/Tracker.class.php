@@ -628,13 +628,13 @@ class Tracker implements Tracker_Dispatchable_Interface
             case 'admin-formElements':
                 if ($this->userIsAdmin($current_user)) {
                     if (is_array($request->get('add-formElement'))) {
-                        list($formElement_id,) = each($request->get('add-formElement'));
+                        $formElement_id = key($request->get('add-formElement'));
                         if (Tracker_FormElementFactory::instance()->addFormElement($formElement_id)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_added'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-formElements');
                         }
                     } else if (is_array($request->get('create-formElement'))) {
-                        list($type,) = each($request->get('create-formElement'));
+                        $type = key($request->get('create-formElement'));
                         if ($request->get('docreate-formElement') && is_array($request->get('formElement_data'))) {
                             try {
                                 $this->createFormElement($type, $request->get('formElement_data'), $current_user);
@@ -1710,7 +1710,7 @@ EOS;
                     $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')) ;
         }
         reset($ugroups_permissions);
-        list($key, $value) = each($ugroups_permissions);
+        $key = key($ugroups_permissions);
 
         //header
         if (($group_first && count($ugroups_permissions) < 1) || (!$group_first && count($ugroups_permissions[$key]['related_parts']) < 1)) {

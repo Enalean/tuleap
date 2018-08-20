@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -193,7 +193,10 @@ class Tracker_RulesManager {
         } else {
             $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
             $found = false;
-            while (!$found && (list(,$rule) = each($rules))) {
+            foreach ($rules as $rule) {
+                if ($found) {
+                    break;
+                }
                 if ($rule->source_field == $target_id) {
                     $found = $this->isCyclic($tracker_id, $source_id, $rule->target_field);
                 }
@@ -213,47 +216,52 @@ class Tracker_RulesManager {
 
     function fieldHasTarget($tracker_id, $field_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
-            $found = ($rule->source_field == $field_id);
+        foreach ($rules as $rule) {
+            if ($rule->source_field == $field_id) {
+                return true;
+            }
         }
-        return $found;
+        return false;
     }
 
     function fieldHasSource($tracker_id, $field_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
-            $found = ($rule->target_field == $field_id);
+        foreach ($rules as $rule) {
+            if ($rule->target_field == $field_id) {
+                return true;
+            }
         }
-        return $found;
+        return false;
     }
 
     function valueHasTarget($tracker_id, $field_id, $value_id, $target_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
-            $found = ($rule->source_field == $field_id && $rule->source_value == $value_id && $rule->target_field == $target_id);
+        foreach ($rules as $rule) {
+            if ($rule->source_field == $field_id && $rule->source_value == $value_id && $rule->target_field == $target_id) {
+                return true;
+            }
         }
-        return $found;
+        return false;
     }
 
     function valueHasSource($tracker_id, $field_id, $value_id, $source_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
-            $found = ($rule->target_field == $field_id && $rule->target_value == $value_id && $rule->source_field == $source_id);
+        foreach ($rules as $rule) {
+            if ($rule->target_field == $field_id && $rule->target_value == $value_id && $rule->source_field == $source_id) {
+                return true;
+            }
         }
-        return $found;
+        return false;
     }
 
     function ruleExists($tracker_id, $source_id, $target_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
-            $found = ($rule->source_field == $source_id && $rule->target_field == $target_id);
+        foreach ($rules as $rule) {
+            if ($rule->source_field == $source_id && $rule->target_field == $target_id) {
+                return true;
+            }
         }
-        return $found;
+        return false;
     }
 
     function getAllSourceFields($target_id) {
@@ -662,8 +670,7 @@ class Tracker_RulesManager {
         // $values[$field_id]['field'] = artifactfield Object
         // $values[$field_id]['values'][] = selected value
         $values = array();
-        reset($value_field_list);
-        while (list($field_id,$value) = each($value_field_list)) {
+        foreach ($value_field_list as $field_id => $value) {
             if ($field = $this->getTrackerFormElementFactory()->getFormElementById($field_id)) {
                 $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
             }
@@ -684,15 +691,20 @@ class Tracker_RulesManager {
         }
 
         $error_occured = false;
-        reset($dependencies);
-        while(!$error_occured && (list($source,) = each($dependencies))) {
+        foreach ($dependencies as $source => $not_used) {
+            if ($error_occured) {
+                break;
+            }
             if (isset($values[$source])) {
-                reset($dependencies[$source]);
-                while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
+                foreach ($dependencies[$source] as $target => $not_used_target) {
+                    if ($error_occured) {
+                        break;
+                    }
                     if (isset($values[$target])) {
-                        reset($values[$target]['values']);
-                        while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
-                            
+                        foreach ($values[$target]['values'] as $target_value) {
+                            if ($error_occured) {
+                                break;
+                            }
                             if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
                                     || $target_value == null) {
                                 
@@ -705,18 +717,17 @@ class Tracker_RulesManager {
                             }
                             //Foreach target values we look if there is at least one source value whith corresponding rule valid
                             $valid = false;
-                            reset($values[$source]['values']);
-                            
-                            
-
-                            while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
-                                
+                            foreach ($values[$source]['values'] as $source_value) {
+                                if ($valid) {
+                                    break;
+                                }
                                 
                                 $applied = false;
-                                reset($dependencies[$source][$target]);
-                                while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-                
-                                    if ($dependencies[$source][$target][$rule]->canApplyTo(
+                                foreach ($dependencies[$source][$target] as $rule) {
+                                    if ($applied && $valid) {
+                                        break;
+                                    }
+                                    if ($rule->canApplyTo(
                                         $tracker_id,
                                         $source,
                                         $source_value,
@@ -724,7 +735,7 @@ class Tracker_RulesManager {
                                         $target_value))
                                     {
                                         $applied = true;
-                                        $valid = $dependencies[$source][$target][$rule]->applyTo(
+                                        $valid = $rule->applyTo(
                                             $tracker_id,
                                             $source,
                                             $source_value,

@@ -47,8 +47,7 @@ class Tracker_Artifact_View_ViewCollection {
         if (isset($this->views[$request->get('view')])) {
             return $this->views[$request->get('view')];
         } else {
-            list(,$first_view) = each($this->views);
-            return $first_view;
+            return current($this->views);
         }
     }
 

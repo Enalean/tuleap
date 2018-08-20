@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2009. All rights reserved
- * Copyright Enalean (c) 2015. All rights reserved.
+ * Copyright Enalean (c) 2015-2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -110,8 +110,7 @@ class tracker_date_reminderPlugin extends Plugin {
             $tdrArtifactFieldFactory = new TrackerDateReminder_ArtifactFieldFactory();
             $tdrArtifactFieldFactory->cacheFieldsWithNotification($params['at']->getID());
             $fields = $tdrArtifactFieldFactory->getUsedDateFields($params['art_field_fact']);
-            while (list($field_name,$field) = each($fields)) {
-
+            foreach ($fields as $field) {
                 // no notification status/settings for special Date field (Submitted on)
                 if (!$field->isSpecial()) {
                     $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id='.$params['group_id'].'&atid='.$params['at']->getID().'&field_id='.$field->getID().'">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','edit_notif_settings').'</A>';

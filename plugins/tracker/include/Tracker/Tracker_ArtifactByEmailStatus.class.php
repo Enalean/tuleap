@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -106,8 +106,10 @@ class Tracker_ArtifactByEmailStatus {
         $is_required_fields_valid = true;
 
         $form_elements = $tracker->getFormElementFields();
-        reset($form_elements);
-        while ($is_required_fields_valid && list(, $form_element) = each($form_elements)) {
+        foreach ($form_elements as $form_element) {
+            if (! $is_required_fields_valid) {
+                break;
+            }
             if ($form_element->isRequired()) {
                 $is_required_fields_valid = $form_element->getId() === $title_field->getId() ||
                     $form_element->getId() === $description_field->getId();

@@ -1,7 +1,7 @@
 <?php
 /* 
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
@@ -144,7 +144,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
     }
 
     private function getChartData(array $info) {
-        list(, $row) = each($this->data);
+        $row = current($this->data);
         if (is_array($row)) {
             return $this->getGroupedBarChartData($info);
         } else {
