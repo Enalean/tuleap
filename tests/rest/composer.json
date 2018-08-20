@@ -1,5 +1,10 @@
 {
     "require": {
         "guzzle/guzzle": "~3.7"
+    },
+    "config": {
+        "platform": {
+            "ext-curl": "0"
+        }
     }
 }

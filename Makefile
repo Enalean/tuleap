@@ -71,7 +71,7 @@ autoload-dev:
 composer:  ## Install PHP dependencies with Composer
 	@echo "Processing src/composer.json"
 	@composer install --working-dir=src/
-	@find plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+	@find plugins/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
 		-exec echo "Processing {}" \; -execdir composer install \;
 	@echo "Processing tools/Configuration/composer.json"
 	@composer install --working-dir=tools/Configuration/
@@ -134,10 +134,10 @@ generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests_rest_56: ## Run all REST tests with PHP FPM 5.6
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql56
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql56
 
 tests_rest_72: ## Run all REST tests with PHP FPM 7.2
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql56
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql56
 
 tests_soap_56: ## Run all SOAP tests in PHP 5.6
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
@@ -160,9 +160,7 @@ tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests
 phpunit-ci-run:
 	$(PHP) src/vendor/bin/phpunit \
 		-c tests/phpunit/phpunit.xml \
-		--log-junit /tmp/results/phpunit_tests_results.xml \
-		--coverage-html /tmp/results/phpunit_coverage \
-		--coverage-clover /tmp/results/phpunit_coverage/coverage.xml
+		--log-junit /tmp/results/phpunit_tests_results.xml
 
 run-as-owner:
 	@USER_ID=`stat -c '%u' /tuleap`; \
@@ -172,12 +170,12 @@ run-as-owner:
 	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
 
 phpunit-ci-56:
-	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/remi/php56/root/usr/bin/php"
+	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-56
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/remi/php56/root/usr/bin/php"
 
 phpunit-ci-72:
-	mkdir -p $(WORKSPACE)/results/ut-phpunit-php-72
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit-php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
+	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-72
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
 
 phpunit-docker-56:
 	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable php56 "make -C /tuleap phpunit"
@@ -189,8 +187,8 @@ phpunit:
 	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
 
 simpletest-72-ci:
-	@mkdir -p $(WORKSPACE)/results/ut-simpletest-php-72
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest-php-72:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
+	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-72
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest/php-72:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
@@ -204,14 +202,14 @@ simpletest-72: ## Run SimpleTest with PHP 7.2
 simpletest-72-file: ## Run SimpleTest with PHP 7.2 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
 
-simpletest11x-56-ci:
-	@mkdir -p $(WORKSPACE)/results/ut-simpletest11x-php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest11x-php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
+simpletest-56-ci:
+	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-56
+	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest/php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration \
 
-simpletest11x-56: ## Run SimpleTest 1.1.x with PHP 5.6 tests in CLI
+simpletest-56: ## Run SimpleTest with PHP 5.6 tests in CLI
 	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
