@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -116,7 +116,7 @@ class FRSFileFactory {
     function getFRSFileInfoListFromDb($group_id, $file_id) {
         $_group_id = (int) $group_id;
         $_file_id = (int) $file_id;
-        $dao = & $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
 
         $dar = $dao->searchInfoByGroupFileID($_group_id, $_file_id);
 
@@ -139,7 +139,7 @@ class FRSFileFactory {
 
     function getFRSFileInfoListByReleaseFromDb($release_id) {
         $_release_id = (int) $release_id;
-        $dao = & $this->_getFRSFileDao();
+        $dao = $this->_getFRSFileDao();
 
         $dar = $dao->searchInfoFileByReleaseID($_release_id);
 
@@ -1003,4 +1003,3 @@ class FRSFileFactory {
         return($computedMd5 == '' || $referenceMd5 == '' || strcasecmp($computedMd5, $referenceMd5) == 0);
     }
 }
-

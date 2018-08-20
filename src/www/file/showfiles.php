@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -302,7 +302,10 @@ foreach ($packages as $package_id => $package_for_display) {
 
                     // get the files in this release....
                     $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
-                    $num_files = count($res_file);
+                    $num_files = 0;
+                    if ($res_file !== null) {
+                        $num_files = count($res_file);
+                    }
                     $uploaded_links  = $uploaded_links_retriever->getLinksForRelease($package_release);
 
                     if (!isset ($proj_stats['files']))
