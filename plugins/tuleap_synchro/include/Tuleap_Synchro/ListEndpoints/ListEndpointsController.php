@@ -24,20 +24,33 @@ namespace Tuleap\TuleapSynchro\ListEndpoints;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 
-class ListEndpointsController implements DispatchableWithRequest
+class ListEndpointsController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var AdminPageRenderer
      */
     private $admin_page_rendered;
 
-    public function __construct(AdminPageRenderer $admin_page_rendered)
+    /**
+     * @var ListEndpointsRetriever
+     */
+    private $list_endpoint_retriever;
+    /**
+     * @var ListEndpointsPresenterBuilder
+     */
+    private $list_endpoints_presenter_builder;
+
+    public function __construct(AdminPageRenderer $admin_page_rendered, ListEndpointsRetriever $list_endpoint_retriever, ListEndpointsPresenterBuilder $list_endpoints_presenter_builder)
     {
-        $this->admin_page_rendered = $admin_page_rendered;
+        $this->admin_page_rendered     = $admin_page_rendered;
+        $this->list_endpoint_retriever = $list_endpoint_retriever;
+        $this->list_endpoints_presenter_builder = $list_endpoints_presenter_builder;
     }
 
     /**
@@ -60,11 +73,24 @@ class ListEndpointsController implements DispatchableWithRequest
             $include_assets->getFileURL('tuleap_synchro.js')
         );
 
+
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    TULEAP_SYNCHRO_BASE_DIR . '/../../../src/www/assets/tuleap_synchro/BurningParrot',
+                    '/assets/tuleap_synchro/BurningParrot'
+                ),
+                'tuleap-synchro'
+            )
+        );
+
+        $list_endpoints_presenter = $this->list_endpoints_presenter_builder->build($this->list_endpoint_retriever->getAllEndpoints());
+
         $this->admin_page_rendered->renderAPresenter(
             'tuleap_synchro',
             __DIR__.'/../../../templates',
             'list_endpoints',
-            new ListEndpointsPresenter([])
+            $list_endpoints_presenter
         );
     }
 }
