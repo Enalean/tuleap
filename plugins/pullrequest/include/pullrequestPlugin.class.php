@@ -122,6 +122,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
             $this->addHook('javascript_file');
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_INFO);
@@ -160,11 +162,24 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
-    public function cssfile($params)
+    public function cssfile()
     {
         if ($this->isAPullrequestRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-pullrequest.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+        }
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->isAPullrequestRequest()) {
+            $theme_include_assets = new IncludeAssets(
+                PULLREQUEST_BASE_DIR . '/www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 
@@ -178,6 +193,19 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
             echo $include_asset_pullrequest->getHTMLSnippet('move-button-back.js');
             echo $include_asset_pullrequest->getHTMLSnippet('tuleap-pullrequest.js');
+        }
+    }
+
+    public function burningParrotGetJavascriptFiles($params)
+    {
+        if ($this->isAPullrequestRequest()) {
+            $include_asset_pullrequest = new IncludeAssets(
+                PULLREQUEST_BASE_DIR . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('move-button-back.js');
+            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('tuleap-pullrequest.js');
         }
     }
 
@@ -344,6 +372,20 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
                 $renderer         = $this->getTemplateRenderer();
                 $user             = $event->getRequest()->getCurrentUser();
+
+                if (\ForgeConfig::get('git_repository_bp')) {
+                    $theme_manager = new \ThemeManager(
+                        new \Tuleap\BurningParrotCompatiblePageDetector(
+                            new \Tuleap\Request\CurrentPage(),
+                            new \Admin_Homepage_Dao(),
+                            new \User_ForgeUserGroupPermissionsManager(
+                                new \User_ForgeUserGroupPermissionsDao()
+                            )
+                        )
+                    );
+                    $layout = $theme_manager->getBurningParrot($event->getRequest()->getCurrentUser());
+                    $event->setLayout($layout);
+                }
 
                 $merge_settings_retriever = new MergeSettingRetriever(
                     new MergeSettingDAO()

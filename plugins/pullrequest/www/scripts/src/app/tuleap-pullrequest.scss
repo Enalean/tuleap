@@ -2,7 +2,7 @@
 @import '../../node_modules/codemirror/addon/merge/merge';
 @import '../../node_modules/ui-select/dist/select';
 
-@import '../app/dashboard/dashboard';
+@import 'dashboard/dashboard';
 @import '../app/pull-request/pull-request';
 @import '../app/overview/overview';
 @import '../app/files/files';

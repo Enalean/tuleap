@@ -1,78 +1,50 @@
-.pull-request-summary {
-    $border-color: #e6e6e6;
-    $border-hover-color: #cccccc;
-    $creation-date-color: #888888;
-    $margin-between-items: 20px;
-
-    min-height: 50px;
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: flex-start;
-    align-content: center;
-    border-radius: 3px;
-    border: 1px solid $border-color;
-    cursor: pointer;
-    padding: $margin-between-items;
-
-    &:hover {
-        transition: border-color 100ms linear;
-        border-color: $border-hover-color;
-    }
-
-    .title {
-        font-size: 14px;
-        min-width: 30px;
-        max-width: 50%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-
-    .refs {
-        margin: 0 0 0 $margin-between-items;
-        white-space: nowrap;
-    }
-
-    .creation-date {
-        color: $creation-date-color;
-        margin: 0 0 0 $margin-between-items;
-        white-space: nowrap;
-    }
-
-    .fa-calendar {
-        margin: 0 3px 0 0;
-    }
-
-    .status {
-        margin: 0 0 0 $margin-between-items;
-        white-space: nowrap;
-    }
-
-    .author {
-        font-size: 12px;
-        white-space: nowrap;
-    }
-
-    .item-labels-box {
-        pointer-events: none;
-    }
-
-    .item-labels-box-select2.select2-container-disabled > .select2-choices {
-        padding: 0;
-
-        > .select2-search-choice {
-            margin: 0 0 6px 5px;
-        }
-    }
+.pull-request-summary-title {
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.pull-request-summary-details {
-    flex: 0 0 auto;
+.pull-request-summary-refs {
+    margin: 0 0 0 $tlp-spacing;
+    white-space: nowrap;
+}
+
+.item-labels-box {
+    pointer-events: none;
+}
+
+.item-labels-box-select2.select2-container-disabled > .select2-choices {
+    padding: 0;
+
+    > .select2-search-choice {
+        margin: 0 0 6px 5px;
+    }
 }
 
 .pull-request-summary-metadata {
-    margin: 10px 0 0;
     display: flex;
     align-items: center;
+    margin: 0 $tlp-spacing $tlp-spacing;
+}
+
+.pull-request-summary-author {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.fa-calendar {
+    margin: 0 3px 0 0;
+}
+
+.pull-request-summary-creation-date {
+    margin: 0 0 0 $tlp-spacing;
+    color: #888888;
+    font-size: 85%;
+    white-space: nowrap;
+}
+
+.pull-request-summary-status {
+    margin: 0 0 0 $tlp-spacing;
+    white-space: nowrap;
 }

@@ -78,6 +78,12 @@ class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
         return $this->layout;
     }
 
+    public function setLayout(BaseLayout $layout)
+    {
+        $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
+        $this->layout = $layout;
+    }
+
     /**
      * @return RepoHeader
      */
