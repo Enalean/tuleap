@@ -549,9 +549,6 @@ project_export_bug_export	depend_on_bugs_desc	List of bugs this bug depends on
 #-----------------------------------------------
 # Script: SF/www/project/export/index.php
 #
-project_export_index	proj_db_success	Your project database has been successfully generated. You can now use your favorite desktop application and access your project database through the MySQL ODBC/JDBC driver installed on your desktop machine. The parameters to configure your ODBC/JDBC database connection are as follows:
-project_export_index	proj_db_no_data	No data to export. Only <strong>Tracker v3</strong> are exported.
-project_export_index	export_to_csv_or_db	Your project data can either be exported in individual text files (CSV format) or in a project specific database that you can directly access from your desktop machine through an ODBC/JDBC connection. See $1 for more information.
 project_export_index	export_to_csv_hdr	Text File Export $2
 project_export_index	export_to_csv_msg	Click on the links below to generate a text file export (CSV format).
 project_export_index	online_help	Online Help
