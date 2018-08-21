@@ -1,14 +1,14 @@
 <form class="contact-support-modal-form" action="/plugins/mytuleap_contact_support/index.php?action=send-message">
     <h1>{{# gettext }}Send a message to the myTuleap team{{/ gettext }}</h1>
     <p class="alert alert-success contact-support-modal-success-message">
-        <i class="icon-ok"></i> {{# gettext }}Your message has been sent to the myTuleap team. You will receive an answer as soon as possible.{{/ gettext }}
+        <i class="fa fa-check"></i> {{# gettext }}Your message has been sent to the myTuleap team. You will receive an answer as soon as possible.{{/ gettext }}
     </p>
     <p class="alert alert-error contact-support-modal-error-message">
-        <i class="icon-frown"></i> {{# gettext }}Ooops, an error has occured. Please contact your administrator %s. | {{ administrator_email }}{{/ gettext }}
+        <i class="fa fa-frown-o"></i> {{# gettext }}Ooops, an error has occured. Please contact your administrator %s. | {{ administrator_email }}{{/ gettext }}
     </p>
     <div class="control-group">
         <div class="controls">
-            <label for="contact-support-modal-subject">{{# gettext }}Subject{{/ gettext }} <i class="icon-asterisk"></i></label>
+            <label for="contact-support-modal-subject">{{# gettext }}Subject{{/ gettext }} <i class="fa fa-asterisk"></i></label>
             <input type="text"
                 class="contact-support-modal-subject"
                 name="message-title"
@@ -19,7 +19,7 @@
     </div>
     <div class="control-group">
         <div class="controls">
-            <label for="contact-support-modal-message">{{# gettext }}Message{{/ gettext }} <i class="icon-asterisk"></i></label>
+            <label for="contact-support-modal-message">{{# gettext }}Message{{/ gettext }} <i class="fa fa-asterisk"></i></label>
             <textarea
                 class="contact-support-modal-message"
                 name="message-content"
@@ -30,8 +30,8 @@
     </div>
     <button type="submit" class="btn btn-primary contact-support-modal-submit"
     >
-        <span class="normal-text"><i class="icon-envelope-alt"></i> {{# gettext }}Send my message{{/ gettext }}</span>
-        <span class="sending-text"><i class="icon-spinner icon-spin"></i> {{# gettext }}Sending...{{/ gettext }}</span>
-        <span class="thank-you-text"><i class="icon-thumbs-up-alt"></i> {{# gettext }}Thank you{{/ gettext }}</span>
+        <span class="normal-text"><i class="fa fa-envelope-o"></i> {{# gettext }}Send my message{{/ gettext }}</span>
+        <span class="sending-text"><i class="fa fa-spinner fa-spin"></i> {{# gettext }}Sending...{{/ gettext }}</span>
+        <span class="thank-you-text"><i class="fa fa-thumbs-o-up"></i> {{# gettext }}Thank you{{/ gettext }}</span>
     </button>
 </form>
