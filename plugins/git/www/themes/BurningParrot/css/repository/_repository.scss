@@ -44,6 +44,21 @@
     margin: 0 0 0 10px;
 }
 
+.git-repository-clone-label {
+    margin: auto 10px auto 0;
+}
+
+.git-repository-clone-form-element {
+    display: flex;
+    margin: 0;
+}
+
+#git-repository-clone-input {
+    width: 300px;
+    color: $tlp-ui-dimmed;
+    text-overflow: ellipsis;
+}
+
 /* scss-lint:disable SelectorFormat */
 .plugin_git_gitphp {
     margin: 10px;

@@ -57,6 +57,12 @@ msgstr "Impossible de supprimer l'utilisateur %s des notifications"
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr "Impossible de supprimer le groupe %s des notifications"
 
+msgid "Clone"
+msgstr "Cloner"
+
+msgid "Clone or download:"
+msgstr "Cloner ou télécharger :"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
@@ -95,6 +101,9 @@ msgstr "Le projet n'a pas été trouvé."
 
 msgid "Repository does not exist"
 msgstr "Le dépôt n'existe pas"
+
+msgid "SSH (default)"
+msgstr "SSH (Défaut)"
 
 msgid "Settings"
 msgstr "Paramètres"

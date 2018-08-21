@@ -15,6 +15,9 @@
     {{/ gerrit_status_presenter }}
     <div class="git-repository-actions">
         <div class="git-repository-actions-spacer"></div>
+        {{# clone_presenter }}
+            {{> repository/clone-bar }}
+        {{/ clone_presenter }}
         {{# user_is_admin }}
             <a href="{{ repository_admin_url }}"
                class="tlp-button-primary tlp-button-outline git-repository-actions-button"

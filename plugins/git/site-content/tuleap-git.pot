@@ -40,6 +40,12 @@ msgstr ""
 msgid "Cannot remove user group \"%s\" from notifications"
 msgstr ""
 
+msgid "Clone"
+msgstr ""
+
+msgid "Clone or download:"
+msgstr ""
+
 msgid "Fork repositories"
 msgstr ""
 
@@ -77,6 +83,9 @@ msgid "Project not found."
 msgstr ""
 
 msgid "Repository does not exist"
+msgstr ""
+
+msgid "SSH (default)"
 msgstr ""
 
 msgid "Settings"

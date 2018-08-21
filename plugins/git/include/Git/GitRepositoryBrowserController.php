@@ -68,6 +68,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * @var \ThemeManager
      */
     private $theme_manager;
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
@@ -77,7 +81,8 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         GitViews\ShowRepo\RepoHeader $repo_header,
         \ThemeManager $theme_manager,
         HeaderRenderer $header_renderer,
-        RepositoryHeaderPresenterBuilder $header_presenter_builder
+        RepositoryHeaderPresenterBuilder $header_presenter_builder,
+        IncludeAssets $include_assets
     ) {
         $this->repository_factory       = $repository_factory;
         $this->project_manager          = $project_manager;
@@ -87,6 +92,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $this->theme_manager            = $theme_manager;
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
+        $this->include_assets           = $include_assets;
     }
 
     /**
@@ -140,18 +146,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
-        if (\ForgeConfig::get('git_repository_bp')) {
-            $layout->addCssAsset(
-                new CssAsset(
-                    new IncludeAssets(
-                        __DIR__ . '/../../www/themes/BurningParrot/assets',
-                        GIT_BASE_URL . '/themes/BurningParrot/assets'
-                    ),
-                    'git'
-                )
-            );
-        }
-
         $url = new \Git_URL(
             $this->project_manager,
             $this->repository_factory,
@@ -173,6 +167,16 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         if (! $url->isADownload($request)) {
             if (\ForgeConfig::get('git_repository_bp')) {
+                $layout->addCssAsset(
+                    new CssAsset(
+                        new IncludeAssets(
+                            __DIR__ . '/../../www/themes/BurningParrot/assets',
+                            GIT_BASE_URL . '/themes/BurningParrot/assets'
+                        ),
+                        'git'
+                    )
+                );
+                $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
                 $this->header_renderer->renderRepositoryHeader($request, $current_user, $project, $repository);
 
                 $renderer         = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
