@@ -18,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
  */
+
 require_once('Docman_View_ItemDetailsSection.class.php');
 require_once('Docman_View_GetFieldsVisitor.class.php');
 require_once dirname(__FILE__).'/../Docman_LockFactory.class.php';
@@ -32,7 +31,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
     var $formName;
     var $inheritableMetadataArray;
 
-    function __construct(&$item, $url, $theme_path, $user_can_write = false, $force = null) {
+    function __construct($item, $url, $theme_path, $user_can_write = false, $force = null) {
         $this->user_can_write = $user_can_write;
         $this->force = $force;
         $this->theme_path = $theme_path;
@@ -113,7 +112,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 
-    function getContent($params = array()) {
+    function getContent($params = []) {
         $html  = '';
 
         $defaultValuesToManage = false;
@@ -204,5 +203,3 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
         return $html;
     }
 }
-
-?>

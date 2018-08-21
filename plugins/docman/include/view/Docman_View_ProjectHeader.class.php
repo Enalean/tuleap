@@ -14,7 +14,7 @@ require_once('Docman_View_Header.class.php');
     
     /* protected */ function _scripts($params) {
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman('. $params['group_id'] .', ';
-        $di =& $this->_getDocmanIcons($params);
+        $di = $this->_getDocmanIcons($params);
         echo $this->phpArrayToJsArray(array_merge(array(
                 'folderSpinner' => $di->getFolderSpinner(),
                 'spinner'       => $di->getSpinner(),

@@ -225,11 +225,11 @@ class Docman_Item {
     }
 
     public function addMetadata(&$metadata) {
-        $this->_metadata[$metadata->getLabel()] =& $metadata;
+        $this->_metadata[$metadata->getLabel()] = $metadata;
     }
     
     public function setMetadata(&$metadata) {
-        $this->_metadata =& $metadata;
+        $this->_metadata = $metadata;
     }
     
     public function &getMetadata() {
@@ -334,7 +334,7 @@ class Docman_Item {
     }
 
     public function setPathId(&$path_id) {
-        $this->pathId =& $path_id;
+        $this->pathId = $path_id;
     }
     
     public function &getPathId() {
@@ -342,7 +342,7 @@ class Docman_Item {
     }
 
     public function setPathTitle(&$path_title) {
-        $this->pathTitle =& $path_title;
+        $this->pathTitle = $path_title;
     }
     
     public function &getPathTitle() {

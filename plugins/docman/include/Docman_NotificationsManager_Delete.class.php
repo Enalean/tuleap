@@ -50,7 +50,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                     if (isset($last['events'][$k]['parent'])) {
                         $p =  $last['events'][$k]['parent'];
                         $t =  $last['events'][$k]['type'];
-                        $u =& $last['events'][$k]['user'];
+                        $u = $last['events'][$k]['user'];
                     }
                 }
                 $this->_addMessage(
@@ -177,7 +177,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                     'user' => &$params['user']
                 );
                 if (isset($params['parent'])) {
-                    $event['parent'] =& $params['parent'];
+                    $event['parent'] = $params['parent'];
                 }
                 $this->_listeners[$row['user_id']]['items'][$params['item']->getId()]['events'][] = $event;
             }

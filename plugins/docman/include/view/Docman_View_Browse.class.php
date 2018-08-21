@@ -1,12 +1,23 @@
 <?php
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Docman_View_Browse
-*/
+ * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('Docman_View_Display.class.php');
 
@@ -126,7 +137,9 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
         }
         return $li_classes;
     }
-    /* static */ function isViewAllowed($view) {
+
+    public static function isViewAllowed($view)
+    {
         //List is part of SOAP api
         return in_array($view, array_merge(array_keys(Docman_View_Browse::getDefaultViews()), array('List')));
     }
@@ -137,7 +150,7 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
         else {
             $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF .'_'. $group_id);
             if (!$pref) {
-                $sBo =& Docman_SettingsBo::instance($group_id);
+                $sBo = Docman_SettingsBo::instance($group_id);
                 $pref = $sBo->getView();            
             }
         }
@@ -146,16 +159,12 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
         }
         return $pref;
     }
-    
-    /**
-     * @access: static
-     */
-    function getDefaultViews() { 
+
+    public static function getDefaultViews()
+    {
         return array('Tree'   => 'Tree',
                      'Icons'  => 'Icons',
                      'Table'  => 'Table',
         );
     }
 }
-
-?>

@@ -48,10 +48,10 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
-            $it =& $items->iterator();
+            $it = $items->iterator();
             while($it->valid()) {
-                $o =& $it->current();
-                $params['parent'] =& $item;
+                $o = $it->current();
+                $params['parent'] = $item;
                 if (!$o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
                 }
@@ -64,7 +64,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             return false;
         } else {
             //Mark the folder as deleted;
-            $params['parent'] =& $parent;
+            $params['parent'] = $parent;
             return $this->_deleteItem($item, $params);
         }
     }
@@ -109,7 +109,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 }
 
             } else { // User have choosen to delete wiki page from wiki service too
-                $dIF =& $this->_getItemFactory();
+                $dIF = $this->_getItemFactory();
                 if ($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())) {
                     $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
                 } else {
@@ -150,7 +150,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         $dao = $this->_getItemDao();
         $referenced = $dao->isWikiPageReferenced($item->getPageName(), $item->getGroupId());
         if(!$referenced) {
-            $dIF =& $this->_getItemFactory();
+            $dIF = $this->_getItemFactory();
             $id_in_wiki = $dIF->getIdInWikiOfWikiPageItem($item->getPageName(), $item->getGroupId());
             // Restrict access to wiki admins if the page already exists in wiki.
             if($id_in_wiki !== null) {
@@ -181,11 +181,11 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      */
     function _deleteFile(Docman_File $item, $params) {
         // Delete all versions before
-        $version_factory =& $this->_getVersionFactory();
+        $version_factory = $this->_getVersionFactory();
         if ($versions = $version_factory->getAllVersionForItem($item)) {
             if (count($versions)) {
-                $um =& UserManager::instance();
-                $user =& $um->getCurrentUser();
+                $um = UserManager::instance();
+                $user = $um->getCurrentUser();
                 foreach ($versions as $version) {
                     $this->_deleteVersion($item, $version, $user);
                 }

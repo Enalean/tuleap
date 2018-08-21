@@ -30,7 +30,7 @@ class Docman_NodeToRootVisitor extends Visitor {
     }
 
     function getItemId(&$itemNode) {
-        $item =& $itemNode->getData();
+        $item = $itemNode->getData();
         return $item->getId();
     }
 
@@ -41,7 +41,7 @@ class Docman_NodeToRootVisitor extends Visitor {
     function visit(&$itemNode) {
         while(($itemNodeId = $this->getItemId($itemNode)) != 0) {
             array_push($this->path, $itemNodeId);
-            $itemNode =& $itemNode->getParentNode();
+            $itemNode = $itemNode->getParentNode();
         }
         array_push($this->path, 0);
     }

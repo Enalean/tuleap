@@ -68,8 +68,7 @@ class Codendi_HTMLPurifier {
      */
     public static function instance() {
         if (!isset(self::$Codendi_HTMLPurifier_instance)) {
-            $c = __CLASS__;
-            self::$Codendi_HTMLPurifier_instance = new $c;
+            self::$Codendi_HTMLPurifier_instance = new Codendi_HTMLPurifier();
         }
         return self::$Codendi_HTMLPurifier_instance;
     }

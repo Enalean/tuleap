@@ -32,7 +32,7 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
     var $fldCounter;
 
     function __construct($groupId, $user) {
-        $this->dpm =& Docman_PermissionsManager::instance($groupId);
+        $this->dpm = Docman_PermissionsManager::instance($groupId);
         $this->user = $user;
         $this->docIdList = array();
         $this->fldIdList = array();
@@ -47,12 +47,12 @@ class Docman_SubItemsWritableVisitor /* implements Visitor */ {
 
         if($this->_itemIsWritable($item, $params)) {
             $this->fldIdList[] = $item->getId();
-            $items =& $item->getAllItems();
+            $items = $item->getAllItems();
             if($items && $items->size() > 0) {
-                $iter =& $items->iterator();
+                $iter = $items->iterator();
                 $iter->rewind();
                 while($iter->valid()) {
-                    $child =& $iter->current();
+                    $child = $iter->current();
                     $canWrite = ($canWrite && $child->accept($this, $params));
                     $iter->next();
                 }

@@ -1,39 +1,38 @@
 <?php
-/* 
+/**
+ * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * 
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once('Docman_View_ItemDetailsSectionActions.class.php');
 
 class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectionActions {
     var $validate;
     var $force;
     var $token;
-    function __construct(&$item, $url, &$controller, $force, $token) {
+    function __construct($item, $url, $controller, $force, $token) {
         parent::__construct($item, $url, false, true, $controller);
         $this->force = $force;
         $this->token = $token;
     }
-    function getContent() {
+    function getContent($params = []) {
         return $this->item->accept($this);
     }
     
@@ -60,10 +59,10 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    function visitFolder(&$item, $params = array()) {
+    function visitFolder($item, $params = array()) {
         return "";
     }
-    function visitDocument(&$item, $params = array()) {
+    function visitDocument($item, $params = array()) {
         $content = '';
         
         $content .= $this->_updateHeader();
@@ -80,20 +79,20 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         
         return $content;
     }
-    function visitWiki(&$item, $params = array()) {
+    function visitWiki($item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitLink(&$item, $params = array()) {
+    function visitLink($item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
-    function visitFile(&$item, $params = array()) {
+    function visitFile($item, $params = array()) {
         return '';
     }
-    function visitEmbeddedFile(&$item, $params = array()) {
+    function visitEmbeddedFile($item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    function visitEmpty($item, $params = array()) {
         $content = '';
 
         $enctype = ' enctype="multipart/form-data"';
@@ -112,4 +111,3 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 }
-?>

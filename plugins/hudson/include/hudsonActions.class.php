@@ -28,7 +28,8 @@ use Tuleap\Hudson\HudsonJobBuilder;
  */
 class hudsonActions extends Actions {
     
-    function __construct(&$controler, $view=null) {
+    public function __construct($controler)
+    {
         parent::__construct($controler);
 
         $this->svn_paths_updater = new SVNPathsUpdater();
@@ -36,7 +37,7 @@ class hudsonActions extends Actions {
 	
     public function addJob()
     {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $job_url = $request->get('hudson_job_url');
         try {
@@ -77,7 +78,7 @@ class hudsonActions extends Actions {
     }
 
     public function updateJob() {
-        $request      =& HTTPRequest::instance();
+        $request      = HTTPRequest::instance();
         $job_id       = $request->get('job_id');
         $new_job_url  = $request->get('hudson_job_url');
         $new_job_name = $request->get('hudson_job_name');
@@ -111,9 +112,9 @@ class hudsonActions extends Actions {
             $em->processEvent('update_ci_triggers', $params);
         }
     }
+
     function deleteJob() {
-        $request =& HTTPRequest::instance();
-        $group_id = $request->get('group_id');
+        $request = HTTPRequest::instance();
         $job_id = $request->get('job_id');
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         if ( ! $job_dao->deleteHudsonJob($job_id)) {
@@ -125,8 +126,4 @@ class hudsonActions extends Actions {
             $em->processEvent('delete_ci_triggers', $params);
         }
     }
-    // }}}
-   
 }
-
-?>

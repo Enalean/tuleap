@@ -1,7 +1,7 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2007
  *
@@ -28,7 +28,7 @@ use Tuleap\Mail\MailLogger;
 class Docman_View_ItemDetailsSectionApprovalCreate
 extends Docman_View_ItemDetailsSectionApproval {
 
-    function __construct(&$item, $url, $themePath) {
+    function __construct($item, $url, $themePath) {
         parent::__construct($item, $url, $themePath, null);
     }
 
@@ -63,12 +63,12 @@ extends Docman_View_ItemDetailsSectionApproval {
         );
         $atsm->setItem($this->item);
 
-        $atf =& Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
+        $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($this->item);
         $table = $atf->getTable(false);
         $atsm->setTable($table);
 
-        $um =& UserManager::instance();
-        $owner =& $um->getUserById($table->getOwner());
+        $um = UserManager::instance();
+        $owner = $um->getUserById($table->getOwner());
         $atsm->setOwner($owner);
 
         $atsm->sendNotifReviewer($owner);
@@ -249,7 +249,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         }
         $rIter = $this->table->getReviewerIterator();
         if($rIter !== null) {
-            $docmanIcons =& $this->_getDocmanIcons();
+            $docmanIcons = $this->_getDocmanIcons();
 
             $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_select'),
                                                      $GLOBALS['Language']->getText('plugin_docman', 'details_approval_reviewer'),
@@ -444,11 +444,11 @@ extends Docman_View_ItemDetailsSectionApproval {
     }
 
 
-    function getContent() {
+    function getContent($params = []) {
         $html = '';
 
-        $user =& $this->_getCurrentUser();
-        $dpm  =& $this->_getPermissionsManager();
+        $user = $this->_getCurrentUser();
+        $dpm  = $this->_getPermissionsManager();
         if(!$dpm->userCanWrite($user, $this->item->getId())) {
             return $html;
         }
@@ -460,7 +460,7 @@ extends Docman_View_ItemDetailsSectionApproval {
 
         $this->initDisplay();
 
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         // Toolbar
         $html .= $this->getToolbar();

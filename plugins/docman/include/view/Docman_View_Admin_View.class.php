@@ -23,7 +23,7 @@ class Docman_View_Admin_View extends Docman_View_Extra {
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
         $html .= '<select name="selected_view" onchange="this.form.submit()">';
 
-        $sBo =& Docman_SettingsBo::instance($params['group_id']);
+        $sBo = Docman_SettingsBo::instance($params['group_id']);
         $actual = $sBo->getView();
 
         $views  = Docman_View_Browse::getDefaultViews();

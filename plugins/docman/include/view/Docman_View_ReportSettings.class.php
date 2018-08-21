@@ -1,26 +1,25 @@
 <?php
-/*
+/**
+ * Copyright © Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright(c) STMicroelectronics, 2007
+ *
  * Originally written by Manuel VACELET, STMicroelectronics, 2007
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
+ * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Id$
- *
  */
 
 require_once('Docman_View_Extra.class.php');
@@ -34,7 +33,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
      *
      */
     function _title($params) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $hp = Codendi_HTMLPurifier::instance();
         if($request->exist('report_id')) {
             echo '<h2>'.$GLOBALS['Language']->getText('plugin_docman', 'report_settings_report_name').' "'. $hp->purify($params['filter']->getName(), CODENDI_PURIFIER_CONVERT_HTML) .'"</h2>';
@@ -49,7 +48,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     function __init($params) {
         $this->groupId     =  $params['group_id'];
         $this->defaultUrl  =  $params['default_url'];
-        $this->controller  =& $params['docman'];
+        $this->controller  = $params['docman'];
     }
 
     /**
@@ -93,9 +92,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     function _getReportTable() {
         $html = '';
         
-        $um   =& UserManager::instance();
+        $um   = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dpm  =& Docman_PermissionsManager::instance($this->groupId);
+        $dpm  = Docman_PermissionsManager::instance($this->groupId);
         $isAdmin = $dpm->userCanAdmin($user);
 
         $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'report_settings_report_name'),
@@ -123,9 +122,9 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
     function _getReportSettings($reportId) {
         $html = '';
         
-        $um   =& UserManager::instance();
+        $um   = UserManager::instance();
         $user = $um->getCurrentUser();
-        $dpm  =& Docman_PermissionsManager::instance($this->groupId);
+        $dpm  = Docman_PermissionsManager::instance($this->groupId);
         $isAdmin = $dpm->userCanAdmin($user);
 
         $reportFactory = new Docman_ReportFactory($this->groupId);
@@ -264,7 +263,7 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         
         $this->__init($params);
         
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if($request->exist('report_id')) {
             $reportId = (int) $request->get('report_id');
             $html .= $this->_getReportSettings($reportId);
@@ -289,5 +288,3 @@ class Docman_View_ReportSettings extends Docman_View_Extra {
         echo $html;
     }
 }
-
-?>

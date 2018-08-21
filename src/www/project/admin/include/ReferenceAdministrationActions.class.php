@@ -22,7 +22,7 @@
 class ReferenceAdministrationActions extends Actions
 {
     
-    public function __construct($controler, $view=null)
+    public function __construct($controler)
     {
         parent::__construct($controler);
     }

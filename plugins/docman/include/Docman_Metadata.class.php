@@ -365,7 +365,7 @@ class Docman_ListMetadata extends Docman_Metadata {
      * @param array of Docman_MetadataListOfValuesElements
      */
     function setListOfValueElements(&$l) {
-        $this->listOfValue =& $l;
+        $this->listOfValue = $l;
     }
 
     /**

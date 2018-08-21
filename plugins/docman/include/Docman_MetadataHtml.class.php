@@ -1,7 +1,7 @@
 <?php
-/*
- * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
+/**
  * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
  *
@@ -141,7 +141,7 @@ class Docman_MetadataHtml {
     var $hp;
 
     function __construct(&$md, $formParams) {
-        $this->md =& $md;
+        $this->md = $md;
         $this->hp = Codendi_HTMLPurifier::instance();
         $this->formParams = $formParams; 
     }
@@ -316,8 +316,8 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
     /**
      * static
      */
-    function _getElementName(&$e, $hideNone=false) {
-        $hp =& Codendi_HTMLPurifier::instance();
+    function _getElementName($e, $hideNone=false) {
+        $hp = Codendi_HTMLPurifier::instance();
         $name = '';
         switch($e->getId()) {
         case 100:
@@ -331,14 +331,16 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml {
         return $name;
     }
 
-    function _getElementDescription(&$e) {
+    public static function _getElementDescription($e)
+    {
         $name = '';
         switch($e->getId()) {
         case 100:
             $name = $GLOBALS['Language']->getText('plugin_docman', 'love_special_none_desc_key');
             break;
         default:
-            $name = $this->hp->purify($e->getDescription());
+            $hp = Codendi_HTMLPurifier::instance();
+            $name = $hp->purify($e->getDescription());
         }
         return $name;
     }

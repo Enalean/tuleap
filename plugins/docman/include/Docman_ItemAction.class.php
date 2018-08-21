@@ -32,7 +32,7 @@ class Docman_ItemAction {
     var $extraUrlParams;
 
     function __construct(&$item) {
-        $this->item             =& $item;
+        $this->item             = $item;
         $this->action           = '';
         $this->classes          = '';
         $this->title            = '';

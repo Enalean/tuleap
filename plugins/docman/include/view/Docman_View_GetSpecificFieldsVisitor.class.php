@@ -32,7 +32,7 @@ class Docman_MetadataHtmlWiki extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[wiki_page]" value="'. $hp->purify($this->pagename) .'" /> ';
     }
 
@@ -57,7 +57,7 @@ class Docman_MetadataHtmlLink extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         return '<input type="text" class="docman_text_field" name="item[link_url]" value="'. $hp->purify($this->link_url) .'" />';
     }
 
@@ -110,7 +110,7 @@ class Docman_MetadataHtmlEmbeddedFile extends Docman_MetadataHtml {
     }
     
     function getField() {
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<textarea id="embedded_content" name="content" cols="80" rows="20">'. $hp->purify($this->content) .'</textarea>';
         return $html;
@@ -193,4 +193,3 @@ class Docman_View_GetSpecificFieldsVisitor {
         return array(new Docman_MetadataHtmlEmpty());
     }
 }
-?>
