@@ -52,6 +52,11 @@ class RepositoryHeaderPresenterBuilder
      */
     public function build(GitRepository $repository, PFUser $current_user)
     {
+        $parent_repository_presenter = null;
+        $parent_repository = $repository->getParent();
+        if (! empty($parent_repository)) {
+            $parent_repository_presenter = $this->buildParentPresenter($parent_repository);
+        }
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
             $repository->belongsTo($current_user);
 
@@ -60,7 +65,16 @@ class RepositoryHeaderPresenterBuilder
         return new RepositoryHeaderPresenter(
             $repository,
             $is_admin,
-            $admin_url
+            $admin_url,
+            $parent_repository_presenter
+        );
+    }
+
+    private function buildParentPresenter(GitRepository $parent_repository)
+    {
+        return new ParentRepositoryPresenter(
+            $parent_repository,
+            $this->url_manager->getRepositoryBaseUrl($parent_repository)
         );
     }
 }

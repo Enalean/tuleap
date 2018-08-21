@@ -51,6 +51,9 @@ msgstr "Impossible de supprimer le groupe %s des notifications"
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
+msgid "Forked from %s"
+msgstr "Fork de %s"
+
 msgid "Git"
 msgstr "Git"
 
