@@ -28,6 +28,8 @@ class RepositoryHeaderPresenter
     public $repository_name;
     public $user_is_admin;
     public $repository_admin_url;
+    /** @var GerritStatusPresenter */
+    public $gerrit_status_presenter;
     /** @var null|ParentRepositoryPresenter */
     public $parent_repository_presenter;
 
@@ -35,16 +37,19 @@ class RepositoryHeaderPresenter
      * @param GitRepository                  $repository
      * @param bool                           $user_is_admin
      * @param string                         $repository_admin_url
+     * @param GerritStatusPresenter          $gerrit_status_presenter
      * @param ParentRepositoryPresenter|null $parent_repository_presenter
      */
     public function __construct(
         GitRepository $repository,
         $user_is_admin,
         $repository_admin_url,
+        GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
         $this->repository_path             = $repository->getPathWithoutProject();
         $this->repository_name             = $repository->getLabel();
+        $this->gerrit_status_presenter     = $gerrit_status_presenter;
         $this->user_is_admin               = $user_is_admin;
         $this->repository_admin_url        = $repository_admin_url;
         $this->parent_repository_presenter = $parent_repository_presenter;

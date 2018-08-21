@@ -20,7 +20,11 @@
 
 namespace Tuleap\Git\Repository\View;
 
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_Driver_Gerrit_UserAccountManager;
 use Git_GitRepositoryUrlManager;
+use Git_RemoteServer_GerritServer;
 use GitPermissionsManager;
 use GitRepository;
 use PFUser;
@@ -33,23 +37,47 @@ class RepositoryHeaderPresenterBuilder
     private $url_manager;
 
     /**
+     * @var Git_Driver_Gerrit_GerritDriverFactory
+     */
+    private $driver_factory;
+
+    /**
+     * @var Git_Driver_Gerrit_UserAccountManager
+     */
+    private $gerrit_usermanager;
+
+    /**
+     * @var Git_RemoteServer_GerritServer[]
+     */
+    private $gerrit_servers;
+
+    /**
      * @var GitPermissionsManager
      */
     private $permissions_manager;
 
+    /**
+     * @var Git_Driver_Gerrit_ProjectCreatorStatus
+     */
+    private $project_creator_status;
+
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
-        GitPermissionsManager $permissions_manager
+        Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
+        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
+        Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
+        GitPermissionsManager $permissions_manager,
+        array $gerrit_servers
     ) {
-        $this->url_manager         = $url_manager;
-        $this->permissions_manager = $permissions_manager;
+        $this->url_manager            = $url_manager;
+        $this->driver_factory         = $driver_factory;
+        $this->project_creator_status = $project_creator_status;
+        $this->gerrit_usermanager     = $gerrit_usermanager;
+        $this->permissions_manager    = $permissions_manager;
+        $this->gerrit_servers         = $gerrit_servers;
     }
 
-    /**
-     * @param GitRepository $repository
-     * @param PFUser        $current_user
-     * @return RepositoryHeaderPresenter
-     */
+    /** @return RepositoryHeaderPresenter */
     public function build(GitRepository $repository, PFUser $current_user)
     {
         $parent_repository_presenter = null;
@@ -57,6 +85,9 @@ class RepositoryHeaderPresenterBuilder
         if (! empty($parent_repository)) {
             $parent_repository_presenter = $this->buildParentPresenter($parent_repository);
         }
+
+        $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository);
+
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
             $repository->belongsTo($current_user);
 
@@ -66,6 +97,7 @@ class RepositoryHeaderPresenterBuilder
             $repository,
             $is_admin,
             $admin_url,
+            $gerrit_status_presenter,
             $parent_repository_presenter
         );
     }
@@ -75,6 +107,16 @@ class RepositoryHeaderPresenterBuilder
         return new ParentRepositoryPresenter(
             $parent_repository,
             $this->url_manager->getRepositoryBaseUrl($parent_repository)
+        );
+    }
+
+    private function buildGerritStatusPresenter(GitRepository $repository)
+    {
+        return new GerritStatusPresenter(
+            $repository,
+            $this->project_creator_status,
+            $this->driver_factory,
+            $this->gerrit_servers
         );
     }
 }
