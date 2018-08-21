@@ -7,6 +7,10 @@ get_list_of_files() {
 
 main() {
     local files=$(get_list_of_files)
+    if [ -z "${files}" ]
+    then
+        exit 0
+    fi
     local prettier_output
     prettier_output=$(npm run prettier --silent -- --list-different ${files})
     local status=$?
