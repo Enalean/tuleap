@@ -36,6 +36,7 @@ use PermissionsManager;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
@@ -159,7 +160,8 @@ class GitRoutingTest extends TestCase
                     'getConfigurationParameter' => 'foo',
                     'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
                     'getHeaderRenderer'         => Mockery::mock(HeaderRenderer::class),
-                    'getThemeManager'           => Mockery::mock(\ThemeManager::class)
+                    'getThemeManager'           => Mockery::mock(\ThemeManager::class),
+                    'getRepositoryHeaderPresenterBuilder' => Mockery::mock(RepositoryHeaderPresenterBuilder::class)
                 ]
             );
 

@@ -32,6 +32,15 @@ msgstr "%s a poussé sur %s"
 msgid "A push occured on %s"
 msgstr "Un push est survenu sur %s"
 
+msgid ""
+"An error occured while migrating this repository on gerrit %s. <strong>Do "
+"not use gerrit repository</strong>, check <a href=\"%s\">gerrit settings</a> "
+"and contact site administration."
+msgstr ""
+"Une erreur s'est produite lors de la migration vers gerrit %s. "
+"<strong>N'utilisez pas le dépôt gerrit</strong>, consultez <a href=\"%s\">le "
+"rapport d'erreur</a> et contactez l'administration de la plateforme."
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr "Impossible d'ajouter l'utilisateur \"%s\""
@@ -89,6 +98,18 @@ msgstr "Le dépôt n'existe pas"
 
 msgid "Settings"
 msgstr "Paramètres"
+
+msgid ""
+"The management of this Git repository has been delegated to the Gerrit "
+"platform: %s"
+msgstr "La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit : %s"
+
+msgid ""
+"This repository is in queue for migration to gerrit. Please check back here "
+"in a few minutes."
+msgstr ""
+"Le dépôt est en attente de transfert vers gerrit. Veuillez revenir dans "
+"quelques minutes."
 
 #, php-format
 msgid "User \"%s\" successfully added to notifications"

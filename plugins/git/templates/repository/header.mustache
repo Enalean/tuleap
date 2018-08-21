@@ -10,6 +10,9 @@
             {{/ dgettext }}
         </div>
     {{/ parent_repository_presenter }}
+    {{# gerrit_status_presenter }}
+        {{> repository/gerrit-status }}
+    {{/ gerrit_status_presenter }}
     <div class="git-repository-actions">
         <div class="git-repository-actions-spacer"></div>
         {{# user_is_admin }}

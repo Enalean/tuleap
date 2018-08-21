@@ -2497,12 +2497,17 @@ class GitPlugin extends Plugin
     }
 
     /**
+     * @access protected for test purpose
      * @return RepositoryHeaderPresenterBuilder
      */
-    private function getRepositoryHeaderPresenterBuilder() {
+    protected function getRepositoryHeaderPresenterBuilder() {
         return new RepositoryHeaderPresenterBuilder(
             $this->getGitRepositoryUrlManager(),
-            $this->getGitPermissionsManager()
+            $this->getGerritDriverFactory(),
+            $this->getProjectCreatorStatus(),
+            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
+            $this->getGitPermissionsManager(),
+            $this->getGerritServerFactory()->getServers()
         );
     }
 

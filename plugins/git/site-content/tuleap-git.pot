@@ -18,6 +18,12 @@ msgstr ""
 msgid "A push occured on %s"
 msgstr ""
 
+msgid ""
+"An error occured while migrating this repository on gerrit %s. <strong>Do "
+"not use gerrit repository</strong>, check <a href=\"%s\">gerrit settings</a> "
+"and contact site administration."
+msgstr ""
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr ""
@@ -74,6 +80,16 @@ msgid "Repository does not exist"
 msgstr ""
 
 msgid "Settings"
+msgstr ""
+
+msgid ""
+"The management of this Git repository has been delegated to the Gerrit "
+"platform: %s"
+msgstr ""
+
+msgid ""
+"This repository is in queue for migration to gerrit. Please check back here "
+"in a few minutes."
 msgstr ""
 
 #, php-format
