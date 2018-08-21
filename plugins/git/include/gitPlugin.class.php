@@ -21,11 +21,11 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbBuilder;
-use Tuleap\Git\BreadCrumbDropdown\RepositorySettingsCrumbsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\ServiceAdministrationCrumbBuilder;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
@@ -104,6 +104,7 @@ use Tuleap\Git\Repository\Settings\WebhookAddController;
 use Tuleap\Git\Repository\Settings\WebhookDeleteController;
 use Tuleap\Git\Repository\Settings\WebhookEditController;
 use Tuleap\Git\Repository\Settings\WebhookRouter;
+use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\RestrictedGerritServerDao;
@@ -2496,6 +2497,16 @@ class GitPlugin extends Plugin
     }
 
     /**
+     * @return RepositoryHeaderPresenterBuilder
+     */
+    private function getRepositoryHeaderPresenterBuilder() {
+        return new RepositoryHeaderPresenterBuilder(
+            $this->getGitRepositoryUrlManager(),
+            $this->getGitPermissionsManager()
+        );
+    }
+
+    /**
      * @return UserDao
      */
     protected function getUserDao()
@@ -2547,7 +2558,10 @@ class GitPlugin extends Plugin
                     $this->getProjectManager(),
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
-                    $this->getRepoHeader()
+                    $this->getRepoHeader(),
+                    $this->getThemeManager(),
+                    $this->getHeaderRenderer(),
+                    $this->getRepositoryHeaderPresenterBuilder()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
@@ -2636,5 +2650,21 @@ class GitPlugin extends Plugin
         $option_builder      = new AccessRightsPresenterOptionsBuilder($user_group_factory, $permissions_manager);
 
         return $option_builder;
+    }
+
+    /**
+     * @return ThemeManager
+     */
+    protected function getThemeManager()
+    {
+        return new ThemeManager(
+            new BurningParrotCompatiblePageDetector(
+                new Tuleap\Request\CurrentPage(),
+                new \Admin_Homepage_Dao(),
+                new \User_ForgeUserGroupPermissionsManager(
+                    new \User_ForgeUserGroupPermissionsDao()
+                )
+            )
+        );
     }
 }

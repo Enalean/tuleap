@@ -191,7 +191,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
                 mock('Tuleap\Git\Notifications\UsersToNotifyDao'),
                 mock('Tuleap\Git\Notifications\UgroupsToNotifyDao'),
                 mock('UGroupManager'),
-                mock(\Tuleap\Git\GitViews\Header\HeaderRenderer::class)
+                mock(\Tuleap\Git\GitViews\Header\HeaderRenderer::class),
+                mock(\ThemeManager::class)
             )
         );
         $git->setRequest($request);

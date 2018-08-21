@@ -32,7 +32,7 @@
                             data-test="repository_name"
                         >
                             <span v-if="is_in_folder && ! isFolderDisplayMode"
-                                class="git-repository-path"
+                                class="git-repository-card-path"
                             >
                                 {{ folder_path }}
                             </span>

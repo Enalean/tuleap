@@ -158,7 +158,8 @@ class GitRoutingTest extends TestCase
                     'getGitDao'                 => \Mockery::mock(GitDao::class),
                     'getConfigurationParameter' => 'foo',
                     'getIncludeAssets'          => \Mockery::mock(IncludeAssets::class),
-                    'getHeaderRenderer'         => Mockery::mock(HeaderRenderer::class)
+                    'getHeaderRenderer'         => Mockery::mock(HeaderRenderer::class),
+                    'getThemeManager'           => Mockery::mock(\ThemeManager::class)
                 ]
             );
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Git_GitRepositoryUrlManager {
-
+class Git_GitRepositoryUrlManager
+{
     /** @var GitPlugin  */
     private $git_plugin;
 
-    public function __construct(GitPlugin $git_plugin) {
+    public function __construct(GitPlugin $git_plugin)
+    {
         $this->git_plugin = $git_plugin;
     }
 
@@ -32,12 +33,23 @@ class Git_GitRepositoryUrlManager {
      * @param GitRepository $repository
      * @return string the base url to access the git repository regarding plugin configuration
      */
-    public function getRepositoryBaseUrl(GitRepository $repository) {
-
+    public function getRepositoryBaseUrl(GitRepository $repository)
+    {
         if ($this->git_plugin->areFriendlyUrlsActivated()) {
             return GIT_BASE_URL .'/'. $repository->getProject()->getUnixName() .'/'. $repository->getFullName();
-        } else {
-            return GIT_BASE_URL .'/index.php/'. $repository->getProjectId() .'/view/'. $repository->getId() .'/';
         }
+
+        return GIT_BASE_URL . '/index.php/' . $repository->getProjectId() . '/view/' . $repository->getId() . '/';
+    }
+
+    public function getRepositoryAdminUrl(GitRepository $repository)
+    {
+        return $this->git_plugin->getPluginPath() . '/?' . http_build_query(
+            [
+                'action'   => 'repo_management',
+                'group_id' => $repository->getProjectId(),
+                'repo_id'  => $repository->getId()
+            ]
+        );
     }
 }

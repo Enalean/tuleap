@@ -23,12 +23,16 @@ namespace Tuleap\Git;
 
 use GitPlugin;
 use HTTPRequest;
+use TemplateRendererFactory;
+use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Request\Project;
 
 class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject
 {
@@ -52,19 +56,37 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * @var GitViews\ShowRepo\RepoHeader
      */
     private $repo_header;
+    /**
+     * @var HeaderRenderer
+     */
+    private $header_renderer;
+    /**
+     * @var RepositoryHeaderPresenterBuilder
+     */
+    private $header_presenter_builder;
+    /**
+     * @var \ThemeManager
+     */
+    private $theme_manager;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
         \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         History\GitPhpAccessLogger $access_logger,
-        GitViews\ShowRepo\RepoHeader $repo_header
+        GitViews\ShowRepo\RepoHeader $repo_header,
+        \ThemeManager $theme_manager,
+        HeaderRenderer $header_renderer,
+        RepositoryHeaderPresenterBuilder $header_presenter_builder
     ) {
-        $this->repository_factory  = $repository_factory;
-        $this->project_manager     = $project_manager;
-        $this->mirror_data_mapper  = $mirror_data_mapper;
-        $this->access_logger       = $access_logger;
-        $this->repo_header         = $repo_header;
+        $this->repository_factory       = $repository_factory;
+        $this->project_manager          = $project_manager;
+        $this->mirror_data_mapper       = $mirror_data_mapper;
+        $this->access_logger            = $access_logger;
+        $this->repo_header              = $repo_header;
+        $this->theme_manager            = $theme_manager;
+        $this->header_renderer          = $header_renderer;
+        $this->header_presenter_builder = $header_presenter_builder;
     }
 
     /**
@@ -73,7 +95,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * @return \Project
      * @throws NotFoundException
      */
-    public function getProject(\HTTPRequest $request, array $variables)
+    public function getProject(HTTPRequest $request, array $variables)
     {
         $project = $this->project_manager->getProjectByCaseInsensitiveUnixName($variables['project_name']);
         if (! $project || $project->isError()) {
@@ -95,6 +117,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $layout          = $this->theme_manager->getBurningParrot($request->getCurrentUser());
+            $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
+        }
         $project = $this->getProject($request, $variables);
         if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
@@ -105,13 +131,26 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             throw new NotFoundException("Repository does not exist");
         }
 
-        if (! $repository->userCanRead($request->getCurrentUser())) {
+        $current_user = $request->getCurrentUser();
+        if (! $repository->userCanRead($current_user)) {
             throw new ForbiddenException();
         }
 
         $this->redirectOutdatedActions($request, $layout);
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
+
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $layout->addCssAsset(
+                new CssAsset(
+                    new IncludeAssets(
+                        __DIR__ . '/../../www/themes/BurningParrot/assets',
+                        GIT_BASE_URL . '/themes/BurningParrot/assets'
+                    ),
+                    'git'
+                )
+            );
+        }
 
         $url = new \Git_URL(
             $this->project_manager,
@@ -132,9 +171,16 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             $this->access_logger
         );
 
-
         if (! $url->isADownload($request)) {
-            $this->repo_header->display($request, $layout, $repository);
+            if (\ForgeConfig::get('git_repository_bp')) {
+                $this->header_renderer->renderRepositoryHeader($request, $current_user, $project, $repository);
+
+                $renderer         = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
+                $header_presenter = $this->header_presenter_builder->build($repository, $current_user);
+                $renderer->renderToPage('repository/header', $header_presenter);
+            } else {
+                $this->repo_header->display($request, $layout, $repository);
+            }
         }
 
         $index_view->display($url);
