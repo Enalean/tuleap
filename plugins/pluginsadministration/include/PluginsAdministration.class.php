@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/mvc/Controler.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('PluginsAdministrationViews.class.php');
-require_once('PluginsAdministrationActions.class.php');
 class PluginsAdministration extends Controler
 {
     public function __construct()
@@ -32,7 +28,7 @@ class PluginsAdministration extends Controler
 
     public function request()
     {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         if ($request->exist('view')) {
             switch ($request->get('view')) {
