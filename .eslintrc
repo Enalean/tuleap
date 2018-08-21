@@ -1,13 +1,11 @@
 {
     "plugins": [
         "you-dont-need-lodash-underscore",
-        "cypress",
-        "prettier"
+        "cypress"
     ],
     "extends": [
         "eslint:recommended",
-        "plugin:you-dont-need-lodash-underscore/all",
-        "prettier"
+        "plugin:you-dont-need-lodash-underscore/all"
     ],
     "parser": "vue-eslint-parser",
     "parserOptions": {
@@ -60,11 +58,7 @@
         "no-void": "error",
         "no-with": "error",
         "radix": "error",
-        "require-await": "error",
-        // Prettier plugin
-        "prettier/prettier": ["error", null, {
-            "usePrettierrc": true
-        }]
+        "require-await": "error"
     },
     "overrides": [
         {
