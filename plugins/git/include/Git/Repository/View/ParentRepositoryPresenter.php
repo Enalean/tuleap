@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
@@ -17,43 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../gitphp';
+namespace Tuleap\Git\Repository\View;
 
-.git-repository-path {
-    display: block;
-    color: $tlp-ui-dimmed;
-    font-size: 16px;
-}
+use GitRepository;
 
-.git-repository-parent {
-    color: $tlp-ui-dimmed;
-    font-size: 14px;
-}
+class ParentRepositoryPresenter
+{
+    public $parent_repository_url;
+    public $parent_repository_name;
 
-.git-repository-actions {
-    display: flex;
-    margin: $tlp-spacing 0 0;
-}
-
-.git-repository-actions-spacer {
-    flex: 1;
-    min-width: 20px;
-}
-
-.git-repository-actions-button {
-    margin: 0 0 0 10px;
-}
-
-/* scss-lint:disable SelectorFormat */
-.plugin_git_gitphp {
-    margin: 10px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
-}
-
-#readme {
-    margin: $tlp-spacing 10px;
-    border: 1px solid #e3e3e3;
-    border-radius: 4px;
+    public function __construct(GitRepository $repository, $repository_url)
+    {
+        $this->parent_repository_url  = $repository_url;
+        $this->parent_repository_name = $repository->getName();
+    }
 }

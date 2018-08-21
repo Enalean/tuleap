@@ -28,21 +28,25 @@ class RepositoryHeaderPresenter
     public $repository_name;
     public $user_is_admin;
     public $repository_admin_url;
+    /** @var null|ParentRepositoryPresenter */
+    public $parent_repository_presenter;
 
     /**
-     * RepositoryHeaderPresenter constructor.
-     * @param GitRepository $repository
-     * @param string        $user_is_admin
-     * @param string        $repository_admin_url
+     * @param GitRepository                  $repository
+     * @param bool                           $user_is_admin
+     * @param string                         $repository_admin_url
+     * @param ParentRepositoryPresenter|null $parent_repository_presenter
      */
     public function __construct(
         GitRepository $repository,
         $user_is_admin,
-        $repository_admin_url
+        $repository_admin_url,
+        ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
-        $this->repository_path      = $repository->getPathWithoutProject();
-        $this->repository_name      = $repository->getLabel();
-        $this->user_is_admin        = $user_is_admin;
-        $this->repository_admin_url = $repository_admin_url;
+        $this->repository_path             = $repository->getPathWithoutProject();
+        $this->repository_name             = $repository->getLabel();
+        $this->user_is_admin               = $user_is_admin;
+        $this->repository_admin_url        = $repository_admin_url;
+        $this->parent_repository_presenter = $parent_repository_presenter;
     }
 }

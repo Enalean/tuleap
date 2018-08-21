@@ -37,6 +37,9 @@ msgstr ""
 msgid "Fork repositories"
 msgstr ""
 
+msgid "Forked from %s"
+msgstr ""
+
 msgid "Git"
 msgstr ""
 
