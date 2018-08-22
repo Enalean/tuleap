@@ -1,3 +1,5 @@
+import { dropdown } from "tlp";
+
 export default OverviewController;
 
 OverviewController.$inject = [
@@ -39,6 +41,7 @@ function OverviewController(
         checkMerge,
         hasAbandonRight,
         hasMergeRight,
+        initCheckoutDropdown,
         isConflictingMerge,
         isNonFastForwardMerge,
         isUnknownMerge,
@@ -47,6 +50,8 @@ function OverviewController(
 
     SharedPropertiesService.whenReady()
         .then(function() {
+            self.initCheckoutDropdown();
+
             self.pull_request = SharedPropertiesService.getPullRequest();
             self.is_merge_commit_allowed = SharedPropertiesService.isMergeCommitAllowed();
 
@@ -124,6 +129,12 @@ function OverviewController(
         self.operationInProgress = true;
         PullRequestService.abandon(self.pull_request).then(function() {
             self.operationInProgress = false;
+        });
+    }
+
+    function initCheckoutDropdown() {
+        dropdown(document.getElementById("pull-request-checkout-dropdown"), {
+            keyboard: false
         });
     }
 }

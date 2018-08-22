@@ -11,7 +11,8 @@ const webpack_config = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     externals: {
-        jquery: "jQuery"
+        jquery: "jQuery",
+        tlp: "tlp"
     },
     resolve: {
         alias: webpack_configurator.extendAliases(
@@ -24,6 +25,7 @@ const webpack_config = {
                 "angular-ui-select": "ui-select/dist/select.js"
             },
             webpack_configurator.flaming_parrot_labels_box_aliases,
+            webpack_configurator.tlp_mocks_alias,
             webpack_configurator.tuleap_core_alias
         )
     },

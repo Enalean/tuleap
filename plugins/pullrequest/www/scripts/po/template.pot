@@ -51,6 +51,10 @@ msgid "Date"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
+msgid "Deprecated REST route"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
 msgid "Description"
 msgstr ""
 
@@ -199,7 +203,5 @@ msgid "Unknown"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid ""
-"Your CI job is using a deprecated REST route to publish the build result and must be updated.\n"
-"                    Consult the documentation or the API Explorer for more information."
+msgid "Your CI job is using a deprecated REST route to publish the build result and must be updated. Consult the documentation or the API Explorer for more information."
 msgstr ""

@@ -1,4 +1,5 @@
 import "babel-polyfill";
+import "tlp-mocks";
 
 import "./user-rest-service.spec.js";
 import "./dashboard/dashboard-controller.spec.js";

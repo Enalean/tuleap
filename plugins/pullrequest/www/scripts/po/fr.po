@@ -59,6 +59,10 @@ msgid "Date"
 msgstr "Date"
 
 #: src/app/overview/overview.tpl.html
+msgid "Deprecated REST route"
+msgstr "Route REST dépréciée"
+
+#: src/app/overview/overview.tpl.html
 msgid "Description"
 msgstr "Description"
 
@@ -238,11 +242,9 @@ msgstr "Inconnu"
 #: src/app/overview/overview.tpl.html
 msgid ""
 "Your CI job is using a deprecated REST route to publish the build result and "
-"must be updated.\n"
-"                    Consult the documentation or the API Explorer for more "
+"must be updated. Consult the documentation or the API Explorer for more "
 "information."
 msgstr ""
 "Votre job d'intégration continue utilise une route REST obsolète et doit "
-"être mis à jour.\n"
-"                    Consulter la documentation ou l'API Explorer pour plus "
+"être mis à jour. Consultez la documentation ou l'API Explorer pour plus "
 "d'informations."
