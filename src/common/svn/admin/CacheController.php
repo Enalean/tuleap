@@ -23,7 +23,9 @@ namespace Tuleap\SvnCore\Admin;
 use CSRFSynchronizerToken;
 use Exception;
 use Feedback;
+use ForgeConfig;
 use HTTPRequest;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\SvnCore\Cache\Parameters;
 use Tuleap\SvnCore\Cache\ParameterSaver;
 
@@ -38,7 +40,7 @@ class CacheController implements Controller
      */
     private $parameter_saver;
     /**
-     * @var Renderer
+     * @var AdminPageRenderer
      */
     private $renderer;
     /**
@@ -49,7 +51,7 @@ class CacheController implements Controller
     public function __construct(
         Parameters $parameters,
         ParameterSaver $parameter_saver,
-        Renderer $renderer,
+        AdminPageRenderer $renderer,
         CSRFSynchronizerToken $csrf_token
     ) {
         $this->parameters      = $parameters;
@@ -94,7 +96,18 @@ class CacheController implements Controller
         $presenter = new CachePresenter($this->parameters, $this->csrf_token);
 
         $this->renderer->renderANoFramedPresenter(
+            $this->getTitle(),
+            ForgeConfig::get('codendi_dir') . '/src/templates/svn',
+            'admin',
             $presenter
         );
+    }
+
+    /**
+     * @return string
+     */
+    private function getTitle()
+    {
+        return $GLOBALS['Language']->getText('svn_admin_index', 'admin');
     }
 }
