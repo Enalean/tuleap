@@ -31,7 +31,7 @@ class DocumentCanBeDownloadedChecker
     {
         $matching_ids = $report->getMatchingIds();
 
-        return isset($matching_ids['id']) && count($matching_ids['id']) > 0;
+        return isset($matching_ids['id']) && strlen($matching_ids['id']) > 0;
     }
 
     public function hasNeededSemantics(Tracker $tracker)
