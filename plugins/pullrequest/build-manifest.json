@@ -17,5 +17,11 @@
             "target_dir": "www/themes/FlamingParrot/css"
         }
     },
+    "gettext-vue": {
+        "create-pullrequest-button": {
+            "scripts": "www/scripts",
+            "po" : "www/scripts/create-pullrequest-button/po"
+        }
+    },
     "components": ["www/scripts"]
 }

@@ -101,6 +101,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::GET_REFERENCE);
@@ -178,6 +179,21 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
             echo $include_asset_pullrequest->getHTMLSnippet('move-button-back.js');
             echo $include_asset_pullrequest->getHTMLSnippet('tuleap-pullrequest.js');
+        }
+    }
+
+    /**
+     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
+     */
+    public function burning_parrot_get_javascript_files() // phpcs:ignore
+    {
+        if ($this->isAPullrequestRequest()) {
+            $include_asset_pullrequest = new IncludeAssets(
+                PULLREQUEST_BASE_DIR . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            echo $include_asset_pullrequest->getHTMLSnippet('create-pullrequest-button.js');
         }
     }
 
