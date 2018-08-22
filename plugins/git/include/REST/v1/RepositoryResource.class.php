@@ -743,7 +743,7 @@ class RepositoryResource extends AuthenticatedResource {
 
         $result = [];
         foreach ($sliced_branches_refs as $branch) {
-            $name = $branch->GetRefPath();
+            $name = $branch->GetName();
             try {
                 $commit_id = $branch->GetHash();
                 $commit    = new GitCommitRepresentation();
