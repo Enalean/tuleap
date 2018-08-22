@@ -206,14 +206,13 @@ class PluginsAdministrationActions extends Actions
         $user_properties = $request->get('properties');
 
         if ($user_properties) {
-            $plug_info =& $plugin['plugin']->getPluginInfo();
-            $descs =& $plug_info->getPropertyDescriptors();
-            $keys  =& $descs->getKeys();
-            $iter  =& $keys->iterator();
-            $props = '';
+            $plug_info = $plugin['plugin']->getPluginInfo();
+            $descs = $plug_info->getPropertyDescriptors();
+            $keys  = $descs->getKeys();
+            $iter  = $keys->iterator();
             while($iter->valid()) {
-                $key   =& $iter->current();
-                $desc  =& $descs->get($key);
+                $key   = $iter->current();
+                $desc  = $descs->get($key);
                 $prop_name = $desc->getName();
                 if (isset($user_properties[$prop_name])) {
                     $val = $user_properties[$prop_name];
@@ -234,20 +233,20 @@ class PluginsAdministrationActions extends Actions
 
     function _getPluginFromRequest() {
         $return = false;
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if ($request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
             $plugin_manager = $this->plugin_manager;
-            $plugin =& $plugin_manager->getPluginById($request->get('plugin_id'));
+            $plugin = $plugin_manager->getPluginById($request->get('plugin_id'));
             if ($plugin) {
-                $plug_info  =& $plugin->getPluginInfo();
-                $descriptor =& $plug_info->getPluginDescriptor();
+                $plug_info  = $plugin->getPluginInfo();
+                $descriptor = $plug_info->getPluginDescriptor();
                 $name = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
                 $return = array();
                 $return['name'] = $name;
-                $return['plugin'] =& $plugin;
+                $return['plugin'] = $plugin;
             }
         }
         return $return;

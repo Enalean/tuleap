@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
@@ -64,7 +64,7 @@ class GraphOnTrackersPlugin extends Plugin {
      * function to get plugin info
      *
      */
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GraphOnTrackersPluginInfo')) {
             require_once('GraphOnTrackersPluginInfo.class.php');
             $this->pluginInfo = new GraphOnTrackersPluginInfo($this);
@@ -79,11 +79,11 @@ class GraphOnTrackersPlugin extends Plugin {
     /**
      * Return true if current project has the right to use this plugin.
      */
-    function isAllowed() {
-        $request =& HTTPRequest::instance();
+    function isAllowed($group_id) {
+        $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if(!isset($this->allowedForProject[$group_id])) {
-            $pM =& PluginManager::instance();
+            $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -128,8 +128,8 @@ class GraphOnTrackersPlugin extends Plugin {
      *
      *     @param params:hook parameters
      */
-    function tracker_urlparam_processing($params){
-        if($this->isAllowed()) {
+    public function tracker_urlparam_processing($params){
+        if($this->isAllowed($params['group_id'])) {
             if ($this->report_graphic_id!="0"){
                 $params['url'] .= "&report_graphic_id=".$this->report_graphic_id;
             }
@@ -141,8 +141,8 @@ class GraphOnTrackersPlugin extends Plugin {
      *
      *     @param params:hook parameters
      */
-    function tracker_user_pref($params){
-        if($this->isAllowed()) {
+    public function tracker_user_pref($params){
+        if($this->isAllowed($params['group_id'])) {
             $this->group_id  = $params['group_id'];
             $this->atid      = $params['atid'];
             $this->report_id = $params['report_id'];
@@ -153,10 +153,8 @@ class GraphOnTrackersPlugin extends Plugin {
             $this->msort     = $params['msort'];
             $this->offset    = $params['offset'];
             $this->set       = $params['set'];
-            $request = & HTTPRequest::instance();
+            $request = HTTPRequest::instance();
 
-            $func = $request->get('func');
-            $set  = $request->get('set');
             if ($request->get('report_graphic_id') !== false && $request->valid(new Valid_UInt('report_graphic_id'))) {
                 $this->report_graphic_id = $request->get('report_graphic_id');
                 $trackerGraphsPrefs = "&report_graphic_id=".$this->report_graphic_id;
@@ -187,8 +185,8 @@ class GraphOnTrackersPlugin extends Plugin {
      * 
      * @param params:hook parameters
      */
-    function tracker_after_report($params){
-       if($this->isAllowed()) {
+    public function tracker_after_report($params){
+       if($this->isAllowed($params['group_id'])) {
            require_once('html-generators/GraphicEngineHtml.class.php');
            $eng = new graphicEngineHtml($this->atid,user_getid(),$this->getThemePath());
            $eng->displayReportGraphic($this->report_graphic_id, $params['group_id'], $params['atid'], $params['url']);
@@ -315,7 +313,7 @@ class GraphOnTrackersPlugin extends Plugin {
      * @param params:hook parameters
      */
     function tracker_graphic_report_add_link($params) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if ($request->valid(new Valid_GroupId())) {
             echo '<H3><A href="/tracker/admin/?func=reportgraphic&group_id='.$request->get('group_id').'&atid='.$request->get('atid').'">'.$GLOBALS['Language']->getText('plugin_graphontrackers_admin_menu','manage_graphic').'</A></H3>';
             echo $GLOBALS['Language']->getText('plugin_graphontrackers_admin_menu','manage_graphic_desc');
@@ -329,7 +327,7 @@ class GraphOnTrackersPlugin extends Plugin {
      * @param params:hook parameters
      */
     function tracker_graphic_report_admin_header($params) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if ($request->valid(new Valid_GroupId())) { 
             echo ' | <a href="/tracker/admin/?func=reportgraphic&group_id='.$request->get('group_id').'&atid='.$request->get('atid').'">'.$GLOBALS['Language']->getText('plugin_graphontrackers_admin_menu','graphic_report').'</a>';
         }
@@ -368,5 +366,3 @@ class GraphOnTrackersPlugin extends Plugin {
         }
     }
 }
-
-?>
