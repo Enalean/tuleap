@@ -10,7 +10,7 @@ require_once('pre.php');
 require_once('../forum/forum_utils.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $params = array();
 

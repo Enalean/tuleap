@@ -9,7 +9,7 @@
 require_once('pre.php');
 require_once('../forum/forum_utils.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if(!$request->valid(new Valid_GroupId())) {
     exit_no_group();

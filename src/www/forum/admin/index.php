@@ -23,7 +23,7 @@ require_once('pre.php');
 require_once('../forum_utils.php');
 
 $is_admin_page='y';
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();

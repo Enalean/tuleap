@@ -31,7 +31,7 @@ if ( !user_isloggedin()) {
     return;
 }
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $vFrm = new Valid_UInt('forum_id');
 $vFrm->required();
