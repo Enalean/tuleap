@@ -32,11 +32,14 @@ class RepositoryHeaderPresenter
     public $gerrit_status_presenter;
     /** @var null|ParentRepositoryPresenter */
     public $parent_repository_presenter;
+    /** @var ClonePresenter */
+    public $clone_presenter;
 
     /**
      * @param GitRepository                  $repository
      * @param bool                           $user_is_admin
      * @param string                         $repository_admin_url
+     * @param ClonePresenter                 $clone_presenter
      * @param GerritStatusPresenter          $gerrit_status_presenter
      * @param ParentRepositoryPresenter|null $parent_repository_presenter
      */
@@ -44,6 +47,7 @@ class RepositoryHeaderPresenter
         GitRepository $repository,
         $user_is_admin,
         $repository_admin_url,
+        ClonePresenter $clone_presenter,
         GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
@@ -53,5 +57,6 @@ class RepositoryHeaderPresenter
         $this->user_is_admin               = $user_is_admin;
         $this->repository_admin_url        = $repository_admin_url;
         $this->parent_repository_presenter = $parent_repository_presenter;
+        $this->clone_presenter             = $clone_presenter;
     }
 }

@@ -2566,7 +2566,8 @@ class GitPlugin extends Plugin
                     $this->getRepoHeader(),
                     $this->getThemeManager(),
                     $this->getHeaderRenderer(),
-                    $this->getRepositoryHeaderPresenterBuilder()
+                    $this->getRepositoryHeaderPresenterBuilder(),
+                    $this->getIncludeAssets()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {

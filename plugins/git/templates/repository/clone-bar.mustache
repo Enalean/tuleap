@@ -1,0 +1,35 @@
+<label class="git-repository-clone-label tlp-label"
+       for="git-repository-clone-dropdown-button">
+    {{# dgettext }}tuleap-git | Clone or download:{{/ dgettext }}
+</label>
+<div class="tlp-form-element tlp-form-element-prepend tlp-dropdown git-repository-clone-form-element">
+    <button class="tlp-button-primary tlp-button-outline tlp-prepend"
+            id="git-repository-clone-dropdown-button"
+            type="button"
+    >
+        <span id="git-repository-clone-button-text">{{# dgettext }}tuleap-git | SSH (default){{/ dgettext }}</span>
+        <i class="fa fa-sort tlp-button-icon-right"></i>
+    </button>
+    <input type="text"
+           class="tlp-input"
+           id="git-repository-clone-input"
+           value="{{ default_ssh_url }}"
+    >
+    <div class="tlp-dropdown-menu" role="menu">
+        <span class="tlp-dropdown-menu-title" role="menuitem"
+    >{{# dgettext }}tuleap-git | Clone{{/ dgettext }}</span>
+        <a href="javascript:;"
+           class="tlp-dropdown-menu-item git-repository-clone-transport"
+           role="menuitem"
+           data-url="{{ default_http_url }}"
+        >HTTPS</a>
+        <a href="javascript:;"
+           class="tlp-dropdown-menu-item git-repository-clone-transport"
+           role="menuitem"
+           data-url="{{ default_ssh_url }}"
+        ><i class="fa fa-check tlp-dropdown-menu-item-icon"
+            id="git-repository-clone-selected-icon"
+        ></i>{{# dgettext }}tuleap-git | SSH (default){{/ dgettext }}</a>
+    </div>
+</div>
+

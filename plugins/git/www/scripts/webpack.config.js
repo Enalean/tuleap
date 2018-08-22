@@ -52,7 +52,8 @@ const webpack_config_for_permisssions_per_group = {
 
 const webpack_config_for_repositories = {
     entry: {
-        "repositories-list": "./repositories/src/index.js"
+        "repositories-list": "./repositories/src/index.js",
+        repository: "./repository/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

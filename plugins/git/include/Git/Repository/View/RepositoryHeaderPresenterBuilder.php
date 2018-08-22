@@ -87,6 +87,7 @@ class RepositoryHeaderPresenterBuilder
         }
 
         $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository);
+        $clone_presenter         = $this->buildClonePresenter($repository);
 
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
             $repository->belongsTo($current_user);
@@ -97,6 +98,7 @@ class RepositoryHeaderPresenterBuilder
             $repository,
             $is_admin,
             $admin_url,
+            $clone_presenter,
             $gerrit_status_presenter,
             $parent_repository_presenter
         );
@@ -118,5 +120,11 @@ class RepositoryHeaderPresenterBuilder
             $this->driver_factory,
             $this->gerrit_servers
         );
+    }
+
+    private function buildClonePresenter(GitRepository $repository)
+    {
+        $access_urls = $repository->getAccessURL();
+        return new ClonePresenter($access_urls);
     }
 }
