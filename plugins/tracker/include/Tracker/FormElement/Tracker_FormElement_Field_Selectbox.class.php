@@ -156,7 +156,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $check = '';
-        if(count($transitions)>0) {
+
+        if(is_array($transitions) && count($transitions)>0) {
             foreach($transitions as $transition) {
                 if($field_value_from===$transition->getFieldValueFrom()&&$field_value_to===$transition->getFieldValueTo()) {
                     $check = 'checked="checked"';
