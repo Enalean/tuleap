@@ -273,7 +273,8 @@ class TrackerXmlImport
             $created_trackers_objects,
             $extraction_path,
             $xml_mapping,
-            $artifacts_id_mapping);
+            $artifacts_id_mapping,
+            $configuration);
 
         $this->importChangesets(
             $xml_trackers,
@@ -281,7 +282,8 @@ class TrackerXmlImport
             $extraction_path,
             $xml_mapping,
             $artifacts_id_mapping,
-            $created_artifacts
+            $created_artifacts,
+            $configuration
         );
 
         // Deal with artifact link types after changesets import to keep the history of types
@@ -440,6 +442,7 @@ class TrackerXmlImport
      * @param $extraction_path
      * @param TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping
      * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
+     * @param ImportConfig $configuration
      * @return array of created artifacts
      * @throws Tracker_Artifact_Exception_XMLImportException
      */
@@ -448,7 +451,8 @@ class TrackerXmlImport
         array $created_trackers_objects,
         $extraction_path,
         TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
-        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
+        Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
+        ImportConfig $configuration
     ) {
         $created_artifacts = array();
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
@@ -458,19 +462,31 @@ class TrackerXmlImport
                     $xml_tracker->artifacts,
                     $extraction_path,
                     $xml_mapping,
-                    $artifacts_id_mapping);
+                    $artifacts_id_mapping,
+                    $configuration);
             }
         }
         return $created_artifacts;
     }
 
+    /**
+     * @param array $xml_trackers
+     * @param array $created_trackers_objects
+     * @param $extraction_path
+     * @param TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping
+     * @param Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping
+     * @param array $created_artifacts
+     * @param ImportConfig $configuration
+     * @throws Tracker_Artifact_Exception_XMLImportException
+     */
     private function importChangesets(
         array $xml_trackers,
         array $created_trackers_objects,
         $extraction_path,
         TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping,
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
-        array $created_artifacts
+        array $created_artifacts,
+        ImportConfig $configuration
     ) {
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             if (isset($xml_tracker->artifacts)) {
@@ -480,7 +496,8 @@ class TrackerXmlImport
                     $extraction_path,
                     $xml_mapping,
                     $artifacts_id_mapping,
-                    $created_artifacts[$xml_tracker_id]);
+                    $created_artifacts[$xml_tracker_id],
+                    $configuration);
             }
         }
     }

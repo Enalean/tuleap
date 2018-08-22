@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
+
 require_once __DIR__.'/../bootstrap.php';
 
 abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
@@ -61,6 +63,7 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
     protected $extraction_path;
     protected $john_doe;
+    protected $config;
 
     public function setUp() {
         parent::setUp();
@@ -86,6 +89,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
 
         $this->xml_import_helper = new XMLImportHelper($this->user_manager);
 
+        $this->config = new \Tuleap\Project\XML\Import\ImportConfig();
+
         $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
 
         $this->extraction_path = $this->getTmpDir();
@@ -109,7 +114,8 @@ abstract class Tracker_Artifact_XMLImportBaseTest extends TuleapTestCase {
             $this->logger,
             false,
             \Mockery::spy(\Tracker_ArtifactFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+            Mockery::spy(XMLArtifactSourcePlatformExtractor::class)
         );
     }
 }
@@ -134,7 +140,8 @@ class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImpo
                 $this->logger,
                 false,
                 \Mockery::spy(\Tracker_ArtifactFactory::class),
-                \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
+                \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+                Mockery::spy(XMLArtifactSourcePlatformExtractor::class)
             ]
         )
             ->makePartial()
@@ -157,6 +164,9 @@ class Tracker_Artifact_XMLImport_ZipArchiveTest extends Tracker_Artifact_XMLImpo
             $this->extraction_path,
             Mockery::on(function ($element) {
                 return is_a($element, TrackerXmlFieldsMapping_InSamePlatform::class);
+            }),
+            Mockery::on(function ($element) {
+                return is_a($element, \Tuleap\Project\XML\Import\ImportConfig::class);
             })
         )->once();
 
@@ -216,7 +226,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -246,7 +257,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -260,7 +272,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -275,7 +288,8 @@ class Tracker_Artifact_XMLImport_HappyPathTest extends Tracker_Artifact_XMLImpor
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -353,7 +367,8 @@ class Tracker_Artifact_XMLImport_CommentsTest extends Tracker_Artifact_XMLImport
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -429,7 +444,8 @@ class Tracker_Artifact_XMLImport_CommentUpdatesTest extends Tracker_Artifact_XML
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -471,7 +487,8 @@ class Tracker_Artifact_XMLImport_NoFieldTest extends Tracker_Artifact_XMLImportB
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -501,7 +518,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             \Mockery::spy(\Logger::class),
             false,
             \Mockery::spy(\Tracker_ArtifactFactory::class),
-            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class)
+            \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
+            Mockery::spy(XMLArtifactSourcePlatformExtractor::class)
         );
 
         $this->xml_mapping = new TrackerXmlFieldsMapping_InSamePlatform();
@@ -541,7 +559,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->tracker,
             $xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -582,7 +601,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->tracker,
             $xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -623,7 +643,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->tracker,
             $xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -665,7 +686,8 @@ class Tracker_Artifact_XMLImport_UserTest extends Tracker_Artifact_XMLImportBase
             $this->tracker,
             $xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -718,7 +740,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -743,7 +766,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -764,7 +788,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -785,7 +810,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -809,7 +835,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -853,7 +880,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 
@@ -959,7 +987,8 @@ class Tracker_Artifact_XMLImport_MultipleChangesetsTest extends Tracker_Artifact
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -1019,7 +1048,8 @@ class Tracker_Artifact_XMLImport_SeveralArtifactsTest extends Tracker_Artifact_X
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 }
@@ -1079,7 +1109,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
             ->with(Mockery::any(), Mockery::any(), $data, Mockery::any(), Mockery::any(), false)
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
     public function itCreatesAChangesetWithOneFileElement() {
@@ -1109,7 +1139,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithAttachementTest extends Tracker_
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1171,7 +1201,7 @@ class Tracker_Artifact_XMLImport_AttachmentNoLongerExistsTest extends Tracker_Ar
             ->with(Mockery::any(), Mockery::any(), $data, Mockery::any(), Mockery::any(), false)
             ->andReturn($artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1252,7 +1282,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsTest extends
             )
             ->andReturn($artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1354,7 +1384,7 @@ class Tracker_Artifact_XMLImport_OneArtifactWithMultipleAttachementsAndChangeset
             )
             ->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1404,7 +1434,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
         $this->open_list_field->shouldReceive('getFieldData')->with('homer')->once();
         $this->open_list_field->shouldReceive('getFieldData')->with('jeanjean')->once();
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
     public function itCreatesArtifactWithCCFieldData() {
@@ -1427,7 +1457,7 @@ class Tracker_Artifact_XMLImport_CCListTest extends Tracker_Artifact_XMLImportBa
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1488,7 +1518,7 @@ class Tracker_Artifact_XMLImport_PermsOnArtifactTest extends Tracker_Artifact_XM
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1548,7 +1578,7 @@ class Tracker_Artifact_XMLImport_TextTest extends Tracker_Artifact_XMLImportBase
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1652,7 +1682,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
      public function itCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate() {
@@ -1677,7 +1707,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
     public function itDoesntConvertEmptyDateInto70sdate() {
@@ -1710,7 +1740,7 @@ class Tracker_Artifact_XMLImport_AlphanumericTest extends Tracker_Artifact_XMLIm
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1786,7 +1816,7 @@ class Tracker_Artifact_XMLImport_SelectboxTest extends Tracker_Artifact_XMLImpor
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1859,7 +1889,7 @@ class Tracker_Artifact_XMLImport_StaticMultiSelectboxTest extends Tracker_Artifa
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1926,7 +1956,7 @@ class Tracker_Artifact_XMLImport_UserMultiSelectboxTest extends Tracker_Artifact
             )
             ->andReturn($this->artifact);
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -1979,7 +2009,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
     public function itCreatesTheLastChangesetEvenWhenTheIntermediateThrowsException() {
@@ -1990,7 +2020,7 @@ class Tracker_Artifact_XMLImport_ChangesetsCreationFailureTest extends Tracker_A
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
         $this->new_changeset_creator->shouldReceive('create')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset::class));
 
-        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $this->xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -2043,7 +2073,7 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
             $artlink_strategy = \Mockery::mock(\Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
             stub($artlink_strategy)->getLastChangeset()->returns(false);
 
-            $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping);
+            $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 
     public function itNotifiesUnexistingArtifacts() {
@@ -2085,7 +2115,7 @@ class Tracker_Artifact_XMLImport_ArtifactLinkTest extends Tracker_Artifact_XMLIm
         stub($artlink_strategy)->getLastChangeset()->returns(false);
 
         expect($this->logger)->error()->count(1);
-        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping);
+        $this->importer->importFromXML($this->tracker, $xml_element, $this->extraction_path, $this->xml_mapping, $this->config);
     }
 }
 
@@ -2125,7 +2155,8 @@ class Tracker_Artifact_XMLImport_BadDateTest extends Tracker_Artifact_XMLImportB
             $this->tracker,
             $this->xml_element,
             $this->extraction_path,
-            $this->xml_mapping
+            $this->xml_mapping,
+            $this->config
         );
     }
 

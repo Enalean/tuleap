@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -181,7 +181,8 @@ class Tracker_Action_CopyArtifact {
         $new_artifacts = array();
         foreach ($xml_artifacts->children() as $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
-            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact);
+            $config = new \Tuleap\Project\XML\Import\ImportConfig();
+            $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config);
             if(!$artifact) {
                 return null;
             } else {
@@ -203,7 +204,8 @@ class Tracker_Action_CopyArtifact {
                 $extraction_path,
                 $xml_field_mapping,
                 $this->artifacts_imported_mapping);
-            $this->xml_importer->importChangesets($new_artifacts[$i], $xml_artifact, $fields_data_builder);
+            $config = new \Tuleap\Project\XML\Import\ImportConfig();
+            $this->xml_importer->importChangesets($new_artifacts[$i], $xml_artifact, $fields_data_builder, $config);
         }
     }
 

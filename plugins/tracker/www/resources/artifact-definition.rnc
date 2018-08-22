@@ -1,4 +1,5 @@
 artifacts =
+    attribute source_platform { xsd:string }?,
     element artifact {
         artifact
     }*
