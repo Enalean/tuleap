@@ -14,7 +14,12 @@
         {{> repository/gerrit-status }}
     {{/ gerrit_status_presenter }}
     <div class="git-repository-actions">
-        <div id="git-repository-actions-main-buttons"></div>
+        <div id="git-repository-actions-main-buttons"
+             data-repository-id="{{ repository_id }}"
+            {{# parent_repository_presenter }}
+                data-parent-repository-id="{{ parent_repository_id }}"
+            {{/ parent_repository_presenter }}
+        ></div>
         <div class="git-repository-actions-spacer"></div>
         {{# clone_presenter }}
             {{> repository/clone-bar }}

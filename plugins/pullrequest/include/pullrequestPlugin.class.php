@@ -185,7 +185,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     /**
      * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
      */
-    public function burning_parrot_get_javascript_files() // phpcs:ignore
+    public function burning_parrot_get_javascript_files($params) // phpcs:ignore
     {
         if ($this->isAPullrequestRequest()) {
             $include_asset_pullrequest = new IncludeAssets(
@@ -193,7 +193,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 $this->getPluginPath() . '/assets'
             );
 
-            echo $include_asset_pullrequest->getHTMLSnippet('create-pullrequest-button.js');
+            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('create-pullrequest-button.js');
         }
     }
 
