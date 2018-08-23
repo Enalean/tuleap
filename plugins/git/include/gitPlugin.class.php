@@ -50,6 +50,7 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
+use Tuleap\Git\GitViews\ShowRepo\RepoHeaderBuilder;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
@@ -97,6 +98,8 @@ use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
+use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
 use Tuleap\Git\Repository\Settings\CITokenController;
 use Tuleap\Git\Repository\Settings\CITokenRouter;
@@ -2558,6 +2561,7 @@ class GitPlugin extends Plugin
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*}', function () {
+
                 return new \Tuleap\Git\GitRepositoryBrowserController(
                     $this->getRepositoryFactory(),
                     $this->getProjectManager(),
@@ -2565,20 +2569,26 @@ class GitPlugin extends Plugin
                     $this->getGitPhpAccessLogger(),
                     $this->getRepoHeader(),
                     $this->getThemeManager(),
-                    $this->getHeaderRenderer(),
-                    $this->getRepositoryHeaderPresenterBuilder(),
-                    $this->getIncludeAssets()
+                    $this->getGitRepositoryHeaderDisplayer()
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
                 return new \Tuleap\Git\GitPluginDefaultController(
                     $this->getChainOfRouters(),
-                    $this->getRepositoryFactory(),
                     EventManager::instance(),
                     $this->getRepoHeader()
                 );
             });
         });
+    }
+
+    /**
+     * protected for testing purpose
+     * @return GitRepositoryHeaderDisplayer
+     */
+    protected function getGitRepositoryHeaderDisplayer() {
+        $header_displayed_builder = new GitRepositoryHeaderDisplayerBuilder();
+        return $header_displayed_builder->build();
     }
 
     /**
@@ -2589,7 +2599,7 @@ class GitPlugin extends Plugin
     protected function getIncludeAssets()
     {
         $include_assets = new IncludeAssets(
-            GIT_BASE_DIR . '/../www/assets',
+            __DIR__ . '/../www/assets',
             $this->getPluginPath() . '/assets'
         );
         return $include_assets;

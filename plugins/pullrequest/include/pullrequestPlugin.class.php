@@ -35,6 +35,7 @@ use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
+use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -72,8 +73,8 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullRequestCreator;
+use Tuleap\PullRequest\PullrequestDisplayer;
 use Tuleap\PullRequest\PullRequestMerger;
-use Tuleap\PullRequest\PullRequestPresenter;
 use Tuleap\PullRequest\PullRequestUpdater;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 use Tuleap\PullRequest\Reference\ProjectReferenceRetriever;
@@ -162,7 +163,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
-    public function cssfile()
+    public function cssfile($params)
     {
         if ($this->isAPullrequestRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-pullrequest.css" />';
@@ -371,47 +372,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     public function gitAdditionalAction(GitAdditionalActionEvent $event)
     {
         if ($event->getRequest()->get('action') === 'pull-requests') {
-            $repository = $event->getRepositoryFactory()->getRepositoryById($event->getRequest()->getValidated('repo_id', 'uint', 0));
-            if ($repository) {
-                $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
-                $renderer         = $this->getTemplateRenderer();
-                $user             = $event->getRequest()->getCurrentUser();
-
-                if (\ForgeConfig::get('git_repository_bp')) {
-                    $theme_manager = new \ThemeManager(
-                        new \Tuleap\BurningParrotCompatiblePageDetector(
-                            new \Tuleap\Request\CurrentPage(),
-                            new \Admin_Homepage_Dao(),
-                            new \User_ForgeUserGroupPermissionsManager(
-                                new \User_ForgeUserGroupPermissionsDao()
-                            )
-                        )
-                    );
-                    $layout = $theme_manager->getBurningParrot($event->getRequest()->getCurrentUser());
-                    $event->setLayout($layout);
-                }
-
-                $merge_settings_retriever = new MergeSettingRetriever(
-                    new MergeSettingDAO()
-                );
-
-                $presenter = new PullRequestPresenter(
-                    $repository->getId(),
-                    $user->getId(),
-                    $user->getShortLocale(),
-                    $nb_pull_requests,
-                    $merge_settings_retriever->getMergeSettingForRepository($repository)
-                );
-
-                $event->getRepoHeader()->display($event->getRequest(), $event->getLayout(), $repository);
-
-                $renderer->renderToPage($presenter->getTemplateName(), $presenter);
-
-                $event->getLayout()->footer([]);
-                exit;
-            } else {
-                throw new \Tuleap\Request\NotFoundException();
-            }
+            $layout          = $this->getThemeManager()->getBurningParrot($event->getRequest()->getCurrentUser());
+            $this->getPullRequestDisplayer()->display($event->getRequest(), $event->getRepoHeader(), $layout);
         }
     }
 
@@ -828,6 +790,39 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             function () {
                 return $this->getLegacyRouter();
             }
+        );
+    }
+
+    /**
+     * @return ThemeManager
+     */
+    private function getThemeManager()
+    {
+        $theme_manager = new \ThemeManager(
+            new \Tuleap\BurningParrotCompatiblePageDetector(
+                new \Tuleap\Request\CurrentPage(),
+                new \Admin_Homepage_Dao(),
+                new \User_ForgeUserGroupPermissionsManager(
+                    new \User_ForgeUserGroupPermissionsDao()
+                )
+            )
+        );
+        return $theme_manager;
+    }
+
+    /**
+     * @return PullrequestDisplayer
+     */
+    private function getPullRequestDisplayer()
+    {
+        $header_builder = new GitRepositoryHeaderDisplayerBuilder();
+        return new PullrequestDisplayer(
+            $this->getThemeManager(),
+            $this->getPullRequestFactory(),
+            $this->getTemplateRenderer(),
+            new MergeSettingRetriever(new MergeSettingDAO()),
+            $header_builder->build(),
+            $this->getRepositoryFactory()
         );
     }
 }
