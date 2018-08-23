@@ -1,18 +1,38 @@
-<div class="modal-header modal-header-error">
-    <h3><i class="fa fa-frown-o"></i> <span translate>Oh snap!</span></h3>
-</div>
-
-<div class="modal-body">
-    <p translate>An error occured while doing one of your last actions.</p>
-    <p ng-show="! error_modal.details">
-        <button type="button" class="btn btn-small" ng-click="error_modal.details = true" translate>Show details</button>
-    </p>
-    <div ng-show="error_modal.details" class="details">
-        <h4 translate>Error details</h4>
-        <pre>{{ error_modal.message }}</pre>
+<div id="pull-requests-error-modal"
+    class="tlp-modal tlp-modal-danger"
+    role="dialog"
+    aria-labelledby="pull-requests-error-title"
+>
+    <div class="tlp-modal-header">
+        <h1 id="pull-requests-error-title"
+            class="tlp-modal-title"
+        >
+            <i class="tlp-modal-title-icon fa fa-frown-o" aria-hidden="true"></i>
+            <span translate>Oh snap!</span>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">
+            &times;
+        </div>
     </div>
-</div>
 
-<div class="modal-footer">
-    <button class="btn btn-danger" ng-click="error_modal.ok()"><span translate>OK</span></button>
+    <div class="tlp-modal-body">
+        <p translate>An error occured while doing one of your last actions.</p>
+        <p ng-show="! error_modal.details">
+            <button type="button"
+                class="tlp-button-secondary tlp-button-small"
+                ng-click="error_modal.details = true"
+                translate
+            >Show details</button>
+        </p>
+        <div ng-show="error_modal.details">
+            <h4 translate>Error details</h4>
+            <pre>{{ error_modal.message }}</pre>
+        </div>
+    </div>
+
+    <div class="tlp-modal-footer">
+        <button class="tlp-button-danger tlp-modal-action" data-dismiss="modal">
+            <span translate>OK</span>
+        </button>
+    </div>
 </div>

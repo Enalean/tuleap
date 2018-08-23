@@ -42,6 +42,11 @@ msgstr ""
 msgid "Checkout with"
 msgstr ""
 
+#: src/app/error-modal/error-modal.tpl.html
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Close"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr ""

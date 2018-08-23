@@ -111,11 +111,18 @@ function OverviewController(
         return self.pull_request.user_can_abandon && isOpen();
     }
 
-    function checkMerge() {
-        var shouldMerge = isNonFastForwardMerge()
-            ? MergeModalService.showMergeModal()
-            : $q.when("go");
-        shouldMerge.then(merge);
+    async function checkMerge() {
+        const is_fast_forward = !isNonFastForwardMerge();
+
+        if (is_fast_forward) {
+            return merge();
+        }
+
+        const should_continue_merge = await MergeModalService.showMergeModal();
+
+        if (should_continue_merge) {
+            return merge();
+        }
     }
 
     function merge() {

@@ -84,6 +84,7 @@ function extendAliases(...aliases) {
 module.exports = {
     extendAliases,
     angular_artifact_modal_aliases,
+    angular_tlp_alias,
     easygettext_loader_alias,
     flaming_parrot_labels_box_aliases,
     tlp_fetch_alias,
