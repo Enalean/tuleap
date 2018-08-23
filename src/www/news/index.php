@@ -24,7 +24,7 @@ require_once('www/project/admin/permissions.php');
 require_once('../forum/forum_utils.php');
 
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if($request->valid(new Valid_GroupId())) {
     $group_id = $request->get('group_id');
@@ -118,5 +118,3 @@ if ($rows < 1) {
 
 // Display footer page
 news_footer($params);
-
-?>

@@ -26,7 +26,7 @@ require_once('www/forum/forum_utils.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if($request->valid(new Valid_GroupId())) {
     $group_id = $request->get('group_id');
@@ -97,7 +97,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
                 }
 
                 // extract cross references
-                $reference_manager =& ReferenceManager::instance();
+                $reference_manager = ReferenceManager::instance();
                 $reference_manager->extractCrossRef($request->get('summary'), $forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
                 $reference_manager->extractCrossRef($request->get('details'), $forum_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
 
@@ -192,4 +192,3 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 } else {
   exit_error($Language->getText('news_admin_index','permission_denied'),$Language->getText('news_admin_index','need_to_be_admin'));
 }
-?>
