@@ -15,11 +15,26 @@ msgstr ""
 msgid "\"Source\" Project's Shortname"
 msgstr "Nom court du Projet \"Source\""
 
+msgid "\"Source\" Project's Shortname:"
+msgstr "Nom court du Projet \"Source\" :"
+
+msgid "\"Source\" Project:"
+msgstr "Projet \"Source\" :"
+
 msgid "\"Source\" Tracker"
-msgstr "Outils de suivi du Projet \"Source\""
+msgstr "Outil de suivi du Projet \"Source\""
+
+msgid "\"Source\" Tracker's Id:"
+msgstr "Identifiant de l’outil de suivi du projet \"Source\" :"
 
 msgid "\"Target\" Project's Shortname"
 msgstr "Nom court du Projet \"Cible\""
+
+msgid "\"Target\" Project's Shortname:"
+msgstr "Nom court du Projet \"Cible\" :"
+
+msgid "\"Target\" Project:"
+msgstr "Projet \"Cible\" :"
 
 msgid "Add endpoint"
 msgstr "Ajouter un point d'accès"
@@ -33,6 +48,9 @@ msgstr "Permet de recopier les artefacts d'une instance Tuleap sur une autre"
 msgid "Base URI's \"Source\" Project"
 msgstr "URI du Projet \"Source\""
 
+msgid "Base URI's \"Source\" Project:"
+msgstr "URI du Projet \"Source\" :"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -42,8 +60,19 @@ msgstr "Fermer"
 msgid "List of import endpoints"
 msgstr "Liste les points d'accès pour l'importation"
 
+msgid "Password (\"Source\" Project):"
+msgstr "Mot de passe (Projet \"Source\") :"
+
 msgid "There isn't any matching webhook"
 msgstr "Aucun webhook trouvé"
+
+#, php-format
+msgid "This base URI: %s isn't valid."
+msgstr "Cette base URI : %s n'est pas valide."
+
+#, php-format
+msgid "This id : %s isn't a numeric."
+msgstr "Cet id : %s n'est pas un chiffre."
 
 msgid "Tuleap to Tuleap"
 msgstr "Tuleap vers Tuleap"
@@ -51,14 +80,17 @@ msgstr "Tuleap vers Tuleap"
 msgid "Tuleap to Tuleap Synchronization"
 msgstr "Synchronisation de Tuleap vers Tuleap"
 
-msgid "Under implementation"
-msgstr "En cours d'implémentation"
-
 msgid "Username (\"Source\" Project)"
 msgstr "Nom d'utilisateur (Projet \"Source\")"
 
+msgid "Username (\"Source\" Project):"
+msgstr "Nom d'utilisateur (Projet \"Source\") :"
+
 msgid "Username (\"Target\" Project)"
 msgstr "Nom d'utilisateur (Projet \"Cible\")"
+
+msgid "Username (\"Target\" Project):"
+msgstr "Nom d'utilisateur (Projet \"Cible\") :"
 
 msgid "Webhook"
 msgstr "Webhook"

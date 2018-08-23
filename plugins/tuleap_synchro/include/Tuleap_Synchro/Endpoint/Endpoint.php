@@ -42,57 +42,36 @@ class Endpoint
         $this->webhook         = $webhook;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUsernameSource()
     {
         return $this->username_source;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUsernameTarget()
     {
         return $this->username_target;
     }
 
-    /**
-     * @return mixed
-     */
     public function getProjectTarget()
     {
         return $this->project_target;
     }
 
-    /**
-     * @return mixed
-     */
     public function getWebhook()
     {
         return $this->webhook;
     }
 
-    /**
-     * @return mixed
-     */
     public function getBaseUri()
     {
         return $this->base_uri;
     }
 
-    /**
-     * @return mixed
-     */
     public function getProjectSource()
     {
         return $this->project_source;
     }
 
-    /**
-     * @return mixed
-     */
     public function getTrackerSource()
     {
         return $this->tracker_source;
