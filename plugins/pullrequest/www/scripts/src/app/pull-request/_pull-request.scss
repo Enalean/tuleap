@@ -2,22 +2,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-half-spacing $tlp-spacing $tlp-spacing;
 
     > h2 {
         flex: 0 0 auto;
+        margin: 0;
     }
+}
 
-    > labels {
-        display: flex;
-        margin: 0 0 0 $tlp-spacing;
-
-        > .select2-container {
-            width: 100%;
-        }
-
-        :empty {
-            margin: 0;
-        }
-    }
+.pull-request-header-labels-box {
+    display: flex;
+    margin: 0 0 0 $tlp-spacing;
 }

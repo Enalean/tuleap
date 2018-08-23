@@ -13,6 +13,10 @@ msgstr ""
 msgid "Abandoned"
 msgstr ""
 
+#: src/app/pull-request/header/header.tpl.html
+msgid "Add labels"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr ""
