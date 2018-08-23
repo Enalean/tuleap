@@ -30,6 +30,6 @@ class PluginDescriptor extends \PluginDescriptor
             false,
             $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_description')
         );
-        $this->setVersionFromFile(TRACKER_ENCRYPTION_BASE_DIR.'/VERSION');
+        $this->setVersionFromFile(__DIR__ . '/../../../VERSION');
     }
 }

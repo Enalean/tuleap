@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once '/usr/share/pear/Crypt/RSA.php';
 
 class Encryption_Manager
 {
@@ -27,8 +27,8 @@ class Encryption_Manager
 
     public function __construct(Tracker_Key $tracker_key)
     {
-        $this->rsa = new \Crypt_RSA();
-        $this->rsa->setEncryptionMode(\CRYPT_RSA_ENCRYPTION_OAEP);
+        $this->rsa = new \phpseclib\Crypt\RSA();
+        $this->rsa->setEncryptionMode(\phpseclib\Crypt\RSA::ENCRYPTION_OAEP);
         $this->rsa->setHash(self::HASH_FUNCTION);
         $this->rsa->setMGFHash(self::HASH_FUNCTION);
         $this->loadRSAKey($tracker_key);

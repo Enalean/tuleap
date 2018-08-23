@@ -296,7 +296,6 @@ Group: Development/Tools
 Version: @@PLUGIN_TRACKER_ENCRYPTION_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-Requires: php-phpseclib-crypt-rsa
 %description plugin-tracker-encryption
 Adding a new type of tracker fields that are encrypted.
 This plugin is still in beta.

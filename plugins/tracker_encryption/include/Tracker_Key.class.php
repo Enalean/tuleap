@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 use Tuleap\TrackerEncryption\Dao\ValueDao;
-
-require_once '/usr/share/pear/Crypt/RSA.php';
 
 class Tracker_Key
 {
@@ -81,7 +79,7 @@ class Tracker_Key
     {
         preg_match('/-----BEGIN PUBLIC KEY-----(.*)-----END PUBLIC KEY-----$/s', $key, $match);
         if (!empty($match)) {
-            $rsa = new \Crypt_RSA();
+            $rsa = new \phpseclib\Crypt\RSA();
             $rsa->loadKey($key);
             if ($rsa->getSize() < 2048 || $rsa->getSize() > 8192) {
                 return false;
@@ -105,7 +103,7 @@ class Tracker_Key
      */
     public function getFieldSize($key)
     {
-        $rsa = new \Crypt_RSA();
+        $rsa = new \phpseclib\Crypt\RSA();
         $rsa->loadKey($key);
         return (($rsa->getSize()/8) - (2 * Encryption_Manager::HLEN) - 2);
     }

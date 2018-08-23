@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -21,19 +21,14 @@
 
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class tracker_encryptionPlugin extends Plugin
 {
-	private $renderer;
-
     public function __construct($id)
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-
-        $this->renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_ENCRYPTION_TEMPLATE_DIR);
     }
 
     public function getHooksAndCallbacks()
@@ -172,7 +167,8 @@ class tracker_encryptionPlugin extends Plugin
         $layout = new TrackerManager();
         $tracker->displayAdminHeader($layout, $title, $breadcrumbs);
         $csrf_token = new CSRFSynchronizerToken('/plugins/tracker_encryption/?tracker='.$tracker_id.'&func=admin-editencryptionkey');
-        $this->renderer->renderToPage(
+        $renderer   = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/');
+        $renderer->renderToPage(
            'tracker-key-settings',
             new Tracker_EncryptionKeySettings_Presenter($tracker_id, '/plugins/tracker_encryption/?tracker='. (int)$tracker_id.'&func=admin-editencryptionkey', $csrf_token));
         $GLOBALS['HTML']->footer(array());
