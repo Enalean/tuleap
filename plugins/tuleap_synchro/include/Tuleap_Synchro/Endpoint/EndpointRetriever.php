@@ -61,6 +61,7 @@ class EndpointRetriever
     {
         return $this->endpoint_builder->build(
             $row['username_source'],
+            $row['password_source'],
             $row['project_source'],
             $row['tracker_source'],
             $row['project_target'],

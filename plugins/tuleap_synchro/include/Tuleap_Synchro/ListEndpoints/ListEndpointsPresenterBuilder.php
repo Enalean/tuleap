@@ -21,17 +21,25 @@
 
 namespace Tuleap\TuleapSynchro\ListEndpoints;
 
+use CSRFSynchronizerToken;
+
 class ListEndpointsPresenterBuilder
 {
     /**
      * @param array $list_endpoints
+     * @param CSRFSynchronizerToken $csrf_token_add
+     * @param CSRFSynchronizerToken $csrf_token_delete
      * @return ListEndpointsPresenter[]
      */
     public function build(array $list_endpoints)
     {
-        $endpoints = [];
+        $csrf_token_delete = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/delete_endpoint');
+        $csrf_token_add = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/add_endpoint');
+
+        $endpoints['csrf_token_add'] = $csrf_token_add;
+
         foreach ($list_endpoints as $key => $endpoint) {
-            $endpoints["endpoints"][] = new ListEndpointsPresenter($endpoint);
+            $endpoints["endpoints"][] = new ListEndpointsPresenter($endpoint, $csrf_token_add, $csrf_token_delete);
         }
         return $endpoints;
     }

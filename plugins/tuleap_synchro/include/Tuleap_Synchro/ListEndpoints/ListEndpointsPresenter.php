@@ -21,6 +21,7 @@
 
 namespace Tuleap\TuleapSynchro\ListEndpoints;
 
+use CSRFSynchronizerToken;
 use Tuleap\TuleapSynchro\Endpoint\Endpoint;
 
 class ListEndpointsPresenter
@@ -32,8 +33,10 @@ class ListEndpointsPresenter
     public $project_target;
     public $base_uri;
     public $webhook;
+    public $csrf_token_delete;
+    public $csrf_token_add;
 
-    public function __construct(Endpoint $endpoint)
+    public function __construct(Endpoint $endpoint, CSRFSynchronizerToken $csrf_add, CSRFSynchronizerToken $csrf_delete)
     {
         $this->username_source = $endpoint->getUsernameSource();
         $this->project_source  = $endpoint->getProjectSource();
@@ -42,5 +45,7 @@ class ListEndpointsPresenter
         $this->project_target  = $endpoint->getProjectTarget();
         $this->base_uri        = $endpoint->getBaseUri();
         $this->webhook         = $endpoint->getWebhook();
+        $this->csrf_token_delete = $csrf_delete;
+        $this->csrf_token_add = $csrf_add;
     }
 }
