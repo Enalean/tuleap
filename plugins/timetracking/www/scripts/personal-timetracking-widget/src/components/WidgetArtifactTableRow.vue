@@ -41,7 +41,7 @@
     </tr>
 </template>)
 (<script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import { gettext_provider } from "../gettext-provider.js";
 import { modal as createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
@@ -68,6 +68,7 @@ export default {
         show_times_label: () => gettext_provider.gettext("Details")
     },
     methods: {
+        ...mapMutations(["setAddMode"]),
         show_modal() {
             this.$store.commit("setCurrentTimes", this.timeData);
             this.modal_simple_content.toggle();
@@ -76,6 +77,7 @@ export default {
     mounted() {
         const modal = this.$refs.timetracking_modal.$el;
         this.modal_simple_content = createModal(modal);
+        this.modal_simple_content.addEventListener("tlp-modal-hidden", this.setAddMode);
     }
 };
 </script>)

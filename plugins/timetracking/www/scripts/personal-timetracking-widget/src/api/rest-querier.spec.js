@@ -24,7 +24,7 @@
 import { Settings } from "luxon";
 import { tlp, mockFetchSuccess } from "tlp-mocks";
 
-import { getTrackedTimes } from "./rest-querier.js";
+import { getTrackedTimes, addTime } from "./rest-querier.js";
 
 describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
@@ -70,5 +70,33 @@ describe("getTrackedTimes() -", () => {
 
         expect(result.times).toEqual(times);
         expect(result.total).toEqual(1);
+    });
+
+    it("the REST API will add date and the new time should be returned", async () => {
+        Settings.defaultZoneName = "Europe/Paris";
+        const time = {
+            artifact: {},
+            project: {},
+            minutes: 20
+        };
+
+        mockFetchSuccess(tlp.post, {
+            return_json: time
+        });
+        const result = await addTime("2018-03-08", 2, "11:11", "oui");
+        const headers = {
+            "content-type": "application/json"
+        };
+        const body = JSON.stringify({
+            date_time: "2018-03-08",
+            artifact_id: 2,
+            time_value: "11:11",
+            step: "oui"
+        });
+        expect(tlp.post).toHaveBeenCalledWith("/api/v1/timetracking", {
+            headers,
+            body
+        });
+        expect(result).toEqual(time);
     });
 });

@@ -18,7 +18,7 @@
  */
 
 import { gettext_provider } from "../gettext-provider.js";
-import { getTrackedTimes } from "../api/rest-querier.js";
+import { getTrackedTimes, addTime as addTimeQuerrier } from "../api/rest-querier.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);
@@ -36,7 +36,20 @@ export async function getTimes(context) {
         );
         return context.commit("loadAChunkOfTimes", [times, total]);
     } catch (error) {
-        return showRestError(context, error);
+        return showErrorMessage(context, error);
+    }
+}
+
+export async function addTime(context, [date, artifact, time, step = null]) {
+    try {
+        const response = await addTimeQuerrier(date, artifact, time, step);
+        context.commit("pushCurrentTimes", [
+            [response],
+            gettext_provider.gettext("Time successfully added")
+        ]);
+        return loadFirstBatchOfTimes(context);
+    } catch (rest_error) {
+        return showRestError(context, rest_error);
     }
 }
 
@@ -46,11 +59,30 @@ export async function loadFirstBatchOfTimes(context) {
     context.commit("setIsLoading", false);
 }
 
-async function showRestError(context, rest_error) {
+export async function reloadTimes(context) {
+    context.commit("resetTimes");
+    await getTimes(context).finally(function() {
+        context.commit("setIsLoading", false);
+    });
+}
+
+async function showErrorMessage(context, rest_error) {
     try {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);
     } catch (error) {
         context.commit("setErrorMessage", gettext_provider.gettext("An error occured"));
+    }
+}
+
+async function showRestError(context, rest_error) {
+    try {
+        const { error } = await rest_error.response.json();
+        return context.commit("setRestFeedback", [error.code + " " + error.message, "danger"]);
+    } catch (error) {
+        return context.commit("setRestFeedback", [
+            gettext_provider.gettext("An error occured"),
+            "danger"
+        ]);
     }
 }

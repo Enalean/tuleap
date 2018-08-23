@@ -48,7 +48,7 @@ describe("Widget", () => {
                 ]
             ];
 
-            mutations.setTimes(state, times);
+            mutations.loadAChunkOfTimes(state, [times, times.length]);
             expect(getters.get_formatted_total_sum(state)).toBe("00:40");
         });
 

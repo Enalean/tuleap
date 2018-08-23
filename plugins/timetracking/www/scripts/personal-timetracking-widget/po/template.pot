@@ -1,3 +1,6 @@
+msgid "Add"
+msgstr ""
+
 msgid "An error occured"
 msgstr ""
 
@@ -34,6 +37,9 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+msgid "Step"
+msgstr ""
+
 msgid "Steps"
 msgstr ""
 
@@ -44,6 +50,9 @@ msgid "The time is displayed in hours:minutes"
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Time successfully added"
 msgstr ""
 
 msgid "Times"

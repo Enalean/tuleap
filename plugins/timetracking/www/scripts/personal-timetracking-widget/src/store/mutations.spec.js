@@ -31,13 +31,6 @@ describe("Store mutations", () => {
     });
 
     describe("setters", () => {
-        it("Given a widget with state initialisation, Then we change dates, states must be equal to the new dates", () => {
-            mutations.setStartDate(state, "2018-03-03");
-            mutations.setEndDate(state, "2018-04-03");
-            expect(state.start_date).toEqual("2018-03-03");
-            expect(state.end_date).toEqual("2018-04-03");
-        });
-
         it("Given a widget with state initialisation, Then we change reading mode, state must change too", () => {
             mutations.toggleReadingMode(state);
             expect(state.reading_mode).toBe(false);
@@ -51,48 +44,6 @@ describe("Store mutations", () => {
             expect(state.reading_mode).toBe(true);
         });
 
-        it("Given a widget with state initialisation, Then we add times, times must change too", () => {
-            let times = [
-                [
-                    {
-                        artifact: {},
-                        project: {},
-                        minutes: 20
-                    },
-                    {
-                        artifact: {},
-                        project: {},
-                        minutes: 20
-                    }
-                ],
-                [
-                    {
-                        artifact: {},
-                        project: {},
-                        minutes: 20
-                    }
-                ]
-            ];
-
-            mutations.setTimes(state, times);
-            expect(state.times.length).toBe(2);
-        });
-
-        it("Given a widget with state initialisation, Then we change total_time, state must change too", () => {
-            mutations.setTotalTimes(state, 5);
-            expect(state.total_times).toBe(5);
-        });
-
-        it("Given a widget with state initialisation, Then we change pagination_offset, state must change too", () => {
-            mutations.setPaginationOffset(state, 5);
-            expect(state.pagination_offset).toBe(5);
-        });
-
-        it("Given a widget with state initialisation, Then we change pagination_limit, state must change too", () => {
-            mutations.setPaginationLimit(state, 5);
-            expect(state.pagination_limit).toBe(5);
-        });
-
         it("Given a widget with state initialisation, Then we change rest_error, state must change too", () => {
             mutations.setErrorMessage(state, "oui");
             expect(state.error_message).toEqual("oui");
@@ -101,6 +52,34 @@ describe("Store mutations", () => {
         it("Given a widget with state initialisation, Then we change isLoading, state must change too", () => {
             mutations.setIsLoading(state, true);
             expect(state.is_loading).toBe(true);
+        });
+
+        it("Given a widget with state initialisation, Then we call setAddMode, states must change", () => {
+            mutations.setAddMode(state);
+            expect(state.is_add_mode).toBe(true);
+            expect(state.rest_feedback.message).toEqual(null);
+            expect(state.rest_feedback.type).toEqual(null);
+        });
+
+        it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
+            state.rest_feedback.message = "Time successfully added";
+            state.rest_feedback.type = "success";
+            mutations.setAddMode(state);
+
+            expect(state.is_add_mode).toBe(true);
+            expect(state.rest_feedback.message).toEqual("");
+            expect(state.rest_feedback.type).toEqual("");
+        });
+
+        it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
+            state.is_add_mode = true;
+            state.rest_feedback.message = "An error occured";
+            state.rest_feedback.type = "danger";
+            mutations.setAddMode(state);
+
+            expect(state.is_add_mode).toBe(false);
+            expect(state.rest_feedback.message).toEqual("");
+            expect(state.rest_feedback.type).toEqual("");
         });
     });
 });

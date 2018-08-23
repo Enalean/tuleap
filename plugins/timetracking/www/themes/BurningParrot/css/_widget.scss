@@ -123,3 +123,16 @@
 .timetracking-details-modal-content {
     padding: 0;
 }
+
+.timetracking-details-modal-add-time-field {
+    display: flex;
+    justify-content: space-between;
+}
+
+.tlp-input.timetracking-details-modal-add-step-field {
+    width: 100%;
+}
+
+.flatpickr-wrapper.static {
+    display: block;
+}

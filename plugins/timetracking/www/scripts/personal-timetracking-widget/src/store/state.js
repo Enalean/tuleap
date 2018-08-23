@@ -31,6 +31,11 @@ const state = {
     times: [],
     error_message: "",
     current_times: [],
+    is_add_mode: false,
+    rest_feedback: {
+        message: null,
+        type: null
+    },
     is_loading: false
 };
 
