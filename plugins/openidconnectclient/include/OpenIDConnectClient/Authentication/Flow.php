@@ -25,6 +25,10 @@ use InoOicClient\Client\ClientInfo;
 use InoOicClient\Flow\Exception\AuthorizationException;
 use InoOicClient\Flow\Exception\TokenRequestException;
 use InoOicClient\Flow\Exception\UserInfoRequestException;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
@@ -38,6 +42,14 @@ class Flow extends Basic {
     private $provider_manager;
 
     /**
+     * @var TokenRequestCreator
+     */
+    private $token_request_creator;
+    /**
+     * @var TokenRequestSender
+     */
+    private $token_request_sender;
+    /**
      * @var IDTokenVerifier
      */
     private $id_token_verifier;
@@ -46,12 +58,16 @@ class Flow extends Basic {
         StateManager $state_manager,
         AuthorizationDispatcher $authorization_dispatcher,
         ProviderManager $provider_manager,
+        TokenRequestCreator $token_request_creator,
+        TokenRequestSender $token_request_sender,
         IDTokenVerifier $id_token_verifier
     ) {
         $this->setStateManager($state_manager);
         $this->setAuthorizationDispatcher($authorization_dispatcher);
-        $this->provider_manager   = $provider_manager;
-        $this->id_token_verifier = $id_token_verifier;
+        $this->provider_manager      = $provider_manager;
+        $this->token_request_creator = $token_request_creator;
+        $this->token_request_sender  = $token_request_sender;
+        $this->id_token_verifier     = $id_token_verifier;
     }
 
     public function setOptions(Provider $provider) {
@@ -76,13 +92,6 @@ class Flow extends Basic {
                     'method' => 'client_secret_post',
                     'params' => array(
                         'client_secret' => $provider->getClientSecret()
-                    )
-                )
-            ),
-            'token_dispatcher' => array(
-                'http_options' => array(
-                    'headers' => array(
-                        'Accept' => 'application/json'
                     )
                 )
             )
@@ -128,7 +137,6 @@ class Flow extends Basic {
             $state                  = $this->getStateManager()->validateState($signed_state);
             $provider               = $this->provider_manager->getById($state->getProviderId());
             $this->setOptions($provider);
-            $authorization_code     = $authorization_response->getCode();
         } catch(Exception $ex) {
             throw new AuthorizationException(
                 sprintf("Exception during authorization: [%s] %s", get_class($ex), $ex->getMessage()),
@@ -138,11 +146,14 @@ class Flow extends Basic {
         }
 
         try {
-            $token_request    = $this->createTokenRequest($authorization_code);
-            $token_response   = $this->getTokenDispatcher()->sendTokenRequest($token_request);
-            $access_token     = $token_response->getAccessToken();
-            $encoded_id_token = $token_response->getIdToken();
-            $id_token         = $this->id_token_verifier->validate($provider, $state->getNonce(), $encoded_id_token);
+            $token_request  = $this->token_request_creator->createTokenRequest(
+                $provider,
+                $authorization_response,
+                $this->getRedirectUri()
+            );
+            $token_response = $this->token_request_sender->sendTokenRequest($token_request);
+            $id_token       = $this->id_token_verifier->validate($provider, $state->getNonce(),
+                $token_response->getIDToken());
         } catch (Exception $ex) {
             throw new TokenRequestException(
                 sprintf("Exception during token request: [%s] %s", get_class($ex), $ex->getMessage()),
@@ -153,7 +164,7 @@ class Flow extends Basic {
 
 
         try {
-            $user_informations = $this->getUserInfo($access_token);
+            $user_informations = $this->getUserInfo($token_response->getAccessToken());
         } catch (Exception $ex) {
             throw new UserInfoRequestException(
                 sprintf("Exception during user info request: [%s] %s", get_class($ex), $ex->getMessage()),

@@ -19,6 +19,8 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\OpenIDConnectClient\AccountLinker\RegisterPresenter;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDao;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
@@ -32,6 +34,8 @@ use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
 use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
+use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
@@ -201,6 +205,8 @@ class openidconnectclientPlugin extends Plugin {
             $state_manager,
             new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
+            new TokenRequestCreator(MessageFactoryBuilder::build()),
+            new TokenRequestSender(HttpClientFactory::createClient()),
             $id_token_verifier
         );
         return $flow;

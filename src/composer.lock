@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d08477368593d87086fba420f104b0b1",
+    "content-hash": "98bd3a533bb38ee55eaf4f3d810fdc82",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -3850,8 +3850,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "mustache/mustache": 20,
-        "luracast/restler": 20
+        "luracast/restler": 20,
+        "mustache/mustache": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
