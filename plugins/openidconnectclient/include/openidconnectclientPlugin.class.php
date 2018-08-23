@@ -36,6 +36,7 @@ use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
+use Tuleap\OpenIDConnectClient\OpenIDConnectClientLogger;
 use Tuleap\OpenIDConnectClient\OpenIDConnectClientPluginInfo;
 use Tuleap\OpenIDConnectClient\Provider\EnableUniqueAuthenticationEndpointVerifier;
 use Tuleap\OpenIDConnectClient\Provider\ProviderDao;
@@ -352,11 +353,11 @@ class openidconnectclientPlugin extends Plugin {
 
         $login_controller          = new Login\Controller(
             $user_manager,
-            $provider_manager,
             $user_mapping_manager,
             $unlinked_account_manager,
             $automatic_user_registration,
-            $flow
+            $flow,
+            new OpenIDConnectClientLogger()
         );
         $account_linker_controller = new AccountLinker\Controller(
             $user_manager,

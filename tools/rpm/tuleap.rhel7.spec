@@ -643,6 +643,11 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
 
+# Plugin OpenID Connect Client
+%{__install} plugins/openidconnectclient/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
+
 ## Symlink for compatibility with older version
 #%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
 #%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
@@ -1059,6 +1064,8 @@ fi
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/openidconnectclient
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
 %files plugin-proftpd
 %defattr(-,root,root,-)
