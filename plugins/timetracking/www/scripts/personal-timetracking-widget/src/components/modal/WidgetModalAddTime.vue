@@ -51,7 +51,7 @@
                 </button>
                 <button class="tlp-button-primary tlp-button-outline"
                        type="button"
-                       v-on:click="setAddMode()"
+                       v-on:click="setAddMode(false)"
                 >
                 <i class="fa fa-times"></i>
                 </button>

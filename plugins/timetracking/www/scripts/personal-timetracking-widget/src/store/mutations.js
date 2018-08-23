@@ -50,8 +50,8 @@ export default {
         state.is_add_mode = false;
     },
 
-    setAddMode(state) {
-        state.is_add_mode = !state.is_add_mode;
+    setAddMode(state, is_add_mode) {
+        state.is_add_mode = is_add_mode;
         if (
             state.is_add_mode === false ||
             (state.is_add_mode === true && state.rest_feedback.type === "success")

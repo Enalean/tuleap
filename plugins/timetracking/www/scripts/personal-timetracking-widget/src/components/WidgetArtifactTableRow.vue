@@ -77,7 +77,9 @@ export default {
     mounted() {
         const modal = this.$refs.timetracking_modal.$el;
         this.modal_simple_content = createModal(modal);
-        this.modal_simple_content.addEventListener("tlp-modal-hidden", this.setAddMode);
+        this.modal_simple_content.addEventListener("tlp-modal-hidden", () =>
+            this.setAddMode(false)
+        );
     }
 };
 </script>)
