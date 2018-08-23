@@ -117,7 +117,7 @@ Group: Development/Tools
 Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, tuleap-core-subversion-modperl, perl-CGI
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
+Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: sha1collisiondetector
 %description core-subversion
 Manage dependencies for Tuleap Subversion integration
@@ -140,7 +140,7 @@ Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
+Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: cvs-tuleap
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
@@ -168,7 +168,7 @@ Version: @@PLUGIN_SVN_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, tuleap-core-subversion-modperl
-Requires: viewvc, viewvc-theme-tuleap >= 1.0.6
+Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 %description plugin-svn
 Integration of Subversion software configuration management tool with Tuleap.
 
