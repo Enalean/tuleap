@@ -119,6 +119,7 @@ _checkPluginsConfiguration() {
         case ${plugin} in
             git) _pluginGit;;
             svn) _pluginSVN;;
+            mediawiki) _pluginMediawiki;;
         esac
     done
 }
