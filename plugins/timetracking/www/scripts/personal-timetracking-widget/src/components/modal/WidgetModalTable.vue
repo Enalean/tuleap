@@ -29,6 +29,8 @@
         <tbody>
         <widget-modal-add-time
             v-if="is_add_mode"
+            v-on:swapMode="setAddMode"
+            v-on:validateTime="addNewTime"
         />
         <widget-modal-row
             v-for="time in current_times"
@@ -61,6 +63,14 @@ export default {
         time_label: () => gettext_provider.gettext("Times"),
         date_message: () => gettext_provider.gettext("Date"),
         steps_label: () => gettext_provider.gettext("Steps")
+    },
+    methods: {
+        setAddMode() {
+            this.$store.commit("setAddMode", false);
+        },
+        addNewTime(date, artifact_id, time, step) {
+            this.$store.dispatch("addTime", [date, artifact_id, time, step]);
+        }
     }
 };
 </script>)

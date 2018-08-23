@@ -17,79 +17,99 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 (<template>
-        <tr>
-            <td>
+    <tr>
+        <td class="tlp-form-element">
+            <span class="tlp-prepend"></span>
+            <input type="text"
+                   class="tlp-input tlp-input-date"
+                   v-model="date"
+                   ref="date_field"
+                   size="11"
+            >
+        </td>
+        <td>
+            <input type="text"
+                   class="tlp-input"
+                   id="timetracking-details-modal-add-step-field"
+                   size="11"
+                   placeholder="preparation"
+                   v-on:keyup.enter="validateNewTime()"
+                   v-model="step"
+            >
+        </td>
+        <td class="timetracking-details-modal-buttons">
+            <div class="tlp-form-element timetracking-details-form-element"
+                 v-bind:class="{'tlp-form-element-error': error_message}"
+            >
                 <input type="text"
-                       class="tlp-input tlp-input-date"
-                       ref="new_date"
-                       v-model="date_model"
-                       size="11"
-                >
-            </td>
-            <td>
-                <input type="text"
-                       ref="new_step"
-                       class="tlp-input timetracking-details-modal-add-step-field"
-                       size="11"
-                       maxlength="255"
-                       placeholder="preparation"
-                >
-            </td>
-            <td class="timetracking-details-modal-add-time-field">
-                <input type="text"
-                       v-on:keyup.enter="addNewTime()"
-                       ref="new_time"
                        class="tlp-input"
                        size="11"
+                       v-model="time"
+                       v-on:keyup.enter="validateNewTime()"
                        placeholder="hh:mm"
                        required>
-
-                <button class="tlp-button-primary"
-                       type="submit"
-                        v-on:click="addNewTime"
-                ><i class="fa fa-check"></i>
-                </button>
-                <button class="tlp-button-primary tlp-button-outline"
-                       type="button"
-                       v-on:click="setAddMode(false)"
-                >
+            </div>
+            <button class="tlp-button-primary"
+                    type="submit"
+                    v-bind:class="{'tlp-tooltip tlp-tooltip-bottom timetracking-tooltip': error_message}"
+                    v-bind:data-tlp-tooltip="error_message"
+                    v-on:click="validateNewTime()"
+            ><i class="fa fa-check"></i>
+            </button>
+            <button class="tlp-button-primary tlp-button-outline"
+                    type="button"
+                    v-on:click="swapMode()"
+            >
                 <i class="fa fa-times"></i>
-                </button>
-            </td>
-        </tr>
+            </button>
+        </td>
+    </tr>
 </template>)
 (<script>
 import { DateTime } from "luxon";
+import { TIME_REGEX } from "../../constants.js";
 import { gettext_provider } from "../../gettext-provider.js";
 import { datePicker } from "tlp";
-import { mapMutations, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
     name: "WigetModalAddTime",
+    props: {
+        timeData: Object
+    },
+    data() {
+        return {
+            date: DateTime.local().toISODate(),
+            step: "",
+            time: "",
+            error_message: null
+        };
+    },
     computed: {
-        ...mapGetters(["current_artifact"]),
-        date_message: () => gettext_provider.gettext("Date"),
-        time_to_add: () => gettext_provider.gettext("Time"),
-        step_to_add: () => gettext_provider.gettext("Step"),
-        add_time: () => gettext_provider.gettext("Add"),
-        date_model() {
-            return DateTime.local().toISODate();
-        }
+        ...mapGetters(["current_artifact"])
     },
     methods: {
-        ...mapMutations(["setAddMode"]),
-        async addNewTime() {
-            await this.$store.dispatch("addTime", [
-                this.$refs.new_date.value,
-                this.current_artifact.id,
-                this.$refs.new_time.value,
-                this.$refs.new_step.value
-            ]);
+        swapMode() {
+            this.$emit("swapMode");
+        },
+        validateNewTime() {
+            if (TIME_REGEX.test(this.time)) {
+                const id = this.timeData ? this.timeData.id : this.current_artifact.id;
+                this.$emit("validateTime", this.date, id, this.time, this.step);
+            } else {
+                this.error_message = gettext_provider.gettext("Please check time's format (hh:mm)");
+                if (!this.time) {
+                    this.error_message = gettext_provider.gettext("Time is required");
+                }
+            }
         }
     },
     mounted() {
-        datePicker(this.$refs.new_date, {
-            static: true
+        datePicker(this.$refs.date_field, {
+            static: true,
+            onValueUpdate: (date, string_value) => {
+                this.date = string_value;
+            }
         });
     }
 };

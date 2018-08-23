@@ -126,6 +126,7 @@
 
 .timetracking-details-modal-add-time-field {
     display: flex;
+    align-items: center;
     justify-content: space-between;
 }
 
@@ -135,4 +136,24 @@
 
 .flatpickr-wrapper.static {
     display: block;
+}
+
+.timetracking-details-modal-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timetracking-details-form-element {
+    margin: 0;
+}
+
+.timetracking-tooltip {
+    &::before {
+        opacity: 1;
+    }
+
+    &::after {
+        opacity: 1;
+    }
 }

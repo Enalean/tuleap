@@ -23,7 +23,12 @@
 
 import { Settings } from "luxon";
 
-import { formatMinutes, formatDatetimeToISO, formatDateDayMonthYear } from "./time-formatters.js";
+import {
+    formatMinutes,
+    formatDatetimeToISO,
+    formatDateDayMonthYear,
+    sortTimesChronologically
+} from "./time-formatters.js";
 
 describe("Time formatters", () => {
     describe("formatMinutes", () => {
@@ -49,6 +54,33 @@ describe("Time formatters", () => {
             const formatted_date = formatDateDayMonthYear("2018-11-11T00:00:00+01:00");
 
             expect(formatted_date).toEqual("11/11/2018");
+        });
+    });
+
+    describe("sortTimesChronologically", () => {
+        it("When I call this method with times, then it return times sorted on dates", () => {
+            const times = [
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-03-01"
+                },
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-02-01"
+                },
+                {
+                    artifact: {},
+                    project: {},
+                    minutes: 20,
+                    date: "2018-01-01"
+                }
+            ];
+            const sorted_times = sortTimesChronologically([times[1], times[0], times[2]]);
+            expect(sorted_times).toEqual(times);
         });
     });
 });
