@@ -18,21 +18,21 @@
   -->
 
 <template>
-    <button class="tlp-button-primary"
-            v-bind:disabled="is_button_disabled"
-            v-bind:title="button_title"
-    >
-        <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
-        <translate>Create pull request</translate>
-    </button>
+    <div>
+        <create-pullrequest-button />
+    </div>
 </template>
 
 <script>
 import store from "../store/index.js";
+import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 
 export default {
-    name: "CreatePullrequest",
+    name: "App",
     store,
+    components: {
+        CreatePullrequestButton
+    },
     props: {
         repository_id: Number,
         parent_repository_id: Number
@@ -42,16 +42,6 @@ export default {
             repository_id: this.repository_id,
             parent_repository_id: this.parent_repository_id
         });
-    },
-    computed: {
-        is_button_disabled() {
-            return !this.$store.getters.can_create_pullrequest;
-        },
-        button_title() {
-            return this.is_button_disabled
-                ? this.$gettext("No pull request can currently be created")
-                : "";
-        }
     }
 };
 </script>

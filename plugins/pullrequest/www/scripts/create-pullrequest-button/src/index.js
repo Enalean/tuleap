@@ -18,7 +18,7 @@
  */
 
 import Vue from "vue";
-import CreatePullrequest from "./components/CreatePullrequest.vue";
+import App from "./components/App.vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 
@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     Vue.config.language = document.body.dataset.userLocale;
 
-    const RootComponent = Vue.extend(CreatePullrequest);
+    const RootComponent = Vue.extend(App);
 
     new RootComponent({
         propsData: {
