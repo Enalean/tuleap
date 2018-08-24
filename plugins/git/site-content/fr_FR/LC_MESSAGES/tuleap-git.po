@@ -103,6 +103,9 @@ msgstr "Permission"
 msgid "Project not found."
 msgstr "Le projet n'a pas été trouvé."
 
+msgid "Read-only"
+msgstr "Lecture seule"
+
 msgid "Repository does not exist"
 msgstr "Le dépôt n'existe pas"
 

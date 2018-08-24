@@ -10,6 +10,9 @@
         <span id="git-repository-clone-button-text">{{ selected_url_label }}</span>
         <i class="fa fa-sort tlp-button-icon-right"></i>
     </button>
+    <span class="tlp-prepend git-repository-clone-hidden" id="git-repository-clone-read-only">
+        <span class="tlp-badge-primary">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span>
+    </span>
     <input type="text"
            class="tlp-input"
            id="git-repository-clone-input"
