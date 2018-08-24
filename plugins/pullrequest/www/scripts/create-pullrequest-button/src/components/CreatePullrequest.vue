@@ -18,14 +18,40 @@
   -->
 
 <template>
-    <button class="tlp-button-primary" disabled>
+    <button class="tlp-button-primary"
+            v-bind:disabled="is_button_disabled"
+            v-bind:title="button_title"
+    >
         <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
         <translate>Create pull request</translate>
     </button>
 </template>
 
 <script>
+import store from "../store/index.js";
+
 export default {
-    name: "CreatePullrequest"
+    name: "CreatePullrequest",
+    store,
+    props: {
+        repository_id: Number,
+        parent_repository_id: Number
+    },
+    mounted() {
+        this.$store.dispatch("init", {
+            repository_id: this.repository_id,
+            parent_repository_id: this.parent_repository_id
+        });
+    },
+    computed: {
+        is_button_disabled() {
+            return !this.$store.getters.can_create_pullrequest;
+        },
+        button_title() {
+            return this.is_button_disabled
+                ? this.$gettext("No pull request can currently be created")
+                : "";
+        }
+    }
 };
 </script>

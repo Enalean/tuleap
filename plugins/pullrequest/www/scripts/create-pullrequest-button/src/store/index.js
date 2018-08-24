@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,20 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+import Vue from "vue";
+import Vuex from "vuex";
+import state from "./state.js";
+import * as actions from "./actions.js";
+import * as mutations from "./mutations.js";
+import * as getters from "./getters.js";
 
-use GitRepository;
+Vue.use(Vuex);
 
-class ParentRepositoryPresenter
-{
-    public $parent_repository_id;
-    public $parent_repository_url;
-    public $parent_repository_name;
-
-    public function __construct(GitRepository $repository, $repository_url)
-    {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
-    }
-}
+export default new Vuex.Store({
+    state,
+    actions,
+    mutations,
+    getters
+});

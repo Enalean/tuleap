@@ -28,6 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const repository_id = parseInt(container.dataset.repositoryId, 10);
+    const parent_repository_id = parseInt(container.dataset.parentRepositoryId, 10);
+
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
 
@@ -42,5 +45,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const RootComponent = Vue.extend(CreatePullrequest);
 
-    new RootComponent({}).$mount(mount_point);
+    new RootComponent({
+        propsData: {
+            repository_id,
+            parent_repository_id
+        }
+    }).$mount(mount_point);
 });

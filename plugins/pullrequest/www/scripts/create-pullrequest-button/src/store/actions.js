@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+import { getBranches } from "../api/rest-querier.js";
 
-use GitRepository;
+export async function init(context, { repository_id, parent_repository_id }) {
+    const branches = await getBranches(repository_id);
+    context.commit("setSourceBranches", branches);
 
-class ParentRepositoryPresenter
-{
-    public $parent_repository_id;
-    public $parent_repository_url;
-    public $parent_repository_name;
-
-    public function __construct(GitRepository $repository, $repository_url)
-    {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
+    if (parent_repository_id) {
+        const parent_repository_branches = await getBranches(parent_repository_id);
+        context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
+    } else {
+        context.commit("setDestinationBranches", branches);
     }
 }

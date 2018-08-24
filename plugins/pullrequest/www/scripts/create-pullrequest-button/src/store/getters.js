@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,20 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+export const can_create_pullrequest = state => {
+    const has_an_unique_branch =
+        state.source_branches.length === 1 && state.destination_branches.length === 1;
 
-use GitRepository;
-
-class ParentRepositoryPresenter
-{
-    public $parent_repository_id;
-    public $parent_repository_url;
-    public $parent_repository_name;
-
-    public function __construct(GitRepository $repository, $repository_url)
-    {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
-    }
-}
+    return (
+        !has_an_unique_branch &&
+        state.source_branches.length > 0 &&
+        state.destination_branches.length > 0
+    );
+};

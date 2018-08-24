@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,20 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+export function setSourceBranches(state, branches) {
+    state.source_branches = branches;
+}
 
-use GitRepository;
-
-class ParentRepositoryPresenter
-{
-    public $parent_repository_id;
-    public $parent_repository_url;
-    public $parent_repository_name;
-
-    public function __construct(GitRepository $repository, $repository_url)
-    {
-        $this->parent_repository_url  = $repository_url;
-        $this->parent_repository_name = $repository->getName();
-        $this->parent_repository_id   = $repository->getId();
-    }
+export function setDestinationBranches(state, branches) {
+    state.destination_branches = branches;
 }

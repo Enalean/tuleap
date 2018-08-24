@@ -7,3 +7,6 @@ msgstr ""
 
 msgid "Create pull request"
 msgstr ""
+
+msgid "No pull request can currently be created"
+msgstr ""
