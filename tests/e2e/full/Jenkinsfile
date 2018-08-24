@@ -34,10 +34,14 @@ pipeline {
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
                 }
                 failure {
-                    mail to: crew@enalean.com, subject: 'Cypress tests are broken'
+                    mail to: 'crew@enalean.com',
+                         subject: "${currentBuild.fullDisplayName} is broken",
+                         body: "See ${env.BUILD_URL}"
                 }
                 unstable {
-                    mail to: crew@enalean.com, subject: 'Cypress tests are unstable'
+                    mail to: 'crew@enalean.com',
+                         subject: "${currentBuild.fullDisplayName} is unstable",
+                         body: "See ${env.BUILD_URL}"
                 }
             }
         }
