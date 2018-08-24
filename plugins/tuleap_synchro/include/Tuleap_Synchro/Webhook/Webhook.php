@@ -19,12 +19,22 @@
  *
  */
 
-namespace Tuleap\TuleapSynchro\Endpoint;
+namespace Tuleap\TuleapSynchro\Webhook;
 
-class EndpointBuilder
+class Webhook
 {
-    public function build($username_source, $password, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
+    /**
+     * @var String
+     */
+    private $webhook;
+
+    public function __construct($webhook)
     {
-        return new Endpoint($username_source, $password, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook);
+        $this->webhook = $webhook;
+    }
+
+    public function getWebhook()
+    {
+        return $this->webhook;
     }
 }

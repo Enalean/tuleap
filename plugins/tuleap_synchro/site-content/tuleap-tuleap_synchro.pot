@@ -43,6 +43,12 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
+msgid "Delete endpoint ?"
+msgstr ""
+
 msgid "List of import endpoints"
 msgstr ""
 
@@ -79,4 +85,9 @@ msgid "Username (\"Target\" Project):"
 msgstr ""
 
 msgid "Webhook"
+msgstr ""
+
+msgid ""
+"Wow, wait a minute. You are about to delete the endpoint: %s. Please confirm "
+"your action."
 msgstr ""

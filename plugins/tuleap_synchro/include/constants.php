@@ -20,3 +20,4 @@
  */
 
 define('TULEAP_SYNCHRO_BASE_DIR', __DIR__);
+define('TULEAP_SYNCHRO_URL', '/admin/tuleap_synchro');

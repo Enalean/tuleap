@@ -30,7 +30,7 @@ class ListEndpointsRetriever
     /**
      * @var TuleapSynchroDao
      */
-    private $endpoint_dao;
+    private $tuleap_synchro_dao;
 
     /**
      * @var EndpointBuilder
@@ -39,8 +39,8 @@ class ListEndpointsRetriever
 
     public function __construct(TuleapSynchroDao $endpoint_dao, EndpointBuilder $endpoint_builder)
     {
-        $this->endpoint_dao     = $endpoint_dao;
-        $this->endpoint_builder = $endpoint_builder;
+        $this->tuleap_synchro_dao = $endpoint_dao;
+        $this->endpoint_builder   = $endpoint_builder;
     }
 
     /**
@@ -48,7 +48,7 @@ class ListEndpointsRetriever
      */
     public function getAllEndpoints()
     {
-        $row_endpoints = $this->endpoint_dao->getAllEndpoints();
+        $row_endpoints = $this->tuleap_synchro_dao->getAllEndpoints();
         $list_endpoint = [];
 
         if ($row_endpoints === null) {
@@ -58,6 +58,7 @@ class ListEndpointsRetriever
         foreach ($row_endpoints as $row_endpoint) {
             $list_endpoint[] = $this->endpoint_builder->build(
                 $row_endpoint['username_source'],
+                $row_endpoint['password_source'],
                 $row_endpoint['project_source'],
                 $row_endpoint['tracker_source'],
                 $row_endpoint['username_target'],

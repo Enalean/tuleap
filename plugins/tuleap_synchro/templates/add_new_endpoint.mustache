@@ -1,4 +1,13 @@
-<form id="add-import-endpoint" class="tlp-modal" role="dialog" aria-labelledby="add-modal-label" method="post">
+<form id="add-import-endpoint"
+      class="tlp-modal"
+      role="dialog"
+      aria-labelledby="add-modal-label"
+      method="post"
+      action="/admin/tuleap_synchro/add_endpoint">
+
+    {{# csrf_token_add }}
+        {{> csrf_token_input }}
+    {{/ csrf_token_add }}
 
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="add-modal-label">
@@ -133,7 +142,7 @@
         </button>
 
         <button type="submit"
-                class="tlp-button-primary tlp-modal-action disabled">
+                class="tlp-button-primary tlp-modal-action">
             <i class="tlp-button-icon fa fa-plus"></i>
             {{# dgettext }} tuleap-tuleap_synchro | Add endpoint{{/ dgettext }}
         </button>

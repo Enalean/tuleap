@@ -21,12 +21,15 @@
 
 namespace Tuleap\TuleapSynchro\Endpoint;
 
+use CSRFSynchronizerToken;
 use HTTPRequest;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 
-class EndpointCreatorController implements DispatchableWithRequest, DispatchableWithBurningParrot
+class EndpointDeleteController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     /**
      * @var EndpointUpdater
@@ -34,14 +37,14 @@ class EndpointCreatorController implements DispatchableWithRequest, Dispatchable
     private $endpoint_updater;
 
     /**
-     * @var EndpointChecker
+     * @var AdminPageRenderer
      */
-    private $checker;
+    private $admin_page_renderer;
 
-    public function __construct(EndpointChecker $endpoint_checker, EndpointUpdater $endpoint_updater)
+    public function __construct(EndpointUpdater $endpoint_updater, AdminPageRenderer $admin_page_renderer)
     {
-        $this->checker                        = $endpoint_checker;
-        $this->endpoint_updater               = $endpoint_updater;
+        $this->endpoint_updater    = $endpoint_updater;
+        $this->admin_page_renderer = $admin_page_renderer;
     }
 
     /**
@@ -50,15 +53,15 @@ class EndpointCreatorController implements DispatchableWithRequest, Dispatchable
      * @param HTTPRequest $request
      * @param BaseLayout $layout
      * @param array $variables
-     * @throws \Tuleap\TuleapSynchro\Exception\TrackerIdIsNotValidException
+     * @return void
+     * @throws ForbiddenException
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $csrf_token_add = new \CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/add_endpoint');
-        $csrf_token_add->check();
+        $csrf_token_delete = new CSRFSynchronizerToken(TULEAP_SYNCHRO_URL . '/delete_endpoint');
+        $csrf_token_delete->check();
 
-        $this->checker->checkData($request->params);
-        $this->endpoint_updater->addEndpoint($request->params);
+        $this->endpoint_updater->deleteEndpoint($request->params);
         $layout->redirect(TULEAP_SYNCHRO_URL);
     }
 }

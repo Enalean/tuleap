@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1\n"
+"X-Generator: Poedit 2.1.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "\"Source\" Project's Shortname"
@@ -57,6 +57,12 @@ msgstr "Annuler"
 msgid "Close"
 msgstr "Fermer"
 
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete endpoint ?"
+msgstr "Supprimer un point d'accès ?"
+
 msgid "List of import endpoints"
 msgstr "Liste les points d'accès pour l'importation"
 
@@ -94,3 +100,10 @@ msgstr "Nom d'utilisateur (Projet \"Cible\") :"
 
 msgid "Webhook"
 msgstr "Webhook"
+
+msgid ""
+"Wow, wait a minute. You are about to delete the endpoint: %s. Please confirm "
+"your action."
+msgstr ""
+"Wow, attendez une minute. Vous êtes sur le point de supprimer le point "
+"d'accès %s. S'il vous plait, confirmez votre action."

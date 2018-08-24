@@ -48,4 +48,32 @@ class TuleapSynchroDao extends DataAccessObject
 
         return $this->getDB()->run($sql);
     }
+
+    /**
+     * @param $webhook
+     */
+    public function deleteEndpoint($webhook)
+    {
+        $sql = "DELETE FROM plugin_tuleap_synchro_endpoint
+                WHERE webhook = ?";
+        $this->getDB()->run($sql, $webhook);
+    }
+
+    /**
+     * @param $username_source
+     * @param $password_source
+     * @param $project_source
+     * @param $tracker_source
+     * @param $username_target
+     * @param $project_target
+     * @param $base_uri
+     * @param $webhook
+     */
+    public function addEndpoint($username_source, $password_source, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
+    {
+        $sql = "INSERT IGNORE plugin_tuleap_synchro_endpoint (username_source, password_source, project_source, tracker_source, username_target, project_target, base_uri, webhook)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        $this->getDB()->run($sql, $username_source, $password_source, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook);
+    }
 }

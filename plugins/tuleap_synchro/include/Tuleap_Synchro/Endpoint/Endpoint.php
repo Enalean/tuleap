@@ -30,8 +30,9 @@ class Endpoint
     private $base_uri;
     private $project_source;
     private $tracker_source;
+    private $password;
 
-    public function __construct($username_source, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
+    public function __construct($username_source, $password, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
     {
         $this->username_source = $username_source;
         $this->project_source  = $project_source;
@@ -40,6 +41,7 @@ class Endpoint
         $this->project_target  = $project_target;
         $this->base_uri        = $base_uri;
         $this->webhook         = $webhook;
+        $this->password        = $password;
     }
 
     public function getUsernameSource()
@@ -75,5 +77,10 @@ class Endpoint
     public function getTrackerSource()
     {
         return $this->tracker_source;
+    }
+
+    public function getPassword()
+    {
+        return $this->password;
     }
 }
