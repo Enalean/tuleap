@@ -1,4 +1,8 @@
 #, php-format
+msgid "%s (Default)"
+msgstr ""
+
+#, php-format
 msgid "%s commit was pushed on %s"
 msgid_plural "%s commits were pushed on %s"
 msgstr[0] ""
@@ -83,9 +87,6 @@ msgid "Project not found."
 msgstr ""
 
 msgid "Repository does not exist"
-msgstr ""
-
-msgid "SSH (default)"
 msgstr ""
 
 msgid "Settings"

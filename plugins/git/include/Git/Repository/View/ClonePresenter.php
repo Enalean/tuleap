@@ -22,13 +22,75 @@ namespace Tuleap\Git\Repository\View;
 
 class ClonePresenter
 {
-    public $default_ssh_url;
+    /** @var string */
+    private $gerrit_label = "Gerrit";
+    /** @var string */
+    private $ssh_label = "SSH";
+    /** @var string */
+    private $https_label = "HTTPS";
 
-    public $default_http_url;
+    /** @var CloneURLPresenter[] */
+    public $clone_url_presenters = [];
 
-    public function __construct(array $access_urls)
+    /** @var string */
+    public $selected_url;
+    /** @var string */
+    public $selected_url_label;
+
+    public function __construct(CloneURLs $clone_urls)
     {
-        $this->default_ssh_url  = (isset($access_urls['ssh'])) ? $access_urls['ssh'] : "";
-        $this->default_http_url = (isset($access_urls['http'])) ? $access_urls['http'] : "";
+        if ($clone_urls->hasGerritUrl()) {
+            $this->selected_url           = $clone_urls->getGerritUrl();
+            $this->selected_url_label     = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->gerrit_label);
+            $this->clone_url_presenters[] = new CloneURLPresenter(
+                $this->selected_url,
+                $this->selected_url_label,
+                true
+            );
+        }
+        if ($clone_urls->hasSshUrl()) {
+            $ssh_is_selected              = (! $this->selected_url);
+            $this->clone_url_presenters[] = $this->getSSHCloneURLPresenter($clone_urls, $ssh_is_selected);
+        }
+        if ($clone_urls->hasHttpsUrl()) {
+            $https_is_selected            = (! $this->selected_url);
+            $this->clone_url_presenters[] = $this->getHTTPSCloneURLPresenter($clone_urls, $https_is_selected);
+        }
+    }
+
+    private function getSSHCloneURLPresenter(CloneURLs $clone_urls, $ssh_is_selected)
+    {
+        if ($ssh_is_selected) {
+            $this->selected_url       = $clone_urls->getSshUrl();
+            $this->selected_url_label = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->ssh_label);
+            return new CloneURLPresenter(
+                $this->selected_url,
+                $this->selected_url_label,
+                true
+            );
+        }
+        return new CloneURLPresenter(
+            $clone_urls->getSshUrl(),
+            $this->ssh_label,
+            false
+        );
+    }
+
+    private function getHTTPSCloneURLPresenter(CloneURLs $clone_urls, $https_is_selected)
+    {
+        if ($https_is_selected) {
+            $this->selected_url       = $clone_urls->getHttpsUrl();
+            $this->selected_url_label = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->https_label);
+            return new CloneURLPresenter(
+                $this->selected_url,
+                $this->selected_url_label,
+                true
+            );
+        }
+        return new CloneURLPresenter(
+            $clone_urls->getHttpsUrl(),
+            $this->https_label,
+            false
+        );
     }
 }

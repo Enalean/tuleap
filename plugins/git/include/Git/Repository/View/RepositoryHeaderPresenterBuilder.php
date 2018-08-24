@@ -87,7 +87,7 @@ class RepositoryHeaderPresenterBuilder
         }
 
         $gerrit_status_presenter = $this->buildGerritStatusPresenter($repository);
-        $clone_presenter         = $this->buildClonePresenter($repository);
+        $clone_presenter         = $this->buildClonePresenter($repository, $current_user);
 
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
             $repository->belongsTo($current_user);
@@ -122,9 +122,25 @@ class RepositoryHeaderPresenterBuilder
         );
     }
 
-    private function buildClonePresenter(GitRepository $repository)
+    private function buildClonePresenter(GitRepository $repository, PFUser $current_user)
     {
         $access_urls = $repository->getAccessURL();
-        return new ClonePresenter($access_urls);
+        $clone_urls = new CloneURLs();
+        if (isset($access_urls['ssh'])) {
+            $clone_urls->setSshUrl($access_urls['ssh']);
+        }
+        if (isset($access_urls['http'])) {
+            $clone_urls->setHttpsUrl($access_urls['http']);
+        }
+        if ($repository->isMigratedToGerrit()) {
+            $gerrit_user    = $this->gerrit_usermanager->getGerritUser($current_user);
+            $gerrit_server  = $this->gerrit_servers[$repository->getRemoteServerId()];
+            $driver         = $this->driver_factory->getDriver($gerrit_server);
+            $gerrit_project = $driver->getGerritProjectName($repository);
+
+            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $gerrit_user);
+            $clone_urls->setGerritUrl($clone_url);
+        }
+        return new ClonePresenter($clone_urls);
     }
 }
