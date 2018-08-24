@@ -34,14 +34,18 @@ pipeline {
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
                 }
                 failure {
-                    mail to: 'crew@enalean.com',
-                         subject: "${currentBuild.fullDisplayName} is broken",
-                         body: "See ${env.BUILD_URL}"
+                    withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                        mail to: email,
+                             subject: "${currentBuild.fullDisplayName} is broken",
+                             body: "See ${env.BUILD_URL}"
+                    }
                 }
                 unstable {
-                    mail to: 'crew@enalean.com',
+                    withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                        mail to: email,
                          subject: "${currentBuild.fullDisplayName} is unstable",
                          body: "See ${env.BUILD_URL}"
+                    }
                 }
             }
         }
