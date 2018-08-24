@@ -19,7 +19,7 @@
 
 import * as actions from "./actions.js";
 
-import { rewire$getBranches, restore as restoreRestQuerier } from "../api/rest-querier.js";
+import { restore as restoreRestQuerier, rewire$getBranches } from "../api/rest-querier.js";
 
 describe("Store actions", () => {
     let getBranches;
@@ -48,7 +48,10 @@ describe("Store actions", () => {
             await actions.init(context, { repository_id: 42 });
 
             expect(getBranches).toHaveBeenCalledWith(42);
-            expect(context.commit).toHaveBeenCalledWith("setSourceBranches", branches);
+            expect(context.commit).toHaveBeenCalledWith("setSourceBranches", [
+                { display_name: "master", name: "master" },
+                { display_name: "feature/branch", name: "feature/branch" }
+            ]);
         });
 
         it("loads branches of current repository and store them as destination branches if there is no parent repository", async () => {
@@ -57,7 +60,10 @@ describe("Store actions", () => {
 
             await actions.init(context, { repository_id: 42 });
 
-            expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", branches);
+            expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
+                { display_name: "master", name: "master" },
+                { display_name: "feature/branch", name: "feature/branch" }
+            ]);
         });
 
         it("loads branches of parent repository and add them as destination branches", async () => {
@@ -66,12 +72,18 @@ describe("Store actions", () => {
             getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
             getBranches.withArgs(66).and.returnValue(Promise.resolve(parent_branches));
 
-            await actions.init(context, { repository_id: 42, parent_repository_id: 66 });
+            await actions.init(context, {
+                repository_id: 42,
+                parent_repository_id: 66,
+                parent_repository_name: "ledepot"
+            });
 
-            expect(context.commit).toHaveBeenCalledWith(
-                "setDestinationBranches",
-                branches.concat(parent_branches)
-            );
+            expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
+                { display_name: "master", name: "master" },
+                { display_name: "feature/branch", name: "feature/branch" },
+                { display_name: "ledepot : master", name: "master" },
+                { display_name: "ledepot : dev", name: "dev" }
+            ]);
         });
     });
 });
