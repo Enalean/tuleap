@@ -101,7 +101,7 @@ if ($current_user->isLoggedIn()) {
     $entry_label = array();
     $entry_value = array();
 
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $eParams = array();
     $eParams['user_id']     =  $user->getId();
     $eParams['entry_label'] =& $entry_label;
@@ -120,7 +120,6 @@ if ($current_user->isLoggedIn()) {
 
     $hooks_output = "";
 
-    $em =& EventManager::instance();
     $eParams = array();
     $eParams['showdir']   =  isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
     $eParams['user_name'] =  $user->getUnixName();
