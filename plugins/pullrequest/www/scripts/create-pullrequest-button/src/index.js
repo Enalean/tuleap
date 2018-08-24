@@ -34,8 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const repository_id = parseInt(container.dataset.repositoryId, 10);
+    const project_id = parseInt(container.dataset.projectId, 10);
     const parent_repository_id = parseInt(container.dataset.parentRepositoryId, 10);
     const parent_repository_name = container.dataset.parentRepositoryName;
+    const parent_project_id = parseInt(container.dataset.parentProjectId, 10);
 
     const mount_point = document.createElement("div");
     container.appendChild(mount_point);
@@ -54,8 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
     new RootComponent({
         propsData: {
             repository_id,
+            project_id,
             parent_repository_id,
-            parent_repository_name
+            parent_repository_name,
+            parent_project_id
         }
     }).$mount(mount_point);
 });

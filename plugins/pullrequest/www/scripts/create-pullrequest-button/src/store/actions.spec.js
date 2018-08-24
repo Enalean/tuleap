@@ -45,12 +45,17 @@ describe("Store actions", () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
             getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
 
-            await actions.init(context, { repository_id: 42 });
+            await actions.init(context, { repository_id: 42, project_id: 101 });
 
             expect(getBranches).toHaveBeenCalledWith(42);
             expect(context.commit).toHaveBeenCalledWith("setSourceBranches", [
-                { display_name: "master", name: "master" },
-                { display_name: "feature/branch", name: "feature/branch" }
+                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
+                {
+                    display_name: "feature/branch",
+                    repository_id: 42,
+                    project_id: 101,
+                    name: "feature/branch"
+                }
             ]);
         });
 
@@ -58,11 +63,16 @@ describe("Store actions", () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
             getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
 
-            await actions.init(context, { repository_id: 42 });
+            await actions.init(context, { repository_id: 42, project_id: 101 });
 
             expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
-                { display_name: "master", name: "master" },
-                { display_name: "feature/branch", name: "feature/branch" }
+                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
+                {
+                    display_name: "feature/branch",
+                    repository_id: 42,
+                    project_id: 101,
+                    name: "feature/branch"
+                }
             ]);
         });
 
@@ -74,15 +84,27 @@ describe("Store actions", () => {
 
             await actions.init(context, {
                 repository_id: 42,
+                project_id: 101,
                 parent_repository_id: 66,
+                parent_project_id: 102,
                 parent_repository_name: "ledepot"
             });
 
             expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
-                { display_name: "master", name: "master" },
-                { display_name: "feature/branch", name: "feature/branch" },
-                { display_name: "ledepot : master", name: "master" },
-                { display_name: "ledepot : dev", name: "dev" }
+                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
+                {
+                    display_name: "feature/branch",
+                    repository_id: 42,
+                    project_id: 101,
+                    name: "feature/branch"
+                },
+                {
+                    display_name: "ledepot : master",
+                    repository_id: 66,
+                    project_id: 102,
+                    name: "master"
+                },
+                { display_name: "ledepot : dev", repository_id: 66, project_id: 102, name: "dev" }
             ]);
         });
     });

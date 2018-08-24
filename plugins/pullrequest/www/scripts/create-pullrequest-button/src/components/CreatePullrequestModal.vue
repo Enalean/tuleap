@@ -28,33 +28,37 @@
                 &times;
             </div>
         </div>
-        <div class="tlp-modal-body git-repository-actions-pullrequest-modal-body">
-            <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
-                <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-source">
-                    <translate>Source branch</translate>
-                    <i class="fa fa-asterisk"></i>
-                </label>
-                <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-source" required>
-                    <option value="" selected disabled>Choose source branch…</option>
-                    <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
-                </select>
-            </div>
-            <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
-                <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-destination" required>
-                    <translate>Destination branch</translate>
-                    <i class="fa fa-asterisk"></i>
-                </label>
-                <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-destination">
-                    <option value="" selected disabled>Choose destination branch</option>
-                    <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
-                </select>
+        <div class="tlp-modal-body">
+            <div class="tlp-alert-danger" v-if="create_error_message">{{ create_error_message }}</div>
+
+            <div class="git-repository-actions-pullrequest-modal-body">
+                <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
+                    <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-source">
+                        <translate>Source branch</translate>
+                        <i class="fa fa-asterisk"></i>
+                    </label>
+                    <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-source" required v-model="source_branch">
+                        <option value="" selected disabled>Choose source branch…</option>
+                        <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                    </select>
+                </div>
+                <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
+                    <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-destination">
+                        <translate>Destination branch</translate>
+                        <i class="fa fa-asterisk"></i>
+                    </label>
+                    <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-destination" required v-model="destination_branch">
+                        <option value="" selected disabled>Choose destination branch</option>
+                        <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button type="submit" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 <translate>Cancel</translate>
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" v-on:click="create()" v-bind:disabled="is_button_disabled">
                 <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
                 <translate>Create the pull request</translate>
             </button>
@@ -67,6 +71,29 @@ import { mapState } from "vuex";
 
 export default {
     name: "CreatePullrequestModal",
-    computed: mapState(["source_branches", "destination_branches"])
+    data() {
+        return {
+            source_branch: undefined,
+            destination_branch: undefined
+        };
+    },
+    computed: {
+        ...mapState(["source_branches", "destination_branches", "create_error_message"]),
+        is_button_disabled() {
+            return (
+                !this.source_branch ||
+                !this.destination_branch ||
+                this.source_branch === this.destination_branch
+            );
+        }
+    },
+    methods: {
+        create() {
+            this.$store.dispatch("create", {
+                source_branch: this.source_branch,
+                destination_branch: this.destination_branch
+            });
+        }
+    }
 };
 </script>

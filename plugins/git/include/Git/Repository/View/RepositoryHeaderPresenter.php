@@ -35,6 +35,7 @@ class RepositoryHeaderPresenter
     public $parent_repository_presenter;
     /** @var ClonePresenter */
     public $clone_presenter;
+    public $project_id;
     public $is_migrated_to_gerrit;
 
     /**
@@ -53,6 +54,7 @@ class RepositoryHeaderPresenter
         GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
+        $this->project_id                  = $repository->getProjectId();
         $this->repository_id               = $repository->getId();
         $this->repository_path             = $repository->getPathWithoutProject();
         $this->repository_name             = $repository->getLabel();
