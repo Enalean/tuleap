@@ -28,7 +28,7 @@
             <widget-modal-artifact-info/>
             <div class="timetracking-details-modal-artefact-link-top-bottom-spacer">
                 <button class="tlp-button-primary"
-                        v-on:click="setAddMode">
+                        v-on:click="setAddMode(!is_add_mode)">
                     <i class="fa fa-plus tlp-button-icon"></i>
                     {{ add_time }}
                 </button>

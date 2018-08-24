@@ -55,7 +55,7 @@ describe("Store mutations", () => {
         });
 
         it("Given a widget with state initialisation, Then we call setAddMode, states must change", () => {
-            mutations.setAddMode(state);
+            mutations.setAddMode(state, true);
             expect(state.is_add_mode).toBe(true);
             expect(state.rest_feedback.message).toEqual(null);
             expect(state.rest_feedback.type).toEqual(null);
@@ -64,7 +64,7 @@ describe("Store mutations", () => {
         it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
             state.rest_feedback.message = "Time successfully added";
             state.rest_feedback.type = "success";
-            mutations.setAddMode(state);
+            mutations.setAddMode(state, true);
 
             expect(state.is_add_mode).toBe(true);
             expect(state.rest_feedback.message).toEqual("");
@@ -75,7 +75,7 @@ describe("Store mutations", () => {
             state.is_add_mode = true;
             state.rest_feedback.message = "An error occured";
             state.rest_feedback.type = "danger";
-            mutations.setAddMode(state);
+            mutations.setAddMode(state, false);
 
             expect(state.is_add_mode).toBe(false);
             expect(state.rest_feedback.message).toEqual("");
