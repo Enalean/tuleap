@@ -587,9 +587,9 @@ done
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
 ## Plugin PullRequest
-#%{__install} -D plugins/pullrequest/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
-#%{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
-#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__install} -D plugins/pullrequest/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
+%{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 
 # Plugin svn
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/svn_plugin
@@ -602,9 +602,9 @@ done
 %{__install} plugins/tracker/etc/sudoers.d/tuleap-plugin-tracker $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_tracker
 #
 # Plugin agiledashboard
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
-#%{__install} plugins/agiledashboard/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
-#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/agiledashboard
+%{__install} plugins/agiledashboard/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
 #
 ## Plugin mediawiki
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
@@ -613,7 +613,7 @@ done
 #%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 #
 ## Plugin proftpd
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
 #
 ## Plugin fulltextsearch
 #%{__install} plugins/fulltextsearch/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
@@ -621,18 +621,18 @@ done
 #%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_fulltextsearch
 #
 ## Plugin bugzilla
-#%{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
-#%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
-#%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__install} plugins/bugzilla_reference/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 #
 ## plugin archivedeleted_items
-#%{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+%{__install} plugins/archivedeleteditems/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 #
 ## Plugin hudson_git
-#%{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
+%{__install} plugins/hudson_git/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_git
 #
 ## Plugin hudson_svn
-#%{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
+%{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
 #
 ## Plugin create_test_env
 #%{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
@@ -957,7 +957,6 @@ fi
 %dir %{APP_DATA_DIR}/gitolite
 %attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
 %attr(00775,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/grokmirror
-#%attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/gitolite3-suexec-wrapper.sh
@@ -974,8 +973,8 @@ fi
 %files plugin-pullrequest
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pullrequest
-#%config(noreplace) /etc/logrotate.d/tuleap_pullrequest
-#%attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
+%config(noreplace) /etc/logrotate.d/tuleap_pullrequest
+%attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
 
 %files plugin-ldap
 %defattr(-,root,root,-)
@@ -990,14 +989,14 @@ fi
 %files plugin-hudson-svn
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_svn
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
-#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_svn
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_svn
 
 %files plugin-hudson-git
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/hudson_git
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
-#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_hudson_git
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_hudson_git
 
 %files plugin-webdav
 %defattr(-,root,root,-)
@@ -1033,8 +1032,8 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/agiledashboard
 %{APP_DIR}/src/www/assets/agiledashboard
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
-#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_agiledashboard
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_agiledashboard
 
 %files plugin-fulltextsearch
 %defattr(-,root,root,-)
@@ -1044,8 +1043,8 @@ fi
 %files plugin-archivedeleteditems
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/archivedeleteditems
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
-#%config(noreplace) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
+%config(noreplace) /etc/logrotate.d/%{APP_NAME}_archivedeleteditems
 
 %files plugin-mediawiki
 %defattr(-,root,root,-)
@@ -1062,7 +1061,7 @@ fi
 %files plugin-proftpd
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/proftpd
-#%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/secure_ftp
 
 %files plugin-frs
 %defattr(-,root,root,-)
@@ -1099,7 +1098,7 @@ fi
 %files plugin-bugzilla-reference
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/bugzilla_reference
-#%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
+%attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_bugzilla_reference
 
 %files plugin-create-test-env
 %defattr(-,root,root,-)
