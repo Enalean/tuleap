@@ -30,8 +30,14 @@ pipeline {
             steps { script { actions.runEndToEndTests('full') } }
             post {
                 always {
-                    junit 'results/e2e/**.xml'
+                    junit 'results/e2e/full/*.xml'
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
+                }
+                failure {
+                    mail to: crew@enalean.com, subject: 'Cypress tests are broken'
+                }
+                unstable {
+                    mail to: crew@enalean.com, subject: 'Cypress tests are unstable'
                 }
             }
         }
