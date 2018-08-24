@@ -48,7 +48,6 @@ const webpack_config = {
                     __dirname,
                     "vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"
                 ),
-                "angular-ui-select": "ui-select/dist/select.js",
                 angular$: path.resolve(__dirname, "node_modules/angular")
             },
             webpack_configurator.tlp_mocks_alias,

@@ -17,7 +17,6 @@
     "lodash.partial": "^4.2.1",
     "lodash.partition": "^4.6.0",
     "mustache": "^2.3.2",
-    "ui-select": "~0.13.2",
     "vue": "^2.5.13",
     "vue-gettext": "^2.1.0",
     "vuex": "^3.0.1"
