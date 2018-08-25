@@ -1,13 +1,26 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//  Parts of code come from bug_util.php (written by Laurent Julliard)
-//
-//  Written for Codendi by Stephane Bouhet
-//
+/**
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Parts of code come from bug_util.php (written by Laurent Julliard)
+ * Written for Codendi by Stephane Bouhet
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/event/EventManager.class.php');
 
@@ -89,7 +102,7 @@ class ArtifactReportHtml extends ArtifactReport {
             if ($criteria_list) {
                         $arr = explode(',',$criteria_list);
                         $i = 0;
-                        while (list(,$attr) = each($arr)) {
+                        foreach ($arr as $attr) {
                             preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
                             list(,$mattr,$mdir) = $match;
                             //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
@@ -138,7 +151,7 @@ class ArtifactReportHtml extends ArtifactReport {
 	    
 	    $arr = explode(',',$criteria_list);
 	    $morder='';
-	    while (list(,$crit) = each($arr)) {
+	    foreach($arr as $crit) {
 	      
 	      $morder .= ($morder ? ",".$crit : $crit);
 	      $attr = str_replace('>','',$crit);
@@ -187,7 +200,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $ib=0;$is=0;
             $load_cal=false;
 
-            while (list($key,$field) = each($query_fields) ) {
+            foreach ($query_fields as $field) {
             
                 $field_html = new ArtifactFieldHtml($field);
                     
@@ -269,7 +282,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 }
             
             }
-            
+
             // Make sure the last few cells are in the table
             if ($labels) {
                 $html_select .= $labels.'</TR>'.$boxes.'</TR>';
@@ -336,8 +349,7 @@ class ArtifactReportHtml extends ArtifactReport {
             
             if ( count($result_fields) == 0 ) return;
 
-            reset($result_fields);
-            while (list(,$field) = each($result_fields)) {
+            foreach ($result_fields as $field) {
                 if ($pv != 0) {
                     $links_arr[] = $url.'&pv='.(int)$pv.'&order='.urlencode($field->getName()).'#results';
                 } else {
@@ -416,16 +428,20 @@ class ArtifactReportHtml extends ArtifactReport {
                 $html_result .= '<table width="100%" cellpadding="2" cellspacing="1" border="0">';
                 $html_result .= '<thead>';
                 $html_result .= '<tr class="boxtable">';
-                while((list(,$title) = each($title_arr)) && 
-                      (list(,$link) = each($links_arr)) && 
-                      (list(,$id) = each($id_arr)) &&
-                      (list(,$width) = each($width_arr))) {
+                while(($title = current($title_arr)) &&
+                      ($link = current($links_arr)) &&
+                      ($id = current($id_arr)) &&
+                      ($width = current($width_arr))) {
                     if ($width) {
                         $width = 'style="width:'.$width.'%"';
                     } else {
                         $width = '';
                     }
                     $html_result .= '<th class="boxtitle" '. $width .'><a href="'. $link .'" id="'. $id .'">'. $title .'</a></th>';
+                    next($title_arr);
+                    next($links_arr);
+                    next($id_arr);
+                    next($width_arr);
                 }
                 $html_result .= '</tr>';
                 $html_result .= '</thead>';
@@ -439,8 +455,7 @@ class ArtifactReportHtml extends ArtifactReport {
                         $html_result .= '<TD align="center"><INPUT TYPE="checkbox" name="mass_change_ids[]" value="'.$result[$i]['artifact_id'].'"></td>';
                 }
 
-                reset($result_fields);  
-                while (list($key,$field) = each($result_fields) ) {
+                foreach ($result_fields as $key => $field) {
                     //echo "$key=".$result[$i][$key]."<br>";
                                     
 				    $value = $result[$i][$key];
@@ -522,9 +537,9 @@ class ArtifactReportHtml extends ArtifactReport {
                           <INPUT TYPE="HIDDEN" NAME="advsrch" VALUE="'.(int)$advsrch.'">
                           <INPUT TYPE="HIDDEN" NAME="func" VALUE="masschange_detail">';
 		// get the query
-		while (list($field,$value) = each($prefs) ) {
+        foreach ($prefs as $field => $value) {
 			if (is_array($value)) {
-				while (list(,$val) = each($value)) {
+                foreach ($value as $val) {
 					$html_result .= '<INPUT TYPE="HIDDEN" NAME="'. $hp->purify($field, CODENDI_PURIFIER_CONVERT_HTML) .'[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';
 				}
 			} else {
@@ -967,8 +982,7 @@ class ArtifactReportHtml extends ArtifactReport {
             	echo '<TR class="fieldset_separator">';
             	echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
             	echo '</TR>';
-	            while ( list($key, $field) = each($used_fields)) {
-	        
+                foreach ($used_fields as $field) {
 	                // Do not show fields not used by the project
 	                if ( !$field->isUsed()) { continue; }
 	        
@@ -1082,8 +1096,7 @@ class ArtifactReportHtml extends ArtifactReport {
             	echo '<TR class="fieldset_separator">';
             	echo '<TD colspan="7">'.$fieldset->getLabel().'</TD>';
             	echo '</TR>';
-            	while ( list($key, $field) = each($used_fields) ) {
-        
+                foreach ($used_fields as $field) {
 	                // Do not show fields not used by the project
 	                if ( !$field->isUsed()) { continue; }
 	        

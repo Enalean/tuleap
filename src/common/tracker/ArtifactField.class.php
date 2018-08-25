@@ -1026,8 +1026,7 @@ class ArtifactField {
 			    $expr = $field_name." RLIKE '".$matches[1]."' ";
 			else {
 			    $words = preg_split('/\s+/', $to_match);
-			    reset($words);
-			    while ( list($i,$w) = each($words)) {
+                foreach ($words as $i => $w) {
 					//echo "<br>DBG $i, $w, $words[$i]";
 					$words[$i] = $field_name." LIKE '%". db_es($w) ."%'";
 			    }
@@ -1180,7 +1179,7 @@ class ArtifactField {
         }
 
         // Build the label values using the id values
-        while (list(,$v) = each($values)) {
+        foreach ($values as $v) {
             if ( $v == 100 ) {
                 $label_values[] = $Language->getText('global','none');
             } else if ($v == 0) {

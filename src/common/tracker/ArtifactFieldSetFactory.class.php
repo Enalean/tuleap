@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -156,7 +156,10 @@ class ArtifactFieldSetFactory {
         $fieldsets = $this->ArtifactFieldSets;
         $searched_fieldset = null;
         $found = false;
-        while (!$found && list($index,$fieldset) = each($fieldsets)) {
+        foreach ($fieldsets as $fieldset) {
+            if ($found) {
+                break;
+            }
             if ($fieldset->getID() == $field_set_id) {
                 $searched_fieldset = $fieldset;
                 $found = true;
@@ -188,7 +191,10 @@ class ArtifactFieldSetFactory {
             $fields = $fieldset->getArtifactFields();
             $fieldset_contains_used_field = false;
             // Walk the field list, stop when we find a used field
-            while (!$fieldset_contains_used_field && (list($key, $field) = each($fields))) {
+            foreach ($fields as $field) {
+                if ($fieldset_contains_used_field) {
+                    break;
+                }
                 if ($field->isUsed()) {
                     $fieldset_contains_used_field = true;
                 }
@@ -217,7 +223,10 @@ class ArtifactFieldSetFactory {
             $fields = $fieldset->getArtifactFields();
             $fieldset_contains_unused_field = false;
             // Walk the field list, stop when we find an unused field
-            while (!$fieldset_contains_unused_field && (list($key, $field) = each($fields))) {
+            foreach ($fields as $field) {
+                if ($fieldset_contains_unused_field) {
+                    break;
+                }
                 if (! $field->isUsed()) {
                     $fieldset_contains_unused_field = true;
                 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -138,7 +138,7 @@ class ArtifactImport {
 
 function getUsedFields() {
     $fields =  $this->art_field_fact->getAllUsedFields();
-    while (list(,$field) = each($fields) ) {
+    foreach ($fields as $field) {
       if ( $field->getName() != "comment_type_id" ) {
 	$used_fields[$field->getLabel()] = $field;
       }
@@ -217,9 +217,7 @@ function getUsedFields() {
   function checkMandatoryFields() {
     // verify if we have all mandatory fields in the case we have to create an artifact
     if ($this->aid_column == -1) {
-      reset($this->used_fields);
-      
-      while (list($label,$field) = each($this->used_fields)) {
+        foreach ($this->used_fields as $label => $field) {
 	//echo $label.",";
 	if ($field) {
 	  $field_name = $field->getName();
@@ -256,7 +254,7 @@ function getUsedFields() {
     $hp = Codendi_HTMLPurifier::instance();
     if ($field->getDisplayType() == "MB") {
       $val_arr = explode(",",$val);
-      while (list(,$name) = each($val_arr)) {
+        foreach ($val_arr as $name) {
 	if (!array_key_exists($name,$predef_vals) && $name != $GLOBALS['Language']->getText('global','none')) {
 	  $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
@@ -377,8 +375,7 @@ function getUsedFields() {
     // we have to check whether all mandatory fields are specified and not empty
     if ($from_update) {
 
-      
-      while (list($label,$field) = each($this->used_fields)) {
+        foreach ($this->used_fields as $label => $field) {
 	if ($field) $field_name = $field->getName();
 	
 	if ($field) {
@@ -575,7 +572,7 @@ function getUsedFields() {
 
   function mandatoryFields() {
     $fields =  $this->art_field_fact->getAllUsedFields();
-    while (list(,$field) = each($fields) ) {
+      foreach ($fields as $field) {
       if ( $field->getName() != "comment_type_id" && !$field->isEmptyOk()) {
 	$mand_fields[$field->getName()] = true;
       }
@@ -751,7 +748,7 @@ function getUsedFields() {
     $comments = $this->splitFollowUpcomments($followup_comments);
     
     $i = 0;
-    while (list(,$comment) = each($comments)) {
+      foreach ($comments as $comment) {
       $i++;
       if (($i == 1) && 
 	  ( (count($comments) > 1) || 
@@ -915,9 +912,8 @@ function getUsedFields() {
     $comments = preg_split("/==================================================/D",$details);
     
     $i = 0;
-    
-    while (list(,$comment) = each($comments)) {
-      
+
+    foreach ($comments as $comment) {
       $i++;
       if ($i==1) continue;
       
@@ -1059,7 +1055,7 @@ function getUsedFields() {
     if (isset($predef_vals)) {
       if ($field && $field->getDisplayType() == "MB") {
 	$val_arr = explode(",",$imported_value);
-	while (list(,$name) = each($val_arr)) {
+    foreach ($val_arr as $name) {
 	  if ($name == $Language->getText('global','none')) $value[] = 100;
 	  else $value[] = $predef_vals[$name];
 	}

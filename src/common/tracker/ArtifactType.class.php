@@ -971,7 +971,7 @@ class ArtifactType {
    			$res_watch = true;
             $arr_user_names = preg_split('/[,;]/D', $watchees);
 			$arr_user_ids = array();
-			while (list(,$user_name) = each($arr_user_names)) {
+            foreach ($arr_user_names as $user_name) {
 			    $user_ident = util_user_finder($user_name, true);
                 $res = user_get_result_set_from_unix($user_ident);
 			    if (!$res || (db_numrows($res) <= 0)) {
@@ -1583,8 +1583,7 @@ class ArtifactType {
 		if ( count($fields) == 0 )
 			return;
 
-		while (list($key,$field) = each($fields) ) {
-			
+        foreach ($fields as $field) {
 		  //echo $field->getName()."-".$field->getID()."<br>";
 			
 			// If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
@@ -1668,7 +1667,7 @@ class ArtifactType {
       foreach ($fieldsets as $fieldset) {
           $fields_in_fieldset = $fieldset->getAllUsedFields();
           // for each fieldset, fetch the used fields inside
-          while (list(,$field) = each($fields_in_fieldset) ) {
+          foreach ($fields_in_fieldset as $field) {
             if ( $field->getName() != "comment_type_id" ) {
                 $fields[$field->getName()] = $field;
                 $col_list[$field->getName()] = $field->getName();
@@ -1725,8 +1724,7 @@ class ArtifactType {
 		
 		$fields = $art_field_fact->getAllUsedFields();
 
-		reset($fields);
-		while (list(,$field) = each($fields) ) {
+        foreach ($fields as $field) {
 		  $record[$field->getName()] = $field->getDefaultValue();
 		}
 		
@@ -1755,10 +1753,10 @@ class ArtifactType {
     	function deleteCC($delete_cc) {
         	
 		$ok=true;
-		while (list(,$artifact_ccs) = each($delete_cc)) {
+        foreach ($delete_cc as $artifact_ccs) {
 			$artifact_cc_ids = explode(",",$artifact_ccs);
 			$i = 0;
-			while (list(,$artifact_cc_id) = each($artifact_cc_ids)) {
+			foreach ($artifact_cc_ids as $artifact_cc_id) {
 	        		$sql = "SELECT artifact_id from artifact_cc WHERE artifact_cc_id=". db_ei($artifact_cc_id) ;
         			$res = db_query($sql);
         			if (db_numrows($res) > 0) {
@@ -1791,9 +1789,9 @@ class ArtifactType {
 	function deleteAttachedFiles($delete_attached) {
 		$ok=true;
 		$i = 0;
-		while (list(,$id_list) = each($delete_attached)) {
+        foreach ($delete_attached as $id_list) {
 			$ids = explode(",",$id_list);
-			while (list(,$id) = each($ids)) {
+            foreach ($ids as $id) {
 				$sql = "SELECT artifact_id FROM artifact_file WHERE id = ". db_ei($id) ;
 				$res = db_query($sql);
         			if (db_numrows($res) > 0) {
@@ -1837,7 +1835,7 @@ class ArtifactType {
 	function deleteDependencies($delete_depend) {
 	    global $Language;
 		$changed = true;
-		while (list(,$depend) = each($delete_depend)) {
+        foreach ($delete_depend as $depend) {
 			$sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN (". db_es($depend) .")";
         		$res = db_query($sql);
         		if (!$res) {
