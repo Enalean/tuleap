@@ -25,7 +25,6 @@ const webpack_config = {
                 "angular-ui-select": "ui-select/dist/select.js",
                 angular$: path.resolve(__dirname, "node_modules/angular")
             },
-            webpack_configurator.flaming_parrot_labels_box_aliases,
             webpack_configurator.tlp_mocks_alias,
             webpack_configurator.tuleap_core_alias,
             webpack_configurator.angular_tlp_alias

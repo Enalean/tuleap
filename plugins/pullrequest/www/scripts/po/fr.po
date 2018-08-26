@@ -21,6 +21,10 @@ msgstr "Abandonner"
 msgid "Abandoned"
 msgstr "Abandonné"
 
+#: src/app/labels/labels-controller.js
+msgid "Add labels"
+msgstr "Ajouter un label"
+
 #: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr "Déjà intégré"

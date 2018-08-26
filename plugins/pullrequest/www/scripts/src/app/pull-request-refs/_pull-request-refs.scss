@@ -1,12 +1,11 @@
 .pull-request-source-destination {
     $default-color: #f79514;
 
-    border-radius: 3px;
+    padding: 2px;
     border: 1px solid $default-color;
+    border-radius: 3px;
     color: $default-color;
     font-size: 12px;
-    margin: 0 5px 0 0;
-    padding: 2px;
 
     > .repository {
         font-weight: 600;
