@@ -1,19 +1,29 @@
 <?php
-
-
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-* 
-* 
-*
-* Validator
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
 require_once ('common/frs/FRSPackageFactory.class.php');
 require_once ('common/frs/FRSReleaseFactory.class.php');
 
 class frsValidator {
-    var $_errors;
+    var $_errors = [];
 
     function addError($error) {
         if (!$this->_errors) {
@@ -26,17 +36,17 @@ class frsValidator {
         return $this->_errors;
     }
 
-    function isValidForCreation($release, $group_id) {
+    public function isValidForCreation($release, $group_id) {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
-            if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
+            if (! isset($release['name']) || !$release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project
 
-                $res1 = & $frspf->getFRSPackageFromDb($release['package_id'], $group_id);
-                if (!$res1 || count($res1) < 1) {
+                $res1 = $frspf->getFRSPackageFromDb($release['package_id'], $group_id);
+                if ($res1 === null) {
                     $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_not_exists'));
                 } else {
                     //check if release name exists already
@@ -54,10 +64,11 @@ class frsValidator {
         } else {
             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'create_p_before_rel_status'));
         }
-        return count($this->_errors) ? false : true;
+
+        return count($this->_errors) === 0;
     }
 
-    function isValidForUpdate($release, $group_id) {
+    public function isValidForUpdate($release, $group_id) {
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
@@ -65,8 +76,8 @@ class frsValidator {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project
-                $res1 = & $frsrf->getFRSReleaseFromDb($release['release_id'], $group_id);
-                if (!$res1 || count($res1) < 1) {
+                $res1 = $frsrf->getFRSReleaseFromDb($release['release_id'], $group_id);
+                if (! $res1 || $res1 === null) {
                     $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_rel_not_yours'));
 
                 } else {
@@ -95,8 +106,6 @@ class frsValidator {
         } else {
             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'create_p_before_rel_status'));
         }
-        return count($this->_errors) ? false : true;
+        return count($this->_errors) === 0;
     }
-
 }
-?>

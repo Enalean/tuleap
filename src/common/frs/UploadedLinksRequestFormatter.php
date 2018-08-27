@@ -40,19 +40,21 @@ class UploadedLinksRequestFormatter
         $valid_http     = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
         $valid_ftp      = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
 
-        foreach ($request->get('uploaded-link') as $key => $link) {
-            if (! $valid_ftp->isValid($link) && ! $valid_http->isValid($link)) {
-                throw new UploadedLinksInvalidFormException();
-            }
+        if ($request->get('uploaded-link')) {
+            foreach ($request->get('uploaded-link') as $key => $link) {
+                if (! $valid_ftp->isValid($link) && ! $valid_http->isValid($link)) {
+                    throw new UploadedLinksInvalidFormException();
+                }
 
-            if (! isset($release_links_name[$key])) {
-                throw new UploadedLinksInvalidFormException();
-            }
+                if (! isset($release_links_name[$key])) {
+                    throw new UploadedLinksInvalidFormException();
+                }
 
-            $uploaded_links[] = array(
-                "link" => $link,
-                "name" => $release_links_name[$key]
-            );
+                $uploaded_links[] = array(
+                    "link" => $link,
+                    "name" => $release_links_name[$key]
+                );
+            }
         }
         return $uploaded_links;
     }

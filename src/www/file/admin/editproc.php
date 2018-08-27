@@ -1,8 +1,7 @@
 <?php
-
-/*
+/**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Originally written by Mohamed CHAARI, 2006. STMicroelectronics.
  *
@@ -88,7 +87,7 @@ if (db_numrows($result) < 1) {
 <H2><?php echo $Language->getText('file_admin_manageprocessors','update_proc'); ?></H2>
 
 <?php
-$hp =& Codendi_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 $return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id='.$group_id.'" METHOD="POST">
     <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
     <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="'.$proc_id.'">
@@ -103,5 +102,3 @@ echo $return;
 
 
 file_utils_footer(array());
-
-?>
