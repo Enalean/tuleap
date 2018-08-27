@@ -51,6 +51,18 @@
 .git-repository-clone-form-element {
     display: flex;
     margin: 0;
+
+    // To override tlp-prepend
+    // scss-lint:disable QualifyingElement
+    > span.tlp-prepend.git-repository-clone-hidden {
+        width: 0;
+        padding: 0;
+        border-width: 1px 0;
+
+        > .tlp-badge-primary {
+            display: none;
+        }
+    }
 }
 
 #git-repository-clone-input {

@@ -25,8 +25,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("git-repository-clone-input");
     const button_text = document.getElementById("git-repository-clone-button-text");
     const selected_icon = document.getElementById("git-repository-clone-selected-icon");
+    const read_only_badge = document.getElementById("git-repository-clone-read-only");
 
-    if (!button || transport_buttons.length === 0 || !input || !button_text || !selected_icon) {
+    if (
+        !button ||
+        transport_buttons.length === 0 ||
+        !input ||
+        !button_text ||
+        !selected_icon ||
+        !read_only_badge
+    ) {
         return;
     }
 
@@ -38,9 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     for (const transport_button of transport_buttons) {
         transport_button.addEventListener("click", function() {
-            input.value = this.dataset.url;
+            const { url, isReadOnly } = this.dataset;
+            input.value = url;
             button_text.textContent = this.text;
             this.insertBefore(selected_icon, this.firstChild);
+            read_only_badge.classList.toggle("git-repository-clone-hidden", !isReadOnly);
+
             dropdown.hide();
         });
     }

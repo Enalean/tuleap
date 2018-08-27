@@ -45,7 +45,8 @@ class ClonePresenter
             $this->clone_url_presenters[] = new CloneURLPresenter(
                 $this->selected_url,
                 $this->selected_url_label,
-                true
+                true,
+                false
             );
         }
         if ($clone_urls->hasSshUrl()) {
@@ -66,13 +67,15 @@ class ClonePresenter
             return new CloneURLPresenter(
                 $this->selected_url,
                 $this->selected_url_label,
-                true
+                true,
+                $clone_urls->hasGerritUrl()
             );
         }
         return new CloneURLPresenter(
             $clone_urls->getSshUrl(),
             $this->ssh_label,
-            false
+            false,
+            $clone_urls->hasGerritUrl()
         );
     }
 
@@ -84,13 +87,15 @@ class ClonePresenter
             return new CloneURLPresenter(
                 $this->selected_url,
                 $this->selected_url_label,
-                true
+                true,
+                $clone_urls->hasGerritUrl()
             );
         }
         return new CloneURLPresenter(
             $clone_urls->getHttpsUrl(),
             $this->https_label,
-            false
+            false,
+            $clone_urls->hasGerritUrl()
         );
     }
 }

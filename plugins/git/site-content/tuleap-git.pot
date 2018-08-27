@@ -86,6 +86,9 @@ msgstr ""
 msgid "Project not found."
 msgstr ""
 
+msgid "Read-only"
+msgstr ""
+
 msgid "Repository does not exist"
 msgstr ""
 

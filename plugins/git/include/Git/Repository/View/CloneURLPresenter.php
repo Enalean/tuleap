@@ -28,16 +28,20 @@ class CloneURLPresenter
     public $label;
     /** @var bool */
     public $is_selected;
+    /** @var bool */
+    public $is_read_only;
 
     /**
      * @param string $url
      * @param string $label
      * @param bool   $is_selected
+     * @param bool   $is_read_only
      */
-    public function __construct($url, $label, $is_selected)
+    public function __construct($url, $label, $is_selected, $is_read_only)
     {
-        $this->url         = $url;
-        $this->label       = $label;
-        $this->is_selected = $is_selected;
+        $this->url          = $url;
+        $this->label        = $label;
+        $this->is_selected  = $is_selected;
+        $this->is_read_only = $is_read_only;
     }
 }
