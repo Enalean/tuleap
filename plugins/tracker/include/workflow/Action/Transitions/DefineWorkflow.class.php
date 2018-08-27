@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 
 class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workflow_Action_Transitions {
     /** @var WorkflowFactory */
@@ -39,7 +38,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
 
         echo '<div class="workflow_transitions">';
-        if (count($workflow)) {
+        if ($workflow !== null) {
             $this->displayAdminWorkflow($layout, $request, $current_user, $workflow);
         } else {
             //Display creation form
