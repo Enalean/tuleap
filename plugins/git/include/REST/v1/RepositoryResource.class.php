@@ -662,7 +662,7 @@ class RepositoryResource extends AuthenticatedResource {
      *
      * @url    GET {id}/files
      *
-     * @access protected
+     * @access hybrid
      *
      * @param int    $id           Id of the git repository
      * @param string $path_to_file path of the file {@from path}
@@ -712,7 +712,7 @@ class RepositoryResource extends AuthenticatedResource {
      *
      * @url    GET {id}/branches
      *
-     * @access protected
+     * @access hybrid
      *
      * @param int $id     Id of the git repository
      * @param int $offset Position of the first element to display {@from path}{@min 0}
