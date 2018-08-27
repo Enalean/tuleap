@@ -249,3 +249,8 @@ _pluginSVN() {
         _infoMessage "Plugin SVN is already configured"
     fi
 }
+
+_pluginMediawiki() {
+    _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
+        "GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\`.* TO '${sys_db_user}'@'${web_server_ip:-localhost}'; FLUSH PRIVILEGES;"
+}

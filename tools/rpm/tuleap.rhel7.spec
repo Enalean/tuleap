@@ -257,7 +257,7 @@ Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-#Requires: php-mediawiki-tuleap-123 >= 1.23.9-5
+Requires: php-mediawiki-tuleap-123 >= 1.23.9-5
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
 
@@ -607,10 +607,9 @@ done
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_agiledashboard
 #
 ## Plugin mediawiki
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
-#%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 #
 ## Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -1049,10 +1048,9 @@ fi
 %files plugin-mediawiki
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/mediawiki
-#%dir %{APP_DATA_DIR}/mediawiki
-#%dir %{APP_DATA_DIR}/mediawiki/master
-#%dir %{APP_DATA_DIR}/mediawiki/projects
-#%attr(644,root,root) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/master
+%dir %attr(0751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/mediawiki/projects
 
 %files plugin-openidconnectclient
 %defattr(-,root,root,-)

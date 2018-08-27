@@ -687,7 +687,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
-%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 
 # Plugin proftpd
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/secure_ftp
@@ -1275,7 +1274,6 @@ fi
 %dir %{APP_DATA_DIR}/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki/master
 %dir %{APP_DATA_DIR}/mediawiki/projects
-%attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 
 %files plugin-openidconnectclient
 %defattr(-,%{APP_USER},%{APP_USER},-)
