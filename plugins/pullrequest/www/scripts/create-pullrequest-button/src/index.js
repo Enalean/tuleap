@@ -23,8 +23,13 @@ import GetTextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const is_anonymous = document.body.dataset.userId === "0";
+    if (is_anonymous) {
+        return;
+    }
+
     const container = document.getElementById("git-repository-actions-main-buttons");
-    if (!container) {
+    if (!container || container.dataset.isMigratedToGerrit === "1") {
         return;
     }
 

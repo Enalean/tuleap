@@ -35,6 +35,7 @@ class RepositoryHeaderPresenter
     public $parent_repository_presenter;
     /** @var ClonePresenter */
     public $clone_presenter;
+    public $is_migrated_to_gerrit;
 
     /**
      * @param GitRepository                  $repository
@@ -60,5 +61,6 @@ class RepositoryHeaderPresenter
         $this->repository_admin_url        = $repository_admin_url;
         $this->parent_repository_presenter = $parent_repository_presenter;
         $this->clone_presenter             = $clone_presenter;
+        $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
     }
 }

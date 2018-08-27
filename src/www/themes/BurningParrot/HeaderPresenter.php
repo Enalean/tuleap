@@ -90,6 +90,9 @@ class HeaderPresenter
     /** @var string */
     public $user_locale;
 
+    /** @var int */
+    public $user_id;
+
     public function __construct(
         PFUser $user,
         $title,
@@ -108,6 +111,7 @@ class HeaderPresenter
         $motd
     ) {
         $this->user_locale                           = $user->getLocale();
+        $this->user_id                               = $user->getId();
         $this->title                                 = html_entity_decode($title);
         $this->imgroot                               = $imgroot;
         $this->navbar_presenter                      = $navbar_presenter;
