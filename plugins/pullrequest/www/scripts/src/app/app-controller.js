@@ -1,5 +1,3 @@
-import { fixRightClickBug } from "./fix-ui-bootstrap-dropdown-right-click.js";
-
 export default MainController;
 
 MainController.$inject = ["$element", "gettextCatalog", "amMoment", "SharedPropertiesService"];
@@ -8,7 +6,6 @@ function MainController($element, gettextCatalog, amMoment, SharedPropertiesServ
     init();
 
     function init() {
-        fixRightClickBug();
         const pullrequest_init_data = $element[0].querySelector(".pullrequest-init-data").dataset;
 
         const repository_id = pullrequest_init_data.repositoryId;

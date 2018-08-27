@@ -44,10 +44,6 @@ const webpack_config = {
         alias: webpack_configurator.extendAliases(
             {
                 "tuleap-pullrequest-module": path.resolve(__dirname, "./src/app/app.js"),
-                "angular-ui-bootstrap-templates": path.resolve(
-                    __dirname,
-                    "vendor/angular-ui-bootstrap-bower/ui-bootstrap-tpls.js"
-                ),
                 angular$: path.resolve(__dirname, "node_modules/angular")
             },
             webpack_configurator.tlp_mocks_alias,
