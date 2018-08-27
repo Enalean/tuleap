@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 options=$(getopt -o h -l src-dir: -- "$@")
 
@@ -23,30 +23,42 @@ if [ -z "$SRC_DIR" ]; then
     exit 1;
 fi
 
-docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
-    echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
+if [ -z "$OS" ]; then
+    >&2 echo "OS environment variable must be defined"
     exit 1
+fi
+
+docker image inspect tuleap-generated-files-builder > /dev/null 2>&1 || \
+    (echo 'You should build tuleap-generated-files-builder from the sources https://tuleap.net/plugins/git/tuleap/docker/tuleap-generated-files-builder' && \
+    exit 1)
 
 
-clean_tuleap_sources="$(mktemp -d)/"
+clean_tuleap_sources="$(mktemp -d)"
 
 function cleanup {
-    docker rm rpm-builder || true
+    docker rm -fv rpm-builder rpm-installer || true
     rm -rf "$clean_tuleap_sources"
 }
 trap cleanup EXIT
 
-docker rm rpm-builder   || true
+docker rm rpm-builder || true
 
 is_in_git_repo=$(cd "$SRC_DIR" && git rev-parse --is-inside-work-tree 2> /dev/null || true)
 if [[ "$is_in_git_repo" == true ]]; then
-    git checkout-index -a --prefix="$clean_tuleap_sources"
+    git checkout-index -a --prefix="$clean_tuleap_sources/"
 else
-    cp -R "$SRC_DIR" "$clean_tuleap_sources"
+    cp -R "$SRC_DIR" "$clean_tuleap_sources/"
 fi
 
 docker run -i --rm -v "$clean_tuleap_sources":/tuleap -v "$clean_tuleap_sources":/output tuleap-generated-files-builder
 
-docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:centos6-without-srpms --os rhel6
+docker run -i --name rpm-builder -v "$clean_tuleap_sources":/tuleap:ro enalean/tuleap-buildrpms:"$OS"-without-srpms
 
-docker run -it --rm --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms
+if [ "$OS" == "centos7" ]; then
+    docker run -t -d --rm --name rpm-installer --volumes-from rpm-builder -v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+        --mount type=tmpfs,destination=/run enalean/tuleap-installrpms:centos7
+    docker logs -f rpm-installer | tee >( grep -q 'Started Install and run Tuleap.' ) || true
+    docker exec -ti rpm-installer bash
+else
+    docker run --rm -ti --name rpm-installer --volumes-from rpm-builder enalean/tuleap-installrpms:centos6
+fi

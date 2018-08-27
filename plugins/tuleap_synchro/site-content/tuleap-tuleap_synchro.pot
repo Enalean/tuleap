@@ -1,10 +1,25 @@
 msgid "\"Source\" Project's Shortname"
 msgstr ""
 
+msgid "\"Source\" Project's Shortname:"
+msgstr ""
+
+msgid "\"Source\" Project:"
+msgstr ""
+
 msgid "\"Source\" Tracker"
 msgstr ""
 
+msgid "\"Source\" Tracker's Id:"
+msgstr ""
+
 msgid "\"Target\" Project's Shortname"
+msgstr ""
+
+msgid "\"Target\" Project's Shortname:"
+msgstr ""
+
+msgid "\"Target\" Project:"
 msgstr ""
 
 msgid "Add endpoint"
@@ -19,16 +34,36 @@ msgstr ""
 msgid "Base URI's \"Source\" Project"
 msgstr ""
 
+msgid "Base URI's \"Source\" Project:"
+msgstr ""
+
 msgid "Cancel"
 msgstr ""
 
 msgid "Close"
 msgstr ""
 
+msgid "Delete"
+msgstr ""
+
+msgid "Delete endpoint ?"
+msgstr ""
+
 msgid "List of import endpoints"
 msgstr ""
 
+msgid "Password (\"Source\" Project):"
+msgstr ""
+
 msgid "There isn't any matching webhook"
+msgstr ""
+
+#, php-format
+msgid "This base URI: %s isn't valid."
+msgstr ""
+
+#, php-format
+msgid "This id : %s isn't a numeric."
 msgstr ""
 
 msgid "Tuleap to Tuleap"
@@ -37,14 +72,22 @@ msgstr ""
 msgid "Tuleap to Tuleap Synchronization"
 msgstr ""
 
-msgid "Under implementation"
+msgid "Username (\"Source\" Project)"
 msgstr ""
 
-msgid "Username (\"Source\" Project)"
+msgid "Username (\"Source\" Project):"
 msgstr ""
 
 msgid "Username (\"Target\" Project)"
 msgstr ""
 
+msgid "Username (\"Target\" Project):"
+msgstr ""
+
 msgid "Webhook"
+msgstr ""
+
+msgid ""
+"Wow, wait a minute. You are about to delete the endpoint: %s. Please confirm "
+"your action."
 msgstr ""

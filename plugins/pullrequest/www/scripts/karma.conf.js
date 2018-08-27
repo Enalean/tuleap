@@ -1,11 +1,11 @@
 const path = require("path");
-const webpack_config = require("./webpack.config.js");
+const webpack_config = require("./webpack.config.js")[1];
 const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
 
 module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, "./coverage");
+    const coverage_dir = path.resolve(__dirname, "./coverage/angular");
     const base_config = karma_configurator.setupBaseKarmaConfig(
         config,
         webpack_config,

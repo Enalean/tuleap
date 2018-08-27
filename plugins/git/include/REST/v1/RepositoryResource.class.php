@@ -59,6 +59,8 @@ use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerExce
 use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\VersionDetector;
+use Tuleap\Git\GitPHP\Head;
+use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
@@ -692,6 +694,73 @@ class RepositoryResource extends AuthenticatedResource {
             throw new RestException(404, $exception->getMessage());
         }
         $this->sendAllowHeaders();
+        return $result;
+    }
+
+    /**
+     * @url OPTIONS {id}/branches
+     *
+     * @param int $id Id of the git repository
+     */
+    public function optionsGetBranches($id)
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get all the branches of a git repository
+     *
+     * @url    GET {id}/branches
+     *
+     * @access protected
+     *
+     * @param int $id     Id of the git repository
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
+     *
+     * @return array {@type \Tuleap\Git\REST\v1\GitBranchRepresentation}
+     *
+     * @status 200
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     */
+    public function getBranches($id, $offset = 0, $limit = self::MAX_LIMIT)
+    {
+        $this->checkAccess();
+        $this->checkLimit($limit);
+
+        $user = $this->getCurrentUser();
+        $repository = $this->getRepository($user, $id);
+        $provider   = new ProjectProvider($repository);
+        $project    = $provider->GetProject();
+
+        /** @var Head[] $branches_refs */
+        $branches_refs        = $project->GetHeads();
+        $total_size           = count($branches_refs);
+        $sliced_branches_refs = array_slice($branches_refs, $offset, $limit);
+
+        $result = [];
+        foreach ($sliced_branches_refs as $branch) {
+            $name = $branch->GetName();
+            try {
+                $commit_id = $branch->GetHash();
+                $commit    = new GitCommitRepresentation();
+                $commit->build($commit_id);
+
+                $branch_representation = new GitBranchRepresentation();
+                $branch_representation->build($name, $commit);
+
+                $result[] = $branch_representation;
+            } catch (GitRepoRefNotFoundException $e) {
+                // ignore the branch if by any chance it is invalid
+            }
+        }
+
+        $this->sendAllowHeaders();
+        Header::sendPaginationHeaders($limit, $offset, $total_size, self::MAX_LIMIT);
+
         return $result;
     }
 

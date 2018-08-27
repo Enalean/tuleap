@@ -101,6 +101,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
+        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::GET_REFERENCE);
@@ -122,8 +124,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         if (defined('GIT_BASE_URL')) {
             $this->addHook('cssfile');
             $this->addHook('javascript_file');
-            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_INFO);
@@ -196,7 +196,10 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         }
     }
 
-    public function burningParrotGetJavascriptFiles($params)
+    /**
+     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
+     */
+    public function burningParrotGetJavascriptFiles($params) // phpcs:ignore
     {
         if ($this->isAPullrequestRequest()) {
             $include_asset_pullrequest = new IncludeAssets(
@@ -206,6 +209,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
             $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('move-button-back.js');
             $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('tuleap-pullrequest.js');
+            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('create-pullrequest-button.js');
         }
     }
 

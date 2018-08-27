@@ -28,3 +28,18 @@ document.addEventListener("DOMContentLoaded", function() {
         modal_simple_content.toggle();
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    const delete_modal_element = document.querySelectorAll(".delete-modal-button");
+    [].forEach.call(delete_modal_element, function(button) {
+        let modal_element = document.getElementById(button.dataset.modalId);
+
+        if (modal_element) {
+            let modal = createModal(modal_element);
+
+            button.addEventListener("click", function() {
+                modal.toggle();
+            });
+        }
+    });
+});

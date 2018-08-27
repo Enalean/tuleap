@@ -30,14 +30,14 @@
         </div>
         <widget-modal-content v-if="current_artifact"/>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            <button v-on:click="reloadTimes" type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{ close_label }}
             </button>
         </div>
     </div>
 </template>)
 (<script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalContent from "./WidgetModalContent.vue";
 export default {
@@ -47,6 +47,9 @@ export default {
         ...mapGetters(["current_artifact"]),
         close_label: () => gettext_provider.gettext("Close"),
         edit_time: () => gettext_provider.gettext("Detailed times")
+    },
+    methods: {
+        ...mapActions(["reloadTimes"])
     }
 };
 </script>)

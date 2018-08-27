@@ -24,6 +24,7 @@ use GitRepository;
 
 class RepositoryHeaderPresenter
 {
+    public $repository_id;
     public $repository_path;
     public $repository_name;
     public $user_is_admin;
@@ -51,6 +52,7 @@ class RepositoryHeaderPresenter
         GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
+        $this->repository_id               = $repository->getId();
         $this->repository_path             = $repository->getPathWithoutProject();
         $this->repository_name             = $repository->getLabel();
         $this->gerrit_status_presenter     = $gerrit_status_presenter;

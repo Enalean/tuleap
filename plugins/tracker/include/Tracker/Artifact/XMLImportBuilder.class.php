@@ -21,6 +21,8 @@
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Tracker\Artifact\ExistingArtifactSourceIdFromTrackerExtractor;
+use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
@@ -93,6 +95,8 @@ class Tracker_Artifact_XMLImportBuilder {
             $webhook_factory
         );
 
+        $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
+
         return new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
             $artifact_creator,
@@ -104,7 +108,9 @@ class Tracker_Artifact_XMLImportBuilder {
             $send_notifications,
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
-            new XMLArtifactSourcePlatformExtractor($logger)
+            new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
+            new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
+            $artifact_source_id_dao
         );
     }
 }

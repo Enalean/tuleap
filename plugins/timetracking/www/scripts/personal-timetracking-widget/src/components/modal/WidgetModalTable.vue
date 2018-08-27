@@ -27,6 +27,9 @@
         </tr>
         </thead>
         <tbody>
+        <widget-modal-add-time
+            v-if="is_add_mode"
+        />
         <widget-modal-row
             v-for="time in current_times"
             v-bind:key="time.id"
@@ -47,12 +50,13 @@
 import { mapState, mapGetters } from "vuex";
 import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalRow from "./WidgetModalRow.vue";
+import WidgetModalAddTime from "./WidgetModalAddTime.vue";
 
 export default {
     name: "WidgetModalTable",
-    components: { WidgetModalRow },
+    components: { WidgetModalRow, WidgetModalAddTime },
     computed: {
-        ...mapState(["current_times"]),
+        ...mapState(["is_add_mode", "current_times"]),
         ...mapGetters(["get_formatted_aggregated_time"]),
         time_label: () => gettext_provider.gettext("Times"),
         date_message: () => gettext_provider.gettext("Date"),

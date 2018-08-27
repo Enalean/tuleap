@@ -18,20 +18,8 @@
  */
 
 export default {
-    setStartDate(state, date) {
-        state.start_date = date;
-    },
-
-    setEndDate(state, date) {
-        state.end_date = date;
-    },
-
     toggleReadingMode(state) {
         state.reading_mode = !state.reading_mode;
-    },
-
-    setQueryHasChanged(state, has_changed) {
-        state.query_has_changed = has_changed;
     },
 
     setParametersForNewQuery(state, [start_date, end_date]) {
@@ -42,25 +30,10 @@ export default {
         state.pagination_offset = 0;
     },
 
-    setIsLoaded(state, is_loaded) {
-        state.is_loaded = is_loaded;
-    },
-
     setCurrentTimes(state, times) {
         state.current_times = times.sort((a, b) => {
             return new Date(b.date) - new Date(a.date);
         });
-    },
-    setTotalTimes(state, total_times) {
-        state.total_times = total_times;
-    },
-
-    setPaginationOffset(state, pagination_offset) {
-        state.pagination_offset = pagination_offset;
-    },
-
-    setPaginationLimit(state, pagination_limit) {
-        state.pagination_limit = pagination_limit;
     },
 
     loadAChunkOfTimes(state, [times, total]) {
@@ -68,6 +41,24 @@ export default {
         state.pagination_offset += state.pagination_limit;
         state.total_times = total;
         state.is_loaded = true;
+    },
+
+    resetTimes(state) {
+        state.is_loading = true;
+        state.pagination_offset = 0;
+        state.times = [];
+        state.is_add_mode = false;
+    },
+
+    setAddMode(state, is_add_mode) {
+        state.is_add_mode = is_add_mode;
+        if (
+            state.is_add_mode === false ||
+            (state.is_add_mode === true && state.rest_feedback.type === "success")
+        ) {
+            state.rest_feedback.message = "";
+            state.rest_feedback.type = "";
+        }
     },
 
     resetErrorMessage(state) {
@@ -78,11 +69,19 @@ export default {
         state.error_message = error_message;
     },
 
-    setTimes(state, times) {
-        state.times = state.times.concat(Object.values(times));
+    pushCurrentTimes(state, [times, feedback_message]) {
+        state.current_times = state.current_times.concat(Object.values(times));
+        state.is_add_mode = false;
+        state.rest_feedback.message = feedback_message;
+        state.rest_feedback.type = "success";
     },
 
     setIsLoading(state, isLoading) {
         state.is_loading = isLoading;
+    },
+
+    setRestFeedback(state, [message, type]) {
+        state.rest_feedback.message = message;
+        state.rest_feedback.type = type;
     }
 };

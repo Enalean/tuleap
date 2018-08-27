@@ -23,9 +23,14 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TuleapSynchro\Dao\TuleapSynchroDao;
 use Tuleap\TuleapSynchro\Endpoint\EndpointBuilder;
+use Tuleap\TuleapSynchro\Endpoint\EndpointChecker;
+use Tuleap\TuleapSynchro\Endpoint\EndpointCreatorController;
+use Tuleap\TuleapSynchro\Endpoint\EndpointDeleteController;
+use Tuleap\TuleapSynchro\Endpoint\EndpointUpdater;
 use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsController;
 use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsPresenterBuilder;
 use Tuleap\TuleapSynchro\ListEndpoints\ListEndpointsRetriever;
+use Tuleap\TuleapSynchro\Webhook\WebhookGenerator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
@@ -66,6 +71,20 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
                 new AdminPageRenderer(),
                 new ListEndpointsRetriever(new TuleapSynchroDao(), new EndpointBuilder()),
                 new ListEndpointsPresenterBuilder()
+            );
+        });
+
+        $event->getRouteCollector()->post('/admin/tuleap_synchro/add_endpoint', function () {
+            return new EndpointCreatorController(
+                new EndpointChecker(new Valid_HTTPURI()),
+                new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5))
+            );
+        });
+
+        $event->getRouteCollector()->post('/admin/tuleap_synchro/delete_endpoint', function () {
+            return new EndpointDeleteController(
+                new EndpointUpdater(new TuleapSynchroDao(), new WebhookGenerator(new TuleapSynchroDao(), 5)),
+                new AdminPageRenderer()
             );
         });
     }

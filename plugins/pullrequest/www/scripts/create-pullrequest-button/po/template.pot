@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Create a pull request"
+msgstr ""
+
+msgid "Create pull request"
+msgstr ""
+
+msgid "Create the pull request"
+msgstr ""
+
+msgid "Destination branch"
+msgstr ""
+
+msgid "No pull request can currently be created"
+msgstr ""
+
+msgid "Source branch"
+msgstr ""

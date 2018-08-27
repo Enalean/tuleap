@@ -45,6 +45,7 @@ use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\DAO\TrackerArtifactSourceIdDao;
 use UserManager;
 use XML_RNGValidator;
 use XMLImportHelper;
@@ -60,7 +61,6 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
     private $tracker_id = 100;
 
     private $extraction_path;
-    private $tmp_dir;
 
     /**
      * @var PFUser
@@ -138,6 +138,11 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
     private $config;
 
     /**
+     * @var ExistingArtifactSourceIdFromTrackerExtractor
+     */
+    private $existing_artifact_source_id_extractor;
+
+    /**
      * @var Tracker_ArtifactFactory
      */
     private $tracker_artifact_factory;
@@ -162,16 +167,31 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
      */
     private $xml_artifact_source_platform_extractor;
 
+    /**
+     * @var TrackerArtifactSourceIdDao
+     */
+    private $artifact_source_id_dao;
+
     public function setUp()
     {
         $this->tracker = \Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $this->tracker->shouldReceive('getWorkflow')->andReturn(\Mockery::spy(\Workflow::class));
 
-        $this->artifact_creator         = \Mockery::mock(Tracker_ArtifactCreator::class);
-        $this->new_changeset_creator    = \Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
-        $this->formelement_factory      = \Mockery::mock(Tracker_FormElementFactory::class);
-        $this->tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->artifact_creator                       = \Mockery::mock(Tracker_ArtifactCreator::class);
+        $this->new_changeset_creator                  = \Mockery::mock(Tracker_Artifact_Changeset_NewChangesetCreatorBase::class);
+        $this->formelement_factory                    = \Mockery::mock(Tracker_FormElementFactory::class);
+        $this->tracker_artifact_factory               = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->existing_artifact_source_id_extractor  = \Mockery::mock(ExistingArtifactSourceIdFromTrackerExtractor::class);
+        $this->tracker_formelement_field_source_id    = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $this->tracker_formelement_field_effort       = Mockery::mock(Tracker_FormElement_Field_Integer::class);
+        $this->static_value_dao                       = \Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
+        $this->xml_artifact_source_platform_extractor = \Mockery::mock(XMLArtifactSourcePlatformExtractor::class);
+        $this->response                               = \Mockery::mock(Response::class);
+        $this->config                                 = \Mockery::mock(ImportConfig::class);
+        $this->artifacts_id_mapping                   = new Tracker_XML_Importer_ArtifactImportedMapping();
+        $this->xml_mapping                            = new TrackerXmlFieldsMapping_FromAnotherPlatform([]);
+        $this->artifact_source_id_dao                 = Mockery::mock(TrackerArtifactSourceIdDao::class);
 
         $this->tracker_formelement_field_string = Mockery::mock(Tracker_FormElement_Field_String::class);
         $this->tracker_formelement_field_string->shouldReceive('setTracker');
@@ -180,10 +200,6 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
         $this->tracker_formelement_field_string->shouldReceive('getTrackerId')->andReturns($this->tracker_id);
         $this->tracker_formelement_field_string->shouldReceive('getLabel')->andReturns('summary');
         $this->tracker_formelement_field_string->shouldReceive('validateField')->andReturns(true);
-
-        $this->tracker_formelement_field_source_id = Mockery::mock(Tracker_FormElement_Field_Integer::class);
-
-        $this->tracker_formelement_field_effort = Mockery::mock(Tracker_FormElement_Field_Integer::class);
 
         $this->john_doe = \Mockery::mock(PFUser::class);
         $this->john_doe->shouldReceive('getId')->andReturn(200);
@@ -197,23 +213,12 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
         $this->extraction_path = $this->getTmpDir();
 
-        $this->static_value_dao = \Mockery::mock(Tracker_FormElement_Field_List_Bind_Static_ValueDao::class);
-
         $this->logger = \Mockery::mock(Logger::class);
         $this->logger->shouldReceive('info');
         $this->logger->shouldReceive('debug');
 
-        $this->response = \Mockery::mock(Response::class);
-
         $this->rng_validator =  \Mockery::mock(XML_RNGValidator::class);
         $this->rng_validator->shouldReceive('validate');
-
-        $this->config = \Mockery::mock(ImportConfig::class);
-
-        $this->xml_artifact_source_platform_extractor = \Mockery::mock(XMLArtifactSourcePlatformExtractor::class);
-
-        $this->artifacts_id_mapping     = new Tracker_XML_Importer_ArtifactImportedMapping();
-        $this->xml_mapping              = new TrackerXmlFieldsMapping_FromAnotherPlatform([]);
 
         $this->importer = new Tracker_Artifact_XMLImport(
             $this->rng_validator,
@@ -226,13 +231,15 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
             false,
             $this->tracker_artifact_factory,
             \Mockery::mock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao::class),
-            $this->xml_artifact_source_platform_extractor
+            $this->xml_artifact_source_platform_extractor,
+            $this->existing_artifact_source_id_extractor,
+            $this->artifact_source_id_dao
         );
     }
 
     public function testImportChangesetInNewArtifactWithNoChangeSet()
     {
-        $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
+        $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn("https://web/");
 
         $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
@@ -303,6 +310,12 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
+        $this->formelement_factory->shouldReceive('getFormElementByName')->andReturn([]);
+
+        $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn();
+
+        $this->artifact_source_id_dao->shouldReceive('save')->withArgs([101, 4918, "https://web/"])->once();
+
         $this->importer->importFromXML(
             $this->tracker,
             $xml_input,
@@ -314,12 +327,15 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateModeItCreateArtifactAndChangesetInExistingTracker()
     {
-        $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
-        $this->xml_artifact_source_platform_extractor->shouldReceive("getErrorMessage")->andReturn("No correspondence between existings artifacts and the new XML artifact. New artifact created.");
+        $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn();
 
         $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
         $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Value', 2);
+
+        $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn();
+
+        $this->artifact_source_id_dao->shouldReceive('getSourceArtifactId')->andReturn(101);
 
         $this->config->shouldReceive('isUpdate')->andReturn(true);
 
@@ -397,7 +413,10 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
     public function testUpdateModeWithoutSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker()
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
-        $this->xml_artifact_source_platform_extractor->shouldReceive("getErrorMessage")->andReturn("No attribute source_platform in XML. New artifact created.");
+
+        $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->with($this->tracker, null)->andReturn(null);
+
+        $this->artifact_source_id_dao->shouldReceive('getSourceArtifactId')->andReturn();
 
         $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
@@ -479,7 +498,8 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
     public function testUpdateModeWithWrongSourcePlatformAttributeItCreateArtifactAndChangesetInExistingTracker()
     {
         $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn(null);
-        $this->xml_artifact_source_platform_extractor->shouldReceive("getErrorMessage")->andReturn("Source platform is not valid. New artifact created.");
+
+        $this->artifact_source_id_dao->shouldReceive('getSourceArtifactId')->andReturn();
 
         $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'OK', 0);
         $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("2014-01-15T10:38:06+01:00"), null, null, null, $this->tracker_id, "summary", 'Again', 1);
@@ -549,6 +569,98 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
 
         $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
 
+        $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn();
+
+        $this->logger->shouldReceive('warn')->with("[XML import] No correspondence between artifact_id and source_artifact_id. New artifact created.", null);
+
+        $this->importer->importFromXML(
+            $this->tracker,
+            $xml_input,
+            $this->extraction_path,
+            $this->xml_mapping,
+            $this->config
+        );
+    }
+
+    public function testUpdateItCreateChangesetsInExistingArtifactWithChangeset()
+    {
+        $this->xml_artifact_source_platform_extractor->shouldReceive("getSourcePlatform")->andReturn("https://web/");
+
+        $this->config->shouldReceive('isUpdate')->andReturn(true);
+
+        $changeset = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'value', 0);
+
+        $artifact = $this->mockAnArtifact(101, $this->tracker, $this->tracker_id, [$changeset]);
+
+        $xml_field_mapping = file_get_contents(dirname(__FILE__).'/_fixtures/testImportChangesetInNewArtifact.xml');
+        $xml_input = simplexml_load_string($xml_field_mapping);
+
+        $this->tracker_artifact_factory->shouldReceive('getArtifactById')->andReturn($artifact)->times(2);
+
+        $this->formelement_factory->shouldReceive('getUsedFieldByName')->withArgs([$this->tracker_id, 'summary'])->andReturn($this->tracker_formelement_field_string);
+
+        $this->existing_artifact_source_id_extractor->shouldReceive('getSourceArtifactIds')->andReturn([4918 => 101]);
+
+        $this->artifact_source_id_dao->shouldReceive('getSourceArtifactId')->with(101, "https://web/")->andReturn(4918);
+
+        $changeset_1 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'OK', 0);
+        $changeset_2 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Again', 1);
+        $changeset_3 = $this->mockAChangeset($this->john_doe->getId(), strtotime("102030"), "un com", $this->john_doe->getId(), strtotime("102030"), $this->tracker_id, "stuff", 'Value', 2);
+
+        $data = array(
+            $this->summary_field_id => 'OK'
+        );
+
+        $this->new_changeset_creator
+            ->shouldReceive('create')
+            ->with(
+                $artifact,
+                $data,
+                Mockery::any(),
+                $this->john_doe,
+                Mockery::any(),
+                false,
+                "text"
+            )
+            ->once()
+            ->andReturn($changeset_1);
+
+        $data = array(
+            $this->summary_field_id => 'Again'
+        );
+
+        $this->new_changeset_creator
+            ->shouldReceive('create')
+            ->with(
+                $artifact,
+                $data,
+                Mockery::any(),
+                $this->john_doe,
+                Mockery::any(),
+                false,
+                "text"
+            )
+            ->andReturn($changeset_2)
+            ->once();
+
+        $data = array(
+            $this->summary_field_id => 'Value'
+        );
+
+        $this->new_changeset_creator
+            ->shouldReceive('create')
+            ->with(
+                $artifact,
+                $data,
+                Mockery::any(),
+                $this->john_doe,
+                Mockery::any(),
+                false,
+                "text"
+            )
+            ->andReturn($changeset_3)
+            ->once();
+
         $this->importer->importFromXML(
             $this->tracker,
             $xml_input,
@@ -563,7 +675,7 @@ class XmlImportTest extends \PHPUnit\Framework\TestCase
         vfsStreamWrapper::register();
         vfsStreamWrapper::setRoot(new vfsStreamDirectory("tuleap_tests"));
 
-        return vfsStream::url($this->tmp_dir);
+        return vfsStream::url("tuleap_tests");
     }
 
     /**

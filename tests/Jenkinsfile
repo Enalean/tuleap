@@ -108,7 +108,7 @@ pipeline {
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
                 }
                 stage('Build and run CentOS 6') { steps { script { actions.runBuildAndRun('centos6') } } }
-                stage('Build CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }
+                stage('Build and run CentOS 7') { steps { script { actions.runBuildAndRun('centos7') } } }
                 stage('Distributed SVN integration') {
                     steps { script { actions.runEndToEndTests('distlp') } }
                     post { always { junit 'results/e2e/**/*.xml' } }

@@ -24,6 +24,7 @@ use GitRepository;
 
 class ParentRepositoryPresenter
 {
+    public $parent_repository_id;
     public $parent_repository_url;
     public $parent_repository_name;
 
@@ -31,5 +32,6 @@ class ParentRepositoryPresenter
     {
         $this->parent_repository_url  = $repository_url;
         $this->parent_repository_name = $repository->getName();
+        $this->parent_repository_id   = $repository->getId();
     }
 }

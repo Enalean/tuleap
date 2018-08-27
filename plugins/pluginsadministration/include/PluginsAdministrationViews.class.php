@@ -268,8 +268,8 @@ class PluginsAdministrationViews extends Views {
 
             $plugins = $plugin_manager->getAllPlugins();
             foreach($plugins as $plugin) {
-                $plug_info  =& $plugin->getPluginInfo();
-                $descriptor =& $plug_info->getPluginDescriptor();
+                $plug_info  = $plugin->getPluginInfo();
+                $descriptor = $plug_info->getPluginDescriptor();
                 $available = $plugin_manager->isPluginAvailable($plugin);
                 $name = $descriptor->getFullName();
                 if (strlen(trim($name)) === 0) {

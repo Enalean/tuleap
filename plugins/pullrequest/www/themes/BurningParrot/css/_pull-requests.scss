@@ -23,3 +23,19 @@
 #pullrequest-app {
     border-top: 2px solid $tlp-theme-color;
 }
+
+.git-repository-actions-pullrequest-modal-body {
+    display: flex;
+}
+
+.git-repository-actions-pullrequest-modal-body-element {
+    width: 50%;
+
+    &:first-child {
+        margin: 0 $tlp-half-spacing 0 0;
+    }
+
+    &:last-child {
+        margin: 0 0 0 $tlp-half-spacing;
+    }
+}

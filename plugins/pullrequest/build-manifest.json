@@ -42,5 +42,11 @@
             "is_revisioned": true
         }
     },
+    "gettext-vue": {
+        "create-pullrequest-button": {
+            "scripts": "www/scripts",
+            "po" : "www/scripts/create-pullrequest-button/po"
+        }
+    },
     "components": ["www/scripts"]
 }

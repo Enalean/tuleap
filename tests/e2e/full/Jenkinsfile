@@ -30,8 +30,22 @@ pipeline {
             steps { script { actions.runEndToEndTests('full') } }
             post {
                 always {
-                    junit 'results/e2e/**.xml'
+                    junit 'results/e2e/full/*.xml'
                     archiveArtifacts allowEmptyArchive: true, artifacts: 'results/'
+                }
+                failure {
+                    withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                        mail to: email,
+                             subject: "${currentBuild.fullDisplayName} is broken",
+                             body: "See ${env.BUILD_URL}"
+                    }
+                }
+                unstable {
+                    withCredentials([string(credentialsId: 'email-notification-rd-team', variable: 'email')]) {
+                        mail to: email,
+                         subject: "${currentBuild.fullDisplayName} is unstable",
+                         body: "See ${env.BUILD_URL}"
+                    }
                 }
             }
         }

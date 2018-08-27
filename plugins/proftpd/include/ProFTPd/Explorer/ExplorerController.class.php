@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +20,7 @@
 
 namespace Tuleap\ProFTPd\Explorer;
 
+use Tuleap\Http\BinaryFileResponse;
 use Tuleap\ProFTPd\Directory\DirectoryParser;
 use Tuleap\ProFTPd\Directory\DirectoryPathParser;
 use Tuleap\ProFTPd\Presenter\ExplorerPresenter;
@@ -30,8 +30,6 @@ use Tuleap\ProFTPd\Xferlog\Dao;
 use HTTPRequest;
 use PFUser;
 use Project;
-use HTTP_Download;
-use PEAR;
 
 class ExplorerController {
     const NAME = 'explorer';
@@ -90,16 +88,16 @@ class ExplorerController {
     }
 
     private function renderFileContent(HTTPRequest $request, Project $project, $project_path) {
-        include_once 'HTTP/Download.php';
         $full_path = $this->parser->getFullPath($project_path);
-        $this->xferlog_dao->storeWebDownload($request->getCurrentUser()->getId(), $project->getID(), $_SERVER['REQUEST_TIME'], $project_path);
-        return ! PEAR::isError(HTTP_Download::staticSend(array(
-            'file'               => $full_path,
-            'cache'              => false,
-            'contentdisposition' => array(HTTP_DOWNLOAD_ATTACHMENT, basename($full_path)),
-            'buffersize'         => self::TRANSFERT_BUFFER_SIZE,
-            )
-        ));
+        $this->xferlog_dao->storeWebDownload(
+            $request->getCurrentUser()->getId(),
+            $project->getID(),
+            $_SERVER['REQUEST_TIME'],
+            $project_path
+        );
+
+        $binary_reponse = new BinaryFileResponse($full_path, basename($full_path));
+        $binary_reponse->send();
     }
 
     private function renderDirectoryContent(ServiceProFTPd $service, HTTPRequest $request, DirectoryPathParser $path_parser, Project $project, $path) {

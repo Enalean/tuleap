@@ -25,7 +25,7 @@ use Logger;
 use PHPUnit\Framework\TestCase;
 use Tracker\Artifact\XMLArtifactSourcePlatformExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
-use WrapperLogger;
+use Valid_HTTPURI;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
@@ -52,7 +52,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
 
         $this->logger = \Mockery::mock(Logger::class);
 
-        $this->xml_source_platform_extractor = new XMLArtifactSourcePlatformExtractor($this->logger);
+        $this->xml_source_platform_extractor = new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $this->logger);
     }
 
     public function testUpdateModeGetNullIfNoSourcePlatform()
@@ -75,7 +75,7 @@ class XMLArtifactSourcePlatformExtractorTest extends TestCase
         $xml_field_mapping = file_get_contents(__DIR__."/_fixtures/testImportChangesetInArtifactWithWrongSourcePlatformAttribute.xml");
         $xml_input = simplexml_load_string($xml_field_mapping);
 
-          $this->logger->shouldReceive('warn')->with("Source platform is not a valid URL. New artifact created.");
+        $this->logger->shouldReceive('warn')->with("Source platform is not a valid URI. New artifact created.");
 
         $source_platform =$this->xml_source_platform_extractor->getSourcePlatform($xml_input, $this->config, $this->logger);
         $this->assertEquals(null, $source_platform);

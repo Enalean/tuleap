@@ -23,8 +23,8 @@ namespace Tuleap\TuleapSynchro\Endpoint;
 
 class EndpointBuilder
 {
-    public function build($username_source, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
+    public function build($username_source, $password, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook)
     {
-        return new Endpoint($username_source, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook);
+        return new Endpoint($username_source, $password, $project_source, $tracker_source, $username_target, $project_target, $base_uri, $webhook);
     }
 }
