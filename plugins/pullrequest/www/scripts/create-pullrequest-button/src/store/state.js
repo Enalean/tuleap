@@ -20,5 +20,6 @@
 export default {
     source_branches: [],
     destination_branches: [],
-    create_error_message: ""
+    create_error_message: "",
+    has_error_while_loading_branches: false
 };

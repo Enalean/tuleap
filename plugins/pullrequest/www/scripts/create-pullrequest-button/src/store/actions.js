@@ -24,16 +24,21 @@ export async function init(
     context,
     { repository_id, project_id, parent_repository_id, parent_repository_name, parent_project_id }
 ) {
-    const branches = (await getBranches(repository_id)).map(extendBranch);
-    context.commit("setSourceBranches", branches);
+    try {
+        const branches = (await getBranches(repository_id)).map(extendBranch);
 
-    if (parent_repository_id) {
-        const parent_repository_branches = (await getBranches(parent_repository_id)).map(
-            extendBranchForParent
-        );
-        context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
-    } else {
-        context.commit("setDestinationBranches", branches);
+        context.commit("setSourceBranches", branches);
+
+        if (parent_repository_id) {
+            const parent_repository_branches = (await getBranches(parent_repository_id)).map(
+                extendBranchForParent
+            );
+            context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
+        } else {
+            context.commit("setDestinationBranches", branches);
+        }
+    } catch (e) {
+        context.commit("setHasErrorWhileLoadingBranchesToTrue");
     }
 
     function extendBranch(branch) {

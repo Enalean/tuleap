@@ -21,6 +21,7 @@
     <div>
         <create-pullrequest-button v-bind:show-modal="showModal" />
         <create-pullrequest-modal ref="modal" />
+        <create-pullrequest-error-modal ref="error_modal" />
     </div>
 </template>
 
@@ -29,13 +30,15 @@ import { modal as createModal } from "tlp";
 import store from "../store/index.js";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 import CreatePullrequestModal from "./CreatePullrequestModal.vue";
+import CreatePullrequestErrorModal from "./CreatePullrequestErrorModal.vue";
 
 export default {
     name: "App",
     store,
     components: {
         CreatePullrequestButton,
-        CreatePullrequestModal
+        CreatePullrequestModal,
+        CreatePullrequestErrorModal
     },
     props: {
         repository_id: Number,
@@ -46,7 +49,8 @@ export default {
     },
     data() {
         return {
-            modal: null
+            modal: null,
+            error_modal: null
         };
     },
     mounted() {
@@ -57,12 +61,20 @@ export default {
             parent_repository_name: this.parent_repository_name,
             parent_project_id: this.parent_project_id
         });
+
         const modal = this.$refs.modal.$el;
         this.modal = createModal(modal);
+
+        const error_modal = this.$refs.error_modal.$el;
+        this.error_modal = createModal(error_modal);
     },
     methods: {
         showModal() {
-            this.modal.toggle();
+            if (this.$store.state.has_error_while_loading_branches) {
+                this.error_modal.toggle();
+            } else {
+                this.modal.toggle();
+            }
         }
     }
 };

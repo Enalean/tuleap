@@ -107,5 +107,19 @@ describe("Store actions", () => {
                 { display_name: "ledepot : dev", repository_id: 66, project_id: 102, name: "dev" }
             ]);
         });
+
+        it("switch the error flag if REST API returns an error", async () => {
+            getBranches.and.returnValue(Promise.reject(500));
+
+            await actions.init(context, {
+                repository_id: 42,
+                project_id: 101,
+                parent_repository_id: 66,
+                parent_project_id: 102,
+                parent_repository_name: "ledepot"
+            });
+
+            expect(context.commit).toHaveBeenCalledWith("setHasErrorWhileLoadingBranchesToTrue");
+        });
     });
 });
