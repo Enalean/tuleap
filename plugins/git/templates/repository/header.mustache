@@ -1,6 +1,6 @@
 <div class="tlp-framed">
-    <span class="git-repository-path">{{ repository_path }}</span>
-    <h1 class="git-repository-name">{{ repository_name }}</h1>
+    <div class="git-repository-path">{{ repository_path }}</div>
+    <h1 {{# parent_repository_presenter }}class="git-repository-forked-name"{{/ parent_repository_presenter }}">{{ repository_name }}</h1>
     {{# parent_repository_presenter }}
         <div class="git-repository-parent">
             {{# dgettext }}
@@ -10,6 +10,7 @@
             {{/ dgettext }}
         </div>
     {{/ parent_repository_presenter }}
+
     {{# gerrit_status_presenter }}
         {{> repository/gerrit-status }}
     {{/ gerrit_status_presenter }}
