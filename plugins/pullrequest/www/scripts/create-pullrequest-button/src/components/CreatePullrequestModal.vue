@@ -1,0 +1,72 @@
+<!--
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+    <div class="tlp-modal" role="dialog">
+        <div class="tlp-modal-header">
+            <h1 class="tlp-modal-title">
+                <i class="fa fa-code-fork fa-rotate-270 tlp-modal-title-icon"></i>
+                <translate>Create a pull request</translate>
+            </h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                &times;
+            </div>
+        </div>
+        <div class="tlp-modal-body git-repository-actions-pullrequest-modal-body">
+            <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
+                <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-source">
+                    <translate>Source branch</translate>
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-source" required>
+                    <option value="" selected disabled>Choose source branch…</option>
+                    <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                </select>
+            </div>
+            <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
+                <label class="tlp-label" for="git-repository-actions-pullrequest-modal-body-destination" required>
+                    <translate>Destination branch</translate>
+                    <i class="fa fa-asterisk"></i>
+                </label>
+                <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-destination">
+                    <option value="" selected disabled>Choose destination branch</option>
+                    <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="tlp-modal-footer tlp-modal-footer-large">
+            <button type="submit" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                <translate>Cancel</translate>
+            </button>
+            <button type="submit" class="tlp-button-primary tlp-modal-action">
+                <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
+                <translate>Create the pull request</translate>
+            </button>
+        </div>
+    </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+    name: "CreatePullrequestModal",
+    computed: mapState(["source_branches", "destination_branches"])
+};
+</script>

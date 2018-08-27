@@ -21,6 +21,7 @@
     <button class="tlp-button-primary"
             v-bind:disabled="is_button_disabled"
             v-bind:title="button_title"
+            v-on:click="showModal"
     >
         <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
         <translate>Create pull request</translate>
@@ -28,11 +29,11 @@
 </template>
 
 <script>
-import store from "../store/index.js";
-
 export default {
     name: "CreatePullrequestButton",
-    store,
+    props: {
+        showModal: Function
+    },
     computed: {
         is_button_disabled() {
             return !this.$store.getters.can_create_pullrequest;

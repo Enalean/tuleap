@@ -19,29 +19,47 @@
 
 <template>
     <div>
-        <create-pullrequest-button />
+        <create-pullrequest-button v-bind:show-modal="showModal" />
+        <create-pullrequest-modal ref="modal" />
     </div>
 </template>
 
 <script>
+import { modal as createModal } from "tlp";
 import store from "../store/index.js";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
+import CreatePullrequestModal from "./CreatePullrequestModal.vue";
 
 export default {
     name: "App",
     store,
     components: {
-        CreatePullrequestButton
+        CreatePullrequestButton,
+        CreatePullrequestModal
     },
     props: {
         repository_id: Number,
-        parent_repository_id: Number
+        parent_repository_id: Number,
+        parent_repository_name: String
+    },
+    data() {
+        return {
+            modal: null
+        };
     },
     mounted() {
         this.$store.dispatch("init", {
             repository_id: this.repository_id,
-            parent_repository_id: this.parent_repository_id
+            parent_repository_id: this.parent_repository_id,
+            parent_repository_name: this.parent_repository_name
         });
+        const modal = this.$refs.modal.$el;
+        this.modal = createModal(modal);
+    },
+    methods: {
+        showModal() {
+            this.modal.toggle();
+        }
     }
 };
 </script>

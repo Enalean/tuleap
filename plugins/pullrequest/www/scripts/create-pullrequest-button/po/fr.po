@@ -12,8 +12,23 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Create a pull request"
+msgstr "Créer une pull request"
+
 msgid "Create pull request"
 msgstr "Créer une pull request"
 
+msgid "Create the pull request"
+msgstr "Créer la pull request"
+
+msgid "Destination branch"
+msgstr "Branche destination"
+
 msgid "No pull request can currently be created"
 msgstr "Aucune pull request ne peut actuellement être créée"
+
+msgid "Source branch"
+msgstr "Branche source"

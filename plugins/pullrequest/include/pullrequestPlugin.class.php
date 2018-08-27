@@ -102,6 +102,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
+        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::GET_REFERENCE);
@@ -166,6 +167,19 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         if ($this->isAPullrequestRequest()) {
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-pullrequest.css" />';
             echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
+        }
+    }
+
+    public function burningParrotGetStylesheets(array $params)
+    {
+        if ($this->isAPullrequestRequest()) {
+            $theme_include_assets = new IncludeAssets(
+                PULLREQUEST_BASE_DIR . '/www/themes/BurningParrot/assets',
+                $this->getThemePath() . '/assets'
+            );
+
+            $variant = $params['variant'];
+            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
         }
     }
 

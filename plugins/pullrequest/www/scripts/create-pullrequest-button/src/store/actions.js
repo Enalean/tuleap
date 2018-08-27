@@ -19,14 +19,33 @@
 
 import { getBranches } from "../api/rest-querier.js";
 
-export async function init(context, { repository_id, parent_repository_id }) {
-    const branches = await getBranches(repository_id);
+export async function init(
+    context,
+    { repository_id, parent_repository_id, parent_repository_name }
+) {
+    const branches = (await getBranches(repository_id)).map(addDisplayName);
     context.commit("setSourceBranches", branches);
 
     if (parent_repository_id) {
-        const parent_repository_branches = await getBranches(parent_repository_id);
+        const parent_repository_branches = (await getBranches(parent_repository_id)).map(
+            addDisplayNameForParent
+        );
         context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
     } else {
         context.commit("setDestinationBranches", branches);
+    }
+
+    function addDisplayName(branch) {
+        return {
+            display_name: branch.name,
+            ...branch
+        };
+    }
+
+    function addDisplayNameForParent(branch) {
+        return {
+            display_name: `${parent_repository_name} : ${branch.name}`,
+            ...branch
+        };
     }
 }
