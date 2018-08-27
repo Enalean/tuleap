@@ -525,7 +525,6 @@ setup_mysql() {
         $MYSQL $pass_opt -e "CREATE DATABASE $PROJECT_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         $CAT <<EOF | $MYSQL $pass_opt mysql
 GRANT ALL PRIVILEGES on $PROJECT_NAME.* TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
-GRANT ALL PRIVILEGES ON \`cx_%\` . * TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd' WITH GRANT OPTION;
 GRANT ALL PRIVILEGES ON \`plugin_mediawiki_%\` . * TO '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd';
 GRANT ALL PRIVILEGES on *.* to '$mysql_user'@'$mysql_httpd_host' identified by '$rt_passwd';
 FLUSH PRIVILEGES;

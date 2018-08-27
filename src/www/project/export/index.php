@@ -64,8 +64,6 @@ if (!$group || !is_object($group) || $group->isError()) {
 
 $project=$pm->getProject($group_id);
 $groupname = $project->getUnixName();
-//export database name is: cx_<project shortname>
-$dbname = "cx_".str_replace("-","",$groupname);
 $pg_title = $Language->getText('project_admin_utils','project_data_export').' '.$groupname;
 
 $em->processEvent('project_export', array('export' => $export, 'project' => $project));
