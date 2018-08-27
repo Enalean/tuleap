@@ -59,6 +59,10 @@
     text-overflow: ellipsis;
 }
 
+.tlp-alert-info.git-waiting-for-repo-creation {
+    margin: 0 $tlp-spacing;
+}
+
 /* scss-lint:disable SelectorFormat */
 .plugin_git_gitphp {
     margin: 10px;

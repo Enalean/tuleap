@@ -127,7 +127,12 @@ class GitViews_ShowRepo_Content {
 
     private function getWaitingForRepositoryCreationInfo()
     {
-        $html = '<div class="alert alert-info wait_creation">';
+        if (ForgeConfig::get('git_repository_bp')) {
+            $html = '<div class="tlp-alert-info git-waiting-for-repo-creation">';
+        } else {
+            $html = '<div class="alert alert-info wait_creation">';
+        }
+
         $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
 
         $default_mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($this->repository);
