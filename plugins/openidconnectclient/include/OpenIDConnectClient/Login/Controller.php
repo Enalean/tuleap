@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,20 +21,19 @@
 namespace Tuleap\OpenIDConnectClient\Login;
 
 use Feedback;
+use Logger;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountDataAccessException;
 use Tuleap\OpenIDConnectClient\AccountLinker\UnlinkedAccountManager;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\FlowResponse;
 use Tuleap\OpenIDConnectClient\Login\Registration\AutomaticUserRegistration;
-use Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException;
-use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMapping;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingDataAccessException;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingManager;
 use Tuleap\OpenIDConnectClient\UserMapping\UserMappingNotFoundException;
 use Exception;
+use Tuleap\User\SessionNotCreatedException;
 use User_LoginException;
-use SessionNotCreatedException;
 use UserNotActiveException;
 use UserManager;
 
@@ -43,11 +42,6 @@ class Controller {
      * @var UserManager
      */
     private $user_manager;
-
-    /**
-     * @var ProviderManager
-     */
-    private $provider_manager;
 
     /**
      * @var UserMappingManager
@@ -68,21 +62,25 @@ class Controller {
      * @var Flow
      */
     private $flow;
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     public function __construct(
         UserManager $user_manager,
-        ProviderManager $provider_manager,
         UserMappingManager $user_mapping_manager,
         UnlinkedAccountManager $unlinked_account_manager,
         AutomaticUserRegistration $automatic_user_registration,
-        Flow $flow
+        Flow $flow,
+        Logger $logger
     ) {
         $this->user_manager                = $user_manager;
-        $this->provider_manager            = $provider_manager;
         $this->user_mapping_manager        = $user_mapping_manager;
         $this->unlinked_account_manager    = $unlinked_account_manager;
         $this->automatic_user_registration = $automatic_user_registration;
         $this->flow                        = $flow;
+        $this->logger                      = $logger;
     }
 
     public function login($return_to, $login_time) {
@@ -92,6 +90,8 @@ class Controller {
         try {
             $flow_response = $this->flow->process();
         } catch (Exception $ex) {
+            $this->logger->error($ex->getMessage());
+            $this->logger->debug($ex->getTraceAsString());
             $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'invalid_request')
             );
@@ -165,6 +165,8 @@ class Controller {
             $user = $this->automatic_user_registration->register($user_information);
             $this->user_mapping_manager->create($user->getId(), $provider->getId(), $user_identifier, $login_time);
         } catch (Exception $ex) {
+            $this->logger->error($ex->getMessage());
+            $this->logger->debug($ex->getTraceAsString());
             $this->redirectAfterFailure(
                 $GLOBALS['Language']->getText('plugin_openidconnectclient', 'unexpected_error')
             );
