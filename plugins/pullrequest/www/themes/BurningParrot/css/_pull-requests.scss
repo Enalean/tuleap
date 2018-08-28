@@ -20,6 +20,10 @@
 @import '../../../scripts/src/app/tuleap-pullrequest';
 @import '../../../../../../src/www/themes/BurningParrot/css/includes/labels/labels-box';
 
+.pull-request-button-back {
+    margin: 0 $tlp-half-spacing;
+}
+
 #pullrequest-app {
     border-top: 2px solid $tlp-theme-color;
 }
