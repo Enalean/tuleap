@@ -1,14 +1,25 @@
 <?php
-//
-// Copyright (c) Enalean SAS, 2017-2018. All rights reserved
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
-//
-//  Written for Codendi by Stephane Bouhet
-//
+/**
+ * Copyright (c) Enalean SAS, 2017 - 2018. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Written for Codendi by Stephane Bouhet
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -37,7 +48,7 @@ ini_set('max_execution_time', 1800);
 $sanitizer = new SimpleSanitizer();
 
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId');
 $atid     = $request->getValidated('atid', 'uint');
@@ -123,7 +134,7 @@ if ($group_id && !$atid) {
 		} else {
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','tracker_created'));
                         // Create corresponding reference
-                        $reference_manager =& ReferenceManager::instance();
+                        $reference_manager = ReferenceManager::instance();
                         $ref = new Reference(0, // no ID yet
                                              strtolower($itemname),
                                              $Language->getText('project_reference','reference_art_desc_key'), // description
@@ -911,8 +922,8 @@ if ($group_id && !$atid) {
                 $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists
                   // NOTE: there is no way to know if the reference is actually related to this tracker.
-                  $reference_manager =& ReferenceManager::instance();
-                  $ref =& $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($ath->getItemName()),$group_id,1);
+                  $reference_manager = ReferenceManager::instance();
+                  $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs(strtolower($ath->getItemName()),$group_id,1);
                   if ($ref) {
                       if ($reference_manager->deleteReference($ref)) {
                           $GLOBALS['Response']->addFeedback('info', $Language->getText('project_reference','t_r_deleted'));
@@ -1072,19 +1083,13 @@ if ($group_id && !$atid) {
 			return;
 		}
 		
-		$em =& EventManager::instance();
+		$em = EventManager::instance();
 		$em->processEvent('tracker_graphic_report_admin', array('ath' => $ath, 'atf' => $atf, 'art_field_fact' => $art_field_fact));
 		$ath->adminHeader(array('title'=>$ath->getName().' '.$Language->getText('tracker_admin_field_usage','tracker_admin'),'help' => 'tracker-v3.html#tracker-administration'));
 		$ath->displayAdminTracker($group_id,$atid);
 		$ath->footer(array());
 	} // switch
-	
-
 } else {
-
     //browse for group first message
-
 	exit_no_group();
-
 }
-?>

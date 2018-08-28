@@ -268,13 +268,12 @@ class ArtifactFieldSet {
      * @param user_id: if not given or false take the current user
      */ 
     function userCanSubmit($group_id, $group_artifact_id, $user_id = false) {
-        $pm =& PermissionsManager::instance();
-        $um =& UserManager::instance();
+        $um = UserManager::instance();
         if (! $user_id) {
-            $user =& $um->getCurrentUser();
+            $user = $um->getCurrentUser();
             $user_id = $user->getId();
         } else {
-            $user =& $um->getUserById($user_id);    
+            $user = $um->getUserById($user_id);
         }
         if ($user->isSuperUser()) {
             $ok = true;
@@ -321,5 +320,3 @@ class ArtifactFieldSet {
         }
     }
 }
-
-?>

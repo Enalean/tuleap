@@ -644,7 +644,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $url .= "&morder=".  $hp->purify($morder, CODENDI_PURIFIER_CONVERT_HTML) ;
 
                 $params = array('url'=>&$url);
-                $em =& EventManager::instance();
+                $em = EventManager::instance();
                 $em->processEvent('tracker_urlparam_processing', $params);
                 $url_nomorder = $url;
                 
@@ -785,7 +785,7 @@ class ArtifactReportHtml extends ArtifactReport {
                 $html_result .= '</div></fieldset>';
                 echo $html_result;
                 
-                $em =& EventManager::instance();
+                $em = EventManager::instance();
                 $em->processEvent('tracker_after_report',array('group_id' => $group_id, 'atid' => (int)$this->group_artifact_id, 'url' => $url));
                 
         }
@@ -1152,8 +1152,4 @@ class ArtifactReportHtml extends ArtifactReport {
                 '</FORM>';
 
         }
-
-
 }
-
-?>

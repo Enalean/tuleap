@@ -1,16 +1,26 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//  Parts of code come from bug_util.php (written by Laurent Julliard)
-//
-//  Written for Codendi by Stephane Bouhet
-//
-
-//require_once('common/tracker/ArtifactField.class.php');
-
+/**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * Parts of code come from bug_util.php (written by Laurent Julliard)
+ * Written for Codendi by Stephane Bouhet
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once('common/include/HTTPRequest.class.php');
 
@@ -427,7 +437,7 @@ class ArtifactFieldHtml extends ArtifactField {
         $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
         if (!$ro) {
-            $request =& HTTPRequest::instance();
+            $request = HTTPRequest::instance();
             if ($request->get('func') == 'add' && $request->exist($this->field_name)) {
                 $value = htmlentities($request->get($this->field_name), ENT_QUOTES, 'UTF-8');
             }
@@ -598,8 +608,4 @@ class ArtifactFieldHtml extends ArtifactField {
 	
 	    return($output);
 	}
-
-	
 }
-
-?>

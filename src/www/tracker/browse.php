@@ -377,7 +377,7 @@ $params=array('title'=>$_title,
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';
 
-$em =& EventManager::instance();
+$em = EventManager::instance();
 $pref_params = array('group_id'   => $group_id,
                      'atid'       => $atid,
                      'report_id'  => $report_id,
@@ -394,5 +394,3 @@ $em->processEvent('tracker_user_pref',$pref_params);
 // Display the artifact items according to all the parameters
 $art_report_html->displayReport($prefs,$group_id,$report_id,$set,$advsrch,$msort,$morder,(isset($order)?$order:false),isset($pref_stg)?$pref_stg:"",$offset,$chunksz,$pv,$masschange);
 $ath->footer($params);
-
-?>

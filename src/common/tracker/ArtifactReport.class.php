@@ -550,7 +550,7 @@ class ArtifactReport {
                     
                     //Get only once the field_id of assigned_to/multi_assigned_to
                     $field_dao = new ArtifactFieldDao(CodendiDataAccess::instance());
-                    $dar =& $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
+                    $dar = $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
                     $assigned_to = array();
                     while ($row = $dar->getRow()) {
                         $assigned_to[] = $row['field_id'];

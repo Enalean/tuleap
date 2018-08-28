@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -32,8 +32,8 @@ require_once('common/reference/ReferenceManager.class.php');
 
 header('Content-type: text/html');
 
-$reference_manager =& ReferenceManager::instance();
-$request =& HTTPRequest::instance();
+$reference_manager = ReferenceManager::instance();
+$request = HTTPRequest::instance();
 
 
 if (!$request->getValidated('group_id', 'GroupId')) {
