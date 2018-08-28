@@ -73,8 +73,8 @@ export default {
     name: "CreatePullrequestModal",
     data() {
         return {
-            source_branch: undefined,
-            destination_branch: undefined
+            source_branch: "",
+            destination_branch: ""
         };
     },
     computed: {
