@@ -19,28 +19,37 @@
 
 import * as actions from "./actions.js";
 
-import { restore as restoreRestQuerier, rewire$getBranches } from "../api/rest-querier.js";
+import {
+    restore as restoreRestQuerier,
+    rewire$getBranches,
+    rewire$createPullrequest
+} from "../api/rest-querier.js";
+import { restore as restoreWindow, rewire$redirectTo } from "../helpers/window-helper.js";
 
 describe("Store actions", () => {
-    let getBranches;
+    let getBranches, createPullrequest, redirectTo, context;
 
     beforeEach(() => {
+        context = {
+            commit: jasmine.createSpy("commit")
+        };
+
         getBranches = jasmine.createSpy("getBranches");
         rewire$getBranches(getBranches);
+
+        createPullrequest = jasmine.createSpy("createPullrequest");
+        rewire$createPullrequest(createPullrequest);
+
+        redirectTo = jasmine.createSpy("redirectTo");
+        rewire$redirectTo(redirectTo);
     });
 
     afterEach(() => {
         restoreRestQuerier();
+        restoreWindow();
     });
 
     describe("init", () => {
-        let context;
-        beforeEach(() => {
-            context = {
-                commit: jasmine.createSpy("commit")
-            };
-        });
-
         it("loads branches of current repository and store them as source branches", async () => {
             const branches = [{ name: "master" }, { name: "feature/branch" }];
             getBranches.withArgs(42).and.returnValue(Promise.resolve(branches));
@@ -120,6 +129,63 @@ describe("Store actions", () => {
             });
 
             expect(context.commit).toHaveBeenCalledWith("setHasErrorWhileLoadingBranchesToTrue");
+        });
+    });
+
+    describe("create", () => {
+        const source_branch = {
+            repository_id: 102,
+            project_id: 42,
+            name: "feature/branch"
+        };
+        const destination_branch = {
+            repository_id: 101,
+            project_id: 42,
+            name: "master"
+        };
+
+        it("calls the rest api to create the pull request", async () => {
+            const created_pullrequest = { id: 1 };
+            createPullrequest.and.returnValue(Promise.resolve(created_pullrequest));
+
+            await actions.create(context, { source_branch, destination_branch });
+
+            expect(createPullrequest).toHaveBeenCalledWith(102, "feature/branch", 101, "master");
+        });
+
+        it("it does a full page reload to redirect to the created pull request", async () => {
+            const created_pullrequest = { id: 1 };
+            createPullrequest.and.returnValue(Promise.resolve(created_pullrequest));
+
+            await actions.create(context, { source_branch, destination_branch });
+
+            expect(redirectTo).toHaveBeenCalledWith(
+                "/plugins/git/?action=pull-requests&repo_id=101&group_id=42#/pull-requests/1/overview"
+            );
+        });
+
+        it("Logs an error if the creation failed", async () => {
+            createPullrequest.and.returnValue(
+                Promise.reject({
+                    response: {
+                        json() {
+                            return Promise.resolve({
+                                error: {
+                                    message: "You cannot create this pullrequest"
+                                }
+                            });
+                        }
+                    }
+                })
+            );
+
+            await actions.create(context, { source_branch, destination_branch });
+
+            expect(createPullrequest).toHaveBeenCalledWith(102, "feature/branch", 101, "master");
+            expect(context.commit).toHaveBeenCalledWith(
+                "setCreateErrorMessage",
+                "You cannot create this pullrequest"
+            );
         });
     });
 });
