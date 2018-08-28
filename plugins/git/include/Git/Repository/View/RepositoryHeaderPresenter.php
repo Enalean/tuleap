@@ -37,11 +37,13 @@ class RepositoryHeaderPresenter
     public $clone_presenter;
     public $project_id;
     public $is_migrated_to_gerrit;
+    public $zip_download_url;
 
     /**
      * @param GitRepository                  $repository
      * @param bool                           $user_is_admin
      * @param string                         $repository_admin_url
+     * @param string                         $zip_download_url
      * @param ClonePresenter                 $clone_presenter
      * @param GerritStatusPresenter          $gerrit_status_presenter
      * @param ParentRepositoryPresenter|null $parent_repository_presenter
@@ -50,6 +52,7 @@ class RepositoryHeaderPresenter
         GitRepository $repository,
         $user_is_admin,
         $repository_admin_url,
+        $zip_download_url,
         ClonePresenter $clone_presenter,
         GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
@@ -64,5 +67,6 @@ class RepositoryHeaderPresenter
         $this->parent_repository_presenter = $parent_repository_presenter;
         $this->clone_presenter             = $clone_presenter;
         $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
+        $this->zip_download_url            = $zip_download_url;
     }
 }
