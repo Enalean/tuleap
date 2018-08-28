@@ -32,18 +32,19 @@ require_once('pre.php');
 require_once('forumml_utils.php');
 require_once('www/mail/mail_utils.php');
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('forumml');
-if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('forumml');
 
-	$request =& HTTPRequest::instance();
-	
-	if ($request->valid(new Valid_UInt('group_id'))) {
-		$group_id = $request->get('group_id');
-	} else {
-		$group_id = "";
-	}
-	
+$request = HTTPRequest::instance();
+
+if ($request->valid(new Valid_UInt('group_id'))) {
+    $group_id = $request->get('group_id');
+} else {
+    $group_id = "";
+}
+
+if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed($group_id)) {
+
 	// Checks 'list' parameter
 	if (! $request->valid(new Valid_UInt('list'))) {
 		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
@@ -124,5 +125,3 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 } else {
 	header('Location: '.get_server_url());
 }
-
-?>

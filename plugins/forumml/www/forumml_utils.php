@@ -106,7 +106,7 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
 
 		$date = date("Y-m-d H:i",strtotime($header[1]));
 		// purify message subject (CODENDI_PURIFIER_FORUMML level)
-		$hp =& ForumML_HTMLPurifier::instance();
+		$hp = ForumML_HTMLPurifier::instance();
 		$subject = $hp->purify($subject,CODENDI_PURIFIER_FORUMML);
 		
 		// display the resulting threads in rows 
@@ -131,7 +131,7 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
 function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 	
     $chunks = 30;
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
 
     // all threads
     $sql = 'SELECT SQL_CALC_FOUND_ROWS 
@@ -223,7 +223,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 
 
 
-        $hp =& ForumML_HTMLPurifier::instance();
+        $hp = ForumML_HTMLPurifier::instance();
         $i = 0;
 
         while (($msg = db_fetch_array($result))) {
@@ -669,7 +669,7 @@ function getAnonymousForumMLReplyURL($link) {
 // Display the post form under the current post
 function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author) {
 
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
     $tab_tmp = explode("\n",$body);
     $tab_tmp = array_pad($tab_tmp,-count($tab_tmp)-1,"$author wrote :");
 
@@ -731,8 +731,8 @@ function plugin_forumml_replace_attachment($id_message, $group_id, $list, $id_pa
 // Build Mail headers, and send the mail
 function plugin_forumml_process_mail($plug,$reply=false) {
 
-	$request =& HTTPRequest::instance();
-	$hp =& ForumML_HTMLPurifier::instance();
+	$request = HTTPRequest::instance();
+	$hp = ForumML_HTMLPurifier::instance();
 	
 	// Instantiate a new Mail class
 	$mail = new Codendi_Mail();

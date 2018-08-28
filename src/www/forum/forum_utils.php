@@ -118,7 +118,7 @@ function forum_header($params) {
     if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
         echo '<P><B>';
 
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 	    if ($forum_id && user_isloggedin() && !$request->exist('delete')) {
             if (user_monitor_forum($forum_id,user_getid()) ) {
                 $msg = $Language->getText('forum_forum_utils','stop_monitor');
@@ -470,7 +470,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
   global $feedback,$Language;
 	if (user_isloggedin()) {
 		
-		$request =& HTTPRequest::instance();
+		$request = HTTPRequest::instance();
 		if (!$group_forum_id) {
 			exit_error($Language->getText('global','error'),$Language->getText('forum_forum_utils','post_without_id'));
 		}
@@ -532,7 +532,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 		$msg_id=db_insertid($result);
 		
         // extract cross reference in the message
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         $g_id = get_forum_group_id($group_forum_id);
         $reference_manager->extractCrossRef($subject,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);
         $reference_manager->extractCrossRef($body,$msg_id,ReferenceManager::REFERENCE_NATURE_FORUMMESSAGE, $g_id);

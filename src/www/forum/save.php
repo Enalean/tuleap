@@ -22,7 +22,7 @@
 require_once('pre.php');
 require_once __DIR__ . '/../forum/forum_utils.php';
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if (user_isloggedin()) {
 	/*

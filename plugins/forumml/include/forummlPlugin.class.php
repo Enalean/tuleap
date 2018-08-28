@@ -24,7 +24,7 @@ require_once __DIR__ . '/autoload.php';
 class ForumMLPlugin extends Plugin {
     const SEARCH_TYPE = 'mail';
 
-    function __construct($id) {
+    public function __construct($id) {
         parent::__construct($id);
 
         $this->addHook('browse_archives','forumml_browse_archives',false);
@@ -46,7 +46,7 @@ class ForumMLPlugin extends Plugin {
         $this->allowedForProject = array();
     }
 	
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
             $this->pluginInfo = new ForumMLPluginInfo($this);
@@ -84,25 +84,23 @@ class ForumMLPlugin extends Plugin {
         }
     }
 
-    function forumml_browse_archives($params) {
-    	if ($this->isAllowed()) {
-    		$request =& HTTPRequest::instance();
-    		$group_id = (int) $request->get('group_id');
-			$params['html'] = '<A href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$params['group_list_id'].'"> '.$GLOBALS['Language']->getText('plugin_forumml','archives').'</A>';
-    	}
+    public function forumml_browse_archives($params)
+    {
+        $request  = HTTPRequest::instance();
+        $group_id = (int)$request->get('group_id');
+        if ($this->isAllowed($group_id)) {
+            $params['html'] = '<A href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $params['group_list_id'] . '"> ' . $GLOBALS['Language']->getText('plugin_forumml', 'archives') . '</A>';
+        }
     }
 
     function cssFile($params) {
-    	$request =& HTTPRequest::instance();
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
 
     function jsFile($params) {
-    	//$request =& HTTPRequest::instance();
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            //echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/forumml.js"></script>'."\n";
         }
     }
