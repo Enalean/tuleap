@@ -53,13 +53,17 @@
     margin: auto 10px auto 0;
 }
 
-.git-repository-clone-form-element {
-    display: flex;
+#git-repository-clone-dropdown-button {
     margin: 0;
+}
 
-    // To override tlp-prepend
-    // scss-lint:disable QualifyingElement
-    > span.tlp-prepend.git-repository-clone-hidden {
+#git-repository-clone-read-only {
+    padding: 0 0 0 12px;
+    border-right: 0;
+    border-left: 0;
+    background: $tlp-ui-white;
+
+    &.git-repository-clone-hidden {
         width: 0;
         padding: 0;
         border-width: 1px 0;
@@ -70,10 +74,20 @@
     }
 }
 
+.git-repository-clone-form-element {
+    display: flex;
+    margin: 0;
+}
+
 #git-repository-clone-input {
     width: 300px;
+    border-left: 0;
     color: $tlp-ui-dimmed;
     text-overflow: ellipsis;
+
+    &:focus {
+        border-color: #cccccc;
+    }
 }
 
 .tlp-alert-info.git-waiting-for-repo-creation {
