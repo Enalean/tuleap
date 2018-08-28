@@ -36,7 +36,10 @@ export default {
     },
     computed: {
         is_button_disabled() {
-            return !this.$store.getters.can_create_pullrequest;
+            return (
+                !this.$store.getters.can_create_pullrequest &&
+                !this.$store.state.has_error_while_loading_branches
+            );
         },
         button_title() {
             return this.is_button_disabled

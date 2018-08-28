@@ -12,8 +12,18 @@ msgstr ""
 "X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid ""
+"An error occured while retrieving needed information to create a pull "
+"request."
+msgstr ""
+"Une erreur est survenue lors de la récupération d'informations "
+"nécessaires pour la création de pull request."
+
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Close"
+msgstr "Fermer"
 
 msgid "Create a pull request"
 msgstr "Créer une pull request"
@@ -29,6 +39,16 @@ msgstr "Branche destination"
 
 msgid "No pull request can currently be created"
 msgstr "Aucune pull request ne peut actuellement être créée"
+
+msgid "Oops"
+msgstr "Oups"
+
+msgid ""
+"Refresh the page and try again; if the error persists, contact your "
+"administrator."
+msgstr ""
+"Rafraîchissez la page et essayez à nouveau ; si l'erreur persiste, "
+"alors contactez votre administrateur."
 
 msgid "Source branch"
 msgstr "Branche source"

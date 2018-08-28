@@ -5,7 +5,15 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid ""
+"An error occured while retrieving needed information to create a pull "
+"request."
+msgstr ""
+
 msgid "Cancel"
+msgstr ""
+
+msgid "Close"
 msgstr ""
 
 msgid "Create a pull request"
@@ -21,6 +29,14 @@ msgid "Destination branch"
 msgstr ""
 
 msgid "No pull request can currently be created"
+msgstr ""
+
+msgid "Oops"
+msgstr ""
+
+msgid ""
+"Refresh the page and try again; if the error persists, contact your "
+"administrator."
 msgstr ""
 
 msgid "Source branch"

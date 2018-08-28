@@ -28,3 +28,7 @@ export function setDestinationBranches(state, branches) {
 export function setCreateErrorMessage(state, create_error_message) {
     state.create_error_message = create_error_message;
 }
+
+export function setHasErrorWhileLoadingBranchesToTrue(state) {
+    state.has_error_while_loading_branches = true;
+}
