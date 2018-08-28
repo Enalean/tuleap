@@ -24,6 +24,7 @@ use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Driver_Gerrit_UserAccountManager;
 use Git_GitRepositoryUrlManager;
+use Git_Mirror_MirrorDataMapper;
 use Git_RemoteServer_GerritServer;
 use GitPermissionsManager;
 use GitRepository;
@@ -60,6 +61,10 @@ class RepositoryHeaderPresenterBuilder
      * @var Git_Driver_Gerrit_ProjectCreatorStatus
      */
     private $project_creator_status;
+    /**
+     * @var Git_Mirror_MirrorDataMapper
+     */
+    private $mirror_data_mapper;
 
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
@@ -67,7 +72,8 @@ class RepositoryHeaderPresenterBuilder
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         GitPermissionsManager $permissions_manager,
-        array $gerrit_servers
+        array $gerrit_servers,
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper
     ) {
         $this->url_manager            = $url_manager;
         $this->driver_factory         = $driver_factory;
@@ -75,6 +81,7 @@ class RepositoryHeaderPresenterBuilder
         $this->gerrit_usermanager     = $gerrit_usermanager;
         $this->permissions_manager    = $permissions_manager;
         $this->gerrit_servers         = $gerrit_servers;
+        $this->mirror_data_mapper     = $mirror_data_mapper;
     }
 
     /** @return RepositoryHeaderPresenter */
@@ -141,6 +148,10 @@ class RepositoryHeaderPresenterBuilder
             $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $gerrit_user);
             $clone_urls->setGerritUrl($clone_url);
         }
-        return new ClonePresenter($clone_urls);
+
+        $mirrors = $this->mirror_data_mapper->fetchAllRepositoryMirrors($repository);
+        $clone_urls->setMirrors($mirrors);
+
+        return new ClonePresenter($clone_urls, $repository);
     }
 }

@@ -20,6 +20,8 @@
 
 namespace Tuleap\Git\Repository\View;
 
+use GitRepository;
+
 class ClonePresenter
 {
     /** @var string */
@@ -32,12 +34,18 @@ class ClonePresenter
     /** @var CloneURLPresenter[] */
     public $clone_url_presenters = [];
 
+    /** @var CloneURLPresenter[] */
+    public $ssh_mirrors_presenters = [];
+
     /** @var string */
     public $selected_url;
     /** @var string */
     public $selected_url_label;
 
-    public function __construct(CloneURLs $clone_urls)
+    /** @var bool */
+    public $has_ssh_mirrors;
+
+    public function __construct(CloneURLs $clone_urls, GitRepository $repository)
     {
         if ($clone_urls->hasGerritUrl()) {
             $this->selected_url           = $clone_urls->getGerritUrl();
@@ -57,6 +65,11 @@ class ClonePresenter
             $https_is_selected            = (! $this->selected_url);
             $this->clone_url_presenters[] = $this->getHTTPSCloneURLPresenter($clone_urls, $https_is_selected);
         }
+        if ($clone_urls->hasMirrorLinks()) {
+            $this->ssh_mirrors_presenters = $this->getMirrorLinksCloneURLPresenter($clone_urls, $repository);
+        }
+
+        $this->has_ssh_mirrors = $clone_urls->hasMirrorLinks();
     }
 
     private function getSSHCloneURLPresenter(CloneURLs $clone_urls, $ssh_is_selected)
@@ -97,5 +110,21 @@ class ClonePresenter
             false,
             $clone_urls->hasGerritUrl()
         );
+    }
+
+    private function getMirrorLinksCloneURLPresenter(CloneURLs $clone_urls, GitRepository $repository)
+    {
+        $presenters = [];
+
+        foreach ($clone_urls->getMirrorsLinks() as $mirror) {
+            $presenters[] = new CloneURLPresenter(
+                $repository->getSSHForMirror($mirror),
+                $mirror->name,
+                false,
+                $clone_urls->hasMirrorLinks()
+            );
+        }
+
+        return $presenters;
     }
 }

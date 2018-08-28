@@ -20,8 +20,14 @@
 
 namespace Tuleap\Git\Repository\View;
 
+use Git_Mirror_Mirror;
+
 class CloneURLs
 {
+    /**
+     * @var Git_Mirror_Mirror[]
+     */
+    private $mirrors = [];
     /** @var string */
     private $gerrit_url;
     /** @var string */
@@ -51,6 +57,14 @@ class CloneURLs
     public function setSshUrl($ssh_url)
     {
         $this->ssh_url = $ssh_url;
+    }
+
+    /**
+     * @param Git_Mirror_Mirror[] $urls
+     */
+    public function setMirrors(array $urls)
+    {
+        $this->mirrors = $urls;
     }
 
     /**
@@ -99,5 +113,15 @@ class CloneURLs
     public function hasSshUrl()
     {
         return $this->ssh_url !== null;
+    }
+
+    public function hasMirrorLinks()
+    {
+        return count($this->mirrors) > 0;
+    }
+
+    public function getMirrorsLinks()
+    {
+        return $this->mirrors;
     }
 }

@@ -19,11 +19,21 @@
            value="{{ selected_url }}"
     >
     <div class="tlp-dropdown-menu" role="menu">
-        <span class="tlp-dropdown-menu-title" role="menuitem"
-    >{{# dgettext }}tuleap-git | Clone{{/ dgettext }}</span>
+        <span class="tlp-dropdown-menu-title" role="menuitem">
+            {{# dgettext }}tuleap-git | Clone{{/ dgettext }}
+        </span>
         {{# clone_url_presenters }}
             {{> repository/clone-bar-url }}
         {{/ clone_url_presenters }}
+
+        {{# has_ssh_mirrors }}
+            <span class="tlp-dropdown-menu-title" role="menuitem">
+                {{# dgettext }}tuleap-git | Clone from SSH mirrors{{/ dgettext }}
+            </span>
+            {{# ssh_mirrors_presenters }}
+                {{> repository/clone-bar-url }}
+            {{/ ssh_mirrors_presenters }}
+        {{/ has_ssh_mirrors }}
     </div>
 </div>
 

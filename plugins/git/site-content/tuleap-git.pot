@@ -47,6 +47,9 @@ msgstr ""
 msgid "Clone"
 msgstr ""
 
+msgid "Clone from SSH mirrors"
+msgstr ""
+
 msgid "Clone or download:"
 msgstr ""
 
