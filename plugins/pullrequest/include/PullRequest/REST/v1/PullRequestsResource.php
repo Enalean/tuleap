@@ -456,7 +456,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pull_request_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
-        $git_repository_destination      = $this->getRepository($pull_request->getRepositoryId());
+        $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
         $executor                        = $this->getExecutor($git_repository_destination);
 
         $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
