@@ -1,0 +1,61 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* scss-lint:disable SelectorFormat, LeadingZero, MergeableSelector, QualifyingElement, HexNotation */
+
+#gitphp.plugin_git_gitphp {
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+#gitphp.plugin_git_gitphp .page_header {
+    height: auto;
+    background: whiteSmoke;
+}
+
+#gitphp.plugin_git_gitphp td,
+#gitphp.plugin_git_gitphp td.link,
+#gitphp.plugin_git_gitphp div.search {
+    /* bootstrap default size */
+    font-size: 14px;
+}
+
+#gitphp.plugin_git_gitphp a.title,
+#gitphp.plugin_git_gitphp > table {
+    margin-left: 0.5em;
+}
+
+#gitphp.plugin_git_gitphp div.page_footer {
+    display: flex;
+    justify-content: flex-end;
+    height: auto;
+    margin-top: 1em;
+    background: whiteSmoke;
+}
+
+#gitphp.plugin_git_gitphp a.rss_logo {
+    margin: 0 0 0 5px;
+}
+
+#gitphp.plugin_git_gitphp div.diff_info,
+#gitphp.plugin_git_gitphp tr.dark,
+#gitphp.plugin_git_gitphp div.title {
+    background: #FCFCFC;
+}

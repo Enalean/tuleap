@@ -190,6 +190,9 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $index_view->display($url);
 
         if (! $url->isADownload($request)) {
+            if (\ForgeConfig::get('git_repository_bp')) {
+                $renderer->renderToPage('repository/footer', []);
+            }
             $layout->footer([]);
         }
     }
