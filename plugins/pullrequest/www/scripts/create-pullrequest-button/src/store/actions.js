@@ -17,35 +17,59 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getBranches } from "../api/rest-querier.js";
+import { getBranches, createPullrequest } from "../api/rest-querier.js";
+import { redirectTo } from "../helpers/window-helper.js";
 
 export async function init(
     context,
-    { repository_id, parent_repository_id, parent_repository_name }
+    { repository_id, project_id, parent_repository_id, parent_repository_name, parent_project_id }
 ) {
-    const branches = (await getBranches(repository_id)).map(addDisplayName);
+    const branches = (await getBranches(repository_id)).map(extendBranch);
     context.commit("setSourceBranches", branches);
 
     if (parent_repository_id) {
         const parent_repository_branches = (await getBranches(parent_repository_id)).map(
-            addDisplayNameForParent
+            extendBranchForParent
         );
         context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
     } else {
         context.commit("setDestinationBranches", branches);
     }
 
-    function addDisplayName(branch) {
+    function extendBranch(branch) {
         return {
             display_name: branch.name,
+            repository_id,
+            project_id,
             ...branch
         };
     }
 
-    function addDisplayNameForParent(branch) {
+    function extendBranchForParent(branch) {
         return {
             display_name: `${parent_repository_name} : ${branch.name}`,
+            repository_id: parent_repository_id,
+            project_id: parent_project_id,
             ...branch
         };
+    }
+}
+
+export async function create(context, { source_branch, destination_branch }) {
+    try {
+        const pullrequest = await createPullrequest(
+            source_branch.repository_id,
+            source_branch.name,
+            destination_branch.repository_id,
+            destination_branch.name
+        );
+        redirectTo(
+            `/plugins/git/?action=pull-requests&repo_id=${
+                destination_branch.repository_id
+            }&group_id=${destination_branch.project_id}#/pull-requests/${pullrequest.id}/overview`
+        );
+    } catch (e) {
+        const { error } = await e.response.json();
+        context.commit("setCreateErrorMessage", error.message);
     }
 }

@@ -24,3 +24,7 @@ export function setSourceBranches(state, branches) {
 export function setDestinationBranches(state, branches) {
     state.destination_branches = branches;
 }
+
+export function setCreateErrorMessage(state, create_error_message) {
+    state.create_error_message = create_error_message;
+}

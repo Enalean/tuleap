@@ -17,10 +17,12 @@
     <div class="git-repository-actions">
         <div id="git-repository-actions-main-buttons"
              data-repository-id="{{ repository_id }}"
+             data-project-id="{{ project_id }}"
              data-is-migrated-to-gerrit="{{ is_migrated_to_gerrit }}"
             {{# parent_repository_presenter }}
                 data-parent-repository-id="{{ parent_repository_id }}"
                 data-parent-repository-name="{{ parent_repository_name }}"
+                data-parent-project-id="{{ parent_project_id }}"
             {{/ parent_repository_presenter }}
         ></div>
         <div class="git-repository-actions-spacer"></div>

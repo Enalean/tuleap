@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    source_branches: [],
-    destination_branches: [],
-    create_error_message: ""
-};
+export function redirectTo(new_href) {
+    window.location.href = new_href;
+}

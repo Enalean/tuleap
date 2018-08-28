@@ -39,8 +39,10 @@ export default {
     },
     props: {
         repository_id: Number,
+        project_id: Number,
         parent_repository_id: Number,
-        parent_repository_name: String
+        parent_repository_name: String,
+        parent_project_id: Number
     },
     data() {
         return {
@@ -50,8 +52,10 @@ export default {
     mounted() {
         this.$store.dispatch("init", {
             repository_id: this.repository_id,
+            project_id: this.project_id,
             parent_repository_id: this.parent_repository_id,
-            parent_repository_name: this.parent_repository_name
+            parent_repository_name: this.parent_repository_name,
+            parent_project_id: this.parent_project_id
         });
         const modal = this.$refs.modal.$el;
         this.modal = createModal(modal);
