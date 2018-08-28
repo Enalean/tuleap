@@ -53,6 +53,9 @@ msgstr ""
 msgid "Clone or download:"
 msgstr ""
 
+msgid "Download"
+msgstr ""
+
 msgid "Fork repositories"
 msgstr ""
 
@@ -131,6 +134,9 @@ msgid "User, group, email"
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
+msgstr ""
+
+msgid "Zip"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission for Git"

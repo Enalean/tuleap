@@ -70,6 +70,9 @@ msgstr "Cloner depuis les miroirs SSH"
 msgid "Clone or download:"
 msgstr "Cloner ou télécharger :"
 
+msgid "Download"
+msgstr "Télécharger"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 
@@ -151,6 +154,9 @@ msgstr "Utilisateur, groupe, email"
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."
+
+msgid "Zip"
+msgstr "Zip"
 
 msgid "{{ user_group_name }} has no global permission for Git"
 msgstr "{{ user_group_name }} n'a pas de permission globale pour Git"
