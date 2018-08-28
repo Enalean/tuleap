@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 
@@ -98,8 +99,7 @@ class ArtifactRulesManager {
         // $values[$field_id]['field'] = artifactfield Object
         // $values[$field_id]['values'][] = selected value
         $values = array();
-        reset($value_field_list);
-        while (list($field_name,$value) = each($value_field_list)) {
+        foreach ($value_field_list as $field_name => $value) {
             $field = $art_field_fact->getFieldFromName($field_name);
             $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
         }
@@ -120,22 +120,32 @@ class ArtifactRulesManager {
         }
         
         $error_occured = false;
-        reset($dependencies);
-        while(!$error_occured && (list($source,) = each($dependencies))) {
+        foreach ($dependencies as $source => $dep) {
+            if ($error_occured) {
+                break;
+            }
             if (isset($values[$source])) {
-                reset($dependencies[$source]);
-                while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
+                foreach ($dependencies[$source] as $target => $dep_source_value) {
+                    if ($error_occured) {
+                        break;
+                    }
                     if (isset($values[$target])) {
-                        reset($values[$target]['values']);
-                        while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
+                        foreach ($values[$target]['values'] as $target_value) {
+                            if ($error_occured) {
+                                break;
+                            }
                             //Foreach target values we look if there is at least one source value whith corresponding rule valid
                             $valid = false;
-                            reset($values[$source]['values']);
-                            while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
+                            foreach ($values[$source]['values'] as $source_value) {
+                                if ($valid) {
+                                    break;
+                                }
                                 $applied = false;
-                                reset($dependencies[$source][$target]);
-                                while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-                                    if ($dependencies[$source][$target][$rule]->canApplyTo(
+                                foreach ($dependencies[$source][$target] as $rule) {
+                                    if ($applied && $valid) {
+                                        break;
+                                    }
+                                    if ($rule->canApplyTo(
                                         $artifact_type_id, 
                                         $source, 
                                         $source_value, 
@@ -143,7 +153,7 @@ class ArtifactRulesManager {
                                         $target_value))
                                     {
                                         $applied = true;
-                                        $valid = $dependencies[$source][$target][$rule]->applyTo(
+                                        $valid = $rule->applyTo(
                                             $artifact_type_id, 
                                             $source, 
                                             $source_value, 
@@ -220,7 +230,10 @@ class ArtifactRulesManager {
         } else {
             $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
             $found = false;
-            while (!$found && (list(,$rule) = each($rules))) {
+            foreach ($rules as $rule) {
+                if ($found) {
+                    break;
+                }
                 if ($rule->source_field == $target_id) {
                     $found = $this->isCyclic($artifact_type_id, $source_id, $rule->target_field);
                 }
@@ -241,7 +254,10 @@ class ArtifactRulesManager {
     function fieldHasTarget($artifact_type_id, $field_id) {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
+        foreach ($rules as $rule) {
+            if ($found) {
+                break;
+            }
             $found = ($rule->source_field == $field_id);
         }
         return $found;
@@ -250,7 +266,10 @@ class ArtifactRulesManager {
     function fieldHasSource($artifact_type_id, $field_id) {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
+        foreach ($rules as $rule) {
+            if ($found) {
+                break;
+            }
             $found = ($rule->target_field == $field_id);
         }
         return $found;
@@ -259,7 +278,10 @@ class ArtifactRulesManager {
     function valueHasTarget($artifact_type_id, $field_id, $value_id, $target_id) {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
+        foreach ($rules as $rule) {
+            if ($found) {
+                break;
+            }
             $found = ($rule->source_field == $field_id && $rule->source_value == $value_id && $rule->target_field == $target_id);
         }
         return $found;
@@ -268,7 +290,10 @@ class ArtifactRulesManager {
     function valueHasSource($artifact_type_id, $field_id, $value_id, $source_id) {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
+        foreach ($rules as $rule) {
+            if ($found) {
+                break;
+            }
             $found = ($rule->target_field == $field_id && $rule->target_value == $value_id && $rule->source_field == $source_id);
         }
         return $found;
@@ -277,7 +302,10 @@ class ArtifactRulesManager {
     function ruleExists($artifact_type_id, $source_id, $target_id) {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         $found = false;
-        while (!$found && (list(,$rule) = each($rules))) {
+        foreach ($rules as $rule) {
+            if ($found) {
+                break;
+            }
             $found = ($rule->source_field == $source_id && $rule->target_field == $target_id);
         }
         return $found;

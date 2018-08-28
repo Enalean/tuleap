@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -146,9 +146,7 @@ class ArtifactFieldFactory {
 	function getAllUsedFields() {
 
 		$result_fields = array();
-		reset($this->USAGE_BY_NAME);
-	
-		while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+        foreach ($this->USAGE_BY_NAME as $key => $field) {
 			if ( $field->getUseIt() == 1 ) {
 				$result_fields[$key] = $field;
 			}
@@ -167,9 +165,7 @@ class ArtifactFieldFactory {
 	function getAllUnusedFields() {
 
 		$result_fields = array();
-		reset($this->USAGE_BY_NAME);
-	
-		while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+        foreach ($this->USAGE_BY_NAME as $key => $field) {
 			if ( $field->getUseIt() == 0 ) {
 				$result_fields[$key] = $field;
 			}
@@ -194,9 +190,8 @@ class ArtifactFieldFactory {
         
 	    $vfl = array();
 	    if ($post_method) {
-			reset($_POST);
-			while ( list($key, $val) = each($_POST)) {
-			    //verify if the prefix param is given and cut the 
+            foreach ($_POST as $key => $val) {
+			    //verify if the prefix param is given and cut the
 			    //prefix from the key
 			    if ($prefix != null) {
 				$pos = strpos($key,$prefix);
@@ -223,9 +218,8 @@ class ArtifactFieldFactory {
 			    }
 			}
 	    } else {
-			reset($_GET);
-			while ( list($key, $val) = each($_GET)) {
-			    if (isset($this->USAGE_BY_NAME[$key])) {
+            foreach ($_GET as $key => $val) {
+				if (isset($this->USAGE_BY_NAME[$key])) {
 					$vfl[$key] = $request->get($key);
 					//echo "Accepted key = ".$key." val = $val<BR>";
 			    } else {
@@ -292,8 +286,7 @@ class ArtifactFieldFactory {
 	    global $Language;
 	
 	    $bad_fields = array();
-	    reset($field_array);
-	    while ( list($key, $val) = each($field_array)) {
+        foreach ($field_array as $key => $val) {
 	        //Those fields are automatically filled out
 	        if ($key != 'artifact_id' && $key != 'open_date' && $key != 'last_update_date') {
 	            $field = $this->getFieldFromName($key);
@@ -335,10 +328,8 @@ class ArtifactFieldFactory {
 	 */
 	function getAllFieldsNotShownOnAdd() {
 	  $result_fields = array();
-	  reset($this->USAGE_BY_NAME);
-	  
-	  while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
-	    if ( $field->getUseIt() == 1 && 
+	  foreach ($this->USAGE_BY_NAME as $key => $field) {
+	    if ( $field->getUseIt() == 1 &&
 		 !$field->userCanSubmit($this->ArtifactType->Group->getID(),$this->ArtifactType->getID())) {
 	      $result_fields[$key] = $field->getDefaultValue();
 	    }
@@ -402,9 +393,7 @@ class ArtifactFieldFactory {
     function copyFields($atid_dest, $mapping_fieldset_array,$ugroup_mapping=false) {
 	  global $Language;
 
-	  reset($this->USAGE_BY_NAME);
-	
-	  while (list($key,$field) = each($this->USAGE_BY_NAME) ) {
+      foreach ($this->USAGE_BY_NAME as $field) {
 	      //$field = new ArtifactField();
 	      //$field->setFromArray($field_array);
 	      

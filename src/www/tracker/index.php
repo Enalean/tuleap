@@ -2,7 +2,7 @@
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2011 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -908,7 +908,9 @@ if ( $func == 'gotoid' ) {
                         $arf = new ArtifactReportFactory($ath);
                         if ($report = $arf->getArtifactReportHtml($report_id, $atid)) {
                             //Todo: check that the user can update the report
-                            list($id,$new_position) = each($reordercolumns);
+                            $id           = key($reordercolumns);
+                            $new_position = current($reordercolumns);
+                            next($reordercolumns);
                             $dao = new ArtifactReportFieldDao(CodendiDataAccess::instance());
                             if ($new_position == '-1') {
                                 $new_position = 'end';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -341,7 +341,7 @@ class ArtifactFactory {
                 reset($result_fields);  
                 $fields['severity_id'] = $severity_id;
                 $fields['id'] = $artifact_id;
-                while (list($key,$field) = each($result_fields) ) {
+                foreach ($result_fields as $key => $field) {
                     $value = $result[$i][$key];
                     $fields[$key] = $value;
                 }

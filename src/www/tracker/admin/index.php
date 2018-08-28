@@ -1,6 +1,6 @@
 <?php
 //
-// Copyright (c) Enalean SAS, 2017. All rights reserved
+// Copyright (c) Enalean SAS, 2017-2018. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
 // 
@@ -250,7 +250,7 @@ if ($group_id && !$atid) {
 			// now insert all the field entries in the artifact_report_field table
 			$aff = new ArtifactFieldFactory($ath);
 			$fields = $aff->getAllUsedFields();
-			while ( list($key, $field) = each($fields) ) {
+			foreach ($fields as $field) {
 				$cb_search = 'CBSRCH_'.$field->getName();
 				$cb_report = 'CBREP_'.$field->getName();
 				$tf_search = 'TFSRCH_'.$field->getName();

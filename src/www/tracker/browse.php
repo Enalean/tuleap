@@ -1,16 +1,27 @@
 <?php
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-//
-// 
-//
-//
-//	Originally by to the SourceForge Team,1999-2000
-//
-//  Parts of code come from bug_util.php (written by Laurent Julliard)
-//
-//  Written for Codendi by Stephane Bouhet
-//
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Originally by to the SourceForge Team,1999-2000
+ *
+ * Parts of code come from bug_util.php (written by Laurent Julliard)
+ * Written for Codendi by Stephane Bouhet
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 //require_once('common/tracker/ArtifactFactory.class.php');
 
@@ -139,7 +150,7 @@ if (!$art_report_html) {
    advanced which would greatly complexifies the code)
  ================================================== */
 $all_prefs = array();
-while (list($field,$value_id) = each($prefs)) {
+foreach ($prefs as $field => $value_id) {
 	$field_object = $art_field_fact->getFieldFromName($field);
     if (!is_array($value_id)) {
 		unset($prefs[$field]);
@@ -231,7 +242,7 @@ if (!$request->exist('set')) {
 	
 		if ($custom_pref) {
 		    $pref_arr = explode('&',substr($custom_pref,1));
-		    while (list(,$expr) = each($pref_arr)) {
+		    foreach ($pref_arr as $expr) {
 				// Extract left and right parts of the assignment
 				// and remove the '[]' array symbol from the left part
 				list($field,$value_id) = explode('=',$expr);
@@ -287,9 +298,9 @@ if ($set=='my') {
     // and then build the preferences array accordingly
     // Exclude the group_id parameter
     $pref_stg="";
-    reset($prefs);
-    while (list($field,$arr_val) = each($prefs)) {
-        while (list(,$value_id) = each($arr_val)) {
+    foreach ($prefs as $field => $arr_val) {
+        while ($value_id = current($arr_val)) {
+            next($arr_val);
             if (!is_array($value_id)) {
                 // Don't add [] for date operator (not really a field)
                 if (substr($field, 0 - strlen('_op')) == '_op') {

@@ -110,7 +110,7 @@ class ArtifactHtml extends Artifact {
                 
                 $i = 0;
                 $fields_in_fieldset = $result_fieldset->getAllUsedFields();
-                while ( list($key, $field) = each($fields_in_fieldset) ) {
+                foreach ($fields_in_fieldset as $field) {
                     if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
                         $field_html = $this->_getFieldLabelAndValueForUser($group_id, $group_artifact_id, $field, $user_id, $pv);
                         if ($field_html) {
@@ -539,8 +539,8 @@ class ArtifactHtml extends Artifact {
             
             $i = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
-            
-            while ( list($key, $field) = each($fields_in_fieldset) ) {
+
+            foreach ($fields_in_fieldset as $field) {
     
                 $field_html = new ArtifactFieldHtml($field);
                 //echo $field_html->dumpStandard()."<br>";
@@ -942,7 +942,7 @@ class ArtifactHtml extends Artifact {
             
             $i = 0;
             $fields_in_fieldset = $result_fieldset->getAllUsedFields();
-            while ( list($key, $field) = each($fields_in_fieldset) ) {
+            foreach ($fields_in_fieldset as $field) {
 
                 $field_html = new ArtifactFieldHtml($field);
         

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -239,8 +239,7 @@ class ArtifactFieldSet {
 	 */
 	function getAllUsedFields() {
         $result_fields = array();
-        reset($this->ArtifactFields);
-        while (list($key,$field) = each($this->ArtifactFields) ) {
+        foreach ($this->ArtifactFields as $key => $field) {
             if ( $field->IsUsed() ) {
                 $result_fields[$key] = $field;
             }
@@ -255,8 +254,7 @@ class ArtifactFieldSet {
 	 */
 	function getAllUnusedFields() {
         $result_fields = array();
-        reset($this->ArtifactFields);
-        while (list($key,$field) = each($this->ArtifactFields) ) {
+        foreach ($this->ArtifactFields as $key => $field) {
             if ( ! $field->IsUsed() ) {
                 $result_fields[$key] = $field;
             }
@@ -283,8 +281,10 @@ class ArtifactFieldSet {
         } else {
             $ok = false;
             $fields = $this->getAllUsedFields();
-            reset($fields);
-            while (!$ok && list(,$field) = each($fields)) {
+            foreach ($fields as $field) {
+                if ($ok) {
+                    break;
+                }
                 if (!$field->isSpecial()) {
                     $ok = $field->userCanSubmit($group_id, $group_artifact_id, $user_id);
                 }

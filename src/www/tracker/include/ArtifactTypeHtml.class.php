@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -380,7 +380,10 @@ EOS;
             //We remove the pseudo field "comment_type"
             $comment_type_field_id = false;
             reset($ugroups_permissions);
-            while((list($key,$value) = each($ugroups_permissions)) && !$comment_type_field_id) {
+            foreach ($ugroups_permissions as $key => $value) {
+                if ($comment_type_field_id) {
+                    break;
+                }
                 if ($value['field']['shortname'] === "comment_type_id") {
                     $comment_type_field_id = $key;
                 }
@@ -431,7 +434,7 @@ EOS;
                                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
             }
             reset($ugroups_permissions);
-            list($key, $value) = each($ugroups_permissions);
+            $key = key($ugroups_permissions);
 
 
             //header
@@ -1018,12 +1021,12 @@ EOS;
         
         $html = "";
 		$tracker_url = '?group_id='.(int)$this->Group->getID().'&atid='.(int)$this->getID();
-        
-        while (list($fieldset_id, $fieldset) = each($fieldsets_with_used_fields)) {
+
+        foreach ($fieldsets_with_used_fields as $fieldset) {
             $used_fields_in_fieldset = $fieldset->getAllUsedFields();
             // separation between fieldsets
             $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</td></tr>';
-            while (list($key, $field) = each($used_fields_in_fieldset) ) {
+            foreach ($used_fields_in_fieldset as $field) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
                 
@@ -1055,12 +1058,12 @@ EOS;
 		}
         
         $html = '';
-        
-        while (list($fieldset_id, $fieldset) = each($fieldsets_with_unused_fields)) {
+
+        foreach ($fieldsets_with_unused_fields as $fieldset) {
             $unused_fields_in_fieldset = $fieldset->getAllUnusedFields();
             // separation between fieldsets
             $html .= '<tr class="fieldset_separator"><td colspan="7">'. $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</td></tr>';
-            while (list($key, $field) = each($unused_fields_in_fieldset) ) {
+            foreach ($unused_fields_in_fieldset as $field) {
                 $rank = ($field->getPlace()?$field->getPlace():"-");
                 $status = ($field->getUseIt()?$Language->getText('tracker_include_type','used'):$Language->getText('tracker_include_type','unused'));
                 
@@ -1464,13 +1467,11 @@ EOS;
 		//$fields = $art_field_fact->getAllUsedFields();
         $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 		$html = "";
-		while (list($fieldset_id, $fieldset) = each($fieldsets)) {
-            
+        foreach ($fieldsets as $fieldset) {
             $html .= '<tr class="fieldset_separator"><td colspan="3">'. $hp->purify(SimpleSanitizer::unsanitize($fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</td></tr>';
             
             $fields = $fieldset->getAllUsedFields();
-            while (list($field_name,$field) = each($fields)) {
-            
+            foreach ($fields as $field) {
               // Special case for special fields (excluded comment_type_id)
               if ( (($field->getName() != "comment_type_id")&&($field->isSpecial())) ||
                    (($field->getName() == "status_id") && !user_is_super_user()) ) {
@@ -2003,8 +2004,10 @@ EOS;
 		} else {
             $ok = false;
             if (count($notifs)) {
-                reset($notifs);
-                while(!$ok && (list($id,) = each($notifs))) {
+                foreach ($notifs as $id => $value) {
+                    if ($ok) {
+                        break;
+                    }
                     $ok = $notifs[$id]->getAddresses();
                 }
             }
@@ -2250,8 +2253,7 @@ EOS;
             
 	    //if ($mass_change_ids) {
             	echo '<H2>'.$Language->getText('tracker_include_type','changing_items',count($mass_change_ids)).' </H2>';
-		reset($mass_change_ids);
-		while ( list($key, $val) = each($mass_change_ids)) {
+		foreach ($mass_change_ids as $key => $val) {
             $url = '/tracker/?func=detail&group_id='. (int)$group_id .'&aid='. (int)$val .'&atid='. (int)$atid;
 			if ($key == 0) echo '<a href="'. $url .'">'. $hp->purify($this->getItemName(), CODENDI_PURIFIER_CONVERT_HTML) .' #'. (int)$val .'</a>';
 			if ($key > 0) echo ', <a href="'. $url .'"> #'. (int)$val .'</a>';
@@ -2267,8 +2269,7 @@ EOS;
             <INPUT TYPE="HIDDEN" NAME="func" VALUE="postmasschange">
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.(int)$group_id.'">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.(int)$atid.'">';
-		reset($mass_change_ids);
-		while (list(,$val) = each($mass_change_ids)) {
+		foreach($mass_change_ids as $val) {
 			echo '
 	    <INPUT TYPE="HIDDEN" NAME="mass_change_ids[]" VALUE="'. $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) .'">';
 		}
@@ -2301,8 +2302,7 @@ EOS;
         
 		$i = 0;            
             	$result_fields = $art_field_fact->getAllUsedFields();
-        	while ( list($key, $field) = each($result_fields) ) {
-                
+        	foreach ($result_fields as $field) {
                 	$field_html = new ArtifactFieldHtml($field);
                 
                         // if the field is a special field (except summary and details) 

@@ -159,7 +159,7 @@ class Artifact {
         // the values for these generic fields to data_array
         $fields = $art_field_fact->getAllUsedFields();
 
-        while (list($key,$field) = each($fields) ) {
+        foreach ($fields as $field) {
             //echo $field->getName()."-".$field->getID()."<br>";
             // Skip! Standard field values fectched in previous query
             // and comment_type_id is not stored in artifact_field_value table
@@ -395,7 +395,7 @@ class Artifact {
         
         // We check the submitted fields to see if the user has the permissions to submit it
         if (!$import) {
-            while ( list($key, $val) = each($vfl)) {
+            foreach ($vfl as $key => $val) {
                 $field = $art_field_fact->getFieldFromName($key);
                 if ($field && (!$field->getName() == 'comment_type_id')) {   // SR #684 we don't check the perms for the field comment type
                     if (! $field->userCanSubmit($group->getID(),$group_artifact_id,user_getid())) {
@@ -448,7 +448,7 @@ class Artifact {
         
         // add default values for fields that have not been shown
         $add_fields = $art_field_fact->getAllFieldsNotShownOnAdd();
-        while (list($key,$def_val) = each($add_fields)) {
+        foreach ($add_fields as $key => $def_val) {
             if (!array_key_exists($key,$vfl)) $vfl[$key] = $def_val;
         }
         
@@ -479,7 +479,6 @@ class Artifact {
         //
         //Reference manager for cross reference
         $reference_manager = ReferenceManager::instance();
-        reset($vfl);
         $vfl_cols = '';
         $vfl_values = '';
         $text_value_list=array();
@@ -543,7 +542,7 @@ class Artifact {
                 //  Insert the field values for no standard field
                 //
                 $fields = $art_field_fact->getAllUsedFields();
-                while (list($field_name,$field) = each($fields)) {
+                foreach ($fields as $field_name => $field) {
                     
                     // skip over special fields  
                     if ( ($field->isSpecial())||($field->isStandardField()) ) {
@@ -721,8 +720,8 @@ class Artifact {
 
         $art_field_fact = new ArtifactFieldFactory($this->ArtifactType);
         $artifact_import = new ArtifactImport($this->ArtifactType, $art_field_fact, $this->ArtifactType->Group);
-        
-      	while (list(,$arr) = each($parsed_comments)) {        
+
+        foreach ($parsed_comments as $arr) {
 		  	$by = $arr['by'];
 			if ($by == "100") {
 				//this case should not exist in new trackers but
@@ -840,8 +839,7 @@ class Artifact {
         $text_value_list=array();
         $changes = array();
         $upd_list = '';
-        reset($vfl);
-        while (list($field_name,$value) = each($vfl)) {
+        foreach ($vfl as $field_name => $value) {
                 
             $field = $art_field_fact->getFieldFromName($field_name);
                 
@@ -897,7 +895,7 @@ class Artifact {
 				//don't take into account the none value if there are several values selected
 				if (count($values) > 1) {
 					$temp = array();
-					while (list($i,$v) = each($values)) {
+                    foreach ($values as $i => $v) {
 						if ($v == 100) {
 							unset($values[$i]);
 							$unset = true;
@@ -1022,8 +1020,7 @@ class Artifact {
 		$request = HTTPRequest::instance();
 	    //for masschange look at the special case of changing the submitted_by param
 	    if ($masschange) {
-			reset($_POST);
-			while ( list($key, $val) = each($_POST)) {
+            foreach ($_POST as $key => $val) {
 	            $val = $request->get($key); //Don't use _POST value
 				if ($key == 'submitted_by' && $val != $Language->getText('global','unchanged')) {
 					$sql = "UPDATE artifact SET submitted_by=". db_ei($val) ." WHERE artifact_id = ". db_ei($this->getID()) ;
@@ -1196,8 +1193,7 @@ class Artifact {
 	
 	//calculate old_values to put into artifact_history
 	$old_value=$this->getCCEmails();
-    reset($arr_email);
-        while (list(,$cc) = each($arr_email)) {
+        foreach ($arr_email as $cc) {
             // Add this cc only if not there already
             if (!$this->existCC($cc)) {
                 $changed = true;
@@ -1256,8 +1252,7 @@ class Artifact {
 		$ok = false;
 	}
 
-	reset($arr_email);
-	while (list(,$cc) = each($arr_email)) {
+	foreach ($arr_email as $cc) {
                 $changed = true;
                 $res = $this->insertCC($cc,$user_id,$comment,$date);
                 if (!$res) { $ok = false; } 
@@ -1411,7 +1406,7 @@ class Artifact {
         
         $ok = true;
         $ids = explode(",",$artifact_id_dependent);
-        while (list(,$id) = each($ids)) {
+        foreach ($ids as $id) {
             // Add this id only if not already exist
             //echo "add id=".$id."<br>";
             
@@ -1880,7 +1875,7 @@ class Artifact {
 			if ($field_value && (count($field_value) > 0) ) {
 				$val_func = $field->getValueFunction();
 				if ( $val_func[0] != "") {
-                			while (list (,$user_id)=each ($field_value)) {
+                			foreach ($field_value as $user_id) {
                     				if ( ($user_id) && ($user_id != 100) ) {
                     				    $curr_assignee = UserManager::instance()->getUserById($user_id);	
 						            if ((!array_key_exists($user_id, $user_ids) || !$user_ids[$user_id]) && 
@@ -1896,7 +1891,7 @@ class Artifact {
                 		} else {
 					// we handle now also the case that the assigned_to field is NOT BOUND to a predefined value list
 					// we accept only names that correspond to codendi user names
-					while (list (,$value_id)=each ($field_value)) {
+					foreach ($field_value as $value_id) {
 						$user_name = $field->getValue($this->ArtifactType->getID(),$value_id);
 						$res_u = user_get_result_set_from_unix($user_name);
 						$user_id = db_result($res_u,0,'user_id');
@@ -1951,7 +1946,7 @@ class Artifact {
         if (isset($user_name) && $user_name) {
 		//echo " verify deleted assigned_to - user_name=$user_name ";
 	    $del_arr = explode(",",$user_name);
-	    while (list (,$uname)=each ($del_arr)) {
+	    foreach ($del_arr as $uname) {
 		//echo " uname=$uname ";
             	$res_oa = user_get_result_set_from_unix($uname);
             	$user_id = db_result($res_oa,0,'user_id');
@@ -2157,7 +2152,7 @@ class Artifact {
             $arr_cc[] = $changes['CC']['del'];
         }
                         
-        while (list(,$cc) = each($arr_cc)) {
+        foreach ($arr_cc as $cc) {
             //echo "DBG - CC=$cc<br>";
             if (validate_email($cc)) {
 	        //echo "DBG - CC email - email=".util_normalize_email($cc)."<br>";
@@ -2241,7 +2236,7 @@ class Artifact {
 	//echo "<br>all_ugroups for $user_id = "; print_r($all_ugroups);
 
 	$found_gr = false;
-	while (list($x,$ug) = each($ugroup_sets)) {
+	foreach ($ugroup_sets as $x => $ug) {
 	  $diff1 = array_diff($ug,$all_ugroups);
 	  $diff2 = array_diff($all_ugroups,$ug);
 	  if ( empty($diff1) && empty($diff2) ) {
@@ -2461,8 +2456,7 @@ class Artifact {
 	    $this->groupNotificationList(array_keys($concerned_ids),$user_sets,$ugroup_sets);
 
 	    //echo "<br>user_sets = "; print_r($user_sets); echo ", ugroup_sets = "; print_r($ugroup_sets);
-	    reset($ugroup_sets);
-	    while (list($x,$ugroups) = each($ugroup_sets)) {
+	    foreach ($ugroup_sets as $x => $ugroups) {
             unset($arr_addresses);
             
             $user_ids = $user_sets[$x];
@@ -2789,7 +2783,7 @@ class Artifact {
             $used_fields = $fieldset->getAllUsedFields();
             // fetch list of used fields and the current field values
             // for this artifact
-            while ( list($key, $field) = each($used_fields) ) {
+            foreach ($used_fields as $field) {
 
                 $field_name = $field->getName();
 
@@ -2967,9 +2961,7 @@ class Artifact {
         }
     
         // All the rest of the fields now
-        reset($changes);
-        
-        while ( list($field_name,$h) = each($changes)) {
+        foreach ($changes as $field_name => $h) {
             // If both removed and added items are empty skip - Sanity check
             if (((isset($h['del']) && $h['del']) || (isset($h['add']) && $h['add']))
                 && $this->hasFieldPermission($field_perm, $field_name)) {

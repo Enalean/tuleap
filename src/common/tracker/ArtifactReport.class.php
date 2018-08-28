@@ -365,9 +365,7 @@ class ArtifactReport {
 		
 		if ( count($this->fields) == 0 ) return $query_fields;
 		
-		reset($this->fields);
-
-		while (list($key,$field) = each($this->fields) ) {
+        foreach ($this->fields as $key => $field) {
 			if ( ($field->isShowOnQuery())&&($field->isUsed())) {
                 if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
                     $query_fields[$key] = $field;
@@ -389,9 +387,7 @@ class ArtifactReport {
 
 		if ( count($this->fields) == 0 ) return $result_fields;
 
-		reset($this->fields);
-	
-		while (list($key,$field) = each($this->fields) ) {
+        foreach ($this->fields as $key => $field) {
 			if ( ($field->isShowOnResult())&&($field->isUsed()) ) {
                 if ($field->userCanRead($GLOBALS['group_id'], $this->group_artifact_id)) {
                     $result_fields[$key] = $field;
@@ -414,9 +410,7 @@ class ArtifactReport {
 
 		if ( count($this->fields) == 0 ) return $result_fields;
 
-		reset($this->fields);
-	
-		while (list($key,$field) = each($this->fields) ) {
+        foreach ($this->fields as $key => $field) {
 			if ( $field->isUsed() ) {
 				$result_fields[$key] = $field;
 			}
@@ -436,9 +430,7 @@ class ArtifactReport {
 
 		if ( count($this->fields) == 0 ) return $result_fields;
 
-		reset($this->fields);
-	
-		while (list($key,$field) = each($this->fields) ) {
+        foreach ($this->fields as $key => $field) {
 			if ( ($field->isShowOnResult())&&($field->getUseIt() == 1)&&($field->isMultiSelectBox()||$field->isSelectBox()) ) {
 				$result_fields[$key] = $field;
 			}
@@ -680,9 +672,8 @@ class ArtifactReport {
 	function isvarany($var) {
 		
 	    if (is_array($var)) {
-			reset($var);
-			while (list(,$v) = each($var)) {
-			    if ($v == 0) { return true; }
+            foreach ($var as $v) {
+				if ($v == 0) { return true; }
 			}
 			return false;
 	    } else {
@@ -784,7 +775,7 @@ class ArtifactReport {
 	  $fields_order = array();
 	  
 	  $arr = explode(',',$morder);
-	  while (list(,$attr) = each($arr)) {
+      foreach ($arr as $attr) {
           $key = substr($attr,0,(strlen($attr)-1));
 	    if (isset($this->fields[$key]) && $this->fields[$key]->isUsed() && ('severity' == $key || $this->fields[$key]->isShowOnResult())) {
 	      preg_match("/\s*([^<>]*)([<>]*)/", $attr,$match);
@@ -857,11 +848,7 @@ class ArtifactReport {
 	  
 	  $from = "FROM artifact a";
 	  $where = "WHERE a.group_artifact_id = ". db_ei($this->group_artifact_id) ;
-	  
-	  
-	  
-	  while (list($key,$field) = each($fields) ) {
-	    
+        foreach ($fields as $field) {
 	    //echo $field->getName()."-".$field->getID()."<br>";
 	    
 	    if ($field->isShowOnQuery()) {
@@ -993,11 +980,10 @@ class ArtifactReport {
 	  
 	  if ( count($fields) == 0 )
 	    return;
-	  
-	  while (list($key,$field) = each($fields) ) {
-	    
+
+        foreach ($fields as $field) {
 	    //echo $field->getName()."-".$field->getID()."<br>";
-	    
+
 	    // If the field is a standard field ie the value is stored directly into the artifact table (severity, artifact_id, ...)
 	    if ( $field->isStandardField() ) {
 	      
@@ -1102,7 +1088,7 @@ class ArtifactReport {
 	  // Build the order_by using the fields_order_result array
 	  if ( count($fields_order) > 0 ) {
 	    $i = 1;
-	    while (list($key,$field) = each($fields_order) ) {
+	    foreach ($fields_order as $key => $field) {
 	      if ( $i > 1 ) {
 		$order_by .= ", ";
 	      }
@@ -1140,8 +1126,7 @@ class ArtifactReport {
 		for($i=0;$i<db_numrows($result);$i++) {
 			$res[$i] = db_fetch_array($result);
             if ( $res[$i]['artifact_id'] ) {
-                reset($fields_sb);
-                while (list($field_name,$field) = each($fields_sb)) {
+                foreach ($fields_sb as $field_name => $field) {
 					$values = array();
                     if ( $field->isStandardField() ) {
                         $values[] = $res[$i][$field_name];
