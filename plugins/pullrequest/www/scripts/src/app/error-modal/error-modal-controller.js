@@ -1,18 +1,13 @@
 export default ErrorModalController;
 
-ErrorModalController.$inject = ["$modalInstance", "message"];
+ErrorModalController.$inject = ["modal_instance", "message"];
 
-function ErrorModalController($modalInstance, message) {
+function ErrorModalController(modal_instance, message) {
     const self = this;
 
     Object.assign(self, {
         reloading: false,
         details: false,
-        message,
-        ok
+        message
     });
-
-    function ok() {
-        $modalInstance.close();
-    }
 }

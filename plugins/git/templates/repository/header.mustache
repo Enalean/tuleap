@@ -1,6 +1,6 @@
 <div class="tlp-framed">
     <div class="git-repository-path">{{ repository_path }}</div>
-    <h1 {{# parent_repository_presenter }}class="git-repository-forked-name"{{/ parent_repository_presenter }}">{{ repository_name }}</h1>
+    <h1 class="git-repository-name {{# parent_repository_presenter }}git-repository-forked-name"{{/ parent_repository_presenter }}">{{ repository_name }}</h1>
     {{# parent_repository_presenter }}
         <div class="git-repository-parent">
             {{# dgettext }}
@@ -39,11 +39,3 @@
         {{/ user_is_admin }}
     </div>
 </div>
-
-<div class=" tlp-framed">
-    <section class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-files-o"></i> Files</h1>
-            </div>
-            <section class="tlp-pane-section">

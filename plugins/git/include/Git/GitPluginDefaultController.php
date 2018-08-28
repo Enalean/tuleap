@@ -23,7 +23,6 @@ namespace Tuleap\Git;
 
 use EventManager;
 use GitPlugin;
-use GitRepositoryFactory;
 use HTTPRequest;
 use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
 use Tuleap\Layout\BaseLayout;
@@ -41,19 +40,14 @@ class GitPluginDefaultController implements DispatchableWithRequest
      */
     private $event_manager;
     /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
      * @var RepoHeader
      */
     private $repo_header;
 
-    public function __construct(RouterLink $router_link, GitRepositoryFactory $repository_factory, EventManager $event_manager, RepoHeader $repo_header)
+    public function __construct(RouterLink $router_link, EventManager $event_manager, RepoHeader $repo_header)
     {
         $this->router_link        = $router_link;
         $this->event_manager      = $event_manager;
-        $this->repository_factory = $repository_factory;
         $this->repo_header        = $repo_header;
     }
 
@@ -77,8 +71,6 @@ class GitPluginDefaultController implements DispatchableWithRequest
         $this->event_manager->processEvent(
             new GitAdditionalActionEvent(
                 $request,
-                $layout,
-                $this->repository_factory,
                 $this->repo_header
             )
         );

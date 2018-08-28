@@ -19,3 +19,4 @@
  */
 
 define('PULLREQUEST_BASE_DIR', realpath(__DIR__.'/..'));
+define('PULLREQUEST_BASE_URL', '/plugins/pullrequest');

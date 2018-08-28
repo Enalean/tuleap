@@ -21,37 +21,19 @@
 
 namespace Tuleap\Git;
 
-use GitRepositoryFactory;
 use HTTPRequest;
-use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
-use Tuleap\Layout\BaseLayout;
 
 class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
 {
-    const NAME =  'gitAdditionalAction';
+    const NAME = 'gitAdditionalAction';
     /**
      * @var HTTPRequest
      */
     private $request;
-    /**
-     * @var GitRepositoryFactory
-     */
-    private $repository_factory;
-    /**
-     * @var BaseLayout
-     */
-    private $layout;
-    /**
-     * @var RepoHeader
-     */
-    private $repo_header;
 
-    public function __construct(HTTPRequest $request, BaseLayout $layout, GitRepositoryFactory $repository_factory, RepoHeader $repo_header)
+    public function __construct(HTTPRequest $request)
     {
-        $this->request            = $request;
-        $this->layout             = $layout;
-        $this->repository_factory = $repository_factory;
-        $this->repo_header        = $repo_header;
+        $this->request = $request;
     }
 
     /**
@@ -60,29 +42,5 @@ class GitAdditionalActionEvent implements \Tuleap\Event\Dispatchable
     public function getRequest()
     {
         return $this->request;
-    }
-
-    /**
-     * @return GitRepositoryFactory
-     */
-    public function getRepositoryFactory()
-    {
-        return $this->repository_factory;
-    }
-
-    /**
-     * @return BaseLayout
-     */
-    public function getLayout()
-    {
-        return $this->layout;
-    }
-
-    /**
-     * @return RepoHeader
-     */
-    public function getRepoHeader()
-    {
-        return $this->repo_header;
     }
 }

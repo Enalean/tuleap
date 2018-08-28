@@ -1,49 +1,43 @@
-.inline-comment {
-    align-items: center;
+.pull-request-inline-comment {
     display: flex;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    align-items: center;
     margin: 3px 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 
     .avatar {
         flex: 0 0 auto;
-        height: 30px;
         margin: 0 5px 0 15px;
-        width: 30px;
     }
 
     .comment {
-        background: #ffffff;
-        border-radius: 3px;
-        border: 1px solid #eeeeee;
-        box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
         display: flex;
         flex: 1 1 auto;
         margin: 0 15px 0 0;
+        border: 1px solid $tlp-theme-color;
+        border-radius: 3px;
+        background: $tlp-ui-white;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, .1);
 
         .info {
-            background: #eeeeee;
-            color: #ffffff;
-            font-size: 12px;
             padding: 4px 6px;
+            background: $tlp-theme-color;
+            color: $tlp-ui-white;
+            font-size: 12px;
             white-space: nowrap;
 
             .author {
-                align-items: center;
                 display: flex;
-            }
-
-            .post-date {
-
+                align-items: center;
             }
         }
 
         .content {
-            align-items: center;
-            color: #333;
             display: flex;
+            align-items: center;
+            padding: 3px 6px;
+            color: #333333;
             font-size: 13px;
             line-height: 24px;
-            padding: 3px 6px;
         }
     }
 }

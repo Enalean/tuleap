@@ -1,14 +1,26 @@
-<div class="merge-modal">
-    <div class="modal-header">
-        <h3><i class="fa fa-exclamation-triangle"></i> <span translate>Non fast-forward merge</span></h3>
+<div id="pull-request-modal-warning"
+    class="tlp-modal tlp-modal-warning"
+    role="dialog"
+    aria-labelledby="pull-request-modal-warning-title"
+>
+    <div class="tlp-modal-header">
+        <h1 id="pull-request-modal-warning-title" class="tlp-modal-title-icon">
+            <i class="tlp-modal-title-icon fa fa-exclamation-triangle" aria-hidden="true"></i>
+            <span translate>Non fast-forward merge</span>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ 'Close' | translate }}">
+            ×
+        </div>
     </div>
-
-    <div class="modal-body">
+    <div class="tlp-modal-body">
         <p translate>Pull request destination has diverged. Merge will not resolve in a fast-forward. You can proceed with the merge, or cancel and update your pull request.</p>
     </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-warning" ng-click="merge_modal.proceed()"><span translate>Proceed with merge</span></button>
-        <button class="btn" ng-click="merge_modal.cancel()"><span translate>Cancel</span></button>
+    <div class="tlp-modal-footer">
+        <button type="button" class="tlp-button-warning tlp-modal-action" ng-click="merge_modal.proceed()">
+            <span translate>Proceed with merge</span>
+        </button>
+        <button type="button" class="tlp-button-warning tlp-button-outline tlp-modal-action" ng-click="merge_modal.cancel()">
+            <span translate>Cancel</span>
+        </button>
     </div>
 </div>

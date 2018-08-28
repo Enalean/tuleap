@@ -1,10 +1,11 @@
 import "./merge-modal.tpl.html";
+import controller from "./merge-modal-controller.js";
 
 export default MergeModalService;
 
-MergeModalService.$inject = ["$modal"];
+MergeModalService.$inject = ["TlpModalService"];
 
-function MergeModalService($modal) {
+function MergeModalService(TlpModalService) {
     const self = this;
 
     Object.assign(self, {
@@ -12,10 +13,21 @@ function MergeModalService($modal) {
     });
 
     function showMergeModal() {
-        const modalInstance = $modal.open({
-            templateUrl: "merge-modal.tpl.html",
-            controller: "MergeModalController as merge_modal"
-        });
-        return modalInstance.result;
+        return new Promise(resolve => {
+            TlpModalService.open({
+                templateUrl: "merge-modal.tpl.html",
+                controller,
+                controllerAs: "merge_modal",
+                tlpModalOptions: {
+                    keyboard: false,
+                    backdrop: "static"
+                },
+                resolve: {
+                    shouldMergeCallback: should_merge => {
+                        resolve(should_merge);
+                    }
+                }
+            });
+        }).then(should_merge => should_merge);
     }
 }

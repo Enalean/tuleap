@@ -1,42 +1,40 @@
-<div
-    class="pull-request-summary"
-    ng-click="::summary_controller.goToOverview()"
->
-    <div class="pull-request-summary-details">
+<section ng-click="::summary_controller.goToOverview()">
+    <div class="tlp-pane-header pull-request-summary-top">
         <div class="pull-request-summary-title">
             <span
-                class="title"
+                class="pull-request-summary-title"
                 ng-bind-html="::summary_controller.pull_request.title"
                 ng-click="$event.stopPropagation()"
             ></span>
-            <pull-request-refs
-                class="refs"
-                pull-request-data="::summary_controller.pull_request"
-            ></pull-request-refs>
         </div>
-        <div class="pull-request-summary-metadata">
-            <tuleap-username
-                    class="author"
-                    username="summary_controller.author"
-            ></tuleap-username>
-            <small class="creation-date">
-                <i class="fa fa-calendar"></i>
-                {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
-            </small>
-            <span
-                ng-if="::summary_controller.isAbandoned()"
-                class="status label"
-                translate
-            >Abandoned</span>
-            <span
-                ng-if="::summary_controller.isMerged()"
-                class="status label label-success"
-                translate
-            >Merged</span>
-        </div>
+        <pull-request-refs
+            class="pull-request-summary-refs"
+            pull-request-data="::summary_controller.pull_request"
+        ></pull-request-refs>
+        <div class="pull-request-summary-top-spacer"></div>
+        <labels-box class="pull-request-summary-labels-box"
+                    pull-request-id="{{ ::summary_controller.pull_request.id }}"
+                    project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
+        ></labels-box>
     </div>
-    <labels class="item-labels-box"
-            pull-request-id="{{ ::summary_controller.pull_request.id }}"
-            project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
-    ></labels>
-</div>
+    <div class="pull-request-summary-metadata">
+        <tuleap-username
+                class="pull-request-summary-author"
+                username="summary_controller.author"
+        ></tuleap-username>
+        <span class="pull-request-summary-creation-date">
+            <i class="fa fa-calendar"></i>
+            {{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+        </span>
+        <span
+            ng-if="::summary_controller.isAbandoned()"
+            class="pull-request-summary-status tlp-badge-chrome-silver"
+            translate
+        >Abandoned</span>
+        <span
+            ng-if="::summary_controller.isMerged()"
+            class="pull-request-summary-status tlp-badge-neon-green"
+            translate
+        >Merged</span>
+    </div>
+</section>
