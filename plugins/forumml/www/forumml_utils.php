@@ -32,8 +32,6 @@ define('FORUMML_CC', 34);
 
 require_once(dirname(__FILE__).'/../include/ForumML_Attachment.class.php');
 require_once('common/include/Toggler.class.php');
-require_once('Mail/RFC822.php');
-require_once('PEAR.php');
 
 // Get message headers 
 function plugin_forumml_get_message_headers($id_message) {
@@ -483,10 +481,11 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
         $bodyIsCached = true;
     }
 
-    if (PEAR::isError($from_info = Mail_RFC822::parseAddressList($msg['sender'], $GLOBALS['sys_default_domain'])) || !isset($from_info[0]) || !$from_info[0]->personal) {
+    $from_info = mailparse_rfc822_parse_addresses($msg['sender']);
+    if (! isset($from_info[0])) {
         $from_info = $hp->purify($msg['sender'], CODENDI_PURIFIER_CONVERT_HTML);
     } else {
-        $from_info = '<abbr title="'.  $hp->purify($from_info[0]->mailbox .'@'. $from_info[0]->host, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($from_info[0]->personal, CODENDI_PURIFIER_CONVERT_HTML)  .'</abbr>';
+        $from_info = '<abbr title="'.  $hp->purify($from_info[0]['address'], CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($from_info[0]['display'], CODENDI_PURIFIER_CONVERT_HTML)  .'</abbr>';
     }
         
     echo '<div class="plugin_forumml_message">';
@@ -506,15 +505,16 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     // get CC
     $cc = trim($msg['cc']);
     if ($cc) {
-        if (PEAR::isError($cc_info = Mail_RFC822::parseAddressList($cc, $GLOBALS['sys_default_domain']))) {
+        $cc_info = mailparse_rfc822_parse_addresses($msg['cc']);
+        if (empty($cc_info)) {
             $ccs = $hp->purify($cc, CODENDI_PURIFIER_CONVERT_HTML);
         } else {
             $ccs = array();
             foreach($cc_info as $c) {
-                if (!$c->personal) {
-                    $ccs[] = $hp->purify($c->mailbox .'@'. $c->host, CODENDI_PURIFIER_CONVERT_HTML);
+                if ($c['address'] === $c['display']) {
+                    $ccs[] = $hp->purify($c['address'], CODENDI_PURIFIER_CONVERT_HTML);
                 } else {
-                    $ccs[] = '<abbr title="'. $hp->purify($c->mailbox .'@'. $c->host, CODENDI_PURIFIER_CONVERT_HTML) .'">'.  $hp->purify($c->personal, CODENDI_PURIFIER_CONVERT_HTML)  .'</abbr>';
+                    $ccs[] = '<abbr title="'. $hp->purify($c['address'], CODENDI_PURIFIER_CONVERT_HTML) .'">'.  $hp->purify($c['display'], CODENDI_PURIFIER_CONVERT_HTML)  .'</abbr>';
                 }
             }
             $ccs = implode(', ', $ccs);

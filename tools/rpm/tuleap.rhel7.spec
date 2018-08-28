@@ -97,7 +97,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php56-php-pecl-mailparse
 #Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
