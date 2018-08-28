@@ -88,8 +88,8 @@ use UserManager;
 
 include_once('www/project/admin/permissions.php');
 
-class RepositoryResource extends AuthenticatedResource {
-
+class RepositoryResource extends AuthenticatedResource
+{
     const MAX_LIMIT = 50;
 
     const MIGRATE_PERMISSION_DEFAULT = 'default';
@@ -132,7 +132,8 @@ class RepositoryResource extends AuthenticatedResource {
      */
     private $ci_token_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $git_dao               = new GitDao();
         $this->project_manager = ProjectManager::instance();
         $this->user_manager    = UserManager::instance();
@@ -165,25 +166,28 @@ class RepositoryResource extends AuthenticatedResource {
             $fine_grained_retriever
         );
 
+        $git_plugin  = \PluginFactory::instance()->getPluginByName('git');
+        $url_manager = new \Git_GitRepositoryUrlManager($git_plugin);
+
         $this->representation_builder = new RepositoryRepresentationBuilder(
             $this->git_permission_manager,
             $this->gerrit_server_factory,
             new \Git_LogDao(),
-            $event_manager
+            $event_manager,
+            $url_manager
         );
 
         $project_history_dao     = new ProjectHistoryDao();
         $this->migration_handler = new MigrationHandler(
             $this->git_system_event_manager,
             $this->gerrit_server_factory,
-            new Git_Driver_Gerrit_GerritDriverFactory (new GitBackendLogger()),
+            new Git_Driver_Gerrit_GerritDriverFactory(new GitBackendLogger()),
             $project_history_dao,
             new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao())
         );
 
         $this->ci_token_manager = new CITokenManager(new CITokenDao());
 
-        $git_plugin         = \PluginFactory::instance()->getPluginByName('git');
         $mirror_data_mapper = new \Git_Mirror_MirrorDataMapper(
             new \Git_Mirror_MirrorDao(),
             $this->user_manager,
@@ -215,7 +219,8 @@ class RepositoryResource extends AuthenticatedResource {
             $ugroup_manager,
             $normalizer,
             $permissions_manager,
-            $validator, $sorter,
+            $validator,
+            $sorter,
             $xml_ugroup_retriever
         );
         $fine_grained_replicator            = new FineGrainedPermissionReplicator(
@@ -255,7 +260,6 @@ class RepositoryResource extends AuthenticatedResource {
             $fine_grained_permission_factory
         );
 
-        $url_manager              = new \Git_GitRepositoryUrlManager($git_plugin);
         $this->repository_creator = new RepositoryCreator(
             $this->repository_factory,
             new \Git_Backend_Gitolite(

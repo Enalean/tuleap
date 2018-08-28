@@ -44,9 +44,34 @@ class GitRepositoryRepresentationBase
     public $name;
 
     /**
+     * The last part of the repository's name
+     * For example:
+     * name = tuleap/rhel6/stable
+     * label = stable
+     * @var string
+     */
+    public $label;
+
+    /**
      * @var string
      */
     public $path;
+
+    /**
+     * The repository's path without the project and without the .git suffix.
+     * Used for presentation purposes to highlight a repository's label.
+     * For example:
+     * name = tuleap/rhel6/stable
+     * path = myproject/tuleap/rhel6/stable.git
+     * path_without_project = tuleap/rhel6
+     *
+     * Presentation will be:
+     * tuleap/rhel6
+     * <h1>stable</h1>
+     *
+     * @var string
+     */
+    public $path_without_project;
 
     /**
      * @var string

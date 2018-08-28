@@ -2095,7 +2095,8 @@ class GitPlugin extends Plugin
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory(),
             new Git_LogDao(),
-            EventManager::instance()
+            EventManager::instance(),
+            $this->getGitRepositoryUrlManager()
         );
     }
 

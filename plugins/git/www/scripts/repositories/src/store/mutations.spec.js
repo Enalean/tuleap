@@ -34,7 +34,14 @@ describe("Store mutations", () => {
         });
 
         it("will set the repository label as 'normalized_path' when it is a 'root' repository (without path)", () => {
-            const repositories = [{ name: "archiplasm", path: "myproject/archiplasm.git" }];
+            const repositories = [
+                {
+                    name: "archiplasm",
+                    label: "archiplasm",
+                    path_without_project: "",
+                    path: "myproject/archiplasm.git"
+                }
+            ];
 
             const state = {
                 repositories_for_owner: {},
@@ -50,8 +57,18 @@ describe("Store mutations", () => {
 
         it("Given some repositories and that the selected owner has already some repositories loaded, then It should push them in his list.", () => {
             const repositories = [
-                { name: "boobs/straps/boobstrap4", path: "myproject/boobs/straps/boobstrap4.git" },
-                { name: "angular.js", path: "myproject/u/johnpapa/angular.js.git" }
+                {
+                    name: "boobs/straps/boobstrap4",
+                    label: "boobstrap4",
+                    path_without_project: "boobs/straps",
+                    path: "myproject/boobs/straps/boobstrap4.git"
+                },
+                {
+                    name: "angular.js",
+                    label: "angular.js",
+                    path_without_project: "u/johnpapa",
+                    path: "myproject/u/johnpapa/angular.js.git"
+                }
             ];
 
             const state = {
