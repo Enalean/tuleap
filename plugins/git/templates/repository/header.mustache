@@ -29,6 +29,14 @@
         {{# clone_presenter }}
             {{> repository/clone-bar }}
         {{/ clone_presenter }}
+        {{^ user_is_anonymous }}
+            <a href="{{ fork_url }}"
+               class="tlp-button-primary tlp-button-outline git-repository-actions-button"
+               role="button"
+            >
+                <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
+            </a>
+        {{/ user_is_anonymous }}
         {{# user_is_admin }}
             <a href="{{ repository_admin_url }}"
                class="tlp-button-primary tlp-button-outline git-repository-actions-button"

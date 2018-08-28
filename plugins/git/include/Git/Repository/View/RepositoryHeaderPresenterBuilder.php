@@ -101,12 +101,15 @@ class RepositoryHeaderPresenterBuilder
 
         $admin_url        = $this->url_manager->getRepositoryAdminUrl($repository);
         $zip_download_url = $this->url_manager->getZipDownloadUrl($repository);
+        $fork_url         = $this->url_manager->getForkUrl($repository);
 
         return new RepositoryHeaderPresenter(
             $repository,
             $is_admin,
             $admin_url,
             $zip_download_url,
+            $fork_url,
+            $current_user,
             $clone_presenter,
             $gerrit_status_presenter,
             $parent_repository_presenter
