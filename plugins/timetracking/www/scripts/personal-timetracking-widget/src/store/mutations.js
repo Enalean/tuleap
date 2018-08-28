@@ -60,6 +60,16 @@ export default {
         }
     },
 
+    replaceInCurrentTimes(state, [time, feedback_message]) {
+        const time_to_update_index = state.current_times.findIndex(
+            current_time => current_time.id === time.id
+        );
+        state.current_times[time_to_update_index] = time;
+        state.current_times = sortTimesChronologically(state.current_times);
+        state.rest_feedback.message = feedback_message;
+        state.rest_feedback.type = "success";
+    },
+
     resetErrorMessage(state) {
         state.error_message = "";
     },

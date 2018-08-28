@@ -58,6 +58,9 @@ msgstr ""
 msgid "Time successfully added"
 msgstr ""
 
+msgid "Time successfully updated"
+msgstr ""
+
 msgid "Times"
 msgstr ""
 

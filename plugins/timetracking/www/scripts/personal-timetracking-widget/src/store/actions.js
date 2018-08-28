@@ -18,7 +18,11 @@
  */
 
 import { gettext_provider } from "../gettext-provider.js";
-import { getTrackedTimes, addTime as addTimeQuerrier } from "../api/rest-querier.js";
+import {
+    getTrackedTimes,
+    addTime as addTimeQuerrier,
+    updateTime as updateTimeQuerrier
+} from "../api/rest-querier.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);
@@ -40,12 +44,25 @@ export async function getTimes(context) {
     }
 }
 
-export async function addTime(context, [date, artifact, time, step = null]) {
+export async function addTime(context, [date, artifact, time_value, step]) {
     try {
-        const response = await addTimeQuerrier(date, artifact, time, step);
+        const response = await addTimeQuerrier(date, artifact, time_value, step);
         context.commit("pushCurrentTimes", [
             [response],
             gettext_provider.gettext("Time successfully added")
+        ]);
+        return loadFirstBatchOfTimes(context);
+    } catch (rest_error) {
+        return showRestError(context, rest_error);
+    }
+}
+
+export async function updateTime(context, [date, time_id, time_value, step]) {
+    try {
+        const response = await updateTimeQuerrier(date, time_id, time_value, step);
+        context.commit("replaceInCurrentTimes", [
+            response,
+            gettext_provider.gettext("Time successfully updated")
         ]);
         return loadFirstBatchOfTimes(context);
     } catch (rest_error) {

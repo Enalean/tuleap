@@ -27,7 +27,7 @@
         </tr>
         </thead>
         <tbody>
-        <widget-modal-add-time
+        <widget-modal-edit-time
             v-if="is_add_mode"
             v-on:swapMode="setAddMode"
             v-on:validateTime="addNewTime"
@@ -52,11 +52,11 @@
 import { mapState, mapGetters } from "vuex";
 import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalRow from "./WidgetModalRow.vue";
-import WidgetModalAddTime from "./WidgetModalAddTime.vue";
+import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 
 export default {
     name: "WidgetModalTable",
-    components: { WidgetModalRow, WidgetModalAddTime },
+    components: { WidgetModalRow, WidgetModalEditTime },
     computed: {
         ...mapState(["is_add_mode", "current_times"]),
         ...mapGetters(["get_formatted_aggregated_time"]),

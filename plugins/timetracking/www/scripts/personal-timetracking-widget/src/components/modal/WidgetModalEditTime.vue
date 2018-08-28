@@ -67,21 +67,24 @@
 </template>)
 (<script>
 import { DateTime } from "luxon";
+import { formatMinutes } from "../../time-formatters.js";
 import { TIME_REGEX } from "../../constants.js";
 import { gettext_provider } from "../../gettext-provider.js";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
 
 export default {
-    name: "WigetModalAddTime",
+    name: "WigetModalEditTime",
     props: {
         timeData: Object
     },
     data() {
+        const data = this.timeData || {};
+        const { date = DateTime.local().toISODate(), step = "" } = data;
         return {
-            date: DateTime.local().toISODate(),
-            step: "",
-            time: "",
+            date,
+            step,
+            time: this.timeData ? formatMinutes(this.timeData.minutes) : "",
             error_message: null
         };
     },
