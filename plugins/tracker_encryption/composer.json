@@ -1,0 +1,14 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\TrackerEncryption\\": ["include/", "include/TrackerEncryption/"]
+    },
+    "classmap": ["include/"]
+  },
+  "require": {
+    "phpseclib/phpseclib": "^2.0"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
