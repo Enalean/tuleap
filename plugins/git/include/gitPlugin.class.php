@@ -2507,7 +2507,8 @@ class GitPlugin extends Plugin
             $this->getProjectCreatorStatus(),
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getGitPermissionsManager(),
-            $this->getGerritServerFactory()->getServers()
+            $this->getGerritServerFactory()->getServers(),
+            $this->getMirrorDataMapper()
         );
     }
 

@@ -64,6 +64,9 @@ msgstr "Impossible de supprimer le groupe %s des notifications"
 msgid "Clone"
 msgstr "Cloner"
 
+msgid "Clone from SSH mirrors"
+msgstr "Cloner depuis les miroirs SSH"
+
 msgid "Clone or download:"
 msgstr "Cloner ou télécharger :"
 
