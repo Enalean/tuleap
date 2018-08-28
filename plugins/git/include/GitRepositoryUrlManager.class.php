@@ -64,4 +64,14 @@ class Git_GitRepositoryUrlManager
             ]
         );
     }
+
+    public function getForkUrl(GitRepository $repository)
+    {
+        return GIT_BASE_URL . "/?" . http_build_query(
+            [
+                "group_id" => $repository->getProject()->getID(),
+                "action"   => "fork_repositories"
+            ]
+        );
+    }
 }

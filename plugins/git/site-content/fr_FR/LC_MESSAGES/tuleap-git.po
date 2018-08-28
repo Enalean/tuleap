@@ -73,6 +73,9 @@ msgstr "Cloner ou télécharger :"
 msgid "Download"
 msgstr "Télécharger"
 
+msgid "Fork"
+msgstr "Fork"
+
 msgid "Fork repositories"
 msgstr "Fork de dépôts Git"
 

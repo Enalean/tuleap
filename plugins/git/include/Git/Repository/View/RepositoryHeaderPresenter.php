@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Repository\View;
 
 use GitRepository;
+use PFUser;
 
 class RepositoryHeaderPresenter
 {
@@ -38,21 +39,17 @@ class RepositoryHeaderPresenter
     public $project_id;
     public $is_migrated_to_gerrit;
     public $zip_download_url;
+    public $fork_url;
+    /** @var bool */
+    public $user_is_anonymous;
 
-    /**
-     * @param GitRepository                  $repository
-     * @param bool                           $user_is_admin
-     * @param string                         $repository_admin_url
-     * @param string                         $zip_download_url
-     * @param ClonePresenter                 $clone_presenter
-     * @param GerritStatusPresenter          $gerrit_status_presenter
-     * @param ParentRepositoryPresenter|null $parent_repository_presenter
-     */
     public function __construct(
         GitRepository $repository,
         $user_is_admin,
         $repository_admin_url,
         $zip_download_url,
+        $fork_url,
+        PFUser $user,
         ClonePresenter $clone_presenter,
         GerritStatusPresenter $gerrit_status_presenter,
         ParentRepositoryPresenter $parent_repository_presenter = null
@@ -68,5 +65,7 @@ class RepositoryHeaderPresenter
         $this->clone_presenter             = $clone_presenter;
         $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
         $this->zip_download_url            = $zip_download_url;
+        $this->fork_url                    = $fork_url;
+        $this->user_is_anonymous           = $user->isAnonymous();
     }
 }
