@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\SvnCore\Admin\CacheController;
-use Tuleap\SvnCore\Admin\Renderer;
 use Tuleap\SvnCore\Admin\Router;
 use Tuleap\SvnCore\Cache\ParameterDao;
 use Tuleap\SvnCore\Cache\ParameterRetriever;
@@ -33,7 +33,7 @@ $parameter_retriever = new ParameterRetriever($parameter_dao);
 $parameters          = $parameter_retriever->getParameters();
 $parameter_saver     = new ParameterSaver($parameter_dao, $event_manager);
 $csrf_token          = new CSRFSynchronizerToken('/admin/svn/index.php?pane=index');
-$renderer            = new Renderer();
+$renderer            = new AdminPageRenderer();
 
 $cache_controller = new CacheController($parameters, $parameter_saver, $renderer, $csrf_token);
 
