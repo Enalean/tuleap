@@ -77,12 +77,6 @@ import { mapState } from "vuex";
 
 export default {
     name: "CreatePullrequestModal",
-    data() {
-        return {
-            source_branch: "",
-            destination_branch: ""
-        };
-    },
     computed: {
         ...mapState([
             "source_branches",
@@ -104,6 +98,22 @@ export default {
             }
 
             return "fa fa-spinner tlp-button-icon";
+        },
+        source_branch: {
+            get() {
+                return this.$store.state.selected_source_branch;
+            },
+            set(value) {
+                this.$store.commit("setSelectedSourceBranch", value);
+            }
+        },
+        destination_branch: {
+            get() {
+                return this.$store.state.selected_destination_branch;
+            },
+            set(value) {
+                this.$store.commit("setSelectedDestinationBranch", value);
+            }
         }
     },
     methods: {

@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import state from "./state.js";
+
+const initial_state = { ...state };
+
 export function setSourceBranches(state, branches) {
     state.source_branches = branches;
 }
@@ -35,4 +39,18 @@ export function setHasErrorWhileLoadingBranchesToTrue(state) {
 
 export function setIsCreatinPullRequest(state, is_creating) {
     state.is_creating_pullrequest = is_creating;
+}
+
+export function resetSelection(state) {
+    state.create_error_message = initial_state.create_error_message;
+    state.selected_source_branch = initial_state.selected_source_branch;
+    state.selected_destination_branch = initial_state.selected_destination_branch;
+}
+
+export function setSelectedSourceBranch(state, branch) {
+    state.selected_source_branch = branch;
+}
+
+export function setSelectedDestinationBranch(state, branch) {
+    state.selected_destination_branch = branch;
 }
