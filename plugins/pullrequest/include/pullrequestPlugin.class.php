@@ -102,8 +102,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->setScope(self::SCOPE_SYSTEM);
         bindtextdomain('tuleap-pullrequest', __DIR__ . '/../site-content/');
 
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::SERVICE_CLASSNAMES);
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::GET_REFERENCE);
@@ -123,8 +121,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProjectHistoryEntryValue::NAME);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook('cssfile');
-            $this->addHook('javascript_file');
+            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_INFO);
@@ -163,40 +160,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
-    public function cssfile($params)
-    {
-        if ($this->isAPullrequestRequest()) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getPluginPath() . '/assets/tuleap-pullrequest.css" />';
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getThemePath() . '/css/style.css" />';
-        }
-    }
-
-    public function burningParrotGetStylesheets(array $params)
-    {
-        if ($this->isAPullrequestRequest()) {
-            $theme_include_assets = new IncludeAssets(
-                PULLREQUEST_BASE_DIR . '/www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
-            );
-
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
-        }
-    }
-
-    public function javascript_file() // phpcs:ignore
-    {
-        if ($this->isAPullrequestRequest()) {
-            $include_asset_pullrequest = new IncludeAssets(
-                PULLREQUEST_BASE_DIR . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            echo $include_asset_pullrequest->getHTMLSnippet('move-button-back.js');
-            echo $include_asset_pullrequest->getHTMLSnippet('tuleap-pullrequest.js');
-        }
-    }
-
     /**
      * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
      */
@@ -204,8 +167,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     {
         if ($this->isAPullrequestRequest()) {
             $include_asset_pullrequest = new IncludeAssets(
-                PULLREQUEST_BASE_DIR . '/www/assets',
-                $this->getPluginPath() . '/assets'
+                PULLREQUEST_BASE_DIR . '/../../src/www/assets/pull-requests/scripts',
+                '/assets/pull-requests/scripts/'
             );
 
             $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('move-button-back.js');

@@ -833,6 +833,7 @@ fi
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/statistics
+%{APP_DIR}/src/www/assets/pull-requests
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/export
