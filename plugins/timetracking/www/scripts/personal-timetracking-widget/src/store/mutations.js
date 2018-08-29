@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { sortTimesChronologically } from "../time-formatters";
 
 export default {
     toggleReadingMode(state) {
@@ -31,9 +32,7 @@ export default {
     },
 
     setCurrentTimes(state, times) {
-        state.current_times = times.sort((a, b) => {
-            return new Date(b.date) - new Date(a.date);
-        });
+        state.current_times = sortTimesChronologically(times);
     },
 
     loadAChunkOfTimes(state, [times, total]) {
@@ -71,6 +70,7 @@ export default {
 
     pushCurrentTimes(state, [times, feedback_message]) {
         state.current_times = state.current_times.concat(Object.values(times));
+        state.current_times = sortTimesChronologically(state.current_times);
         state.is_add_mode = false;
         state.rest_feedback.message = feedback_message;
         state.rest_feedback.type = "success";

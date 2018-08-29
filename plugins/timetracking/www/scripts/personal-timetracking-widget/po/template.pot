@@ -31,13 +31,13 @@ msgstr ""
 msgid "No tracked time have been found for this period"
 msgstr ""
 
+msgid "Please check time's format (hh:mm)"
+msgstr ""
+
 msgid "Project"
 msgstr ""
 
 msgid "Search"
-msgstr ""
-
-msgid "Step"
 msgstr ""
 
 msgid "Steps"
@@ -50,6 +50,9 @@ msgid "The time is displayed in hours:minutes"
 msgstr ""
 
 msgid "Time"
+msgstr ""
+
+msgid "Time is required"
 msgstr ""
 
 msgid "Time successfully added"
