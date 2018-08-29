@@ -50,7 +50,6 @@ use Tuleap\Git\Gitolite\SSHKey\Provider\WholeInstanceKeysAggregator;
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\GitViews\ShowRepo\RepoHeaderBuilder;
 use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
@@ -386,7 +385,6 @@ class GitPlugin extends Plugin
         // Only show the javascript if we're actually in the Git pages.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/git.js"></script>';
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/clone_url.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/mass-update.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/webhooks.js"></script>';
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/permissions.js"></script>';
@@ -2484,24 +2482,6 @@ class GitPlugin extends Plugin
 
     /**
      * @access protected for test purpose
-     * @return \Tuleap\Git\GitViews\ShowRepo\RepoHeader
-     */
-    protected function getRepoHeader()
-    {
-        return new Tuleap\Git\GitViews\ShowRepo\RepoHeader(
-            $this->getGitRepositoryUrlManager(),
-            $this->getGerritDriverFactory(),
-            new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
-            $this->getMirrorDataMapper(),
-            $this->getGitPermissionsManager(),
-            $this->getHeaderRenderer(),
-            $this->getGerritServerFactory()->getServers(),
-            $this->getConfigurationParameter('master_location_name')
-        );
-    }
-
-    /**
-     * @access protected for test purpose
      * @return RepositoryHeaderPresenterBuilder
      */
     protected function getRepositoryHeaderPresenterBuilder() {
@@ -2569,7 +2549,6 @@ class GitPlugin extends Plugin
                     $this->getProjectManager(),
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
-                    $this->getRepoHeader(),
                     $this->getThemeManager(),
                     $this->getGitRepositoryHeaderDisplayer()
                 );
@@ -2577,8 +2556,7 @@ class GitPlugin extends Plugin
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
                 return new \Tuleap\Git\GitPluginDefaultController(
                     $this->getChainOfRouters(),
-                    EventManager::instance(),
-                    $this->getRepoHeader()
+                    EventManager::instance()
                 );
             });
         });

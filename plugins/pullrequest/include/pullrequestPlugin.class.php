@@ -56,7 +56,6 @@ use Tuleap\PullRequest\FileUniDiffBuilder;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceBulkConverter;
-use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNamespaceAvailabilityChecker;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRemover;
@@ -72,7 +71,6 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullrequestDisplayer;
 use Tuleap\PullRequest\PullRequestMerger;
 use Tuleap\PullRequest\PullRequestUpdater;
@@ -124,11 +122,8 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
-            $this->addHook(GIT_ADDITIONAL_INFO);
-            $this->addHook(GIT_ADDITIONAL_ACTIONS);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
             $this->addHook(GIT_ADDITIONAL_PERMITTED_ACTIONS);
-            $this->addHook(GIT_ADDITIONAL_HELP_TEXT);
             $this->addHook(GIT_HOOK_POSTRECEIVE_REF_UPDATE, 'gitHookPostReceive');
             $this->addHook(REST_GIT_BUILD_STATUS, 'gitRestBuildStatus');
             $this->addHook(GitRepositoryDeletionEvent::NAME);
@@ -182,29 +177,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0;
     }
 
-    private function getLegacyRouter()
-    {
-        $user_manager           = UserManager::instance();
-        $event_manager          = EventManager::instance();
-        $git_repository_factory = $this->getRepositoryFactory();
-
-        $pull_request_merger  = new PullRequestMerger(
-            new MergeSettingRetriever(new MergeSettingDAO())
-        );
-        $pull_request_creator = new PullRequestCreator(
-            $this->getPullRequestFactory(),
-            new PullRequestDao(),
-            $pull_request_merger,
-            $event_manager,
-            new GitPullRequestReferenceCreator(
-                new GitPullRequestReferenceDAO,
-                new GitPullRequestReferenceNamespaceAvailabilityChecker
-            )
-        );
-
-        return new LegacyRouter($pull_request_creator, $git_repository_factory, $user_manager);
-    }
-
     /**
      * @return Tuleap\PullRequest\PluginInfo
      */
@@ -251,65 +223,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
     }
 
     /**
-     * @see GIT_ADDITIONAL_INFO
-     */
-    public function git_additional_info($params) // phpcs:ignore
-    {
-        $repository = $params['repository'];
-
-        if (! $repository->isMigratedToGerrit()) {
-            $nb_pull_requests = $this->getPullRequestFactory()->getPullRequestCount($repository);
-
-            $renderer  = $this->getTemplateRenderer();
-            $presenter = new AdditionalInfoPresenter($repository, $nb_pull_requests);
-
-            $params['info'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
-        }
-    }
-
-    /**
-     * @see GIT_ADDITIONAL_ACTIONS
-     */
-    public function git_additional_actions($params) // phpcs:ignore
-    {
-        $repository = $params['repository'];
-        $user       = $params['user'];
-
-        if (! $repository
-            || $repository->isMigratedToGerrit()
-            || $user->isAnonymous()
-        ) {
-            return;
-        }
-
-        $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
-        $renderer = $this->getTemplateRenderer();
-        $csrf     = new CSRFSynchronizerToken('/plugins/git/?action=view&repo_id=' . $repository->getId() . '&group_id=' . $repository->getProjectId());
-
-        $branches = $git_exec->getAllBranchNames();
-
-        $dest_branches   = array();
-        foreach ($branches as $branch) {
-            $dest_branches[] = array('repo_id' => $repository->getId(), 'repo_name' => null, 'branch_name' => $branch);
-        }
-
-        $parent_repo = $repository->getParent();
-        if ($parent_repo) {
-            $git_exec        = new GitExec($parent_repo->getFullPath(), $parent_repo->getFullPath());
-            $parent_branches = $git_exec->getAllBranchNames();
-            foreach ($parent_branches as $branch) {
-                $dest_branches[] = array('repo_id' => $parent_repo->getId(), 'repo_name' => $parent_repo->getFullName(), 'branch_name' => $branch);
-            }
-        }
-
-        $has_an_unique_branch    = count($branches) === 1 && count($dest_branches) === 1;
-        $can_create_pull_request = !$has_an_unique_branch && !empty($branches) && !empty($dest_branches);
-
-        $presenter = new AdditionalActionsPresenter($repository, $csrf, $branches, $dest_branches, $can_create_pull_request);
-        $params['actions'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
-    }
-
-    /**
      * @see GIT_ADDITIONAL_BODY_CLASSES
      */
     public function git_additional_body_classes($params) // phpcs:ignore
@@ -337,21 +250,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         if ($event->getRequest()->get('action') === 'pull-requests') {
             $layout          = $this->getThemeManager()->getBurningParrot($event->getRequest()->getCurrentUser());
             $this->getPullRequestDisplayer()->display($event->getRequest(), $layout);
-        }
-    }
-
-    /**
-     * @see GIT_ADDITIONAL_HELP_TEXT
-     */
-    public function git_additional_help_text($params) // phpcs:ignore
-    {
-        $repository = $params['repository'];
-
-        if (! $repository->isMigratedToGerrit()) {
-            $renderer  = $this->getTemplateRenderer();
-            $presenter = new AdditionalHelpTextPresenter();
-
-            $params['html'] = $renderer->renderToString($presenter->getTemplateName(), $presenter);
         }
     }
 
@@ -745,13 +643,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getPluginPath() . '/default-settings',
             function () {
                 return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
-            }
-        );
-
-        $event->getRouteCollector()->post(
-            $this->getPluginPath() . '/{query:.*}',
-            function () {
-                return $this->getLegacyRouter();
             }
         );
     }

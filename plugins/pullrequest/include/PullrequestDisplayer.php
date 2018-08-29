@@ -91,9 +91,9 @@ class PullrequestDisplayer
                 )
             );
 
-            $this->header_displayer->includeAssetsForBurningParrot($layout);
-            $this->header_displayer->displayForBurningParrot(
+            $this->header_displayer->display(
                 $request,
+                $layout,
                 $user,
                 $repository
             );

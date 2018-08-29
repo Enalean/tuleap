@@ -157,8 +157,6 @@ plugin_git	actions_missing_permission		 Please define both Write and Rewind perm
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent_gitshell	Parent: $1
-plugin_git	view_repo_parent_gitolite	Forked from $1
 plugin_git	view_repo_initialized	Initialized
 plugin_git	view_repo_not_initialized	Not initialized
 plugin_git	view_repo_clone_url	Clone url
@@ -468,12 +466,6 @@ project_admin_utils	git_admin_groups	Git admin groups
 project_admin_utils	git_fork_repositories	Git fork repositories
 
 plugin_git	identifier	Identifier
-
-plugin_git	how_to_use_text	How to use a Git repository:
-plugin_git	clone_text	Clone the repository in order to get your working copy:
-plugin_git	add_remote_text	Or just add this repository as a remote to an existing local repository:
-plugin_git	default_location	Default
-plugin_git	ssh_mirrors_text	SSH Mirrors
 
 plugin_git	restore_invalid_id	Unable to restore Git repository : Invalid repository id
 plugin_git	restore_invalid_name	Unable to restore Git repository : repository with the same name already exist

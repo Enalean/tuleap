@@ -25,7 +25,6 @@ use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
 use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -60,18 +59,13 @@ class GitRepositoryHeaderDisplayer
         HTTPRequest $request,
         BaseLayout $layout,
         PFUser $current_user,
-        GitRepository $repository,
-        RepoHeader $repo_header
+        GitRepository $repository
     ) {
-        if (\ForgeConfig::get('git_repository_bp')) {
-            $this->includeAssetsForBurningParrot($layout);
-            $this->displayForBurningParrot($request, $current_user, $repository);
-        } else {
-            $this->displayForFlamingParrot($request, $layout, $repository, $repo_header);
-        }
+        $this->includeAssetsForBurningParrot($layout);
+        $this->displayForBurningParrot($request, $current_user, $repository);
     }
 
-    public function includeAssetsForBurningParrot(BaseLayout $layout)
+    private function includeAssetsForBurningParrot(BaseLayout $layout)
     {
         $layout->addCssAsset(
             new CssAsset(
@@ -85,7 +79,7 @@ class GitRepositoryHeaderDisplayer
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
     }
 
-    public function displayForBurningParrot(
+    private function displayForBurningParrot(
         HTTPRequest $request,
         PFUser $current_user,
         GitRepository $repository
@@ -95,14 +89,5 @@ class GitRepositoryHeaderDisplayer
         $renderer         = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
         $header_presenter = $this->header_presenter_builder->build($repository, $current_user);
         $renderer->renderToPage('repository/header', $header_presenter);
-    }
-
-    private function displayForFlamingParrot(
-        HTTPRequest $request,
-        BaseLayout $layout,
-        GitRepository $repository,
-        RepoHeader $repo_header
-    ) {
-        $repo_header->display($request, $layout, $repository);
     }
 }

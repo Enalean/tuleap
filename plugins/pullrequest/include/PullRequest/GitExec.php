@@ -126,13 +126,6 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    public function getAllBranchNames()
-    {
-        $output = array();
-        $this->gitCmdWithOutput("branch | cut -c 3-", $output);
-        return $output;
-    }
-
     public function getCommitMessage($ref)
     {
         $ref    = escapeshellarg($ref);

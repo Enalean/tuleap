@@ -7,30 +7,6 @@ plugin_pullrequest	service_lbl_key	Pull request
 plugin_pullrequest	nb_pull_request_badge	$1 pull request
 plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
 
-plugin_pullrequest	new_pull_request_button_title	Créer une pull request
-plugin_pullrequest	pull_request_can_not_be_created	Aucune pull request ne peut actuellement être créée
-plugin_pullrequest	new_pull_request_modal_title	Créer une pull request
-plugin_pullrequest	new_pull_request_modal_from	A partir de
-plugin_pullrequest	new_pull_request_modal_to	Dans
-plugin_pullrequest	new_pull_request_modal_choose_branch_from	Choisissez une branche source
-plugin_pullrequest	new_pull_request_modal_choose_branch_to	Choisissez une branche de destination
-plugin_pullrequest	new_pull_request_modal_close	Annuler
-plugin_pullrequest	new_pull_request_modal_submit	Créer
-
-plugin_pullrequest	invalid_request	La requête n'est pas valide.
-plugin_pullrequest	generate_pull_request_error	Une erreur est survenue lors de la création de la Pull Request.
-plugin_pullrequest	generate_pull_request_branch_error	Une des branches demandées n'existe pas.
-plugin_pullrequest	user_cannot_read_repository	Vous n'êtes pas autorisé à lire le dépôt Git.
-plugin_pullrequest	pull_request_cannot_be_created	Les références source et destination ne peuvent être identiques.
-plugin_pullrequest	pull_request_already_exists	Une pull request existe déjà avec les mêmes références source et destination.
-plugin_pullrequest	repository_migrated_on_gerrit	Le dépôt est migré sur Gerrit.
-
-plugin_pullrequest	git_clone_bar_help_text_title	Comment utiliser les pull requests :
-plugin_pullrequest	git_clone_bar_help_text_intro	Pour le moment, seules les pull requests entre deux branches d'un même dépôt Git sont possibles. Vous pouvez :
-plugin_pullrequest	git_clone_bar_help_text_create_pull_request	Créer une pull request en cliquant sur le bouton
-plugin_pullrequest	git_clone_bar_help_text_view_pull_requests	Voir toutes les pull requests en cliquant sur <span class="badge">$1</span> à côté du nom du dépôt
-plugin_pullrequest	git_clone_bar_help_text_pull_request_actions	En consultant une pull request, la commenter, revoir les fichiers ainsi que l'intégrer ou l'abandonner
-
 plugin_pullrequest	reference_pullrequest_desc_key	Pull Request
 
 plugin_pullrequest	status_merged	Intégrée
