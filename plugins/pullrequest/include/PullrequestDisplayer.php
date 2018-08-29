@@ -23,7 +23,6 @@ namespace Tuleap\PullRequest;
 use GitRepositoryFactory;
 use TemplateRenderer;
 use ThemeManager;
-use Tuleap\Git\GitViews\ShowRepo\RepoHeader;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -85,10 +84,10 @@ class PullrequestDisplayer
             $layout->addCssAsset(
                 new CssAsset(
                     new IncludeAssets(
-                        __DIR__ . '/../www/themes/BurningParrot/assets',
-                        PULLREQUEST_BASE_URL . '/themes/BurningParrot/assets'
+                        __DIR__ . '/../../../src/www/assets/pull-requests/BurningParrot',
+                        '/assets/pull-requests/BurningParrot/'
                     ),
-                    'style'
+                    'pull-requests'
                 )
             );
 
