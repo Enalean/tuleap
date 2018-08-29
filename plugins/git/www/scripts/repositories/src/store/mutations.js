@@ -60,10 +60,6 @@ export default {
 };
 
 function extendRepository(repository) {
-    const split_path = repository.path.split("/");
-    split_path.shift();
-    repository.label = split_path.pop().replace(".git", "");
-    repository.path_without_project = split_path.join("/");
     repository.normalized_path =
         repository.path_without_project !== ""
             ? repository.path_without_project + "/" + repository.label
