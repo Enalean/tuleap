@@ -53,18 +53,6 @@ class Git_GitRepositoryUrlManager
         );
     }
 
-    public function getZipDownloadUrl(GitRepository $repository)
-    {
-        return $this->getRepositoryBaseUrl($repository) . '?' . http_build_query(
-            [
-                'a'        => 'snapshot',
-                'f'        => 'master',
-                'noheader' => '1',
-                'fmt'      => 'zip'
-            ]
-        );
-    }
-
     public function getForkUrl(GitRepository $repository)
     {
         return GIT_BASE_URL . "/?" . http_build_query(

@@ -55,6 +55,11 @@
 
 #git-repository-clone-dropdown-button {
     margin: 0;
+    border-radius: 3px 0 0 3px;
+}
+
+.git-repository-clone-dropdown-menu > .tlp-dropdown-menu-title {
+    white-space: nowrap;
 }
 
 #git-repository-clone-read-only {
