@@ -32,3 +32,7 @@ export function setCreateErrorMessage(state, create_error_message) {
 export function setHasErrorWhileLoadingBranchesToTrue(state) {
     state.has_error_while_loading_branches = true;
 }
+
+export function setIsCreatinPullRequest(state, is_creating) {
+    state.is_creating_pullrequest = is_creating;
+}

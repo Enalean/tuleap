@@ -55,11 +55,17 @@
             </div>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
-            <button type="submit" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+            <button type="submit"
+                    class="tlp-button-primary tlp-button-outline tlp-modal-action"
+                    data-dismiss="modal"
+            >
                 <translate>Cancel</translate>
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action" v-on:click="create()" v-bind:disabled="is_button_disabled">
-                <i class="fa fa-code-fork fa-rotate-270 tlp-button-icon"></i>
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    v-on:click="create()"
+                    v-bind:disabled="is_button_disabled">
+                <i v-bind:class="is_creating_pullrequest_icon_class"></i>
                 <translate>Create the pull request</translate>
             </button>
         </div>
@@ -78,13 +84,26 @@ export default {
         };
     },
     computed: {
-        ...mapState(["source_branches", "destination_branches", "create_error_message"]),
+        ...mapState([
+            "source_branches",
+            "destination_branches",
+            "create_error_message",
+            "is_creating_pullrequest"
+        ]),
         is_button_disabled() {
             return (
+                this.is_creating_pullrequest ||
                 !this.source_branch ||
                 !this.destination_branch ||
                 this.source_branch === this.destination_branch
             );
+        },
+        is_creating_pullrequest_icon_class() {
+            if (!this.is_creating_pullrequest) {
+                return "fa fa-code-fork fa-rotate-270 tlp-button-icon";
+            }
+
+            return "fa fa-spinner tlp-button-icon";
         }
     },
     methods: {
