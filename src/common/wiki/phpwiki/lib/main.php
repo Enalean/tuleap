@@ -51,11 +51,7 @@ class WikiRequest extends Request {
     function __construct () {
         $this->_dbi = WikiDB::open();
          // first mysql request costs [958ms]! [670ms] is mysql_connect()
-        
-        if (in_array('File', $this->_dbi->getAuthParam('USER_AUTH_ORDER'))) {
-            // force our local copy, until the pear version is fixed.
-            include_once(dirname(__FILE__)."/pear/File_Passwd.php");
-        }
+
         if (ENABLE_USER_NEW) {
             // Preload all necessary userclasses. Otherwise session => __PHP_Incomplete_Class_Name
             // There's no way to demand-load it later. This way it's much slower, but needs slightly
@@ -65,12 +61,6 @@ class WikiRequest extends Request {
             // UserPreferences POST Update doesn't reach this.
             foreach ($GLOBALS['USER_AUTH_ORDER'] as $method) {
                 include_once("lib/WikiUser/$method.php");
-            	if ($method == 'Db')
-            	    switch( DATABASE_TYPE ) {
-            	    	case 'SQL'  : include_once("lib/WikiUser/PearDb.php"); break;
-            	    	case 'ADODB': include_once("lib/WikiUser/AdoDb.php"); break;
-                        case 'PDO'  : include_once("lib/WikiUser/PdoDb.php"); break;
-            	    }
             }
             unset($method);
         }
