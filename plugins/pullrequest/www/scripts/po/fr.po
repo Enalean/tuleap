@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -20,6 +20,10 @@ msgstr "Abandonner"
 #: src/app/overview/overview.tpl.html
 msgid "Abandoned"
 msgstr "Abandonné"
+
+#: src/app/labels/labels-controller.js
+msgid "Add labels"
+msgstr "Ajouter un label"
 
 #: src/app/overview/overview.tpl.html
 msgid "Already merged"
@@ -50,6 +54,11 @@ msgstr "Checkout"
 msgid "Checkout with"
 msgstr "Checkout avec"
 
+#: src/app/error-modal/error-modal.tpl.html
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Close"
+msgstr "Fermer"
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr "Commenter"
@@ -57,6 +66,10 @@ msgstr "Commenter"
 #: src/app/overview/overview.tpl.html
 msgid "Date"
 msgstr "Date"
+
+#: src/app/overview/overview.tpl.html
+msgid "Deprecated REST route"
+msgstr "Route REST dépréciée"
 
 #: src/app/overview/overview.tpl.html
 msgid "Description"
@@ -238,11 +251,9 @@ msgstr "Inconnu"
 #: src/app/overview/overview.tpl.html
 msgid ""
 "Your CI job is using a deprecated REST route to publish the build result and "
-"must be updated.\n"
-"                    Consult the documentation or the API Explorer for more "
+"must be updated. Consult the documentation or the API Explorer for more "
 "information."
 msgstr ""
 "Votre job d'intégration continue utilise une route REST obsolète et doit "
-"être mis à jour.\n"
-"                    Consulter la documentation ou l'API Explorer pour plus "
+"être mis à jour. Consultez la documentation ou l'API Explorer pour plus "
 "d'informations."

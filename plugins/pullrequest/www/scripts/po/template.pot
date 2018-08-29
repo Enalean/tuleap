@@ -13,6 +13,10 @@ msgstr ""
 msgid "Abandoned"
 msgstr ""
 
+#: src/app/pull-request/header/header.tpl.html
+msgid "Add labels"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Already merged"
 msgstr ""
@@ -42,12 +46,21 @@ msgstr ""
 msgid "Checkout with"
 msgstr ""
 
+#: src/app/error-modal/error-modal.tpl.html
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Close"
+msgstr ""
+
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Date"
+msgstr ""
+
+#: src/app/overview/overview.tpl.html
+msgid "Deprecated REST route"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
@@ -199,7 +212,5 @@ msgid "Unknown"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid ""
-"Your CI job is using a deprecated REST route to publish the build result and must be updated.\n"
-"                    Consult the documentation or the API Explorer for more information."
+msgid "Your CI job is using a deprecated REST route to publish the build result and must be updated. Consult the documentation or the API Explorer for more information."
 msgstr ""

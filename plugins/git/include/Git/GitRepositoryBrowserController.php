@@ -24,11 +24,8 @@ namespace Tuleap\Git;
 use GitPlugin;
 use HTTPRequest;
 use TemplateRendererFactory;
-use Tuleap\Git\GitViews\Header\HeaderRenderer;
-use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
+use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAsset;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -53,25 +50,17 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     private $access_logger;
     /**
-     * @var GitViews\ShowRepo\RepoHeader
-     */
-    private $repo_header;
-    /**
-     * @var HeaderRenderer
-     */
-    private $header_renderer;
-    /**
-     * @var RepositoryHeaderPresenterBuilder
-     */
-    private $header_presenter_builder;
-    /**
      * @var \ThemeManager
      */
     private $theme_manager;
     /**
-     * @var IncludeAssets
+     * @var GitRepositoryHeaderDisplayer
      */
-    private $include_assets;
+    private $header_displayer;
+    /**
+     * @var GitViews\ShowRepo\RepoHeader
+     */
+    private $repo_header;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
@@ -80,19 +69,15 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         History\GitPhpAccessLogger $access_logger,
         GitViews\ShowRepo\RepoHeader $repo_header,
         \ThemeManager $theme_manager,
-        HeaderRenderer $header_renderer,
-        RepositoryHeaderPresenterBuilder $header_presenter_builder,
-        IncludeAssets $include_assets
+        GitRepositoryHeaderDisplayer $header_displayer
     ) {
-        $this->repository_factory       = $repository_factory;
-        $this->project_manager          = $project_manager;
-        $this->mirror_data_mapper       = $mirror_data_mapper;
-        $this->access_logger            = $access_logger;
-        $this->repo_header              = $repo_header;
-        $this->theme_manager            = $theme_manager;
-        $this->header_renderer          = $header_renderer;
-        $this->header_presenter_builder = $header_presenter_builder;
-        $this->include_assets           = $include_assets;
+        $this->repository_factory = $repository_factory;
+        $this->project_manager    = $project_manager;
+        $this->mirror_data_mapper = $mirror_data_mapper;
+        $this->access_logger      = $access_logger;
+        $this->theme_manager      = $theme_manager;
+        $this->header_displayer   = $header_displayer;
+        $this->repo_header        = $repo_header;
     }
 
     /**
@@ -165,33 +150,18 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             $this->access_logger
         );
 
-        if (! $url->isADownload($request)) {
-            if (\ForgeConfig::get('git_repository_bp')) {
-                $layout->addCssAsset(
-                    new CssAsset(
-                        new IncludeAssets(
-                            __DIR__ . '/../../www/themes/BurningParrot/assets',
-                            GIT_BASE_URL . '/themes/BurningParrot/assets'
-                        ),
-                        'git'
-                    )
-                );
-                $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
-                $this->header_renderer->renderRepositoryHeader($request, $current_user, $project, $repository);
+        $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
-                $renderer         = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
-                $header_presenter = $this->header_presenter_builder->build($repository, $current_user);
-                $renderer->renderToPage('repository/header', $header_presenter);
-            } else {
-                $this->repo_header->display($request, $layout, $repository);
-            }
+        if (! $url->isADownload($request)) {
+            $this->header_displayer->display($request, $layout, $current_user, $repository, $this->repo_header);
+            $renderer->renderToPage('repository/files/header', []);
         }
 
         $index_view->display($url);
 
         if (! $url->isADownload($request)) {
             if (\ForgeConfig::get('git_repository_bp')) {
-                $renderer->renderToPage('repository/footer', []);
+                $renderer->renderToPage('repository/files/footer', []);
             }
             $layout->footer([]);
         }

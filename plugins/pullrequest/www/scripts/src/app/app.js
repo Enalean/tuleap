@@ -5,12 +5,11 @@ import ng_sanitize from "angular-sanitize";
 import "angular-moment";
 import "angular-gettext";
 import "angular-ui-bootstrap-templates";
-import "angular-ui-select";
 import "../../po/fr.po";
 
+import angular_tlp from "angular-tlp";
+
 import MainController from "./app-controller.js";
-import ErrorModalController from "./error-modal/error-modal-controller.js";
-import MergeModalController from "./overview/merge-modal/merge-modal-controller.js";
 
 import ButtonBackDirective from "./button-back/button-back-directive.js";
 import DashboardDirective from "./dashboard/dashboard-directive.js";
@@ -18,7 +17,7 @@ import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-r
 import FileDiffDirective from "./file-diff/file-diff-directive.js";
 import InlineCommentDirective from "./file-diff/inline-comment/inline-comment-directive.js";
 import FilesDirective from "./files/files-directive.js";
-import Labels from "./labels/labels-directive.js";
+import LabelsBox from "./labels/labels-directive.js";
 import OverviewDirective from "./overview/overview-directive.js";
 import TimelineDirective from "./overview/timeline/timeline-directive.js";
 import PullRequestDirective from "./pull-request/pull-request-directive.js";
@@ -54,15 +53,13 @@ export default angular
         "angularMoment",
         "gettext",
         "ui.bootstrap",
-        "ui.select",
+        angular_tlp,
         ui_router,
         ng_sanitize,
         SharedProperties,
         TuleapResize
     ])
     .controller("MainController", MainController)
-    .controller("ErrorModalController", ErrorModalController)
-    .controller("MergeModalController", MergeModalController)
 
     .directive("buttonBack", ButtonBackDirective)
     .directive("dashboard", DashboardDirective)
@@ -70,7 +67,7 @@ export default angular
     .directive("fileDiff", FileDiffDirective)
     .directive("inlineComment", InlineCommentDirective)
     .directive("files", FilesDirective)
-    .directive("labels", Labels)
+    .directive("labelsBox", LabelsBox)
     .directive("overview", OverviewDirective)
     .directive("timeline", TimelineDirective)
     .directive("pullRequest", PullRequestDirective)

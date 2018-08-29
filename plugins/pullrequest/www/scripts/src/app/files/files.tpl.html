@@ -1,28 +1,41 @@
-<div id="modified-files">
-    <h3><i class="fa fa-files-o"></i> <span translate>Modified Files</span> <span class="badge">{{ files.files.length }}</span></h3>
+<div id="modified-files" class="tlp-framed-horizontally">
+    <h3>
+        <i class="fa fa-files-o"></i>
+        <span translate>Modified Files</span>
+        <span class="badge">{{ files.files.length }}</span>
+    </h3>
 
-    <div class="file-switcher">
-        <ui-select ng-if="! files_controller.loading_files" ng-model="files_controller.selected_file" search-enabled="false" on-select="files_controller.loadFile($item)">
-            <ui-select-match>
-                <div class="file">
-                    <span class="status status-{{ $select.selected.status }}">{{ $select.selected.status }}</span>
-                    <span class="path">{{ $select.selected.path }}</span>
-                    <span class="changes lines-added text-success" ng-class="{ 'show-changes': $select.selected.lines_added > 0}">+{{ $select.selected.lines_added }}</span>
-                    <span class="changes lines-removed text-error" ng-class="{ 'show-changes': $select.selected.lines_removed > 0}">-{{ $select.selected.lines_removed }}</span>
+    <div class="pull-request-file-switcher" ng-show="! files_controller.loading_files">
+        <div class="tlp-dropdown">
+            <button type="button" id="file-switcher-dropdown-button" class="tlp-button-secondary">
+                <span>
+                    <span class="pull-request-file-status pull-request-file-status-{{ files_controller.selected_file.status }}">{{ files_controller.selected_file.status }}</span>
+                    <span class="pull-request-file-path">{{ files_controller.selected_file.path }}</span>
+                </span>
+
+                <span>
+                    <span class="pull-request-file-changes pull-request-file-lines-added tlp-text-success" ng-class="{ 'pull-request-file-show-changes': files_controller.selected_file.lines_added > 0}">+{{ files_controller.selected_file.lines_added }}</span>
+                    <span class="pull-request-file-changes pull-request-file-lines-removed tlp-text-danger" ng-class="{ 'pull-request-file-show-changes': files_controller.selected_file.lines_removed > 0}">-{{ files_controller.selected_file.lines_removed }}</span>
+                    <i class="fa fa-caret-down"></i>
+                </span>
+            </button>
+            <div id="file-switcher-dropdown-content" class="tlp-dropdown-menu" role="menu">
+                <div class="tlp-dropdown-menu-item"
+                    ng-class="{ 'pull-request-file-selected': files_controller.isFileSelected(file) }"
+                    ng-repeat="file in (files_controller.files | filter: $select.search) track by file.path"
+                >
+                    <div class="pull-request-file" ng-click="files_controller.loadFile(file)">
+                        <span class="pull-request-file-status pull-request-file-status-{{ file.status }}">{{ file.status }}</span>
+                        <span class="pull-request-file-path">{{ file.path }}</span>
+                        <span class="pull-request-file-changes pull-request-file-lines-added tlp-text-success" ng-class="{ 'pull-request-file-show-changes': file.lines_added > 0}">+{{ file.lines_added }}</span>
+                        <span class="pull-request-file-changes pull-request-file-lines-removed tlp-text-danger" ng-class="{ 'pull-request-file-show-changes': file.lines_removed > 0}">-{{ file.lines_removed }}</span>
+                    </div>
                 </div>
-            </ui-select-match>
-            <ui-select-choices repeat="file in (files_controller.files | filter: $select.search) track by file.path">
-                <div class="file">
-                    <span class="status status-{{ file.status }}">{{ file.status }}</span>
-                    <span class="path">{{ file.path }}</span>
-                    <span class="changes lines-added text-success" ng-class="{ 'show-changes': file.lines_added > 0}">+{{ file.lines_added }}</span>
-                    <span class="changes lines-removed text-error" ng-class="{ 'show-changes': file.lines_removed > 0}">-{{ file.lines_removed }}</span>
-                </div>
-            </ui-select-choices>
-        </ui-select>
+            </div>
+        </div>
     </div>
 
-    <div ng-if="files_controller.loading_files" class="loading"></div>
+    <div ng-if="files_controller.loading_files" class="pull-request-modified-files-loading"></div>
 </div>
 
-<div ui-view="file-diff" ng-if="! files_controller.loading_files"></div>
+<div ui-view="file-diff" ng-if="! files_controller.loading_files" class="tlp-framed"></div>

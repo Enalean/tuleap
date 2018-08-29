@@ -1,6 +1,6 @@
-.dashboard {
-    @import 'pull-request-summary/pull-request-summary';
+@import 'pull-request-summary/pull-request-summary';
 
+.dashboard {
     > h2 {
         display: block;
         margin: 0;
@@ -11,27 +11,30 @@
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
-        justify-content: space-around;
-        align-items: stretch;
         align-content: flex-start;
+        align-items: stretch;
+        justify-content: space-around;
         margin: 0;
         padding: 25px 15px;
     }
 
     .pull-request-list-item {
-        list-style: none;
-        margin: 0 0 10px;
-        background: #ffffff;
+        cursor: pointer;
+
+        &:hover {
+            transition: border-color 100ms linear;
+            border-color: #cccccc;
+        }
 
         &.closed {
             background: #efefef;
         }
     }
 
-    > .loading {
-        height: 16px;
+    > .pull-request-loading {
+        height: 50px;
         margin: 20px 0 0;
-        background: url('loader-mini.gif') no-repeat center center;
+        background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
     }
 
     .pull-request-list-load {
@@ -42,13 +45,5 @@
         .hide-closed-pull-requests {
             cursor: pointer;
         }
-    }
-
-    > .no-pull-requests {
-        color: #AAA;
-        font-size: 0.9em;
-        margin: 50px 0 100px;
-        padding: 110px 0 0;
-        text-align: center;
     }
 }

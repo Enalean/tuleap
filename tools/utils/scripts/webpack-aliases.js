@@ -31,10 +31,6 @@ const tuleap_core_alias = {
     "tuleap-core": path_to_tuleap_core
 };
 
-const flaming_parrot_labels_box_alias = {
-    "labels-box": path.join(path_to_tuleap_core, "labels/labels-box.js")
-};
-
 const angular_tlp_alias = {
     "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js")
 };
@@ -53,12 +49,6 @@ const angular_artifact_modal_alias = {
         "plugins/tracker/www/scripts/angular-artifact-modal/index.js"
     )
 };
-
-const flaming_parrot_labels_box_aliases = Object.assign(
-    {},
-    tlp_fetch_alias,
-    flaming_parrot_labels_box_alias
-);
 
 const easygettext_loader_alias = {
     "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js")
@@ -84,8 +74,8 @@ function extendAliases(...aliases) {
 module.exports = {
     extendAliases,
     angular_artifact_modal_aliases,
+    angular_tlp_alias,
     easygettext_loader_alias,
-    flaming_parrot_labels_box_aliases,
     tlp_fetch_alias,
     tlp_mocks_alias,
     tuleap_core_alias,

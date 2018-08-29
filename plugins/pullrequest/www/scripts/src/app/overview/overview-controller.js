@@ -1,3 +1,5 @@
+import { dropdown } from "tlp";
+
 export default OverviewController;
 
 OverviewController.$inject = [
@@ -39,6 +41,7 @@ function OverviewController(
         checkMerge,
         hasAbandonRight,
         hasMergeRight,
+        initCheckoutDropdown,
         isConflictingMerge,
         isNonFastForwardMerge,
         isUnknownMerge,
@@ -47,6 +50,8 @@ function OverviewController(
 
     SharedPropertiesService.whenReady()
         .then(function() {
+            self.initCheckoutDropdown();
+
             self.pull_request = SharedPropertiesService.getPullRequest();
             self.is_merge_commit_allowed = SharedPropertiesService.isMergeCommitAllowed();
 
@@ -106,11 +111,18 @@ function OverviewController(
         return self.pull_request.user_can_abandon && isOpen();
     }
 
-    function checkMerge() {
-        var shouldMerge = isNonFastForwardMerge()
-            ? MergeModalService.showMergeModal()
-            : $q.when("go");
-        shouldMerge.then(merge);
+    async function checkMerge() {
+        const is_fast_forward = !isNonFastForwardMerge();
+
+        if (is_fast_forward) {
+            return merge();
+        }
+
+        const should_continue_merge = await MergeModalService.showMergeModal();
+
+        if (should_continue_merge) {
+            return merge();
+        }
     }
 
     function merge() {
@@ -124,6 +136,12 @@ function OverviewController(
         self.operationInProgress = true;
         PullRequestService.abandon(self.pull_request).then(function() {
             self.operationInProgress = false;
+        });
+    }
+
+    function initCheckoutDropdown() {
+        dropdown(document.getElementById("pull-request-checkout-dropdown"), {
+            keyboard: false
         });
     }
 }

@@ -1,8 +1,8 @@
 export default MergeModalController;
 
-MergeModalController.$inject = ["$modalInstance"];
+MergeModalController.$inject = ["modal_instance", "shouldMergeCallback"];
 
-function MergeModalController($modalInstance) {
+function MergeModalController(modal_instance, shouldMergeCallback) {
     const self = this;
 
     Object.assign(self, {
@@ -10,11 +10,13 @@ function MergeModalController($modalInstance) {
         cancel
     });
 
-    function proceed() {
-        $modalInstance.close();
+    function cancel() {
+        modal_instance.tlp_modal.hide();
+        shouldMergeCallback(false);
     }
 
-    function cancel() {
-        $modalInstance.dismiss();
+    function proceed() {
+        modal_instance.tlp_modal.hide();
+        shouldMergeCallback(true);
     }
 }

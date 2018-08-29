@@ -73,16 +73,16 @@ function FileDiffDirective(
         function showCommentForm(unidiff, lnb) {
             var elt = document.createElement("div");
             elt.innerHTML =
-                '<div class="new-inline-comment">' +
+                '<div class="pull-request-new-inline-comment">' +
                 '<i class="fa fa-plus-circle"></i>' +
                 '<div class="arrow"></div>' +
-                '<div class="new-inline-comment-content">' +
+                '<div class="pull-request-new-inline-comment-content">' +
                 "<form>" +
-                "<textarea></textarea>" +
+                '<textarea type="text" class="tlp-textarea"></textarea>' +
                 "</form>" +
-                '<div class="controls">' +
-                '<button type="submit" class="btn btn-primary"><i class="fa fa-comment"></i> Comment</button>' +
-                '<button type="button" class="btn"><i class="fa fa-times"></i> Cancel</button>' +
+                '<div class="pull-request-new-inline-comment-controls">' +
+                '<button type="submit" class="tlp-button-primary"><i class="tlp-button-icon fa fa-comment"></i> Comment</button>' +
+                '<button type="button" class="tlp-button-primary tlp-button-outline"><i class="tlp-button-icon fa fa-times"></i> Cancel</button>' +
                 "</div></div></div>";
             var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
                 coverGutter: true
@@ -118,7 +118,7 @@ function FileDiffDirective(
                     document.createTextNode(line.old_offset)
                 );
             } else {
-                unidiff.addLineClass(lnb, "background", "added-lines");
+                unidiff.addLineClass(lnb, "background", "pull-request-file-diff-added-lines");
             }
             if (line.new_offset) {
                 unidiff.setGutterMarker(
@@ -127,7 +127,7 @@ function FileDiffDirective(
                     document.createTextNode(line.new_offset)
                 );
             } else {
-                unidiff.addLineClass(lnb, "background", "deleted-lines");
+                unidiff.addLineClass(lnb, "background", "pull-request-file-diff-deleted-lines");
             }
         });
     }

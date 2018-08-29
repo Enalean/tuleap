@@ -1,4 +1,4 @@
-import { create } from "labels-box";
+import { create } from "tuleap-core/labels/labels-box.js";
 
 export default LabelsController;
 
@@ -28,10 +28,11 @@ function LabelsController($element, SharedPropertiesService) {
 
     function createLabelsBox(pull_request_id, project_id, user_can_update_labels) {
         create(
-            $element[0],
+            $element[0].children[0],
             "/api/v1/pull_requests/" + pull_request_id + "/labels",
             "/api/v1/projects/" + project_id + "/labels",
-            user_can_update_labels
+            user_can_update_labels,
+            self.placeholder
         );
     }
 }

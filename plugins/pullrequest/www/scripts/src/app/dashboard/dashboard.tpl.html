@@ -1,18 +1,19 @@
 <div class="dashboard">
     <h2 translate>Pull requests</h2>
 
-    <ul class="pull-requests-list">
-        <li
-            class="pull-request-list-item"
+    <div class="pull-requests-list">
+        <div
+            class="tlp-pane pull-request-list-item"
             ng-class="{ closed: dashboard_controller.isPullRequestClosed(pull_request) }"
             ng-repeat="pull_request in dashboard_controller.pull_requests track by pull_request.id"
             ng-hide="dashboard_controller.areClosedPullRequestsHidden() && dashboard_controller.isPullRequestClosed(pull_request)"
         >
-            <pull-request-summary pull-request-data="pull_request"></pull-request-summary>
-        </li>
-    </ul>
+            <pull-request-summary class="tlp-pane-container" pull-request-data="pull_request"></pull-request-summary>
+        </div>
+    </div>
+
     <div
-        class="no-pull-requests"
+        class="empty-page-text"
         ng-if="! dashboard_controller.isThereAtLeastOneOpenpullRequest()
             && dashboard_controller.areOpenPullRequestsFullyLoaded()
             && (
@@ -22,7 +23,7 @@
         <span translate>There are no open pull requests</span>
     </div>
     <div
-        class="no-pull-requests"
+        class="empty-page-text"
         ng-if="! dashboard_controller.isThereAtLeastOneClosedPullRequest() && dashboard_controller.areClosedPullRequestsFullyLoaded()">
         <span translate>There are no closed pull requests</span>
     </div>
@@ -40,5 +41,5 @@
             translate
         >Hide closed pull requests</a>
     </div>
-    <div class="loading" ng-if="dashboard_controller.loading_pull_requests"></div>
+    <div class="pull-request-loading" ng-if="dashboard_controller.loading_pull_requests"></div>
 </div>
