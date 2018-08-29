@@ -38,7 +38,6 @@ class RepositoryHeaderPresenter
     public $clone_presenter;
     public $project_id;
     public $is_migrated_to_gerrit;
-    public $zip_download_url;
     public $fork_url;
     /** @var bool */
     public $user_is_anonymous;
@@ -47,7 +46,6 @@ class RepositoryHeaderPresenter
         GitRepository $repository,
         $user_is_admin,
         $repository_admin_url,
-        $zip_download_url,
         $fork_url,
         PFUser $user,
         ClonePresenter $clone_presenter,
@@ -64,7 +62,6 @@ class RepositoryHeaderPresenter
         $this->parent_repository_presenter = $parent_repository_presenter;
         $this->clone_presenter             = $clone_presenter;
         $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
-        $this->zip_download_url            = $zip_download_url;
         $this->fork_url                    = $fork_url;
         $this->user_is_anonymous           = $user->isAnonymous();
     }

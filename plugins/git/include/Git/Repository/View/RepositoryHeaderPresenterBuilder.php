@@ -99,15 +99,13 @@ class RepositoryHeaderPresenterBuilder
         $is_admin = $this->permissions_manager->userIsGitAdmin($current_user, $repository->getProject()) ||
             $repository->belongsTo($current_user);
 
-        $admin_url        = $this->url_manager->getRepositoryAdminUrl($repository);
-        $zip_download_url = $this->url_manager->getZipDownloadUrl($repository);
-        $fork_url         = $this->url_manager->getForkUrl($repository);
+        $admin_url = $this->url_manager->getRepositoryAdminUrl($repository);
+        $fork_url  = $this->url_manager->getForkUrl($repository);
 
         return new RepositoryHeaderPresenter(
             $repository,
             $is_admin,
             $admin_url,
-            $zip_download_url,
             $fork_url,
             $current_user,
             $clone_presenter,
