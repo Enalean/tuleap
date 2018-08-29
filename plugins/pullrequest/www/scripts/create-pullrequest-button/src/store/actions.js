@@ -62,6 +62,7 @@ export async function init(
 
 export async function create(context, { source_branch, destination_branch }) {
     try {
+        context.commit("setIsCreatinPullRequest", true);
         const pullrequest = await createPullrequest(
             source_branch.repository_id,
             source_branch.name,
@@ -76,5 +77,6 @@ export async function create(context, { source_branch, destination_branch }) {
     } catch (e) {
         const { error } = await e.response.json();
         context.commit("setCreateErrorMessage", error.message);
+        context.commit("setIsCreatinPullRequest", false);
     }
 }

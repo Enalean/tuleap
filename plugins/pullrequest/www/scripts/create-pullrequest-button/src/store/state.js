@@ -21,5 +21,6 @@ export default {
     source_branches: [],
     destination_branches: [],
     create_error_message: "",
-    has_error_while_loading_branches: false
+    has_error_while_loading_branches: false,
+    is_creating_pullrequest: false
 };
