@@ -46,6 +46,7 @@
             <directory suffix=".php">../../plugins/bugzilla_reference/include/Bugzilla</directory>
             <directory suffix=".php">../../plugins/hudson/include/</directory>
             <directory suffix=".php">../../plugins/archivedeleteditems/include/</directory>
+            <directory suffix=".php">../../plugins/forumml/include/</directory>
         </whitelist>
     </filter>
     <testsuites>

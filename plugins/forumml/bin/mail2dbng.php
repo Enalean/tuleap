@@ -1,7 +1,7 @@
 #!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
  */
 
 require_once 'pre.php';
-require 'Mail/Mbox.php';
 
 $list = $argv[1];
 $sql = sprintf('SELECT group_id, group_list_id FROM mail_group_list WHERE list_name = "%s"', db_escape_string($list));
@@ -39,24 +38,12 @@ $plugin = $plugin_manager->getPluginByName('forumml');
 if ($plugin && $plugin_manager->isPluginAvailable($plugin) && $plugin_manager->isPluginAllowedForProject($plugin, $project_id)) {
     $info = $plugin->getPluginInfo();
 
-    $mail_content = '';
-    while (($line = fgets(STDIN, 4096)) !== false) {
-        $mail_content .= $line;
-    }
-
-    // Decode email
-    $args['include_bodies'] = true;
-    $args['decode_bodies']  = true;
-    $args['decode_headers'] = true;
-    $args['crlf']           = "\r\n";
-    $decoder = new ForumML_mimeDecode($mail_content, "\r\n");
-    $structure = $decoder->decode($args);
-
     // Get ForumML storage
     $forumml_dir     = $info->getPropertyValueForName('forumml_dir');
     $forumml_storage = new ForumML_FileStorage($forumml_dir);
 
     // Store email
-    $insert = new ForumMLInsert($list_id);
-    $insert->storeEmail($structure, $forumml_storage);
+    $incoming_mail = new \Tuleap\ForumML\Incoming\IncomingMail(STDIN);
+    $archiver      = new \Tuleap\ForumML\MessageArchiver($list_id);
+    $archiver->storeEmail($incoming_mail, $forumml_storage);
 }
