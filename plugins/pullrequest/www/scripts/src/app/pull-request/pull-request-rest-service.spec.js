@@ -68,7 +68,6 @@ describe("PullRequestRestService -", function() {
                 .respond(403, "Forbidden");
 
             var promise = PullRequestRestService.getPullRequest(pull_request_id);
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(ErrorModalService.showError).toHaveBeenCalledWith(

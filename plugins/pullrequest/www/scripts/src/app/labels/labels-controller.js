@@ -6,8 +6,7 @@ LabelsController.$inject = ["$element", "SharedPropertiesService"];
 
 function LabelsController($element, SharedPropertiesService) {
     const self = this;
-
-    initLabels();
+    self.$onInit = initLabels;
 
     function initLabels() {
         if (self.pullRequestId && self.projectId) {

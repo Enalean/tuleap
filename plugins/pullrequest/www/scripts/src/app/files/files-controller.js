@@ -20,14 +20,17 @@ function FilesController($state, SharedPropertiesService, FilesRestService, File
         loading_files: true,
         loadFile,
         initFileDropdown,
-        isFileSelected
+        isFileSelected,
+        $onInit: init
     });
 
-    SharedPropertiesService.whenReady().then(() => {
-        self.pull_request = SharedPropertiesService.getPullRequest();
-        getFiles();
-        initFileDropdown();
-    });
+    function init() {
+        SharedPropertiesService.whenReady().then(() => {
+            self.pull_request = SharedPropertiesService.getPullRequest();
+            getFiles();
+            initFileDropdown();
+        });
+    }
 
     function getFiles() {
         FilesRestService.getFiles(self.pull_request.id)

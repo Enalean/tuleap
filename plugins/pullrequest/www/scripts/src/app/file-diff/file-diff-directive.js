@@ -9,6 +9,7 @@ FileDiffDirective.$inject = [
     "$window",
     "$state",
     "$compile",
+    "gettextCatalog",
     "SharedPropertiesService",
     "FileDiffRestService",
     "TooltipService"
@@ -18,6 +19,7 @@ function FileDiffDirective(
     $window,
     $state,
     $compile,
+    gettextCatalog,
     SharedPropertiesService,
     FileDiffRestService,
     TooltipService
@@ -72,18 +74,29 @@ function FileDiffDirective(
 
         function showCommentForm(unidiff, lnb) {
             var elt = document.createElement("div");
-            elt.innerHTML =
-                '<div class="pull-request-new-inline-comment">' +
-                '<i class="fa fa-plus-circle"></i>' +
-                '<div class="arrow"></div>' +
-                '<div class="pull-request-new-inline-comment-content">' +
-                "<form>" +
-                '<textarea type="text" class="tlp-textarea"></textarea>' +
-                "</form>" +
-                '<div class="pull-request-new-inline-comment-controls">' +
-                '<button type="submit" class="tlp-button-primary"><i class="tlp-button-icon fa fa-comment"></i> Comment</button>' +
-                '<button type="button" class="tlp-button-primary tlp-button-outline"><i class="tlp-button-icon fa fa-times"></i> Cancel</button>' +
-                "</div></div></div>";
+            elt.innerHTML = `
+                <div class="pull-request-new-inline-comment">
+                    <i class="fa fa-plus-circle"></i>
+                    <div class="arrow"></div>
+                    <div class="pull-request-new-inline-comment-content">
+                        <form>
+                            <textarea type="text" class="tlp-textarea"></textarea>
+                        </form>
+                        <div class="pull-request-new-inline-comment-controls">
+                            <button type="submit" class="tlp-button-primary">
+                                <i class="tlp-button-icon fa fa-comment"></i> ${gettextCatalog.getString(
+                                    "Comment"
+                                )}
+                            </button>
+                            <button type="button" class="tlp-button-primary tlp-button-outline">
+                                <i class="tlp-button-icon fa fa-times"></i> ${gettextCatalog.getString(
+                                    "Cancel"
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
             var commentFormWidget = unidiff.addLineWidget(lnb, elt, {
                 coverGutter: true
             });

@@ -3,7 +3,7 @@ export default MainController;
 MainController.$inject = ["$element", "gettextCatalog", "amMoment", "SharedPropertiesService"];
 
 function MainController($element, gettextCatalog, amMoment, SharedPropertiesService) {
-    init();
+    this.$onInit = init;
 
     function init() {
         const pullrequest_init_data = $element[0].querySelector(".pullrequest-init-data").dataset;

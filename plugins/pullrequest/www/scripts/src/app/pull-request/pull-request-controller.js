@@ -6,11 +6,9 @@ function PullRequestController($state, PullRequestRestService, SharedPropertiesS
     const self = this;
 
     Object.assign(self, {
-        init,
-        $state
+        $state,
+        $onInit: init
     });
-
-    self.init();
 
     function init() {
         var pull_request_id = parseInt($state.params.id, 10);

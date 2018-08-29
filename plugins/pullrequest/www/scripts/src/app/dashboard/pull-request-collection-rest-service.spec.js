@@ -154,15 +154,14 @@ describe("PullRequestCollectionRestService -", function() {
                 .respond(403, "Forbidden");
 
             var promise = PullRequestCollectionRestService.getPullRequests(repository_id, 50, 0);
-            $httpBackend.flush();
 
+            expect(promise).toBeRejected();
             expect(ErrorModalService.showError).toHaveBeenCalledWith(
                 jasmine.objectContaining({
                     status: 403,
                     statusText: ""
                 })
             );
-            expect(promise).toBeRejected();
         });
     });
 

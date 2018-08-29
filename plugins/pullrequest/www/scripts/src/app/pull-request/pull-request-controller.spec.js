@@ -4,58 +4,63 @@ import pullrequest_controller from "./pull-request-controller.js";
 
 import "angular-mocks";
 
-describe("PullRequestController -", function() {
-    var $rootScope,
+describe("PullRequestController -", () => {
+    let $rootScope,
         $state,
         $q,
         PullRequestController,
         PullRequestRestService,
         SharedPropertiesService;
 
-    beforeEach(function() {
-        var $controller;
+    beforeEach(() => {
+        let $controller;
 
         angular.mock.module(tuleap_pullrequest_module);
 
-        // eslint-disable-next-line angular/di
         angular.mock.inject(function(
             _$controller_,
             _$q_,
             _$rootScope_,
-            _$state_,
             _PullRequestRestService_,
             _SharedPropertiesService_
         ) {
             $controller = _$controller_;
             $q = _$q_;
             $rootScope = _$rootScope_;
-            $state = _$state_;
             PullRequestRestService = _PullRequestRestService_;
             SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        spyOn(SharedPropertiesService, "setPullRequest");
-        spyOn(SharedPropertiesService, "setReadyPromise");
-        spyOn(PullRequestRestService, "getPullRequest").and.returnValue($q.when());
+        $state = jasmine.createSpyObj("$state", ["go"]);
+        $state.params = {};
 
-        PullRequestController = $controller(pullrequest_controller);
-        $rootScope.$apply();
+        PullRequestController = $controller(pullrequest_controller, {
+            $state,
+            PullRequestRestService,
+            SharedPropertiesService
+        });
 
         installPromiseMatchers();
     });
 
-    describe("init()", function() {
-        it("Given I have a pull request id in $state.params.id and the pull requests had not been initially loaded, when I create the controller, then the pull_request will be loaded using the REST service and set in SharedPropertiesService", function() {
-            var pull_request_id = 20;
+    describe("init()", () => {
+        beforeEach(() => {
+            spyOn(SharedPropertiesService, "setPullRequest");
+            spyOn(SharedPropertiesService, "setReadyPromise");
+            spyOn(PullRequestRestService, "getPullRequest").and.returnValue($q.when());
+        });
+
+        it("Given I have a pull request id in $state.params.id and the pull requests had not been initially loaded, then the pull_request will be loaded using the REST service and set in SharedPropertiesService", () => {
+            const pull_request_id = 20;
             $state.params.id = pull_request_id;
-            var pull_request = {
+            const pull_request = {
                 id: pull_request_id
             };
 
-            var promise = $q.when(pull_request);
+            const promise = $q.when(pull_request);
             PullRequestRestService.getPullRequest.and.returnValue(promise);
 
-            PullRequestController.init();
+            PullRequestController.$onInit();
             $rootScope.$apply();
 
             expect(PullRequestRestService.getPullRequest).toHaveBeenCalledWith(pull_request_id);

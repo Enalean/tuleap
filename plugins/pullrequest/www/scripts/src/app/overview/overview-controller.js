@@ -45,32 +45,35 @@ function OverviewController(
         isConflictingMerge,
         isNonFastForwardMerge,
         isUnknownMerge,
-        saveEditionForm
+        saveEditionForm,
+        $onInit: init
     });
 
-    SharedPropertiesService.whenReady()
-        .then(function() {
-            self.initCheckoutDropdown();
+    function init() {
+        SharedPropertiesService.whenReady()
+            .then(function() {
+                self.initCheckoutDropdown();
 
-            self.pull_request = SharedPropertiesService.getPullRequest();
-            self.is_merge_commit_allowed = SharedPropertiesService.isMergeCommitAllowed();
+                self.pull_request = SharedPropertiesService.getPullRequest();
+                self.is_merge_commit_allowed = SharedPropertiesService.isMergeCommitAllowed();
 
-            self.current_checkout_method = self.pull_request.repository_dest.clone_ssh_url
-                ? "ssh"
-                : "http";
+                self.current_checkout_method = self.pull_request.repository_dest.clone_ssh_url
+                    ? "ssh"
+                    : "http";
 
-            self.editionForm.raw_title = self.pull_request.raw_title;
-            self.editionForm.raw_description = self.pull_request.raw_description;
+                self.editionForm.raw_title = self.pull_request.raw_title;
+                self.editionForm.raw_description = self.pull_request.raw_description;
 
-            UserRestService.getUser(self.pull_request.user_id).then(function(user) {
-                self.author = user;
+                UserRestService.getUser(self.pull_request.user_id).then(function(user) {
+                    self.author = user;
+                });
+
+                TooltipService.setupTooltips();
+            })
+            .catch(function() {
+                $state.go("dashboard");
             });
-
-            TooltipService.setupTooltips();
-        })
-        .catch(function() {
-            $state.go("dashboard");
-        });
+    }
 
     function buildStatusIs(status) {
         return self.pull_request.last_build_status === status;
