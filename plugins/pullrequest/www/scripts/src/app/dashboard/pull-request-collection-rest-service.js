@@ -1,6 +1,4 @@
 import { noop } from "angular";
-import partial from "lodash.partial";
-import isString from "lodash.isstring";
 
 export default PullRequestCollectionRestService;
 
@@ -22,9 +20,9 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
     });
 
     function getPullRequests(repository_id, limit, offset, status) {
-        var status_param = {};
+        let status_param = {};
 
-        if (isString(status)) {
+        if (typeof status === "string") {
             status_param = {
                 query: {
                     status: status
@@ -32,7 +30,7 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
             };
         }
 
-        var params = Object.assign(
+        const params = Object.assign(
             {
                 limit: limit,
                 offset: offset
@@ -58,10 +56,10 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
     }
 
     function recursiveGet(getFunction, limit, offset, callback) {
-        return getFunction(limit, offset).then(function(response) {
-            var results = [].concat(response.results);
+        return getFunction(offset).then(function(response) {
+            const results = [].concat(response.results);
 
-            var progress_callback = callback || noop;
+            const progress_callback = callback || noop;
             progress_callback(results);
 
             if (offset + limit >= response.total) {
@@ -77,34 +75,30 @@ function PullRequestCollectionRestService($http, $q, ErrorModalService) {
     }
 
     function getAllPullRequestsWithStatus(repository_id, status, callback) {
-        var limit = self.pull_requests_pagination.limit;
-        var offset = self.pull_requests_pagination.offset;
+        const limit = self.pull_requests_pagination.limit;
+        const offset = self.pull_requests_pagination.offset;
 
-        var getOnePagePullRequests = partial(
-            self.getPullRequests,
-            repository_id,
-            partial.placeholder,
-            partial.placeholder,
-            status
-        );
+        const getOnePagePullRequests = new_offset => {
+            return $q.when(self.getPullRequests(repository_id, limit, new_offset, status));
+        };
 
         return recursiveGet(getOnePagePullRequests, limit, offset, callback);
     }
 
     function getAllPullRequests(repository_id, callback) {
-        var status = null;
+        const status = null;
 
         return getAllPullRequestsWithStatus(repository_id, status, callback);
     }
 
     function getAllOpenPullRequests(repository_id, callback) {
-        var status = "open";
+        const status = "open";
 
         return getAllPullRequestsWithStatus(repository_id, status, callback);
     }
 
     function getAllClosedPullRequests(repository_id, callback) {
-        var status = "closed";
+        const status = "closed";
 
         return getAllPullRequestsWithStatus(repository_id, status, callback);
     }
