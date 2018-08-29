@@ -8,13 +8,11 @@ function PullRequestSummaryController($state, PullRequestService, UserRestServic
     Object.assign(self, {
         author: {},
 
-        init,
+        $onInit: init,
         goToOverview,
         isAbandoned,
         isMerged
     });
-
-    self.init();
 
     function init() {
         UserRestService.getUser(self.pull_request.user_id).then(user => {

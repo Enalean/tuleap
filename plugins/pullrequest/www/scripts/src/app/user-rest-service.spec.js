@@ -51,7 +51,6 @@ describe("UserRestService -", function() {
             $httpBackend.expectGET("/api/v1/users/" + user_id).respond(403, "Forbidden");
 
             var promise = UserRestService.getUser(user_id);
-            $httpBackend.flush();
 
             expect(promise).toBeRejected();
             expect(ErrorModalService.showError).toHaveBeenCalledWith(

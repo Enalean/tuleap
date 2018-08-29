@@ -6,11 +6,11 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
-    "angular": "^1.4.14",
-    "angular-gettext": "^1.1.4",
+    "angular": "^1.7.3",
+    "angular-gettext": "^2.4.1",
     "angular-moment": "^0.10.3",
-    "angular-sanitize": "^1.4.14",
-    "angular-ui-router": "^0.2.18",
+    "angular-sanitize": "^1.7.3",
+    "angular-ui-router": "^0.4.3",
     "codemirror": "5.14.2 < 5.20.0",
     "mustache": "^2.3.2",
     "vue": "^2.5.13",
@@ -18,7 +18,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "angular-mocks": "^1.4.14",
+    "angular-mocks": "^1.7.3",
     "jquery": "^3.3.1"
   },
   "config": {

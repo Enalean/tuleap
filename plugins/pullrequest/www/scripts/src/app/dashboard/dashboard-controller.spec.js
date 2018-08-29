@@ -42,7 +42,7 @@ describe("DashboardController", function() {
         it("When the controller is created, then the open pull requests will be loaded and the loading flag will be set to false", function() {
             PullRequestCollectionService.loadOpenPullRequests.and.returnValue($q.when());
 
-            DashboardController.init();
+            DashboardController.$onInit();
             expect(DashboardController.loading_pull_requests).toBe(true);
 
             $rootScope.$apply();
@@ -57,7 +57,7 @@ describe("DashboardController", function() {
             PullRequestCollectionService.areAllPullRequestsFullyLoaded.and.returnValue(true);
             PullRequestCollectionService.loadAllPullRequests.and.returnValue($q.when());
 
-            DashboardController.init();
+            DashboardController.$onInit();
             expect(DashboardController.loading_pull_requests).toBe(true);
 
             $rootScope.$apply();
@@ -95,7 +95,6 @@ describe("DashboardController", function() {
 
             expect(DashboardController.areClosedPullRequestsHidden()).toBe(false);
             expect(PullRequestCollectionService.loadClosedPullRequests).not.toHaveBeenCalled();
-            expect(DashboardController.loading_pull_requests).toBe(false);
         });
     });
 
