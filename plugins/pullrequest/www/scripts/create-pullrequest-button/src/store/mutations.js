@@ -49,8 +49,10 @@ export function resetSelection(state) {
 
 export function setSelectedSourceBranch(state, branch) {
     state.selected_source_branch = branch;
+    state.create_error_message = initial_state.create_error_message;
 }
 
 export function setSelectedDestinationBranch(state, branch) {
     state.selected_destination_branch = branch;
+    state.create_error_message = initial_state.create_error_message;
 }
