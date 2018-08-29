@@ -178,8 +178,6 @@ _pluginGit() {
 }
 
 _pluginSVN() {
-    local -r httpd_conf="/etc/httpd/conf/httpd.conf"
-    local -r httpd_conf_ssl="/etc/httpd/conf.d/ssl.conf"
     local -r httpd_vhost="/etc/httpd/conf.d/tuleap-vhost.conf"
     local plugin_svn_configured="false"
 
@@ -212,32 +210,6 @@ _pluginSVN() {
                     "${tuleap_src}/etc/tuleap-vhost.conf.dist" > ${httpd_vhost}
         ${sed} --in-place '/Include.*configuration\|tuleap-aliases/d' \
              ${httpd_vhost}
-        plugin_svn_configured="true"
-    fi
-
-    if ! ${grep} --quiet "^User.*${tuleap_unix_user}" ${httpd_conf}; then
-        ${sed} --in-place "s@^User.*@User ${tuleap_unix_user}@g" ${httpd_conf}
-        plugin_svn_configured="true"
-    fi
-
-    if ! ${grep} --quiet "^Group.*${tuleap_unix_user}" ${httpd_conf}; then
-        ${sed} --in-place "s@^Group.*@Group ${tuleap_unix_user}@g" ${httpd_conf}
-        plugin_svn_configured="true"
-    fi
-
-    if ! ${grep} --quiet "Listen.*:8080" ${httpd_conf}; then
-        _phpConfigureModule "apache"
-        plugin_svn_configured="true"
-    fi
-
-    if [ -f ${httpd_conf_ssl} ] && \
-        ${grep} --quiet "SSLEngine.*on" ${httpd_conf_ssl}; then
-        ${sed} --in-place "s@^SSLEngine.*on@SSLEngine off@g" ${httpd_conf_ssl}
-        plugin_svn_configured="true"
-    fi
-
-    if ${grep} --quiet "^Listen" ${httpd_conf_ssl}; then
-        ${sed} --in-place "s@^Listen@#Listen@g" ${httpd_conf_ssl}
         plugin_svn_configured="true"
     fi
 

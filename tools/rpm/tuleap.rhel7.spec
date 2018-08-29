@@ -58,7 +58,7 @@ Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-#Requires: mailman-tuleap
+Requires: mailman-tuleap
 %description core-mailman
 Manage dependencies for Tuleap mailman integration
 
@@ -97,8 +97,8 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php56-php-pecl-mailparse
-#Requires: tuleap-core-mailman
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php56-php-pecl-mailparse
+Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
@@ -553,9 +553,9 @@ done
 #%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 #
 ## plugin forumml
-#%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
-#%{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
-#
+%{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
+%{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
+
 
 # plugin-git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
@@ -951,8 +951,8 @@ fi
 %files plugin-forumml
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/forumml
-#%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
-#%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
+%attr(00750,%{APP_USER},%{APP_USER}) %{_localstatedir}/run/forumml
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
 
 %files plugin-git
 %defattr(-,root,root,-)
