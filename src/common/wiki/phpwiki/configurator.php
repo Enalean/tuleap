@@ -402,12 +402,6 @@ new boolean_define_commented_optional
  array('true'  => "Enabled",
        'false' => "Disabled"));
 
-$properties["USE_SAFE_DBSESSION"] =
-new boolean_define_commented_optional
-('USE_SAFE_DBSESSION', 
- array('false' => "Disabled",
-       'true'  => "Enabled"));
-
 $properties["Part One"] =
 new part('_part1', $SEPARATOR."\n", "
 Part One: Authentication and security settings. See Part Three for more.");

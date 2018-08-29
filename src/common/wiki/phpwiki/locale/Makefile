@@ -82,11 +82,6 @@ ${POT_FILE}: ../lib/config.php
 ${POT_FILE}: ../lib/DbaDatabase.php
 ${POT_FILE}: ../lib/DbaListSet.php
 ${POT_FILE}: ../lib/DbaPartition.php
-${POT_FILE}: ../lib/DbSession/ADODB.php
-${POT_FILE}: ../lib/DbSession/dba.php
-${POT_FILE}: ../lib/DbSession/PDO.php
-${POT_FILE}: ../lib/DbSession.php
-${POT_FILE}: ../lib/DbSession/SQL.php
 ${POT_FILE}: ../lib/diff3.php
 ${POT_FILE}: ../lib/difflib.php
 ${POT_FILE}: ../lib/diff.php

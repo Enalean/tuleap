@@ -2054,8 +2054,6 @@ $locale["Your E-Mail:"] =
    "Votre E-Mail :";
 $locale["Your UserPreferences have been successfully deleted."] =
    "Vos PréférencesUtilisateurs ont été effacées avec succès.";
-$locale["Your WikiDB DB backend '%s' cannot be used for DbSession."] =
-   "Votre choix '%s' de WikiDB DB ne peut pas être utilisé pour DbSession.";
 $locale["Your access permissions are only for a BogoUser."] =
    "Vos permissions d'acces sont celles d'un utilisateur Bogo.";
 $locale["Your are probably trying to edit/create an invalid version of this page."] =
