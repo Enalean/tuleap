@@ -27,6 +27,7 @@ use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullrequestDisplayer
@@ -84,8 +85,8 @@ class PullrequestDisplayer
             $layout->addCssAsset(
                 new CssAsset(
                     new IncludeAssets(
-                        __DIR__ . '/../../../src/www/assets/pull-requests/BurningParrot',
-                        '/assets/pull-requests/BurningParrot/'
+                        __DIR__ . '/../../../src/www/assets/pullrequest/BurningParrot',
+                        '/assets/pullrequest/BurningParrot'
                     ),
                     'pull-requests'
                 )
@@ -97,6 +98,16 @@ class PullrequestDisplayer
                 $user,
                 $repository
             );
+
+            $scripts_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/pullrequest/scripts',
+                '/assets/pullrequest/scripts'
+            );
+
+            $move_button_back = new ScriptAsset($scripts_assets, 'move-button-back.js');
+            $pull_requests_app = new ScriptAsset($scripts_assets, 'tuleap-pullrequest.js');
+            $layout->includeFooterJavascriptFile($move_button_back->getFileURL());
+            $layout->includeFooterJavascriptFile($pull_requests_app->getFileURL());
 
             $presenter = new PullRequestPresenter(
                 $repository->getId(),
