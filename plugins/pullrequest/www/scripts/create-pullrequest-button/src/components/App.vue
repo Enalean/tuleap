@@ -64,6 +64,7 @@ export default {
 
         const modal = this.$refs.modal.$el;
         this.modal = createModal(modal);
+        this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
 
         const error_modal = this.$refs.error_modal.$el;
         this.error_modal = createModal(error_modal);
@@ -75,6 +76,9 @@ export default {
             } else {
                 this.modal.toggle();
             }
+        },
+        resetModal() {
+            this.$store.commit("resetSelection");
         }
     }
 };

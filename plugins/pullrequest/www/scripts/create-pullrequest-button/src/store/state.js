@@ -20,6 +20,8 @@
 export default {
     source_branches: [],
     destination_branches: [],
+    selected_source_branch: "",
+    selected_destination_branch: "",
     create_error_message: "",
     has_error_while_loading_branches: false,
     is_creating_pullrequest: false
