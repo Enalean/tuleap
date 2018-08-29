@@ -4,7 +4,6 @@ import ng_sanitize from "angular-sanitize";
 
 import "angular-moment";
 import "angular-gettext";
-import "angular-ui-bootstrap-templates";
 import "../../po/fr.po";
 
 import angular_tlp from "angular-tlp";
@@ -52,7 +51,6 @@ export default angular
     .module("tuleap.pull-request", [
         "angularMoment",
         "gettext",
-        "ui.bootstrap",
         angular_tlp,
         ui_router,
         ng_sanitize,
