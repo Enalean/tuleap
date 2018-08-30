@@ -3630,7 +3630,6 @@ EOS;
             )
         );
 
-        $xml_import_helper = new XMLImportHelper($this->getUserManager());
         $artifact_source_id_dao = new TrackerArtifactSourceIdDao();
         return new Tracker_Artifact_XMLImport(
             new XML_RNGValidator(),
@@ -3644,7 +3643,7 @@ EOS;
             Tracker_ArtifactFactory::instance(),
             new NatureDao(),
             new XMLArtifactSourcePlatformExtractor(new Valid_HTTPURI(), $logger),
-            new ExistingArtifactSourceIdFromTrackerExtractor(Tracker_ArtifactFactory::instance(), $artifact_source_id_dao),
+            new ExistingArtifactSourceIdFromTrackerExtractor($artifact_source_id_dao),
             $artifact_source_id_dao
         );
     }
