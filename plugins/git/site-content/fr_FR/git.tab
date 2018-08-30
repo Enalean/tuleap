@@ -112,8 +112,6 @@ plugin_git	actions_missing_permission	Veuillez définir les permissions d'Écrit
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent_gitshell	Parent : $1
-plugin_git	view_repo_parent_gitolite	Fork de $1
 plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
@@ -462,12 +460,6 @@ project_admin_utils	git_admin_groups	Groupes administrateurs Git
 project_admin_utils	git_fork_repositories	Fork de dépôts Git
 
 plugin_git	identifier	Identifiant
-
-plugin_git	how_to_use_text	Comment utiliser un dépôt Git:
-plugin_git	clone_text	Clonez le dépôt pour obtenir votre copie de travail locale:
-plugin_git	add_remote_text	Ou ajoutez simplement ce dépôt distant à votre copie locale:
-plugin_git	default_location	Défaut
-plugin_git	ssh_mirrors_text	Miroirs SSH
 
 plugin_git	restore_invalid_id	Impossible de restorer le dépôt Git : Identifiant invalide
 plugin_git	restore_invalid_name	Impossible de restorer le dépôt Git : un dépôt avec le même nom existe déjà

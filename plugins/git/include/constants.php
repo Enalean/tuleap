@@ -35,25 +35,6 @@ define('REST_GIT_PULL_REQUEST_ENDPOINTS', 'rest_git_pull_request_endpoints');
 define('REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY', 'rest_git_pull_request_get_for_repository');
 
 /**
- * Allow a plugin to add additional info beside the repository name
- *
- * Parameters:
- *   'repository' => (Input)  GitRepository Git repository
- *   'info'       => (Output) String        Html string of the info to append
- */
-define('GIT_ADDITIONAL_INFO', 'git_additional_info');
-
-/**
- * Allow a plugin to add additional actions beside the clone bar
- *
- * Parameters:
- *   'repository' => (Input)  GitRepository Git repository
- *   'user'       => (Input)  PFUser        Current user
- *   'actions'    => (Output) String        Rendered template of the actions
- */
-define('GIT_ADDITIONAL_ACTIONS', 'git_additional_actions');
-
-/**
  * Allow a plugin to append his own classes to the body DOM element in git views
  *
  * Parameters:
@@ -71,15 +52,6 @@ define('GIT_ADDITIONAL_BODY_CLASSES', 'git_additional_body_classes');
  *   'permitted_actions' => (Output) String[]      Permitted actions
  */
 define('GIT_ADDITIONAL_PERMITTED_ACTIONS', 'git_additional_permitted_actions');
-
-/**
- * Allow a plugin to add additional help text in the clone url bar
- *
- * Parameters:
- *   'repository'=> (Input)  GitRepository Git repository
- *   'html'      => (Output) String        Help text
- */
-define('GIT_ADDITIONAL_HELP_TEXT', 'git_additional_help_text');
 
 /**
  * Allow plugins to add additional notifications setup for git

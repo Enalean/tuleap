@@ -7,30 +7,6 @@ plugin_pullrequest	service_lbl_key	Pull request
 plugin_pullrequest	nb_pull_request_badge	$1 pull request
 plugin_pullrequest	nb_pull_request_badge_plural	$1 pull requests
 
-plugin_pullrequest	new_pull_request_button_title	Create a pull request
-plugin_pullrequest	pull_request_can_not_be_created	No pull request can currently be created
-plugin_pullrequest	new_pull_request_modal_title	Create a pull request
-plugin_pullrequest	new_pull_request_modal_from	From
-plugin_pullrequest	new_pull_request_modal_to	To
-plugin_pullrequest	new_pull_request_modal_choose_branch_from	Choose a source branch
-plugin_pullrequest	new_pull_request_modal_choose_branch_to	Choose a destination branch
-plugin_pullrequest	new_pull_request_modal_close	Close
-plugin_pullrequest	new_pull_request_modal_submit	Create
-
-plugin_pullrequest	invalid_request	This request is not valid.
-plugin_pullrequest	generate_pull_request_error	An error occured while generating the Pull Request.
-plugin_pullrequest	generate_pull_request_branch_error	A provided branch does not exist.
-plugin_pullrequest	user_cannot_read_repository	You are not authorized to READ the Git repository.
-plugin_pullrequest	pull_request_cannot_be_created	The source and destination references should not be the same.
-plugin_pullrequest	pull_request_already_exists	A pull request with the same source and destination references already exists.
-plugin_pullrequest	repository_migrated_on_gerrit	The repository is migrated on Gerrit.
-
-plugin_pullrequest	git_clone_bar_help_text_title	How to use pull requests:
-plugin_pullrequest	git_clone_bar_help_text_intro	For now, you can only make a pull request between two branches of a Git repository. What you can do is:
-plugin_pullrequest	git_clone_bar_help_text_create_pull_request	Create a pull request using the button
-plugin_pullrequest	git_clone_bar_help_text_view_pull_requests	See all pull requests by clicking on <span class="badge">$1</span> beside the repository name
-plugin_pullrequest	git_clone_bar_help_text_pull_request_actions	When viewing a pull request, comment it, review its files and merge or abandon it
-
 plugin_pullrequest	reference_pullrequest_desc_key	Pull Request
 
 plugin_pullrequest	status_merged	Merged

@@ -26,12 +26,13 @@ use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
-class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject
+class GitRepositoryBrowserController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     /**
      * @var \GitRepositoryFactory
@@ -57,17 +58,12 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * @var GitRepositoryHeaderDisplayer
      */
     private $header_displayer;
-    /**
-     * @var GitViews\ShowRepo\RepoHeader
-     */
-    private $repo_header;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         \ProjectManager $project_manager,
         \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         History\GitPhpAccessLogger $access_logger,
-        GitViews\ShowRepo\RepoHeader $repo_header,
         \ThemeManager $theme_manager,
         GitRepositoryHeaderDisplayer $header_displayer
     ) {
@@ -77,7 +73,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $this->access_logger      = $access_logger;
         $this->theme_manager      = $theme_manager;
         $this->header_displayer   = $header_displayer;
-        $this->repo_header        = $repo_header;
     }
 
     /**
@@ -108,10 +103,6 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if (\ForgeConfig::get('git_repository_bp')) {
-            $layout          = $this->theme_manager->getBurningParrot($request->getCurrentUser());
-            $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
-        }
         $project = $this->getProject($request, $variables);
         if (! $project->usesService(gitPlugin::SERVICE_SHORTNAME)) {
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
@@ -153,16 +144,14 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
 
         if (! $url->isADownload($request)) {
-            $this->header_displayer->display($request, $layout, $current_user, $repository, $this->repo_header);
+            $this->header_displayer->display($request, $layout, $current_user, $repository);
             $renderer->renderToPage('repository/files/header', []);
         }
 
         $index_view->display($url);
 
         if (! $url->isADownload($request)) {
-            if (\ForgeConfig::get('git_repository_bp')) {
-                $renderer->renderToPage('repository/files/footer', []);
-            }
+            $renderer->renderToPage('repository/files/footer', []);
             $layout->footer([]);
         }
     }

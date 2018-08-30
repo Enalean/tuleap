@@ -24,7 +24,8 @@ use TuleapTestCase;
 
 require_once 'bootstrap.php';
 
-class GitExecTest extends TuleapTestCase {
+class GitExecTest extends TuleapTestCase
+{
     private $fixture_dir;
 
     /**
@@ -32,7 +33,8 @@ class GitExecTest extends TuleapTestCase {
      */
     private $git_exec;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->fixture_dir = '/tmp/tuleap-pullrequest-git-exec-test_'.rand(0, 99999999);
@@ -47,13 +49,15 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->commit("add stuff");
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         system("rm -rf $this->fixture_dir");
 
         parent::tearDown();
     }
 
-    public function itReturnsTheSha1OfAGivenBranch() {
+    public function itReturnsTheSha1OfAGivenBranch()
+    {
         $sha1 = $this->git_exec->getBranchSha1('refs/heads/master');
 
         $this->assertNotNull($sha1);
@@ -61,13 +65,15 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual(strlen($sha1), 40);
     }
 
-    public function itThrowsAnExceptionIfBranchDoesNotExist() {
+    public function itThrowsAnExceptionIfBranchDoesNotExist()
+    {
         $this->expectException('Tuleap\PullRequest\Exception\UnknownBranchNameException');
 
         $sha1 = $this->git_exec->getBranchSha1('refs/heads/universitylike');
     }
 
-    public function itReturnsAnArrayOfModifiedFiles() {
+    public function itReturnsAnArrayOfModifiedFiles()
+    {
         system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/toto", "jackassness");
         $this->git_exec->add("$this->fixture_dir/toto");
@@ -82,7 +88,8 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual($files[0], 'M	toto');
     }
 
-    public function itUsesTheCommonAncestorToDoTheDiff() {
+    public function itUsesTheCommonAncestorToDoTheDiff()
+    {
         system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
         system("cd $this->fixture_dir && git checkout --quiet master 2>&1 >/dev/null");
         file_put_contents("$this->fixture_dir/added-file-in-master", "whatever");
@@ -100,10 +107,10 @@ class GitExecTest extends TuleapTestCase {
         $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
 
         $this->assertEqual($files[0], 'A	added-file-in-dev');
-
     }
 
-    public function itThrowsAnExceptionIfReferenceIsUnknown() {
+    public function itThrowsAnExceptionIfReferenceIsUnknown()
+    {
         $sha1_src  = 'weeakplbrhmj03pjcjtw5blestib2hy3rgpwxmwt';
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
@@ -112,23 +119,8 @@ class GitExecTest extends TuleapTestCase {
         $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
     }
 
-    public function itReturnsTheBranchNames() {
-        system("cd $this->fixture_dir && git checkout --quiet -b dev 2>&1 >/dev/null");
-        file_put_contents("$this->fixture_dir/nonprophetic", "jackassness");
-        $this->git_exec->add("$this->fixture_dir/nonprophetic");
-        $this->git_exec->commit("add nonprophetic");
-
-        $branches = $this->git_exec->getAllBranchNames();
-
-        $expected = array(
-            'dev',
-            'master'
-        );
-
-        $this->assertEqual($branches, $expected);
-    }
-
-    public function itReturnsShortStat() {
+    public function itReturnsShortStat()
+    {
         $file1_path = "$this->fixture_dir/file1";
         $file2_path = "$this->fixture_dir/file2";
 
@@ -151,7 +143,8 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
     }
 
-    public function itReturnsShortStatForOneFile() {
+    public function itReturnsShortStatForOneFile()
+    {
         $file1_path = "$this->fixture_dir/file1";
         $file2_path = "$this->fixture_dir/file2";
 
@@ -179,13 +172,13 @@ class GitExecTest extends TuleapTestCase {
         $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
     }
 
-    public function itReturnsFalseIfBaseCommitRefDoesntExist_isAncestor()
+    public function itReturnsFalseIfBaseCommitRefDoesntExist_isAncestor() // phpcs:ignore
     {
         $res = $this->git_exec->isAncestor('aldfkezjjzfrkj', 'HEAD');
         $this->assertEqual(false, $res);
     }
 
-    public function itReturnsFalseIfMergedCommitRefDoesntExist_isAncestor()
+    public function itReturnsFalseIfMergedCommitRefDoesntExist_isAncestor() // phpcs:ignore
     {
         $res = $this->git_exec->isAncestor('HEAD^', 'fezefzefzeef');
         $this->assertEqual(false, $res);
@@ -210,5 +203,4 @@ class GitExecTest extends TuleapTestCase {
         $res = $this->git_exec->isAncestor('HEAD', 'HEAD^');
         $this->assertEqual(true, $res);
     }
-
 }

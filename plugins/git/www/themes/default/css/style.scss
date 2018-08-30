@@ -17,111 +17,6 @@ textarea.text {
     width: 400px;
 }
 
-#plugin_git_clone_url {
-    margin: 20px 0 0;
-}
-
-#plugin_git_clone_url_group {
-    display: inline;
-}
-
-#plugin_git_reference {
-    margin: 0 0 20px;
-
-    h1 {
-        > a.git-repo-name {
-            color: inherit;
-
-            &:hover, &:focus {
-                color: inherit;
-                text-decoration: none;
-                opacity: 0.8;
-            }
-        }
-
-        .badge {
-            position: relative;
-            top: -5px;
-            left: 5px;
-            padding: 4px 10px 5px;
-            border-radius: 50px;
-            font-size: 13px;
-        }
-
-        a.badge:hover {
-            opacity: 0.8;
-        }
-    }
-}
-
-#plugin_git_repository_actions {
-    float: right;
-    list-style: none;
-    align: left;
-    margin: 0 0 0 10em;
-}
-
-#plugin_git_repository_actions li {
-    display: inline;
-}
-
-#plugin_git_repository_actions a {
-    background: no-repeat;
-    background-position: 5px center;
-    padding-left: 24px;
-}
-
-#plugin_git_repository_actions a.repo_fork {
-    background-image: url('../images/fork.png');
-}
-
-#plugin_git_repository_actions a.repo_admin {
-    background-image: url('../images/edit.png');
-}
-
-#plugin_git_reference_author {
-    clear: both;
-    margin: 0;
-    font-size: 0.9em;
-    color: gray;
-}
-
-#plugin_git_description {
-    margin: 0.5em 0 0.5em 0;
-}
-
-#plugin_git_fork_form {
-    white-space: no-wrap;
-    margin-top: 0em;
-}
-
-#plugin_git_clone_field {
-    border: 1px solid rgb(196, 196, 196);
-    padding-left: 5px;
-}
-
-#plugin_git_description textarea {
-    vertical-align: top;
-}
-
-#plugin_git_repo_parent {
-    color: #666;
-    font-size: 12px;
-    margin: -5px 0 0;
-}
-
-.plugin_git_repo_privacy {
-    margin-right: 8px;
-}
-
-.plugin_git_repo_type_gitshell > #plugin_git_repo_parent {
-    margin-left: 25px;
-}
-
-td.plugin_git_first_col {
-    width: 11em;
-}
-
 .plugin_git_mail_prefix {
     width: 15em;
 }
@@ -129,49 +24,6 @@ td.plugin_git_first_col {
 .plugin_git_permissions_select {
     width: 256px;
     margin-right: 20px;
-}
-
-#gitphp.plugin_git_gitphp {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    border: 1px solid #e3e3e3;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
-}
-
-#gitphp.plugin_git_gitphp .page_header {
-    background: whiteSmoke;
-}
-
-#gitphp.plugin_git_gitphp div.search {
-    margin-top: 18px;
-}
-
-#gitphp.plugin_git_gitphp td,
-#gitphp.plugin_git_gitphp td.link,
-#gitphp.plugin_git_gitphp div.search {
-    /* bootstrap default size */
-    font-size: 14px;
-}
-
-#gitphp.plugin_git_gitphp a.title,
-#gitphp.plugin_git_gitphp > table {
-    margin-left: 0.5em;
-}
-
-#gitphp.plugin_git_gitphp div.page_footer {
-    margin-top: 1em;
-    background: whiteSmoke;
-}
-
-#gitphp.plugin_git_gitphp div.diff_info,
-#gitphp.plugin_git_gitphp tr.dark,
-#gitphp.plugin_git_gitphp div.title {
-    background: #FCFCFC;
 }
 
 #git_repositories_list {
@@ -220,110 +72,6 @@ tr.boxitemalt > td {
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-#plugin_git_example {
-    > h3 {
-        margin: 0 0 15px;
-    }
-
-    > dl {
-        margin: 0;
-
-        > dd {
-            margin: 5px 0 15px;
-
-            > pre {
-                display: inline-block;
-            }
-
-            > ul {
-                margin-bottom: 0;
-            }
-        }
-    }
-}
-
-/* {{{ The styling of the #plugin_git_clone_field is based on bootstrap with
-       customizations. Waiting for LESS support */
-#plugin_git_clone_field {
-    font-size: 14px;
-    font-weight: normal;
-    line-height: 20px;
-}
-
-#plugin_git_clone_field {
-    display: inline-block;
-    height: 20px;
-    padding: 4px 6px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    line-height: 20px;
-    color: #555555;
-    vertical-align: top;
-    background-color: #FCFCFC;
-    border: 1px solid #cccccc;
-    border-left: none;
-    border-right: none;
-    -webkit-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.075);
-
-}
-
-#plugin_git_clone_field:focus {
-    outline: 0;
-    outline: thin dotted \9
-;
-    /* IE6-9 */
-
-}
-
-#plugin_git_clone_field:-moz-placeholder {
-    color: #999999;
-}
-
-#plugin_git_clone_field:-ms-input-placeholder {
-    color: #999999;
-}
-
-#plugin_git_clone_field::-webkit-input-placeholder {
-    color: #999999;
-}
-
-#plugin_git_clone_field[class*="span"],
-.row-fluid #plugin_git_clone_field[class*="span"] {
-    float: none;
-    margin-left: 0;
-}
-
-.input-append #plugin_git_clone_field[class*="span"],
-.input-prepend #plugin_git_clone_field[class*="span"],
-.row-fluid #plugin_git_clone_field[class*="span"] {
-    display: inline-block;
-}
-
-#plugin_git_clone_field {
-    margin-left: 0;
-    border-left: 0;
-}
-
-/* }}} */
-
-.input-prepend .gitclone_urls_protocols {
-    border-right: 1px solid;
-
-    > .btn:last-child {
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        border-radius: 0;
-    }
-
-    .btn.git_first_protocol {
-        -webkit-border-radius: 4px 0 0 4px;
-        -moz-border-radius: 4px 0 0 4px;
-        border-radius: 4px 0 0 4px;
-    }
-}
-
 .gerrit_url.alert.alert-info {
     display: inline-block;
     margin-bottom: 1em;
@@ -337,33 +85,6 @@ tr.boxitemalt > td {
 .wait_creation.alert.alert-info {
     display: inline-block;
     margin-bottom: 1em;
-}
-
-#plugin_git_clone_url_group > .add-on {
-    display: inline-block;
-    background-color: #fcfcfb;
-}
-
-#plugin_git_clone_url_group.plugin_git_clone_field-read-only > .add-on {
-    display: inline-block;
-    border-right: none;
-    background: #fcfcfc;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-
-.plugin_git_clone_field-read-only > .add-on > .label {
-    line-height: inherit;
-}
-
-.plugin_git_clone_field-read-only > #plugin_git_clone_field {
-    border-left: none;
-}
-
-a.btn.plugin_git_admin_button {
-    color: #333;
-    margin-left: 1em;
 }
 
 legend.gerrit_disconnect {
@@ -628,25 +349,6 @@ body.sidebar-expanded .mass-mirrors-list-update-bar {
     font-weight: bold;
 }
 
-.update-n-repositories-popup-content {
-    display: none;
-}
-
-#gitclone_urls_readonly {
-    box-shadow: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.0470588);
-}
-
-#plugin_git_example-handle {
-    border-left: 1px solid rgba(0, 0, 0, 0.0980392);
-    margin-left: 0;
-}
-
-#gitclone_urls_protocol_ssh {
-    + .dropdown-toggle + .dropdown-menu > li:not(.is_selected) > a > .fa-check {
-        visibility: hidden;
-    }
-}
-
 .form-tree {
     margin: 30px 0 0;
 }
@@ -659,32 +361,6 @@ h1, h2, h3 {
         &:hover {
             text-decoration: none;
             color: #888;
-        }
-    }
-}
-
-#gitphp.plugin_git_gitphp {
-    table.diffTable {
-        font-family: monospace;
-
-        tr.diff-added {
-            background-color: #C1FFC1;
-        }
-
-        tr.diff-modified {
-            background-color: #DDEEFF;
-        }
-
-        tr.diff-deleted {
-            background-color: #FFDDDD;
-        }
-
-        td {
-            font-size: 0.85em;
-
-            &.diff-left {
-                border-right: 1px solid #d9d8d1;
-            }
         }
     }
 }
@@ -997,9 +673,4 @@ h1, h2, h3 {
 
 .git-notification-mail-list-submit {
     margin: 15px 0 0;
-}
-
-.git-checkout-command::before {
-    content: '$';
-    margin: 0 1em 0 0;
 }
