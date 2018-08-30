@@ -245,6 +245,50 @@
     }
 }
 
+.current-project-nav-flag-popover-header {
+    padding: 0;
+    justify-content: center;
+}
+
+.current-project-nav-flag-popover-title {
+    margin: 0;
+    padding: 10px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+    letter-spacing: normal;
+    text-align: center;
+    cursor: initial;
+}
+
+.current-project-nav-flag-popover-flags {
+    margin: 0 0 0 $tlp-half-spacing;
+    list-style-type: disc;
+    color: $tlp-theme-color;
+}
+
+.current-project-nav-flag-popover-flag {
+    margin: 0 0 $tlp-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.current-project-nav-flag-popover-content-title {
+    margin: 0 0 $tlp-half-spacing;
+    line-height: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: $tlp-theme-color;
+}
+
+.current-project-nav-flag-popover-content-description {
+    margin: 0;
+    color: $tlp-typo-default-text-color;
+}
+
 .current-project-name {
     max-width: 250px;
     overflow: hidden;

@@ -25,6 +25,8 @@ export { default as modal } from "./modal.js";
 
 export { default as dropdown } from "./dropdowns.js";
 
+export { default as createPopover } from "./popovers.js";
+
 export { default as filterInlineTable } from "./filter-inline-table.js";
 
 import jQuery from "jquery";

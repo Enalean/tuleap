@@ -145,6 +145,13 @@ $nav-margin: 30px;
     #dropdown-icon-right-example:hover {
         color: $theme-color;
     }
+
+    .popover-examples-container > i {
+        text-shadow: -5px -5px 0 $tlp-theme-background-color,
+            5px -5px 0 $tlp-theme-background-color,
+            -5px 5px 0 $tlp-theme-background-color,
+            5px 5px 0 $tlp-theme-background-color;
+    }
 }
 
 body {
