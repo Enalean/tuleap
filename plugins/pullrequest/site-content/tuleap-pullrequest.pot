@@ -15,6 +15,10 @@ msgstr ""
 msgid "Pull requests"
 msgstr ""
 
+#, php-format
+msgid "Pull requests (%d)"
+msgstr ""
+
 msgid "Pull requests settings updated"
 msgstr ""
 

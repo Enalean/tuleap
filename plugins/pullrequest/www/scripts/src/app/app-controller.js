@@ -1,8 +1,22 @@
 export default MainController;
 
-MainController.$inject = ["$element", "gettextCatalog", "amMoment", "SharedPropertiesService"];
+MainController.$inject = [
+    "$element",
+    "$document",
+    "$state",
+    "gettextCatalog",
+    "amMoment",
+    "SharedPropertiesService"
+];
 
-function MainController($element, gettextCatalog, amMoment, SharedPropertiesService) {
+function MainController(
+    $element,
+    $document,
+    $state,
+    gettextCatalog,
+    amMoment,
+    SharedPropertiesService
+) {
     this.$onInit = init;
 
     function init() {
@@ -26,10 +40,17 @@ function MainController($element, gettextCatalog, amMoment, SharedPropertiesServ
 
         const is_merge_commit_allowed = pullrequest_init_data.isMergeCommitAllowed;
         SharedPropertiesService.setIsMergeCommitAllowed(is_merge_commit_allowed);
+
+        useUiRouterInPullRequestTabLink();
     }
 
     function initLocale(language) {
         gettextCatalog.setCurrentLanguage(language);
         amMoment.changeLocale(language);
+    }
+
+    function useUiRouterInPullRequestTabLink() {
+        const tab_element = $document[0].getElementById("tabs-pullrequest");
+        tab_element.href = $state.href("dashboard");
     }
 }

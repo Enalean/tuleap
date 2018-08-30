@@ -104,9 +104,7 @@ class PullrequestDisplayer
                 '/assets/pullrequest/scripts'
             );
 
-            $move_button_back = new ScriptAsset($scripts_assets, 'move-button-back.js');
             $pull_requests_app = new ScriptAsset($scripts_assets, 'tuleap-pullrequest.js');
-            $layout->includeFooterJavascriptFile($move_button_back->getFileURL());
             $layout->includeFooterJavascriptFile($pull_requests_app->getFileURL());
 
             $presenter = new PullRequestPresenter(

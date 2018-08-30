@@ -22,7 +22,9 @@
 namespace Tuleap\PullRequest\NavigationTab;
 
 use GitRepository;
+use TemplateRendererFactory;
 use Tuleap\Git\Repository\View\TabPresenter;
+use Tuleap\PullRequest\Factory;
 use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
 class NavigationTabPresenterBuilder
@@ -32,20 +34,37 @@ class NavigationTabPresenterBuilder
      * @var HTMLURLBuilder
      */
     private $url_builder;
+    /**
+     * @var Factory
+     */
+    private $factory;
 
-    public function __construct(HTMLURLBuilder $url_builder)
+    public function __construct(HTMLURLBuilder $url_builder, Factory $factory)
     {
         $this->url_builder = $url_builder;
+        $this->factory = $factory;
     }
 
     public function build(GitRepository $repository, $selected_tab)
     {
         $is_selected = $selected_tab === self::TAB_PULLREQUEST;
 
+        $nb_pull_requests = 0;
+        if (! $repository->isMigratedToGerrit()) {
+            $nb_pull_requests = $this->factory->getPullRequestCount($repository);
+        }
+
         return new TabPresenter(
             $is_selected,
             $this->url_builder->getPullRequestDashboardUrl($repository),
-            dgettext("tuleap-pullrequest", "Pull requests")
+            sprintf(
+                dgettext(
+                    'tuleap-pullrequest',
+                    "Pull requests (%d)"
+                ),
+                $nb_pull_requests->getNbOpen()
+            ),
+            self::TAB_PULLREQUEST
         );
     }
 }

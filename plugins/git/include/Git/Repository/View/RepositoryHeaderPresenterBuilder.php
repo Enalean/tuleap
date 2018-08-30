@@ -188,7 +188,8 @@ class RepositoryHeaderPresenterBuilder
         return new TabPresenter(
             $is_selected,
             $this->url_manager->getRepositoryBaseUrl($repository),
-            dgettext("tuleap-git", "Files")
+            dgettext("tuleap-git", "Files"),
+            self::TAB_FILES
         );
     }
 

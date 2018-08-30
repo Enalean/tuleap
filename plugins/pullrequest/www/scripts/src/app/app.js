@@ -10,7 +10,6 @@ import angular_tlp from "angular-tlp";
 
 import MainController from "./app-controller.js";
 
-import ButtonBackDirective from "./button-back/button-back-directive.js";
 import DashboardDirective from "./dashboard/dashboard-directive.js";
 import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-request-summary-directive.js";
 import FileDiffDirective from "./file-diff/file-diff-directive.js";
@@ -59,7 +58,6 @@ export default angular
     ])
     .controller("MainController", MainController)
 
-    .directive("buttonBack", ButtonBackDirective)
     .directive("dashboard", DashboardDirective)
     .directive("pullRequestSummary", PullRequestSummaryDirective)
     .directive("fileDiff", FileDiffDirective)

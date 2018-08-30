@@ -646,7 +646,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
     public function repositoryExternalNavigationTabsCollector(RepositoryExternalNavigationTabsCollector $event)
     {
-        $builder = new NavigationTabPresenterBuilder($this->getHTMLBuilder());
+        $builder = new NavigationTabPresenterBuilder($this->getHTMLBuilder(), $this->getPullRequestFactory());
         $event->addNewTab($builder->build($event->getRepository(), $event->getSelectedTab()));
     }
 
