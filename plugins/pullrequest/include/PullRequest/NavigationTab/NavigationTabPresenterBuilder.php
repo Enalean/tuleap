@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
@@ -18,45 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository;
+namespace Tuleap\PullRequest\NavigationTab;
 
-use Tuleap\Event\Dispatchable;
-use Tuleap\Layout\CssAsset;
-use Tuleap\layout\ScriptAsset;
+use GitRepository;
+use Tuleap\Git\Repository\View\TabPresenter;
+use Tuleap\PullRequest\Reference\HTMLURLBuilder;
 
-class CollectAssets implements Dispatchable
+class NavigationTabPresenterBuilder
 {
-    const NAME = "collectAssets";
-
-    /** @var ScriptAsset[] */
-    private $scripts = [];
-
-    /** @var CssAsset[] */
-    private $stylesheets = [];
-
-    public function addScript(ScriptAsset $script_asset)
-    {
-        $this->scripts[] = $script_asset;
-    }
-
-    public function addStylesheet(CssAsset $css_asset)
-    {
-        $this->stylesheets[] = $css_asset;
-    }
-
+    const TAB_PULLREQUEST = 'tabs-pullrequest';
     /**
-     * @return ScriptAsset[]
+     * @var HTMLURLBuilder
      */
-    public function getScripts()
+    private $url_builder;
+
+    public function __construct(HTMLURLBuilder $url_builder)
     {
-        return $this->scripts;
+        $this->url_builder = $url_builder;
     }
 
-    /**
-     * @return CssAsset[]
-     */
-    public function getStylesheets()
+    public function build(GitRepository $repository, $selected_tab)
     {
-        return $this->stylesheets;
+        $is_selected = $selected_tab === self::TAB_PULLREQUEST;
+
+        return new TabPresenter(
+            $is_selected,
+            $this->url_builder->getPullRequestDashboardUrl($repository),
+            dgettext("tuleap-pullrequest", "Pull requests")
+        );
     }
 }

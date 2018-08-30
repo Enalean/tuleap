@@ -55,12 +55,12 @@ use UserManager;
 
 class GitRepositoryHeaderDisplayerBuilder
 {
-    public function build()
+    public function build($selected_tab)
     {
         $git_plugin = \PluginManager::instance()->getPluginByName('git');
         return new GitRepositoryHeaderDisplayer(
             $this->getHeaderRenderer($git_plugin),
-            $this->getRepositoryHeaderPresenterBuilder($git_plugin),
+            $this->getRepositoryHeaderPresenterBuilder($git_plugin, $selected_tab),
             $this->getIncludeAssets($git_plugin),
             EventManager::instance()
         );
@@ -128,7 +128,7 @@ class GitRepositoryHeaderDisplayerBuilder
         return new Git_GitRepositoryUrlManager($git_plugin);
     }
 
-    private function getRepositoryHeaderPresenterBuilder(Plugin $git_plugin)
+    private function getRepositoryHeaderPresenterBuilder(Plugin $git_plugin, $selected_tab)
     {
         return new RepositoryHeaderPresenterBuilder(
             $this->getGitRepositoryUrlManager($git_plugin),
@@ -137,7 +137,9 @@ class GitRepositoryHeaderDisplayerBuilder
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory()->getServers(),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            $selected_tab,
+            EventManager::instance()
         );
     }
 

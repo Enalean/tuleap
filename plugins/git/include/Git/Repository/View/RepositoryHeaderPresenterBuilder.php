@@ -32,6 +32,8 @@ use PFUser;
 
 class RepositoryHeaderPresenterBuilder
 {
+    const TAB_FILES = 'tab-files';
+
     /**
      * @var Git_GitRepositoryUrlManager
      */
@@ -65,6 +67,11 @@ class RepositoryHeaderPresenterBuilder
      * @var Git_Mirror_MirrorDataMapper
      */
     private $mirror_data_mapper;
+    private $selected_tab;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Git_GitRepositoryUrlManager $url_manager,
@@ -73,7 +80,9 @@ class RepositoryHeaderPresenterBuilder
         Git_Driver_Gerrit_UserAccountManager $gerrit_usermanager,
         GitPermissionsManager $permissions_manager,
         array $gerrit_servers,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper,
+        $selected_tab,
+        \EventManager $event_manager
     ) {
         $this->url_manager            = $url_manager;
         $this->driver_factory         = $driver_factory;
@@ -82,6 +91,8 @@ class RepositoryHeaderPresenterBuilder
         $this->permissions_manager    = $permissions_manager;
         $this->gerrit_servers         = $gerrit_servers;
         $this->mirror_data_mapper     = $mirror_data_mapper;
+        $this->selected_tab           = $selected_tab;
+        $this->event_manager          = $event_manager;
     }
 
     /** @return RepositoryHeaderPresenter */
@@ -110,6 +121,7 @@ class RepositoryHeaderPresenterBuilder
             $current_user,
             $clone_presenter,
             $gerrit_status_presenter,
+            $this->buildTabsPresenter($repository),
             $parent_repository_presenter
         );
     }
@@ -156,5 +168,35 @@ class RepositoryHeaderPresenterBuilder
         $clone_urls->setMirrors($mirrors);
 
         return new ClonePresenter($clone_urls, $repository);
+    }
+
+    private function buildTabsPresenter(GitRepository $repository)
+    {
+        $tabs          = [$this->getFilesTab($repository)];
+        $external_tabs = $this->getExternalsTabs($repository);
+        if (count($external_tabs) > 0) {
+            $tabs = array_merge($tabs, $external_tabs);
+        }
+
+        return $tabs;
+    }
+
+    private function getFilesTab(GitRepository $repository)
+    {
+        $is_selected = $this->selected_tab === self::TAB_FILES;
+
+        return new TabPresenter(
+            $is_selected,
+            $this->url_manager->getRepositoryBaseUrl($repository),
+            dgettext("tuleap-git", "Files")
+        );
+    }
+
+    private function getExternalsTabs(GitRepository $repository)
+    {
+        $event = new RepositoryExternalNavigationTabsCollector($repository, $this->selected_tab);
+        $this->event_manager->processEvent($event);
+
+        return $event->getExternalTabs();
     }
 }

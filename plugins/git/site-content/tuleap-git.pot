@@ -53,6 +53,9 @@ msgstr ""
 msgid "Clone or download:"
 msgstr ""
 
+msgid "Files"
+msgstr ""
+
 msgid "Fork"
 msgstr ""
 

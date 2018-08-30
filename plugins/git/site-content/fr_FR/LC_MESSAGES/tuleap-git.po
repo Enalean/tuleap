@@ -70,6 +70,9 @@ msgstr "Cloner depuis les miroirs SSH"
 msgid "Clone or download:"
 msgstr "Cloner ou télécharger :"
 
+msgid "Files"
+msgstr "Fichiers"
+
 msgid "Fork"
 msgstr "Fork"
 

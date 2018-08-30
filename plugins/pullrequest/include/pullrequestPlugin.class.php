@@ -37,6 +37,7 @@ use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
 use Tuleap\Git\Repository\CollectAssets;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
+use Tuleap\Git\Repository\View\RepositoryExternalNavigationTabsCollector;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
@@ -47,9 +48,6 @@ use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ScriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
-use Tuleap\PullRequest\AdditionalActionsPresenter;
-use Tuleap\PullRequest\AdditionalHelpTextPresenter;
-use Tuleap\PullRequest\AdditionalInfoPresenter;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
@@ -68,10 +66,10 @@ use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
 use Tuleap\PullRequest\InlineComment\InlineCommentUpdater;
 use Tuleap\PullRequest\Label\LabeledItemCollector;
 use Tuleap\PullRequest\Label\PullRequestLabelDao;
-use Tuleap\PullRequest\LegacyRouter;
 use Tuleap\PullRequest\Logger;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
+use Tuleap\PullRequest\NavigationTab\NavigationTabPresenterBuilder;
 use Tuleap\PullRequest\PluginInfo;
 use Tuleap\PullRequest\PullRequestCloser;
 use Tuleap\PullRequest\PullrequestDisplayer;
@@ -137,6 +135,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(PanesCollection::NAME);
             $this->addHook(DefaultSettingsPanesCollection::NAME);
             $this->addHook(CollectAssets::NAME);
+            $this->addHook(RepositoryExternalNavigationTabsCollector::NAME);
         }
     }
 
@@ -398,9 +397,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getPullRequestFactory(),
             $this->getRepositoryFactory(),
             new ProjectReferenceRetriever(new ReferenceDao()),
-            new HTMLURLBuilder(
-                $this->getRepositoryFactory()
-            )
+            $this->getHTMLBuilder()
         );
     }
 
@@ -480,9 +477,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                 $this->getRepositoryFactory(),
                 new URLVerification()
             ),
-            new HTMLURLBuilder(
-                $this->getRepositoryFactory()
-            ),
+            $this->getHTMLBuilder(),
             new GlyphFinder(
                 EventManager::instance()
             ),
@@ -648,6 +643,13 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         );
     }
 
+
+    public function repositoryExternalNavigationTabsCollector(RepositoryExternalNavigationTabsCollector $event)
+    {
+        $builder = new NavigationTabPresenterBuilder($this->getHTMLBuilder());
+        $event->addNewTab($builder->build($event->getRepository(), $event->getSelectedTab()));
+    }
+
     /**
      * @return ThemeManager
      */
@@ -676,7 +678,17 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->getPullRequestFactory(),
             $this->getTemplateRenderer(),
             new MergeSettingRetriever(new MergeSettingDAO()),
-            $header_builder->build(),
+            $header_builder->build(NavigationTabPresenterBuilder::TAB_PULLREQUEST),
+            $this->getRepositoryFactory()
+        );
+    }
+
+    /**
+     * @return HTMLURLBuilder
+     */
+    private function getHTMLBuilder()
+    {
+        return new HTMLURLBuilder(
             $this->getRepositoryFactory()
         );
     }

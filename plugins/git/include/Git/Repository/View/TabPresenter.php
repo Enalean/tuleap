@@ -18,45 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository;
+namespace Tuleap\Git\Repository\View;
 
-use Tuleap\Event\Dispatchable;
-use Tuleap\Layout\CssAsset;
-use Tuleap\layout\ScriptAsset;
-
-class CollectAssets implements Dispatchable
+class TabPresenter
 {
-    const NAME = "collectAssets";
-
-    /** @var ScriptAsset[] */
-    private $scripts = [];
-
-    /** @var CssAsset[] */
-    private $stylesheets = [];
-
-    public function addScript(ScriptAsset $script_asset)
-    {
-        $this->scripts[] = $script_asset;
-    }
-
-    public function addStylesheet(CssAsset $css_asset)
-    {
-        $this->stylesheets[] = $css_asset;
-    }
-
     /**
-     * @return ScriptAsset[]
+     * @var bool
      */
-    public function getScripts()
-    {
-        return $this->scripts;
-    }
-
+    public $is_active;
     /**
-     * @return CssAsset[]
+     * @var string
      */
-    public function getStylesheets()
+    public $url;
+    /**
+     * @var string
+     */
+    public $label;
+
+    public function __construct($is_active, $url, $label)
     {
-        return $this->stylesheets;
+        $this->is_active = $is_active;
+        $this->url       = $url;
+        $this->label     = $label;
     }
 }

@@ -2492,7 +2492,8 @@ class GitPlugin extends Plugin
             new Git_Driver_Gerrit_UserAccountManager($this->getGerritDriverFactory(), $this->getGerritServerFactory()),
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory()->getServers(),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            ""
         );
     }
 
@@ -2550,7 +2551,7 @@ class GitPlugin extends Plugin
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
                     $this->getThemeManager(),
-                    $this->getGitRepositoryHeaderDisplayer()
+                    $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES)
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {
@@ -2566,9 +2567,9 @@ class GitPlugin extends Plugin
      * protected for testing purpose
      * @return GitRepositoryHeaderDisplayer
      */
-    protected function getGitRepositoryHeaderDisplayer() {
+    protected function getGitRepositoryHeaderDisplayer($selected_tab) {
         $header_displayed_builder = new GitRepositoryHeaderDisplayerBuilder();
-        return $header_displayed_builder->build();
+        return $header_displayed_builder->build($selected_tab);
     }
 
     /**

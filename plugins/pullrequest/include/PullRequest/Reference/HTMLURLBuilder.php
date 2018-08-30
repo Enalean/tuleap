@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\Reference;
 
+use GitRepository;
 use Tuleap\PullRequest\PullRequest;
 
 class HTMLURLBuilder
@@ -41,5 +42,12 @@ class HTMLURLBuilder
         return '/plugins/git/?action=pull-requests&repo_id=' .
             urlencode($pull_request->getRepositoryId()) . '&group_id=' . urlencode($project_id) .
             '#/pull-requests/' . urlencode($pull_request->getId()) . '/overview';
+    }
+
+    public function getPullRequestDashboardUrl(GitRepository $repository)
+    {
+        $project_id = $repository->getProject()->getID();
+        return '/plugins/git/?action=pull-requests&repo_id=' .
+            urlencode($repository->getId()) . '&group_id=' . urlencode($project_id);
     }
 }
