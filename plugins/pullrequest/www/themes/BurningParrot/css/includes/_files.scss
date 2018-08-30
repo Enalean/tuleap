@@ -11,6 +11,14 @@
     }
 }
 
+.modified-files-header {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 0 0 $tlp-half-spacing;
+}
+
 .pull-request-file {
     display: flex;
     width: 100%;
