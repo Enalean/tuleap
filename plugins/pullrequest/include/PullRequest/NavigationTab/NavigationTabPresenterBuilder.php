@@ -49,22 +49,15 @@ class NavigationTabPresenterBuilder
     {
         $is_selected = $selected_tab === self::TAB_PULLREQUEST;
 
-        $nb_pull_requests = 0;
-        if (! $repository->isMigratedToGerrit()) {
-            $nb_pull_requests = $this->factory->getPullRequestCount($repository);
-        }
+        $nb_pull_requests = $this->factory->getPullRequestCount($repository)->getNbOpen();
 
         return new TabPresenter(
             $is_selected,
             $this->url_builder->getPullRequestDashboardUrl($repository),
-            sprintf(
-                dgettext(
-                    'tuleap-pullrequest',
-                    "Pull requests (%d)"
-                ),
-                $nb_pull_requests->getNbOpen()
-            ),
-            self::TAB_PULLREQUEST
+            dgettext('tuleap-pullrequest', "Pull requests"),
+            self::TAB_PULLREQUEST,
+            true,
+            $nb_pull_requests
         );
     }
 }

@@ -31,10 +31,6 @@ msgstr "Fusion"
 msgid "Pull requests"
 msgstr "Pull requests"
 
-#, php-format
-msgid "Pull requests (%d)"
-msgstr "Pull requests (%d)"
-
 msgid "Pull requests settings updated"
 msgstr "Les paramètres des pull requests ont été mis à jour"
 

@@ -189,7 +189,9 @@ class RepositoryHeaderPresenterBuilder
             $is_selected,
             $this->url_manager->getRepositoryBaseUrl($repository),
             dgettext("tuleap-git", "Files"),
-            self::TAB_FILES
+            self::TAB_FILES,
+            false,
+            0
         );
     }
 
