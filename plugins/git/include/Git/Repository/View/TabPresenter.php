@@ -34,11 +34,16 @@ class TabPresenter
      * @var string
      */
     public $label;
+    /**
+     * @var string
+     */
+    public $html_id;
 
-    public function __construct($is_active, $url, $label)
+    public function __construct($is_active, $url, $label, $html_id)
     {
         $this->is_active = $is_active;
         $this->url       = $url;
         $this->label     = $label;
+        $this->html_id   = $html_id;
     }
 }

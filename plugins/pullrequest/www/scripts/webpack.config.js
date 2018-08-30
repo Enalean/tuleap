@@ -31,8 +31,7 @@ const webpack_config_for_create_button = {
 
 const webpack_config = {
     entry: {
-        "tuleap-pullrequest": "./src/app/app.js",
-        "move-button-back": "./move-button-back.js"
+        "tuleap-pullrequest": "./src/app/app.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
