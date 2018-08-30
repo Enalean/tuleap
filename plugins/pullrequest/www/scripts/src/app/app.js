@@ -10,6 +10,8 @@ import angular_tlp from "angular-tlp";
 
 import MainController from "./app-controller.js";
 
+import NewInlineCommentComponent from "./file-diff/new-inline-comment-component.js";
+
 import DashboardDirective from "./dashboard/dashboard-directive.js";
 import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-request-summary-directive.js";
 import FileDiffDirective from "./file-diff/file-diff-directive.js";
@@ -57,6 +59,8 @@ export default angular
         TuleapResize
     ])
     .controller("MainController", MainController)
+
+    .component("newInlineComment", NewInlineCommentComponent)
 
     .directive("dashboard", DashboardDirective)
     .directive("pullRequestSummary", PullRequestSummaryDirective)

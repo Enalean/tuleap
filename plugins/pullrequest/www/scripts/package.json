@@ -11,7 +11,7 @@
     "angular-moment": "^0.10.3",
     "angular-sanitize": "^1.7.3",
     "angular-ui-router": "^0.4.3",
-    "codemirror": "5.14.2 < 5.20.0",
+    "codemirror": "^5.40.0",
     "mustache": "^2.3.2",
     "vue": "^2.5.13",
     "vue-gettext": "^2.1.0",
