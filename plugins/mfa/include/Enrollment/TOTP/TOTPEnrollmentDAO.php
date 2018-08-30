@@ -18,30 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\MFA\Enrollment;
+namespace Tuleap\MFA\Enrollment\TOTP;
 
-use ParagonIE\ConstantTime\Base32;
-use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DataAccessObject;
 
-class EnrollmentPresenter
+class TOTPEnrollmentDAO extends DataAccessObject
 {
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var string
-     */
-    public $secret;
-    /**
-     * @var bool
-     */
-    public $is_user_already_registered;
-
-    public function __construct(\CSRFSynchronizerToken $csrf_token, ConcealedString $secret, $is_user_already_registered)
+    public function isUserIDEnrolled($user_id)
     {
-        $this->csrf_token                 = $csrf_token;
-        $this->secret                     = Base32::encode($secret);
-        $this->is_user_already_registered = $is_user_already_registered;
+        $res = $this->getDB()->single(
+            'SELECT TRUE FROM plugin_mfa_enrollment_totp WHERE user_id = ?',
+            [$user_id]
+        );
+        return $res !== false;
+    }
+
+    public function enrollUserID($user_id, $secret)
+    {
+        $this->getDB()->run(
+            'INSERT INTO plugin_mfa_enrollment_totp(user_id, secret) VALUES (?,?) ON DUPLICATE KEY UPDATE secret = ?',
+            $user_id,
+            $secret,
+            $secret
+        );
     }
 }

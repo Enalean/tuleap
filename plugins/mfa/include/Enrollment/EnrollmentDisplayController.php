@@ -21,7 +21,9 @@
 namespace Tuleap\MFA\Enrollment;
 
 use HTTPRequest;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\MFA\Enrollment\TOTP\TOTPEnroller;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 class EnrollmentDisplayController implements DispatchableWithRequestNoAuthz
@@ -30,20 +32,28 @@ class EnrollmentDisplayController implements DispatchableWithRequestNoAuthz
      * @var \TemplateRenderer
      */
     private $template_renderer;
+    /**
+     * @var TOTPEnroller
+     */
+    private $totp_enroller;
 
-    public function __construct(\TemplateRenderer $template_renderer)
+    public function __construct(\TemplateRenderer $template_renderer, TOTPEnroller $totp_enroller)
     {
         $this->template_renderer = $template_renderer;
+        $this->totp_enroller     = $totp_enroller;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $csrf_token = new \CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
 
+        $is_user_already_registered = $this->totp_enroller->isUserEnrolled($request->getCurrentUser());
+        $secret                     = $this->totp_enroller->prepareSessionForEnrollment($_SESSION);
+
         $layout->header(['title' => dgettext('tuleap-mfa', 'Enable two-factor authentication')]);
         $this->template_renderer->renderToPage(
             'enrollment',
-            new EnrollmentPresenter($csrf_token)
+            new EnrollmentPresenter($csrf_token, $secret, $is_user_already_registered)
         );
     }
 

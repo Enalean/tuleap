@@ -25,34 +25,24 @@ class TOTPValidator
     const OUT_OF_SYNC_ACCEPTED_STEPS = 1;
 
     /**
-     * @var TOTP
-     */
-    private $totp;
-
-    public function __construct(TOTP $totp)
-    {
-        $this->totp = $totp;
-    }
-
-    /**
      * @return bool
      */
-    public function validate($code, \DateTimeImmutable $current_time)
+    public function validate(TOTP $totp, $code, \DateTimeImmutable $current_time)
     {
         $is_valid = false;
 
-        foreach ($this->getAcceptedStepTimes($current_time) as $time) {
-            $is_valid |= hash_equals($this->totp->generateCode($time), $code);
+        foreach ($this->getAcceptedStepTimes($totp, $current_time) as $time) {
+            $is_valid |= hash_equals($totp->generateCode($time), $code);
         }
 
         return (bool) $is_valid;
     }
 
-    private function getAcceptedStepTimes(\DateTimeImmutable $time)
+    private function getAcceptedStepTimes(TOTP $totp, \DateTimeImmutable $time)
     {
         yield $time;
 
-        $time_step = $this->totp->getTOTPMode()->getTimeStep();
+        $time_step = $totp->getTOTPMode()->getTimeStep();
         for ($i = 1; $i <= self::OUT_OF_SYNC_ACCEPTED_STEPS; $i++) {
             $interval = new \DateInterval('PT' . $i * $time_step . 'S');
 

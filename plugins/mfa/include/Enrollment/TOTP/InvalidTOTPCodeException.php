@@ -18,30 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\MFA\Enrollment;
+namespace Tuleap\MFA\Enrollment\TOTP;
 
-use ParagonIE\ConstantTime\Base32;
-use Tuleap\Cryptography\ConcealedString;
-
-class EnrollmentPresenter
+final class InvalidTOTPCodeException extends EnrollmentTOTPException
 {
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    /**
-     * @var string
-     */
-    public $secret;
-    /**
-     * @var bool
-     */
-    public $is_user_already_registered;
-
-    public function __construct(\CSRFSynchronizerToken $csrf_token, ConcealedString $secret, $is_user_already_registered)
+    public function __construct()
     {
-        $this->csrf_token                 = $csrf_token;
-        $this->secret                     = Base32::encode($secret);
-        $this->is_user_already_registered = $is_user_already_registered;
+        parent::__construct('The given TOTP code is not valid');
     }
 }

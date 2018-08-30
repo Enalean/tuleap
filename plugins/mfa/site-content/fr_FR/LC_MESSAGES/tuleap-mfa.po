@@ -14,3 +14,10 @@ msgstr "Activer l'authentification multi-facteur"
 
 msgid "Multi-factor authentication"
 msgstr "Authentification multi-facteur"
+
+msgid ""
+"You already have registered a multi-factor authentication device. "
+"Registering a new device will invalidate the one currently used."
+msgstr ""
+"Vous havez déjà enregistré un dispositif d'authenfication multi-facteurs."
+"En enregistrer un nouveau remplacera celui actuellement utilisé."

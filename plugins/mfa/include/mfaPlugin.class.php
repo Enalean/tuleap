@@ -18,8 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\MFA\Enrollment\EnrollmentDisplayController;
 use Tuleap\MFA\Enrollment\EnrollmentRegisterController;
+use Tuleap\MFA\Enrollment\TOTP\TOTPEnroller;
+use Tuleap\MFA\Enrollment\TOTP\TOTPEnrollmentDAO;
+use Tuleap\MFA\OTP\TOTPModeBuilder;
+use Tuleap\MFA\OTP\TOTPValidator;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -55,12 +60,28 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (FastRoute\RouteCollector $r) {
             $r->get('/enroll', function () {
                 return new EnrollmentDisplayController(
-                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/')
+                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+                    $this->getTOTPEnroller()
                 );
             });
             $r->post('/enroll', function () {
-                return new EnrollmentRegisterController();
+                return new EnrollmentRegisterController(
+                    $this->getTOTPEnroller()
+                );
             });
         });
+    }
+
+    /**
+     * @return TOTPEnroller
+     */
+    private function getTOTPEnroller()
+    {
+        return new TOTPEnroller(
+            new TOTPEnrollmentDAO(),
+            (new KeyFactory())->getEncryptionKey(),
+            new TOTPValidator(),
+            TOTPModeBuilder::build()
+        );
     }
 }
