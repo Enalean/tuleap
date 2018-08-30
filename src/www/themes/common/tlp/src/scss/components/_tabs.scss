@@ -131,3 +131,10 @@ $tlp-tabs-transition: 75ms ease-out;
         font-size: 10px;
     }
 }
+
+.tlp-tab-badge-append {
+    margin: -10px 0 -9px 10px;
+    letter-spacing: normal;
+    line-height: unset;
+    text-transform: none;
+}
