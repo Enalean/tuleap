@@ -67,9 +67,11 @@ Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-#Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
-#Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
-#Requires: cvs-tuleap
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph, perl-CGI
+Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
+Requires: cvs-tuleap
+Requires: libnss-mysql, nss, nscd
+Requires: perl-Text-Iconv
 %description core-cvs
 Manage dependencies for Tuleap CVS integration
 
@@ -483,10 +485,13 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/cvs1/cvssh-restricted $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvsroot
+%{__install} -d $RPM_BUILD_ROOT/var/lock/cvs
+%{__install} -d $RPM_BUILD_ROOT/var/run/log_accum
 #%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 #%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -517,7 +522,7 @@ done
 
 # Log dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
+%{__install} -d $RPM_BUILD_ROOT/%{APP_LOG_DIR}/cvslog
 
 # Run dir
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/tuleap
@@ -877,10 +882,10 @@ fi
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
 #%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
 #%attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
-#%attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
-#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
-#%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
-#%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
+%attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
 #%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
 #%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
 #%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
@@ -902,7 +907,7 @@ fi
 
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
-#%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
+%attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
 
 # Run dir
 %attr(00755,%{APP_USER},%{APP_USER}) %dir %{_localstatedir}/run/tuleap
@@ -930,6 +935,9 @@ fi
 %files core-cvs
 %defattr(-,root,root,-)
 %{APP_DIR}/src/CORE_CVS_VERSION
+%attr(00751,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/cvsroot
+%attr(00751,root,root) /var/lock/cvs
+%attr(00777,root,root) /var/run/log_accum
 
 #
 # Plugins

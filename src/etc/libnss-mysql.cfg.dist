@@ -1,4 +1,4 @@
-# Libnss-mysql queries for Codendi database
+# Libnss-mysql queries for Tuleap database
 getpwnam    SELECT user_name,'x',unix_uid+20000,unix_uid+20000,CONCAT(realname,' <',email,'>'),CONCAT('/home/users/',user_name),shell \
             FROM user \
             WHERE user_name='%1$s' \

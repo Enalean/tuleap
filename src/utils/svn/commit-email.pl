@@ -7,7 +7,7 @@
 # For usage, see the usage subroutine or run the script with no
 # command line arguments.
 #
-# Copyright Enalean (c) 2015-2017. All rights reserved.
+# Copyright Enalean (c) 2015-2018. All rights reserved.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
 # $LastChangedDate: 2012-03-23 08:59:24 +0000 (Fri, 23 Mar 2012) $
@@ -230,7 +230,7 @@ use DBI;
 use HTTP::Request::Common qw(POST);
 use LWP::UserAgent;
 
-$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/tuleap/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/svn/svn-checkins.pl";

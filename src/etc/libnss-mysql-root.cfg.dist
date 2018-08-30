@@ -1,4 +1,4 @@
 # Settings here overrides any settings in the main config (libnss-mysql.cfg) for operations that are done as root
-# For codendi, there is no difference.
+# For Tuleap, there is no difference.
 username    dbauthuser
 password    %sys_dbauth_passwd%
