@@ -16,12 +16,11 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Layout;
+namespace Tuleap\layout;
 
-class CssAsset
+class ScriptAsset
 {
     /** @var IncludeAssets */
     private $include_assets;
@@ -34,8 +33,8 @@ class CssAsset
         $this->name           = $name;
     }
 
-    public function getFileURL(ThemeVariation $variant)
+    public function getFileURL()
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        return $this->include_assets->getFileURL($this->name);
     }
 }

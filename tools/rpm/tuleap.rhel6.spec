@@ -1020,7 +1020,6 @@ fi
 %{APP_DIR}/src/www/assets/manifest.json
 %{APP_DIR}/src/www/assets/admindelegation
 %{APP_DIR}/src/www/assets/statistics
-%{APP_DIR}/src/www/assets/pull-requests
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/export
@@ -1193,6 +1192,7 @@ fi
 %files plugin-pullrequest
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/pullrequest
+%{APP_DIR}/src/www/assets/pullrequest
 %config(noreplace) /etc/logrotate.d/tuleap_pullrequest
 %attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
 

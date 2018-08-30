@@ -61,7 +61,8 @@ class GitRepositoryHeaderDisplayerBuilder
         return new GitRepositoryHeaderDisplayer(
             $this->getHeaderRenderer($git_plugin),
             $this->getRepositoryHeaderPresenterBuilder($git_plugin),
-            $this->getIncludeAssets($git_plugin)
+            $this->getIncludeAssets($git_plugin),
+            EventManager::instance()
         );
     }
 

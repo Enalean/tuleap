@@ -1,10 +1,7 @@
 const path = require("path");
 const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(
-    __dirname,
-    "../../../../src/www/assets/pull-requests/scripts/"
-);
+const assets_dir_path = path.resolve(__dirname, "../../../../src/www/assets/pullrequest/scripts/");
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const webpack_config_for_create_button = {

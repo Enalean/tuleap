@@ -44,15 +44,21 @@ class GitRepositoryHeaderDisplayer
      * @var IncludeAssets
      */
     private $include_assets;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         HeaderRenderer $header_renderer,
         RepositoryHeaderPresenterBuilder $header_presenter_builder,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
+        \EventManager $event_manager
     ) {
         $this->header_renderer          = $header_renderer;
         $this->header_presenter_builder = $header_presenter_builder;
         $this->include_assets           = $include_assets;
+        $this->event_manager            = $event_manager;
     }
 
     public function display(
@@ -77,6 +83,15 @@ class GitRepositoryHeaderDisplayer
             )
         );
         $layout->includeFooterJavascriptFile($this->include_assets->getFileURL('repository.js'));
+
+        $external_assets = new CollectAssets();
+        $this->event_manager->processEvent($external_assets);
+        foreach ($external_assets->getStylesheets() as $css_asset) {
+            $layout->addCssAsset($css_asset);
+        }
+        foreach ($external_assets->getScripts() as $script) {
+            $layout->includeFooterJavascriptFile($script->getFileURL());
+        }
     }
 
     private function displayForBurningParrot(

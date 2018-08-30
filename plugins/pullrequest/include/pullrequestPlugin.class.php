@@ -35,6 +35,7 @@ use Tuleap\Git\Permissions\ProtectedReferencePermission;
 use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationCache;
 use Tuleap\Git\Repository\AdditionalInformationRepresentationRetriever;
+use Tuleap\Git\Repository\CollectAssets;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
@@ -42,7 +43,9 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Label\CanProjectUseLabels;
 use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ScriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\PullRequest\AdditionalActionsPresenter;
 use Tuleap\PullRequest\AdditionalHelpTextPresenter;
@@ -119,7 +122,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $this->addHook(GetProjectHistoryEntryValue::NAME);
 
         if (defined('GIT_BASE_URL')) {
-            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(REST_GIT_PULL_REQUEST_ENDPOINTS);
             $this->addHook(REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY);
             $this->addHook(GIT_ADDITIONAL_BODY_CLASSES);
@@ -134,6 +136,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $this->addHook(AfterRepositoryCreated::NAME);
             $this->addHook(PanesCollection::NAME);
             $this->addHook(DefaultSettingsPanesCollection::NAME);
+            $this->addHook(CollectAssets::NAME);
         }
     }
 
@@ -155,26 +158,24 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $params['classnames'][$this->getServiceShortname()] = 'PullRequest\\Service';
     }
 
-    /**
-     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
-     */
-    public function burningParrotGetJavascriptFiles($params) // phpcs:ignore
+    public function collectAssets(CollectAssets $retriever)
     {
-        if ($this->isAPullrequestRequest()) {
-            $include_asset_pullrequest = new IncludeAssets(
-                PULLREQUEST_BASE_DIR . '/../../src/www/assets/pull-requests/scripts',
-                '/assets/pull-requests/scripts/'
-            );
+        $css_assets = new CssAsset(
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/pullrequest/BurningParrot',
+                '/assets/pullrequest/BurningParrot'
+            ),
+            'repository'
+        );
+        $retriever->addStylesheet($css_assets);
 
-            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('move-button-back.js');
-            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('tuleap-pullrequest.js');
-            $params['javascript_files'][] = $include_asset_pullrequest->getFileURL('create-pullrequest-button.js');
-        }
-    }
+        $scripts_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/pullrequest/scripts',
+            '/assets/pullrequest/scripts'
+        );
 
-    private function isAPullrequestRequest()
-    {
-        return strpos($_SERVER['REQUEST_URI'], GIT_BASE_URL . '/') === 0;
+        $create_pullrequest = new ScriptAsset($scripts_assets, 'create-pullrequest-button.js');
+        $retriever->addScript($create_pullrequest);
     }
 
     /**

@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
@@ -16,26 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Layout;
+.git-repository-actions-pullrequest-modal-body {
+    display: flex;
+}
 
-class CssAsset
-{
-    /** @var IncludeAssets */
-    private $include_assets;
-    /** @var string */
-    private $name;
+.git-repository-actions-pullrequest-modal-body-element {
+    width: 50%;
 
-    public function __construct(IncludeAssets $include_assets, $name)
-    {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
+    &:first-child {
+        margin: 0 $tlp-half-spacing 0 0;
     }
 
-    public function getFileURL(ThemeVariation $variant)
-    {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+    &:last-child {
+        margin: 0 0 0 $tlp-half-spacing;
     }
 }

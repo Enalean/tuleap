@@ -14,7 +14,19 @@
                 "www/themes/BurningParrot/css/pull-requests-purple.scss",
                 "www/themes/BurningParrot/css/pull-requests-purple-condensed.scss",
                 "www/themes/BurningParrot/css/pull-requests-red.scss",
-                "www/themes/BurningParrot/css/pull-requests-red-condensed.scss"
+                "www/themes/BurningParrot/css/pull-requests-red-condensed.scss",
+                "www/themes/BurningParrot/css/repository-blue.scss",
+                "www/themes/BurningParrot/css/repository-blue-condensed.scss",
+                "www/themes/BurningParrot/css/repository-green.scss",
+                "www/themes/BurningParrot/css/repository-green-condensed.scss",
+                "www/themes/BurningParrot/css/repository-grey.scss",
+                "www/themes/BurningParrot/css/repository-grey-condensed.scss",
+                "www/themes/BurningParrot/css/repository-orange.scss",
+                "www/themes/BurningParrot/css/repository-orange-condensed.scss",
+                "www/themes/BurningParrot/css/repository-purple.scss",
+                "www/themes/BurningParrot/css/repository-purple-condensed.scss",
+                "www/themes/BurningParrot/css/repository-red.scss",
+                "www/themes/BurningParrot/css/repository-red-condensed.scss"
             ],
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss"
@@ -22,14 +34,14 @@
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss"
             ],
-            "target_dir": "../../src/www/assets/pull-requests/BurningParrot/",
+            "target_dir": "../../src/www/assets/pullrequest/BurningParrot/",
             "is_revisioned": true
         }
     },
     "gettext-vue": {
         "create-pullrequest-button": {
             "scripts": "www/scripts",
-            "po" : "www/scripts/create-pullrequest-button/po"
+            "po": "www/scripts/create-pullrequest-button/po"
         }
     },
     "components": ["www/scripts"]
