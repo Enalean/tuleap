@@ -41,6 +41,8 @@ class RepositoryHeaderPresenter
     public $fork_url;
     /** @var bool */
     public $user_is_anonymous;
+    /**  @var NavigationTabsPresenter[] */
+    public $navigation_tabs_presenters;
 
     public function __construct(
         GitRepository $repository,
@@ -50,6 +52,7 @@ class RepositoryHeaderPresenter
         PFUser $user,
         ClonePresenter $clone_presenter,
         GerritStatusPresenter $gerrit_status_presenter,
+        array $navigation_tabs_presenters,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
         $this->project_id                  = $repository->getProjectId();
@@ -64,5 +67,6 @@ class RepositoryHeaderPresenter
         $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
         $this->fork_url                    = $fork_url;
         $this->user_is_anonymous           = $user->isAnonymous();
+        $this->navigation_tabs_presenters  = $navigation_tabs_presenters;
     }
 }
