@@ -277,7 +277,7 @@ class FRSFileDao extends DataAccessObject {
         if ($file_id) {
             $dar = $this->searchById($file_id);
             if (!$dar->isError() && $dar->valid()) {
-                $current =& $dar->current();
+                $current = $dar->current();
                 $set_array = array();
                 foreach($data_array as $key => $value) {
                     if ($key != 'id' && $key!= 'post_date' && $value != $current[$key]) {
