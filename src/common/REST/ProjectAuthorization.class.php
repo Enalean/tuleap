@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ class ProjectAuthorization {
             $url_verification->userCanAccessProject($user, $project);
             return true;
         } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
+            throw new RestException(404, "Project does not exist");
         } catch (Project_AccessException $exception) {
             throw new RestException(403, $exception->getMessage());
         }
@@ -49,7 +49,7 @@ class ProjectAuthorization {
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
             return true;
         } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
+            throw new RestException(404, "Project does not exist");
         } catch (Project_AccessNotAdminException $exception) {
             $can_access    = false;
             $event_manager = EventManager::instance();
@@ -75,7 +75,7 @@ class ProjectAuthorization {
             $url_verification = new URLVerification();
             $url_verification->userCanAccessProjectAndIsProjectAdmin($user, $project);
         } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
+            throw new RestException(404, "Project does not exist");
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (Project_AccessException $exception) {
@@ -89,7 +89,7 @@ class ProjectAuthorization {
             $url_verification = new URLVerification();
             $url_verification->userCanManageProjectMembership($user, $project);
         } catch (Project_AccessProjectNotFoundException $exception) {
-            throw new RestException(404);
+            throw new RestException(404, "Project does not exist");
         } catch (Project_AccessNotAdminException $exception) {
             throw new RestException(403, $exception->getMessage());
         } catch (Project_AccessException $exception) {

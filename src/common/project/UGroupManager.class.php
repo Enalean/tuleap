@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -393,6 +393,9 @@ class UGroupManager {
         return array();
     }
 
+    /**
+     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException
+     */
     public function createEmptyUgroup($project_id, $ugroup_name, $ugroup_description) {
         return ugroup_create($project_id, $ugroup_name, $ugroup_description, "cx_empty");
     }
