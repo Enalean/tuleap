@@ -36,12 +36,18 @@
             {{> repository/clone-bar }}
         {{/ clone_presenter }}
         {{^ user_is_anonymous }}
-            <a href="{{ fork_url }}"
-               class="tlp-button-primary tlp-button-outline git-repository-actions-button"
-               role="button"
-            >
-                <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
-            </a>
+            <form action="{{ fork_url }}" method="POST">
+                <input name="action" value="fork_repositories_permissions" type="hidden">
+                <input type="hidden" name="repos[]" value="{{ repository_id }}">
+                <input type="hidden" name="choose_destination" value="personal">
+                <input type="hidden" name="path" value="">
+                <button
+                    type="submit"
+                    class="tlp-button-primary tlp-button-outline git-repository-actions-button"
+                >
+                    <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
+                </button>
+            </form>
         {{/ user_is_anonymous }}
         {{# user_is_admin }}
             <a href="{{ repository_admin_url }}"
