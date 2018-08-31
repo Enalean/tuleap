@@ -105,19 +105,14 @@
     border: 1px solid $tlp-theme-color;
     border-radius: 3px;
     background: $tlp-ui-white;
+}
 
-    > form {
-        flex: 1 1 auto;
-        margin: 0;
-
-        > textarea {
-            box-sizing: border-box;
-            width: 100%;
-            height: 43px;
-            margin: 0;
-            font-size: 13px;
-        }
-    }
+.pull-request-new-inline-comment-text {
+    box-sizing: border-box;
+    width: 100%;
+    height: 43px;
+    margin: 0;
+    font-size: 13px;
 }
 
 .pull-request-new-inline-comment-controls {

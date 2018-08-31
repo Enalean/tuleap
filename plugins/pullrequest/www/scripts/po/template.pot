@@ -29,7 +29,7 @@ msgstr ""
 msgid "Binary file"
 msgstr ""
 
-#: src/app/file-diff/file-diff-directive.js
+#: src/app/file-diff/new-inline-comment.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 #: src/app/overview/overview.tpl.html
 msgid "Cancel"
@@ -52,7 +52,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/app/file-diff/file-diff-directive.js
+#: src/app/file-diff/new-inline-comment.html
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr ""
