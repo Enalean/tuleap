@@ -530,7 +530,7 @@ document.observe("dom:loaded", function() {
                 children = [];
 
             cell.classList.add("tracker-artifact-rollup-view");
-            icon.classList.add("tracker-artifact-rollup-view-icon");
+            icon.classList.add("tracker-artifact-rollup-view-icon", "fa");
             cell.insertBefore(icon, link);
 
             loadChildrenRecursively(0);
