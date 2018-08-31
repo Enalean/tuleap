@@ -835,7 +835,7 @@ class Artifact {
         //  and if we must keep history then do it. Also add them to the update
         //  statement
         //
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         $text_value_list=array();
         $changes = array();
         $upd_list = '';
@@ -2864,7 +2864,6 @@ class Artifact {
         foreach ($ref_array as $description => $match_array) {
             $body .= $GLOBALS['sys_lf'].$description.":".$GLOBALS['sys_lf'];
             foreach ($match_array as $match => $ref_instance) {
-                $reference =& $ref_instance->getReference();
                 $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$GLOBALS['sys_lf'];
             }
         }

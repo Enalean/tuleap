@@ -37,4 +37,3 @@ class ArtifactRuleValueViewTest extends TuleapTestCase {
         $this->assertEqual($view->fetch(), '#id@group_artifact_id source_field(source_value_1) => target_field(target_value_2)');
     }
 }
-?>

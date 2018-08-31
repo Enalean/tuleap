@@ -38,8 +38,9 @@ class ArtifactRuleFactory {
     var $RULETYPE_MANDATORY;
     var $RULETYPE_VALUE;
     
-    function __construct(&$rules_dao) {
-        $this->rules_dao         =& $rules_dao;
+    function __construct(ArtifactRuleDao $rules_dao)
+    {
+        $this->rules_dao = $rules_dao;
         $this->rules = array();
         
         $this->RULETYPE_HIDDEN    = 1;
@@ -51,7 +52,8 @@ class ArtifactRuleFactory {
     /**
     * ArtifactRuleFactory is a singleton
     */
-    function &instance() {
+    public static function instance()
+    {
         static $_artifactrulefactory_instance;
         if (!$_artifactrulefactory_instance) {
             $rules_dao         = new ArtifactRuleDao(CodendiDataAccess::instance());

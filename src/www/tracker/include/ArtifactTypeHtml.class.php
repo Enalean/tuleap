@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
 require_once('common/tracker/ArtifactType.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/tracker/ArtifactGlobalNotificationFactory.class.php');
-
 
 class ArtifactTypeHtml extends ArtifactType {
 
@@ -123,7 +123,7 @@ class ArtifactTypeHtml extends ArtifactType {
 		echo ' | <a href="/tracker/admin/?group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=canned">'.$Language->getText('tracker_include_type','canned_resp').'</a>';
 		echo ' | <a href="/tracker/admin/?func=report&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'">'.$Language->getText('tracker_include_type','reports').'</a>';
 
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('tracker_graphic_report_admin_header',null);
         		echo ' | <a href="/tracker/admin/?func=notification&group_id='.(int)$group_id.'&atid='. (int)$this->getID() .'&func=notification">'.$Language->getText('tracker_include_type','mail_notif').'</a>';
 		echo '</strong><hr>';
@@ -259,7 +259,7 @@ class ArtifactTypeHtml extends ArtifactType {
 
 		echo '<H3><a href="/tracker/admin/?func=report&group_id='.(int)$group_id.'&atid='.(int)$atid.'">'.$Language->getText('tracker_include_type','mng_reports').'</a></H3>';
 		echo $Language->getText('tracker_include_type','define_reports');
-		$em =& EventManager::instance();
+		$em = EventManager::instance();
         $em->processEvent('tracker_graphic_report_add_link',null);					
 		echo '<H3><a href="/tracker/admin?func=notification&group_id='.(int)$group_id.'&atid='.(int)$atid.'">'.$Language->getText('tracker_include_type','mail_notif').'</a></H3>';
 		echo $Language->getText('tracker_include_type','define_notif');
@@ -419,10 +419,10 @@ EOS;
                                 $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
             } else {
                 foreach($ugroups_permissions as $key_field => $value_field) {
-                    $ugroups_permissions[$key_field]['values']        =& $ugroups_permissions[$key_field]['field'];
-                    $ugroups_permissions[$key_field]['related_parts'] =& $ugroups_permissions[$key_field]['ugroups'];
+                    $ugroups_permissions[$key_field]['values']        = $ugroups_permissions[$key_field]['field'];
+                    $ugroups_permissions[$key_field]['related_parts'] = $ugroups_permissions[$key_field]['ugroups'];
                     foreach($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
-                        $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['values'] =& $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['ugroup'];
+                        $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['values'] = $ugroups_permissions[$key_field]['related_parts'][$key_ugroup]['ugroup'];
                     }
                     ksort($ugroups_permissions[$key_field]['related_parts']);
                     reset($ugroups_permissions[$key_field]['related_parts']);
