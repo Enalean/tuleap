@@ -11,12 +11,12 @@
                 <input type="checkbox"
                        id="side-by-side-diff-button"
                        class="tlp-button-bar-checkbox"
-                       ng-checked="files_controller.isCurrentDisplayMode(files_controller.side_by_side_diff)"
+                       ng-checked="files_controller.isSideBySideMode()"
                        ng-click="files_controller.switchDiffDisplayMode(files_controller.side_by_side_diff)"
                 >
                 <label for="side-by-side-diff-button"
                        class="tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
-                       data-tlp-tooltip="{{ 'Side by side diff' | translate }}"
+                       data-tlp-tooltip="{{:: 'Side by side diff' | translate }}"
                 >
                     <i class="fa fa-files-o tlp-button-icon"></i>
                 </label>
@@ -25,12 +25,12 @@
                 <input type="checkbox"
                        id="unified-diff-button"
                        class="tlp-button-bar-checkbox"
-                       ng-checked="files_controller.isCurrentDisplayMode(files_controller.unified_diff)"
+                       ng-checked="files_controller.isUnifiedMode()"
                        ng-click="files_controller.switchDiffDisplayMode(files_controller.unified_diff)"
                 >
                 <label for="unified-diff-button"
                        class="tlp-button-primary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
-                       data-tlp-tooltip="{{ 'Unified diff' | translate }}"
+                       data-tlp-tooltip="{{:: 'Unified diff' | translate }}"
                 >
                     <i class="fa fa-file-o tlp-button-icon"></i>
                 </label>

@@ -17,19 +17,14 @@
   ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<div ng-if="$ctrl.is_loading" class="pull-request-file-diff-loading"></div>
-
-<div ng-if="$ctrl.is_binary_file" class="pull-request-file-diff-binary-file">
-    <i class="fa fa-file-o"></i><br>{{:: 'Binary file' | translate }}
+<div class="pull-request-inline-comment">
+    <div class="tlp-avatar avatar"><img ng-src="{{:: $ctrl.comment.user.avatar_url }}"></div>
+    <div class="arrow"></div>
+    <div class="comment">
+        <div class="info">
+            <span class="author">{{:: $ctrl.comment.user.display_name }}</span>
+            <span class="post-date">{{:: $ctrl.comment.post_date | date: "short" }}</span>
+        </div>
+        <pre class="content" ng-bind-html="$ctrl.comment.content"></pre>
+    </div>
 </div>
-
-<file-unidiff ng-if="$ctrl.shouldShowUnifiedDiff()"
-              diff="$ctrl.diff"
-              file-path="{{ $ctrl.file_path }}"
-              pull-request-id="{{ $ctrl.pull_request_id }}"
-></file-unidiff>
-<side-by-side-diff ng-if="$ctrl.shouldShowSideBySideDiff()"
-                   diff="$ctrl.diff"
-                   file-path="{{ $ctrl.file_path }}"
-                   pull-request-id="{{ $ctrl.pull_request_id }}"
-></side-by-side-diff>

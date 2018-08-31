@@ -17,38 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./new-inline-comment.html";
-
 export default {
-    templateUrl: "new-inline-comment.html",
+    template: `<div class="empty-pane-text">Not implemented yet</div>`,
     controller,
     bindings: {
-        submitCallback: "<",
-        codemirrorWidget: "<"
+        diff: "<",
+        filePath: "@",
+        pullRequestId: "@"
     }
 };
 
 function controller() {
     const self = this;
     Object.assign(self, {
-        comment: "",
-        is_loading: false,
-        submit,
-        cancel
+        $onInit: init
     });
 
-    function submit() {
-        self.is_loading = true;
-        self.submitCallback(self.comment)
-            .then(() => {
-                self.codemirrorWidget.clear();
-            })
-            .finally(() => {
-                self.is_loading = false;
-            });
-    }
-
-    function cancel() {
-        self.codemirrorWidget.clear();
+    function init() {
+        //Nothing yet
     }
 }

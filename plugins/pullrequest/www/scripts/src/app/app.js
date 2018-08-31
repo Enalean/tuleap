@@ -11,11 +11,13 @@ import angular_tlp from "angular-tlp";
 import MainController from "./app-controller.js";
 
 import NewInlineCommentComponent from "./file-diff/new-inline-comment-component.js";
+import InlineCommentComponent from "./file-diff/inline-comment-component.js";
+import FileDiffComponent from "./file-diff/file-diff-component.js";
+import UnidiffComponent from "./file-diff/diff-modes/unidiff-component.js";
+import SideBySideDiffComponent from "./file-diff/diff-modes/side-by-side-diff-component.js";
 
 import DashboardDirective from "./dashboard/dashboard-directive.js";
 import PullRequestSummaryDirective from "./dashboard/pull-request-summary/pull-request-summary-directive.js";
-import FileDiffDirective from "./file-diff/file-diff-directive.js";
-import InlineCommentDirective from "./file-diff/inline-comment/inline-comment-directive.js";
 import FilesDirective from "./files/files-directive.js";
 import LabelsBox from "./labels/labels-directive.js";
 import OverviewDirective from "./overview/overview-directive.js";
@@ -38,6 +40,7 @@ import TimelineRestService from "./overview/timeline/timeline-rest-service.js";
 import TimelineService from "./overview/timeline/timeline-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 import PullRequestService from "./pull-request/pull-request-service.js";
+import CodeMirrorHelperService from "./file-diff/codemirror-helper-service.js";
 
 import MainConfig from "./app-config.js";
 import TuleapResize from "./resize/resize.js";
@@ -61,11 +64,13 @@ export default angular
     .controller("MainController", MainController)
 
     .component("newInlineComment", NewInlineCommentComponent)
+    .component("inlineComment", InlineCommentComponent)
+    .component("fileDiff", FileDiffComponent)
+    .component("fileUnidiff", UnidiffComponent)
+    .component("sideBySideDiff", SideBySideDiffComponent)
 
     .directive("dashboard", DashboardDirective)
     .directive("pullRequestSummary", PullRequestSummaryDirective)
-    .directive("fileDiff", FileDiffDirective)
-    .directive("inlineComment", InlineCommentDirective)
     .directive("files", FilesDirective)
     .directive("labelsBox", LabelsBox)
     .directive("overview", OverviewDirective)
@@ -88,6 +93,7 @@ export default angular
     .service("TimelineService", TimelineService)
     .service("PullRequestRestService", PullRequestRestService)
     .service("PullRequestService", PullRequestService)
+    .service("CodeMirrorHelperService", CodeMirrorHelperService)
 
     .config(MainConfig)
     .config(DashboardConfig)
