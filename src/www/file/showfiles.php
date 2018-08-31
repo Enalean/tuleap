@@ -180,7 +180,8 @@ foreach ($packages as $package_id => $package_for_display) {
             $frs_icon = $package_for_display['is_collapsed'] ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
             $html    .= '<a href="#" onclick="javascript:toggle_package(\'p_'.$package_id.'\'); return false;" /><img src="'. $frs_icon .'" id="img_p_'.$package_id.'" /></a>&nbsp;';
         }
-        $html .= " <$emphasis>". $hp->purify(util_unconvert_htmlspecialchars($package->getName())) ."</$emphasis>";
+        $html             .= " <$emphasis data-test='package-name'>" . $hp->purify(util_unconvert_htmlspecialchars($package->getName()))
+            . "</$emphasis>";
         if (!$pv) {
             if ($permission_manager->isAdmin($project, $user)) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' .
@@ -268,7 +269,8 @@ foreach ($packages as $package_id => $package_for_display) {
                         $frs_icon = $is_release_collapsed ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
                         $html .= '<a href="#" onclick="javascript:toggle_release(\'p_'.$package_id.'\', \'r_'.$package_release->getReleaseID().'\'); return false;" /><img src="'. $frs_icon .'" id="img_p_'.$package_id.'r_'.$package_release->getReleaseID().'" /></a>';
                     }
-                    $html .= "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
+                    $html .= "     <$emphasis data-test='release-name'>" .
+                        $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
                         if ($permission_manager->isAdmin($project, $user)) {
                             $html .= '     <a
