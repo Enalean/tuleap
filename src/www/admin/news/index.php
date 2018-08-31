@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ require_once('www/forum/forum_utils.php');
 require_once('www/project/admin/ugroup_utils.php');
 
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
     $admin_news_renderer = new AdminPageRenderer();
@@ -54,6 +54,8 @@ if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
     );
     $admin_news_router->route($request);
 } else {
-    exit_error($Language->getText('news_admin_index', 'permission_denied'),
-        $Language->getText('news_admin_index', 'need_to_be_admin'));
+    exit_error(
+        $Language->getText('news_admin_index', 'permission_denied'),
+        $Language->getText('news_admin_index', 'need_to_be_admin')
+    );
 }

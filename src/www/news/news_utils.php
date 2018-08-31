@@ -287,7 +287,7 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
             news_send_to_ugroups($send_news_to, $summary, $details, $group_id);
         }
         // extract cross references           
-        $reference_manager =& ReferenceManager::instance();
+        $reference_manager = ReferenceManager::instance();
         $reference_manager->extractCrossRef($summary, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
         $reference_manager->extractCrossRef($details, $new_id, ReferenceManager::REFERENCE_NATURE_NEWS, $group_id);
     }
