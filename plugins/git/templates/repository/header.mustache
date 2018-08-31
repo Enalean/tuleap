@@ -1,11 +1,14 @@
 <div class="tlp-framed">
-    <div class="git-repository-path">{{ repository_path }}</div>
+    {{# repository_path }}
+        <div class="git-repository-path">{{ repository_path }}/</div>
+    {{/ repository_path }}
     <h1 class="git-repository-name {{# parent_repository_presenter }}git-repository-forked-name{{/ parent_repository_presenter }}"
         data-test="git_repo_name">
         {{ repository_name }}
     </h1>
     {{# parent_repository_presenter }}
         <div class="git-repository-parent">
+            <i class="fa fa-code-fork"></i>
             {{# dgettext }}
                 tuleap-git
                 | Forked from %s

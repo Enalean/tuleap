@@ -127,7 +127,7 @@ class GitViews_ShowRepo_Content {
 
     private function getWaitingForRepositoryCreationInfo()
     {
-        $html = '<div class="tlp-alert-info git-waiting-for-repo-creation">';
+        $html = '<div class="tlp-alert-info">';
 
         $html .= $GLOBALS['Language']->getText('plugin_git', 'waiting_for_repo_creation');
 

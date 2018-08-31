@@ -2,14 +2,14 @@
        for="git-repository-clone-dropdown-button">
     {{# dgettext }}tuleap-git | Clone or download:{{/ dgettext }}
 </label>
-<div class="tlp-form-element tlp-form-element-prepend tlp-dropdown git-repository-clone-form-element">
-    <div class="tlp-dropdown">
+<div class="tlp-form-element tlp-form-element-prepend git-repository-clone-form-element">
+    <div class="tlp-dropdown tlp-prepend">
         <button class="tlp-button-primary tlp-button-outline"
                 id="git-repository-clone-dropdown-button"
                 type="button"
         >
             <span id="git-repository-clone-button-text">{{ selected_url_label }}</span>
-            <i class="fa fa-sort tlp-button-icon-right"></i>
+            <i class="fa fa-caret-down tlp-button-icon-right"></i>
         </button>
         <div class="tlp-dropdown-menu git-repository-clone-dropdown-menu" role="menu">
             <span class="tlp-dropdown-menu-title" role="menuitem">
@@ -30,7 +30,7 @@
         </div>
     </div>
     <span class="tlp-prepend git-repository-clone-hidden" id="git-repository-clone-read-only">
-        <span class="tlp-badge-primary">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span>
+        <span class="tlp-badge-info">{{# dgettext }}tuleap-git | Read-only{{/ dgettext }}</span>
     </span>
     <input type="text"
            class="tlp-input"
@@ -38,4 +38,3 @@
            value="{{ selected_url }}"
     >
 </div>
-
