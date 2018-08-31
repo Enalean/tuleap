@@ -5,7 +5,7 @@ set -e
 PHP=/opt/remi/php72/root/usr/bin/php
 
 generate_testsuite() {
-    php /usr/share/tuleap/tests/rest/bin/generate-testsuite.php /tmp /output
+    $PHP /usr/share/tuleap/tests/rest/bin/generate-testsuite.php /tmp /output
 }
 
 run_testsuite() {

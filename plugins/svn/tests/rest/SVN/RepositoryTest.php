@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -79,7 +79,11 @@ class RepositoryTest extends TestBase
                     'emails'      => array("project-svn@list.example.com"),
                     'path'        => "/trunk"
                 )
-            )
+            ),
+            $message = '',
+            $delta = 0,
+            $max_depth = 10,
+            $canonicalize = true
         );
     }
 
