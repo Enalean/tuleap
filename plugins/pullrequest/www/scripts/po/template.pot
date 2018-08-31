@@ -113,10 +113,6 @@ msgstr ""
 msgid "Has updated the pull request."
 msgstr ""
 
-#: src/app/dashboard/dashboard.tpl.html
-msgid "Hide closed pull requests"
-msgstr ""
-
 #: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
 msgstr ""
@@ -171,10 +167,6 @@ msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
-msgstr ""
-
-#: src/app/dashboard/dashboard.tpl.html
-msgid "Pull requests"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html

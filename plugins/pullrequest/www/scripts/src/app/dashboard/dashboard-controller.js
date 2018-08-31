@@ -24,7 +24,6 @@ function DashboardController(PullRequestCollectionService, PullRequestService, T
         loading_pull_requests: true,
 
         areClosedPullRequestsHidden,
-        hideClosedPullRequests,
         loadClosedPullRequests,
         $onInit: init
     });
@@ -71,9 +70,5 @@ function DashboardController(PullRequestCollectionService, PullRequestService, T
 
     function areClosedPullRequestsHidden() {
         return closed_pull_requests_hidden;
-    }
-
-    function hideClosedPullRequests() {
-        closed_pull_requests_hidden = true;
     }
 }

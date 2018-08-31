@@ -1,15 +1,12 @@
-<div class="dashboard">
-    <h2 translate>Pull requests</h2>
-
+<div class="dashboard tlp-framed-horizontally">
     <div class="pull-requests-list">
-        <div
+        <pull-request-summary
             class="tlp-pane pull-request-list-item"
             ng-class="{ closed: dashboard_controller.isPullRequestClosed(pull_request) }"
             ng-repeat="pull_request in dashboard_controller.pull_requests track by pull_request.id"
             ng-hide="dashboard_controller.areClosedPullRequestsHidden() && dashboard_controller.isPullRequestClosed(pull_request)"
-        >
-            <pull-request-summary class="tlp-pane-container" pull-request-data="pull_request"></pull-request-summary>
-        </div>
+            pull-request-data="pull_request"
+        ></pull-request-summary>
     </div>
 
     <div
@@ -22,24 +19,21 @@
             )">
         <span translate>There are no open pull requests</span>
     </div>
+
+    <div class="pull-request-loading" ng-if="dashboard_controller.loading_pull_requests"></div>
+
+    <div class="pull-request-list-load">
+        <a
+            class="load-closed-pull-requests"
+            ng-if="! dashboard_controller.loading_pull_requests && (! dashboard_controller.areClosedPullRequestsFullyLoaded() || dashboard_controller.areClosedPullRequestsHidden())"
+            ng-click="dashboard_controller.loadClosedPullRequests()"
+            translate
+        >Load closed pull requests</a>
+    </div>
+
     <div
         class="empty-page-text"
         ng-if="! dashboard_controller.isThereAtLeastOneClosedPullRequest() && dashboard_controller.areClosedPullRequestsFullyLoaded()">
         <span translate>There are no closed pull requests</span>
     </div>
-    <div class="pull-request-list-load">
-        <a
-            class="load-closed-pull-requests"
-            ng-if="! dashboard_controller.areClosedPullRequestsFullyLoaded() || dashboard_controller.areClosedPullRequestsHidden()"
-            ng-click="dashboard_controller.loadClosedPullRequests()"
-            translate
-        >Load closed pull requests</a>
-        <a
-            class="hide-closed-pull-requests"
-            ng-if="dashboard_controller.isThereAtLeastOneClosedPullRequest() && ! dashboard_controller.areClosedPullRequestsHidden()"
-            ng-click="dashboard_controller.hideClosedPullRequests()"
-            translate
-        >Hide closed pull requests</a>
-    </div>
-    <div class="pull-request-loading" ng-if="dashboard_controller.loading_pull_requests"></div>
 </div>
