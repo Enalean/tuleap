@@ -122,3 +122,78 @@ function _configureApache() {
         _infoMessage "Apache is already configured"
     fi
 }
+
+function _configureNSSMySQL() {
+    local has_libnss_mysql_been_configured="false"
+    local libnss_conf="/etc/libnss-mysql.cfg"
+    local libnss_conf_root="/etc/libnss-mysql-root.cfg"
+
+    local dbauthuser_username=$(${awk} --field-separator="'" '/^\$sys_dbauth_user/ {print $2}' ${tuleap_conf}/local.inc)
+    local dbauthuser_password=$(${awk} --field-separator="'" '/^\$sys_dbauth_passwd/ {print $2}' ${tuleap_conf}/local.inc)
+
+    if ! ${grep} --quiet "$dbauthuser_password" "$libnss_conf"; then
+        ${cp} -f "$install_dir/src/etc/libnss-mysql.cfg.dist" "$libnss_conf"
+
+        local mysql_host=$(${awk} --field-separator="'" '/^\$sys_dbhost/ {print $2}' ${tuleap_conf}/database.inc)
+        local mysql_dbname=$(${awk} --field-separator="'" '/^\$sys_dbname/ {print $2}' ${tuleap_conf}/database.inc)
+        ${sed} --in-place "s@%sys_dbhost%@$mysql_host@" "$libnss_conf"
+        ${sed} --in-place "s@%sys_dbname%@$mysql_dbname@" "$libnss_conf"
+        ${sed} --in-place "s@%sys_dbhost%@$mysql_host@" "$libnss_conf"
+        ${sed} --in-place "s@%sys_dbauth_passwd%@$dbauthuser_password@" "$libnss_conf"
+        has_libnss_mysql_been_configured="true"
+    fi
+
+    if ! ${grep} --quiet "$dbauthuser_password" "$libnss_conf_root"; then
+        ${cp} -f "$install_dir/src/etc/libnss-mysql-root.cfg.dist" "$libnss_conf_root"
+
+        ${sed} --in-place "s@%sys_dbauth_passwd%@$dbauthuser_password@" "$libnss_conf_root"
+        has_libnss_mysql_been_configured="true"
+    fi
+
+    if ! ${grep} ^passwd  /etc/nsswitch.conf | ${grep} --quiet mysql; then
+        ${sed} --in-place "/^passwd:/ s/$/ mysql/g" /etc/nsswitch.conf
+        has_libnss_mysql_been_configured="true"
+    fi
+
+
+    if ! ${grep} ^shadow  /etc/nsswitch.conf | ${grep} --quiet mysql; then
+        ${sed} --in-place "/^shadow:/ s/$/ mysql/g" /etc/nsswitch.conf
+        has_libnss_mysql_been_configured="true"
+    fi
+
+
+    if ! ${grep} ^group  /etc/nsswitch.conf | ${grep} --quiet mysql; then
+        ${sed} --in-place "/^group:/ s/$/ mysql/g" /etc/nsswitch.conf
+        has_libnss_mysql_been_configured="true"
+    fi
+
+    if [ ${has_libnss_mysql_been_configured} = "true" ]; then
+        _infoMessage "LibNSS MySQL has been configured"
+    fi
+}
+
+function _configureCVS() {
+    if [ ! -f "/usr/lib/systemd/system/cvs.socket" ]; then
+        return
+    fi
+    local has_cvs_been_configured="false"
+
+    if [ ! -L "/cvsroot" ]; then
+        ${ln} --symbolic ${tuleap_data}/cvsroot /cvsroot
+        has_cvs_been_configured="true"
+    fi
+
+    _configureNSSMySQL
+
+    if ! $(_serviceIsEnabled "cvs.socket"); then
+        _serviceEnable "cvs.socket"
+        has_cvs_been_configured="true"
+    fi
+
+    if [ ${has_cvs_been_configured} = "true" ]; then
+        _serviceRestart "cvs.socket"
+        _infoMessage "CVS has been configured"
+    else
+        _infoMessage "CVS is already configured"
+    fi
+}

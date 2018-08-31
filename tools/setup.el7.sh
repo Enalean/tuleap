@@ -144,6 +144,7 @@ if [ ${configure:-false} = "true" ]; then
     _configureMailman
     _checkInstalledPlugins
     _checkPluginsConfiguration
+    _configureCVS
     if ${printf} '%s' ${plugins_configured[@]:-false} | \
         ${grep} --quiet "true"; then
         _phpConfigureModule "nginx"

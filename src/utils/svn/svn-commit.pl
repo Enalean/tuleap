@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Copyright (c) Enalean, 2017. All Rights Reserved.
+# Copyright (c) Enalean, 2017-2018. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 #
 # Tuleap is free software; you can redistribute it and/or modify
@@ -26,7 +26,7 @@ use DBI qw(:sql_types);
 # Svnlook path.
 my $svnlook = "/usr/bin/svnlook";
 
-$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/tuleap/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 &db_connect;

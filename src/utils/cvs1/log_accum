@@ -14,6 +14,7 @@
 #
 # hacked greatly by Greg A. Woods <woods@web.net>
 #
+# Copyright (c) Enalean, 2017-2018. All Rights Reserved.
 # Heavily modified for the Codendi project at Xerox
 # Copyright (c) Xerox Corporation, Codendi / Codendi Team, 2004-2006. All Rights Reserved
 
@@ -51,7 +52,7 @@ use Encode;
 use DBI;
 use Text::Iconv;
 
-$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/tuleap/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 require $utils_path."/cvs1/checkins.pl";
