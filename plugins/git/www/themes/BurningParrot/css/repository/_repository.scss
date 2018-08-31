@@ -31,7 +31,8 @@
 
 .git-repository-parent {
     display: block;
-    margin: 3px 0 30px;
+    margin: 10px 0 30px;
+    color: $tlp-ui-dimmed;
     font-size: 14px;
 }
 
@@ -53,16 +54,12 @@
     margin: auto 10px auto 0;
 }
 
-#git-repository-clone-dropdown-button {
-    margin: 0;
-    border-radius: 3px 0 0 3px;
-}
-
 .git-repository-clone-dropdown-menu > .tlp-dropdown-menu-title {
     white-space: nowrap;
 }
 
 #git-repository-clone-read-only {
+    margin-left: 1px;
     padding: 0 0 0 12px;
     border-right: 0;
     border-left: 0;
@@ -73,7 +70,7 @@
         padding: 0;
         border-width: 1px 0;
 
-        > .tlp-badge-primary {
+        > .tlp-badge-info {
             display: none;
         }
     }
@@ -89,14 +86,6 @@
     border-left: 0;
     color: $tlp-ui-dimmed;
     text-overflow: ellipsis;
-
-    &:focus {
-        border-color: #cccccc;
-    }
-}
-
-.tlp-alert-info.git-waiting-for-repo-creation {
-    margin: 0 $tlp-spacing;
 }
 
 /* scss-lint:disable SelectorFormat */
