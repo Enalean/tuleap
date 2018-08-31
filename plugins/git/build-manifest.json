@@ -55,6 +55,10 @@
         "permissions-per-group": {
             "src": "www/scripts/permissions-per-group/src",
             "po": "www/scripts/permissions-per-group/po"
+        },
+        "repository": {
+            "src": "www/scripts/repository",
+            "po": "www/scripts/repository/po"
         }
     },
     "gettext-vue": {

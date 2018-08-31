@@ -2,7 +2,7 @@
        for="git-repository-clone-dropdown-button">
     {{# dgettext }}tuleap-git | Clone or download:{{/ dgettext }}
 </label>
-<div class="tlp-form-element tlp-form-element-prepend git-repository-clone-form-element">
+<div class="tlp-form-element tlp-form-element-prepend tlp-form-element-append git-repository-clone-form-element">
     <div class="tlp-dropdown tlp-prepend">
         <button class="tlp-button-primary tlp-button-outline"
                 id="git-repository-clone-dropdown-button"
@@ -39,4 +39,10 @@
            value="{{ selected_url }}"
            readonly
     >
+    <button class="tlp-append tlp-button-secondary tlp-button-outline tlp-tooltip tlp-tooltip-bottom"
+            id="git-repository-copy-url"
+            data-tlp-tooltip="{{# dgettext }}tuleap-git | Copy to clipboard{{/ dgettext }}"
+    >
+        <i class="fa fa-clipboard" ></i>
+    </button>
 </div>

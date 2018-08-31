@@ -14,6 +14,7 @@
     "radios",
     "prepends",
     "appends",
+    "prepends-appends",
     "datetime"
   ]
 }
