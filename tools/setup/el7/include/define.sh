@@ -64,6 +64,8 @@ declare -r tuleap_log="/var/log/tuleap/tuleap_setup.log"
 declare -r tuleap_src="${install_dir}/src"
 declare -r urandom="/dev/urandom"
 declare -r nginx_conf="/etc/nginx/conf.d/tuleap.conf"
+declare -r httpd_conf="/etc/httpd/conf/httpd.conf"
+declare -r httpd_conf_ssl="/etc/httpd/conf.d/ssl.conf"
 
 # declare options
 declare -r sys_db_name="tuleap"

@@ -36,6 +36,7 @@ declare -r include="${tools_dir}/setup/el7/include"
 . ${include}/mysqlcli.sh
 . ${include}/sql.sh
 . ${include}/services.sh
+. ${include}/core.sh
 . ${include}/plugins.sh
 
 # Main
@@ -139,6 +140,8 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 fi
 
 if [ ${configure:-false} = "true" ]; then
+    _configureApache
+    _configureMailman
     _checkInstalledPlugins
     _checkPluginsConfiguration
     if ${printf} '%s' ${plugins_configured[@]:-false} | \
