@@ -5,6 +5,9 @@
            id="{{ html_id }}"
         >
             {{ label }}
+            {{# has_count_to_display }}
+                <span class="tlp-tab-badge-append tlp-badge-primary tlp-badge-outline">{{ count }}</span>
+            {{/ has_count_to_display }}
         </a>
     {{/ navigation_tabs_presenters }}
 </nav>

@@ -38,12 +38,22 @@ class TabPresenter
      * @var string
      */
     public $html_id;
+    /**
+     * @var bool
+     */
+    public $has_count_to_display;
+    /**
+     * @var int
+     */
+    public $count;
 
-    public function __construct($is_active, $url, $label, $html_id)
+    public function __construct($is_active, $url, $label, $html_id, $has_count_to_display, $count)
     {
-        $this->is_active = $is_active;
-        $this->url       = $url;
-        $this->label     = $label;
-        $this->html_id   = $html_id;
+        $this->is_active            = $is_active;
+        $this->url                  = $url;
+        $this->label                = $label;
+        $this->html_id              = $html_id;
+        $this->has_count_to_display = $has_count_to_display;
+        $this->count                = $count;
     }
 }
