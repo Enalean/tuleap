@@ -63,7 +63,11 @@ function controller(
         displayUnidiff(unidiff_codemirror, self.diff.lines);
 
         self.diff.inline_comments.forEach(comment => {
-            CodeMirrorHelperService.displayInlineComment(unidiff_codemirror, comment);
+            CodeMirrorHelperService.displayInlineComment(
+                unidiff_codemirror,
+                comment,
+                comment.unidiff_offset - 1
+            );
         });
 
         const gutterClick = (codemirror, line_number) => {
