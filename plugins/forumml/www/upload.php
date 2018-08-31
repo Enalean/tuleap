@@ -1,23 +1,24 @@
 <?php
 #
+# Copyright (c) Enalean, 2011-2018. All Rights Reserved.
 # Copyright (c) STMicroelectronics, 2005. All Rights Reserved.
 
  # Originally written by Jean-Philippe Giola, 2005
  #
- # This file is a part of codendi.
+ # This file is a part of Tuleap.
  #
- # codendi is free software; you can redistribute it and/or modify
+ # Tuleap is free software; you can redistribute it and/or modify
  # it under the terms of the GNU General Public License as published by
  # the Free Software Foundation; either version 2 of the License, or
  # (at your option) any later version.
  #
- # codendi is distributed in the hope that it will be useful,
+ # Tuleap is distributed in the hope that it will be useful,
  # but WITHOUT ANY WARRANTY; without even the implied warranty of
  # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  # GNU General Public License for more details.
  #
  # You should have received a copy of the GNU General Public License
- # along with codendi; if not, write to the Free Software
+ # along with Tuleap; if not, write to the Free Software
  # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  #
  # $Id$
@@ -64,20 +65,8 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         $fmlAttch = new ForumML_Attachment();
         $attch = $fmlAttch->getById($attchmentId);
         if ($attch && file_exists($attch['file_path'])) {
-            header('Content-disposition: filename="'.$attch['file_name'].'"');
-            header("Content-Type: ".$attch['type']);
-            header("Content-Transfer-Encoding: ".$attch['type']);
-            if ($attch['file_size'] > 0) {
-                header("Content-Length: ".$attch['file_size']);
-            }
-            header("Pragma: no-cache");
-            header("Cache-Control: must-revalidate, post-check=0, pre-check=0, public");
-            header("Expires: 0");
-            if (ob_get_level()) {
-                ob_end_clean();
-            }
-            readfile($attch['file_path']);
-            exit;
+            $response = new \Tuleap\Http\BinaryFileResponse($attch['file_path'], $attch['file_name'], $attch['type']);
+            $response->send();
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml','attchment_not_found'));
         }
@@ -86,7 +75,5 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
     }
     $GLOBALS['Response']->redirect('/plugins/forumml/message.php?group_id='.$groupId.'&list='.$list_id.'&topic='.$topic);
 } else {
-    header('Location: '.get_server_url());
+    header('Location: /');
 }
-
-?>
