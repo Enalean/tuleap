@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid "%s (Default)"
@@ -35,6 +35,9 @@ msgstr "%s a poussé sur %s"
 #, php-format
 msgid "A push occured on %s"
 msgstr "Un push est survenu sur %s"
+
+msgid "Already forked repository"
+msgstr "Dépôt déjà forké"
 
 msgid ""
 "An error occured while migrating this repository on gerrit %s. <strong>Do "
@@ -99,6 +102,9 @@ msgstr "Permissions globales"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+msgid "It seems that you already forked this repository:"
+msgstr "Il semblerait que vous avez déjà forké ce dépôt :"
 
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"

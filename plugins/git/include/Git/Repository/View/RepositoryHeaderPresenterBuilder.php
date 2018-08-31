@@ -26,6 +26,7 @@ use Git_Driver_Gerrit_UserAccountManager;
 use Git_GitRepositoryUrlManager;
 use Git_Mirror_MirrorDataMapper;
 use Git_RemoteServer_GerritServer;
+use GitDao;
 use GitPermissionsManager;
 use GitRepository;
 use PFUser;
@@ -72,8 +73,13 @@ class RepositoryHeaderPresenterBuilder
      * @var \EventManager
      */
     private $event_manager;
+    /**
+     * @var GitDao
+     */
+    private $dao;
 
     public function __construct(
+        GitDao $dao,
         Git_GitRepositoryUrlManager $url_manager,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
@@ -84,6 +90,7 @@ class RepositoryHeaderPresenterBuilder
         $selected_tab,
         \EventManager $event_manager
     ) {
+        $this->dao                    = $dao;
         $this->url_manager            = $url_manager;
         $this->driver_factory         = $driver_factory;
         $this->project_creator_status = $project_creator_status;
@@ -121,6 +128,7 @@ class RepositoryHeaderPresenterBuilder
             $current_user,
             $clone_presenter,
             $gerrit_status_presenter,
+            $this->getAlreadyForkedRepositoriesPresenters($repository, $current_user),
             $this->buildTabsPresenter($repository),
             $parent_repository_presenter
         );
@@ -201,5 +209,21 @@ class RepositoryHeaderPresenterBuilder
         $this->event_manager->processEvent($event);
 
         return $event->getExternalTabs();
+    }
+
+    private function getAlreadyForkedRepositoriesPresenters(GitRepository $repository, PFUser $current_user)
+    {
+        $project_name = $repository->getProject()->getUnixNameMixedCase();
+
+        return array_map(
+            function ($row) use ($project_name) {
+                $path = "${row['repository_namespace']}/${row['repository_name']}";
+                return new ForkedRepositoryPresenter(
+                    GIT_BASE_URL . "/$project_name/$path",
+                    $path
+                );
+            },
+            $this->dao->getForksOfRepositoryForUser($repository->getId(), $current_user->getId())
+        );
     }
 }

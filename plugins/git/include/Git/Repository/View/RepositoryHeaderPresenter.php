@@ -43,6 +43,11 @@ class RepositoryHeaderPresenter
     public $user_is_anonymous;
     /**  @var NavigationTabsPresenter[] */
     public $navigation_tabs_presenters;
+    /** @var ForkedRepositoryPresenter[] */
+    public $forked_repositories_presenters;
+    /** @var bool */
+    public $is_already_forked;
+    public $has_only_one_fork;
 
     public function __construct(
         GitRepository $repository,
@@ -52,21 +57,25 @@ class RepositoryHeaderPresenter
         PFUser $user,
         ClonePresenter $clone_presenter,
         GerritStatusPresenter $gerrit_status_presenter,
+        array $forked_repositories_presenters,
         array $navigation_tabs_presenters,
         ParentRepositoryPresenter $parent_repository_presenter = null
     ) {
-        $this->project_id                  = $repository->getProjectId();
-        $this->repository_id               = $repository->getId();
-        $this->repository_path             = $repository->getPathWithoutProject();
-        $this->repository_name             = $repository->getLabel();
-        $this->gerrit_status_presenter     = $gerrit_status_presenter;
-        $this->user_is_admin               = $user_is_admin;
-        $this->repository_admin_url        = $repository_admin_url;
-        $this->parent_repository_presenter = $parent_repository_presenter;
-        $this->clone_presenter             = $clone_presenter;
-        $this->is_migrated_to_gerrit       = $repository->isMigratedToGerrit() ? "1" : "0";
-        $this->fork_url                    = $fork_url;
-        $this->user_is_anonymous           = $user->isAnonymous();
-        $this->navigation_tabs_presenters  = $navigation_tabs_presenters;
+        $this->project_id                     = $repository->getProjectId();
+        $this->repository_id                  = $repository->getId();
+        $this->repository_path                = $repository->getPathWithoutProject();
+        $this->repository_name                = $repository->getLabel();
+        $this->gerrit_status_presenter        = $gerrit_status_presenter;
+        $this->user_is_admin                  = $user_is_admin;
+        $this->repository_admin_url           = $repository_admin_url;
+        $this->parent_repository_presenter    = $parent_repository_presenter;
+        $this->clone_presenter                = $clone_presenter;
+        $this->is_migrated_to_gerrit          = $repository->isMigratedToGerrit() ? "1" : "0";
+        $this->fork_url                       = $fork_url;
+        $this->user_is_anonymous              = $user->isAnonymous();
+        $this->navigation_tabs_presenters     = $navigation_tabs_presenters;
+        $this->forked_repositories_presenters = $forked_repositories_presenters;
+        $this->is_already_forked              = count($forked_repositories_presenters) > 0;
+        $this->has_only_one_fork              = count($forked_repositories_presenters) === 1;
     }
 }
