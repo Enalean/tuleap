@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -474,5 +474,30 @@ class UserGroupTest extends RestBase {
             null,
             $put_resource)
         );
+    }
+
+    public function testOptions()
+    {
+        $response = $this->getResponse($this->client->options('user_groups'));
+
+        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPOSTUserGroup()
+    {
+        $post_resource = json_encode(array(
+            'project_id' => $this->project_private_member_id,
+            'short_name' => 'static_ugroup_rest_1'
+        ));
+
+        $response = $this->getResponse($this->client->post('user_groups', null, $post_resource));
+
+        $this->assertEquals($response->getStatusCode(), 201);
+
+        $ugroup = $response->json();
+
+        $this->assertTrue($ugroup['id'] > 0);
+        $this->assertEquals($ugroup['short_name'], 'static_ugroup_rest_1');
     }
 }

@@ -23,7 +23,9 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use ProjectUGroup;
+use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsUGroupMemberChecker;
+use Tuleap\Project\REST\UserGroupPOSTRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\UserPermissionsDao;
@@ -115,7 +117,7 @@ class UserGroupResource extends AuthenticatedResource {
 
         $ugroup_representation = new UserGroupRepresentation();
         $ugroup_representation->build($project_id, $ugroup);
-        $this->sendAllowHeadersForUserGroup();
+        $this->sendAllowHeadersForUserGroupId();
 
         return $ugroup_representation;
     }
@@ -130,7 +132,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @throws 404
      */
     public function optionsId($id) {
-        $this->sendAllowHeadersForUserGroup();
+        $this->sendAllowHeadersForUserGroupId();
     }
 
     /**
@@ -202,7 +204,7 @@ class UserGroupResource extends AuthenticatedResource {
         }
 
 
-        $this->sendAllowHeadersForUserGroup();
+        $this->sendAllowHeadersForUserGroupId();
 
         return $member_representations;
     }
@@ -358,7 +360,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @param int $id Id of the ugroup (format: projectId_ugroupId)
      */
     public function optionsUsers($id) {
-        $this->sendAllowHeadersForUserGroup();
+        $this->sendAllowHeadersForUserGroupId();
     }
 
     /**
@@ -442,8 +444,12 @@ class UserGroupResource extends AuthenticatedResource {
         return true;
     }
 
-    private function sendAllowHeadersForUserGroup() {
+    private function sendAllowHeadersForUserGroupId() {
         Header::allowOptionsGetPut();
+    }
+
+    private function sendAllowHeadersForUserGroup() {
+        Header::allowOptionsPost();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
@@ -483,5 +489,62 @@ class UserGroupResource extends AuthenticatedResource {
         }
 
         return null;
+    }
+
+    /**
+     * @url OPTIONS
+     */
+    public function options()
+    {
+        $this->sendAllowHeadersForUserGroup();
+    }
+
+    /**
+     * POST user_groups
+     *
+     * Create an empty user_group
+     *
+     * @url POST
+     *
+     * @access protected
+     *
+     * @param \Tuleap\Project\REST\UserGroupPOSTRepresentation $user_group_representation Ugroup representation {@from body}
+     *
+     * @return UserGroupRepresentation {@type \Tuleap\Project\REST\v1\UserGroupRepresentation}
+     *
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     *
+     * @status 201
+     */
+    protected function postUgroups(UserGroupPOSTRepresentation $user_group_representation)
+    {
+        try {
+            $this->checkAccess();
+
+            $project_id   = $user_group_representation->project_id;
+            $project      = $this->project_manager->getProject($project_id);
+            $user         = $this->user_manager->getCurrentUser();
+
+            ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
+
+            $new_ugroup_id = $this->ugroup_manager->createEmptyUgroup(
+                $project_id,
+                $user_group_representation->short_name,
+                $user_group_representation->description
+            );
+
+            $new_ugroup                = $this->ugroup_manager->getById($new_ugroup_id);
+            $new_ugroup_representation = new UserGroupRepresentation();
+            $new_ugroup_representation->build($project_id, $new_ugroup);
+
+            return $new_ugroup_representation;
+
+        } catch (CannotCreateUGroupException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } finally {
+            $this->sendAllowHeadersForUserGroup();
+        }
     }
 }
