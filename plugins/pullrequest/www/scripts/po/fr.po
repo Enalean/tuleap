@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1\n"
+"X-Generator: Poedit 2.1.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -21,7 +21,7 @@ msgstr "Abandonner"
 msgid "Abandoned"
 msgstr "Abandonné"
 
-#: src/app/labels/labels-controller.js
+#: src/app/pull-request/header/header.tpl.html
 msgid "Add labels"
 msgstr "Ajouter un label"
 
@@ -37,6 +37,7 @@ msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 msgid "Binary file"
 msgstr "Fichier binaire"
 
+#: src/app/file-diff/file-diff-directive.js
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 #: src/app/overview/overview.tpl.html
 msgid "Cancel"
@@ -59,6 +60,7 @@ msgstr "Checkout avec"
 msgid "Close"
 msgstr "Fermer"
 
+#: src/app/file-diff/file-diff-directive.js
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Comment"
 msgstr "Commenter"
@@ -224,6 +226,10 @@ msgstr "Dites quelque chose…"
 msgid "Show details"
 msgstr "Voir les détails"
 
+#: src/app/files/files.tpl.html
+msgid "Side by side diff"
+msgstr "Diff côte à côte"
+
 #: src/app/overview/overview.tpl.html
 msgid ""
 "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-"
@@ -243,6 +249,10 @@ msgstr "Il n'existe pas de pull requests ouvertes"
 #: src/app/overview/overview.tpl.html
 msgid "Title"
 msgstr "Titre"
+
+#: src/app/files/files.tpl.html
+msgid "Unified diff"
+msgstr "Diff unifié"
 
 #: src/app/overview/overview.tpl.html
 msgid "Unknown"

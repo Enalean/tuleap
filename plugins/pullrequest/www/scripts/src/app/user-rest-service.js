@@ -6,7 +6,9 @@ function UserRestService($http, $q, ErrorModalService) {
     const self = this;
 
     Object.assign(self, {
-        getUser
+        getUser,
+        getPreference,
+        setPreference
     });
 
     function getUser(user_id) {
@@ -20,6 +22,27 @@ function UserRestService($http, $q, ErrorModalService) {
             .catch(function(response) {
                 ErrorModalService.showError(response);
                 return $q.reject(response);
+            });
+    }
+
+    function getPreference(user_id, key) {
+        return $http
+            .get(`/api/v1/users/${user_id}/preferences`, { params: { key } })
+            .then(response => response.data)
+            .catch(response => {
+                ErrorModalService.showError(response);
+                return $q.reject(response);
+            });
+    }
+
+    function setPreference(user_id, key, value) {
+        return $http
+            .patch(`/api/v1/users/${user_id}/preferences`, {
+                key,
+                value
+            })
+            .catch(() => {
+                // Do nothing
             });
     }
 }

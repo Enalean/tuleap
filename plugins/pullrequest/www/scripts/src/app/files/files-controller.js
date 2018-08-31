@@ -6,11 +6,22 @@ FilesController.$inject = [
     "$state",
     "SharedPropertiesService",
     "FilesRestService",
-    "FilepathsService"
+    "FilepathsService",
+    "UserRestService"
 ];
 
-function FilesController($state, SharedPropertiesService, FilesRestService, FilepathsService) {
+function FilesController(
+    $state,
+    SharedPropertiesService,
+    FilesRestService,
+    FilepathsService,
+    UserRestService
+) {
     const self = this;
+
+    const USER_DIFF_DISPLAY_MODE_PREFERENCE = "pull_requests_diff_display_mode";
+    const SIDE_BY_SIDE_DIFF = "side_by_side";
+    const UNIFIED_DIFF = "unified";
 
     Object.assign(self, {
         pull_request: {},
@@ -18,9 +29,14 @@ function FilesController($state, SharedPropertiesService, FilesRestService, File
         file_selector: null,
         selected_file: {},
         loading_files: true,
+        diff_display_mode: null,
+        side_by_side_diff: SIDE_BY_SIDE_DIFF,
+        unified_diff: UNIFIED_DIFF,
         loadFile,
         initFileDropdown,
+        isCurrentDisplayMode,
         isFileSelected,
+        switchDiffDisplayMode,
         $onInit: init
     });
 
@@ -29,6 +45,26 @@ function FilesController($state, SharedPropertiesService, FilesRestService, File
             self.pull_request = SharedPropertiesService.getPullRequest();
             getFiles();
             initFileDropdown();
+
+            const user_id = SharedPropertiesService.getUserId();
+
+            if (!user_id) {
+                self.diff_display_mode = UNIFIED_DIFF;
+
+                return;
+            }
+
+            UserRestService.getPreference(user_id, USER_DIFF_DISPLAY_MODE_PREFERENCE).then(
+                ({ value }) => {
+                    if (!value) {
+                        self.diff_display_mode = UNIFIED_DIFF;
+
+                        return;
+                    }
+
+                    self.diff_display_mode = value;
+                }
+            );
         });
     }
 
@@ -74,5 +110,21 @@ function FilesController($state, SharedPropertiesService, FilesRestService, File
 
     function isFileSelected(file) {
         return self.selected_file.path === file.path;
+    }
+
+    function isCurrentDisplayMode(display_mode) {
+        return self.diff_display_mode === display_mode;
+    }
+
+    function switchDiffDisplayMode(new_display_mode) {
+        const user_id = SharedPropertiesService.getUserId();
+
+        self.diff_display_mode = new_display_mode;
+
+        if (!user_id) {
+            return;
+        }
+
+        UserRestService.setPreference(user_id, USER_DIFF_DISPLAY_MODE_PREFERENCE, new_display_mode);
     }
 }

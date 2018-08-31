@@ -193,6 +193,10 @@ msgstr ""
 msgid "Show details"
 msgstr ""
 
+#: src/app/files/files.tpl.html
+msgid "Side by side diff"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Success on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
@@ -207,6 +211,10 @@ msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Title"
+msgstr ""
+
+#: src/app/files/files.tpl.html
+msgid "Unified diff"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
