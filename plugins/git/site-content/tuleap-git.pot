@@ -50,6 +50,9 @@ msgstr ""
 msgid "Clone from SSH mirrors"
 msgstr ""
 
+msgid "Clone or download"
+msgstr ""
+
 msgid "Clone or download:"
 msgstr ""
 

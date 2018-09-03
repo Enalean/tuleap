@@ -53,8 +53,10 @@
             <a href="{{ repository_admin_url }}"
                class="tlp-button-primary tlp-button-outline git-repository-actions-button"
                role="button"
+               title="{{# dgettext }}tuleap-git | Settings{{/ dgettext }}"
             >
-                <i class="fa fa-cog tlp-button-icon"></i> {{# dgettext }}tuleap-git | Settings{{/ dgettext }}
+                <i class="fa fa-cog tlp-button-icon git-repository-actions-settings-icon"></i>
+                <span class="git-repository-actions-settings-label">{{# dgettext }}tuleap-git | Settings{{/ dgettext }}</span>
             </a>
         {{/ user_is_admin }}
     </div>
