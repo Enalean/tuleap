@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import CodeMirror from "codemirror";
+
 export default CodeMirrorHelperService;
 
 CodeMirrorHelperService.$inject = [
@@ -25,7 +27,8 @@ CodeMirrorHelperService.$inject = [
     "$document",
     "$timeout",
     "FileDiffRestService",
-    "TooltipService"
+    "TooltipService",
+    "gettextCatalog"
 ];
 
 function CodeMirrorHelperService(
@@ -34,10 +37,12 @@ function CodeMirrorHelperService(
     $document,
     $timeout,
     FileDiffRestService,
-    TooltipService
+    TooltipService,
+    gettextCatalog
 ) {
     const self = this;
     Object.assign(self, {
+        collapseCommonSectionsUnidiff,
         displayInlineComment,
         showCommentForm,
         displayPlaceholderWidget
@@ -98,5 +103,39 @@ function CodeMirrorHelperService(
             unidiff_offset,
             comment_text
         );
+    }
+
+    function getCollapsedLabelElement(section) {
+        const collapsed_label = document.createElement("span");
+        collapsed_label.className =
+            "pull-request-file-diff-section-collapsed tlp-badge-primary tlp-badge-outline";
+
+        collapsed_label.appendChild(
+            document.createTextNode(
+                gettextCatalog.getPlural(
+                    section.end - section.start + 1,
+                    "... Skipped 1 common line",
+                    "... Skipped {{ $count }} common lines",
+                    {}
+                )
+            )
+        );
+        return collapsed_label;
+    }
+
+    function collapseCommonSectionsUnidiff(unidiff_codemirror, sections) {
+        sections.forEach(section => {
+            const collapsed_label = getCollapsedLabelElement(section);
+
+            const marker = unidiff_codemirror.markText(
+                CodeMirror.Pos(section.start, 0),
+                CodeMirror.Pos(section.end, unidiff_codemirror.getLine(section.end).length),
+                {
+                    replacedWith: collapsed_label
+                }
+            );
+
+            collapsed_label.addEventListener("click", () => marker.clear());
+        });
     }
 }

@@ -13,3 +13,5 @@ import "./pull-request/pull-request-controller.spec.js";
 import "./pull-request/pull-request-rest-service.spec.js";
 import "./pull-request/pull-request-service.spec.js";
 import "./user-rest-service.spec.js";
+import "./pull-request-refs/pull-request-refs-controller.spec.js";
+import "./code-collapse/code-collapse-service.spec.js";

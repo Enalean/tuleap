@@ -4,6 +4,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Project-Id-Version: \n"
 
+#: src/app/file-diff/codemirror-helper-service.js
+msgid "... Skipped 1 common line"
+msgid_plural "... Skipped {{ $count }} common lines"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Abandon"
 msgstr ""

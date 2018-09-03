@@ -34,7 +34,8 @@ controller.$inject = [
     "$scope",
     "FileDiffRestService",
     "TooltipService",
-    "CodeMirrorHelperService"
+    "CodeMirrorHelperService",
+    "CodeCollapseService"
 ];
 
 function controller(
@@ -42,7 +43,8 @@ function controller(
     $scope,
     FileDiffRestService,
     TooltipService,
-    CodeMirrorHelperService
+    CodeMirrorHelperService,
+    CodeCollapseService
 ) {
     const self = this;
     Object.assign(self, {
@@ -61,6 +63,16 @@ function controller(
         const unidiff_codemirror = CodeMirror(codemirror_area, unidiff_options);
         $scope.$broadcast("code_mirror_initialized");
         displayUnidiff(unidiff_codemirror, self.diff.lines);
+
+        const collapsible_sections = CodeCollapseService.getCollapsibleCodeSections(
+            self.diff.lines,
+            self.diff.inline_comments
+        );
+
+        CodeMirrorHelperService.collapseCommonSectionsUnidiff(
+            unidiff_codemirror,
+            collapsible_sections
+        );
 
         self.diff.inline_comments.forEach(comment => {
             CodeMirrorHelperService.displayInlineComment(
