@@ -22,6 +22,9 @@ msgstr ""
 msgid "A push occured on %s"
 msgstr ""
 
+msgid "Already forked repository"
+msgstr ""
+
 msgid ""
 "An error occured while migrating this repository on gerrit %s. <strong>Do "
 "not use gerrit repository</strong>, check <a href=\"%s\">gerrit settings</a> "
@@ -84,6 +87,9 @@ msgid "Global permissions"
 msgstr ""
 
 msgid "Granted groups"
+msgstr ""
+
+msgid "It seems that you already forked this repository:"
 msgstr ""
 
 msgid "No notifications set"

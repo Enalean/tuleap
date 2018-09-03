@@ -131,6 +131,7 @@ class GitRepositoryHeaderDisplayerBuilder
     private function getRepositoryHeaderPresenterBuilder(Plugin $git_plugin, $selected_tab)
     {
         return new RepositoryHeaderPresenterBuilder(
+            $this->getGitDao(),
             $this->getGitRepositoryUrlManager($git_plugin),
             $this->getGerritDriverFactory(),
             $this->getProjectCreatorStatus(),

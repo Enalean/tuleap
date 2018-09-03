@@ -36,6 +36,9 @@ msgstr "%s a poussé sur %s"
 msgid "A push occured on %s"
 msgstr "Un push est survenu sur %s"
 
+msgid "Already forked repository"
+msgstr "Dépôt déjà forké"
+
 msgid ""
 "An error occured while migrating this repository on gerrit %s. <strong>Do "
 "not use gerrit repository</strong>, check <a href=\"%s\">gerrit settings</a> "
@@ -102,6 +105,9 @@ msgstr "Permissions globales"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+msgid "It seems that you already forked this repository:"
+msgstr "Il semblerait que vous avez déjà forké ce dépôt :"
 
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"

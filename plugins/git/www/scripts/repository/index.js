@@ -18,8 +18,10 @@
  */
 
 import { dropdown as createDropdown } from "tlp";
+import initAlreadyForkedModal from "./already-forked-modal.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    initAlreadyForkedModal();
     const button = document.getElementById("git-repository-clone-dropdown-button");
     const transport_buttons = document.getElementsByClassName("git-repository-clone-transport");
     const input = document.getElementById("git-repository-clone-input");

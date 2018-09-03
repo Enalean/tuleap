@@ -774,4 +774,16 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->run($default_sql, $permission_type);
     }
+
+    public function getForksOfRepositoryForUser($repository_id, $user_id)
+    {
+        $sql = "SELECT *
+                FROM plugin_git
+                WHERE repository_parent_id = ?
+                  AND repository_creation_user_id = ?
+                  AND repository_scope = 'I'
+                  AND repository_deletion_date IS NULL";
+
+        return $this->getDB()->run($sql, $repository_id, $user_id);
+    }
 }
