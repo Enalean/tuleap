@@ -267,6 +267,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             return $this->values;
         }
 
+        if (empty($bindvalue_ids)) {
+            return [];
+        }
+
         return $this->getUsersValueByKeywordAndIds($this->value_function, null, $bindvalue_ids);
     }
 
@@ -826,13 +830,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
 
     public function getDefaultRESTValues() {
-        $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
-
-        $class_with_right_namespace = '\\Tuleap\\User\\REST\\UserRepresentation';
+        $bind_values = $this->getBindValuesForIds(array_keys($this->getDefaultValues()));
 
         $rest_array = array();
         foreach ($bind_values as $value) {
-            $representation = new $class_with_right_namespace;
+            $representation = new \Tuleap\User\REST\UserRepresentation();
             $representation->build($value->getUser());
             $rest_array[] = $representation;
 
