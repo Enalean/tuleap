@@ -100,3 +100,20 @@
     border: 1px solid #e3e3e3;
     border-radius: 4px;
 }
+
+@media screen and (max-width: 1400px) {
+    #git-repository-clone-input {
+        width: auto;
+    }
+}
+
+@media screen and (max-width: 1250px) {
+    .git-repository-clone-label,
+    .git-repository-actions-settings-label {
+        display: none;
+    }
+
+    .tlp-button-primary > .git-repository-actions-settings-icon {
+        margin: 0;
+    }
+}
