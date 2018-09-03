@@ -158,39 +158,24 @@ function ArtifactModalService(
         var transformed_tracker;
 
         var promise = $q
-            .when(getTracker(tracker_id))
-            .then(function(tracker) {
+            .all([
+                getTracker(tracker_id),
+                getArtifactValues(artifact_id),
+                getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
+                getTextFieldsFormatUserPreference(user_id, modal_model)
+            ])
+            .then(function(promises) {
+                const tracker = promises[0];
                 transformed_tracker = TuleapArtifactModalTrackerTransformerService.transform(
                     tracker,
                     creation_mode
                 );
+
                 modal_model.ordered_fields = transformed_tracker.ordered_fields;
                 modal_model.color = transformed_tracker.color_name;
 
-                const get_values_promise = getArtifactValues(artifact_id),
-                    comment_order_preference_promise = getFollowupsCommentsOrderUserPreference(
-                        user_id,
-                        tracker_id,
-                        modal_model
-                    ),
-                    comment_format_preference_promise = getTextFieldsFormatUserPreference(
-                        user_id,
-                        modal_model
-                    ),
-                    file_upload_rules_promise = $q.when(
-                        updateFileUploadRulesWhenNeeded(transformed_tracker.fields)
-                    );
-
-                return $q.all([
-                    get_values_promise,
-                    comment_order_preference_promise,
-                    comment_format_preference_promise,
-                    file_upload_rules_promise
-                ]);
-            })
-            .then(function(promises) {
-                var artifact_values = promises[0];
-                var tracker_with_field_values = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(
+                const artifact_values = promises[1];
+                let tracker_with_field_values = TuleapArtifactModalTrackerTransformerService.addFieldValuesToTracker(
                     artifact_values,
                     transformed_tracker
                 );
@@ -208,6 +193,12 @@ function ArtifactModalService(
                     tracker_with_field_values
                 );
 
+                const file_upload_rules_promise = $q.when(
+                    updateFileUploadRulesWhenNeeded(transformed_tracker.fields)
+                );
+                return file_upload_rules_promise;
+            })
+            .then(function() {
                 return modal_model;
             });
 
