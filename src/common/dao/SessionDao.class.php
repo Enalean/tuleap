@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,6 +71,15 @@ class SessionDao extends DataAccessObject
         $sql     = "DELETE FROM session WHERE user_id = $user_id";
         return $this->update($sql);
     }
+
+    public function deleteAllSessionsByUserIdButTheCurrentOne($user_id, $current_session_id)
+    {
+        $user_id            = $this->getDa()->escapeInt($user_id);
+        $current_session_id = $this->getDa()->escapeInt($current_session_id);
+        $sql     = "DELETE FROM session WHERE user_id = $user_id AND id != $current_session_id";
+        return $this->update($sql);
+    }
+
     /**
      * Purge the table
      *

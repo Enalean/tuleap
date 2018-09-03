@@ -7,7 +7,10 @@
 //
 // 
 
-require_once('pre.php');    
+use Tuleap\User\Password\Change\PasswordChanger;
+use Tuleap\User\SessionManager;
+
+require_once('pre.php');
 require_once('account.php');
 $request = HTTPRequest::instance();
 $csrf    = new CSRFSynchronizerToken('/account/change_pw.php');
@@ -57,7 +60,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'password_needed'));
 		return 0;
 	}
-	if ($request->get('form_pw') != $request->get('form_pw2')) {
+	if ($request->get('form_pw') !== $request->get('form_pw2')) {
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'password_not_match'));
 		return 0;
 	}
@@ -75,13 +78,18 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
 	}
 	
 	// if we got this far, it must be good
-    $user->setPassword($request->get('form_pw'));
-    if (!$user_manager->updateDb($user)) {
+    $password_changer = new PasswordChanger(
+            $user_manager,
+            new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
+            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
+    );
+	try {
+        $password_changer->changePassword($user, $request->get('form_pw'));
+    } catch (Exception $ex) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'internal_error_update'));
         return 0;
-	}
-
-	return 1;
+    }
+    return 1;
 }
 
 $event_manager = EventManager::instance();
