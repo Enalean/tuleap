@@ -97,12 +97,4 @@ describe("DashboardController", function() {
             expect(PullRequestCollectionService.loadClosedPullRequests).not.toHaveBeenCalled();
         });
     });
-
-    describe("hideClosedPullRequests()", function() {
-        it("When I hide closed pull requests, then the hidden flag will be true", function() {
-            DashboardController.hideClosedPullRequests();
-
-            expect(DashboardController.areClosedPullRequestsHidden()).toBe(true);
-        });
-    });
 });

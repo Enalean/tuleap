@@ -1,10 +1,8 @@
 .pull-request-source-destination {
-    $default-color: #f79514;
-
     padding: 2px;
-    border: 1px solid $default-color;
+    border: 1px solid $tlp-theme-color;
     border-radius: 3px;
-    color: $default-color;
+    color: $tlp-theme-color;
     font-size: 12px;
 
     > .repository {
