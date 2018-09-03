@@ -1,23 +1,27 @@
-<pull-request-header pull-request-id="{{ pull_request.$state.params.id }}"></pull-request-header>
+<div class="tlp-framed-horizontally">
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <pull-request-header pull-request-id="{{ pull_request.$state.params.id }}"></pull-request-header>
 
-<nav class="tlp-tabs">
-    <a class="tlp-tab"
-       ng-class="{'tlp-tab-active': pull_request.$state.includes('overview')}"
-       ui-sref="overview"
-    >
-        <i class="tlp-tab-icon fa fa-pencil"></i>
-        {{ 'Pull Request Details' | translate }}
-    </a>
-    <a class="tlp-tab"
-       ng-class="{'tlp-tab-active': pull_request.$state.includes('files')}"
-       ui-sref="files"
-    >
-        <i class="tlp-tab-icon fa fa-files-o"></i>
-        {{ 'Files' | translate }}
-    </a>
-</nav>
+            <nav class="tlp-tabs">
+                <a class="tlp-tab"
+                   ng-class="{'tlp-tab-active': pull_request.$state.includes('overview')}"
+                   ui-sref="overview"
+                >
+                    <i class="tlp-tab-icon fa fa-pencil"></i>
+                    {{ 'Pull Request Details' | translate }}
+                </a>
+                <a class="tlp-tab"
+                   ng-class="{'tlp-tab-active': pull_request.$state.includes('files')}"
+                   ui-sref="files"
+                >
+                    <i class="tlp-tab-icon fa fa-files-o"></i>
+                    {{ 'Files' | translate }}
+                </a>
+            </nav>
 
-<div>
-  <div ui-view="overview" ng-show="pull_request.$state.includes('overview')"></div>
-  <div ui-view="files" ng-show="pull_request.$state.includes('files')"></div>
+            <div ui-view="overview" ng-show="pull_request.$state.includes('overview')"></div>
+            <div ui-view="files" ng-show="pull_request.$state.includes('files')"></div>
+        </div>
+    </div>
 </div>

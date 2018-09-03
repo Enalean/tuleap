@@ -32,6 +32,12 @@ $tlp-tabs-transition: 75ms ease-out;
     align-items: center;
 }
 
+.tlp-pane > .tlp-pane-container > .tlp-tabs {
+    margin: 0;
+    padding: 0;
+    box-shadow: inset 0 -1px 0 $tlp-ui-border-normal;
+}
+
 .tlp-tab-menu {
     display: flex;
     position: absolute;

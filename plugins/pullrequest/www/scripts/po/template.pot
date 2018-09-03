@@ -36,10 +36,6 @@ msgid "Cancel"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "Changes"
-msgstr ""
-
-#: src/app/overview/overview.tpl.html
 msgid "Checkout"
 msgstr ""
 
@@ -58,23 +54,11 @@ msgid "Comment"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
-msgid "Date"
-msgstr ""
-
-#: src/app/overview/overview.tpl.html
 msgid "Deprecated REST route"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Description"
-msgstr ""
-
-#: src/app/overview/overview.tpl.html
-msgid "Details"
-msgstr ""
-
-#: src/app/overview/timeline/timeline.tpl.html
-msgid "Discussion"
 msgstr ""
 
 #: src/app/overview/timeline/timeline.tpl.html
@@ -167,10 +151,6 @@ msgstr ""
 
 #: src/app/overview/overview.tpl.html
 msgid "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
-msgstr ""
-
-#: src/app/overview/overview.tpl.html
-msgid "Requester"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
