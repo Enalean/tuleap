@@ -39,7 +39,7 @@
                     </label>
                     <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-source" required v-model="source_branch">
                         <option value="" selected disabled>Choose source branch…</option>
-                        <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                        <option v-for="branch of source_branches" v-bind:value="branch" v-bind:key="branch.display_name">{{ branch.display_name }}</option>
                     </select>
                 </div>
                 <div class="tlp-form-element git-repository-actions-pullrequest-modal-body-element">
@@ -49,7 +49,7 @@
                     </label>
                     <select class="tlp-select" id="git-repository-actions-pullrequest-modal-body-destination" required v-model="destination_branch">
                         <option value="" selected disabled>Choose destination branch</option>
-                        <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.name">{{ branch.display_name }}</option>
+                        <option v-for="branch of destination_branches" v-bind:value="branch" v-bind:key="branch.display_name">{{ branch.display_name }}</option>
                     </select>
                 </div>
             </div>

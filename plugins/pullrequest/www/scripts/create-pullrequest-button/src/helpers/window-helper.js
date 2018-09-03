@@ -18,5 +18,15 @@
  */
 
 export function redirectTo(new_href) {
+    const parser = document.createElement("a");
+    parser.href = new_href;
+
+    const original_request_uri = window.location.pathname + window.location.search;
+    const new_request_uri = parser.pathname + parser.search;
+    const are_request_uri_the_same = original_request_uri === new_request_uri;
+
     window.location.href = new_href;
+    if (are_request_uri_the_same) {
+        window.location.reload();
+    }
 }
