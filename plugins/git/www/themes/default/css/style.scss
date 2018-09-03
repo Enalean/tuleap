@@ -365,23 +365,6 @@ h1, h2, h3 {
     }
 }
 
-#readme {
-    margin: 20px 0 0;
-    border: 1px solid #E3E3E3;
-    border-radius: 4px;
-
-    > h2 {
-        margin: 0;
-        padding: 5px 10px;
-        background: whitesmoke;
-        font-size: 18px;
-    }
-
-    > #readme-content {
-        padding: 10px;
-    }
-}
-
 #admin-general-settings {
     ul > li > a.disabled-link {
         pointer-events: none;
