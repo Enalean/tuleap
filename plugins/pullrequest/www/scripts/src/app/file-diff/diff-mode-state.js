@@ -17,38 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./new-inline-comment.html";
+const SIDE_BY_SIDE_DIFF = "side_by_side";
+const UNIFIED_DIFF = "unified";
 
-export default {
-    templateUrl: "new-inline-comment.html",
-    controller,
-    bindings: {
-        submitCallback: "<",
-        codemirrorWidget: "<"
-    }
-};
+let current_diff_mode = UNIFIED_DIFF;
 
-function controller() {
-    const self = this;
-    Object.assign(self, {
-        comment: "",
-        is_loading: false,
-        submit,
-        cancel
-    });
-
-    function submit() {
-        self.is_loading = true;
-        self.submitCallback(self.comment)
-            .then(() => {
-                self.codemirrorWidget.clear();
-            })
-            .finally(() => {
-                self.is_loading = false;
-            });
-    }
-
-    function cancel() {
-        self.codemirrorWidget.clear();
-    }
+function setMode(value) {
+    current_diff_mode = value;
 }
+
+function isUnifiedMode() {
+    return current_diff_mode === UNIFIED_DIFF;
+}
+
+function isSideBySideMode() {
+    return current_diff_mode === SIDE_BY_SIDE_DIFF;
+}
+
+export { SIDE_BY_SIDE_DIFF, UNIFIED_DIFF, setMode, isUnifiedMode, isSideBySideMode };

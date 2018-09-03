@@ -1,4 +1,11 @@
 import { dropdown } from "tlp";
+import {
+    SIDE_BY_SIDE_DIFF,
+    UNIFIED_DIFF,
+    setMode,
+    isUnifiedMode,
+    isSideBySideMode
+} from "../file-diff/diff-mode-state.js";
 
 export default FilesController;
 
@@ -20,8 +27,6 @@ function FilesController(
     const self = this;
 
     const USER_DIFF_DISPLAY_MODE_PREFERENCE = "pull_requests_diff_display_mode";
-    const SIDE_BY_SIDE_DIFF = "side_by_side";
-    const UNIFIED_DIFF = "unified";
 
     Object.assign(self, {
         pull_request: {},
@@ -29,12 +34,12 @@ function FilesController(
         file_selector: null,
         selected_file: {},
         loading_files: true,
-        diff_display_mode: null,
         side_by_side_diff: SIDE_BY_SIDE_DIFF,
         unified_diff: UNIFIED_DIFF,
         loadFile,
         initFileDropdown,
-        isCurrentDisplayMode,
+        isUnifiedMode,
+        isSideBySideMode,
         isFileSelected,
         switchDiffDisplayMode,
         $onInit: init
@@ -49,20 +54,16 @@ function FilesController(
             const user_id = SharedPropertiesService.getUserId();
 
             if (!user_id) {
-                self.diff_display_mode = UNIFIED_DIFF;
-
                 return;
             }
 
             UserRestService.getPreference(user_id, USER_DIFF_DISPLAY_MODE_PREFERENCE).then(
                 ({ value }) => {
                     if (!value) {
-                        self.diff_display_mode = UNIFIED_DIFF;
-
                         return;
                     }
 
-                    self.diff_display_mode = value;
+                    setMode(value);
                 }
             );
         });
@@ -112,14 +113,10 @@ function FilesController(
         return self.selected_file.path === file.path;
     }
 
-    function isCurrentDisplayMode(display_mode) {
-        return self.diff_display_mode === display_mode;
-    }
-
     function switchDiffDisplayMode(new_display_mode) {
         const user_id = SharedPropertiesService.getUserId();
 
-        self.diff_display_mode = new_display_mode;
+        setMode(new_display_mode);
 
         if (!user_id) {
             return;

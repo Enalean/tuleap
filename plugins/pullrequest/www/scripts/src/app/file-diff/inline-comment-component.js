@@ -17,38 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./new-inline-comment.html";
+import "./inline-comment.tpl.html";
 
 export default {
-    templateUrl: "new-inline-comment.html",
-    controller,
+    templateUrl: "inline-comment.tpl.html",
     bindings: {
-        submitCallback: "<",
-        codemirrorWidget: "<"
+        comment: "<"
     }
 };
-
-function controller() {
-    const self = this;
-    Object.assign(self, {
-        comment: "",
-        is_loading: false,
-        submit,
-        cancel
-    });
-
-    function submit() {
-        self.is_loading = true;
-        self.submitCallback(self.comment)
-            .then(() => {
-                self.codemirrorWidget.clear();
-            })
-            .finally(() => {
-                self.is_loading = false;
-            });
-    }
-
-    function cancel() {
-        self.codemirrorWidget.clear();
-    }
-}

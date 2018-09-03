@@ -1,12 +1,7 @@
 @import './inline-comment';
 
-#file-diff {
-    box-sizing: border-box;
-
-    > .pull-request-file-diff-loading {
-        height: 50px;
-        background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-    }
+.pull-request-unidiff {
+    height: 50vh;
 
     // scss-lint:disable SelectorFormat
     .CodeMirror {
@@ -51,6 +46,11 @@
     }
 }
 
+.pull-request-file-diff-loading {
+    height: 50px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
 .pull-request-file-diff-binary-file {
     padding: 100px;
     border: 1px solid #dddddd;
@@ -62,10 +62,6 @@
     > i {
         font-size: 40px;
     }
-}
-
-#code-mirror-area {
-    height: 50vh;
 }
 
 .pull-request-file-diff-added-lines {
