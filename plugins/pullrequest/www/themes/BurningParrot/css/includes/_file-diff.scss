@@ -91,6 +91,11 @@
     }
 }
 
+.pull-request-file-diff-placeholder-block {
+    margin: 0 0 0 13px;
+    border-left: 3px solid darken(#ffe6e6, 30%);
+}
+
 .pull-request-new-inline-comment {
     display: flex;
     align-items: center;
