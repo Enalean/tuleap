@@ -8,7 +8,7 @@ function FileDiffConfig($stateProvider) {
         parent: "files",
         views: {
             "file-diff@files": {
-                template: '<file-diff id="file-diff"></file-diff>'
+                template: '<file-diff class="pull-request-file-diff"></file-diff>'
             }
         }
     });

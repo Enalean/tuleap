@@ -33,13 +33,13 @@ function CodeMirrorHelperService($rootScope, $compile, FileDiffRestService, Tool
         showCommentForm
     });
 
-    function displayInlineComment(codemirror, comment) {
+    function displayInlineComment(codemirror, comment, line_number) {
         const child_scope = $rootScope.$new(true);
         child_scope.comment = comment;
         const inline_comment_element = $compile(
             '<inline-comment comment="comment"></inline-comment>'
         )(child_scope)[0];
-        codemirror.addLineWidget(comment.unidiff_offset - 1, inline_comment_element, {
+        codemirror.addLineWidget(line_number, inline_comment_element, {
             coverGutter: true
         });
     }
@@ -48,7 +48,7 @@ function CodeMirrorHelperService($rootScope, $compile, FileDiffRestService, Tool
         const child_scope = $rootScope.$new(true);
         child_scope.submitCallback = comment_text => {
             return postComment(line_number, comment_text, file_path, pull_request).then(comment => {
-                self.displayInlineComment(codemirror, comment);
+                self.displayInlineComment(codemirror, comment, line_number);
                 TooltipService.setupTooltips();
             });
         };
