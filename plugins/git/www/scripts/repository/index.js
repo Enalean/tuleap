@@ -19,16 +19,19 @@
 
 import { dropdown as createDropdown } from "tlp";
 import initAlreadyForkedModal from "./already-forked-modal.js";
+import initCopyButton from "./copy-button.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initAlreadyForkedModal();
+    initCopyButton();
+
     const button = document.getElementById("git-repository-clone-dropdown-button");
     const transport_buttons = document.getElementsByClassName("git-repository-clone-transport");
     const input = document.getElementById("git-repository-clone-input");
     const button_text = document.getElementById("git-repository-clone-button-text");
     const selected_icon = document.getElementById("git-repository-clone-selected-icon");
-    const read_only_badge = document.getElementById("git-repository-clone-read-only");
 
+    const read_only_badge = document.getElementById("git-repository-clone-read-only");
     if (
         !button ||
         transport_buttons.length === 0 ||

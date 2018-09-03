@@ -1,0 +1,2 @@
+msgid "URL have been copied"
+msgstr ""
