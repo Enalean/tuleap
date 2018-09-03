@@ -97,7 +97,7 @@ export default {
                 return "fa fa-code-fork fa-rotate-270 tlp-button-icon";
             }
 
-            return "fa fa-spinner tlp-button-icon";
+            return "fa fa-spinner fa-spin tlp-button-icon";
         },
         source_branch: {
             get() {
