@@ -47,7 +47,10 @@ class RepositoryHeaderPresenter
     public $forked_repositories_presenters;
     /** @var bool */
     public $is_already_forked;
+    /** @var bool */
     public $has_only_one_fork;
+    /** @var bool */
+    public $is_scope_project;
 
     public function __construct(
         GitRepository $repository,
@@ -77,5 +80,6 @@ class RepositoryHeaderPresenter
         $this->forked_repositories_presenters = $forked_repositories_presenters;
         $this->is_already_forked              = count($forked_repositories_presenters) > 0;
         $this->has_only_one_fork              = count($forked_repositories_presenters) === 1;
+        $this->is_scope_project               = $repository->getScope() === GitRepository::REPO_SCOPE_PROJECT;
     }
 }
