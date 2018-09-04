@@ -1,22 +1,34 @@
 #modified-files {
-    > h3 {
-        > .fa-files-o {
-            margin: 0 5px;
-        }
+    padding: $tlp-spacing $tlp-spacing 0;
+}
 
-        > .badge {
-            position: relative;
-            top: -1px;
-        }
+.pull-request-files-header {
+    display: flex;
+}
+
+.pull-request-file-switcher {
+    flex: 1 1 auto;
+    margin: 0 $tlp-half-spacing 0 0;
+
+    .fa-caret-down {
+        margin: 0 0 0 10px;
     }
 }
 
-.modified-files-header {
+#file-switcher-dropdown-button {
     display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-    margin: 0 0 $tlp-half-spacing;
+    align-items: center;
+
+    .pull-request-file-changes {
+        flex: 0 0 auto;
+        width: auto;
+    }
+}
+
+#file-switcher-dropdown-content {
+    width: 100%;
+    max-height: 280px;
+    overflow-y: scroll;
 }
 
 .pull-request-file {
@@ -51,12 +63,13 @@
 
 .pull-request-file-path {
     flex: 1 1 auto;
+    text-align: left;
 }
 
 .pull-request-file-changes {
     visibility: hidden;
     flex: 0 0 auto;
-    width: 55px;
+    width: 50px;
 
     &.pull-request-file-show-changes {
         visibility: visible;
@@ -68,25 +81,8 @@
     }
 }
 
-.pull-request-file-switcher > .tlp-dropdown {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-
-#file-switcher-dropdown-button {
-    display: flex;
-    justify-content: space-between;
-}
-
-#file-switcher-dropdown-content {
-    width: 100%;
-    max-height: 300px;
-    margin: 45px 0;
-    overflow-y: scroll;
-}
-
 .pull-request-modified-files-loading {
-    height: 26px;
+    height: 30px;
+    margin: 0 0 $tlp-spacing;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
