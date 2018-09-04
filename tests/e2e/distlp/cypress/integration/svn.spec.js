@@ -26,7 +26,7 @@ describe("SVN", () => {
         cy.visit("/plugins/svn/?group_id=102");
         cy.title().should("contain", "SVN");
 
-        cy.get("a")
+        cy.get("a", { timeout: 30000 })
             .contains("sample")
             .click();
 
