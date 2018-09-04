@@ -462,8 +462,8 @@ done
 
 # Data dir
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
-#%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
-#%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
+%{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/images
 
 
 # Install systemd Unit
@@ -483,8 +483,8 @@ done
 %{__install} src/utils/tuleap $RPM_BUILD_ROOT/%{_bindir}/tuleap
 
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/log_accum $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/commit_prep $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/cvs1/cvssh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -492,23 +492,15 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/cvsroot
 %{__install} -d $RPM_BUILD_ROOT/var/lock/cvs
 %{__install} -d $RPM_BUILD_ROOT/var/run/log_accum
-#%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
-#%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
+%{__install} src/utils/svn/commit-email.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/codendi_svn_pre_commit.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/pre-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/svn/post-revprop-change.php $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} src/utils/fileforge.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/fileforge
 
 # Special custom include script
-#%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
-#%{__perl} -pi -e "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
-#
-## Install init.d script
-#%{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
-#%{__install} src/utils/init.d/codendi $RPM_BUILD_ROOT/etc/rc.d/init.d/%{APP_NAME}
-#
-## Install cron.d script
-#%{__install} -d $RPM_BUILD_ROOT/etc/cron.d
-#%{__install} src/utils/cron.d/codendi-stop $RPM_BUILD_ROOT/etc/cron.d/%{APP_NAME}
+%{__install} src/etc/env.inc.php.dist $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
+%{__perl} -pi -e "s~%include_path%~%{APP_PHP_INCLUDE_PATH}~g" $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}/env.inc.php
 #
 ## Install logrotate.d script
 %{__install} -d $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d
@@ -530,16 +522,6 @@ done
 # Core subversion mod_perl
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
-
-# Apache conf dir
-#%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
-#%{__install} src/etc/ckeditor.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
-#%{__install} src/etc/tuleap-uploaded-images.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
-#%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/
-#%{__install} src/etc/00-common.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/00-common.conf
-#%{__install} src/etc/02-themes.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/02-themes.conf
-#%{__install} src/etc/03-plugins.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
-#%{__install} src/etc/04-cgi.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
 
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
@@ -624,7 +606,7 @@ done
 %{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
 #
 ## Plugin create_test_env
-#%{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
+%{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
 #
 # Plugin LDAP
 %{__install} plugins/ldap/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_ldap
@@ -636,14 +618,6 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_openid_connect_client
 
-## Symlink for compatibility with older version
-#%{__ln_s} %{APP_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DIR}
-#%{__ln_s} %{APP_LIB_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LIB_DIR}
-#%{__ln_s} %{APP_DATA_DIR} $RPM_BUILD_ROOT/%{OLD_APP_DATA_DIR}
-#%{__ln_s} %{APP_CACHE_DIR} $RPM_BUILD_ROOT/%{OLD_APP_CACHE_DIR}
-#%{__ln_s} %{APP_LOG_DIR} $RPM_BUILD_ROOT/%{OLD_APP_LOG_DIR}
-#%{__ln_s} /etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/codendi
-#%{__ln_s} /etc/%{APP_NAME} $RPM_BUILD_ROOT/etc/%{OLD_APP_NAME}
 #
 ##
 ## On package install
@@ -743,9 +717,6 @@ if [ $1 -eq 1 ]; then
         tuleap-svn-updater.service &>/dev/null || :
 fi
 
-# In any cases fix the context
-#/usr/sbin/semanage fcontext -a -t httpd_sys_content_t '%{APP_DIR}(/.*)?' || true
-#/sbin/restorecon -R %{APP_DIR} || true
 
 #
 # Post install of git plugin
@@ -871,8 +842,8 @@ fi
 
 # Data dir
 %dir %attr(755,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}
-#%dir %{APP_DATA_DIR}/user
-#%dir %{APP_DATA_DIR}/images
+%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/user
+%dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_DATA_DIR}/images
 
 # Executables (/usr/bin)
 %attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
@@ -880,31 +851,20 @@ fi
 # Executables (/usr/lib/tuleap/bin)
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
-#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
-#%attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gotohell
+%attr(00740,root,root) %{APP_LIBBIN_DIR}/backup_job
 %attr(04755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/log_accum
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit_prep
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh
 %attr(00755,root,root) %{APP_LIBBIN_DIR}/cvssh-restricted
-#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
-#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
-#%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
-#%attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
-#%attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
-#%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
-#%attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
-#%attr(00644,root,root) /etc/cron.d/%{APP_NAME}
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/commit-email.pl
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/codendi_svn_pre_commit.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/env.inc.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/pre-revprop-change.php
+%attr(00755,root,root) %{APP_LIBBIN_DIR}/post-revprop-change.php
+%attr(04755,root,root) %{APP_LIBBIN_DIR}/fileforge
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_syslog
 %dir %attr(-,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}
-#%dir /etc/httpd/conf.d/tuleap-plugins
-#%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/ckeditor.conf
-#%attr(04755,root,root) /etc/httpd/conf.d/tuleap-plugins/tuleap-uploaded-images.conf
-#%dir /etc/httpd/conf.d/tuleap-aliases
-#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/00-common.conf
-#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/02-themes.conf
-#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/03-plugins.conf
-#%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/04-cgi.conf
-
 # Log dir
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}
 %attr(775,%{APP_USER},%{APP_USER}) %dir %{APP_LOG_DIR}/cvslog
@@ -1097,7 +1057,7 @@ fi
 %files plugin-create-test-env
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/create_test_env
-#%attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
+%attr(00400,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_create_test_env
 %{APP_DIR}/src/www/assets/create_test_env
 
 %files plugin-docman
