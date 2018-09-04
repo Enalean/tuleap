@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/overview/overview.tpl.html
@@ -44,10 +44,6 @@ msgid "Cancel"
 msgstr "Annuler"
 
 #: src/app/overview/overview.tpl.html
-msgid "Changes"
-msgstr "Changements"
-
-#: src/app/overview/overview.tpl.html
 msgid "Checkout"
 msgstr "Checkout"
 
@@ -66,24 +62,12 @@ msgid "Comment"
 msgstr "Commenter"
 
 #: src/app/overview/overview.tpl.html
-msgid "Date"
-msgstr "Date"
-
-#: src/app/overview/overview.tpl.html
 msgid "Deprecated REST route"
 msgstr "Route REST dépréciée"
 
 #: src/app/overview/overview.tpl.html
 msgid "Description"
 msgstr "Description"
-
-#: src/app/overview/overview.tpl.html
-msgid "Details"
-msgstr "Détails"
-
-#: src/app/overview/timeline/timeline.tpl.html
-msgid "Discussion"
-msgstr "Discussion"
 
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Discussion has not started yet"
@@ -201,10 +185,6 @@ msgid ""
 msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
-
-#: src/app/overview/overview.tpl.html
-msgid "Requester"
-msgstr "Demandeur"
 
 #: src/app/overview/overview.tpl.html
 msgid "Save changes"

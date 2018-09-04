@@ -2,15 +2,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
 
     > h2 {
         flex: 0 0 auto;
         margin: 0;
+        font-size: 20px;
     }
 }
 
 .pull-request-header-labels-box {
     display: flex;
     margin: 0 0 0 $tlp-spacing;
+}
+
+.pull-request-tab-content {
+    display: flex;
+
+    @media screen and (max-width: 1100px) {
+        flex-direction: column;
+    }
 }

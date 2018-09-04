@@ -1,9 +1,17 @@
-#timeline {
-    margin: $tlp-spacing;
+.pull-request-overview-timeline {
+    width: 100%;
+    max-width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 0 0 $tlp-half-spacing;
+
+    @media screen and (max-width: 1100px) {
+        max-width: none;
+        margin: $tlp-spacing 0 0;
+    }
 }
 
 .pull-request-comments-section {
-    border: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .pull-request-add-comment-form {
@@ -23,7 +31,6 @@
 
 .pull-request-event {
     display: flex;
-    width: 55%;
     margin: 0 0 15px;
     padding: 15px;
     float: left;

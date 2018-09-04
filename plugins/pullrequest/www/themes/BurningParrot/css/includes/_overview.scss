@@ -1,11 +1,18 @@
 @import './timeline';
 
 #pull-request-overview {
-    margin: 20px;
+    flex: 1 1 auto;
+    max-width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 $tlp-half-spacing 0 0;
+
+    @media screen and (max-width: 1100px) {
+        max-width: none;
+        margin: 0;
+    }
 }
 
 .pull-request-top-actions {
-    border: 0;
+    margin: 0 0 $tlp-spacing;
 }
 
 .pull-request-checkout-dropdown {
@@ -19,6 +26,7 @@
 .pull-request-checkout-menu-content {
     display: flex;
     align-items: baseline;
+    margin: 0 0 $tlp-half-spacing;
 }
 
 .pull-request-checkout-menu-label {
@@ -26,112 +34,51 @@
     margin: 0 5px 0 0;
 }
 
-.pull-request-checkout-select {
-    margin: $tlp-half-spacing;
+.pull-request-checkout-command {
+    font-size: 12px;
+
+    &::before {
+        content: '$';
+        margin: 0 5px 0 0;
+    }
 }
 
-.pull-request-checkout-commands {
-    margin: 0;
-    padding: $tlp-spacing;
-}
-
-.pull-request-checkout-command::before {
-    content: '$';
-    margin: 0 1em 0 0;
-}
-
-#pull-request-info {
+.pull-request-requester-date-changes {
     display: flex;
-    border: 0;
+    align-items: center;
+    margin: 0 0 $tlp-spacing;
+}
 
-    .pull-request-label {
-        display: block;
-        margin: 25px 0 5px;
-        color: #888888;
+.pull-request-date {
+    margin: 0 0 0 $tlp-half-spacing;
+    font-size: 14px;
+
+    > .fa-clock-o {
+        margin: 0 2px 0 0;
         font-size: 12px;
-        font-weight: 600;
-
-        &:first-child {
-            margin: 0 0 5px;
-        }
-
-        > i {
-            margin: 0 3px 0 0;
-            font-size: 14px;
-        }
-    }
-
-    > .pull-request-details {
-        flex: 1 1 auto;
-        max-width: 50%;
-
-        .pull-request-title {
-            font-weight: 600;
-        }
-
-        .pull-request-description {
-            margin: 10px 50px 0 0;
-            padding: 0 0 0 10px;
-            font-size: 13px;
-            line-height: 18px;
-        }
-
-        > .pull-requests-references {
-            margin: 15px 0 0;
-            transition: opacity 100ms linear;
-            font-size: 12px;
-            line-height: 20px;
-
-            > .pull-request-reference {
-                color: #888888;
-                letter-spacing: .3px;
-            }
-        }
-    }
-
-    > .pull-request-details,
-    > .pull-request-author-date {
-        margin: 0 50px 0 0;
-    }
-
-    > .pull-request-author-date,
-    > .pull-request-changes-ci {
-        transition: opacity 100ms linear;
-    }
-
-    .pull-request-author,
-    .pull-request-date,
-    .pull-request-changes,
-    .pull-request-ci {
-        margin: 0 0 30px;
-        white-space: nowrap;
-    }
-
-    .pull-request-changes {
-        .text-success,
-        .text-error {
-            margin: 0 2px 0 0;
-            font-size: 14px;
-            font-weight: 600;
-        }
-    }
-
-    &.in-edition {
-        .pull-requests-references,
-        .pull-request-author-date,
-        .pull-request-changes-ci {
-            transition: opacity 100ms linear;
-            opacity: .3;
-        }
     }
 }
 
-.pull-request-author-date {
-    flex: 0 0 auto;
-}
-
-.pull-request-changes-ci {
+.pull-request-changes {
     flex: 1 1 auto;
+    margin: 0 0 0 $tlp-spacing;
+    font-size: 24px;
+    text-align: right;
+}
+
+.pull-request-references-ci {
+    display: flex;
+    margin: 0 0 $tlp-spacing;
+}
+
+.pull-request-references {
+    margin: 0 $tlp-double-spacing 0 0;
+}
+
+.pull-request-reference {
+    margin: 0 0 5px;
+    font-size: 12px;
+    font-style: italic;
 }
 
 .warning-deprecation-build-status-rest-route {
