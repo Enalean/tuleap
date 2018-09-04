@@ -22,6 +22,7 @@ import "codemirror/addon/scroll/simplescrollbars.js";
 import { getComments } from "../comments-state.js";
 import { buildLineGroups, DELETED_GROUP, ADDED_GROUP } from "./side-by-side-data-builder.js";
 import { synchronize } from "./side-by-side-scroll-synchronizer.js";
+import { getCollapsibleSectionsSideBySide } from "../../code-collapse/code-collapse-service.js";
 
 export default {
     template: `
@@ -62,6 +63,17 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
         displaySideBySideDiff(left_code_mirror, right_code_mirror, file_lines);
 
         synchronize(left_code_mirror, right_code_mirror);
+
+        const collapsible_sections = getCollapsibleSectionsSideBySide(
+            self.diff.lines,
+            getComments()
+        );
+
+        CodeMirrorHelperService.collapseCommonSectionsSideBySide(
+            left_code_mirror,
+            right_code_mirror,
+            collapsible_sections
+        );
     }
 
     function displaySideBySideDiff(left_code_mirror, right_code_mirror, file_lines) {
