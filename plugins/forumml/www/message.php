@@ -35,7 +35,7 @@ require_once('www/mail/mail_utils.php');
 
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('forumml');
-if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
+if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
 
 	$request = HTTPRequest::instance();
 	$user    = $request->getCurrentUser();
