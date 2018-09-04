@@ -1,12 +1,17 @@
 @import './timeline';
 
 #pull-request-overview {
-    flex: 1 1 auto;
-    max-width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 $tlp-half-spacing 0 0;
+    position: sticky;
+    z-index: 3;
+    top: 50px;
+    flex: 0 0 50%;
+    min-width: 50%;
+    padding: $tlp-spacing;
 
-    @media screen and (max-width: 1100px) {
-        max-width: none;
+    @media screen and (max-width: 1200px) {
+        position: relative;
+        top: 0;
+        width: 100%;
         margin: 0;
     }
 }
@@ -20,6 +25,7 @@
 }
 
 .pull-request-checkout-menu {
+    z-index: 3;
     padding: $tlp-spacing;
 }
 
@@ -47,6 +53,10 @@
     display: flex;
     align-items: center;
     margin: 0 0 $tlp-spacing;
+
+    .tlp-avatar {
+        flex: 0 0 auto;
+    }
 }
 
 .pull-request-date {
@@ -64,11 +74,12 @@
     margin: 0 0 0 $tlp-spacing;
     font-size: 24px;
     text-align: right;
+    white-space: nowrap;
 }
 
 .pull-request-references-ci {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-double-spacing;
 }
 
 .pull-request-references {

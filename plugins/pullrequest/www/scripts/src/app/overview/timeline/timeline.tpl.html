@@ -1,53 +1,47 @@
-<section class="pull-request-comments-section">
-    <p ng-if="timeline_controller.timeline.length === 0 && ! timeline_controller.loading_timeline"
-        class="empty-page-text"
-        translate
-    >
-        Discussion has not started yet
+<div ng-if="timeline_controller.timeline.length === 0 && ! timeline_controller.loading_timeline"
+    class="pull-request-no-comment"
+>
+    <p class="empty-page-text">
+        <i class="empty-page-icon fa fa-comments-o"></i>
+        {{ 'Discussion has not started yet' | translate }}
     </p>
+</div>
 
-    <div class="pull-request-event"
-        ng-repeat="event in timeline_controller.timeline track by $index"
-        ng-class="[event.type, { 'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated, 'pull-request-inline-comment': event.isInlineComment }]"
-    >
-        <div class="avatar"
-             ng-class="[
-                event.type,
-                {
-                    'tlp-avatar-large avatar': ! event.isInlineComment,
-                    'tlp-avatar-small': event.isInlineComment
-                }
-            ]"
-        >
-            <img ng-src="{{ ::event.user.avatar_url }}" class="media-object">
-        </div>
-
-        <div class="pull-request-event-content">
-            <div class="pull-request-event-content-info">
-                <a href="{{ event.user.user_url }}" class="pull-request-event-author">{{ event.user.display_name }}</a>
-                <small class="pull-request-event-date" am-time-ago="event.post_date"></small>
-
-                <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
-                    <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline_controller.pull_request.id }} , file_path: '{{ event.file_path }}'})">
-                        <i class="fa fa-file-text-o"></i> {{ event.file_path }}
-                    </a>
-                    <span ng-if="event.is_outdated"><i class="fa fa-file-text-o"></i> {{ event.file_path }}</span>
-                </span>
-            </div>
-
-            <p ng-bind-html="event.content"></p>
-        </div>
+<div class="pull-request-event"
+    ng-repeat="event in timeline_controller.timeline track by $index"
+    ng-class="[event.type, { 'from-pr-author': event.isFromPRAuthor, 'is-outdated': event.is_outdated, 'is-inline-comment': event.isInlineComment }]"
+>
+    <div class="tlp-avatar">
+        <img ng-src="{{ ::event.user.avatar_url }}" class="media-object">
     </div>
 
-    <div ng-if="timeline_controller.loading_timeline" class="pull-request-timeline-loading"></div>
-
-    <form ng-submit="timeline_controller.addComment()" class="pull-request-add-comment-form">
-        <div class="tlp-form-element pull-request-add-comment-area">
-            <textarea class="tlp-textarea"
-                type="text"
-                ng-model="timeline_controller.new_comment.content" placeholder="{{ 'Say something…' | translate }}"
-            ></textarea>
+    <div class="pull-request-event-content">
+        <div class="pull-request-event-content-info">
+            <a href="{{ event.user.user_url }}">{{ event.user.display_name }}</a>
+            <span class="tlp-text-muted" am-time-ago="event.post_date"></span>
         </div>
-        <button type="submit" class="tlp-button-primary" ng-disabled="timeline_controller.loading_timeline"><i class="tlp-button-icon fa fa-comment"></i> {{ 'Comment' | translate }}</button>
-    </form>
-</section>
+
+        <span ng-if="event.isInlineComment" class="pull-request-event-file-path">
+            <a ng-if="! event.is_outdated" ui-sref="diff({id: {{ timeline_controller.pull_request.id }} , file_path: '{{ event.file_path }}'})">
+                <i class="fa fa-file-text-o"></i> {{ event.file_path }}
+            </a>
+            <span ng-if="event.is_outdated"><i class="fa fa-file-text-o"></i> {{ event.file_path }}</span>
+        </span>
+
+        <p ng-bind-html="event.content"></p>
+    </div>
+</div>
+
+<div ng-if="timeline_controller.loading_timeline" class="pull-request-timeline-loading"></div>
+
+<form ng-submit="timeline_controller.addComment()" class="pull-request-add-comment-form">
+    <div class="tlp-form-element pull-request-add-comment-area">
+        <textarea class="tlp-textarea"
+            type="text"
+            ng-model="timeline_controller.new_comment.content" placeholder="{{ 'Say something…' | translate }}"
+        ></textarea>
+    </div>
+    <button type="submit" class="tlp-button-primary tlp-button-outline pull-request-add-comment-button" ng-disabled="timeline_controller.loading_timeline">
+        <i class="tlp-button-icon fa fa-comments-o"></i> {{ 'Comment' | translate }}
+    </button>
+</form>

@@ -18,8 +18,11 @@
 
 .pull-request-tab-content {
     display: flex;
+    position: relative;
+    align-items: flex-start;
+    padding: 0;
 
-    @media screen and (max-width: 1100px) {
-        flex-direction: column;
+    @media screen and (max-width: 1200px) {
+        display: block;
     }
 }
