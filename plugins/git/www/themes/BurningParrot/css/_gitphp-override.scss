@@ -42,6 +42,10 @@
     margin-left: 0.5em;
 }
 
+#blobData > tbody > tr > td > pre {
+    color: $tlp-typo-default-text-color;
+}
+
 #gitphp.plugin_git_gitphp div.page_footer {
     display: flex;
     justify-content: flex-end;
