@@ -26,7 +26,7 @@ import {
 
 describe("Side-by-side data builder", () => {
     describe("buildLineGroups()", () => {
-        it("Given diff lines, then it will return groups of deleted lines to be able to add line widgets", () => {
+        describe("Deleted lines", () => {
             const lines = [
                 { unidiff_offset: 1, old_offset: 1, new_offset: 1 },
                 { unidiff_offset: 2, old_offset: 2, new_offset: null },
@@ -37,61 +37,69 @@ describe("Side-by-side data builder", () => {
                 { unidiff_offset: 7, old_offset: 7, new_offset: null }
             ];
 
-            const result = buildLineGroups(lines);
+            it("Given diff lines, then it will return groups of deleted lines and a map from first line to group to be able to place line widgets", () => {
+                const { first_line_to_group_map } = buildLineGroups(lines);
 
-            expect(result.size).toEqual(4);
-            const first_unmoved_group = result.get(1);
-            const first_deleted_group = result.get(2);
-            const second_unmoved_group = result.get(5);
-            const second_deleted_group = result.get(6);
+                expect(first_line_to_group_map.size).toEqual(4);
+                const first_unmoved_group = first_line_to_group_map.get(1);
+                const first_deleted_group = first_line_to_group_map.get(2);
+                const second_unmoved_group = first_line_to_group_map.get(5);
+                const second_deleted_group = first_line_to_group_map.get(6);
 
-            expect(first_unmoved_group).toEqual({
-                type: UNMOVED_GROUP,
-                first_line_unidiff_offset: 1,
-                height: 0
+                expect(first_unmoved_group).toEqual({
+                    type: UNMOVED_GROUP,
+                    unidiff_offsets: [1],
+                    height: 0
+                });
+                expect(first_deleted_group).toEqual({
+                    type: DELETED_GROUP,
+                    unidiff_offsets: [2, 3, 4],
+                    height: 60
+                });
+                expect(second_unmoved_group).toEqual({
+                    type: UNMOVED_GROUP,
+                    unidiff_offsets: [5],
+                    height: 20
+                });
+                expect(second_deleted_group).toEqual({
+                    type: DELETED_GROUP,
+                    unidiff_offsets: [6, 7],
+                    height: 40
+                });
             });
-            expect(first_deleted_group).toEqual({
-                type: DELETED_GROUP,
-                first_line_unidiff_offset: 2,
-                height: 60
+
+            it("Given diff lines, then it will return groups of deleted lines and a map from each line to its group to be able to deal with comment's heights", () => {
+                const { first_line_to_group_map, lines_to_groups_map } = buildLineGroups(lines);
+
+                const first_unmoved_group = first_line_to_group_map.get(1);
+                const first_deleted_group = first_line_to_group_map.get(2);
+                const second_unmoved_group = first_line_to_group_map.get(5);
+                const second_deleted_group = first_line_to_group_map.get(6);
+
+                expect(lines_to_groups_map.size).toEqual(7);
+                expect(lines_to_groups_map.get(1)).toBe(first_unmoved_group);
+                expect(lines_to_groups_map.get(2)).toBe(first_deleted_group);
+                expect(lines_to_groups_map.get(3)).toBe(first_deleted_group);
+                expect(lines_to_groups_map.get(4)).toBe(first_deleted_group);
+                expect(lines_to_groups_map.get(5)).toBe(second_unmoved_group);
+                expect(lines_to_groups_map.get(6)).toBe(second_deleted_group);
+                expect(lines_to_groups_map.get(7)).toBe(second_deleted_group);
             });
-            expect(second_unmoved_group).toEqual({
-                type: UNMOVED_GROUP,
-                first_line_unidiff_offset: 5,
-                height: 20
-            });
-            expect(second_deleted_group).toEqual({
-                type: DELETED_GROUP,
-                first_line_unidiff_offset: 6,
-                height: 40
+
+            it("Given a deleted one-line file, then its group height will be 0. A line widget is not needed because CodeMirror always has an empty line", () => {
+                const lines = [{ unidiff_offset: 1, old_offset: 1, new_offset: null }];
+
+                const { first_line_to_group_map } = buildLineGroups(lines);
+
+                expect(first_line_to_group_map.get(1)).toEqual({
+                    type: DELETED_GROUP,
+                    unidiff_offsets: [1],
+                    height: 0
+                });
             });
         });
 
-        it("Given a deleted one-line file, then its group height will be 0. A line widget is not needed because CodeMirror always has an empty line", () => {
-            const lines = [{ unidiff_offset: 1, old_offset: 1, new_offset: null }];
-
-            const result = buildLineGroups(lines);
-
-            expect(result.get(1)).toEqual({
-                type: DELETED_GROUP,
-                first_line_unidiff_offset: 1,
-                height: 0
-            });
-        });
-
-        it("Given an added one-line file, then its group height will be 0", () => {
-            const lines = [{ unidiff_offset: 1, old_offset: null, new_offset: 1 }];
-
-            const result = buildLineGroups(lines);
-
-            expect(result.get(1)).toEqual({
-                type: ADDED_GROUP,
-                first_line_unidiff_offset: 1,
-                height: 0
-            });
-        });
-
-        it("Given diff lines, then it will return groups of added lines to be able to add line widgets", () => {
+        describe("Added lines", () => {
             const lines = [
                 { unidiff_offset: 1, old_offset: 1, new_offset: 1 },
                 { unidiff_offset: 2, old_offset: 2, new_offset: 2 },
@@ -103,33 +111,66 @@ describe("Side-by-side data builder", () => {
                 { unidiff_offset: 8, old_offset: null, new_offset: 8 }
             ];
 
-            const result = buildLineGroups(lines);
+            it("Given diff lines, then it will return groups of added lines to be able to add line widgets", () => {
+                const { first_line_to_group_map } = buildLineGroups(lines);
 
-            expect(result.size).toEqual(4);
-            const first_unmoved_group = result.get(1);
-            const first_added_group = result.get(3);
-            const second_unmoved_group = result.get(6);
-            const second_added_group = result.get(7);
+                expect(first_line_to_group_map.size).toEqual(4);
+                const first_unmoved_group = first_line_to_group_map.get(1);
+                const first_added_group = first_line_to_group_map.get(3);
+                const second_unmoved_group = first_line_to_group_map.get(6);
+                const second_added_group = first_line_to_group_map.get(7);
 
-            expect(first_unmoved_group).toEqual({
-                type: UNMOVED_GROUP,
-                first_line_unidiff_offset: 1,
-                height: 20
+                expect(first_unmoved_group).toEqual({
+                    type: UNMOVED_GROUP,
+                    unidiff_offsets: [1, 2],
+                    height: 20
+                });
+                expect(first_added_group).toEqual({
+                    type: ADDED_GROUP,
+                    unidiff_offsets: [3, 4, 5],
+                    height: 60
+                });
+                expect(second_unmoved_group).toEqual({
+                    type: UNMOVED_GROUP,
+                    unidiff_offsets: [6],
+                    height: 20
+                });
+                expect(second_added_group).toEqual({
+                    type: ADDED_GROUP,
+                    unidiff_offsets: [7, 8],
+                    height: 40
+                });
             });
-            expect(first_added_group).toEqual({
+
+            it("Given diff lines, then it will return groups of added lines and a map from each line to its group to be able to deal with comment's heights", () => {
+                const { first_line_to_group_map, lines_to_groups_map } = buildLineGroups(lines);
+
+                const first_unmoved_group = first_line_to_group_map.get(1);
+                const first_added_group = first_line_to_group_map.get(3);
+                const second_unmoved_group = first_line_to_group_map.get(6);
+                const second_added_group = first_line_to_group_map.get(7);
+
+                expect(lines_to_groups_map.size).toEqual(8);
+                expect(lines_to_groups_map.get(1)).toBe(first_unmoved_group);
+                expect(lines_to_groups_map.get(2)).toBe(first_unmoved_group);
+                expect(lines_to_groups_map.get(3)).toBe(first_added_group);
+                expect(lines_to_groups_map.get(4)).toBe(first_added_group);
+                expect(lines_to_groups_map.get(5)).toBe(first_added_group);
+                expect(lines_to_groups_map.get(6)).toBe(second_unmoved_group);
+                expect(lines_to_groups_map.get(7)).toBe(second_added_group);
+                expect(lines_to_groups_map.get(8)).toBe(second_added_group);
+            });
+        });
+
+        it("Given an added one-line file, then its group height will be 0", () => {
+            const lines = [{ unidiff_offset: 1, old_offset: null, new_offset: 1 }];
+
+            const { first_line_to_group_map } = buildLineGroups(lines);
+
+            expect(first_line_to_group_map.get(1)).toEqual({
                 type: ADDED_GROUP,
-                first_line_unidiff_offset: 3,
-                height: 60
-            });
-            expect(second_unmoved_group).toEqual({
-                type: UNMOVED_GROUP,
-                first_line_unidiff_offset: 6,
-                height: 20
-            });
-            expect(second_added_group).toEqual({
-                type: ADDED_GROUP,
-                first_line_unidiff_offset: 7,
-                height: 40
+                unidiff_offsets: [1],
+                height: 0
             });
         });
     });

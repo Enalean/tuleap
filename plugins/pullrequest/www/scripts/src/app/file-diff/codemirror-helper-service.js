@@ -22,15 +22,25 @@ export default CodeMirrorHelperService;
 CodeMirrorHelperService.$inject = [
     "$rootScope",
     "$compile",
+    "$document",
+    "$timeout",
     "FileDiffRestService",
     "TooltipService"
 ];
 
-function CodeMirrorHelperService($rootScope, $compile, FileDiffRestService, TooltipService) {
+function CodeMirrorHelperService(
+    $rootScope,
+    $compile,
+    $document,
+    $timeout,
+    FileDiffRestService,
+    TooltipService
+) {
     const self = this;
     Object.assign(self, {
         displayInlineComment,
-        showCommentForm
+        showCommentForm,
+        displayPlaceholderWidget
     });
 
     function displayInlineComment(codemirror, comment, line_number) {
@@ -39,8 +49,11 @@ function CodeMirrorHelperService($rootScope, $compile, FileDiffRestService, Tool
         const inline_comment_element = $compile(
             '<inline-comment comment="comment"></inline-comment>'
         )(child_scope)[0];
-        codemirror.addLineWidget(line_number, inline_comment_element, {
-            coverGutter: true
+        // Wait for angular to actually render the component so that it has a height
+        return $timeout(() => {
+            return codemirror.addLineWidget(line_number, inline_comment_element, {
+                coverGutter: true
+            });
         });
     }
 
@@ -64,6 +77,17 @@ function CodeMirrorHelperService($rootScope, $compile, FileDiffRestService, Tool
                 coverGutter: true
             }
         );
+    }
+
+    function displayPlaceholderWidget(codemirror, line_number, widget_height) {
+        const options = {
+            coverGutter: true
+        };
+        const elem = $document[0].createElement("div");
+        elem.classList.add("pull-request-file-diff-placeholder-block");
+        elem.style = `height: ${widget_height}px`;
+
+        codemirror.addLineWidget(line_number, elem, options);
     }
 
     function postComment(line_number, comment_text, file_path, pull_request) {
