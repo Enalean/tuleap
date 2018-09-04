@@ -946,7 +946,14 @@ class ProjectTest extends ProjectBase
             )
         );
 
-        $this->assertEquals($expected_result, $response->json());
+        $this->assertEquals(
+            $expected_result,
+            $response->json(),
+            $message = '',
+            $delta = 0,
+            $max_depth = 10,
+            $canonicalize = true
+        );
     }
 
     public function testGETWikiWithNotExistingPagename() {
