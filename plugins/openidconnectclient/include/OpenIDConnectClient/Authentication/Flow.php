@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,15 +24,14 @@ use InoOicClient\Flow\Basic;
 use InoOicClient\Client\ClientInfo;
 use InoOicClient\Flow\Exception\AuthorizationException;
 use InoOicClient\Flow\Exception\TokenRequestException;
-use InoOicClient\Flow\Exception\UserInfoRequestException;
-use Tuleap\Http\HttpClientFactory;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoResponseException;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
-use Firebase\JWT\JWT;
 use Exception;
 
 class Flow extends Basic {
@@ -53,6 +52,14 @@ class Flow extends Basic {
      * @var IDTokenVerifier
      */
     private $id_token_verifier;
+    /**
+     * @var UserInfoRequestCreator
+     */
+    private $user_info_request_creator;
+    /**
+     * @var UserInfoRequestSender
+     */
+    private $user_info_request_sender;
 
     public function __construct(
         StateManager $state_manager,
@@ -60,14 +67,18 @@ class Flow extends Basic {
         ProviderManager $provider_manager,
         TokenRequestCreator $token_request_creator,
         TokenRequestSender $token_request_sender,
-        IDTokenVerifier $id_token_verifier
+        IDTokenVerifier $id_token_verifier,
+        UserInfoRequestCreator $user_info_request_creator,
+        UserInfoRequestSender $user_info_request_sender
     ) {
         $this->setStateManager($state_manager);
         $this->setAuthorizationDispatcher($authorization_dispatcher);
-        $this->provider_manager      = $provider_manager;
-        $this->token_request_creator = $token_request_creator;
-        $this->token_request_sender  = $token_request_sender;
-        $this->id_token_verifier     = $id_token_verifier;
+        $this->provider_manager          = $provider_manager;
+        $this->token_request_creator     = $token_request_creator;
+        $this->token_request_sender      = $token_request_sender;
+        $this->id_token_verifier         = $id_token_verifier;
+        $this->user_info_request_creator = $user_info_request_creator;
+        $this->user_info_request_sender  = $user_info_request_sender;
     }
 
     public function setOptions(Provider $provider) {
@@ -86,7 +97,6 @@ class Flow extends Basic {
 
                 'authorization_endpoint' => $provider->getAuthorizationEndpoint(),
                 'token_endpoint'         => $provider->getTokenEndpoint(),
-                'user_info_endpoint'     => $provider->getUserInfoEndpoint(),
 
                 'authentication_info' => array(
                     'method' => 'client_secret_post',
@@ -128,7 +138,8 @@ class Flow extends Basic {
      * @return FlowResponse
      * @throws AuthorizationException
      * @throws TokenRequestException
-     * @throws UserInfoRequestException
+     * @throws UserInfoResponseException
+     * @throws \Http\Client\Exception
      */
     public function process() {
         try {
@@ -136,7 +147,6 @@ class Flow extends Basic {
             $signed_state           = $authorization_response->getState();
             $state                  = $this->getStateManager()->validateState($signed_state);
             $provider               = $this->provider_manager->getById($state->getProviderId());
-            $this->setOptions($provider);
         } catch(Exception $ex) {
             throw new AuthorizationException(
                 sprintf("Exception during authorization: [%s] %s", get_class($ex), $ex->getMessage()),
@@ -162,20 +172,12 @@ class Flow extends Basic {
             );
         }
 
-
-        try {
-            $user_informations = $this->getUserInfo($token_response->getAccessToken());
-        } catch (Exception $ex) {
-            throw new UserInfoRequestException(
-                sprintf("Exception during user info request: [%s] %s", get_class($ex), $ex->getMessage()),
-                null,
-                $ex
-            );
-        }
+        $user_info_request  = $this->user_info_request_creator->createUserInfoRequest($provider, $token_response);
+        $user_info_response = $this->user_info_request_sender->sendUserInfoRequest($user_info_request);
 
         $this->getStateManager()->clearState();
 
-        return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_informations);
+        return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_info_response->getClaims());
     }
 
     /**
@@ -187,20 +189,5 @@ class Flow extends Basic {
         }
         $this->clientInfo->fromArray($this->options->get(self::OPT_CLIENT_INFO, array()));
         return $this->clientInfo;
-    }
-
-    /**
-     * @return array
-     */
-    public function getUserInfo($access_token)
-    {
-        $user_info_endpoint = $this->getClientInfo()->getUserInfoEndpoint();
-        if (empty($user_info_endpoint)) {
-            return array();
-        }
-
-        $user_info_request  = $this->createUserInfoRequest($access_token);
-        $user_info_response = $this->getUserInfoDispatcher()->sendUserInfoRequest($user_info_request);
-        return $user_info_response->getClaims();
     }
 }
