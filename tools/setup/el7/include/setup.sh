@@ -98,7 +98,7 @@ _setupMysqlPrivileges() {
 }
 
 _setupRandomPassword() {
-    < ${urandom} ${tr} -dc "@*?!+_a-zA-Z0-9" | ${head} -c${1:-16}
+    (${tr} -dc '@*?!+_a-zA-Z0-9' < ${urandom} | ${head} -c32) 2>/dev/null
     ${printf} ""
 }
 

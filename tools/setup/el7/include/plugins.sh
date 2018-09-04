@@ -184,12 +184,12 @@ _pluginSVN() {
     if ${grep} --quiet "%sys_dbauth_passwd%" "${tuleap_conf}/${local_inc}"; then
         if [ ${mysql_user:-NULL} != "NULL" ] && \
            [ ${mysql_password:-NULL} != "NULL" ]; then
-            dbauthuser_password=$(_setupRandomPassword)
+            dbauthuser_password="$(_setupRandomPassword)"
             _mysqlExecute "${mysql_user}" "${mysql_password:-NULL}" \
                 "$(_sqlDbauthuserPrivileges ${web_server_ip:-localhost} \
                 ${dbauthuser_password})"
             ${sed} --in-place \
-                "s@sys_dbauth_passwd.*@sys_dbauth_passwd = '${dbauthuser_password}';@g" \
+                "s|sys_dbauth_passwd.*|sys_dbauth_passwd = '${dbauthuser_password}';|g" \
                 "${tuleap_conf}/${local_inc}"
             _logPassword \
                 "MySQL dbauth user password (dbauthuser): ${dbauthuser_password}"

@@ -74,7 +74,7 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         fi
 
         _infoMessage "Generate MySQL password"
-        mysql_password=$(_setupRandomPassword)
+        mysql_password="$(_setupRandomPassword)"
         _infoMessage "Set MySQL password for ${mysql_user}"
         _setupMysqlPassword "${mysql_user}" ${mysql_password}
         _logPassword "MySQL system user password (${mysql_user}): ${mysql_password}"
@@ -82,8 +82,8 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         _checkMysqlStatus "${mysql_user}" "${mysql_password}"
     fi
 
-    admin_password=$(_setupRandomPassword)
-    sys_db_password=$(_setupRandomPassword)
+    admin_password="$(_setupRandomPassword)"
+    sys_db_password="$(_setupRandomPassword)"
     _setupMysqlPrivileges "${mysql_user}" "${mysql_password}" \
         "${sys_db_user}"  "${sys_db_password}"
     _logPassword "MySQL system user password (${sys_db_user}): ${sys_db_password}"
