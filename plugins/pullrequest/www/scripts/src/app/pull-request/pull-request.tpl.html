@@ -8,15 +8,13 @@
                    ng-class="{'tlp-tab-active': pull_request.$state.includes('overview')}"
                    ui-sref="overview"
                 >
-                    <i class="tlp-tab-icon fa fa-pencil"></i>
-                    {{ 'Pull Request Details' | translate }}
+                    {{ 'Overview' | translate }}
                 </a>
                 <a class="tlp-tab"
                    ng-class="{'tlp-tab-active': pull_request.$state.includes('files')}"
                    ui-sref="files"
                 >
-                    <i class="tlp-tab-icon fa fa-files-o"></i>
-                    {{ 'Files' | translate }}
+                    {{ 'Changes' | translate }}
                 </a>
             </nav>
 

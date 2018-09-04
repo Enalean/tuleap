@@ -35,6 +35,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Changes"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Checkout"
 msgstr ""
@@ -77,10 +81,6 @@ msgstr ""
 msgid "Failure on {{ overview.pull_request.last_build_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html
-msgid "Files"
-msgstr ""
-
 #: src/app/overview/timeline/timeline-service.js
 msgid "Has abandoned the pull request."
 msgstr ""
@@ -117,10 +117,6 @@ msgstr ""
 msgid "Merged"
 msgstr ""
 
-#: src/app/files/files.tpl.html
-msgid "Modified Files"
-msgstr ""
-
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Non fast-forward merge"
 msgstr ""
@@ -133,12 +129,12 @@ msgstr ""
 msgid "Oh snap!"
 msgstr ""
 
-#: src/app/overview/merge-modal/merge-modal.tpl.html
-msgid "Proceed with merge"
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Overview"
 msgstr ""
 
-#: src/app/pull-request/pull-request.tpl.html
-msgid "Pull Request Details"
+#: src/app/overview/merge-modal/merge-modal.tpl.html
+msgid "Proceed with merge"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
