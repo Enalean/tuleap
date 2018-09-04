@@ -21,6 +21,7 @@
 
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
+use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
 
 class hudson_Widget_JobTestResults extends HudsonJobWidget
 {
@@ -28,7 +29,11 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
      * @var HudsonJob
      */
     private $job;
-    var $test_result;
+
+    /**
+     * @var HudsonTestResult
+     */
+    private $test_result;
     /**
      * @var HudsonJobBuilder
      */
@@ -111,15 +116,15 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         $this->initContent();
 
         $html = '';
-        if ($this->job != null && $this->test_result != null) {
+        if ($this->job !== null && $this->test_result !== null) {
+            $pie_displayer = new TestResultsPieChartDisplayer();
 
-            $job = $this->job;
-            $test_result = $this->test_result;
-
-            $html .= '<div style="padding: 20px;">';
-            $html .= ' <a href="/plugins/hudson/?action=view_last_test_result&group_id='.$this->group_id.'&job_id='.$this->job_id.'">'.$test_result->getTestResultPieChart().'</a>';
-            $html .= '</div>';
-
+            $pie_displayer->displayTestResultsPieChart(
+                $this->getInstanceId(),
+                $this->job_id,
+                $this->group_id,
+                $this->test_result
+            );
         } else {
             if ($this->job != null) {
                 $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_tests_not_found');

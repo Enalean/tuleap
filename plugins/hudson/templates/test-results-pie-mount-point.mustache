@@ -1,0 +1,19 @@
+{{# has_data_to_display }}
+    <div id="{{ pie_chart_id }}"
+        class="test-results-pie"
+        data-test-results="{{ test_results }}"
+    ></div>
+    <div class="hudson-test-results-link">
+        <a href="{{ latest_results_url }}">
+            {{# dgettext }}
+                tuleap-hudson
+                | [See the latest tests results]
+            {{/ dgettext }}
+        </a>
+    </div>
+{{/ has_data_to_display }}
+{{^ has_data_to_display }}
+    <div class="tlp-alert-warning">
+        {{# dgettext }} tuleap-hudson | No data to display {{/ dgettext }}
+    </div>
+{{/ has_data_to_display }}

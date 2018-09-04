@@ -6,3 +6,21 @@ msgid_plural ""
 "be displayed"
 msgstr[0] ""
 msgstr[1] ""
+
+#, php-format
+msgid "Failed (%s)"
+msgstr ""
+
+msgid "No data to display"
+msgstr ""
+
+#, php-format
+msgid "Passed (%s)"
+msgstr ""
+
+#, php-format
+msgid "Skipped (%s)"
+msgstr ""
+
+msgid "[See the latest tests results]"
+msgstr ""

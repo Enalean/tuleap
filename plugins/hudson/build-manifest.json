@@ -30,5 +30,8 @@
             ],
             "target_dir": "www/themes/BurningParrot/css"
         }
-    }
+    },
+    "components": [
+        "www/js"
+    ]
 }

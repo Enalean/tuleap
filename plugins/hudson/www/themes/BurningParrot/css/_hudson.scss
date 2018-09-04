@@ -6,3 +6,104 @@
 .widget-lastbuilds-weather-img {
     vertical-align: middle;
 }
+
+.hudson-test-results-link {
+    padding: $tlp-spacing;
+}
+
+#test-results-pie-legend {
+    padding: $tlp-spacing;
+
+    > ul {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.test-results-pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.test-results-pie-legend {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+
+    > .test-results-pie-legend-text-span {
+        min-height: 0;
+        color: $tlp-ui-dimmed;
+        font-size: 12px;
+        line-height: 18px;
+        cursor: default;
+    }
+
+    > .test-results-pie-legend-color-span {
+        flex: 0 0 auto;
+        width: 12px;
+        height: 12px;
+        min-height: 0;
+        margin: 0 5px 0 0;
+        border-radius: 50%;
+        opacity: .8;
+    }
+}
+
+.test-results-pie-legend-selected {
+    font-weight: 600;
+}
+
+.test-results-pie-legend-color-success {
+    background-color: $tlp-ui-success;
+}
+
+.test-results-pie-legend-color-skipped {
+    background-color: $tlp-ui-warning;
+}
+
+.test-results-pie-legend-color-failed {
+    background-color: $tlp-ui-danger;
+}
+
+.test-results-pie-slice-path {
+    opacity: .8;
+}
+
+.test-results-pie-slice-text {
+    font-weight: 600;
+}
+
+.test-results-pie-slice-success {
+
+    > path {
+        fill: $tlp-ui-success;
+    }
+
+    > text {
+        fill: darken($tlp-ui-success, 10%);
+    }
+}
+
+.test-results-pie-slice-skipped {
+
+    > path {
+        fill: $tlp-ui-warning;
+    }
+
+    > text {
+        fill: darken($tlp-ui-warning, 10%);
+    }
+}
+
+.test-results-pie-slice-failed {
+
+    > path {
+        fill: $tlp-ui-danger;
+    }
+
+    > text {
+        fill: darken($tlp-ui-danger, 10%);
+    }
+}

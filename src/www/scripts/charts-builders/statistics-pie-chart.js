@@ -23,15 +23,16 @@ import { arc, pie } from "d3-shape";
 import "d3-transition";
 
 export class StatisticsPieChart {
-    constructor({ width, height, radius, data, prefix, general_prefix }) {
+    constructor({ id, width, height, radius, data, prefix, general_prefix }) {
         Object.assign(this, {
+            id,
             width,
             height,
             radius,
             data,
             prefix,
             general_prefix,
-            div_graph: select("#" + prefix),
+            div_graph: select("#" + id),
             group: null,
             svg: null,
             arc_text: null
@@ -83,7 +84,7 @@ export class StatisticsPieChart {
     }
 
     initLegend() {
-        const svg_legend = select("#" + this.prefix)
+        const svg_legend = select("#" + this.id)
             .append("div")
             .attr("id", this.getLegendClass())
             .append("ul")
@@ -366,7 +367,9 @@ export class StatisticsPieChart {
                 return "translate(" + this.arc_over_text.centroid(d) + ")";
             });
 
-        select("." + this.getLegendClassByKey(key)).classed(this.getLegendSelectedClass(), true);
+        this.div_graph
+            .select("." + this.getLegendClassByKey(key))
+            .classed(this.getLegendSelectedClass(), true);
     }
 
     onSliceAndTextOut(key) {
@@ -390,7 +393,9 @@ export class StatisticsPieChart {
                 return "translate(" + this.arc_text.centroid(d) + ")";
             });
 
-        select("." + this.getLegendClassByKey(key)).classed(this.getLegendSelectedClass(), false);
+        this.div_graph
+            .select("." + this.getLegendClassByKey(key))
+            .classed(this.getLegendSelectedClass(), false);
     }
 }
 
