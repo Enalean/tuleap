@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -134,6 +134,17 @@ class SessionManager
         }
         $user->setSessionId(false);
         $user->setSessionHash(false);
+    }
+
+    /**
+     * @throws SessionDataAccessException
+     */
+    public function destroyAllSessionsButTheCurrentOne(PFUser $user)
+    {
+        $is_deleted = $this->session_dao->deleteAllSessionsByUserIdButTheCurrentOne($user->getId(), $user->getSessionId());
+        if ($is_deleted === false) {
+            throw new SessionDataAccessException();
+        }
     }
 
     /**

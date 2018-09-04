@@ -31,7 +31,9 @@ use Tuleap\user\Admin\UserDetailsFormatter;
 use Tuleap\User\Admin\UserDetailsPresenter;
 use Tuleap\user\Admin\UserStatusBuilder;
 use Tuleap\user\Admin\UserStatusChecker;
+use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\PasswordValidatorPresenter;
+use Tuleap\User\SessionManager;
 
 require_once('pre.php');
 require_once('account.php');
@@ -235,7 +237,7 @@ if ($request->isPost()) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_nopasswd'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
-        if ($request->get('form_pw') != $request->get('form_pw2')) {
+        if ($request->get('form_pw') !== $request->get('form_pw2')) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw','error_passwd'));
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
@@ -255,12 +257,16 @@ if ($request->isPost()) {
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
         }
 
-        $user->setPassword($request->get('form_pw'));
-
-        if (! $user_manager->updateDb($user)) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
-        } else {
+        $password_changer = new PasswordChanger(
+            $user_manager,
+            new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
+            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
+        );
+        try {
+            $password_changer->changePassword($user, $request->get('form_pw'));
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
+        } catch (Exception $ex) {
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
         }
 
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id='.$user->getId());
