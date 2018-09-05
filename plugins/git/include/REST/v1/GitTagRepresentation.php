@@ -15,28 +15,28 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\GitPHP;
+namespace Tuleap\Git\REST\v1;
 
-class ProjectProvider
+class GitTagRepresentation
 {
-    private $project;
-
-    public function __construct(\GitRepository $repository)
-    {
-        $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';
-        $project_path = $repository->getFullName() . '.git';
-
-        $this->project = new Project($project_root, $project_path);
-    }
+    /**
+     * @var string
+     */
+    public $name;
 
     /**
-     * @return Project
+     * @var GitCommitRepresentation
      */
-    public function GetProject() // @codingStandardsIgnoreLine
+    public $commit;
+
+
+    public function build($name, GitCommitRepresentation $commit)
     {
-        return $this->project;
+        $this->name   = $name;
+        $this->commit = $commit;
     }
 }

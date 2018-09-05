@@ -61,6 +61,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\ProjectProvider;
+use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedPatternValidator;
@@ -735,10 +736,7 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkLimit($limit);
 
-        $user = $this->getCurrentUser();
-        $repository = $this->getRepository($user, $id);
-        $provider   = new ProjectProvider($repository);
-        $project    = $provider->GetProject();
+        $project = $this->getGitPHPProject($id);
 
         /** @var Head[] $branches_refs */
         $branches_refs        = $project->GetHeads();
@@ -766,6 +764,83 @@ class RepositoryResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $total_size, self::MAX_LIMIT);
 
         return $result;
+    }
+
+    /**
+     * @url OPTIONS {id}/tags
+     *
+     * @param int $id Id of the git repository
+     */
+    public function optionsGetTags($id)
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get all the tags of a git repository
+     *
+     * @url    GET {id}/tags
+     *
+     * @access hybrid
+     *
+     * @param int $id     Id of the git repository
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
+     *
+     * @return array {@type \Tuleap\Git\REST\v1\GitTagRepresentation}
+     *
+     * @status 200
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     * @throws 406
+     */
+    public function getTags($id, $offset = 0, $limit = self::MAX_LIMIT)
+    {
+        $this->checkAccess();
+        $this->checkLimit($limit);
+
+        $project = $this->getGitPHPProject($id);
+
+        /** @var Tag[] $tags_refs */
+        $tags_refs        = $project->GetTags();
+        $total_size       = count($tags_refs);
+        $sliced_tags_refs = array_slice($tags_refs, $offset, $limit);
+
+        $result = [];
+        foreach ($sliced_tags_refs as $tag) {
+            $name = $tag->GetName();
+            try {
+                $commit_id = $tag->GetHash();
+                $commit    = new GitCommitRepresentation();
+                $commit->build($commit_id);
+
+                $tag_representation = new GitTagRepresentation();
+                $tag_representation->build($name, $commit);
+
+                $result[] = $tag_representation;
+            } catch (GitRepoRefNotFoundException $e) {
+                // ignore the tag if by any chance it is invalid
+            }
+        }
+
+        $this->sendAllowHeaders();
+        Header::sendPaginationHeaders($limit, $offset, $total_size, self::MAX_LIMIT);
+
+        return $result;
+    }
+
+    /**
+     * @return \Tuleap\Git\GitPHP\Project
+     * @throws RestException
+     */
+    private function getGitPHPProject($repository_id)
+    {
+        $user       = $this->getCurrentUser();
+        $repository = $this->getRepository($user, $repository_id);
+        $provider   = new ProjectProvider($repository);
+
+        return $provider->GetProject();
     }
 
     private function disconnect(GitRepository $repository, $disconnect_from_gerrit) {
