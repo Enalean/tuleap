@@ -1,7 +1,7 @@
 <section class="tlp-pane-section pull-request-tab-content">
     <section id="pull-request-overview">
         <div class="pull-request-top-actions">
-            <button class="tlp-button-primary tlp-button-outline tlp-button-small" ng-click="overview.showEditionForm = true">
+            <button class="tlp-button-primary tlp-button-outline tlp-button-small" ng-click="overview.showEditionForm()">
                 <i class="tlp-button-icon fa fa-pencil"></i> {{ ::'Edit message' | translate }}
             </button>
 
@@ -50,37 +50,7 @@
             </div>
         </div>
 
-        <div ng-hide="overview.showEditionForm">
-            <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
-        </div>
-        <form ng-show="overview.showEditionForm">
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="pullrequest-title" translate>Title</label>
-                <input id="pullrequest-title"
-                       class="tlp-input"
-                       type="text"
-                       ng-model="overview.editionForm.raw_title"
-                       placeholder="{{ 'Title' | translate }}"
-                >
-            </div>
-
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="pullrequest-description" translate>Description</label>
-                <textarea id="pullrequest-description"
-                    class="tlp-textarea"
-                    rows="5"
-                    ng-model="overview.editionForm.raw_description"
-                    placeholder="{{ 'Description' | translate }}"
-                ></textarea>
-            </div>
-
-            <button ng-click="overview.saveEditionForm()" class="tlp-button-primary tlp-button-small">
-                {{ 'Save changes' | translate }}
-            </button>
-            <button ng-click="overview.showEditionForm = false" class="tlp-button-primary tlp-button-outline tlp-button-small">
-                {{ 'Cancel' | translate }}
-            </button>
-        </form>
+        <blockquote class="pull-request-description" ng-bind-html="overview.pull_request.description"></blockquote>
 
         <div class="pull-request-references-ci">
             <div class="pull-request-references">
@@ -108,7 +78,7 @@
             </div>
         </div>
 
-        <div id="pull-request-actions" ng-class="{ 'in-edition': overview.showEditionForm }">
+        <div id="pull-request-actions">
             <div ng-if="overview.operationInProgress" class="loading"></div>
 
             <div ng-if="overview.isNonFastForwardMerge() && overview.is_merge_commit_allowed">

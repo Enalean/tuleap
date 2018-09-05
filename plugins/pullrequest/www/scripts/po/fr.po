@@ -44,8 +44,8 @@ msgid "Binary file"
 msgstr "Fichier binaire"
 
 #: src/app/file-diff/new-inline-comment.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
-#: src/app/overview/overview.tpl.html
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -62,6 +62,7 @@ msgid "Checkout with"
 msgstr "Checkout avec"
 
 #: src/app/error-modal/error-modal.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Close"
 msgstr "Fermer"
@@ -75,7 +76,7 @@ msgstr "Commenter"
 msgid "Deprecated REST route"
 msgstr "Route REST dépréciée"
 
-#: src/app/overview/overview.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Description"
 msgstr "Description"
 
@@ -83,6 +84,7 @@ msgstr "Description"
 msgid "Discussion has not started yet"
 msgstr "La discussion n’a pas commencé"
 
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/overview.tpl.html
 msgid "Edit message"
 msgstr "Éditer le message"
@@ -188,9 +190,9 @@ msgstr ""
 "Le statut d’intégration de cette pull request est indéterminé. Essayez de "
 "l’intégrer en ligne de commande et poussez vers la destination."
 
-#: src/app/overview/overview.tpl.html
-msgid "Save changes"
-msgstr "Enregistrer les changements"
+#: src/app/overview/edit-modal/edit-modal.tpl.html
+msgid "Save"
+msgstr "Sauvegarder"
 
 #: src/app/overview/timeline/timeline.tpl.html
 msgid "Say something…"
@@ -220,7 +222,7 @@ msgstr "Il n'existe pas de pull requests fermées"
 msgid "There are no open pull requests"
 msgstr "Il n'existe pas de pull requests ouvertes"
 
-#: src/app/overview/overview.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Title"
 msgstr "Titre"
 

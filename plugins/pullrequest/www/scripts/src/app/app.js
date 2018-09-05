@@ -36,6 +36,7 @@ import FileDiffRestService from "./file-diff/file-diff-rest-service.js";
 import FilepathsService from "./files/filepaths-service.js";
 import FilesRestService from "./files/files-rest-service.js";
 import MergeModalService from "./overview/merge-modal/merge-modal-service.js";
+import EditModalService from "./overview/edit-modal/edit-modal-service.js";
 import TimelineRestService from "./overview/timeline/timeline-rest-service.js";
 import TimelineService from "./overview/timeline/timeline-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
@@ -89,6 +90,7 @@ export default angular
     .service("FilepathsService", FilepathsService)
     .service("FilesRestService", FilesRestService)
     .service("MergeModalService", MergeModalService)
+    .service("EditModalService", EditModalService)
     .service("TimelineRestService", TimelineRestService)
     .service("TimelineService", TimelineService)
     .service("PullRequestRestService", PullRequestRestService)
