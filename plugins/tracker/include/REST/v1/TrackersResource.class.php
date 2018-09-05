@@ -295,11 +295,10 @@ class TrackersResource extends AuthenticatedResource {
 
         try {
             $report->setRESTCriteria($query);
+            return $this->getArtifactsMatching($report, $offset, $limit);
         } catch (InvalidCriteriaException $e) {
             throw new RestException(400, $e->getMessage());
         }
-
-        return $this->getArtifactsMatching($report, $offset, $limit);
     }
 
     private function getArtifactsMatchingFromExpertQuery(PFUser $user, Tracker $tracker, $query, $offset, $limit)
