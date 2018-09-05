@@ -24,16 +24,6 @@ msgstr ""
 msgid "Supported handlers are: %s"
 msgstr ""
 
-#: ../lib/DbSession.php:50
-#, php-format
-msgid "Your WikiDB DB backend '%s' cannot be used for DbSession."
-msgstr ""
-
-#: ../lib/DbSession.php:51
-#, php-format
-msgid "Set USE_DB_SESSION to false."
-msgstr ""
-
 #: ../lib/diff.php:257 ../lib/plugin/Diff.php:72
 #, php-format
 msgid "version %s"

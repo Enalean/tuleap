@@ -28,16 +28,6 @@ msgstr "Le gestionnaire DBA %s n'est pas supporté !"
 msgid "Supported handlers are: %s"
 msgstr "Les gestionnaires supportés sont : %s"
 
-#: ../lib/DbSession.php:50
-#, php-format
-msgid "Your WikiDB DB backend '%s' cannot be used for DbSession."
-msgstr "Votre choix '%s' de WikiDB DB ne peut pas être utilisé pour DbSession."
-
-#: ../lib/DbSession.php:51
-#, php-format
-msgid "Set USE_DB_SESSION to false."
-msgstr "Mettre USE_DB_SESSION à false."
-
 # lib/diff.php:1001 lib/diff.php:1019
 #: ../lib/diff.php:257 ../lib/plugin/Diff.php:72
 #, php-format
