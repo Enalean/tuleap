@@ -20,11 +20,19 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use BackendLogger;
 use EventManager;
+use Git_Command_Exception;
+use GitDao;
+use GitRepository;
+use GitRepositoryFactory;
 use Luracast\Restler\RestException;
+use PFUser;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
+use ProjectManager;
+use ReferenceManager;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
@@ -44,7 +52,21 @@ use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
+use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
+use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
+use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
+use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
+use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
+use Tuleap\PullRequest\Exception\UnknownBranchNameException;
+use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
+use Tuleap\PullRequest\Factory as PullRequestFactory;
+use Tuleap\PullRequest\FileUniDiff;
+use Tuleap\PullRequest\FileUniDiffBuilder;
+use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\GitReference\GitPullRequestReference;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceDAO;
@@ -53,47 +75,25 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceNotFoundException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceRetriever;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDao;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
-use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
-use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
-use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
-use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
-use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
-use Tuleap\PullRequest\Exception\UnknownBranchNameException;
-use Tuleap\PullRequest\Exception\UnknownReferenceException;
-use Tuleap\PullRequest\Label\PullRequestLabelDao;
+use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
 use Tuleap\PullRequest\Label\LabelsCurlyCoatedRetriever;
+use Tuleap\PullRequest\Label\PullRequestLabelDao;
 use Tuleap\PullRequest\MergeSetting\MergeSettingDAO;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
-use Tuleap\PullRequest\PullRequestWithGitReference;
-use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
-use Tuleap\PullRequest\Dao as PullRequestDao;
-use Tuleap\PullRequest\Factory as PullRequestFactory;
-use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
-use Tuleap\PullRequest\PullRequestMerger;
-use Tuleap\PullRequest\PullRequestCreator;
 use Tuleap\PullRequest\PullRequestCloser;
-use Tuleap\PullRequest\FileUniDiff;
-use Tuleap\PullRequest\FileUniDiffBuilder;
+use Tuleap\PullRequest\PullRequestCreator;
+use Tuleap\PullRequest\PullRequestMerger;
+use Tuleap\PullRequest\PullRequestWithGitReference;
+use Tuleap\PullRequest\Timeline\Dao as TimelineDao;
+use Tuleap\PullRequest\Timeline\Factory as TimelineFactory;
+use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\User\REST\MinimalUserRepresentation;
-use GitRepositoryFactory;
-use GitDao;
-use ProjectManager;
-use UserManager;
-use PFUser;
-use GitRepository;
-use Git_Command_Exception;
-use URLVerification;
 use Tuleap\REST\ProjectAuthorization;
-use BackendLogger;
-use \Tuleap\PullRequest\Timeline\Dao as TimelineDao;
-use \Tuleap\PullRequest\Timeline\TimelineEventCreator;
-use ReferenceManager;
-use Tuleap\PullRequest\InlineComment\InlineCommentCreator;
+use Tuleap\User\REST\MinimalUserRepresentation;
+use URLVerification;
+use UserManager;
 
 class PullRequestsResource extends AuthenticatedResource
 {
@@ -293,6 +293,68 @@ class PullRequestsResource extends AuthenticatedResource
             $user
         );
     }
+
+    /**
+     * Get pull request commits
+     *
+     * Retrieve all commits of a given pull request. <br/>
+     * User is not able to see a pull request in a git repository where he is not able to READ
+     *
+     * <pre>
+     * /!\ PullRequest REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * @url    GET {id}/commits
+     *
+     * @access hybrid
+     *
+     * @param int $id     pull request ID
+     * @param int $limit  Number of fetched comments {@from path} {@min 0}{@max 50}
+     * @param int $offset Position of the first comment to fetch {@from path} {@min 0}
+     *
+     * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestsCommitRepresentation}
+     *
+     * @throws 403
+     * @throws 404 x Pull request does not exist
+     * @throws 410
+     * @throws 500
+     */
+    public function getCommit($id, $limit = 50, $offset = 0)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeadersForCommits();
+
+        $pull_requests_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
+
+        $commit_factory = new PullRequestsCommitRepresentationFactory(
+            $this->getExecutor(
+                $this->getRepository($pull_requests_with_git_reference->getPullRequest()->getRepoDestId())
+            )
+        );
+
+        try {
+            $commit_representation = $commit_factory->getPullRequestCommits(
+                $pull_requests_with_git_reference->getPullRequest(),
+                $limit,
+                $offset
+            );
+
+            Header::sendPaginationHeaders($limit, $offset, $commit_representation->getSize(), self::MAX_LIMIT);
+
+            return $commit_representation->getCommitsCollection();
+        } catch (Git_Command_Exception $exception) {
+            throw new RestException(500, $exception->getMessage());
+        }
+    }
+
+    /**
+     * @url OPTIONS {id}/commits
+     */
+    public function optionsCommits($id)
+    {
+        $this->sendAllowHeadersForCommits();
+    }
+
 
     /**
      * @url OPTIONS {id}/labels
@@ -1014,6 +1076,7 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * @param $id
      * @return PullRequestWithGitReference
+     * @throws RestException
      */
     private function getReadablePullRequestWithGitReference($id)
     {
@@ -1109,6 +1172,12 @@ class PullRequestsResource extends AuthenticatedResource
     {
         HEADER::allowOptionsGet();
     }
+
+    private function sendAllowHeadersForCommits()
+    {
+        HEADER::allowOptionsGet();
+    }
+
 
     private function sendAllowHeadersForLabels()
     {

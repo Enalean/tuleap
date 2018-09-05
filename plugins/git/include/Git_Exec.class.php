@@ -334,6 +334,10 @@ class Git_Exec {
         return $this->gitCmdWithOutput($cmd, $output);
     }
 
+    /**
+     * @return bool
+     * @throws Git_Command_Exception
+     */
     protected function gitCmdWithOutput($cmd, &$output) {
         return $this->execInPath($cmd, $output);
     }
