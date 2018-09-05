@@ -2295,7 +2295,6 @@ class GitPlugin extends Plugin
             $this->getRepositoryFactory(),
             $this->getBackendGitolite(),
             new XML_RNGValidator(),
-            new System_Command(),
             $this->getGitSystemEventManager(),
             PermissionsManager::instance(),
             EventManager::instance(),
