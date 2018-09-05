@@ -175,24 +175,63 @@ class GitRepositoryManager {
     }
 
     /**
-     * @param GitRepository        $repository
-     * @param GitRepositoryCreator $creator
-     * @param                      $bundle_path
-     *
      * @throws GitDaoException
      * @throws GitRepositoryAlreadyExistsException
      * @throws GitRepositoryNameIsInvalidException
      */
-    public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $bundle_path) {
-        $this->initRepository($repository, $creator);
+    public function createFromBundle(GitRepository $repository, GitRepositoryCreator $creator, $extraction_path, $bundle_path)
+    {
+        try {
+            $this->initRepository($repository, $creator);
 
-        $bundle_path_arg = escapeshellarg($bundle_path);
-        $repository_full_path_arg = escapeshellarg($repository->getFullPath());
-        $this->system_command->exec("sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $bundle_path_arg $repository_full_path_arg");
+            $tmp_git_import_folder = ForgeConfig::get('tmp_dir') . '/git_import_' . $repository->getId();
+            $this->createTemporaryWorkingDir($extraction_path, $bundle_path, $tmp_git_import_folder);
 
-        $this->git_system_event_manager->queueRepositoryUpdate($repository);
+            $repository_full_path_arg = escapeshellarg($repository->getFullPath());
+            $tmp_path_arg             = escapeshellarg($this->getTmpPath($bundle_path, $tmp_git_import_folder));
+            $this->system_command->exec(
+                "sudo -u gitolite /usr/share/tuleap/plugins/git/bin/gl-clone-bundle.sh $tmp_path_arg $repository_full_path_arg"
+            );
 
-        $this->event_manager->processEvent(new PostInitGitRepositoryWithDataEvent($repository));
+            $this->git_system_event_manager->queueRepositoryUpdate($repository);
+
+            $this->event_manager->processEvent(new PostInitGitRepositoryWithDataEvent($repository));
+        } finally {
+            $this->removeTemporaryWorkingDir($tmp_git_import_folder);
+        }
+    }
+
+    private function removeTemporaryWorkingDir($tmp_git_import_folder)
+    {
+        $tmp_git_import_folder_arg = escapeshellarg($tmp_git_import_folder);
+        $this->system_command->exec(
+            "rm -rf $tmp_git_import_folder_arg"
+        );
+    }
+
+    private function getTmpPath($bundle_path, $tmp_git_import_folder)
+    {
+        $bundle_name = basename($bundle_path);
+
+        return $tmp_git_import_folder . '/' . $bundle_name;
+    }
+
+    private function createTemporaryWorkingDir($extraction_path, $bundle_path, $tmp_git_import_folder)
+    {
+        $tmp_git_import_folder_arg = escapeshellarg($tmp_git_import_folder);
+        $this->system_command->exec(
+            "mkdir $tmp_git_import_folder_arg"
+        );
+
+        $bundle_path_arg = escapeshellarg($extraction_path . '/' . $bundle_path);
+        $tmp_path_arg    = escapeshellarg($this->getTmpPath($bundle_path, $tmp_git_import_folder));
+        $this->system_command->exec(
+            "cp -r $bundle_path_arg $tmp_path_arg"
+        );
+
+        $this->system_command->exec(
+            "chown -R gitolite:gitolite $tmp_git_import_folder_arg"
+        );
     }
 
     private function forkUniqueRepository(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope, array $forkPermissions) {

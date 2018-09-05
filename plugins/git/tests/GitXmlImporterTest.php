@@ -99,13 +99,13 @@ class GitXmlImporterTest extends TuleapTestCase {
 
         $this->old_sys_data_dir = isset($GLOBALS['sys_data_dir']) ? $GLOBALS['sys_data_dir'] : null;
         $GLOBALS['sys_data_dir'] = parent::getTmpDir();
-        $GLOBALS['tmp_dir'] = dirname(__FILE__) . '/_fixtures/tmp';
         mkdir("${GLOBALS['sys_data_dir']}/gitolite/admin/", 0777, true);
         mkdir("${GLOBALS['sys_data_dir']}/gitolite/repositories/test_project", 0777, true);
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
-        $this->system_command->exec("chmod -R 777 $sys_data_dir_arg/gitolite/repositories");
+        $this->system_command->exec("chown -R gitolite:gitolite $sys_data_dir_arg/");
 
         ForgeConfig::store();
+        ForgeConfig::set('tmp_dir', parent::getTmpDir());
 
         $this->git_dao = new MyMockGitDao();
         $plugin_dao = mock('PluginDao');
@@ -184,7 +184,6 @@ class GitXmlImporterTest extends TuleapTestCase {
             $this->git_factory,
             $gitolite,
             new XML_RNGValidator(),
-            new System_Command(),
             $this->git_systemeventmanager,
             $permissions_manager,
             $this->event_manager,
@@ -229,7 +228,6 @@ class GitXmlImporterTest extends TuleapTestCase {
         PermissionsManager::clearInstance();
         PluginManager::clearInstance();
         UserManager::clearInstance();
-        unset($GLOBALS['tmp_dir']);
         //revert gitolite driver setAdminPath in its builder
         chdir($this->old_cwd);
     }
@@ -267,7 +265,13 @@ XML;
             </project>
 XML;
         $xml_element = new SimpleXMLElement($xml);
-        $res = $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
+        $res = $this->importer->import(
+            new Tuleap\Project\XML\Import\ImportConfig(),
+            $this->project,
+            mock('PFUSer'),
+            $xml_element,
+            parent::getTmpDir()
+        );
 
         $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
         $nb_commit = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");

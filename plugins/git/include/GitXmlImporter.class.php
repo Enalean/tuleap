@@ -77,11 +77,6 @@ class GitXmlImporter
     private $xml_validator;
 
     /**
-     * @var System_Command
-     */
-    private $system_command;
-
-    /**
      * @var EventManager
      */
     private $event_manager;
@@ -131,7 +126,6 @@ class GitXmlImporter
         GitRepositoryFactory   $repository_factory,
         Git_Backend_Gitolite   $gitolite_backend,
         XML_RNGValidator $rng_validator,
-        System_Command $system_command,
         Git_SystemEventManager $system_event_manager,
         PermissionsManager $permissions_manager,
         EventManager $event_manager,
@@ -150,7 +144,6 @@ class GitXmlImporter
         $this->repository_factory            = $repository_factory;
         $this->gitolite_backend              = $gitolite_backend;
         $this->xml_validator                 = $rng_validator;
-        $this->system_command                = $system_command;
         $this->system_event_manager          = $system_event_manager;
         $this->event_manager                 = $event_manager;
         $this->fine_grained_updater          = $fine_grained_updater;
@@ -221,10 +214,12 @@ class GitXmlImporter
         $description = isset($repository_info['description']) ? (string) $repository_info['description'] : GitRepository::DEFAULT_DESCRIPTION;
         $repository = $this->repository_factory->buildRepository($project, $repository_info['name'], $creator, $this->gitolite_backend, $description);
         if (trim($repository_info['bundle-path']) !== '') {
-            $absolute_bundle_path = $extraction_path . '/' . $repository_info['bundle-path'];
-            $extraction_path_arg = escapeshellarg($extraction_path);
-            $this->system_command->exec("chmod 755 $extraction_path_arg");
-            $this->repository_manager->createFromBundle($repository, $this->gitolite_backend, $absolute_bundle_path);
+            $this->repository_manager->createFromBundle(
+                $repository,
+                $this->gitolite_backend,
+                $extraction_path,
+                (string) $repository_info['bundle-path']
+            );
         } else {
             $this->repository_manager->create($repository, $this->gitolite_backend, array());
         }

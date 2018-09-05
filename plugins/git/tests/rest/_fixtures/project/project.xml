@@ -18,7 +18,7 @@
         </ugroup>
     </ugroups>
     <git>
-        <repository description="Git repository" bundle-path="" name="repo01">
+        <repository description="Git repository" bundle-path="export/testRepo.bundle" name="repo01">
             <read>
                 <ugroup>project_members</ugroup>
             </read>
