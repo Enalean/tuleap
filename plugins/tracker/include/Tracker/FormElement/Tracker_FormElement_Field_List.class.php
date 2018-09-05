@@ -364,12 +364,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 continue;
             }
 
-            $criterias[] = $value_to_match;
+            $criterias[] = $this->formatCriteriaValue($value_to_match);
         }
 
         $this->setCriteriaValue($criterias, $criteria->report->id);
 
         return count($criterias) > 0;
+    }
+
+    protected function formatCriteriaValue($value_to_match)
+    {
+        return $value_to_match;
     }
 
     /**

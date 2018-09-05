@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -205,8 +205,8 @@ class TrackersResource extends AuthenticatedResource {
      *  <li>The complex form of a property is "field_id" : {"operator" : "operator_name", "value" : [number|string|array(number)]}
      *      <br>Example: {"title" : {"operator" : "contains", "value" : "bug"}}
      *  </li>
-     *  <li>For text or number-like fields, the allowed operators are ["contains"]. The value must be a string or number</li>
-     *  <li>For select-box-like fields, the allowed operators are ["contains"]. The value(s) are bind_value_id</li>
+     *  <li>For text or number-like fields, the allowed operator is "contains". The value must be a string or number</li>
+     *  <li>For list fields (like selectboxes or openlists), the allowed operator is "contains". The value(s) are bind_value_id</li>
      *  <li>For date-like fields, the allowed operators are ["="|"<"|">"|"between"]. Dates must be in ISO date format</li>
      *  <li>Full example: {"title" : "bug", "2458" : {"operator" : "between", "value", ["2014-02-25", "2014-03-25T00:00:00-05:00"]}}</li>
      * </ol>

@@ -624,6 +624,11 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return '';
     }
 
+    protected function formatCriteriaValue($value_to_match)
+    {
+        return 'b'.$value_to_match;
+    }
+
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
@@ -706,10 +711,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     protected function extractCriteriaValue($criteria_value) {
         //switch to array
-        if (strpos($criteria_value, ',') !== false) {
+        if (! is_array($criteria_value)) {
             $criteria_value = explode(',', $criteria_value);
-        } else {
-            $criteria_value = array($criteria_value);
         }
 
         //first extract open and unsaved values
