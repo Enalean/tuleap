@@ -612,8 +612,8 @@ class Commit extends GitObject
                     $this->title = $trimmed;
                 }
                 if (!empty($this->title)) {
-                    if ((strlen($trimmed) > 0) || ($i < (count($lines)-1))) {
-                        $this->comment[] = $trimmed;
+                    if ((strlen($line) > 0) || ($i < (count($lines)-1))) {
+                        $this->comment[] = $line;
                     }
                 }
             }

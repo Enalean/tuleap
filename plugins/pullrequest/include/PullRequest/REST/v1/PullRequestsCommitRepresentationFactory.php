@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Git_Exec;
+use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\REST\v1\GitCommitRepresentation;
 use Tuleap\PullRequest\PullRequest;
 
@@ -30,10 +31,15 @@ class PullRequestsCommitRepresentationFactory
      * @var Git_Exec
      */
     private $git_exec;
+    /**
+     * @var Project
+     */
+    private $project;
 
-    public function __construct(Git_Exec $git_exec)
+    public function __construct(Git_Exec $git_exec, Project $project)
     {
-        $this->git_exec = $git_exec;
+        $this->git_exec     = $git_exec;
+        $this->project      = $project;
     }
 
     /**
@@ -50,7 +56,9 @@ class PullRequestsCommitRepresentationFactory
         $commits_collection = [];
         foreach ($all_references as $reference) {
             $representation = new GitCommitRepresentation();
-            $representation->build($reference);
+            $representation->build(
+                $this->project->GetCommit($reference)
+            );
 
             $commits_collection[] = $representation;
         }

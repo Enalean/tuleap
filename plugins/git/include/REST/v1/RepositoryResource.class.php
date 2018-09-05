@@ -749,12 +749,11 @@ class RepositoryResource extends AuthenticatedResource
         foreach ($sliced_branches_refs as $branch) {
             $name = $branch->GetName();
             try {
-                $commit_id = $branch->GetHash();
-                $commit    = new GitCommitRepresentation();
-                $commit->build($commit_id);
+                $commit_representation = new GitCommitRepresentation();
+                $commit_representation->build($branch->GetCommit());
 
                 $branch_representation = new GitBranchRepresentation();
-                $branch_representation->build($name, $commit);
+                $branch_representation->build($name, $commit_representation);
 
                 $result[] = $branch_representation;
             } catch (GitRepoRefNotFoundException $e) {
@@ -813,12 +812,11 @@ class RepositoryResource extends AuthenticatedResource
         foreach ($sliced_tags_refs as $tag) {
             $name = $tag->GetName();
             try {
-                $commit_id = $tag->GetHash();
-                $commit    = new GitCommitRepresentation();
-                $commit->build($commit_id);
+                $commit_representation = new GitCommitRepresentation();
+                $commit_representation->build($tag->GetCommit());
 
                 $tag_representation = new GitTagRepresentation();
-                $tag_representation->build($name, $commit);
+                $tag_representation->build($name, $commit_representation);
 
                 $result[] = $tag_representation;
             } catch (GitRepoRefNotFoundException $e) {

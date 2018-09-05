@@ -36,6 +36,7 @@ use ReferenceManager;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\Label\Label;
@@ -326,10 +327,14 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pull_requests_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
 
+        $pull_request   = $pull_requests_with_git_reference->getPullRequest();
+        $git_repository = $this->getRepository($pull_request->getRepoDestId());
+
+        $provider = new ProjectProvider($git_repository);
+
         $commit_factory = new PullRequestsCommitRepresentationFactory(
-            $this->getExecutor(
-                $this->getRepository($pull_requests_with_git_reference->getPullRequest()->getRepoDestId())
-            )
+            $this->getExecutor($git_repository),
+            $provider->GetProject()
         );
 
         try {
