@@ -24,6 +24,7 @@
 
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentDao;
+use Tuleap\Tracker\SOAP\SOAPRequestValidatorTrackerWhitelistedUser;
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../../include/constants.php';
@@ -66,7 +67,9 @@ if ($request->exist('wsdl')) {
 
     $server->setClass(
         'Tracker_SOAPServer',
-        new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance()),
+        new SOAPRequestValidatorTrackerWhitelistedUser(
+            new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance())
+        ),
         TrackerFactory::instance(),
         PermissionsManager::instance(),
         new Tracker_ReportDao(),
