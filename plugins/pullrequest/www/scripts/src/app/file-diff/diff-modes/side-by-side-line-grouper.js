@@ -20,15 +20,14 @@
 const UNMOVED_GROUP = "unmoved";
 const DELETED_GROUP = "deleted";
 const ADDED_GROUP = "added";
-const LINE_HEIGHT_IN_PX = 20;
 
 function buildLineGroups(lines) {
     const groups = groupLinesByChangeType(lines);
 
-    const lines_to_groups_map = buildLinesToGroupMap(groups);
+    const line_to_group_map = buildLinesToGroupMap(groups);
     const first_line_to_group_map = buildFirstLineToGroupMap(groups);
     return {
-        lines_to_groups_map,
+        line_to_group_map,
         first_line_to_group_map
     };
 }
@@ -43,31 +42,18 @@ const buildGroups = (accumulator, line, index, array) => {
         const previous_line = array[index - 1];
         if (lineHasSameChangeTypeAsPreviousLine(previous_line, change_type)) {
             line.group = previous_line.group;
-            updateGroupFirstLineAndHeight(line.group, line.unidiff_offset, index);
+            line.group.unidiff_offsets.push(line.unidiff_offset);
             return accumulator;
         }
     }
     const new_group = {
         type: change_type,
-        unidiff_offsets: [line.unidiff_offset],
-        height: computeLineHeightForIndex(index)
+        unidiff_offsets: [line.unidiff_offset]
     };
     line.group = new_group;
     accumulator.push(new_group);
     return accumulator;
 };
-
-function updateGroupFirstLineAndHeight(group, line_unidiff_offset, index) {
-    group.unidiff_offsets.push(line_unidiff_offset);
-    group.height += computeLineHeightForIndex(index);
-}
-
-function computeLineHeightForIndex(index) {
-    if (index === 0) {
-        return 0;
-    }
-    return LINE_HEIGHT_IN_PX;
-}
 
 function lineHasSameChangeTypeAsPreviousLine(previous_line, change_type) {
     return previous_line.group.type === change_type;

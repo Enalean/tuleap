@@ -90,15 +90,16 @@ function CodeMirrorHelperService(
         );
     }
 
-    function displayPlaceholderWidget(codemirror, line_number, widget_height) {
+    function displayPlaceholderWidget(code_mirror, line_handle, widget_height, display_above_line) {
         const options = {
-            coverGutter: true
+            coverGutter: true,
+            above: display_above_line
         };
         const elem = $document[0].createElement("div");
         elem.classList.add("pull-request-file-diff-placeholder-block");
         elem.style = `height: ${widget_height}px`;
 
-        codemirror.addLineWidget(line_number, elem, options);
+        code_mirror.addLineWidget(line_handle, elem, options);
     }
 
     function postComment(line_number, comment_text, file_path, pull_request) {
