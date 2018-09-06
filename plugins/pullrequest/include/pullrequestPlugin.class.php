@@ -662,7 +662,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
         $theme_manager = new \ThemeManager(
             new \Tuleap\BurningParrotCompatiblePageDetector(
                 new \Tuleap\Request\CurrentPage(),
-                new \Admin_Homepage_Dao(),
                 new \User_ForgeUserGroupPermissionsManager(
                     new \User_ForgeUserGroupPermissionsDao()
                 )
