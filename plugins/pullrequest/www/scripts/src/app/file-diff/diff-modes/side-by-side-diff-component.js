@@ -19,6 +19,8 @@
 
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
+import { buildLineGroups, DELETED_GROUP, ADDED_GROUP } from "./side-by-side-data-builder.js";
+import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 
 export default {
     template: `
@@ -56,11 +58,15 @@ function controller($element, $scope) {
         $scope.$broadcast("code_mirror_initialized");
 
         displaySideBySideDiff(left_code_mirror, right_code_mirror, self.diff.lines);
+
+        synchronize(left_code_mirror, right_code_mirror);
     }
 
     function displaySideBySideDiff(left_code_mirror, right_code_mirror, file_lines) {
         const left_lines = file_lines.filter(line => line.old_offset !== null);
         const right_lines = file_lines.filter(line => line.new_offset !== null);
+
+        const line_groups = buildLineGroups(file_lines);
 
         const left_content = left_lines.map(({ content }) => content).join("\n");
         const right_content = right_lines.map(({ content }) => content).join("\n");
@@ -69,11 +75,39 @@ function controller($element, $scope) {
         right_code_mirror.setValue(right_content);
 
         file_lines.forEach((line, line_number) => {
-            displayLine(line, line_number, left_code_mirror, right_code_mirror);
+            displayLine(line, left_code_mirror, right_code_mirror);
+
+            if (!line_groups.has(line.unidiff_offset)) {
+                return;
+            }
+
+            const group = line_groups.get(line.unidiff_offset);
+            const previous_line = file_lines[line_number - 1];
+            if (group.type === DELETED_GROUP) {
+                const placeholder_line_number = previous_line ? previous_line.new_offset - 1 : 0;
+                addPlaceholderWidget(right_code_mirror, placeholder_line_number, group.height);
+            }
+
+            if (group.type === ADDED_GROUP) {
+                const placeholder_line_number = previous_line ? previous_line.old_offset - 1 : 0;
+                addPlaceholderWidget(left_code_mirror, placeholder_line_number, group.height);
+            }
         });
     }
 
-    function displayLine(line, line_number, left_code_mirror, right_code_mirror) {
+    function addPlaceholderWidget(code_mirror, line_number, widget_height) {
+        const options = {
+            insertAt: 0,
+            coverGutter: true
+        };
+        const elem = document.createElement("div");
+        elem.classList.add("pull-request-file-diff-placeholder-block");
+        elem.style = `height: ${widget_height}px`;
+
+        code_mirror.addLineWidget(line_number, elem, options);
+    }
+
+    function displayLine(line, left_code_mirror, right_code_mirror) {
         if (line.old_offset !== null) {
             left_code_mirror.setGutterMarker(
                 line.old_offset - 1,
@@ -83,7 +117,7 @@ function controller($element, $scope) {
 
             if (line.new_offset === null) {
                 left_code_mirror.addLineClass(
-                    line_number,
+                    line.old_offset - 1,
                     "background",
                     "pull-request-file-diff-deleted-lines"
                 );
@@ -99,7 +133,7 @@ function controller($element, $scope) {
 
             if (line.old_offset === null) {
                 right_code_mirror.addLineClass(
-                    line_number,
+                    line.new_offset - 1,
                     "background",
                     "pull-request-file-diff-added-lines"
                 );
