@@ -655,7 +655,7 @@ class RepositoryResource extends AuthenticatedResource
      */
     public function optionsGetFileContent($id, $path_to_file, $ref)
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsGet();
     }
 
 
@@ -683,6 +683,8 @@ class RepositoryResource extends AuthenticatedResource
      */
     public function getFileContent($id, $path_to_file, $ref = 'master')
     {
+        Header::allowOptionsGet();
+
         $this->checkAccess();
         $user                        = $this->getCurrentUser();
         $repository                  = $this->getRepository($user, $id);
@@ -693,13 +695,13 @@ class RepositoryResource extends AuthenticatedResource
                 $ref,
                 $repository
             );
+
+            return $result;
         } catch (\GitRepositoryException $exception) {
             throw new RestException(404, $exception->getMessage());
         } catch (GitRepoRefNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
         }
-        $this->sendAllowHeaders();
-        return $result;
     }
 
     /**
