@@ -12,8 +12,9 @@
                 <div class="tlp-dropdown-menu-item"
                     ng-class="{ 'pull-request-file-selected': files_controller.isFileSelected(file) }"
                     ng-repeat="file in (files_controller.files | filter: $select.search) track by file.path"
+                    ng-click="files_controller.loadFile(file)"
                 >
-                    <div class="pull-request-file" ng-click="files_controller.loadFile(file)">
+                    <div class="pull-request-file">
                         <span class="pull-request-file-status pull-request-file-status-{{ file.status }}">{{ file.status }}</span>
                         <span class="pull-request-file-path">{{ file.path }}</span>
                         <span class="pull-request-file-changes pull-request-file-lines-added tlp-text-success" ng-class="{ 'pull-request-file-show-changes': file.lines_added > 0}">+{{ file.lines_added }}</span>
