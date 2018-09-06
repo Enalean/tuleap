@@ -35,9 +35,9 @@ export default {
     }
 };
 
-controller.$inject = ["$element", "$scope"];
+controller.$inject = ["$element", "$scope", "$q", "CodeMirrorHelperService", "TooltipService"];
 
-function controller($element, $scope) {
+function controller($element, $scope, $q, CodeMirrorHelperService, TooltipService) {
     const self = this;
     self.$onInit = init;
 
@@ -57,7 +57,8 @@ function controller($element, $scope) {
         const right_code_mirror = CodeMirror(right_element, options);
         $scope.$broadcast("code_mirror_initialized");
 
-        displaySideBySideDiff(left_code_mirror, right_code_mirror, self.diff.lines);
+        const file_lines = self.diff.lines;
+        displaySideBySideDiff(left_code_mirror, right_code_mirror, file_lines);
 
         synchronize(left_code_mirror, right_code_mirror);
     }
@@ -66,7 +67,7 @@ function controller($element, $scope) {
         const left_lines = file_lines.filter(line => line.old_offset !== null);
         const right_lines = file_lines.filter(line => line.new_offset !== null);
 
-        const line_groups = buildLineGroups(file_lines);
+        const { lines_to_groups_map, first_line_to_group_map } = buildLineGroups(file_lines);
 
         const left_content = left_lines.map(({ content }) => content).join("\n");
         const right_content = right_lines.map(({ content }) => content).join("\n");
@@ -74,37 +75,120 @@ function controller($element, $scope) {
         left_code_mirror.setValue(left_content);
         right_code_mirror.setValue(right_content);
 
-        file_lines.forEach((line, line_number) => {
-            displayLine(line, left_code_mirror, right_code_mirror);
+        const promises = self.diff.inline_comments.map(comment => {
+            const comment_line = file_lines[comment.unidiff_offset - 1];
+            return displayInlineCommentAndComputeItsHeight(
+                comment,
+                comment_line,
+                lines_to_groups_map,
+                left_code_mirror,
+                right_code_mirror
+            );
+        });
 
-            if (!line_groups.has(line.unidiff_offset)) {
-                return;
-            }
+        $q.all(promises).then(() => {
+            TooltipService.setupTooltips();
 
-            const group = line_groups.get(line.unidiff_offset);
-            const previous_line = file_lines[line_number - 1];
-            if (group.type === DELETED_GROUP) {
-                const placeholder_line_number = previous_line ? previous_line.new_offset - 1 : 0;
-                addPlaceholderWidget(right_code_mirror, placeholder_line_number, group.height);
-            }
-
-            if (group.type === ADDED_GROUP) {
-                const placeholder_line_number = previous_line ? previous_line.old_offset - 1 : 0;
-                addPlaceholderWidget(left_code_mirror, placeholder_line_number, group.height);
-            }
+            file_lines.forEach((line, line_number) => {
+                const previous_line = file_lines[line_number - 1];
+                displayLine(line, left_code_mirror, right_code_mirror);
+                displayOppositePlaceholder(
+                    line,
+                    previous_line,
+                    first_line_to_group_map,
+                    left_code_mirror,
+                    right_code_mirror
+                );
+            });
         });
     }
 
-    function addPlaceholderWidget(code_mirror, line_number, widget_height) {
-        const options = {
-            insertAt: 0,
-            coverGutter: true
-        };
-        const elem = document.createElement("div");
-        elem.classList.add("pull-request-file-diff-placeholder-block");
-        elem.style = `height: ${widget_height}px`;
+    function displayInlineCommentAndComputeItsHeight(
+        comment,
+        comment_line,
+        lines_to_groups_map,
+        left_code_mirror,
+        right_code_mirror
+    ) {
+        if (comment_line.new_offset === null) {
+            return CodeMirrorHelperService.displayInlineComment(
+                left_code_mirror,
+                comment,
+                comment_line.old_offset - 1
+            ).then(widget => {
+                lines_to_groups_map.get(comment.unidiff_offset).height += widget.height;
+            });
+        }
 
-        code_mirror.addLineWidget(line_number, elem, options);
+        if (comment_line.old_offset === null) {
+            return CodeMirrorHelperService.displayInlineComment(
+                right_code_mirror,
+                comment,
+                comment_line.new_offset - 1
+            ).then(widget => {
+                lines_to_groups_map.get(comment.unidiff_offset).height += widget.height;
+            });
+        }
+
+        // Arbitrarily show the comment on right side. As of today, We can't tell the backend
+        // to store it on the left side.
+        return CodeMirrorHelperService.displayInlineComment(
+            right_code_mirror,
+            comment,
+            comment_line.new_offset - 1
+        ).then(widget => {
+            comment_line.height = initializeOrIncrementHeight(comment_line, widget);
+        });
+    }
+
+    function initializeOrIncrementHeight(line, widget) {
+        return typeof line.height === "undefined" ? widget.height : line.height + widget.height;
+    }
+
+    function displayOppositePlaceholder(
+        line,
+        previous_line,
+        first_line_to_group_map,
+        left_code_mirror,
+        right_code_mirror
+    ) {
+        if (lineIsUnmoved(line) && line.height > 0) {
+            const placeholder_line_number = line.old_offset - 1;
+            CodeMirrorHelperService.displayPlaceholderWidget(
+                left_code_mirror,
+                placeholder_line_number,
+                line.height
+            );
+            return;
+        }
+
+        if (!first_line_to_group_map.has(line.unidiff_offset)) {
+            return;
+        }
+
+        const group = first_line_to_group_map.get(line.unidiff_offset);
+        if (group.type === DELETED_GROUP) {
+            const placeholder_line_number = previous_line ? previous_line.new_offset - 1 : 0;
+            CodeMirrorHelperService.displayPlaceholderWidget(
+                right_code_mirror,
+                placeholder_line_number,
+                group.height
+            );
+            return;
+        }
+
+        if (group.type === ADDED_GROUP) {
+            const placeholder_line_number = previous_line ? previous_line.old_offset - 1 : 0;
+            CodeMirrorHelperService.displayPlaceholderWidget(
+                left_code_mirror,
+                placeholder_line_number,
+                group.height
+            );
+        }
+    }
+
+    function lineIsUnmoved(line) {
+        return line.new_offset !== null && line.old_offset !== null;
     }
 
     function displayLine(line, left_code_mirror, right_code_mirror) {

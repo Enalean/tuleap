@@ -25,20 +25,22 @@ const LINE_HEIGHT_IN_PX = 20;
 function buildLineGroups(lines) {
     const groups = groupLinesByChangeType(lines);
 
-    return buildFirstLineToGroupMap(groups);
+    const lines_to_groups_map = buildLinesToGroupMap(groups);
+    const first_line_to_group_map = buildFirstLineToGroupMap(groups);
+    return {
+        lines_to_groups_map,
+        first_line_to_group_map
+    };
 }
 
 function groupLinesByChangeType(lines) {
-    // Start from the end of the lines to compute the first line of
-    // each group more easily.
-    // The first line is where the placeholder widget will be set.
-    return lines.reduceRight(buildGroups, []);
+    return lines.reduce(buildGroups, []);
 }
 
 const buildGroups = (accumulator, line, index, array) => {
     const change_type = getChangeType(line);
-    if (index < array.length - 1) {
-        const previous_line = array[index + 1];
+    if (index > 0) {
+        const previous_line = array[index - 1];
         if (lineHasSameChangeTypeAsPreviousLine(previous_line, change_type)) {
             line.group = previous_line.group;
             updateGroupFirstLineAndHeight(line.group, line.unidiff_offset, index);
@@ -47,7 +49,7 @@ const buildGroups = (accumulator, line, index, array) => {
     }
     const new_group = {
         type: change_type,
-        first_line_unidiff_offset: line.unidiff_offset,
+        unidiff_offsets: [line.unidiff_offset],
         height: computeLineHeightForIndex(index)
     };
     line.group = new_group;
@@ -56,7 +58,7 @@ const buildGroups = (accumulator, line, index, array) => {
 };
 
 function updateGroupFirstLineAndHeight(group, line_unidiff_offset, index) {
-    group.first_line_unidiff_offset = line_unidiff_offset;
+    group.unidiff_offsets.push(line_unidiff_offset);
     group.height += computeLineHeightForIndex(index);
 }
 
@@ -73,7 +75,17 @@ function lineHasSameChangeTypeAsPreviousLine(previous_line, change_type) {
 
 function buildFirstLineToGroupMap(groups) {
     return groups.reduce((accumulator, group) => {
-        accumulator.set(group.first_line_unidiff_offset, group);
+        const first_unidiff_index = group.unidiff_offsets[0];
+        accumulator.set(first_unidiff_index, group);
+        return accumulator;
+    }, new Map());
+}
+
+function buildLinesToGroupMap(groups) {
+    return groups.reduce((accumulator, group) => {
+        group.unidiff_offsets.forEach(offset => {
+            accumulator.set(offset, group);
+        });
         return accumulator;
     }, new Map());
 }
