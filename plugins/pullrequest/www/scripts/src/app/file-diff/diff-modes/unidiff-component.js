@@ -18,6 +18,7 @@
  */
 
 import CodeMirror from "codemirror";
+import { getComments } from "../comments-state.js";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -66,7 +67,7 @@ function controller(
 
         const collapsible_sections = CodeCollapseService.getCollapsibleCodeSections(
             self.diff.lines,
-            self.diff.inline_comments
+            getComments()
         );
 
         CodeMirrorHelperService.collapseCommonSectionsUnidiff(
@@ -74,7 +75,7 @@ function controller(
             collapsible_sections
         );
 
-        self.diff.inline_comments.forEach(comment => {
+        getComments().forEach(comment => {
             CodeMirrorHelperService.displayInlineComment(
                 unidiff_codemirror,
                 comment,
