@@ -60,6 +60,10 @@
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
+.pull-request-file-diff-section-collapsed {
+    cursor: pointer;
+}
+
 .pull-request-file-diff-binary-file {
     padding: 100px;
     border: 1px solid #dddddd;

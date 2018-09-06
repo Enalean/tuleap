@@ -41,6 +41,7 @@ import TimelineService from "./overview/timeline/timeline-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 import PullRequestService from "./pull-request/pull-request-service.js";
 import CodeMirrorHelperService from "./file-diff/codemirror-helper-service.js";
+import CodeCollapseService from "./code-collapse/code-collapse-service.js";
 
 import MainConfig from "./app-config.js";
 import TuleapResize from "./resize/resize.js";
@@ -94,6 +95,7 @@ export default angular
     .service("PullRequestRestService", PullRequestRestService)
     .service("PullRequestService", PullRequestService)
     .service("CodeMirrorHelperService", CodeMirrorHelperService)
+    .service("CodeCollapseService", CodeCollapseService)
 
     .config(MainConfig)
     .config(DashboardConfig)
