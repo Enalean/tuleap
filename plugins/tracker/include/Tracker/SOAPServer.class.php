@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\SOAP\SOAPRequestValidator;
 use Tuleap\Tracker\Report\AdditionalCriteria\CommentCriterionValueRetriever;
 
 require_once 'common/soap/SOAP_RequestValidator.class.php';
@@ -59,7 +60,7 @@ define('check_field_fault', '3035');
 
 class Tracker_SOAPServer {
     /**
-     * @var SOAP_RequestValidator
+     * @var SOAPRequestValidator
      */
     private $soap_request_validator;
 
@@ -108,7 +109,7 @@ class Tracker_SOAPServer {
     private $comment_criterion_value_retriever;
 
     public function __construct(
-        SOAP_RequestValidator $soap_request_validator,
+        SOAPRequestValidator $soap_request_validator,
         TrackerFactory $tracker_factory,
         PermissionsManager $permissions_manager,
         Tracker_ReportDao $dao,

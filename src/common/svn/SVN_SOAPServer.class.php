@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+use Tuleap\SOAP\SOAPRequestValidator;
 
 require_once 'SVN_RepositoryListing.class.php';
 require_once 'SVN_LogFactory.class.php';
@@ -36,7 +38,7 @@ class SVN_SOAPServer {
      */
     private $svn_repository_listing;
     
-    public function __construct(SOAP_RequestValidator $soap_request_validator,
+    public function __construct(SOAPRequestValidator $soap_request_validator,
                                 SVN_RepositoryListing $svn_repository_listing) {
         $this->soap_request_validator = $soap_request_validator;
         $this->svn_repository_listing = $svn_repository_listing;

@@ -30,7 +30,8 @@ require_once 'common/user/UserManager.class.php';
  * - user session
  * - project
  */
-class SOAP_RequestValidator {
+class SOAP_RequestValidator implements \Tuleap\SOAP\SOAPRequestValidator
+{
     /**
      * @var ProjectManager
      */
