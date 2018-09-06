@@ -31,10 +31,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
-require_once 'exit.php';
-require_once 'html.php';
-require_once 'user.php';
-
 require_once __DIR__ . '/bootstrap.php';
 
 class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
@@ -50,11 +46,6 @@ class ProjectImportTest extends TuleapDbTestCase
 
         // Uncomment this during development to avoid aweful 50" setUp
         // $this->markThisTestUnderDevelopment();
-    }
-
-    public function skip()
-    {
-        $this->skipIf(PHP_VERSION_ID > 70000);
     }
 
     public function setUp()
@@ -90,32 +81,6 @@ class ProjectImportTest extends TuleapDbTestCase
         ForgeConfig::set('sys_dbuser', $sys_dbuser);
         ForgeConfig::set('sys_dbpasswd', $sys_dbpasswd);
         ForgeConfig::set('sys_dbname', $sys_dbname);
-        /**
-         * HACK
-         */
-        require_once dirname(__FILE__) . '/../../plugins/mediawiki/fusionforge/compat/load_compatibilities_method.php';
-
-        PluginManager::instance()->installAndActivate('mediawiki');
-
-        $plugin = PluginManager::instance()->getPluginByName('mediawiki');
-        EventManager::instance()->addListener(
-            Event::IMPORT_XML_PROJECT,
-            $plugin,
-            'importXmlProject',
-            false
-        );
-        EventManager::instance()->addListener(
-            'register_project_creation',
-            $plugin,
-            'register_project_creation',
-            false
-        );
-        EventManager::instance()->addListener(
-            Event::SERVICES_ALLOWED_FOR_PROJECT,
-            $plugin,
-            'services_allowed_for_project',
-            false
-        );
 
         $this->sys_command = new System_Command();
 
