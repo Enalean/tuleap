@@ -156,20 +156,44 @@ class RepositoryTest extends TestBase {
                     'name' => 'master',
                     'commit' => [
                         'id'            => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
-                        'author_name'   => 'Test User 1',
-                        'authored_date' => '2018-09-05T11:12:07+02:00',
                         'title'         => '04',
-                        'message'       => '04'
-                    ]
+                        'message'       => '04',
+                        'author_name'   => 'Test User 1',
+                        'author_email'  => 'test_user_1@example.com',
+                        'authored_date' => '2018-09-05T11:12:07+02:00',
+                        'author'        => [
+                            'id'           => 102,
+                            'uri'          => 'users/102',
+                            'user_url'     => '/users/rest_api_tester_1',
+                            'real_name'    => 'Test User 1',
+                            'display_name' => 'Test User 1 (rest_api_tester_1)',
+                            'username'     => 'rest_api_tester_1',
+                            'ldap_id'      => 'tester1',
+                            'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                            'is_anonymous' => false
+                        ]
+                    ],
                 ],
                 [
                     'name' => 'branch_file_02',
                     'commit' => [
                         'id'            => 'bcbc8956071c646493d484c64a6034b663e073e0',
-                        'author_name'   => 'Test User 1',
-                        'authored_date' => '2018-09-05T11:10:39+02:00',
                         'title'         => '03',
-                        'message'       => '03'
+                        'message'       => '03',
+                        'author_name'   => 'Test User 1',
+                        'author_email'  => 'test_user_1@example.com',
+                        'authored_date' => '2018-09-05T11:10:39+02:00',
+                        'author'        => [
+                            'id'           => 102,
+                            'uri'          => 'users/102',
+                            'user_url'     => '/users/rest_api_tester_1',
+                            'real_name'    => 'Test User 1',
+                            'display_name' => 'Test User 1 (rest_api_tester_1)',
+                            'username'     => 'rest_api_tester_1',
+                            'ldap_id'      => 'tester1',
+                            'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                            'is_anonymous' => false
+                        ]
                     ]
                 ],
             ],
@@ -201,10 +225,22 @@ class RepositoryTest extends TestBase {
                     'name' => 'v0',
                     'commit' => [
                         'id'            => '5d408503daf6f1348e264122cfa8fc89a30f7f12',
+                        'title'         => 'First commit',
+                        'message'       => 'First commit',
                         'author_name'   => 'Test User 1',
                         'authored_date' => '2018-09-05T11:05:05+02:00',
-                        'title'         => 'First commit',
-                        'message'       => 'First commit'
+                        'author_email'  => 'test_user_1@example.com',
+                        'author'        => [
+                            'id'           => 102,
+                            'uri'          => 'users/102',
+                            'user_url'     => '/users/rest_api_tester_1',
+                            'real_name'    => 'Test User 1',
+                            'display_name' => 'Test User 1 (rest_api_tester_1)',
+                            'username'     => 'rest_api_tester_1',
+                            'ldap_id'      => 'tester1',
+                            'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
+                            'is_anonymous' => false
+                        ]
                     ]
                 ]
             ],

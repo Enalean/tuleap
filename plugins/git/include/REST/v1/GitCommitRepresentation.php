@@ -23,6 +23,7 @@ namespace Tuleap\Git\REST\v1;
 
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\REST\JsonCast;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class GitCommitRepresentation
 {
@@ -46,13 +47,31 @@ class GitCommitRepresentation
      * @var String
      */
     public $message;
+    /**
+     * @var string
+     */
+    public $author_email;
+    /**
+     * @var MinimalUserRepresentation|null
+     */
+    public $author = null;
+
 
     public function build(Commit $commit)
     {
         $this->id            = $commit->GetHash();
-        $this->authored_date = JsonCast::toDate($commit->GetAuthorEpoch());
         $this->title         = $commit->GetTitle();
-        $this->author_name   = $commit->GetAuthorName();
         $this->message       = implode("\n", $commit->GetComment());
+        $this->author_name   = $commit->GetAuthorName();
+        $this->author_email  = $commit->getAuthorEmail();
+        $this->authored_date = JsonCast::toDate($commit->GetAuthorEpoch());
+
+        $user_manager = \UserManager::instance();
+
+        $author = $user_manager->getUserByEmail($this->author_email);
+        if ($author !== null) {
+            $author_representation = new MinimalUserRepresentation();
+            $this->author = $author_representation->build($author);
+        }
     }
 }
