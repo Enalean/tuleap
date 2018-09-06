@@ -32,6 +32,7 @@ use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Instrument\MetricsController;
+use Tuleap\layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
 use Tuleap\Password\Administration\PasswordPolicyUpdateController;
@@ -55,7 +56,11 @@ class RouteCollector
     public function collect(FastRoute\RouteCollector $r)
     {
         $r->get('/', function () {
-            return new SiteHomepageController();
+            $dao = new \Admin_Homepage_Dao();
+            if ($dao->isStandardHomepageUsed()) {
+                return new SiteHomepageController();
+            }
+            return new LegacySiteHomePageController();
         });
         $r->addRoute(['GET', 'POST'], '/projects/{name}[/]', function () {
             return new \Tuleap\Project\Home();

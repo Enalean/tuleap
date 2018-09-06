@@ -20,9 +20,7 @@
 
 namespace Tuleap;
 
-use Admin_Homepage_Dao;
 use EventManager;
-use HTTPRequest;
 use PFUser;
 use Tuleap\Request\CurrentPage;
 use User_ForgeUserGroupPermission_ProjectApproval;
@@ -31,15 +29,9 @@ use User_ForgeUserGroupPermissionsManager;
 class BurningParrotCompatiblePageDetector
 {
     /**
-     * @var Admin_Homepage_Dao
-     */
-    private $homepage_dao;
-
-    /**
      * @var CurrentPage
      */
     private $current_page;
-
     /**
      * @var User_ForgeUserGroupPermissionsManager
      */
@@ -47,10 +39,8 @@ class BurningParrotCompatiblePageDetector
 
     public function __construct(
         CurrentPage $current_page,
-        Admin_Homepage_Dao $homepage_dao,
         User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager
     ) {
-        $this->homepage_dao                         = $homepage_dao;
         $this->current_page                         = $current_page;
         $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
@@ -63,7 +53,6 @@ class BurningParrotCompatiblePageDetector
 
         return $this->isInCoreServicesSiteAdmin($current_user)
             || $this->current_page->isDashboard()
-            || $this->isInHomepage()
             || $this->isManagingLabels()
             || $this->isInProjectAdmin()
             || $this->isInContact()
@@ -116,14 +105,6 @@ class BurningParrotCompatiblePageDetector
                 $current_user,
                 new User_ForgeUserGroupPermission_ProjectApproval()
             );
-    }
-
-    public function isInHomepage()
-    {
-        return ($_SERVER['SERVER_NAME'] === \ForgeConfig::get('sys_default_domain') ||
-                    $_SERVER['SERVER_NAME'] === \ForgeConfig::get('sys_https_host'))
-            && ($_SERVER['REQUEST_URI'] === '/' || strpos($_SERVER['REQUEST_URI'], '/index.php') === 0)
-            && $this->homepage_dao->isStandardHomepageUsed();
     }
 
     private function isInContact()
