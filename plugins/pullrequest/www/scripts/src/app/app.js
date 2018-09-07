@@ -22,6 +22,7 @@ import FilesDirective from "./files/files-directive.js";
 import LabelsBox from "./labels/labels-directive.js";
 import OverviewDirective from "./overview/overview-directive.js";
 import TimelineDirective from "./overview/timeline/timeline-directive.js";
+import CommitsDirective from "./commits/commits-directive.js";
 import PullRequestDirective from "./pull-request/pull-request-directive.js";
 import PullRequestHeaderDirective from "./pull-request/header/header-directive.js";
 import PullRequestRefsDirective from "./pull-request-refs/pull-request-refs.directive.js";
@@ -40,6 +41,7 @@ import MergeModalService from "./overview/merge-modal/merge-modal-service.js";
 import EditModalService from "./overview/edit-modal/edit-modal-service.js";
 import TimelineRestService from "./overview/timeline/timeline-rest-service.js";
 import TimelineService from "./overview/timeline/timeline-service.js";
+import CommitsRestService from "./commits/commits-rest-service.js";
 import PullRequestRestService from "./pull-request/pull-request-rest-service.js";
 import PullRequestService from "./pull-request/pull-request-service.js";
 import CodeMirrorHelperService from "./file-diff/codemirror-helper-service.js";
@@ -51,6 +53,7 @@ import DashboardConfig from "./dashboard/dashboard-config.js";
 import FileDiffConfig from "./file-diff/file-diff-config.js";
 import FilesConfig from "./files/files-config.js";
 import OverviewConfig from "./overview/overview-config.js";
+import CommitsConfig from "./commits/commits-config.js";
 import PullRequestConfig from "./pull-request/pull-request-config.js";
 
 export default angular
@@ -77,6 +80,7 @@ export default angular
     .directive("labelsBox", LabelsBox)
     .directive("overview", OverviewDirective)
     .directive("timeline", TimelineDirective)
+    .directive("commits", CommitsDirective)
     .directive("pullRequest", PullRequestDirective)
     .directive("pullRequestHeader", PullRequestHeaderDirective)
     .directive("pullRequestRefs", PullRequestRefsDirective)
@@ -95,6 +99,7 @@ export default angular
     .service("EditModalService", EditModalService)
     .service("TimelineRestService", TimelineRestService)
     .service("TimelineService", TimelineService)
+    .service("CommitsRestService", CommitsRestService)
     .service("PullRequestRestService", PullRequestRestService)
     .service("PullRequestService", PullRequestService)
     .service("CodeMirrorHelperService", CodeMirrorHelperService)
@@ -104,4 +109,5 @@ export default angular
     .config(FileDiffConfig)
     .config(FilesConfig)
     .config(OverviewConfig)
+    .config(CommitsConfig)
     .config(PullRequestConfig).name;

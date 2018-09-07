@@ -8,17 +8,24 @@
                    ng-class="{'tlp-tab-active': pull_request.$state.includes('overview')}"
                    ui-sref="overview"
                 >
-                    {{ 'Overview' | translate }}
+                    {{ ::'Overview' | translate }}
+                </a>
+                <a class="tlp-tab"
+                   ng-class="{'tlp-tab-active': pull_request.$state.includes('commits')}"
+                   ui-sref="commits"
+                >
+                    {{ ::'Commits' | translate }}
                 </a>
                 <a class="tlp-tab"
                    ng-class="{'tlp-tab-active': pull_request.$state.includes('files')}"
                    ui-sref="files"
                 >
-                    {{ 'Changes' | translate }}
+                    {{ ::'Changes' | translate }}
                 </a>
             </nav>
 
             <div ui-view="overview" ng-show="pull_request.$state.includes('overview')"></div>
+            <div ui-view="commits" ng-show="pull_request.$state.includes('commits')"></div>
             <div ui-view="files" ng-show="pull_request.$state.includes('files')"></div>
         </div>
     </div>

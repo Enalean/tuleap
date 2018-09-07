@@ -23,11 +23,14 @@ namespace Tuleap\PullRequest\REST\v1;
 use BackendLogger;
 use EventManager;
 use Git_Command_Exception;
+use Git_GitRepositoryUrlManager;
 use GitDao;
+use GitPlugin;
 use GitRepository;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use PFUser;
+use PluginFactory;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
@@ -166,6 +169,14 @@ class PullRequestsResource extends AuthenticatedResource
      * @var GitPullRequestReferenceUpdater
      */
     private $git_pull_request_reference_updater;
+    /**
+     * @var gitPlugin
+     */
+    private $git_plugin;
+    /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $url_manager;
 
     public function __construct()
     {
@@ -238,6 +249,9 @@ class PullRequestsResource extends AuthenticatedResource
             $git_pull_request_reference_dao,
             new GitPullRequestReferenceNamespaceAvailabilityChecker()
         );
+
+        $this->git_plugin  = PluginFactory::instance()->getPluginByName('git');
+        $this->url_manager = new Git_GitRepositoryUrlManager($this->git_plugin);
     }
 
     /**
@@ -334,7 +348,9 @@ class PullRequestsResource extends AuthenticatedResource
 
         $commit_factory = new PullRequestsCommitRepresentationFactory(
             $this->getExecutor($git_repository),
-            $provider->GetProject()
+            $provider->GetProject(),
+            $this->url_manager,
+            $this->git_repository_factory
         );
 
         try {
@@ -1220,7 +1236,6 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private function getGitoliteAccessURLGenerator()
     {
-        $git_plugin = \PluginFactory::instance()->getPluginByName('git');
-        return new GitoliteAccessURLGenerator($git_plugin->getPluginInfo());
+        return new GitoliteAccessURLGenerator($this->git_plugin->getPluginInfo());
     }
 }

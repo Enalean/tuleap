@@ -155,6 +155,7 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'master',
                     'commit' => [
+                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
                         'id'            => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
                         'title'         => '04',
                         'message'       => '04',
@@ -177,6 +178,7 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'branch_file_02',
                     'commit' => [
+                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=bcbc8956071c646493d484c64a6034b663e073e0',
                         'id'            => 'bcbc8956071c646493d484c64a6034b663e073e0',
                         'title'         => '03',
                         'message'       => '03',
@@ -224,6 +226,7 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'v0',
                     'commit' => [
+                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=5d408503daf6f1348e264122cfa8fc89a30f7f12',
                         'id'            => '5d408503daf6f1348e264122cfa8fc89a30f7f12',
                         'title'         => 'First commit',
                         'message'       => 'First commit',

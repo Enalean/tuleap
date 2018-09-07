@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/app/file-diff/codemirror-helper-service.js
@@ -72,6 +72,10 @@ msgstr "Fermer"
 msgid "Comment"
 msgstr "Commenter"
 
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Commits"
+msgstr "Commits"
+
 #: src/app/overview/overview.tpl.html
 msgid "Deprecated REST route"
 msgstr "Route REST dépréciée"
@@ -116,6 +120,10 @@ msgstr "A rebasé la pull request."
 #: src/app/overview/timeline/timeline-service.js
 msgid "Has updated the pull request."
 msgstr "A mis à jour la pull request."
+
+#: src/app/commits/commits.tpl.html
+msgid "It seems that the pull request does not have any commits."
+msgstr "Il semblerait que la pull request n'a aucun commit."
 
 #: src/app/overview/overview.tpl.html
 msgid "Last CI Status"
