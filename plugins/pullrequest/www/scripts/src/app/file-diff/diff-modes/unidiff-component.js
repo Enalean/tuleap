@@ -20,6 +20,8 @@
 import CodeMirror from "codemirror";
 import { getComments } from "../comments-state.js";
 
+import { getCollapsibleCodeSections } from "../../code-collapse/code-collapse-service.js";
+
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
     controller,
@@ -35,8 +37,7 @@ controller.$inject = [
     "$scope",
     "FileDiffRestService",
     "TooltipService",
-    "CodeMirrorHelperService",
-    "CodeCollapseService"
+    "CodeMirrorHelperService"
 ];
 
 function controller(
@@ -44,8 +45,7 @@ function controller(
     $scope,
     FileDiffRestService,
     TooltipService,
-    CodeMirrorHelperService,
-    CodeCollapseService
+    CodeMirrorHelperService
 ) {
     const self = this;
     Object.assign(self, {
@@ -65,10 +65,7 @@ function controller(
         $scope.$broadcast("code_mirror_initialized");
         displayUnidiff(unidiff_codemirror, self.diff.lines);
 
-        const collapsible_sections = CodeCollapseService.getCollapsibleCodeSections(
-            self.diff.lines,
-            getComments()
-        );
+        const collapsible_sections = getCollapsibleCodeSections(self.diff.lines, getComments());
 
         CodeMirrorHelperService.collapseCommonSectionsUnidiff(
             unidiff_codemirror,

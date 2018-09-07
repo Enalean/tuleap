@@ -43,6 +43,7 @@ function CodeMirrorHelperService(
 ) {
     const self = this;
     Object.assign(self, {
+        collapseCommonSectionsSideBySide,
         collapseCommonSectionsUnidiff,
         displayInlineComment,
         showCommentForm,
@@ -129,18 +130,47 @@ function CodeMirrorHelperService(
     }
 
     function collapseCommonSectionsUnidiff(unidiff_codemirror, sections) {
-        sections.forEach(section => {
-            const collapsed_label = getCollapsedLabelElement(section);
+        sections.forEach(section => appendCollapsedSectionLabel(unidiff_codemirror, section));
+    }
 
-            const marker = unidiff_codemirror.markText(
-                CodeMirror.Pos(section.start, 0),
-                CodeMirror.Pos(section.end, unidiff_codemirror.getLine(section.end).length),
-                {
-                    replacedWith: collapsed_label
-                }
-            );
+    function appendCollapsedSectionLabel(codemirror, section) {
+        let last_line_length = 0;
 
-            collapsed_label.addEventListener("click", () => marker.clear());
+        if (codemirror.getLine(section.end)) {
+            last_line_length = codemirror.getLine(section.end).length;
+        }
+
+        const collapsed_label = getCollapsedLabelElement(section);
+
+        const marker = codemirror.markText(
+            CodeMirror.Pos(section.start, 0),
+            CodeMirror.Pos(section.end, last_line_length),
+            {
+                replacedWith: collapsed_label
+            }
+        );
+
+        collapsed_label.addEventListener("click", () => marker.clear());
+    }
+
+    function synchronizeExpandCollapsedSectionsSideBySide(left_codemirror, right_codemirror) {
+        const left_labels = left_codemirror.getAllMarks();
+        const right_labels = right_codemirror.getAllMarks();
+
+        left_labels.forEach((label, index) => {
+            label.replacedWith.addEventListener("click", () => right_labels[index].clear());
         });
+
+        right_labels.forEach((label, index) => {
+            label.replacedWith.addEventListener("click", () => left_labels[index].clear());
+        });
+    }
+
+    function collapseCommonSectionsSideBySide(left_codemirror, right_codemirror, sections) {
+        sections.forEach(section => appendCollapsedSectionLabel(left_codemirror, section.left));
+
+        sections.forEach(section => appendCollapsedSectionLabel(right_codemirror, section.right));
+
+        synchronizeExpandCollapsedSectionsSideBySide(left_codemirror, right_codemirror);
     }
 }
