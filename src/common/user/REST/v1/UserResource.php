@@ -254,7 +254,7 @@ class UserResource extends AuthenticatedResource {
      * @access public
      */
     public function optionPreferences($id) {
-        Header::allowOptionsGetPatch();
+        Header::allowOptionsGetPatchDelete();
     }
 
     /**
@@ -275,6 +275,7 @@ class UserResource extends AuthenticatedResource {
      */
     public function getPreferences($id, $key) {
         $this->checkAccess();
+        $this->optionPreferences($id);
 
         if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
@@ -287,6 +288,32 @@ class UserResource extends AuthenticatedResource {
 
         return $preference_representation;
 
+    }
+
+    /**
+     * Delete a user preference
+     *
+     * @url DELETE {id}/preferences
+     *
+     * @access hybrid
+     *
+     * @param int    $id Id of the desired user
+     * @param string $key Preference key
+     *
+     * @throws 401
+     * @throws 500
+     */
+    public function deletePreferences($id, $key) {
+        $this->checkAccess();
+        $this->optionPreferences($id);
+
+        if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
+            throw new RestException(403, 'You can only set your own preferences');
+        }
+
+        if (! $this->deleteUserPreference($id, $key)) {
+            throw new RestException(500, 'Unable to delete the user preference');
+        }
     }
 
     /**
@@ -306,6 +333,7 @@ class UserResource extends AuthenticatedResource {
      */
     public function patchPreferences($id, $preference) {
         $this->checkAccess();
+        $this->optionPreferences($id);
 
         if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only set your own preferences');
@@ -322,6 +350,10 @@ class UserResource extends AuthenticatedResource {
 
     private function setUserPreference($user_id, $key, $value) {
         return $this->user_manager->getUserById($user_id)->setPreference($key, $value);
+    }
+
+    private function deleteUserPreference($user_id, $key) {
+        return $this->user_manager->getUserById($user_id)->delPreference($key);
     }
 
     private function checkUserCanSeeOtherUser(PFUser $watcher, PFuser $watchee) {

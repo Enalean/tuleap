@@ -18,9 +18,32 @@
  */
 
 import mutations from "./mutations.js";
-import { PROJECT_KEY } from "../constants.js";
+import {
+    PROJECT_KEY,
+    REPOSITORIES_SORTED_BY_LAST_UPDATE,
+    REPOSITORIES_SORTED_BY_PATH
+} from "../constants.js";
 
 describe("Store mutations", () => {
+    describe("setDisplayMode", () => {
+        it("saves the new mode", () => {
+            const state = {};
+
+            mutations.setDisplayMode(state, REPOSITORIES_SORTED_BY_LAST_UPDATE);
+            expect(state.display_mode).toBe(REPOSITORIES_SORTED_BY_LAST_UPDATE);
+
+            mutations.setDisplayMode(state, REPOSITORIES_SORTED_BY_PATH);
+            expect(state.display_mode).toBe(REPOSITORIES_SORTED_BY_PATH);
+        });
+
+        it("defaults to last update date", () => {
+            const state = {};
+
+            mutations.setDisplayMode(state, "whatever");
+            expect(state.display_mode).toBe(REPOSITORIES_SORTED_BY_LAST_UPDATE);
+        });
+    });
+
     describe("pushRepositoriesForCurrentOwner", () => {
         it("Given some repositories and that the selected owner has no repositories loaded yet, then It should create an entry for him in the list, and push them in it.", () => {
             const state = {

@@ -1,0 +1,8 @@
+
+<script>
+import { del } from 'tlp';
+
+function removeUser(user_id) {
+    return del(`/api/v1/users/${user_id}`);
+}
+</script>

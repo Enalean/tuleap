@@ -48,16 +48,21 @@ export default {
     setAddRepositoryModal(state, modal) {
         state.add_repository_modal = modal;
     },
-    toggleDisplayMode(state) {
-        state.display_mode =
-            state.display_mode === REPOSITORIES_SORTED_BY_LAST_UPDATE
-                ? REPOSITORIES_SORTED_BY_PATH
-                : REPOSITORIES_SORTED_BY_LAST_UPDATE;
+    setDisplayMode(state, new_mode) {
+        if (isUnknownMode(new_mode)) {
+            state.display_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
+        } else {
+            state.display_mode = new_mode;
+        }
     },
     setIsFirstLoadDone(state, is_first_load_done) {
         state.is_first_load_done = is_first_load_done;
     }
 };
+
+function isUnknownMode(mode) {
+    return mode !== REPOSITORIES_SORTED_BY_LAST_UPDATE && mode !== REPOSITORIES_SORTED_BY_PATH;
+}
 
 function extendRepository(repository) {
     repository.normalized_path =

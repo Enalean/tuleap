@@ -17,9 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { post, recursiveGet } from "tlp";
+import { patch, post, del, recursiveGet } from "tlp";
+import { REPOSITORIES_SORTED_BY_PATH } from "../constants.js";
 
-export { getRepositoryList, getForkedRepositoryList, postRepository };
+export {
+    getRepositoryList,
+    getForkedRepositoryList,
+    postRepository,
+    setRepositoriesSortedByPathUserPreference,
+    deleteRepositoriesSortedByPathUserPreference
+};
+
+const USER_PREFERENCE_KEY = "are_git_repositories_sorted_by_path";
+
+function setRepositoriesSortedByPathUserPreference(user_id) {
+    return patch(`/api/users/${user_id}/preferences`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            key: USER_PREFERENCE_KEY,
+            value: REPOSITORIES_SORTED_BY_PATH
+        })
+    });
+}
+
+function deleteRepositoriesSortedByPathUserPreference(user_id) {
+    return del(`/api/users/${user_id}/preferences?key=${USER_PREFERENCE_KEY}`);
+}
 
 function buildCollectionCallback(displayCallback) {
     return ({ repositories }) => {

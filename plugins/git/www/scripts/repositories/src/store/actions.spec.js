@@ -18,8 +18,15 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { PROJECT_KEY, ERROR_TYPE_NO_GIT, ERROR_TYPE_UNKNOWN_ERROR } from "../constants.js";
 import {
+    PROJECT_KEY,
+    ERROR_TYPE_NO_GIT,
+    ERROR_TYPE_UNKNOWN_ERROR,
+    REPOSITORIES_SORTED_BY_LAST_UPDATE,
+    REPOSITORIES_SORTED_BY_PATH
+} from "../constants.js";
+import {
+    setDisplayMode,
     getAsyncRepositoryList,
     changeRepositories,
     rewire$getAsyncRepositoryList,
@@ -27,17 +34,99 @@ import {
 } from "./actions.js";
 
 import {
+    rewire$setRepositoriesSortedByPathUserPreference,
+    rewire$deleteRepositoriesSortedByPathUserPreference,
     rewire$getRepositoryList,
     rewire$getForkedRepositoryList,
     restore as restoreRestQuerier
 } from "../api/rest-querier.js";
 
 import {
+    rewire$getUserId,
     rewire$getProjectId,
     restore as restoreRepositoryPresenter
 } from "../repository-list-presenter.js";
 
 describe("Store actions", () => {
+    afterEach(() => {
+        restoreRestQuerier();
+        restoreActions();
+        restoreRepositoryPresenter();
+    });
+
+    describe("setDisplayMode", () => {
+        let context,
+            setRepositoriesSortedByPathUserPreference,
+            deleteRepositoriesSortedByPathUserPreference;
+
+        beforeEach(() => {
+            context = {
+                commit: jasmine.createSpy("commit")
+            };
+
+            setRepositoriesSortedByPathUserPreference = jasmine.createSpy(
+                "setRepositoriesSortedByPathUserPreference"
+            );
+            rewire$setRepositoriesSortedByPathUserPreference(
+                setRepositoriesSortedByPathUserPreference
+            );
+
+            deleteRepositoriesSortedByPathUserPreference = jasmine.createSpy(
+                "deleteRepositoriesSortedByPathUserPreference"
+            );
+            rewire$deleteRepositoriesSortedByPathUserPreference(
+                deleteRepositoriesSortedByPathUserPreference
+            );
+        });
+
+        it("commits the new mode", async () => {
+            const getUserId = () => 0;
+            rewire$getUserId(getUserId);
+
+            const new_mode = REPOSITORIES_SORTED_BY_PATH;
+
+            await setDisplayMode(context, new_mode);
+
+            expect(context.commit).toHaveBeenCalledWith("setDisplayMode", new_mode);
+        });
+
+        it("does not save user preference if user is anonymous", async () => {
+            const getUserId = () => 0;
+            rewire$getUserId(getUserId);
+
+            const new_mode = REPOSITORIES_SORTED_BY_PATH;
+
+            await setDisplayMode(context, new_mode);
+
+            expect(setRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
+            expect(deleteRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
+        });
+
+        it("saves user preferences if by path", async () => {
+            const getUserId = () => 101;
+            rewire$getUserId(getUserId);
+
+            const new_mode = REPOSITORIES_SORTED_BY_PATH;
+
+            await setDisplayMode(context, new_mode);
+
+            expect(setRepositoriesSortedByPathUserPreference).toHaveBeenCalledWith(101);
+            expect(deleteRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
+        });
+
+        it("deletes user preferences if not by path", async () => {
+            const getUserId = () => 101;
+            rewire$getUserId(getUserId);
+
+            const new_mode = REPOSITORIES_SORTED_BY_LAST_UPDATE;
+
+            await setDisplayMode(context, new_mode);
+
+            expect(deleteRepositoriesSortedByPathUserPreference).toHaveBeenCalledWith(101);
+            expect(setRepositoriesSortedByPathUserPreference).not.toHaveBeenCalled();
+        });
+    });
+
     describe("changeRepositories", () => {
         const current_project_id = 100;
 
@@ -52,12 +141,6 @@ describe("Store actions", () => {
 
             getProjectId = () => current_project_id;
             rewire$getProjectId(getProjectId);
-        });
-
-        afterEach(() => {
-            restoreRestQuerier();
-            restoreActions();
-            restoreRepositoryPresenter();
         });
 
         it("Given that my repositories have already been loaded, then it should not try to fetch the list of repositories.", () => {

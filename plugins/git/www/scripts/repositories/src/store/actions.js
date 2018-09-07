@@ -17,9 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getForkedRepositoryList, getRepositoryList } from "../api/rest-querier.js";
-import { getProjectId } from "../repository-list-presenter.js";
-import { ERROR_TYPE_UNKNOWN_ERROR, ERROR_TYPE_NO_GIT, PROJECT_KEY } from "../constants.js";
+import {
+    getForkedRepositoryList,
+    getRepositoryList,
+    setRepositoriesSortedByPathUserPreference,
+    deleteRepositoriesSortedByPathUserPreference
+} from "../api/rest-querier.js";
+import { getProjectId, getUserId } from "../repository-list-presenter.js";
+import {
+    ERROR_TYPE_UNKNOWN_ERROR,
+    ERROR_TYPE_NO_GIT,
+    PROJECT_KEY,
+    REPOSITORIES_SORTED_BY_PATH
+} from "../constants.js";
+
+export const setDisplayMode = async (context, new_mode) => {
+    context.commit("setDisplayMode", new_mode);
+
+    const user_id = getUserId();
+    if (!user_id) {
+        return;
+    }
+
+    if (new_mode === REPOSITORIES_SORTED_BY_PATH) {
+        await setRepositoriesSortedByPathUserPreference(user_id);
+    } else {
+        await deleteRepositoriesSortedByPathUserPreference(user_id);
+    }
+};
 
 export const showAddRepositoryModal = ({ state }) => {
     state.add_repository_modal.toggle();

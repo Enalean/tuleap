@@ -52,6 +52,7 @@ class ListPresenterBuilder
     public function build(Project $project, PFUser $current_user)
     {
         return new GitRepositoryListPresenter(
+            $current_user,
             $project,
             $this->git_permissions_manager->userIsGitAdmin($current_user, $project),
             $this->getRepositoriesOwnersRepresentations($project)

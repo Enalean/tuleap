@@ -32,9 +32,15 @@ class GitRepositoryListPresenter
     public $is_admin;
     /** @var string */
     public $json_encoded_repositories_owners;
+    /** @var string */
+    public $display_mode;
 
-    public function __construct(\Project $project, $is_git_administrator, array $repositories_owners)
-    {
+    public function __construct(
+        \PFUser $current_user,
+        \Project $project,
+        $is_git_administrator,
+        array $repositories_owners
+    ) {
         $this->repositories_administration_url = GIT_BASE_URL . "/?" . http_build_query(
             [
                 "group_id" => $project->getID(),
@@ -54,5 +60,7 @@ class GitRepositoryListPresenter
         $this->is_admin              = $is_git_administrator;
 
         $this->json_encoded_repositories_owners = json_encode($repositories_owners);
+
+        $this->display_mode = $current_user->getPreference("are_git_repositories_sorted_by_path");
     }
 }
