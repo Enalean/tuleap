@@ -1067,6 +1067,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
             // test if first result is valid (if yes, we consider that others are valid too)
             if (!empty($results[0])) {
+                $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
                 //extract the first results
                 $first_result = array_shift($results);
                 //loop through it
@@ -1157,10 +1158,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
                             $html .= "<td>$forward_label</td>";
                         } else {
-                            $nature_presenter_factory = $this->getNaturePresenterFactory();
-                            $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
                             $project = $this->report->getTracker()->getProject();
-                            $natures = $nature_presenter_factory->getAllUsableTypesInProject($project);
+                            $natures = $this->getAllUsableTypesInProjectWithCache($project);
                             $natures_presenter = array();
                             $selected_nature = $nature->shortname;
                             if (isset($prefill_natures[$artifact_id])) {
@@ -1196,6 +1195,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '</table>';
         }
         return $html;
+    }
+
+    private function getAllUsableTypesInProjectWithCache(Project $project)
+    {
+        static $all_natures_project_cache = [];
+        if (isset($all_natures_project_cache[$project->getID()])) {
+            return $all_natures_project_cache[$project->getID()];
+        }
+        $nature_presenter_factory = $this->getNaturePresenterFactory();
+        $all_natures              = $nature_presenter_factory->getAllUsableTypesInProject($project);
+        $all_natures_project_cache[$project->getID()] = $all_natures;
+        return $all_natures;
     }
 
     public function fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only) {
