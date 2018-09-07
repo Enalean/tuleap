@@ -18,6 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../include/constants.php';
-require_once __DIR__ . '/../include/autoload.php';
+require_once __DIR__ . '/../include/crosstrackerPlugin.class.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';

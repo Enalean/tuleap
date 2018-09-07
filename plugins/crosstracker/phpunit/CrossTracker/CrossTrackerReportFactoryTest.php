@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -20,10 +20,15 @@
 
 namespace Tuleap\CrossTracker;
 
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/../bootstrap.php';
 
-class CrossTrackerReportFactoryTest extends \TuleapTestCase
+class CrossTrackerReportFactoryTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var \Tracker
      */
@@ -53,45 +58,53 @@ class CrossTrackerReportFactoryTest extends \TuleapTestCase
     {
         parent::setUp();
 
-        $this->report_dao            = mock('Tuleap\CrossTracker\CrossTrackerReportDao');
-        $this->tracker_factory       = mock('TrackerFactory');
+        $globals = array_merge([], $GLOBALS);
+
+        $this->report_dao            = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReportDao::class);
+        $this->tracker_factory       = \Mockery::spy(\TrackerFactory::class);
         $this->cross_tracker_factory = new CrossTrackerReportFactory($this->report_dao, $this->tracker_factory);
 
-        $this->user = aUser()->withId(101)->build();
+        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user->shouldReceive('getId')->andReturn(101);
 
-        $this->tracker_1 = aMockTracker()->withId(1)->build();
-        $this->tracker_2 = aMockTracker()->withId(2)->build();
+        $this->tracker_1 = \Mockery::spy(\Tracker::class);
+        $this->tracker_1->shouldReceive('getId')->andReturn(1);
+
+        $this->tracker_2 = \Mockery::spy(\Tracker::class);
+        $this->tracker_2->shouldReceive('getId')->andReturn(2);
+
+        $GLOBALS = $globals;
     }
 
-    public function itThrowsAnExceptionWhenReportIsNotFound()
+    public function testItThrowsAnExceptionWhenReportIsNotFound()
     {
-        stub($this->report_dao)->searchReportById()->returns(false);
-        $this->expectException('Tuleap\CrossTracker\CrossTrackerReportNotFoundException');
+        $this->report_dao->shouldReceive('searchReportById')->andReturn(false);
+        $this->expectException(\Tuleap\CrossTracker\CrossTrackerReportNotFoundException::class);
 
         $this->cross_tracker_factory->getById(1);
     }
 
-    public function itDoesNotThrowsAnExceptionWhenTrackerIsNotFound()
+    public function testItDoesNotThrowsAnExceptionWhenTrackerIsNotFound()
     {
-        stub($this->report_dao)->searchReportById()->returns(
+        $this->report_dao->shouldReceive('searchReportById')->andReturn(
             array("id" => 1, "expert_query" => "")
         );
 
-        stub($this->report_dao)->searchReportTrackersById()->returns(
+        $this->report_dao->shouldReceive('searchReportTrackersById')->andReturn(
             array(
                 array("tracker_id" => 1),
                 array("tracker_id" => 2)
             )
         );
 
-        stub($this->tracker_factory)->getTrackerById(1)->returns(null);
-        stub($this->tracker_factory)->getTrackerById(2)->returns($this->tracker_2);
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(null);
+        $this->tracker_factory->shouldReceive('getTrackerById')->with(2)->andReturn($this->tracker_2);
 
-        stub($this->tracker_2)->userCanView()->returns(true);
+        $this->tracker_2->shouldReceive('userCanView')->andReturn(true);
 
         $expected_result = new CrossTrackerReport(1, '', array($this->tracker_2));
 
-        $this->assertEqual(
+        $this->assertEquals(
             $this->cross_tracker_factory->getById(1),
             $expected_result
         );
