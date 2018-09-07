@@ -711,7 +711,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 } else {
                     $list_values = $last_changeset->getValue($this)->getListValues();
                     $from        = reset($list_values);
-                    if (!is_string($value)) {
+                    if (is_a($value, Tracker_Artifact_ChangesetValue_List::class)) {
                         $to = $value->getId();
                     }else {
                         $to = $value;
