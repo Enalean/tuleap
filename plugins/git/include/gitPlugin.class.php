@@ -2639,7 +2639,6 @@ class GitPlugin extends Plugin
         return new ThemeManager(
             new BurningParrotCompatiblePageDetector(
                 new Tuleap\Request\CurrentPage(),
-                new \Admin_Homepage_Dao(),
                 new \User_ForgeUserGroupPermissionsManager(
                     new \User_ForgeUserGroupPermissionsDao()
                 )
