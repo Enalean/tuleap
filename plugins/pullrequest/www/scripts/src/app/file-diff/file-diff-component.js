@@ -19,6 +19,7 @@
 
 import "./file-diff.tpl.html";
 import { isUnifiedMode, isSideBySideMode } from "./diff-mode-state.js";
+import { initComments } from "./comments-state.js";
 
 export default {
     templateUrl: "file-diff.tpl.html",
@@ -45,6 +46,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
             .then(diff => {
                 self.diff = diff;
                 self.is_binary_file = diff.charset === "binary";
+                initComments(diff.inline_comments);
             })
             .finally(() => {
                 self.is_loading = false;

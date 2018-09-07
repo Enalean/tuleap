@@ -18,6 +18,7 @@
  */
 
 import CodeMirror from "codemirror";
+import { addComment } from "./comments-state.js";
 
 export default CodeMirrorHelperService;
 
@@ -65,10 +66,14 @@ function CodeMirrorHelperService(
     function showCommentForm(codemirror, line_number, file_path, pull_request) {
         const child_scope = $rootScope.$new(true);
         child_scope.submitCallback = comment_text => {
-            return postComment(line_number, comment_text, file_path, pull_request).then(comment => {
-                self.displayInlineComment(codemirror, comment, line_number);
-                TooltipService.setupTooltips();
-            });
+            return postComment(line_number, comment_text, file_path, pull_request)
+                .then(comment => {
+                    addComment(comment);
+                    return self.displayInlineComment(codemirror, comment, line_number);
+                })
+                .then(() => {
+                    TooltipService.setupTooltips();
+                });
         };
         const new_inline_comment_element = $compile(`
             <new-inline-comment submit-callback="submitCallback"

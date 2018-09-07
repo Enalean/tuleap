@@ -19,6 +19,7 @@
 
 import CodeMirror from "codemirror";
 import "codemirror/addon/scroll/simplescrollbars.js";
+import { getComments } from "../comments-state.js";
 import { buildLineGroups, DELETED_GROUP, ADDED_GROUP } from "./side-by-side-data-builder.js";
 import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 
@@ -75,7 +76,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
         left_code_mirror.setValue(left_content);
         right_code_mirror.setValue(right_content);
 
-        const promises = self.diff.inline_comments.map(comment => {
+        const promises = getComments().map(comment => {
             const comment_line = file_lines[comment.unidiff_offset - 1];
             return displayInlineCommentAndComputeItsHeight(
                 comment,
