@@ -36,8 +36,8 @@ msgid "Binary file"
 msgstr ""
 
 #: src/app/file-diff/new-inline-comment.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
-#: src/app/overview/overview.tpl.html
 msgid "Cancel"
 msgstr ""
 
@@ -54,6 +54,7 @@ msgid "Checkout with"
 msgstr ""
 
 #: src/app/error-modal/error-modal.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
 msgid "Close"
 msgstr ""
@@ -67,7 +68,7 @@ msgstr ""
 msgid "Deprecated REST route"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Description"
 msgstr ""
 
@@ -75,6 +76,7 @@ msgstr ""
 msgid "Discussion has not started yet"
 msgstr ""
 
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/overview.tpl.html
 msgid "Edit message"
 msgstr ""
@@ -155,8 +157,8 @@ msgstr ""
 msgid "Pull request mergeability with destination is not determined. You can merge on the command line and push to destination."
 msgstr ""
 
-#: src/app/overview/overview.tpl.html
-msgid "Save changes"
+#: src/app/overview/edit-modal/edit-modal.tpl.html
+msgid "Save"
 msgstr ""
 
 #: src/app/overview/timeline/timeline.tpl.html
@@ -183,7 +185,7 @@ msgstr ""
 msgid "There are no open pull requests"
 msgstr ""
 
-#: src/app/overview/overview.tpl.html
+#: src/app/overview/edit-modal/edit-modal.tpl.html
 msgid "Title"
 msgstr ""
 

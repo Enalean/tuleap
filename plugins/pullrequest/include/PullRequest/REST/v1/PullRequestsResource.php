@@ -888,12 +888,20 @@ class PullRequestsResource extends AuthenticatedResource
         $this->pull_request_closer->abandon($pull_request);
     }
 
+    /**
+     * @throws 400
+     */
     private function patchInfo(
         PFUser $user,
         PullRequest $pull_request,
         $project_id,
         $body
     ) {
+        $trimmed_title = trim($body->title);
+        if (empty($trimmed_title)) {
+            throw new RestException(400, 'Title cannot be empty');
+        }
+
         $this->pull_request_factory->updateTitleAndDescription(
             $user,
             $pull_request,

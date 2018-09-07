@@ -9,6 +9,7 @@ OverviewController.$inject = [
     "PullRequestService",
     "UserRestService",
     "MergeModalService",
+    "EditModalService",
     "TooltipService"
 ];
 
@@ -19,6 +20,7 @@ function OverviewController(
     PullRequestService,
     UserRestService,
     MergeModalService,
+    EditModalService,
     TooltipService
 ) {
     const self = this;
@@ -28,7 +30,6 @@ function OverviewController(
         editionForm: {},
         operationInProgress: false,
         pull_request: {},
-        showEditionForm: false,
         valid_status_keys: PullRequestService.valid_status_keys,
         current_checkout_method: "ssh",
 
@@ -45,7 +46,7 @@ function OverviewController(
         isConflictingMerge,
         isNonFastForwardMerge,
         isUnknownMerge,
-        saveEditionForm,
+        showEditionForm,
         $onInit: init
     });
 
@@ -75,19 +76,12 @@ function OverviewController(
             });
     }
 
-    function buildStatusIs(status) {
-        return self.pull_request.last_build_status === status;
+    function showEditionForm() {
+        EditModalService.showEditModal(self.pull_request);
     }
 
-    function saveEditionForm() {
-        PullRequestService.updateTitleAndDescription(
-            self.pull_request,
-            self.editionForm.raw_title,
-            self.editionForm.raw_description
-        ).then(function() {
-            self.showEditionForm = false;
-            TooltipService.setupTooltips();
-        });
+    function buildStatusIs(status) {
+        return self.pull_request.last_build_status === status;
     }
 
     function isOpen() {
