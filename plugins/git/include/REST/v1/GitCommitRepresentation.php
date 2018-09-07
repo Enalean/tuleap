@@ -29,7 +29,7 @@ class GitCommitRepresentation
     /**
      * @var string
      */
-    public $commit_id;
+    public $id;
     /**
      * @var string
      */
@@ -49,7 +49,7 @@ class GitCommitRepresentation
 
     public function build(Commit $commit)
     {
-        $this->commit_id     = $commit->GetHash();
+        $this->id            = $commit->GetHash();
         $this->authored_date = JsonCast::toDate($commit->GetAuthorEpoch());
         $this->title         = $commit->GetTitle();
         $this->author_name   = $commit->GetAuthorName();
