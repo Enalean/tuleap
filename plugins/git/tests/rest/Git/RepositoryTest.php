@@ -155,13 +155,21 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'master',
                     'commit' => [
-                        'commit_id' => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e'
+                        'commit_id'     => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
+                        'author_name'   => 'Test User 1',
+                        'authored_date' => '2018-09-05T11:12:07+02:00',
+                        'title'         => '04',
+                        'message'       => '04'
                     ]
                 ],
                 [
                     'name' => 'branch_file_02',
                     'commit' => [
-                        'commit_id' => 'bcbc8956071c646493d484c64a6034b663e073e0'
+                        'commit_id'     => 'bcbc8956071c646493d484c64a6034b663e073e0',
+                        'author_name'   => 'Test User 1',
+                        'authored_date' => '2018-09-05T11:10:39+02:00',
+                        'title'         => '03',
+                        'message'       => '03'
                     ]
                 ],
             ],
@@ -178,7 +186,8 @@ class RepositoryTest extends TestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETTags() {
+    public function testGETTags()
+    {
         $response  = $this->getResponse($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/tags'
         ));
@@ -191,7 +200,11 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'v0',
                     'commit' => [
-                        'commit_id' => '504a824c0c91ec6c549ae89df1f42ca86d7700b2'
+                        'commit_id'     => '5d408503daf6f1348e264122cfa8fc89a30f7f12',
+                        'author_name'   => 'Test User 1',
+                        'authored_date' => '2018-09-05T11:05:05+02:00',
+                        'title'         => 'First commit',
+                        'message'       => 'First commit'
                     ]
                 ]
             ],
