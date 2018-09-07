@@ -23,6 +23,9 @@ use Tuleap\MFA\Enrollment\EnrollmentDisplayController;
 use Tuleap\MFA\Enrollment\EnrollmentRegisterController;
 use Tuleap\MFA\Enrollment\TOTP\TOTPEnroller;
 use Tuleap\MFA\Enrollment\TOTP\TOTPEnrollmentDAO;
+use Tuleap\MFA\Enrollment\TOTP\TOTPRetriever;
+use Tuleap\MFA\Enrollment\TrialAuthenticationDisplayController;
+use Tuleap\MFA\Enrollment\TrialAuthenticationVerifierController;
 use Tuleap\MFA\OTP\TOTPModeBuilder;
 use Tuleap\MFA\OTP\TOTPValidator;
 
@@ -67,6 +70,22 @@ class mfaPlugin  extends Plugin // @codingStandardsIgnoreLine
             $r->post('/enroll', function () {
                 return new EnrollmentRegisterController(
                     $this->getTOTPEnroller()
+                );
+            });
+            $r->get('/enroll/test', function () {
+                return new TrialAuthenticationDisplayController(
+                    TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/'),
+                    $this->getTOTPEnroller()
+                );
+            });
+            $r->post('/enroll/test', function () {
+                return new TrialAuthenticationVerifierController(
+                    new TOTPRetriever(
+                        new TOTPEnrollmentDAO(),
+                        (new KeyFactory())->getEncryptionKey(),
+                        TOTPModeBuilder::build()
+                    ),
+                    new TOTPValidator()
                 );
             });
         });
