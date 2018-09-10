@@ -99,8 +99,6 @@ final class EmailNotificationTask implements PostCreationTask
         }
         $this->logger->debug('Start mail notification');
 
-        $changeset->getArtifact()->forceFetchAllChangesets();
-
         // 0. Is update
         $is_update = ! $changeset->getArtifact()->isFirstChangeset($changeset);
 

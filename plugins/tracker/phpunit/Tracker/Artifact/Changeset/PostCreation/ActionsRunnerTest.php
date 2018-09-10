@@ -85,4 +85,32 @@ class ActionsRunnerTest extends TestCase
 
         $actions_runner->executePostCreationActions($changeset);
     }
+
+    public function testTasksAreExecutedInOrder()
+    {
+        $task_1 = \Mockery::mock(PostCreationTask::class);
+        $task_2 = \Mockery::mock(PostCreationTask::class);
+        $task_3 = \Mockery::mock(PostCreationTask::class);
+
+        $actions_runner = new ActionsRunner($this->logger, $this->dao, $task_1, $task_2, $task_3);
+
+        $changeset = \Mockery::mock(\Tracker_Artifact_Changeset::class);
+
+        $last_task_name = '';
+        $task_1->shouldReceive('execute')->andReturnUsing(function () use (&$last_task_name) {
+            $this->assertEmpty($last_task_name);
+            $last_task_name = 'task_1';
+        });
+        $task_2->shouldReceive('execute')->andReturnUsing(function () use (&$last_task_name) {
+            $this->assertSame($last_task_name, 'task_1');
+            $last_task_name = 'task_2';
+        });
+        $task_3->shouldReceive('execute')->andReturnUsing(function () use (&$last_task_name) {
+            $this->assertSame($last_task_name, 'task_2');
+            $last_task_name = 'task_3';
+        });
+
+        $actions_runner->executePostCreationActions($changeset);
+        $this->assertSame($last_task_name, 'task_3');
+    }
 }

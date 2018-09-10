@@ -82,6 +82,7 @@ class ActionsRunner
         return new ActionsRunner(
             $logger,
             new ActionsRunnerDao(),
+            new ClearArtifactChangesetCacheTask(),
             new EmailNotificationTask(
                 $logger,
                 UserHelper::instance(),
