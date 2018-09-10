@@ -313,14 +313,14 @@ class PullRequestsResource extends AuthenticatedResource
      * @param int $limit  Number of fetched comments {@from path} {@min 0}{@max 50}
      * @param int $offset Position of the first comment to fetch {@from path} {@min 0}
      *
-     * @return array {@type Tuleap\PullRequest\REST\v1\PullRequestsCommitRepresentation}
+     * @return array {@type \Tuleap\Git\REST\v1\GitCommitRepresentation}
      *
      * @throws 403
      * @throws 404 x Pull request does not exist
      * @throws 410
      * @throws 500
      */
-    public function getCommit($id, $limit = 50, $offset = 0)
+    public function getCommits($id, $limit = 50, $offset = 0)
     {
         $this->checkAccess();
         $this->sendAllowHeadersForCommits();

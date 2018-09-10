@@ -318,6 +318,16 @@ class Commit extends GitObject
     }
 
     /**
+     * @return string
+     */
+    public function getAuthorEmail()
+    {
+        preg_match('/<(.*)>/', $this->GetAuthor(), $matches);
+
+        return isset($matches[1]) ? $matches[1] : '';
+    }
+
+    /**
      * GetAuthorEpoch
      *
      * Gets the author's epoch
