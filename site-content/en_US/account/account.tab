@@ -95,7 +95,6 @@ account_preferences	lab_features_cblabel	Enable $1 Lab
 account_preferences	tracker_mail_format	Tracker emails format:
 account_preferences	error_form_mail_site	Verify site updates value
 account_preferences	error_form_mail_va	Verify additional community mailings value
-account_preferences	error_user_theme	Verify theme value
 account_preferences	error_form_sticky_login	Verify remember me value
 account_preferences	error_language_id	Verify language value
 account_preferences	error_user_csv_separator	Verify CSV separator value

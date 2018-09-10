@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -87,28 +87,6 @@ foreach ($mail_manager->getAllMailFormats() as $format) {
     $tracker_formats[] = array(
         'format'      => $format,
         'is_selected' => $format === $mail_manager->getMailPreferencesByUser($user)
-    );
-}
-
-$all_themes = array();
-$themes     = util_get_theme_list();
-natcasesort($themes);
-
-foreach ($themes as $theme) {
-    if ($theme === 'BurningParrot') {
-        continue;
-    }
-
-    $is_default  = $theme === $GLOBALS['sys_themedefault'];
-    $is_selected = $is_default;
-    if ($user->getTheme()) {
-        $is_selected = $theme === $user->getTheme();
-    }
-
-    $all_themes[] = array(
-        'theme_name'  => $theme,
-        'is_selected' => $is_selected,
-        'is_default'  => $is_default
     );
 }
 
@@ -224,7 +202,6 @@ $presenter = new User_PreferencesPresenter(
     $third_paty_html,
     $csrf->fetchHTMLInput(),
     $tracker_formats,
-    $all_themes,
     $languages_html,
     $user_helper_preferences,
     $plugins_prefs,

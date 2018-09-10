@@ -972,7 +972,6 @@ INSERT INTO user SET
         authorized_keys = NULL,
         email_new = NULL,
         timezone = 'GMT',
-        theme = '',
         language_id = 'en_US',
         last_pwd_update = '0';
 

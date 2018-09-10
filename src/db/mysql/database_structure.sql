@@ -864,7 +864,6 @@ CREATE TABLE user (
   authorized_keys text,
   email_new text,
   timezone varchar(64) default 'GMT',
-  theme varchar(50),
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',
   expiry_date int(11),

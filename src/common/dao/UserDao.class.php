@@ -148,13 +148,12 @@ class UserDao extends DataAccessObject {
      * @param $authorized_keys
      * @param $email_new
      * @param $timezone
-     * @param $theme
      * @param $language_id
      * @param $expiry_date
      * @param $last_pwd_update
      * @return true or id(auto_increment) if there is no error
      */
-    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $theme, $language_id, $expiry_date, $last_pwd_update) {
+    function create($user_name, $email, $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update) {
 
         $columns = array();
         $values  = array();
@@ -239,10 +238,6 @@ class UserDao extends DataAccessObject {
         if ($timezone !== null) {
             $columns[] = 'timezone';
             $values[]  = $timezone;
-        }
-        if ($theme !== null) {
-            $columns[] = 'theme';
-            $values[]  = $theme;
         }
         if ($language_id !== null) {
             $columns[] = 'language_id';

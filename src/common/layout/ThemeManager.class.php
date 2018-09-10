@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 class ThemeManager
 {
     private static $BURNING_PARROT   = 'BurningParrot';
+    private static $FLAMING_PARROT   = 'FlamingParrot';
     private static $LEGACY_EXTENSION = '_Theme.class.php';
     private static $PSR2_EXTENSION   = 'Theme.php';
 
@@ -43,12 +44,17 @@ class ThemeManager
 
     public function getTheme(PFUser $current_user)
     {
-        $GLOBALS['Response'] = $this->getFirstValidTheme($current_user, array(
-            $current_user->getTheme(),
-            $GLOBALS['sys_themedefault'],
-            'FlamingParrot',
-            'Tuleap',
-        ));
+        if ($this->page_detector->isInCompatiblePage($current_user)) {
+            $theme = $this->getStandardTheme($current_user, self::$BURNING_PARROT);
+        } else {
+            $theme = $this->getStandardTheme($current_user, self::$FLAMING_PARROT);
+        }
+
+        if ($theme === null && ! IS_SCRIPT) {
+            throw new Exception('No theme has been found. Do you have installed BurningParrot?');
+        }
+
+        $GLOBALS['Response'] = $theme;
         return $GLOBALS['Response'];
     }
 
@@ -61,65 +67,16 @@ class ThemeManager
         return $this->getStandardTheme($current_user, self::$BURNING_PARROT);
     }
 
-    private function getFirstValidTheme(PFUser $current_user, array $theme_names)
-    {
-        if ($this->page_detector->isInCompatiblePage($current_user)) {
-            return $this->getValidTheme($current_user, self::$BURNING_PARROT);
-        }
-
-        foreach ($theme_names as $name) {
-            $theme = $this->getValidTheme($current_user, $name);
-            if ($theme !== false && $this->isAllowedTheme($current_user, $name)) {
-                return $theme;
-            }
-        }
-
-        if (! IS_SCRIPT) {
-            throw new Exception('No theme has been found. Do you have installed BurningParrot?');
-        }
-    }
-
-    private function isAllowedTheme(PFUser $current_user, $name)
-    {
-        if ($name === self::$BURNING_PARROT) {
-            return $this->page_detector->isInCompatiblePage($current_user);
-        }
-
-        return true;
-    }
-
-    private function getValidTheme(PFUser $current_user, $name)
-    {
-        $theme = $this->getStandardTheme($current_user, $name);
-        if ($theme === false) {
-            $theme = $this->getCustomTheme($current_user, $name);
-        }
-
-        return $theme;
-    }
-
     private function getStandardTheme(PFUser $current_user, $name)
     {
-        if ($this->themeExists($GLOBALS['sys_themeroot'], $name)) {
-            $GLOBALS['sys_is_theme_custom'] = false;
+        $theme_basedir_root = __DIR__ . '/../../www/themes/';
+        if ($this->themeExists($theme_basedir_root, $name)) {
             $GLOBALS['sys_user_theme'] = $name;
-            $path = $this->getThemeClassPath($GLOBALS['sys_themeroot'], $name);
+            $path = $this->getThemeClassPath($theme_basedir_root, $name);
 
             return $this->instantiateTheme($current_user, $name, $path, '/themes/'.$name);
         }
-        return false;
-    }
-
-    private function getCustomTheme(PFUser $current_user, $name)
-    {
-        if ($this->themeExists($GLOBALS['sys_custom_themeroot'], $name)) {
-            $GLOBALS['sys_is_theme_custom'] = true;
-            $GLOBALS['sys_user_theme'] = $name;
-            $path = $this->getThemeClassPath($GLOBALS['sys_custom_themeroot'], $name);
-
-            return $this->instantiateTheme($current_user, $name, $path, '/custom/'.$name);
-        }
-        return false;
+        return null;
     }
 
     private function instantiateTheme(PFUser $current_user, $name, $path, $webroot)
@@ -160,11 +117,5 @@ class ThemeManager
         } else {
             return $name . self::$PSR2_EXTENSION;
         }
-    }
-
-    public function isThemeValid($name)
-    {
-        return $this->themeExists(ForgeConfig::get('sys_themeroot'), $name) ||
-               $this->themeExists(ForgeConfig::get('sys_custom_themeroot'), $name);
     }
 }

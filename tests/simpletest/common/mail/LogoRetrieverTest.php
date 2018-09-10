@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,28 +20,29 @@
 
 class LogoRetrieverTest extends TuleapTestCase {
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         ForgeConfig::store();
-        ForgeConfig::set('sys_urlroot', '/tuleap/src/www/');
     }
 
-    public function tearDown() {
+    public function tearDown()
+    {
         parent::tearDown();
         ForgeConfig::restore();
     }
 
-    public function itFindsExistingLogo() {
-        ForgeConfig::set('sys_themedefault', 'FlamingParrot');
+    public function itFindsExistingLogo()
+    {
+        ForgeConfig::set('sys_urlroot', '/tuleap/src/www/');
         $logo_retriever = new LogoRetriever();
         $this->assertTrue($logo_retriever->getPath());
     }
 
-    public function itDoesNotFoundUnavailableLogo() {
-        ForgeConfig::set('sys_themedefault', 'notfound');
+    public function itDoesNotFoundUnavailableLogo()
+    {
+        ForgeConfig::set('sys_urlroot', '/wrongpath/');
         $logo_retriever = new LogoRetriever();
         $this->assertFalse($logo_retriever->getPath());
     }
-
-
 }

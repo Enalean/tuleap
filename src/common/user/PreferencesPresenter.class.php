@@ -45,9 +45,6 @@ class User_PreferencesPresenter {
     public $tracker_formats;
 
     /** @var array */
-    public $all_themes;
-
-    /** @var array */
     public $languages_html;
 
     /** @var array */
@@ -75,7 +72,6 @@ class User_PreferencesPresenter {
     public $is_condensed;
     public $display_density_name;
     public $display_density_condensed;
-    public $has_only_flamingparrot;
 
     public function __construct(
         PFUser $user,
@@ -89,7 +85,6 @@ class User_PreferencesPresenter {
         $third_party_html,
         $csrf_input_html,
         array $tracker_formats,
-        array $all_themes,
         array $languages_html,
         array $user_helper_preferences,
         array $plugins_prefs,
@@ -109,7 +104,6 @@ class User_PreferencesPresenter {
         $this->third_party_html        = $third_party_html;
         $this->csrf_input_html         = $csrf_input_html;
         $this->tracker_formats         = $tracker_formats;
-        $this->all_themes              = $all_themes;
         $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
         $this->plugins_prefs           = $plugins_prefs;
@@ -125,14 +119,6 @@ class User_PreferencesPresenter {
         $this->display_density_condensed = PFUser::DISPLAY_DENSITY_CONDENSED;
 
         $this->is_condensed = $user->getPreference(PFUser::PREFERENCE_DISPLAY_DENSITY) === PFUser::DISPLAY_DENSITY_CONDENSED;
-
-        $this->has_only_flamingparrot = true;
-        foreach ($all_themes as $theme) {
-            if ($theme['theme_name'] !== 'FlamingParrot') {
-                $this->has_only_flamingparrot = false;
-                break;
-            }
-        }
     }
 
     public function generated_svn_token() {

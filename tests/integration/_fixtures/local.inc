@@ -142,10 +142,6 @@ $alias_file      = "/etc/aliases.codendi";
 // Comma separated paths where Tuleap can find plugins
 $sys_extra_plugin_path = '';
 
-// Themeing related paths
-$sys_themeroot = $codendi_dir . "/src/www/themes/";
-$sys_custom_themeroot = $sys_custom_dir . "/themes";
-
 // 3rd Party libraries
 $jpgraph_dir      = "/usr/share/jpgraph";
 $ckeditor_dir     = "/usr/share/ckeditor";
@@ -233,12 +229,6 @@ $sys_supported_languages = 'en_US,fr_FR';
 
 // Default language for the system
 $sys_lang = 'en_US';
-
-// Default theme
-$sys_themedefault = 'FlamingParrot';
-
-// Default theme for old browsers (currently netscape 4)
-$sys_themedefault_old = 'savannah';
 
 // If set to 1 (one) the user registration must be approved by site
 // admin. If 0 user can register by themselves

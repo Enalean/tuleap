@@ -132,7 +132,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     protected $authorized_keys;
     protected $email_new;
     protected $timezone;
-    protected $theme;
     protected $language_id;
     protected $last_pwd_update;
     protected $expiry_date;
@@ -228,7 +227,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
         $this->authorized_keys    = isset($row['authorized_keys'])    ? $row['authorized_keys']    : null;
         $this->email_new          = isset($row['email_new'])          ? $row['email_new']          : null;
         $this->timezone           = isset($row['timezone'])           ? $row['timezone']           : null;
-        $this->theme              = isset($row['theme'])              ? $row['theme']              : null;
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
@@ -279,7 +277,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
             'authorized_keys'    => $this->authorized_keys,
             'email_new'          => $this->email_new,
             'timezone'           => $this->timezone,
-            'theme'              => $this->theme,
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
             'expiry_date'        => $this->expiry_date,
@@ -656,12 +653,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getStickyLogin() {
         return $this->sticky_login;
-    }
-    /**
-     * @return string theme set in user's preferences
-     */
-    function getTheme() {
-        return $this->theme;
     }
     /**
      * @return string the Status of the user
@@ -1042,12 +1033,6 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function setStickyLogin($stickyLogin) {
         $this->sticky_login = $stickyLogin;
-    }
-    /**
-     * @param string theme set in user's preferences
-     */
-    function setTheme($theme) {
-        $this->theme = $theme;
     }
     /**
      * @param string the Status of the user
