@@ -24,6 +24,8 @@ import { buildLineGroups, DELETED_GROUP, ADDED_GROUP } from "./side-by-side-data
 import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/code-collapse-service.js";
 
+import "./modes.js";
+
 export default {
     template: `
         <div class="pull-request-side-by-side-diff" resize></div>

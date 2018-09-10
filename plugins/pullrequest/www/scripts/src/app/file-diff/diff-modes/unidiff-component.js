@@ -19,8 +19,9 @@
 
 import CodeMirror from "codemirror";
 import { getComments } from "../comments-state.js";
-
 import { getCollapsibleCodeSections } from "../../code-collapse/code-collapse-service.js";
+
+import "./modes.js";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
