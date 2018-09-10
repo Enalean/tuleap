@@ -27,33 +27,31 @@
         <div class="tlp-pane-container">
             <a v-bind:href="getRepositoryPath" class="git-repository-card-link">
                 <div class="tlp-pane-header git-repository-card-header">
-                    <div class="git-repository-card-header-line">
-                        <h2 class="tlp-pane-title git-repository-card-title"
-                            data-test="repository_name"
+                    <h2 class="tlp-pane-title git-repository-card-title"
+                        data-test="repository_name"
+                    >
+                        <span v-if="is_in_folder && ! isFolderDisplayMode"
+                            class="git-repository-card-path"
                         >
-                            <span v-if="is_in_folder && ! isFolderDisplayMode"
-                                class="git-repository-card-path"
-                            >
-                                {{ folder_path }}
-                            </span>
-                            {{ repository_label }}
-                        </h2>
-                        <div class="git-repository-links-spacer"></div>
-                        <pull-request-badge
-                            v-bind:number-pull-request="number_pull_requests"
-                            v-bind:repository-id="repository.id"
-                        />
-                        <a v-if="is_admin"
-                           v-bind:href="repository_admin_url"
-                           class="git-repository-card-admin-link"
-                        >
-                            <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
-                        </a>
-                    </div>
+                            {{ folder_path }}
+                        </span>
+                        {{ repository_label }}
+                    </h2>
+                    <div class="git-repository-links-spacer"></div>
+                    <pull-request-badge
+                    v-bind:number-pull-request="number_pull_requests"
+                    v-bind:repository-id="repository.id"
+                    />
                     <div class="git-repository-card-last-update">
                         <i class="fa fa-clock-o git-repository-card-last-update-icon"></i>
                         <translate>Last update %{ formatted_last_update_date }</translate>
                     </div>
+                    <a v-if="is_admin"
+                       v-bind:href="repository_admin_url"
+                       class="git-repository-card-admin-link"
+                    >
+                        <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
+                    </a>
                 </div>
                 <section class="tlp-pane-section" v-if="hasRepositoryDescription">
                     <p class="git-repository-card-description">

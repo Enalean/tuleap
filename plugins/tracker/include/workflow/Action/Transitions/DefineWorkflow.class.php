@@ -47,7 +47,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             echo '<p>';
 
             echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                'tracker' => (int)$this->tracker->id, 
+                'tracker' => (int)$this->tracker->id,
                 'func'    => Workflow::FUNC_ADMIN_TRANSITIONS
             )).'" method="POST">';
             echo '<SELECT name="field_id">';
