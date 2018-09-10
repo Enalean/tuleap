@@ -83,8 +83,8 @@ export default {
             get() {
                 return this.$store.state.display_mode;
             },
-            set() {
-                return this.$store.commit("toggleDisplayMode");
+            set(value) {
+                return this.$store.dispatch("setDisplayMode", value);
             }
         },
         ...mapGetters(["isLoading"])

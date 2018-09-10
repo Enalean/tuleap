@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { get, patch, put, post, recursiveGet, options };
+export { get, patch, put, post, recursiveGet, options, del };
 
 async function get(input, init = {}) {
     const method = "GET";
@@ -104,6 +104,13 @@ function patch(input, init = {}) {
 
 function post(input, init = {}) {
     const method = "POST",
+        { credentials = "same-origin" } = init;
+
+    return fetch(input, { method, credentials, ...init }).then(checkResponse);
+}
+
+function del(input, init = {}) {
+    const method = "DELETE",
         { credentials = "same-origin" } = init;
 
     return fetch(input, { method, credentials, ...init }).then(checkResponse);

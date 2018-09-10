@@ -52,12 +52,23 @@ document.addEventListener("DOMContentLoaded", () => {
             repositoriesForkUrl,
             projectId,
             isAdmin,
-            repositoriesOwners
+            repositoriesOwners,
+            displayMode
         } = vue_mount_point.dataset;
 
         setUrls(repositoriesAdministrationUrl, repositoryListUrl, repositoriesForkUrl);
-        buildRepositoryListPresenter(projectId, isAdmin, locale, JSON.parse(repositoriesOwners));
+        buildRepositoryListPresenter(
+            document.body.dataset.userId,
+            projectId,
+            isAdmin,
+            locale,
+            JSON.parse(repositoriesOwners)
+        );
 
-        new AppComponent().$mount(vue_mount_point);
+        new AppComponent({
+            propsData: {
+                displayMode
+            }
+        }).$mount(vue_mount_point);
     }
 });

@@ -6,6 +6,7 @@
         "patch",
         "put",
         "post",
+        "del",
         "recursive-get",
         "options"
     ]

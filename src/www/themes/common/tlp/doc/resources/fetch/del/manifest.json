@@ -1,0 +1,4 @@
+{
+    "label": "del",
+    "shortcode": "tlp.del(url_to_query, options)"
+}
