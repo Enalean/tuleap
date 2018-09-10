@@ -93,6 +93,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(FilterFormElementsThatCanBeCreatedForTracker::NAME);
             $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
+            $this->addHook(TRACKER_USAGE);
         }
 
         return parent::getHooksAndCallbacks();
@@ -278,6 +279,29 @@ class testmanagementPlugin extends Plugin
             new BackendLogger()
         );
         $config_creator->createConfigForProjectFromTemplate($to_project, $from_project, $params['tracker_mapping']);
+    }
+
+    /**
+     * @see TRACKER_USAGE
+     */
+    public function trackerUsage(array $params)
+    {
+        $tracker    = $params['tracker'];
+        $tracker_id = $tracker->getId();
+        $project    = $tracker->getProject();
+
+        static $config = null;
+        if ($config === null) {
+            $config = new Config(new Dao());
+        }
+
+        if ((int) $config->getCampaignTrackerId($project) === (int) $tracker_id ||
+            (int) $config->getIssueTrackerId($project) === (int) $tracker_id ||
+            (int) $config->getTestDefinitionTrackerId($project) === (int) $tracker_id ||
+            (int) $config->getTestExecutionTrackerId($project) === (int) $tracker_id) {
+            $params['result']['message']        = $this->getPluginInfo()->getPluginDescriptor()->getFullName();
+            $params['result']['can_be_deleted'] = false;
+        }
     }
 
     /**
