@@ -3,12 +3,28 @@
 
 .pull-request-unidiff {
     height: 40vh;
+
+    // scss-lint:disable SelectorFormat
+    .CodeMirror-gutter-wrapper:hover > .CodeMirror-gutter-elt {
+        background: $tlp-theme-color;
+        color: $tlp-ui-white;
+        font-weight: 600;
+        cursor: pointer;
+    }
 }
 
 .pull-request-side-by-side-diff {
     width: 50%;
     height: 40vh;
     float: left;
+
+    // scss-lint:disable SelectorFormat
+    .pull-request-side-by-side-diff-can-comment > .CodeMirror-gutter-elt:hover {
+        background: $tlp-theme-color;
+        color: $tlp-ui-white;
+        font-weight: 600;
+        cursor: pointer;
+    }
 }
 
 .pull-request-file-diff {
@@ -38,20 +54,6 @@
         color: #8c8c8c;
         font-size: 11px;
         text-align: center;
-
-        &:hover {
-            background: $tlp-theme-color;
-            color: $tlp-ui-white;
-            font-weight: 600;
-            cursor: pointer;
-        }
-    }
-
-    .CodeMirror-gutter-wrapper:hover .CodeMirror-gutter-elt {
-        background: $tlp-theme-color;
-        color: $tlp-ui-white;
-        font-weight: 600;
-        cursor: pointer;
     }
 }
 
