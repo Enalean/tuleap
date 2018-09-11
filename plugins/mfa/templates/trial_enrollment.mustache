@@ -1,0 +1,7 @@
+<form method="post">
+    {{# csrf_token }}
+        {{> csrf_token_input }}
+    {{/ csrf_token }}
+    <input type="text" name="code" required>
+    <input type="submit">
+</form>

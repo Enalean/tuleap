@@ -42,4 +42,15 @@ class TOTPEnrollmentDAO extends DataAccessObject
             $secret
         );
     }
+
+    /**
+     * @return false|string
+     */
+    public function getSecretByUserID($user_id)
+    {
+        return $this->getDB()->single(
+            'SELECT secret FROM plugin_mfa_enrollment_totp WHERE user_id = ?',
+            [$user_id]
+        );
+    }
 }
