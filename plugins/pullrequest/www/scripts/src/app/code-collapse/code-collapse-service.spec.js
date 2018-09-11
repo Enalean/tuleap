@@ -7,8 +7,6 @@ import {
     getCollapsibleSectionsSideBySide
 } from "./code-collapse-service.js";
 
-import "angular-mocks";
-
 describe("code-collapse-service", () => {
     describe("isThereACommentOnThisLine", () => {
         it("Given a line number and a collection of comments, Then it should return true if a comment is on the given line, false otherwise.", () => {
