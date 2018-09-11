@@ -116,15 +116,31 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         return true;
     }
 
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
+        $tracker = $this->getTracker();
+        if ($tracker === null) {
+            return '';
+        }
+        $project_id = $tracker->getGroupId();
+
+        static $cache = [];
+        if (isset($cache[$project_id][$value])) {
+            return $cache[$project_id][$value];
+        }
+
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
         $format   = $this->getRightBodyFormat($artifact, $value);
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp       = Codendi_HTMLPurifier::instance();
 
         if ($format == Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-            return $hp->purify($value, CODENDI_PURIFIER_FULL, $this->getTracker()->getGroupId());
+            $changeset_value = $hp->purify($value, CODENDI_PURIFIER_FULL, $project_id);
+        } else {
+            $changeset_value = $hp->purify($value, CODENDI_PURIFIER_BASIC, $project_id);
         }
-        return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
+
+        $cache[$project_id][$value] = $changeset_value;
+        return $changeset_value;
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report) {

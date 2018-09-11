@@ -246,7 +246,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param mixed $value the value of the field
      * @return string
      */
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null) {
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $report=null, $from_aid = null)
+    {
+        static $cache = [];
+
+        if (isset($cache[$this->getId()][$changeset_id])) {
+            return $cache[$this->getId()][$changeset_id];
+        }
 
         //We have to fetch all values of the changeset as we are a list of value
         //This is the case only if we are multiple but an old changeset may
@@ -258,7 +264,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 $values[] = $val;
             }
         }
-        return implode(', ', $values);
+        $changeset_value = implode(', ', $values);
+        $cache[$this->getId()][$changeset_id] = $changeset_value;
+        return $changeset_value;
     }
 
     /**
