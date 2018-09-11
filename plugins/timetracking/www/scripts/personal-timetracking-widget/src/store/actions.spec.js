@@ -48,7 +48,7 @@ describe("Store actions", () => {
     });
 
     describe("loadFirstBatchOfTimes - success", () => {
-        it("Given a succes response, When times are received, Then no message error is reveived", async () => {
+        it("Given a success response, When times are received, Then no message error is reveived", async () => {
             let times = [
                 [
                     {
@@ -134,8 +134,8 @@ describe("Store actions", () => {
             });
         });
 
-        describe("addTime - succes", () => {
-            it("Given a rest error, When a json error message is received, Then the message is extracted in the component 's rest_feedback private property.", async () => {
+        describe("addTime - success", () => {
+            it("Given no rest error, then a success message is displayed", async () => {
                 const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
                 rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
 
@@ -154,15 +154,66 @@ describe("Store actions", () => {
                     "Time successfully added"
                 ]);
                 expect(loadFirstBatchOfTimes).toHaveBeenCalled();
-                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback", [
+                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+            });
+        });
+
+        describe("updateTime - rest errors", () => {
+            it("Given a rest error, When a json error message is received, Then it should add the json error message on rest_feedback", async () => {
+                mockFetchError(tlp.put, {
+                    error_json: {
+                        error: {
+                            code: 403,
+                            message: "Forbidden"
+                        }
+                    }
+                });
+
+                await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
+                    "403 Forbidden",
+                    "danger"
+                ]);
+            });
+
+            it("Given a rest error ,When no error message is provided, Then it should add a generic error message on rest_feedback", async () => {
+                mockFetchError(tlp.put, {});
+
+                await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
                     "An error occured",
                     "danger"
                 ]);
             });
         });
 
+        describe("updateTime - success", () => {
+            it("Given no rest error, then a success message is displayed", async () => {
+                const loadFirstBatchOfTimes = jasmine.createSpy("loadFirstBatchOfTimes");
+                rewire$loadFirstBatchOfTimes(loadFirstBatchOfTimes);
+
+                let time = {
+                    artifact: {},
+                    project: {},
+                    id: 1,
+                    minutes: 20
+                };
+                mockFetchSuccess(tlp.put, {
+                    return_json: time
+                });
+
+                await actions.updateTime(context, ["2018-01-01", 1, "00:20", "oui"]);
+                expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
+                    time,
+                    "Time successfully updated"
+                ]);
+                expect(loadFirstBatchOfTimes).toHaveBeenCalled();
+                expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
+            });
+        });
+
         describe("reloadTimes", () => {
-            it("Given a succes response, When times are received, Then no message error is reveived and reloadTimes' mutations are called", async () => {
+            it("Given a success response, When times are received, Then no message error is reveived and reloadTimes' mutations are called", async () => {
                 let times = [
                     [
                         {

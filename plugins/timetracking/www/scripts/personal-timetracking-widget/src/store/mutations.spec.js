@@ -81,5 +81,26 @@ describe("Store mutations", () => {
             expect(state.rest_feedback.message).toEqual("");
             expect(state.rest_feedback.type).toEqual("");
         });
+
+        it("Given a widget with states updated with error message, Then we call replaceCurrentTime, states must change", () => {
+            state.current_times = [
+                {
+                    artifact: {},
+                    project: {},
+                    id: 1,
+                    minutes: 20
+                }
+            ];
+            const updated_time = {
+                artifact: {},
+                project: {},
+                id: 1,
+                minutes: 40
+            };
+            mutations.replaceInCurrentTimes(state, [updated_time, "Time successfully updated"]);
+            expect(state.current_times).toEqual([updated_time]);
+            expect(state.rest_feedback.message).toEqual("Time successfully updated");
+            expect(state.rest_feedback.type).toEqual("success");
+        });
     });
 });

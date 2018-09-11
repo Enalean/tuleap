@@ -72,6 +72,9 @@ msgstr "Le temps est requis"
 msgid "Time successfully added"
 msgstr "Temps ajouté avec succès"
 
+msgid "Time successfully updated"
+msgstr "Temps mis à jour avec succès"
+
 msgid "Times"
 msgstr "Temps"
 
