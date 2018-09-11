@@ -116,7 +116,7 @@ project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'
 project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
 project_admin_index	member_request_delegation_ugroups_non_admins	Certains groupes d'utilisateurs contiennent des utilisateurs non admins du projet ($1 non admin du projet en total, ils ne vont pas reçevoir les demandes de permission).
 project_admin_index	member_request_delegation_ugroups_msg	Le(s) groupe(s) d'utilisateur à  notifier pour la délégation d'opération d'admin ($1) ont été modifiés.
-project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message pertinent afin d'aider l'administateur.
+project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message pertinent afin d'aider l'administrateur.
 project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par défaut qui va être affiché aux utilisateurs qui requièrent l'accès à votre projet. Vous pouvez le personnaliser.
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
