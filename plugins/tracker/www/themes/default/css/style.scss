@@ -1402,6 +1402,10 @@ div.tracker-admin-field-controls {
         }
     }
 
+    .tracker_formelement_read_and_edit_edition_section {
+        display: none;
+    }
+
     &.in-edition {
         .tracker_formelement_edit {
             display: none;

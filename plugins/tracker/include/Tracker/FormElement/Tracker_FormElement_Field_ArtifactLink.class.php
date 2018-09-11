@@ -509,6 +509,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     ) {
         $current_user = $this->getCurrentUser();
         $html = '';
+        if (! $read_only) {
+            $html = '<div class="tracker_formelement_read_and_edit">';
+        }
+
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
@@ -532,11 +536,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $html .= '<h5 class="artifack_link_subtitle">'.$this->getWidgetTitle($reverse_artifact_links).'</h5>';
 
         $html_name_new = '';
-        $html_name_del = '';
 
         if ($name) {
             $html_name_new = 'name="'. $name .'[new_values]"';
-            $html_name_del = 'name="'. $name .'[removed_values]';
         }
 
         $hp              = Codendi_HTMLPurifier::instance();
@@ -544,6 +546,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         if (! $read_only) {
             $read_only_class = '';
+            $html .= '<div class="tracker_formelement_read_and_edit_edition_section">';
             $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
@@ -580,6 +583,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
             }
+            $html .= '</div>';
         }
 
         $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
@@ -978,12 +982,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     public function fetchArtifactValueWithEditionFormIfEditable(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array())
     {
-        $artifact_links_to_render = $this->getArtifactLinksToRenderFromChangesetValue($value);
-
-        $hidden_artifact_value = "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . ">" .
-            $this->fetchLinks($artifact, $artifact_links_to_render, $submitted_values) .
-            "</div>";
-        return $hidden_artifact_value . $this->fetchArtifactValueReadOnly($artifact, $value, $artifact_links_to_render) ;
+        return $this->fetchArtifactValue($artifact, $value, $submitted_values) .
+            "<div class='tracker_hidden_edition_field' data-field-id=" . $this->getId() . '></div>';
     }
 
     private function fetchLinksReadOnly(Tracker_Artifact $artifact, ArtifactLinksToRender $artifact_links_to_render)
