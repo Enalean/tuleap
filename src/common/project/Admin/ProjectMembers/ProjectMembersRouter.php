@@ -67,7 +67,7 @@ class ProjectMembersRouter
                 break;
             case 'import':
                 $this->csrf_token->check();
-                $this->members_controller->importMembers();
+                $this->members_controller->importMembers($request);
                 $this->redirect($request);
                 break;
             default:

@@ -267,7 +267,7 @@ class ProjectMembersController
         return $this->ugroup_presenters[$ugroup_id];
     }
 
-    public function importMembers()
+    public function importMembers(HTTPRequest $request)
     {
         $import_file = $_FILES['user_filename']['tmp_name'];
 
@@ -279,6 +279,8 @@ class ProjectMembersController
         $user_collection = $this->user_importer->parse($import_file);
 
         $this->user_importer->updateDB($user_collection->getUsers());
+
+        $this->user_group_bindings->reloadUgroupBindingInProject($request->getProject());
     }
 
     private function canUserSeeUGroups(PFUser $user, Project $project)
