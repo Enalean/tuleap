@@ -64,13 +64,19 @@ function CodeMirrorHelperService(
         });
     }
 
-    function showCommentForm(codemirror, line_number, file_path, pull_request) {
+    function showCommentForm(
+        code_mirror,
+        unidiff_offset,
+        display_line_number,
+        file_path,
+        pull_request_id
+    ) {
         const child_scope = $rootScope.$new(true);
         child_scope.submitCallback = comment_text => {
-            return postComment(line_number, comment_text, file_path, pull_request)
+            return postComment(unidiff_offset, comment_text, file_path, pull_request_id)
                 .then(comment => {
                     addComment(comment);
-                    return self.displayInlineComment(codemirror, comment, line_number);
+                    return self.displayInlineComment(code_mirror, comment, display_line_number);
                 })
                 .then(() => {
                     TooltipService.setupTooltips();
@@ -81,16 +87,38 @@ function CodeMirrorHelperService(
                                 codemirror-widget="codemirror_widget"
             ></new-inline-comment>
         `)(child_scope)[0];
-        child_scope.codemirror_widget = codemirror.addLineWidget(
-            line_number,
-            new_inline_comment_element,
-            {
-                coverGutter: true
-            }
-        );
+
+        const options = {
+            coverGutter: true
+        };
+        const line_handle = code_mirror.getLineHandle(display_line_number);
+        const placeholder_index = getPlaceholderWidgetIndex(line_handle);
+        if (placeholder_index !== -1) {
+            options.insertAt = placeholder_index;
+        }
+        // Wait for angular to actually render the component so that it has a height
+        return $timeout(() => {
+            const widget = code_mirror.addLineWidget(
+                display_line_number,
+                new_inline_comment_element,
+                options
+            );
+            child_scope.codemirror_widget = widget;
+            return widget;
+        });
     }
 
-    function displayPlaceholderWidget(code_mirror, line_handle, widget_height, display_above_line) {
+    function getPlaceholderWidgetIndex(handle) {
+        if (!handle.widgets) {
+            return -1;
+        }
+        return handle.widgets.findIndex(widget => {
+            return widget.node.classList.contains("pull-request-file-diff-placeholder-block");
+        });
+    }
+
+    function displayPlaceholderWidget(widget_params) {
+        const { code_mirror, handle, widget_height, display_above_line } = widget_params;
         const options = {
             coverGutter: true,
             above: display_above_line
@@ -99,13 +127,12 @@ function CodeMirrorHelperService(
         elem.classList.add("pull-request-file-diff-placeholder-block");
         elem.style = `height: ${widget_height}px`;
 
-        code_mirror.addLineWidget(line_handle, elem, options);
+        code_mirror.addLineWidget(handle, elem, options);
     }
 
-    function postComment(line_number, comment_text, file_path, pull_request) {
-        const unidiff_offset = Number(line_number) + 1;
+    function postComment(unidiff_offset, comment_text, file_path, pull_request_id) {
         return FileDiffRestService.postInlineComment(
-            pull_request,
+            pull_request_id,
             file_path,
             unidiff_offset,
             comment_text

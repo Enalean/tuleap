@@ -18,7 +18,10 @@
  */
 
 import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
-import { getWidgetCreationParams } from "./side-by-side-widget-builder.js";
+import {
+    getWidgetCreationParams,
+    getUnmovedLineWidgetCreationParams
+} from "./side-by-side-widget-builder.js";
 import {
     rewire$getGroupLines,
     rewire$getLineHandles,
@@ -283,6 +286,33 @@ describe("side-by-side widget builder", () => {
                     widget_height: 40,
                     display_above_line: true
                 });
+            });
+        });
+    });
+
+    describe("getUnmovedLineWidgetCreationParams()", () => {
+        it("Given an unmoved line and given it had already a placeholder on the right side, then it will return the left handle to attach another placeholder and the height of the line minus that of the placeholder to keep the scroll in sync", () => {
+            const unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
+            const left_handle = { height: 20 };
+            const classList = jasmine.createSpyObj("classList", ["contains"]);
+            classList.contains
+                .withArgs("pull-request-file-diff-placeholder-block")
+                .and.returnValue(true);
+            const placeholder_widget = {
+                node: {
+                    classList
+                },
+                height: 48
+            };
+            const right_handle = { height: 108, widgets: [placeholder_widget] };
+            getLineHandles.and.returnValue({ left_handle, right_handle });
+
+            const widget_params = getUnmovedLineWidgetCreationParams(unmoved_line);
+
+            expect(widget_params).toEqual({
+                handle: left_handle,
+                widget_height: 40,
+                display_above_line: false
             });
         });
     });

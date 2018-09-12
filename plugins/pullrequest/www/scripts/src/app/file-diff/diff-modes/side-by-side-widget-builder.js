@@ -59,6 +59,30 @@ function getWidgetCreationParams(line, left_code_mirror, right_code_mirror) {
     };
 }
 
+function getUnmovedLineWidgetCreationParams(line) {
+    const { left_handle, right_handle } = getLineHandles(line);
+
+    let widget_height = right_handle.height - left_handle.height;
+    const right_placeholder_widget = getPlaceholderWidget(right_handle);
+    if (right_placeholder_widget) {
+        widget_height -= right_placeholder_widget.height;
+    }
+    return {
+        handle: left_handle,
+        widget_height,
+        display_above_line: false
+    };
+}
+
+function getPlaceholderWidget(handle) {
+    if (!handle.widgets) {
+        return null;
+    }
+    return handle.widgets.find(widget => {
+        return widget.node.classList.contains("pull-request-file-diff-placeholder-block");
+    });
+}
+
 function getCodeMirror(group, left_code_mirror, right_code_mirror) {
     return group.type === ADDED_GROUP ? left_code_mirror : right_code_mirror;
 }
@@ -127,4 +151,4 @@ function lineIsUnmoved(line) {
     return line.new_offset !== null && line.old_offset !== null;
 }
 
-export { getWidgetCreationParams };
+export { getWidgetCreationParams, getUnmovedLineWidgetCreationParams };

@@ -81,17 +81,19 @@ function controller(
             );
         });
 
-        const gutterClick = (codemirror, line_number) => {
-            CodeMirrorHelperService.showCommentForm(
-                codemirror,
-                line_number,
-                self.filePath,
-                self.pullRequestId
-            );
-        };
-        unidiff_codemirror.on("gutterClick", gutterClick);
+        unidiff_codemirror.on("gutterClick", addNewComment);
 
         TooltipService.setupTooltips();
+    }
+
+    function addNewComment(code_mirror, line_number) {
+        CodeMirrorHelperService.showCommentForm(
+            code_mirror,
+            Number(line_number) + 1,
+            line_number,
+            self.filePath,
+            self.pullRequestId
+        );
     }
 
     function displayUnidiff(unidiff_codemirror, file_lines) {

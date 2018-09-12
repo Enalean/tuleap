@@ -23,9 +23,15 @@ import { getComments } from "../comments-state.js";
 import {
     initDataAndCodeMirrors,
     isFirstLineOfGroup,
-    getCommentLine
+    getCommentLine,
+    getLineHandles,
+    getRightLine,
+    getLeftLine
 } from "./side-by-side-lines-state.js";
-import { getWidgetCreationParams } from "./side-by-side-widget-builder.js";
+import {
+    getWidgetCreationParams,
+    getUnmovedLineWidgetCreationParams
+} from "./side-by-side-widget-builder.js";
 import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/code-collapse-service.js";
 
@@ -72,7 +78,6 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
         synchronize(left_code_mirror, right_code_mirror);
 
         const collapsible_sections = getCollapsibleSectionsSideBySide(file_lines, getComments());
-
         CodeMirrorHelperService.collapseCommonSectionsSideBySide(
             left_code_mirror,
             right_code_mirror,
@@ -94,6 +99,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
                 displayLine(line, left_code_mirror, right_code_mirror);
                 displayOppositePlaceholder(line, line_number, left_code_mirror, right_code_mirror);
             });
+
+            handleCodeMirrorEvents(left_code_mirror, right_code_mirror);
         });
     }
 
@@ -124,6 +131,101 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
         );
     }
 
+    function handleCodeMirrorEvents(left_code_mirror, right_code_mirror) {
+        left_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
+            const placeholder = getOppositePlaceholderWidgetForLeft(line_number);
+            addHeightToOppositePlaceholder(placeholder, line_widget.height);
+        });
+        right_code_mirror.on("lineWidgetAdded", (code_mirror, line_widget, line_number) => {
+            const line = getRightLine(line_number);
+            const { left_handle } = getLineHandles(line);
+            if (!left_handle.widgets) {
+                const widget_params = getUnmovedLineWidgetCreationParams(line);
+                widget_params.code_mirror = left_code_mirror;
+                CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
+                return;
+            }
+            const placeholder = left_handle.widgets[0];
+            addHeightToOppositePlaceholder(placeholder, line_widget.height);
+        });
+        left_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
+            const placeholder = getOppositePlaceholderWidgetForLeft(line_number);
+            subtractHeightToOppositePlaceholder(placeholder, line_widget.height);
+        });
+        right_code_mirror.on("lineWidgetCleared", (code_mirror, line_widget, line_number) => {
+            const placeholder = getOppositePlaceholderWidgetForRight(line_number);
+            if (placeholder) {
+                subtractHeightToOppositePlaceholder(placeholder, line_widget.height);
+            }
+        });
+
+        left_code_mirror.on("gutterClick", addCommentOnLeftCodeMirror);
+        right_code_mirror.on("gutterClick", addCommentOnRightCodeMirror);
+    }
+
+    function getOppositePlaceholderWidgetForLeft(line_number) {
+        const line = getLeftLine(line_number);
+        const { right_handle } = getLineHandles(line);
+        // Since we cannot add comments on unmoved lines on the left,
+        // the opposite line should always have a placeholder
+        return right_handle.widgets[0];
+    }
+
+    function getOppositePlaceholderWidgetForRight(line_number) {
+        const line = getRightLine(line_number);
+        const { left_handle } = getLineHandles(line);
+        if (!left_handle.widgets) {
+            return;
+        }
+
+        return left_handle.widgets[0];
+    }
+
+    function addHeightToOppositePlaceholder(placeholder, widget_height) {
+        adjustOppositePlaceholderHeight(placeholder, placeholder.height + widget_height);
+    }
+
+    function subtractHeightToOppositePlaceholder(placeholder, widget_height) {
+        adjustOppositePlaceholderHeight(placeholder, placeholder.height - widget_height);
+    }
+
+    function adjustOppositePlaceholderHeight(placeholder, widget_height) {
+        placeholder.node.style = `height: ${widget_height}px`;
+        placeholder.changed();
+    }
+
+    function addCommentOnLeftCodeMirror(left_code_mirror, line_number) {
+        const line = getLeftLine(line_number);
+        if (!line || lineIsUnmoved(line)) {
+            // As of today, We can't tell the backend to store comments on the
+            // left side. So, we don't allow it.
+            return;
+        }
+
+        CodeMirrorHelperService.showCommentForm(
+            left_code_mirror,
+            line.unidiff_offset,
+            line_number,
+            self.filePath,
+            self.pullRequestId
+        );
+    }
+
+    function addCommentOnRightCodeMirror(right_code_mirror, line_number) {
+        const line = getRightLine(line_number);
+        if (!line) {
+            return;
+        }
+
+        CodeMirrorHelperService.showCommentForm(
+            right_code_mirror,
+            line.unidiff_offset,
+            line_number,
+            self.filePath,
+            self.pullRequestId
+        );
+    }
+
     function displayOppositePlaceholder(line, line_number, left_code_mirror, right_code_mirror) {
         if (!lineIsUnmoved(line) && !isFirstLineOfGroup(line)) {
             return;
@@ -133,13 +235,7 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             return;
         }
 
-        const { code_mirror, handle, widget_height, display_above_line } = widget_params;
-        CodeMirrorHelperService.displayPlaceholderWidget(
-            code_mirror,
-            handle,
-            widget_height,
-            display_above_line
-        );
+        CodeMirrorHelperService.displayPlaceholderWidget(widget_params);
     }
 
     function lineIsUnmoved(line) {
@@ -160,6 +256,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
                     "background",
                     "pull-request-file-diff-deleted-lines"
                 );
+                left_code_mirror.addLineClass(
+                    line.old_offset - 1,
+                    "gutter",
+                    "pull-request-side-by-side-diff-can-comment"
+                );
             }
         }
 
@@ -168,6 +269,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
                 line.new_offset - 1,
                 "gutter-lines",
                 document.createTextNode(line.new_offset)
+            );
+            right_code_mirror.addLineClass(
+                line.new_offset - 1,
+                "gutter",
+                "pull-request-side-by-side-diff-can-comment"
             );
 
             if (line.old_offset === null) {

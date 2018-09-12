@@ -24,11 +24,13 @@ let diff_lines;
 let first_line_to_group_map;
 let line_to_group_map;
 let line_to_line_handles_map;
+let left_lines;
+let right_lines;
 
 function initDataAndCodeMirrors(file_lines, left_code_mirror, right_code_mirror) {
     diff_lines = file_lines;
-    const left_lines = file_lines.filter(line => line.old_offset !== null);
-    const right_lines = file_lines.filter(line => line.new_offset !== null);
+    left_lines = file_lines.filter(line => line.old_offset !== null);
+    right_lines = file_lines.filter(line => line.new_offset !== null);
 
     const maps = buildLineGroups(diff_lines);
     first_line_to_group_map = maps.first_line_to_group_map;
@@ -78,6 +80,14 @@ function getNextLine(line) {
     return diff_lines[line.unidiff_offset];
 }
 
+function getRightLine(line_number) {
+    return right_lines[line_number];
+}
+
+function getLeftLine(line_number) {
+    return left_lines[line_number];
+}
+
 export {
     initDataAndCodeMirrors,
     isFirstLineOfGroup,
@@ -86,5 +96,7 @@ export {
     getCommentLine,
     getGroupOfLine,
     hasNextLine,
-    getNextLine
+    getNextLine,
+    getRightLine,
+    getLeftLine
 };
