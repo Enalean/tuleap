@@ -125,7 +125,7 @@ function CodeMirrorHelperService(
         };
         const elem = $document[0].createElement("div");
         elem.classList.add("pull-request-file-diff-placeholder-block");
-        elem.style = `height: ${widget_height}px`;
+        elem.style.height = `${widget_height}px`;
 
         code_mirror.addLineWidget(handle, elem, options);
     }
