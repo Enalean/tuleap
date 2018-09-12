@@ -53,8 +53,6 @@ class UserInfoResponseTest extends TestCase
 
     public function testUserInfoResponseIsParsed()
     {
-        $http_response = \Mockery::mock(ResponseInterface::class);
-        $http_response->shouldReceive('getHeaderLine')->andReturns('application/json');
         $claims = [
             'sub'                => '248289761001',
             'name'               => 'Jane Doe',
@@ -63,10 +61,14 @@ class UserInfoResponseTest extends TestCase
             'preferred_username' => 'j.doe',
             'email'              => 'janedoe@example.com',
         ];
-        $http_response->shouldReceive('getBody')->andReturns(json_encode($claims));
+        foreach (['application/json', 'application/json; charset=UTF-8'] as $content_type) {
+            $http_response = \Mockery::mock(ResponseInterface::class);
+            $http_response->shouldReceive('getHeaderLine')->andReturns($content_type);
+            $http_response->shouldReceive('getBody')->andReturns(json_encode($claims));
 
-        $user_info_response = UserInfoResponse::buildFromHTTPResponse($http_response);
-        $this->assertSame($claims, $user_info_response->getClaims());
+            $user_info_response = UserInfoResponse::buildFromHTTPResponse($http_response);
+            $this->assertSame($claims, $user_info_response->getClaims());
+        }
     }
 
     public function testAnEmptyUserInfoResponseCanBeProvided()

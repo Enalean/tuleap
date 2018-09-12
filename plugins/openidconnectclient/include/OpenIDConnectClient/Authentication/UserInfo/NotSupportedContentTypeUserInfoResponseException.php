@@ -24,6 +24,6 @@ final class NotSupportedContentTypeUserInfoResponseException extends UserInfoRes
 {
     public function __construct($content_type)
     {
-        parent::__construct('Content type of the user info response msut be application/json, got ' . $content_type);
+        parent::__construct('Content type of the user info response must be application/json, got ' . $content_type);
     }
 }
