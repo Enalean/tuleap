@@ -27,6 +27,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
@@ -67,7 +69,9 @@ class FlowTest extends TestCase
             $provider_manager,
             \Mockery::spy(TokenRequestCreator::class),
             \Mockery::spy(TokenRequestSender::class),
-            new IDTokenVerifier()
+            new IDTokenVerifier(),
+            \Mockery::spy(UserInfoRequestCreator::class),
+            \Mockery::spy(UserInfoRequestSender::class)
         );
 
         $request_uri = $flow->getAuthorizationRequestUri($provider, 'return_to');
@@ -101,7 +105,9 @@ class FlowTest extends TestCase
             $provider_manager,
             \Mockery::spy(TokenRequestCreator::class),
             \Mockery::spy(TokenRequestSender::class),
-            new IDTokenVerifier()
+            new IDTokenVerifier(),
+            \Mockery::spy(UserInfoRequestCreator::class),
+            \Mockery::spy(UserInfoRequestSender::class)
         );
 
         $request_uri  = $flow->getAuthorizationRequestUri($provider, 'return_to');

@@ -37,6 +37,8 @@ use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
+use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
 use Tuleap\OpenIDConnectClient\Login;
 use Tuleap\OpenIDConnectClient\Login\IncoherentDataUniqueProviderException;
@@ -202,13 +204,17 @@ class openidconnectclientPlugin extends Plugin {
         );
         $id_token_verifier = new IDTokenVerifier();
         $uri_generator     = new Generator();
+        $request_factory   = MessageFactoryBuilder::build();
+        $http_client       = HttpClientFactory::createClient();
         $flow              = new Flow(
             $state_manager,
             new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
-            new TokenRequestCreator(MessageFactoryBuilder::build()),
-            new TokenRequestSender(HttpClientFactory::createClient()),
-            $id_token_verifier
+            new TokenRequestCreator($request_factory),
+            new TokenRequestSender($http_client),
+            $id_token_verifier,
+            new UserInfoRequestCreator($request_factory),
+            new UserInfoRequestSender($http_client)
         );
         return $flow;
     }
