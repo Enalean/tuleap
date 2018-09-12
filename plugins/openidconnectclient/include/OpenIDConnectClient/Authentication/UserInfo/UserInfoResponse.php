@@ -50,7 +50,7 @@ class UserInfoResponse
     public static function buildFromHTTPResponse(ResponseInterface $response)
     {
         $content_type = $response->getHeaderLine('content-type');
-        if (strtolower($content_type) !== 'application/json') {
+        if (stripos($content_type, 'application/json') === false) {
             throw new NotSupportedContentTypeUserInfoResponseException($content_type);
         }
         $user_info_response_body = (string) $response->getBody();
