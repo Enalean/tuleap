@@ -190,7 +190,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
     }
 
     function adjustOppositePlaceholderHeight(placeholder, widget_height) {
-        placeholder.node.style = `height: ${widget_height}px`;
+        const height = Math.max(widget_height, 0);
+        placeholder.node.style.height = `${height}px`;
         placeholder.changed();
     }
 

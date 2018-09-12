@@ -26,6 +26,7 @@ import PullRequestDirective from "./pull-request/pull-request-directive.js";
 import PullRequestHeaderDirective from "./pull-request/header/header-directive.js";
 import PullRequestRefsDirective from "./pull-request-refs/pull-request-refs.directive.js";
 import TuleapUsernameDirective from "./tuleap-username/tuleap-username-directive.js";
+import AutofocusInputDirective from "./autofocus-input-directive.js";
 
 import UserRestService from "./user-rest-service.js";
 import TooltipService from "./tooltip-service.js";
@@ -80,6 +81,7 @@ export default angular
     .directive("pullRequestHeader", PullRequestHeaderDirective)
     .directive("pullRequestRefs", PullRequestRefsDirective)
     .directive("tuleapUsername", TuleapUsernameDirective)
+    .directive("autofocusInput", AutofocusInputDirective)
 
     .service("UserRestService", UserRestService)
     .service("ErrorModalService", ErrorModalService)

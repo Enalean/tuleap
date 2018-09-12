@@ -28,16 +28,13 @@ export default {
     }
 };
 
-controller.$inject = ["$element"];
-
-function controller($element) {
+function controller() {
     const self = this;
     Object.assign(self, {
         comment: "",
         is_loading: false,
         submit,
-        cancel,
-        $onInit: () => $element.find(".pull-request-new-inline-comment-text").focus()
+        cancel
     });
 
     function submit() {
