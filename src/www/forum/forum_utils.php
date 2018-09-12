@@ -660,7 +660,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 	$rows=db_numrows($result);
 
 	if ($result && $rows > 0) {
-		$tolist=implode(result_column_to_array($result),', ');
+		$to_list = result_column_to_array($result);
 
 		$sql="SELECT groups.unix_group_name,user.user_name,user.realname,forum_group_list.forum_name,".
 			"forum.group_forum_id,forum.thread_id,forum.subject,forum.date,forum.body ".
@@ -676,8 +676,9 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
             $mail = new Codendi_Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . util_unconvert_htmlspecialchars(db_result($result,0,'forum_name'))." - ". db_result($result,0, 'user_name') ."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
-            $mail->setBcc($tolist);
-            
+            foreach ($to_list as $to) {
+                $mail->setBcc($to);
+            }
 	        $url1 = get_server_url()."/forum/monitor.php?forum_id=".$forum_id;
 	        $url2 = get_server_url()."/forum/monitor_thread.php?forum_id=".$forum_id;
 	        $body = $Language->getText('forum_forum_utils','read_and_respond').": ".
