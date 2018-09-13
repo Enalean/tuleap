@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS plugin_openidconnectclient_unlinked_account (
 INSERT INTO plugin_openidconnectclient_provider(name, authorization_endpoint, token_endpoint, user_info_endpoint)
 VALUES (
     'Google',
-    'https://accounts.google.com/o/oauth2/auth',
-    'https://accounts.google.com/o/oauth2/token',
-    'https://www.googleapis.com/oauth2/v2/userinfo'
+    'https://accounts.google.com/o/oauth2/v2/auth',
+    'https://oauth2.googleapis.com/token',
+    'https://www.googleapis.com/oauth2/v3/userinfo'
 );
