@@ -1,2 +1,0 @@
-RewriteRule /http-bind  http://%sys_default_domain%:7070/http-bind/ [P]
-RewriteRule /http-bind/ http://%sys_default_domain%:7070/http-bind/ [P]

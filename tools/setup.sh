@@ -913,10 +913,8 @@ do
 done
 
 mysql_host_and_port="$mysql_host"
-mysql_openfire_host_and_port="$mysql_host:$mysql_default_port"
 if [ ! -z "$mysql_port" ]; then
     mysql_host_and_port="$mysql_host_and_port:$mysql_port"
-    mysql_openfire_host_and_port="$mysql_host_and_port"
 fi
 
 if [ ! -z "$mysql_remote_server" ]; then
@@ -961,12 +959,6 @@ else
         echo "Bye now!"
         exit 1
     fi
-fi
-
-# Check if IM plugin is installed (works only on rhel).
-enable_plugin_im="false"
-if rpm -q openfire >/dev/null; then
-    enable_plugin_im="true"
 fi
 
 enable_plugin_tracker="false"
@@ -1089,12 +1081,6 @@ if [ "$auto_passwd" = "true" ]; then
         echo "Mailman siteadmin: $mm_passwd" >> $passwd_file
     fi
 
-    # Openfire (only if installed)
-    if [ "$enable_plugin_im" = "true" ]; then
-        openfire_passwd=$(generate_passwd)
-        echo "Openfire DB user (openfireadm): $openfire_passwd" >> $passwd_file
-    fi
-
     # Only for ftp/ssh/cvs
     dbauth_passwd=$(generate_passwd)
     echo "Libnss-mysql DB user (dbauthuser): $dbauth_passwd" >> $passwd_file
@@ -1117,10 +1103,6 @@ else
 
     if [ "$enable_core_mailman" = "true" ]; then
 	mm_passwd=$(input_password "mailman user")
-    fi
-
-    if [ "$enable_plugin_im" = "true" ]; then
-	openfire_passwd=$(input_password "Openfire DB user")
     fi
 
     echo "DB authentication user: MySQL user that will be used for user authentication"
@@ -1425,35 +1407,6 @@ fi
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
     echo "Install Graphontrackersv5"
     su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php graphontrackersv5' -l codendiadm
-fi
-
-# IM plugin
-if [ "$enable_plugin_im" = "true" ]; then
-    echo "Install IM"
-
-    # Create openfireadm MySQL user
-    $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'$mysql_httpd_host' identified by '$openfire_passwd';
-GRANT SELECT ON $PROJECT_NAME.user to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON $PROJECT_NAME.groups to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON $PROJECT_NAME.user_group to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON $PROJECT_NAME.session to 'openfireadm'@'$mysql_httpd_host';
-FLUSH PRIVILEGES;
-EOF
-    # Install plugin
-    su -c '/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php IM' -l codendiadm
-
-    # Initialize Jabbex
-    build_dir /etc/$PROJECT_NAME/plugins/IM/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
-    IM_ADMIN_GROUP='imadmingroup'
-    IM_ADMIN_USER='imadmin-bot'
-    IM_ADMIN_USER_PW='1M@dm1n'
-    IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_openfire_host_and_port/openfire -cdb jdbc:mysql://$mysql_openfire_host_and_port/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW -fdn $PROJECT_NAME
-    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
-    # Enable service
-    enable_service openfire
-    control_service openfire restart
 fi
 
 # Agile Dashboard plugin
