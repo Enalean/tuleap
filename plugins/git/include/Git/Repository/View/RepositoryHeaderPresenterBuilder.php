@@ -213,7 +213,7 @@ class RepositoryHeaderPresenterBuilder
 
     private function getAlreadyForkedRepositoriesPresenters(GitRepository $repository, PFUser $current_user)
     {
-        $project_name = $repository->getProject()->getUnixNameMixedCase();
+        $project_name = $repository->getProject()->getUnixName();
 
         return array_map(
             function ($row) use ($project_name) {
