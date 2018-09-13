@@ -1,65 +1,67 @@
-{{# is_scope_project }}
-    {{# is_already_forked }}
-        <button type="button"
-            class="tlp-button-primary tlp-button-outline git-repository-actions-button"
-            id="git-repository-already-forked-button"
-        >
-            <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
-        </button>
-        <div id="git-repository-already-forked-modal"
-             class="tlp-modal"
-             role="dialog"
-             aria-labelledby="git-repository-already-forked-modal-label"
-        >
-            <div class="tlp-modal-header">
-                <h1 class="tlp-modal-title" id="git-repository-already-forked-modal-label">
-                    <i class="fa fa-code-fork tlp-modal-title-icon"></i>
-                    {{# dgettext }}tuleap-git | Already forked repository{{/ dgettext }}
-                </h1>
-                <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
-                    &times;
-                </div>
-            </div>
-            <div class="tlp-modal-body">
-                <p>
-                    {{# dgettext }}
-                        tuleap-git |
-                        It seems that you already forked this repository:
-                    {{/ dgettext }}
-                    {{# has_only_one_fork }}
-                        {{# forked_repositories_presenters }}
-                            <a href="{{ url }}">{{ path }}</a>
-                        {{/ forked_repositories_presenters }}
-                    {{/ has_only_one_fork }}
-                </p>
-                {{^ has_only_one_fork }}
-                    <ul>
-                        {{# forked_repositories_presenters }}
-                            <li>
-                                <a href="{{ url }}">{{ path }}</a>
-                            </li>
-                        {{/ forked_repositories_presenters }}
-                    </ul>
-                {{/ has_only_one_fork }}
-            </div>
-            <div class="tlp-modal-footer">
-                <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
-                    {{# gettext }}Close{{/ gettext }}
-                </button>
-            </div>
-        </div>
-    {{/ is_already_forked }}
-    {{^ is_already_forked }}
-        <form action="{{ fork_url }}" method="POST">
-            <input name="action" value="fork_repositories_permissions" type="hidden">
-            <input type="hidden" name="repos[]" value="{{ repository_id }}">
-            <input type="hidden" name="choose_destination" value="personal">
-            <input type="hidden" name="path" value="">
-            <button type="submit"
+{{# is_user_project_member }}
+    {{# is_scope_project }}
+        {{# is_already_forked }}
+            <button type="button"
                 class="tlp-button-primary tlp-button-outline git-repository-actions-button"
+                id="git-repository-already-forked-button"
             >
                 <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
             </button>
-        </form>
-    {{/ is_already_forked }}
-{{/ is_scope_project }}
+            <div id="git-repository-already-forked-modal"
+                 class="tlp-modal"
+                 role="dialog"
+                 aria-labelledby="git-repository-already-forked-modal-label"
+            >
+                <div class="tlp-modal-header">
+                    <h1 class="tlp-modal-title" id="git-repository-already-forked-modal-label">
+                        <i class="fa fa-code-fork tlp-modal-title-icon"></i>
+                        {{# dgettext }}tuleap-git | Already forked repository{{/ dgettext }}
+                    </h1>
+                    <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+                        &times;
+                    </div>
+                </div>
+                <div class="tlp-modal-body">
+                    <p>
+                        {{# dgettext }}
+                            tuleap-git |
+                            It seems that you already forked this repository:
+                        {{/ dgettext }}
+                        {{# has_only_one_fork }}
+                            {{# forked_repositories_presenters }}
+                                <a href="{{ url }}">{{ path }}</a>
+                            {{/ forked_repositories_presenters }}
+                        {{/ has_only_one_fork }}
+                    </p>
+                    {{^ has_only_one_fork }}
+                        <ul>
+                            {{# forked_repositories_presenters }}
+                                <li>
+                                    <a href="{{ url }}">{{ path }}</a>
+                                </li>
+                            {{/ forked_repositories_presenters }}
+                        </ul>
+                    {{/ has_only_one_fork }}
+                </div>
+                <div class="tlp-modal-footer">
+                    <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                        {{# gettext }}Close{{/ gettext }}
+                    </button>
+                </div>
+            </div>
+        {{/ is_already_forked }}
+        {{^ is_already_forked }}
+            <form action="{{ fork_url }}" method="POST">
+                <input name="action" value="fork_repositories_permissions" type="hidden">
+                <input type="hidden" name="repos[]" value="{{ repository_id }}">
+                <input type="hidden" name="choose_destination" value="personal">
+                <input type="hidden" name="path" value="">
+                <button type="submit"
+                    class="tlp-button-primary tlp-button-outline git-repository-actions-button"
+                >
+                    <i class="fa fa-code-fork tlp-button-icon"></i> {{# dgettext }}tuleap-git | Fork{{/ dgettext }}
+                </button>
+            </form>
+        {{/ is_already_forked }}
+    {{/ is_scope_project }}
+{{/ is_user_project_member }}
