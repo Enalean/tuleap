@@ -344,8 +344,10 @@ class GraphOnTrackersV5Plugin extends Plugin {
     public function javascript_file()
     {
         $tracker_plugin = PluginManager::instance()->getPluginByName('tracker');
-        if ($tracker_plugin->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
-            echo $this->getMinifiedAssetHTML()."\n";
+        if ($tracker_plugin->currentRequestIsForPlugin()) {
+            $include_assets = $this->getMinifiedAssets();
+
+            echo $include_assets->getHTMLSnippet($this->getName().'.js');
         }
     }
 
@@ -355,12 +357,20 @@ class GraphOnTrackersV5Plugin extends Plugin {
     public function burning_parrot_get_javascript_files(array $params)
     {
         if ($this->currentRequestIsForDashboards()) {
-            $include_assets = new IncludeAssets(
-                $this->getFilesystemPath() . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-            $params['javascript_files'][] = '/scripts/d3/d3.min.js';
+            $include_assets = $this->getMinifiedAssets();
             $params['javascript_files'][] = $include_assets->getFileURL($this->getName().'.js');
         }
+    }
+
+    /**
+     * @return IncludeAssets
+     */
+    private function getMinifiedAssets()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
+            '/assets/graphontrackersv5/scripts'
+        );
+        return $include_assets;
     }
 }

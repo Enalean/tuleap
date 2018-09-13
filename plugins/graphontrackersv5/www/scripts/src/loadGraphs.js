@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.addEventListener("DOMContentLoaded", function() {
-    if (!tuleap.graphontrackersv5.graphs) {
+import tuleap from "tuleap";
+import graphs from "./graphs.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+    if (!tuleap.hasOwnProperty("graphontrackersv5") || !tuleap.graphontrackersv5.graphs) {
         return;
     }
 
-    Object.getOwnPropertyNames(tuleap.graphontrackersv5.graphs).forEach(function(id) {
-        var graph = tuleap.graphontrackersv5.graphs[id];
+    Object.getOwnPropertyNames(tuleap.graphontrackersv5.graphs).forEach(id => {
+        const graph = tuleap.graphontrackersv5.graphs[id];
 
-        if (tuleap.graphontrackersv5.draw[graph.type] !== undefined) {
-            tuleap.graphontrackersv5.draw[graph.type](id, graph);
+        if (graphs[graph.type] !== undefined) {
+            graphs[graph.type](id, graph);
         }
     });
 });

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || {};
-tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
-tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
-tuleap.graphontrackersv5.draw = {};
+import * as d3 from "d3";
 
-tuleap.graphontrackersv5.topRoundedRect = function(x, y, width, height, radius) {
+export { topRoundedRect, alternateXAxisLabels, addLegendBox, defineGradients };
+
+function topRoundedRect(x, y, width, height, radius) {
     return (
         "M" +
         (x + radius) +
@@ -54,7 +53,7 @@ tuleap.graphontrackersv5.topRoundedRect = function(x, y, width, height, radius) 
         -radius +
         "z"
     );
-};
+}
 
 /**
  * Utility function to display x axis legend labels with alternate height so
@@ -66,16 +65,16 @@ tuleap.graphontrackersv5.topRoundedRect = function(x, y, width, height, radius) 
  * @param {int} height
  * @param {Object} xAxis
  */
-tuleap.graphontrackersv5.alternateXAxisLabels = function(svg, height, xAxis, legend) {
-    var x_labels_alternate_delta = 15;
-    var x_labels = svg
+function alternateXAxisLabels(svg, height, xAxis, legend) {
+    const x_labels_alternate_delta = 15;
+    const x_labels = svg
         .append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
-    x_labels.selectAll("text").attr("transform", function(d, i) {
-        var y_delta = 0;
+    x_labels.selectAll("text").attr("transform", (d, i) => {
+        let y_delta = 0;
         if (i % 2 === 0) {
             y_delta += x_labels_alternate_delta;
         }
@@ -83,22 +82,20 @@ tuleap.graphontrackersv5.alternateXAxisLabels = function(svg, height, xAxis, leg
     });
 
     if (typeof legend !== "undefined") {
-        x_labels.selectAll("text").text(function(d, i) {
-            return legend[i];
-        });
+        x_labels.selectAll("text").text((d, i) => legend[i]);
     }
 
     x_labels
         .selectAll("line")
         .attr("x2", 0)
-        .attr("y2", function(d, i) {
-            var y_delta = 6;
+        .attr("y2", (d, i) => {
+            let y_delta = 6;
             if (i % 2 === 0) {
                 y_delta += x_labels_alternate_delta;
             }
             return y_delta;
         });
-};
+}
 
 /**
  * Add a legend on the right of the chart
@@ -112,33 +109,31 @@ tuleap.graphontrackersv5.alternateXAxisLabels = function(svg, height, xAxis, leg
  * @param {type} onOutValue
  * @param {type} getLegendClass
  */
-tuleap.graphontrackersv5.addLegendBox = function(
+function addLegendBox(
     svg,
-    graph,
-    margin,
+    { width, height },
+    { right },
     legend_width,
     colors,
     onOverValue,
     onOutValue,
     getLegendClass
 ) {
-    var legend_x = graph.width - legend_width - margin.right,
-        legend_y = Math.max(0, graph.height / 2 - (20 / 2) * colors.length),
-        legend_group;
+    const legend_x = width - legend_width - right;
+    const legend_y = Math.max(0, height / 2 - (20 / 2) * colors.length);
+    let legend_group;
 
     legend_group = svg
         .append("g")
         .attr("transform", "translate(" + legend_x + ", " + legend_y + ")");
 
-    var legend = legend_group
+    const legend = legend_group
         .selectAll(".legend")
         .data(colors)
         .enter()
         .append("g")
         .attr("class", "legend")
-        .attr("transform", function(d, i) {
-            return "translate(0, " + i * 20 + ")";
-        })
+        .attr("transform", (d, i) => "translate(0, " + i * 20 + ")")
         .on("mouseover", onOverValue)
         .on("mouseout", onOutValue);
 
@@ -149,28 +144,24 @@ tuleap.graphontrackersv5.addLegendBox = function(
         .attr("ry", 3)
         .attr("width", 16)
         .attr("height", 16)
-        .attr("class", function(d) {
-            if (d.color.indexOf("#") > -1) {
-                return;
+        .attr("class", ({ color }) => {
+            if (color.includes("#")) {
+                return "";
             }
 
-            return "graph-element-" + d.color;
+            return "graph-element-" + color;
         })
-        .style("fill", function(d) {
-            return d.color;
-        });
+        .style("fill", ({ color }) => color);
 
     legend
         .append("text")
-        .attr("class", function(d, i) {
-            return getLegendClass(i);
-        })
+        .attr("class", (d, i) => getLegendClass(i))
         .attr("x", 22)
         .attr("y", 8)
         .attr("dy", ".35em")
         .style("text-anchor", "start")
-        .text(function(d) {
-            var legend = d.label,
+        .text(({ label }) => {
+            const legend = label,
                 length = legend.length;
 
             if (length > 25) {
@@ -178,7 +169,7 @@ tuleap.graphontrackersv5.addLegendBox = function(
             }
             return legend;
         });
-};
+}
 
 /**
  * Add gradients for given colors in svg definitions
@@ -187,8 +178,8 @@ tuleap.graphontrackersv5.addLegendBox = function(
  * @param {type} colors
  * @param {type} getGradientId
  */
-tuleap.graphontrackersv5.defineGradients = function(svg, colors, getGradientId) {
-    var grads = svg
+function defineGradients(svg, colors, getGradientId) {
+    const grads = svg
         .append("defs")
         .selectAll("linearGradient")
         .data(colors)
@@ -198,19 +189,13 @@ tuleap.graphontrackersv5.defineGradients = function(svg, colors, getGradientId) 
         .attr("y1", 0)
         .attr("x2", 0)
         .attr("y2", 1)
-        .attr("id", function(d, i) {
-            return getGradientId(i);
-        });
+        .attr("id", (d, i) => getGradientId(i));
     grads
         .append("stop")
         .attr("offset", "0%")
-        .style("stop-color", function(d, i) {
-            return d3.rgb(d.color).brighter(0.5);
-        });
+        .style("stop-color", ({ color }) => d3.rgb(color).brighter(0.5));
     grads
         .append("stop")
         .attr("offset", "100%")
-        .style("stop-color", function(d, i) {
-            return d.color;
-        });
-};
+        .style("stop-color", ({ color }) => color);
+}

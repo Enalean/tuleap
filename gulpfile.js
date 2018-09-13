@@ -76,8 +76,7 @@ const fat_combined_files = [
         "src/www/scripts/tuleap/massmail_project_members.js",
         "src/www/scripts/tuleap/textarea_rte.js",
         "src/www/scripts/tuleap/tuleap-ckeditor-toolbar.js",
-        "src/www/scripts/tuleap/project-visibility.js",
-        "src/www/scripts/d3/d3.min.js"
+        "src/www/scripts/tuleap/project-visibility.js"
     ],
     subset_combined_files = [
         "src/www/scripts/jquery/jquery-2.1.1.min.js",

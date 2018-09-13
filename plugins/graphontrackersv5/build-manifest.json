@@ -17,11 +17,7 @@
             "target_dir": "www/themes/FlamingParrot/css"
         }
     },
-    "javascript": [
-        "www/scripts/graphs.js",
-        "www/scripts/graphs-pie.js",
-        "www/scripts/graphs-bar.js",
-        "www/scripts/graphs-groupedbar.js",
-        "www/scripts/loadGraphs.js"
+    "components": [
+        "www/scripts"
     ]
 }
