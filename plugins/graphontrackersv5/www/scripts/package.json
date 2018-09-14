@@ -1,0 +1,19 @@
+{
+  "name": "graphontrackersv5",
+  "author": "Enalean team",
+  "homepage": "https://www.enalean.com",
+  "license": "GPL-2.0+",
+  "private": true,
+  "version": "0.1.0",
+  "dependencies": {
+    "d3": "^3.5.17"
+  },
+  "devDependencies": {},
+  "config": {
+    "bin": "../../../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "rm -rf ../../../../src/www/assets/graphontrackersv5/scripts && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/webpack --watch --mode=development"
+  }
+}

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,30 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as d3 from "d3";
+
+import { topRoundedRect, alternateXAxisLabels, defineGradients } from "./graphs-layout-helper.js";
+
 // Inspired from  http://bl.ocks.org/mbostock/3887051
-tuleap.graphontrackersv5.draw.bar = function(id, graph) {
-    var margin = { top: 20, right: 20, bottom: 40, left: 40 },
+export function bar(id, graph) {
+    const margin = { top: 20, right: 20, bottom: 40, left: 40 },
         width = graph.width - margin.left - margin.right,
         height = graph.height - margin.top - margin.bottom,
         color = d3.scale.category20();
 
-    var x = d3.scale.ordinal().rangeRoundBands([0, width], 0.35);
+    const x = d3.scale.ordinal().rangeRoundBands([0, width], 0.35);
 
-    var y = d3.scale.linear().range([height, 0]);
+    const y = d3.scale.linear().range([height, 0]);
 
-    var xAxis = d3.svg
+    const xAxis = d3.svg
         .axis()
         .scale(x)
         .orient("bottom");
 
-    var yAxis = d3.svg
+    const yAxis = d3.svg
         .axis()
         .scale(y)
         .ticks(5)
         .tickSize(width)
         .orient("right");
 
-    var svg = d3
+    const svg = d3
         .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -49,9 +53,9 @@ tuleap.graphontrackersv5.draw.bar = function(id, graph) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Start with some data
-    var data = [];
-    for (var i = 0; i < graph.data.length; ++i) {
-        var c = graph.colors[i];
+    const data = [];
+    for (let i = 0; i < graph.data.length; ++i) {
+        let c = graph.colors[i];
         if (c === null) {
             c = color(i);
         }
@@ -62,23 +66,14 @@ tuleap.graphontrackersv5.draw.bar = function(id, graph) {
         });
     }
 
-    tuleap.graphontrackersv5.defineGradients(svg, data, getGradientId);
+    defineGradients(svg, data, getGradientId);
 
-    x.domain(
-        data.map(function(d, i) {
-            return i;
-        })
-    );
-    y.domain([
-        0,
-        d3.max(data, function(d) {
-            return d.value;
-        })
-    ]);
+    x.domain(data.map((d, i) => i));
+    y.domain([0, d3.max(data, ({ value }) => value)]);
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(svg, height, xAxis, graph.legend);
+    alternateXAxisLabels(svg, height, xAxis, graph.legend);
 
-    var gy = svg
+    const gy = svg
         .append("g")
         .attr("class", "y axis")
         .call(yAxis);
@@ -88,20 +83,20 @@ tuleap.graphontrackersv5.draw.bar = function(id, graph) {
         .attr("x", -30)
         .attr("dx", ".71em");
 
-    var bar = svg
+    const bar = svg
         .selectAll(".bar")
         .data(data)
         .enter();
 
     bar.append("path")
-        .style("fill", function(d, i) {
+        .style("fill", (d, i) => {
             if (!isHexaColor(d.color)) {
-                return;
+                return "";
             }
 
             return "url(#" + getGradientId(i) + ")";
         })
-        .attr("class", function(d) {
+        .attr("class", d => {
             if (!isHexaColor(d.color)) {
                 return "bar graph-element-" + d.color;
             }
@@ -110,43 +105,27 @@ tuleap.graphontrackersv5.draw.bar = function(id, graph) {
         })
         .transition()
         .duration(750)
-        .attrTween("d", function(d, j) {
-            var i = d3.interpolateNumber(height, y(d.value));
+        .attrTween("d", ({ value }, j) => {
+            const i = d3.interpolateNumber(height, y(value));
 
-            return function(t) {
-                return tuleap.graphontrackersv5.topRoundedRect(
-                    x(j),
-                    i(t),
-                    x.rangeBand(),
-                    height - i(t),
-                    3
-                );
-            };
+            return t => topRoundedRect(x(j), i(t), x.rangeBand(), height - i(t), 3);
         });
 
     bar.append("text")
-        .attr("x", function(d, i) {
-            return x(i) + x.rangeBand() / 2;
-        })
-        .attr("y", function(d) {
-            return height;
-        })
+        .attr("x", (d, i) => x(i) + x.rangeBand() / 2)
+        .attr("y", () => height)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .text(function(d) {
-            return d.value;
-        })
+        .text(({ value }) => value)
         .transition()
         .duration(750)
-        .attr("y", function(d) {
-            return y(d.value) - 10;
-        });
+        .attr("y", ({ value }) => y(value) - 10);
 
     function getGradientId(value_index) {
         return "grad_" + id + "_" + value_index;
     }
 
     function isHexaColor(color) {
-        return color.indexOf("#") > -1;
+        return color.includes("#");
     }
-};
+}

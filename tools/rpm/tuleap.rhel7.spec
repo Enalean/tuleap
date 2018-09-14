@@ -976,6 +976,7 @@ fi
 %files plugin-graphontrackers
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/graphontrackersv5
+%{APP_DIR}/src/www/assets/graphontrackersv5
 
 %files plugin-tracker-encryption
 %defattr(-,root,root,-)

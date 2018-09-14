@@ -1225,6 +1225,7 @@ fi
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/graphontrackersv5
+%{APP_DIR}/src/www/assets/graphontrackersv5
 
 %files plugin-tracker-encryption
 %defattr(-,%{APP_USER},%{APP_USER},-)

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,30 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Inspired from http://bl.ocks.org/mbostock/3887193
-tuleap.graphontrackersv5.draw.pie = function(id, graph) {
-    var margin = { top: 0, right: 0, bottom: 0, left: 0 },
-        width = graph.width,
-        height = graph.height,
-        radius = Math.min(width, height) / 2,
-        inner_radius_coef = width / 550,
-        data = [],
-        total_values = 0,
-        color = d3.scale.category20c();
+import * as d3 from "d3";
 
-    for (var i = 0; i < graph.data.length; ++i) {
+import { addLegendBox, defineGradients } from "./graphs-layout-helper.js";
+
+// Inspired from http://bl.ocks.org/mbostock/3887193
+export function pie(id, graph) {
+    const margin = { top: 0, right: 0, bottom: 0, left: 0 };
+    const width = graph.width;
+    const height = graph.height;
+    const radius = Math.min(width, height) / 2;
+
+    const data = [];
+    let total_values = 0;
+    const color = d3.scale.category20c();
+
+    for (let i = 0; i < graph.data.length; ++i) {
         total_values += parseFloat(graph.data[i]);
     }
 
-    for (var i = 0; i < graph.data.length; ++i) {
-        var c = graph.colors[i];
+    for (let i = 0; i < graph.data.length; ++i) {
+        let c = graph.colors[i];
         if (c === null) {
             c = color(i);
         }
-        var value = parseFloat(graph.data[i]);
-        var line = {
+        const value = parseFloat(graph.data[i]);
+        const line = {
             label: graph.legend[i],
-            value: value,
+            value,
             percentage: ((value / total_values) * 100).toFixed(0),
             color: c
         };
@@ -49,34 +53,32 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
         graph.colors[i] = c;
     }
 
-    var pie = d3.layout
+    const pie = d3.layout
         .pie()
-        .value(function(d) {
-            return d.value;
-        })
+        .value(({ value }) => value)
         .sort(null);
 
-    var arc = d3.svg
+    const arc = d3.svg
         .arc()
         .innerRadius((radius - 50) / 2)
         .outerRadius(radius - 50);
 
-    var svg = d3
+    const svg = d3
         .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    tuleap.graphontrackersv5.defineGradients(svg, data, getGradientId);
+    defineGradients(svg, data, getGradientId);
 
-    var chart = svg
+    const chart = svg
         .append("g")
         .attr("transform", "translate(" + width / 3 + "," + height / 2 + ")");
 
     drawDonutChart();
 
     function drawDonutChart() {
-        var slice = chart
+        const slice = chart
             .selectAll(".arc")
             .data(pie(data))
             .enter()
@@ -92,14 +94,14 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
         slice
             .append("path")
             .attr("d", arc)
-            .style("fill", function(d, i) {
+            .style("fill", (d, i) => {
                 if (!isHexaColor(d.data.color)) {
-                    return;
+                    return "";
                 }
 
                 return "url(#" + getGradientId(i) + ")";
             })
-            .attr("class", function(d, i) {
+            .attr("class", (d, i) => {
                 if (isHexaColor(d.data.color)) {
                     return getDonutSliceClass(i);
                 }
@@ -110,8 +112,8 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
             .on("mouseout", onOutValue)
             .transition()
             .duration(750)
-            .attrTween("d", function(b) {
-                var i = d3.interpolate(
+            .attrTween("d", b => {
+                const i = d3.interpolate(
                     {
                         startAngle: 0,
                         endAngle: 0
@@ -119,9 +121,7 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
                     b
                 );
 
-                return function(t) {
-                    return arc(i(t));
-                };
+                return t => arc(i(t));
             });
     }
 
@@ -131,61 +131,49 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
             .attr("x1", 0)
             .attr("x2", 0)
             .attr("y1", -radius + 50)
-            .attr("y2", function(d, i) {
+            .attr("y2", (d, i) => {
                 if (i % 2 === 0) {
                     return -radius + 40;
-                } else {
-                    return -radius + 25;
                 }
+                return -radius + 25;
             })
             .attr("stroke", "#DDD")
-            .attr("transform", function(d) {
+            .attr("transform", ({ startAngle, endAngle }) => {
                 radius;
-                return "rotate(" + ((d.startAngle + d.endAngle) / 2) * (180 / Math.PI) + ")";
+                return "rotate(" + ((startAngle + endAngle) / 2) * (180 / Math.PI) + ")";
             });
 
         slice
             .append("text")
-            .attr("transform", function(d) {
-                return "translate(" + arc.centroid(d) + ")";
-            })
-            .attr("transform", function(d, i) {
-                var dist;
+            .attr("transform", d => "translate(" + arc.centroid(d) + ")")
+            .attr("transform", ({ startAngle, endAngle }, i) => {
+                let dist;
                 if (i % 2 === 0) {
                     dist = radius - 34;
                 } else {
                     dist = radius - 19;
                 }
-                var angle = (d.startAngle + d.endAngle) / 2, // Middle of wedge
+
+                // Middle of wedge
+                const angle = (startAngle + endAngle) / 2,
                     x = dist * Math.sin(angle),
                     y = -dist * Math.cos(angle);
 
                 return "translate(" + x + "," + y + ")";
             })
             .attr("dy", ".35em")
-            .style("text-anchor", function(d) {
-                var angle = (d.startAngle + d.endAngle) / 2;
+            .style("text-anchor", ({ startAngle, endAngle }) => {
+                const angle = (startAngle + endAngle) / 2;
 
                 if (angle > Math.PI) {
                     return "end";
                 }
                 return "start";
             })
-            .text(function(d) {
-                return d.data.percentage + "%";
-            });
+            .text(d => d.data.percentage + "%");
     }
 
-    tuleap.graphontrackersv5.addLegendBox(
-        svg,
-        graph,
-        margin,
-        width / 3,
-        data,
-        onOverValue,
-        onOutValue,
-        getLegendClass
-    );
+    addLegendBox(svg, graph, margin, width / 3, data, onOverValue, onOutValue, getLegendClass);
 
     function onOverValue(d, index) {
         svg.select("." + getDonutSliceClass(index))
@@ -214,6 +202,6 @@ tuleap.graphontrackersv5.draw.pie = function(id, graph) {
     }
 
     function isHexaColor(color) {
-        return color && color.indexOf("#") > -1;
+        return color && color.includes("#");
     }
-};
+}

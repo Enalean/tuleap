@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,9 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as d3 from "d3";
+
+import {
+    topRoundedRect,
+    alternateXAxisLabels,
+    addLegendBox,
+    defineGradients
+} from "./graphs-layout-helper.js";
+
 // Inspired from  http://bl.ocks.org/mbostock/3887051
-tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
-    var margin = { top: 20, right: 20, bottom: 20, left: 20 },
+export function groupedbar(id, graph) {
+    const margin = { top: 20, right: 20, bottom: 20, left: 20 },
         axis_margin = { bottom: 20, left: 20 },
         width = graph.width - margin.left - margin.right - axis_margin.left,
         height = graph.height - margin.top - margin.bottom - axis_margin.bottom,
@@ -30,73 +39,57 @@ tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
         chart_width = width - legend_width - legend_margin;
 
     // Fix a d3 color when the backend doesn't define one
-    graph.colors.forEach(function(legend_color, i) {
-        if (legend_color.color === null) {
+    graph.colors.forEach(({ color }, i) => {
+        if (color === null) {
             graph.colors[i].color = d3_colors(i);
         } else {
-            graph.colors[i].color = legend_color.color;
+            graph.colors[i].color = color;
         }
     });
 
-    var x = d3.scale.ordinal().rangeRoundBands([0, chart_width], 0.35);
+    const x = d3.scale.ordinal().rangeRoundBands([0, chart_width], 0.35);
 
-    var xGrouped = d3.scale.ordinal();
+    const xGrouped = d3.scale.ordinal();
 
-    var y = d3.scale.linear().range([height, 0]);
+    const y = d3.scale.linear().range([height, 0]);
 
-    var xAxis = d3.svg
+    const xAxis = d3.svg
         .axis()
         .scale(x)
         .orient("bottom");
 
-    var yAxis = d3.svg
+    const yAxis = d3.svg
         .axis()
         .scale(y)
         .ticks(5)
         .tickSize(chart_width)
         .orient("right");
-    var svg = d3
+    const svg = d3
         .selectAll('.plugin_graphontrackersv5_chart[data-graph-id="' + id + '"]')
         .append("svg")
         .attr("width", graph.width)
         .attr("height", graph.height);
 
-    tuleap.graphontrackersv5.defineGradients(svg, graph.colors, getGradientId);
+    defineGradients(svg, graph.colors, getGradientId);
 
-    var chart = svg
+    const chart = svg
         .append("g")
         .attr("transform", "translate(" + margin_left + "," + margin.top + ")");
 
-    var xAxisLabels = graph.values.map(function(d) {
-        return d.label;
-    });
+    const xAxisLabels = graph.values.map(({ label }) => label);
 
-    x.domain(
-        graph.values.map(function(d, i) {
-            return i;
-        })
-    );
-    xGrouped
-        .domain(
-            graph.grouped_labels.map(function(d, i) {
-                return i;
-            })
-        )
-        .rangeRoundBands([0, x.rangeBand()]);
+    x.domain(graph.values.map((d, i) => i));
+    xGrouped.domain(graph.grouped_labels.map((d, i) => i)).rangeRoundBands([0, x.rangeBand()]);
     y.domain([
         0,
-        d3.max(graph.values, function(d) {
-            return d3.max(
-                d3.values(d.values).map(function(d) {
-                    return parseFloat(d.value);
-                })
-            );
-        })
+        d3.max(graph.values, ({ values }) =>
+            d3.max(d3.values(values).map(({ value }) => parseFloat(value)))
+        )
     ]);
 
-    tuleap.graphontrackersv5.alternateXAxisLabels(chart, height, xAxis, xAxisLabels);
+    alternateXAxisLabels(chart, height, xAxis, xAxisLabels);
 
-    var gy = chart
+    const gy = chart
         .append("g")
         .attr("class", "y axis")
         .call(yAxis);
@@ -106,21 +99,17 @@ tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
         .attr("x", -30)
         .attr("dx", ".71em");
 
-    var bar = chart
+    const bar = chart
         .selectAll(".bar")
         .data(graph.values)
         .enter()
         .append("g")
         .attr("class", "g")
-        .attr("transform", function(d, i) {
-            return "translate(" + x(i) + ",0)";
-        });
+        .attr("transform", (d, i) => "translate(" + x(i) + ",0)");
 
-    var grouped_bar = bar
+    const grouped_bar = bar
         .selectAll("path")
-        .data(function(d) {
-            return d.values;
-        })
+        .data(({ values }) => values)
         .enter()
         .append("g")
         .on("mouseover", onOverValue)
@@ -128,17 +117,17 @@ tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
 
     grouped_bar
         .append("path")
-        .style("fill", function(d, i) {
-            var color = getColor(i);
+        .style("fill", (d, i) => {
+            const color = getColor(i);
 
             if (!isHexaColor(color)) {
-                return;
+                return "";
             }
 
             return "url(#" + getGradientId(i) + ")";
         })
-        .attr("class", function(d, i) {
-            var color = getColor(i);
+        .attr("class", (d, i) => {
+            const color = getColor(i);
 
             if (!isHexaColor(color)) {
                 return "bar graph-element-" + color;
@@ -148,43 +137,32 @@ tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
         })
         .transition()
         .duration(750)
-        .attrTween("d", function(d, i) {
-            var interpolate = d3.interpolateNumber(height, y(d.value));
+        .attrTween("d", ({ value }, i) => {
+            const interpolate = d3.interpolateNumber(height, y(value));
 
-            return function(t) {
-                return tuleap.graphontrackersv5.topRoundedRect(
+            return t =>
+                topRoundedRect(
                     xGrouped(i),
                     interpolate(t),
                     xGrouped.rangeBand(),
                     height - interpolate(t),
                     3
                 );
-            };
         });
 
     grouped_bar
         .append("text")
-        .attr("class", function(d, i) {
-            return getTextClass(i);
-        })
-        .attr("x", function(d, i) {
-            return xGrouped(i) + xGrouped.rangeBand() / 2;
-        })
-        .attr("y", function(d) {
-            return height;
-        })
+        .attr("class", (d, i) => getTextClass(i))
+        .attr("x", (d, i) => xGrouped(i) + xGrouped.rangeBand() / 2)
+        .attr("y", () => height)
         .attr("dy", ".35em")
         .attr("text-anchor", "middle")
-        .text(function(d) {
-            return d.value;
-        })
+        .text(({ value }) => value)
         .transition()
         .duration(750)
-        .attr("y", function(d) {
-            return y(d.value) - 10;
-        });
+        .attr("y", ({ value }) => y(value) - 10);
 
-    tuleap.graphontrackersv5.addLegendBox(
+    addLegendBox(
         svg,
         graph,
         margin,
@@ -218,12 +196,12 @@ tuleap.graphontrackersv5.draw.groupedbar = function(id, graph) {
     }
 
     function isHexaColor(color) {
-        return color.indexOf("#") > -1;
+        return color.includes("#");
     }
 
     function getColor(index) {
-        var color = graph.colors[index];
+        const color = graph.colors[index];
 
         return color ? color.color : null;
     }
-};
+}
