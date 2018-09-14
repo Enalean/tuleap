@@ -45,7 +45,7 @@ describe("StaticOpenListFieldController", function() {
             spyOn($element, "on");
             tlp.select2 = jasmine.createSpy("select2");
 
-            StaticOpenListFieldController.init();
+            StaticOpenListFieldController.$onInit();
 
             expect(tlp.select2).toHaveBeenCalled();
             expect($element.on).toHaveBeenCalledWith("select2:selecting", jasmine.any(Function));

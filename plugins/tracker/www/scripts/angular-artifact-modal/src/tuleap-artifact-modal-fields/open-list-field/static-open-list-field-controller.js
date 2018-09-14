@@ -7,22 +7,21 @@ export default StaticOpenListFieldController;
 StaticOpenListFieldController.$inject = ["$element"];
 
 function StaticOpenListFieldController($element) {
-    var self = this;
-
-    self.init = init;
-    self.handleStaticValueSelection = handleStaticValueSelection;
-    self.handleStaticValueUnselection = handleStaticValueUnselection;
-    self.isStaticValueSelected = isStaticValueSelected;
-    self.newOpenListStaticValue = newOpenListStaticValue;
-    self.isRequiredAndEmpty = isRequiredAndEmpty;
-    self.fieldValues = fieldValues;
-
-    self.init();
+    const self = this;
+    Object.assign(self, {
+        $onInit: init,
+        handleStaticValueSelection,
+        handleStaticValueUnselection,
+        isStaticValueSelected,
+        newOpenListStaticValue,
+        isRequiredAndEmpty,
+        fieldValues
+    });
 
     function init() {
         self.merged_values = [];
 
-        var open_list_element = $element[0].querySelector(
+        const open_list_element = $element[0].querySelector(
             ".tuleap-artifact-modal-open-list-static"
         );
         if (!open_list_element) {

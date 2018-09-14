@@ -1,3 +1,4 @@
+import { contains } from "lodash";
 import { isInCreationMode } from "./modal-creation-mode-state.js";
 import { setError, hasError, getErrorMessage } from "./rest/rest-error-state.js";
 import { createArtifact, editArtifact, getFollowupsComments } from "./rest/rest-service.js";
@@ -39,6 +40,7 @@ function ArtifactModalController(
         user_id = modal_model.user_id;
 
     Object.assign(self, {
+        $onInit: init,
         artifact_id: modal_model.artifact_id,
         color: formatColor(modal_model.color),
         creation_mode: isInCreationMode(),
@@ -83,8 +85,6 @@ function ArtifactModalController(
             }
         }
     });
-
-    init();
 
     function init() {
         setFieldDependenciesWatchers();
@@ -236,7 +236,7 @@ function ArtifactModalController(
 
     function isDisabled(field) {
         var necessary_permission = isInCreationMode() ? "create" : "update";
-        return !_(field.permissions).contains(necessary_permission);
+        return !contains(field.permissions, necessary_permission);
     }
 
     function getDropdownAttribute(field) {

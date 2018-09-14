@@ -38,7 +38,7 @@ describe("UgroupsOpenListFieldController", function() {
             );
             tlp.select2 = jasmine.createSpy("select2");
 
-            UgroupsOpenListFieldController.init();
+            UgroupsOpenListFieldController.$onInit();
 
             expect(tlp.select2).toHaveBeenCalled();
         });

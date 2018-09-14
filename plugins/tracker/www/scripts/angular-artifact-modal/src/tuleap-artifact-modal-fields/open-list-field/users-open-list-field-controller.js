@@ -11,7 +11,7 @@ OpenListFieldController.$inject = ["$element", "$compile", "$rootScope", "$templ
 function OpenListFieldController($element, $compile, $rootScope, $templateCache) {
     const self = this;
     Object.assign(self, {
-        init,
+        $onInit: init,
         handleUsersValueSelection,
         handleUsersValueUnselection,
         newAnonymousUser,
@@ -20,8 +20,6 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
         isRequiredAndEmpty,
         getFieldValue
     });
-
-    self.init();
 
     function init() {
         var open_list_element = $element[0].querySelector(".tuleap-artifact-modal-open-list-users");
@@ -115,7 +113,7 @@ function OpenListFieldController($element, $compile, $rootScope, $templateCache)
             if (is_anonymous) {
                 return value_object.email === removed_selection.id;
             }
-            return value_object.id === parseInt(removed_selection.id);
+            return value_object.id === Number.parseInt(removed_selection.id, 10);
         });
     }
 

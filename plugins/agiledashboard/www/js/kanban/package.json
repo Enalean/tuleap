@@ -6,12 +6,12 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "^1.6.5",
-    "angular-gettext": "^2.3.10",
+    "angular": "^1.7.4",
+    "angular-gettext": "^2.4.1",
     "angular-jwt": "0.1.8",
     "angular-locker": "^2.0.4",
     "angular-moment": "0.8.3",
-    "angular-sanitize": "^1.6.5",
+    "angular-sanitize": "^1.7.4",
     "angular-socket-io": "0.7.0",
     "d3": "^4.8.0",
     "dragular": "4.2.0",
@@ -25,8 +25,7 @@
     "striptags": "^2.2.1"
   },
   "devDependencies": {
-    "angular-mocks": "^1.6.5",
-    "concurrently": "^3.4.0",
+    "angular-mocks": "^1.7.4",
     "gulp": "3.9.1",
     "gulp-angular-gettext": "^2.2.0",
     "jasmine-promise-matchers": "^2.3.0",
@@ -39,6 +38,6 @@
     "build": "rm -rf ../../../../../src/www/assets/agiledashboard/scripts/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'"
   }
 }

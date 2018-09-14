@@ -8,13 +8,15 @@
     ```js
     resolve: {
     //...
-        alias: {
-            // We force webpack to resolve angular in this app's node_modules,
-            // otherwise angular-artifact-modal makes us include it twice
-            'angular': path.resolve(__dirname, './node_modules/angular/index.js'),
-            // the path should point to angular-artifact-modal/index.js
-            'angular-artifact-modal' : path.resolve(__dirname, '../../../../tracker/www/scripts/angular-artifact-modal/index.js'),
-        }
+        alias: webpack_configurator.extendAliases(
+            {
+                // We force webpack to resolve angular in this app's node_modules,
+                // otherwise angular-artifact-modal makes us include it twice
+                angular$: path.resolve(__dirname, "node_modules/angular"),
+                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks")
+            },
+            webpack_configurator.angular_artifact_modal_aliases
+        )
     }
     ```
 - In your main `app.js`, add the following:

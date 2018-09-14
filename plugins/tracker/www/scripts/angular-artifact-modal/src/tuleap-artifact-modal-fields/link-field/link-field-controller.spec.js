@@ -59,7 +59,7 @@ describe("LinkFieldController -", () => {
             canChooseArtifactsParent.and.returnValue(true);
             isInCreationMode.and.returnValue(true);
 
-            LinkFieldController.init();
+            LinkFieldController.$onInit();
             $rootScope.$apply();
 
             expect(LinkFieldController.loadParentArtifactsTitle).toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe("LinkFieldController -", () => {
             const getArtifact = jasmine.createSpy("getArtifact").and.returnValue($q.when(artifact));
             rewire$getArtifact(getArtifact);
 
-            LinkFieldController.init();
+            LinkFieldController.$onInit();
             $rootScope.$apply();
 
             expect(LinkFieldController.parent_artifact).toEqual(artifact);
@@ -86,7 +86,7 @@ describe("LinkFieldController -", () => {
             canChooseArtifactsParent.and.returnValue(false);
             isInCreationMode.and.returnValue(true);
 
-            LinkFieldController.init();
+            LinkFieldController.$onInit();
             $rootScope.$apply();
 
             expect(LinkFieldController.parent_artifact).toBe(null);
@@ -98,7 +98,7 @@ describe("LinkFieldController -", () => {
             canChooseArtifactsParent.and.returnValue(true);
             isInCreationMode.and.returnValue(false);
 
-            LinkFieldController.init();
+            LinkFieldController.$onInit();
             $rootScope.$apply();
 
             expect(LinkFieldController.loadParentArtifactsTitle).toHaveBeenCalled();
@@ -110,7 +110,7 @@ describe("LinkFieldController -", () => {
             canChooseArtifactsParent.and.returnValue(false);
             isInCreationMode.and.returnValue(false);
 
-            LinkFieldController.init();
+            LinkFieldController.$onInit();
             $rootScope.$apply();
 
             expect(LinkFieldController.parent_artifact).toEqual(artifact);
@@ -180,6 +180,7 @@ describe("LinkFieldController -", () => {
         beforeEach(() => {
             getFirstReverseIsChildLink = jasmine.createSpy("getFirstReverseIsChildLink");
             rewire$getFirstReverseIsChildLink(getFirstReverseIsChildLink);
+            LinkFieldController.$onInit();
         });
 
         it("it will return the first linked reverse _is_child artifact", () => {
@@ -233,6 +234,7 @@ describe("LinkFieldController -", () => {
                 .and.returnValue($q.when(collection));
             rewire$getAllOpenParentArtifacts(getAllOpenParentArtifacts);
 
+            LinkFieldController.$onInit();
             const promise = LinkFieldController.loadParentArtifactsTitle();
             expect(LinkFieldController.is_loading).toBe(true);
 

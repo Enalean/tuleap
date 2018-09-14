@@ -6,11 +6,11 @@
   "license": "GPL-2.0",
   "private": true,
   "dependencies": {
-    "angular": "^1.6.9",
-    "angular-animate": "^1.6.9",
-    "angular-gettext": "^2.3.10",
+    "angular": "^1.7.4",
+    "angular-animate": "^1.7.4",
+    "angular-gettext": "^2.4.1",
     "angular-moment": "^1.2.0",
-    "angular-sanitize": "^1.6.9",
+    "angular-sanitize": "^1.7.4",
     "animate.css": "3.5.2",
     "dragular": "4.2.0",
     "escape-string-regexp": "^1.0.5",
@@ -22,8 +22,7 @@
     "striptags": "^2.2.1"
   },
   "devDependencies": {
-    "angular-mocks": "^1.6.9",
-    "concurrently": "^3.4.0",
+    "angular-mocks": "^1.7.4",
     "gulp": "^3.9.1",
     "gulp-angular-gettext": "^2.2.0",
     "jquery": "^3.2.1"
@@ -35,6 +34,6 @@
     "build": "rm -rf ./dist/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'gulp watch' '$npm_package_config_bin/karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'gulp watch' '$npm_package_config_bin/karma start ./karma.conf.js'"
   }
 }
