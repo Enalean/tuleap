@@ -9,11 +9,6 @@ datadir=/var/lib/mysql
 socket=/var/lib/mysql/mysql.sock
 bind-address=127.0.0.1
 
-# Skip logging openfire db (for instant messaging)
-# The 'monitor' openfire plugin creates large %PROJECT_NAME%-bin files
-# Comment this line if you prefer to be safer.
-binlog-ignore-db=openfire
-
 # Reduce default inactive timeout (prevent DB overload in case of nscd
 # crash)
 wait_timeout=180

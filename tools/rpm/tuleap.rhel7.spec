@@ -427,7 +427,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/IM
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/textualreport

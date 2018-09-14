@@ -81,6 +81,7 @@ Requires(post): policycoreutils-python
 Requires: bind-utils
 
 Obsoletes: php-restler, php-amqplib-amqplib, php-markdown
+Obsoletes: %{name}-plugin-im
 
 %description
 Tuleap is a web based application that address all the aspects of product development.
@@ -221,18 +222,6 @@ Provides: tuleap-plugin-ldap = %{version}
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
-
-%package plugin-im
-Summary: Instant Messaging Plugin for Tuleap
-Group: Development/Tools
-Version: @@PLUGIN_IM_VERSION@@
-Release: @@VERSION@@_@@RELEASE@@%{?dist}
-AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, openfire, glibc(x86-32), openfire-tuleap-plugins
-#, zlib.i686
-Provides: tuleap-plugin-im = %{version}
-%description plugin-im
-Provides instant messaging capabilities, based on a Jabber/XMPP server.
 
 %package plugin-hudson
 Summary: Hudson plugin for Tuleap
@@ -708,9 +697,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin hudson_svn
 %{__install} plugins/hudson_svn/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_hudson_svn
-
-# Plugin im
-%{__install} plugins/IM/etc/05-im.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
 # Plugin create_test_env
 %{__install} plugins/create_test_env/etc/sudoers.d/tuleap_plugin_create_test_env $RPM_BUILD_ROOT/%{_sysconfdir}/sudoers.d
@@ -1202,11 +1188,6 @@ fi
 %{APP_DIR}/plugins/ldap
 %attr(00644,root,root) /etc/logrotate.d/%{APP_NAME}_ldap
 %config(noreplace) /etc/logrotate.d/%{APP_NAME}_ldap
-
-%files plugin-im
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/IM
-%attr(00644,root,root) /etc/httpd/conf.d/tuleap-aliases/05-im.conf
 
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)
