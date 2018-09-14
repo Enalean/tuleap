@@ -19,6 +19,7 @@ const webpack_config_for_angular = {
             {
                 // angular-tlp
                 angular$: path.resolve(__dirname, "node_modules/angular"),
+                "angular-sanitize$": path.resolve(__dirname, "node_modules/angular-sanitize"),
                 "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks")
             },
             webpack_configurator.angular_artifact_modal_aliases

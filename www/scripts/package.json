@@ -7,14 +7,14 @@
   "license": "GPL-2.0+",
   "private": true,
   "dependencies": {
-    "angular": "^1.6.8",
+    "angular": "^1.7.4",
     "angular-breadcrumb": "~0.3.0",
-    "angular-cookies": "^1.6.8",
-    "angular-gettext": "~1.1.0",
+    "angular-cookies": "^1.7.4",
+    "angular-gettext": "^2.4.1",
     "angular-jwt": "~0.0.9",
     "angular-locker": "~2.0.3",
     "angular-moment": "^1.0.1",
-    "angular-sanitize": "^1.6.8",
+    "angular-sanitize": "^1.7.4",
     "angular-socket-io": "^0.7.0",
     "angular-ui-router": "^0.3.2",
     "d3-drag": "^1.2.1",
@@ -32,7 +32,7 @@
     "vue-gettext": "^2.0.31"
   },
   "devDependencies": {
-    "angular-mocks": "^1.6.8",
+    "angular-mocks": "^1.7.4",
     "gulp": "3.9.1",
     "gulp-angular-gettext": "^2.2.0",
     "jquery": "^3.3.1"
