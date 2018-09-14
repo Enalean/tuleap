@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -43,6 +43,10 @@ const jquery_mocks_alias = {
     "jquery-mocks": path.join(path_to_tlp, "mocks/jQuery.js")
 };
 
+const ckeditor_mocks_alias = {
+    "ckeditor-mocks": path.join(path_to_tuleap_core, "tuleap/ckeditor/mocks/index.js")
+};
+
 const angular_artifact_modal_alias = {
     "angular-artifact-modal": path.join(
         path_to_tuleap_root,
@@ -70,6 +74,7 @@ const angular_artifact_modal_aliases = Object.assign(
     {},
     angular_artifact_modal_alias,
     angular_tlp_alias,
+    ckeditor_mocks_alias,
     tlp_mocks_alias,
     tuleap_core_alias,
     node_streams_alias
@@ -82,12 +87,13 @@ function extendAliases(...aliases) {
 module.exports = {
     extendAliases,
     angular_artifact_modal_aliases,
-    skeletons_alias,
     angular_tlp_alias,
+    ckeditor_mocks_alias,
     easygettext_loader_alias,
+    jquery_mocks_alias,
+    skeletons_alias,
     tlp_fetch_alias,
     tlp_mocks_alias,
     tuleap_core_alias,
-    jquery_mocks_alias,
     vue_components_alias
 };

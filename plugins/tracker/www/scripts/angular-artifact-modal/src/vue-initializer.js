@@ -17,21 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./text-field.tpl.html";
-import TextFieldController from "./text-field-controller.js";
+import Vue from "vue";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../po/fr.po";
 
-export default function TextFieldDirective() {
-    return {
-        restrict: "EA",
-        replace: false,
-        scope: {
-            field: "=tuleapArtifactModalTextField",
-            isDisabled: "&isDisabled",
-            value_model: "=valueModel"
-        },
-        controller: TextFieldController,
-        controllerAs: "text_field",
-        bindToController: true,
-        templateUrl: "text-field.tpl.html"
-    };
-}
+Vue.use(GettextPlugin, {
+    translations: {
+        fr: french_translations.messages
+    },
+    silent: true
+});
+
+Vue.config.language = document.body.dataset.userLocale;

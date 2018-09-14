@@ -19,11 +19,15 @@
 
 import angular from "angular";
 import ngSanitize from "angular-sanitize";
-
 import "imports-loader?CKEDITOR=>window.CKEDITOR!ng-ckeditor";
 import "angular-moment";
 import "angular-gettext";
 import translations from "../po/fr.po";
+
+import "ngVue";
+import "ngVue/build/plugins.js";
+import Vue from "vue";
+import "./vue-initializer.js";
 
 import fields from "./tuleap-artifact-modal-fields/fields.js";
 import model from "./model/model.js";
@@ -37,11 +41,15 @@ import ArtifactModalService from "./tuleap-artifact-modal-service.js";
 import ArtifactModalController from "./tuleap-artifact-modal-controller.js";
 import NewFollowupComponent from "./followups/new-followup-component.js";
 
-angular
+import TextField from "./tuleap-artifact-modal-fields/text-field/TextField.vue";
+
+export default angular
     .module("tuleap.artifact-modal", [
         "angularMoment",
         "ng.ckeditor",
         "gettext",
+        "ngVue",
+        "ngVue.plugins",
         angular_tlp,
         fields,
         model,
@@ -53,7 +61,8 @@ angular
         "gettextCatalog",
         function(gettextCatalog) {
             for (const [language, strings] of Object.entries(translations)) {
-                gettextCatalog.setStrings(language, strings);
+                const short_language = language.split("_")[0];
+                gettextCatalog.setStrings(short_language, strings);
             }
         }
     ])
@@ -64,6 +73,5 @@ angular
     })
     .service("TuleapArtifactModalFieldDependenciesService", FieldDependenciesService)
     .service("TuleapArtifactModalValidateService", ValidateService)
-    .service("NewTuleapArtifactModalService", ArtifactModalService);
-
-export default "tuleap.artifact-modal";
+    .service("NewTuleapArtifactModalService", ArtifactModalService)
+    .value(TextField.name, Vue.component(TextField.name, TextField)).name;
