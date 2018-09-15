@@ -1,4 +1,6 @@
 <?php //-*-php-*-
+use Tuleap\PHPWiki\WikiPage;
+
 rcs_id('$Id: loadsave.php,v 1.137 2005/01/30 23:14:38 rurban Exp $');
 
 /*
@@ -822,7 +824,7 @@ function LoadZip (&$request, $zipfile, $files = false, $exclude = false) {
     }
 }
 
-class LimitedFileSet extends FileSet {
+class LimitedFileSet extends fileSet {
     function __construct($dirname, $_include, $exclude) {
         $this->_includefiles = $_include;
         $this->_exclude = $exclude;

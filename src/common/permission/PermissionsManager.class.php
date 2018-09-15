@@ -42,7 +42,7 @@ class PermissionsManager implements IPermissionsManagerNG {
      */
     public static function instance() {
         if (!self::$_permissionmanager_instance) {
-            self::$_permissionmanager_instance = new PermissionsManager(new PermissionsDAO(CodendiDataAccess::instance()));
+            self::$_permissionmanager_instance = new PermissionsManager(new PermissionsDao(CodendiDataAccess::instance()));
         }
         return self::$_permissionmanager_instance;
     }

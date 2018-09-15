@@ -23,8 +23,6 @@ require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
-require_once __DIR__ . '/bootstrap.php';
-
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\UgroupDuplicator;
 use Tuleap\FRS\FRSPermissionCreator;

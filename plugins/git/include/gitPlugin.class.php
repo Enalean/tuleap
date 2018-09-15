@@ -121,7 +121,7 @@ use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
-use Tuleap\project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
+use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
@@ -1232,7 +1232,7 @@ class GitPlugin extends Plugin
             if ($params['request']->get('hudson_use_plugin_git_trigger_checkbox')) {
                 $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
                 if ($repositoryId) {
-                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
+                    $vRepoId = new Valid_UInt('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
                     if($params['request']->valid($vRepoId)) {
                         $ci = new Git_Ci();
@@ -1259,11 +1259,11 @@ class GitPlugin extends Plugin
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
             if ($jobId) {
-                $vJobId = new Valid_Uint('job_id');
+                $vJobId = new Valid_UInt('job_id');
                 $vJobId->required();
                 if($params['request']->valid($vJobId)) {
                     $ci = new Git_Ci();
-                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
+                    $vRepoId = new Valid_UInt('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
                         if (!$ci->saveTrigger($jobId, $repositoryId)) {

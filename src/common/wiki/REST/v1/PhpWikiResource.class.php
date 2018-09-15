@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,12 +19,12 @@
 
 namespace Tuleap\PhpWiki\REST\v1;
 
+use Tuleap\PHPWiki\WikiPage;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Luracast\Restler\RestException;
 use Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation;
 use Tuleap\REST\ProjectAuthorization;
-use WikiPage;
 use Wiki;
 use WikiDao;
 use UserManager;
@@ -73,7 +73,7 @@ class PhpWikiResource extends AuthenticatedResource {
      *
      * @throws 403
      *
-     * @return Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation
+     * @return \Tuleap\PhpWiki\REST\v1\PhpWikiPageFullRepresentation
      */
     public function get($id) {
         $this->checkAccess();

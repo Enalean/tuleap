@@ -20,8 +20,6 @@
 
 // @codingStandardsIgnoreFile
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
-
 use Tuleap\REST\MilestoneBase;
 
 /**

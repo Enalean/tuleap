@@ -25,8 +25,6 @@ use SOAP_TestDataBuilder;
 use SOAPBase;
 use SoapClient;
 
-require_once __DIR__.'/../lib/autoload.php';
-
 class TrackerTest extends SOAPBase
 {
     /**

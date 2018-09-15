@@ -34,7 +34,7 @@ if($request->valid(new Valid_GroupId())) {
     $group_id = null;
 }
 
-if ($request->valid(new Valid_Uint('id'))) {
+if ($request->valid(new Valid_UInt('id'))) {
     $id = $request->get('id');
 } else {
     $id = null;

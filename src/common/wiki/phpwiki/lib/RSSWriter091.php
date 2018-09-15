@@ -24,7 +24,7 @@
 rcs_id('$Id: RSSWriter091.php,v 1.10 2005/08/06 13:06:22 rurban Exp $');
 
 include_once("lib/RssWriter.php");
-class RSSWriter091 extends RSSWriter
+class RSSWriter091 extends RssWriter
 {
     function __construct()
     {
@@ -75,13 +75,13 @@ class RSSWriter091 extends RSSWriter
 }
 
 class _RecentChanges_RssFormatter091
-extends _RecentChanges_RSSFormatter
+extends _RecentChanges_RssFormatter
 // This class should probably go at then of RecentChanges.php
 {
     function format ($changes) 
     {
         //    include_once('lib/RssWriter.php');
-        $rss = new RssWriter091;
+        $rss = new RSSWriter091;
 
         $rss->channel($this->channel_properties());
 

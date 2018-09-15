@@ -179,7 +179,7 @@ class UserManagerTest extends TuleapTestCase
 
         $token_value   = 'token';
         $token         = stub('Rest_Token')->getTokenValue()->returns($token_value);
-        $token_manager = stub('REST_TokenManager')->generateTokenForUser()->returns($token);
+        $token_manager = stub('Rest_TokenManager')->generateTokenForUser()->returns($token);
 
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');

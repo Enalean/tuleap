@@ -19,8 +19,6 @@
  *
  */
 
-require_once __DIR__.'/../../lib/autoload.php';
-
 class SOAP_TestDataBuilder extends TestDataBuilder
 {
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -194,7 +194,7 @@ class hudson_svnPlugin extends Plugin {
     public function update_ci_triggers($params) {
         $params['job_id'] = $params['request']->get('job_id');
         if ($this->isRequestWellFormed($params) && $this->isPluginConcerned($params)) {
-            $vRepoId = new Valid_Uint('hudson_use_plugin_svn_trigger');
+            $vRepoId = new Valid_UInt('hudson_use_plugin_svn_trigger');
             $vRepoId->required();
             if ($params['request']->valid($vRepoId)) {
                 $this->getJobManager()->save($params);

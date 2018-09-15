@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\PHPWiki\WikiPage;
 
 class SystemEvent_FULLTEXTSEARCH_WIKI_UPDATE extends SystemEvent_FULLTEXTSEARCH_WIKI {
     const NAME = 'FULLTEXTSEARCH_WIKI_UPDATE';

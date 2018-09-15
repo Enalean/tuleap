@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,8 +26,6 @@ use Tuleap\FRS\UploadedLinksRequestFormatter;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\FRS\UploadedLinksUpdater;
 use Tuleap\FRS\UploadedLinkUpdateTablePresenter;
-
-require_once('common/autoload.php');
 
 function file_utils_header($params) {
     global $group_id,$Language;

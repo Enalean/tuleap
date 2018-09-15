@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/DataBuilder.php';
 require_once dirname(__FILE__).'/TestBase.php';
 require_once dirname(__FILE__).'/ArtifactBase.php';

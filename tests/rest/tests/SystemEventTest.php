@@ -24,8 +24,6 @@ namespace Tuleap\SystemEvent\REST;
 use RestBase;
 use REST_TestDataBuilder;
 
-require_once dirname(__FILE__).'/../lib/autoload.php';
-
 /**
  * @group SystemEventTests
  */

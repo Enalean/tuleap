@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2004-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -58,7 +58,7 @@ if ($user->isRestricted()) {
     $isMember = true;
 }
 
-$vPrivate = new Valid_Whitelist('private', array('1'));
+$vPrivate = new Valid_WhiteList('private', array('1'));
 $vPrivate->required();
 // Allow the autocomplete to include private projects only to super user
 if ($request->valid($vPrivate) && $user->isSuperUser()) {

@@ -1,4 +1,17 @@
 {
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\": ["common/"]
+    },
+    "classmap": ["common/"],
+    "exclude-from-classmap": ["common/wiki/phpwiki/"]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tuleap\\Test\\": ["../tests/lib/"]
+    },
+    "classmap": ["../tests/lib/"]
+  },
   "repositories": [
     {
       "type": "vcs",

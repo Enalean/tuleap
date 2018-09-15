@@ -23,4 +23,3 @@
  */
 
 require_once __DIR__ . '/../include/statisticsPlugin.class.php';
-require_once __DIR__ . '/../../../tests/lib/autoload.php';

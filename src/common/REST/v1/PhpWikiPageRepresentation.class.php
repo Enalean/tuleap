@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,7 @@
 
 namespace Tuleap\REST\v1;
 
-use WikiPage;
+use Tuleap\PHPWiki\WikiPage;
 
 class PhpWikiPageRepresentation {
 

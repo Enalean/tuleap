@@ -168,7 +168,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
 
     function create(Codendi_Request $request) {
         $content_id = false;
-        $vId = new Valid_Uint('renderer_id');
+        $vId = new Valid_UInt('renderer_id');
         $vId->setErrorMessage("Can't add empty renderer id");
         $vId->required();
         if($request->validInArray('renderer', $vId)) {
@@ -186,7 +186,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($renderer = $request->get('renderer')) && $request->valid($vContentId)) {
-            $vId = new Valid_Uint('renderer_id');
+            $vId = new Valid_UInt('renderer_id');
             if($request->validInArray('renderer', $vId)) {
                 $id = " renderer_id   = ". db_escape_int($renderer['renderer_id']) ." ";
             } else {

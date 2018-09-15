@@ -973,7 +973,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $i=0;
             $aff = new ArtifactFieldFactory($ath);
             
-            $art_fieldset_fact = new ArtifactFieldsetFactory($ath);
+            $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
       		$used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
       		
       		// fetch list of used fieldsets for this artifact
@@ -1087,7 +1087,7 @@ class ArtifactReportHtml extends ArtifactReport {
             $i=0;
             $aff = new ArtifactFieldFactory($ath);
 
-            $art_fieldset_fact = new ArtifactFieldsetFactory($ath);
+            $art_fieldset_fact = new ArtifactFieldSetFactory($ath);
       		$used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
       		
       		// fetch list of used fieldsets for this artifact

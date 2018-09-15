@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,7 +21,6 @@
 
 require_once('pre.php');
 require_once('account.php');
-require_once('common/include/lib/Upload.class.php');
 
 $user_manager = UserManager::instance();
 $user = $user_manager->getCurrentUser();
@@ -50,7 +49,7 @@ if ($request->get('use-default-avatar')) {
             _('An error occured with your upload. Please try again or choose another image.')
         );
     } else {
-        $handle = new Upload($_FILES['avatar']);
+        $handle = new upload($_FILES['avatar']);
         list($width, $height) = getimagesize($_FILES['avatar']['tmp_name']);
         $max_size = 100;
         //always resize in order to generate a background color

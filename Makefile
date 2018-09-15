@@ -32,16 +32,10 @@ doc: ## Build CLI documentation
 	$(MAKE) -C documentation all
 
 autoload:
-	@echo "Generate core"
-	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
 	@for path in `ls src/www/themes | egrep -v "^Tuleap|^common|^FlamingParrot|^local"`; do \
 	     echo "Generate theme $$path"; \
 	     (cd "src/www/themes/$$path/"; phpab -q --compat -o autoload.php .) \
         done;
-	@echo "Generate tests"
-	@(cd tests/lib; phpab  -q --compat -o autoload.php .)
-	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
-	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
@@ -49,12 +43,7 @@ autoload:
         done;
 
 autoload-with-userid:
-	@echo "Generate core"
-	@(cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .;chown $(USER_ID):$(USER_ID) autoload.php)
 	@echo "Generate tests"
-	@(cd tests/lib; phpab  -q --compat -o autoload.php .;chown $(USER_ID):$(USER_ID) autoload.php)
-	@(cd tests/soap/lib; phpab  -q --compat -o autoload.php .)
-	@(cd tests/rest/lib; phpab  -q --compat -o autoload.php .)
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-require_once dirname(__FILE__).'/../../lib/autoload.php';
 
 /**
  * When you move an artifact from the release plan back to the product backlog and Submit the changes an error is generated

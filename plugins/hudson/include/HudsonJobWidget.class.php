@@ -38,7 +38,7 @@ abstract class HudsonJobWidget extends HudsonWidget {
 
     function create(Codendi_Request $request) {
         $content_id = false;
-        $vId = new Valid_Uint($this->widget_id . '_job_id');
+        $vId = new Valid_UInt($this->widget_id . '_job_id');
         $vId->setErrorMessage("Can't add empty job id");
         $vId->required();
         if ($request->valid($vId)) {

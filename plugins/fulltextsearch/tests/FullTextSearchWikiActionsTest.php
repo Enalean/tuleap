@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,7 +48,7 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
             array('index', 'update', 'delete', 'deleteType', 'getMapping', 'setMapping', 'getIndexedElement', 'getIndexedType')
         );
 
-        $this->wiki_page = mock('WikiPage');
+        $this->wiki_page = mock(\Tuleap\PHPWiki\WikiPage::class);
         stub($this->wiki_page)->getGid()->returns(200);
         stub($this->wiki_page)->getId()->returns(101);
         stub($this->wiki_page)->getPagename()->returns('page');
@@ -211,8 +211,8 @@ class FullTextSearchWikiActionsTests extends TuleapTestCase {
     }
 
     public function itReindexAllTheWikiPagesForAGivenProject() {
-        $wiki_page_1 = stub('WikiPage')->getId()->returns(101);
-        $wiki_page_2 = stub('WikiPage')->getId()->returns(102);
+        $wiki_page_1 = stub(\Tuleap\PHPWiki\WikiPage::class)->getId()->returns(101);
+        $wiki_page_2 = stub(\Tuleap\PHPWiki\WikiPage::class)->getId()->returns(102);
 
         stub($wiki_page_1)->getGid()->returns(200);
         stub($wiki_page_2)->getGid()->returns(200);

@@ -29,7 +29,7 @@ use Project;
 use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;

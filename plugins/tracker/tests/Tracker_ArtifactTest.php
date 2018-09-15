@@ -1161,7 +1161,7 @@ class Tracker_Artifact_ExportToXMLTest extends TuleapTestCase {
 
         $archive = \Mockery::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
 
-        $user_xml_exporter      = new UserXmlExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
+        $user_xml_exporter      = new UserXMLExporter($this->user_manager, \Mockery::spy(\UserXMLExportedCollection::class));
         $builder                = new Tracker_XML_Exporter_ArtifactXMLExporterBuilder();
         $children_collector     = new Tracker_XML_Exporter_NullChildrenCollector();
         $file_path_xml_exporter = new Tracker_XML_Exporter_InArchiveFilePathXMLExporter();

@@ -56,7 +56,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         $vIsPublic->required();
 
         if ($request->existAndNonEmpty('delete')) {
-            $vMsg = new Valid_Uint('msg_id');
+            $vMsg = new Valid_UInt('msg_id');
             $vMsg->required();
             if($request->valid($vMsg)) {
                     /*

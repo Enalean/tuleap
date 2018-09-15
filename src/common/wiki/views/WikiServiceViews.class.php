@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  * Copyright 2005, STMicroelectronics
  *
  * Originally written by Manuel Vacelet
@@ -20,6 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\PHPWiki\WikiPage;
+
 require_once(dirname(__FILE__).'/WikiViews.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');

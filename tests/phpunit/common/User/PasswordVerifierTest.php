@@ -20,6 +20,7 @@
 
 namespace Tuleap\User;
 
+use Tuleap\user\PasswordVerifier;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 

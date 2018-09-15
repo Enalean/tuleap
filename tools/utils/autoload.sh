@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2014 - 2017. All rights reserved
+# Copyright (c) Enalean, 2014 - 2018. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -20,20 +20,7 @@
 
 echo "Running autoload in dev mode"
 declare -A AUTOLOAD_EXCLUDES
-AUTOLOAD_EXCLUDES["tests"]=1
 AUTOLOAD_EXCLUDES["template"]=1
-
-for section in `git status --porcelain src/ | sed s/^...// | cut -d'/' -f 1`; do
-    echo "Generate core"
-    (cd src/common; phpab -q --compat -o autoload.php --exclude "./wiki/phpwiki/*" .)
-    break
-done
-
-for section in `git status --porcelain tests/ | sed s/^...// | cut -d'/' -f 1`; do
-    echo "Generate tests"
-    (cd tests/lib; phpab  -q --compat -o autoload.php .)
-    break
-done
 
 for plugin in `git status --porcelain plugins/ | sed s/^...// | cut -d'/' -f 2 | sort -u`; do
     if [[ ${AUTOLOAD_EXCLUDES[$plugin]} ]];

@@ -21,8 +21,6 @@
 
 namespace Tuleap\Tests\SOAP;
 
-require_once __DIR__.'/../lib/autoload.php';
-
 use SOAP_TestDataBuilder;
 use SOAPBase;
 

@@ -20,6 +20,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\PHPWiki\WikiPage;
+
 require_once('www/project/admin/permissions.php');
 require_once('WikiPage.class.php');
 /**

@@ -23,8 +23,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\Widget\WidgetFactory;
 
-require_once __DIR__.'/../../lib/autoload.php';
-
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
 

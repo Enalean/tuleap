@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_WIKITest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->wiki_page = mock('WikiPage');
+        $this->wiki_page = mock(\Tuleap\PHPWiki\WikiPage::class);
         $this->group_id  = 101;
         $this->actions   = mock('FullTextSearchWikiActions');
     }

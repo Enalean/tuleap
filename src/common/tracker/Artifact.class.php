@@ -2534,7 +2534,7 @@ class Artifact {
 
         $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
         $used_fields = $art_field_fact->getAllUsedFields();
-        $art_fieldset_fact = new ArtifactFieldsetFactory($this->ArtifactType);
+        $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
         $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
         $ok = false;
 
@@ -2731,7 +2731,7 @@ class Artifact {
 	  $fmt_right = "%s";
 	  $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
 	  $used_fields = $art_field_fact->getAllUsedFields();
-      $art_fieldset_fact = new ArtifactFieldsetFactory($this->ArtifactType);
+      $art_fieldset_fact = new ArtifactFieldSetFactory($this->ArtifactType);
       $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
 	  $ok = false;
 

@@ -1,9 +1,9 @@
 <?php
 /**
  * Copyright 1999-2000 (c) The SourceForge Crew
- * Copyright Enalean (c) 2015 - 2017. All rights reserved.
+ * Copyright Enalean (c) 2015 - 2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -40,7 +40,7 @@ $group_id = $request->get('group_id');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
-$currentproject                    = new project($group_id);
+$currentproject                    = new Project($group_id);
 $fields_factory                    = new DescriptionFieldsFactory(new DescriptionFieldsDao());
 $project_details_dao               = new ProjectDetailsDAO();
 $project_manager                   = ProjectManager::instance();

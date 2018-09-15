@@ -378,7 +378,7 @@ extends WikiPlugin
         // navbar links, actionpages, and admin requests
         case 'buttons':
             $buttons = $GLOBALS['AllActionPages'];
-            $fileset = new FileSet(FindFile("themes/MacOSX/buttons/en"), 
+            $fileset = new fileSet(FindFile("themes/MacOSX/buttons/en"),
                                    "*.png");
             foreach ($fileset->getFiles() as $file) {
                 $b = urldecode(substr($file, 0, -4));
