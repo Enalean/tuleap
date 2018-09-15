@@ -527,6 +527,11 @@ class TrackerXmlImport
         SimpleXMLElement $xml_tracker,
         ImportConfig $configuration
     ) {
+        $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
+        if ($tracker_existing !== null) {
+            return $tracker_existing;
+        }
+
         if ($configuration->isUpdate()) {
             $tracker_created = $this->updateFromXML($project, $xml_tracker);
         } else {
@@ -546,6 +551,38 @@ class TrackerXmlImport
     }
 
     /**
+     * @return null|Tracker
+     */
+    private function getTrackerToReUse(
+        Project $project,
+        SimpleXMLElement $xml_tracker,
+        ImportConfig $configuration
+    ) {
+        foreach ($configuration->getExtraConfiguration() as $extra_configuration) {
+            if ($extra_configuration->getServiceName() !== trackerPlugin::SERVICE_SHORTNAME) {
+                continue;
+            }
+
+            $tracker_shortname = (String)$xml_tracker->item_name;
+
+            if (in_array($tracker_shortname, $extra_configuration->getValue())) {
+                $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId(
+                    $tracker_shortname,
+                    $project->getID()
+                );
+
+                if ($tracker_existing) {
+                    $this->fillFieldMappingFromExistingTracker($tracker_existing, $xml_tracker);
+
+                    return $tracker_existing;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param Project $project
      * @param SimpleXMLElement $xml_tracker
      * @return Tracker
@@ -559,11 +596,18 @@ class TrackerXmlImport
             throw new TrackerFromXmlImportCannotBeUpdatedException((String) $xml_tracker->name);
         }
 
-        $form_elements_existing = $this->formelement_factory->getFields($tracker_existing);
-
-        $this->xml_fields_mapping = $this->existing_tracker_field_mapping->getXmlFieldsMapping($xml_tracker, $form_elements_existing);
+        $this->fillFieldMappingFromExistingTracker($tracker_existing, $xml_tracker);
 
         return $tracker_existing;
+    }
+
+    private function fillFieldMappingFromExistingTracker(Tracker $tracker, SimpleXMLElement $xml_tracker)
+    {
+        $form_elements_existing   = $this->formelement_factory->getFields($tracker);
+        $this->xml_fields_mapping = $this->existing_tracker_field_mapping->getXmlFieldsMapping(
+            $xml_tracker,
+            $form_elements_existing
+        );
     }
 
     /**

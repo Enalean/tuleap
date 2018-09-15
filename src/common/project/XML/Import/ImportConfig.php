@@ -17,12 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 namespace Tuleap\Project\XML\Import;
 
 class ImportConfig
 {
-    private $force = array();
-    private $update = false;
+    private $force               = [];
+    private $update              = false;
+
+    /**
+     * @var ImportExtraConfiguration[]
+     */
+    private $extra_configuration = [];
 
     public function setForce($force)
     {
@@ -42,5 +48,18 @@ class ImportConfig
     public function setUpdate($update)
     {
         $this->update = $update;
+    }
+
+    public function addExtraConfiguration(ImportExtraConfiguration $extra_configuration)
+    {
+        $this->extra_configuration[] = $extra_configuration;
+    }
+
+    /**
+     * @return ImportExtraConfiguration[]
+     */
+    public function getExtraConfiguration()
+    {
+        return $this->extra_configuration;
     }
 }

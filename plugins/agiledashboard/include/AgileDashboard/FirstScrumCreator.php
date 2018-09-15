@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\XML\Importer\TrackerExtraConfiguration;
 
 class AgileDashboard_FirstScrumCreator {
 
@@ -70,7 +71,9 @@ class AgileDashboard_FirstScrumCreator {
             return;
         }
 
-        $config = new ImportConfig();
+        $config              = new ImportConfig();
+        $extra_configuration = new TrackerExtraConfiguration(['bugs']);
+        $config->addExtraConfiguration($extra_configuration);
 
         try {
             $this->xml_importer->import($config, $this->project->getId(), $this->template_path);
