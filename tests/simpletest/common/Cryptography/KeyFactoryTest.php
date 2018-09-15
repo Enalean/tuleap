@@ -62,7 +62,7 @@ class KeyFactoryTest extends \TuleapTestCase
         mkdir(dirname($encryption_key_file));
         \ForgeConfig::set('sys_custom_dir', $temporary_dir);
 
-        $raw_key_material = sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
+        $raw_key_material = random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
 
         file_put_contents($encryption_key_file, sodium_bin2hex($raw_key_material));
 

@@ -54,7 +54,7 @@ class KeyFactory
     private function generateEncryptionKey()
     {
         return new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
     }
 

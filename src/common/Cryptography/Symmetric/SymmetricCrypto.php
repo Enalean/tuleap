@@ -36,7 +36,7 @@ final class SymmetricCrypto
      */
     public static function encrypt(ConcealedString $plaintext, EncryptionKey $secret_key)
     {
-        $nonce = \sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $nonce = \random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
 
         return $nonce . \sodium_crypto_secretbox($plaintext->getString(), $nonce, $secret_key->getRawKeyMaterial());
     }
