@@ -121,7 +121,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, gitolite3
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
 Requires: php-guzzle-Guzzle, sudo, openssh-server
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -132,7 +132,7 @@ This package is integrated with gitolite v3 (new version)
 Summary: Pullrequest management for Tuleap
 Version: @@PLUGIN_PULLREQUEST_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git29-git
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sclo-git212-git
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.

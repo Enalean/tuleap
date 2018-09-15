@@ -6,8 +6,8 @@
 #
 
 GIT=/usr/bin/git
-if [ -f /opt/rh/rh-git29/root/usr/bin/git ]; then
-    GIT=/opt/rh/rh-git29/root/usr/bin/git
+if [ -f /opt/rh/sclo-git212/root/usr/bin/git ]; then
+    GIT=/opt/rh/sclo-git212/root/usr/bin/git
 fi
 
 bundle_file_path="$1"

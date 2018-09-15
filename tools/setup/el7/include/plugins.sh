@@ -1,5 +1,5 @@
 _pluginGit() {
-    local -r git="/opt/rh/rh-git29/root/usr/bin/git"
+    local -r git="/opt/rh/sclo-git212/root/usr/bin/git"
     local -r gitolite="/usr/bin/gitolite"
     local -r git_group="gitolite"
     local -r git_user="gitolite"
@@ -109,7 +109,7 @@ _pluginGit() {
     ${chmod} 640 ${git_home}/.gitolite.rc
 
     if [ ! -f "${git_home}/.profile" ]; then
-        ${printf} "source /opt/rh/rh-git29/enable" > ${git_home}/.profile
+        ${printf} "source /opt/rh/sclo-git212/enable" > ${git_home}/.profile
         ${chown} ${git_user}:${git_group} ${git_home}/.profile
         plugin_git_configured="true"
     fi
@@ -123,7 +123,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! ${su} --command '/opt/rh/rh-git29/root/usr/bin/git \
+    if ! ${su} --command '/opt/rh/sclo-git212/root/usr/bin/git \
         --git-dir="/var/lib/tuleap/gitolite/admin/.git"  \
         cat-file -e origin/master:conf/gitolite.conf' \
         --login ${tuleap_unix_user}; then

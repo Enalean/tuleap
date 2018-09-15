@@ -194,7 +194,7 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 AutoReqProv: no
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rh-git29-git, gitolite3
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, sclo-git212-git, gitolite3
 Requires: php-guzzle-Guzzle, sudo
 Provides: tuleap-plugin-git = %{version}
 Conflicts: tuleap-plugin-git
@@ -207,7 +207,7 @@ This package is integrated with gitolite v3 (new version)
 Summary: Pullrequest management for Tuleap
 Version: @@PLUGIN_PULLREQUEST_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git29-git
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sclo-git212-git
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.
@@ -803,7 +803,7 @@ else
     true
 fi
 
-echo 'source /opt/rh/rh-git29/enable' > /var/lib/gitolite/.profile
+echo 'source /opt/rh/sclo-git212/enable' > /var/lib/gitolite/.profile
 chown gitolite:gitolite /var/lib/gitolite/.profile
 
 chmod 750 /var/lib/gitolite

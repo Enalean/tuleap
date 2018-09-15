@@ -166,7 +166,7 @@
 # See http://gitolite.com/gitolite/git-config.html
 $UNSAFE_PATT = qr([\n]);
 
-$ENV{PATH} = "/opt/rh/rh-git29/root/usr/bin:$ENV{PATH}";
+$ENV{PATH} = "/opt/rh/sclo-git212/root/usr/bin/git:$ENV{PATH}";
 
 # ------------------------------------------------------------------------------
 # per perl rules, this should be the last line in such a file:
