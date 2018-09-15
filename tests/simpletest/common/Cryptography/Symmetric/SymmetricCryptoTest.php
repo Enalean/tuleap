@@ -33,7 +33,7 @@ class SymmetricCryptoTest extends \TuleapTestCase
     public function itDoesNotReuseNonces()
     {
         $key       = new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
         $plaintext = new ConcealedString('plaintext');
 
@@ -46,7 +46,7 @@ class SymmetricCryptoTest extends \TuleapTestCase
     public function itCanDecryptACiphertext()
     {
         $key       = new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
         $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
 
@@ -60,10 +60,10 @@ class SymmetricCryptoTest extends \TuleapTestCase
     public function itCannotDecryptACiphertextEncryptedWithADifferentKey()
     {
         $key_1     = new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
         $key_2     = new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
         $plaintext = new ConcealedString('The quick brown fox jumps over the lazy dog');
 
@@ -76,7 +76,7 @@ class SymmetricCryptoTest extends \TuleapTestCase
     public function itCannotDecryptAWronglyFormattedCiphertext()
     {
         $key = new EncryptionKey(
-            new ConcealedString(sodium_randombytes_buf(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
 
         $this->expectException('Tuleap\\Cryptography\\Exception\\InvalidCiphertextException');
