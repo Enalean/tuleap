@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Mediawiki;
+
+use MediaWikiPlugin;
+use Mockery;
+use PHPUnit\Framework\TestCase;
+
 require_once 'bootstrap.php';
 
-class mediawikiPluginTest extends TuleapTestCase {
+class mediawikiPluginTest extends TestCase //phpcs:ignore
+{
+    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function itReplacesTheTemplateNameInUrlByTheProjectName() {
+    public function testItReplacesTheTemplateNameInUrlByTheProjectName()
+    {
         $template = array ('name' => 'toto');
-        $link   = 'example.com/plugins/mediawiki/wiki/toto';
-        $project = stub('Project')->getUnixName()->returns('yaya');
+        $link     = 'example.com/plugins/mediawiki/wiki/toto';
+        $project  = Mockery::spy(\Project::class);
+        $project->shouldReceive('getUnixName')->andReturn('yaya');
 
         $params = array(
             'template' => $template,
@@ -33,10 +43,9 @@ class mediawikiPluginTest extends TuleapTestCase {
             'link'     => &$link
         );
 
-        $mediawiki_plugin = new MediaWikiPlugin();
+        $mediawiki_plugin = new mediaWikiPlugin();
         $mediawiki_plugin->service_replace_template_name_in_link($params);
-        $this->assertEqual('example.com/plugins/mediawiki/wiki/yaya', $link);
-    }
 
+        $this->assertSame('example.com/plugins/mediawiki/wiki/yaya', $link);
+    }
 }
-?>
