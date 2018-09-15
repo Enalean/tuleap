@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,15 @@
 
 namespace Tuleap\Label\Widget;
 
-use TuleapTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-require_once('bootstrap.php');
+require_once __DIR__ .'/bootstrap.php';
 
-class ProjectLabelRequestDataValidatorTest extends TuleapTestCase
+class ProjectLabelRequestDataValidatorTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /**
      * @var \Codendi_Request
      */
@@ -37,13 +40,14 @@ class ProjectLabelRequestDataValidatorTest extends TuleapTestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->validator = new ProjectLabelRequestDataValidator();
-        $this->request   = mock('Codendi_Request');
+        $this->request   = \Mockery::spy(\Codendi_Request::class);
     }
 
-    public function itThrowsAnExceptionWhenLabelDoesNotBelongToProject()
+    public function testItThrowsAnExceptionWhenLabelDoesNotBelongToProject()
     {
-        stub($this->request)->get('project-labels')->returns(array(1, 2));
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array(1, 2));
         $projects_labels = array(
             array(
                 'id'         => '1',
@@ -60,35 +64,38 @@ class ProjectLabelRequestDataValidatorTest extends TuleapTestCase
                 'color'      => 'acid-green'
             )
         );
-        stub($this->request)->validArray()->returns(true);
+        $this->request->shouldReceive('validArray')->andReturn(true);
 
-        $this->expectException('Tuleap\Label\Widget\ProjectLabelDoesNotBelongToProjectException');
+        $this->expectException(\Tuleap\Label\Widget\ProjectLabelDoesNotBelongToProjectException::class);
+
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function itThrowsAnExceptionWhenLabelAreNotSent()
+    public function testItThrowsAnExceptionWhenLabelAreNotSent()
     {
-        stub($this->request)->get('project-labels')->returns(array());
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn([]);
         $projects_labels = array();
 
-        $this->expectException('Tuleap\Label\Widget\ProjectLabelAreMandatoryException');
+        $this->expectException(\Tuleap\Label\Widget\ProjectLabelAreMandatoryException::class);
+
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function itThrowsAnExceptionWhenLabelsAreInvalid()
+    public function testItThrowsAnExceptionWhenLabelsAreInvalid()
     {
-        stub($this->request)->get('project-labels')->returns(array('aa', 'bb'));
-        stub($this->request)->validArray()->returns(false);
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array('aa', 'bb'));
+        $this->request->shouldReceive('validArray')->andReturn(false);
 
         $projects_labels = array();
 
-        $this->expectException('Tuleap\Label\Widget\ProjectLabelAreNotValidException');
+        $this->expectException(\Tuleap\Label\Widget\ProjectLabelAreNotValidException::class);
+
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
 
-    public function itDoesNotThrowExceptionWhenLabelsAreValid()
+    public function testItDoesNotThrowExceptionWhenLabelsAreValid()
     {
-        stub($this->request)->get('project-labels')->returns(array(1, 2));
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array(1, 2));
         $projects_labels = array(
             array(
                 'id'         => '1',
@@ -105,7 +112,7 @@ class ProjectLabelRequestDataValidatorTest extends TuleapTestCase
                 'color'      => 'acid-green'
             )
         );
-        stub($this->request)->validArray()->returns(true);
+        $this->request->shouldReceive('validArray')->andReturn(true);
 
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
     }
