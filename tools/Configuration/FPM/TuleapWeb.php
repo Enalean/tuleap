@@ -85,9 +85,11 @@ class TuleapWeb
     public function configure()
     {
         $this->logger->info("Start configuration in $this->php_configuration_folder/php-fpm.d/");
-        if (file_exists("$this->php_configuration_folder/php-fpm.d/www.conf")) {
+        if (file_exists("$this->php_configuration_folder/php-fpm.d/www.conf") &&
+                filesize("$this->php_configuration_folder/php-fpm.d/www.conf") !== 0) {
             $this->logger->info("Backup $this->php_configuration_folder/php-fpm.d/www.conf");
             rename("$this->php_configuration_folder/php-fpm.d/www.conf", "$this->php_configuration_folder/php-fpm.d/www.conf.orig");
+            touch("$this->php_configuration_folder/php-fpm.d/www.conf");
         }
         if (! file_exists("$this->php_configuration_folder/php-fpm.d/tuleap.conf")) {
             $this->moveExistingConfigurationFromOldConfigurationFolders();

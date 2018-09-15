@@ -46,9 +46,11 @@ class BackendSVN
             return;
         }
 
-        if (file_exists('/etc/opt/remi/php56/php-fpm.d/www.conf')) {
+        if (file_exists('/etc/opt/remi/php56/php-fpm.d/www.conf') &&
+                filesize('/etc/opt/remi/php56/php-fpm.d/www.conf') !== 0) {
             $this->logger->info('Backup original FPM file');
             rename('/etc/opt/remi/php56/php-fpm.d/www.conf', '/etc/opt/remi/php56/php-fpm.d/www.conf.orig');
+            touch('/etc/opt/remi/php56/php-fpm.d/www.conf');
         }
         if (file_exists('/etc/opt/remi/php56/php-fpm.d/tuleap.conf')) {
             $this->logger->info('Remove pre-existing tuleap.conf file');
