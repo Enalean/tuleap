@@ -21,7 +21,6 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use InoOicClient\Flow\Basic;
-use InoOicClient\Client\ClientInfo;
 use InoOicClient\Flow\Exception\AuthorizationException;
 use InoOicClient\Flow\Exception\TokenRequestException;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
@@ -29,7 +28,6 @@ use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoResponseException;
-use Tuleap\OpenIDConnectClient\Provider\Provider;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 use Exception;
@@ -39,7 +37,6 @@ class Flow extends Basic {
      * @var ProviderManager
      */
     private $provider_manager;
-
     /**
      * @var TokenRequestCreator
      */
@@ -63,7 +60,6 @@ class Flow extends Basic {
 
     public function __construct(
         StateManager $state_manager,
-        AuthorizationDispatcher $authorization_dispatcher,
         ProviderManager $provider_manager,
         TokenRequestCreator $token_request_creator,
         TokenRequestSender $token_request_sender,
@@ -72,7 +68,6 @@ class Flow extends Basic {
         UserInfoRequestSender $user_info_request_sender
     ) {
         $this->setStateManager($state_manager);
-        $this->setAuthorizationDispatcher($authorization_dispatcher);
         $this->provider_manager          = $provider_manager;
         $this->token_request_creator     = $token_request_creator;
         $this->token_request_sender      = $token_request_sender;
@@ -81,57 +76,11 @@ class Flow extends Basic {
         $this->user_info_request_sender  = $user_info_request_sender;
     }
 
-    public function setOptions(Provider $provider) {
-        $configuration = $this->generateConfiguration($provider);
-        parent::setOptions($configuration);
-    }
-
-    /**
-     * @return array
-     */
-    private function generateConfiguration(Provider $provider) {
-        return array(
-            'client_info' => array(
-                'client_id'    => $provider->getClientId(),
-                'redirect_uri' => $this->getRedirectUri(),
-
-                'authorization_endpoint' => $provider->getAuthorizationEndpoint(),
-                'token_endpoint'         => $provider->getTokenEndpoint(),
-
-                'authentication_info' => array(
-                    'method' => 'client_secret_post',
-                    'params' => array(
-                        'client_secret' => $provider->getClientSecret()
-                    )
-                )
-            )
-        );
-    }
-
     /**
      * @return string
      */
     private function getRedirectUri() {
         return 'https://'. ForgeConfig::get('sys_https_host') . '/plugins/openidconnectclient/';
-    }
-
-    /**
-     * @param Provider $provider
-     * @param $return_to
-     * @return string
-     */
-    public function getAuthorizationRequestUri(Provider $provider, $return_to) {
-        $this->setOptions($provider);
-        $scope = 'openid';
-        if ($provider->isUniqueAuthenticationEndpoint()) {
-            $scope = 'openid profile email';
-        }
-        $authorization_request = $this->createAuthorizationRequest($scope);
-        return $this->getAuthorizationDispatcher()->createAuthorizationRequestUri(
-            $authorization_request,
-            $provider,
-            $return_to
-        );
     }
 
     /**
@@ -178,16 +127,5 @@ class Flow extends Basic {
         $this->getStateManager()->clearState();
 
         return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_info_response->getClaims());
-    }
-
-    /**
-     * @return ClientInfo
-     */
-    public function getClientInfo() {
-        if (! $this->clientInfo instanceof ClientInfo) {
-            $this->clientInfo = new ClientInfo();
-        }
-        $this->clientInfo->fromArray($this->options->get(self::OPT_CLIENT_INFO, array()));
-        return $this->clientInfo;
     }
 }
