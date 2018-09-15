@@ -48,6 +48,7 @@
             <directory suffix=".php">../../plugins/forumml/include/</directory>
             <directory suffix=".php">../../plugins/crosstracker/include/CrossTracker</directory>
             <directory suffix=".php">../../plugins/hudson_svn/include</directory>
+            <directory suffix=".php">../../plugins/label/include</directory>
         </whitelist>
     </filter>
     <testsuites>
