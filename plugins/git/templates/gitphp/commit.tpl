@@ -79,7 +79,7 @@
                 echo $purifier->purify(
                     $this->get_template_vars('line'),
                     CODENDI_PURIFIER_BASIC_NOBR,
-                    $_REQUEST['group_id']
+                    HTTPRequest::instance()->getProject()->getID()
                 );
             {/php}
         </span>
@@ -88,7 +88,7 @@
             echo $purifier->purify(
                 $this->get_template_vars('line'),
                 CODENDI_PURIFIER_BASIC_NOBR,
-                $_REQUEST['group_id']
+                HTTPRequest::instance()->getProject()->getID()
             );
         {/php}
      {/if}
