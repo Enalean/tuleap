@@ -20,7 +20,7 @@
     "babel-preset-env": "^1.6.1",
     "concurrently": "^3.6.0",
     "del": "^2.2.1",
-    "easygettext": "^2.5.0",
+    "easygettext": "^2.6.4",
     "eslint": "^5.1.0",
     "eslint-plugin-cypress": "^2.0.1",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.3.1",

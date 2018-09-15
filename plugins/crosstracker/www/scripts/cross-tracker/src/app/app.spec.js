@@ -20,6 +20,14 @@
 import "babel-polyfill";
 import "tlp-mocks";
 
+import Vue from "vue";
+import GettextPlugin from "vue-gettext";
+
+Vue.use(GettextPlugin, {
+    translations: {},
+    silent: true
+});
+
 import "./ArtifactTable.spec.js";
 import "./CrossTrackerWidget.spec.js";
 import "./reading-mode/ReadingMode.spec.js";

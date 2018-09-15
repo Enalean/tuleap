@@ -18,8 +18,9 @@
  */
 
 import Vue from "vue";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../../po/fr.po";
 
-import { gettext_provider } from "./gettext-provider.js";
 import { init as initUser } from "./user-service.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
@@ -27,19 +28,25 @@ import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
+    Vue.use(GettextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+    const locale = document.body.dataset.userLocale;
+    Vue.config.language = locale;
+
     const widget_cross_tracker_elements = document.getElementsByClassName(
         "dashboard-widget-content-cross-tracker"
     );
-
     const Widget = Vue.extend(CrossTrackerWidget);
 
     for (const widget_element of widget_cross_tracker_elements) {
         const report_id = widget_element.dataset.reportId;
-        const locale = widget_element.dataset.locale;
         const localized_php_date_format = widget_element.dataset.dateFormat;
         const is_anonymous = widget_element.dataset.isAnonymous === "true";
 
-        gettext_provider.setLocale(locale);
         initUser(is_anonymous, localized_php_date_format, locale);
 
         const backend_cross_tracker_report = new BackendCrossTrackerReport();

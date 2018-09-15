@@ -1,33 +1,33 @@
-/**
-* Copyright (c) Enalean, 2018. All Rights Reserved.
-*
-* This file is a part of Tuleap.
-*
-* Tuleap is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Tuleap is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+<!--
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(<template>
+<template>
     <div class="cross-tracker-artifacts-table">
         <table class="tlp-table">
             <thead>
                 <tr>
-                    <th>{{ artifact_label }}</th>
-                    <th>{{ project_label }}</th>
-                    <th>{{ status_label }}</th>
-                    <th>{{ last_update_label }}</th>
-                    <th>{{ submitted_by_label }}</th>
-                    <th>{{ assigned_to_label }}</th>
+                    <th v-translate>Artifact</th>
+                    <th v-translate>Project</th>
+                    <th v-translate>Status</th>
+                    <th v-translate>Last update date</th>
+                    <th v-translate>Submitted by</th>
+                    <th v-translate>Assigned to</th>
                 </tr>
             </thead>
             <tbody v-if="is_loading === true">
@@ -37,8 +37,8 @@
             </tbody>
             <tbody v-else-if="artifacts.length === 0">
                 <tr>
-                    <td colspan="6" class="tlp-table-cell-empty">
-                        {{ artifacts_empty }}
+                    <td colspan="6" class="tlp-table-cell-empty" v-translate>
+                        No matching artifacts found
                     </td>
                 </tr>
             </tbody>
@@ -59,16 +59,13 @@
                     v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                {{ load_more_label }}
+                <translate>Load more</translate>
             </button>
         </div>
     </div>
+</template>
 
-
-</template>)
-
-(<script>
-import { gettext_provider } from "./gettext-provider.js";
+<script>
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import { getReportContent, getQueryResult } from "./rest-querier.js";
 import moment from "moment";
@@ -94,14 +91,6 @@ export default {
         };
     },
     computed: {
-        artifact_label: () => gettext_provider.gettext("Artifact"),
-        project_label: () => gettext_provider.gettext("Project"),
-        status_label: () => gettext_provider.gettext("Status"),
-        last_update_label: () => gettext_provider.gettext("Last update date"),
-        submitted_by_label: () => gettext_provider.gettext("Submitted by"),
-        assigned_to_label: () => gettext_provider.gettext("Assigned to"),
-        artifacts_empty: () => gettext_provider.gettext("No matching artifacts found"),
-        load_more_label: () => gettext_provider.gettext("Load more"),
         report_state() {
             // We just need to react to certain changes in this
             return [this.isReportInReadingMode, this.isReportSaved];
@@ -177,4 +166,4 @@ export default {
         }
     }
 };
-</script>)
+</script>
