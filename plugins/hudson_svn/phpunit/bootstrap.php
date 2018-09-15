@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once __DIR__ . '/../include/autoload.php';
-require_once __DIR__ .'/../include/constants.php';
+require_once __DIR__ . '/../include/hudson_svnPlugin.class.php';
 require_once __DIR__ . '/../../svn/tests/bootstrap.php';
