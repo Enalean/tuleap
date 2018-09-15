@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -94,10 +94,6 @@ class KeyboardNavigationModalPresenter {
 
     public function sidebar_mediawiki() {
         return _('Mediawiki');
-    }
-
-    public function sidebar_im() {
-        return _('Instant messaging');
     }
 
     public function sidebar_forum() {

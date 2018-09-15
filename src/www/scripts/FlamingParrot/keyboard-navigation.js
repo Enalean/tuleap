@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,7 +40,6 @@ function deployKeyboardShortcuts() {
         sidebar_cvs = $("a#sidebar-cvs"),
         sidebar_file = $("a#sidebar-file"),
         sidebar_mediawiki = $("a#sidebar-plugin_mediawiki"),
-        sidebar_im = $("a#sidebar-IM"),
         sidebar_forum = $("a#sidebar-forum"),
         sidebar_mail = $("a#sidebar-mail"),
         sidebar_news = $("a#sidebar-news");
@@ -66,7 +65,6 @@ function deployKeyboardShortcuts() {
     setShortcutOnSidebarLink(["p", "b"], sidebar_forum);
     setShortcutOnSidebarLink(["p", "n"], sidebar_news);
     setShortcutOnSidebarLink(["p", "l"], sidebar_mail);
-    setShortcutOnSidebarLink(["p", "i"], sidebar_im);
 }
 
 function setShortcutOnProjectDropDown(shortCut, element, dropdown) {

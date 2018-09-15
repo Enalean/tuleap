@@ -443,9 +443,6 @@ msgstr ""
 msgid "Initial layout creation"
 msgstr ""
 
-msgid "Instant messaging"
-msgstr ""
-
 msgid "Internal server error"
 msgstr ""
 

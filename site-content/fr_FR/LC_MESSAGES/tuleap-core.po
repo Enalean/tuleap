@@ -481,9 +481,6 @@ msgstr "Hérité?"
 msgid "Initial layout creation"
 msgstr "Création de la structure initiale"
 
-msgid "Instant messaging"
-msgstr "Messagerie Instantanée"
-
 msgid "Internal server error"
 msgstr "Erreur interne du serveur"
 
