@@ -47,6 +47,7 @@
             <directory suffix=".php">../../plugins/archivedeleteditems/include/</directory>
             <directory suffix=".php">../../plugins/forumml/include/</directory>
             <directory suffix=".php">../../plugins/crosstracker/include/CrossTracker</directory>
+            <directory suffix=".php">../../plugins/hudson_svn/include</directory>
         </whitelist>
     </filter>
     <testsuites>
