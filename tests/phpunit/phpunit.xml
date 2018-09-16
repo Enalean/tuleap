@@ -49,6 +49,7 @@
             <directory suffix=".php">../../plugins/crosstracker/include/CrossTracker</directory>
             <directory suffix=".php">../../plugins/hudson_svn/include</directory>
             <directory suffix=".php">../../plugins/label/include</directory>
+            <directory suffix=".php">../../plugins/referencealias_core/include/ReferenceAliasCore/</directory>
         </whitelist>
     </filter>
     <testsuites>
