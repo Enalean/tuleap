@@ -1,11 +1,11 @@
 {{# is_migration_queued }}
-<div class="tlp-alert-info">
+<div class="tlp-alert-info git-repository-gerrit-status">
     <i class="fa fa-info-circle tlp-alert-icon"></i>
     {{# dgettext }}tuleap-git | This repository is in queue for migration to gerrit. Please check back here in a few minutes.{{/ dgettext }}
 </div>
 {{/ is_migration_queued }}
 {{# is_migrated_to_gerrit }}
-<div class="tlp-alert-info">
+<div class="tlp-alert-info git-repository-gerrit-status">
     <i class="fa fa-info-circle tlp-alert-icon"></i>
     {{# dgettext }}
         tuleap-git
@@ -15,7 +15,7 @@
 </div>
 {{/ is_migrated_to_gerrit }}
 {{# has_migration_error }}
-<div class="tlp-alert-danger">
+<div class="tlp-alert-danger git-repository-gerrit-status">
     <i class="fa fa-exclamation-triangle tlp-alert-icon"></i>
     {{# dgettext }}
         tuleap-git
