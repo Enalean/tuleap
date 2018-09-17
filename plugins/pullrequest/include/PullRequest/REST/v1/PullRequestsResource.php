@@ -645,8 +645,8 @@ class PullRequestsResource extends AuthenticatedResource
     /**
      * Post a new inline comment
      *
-     * Post a new inline comment for a given pull request file<br>
-     * Format: { "content": "My new comment" , "unidiff_offset": 1, "file_path": "dir/myfile.txt"}
+     * Post a new inline comment for a given pull request file and a position (left | right)<br>
+     * Format: { "content": "My new comment" , "unidiff_offset": 1, "file_path": "dir/myfile.txt" , position: "left" }
      *
      * <pre>
      * /!\ PullRequest REST routes are under construction and subject to changes /!\
@@ -683,8 +683,19 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(404, 'The file does not exist');
         }
 
+        if (! in_array($comment_data->position, ['left', 'right'])) {
+            throw new RestException(400, 'Please provide a valid position, either left or right');
+        }
+
         $post_date = time();
-        $this->inline_comment_creator->insert($pull_request, $user, $comment_data, $post_date, $git_repository_source->getProjectId());
+
+        $this->inline_comment_creator->insert(
+            $pull_request,
+            $user,
+            $comment_data,
+            $post_date,
+            $git_repository_source->getProjectId()
+        );
 
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($this->user_manager->getUserById($user->getId()));
@@ -695,7 +706,7 @@ class PullRequestsResource extends AuthenticatedResource
             $post_date,
             $comment_data->content,
             $git_repository_source->getProjectId(),
-            'right'
+            $comment_data->position
         );
     }
 

@@ -35,6 +35,8 @@ import {
 import { synchronize } from "./side-by-side-scroll-synchronizer.js";
 import { getCollapsibleSectionsSideBySide } from "../../code-collapse/code-collapse-service.js";
 
+import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
+
 import "./modes.js";
 
 export default {
@@ -122,10 +124,11 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             );
         }
 
-        // Arbitrarily show the comment on right side. As of today, We can't tell the backend
-        // to store it on the left side.
+        const target_code_mirror =
+            comment.position === POSITION_LEFT ? left_code_mirror : right_code_mirror;
+
         return CodeMirrorHelperService.displayInlineComment(
-            right_code_mirror,
+            target_code_mirror,
             comment,
             comment_line.new_offset - 1
         );
@@ -208,7 +211,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             line.unidiff_offset,
             line_number,
             self.filePath,
-            self.pullRequestId
+            self.pullRequestId,
+            POSITION_LEFT
         );
     }
 
@@ -223,7 +227,8 @@ function controller($element, $scope, $q, CodeMirrorHelperService, TooltipServic
             line.unidiff_offset,
             line_number,
             self.filePath,
-            self.pullRequestId
+            self.pullRequestId,
+            POSITION_RIGHT
         );
     }
 

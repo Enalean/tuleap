@@ -20,11 +20,12 @@ function FileDiffRestService($q, $http, ErrorModalService) {
             });
     }
 
-    function postInlineComment(pull_request_id, file_path, unidiff_offset, content) {
+    function postInlineComment(pull_request_id, file_path, unidiff_offset, content, position) {
         const data = {
-            file_path: file_path,
-            unidiff_offset: unidiff_offset,
-            content: content
+            file_path,
+            unidiff_offset,
+            content,
+            position
         };
 
         return $http

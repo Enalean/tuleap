@@ -50,7 +50,7 @@ class Dao extends DataAccessObject
         return $this->getDB()->run($sql, $pull_request_id);
     }
 
-    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content)
+    public function insert($pull_request_id, $user_id, $file_path, $post_date, $unidiff_offset, $content, $position)
     {
         $this->getDB()->insert(
             'plugin_pullrequest_inline_comments',
@@ -60,7 +60,8 @@ class Dao extends DataAccessObject
                 'file_path'       => $file_path,
                 'post_date'       => $post_date,
                 'unidiff_offset'  => $unidiff_offset,
-                'content'         => $content
+                'content'         => $content,
+                'position'        => $position
             ]
         );
 
