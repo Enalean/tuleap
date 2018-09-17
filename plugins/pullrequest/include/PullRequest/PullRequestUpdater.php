@@ -66,6 +66,10 @@ class PullRequestUpdater
      */
     private $git_repository_factory;
     /**
+     * @var GitExecFactory
+     */
+    private $git_exec_factory;
+    /**
      * @var GitPullRequestReferenceUpdater
      */
     private $git_pull_request_reference_updater;
@@ -78,6 +82,7 @@ class PullRequestUpdater
         FileUniDiffBuilder $diff_builder,
         TimelineEventCreator $timeline_event_creator,
         GitRepositoryFactory $git_repository_factory,
+        GitExecFactory $git_exec_factory,
         GitPullRequestReferenceUpdater $git_pull_request_reference_updater
     ) {
         $this->pull_request_factory               = $pull_request_factory;
@@ -87,17 +92,18 @@ class PullRequestUpdater
         $this->diff_builder                       = $diff_builder;
         $this->timeline_event_creator             = $timeline_event_creator;
         $this->git_repository_factory             = $git_repository_factory;
+        $this->git_exec_factory                   = $git_exec_factory;
         $this->git_pull_request_reference_updater = $git_pull_request_reference_updater;
     }
 
-    public function updatePullRequests(PFUser $user, GitExec $git_exec, GitRepository $repository, $branch_name, $new_rev)
+    public function updatePullRequests(PFUser $user, GitRepository $repository, $branch_name, $new_rev)
     {
         $prs = $this->pull_request_factory->getOpenedBySourceBranch($repository, $branch_name);
         foreach ($prs as $pr) {
             $this->pull_request_factory->updateSourceRev($pr, $new_rev);
 
             $repository_destination          = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
-            $executor_repository_destination = GitExec::buildFromRepository($repository_destination);
+            $executor_repository_destination = $this->git_exec_factory->getGitExec($repository_destination);
 
             $updated_pr = new PullRequest(
                 $pr->getId(),
@@ -117,14 +123,16 @@ class PullRequestUpdater
                 $pr->getMergeStatus()
             );
 
+
+            $executor_repository_source = $this->git_exec_factory->getGitExec($repository);
             $this->git_pull_request_reference_updater->updatePullRequestReference(
                 $updated_pr,
-                $git_exec,
+                $executor_repository_source,
                 $executor_repository_destination,
                 $repository_destination
             );
 
-            $ancestor_rev = $git_exec->getCommonAncestor($new_rev, $pr->getBranchDest());
+            $ancestor_rev = $executor_repository_destination->getCommonAncestor($new_rev, $pr->getBranchDest());
             if ($ancestor_rev !== $pr->getSha1Dest()) {
                 $this->pull_request_factory->updateDestRev($pr, $ancestor_rev);
             }
@@ -142,8 +150,8 @@ class PullRequestUpdater
 
         $prs = $this->pull_request_factory->getOpenedByDestinationBranch($repository, $branch_name);
         foreach ($prs as $pr) {
-            $pr_repository = $this->git_repository_factory->getRepositoryById($pr->getRepositoryId());
-            $pr_git_exec   = new GitExec($pr_repository->getFullPath(), $pr_repository->getFullPath());
+            $pr_repository = $this->git_repository_factory->getRepositoryById($pr->getRepoDestId());
+            $pr_git_exec   = $this->git_exec_factory->getGitExec($pr_repository);
             $merge_status  = $this->pull_request_merger->detectMergeabilityStatus(
                 $pr_git_exec,
                 $pr->getSha1Src(),
