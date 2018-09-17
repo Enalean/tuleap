@@ -155,11 +155,6 @@
                 });
             });
 
-            var dropdown_trigger = document.getElementById("dropdown-example");
-            if (dropdown_trigger) {
-                tlp.dropdown(dropdown_trigger);
-            }
-
             var dropdown_trigger_options = document.getElementById("dropdown-example-options");
             if (dropdown_trigger_options) {
                 tlp.dropdown(dropdown_trigger_options, {
@@ -168,25 +163,17 @@
                 });
             }
 
-            var dropdown_trigger = document.getElementById("dropdown-right-example");
-            if (dropdown_trigger) {
-                tlp.dropdown(dropdown_trigger);
-            }
-
-            var dropdown_trigger = document.getElementById("dropdown-top-example");
-            if (dropdown_trigger) {
-                tlp.dropdown(dropdown_trigger);
-            }
-
-            var dropdown_trigger = document.getElementById("dropdown-top-right-example");
-            if (dropdown_trigger) {
-                tlp.dropdown(dropdown_trigger);
-            }
-
-            var dropdown_icon_trigger = document.getElementById("dropdown-icon-right-example");
-            if (dropdown_icon_trigger) {
-                tlp.dropdown(dropdown_icon_trigger);
-            }
+            [
+                "dropdown-example",
+                "dropdown-right-example",
+                "dropdown-top-example",
+                "dropdown-top-right-example",
+                "dropdown-icon-right-example",
+                "dropdown-with-tabs-example"
+            ]
+                .map(id => document.getElementById(id))
+                .filter(element => Boolean(element))
+                .forEach(trigger => tlp.dropdown(trigger));
         }
         setTimeout(updatePreview, 10);
     });
