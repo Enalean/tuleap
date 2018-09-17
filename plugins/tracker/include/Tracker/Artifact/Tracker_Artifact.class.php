@@ -590,6 +590,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return Tracker_Semantic_Status::load($this->getTracker())->isOpen($this);
     }
 
+    public function isOpenAtGivenChangeset(Tracker_Artifact_Changeset $changeset)
+    {
+        return Tracker_Semantic_Status::load($this->getTracker())->isOpenAtGivenChangeset($changeset);
+    }
+
     /**
      *
      * @param <type> $recipient

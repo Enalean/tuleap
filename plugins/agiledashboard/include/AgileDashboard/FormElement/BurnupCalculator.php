@@ -136,6 +136,6 @@ class BurnupCalculator
         Tracker_Artifact_Changeset $changeset,
         SemanticDone $semantic_done
     ) {
-        return $changeset->getArtifact()->isOpen() || $semantic_done->isDone($changeset);
+        return $changeset->getArtifact()->isOpenAtGivenChangeset($changeset) || $semantic_done->isDone($changeset);
     }
 }

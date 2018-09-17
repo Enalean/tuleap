@@ -125,6 +125,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return in_array($status, $this->getOpenLabels());
     }
 
+    public function isOpenAtGivenChangeset(Tracker_Artifact_Changeset $changeset)
+    {
+        if (! $this->getField()) {
+            return true;
+        }
+
+        $status = $changeset->getArtifact()->getStatusForChangeset($changeset);
+        return in_array($status, $this->getOpenLabels());
+    }
+
     /**
      * Get status label independent of language (hence english)
      *
