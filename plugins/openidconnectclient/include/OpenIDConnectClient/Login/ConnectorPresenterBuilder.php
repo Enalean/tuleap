@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,22 +20,24 @@
 
 namespace Tuleap\OpenIDConnectClient\Login;
 
-use Tuleap\OpenIDConnectClient\Authentication\Flow;
+use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
-class ConnectorPresenterBuilder {
+class ConnectorPresenterBuilder
+{
     /**
      * @var ProviderManager
      */
     private $provider_manager;
     /**
-     * @var Flow
+     * @var AuthorizationRequestCreator
      */
-    private $flow;
+    private $authorization_request_creator;
 
-    public function __construct(ProviderManager $provider_manager, Flow $flow) {
-        $this->provider_manager = $provider_manager;
-        $this->flow             = $flow;
+    public function __construct(ProviderManager $provider_manager, AuthorizationRequestCreator $authorization_request_creator)
+    {
+        $this->provider_manager              = $provider_manager;
+        $this->authorization_request_creator = $authorization_request_creator;
     }
 
     /**
@@ -64,11 +66,13 @@ class ConnectorPresenterBuilder {
         $providers                           = $this->provider_manager->getProvidersUsableToLogIn();
         $providers_authorization_request_uri = array();
         foreach($providers as $provider) {
+            $authorization_request = $this->authorization_request_creator->createAuthorizationRequest($provider, $return_to);
+
             $providers_authorization_request_uri[] = array(
                 'name'                      => $provider->getName(),
                 'icon'                      => $provider->getIcon(),
                 'color'                     => $provider->getColor(),
-                'authorization_request_uri' => $this->flow->getAuthorizationRequestUri($provider, $return_to)
+                'authorization_request_uri' => $authorization_request->getURL()
             );
         }
 

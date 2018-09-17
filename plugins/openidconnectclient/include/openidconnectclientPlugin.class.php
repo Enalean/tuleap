@@ -28,7 +28,7 @@ use Tuleap\OpenIDConnectClient\AccountLinker;
 use Tuleap\OpenIDConnectClient\AdminRouter;
 use Tuleap\OpenIDConnectClient\Administration\IconPresenterFactory;
 use Tuleap\OpenIDConnectClient\Administration\ColorPresenterFactory;
-use Tuleap\OpenIDConnectClient\Authentication\AuthorizationDispatcher;
+use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Flow;
 use Tuleap\OpenIDConnectClient\Authentication\IDTokenVerifier;
 use Tuleap\OpenIDConnectClient\Authentication\StateFactory;
@@ -36,7 +36,6 @@ use Tuleap\OpenIDConnectClient\Authentication\StateManager;
 use Tuleap\OpenIDConnectClient\Authentication\StateStorage;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
-use Tuleap\OpenIDConnectClient\Authentication\Uri\Generator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Login\ConnectorPresenterBuilder;
@@ -176,7 +175,7 @@ class openidconnectclientPlugin extends Plugin {
 
         $url_generator = new Login\LoginUniqueAuthenticationUrlGenerator(
             $provider_manager,
-            $this->getFlow($provider_manager)
+            $this->getAuthorizationRequestCreator()
         );
 
         try {
@@ -203,12 +202,10 @@ class openidconnectclientPlugin extends Plugin {
             new StateFactory(new RandomNumberGenerator())
         );
         $id_token_verifier = new IDTokenVerifier();
-        $uri_generator     = new Generator();
         $request_factory   = MessageFactoryBuilder::build();
         $http_client       = HttpClientFactory::createClient();
         $flow              = new Flow(
             $state_manager,
-            new AuthorizationDispatcher($state_manager, $uri_generator),
             $provider_manager,
             new TokenRequestCreator($request_factory),
             new TokenRequestSender($http_client),
@@ -217,6 +214,19 @@ class openidconnectclientPlugin extends Plugin {
             new UserInfoRequestSender($http_client)
         );
         return $flow;
+    }
+
+    /**
+     * @return AuthorizationRequestCreator
+     */
+    private function getAuthorizationRequestCreator()
+    {
+        return new AuthorizationRequestCreator(
+            new StateManager(
+                new StateStorage(),
+                new StateFactory(new RandomNumberGenerator())
+            )
+        );
     }
 
     /**
@@ -239,8 +249,10 @@ class openidconnectclientPlugin extends Plugin {
         }
 
         $provider_manager                  = $this->getProviderManager();
-        $flow                              = $this->getFlow($provider_manager);
-        $login_connector_presenter_builder = new ConnectorPresenterBuilder($provider_manager, $flow);
+        $login_connector_presenter_builder = new ConnectorPresenterBuilder(
+            $provider_manager,
+            $this->getAuthorizationRequestCreator()
+        );
         $login_connector_presenter         = $login_connector_presenter_builder->getLoginConnectorPresenter(
             $params['return_to']
         );
@@ -421,8 +433,10 @@ class openidconnectclientPlugin extends Plugin {
         }
 
         $provider_manager        = $this->getProviderManager();
-        $flow                    = $this->getFlow($provider_manager);
-        $login_presenter_builder = new ConnectorPresenterBuilder($provider_manager, $flow);
+        $login_presenter_builder = new ConnectorPresenterBuilder(
+            $provider_manager,
+            $this->getAuthorizationRequestCreator()
+        );
 
         $return_to = $request->get('return_to');
         $presenter = $login_presenter_builder->getLoginSpecificPageConnectorPresenter($return_to);
