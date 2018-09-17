@@ -82,7 +82,7 @@ class GitExecTest extends TuleapTestCase
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
-        $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
+        $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
         $this->assertArrayNotEmpty($files);
         $this->assertEqual($files[0], 'M	toto');
@@ -104,7 +104,7 @@ class GitExecTest extends TuleapTestCase
         $sha1_src  = $this->git_exec->getBranchSha1('refs/heads/dev');
         $sha1_dest = $this->git_exec->getBranchSha1('refs/heads/master');
 
-        $files = $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
+        $files = $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
 
         $this->assertEqual($files[0], 'A	added-file-in-dev');
     }
@@ -116,7 +116,7 @@ class GitExecTest extends TuleapTestCase
 
         $this->expectException('Tuleap\PullRequest\Exception\UnknownReferenceException');
 
-        $this->git_exec->getModifiedFiles($sha1_src, $sha1_dest);
+        $this->git_exec->getModifiedFilesNameStatus($sha1_src, $sha1_dest);
     }
 
     public function itReturnsShortStat()
@@ -143,7 +143,7 @@ class GitExecTest extends TuleapTestCase
         $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
     }
 
-    public function itReturnsShortStatForOneFile()
+    public function itReturnsModifiedLinesStats()
     {
         $file1_path = "$this->fixture_dir/file1";
         $file2_path = "$this->fixture_dir/file2";
@@ -161,15 +161,9 @@ class GitExecTest extends TuleapTestCase
         $this->git_exec->add($file1_path);
         $this->git_exec->commit("rm $file2_path & modify $file1_path");
 
-        $short_stat = $this->git_exec->getFileDiffStat('master', 'dev', $file1_path);
-        $this->assertEqual(1, $short_stat->getFilesChangedNumber());
-        $this->assertEqual(1, $short_stat->getLinesAddedNumber());
-        $this->assertEqual(0, $short_stat->getLinesRemovedNumber());
+        $modified_files = $this->git_exec->getModifiedFilesLineStat('master', 'dev');
 
-        $short_stat = $this->git_exec->getFileDiffStat('master', 'dev', $file2_path);
-        $this->assertEqual(1, $short_stat->getFilesChangedNumber());
-        $this->assertEqual(0, $short_stat->getLinesAddedNumber());
-        $this->assertEqual(1, $short_stat->getLinesRemovedNumber());
+        $this->assertEqual(["1\t0\tfile1", "0\t1\tfile2"], $modified_files);
     }
 
     public function itReturnsFalseIfBaseCommitRefDoesntExist_isAncestor() // phpcs:ignore
