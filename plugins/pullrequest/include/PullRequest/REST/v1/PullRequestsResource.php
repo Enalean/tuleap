@@ -694,7 +694,8 @@ class PullRequestsResource extends AuthenticatedResource
             $user_representation,
             $post_date,
             $comment_data->content,
-            $git_repository_source->getProjectId()
+            $git_repository_source->getProjectId(),
+            'right'
         );
     }
 
