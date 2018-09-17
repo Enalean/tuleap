@@ -20,10 +20,10 @@
 
 namespace Tuleap\Git\HTTP;
 
-class CommandSCL29GitHttpBackend extends \Git_HTTP_Command
+class CommandSCL212GitHttpBackend extends \Git_HTTP_Command
 {
     public function getCommand()
     {
-        return \Git_Exec::GIT29_PATH.'/usr/libexec/git-core/git-http-backend';
+        return \Git_Exec::GIT212_PATH.'/usr/libexec/git-core/git-http-backend';
     }
 }

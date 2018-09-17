@@ -46,8 +46,8 @@ class Git_HTTP_CommandFactory
 
     private function getGitHttpBackendCommand() {
         $command = new Git_HTTP_CommandCentos6GitHttpBackend();
-        if (Git_Exec::isGit29Installed()) {
-            $command = new \Tuleap\Git\HTTP\CommandSCL29GitHttpBackend();
+        if (Git_Exec::isGit212Installed()) {
+            $command = new \Tuleap\Git\HTTP\CommandSCL212GitHttpBackend();
         }
         return $command;
     }

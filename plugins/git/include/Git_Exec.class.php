@@ -22,9 +22,9 @@
 /**
  * Wrap access to git commands
  */
-class Git_Exec {
-
-    const GIT29_PATH = '/opt/rh/rh-git29/root';
+class Git_Exec
+{
+    const GIT212_PATH = '/opt/rh/sclo-git212/root';
 
     private $work_tree;
     private $git_dir;
@@ -48,9 +48,9 @@ class Git_Exec {
         return new static($repository->getFullPath(), $repository->getFullPath());
     }
 
-    public static function isGit29Installed()
+    public static function isGit212Installed()
     {
-        return is_file(self::GIT29_PATH.'/usr/bin/git');
+        return is_file(self::GIT212_PATH.'/usr/bin/git');
     }
 
     public function init() {
@@ -319,8 +319,8 @@ class Git_Exec {
 
     public static function getGitCommand()
     {
-        if (self::isGit29Installed()) {
-            return self::GIT29_PATH . '/usr/bin/git';
+        if (self::isGit212Installed()) {
+            return self::GIT212_PATH . '/usr/bin/git';
         }
         return 'git';
     }
