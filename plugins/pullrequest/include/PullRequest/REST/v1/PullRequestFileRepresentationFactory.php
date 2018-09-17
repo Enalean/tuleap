@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+use \RuntimeException;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 
@@ -37,19 +38,57 @@ class PullRequestFileRepresentationFactory
     }
 
     /**
-     * @throws UnknownReferenceException
+     * @throws \Tuleap\PullRequest\Exception\UnknownReferenceException
      */
     public function getModifiedFilesRepresentations(PullRequest $pull_request)
     {
-        $x_files = array();
+        $x_files = [];
 
-        $modified_files = $this->executor->getModifiedFiles($pull_request->getSha1Src(), $pull_request->getSha1Dest());
+        $modified_files_name_status = $this->executor->getModifiedFilesNameStatus(
+            $pull_request->getSha1Src(),
+            $pull_request->getSha1Dest()
+        );
+        $modified_files_line_stat   = $this->executor->getModifiedFilesLineStat(
+            $pull_request->getSha1Dest(),
+            $pull_request->getSha1Src()
+        );
 
-        foreach ($modified_files as $file) {
-            $impacted_file = preg_split("/[\t]/", $file);
-            $shortstat = $this->executor->getFileDiffStat($pull_request->getSha1Dest(), $pull_request->getSha1Src(), $impacted_file[1]);
+        if (count($modified_files_name_status) !== count($modified_files_line_stat)) {
+            throw new \RuntimeException(
+                'Name status and line stat diff should be the same size, got ' . count($modified_files_name_status) .
+                ' and ' . count($modified_files_line_stat)
+            );
+        }
+
+        $modified_files_iterator = new \MultipleIterator(\MultipleIterator::MIT_NEED_ALL);
+        $modified_files_iterator->attachIterator(new \ArrayIterator($modified_files_name_status));
+        $modified_files_iterator->attachIterator(new \ArrayIterator($modified_files_line_stat));
+
+        foreach ($modified_files_iterator as list($name_status_line, $lines_stat_line)) {
+            if (preg_match('/(?P<status>[A-Z])\\t(?P<file_name>.+)/', $name_status_line, $name_status) !== 1 ||
+                preg_match(
+                    '/(?P<added_lines>(\d|-)+)\\t(?P<removed_lines>(\d|-)+)\\t(?P<file_name>.+)/',
+                    $lines_stat_line,
+                    $lines_stat
+                ) !== 1
+            ) {
+                throw new \RuntimeException('Not able to extract changes from the diff');
+            }
+
+            if ($name_status['file_name'] !== $lines_stat['file_name']) {
+                throw new RuntimeException(
+                    'The name status and short diff are not sorted the same way, ' .
+                    "${name_status['file_name']} is not the same file than ${lines_stat['file_name']}"
+                );
+            }
+
             $file_representation = new PullRequestFileRepresentation();
-            $file_representation->build($impacted_file[1], $impacted_file[0], $shortstat->getLinesAddedNumber(), $shortstat->getLinesRemovedNumber());
+            $file_representation->build(
+                $name_status['file_name'],
+                $name_status['status'],
+                $lines_stat['added_lines'],
+                $lines_stat['removed_lines']
+            );
             $x_files[] = $file_representation;
         }
 

@@ -45,7 +45,7 @@ class GitExec extends Git_Exec
         throw new UnknownBranchNameException($branch_name);
     }
 
-    public function getModifiedFiles($src_reference, $dest_reference)
+    public function getModifiedFilesNameStatus($src_reference, $dest_reference)
     {
         $output = array();
 
@@ -58,6 +58,21 @@ class GitExec extends Git_Exec
             throw new UnknownReferenceException();
         }
 
+        return $output;
+    }
+
+    public function getModifiedFilesLineStat($ref_base, $ref_compare)
+    {
+        $ref_base    = escapeshellarg($ref_base);
+        $ref_compare = escapeshellarg($ref_compare);
+        $cmd         = "diff --no-renames --numstat $ref_base...$ref_compare";
+        $output      = [];
+
+        try {
+            $this->gitCmdWithOutput($cmd, $output);
+        } catch (Git_Command_Exception $exception) {
+            throw new UnknownReferenceException();
+        }
         return $output;
     }
 
@@ -138,19 +153,9 @@ class GitExec extends Git_Exec
 
     public function getShortStat($ref_base, $ref_compare)
     {
-        return $this->getFileDiffStat($ref_base, $ref_compare, '*');
-    }
-
-    public function getFileDiffStat($ref_base, $ref_compare, $file_path)
-    {
-        $ref_base    = escapeshellarg($ref_base);
-        $ref_compare = escapeshellarg($ref_compare);
-        $file_path   = escapeshellarg($file_path);
-        $cmd         = "diff --no-renames --numstat $ref_base...$ref_compare -- $file_path";
-        $output      = array();
-
-        $this->gitCmdWithOutput($cmd, $output);
-        return $this->parseDiffNumStatOutput($output);
+        return $this->parseDiffNumStatOutput(
+            $this->getModifiedFilesLineStat($ref_base, $ref_compare)
+        );
     }
 
     public function getCommonAncestor($ref1, $ref2)
