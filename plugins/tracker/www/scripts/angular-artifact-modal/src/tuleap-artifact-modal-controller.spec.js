@@ -150,6 +150,7 @@ describe("TuleapArtifactModalController", () => {
                 };
 
                 ArtifactModalController = $controller(BaseModalController, controller_params);
+                ArtifactModalController.$onInit();
 
                 expect($scope.$watch).toHaveBeenCalled();
                 expect($scope.$watch.calls.count()).toEqual(1);
@@ -323,6 +324,7 @@ describe("TuleapArtifactModalController", () => {
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.$onInit();
             // First apply so the watcher takes into account the initial value
             $scope.$apply();
 
@@ -379,6 +381,7 @@ describe("TuleapArtifactModalController", () => {
             };
 
             ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.$onInit();
             // First apply so the watcher takes into account the initial value
             $scope.$apply();
 
@@ -396,6 +399,7 @@ describe("TuleapArtifactModalController", () => {
     describe("", () => {
         beforeEach(() => {
             ArtifactModalController = $controller(BaseModalController, controller_params);
+            ArtifactModalController.$onInit();
         });
 
         describe("isDisabled() -", () => {

@@ -5,19 +5,19 @@ export default DateFieldController;
 DateFieldController.$inject = ["$element"];
 
 function DateFieldController($element) {
-    var self = this;
+    const self = this;
 
-    var DATE_PICKER_SIZE = 11;
-    var DATETIME_PICKER_SIZE = 19;
+    const DATE_PICKER_SIZE = 11;
+    const DATETIME_PICKER_SIZE = 19;
 
-    self.init = init;
-    self.getFieldSize = getFieldSize;
-    self.isRequiredAndEmpty = isRequiredAndEmpty;
-
-    self.init();
+    Object.assign(self, {
+        $onInit: init,
+        getFieldSize,
+        isRequiredAndEmpty
+    });
 
     function init() {
-        var date_picker = $element[0]
+        const date_picker = $element[0]
             .querySelector(".tlp-form-element")
             .getElementsByTagName("input")[0];
 
@@ -25,7 +25,7 @@ function DateFieldController($element) {
             date_picker.setAttribute("data-enabletime", true);
         }
 
-        var options = {
+        const options = {
             onChange: function(selected_dates, currently_selected_date) {
                 self.value_model.value = currently_selected_date;
             }

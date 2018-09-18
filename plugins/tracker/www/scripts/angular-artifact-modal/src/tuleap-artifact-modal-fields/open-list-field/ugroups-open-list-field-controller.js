@@ -6,14 +6,12 @@ export default UgroupsOpenListFieldController;
 UgroupsOpenListFieldController.$inject = ["$element"];
 
 function UgroupsOpenListFieldController($element) {
-    var self = this;
-    self.init = init;
+    const self = this;
+    self.$onInit = init;
     self.isRequiredAndEmpty = isRequiredAndEmpty;
 
-    self.init();
-
     function init() {
-        var open_list_element = $element[0].querySelector(
+        const open_list_element = $element[0].querySelector(
             ".tuleap-artifact-modal-open-list-ugroups"
         );
         if (!open_list_element) {

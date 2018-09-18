@@ -14,7 +14,7 @@ function LinkFieldController($q) {
     const self = this;
 
     Object.assign(self, {
-        init,
+        $onInit: init,
         showParentArtifactChoice,
         loadParentArtifactsTitle,
         hasArtifactAlreadyAParent,
@@ -22,8 +22,6 @@ function LinkFieldController($q) {
         parent_artifact: null,
         possible_parent_artifacts: []
     });
-
-    self.init();
 
     function init() {
         self.is_loading = true;
