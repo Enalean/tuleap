@@ -1,0 +1,45 @@
+<section class="tlp-pane-section" ng-if="commits.shouldDisplayWarningMessage()">
+    <div class="tlp-alert-warning">
+        {{ ::'It seems that the pull request does not have any commits.' | translate }}
+    </div>
+</section>
+
+<section class="tlp-pane-section" ng-if="commits.is_loading_commits">
+    <div class="pull-request-commits-loading"></div>
+</section>
+
+<section class="tlp-pane-section pull-request-commits-list" ng-if="commits.shouldDisplayListOfCommits()">
+    <a ng-repeat="commit in commits.list track by commit.id"
+       class="pull-request-commits-list-commit"
+       ng-href="{{ ::commit.html_url }}"
+    >
+        <div class="pull-request-commits-list-commit-metadata">
+            <div class="tlp-avatar pull-request-commits-list-commit-metadata-avatar">
+                <img ng-src="{{ ::commit.avatar_url }}" alt="{{ ::commit.author_name }}" ng-if="commit.avatar_url">
+            </div>
+            <div>
+                <div>{{ ::commit.title }}</div>
+                <div class="pull-request-commits-list-commit-metadata-authored">
+                    <span ng-if="commit.display_name" class="pull-request-commits-list-commit-metadata-authored-name">
+                        <span ng-if="commit.author"
+                              class="pull-request-commits-list-commit-metadata-authored-name-link"
+                              ng-click="commit.goToAuthor($event)"
+                        >{{ ::commit.display_name }}</span>
+                        <span ng-if="! commit.author">
+                            {{ ::commit.display_name }}
+                        </span>
+                    </span>
+                    <span class="pull-request-commits-list-commit-metadata-authored-date">
+                        <i class="fa fa-calendar pull-request-commits-list-commit-metadata-authored-icon"></i>
+                        {{ ::commit.authored_date | amDateFormat: 'YYYY-MM-DD HH:mm'  }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div
+           class="tlp-badge-secondary tlp-badge-outline pull-request-commits-list-commit-badge"
+        >
+            {{ ::commit.short_id }}
+        </div>
+    </a>
+</section>

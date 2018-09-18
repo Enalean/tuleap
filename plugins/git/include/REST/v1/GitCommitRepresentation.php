@@ -55,9 +55,12 @@ class GitCommitRepresentation
      * @var MinimalUserRepresentation|null
      */
     public $author = null;
+    /**
+     * @var string
+     */
+    public $html_url;
 
-
-    public function build(Commit $commit)
+    public function build($repository_path, Commit $commit)
     {
         $this->id            = $commit->GetHash();
         $this->title         = $commit->GetTitle();
@@ -65,6 +68,13 @@ class GitCommitRepresentation
         $this->author_name   = $commit->GetAuthorName();
         $this->author_email  = $commit->getAuthorEmail();
         $this->authored_date = JsonCast::toDate($commit->GetAuthorEpoch());
+
+        $this->html_url = $repository_path . '?' . http_build_query(
+            [
+                'a' => 'commit',
+                'h' => $commit->GetHash()
+            ]
+        );
 
         $user_manager = \UserManager::instance();
 

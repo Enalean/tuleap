@@ -27,6 +27,7 @@ use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
 use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_Exec;
+use Git_GitRepositoryUrlManager;
 use Git_PermissionsDao;
 use Git_RemoteServer_Dao;
 use Git_RemoteServer_GerritServerFactory;
@@ -42,6 +43,7 @@ use GitRepositoryAlreadyExistsException;
 use GitRepositoryFactory;
 use Luracast\Restler\RestException;
 use PFUser;
+use PluginFactory;
 use ProjectHistoryDao;
 use ProjectManager;
 use SystemEventManager;
@@ -132,6 +134,10 @@ class RepositoryResource extends AuthenticatedResource
      * @var CITokenManager
      */
     private $ci_token_manager;
+    /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $url_manager;
 
     public function __construct()
     {
@@ -295,6 +301,8 @@ class RepositoryResource extends AuthenticatedResource
             $this->ci_token_manager,
             $event_manager
         );
+
+        $this->url_manager = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
     }
 
     /**
@@ -738,6 +746,8 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkLimit($limit);
 
+        $repository_path = $this->getRepositoryPathById($id);
+
         $project = $this->getGitPHPProject($id);
 
         /** @var Head[] $branches_refs */
@@ -750,7 +760,7 @@ class RepositoryResource extends AuthenticatedResource
             $name = $branch->GetName();
             try {
                 $commit_representation = new GitCommitRepresentation();
-                $commit_representation->build($branch->GetCommit());
+                $commit_representation->build($repository_path, $branch->GetCommit());
 
                 $branch_representation = new GitBranchRepresentation();
                 $branch_representation->build($name, $commit_representation);
@@ -801,6 +811,8 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkLimit($limit);
 
+        $repository_path = $this->getRepositoryPathById($id);
+
         $project = $this->getGitPHPProject($id);
 
         /** @var Tag[] $tags_refs */
@@ -813,7 +825,7 @@ class RepositoryResource extends AuthenticatedResource
             $name = $tag->GetName();
             try {
                 $commit_representation = new GitCommitRepresentation();
-                $commit_representation->build($tag->GetCommit());
+                $commit_representation->build($repository_path, $tag->GetCommit());
 
                 $tag_representation = new GitTagRepresentation();
                 $tag_representation->build($name, $commit_representation);
@@ -946,4 +958,19 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
+
+    /**
+     * @param $id
+     *
+     * @return string
+     * @throws RestException
+     */
+    private function getRepositoryPathById($id)
+    {
+        $user            = $this->getCurrentUser();
+        $repository      = $this->getRepository($user, $id);
+        $repository_path = $this->url_manager->getRepositoryBaseUrl($repository);
+
+        return $repository_path;
+}
 }

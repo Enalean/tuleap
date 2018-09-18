@@ -64,6 +64,10 @@ msgstr ""
 msgid "Comment"
 msgstr ""
 
+#: src/app/pull-request/pull-request.tpl.html
+msgid "Commits"
+msgstr ""
+
 #: src/app/overview/overview.tpl.html
 msgid "Deprecated REST route"
 msgstr ""
@@ -103,6 +107,10 @@ msgstr ""
 
 #: src/app/overview/timeline/timeline-service.js
 msgid "Has updated the pull request."
+msgstr ""
+
+#: src/app/commits/commits.tpl.html
+msgid "It seems that the pull request does not have any commits."
 msgstr ""
 
 #: src/app/overview/overview.tpl.html
