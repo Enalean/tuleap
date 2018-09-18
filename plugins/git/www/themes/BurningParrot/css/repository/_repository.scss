@@ -25,20 +25,37 @@
     font-size: 16px;
 }
 
+.git-repository-header {
+    padding: $tlp-spacing $tlp-spacing 0;
+}
+
+.git-repository-subheader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.git-repository-subheader-spacer {
+    min-width: $tlp-spacing;
+}
+
 .git-repository-forked-name {
-    margin: 0;
+    margin: 0 0 $tlp-half-spacing;
 }
 
 .git-repository-parent {
     display: block;
-    margin: 10px 0 30px;
+    margin: 0 0 $tlp-spacing;
     color: $tlp-ui-dimmed;
     font-size: 14px;
 }
 
 .git-repository-actions {
     display: flex;
-    margin: $tlp-spacing 0 0;
+    flex: 1 1 auto;
+    align-items: baseline;
+    margin: 5px 0 $tlp-spacing;
 }
 
 .git-repository-actions-spacer {
@@ -51,7 +68,7 @@
 }
 
 .git-repository-clone-label {
-    margin: auto 10px auto 0;
+    margin: 0 5px 0 0;
 }
 
 .git-repository-clone-dropdown-menu > .tlp-dropdown-menu-title {
@@ -78,14 +95,19 @@
 
 .git-repository-clone-form-element {
     display: flex;
+    flex: 2 1 auto;
     margin: 0;
 }
 
 #git-repository-clone-input {
-    width: 300px;
+    min-width: 100px;
     border-left: 0;
     color: $tlp-ui-dimmed;
     text-overflow: ellipsis;
+}
+
+.git-repository-gerrit-status:last-child {
+    margin: 0 0 $tlp-spacing;
 }
 
 /* scss-lint:disable SelectorFormat */
@@ -99,12 +121,6 @@
     margin: $tlp-spacing 10px;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
-}
-
-@media screen and (max-width: 1400px) {
-    #git-repository-clone-input {
-        width: auto;
-    }
 }
 
 @media screen and (max-width: 1250px) {
