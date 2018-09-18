@@ -28,7 +28,6 @@ if (PHP_VERSION_ID < 50600) {
 }
 
 require_once __DIR__ . '/../../common/constants.php';
-require_once __DIR__ . '/../../common/autoload.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());

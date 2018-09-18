@@ -21,6 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\PHPWiki\WikiPage;
+
 require_once('WikiActions.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiEntry.class.php');
 require_once(dirname(__FILE__).'/../lib/WikiPage.class.php');

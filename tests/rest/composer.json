@@ -1,4 +1,10 @@
 {
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\REST\\": ["lib/"]
+        },
+        "classmap": ["lib/"]
+    },
     "require": {
         "guzzle/guzzle": "~3.7"
     },

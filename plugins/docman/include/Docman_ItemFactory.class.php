@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -23,6 +23,7 @@
 
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+use Tuleap\PHPWiki\WikiPage;
 
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('common/reference/ReferenceManager.class.php');

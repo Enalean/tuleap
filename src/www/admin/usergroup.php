@@ -27,10 +27,10 @@ use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\User\Admin\UserChangePasswordPresenter;
 use Tuleap\User\Admin\UserDetailsAccessPresenter;
-use Tuleap\user\Admin\UserDetailsFormatter;
+use Tuleap\User\Admin\UserDetailsFormatter;
 use Tuleap\User\Admin\UserDetailsPresenter;
-use Tuleap\user\Admin\UserStatusBuilder;
-use Tuleap\user\Admin\UserStatusChecker;
+use Tuleap\User\Admin\UserStatusBuilder;
+use Tuleap\User\Admin\UserStatusChecker;
 use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\PasswordValidatorPresenter;
 use Tuleap\User\SessionManager;
@@ -72,7 +72,7 @@ if (!$user_id || !$user) {
 }
 
 // Validate action
-$vAction = new Valid_Whitelist('action', array('update_user', 'update_password'));
+$vAction = new Valid_WhiteList('action', array('update_user', 'update_password'));
 $vAction->required();
 if ($request->valid($vAction)) {
     $action = $request->get('action');

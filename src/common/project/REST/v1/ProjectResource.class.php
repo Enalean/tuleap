@@ -1330,7 +1330,8 @@ class ProjectResource extends AuthenticatedResource {
         return $wiki_pages;
     }
 
-    private function userCanAccessPhpWikiService(PFUser $user, $project_id) {
+    private function userCanAccessPhpWikiService(PFUser $user, $project_id)
+    {
         $wiki_service = new Wiki($project_id);
 
         if (! $wiki_service->isAutorized($user->getId())) {

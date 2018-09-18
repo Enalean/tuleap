@@ -360,7 +360,7 @@ class PluginManager {
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
             $sql_filename = $dir.$path_to_file;
             if (file_exists($sql_filename)) {
-                $dbtables = new DBTablesDAO();
+                $dbtables = new DBTablesDao();
                 if (!$dbtables->updateFromFile($sql_filename)) {
                     $db_corrupted = true;
                 }

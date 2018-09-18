@@ -31,8 +31,6 @@ use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Widget\WidgetFactory;
 
-require_once __DIR__ . '/bootstrap.php';
-
 class ProjectImportTest_SystemEventRunner extends Tuleap\Project\SystemEventRunner {
 
 }

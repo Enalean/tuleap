@@ -19,7 +19,7 @@
  *
  */
 
-require_once __DIR__.'/../../src/common/autoload.php';
+require_once __DIR__.'/../../src/vendor/autoload.php';
 require_once __DIR__.'/../../src/www/themes/BurningParrot/autoload.php';
 require_once __DIR__.'/../../src/common/constants.php';
 

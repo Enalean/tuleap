@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,7 @@ $output_dir = $argv[2];
 
 $xml = simplexml_load_string(<<<XML
 <?xml version='1.0'?>
-<phpunit>
+<phpunit  bootstrap="/usr/share/tuleap/tests/soap/vendor/autoload.php">
   <php>
     <includePath>/usr/share/tuleap/src/www/include:/usr/share/tuleap/src</includePath>
   </php>

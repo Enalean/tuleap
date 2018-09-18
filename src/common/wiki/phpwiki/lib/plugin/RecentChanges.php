@@ -214,12 +214,12 @@ extends _RecentChanges_Formatter
          * overlapping ideal word cutting points.
          *
          * en: day/days "The %d most recent %s [during (the past] day) are listed below."
-         * de: 1 Tag    "Die %d jüngste %s [innerhalb (von des letzten] Tages) sind unten aufgelistet."
-         * de: %s days  "Die %d jüngste %s [innerhalb (von] %s Tagen) sind unten aufgelistet."
+         * de: 1 Tag    "Die %d jÃ¼ngste %s [innerhalb (von des letzten] Tages) sind unten aufgelistet."
+         * de: %s days  "Die %d jÃ¼ngste %s [innerhalb (von] %s Tagen) sind unten aufgelistet."
          *
          * en: day/days "The %d most recent %s during [the past] (day) are listed below."
-         * fr: 1 jour   "Les %d %s les plus récentes pendant [le dernier (d'une] jour) sont énumérées ci-dessous."
-         * fr: %s jours "Les %d %s les plus récentes pendant [les derniers (%s] jours) sont énumérées ci-dessous."
+         * fr: 1 jour   "Les %d %s les plus rÃ©centes pendant [le dernier (d'une] jour) sont Ã©numÃ©rÃ©es ci-dessous."
+         * fr: %s jours "Les %d %s les plus rÃ©centes pendant [les derniers (%s] jours) sont Ã©numÃ©rÃ©es ci-dessous."
          */
         if ($limit > 0) {
             if ($timespan) {
@@ -303,7 +303,7 @@ extends _RecentChanges_Formatter
                                 ."       document.write('$addsidebarjsclick');\n"
                                 ."   }\n"
                                 );
-        return HTML(new RawXML("\n"), $jsf, new RawXML("\n"), $jsc);
+        return HTML(new RawXml("\n"), $jsf, new RawXml("\n"), $jsc);
     }
 
     function format ($changes) {
@@ -416,14 +416,14 @@ extends _RecentChanges_HtmlFormatter
         $linkurl = parent::diffLink($rev);
         $linkurl->setAttr('target', '_content');
         // FIXME: Smelly hack to get smaller diff buttons in sidebar
-        $linkurl = new RawXML(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
+        $linkurl = new RawXml(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
         return $linkurl;
     }
     function historyLink ($rev) {
         $linkurl = parent::historyLink($rev);
         $linkurl->setAttr('target', '_content');
         // FIXME: Smelly hack to get smaller history buttons in sidebar
-        $linkurl = new RawXML(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
+        $linkurl = new RawXml(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
         return $linkurl;
     }
     function pageLink ($rev) {

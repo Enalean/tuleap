@@ -236,7 +236,7 @@ extends WikiPluginCached
         return implode(' ', explode('|', ALLOWED_PROTOCOLS));
     }
     function available_plugins () {
-        $fileset = new FileSet(FindFile('lib/plugin'), '*.php');
+        $fileset = new fileSet(FindFile('lib/plugin'), '*.php');
         $list = $fileset->getFiles();
         natcasesort($list);
         reset($list);

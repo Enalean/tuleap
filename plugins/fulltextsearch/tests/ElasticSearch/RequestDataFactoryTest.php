@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -353,7 +353,7 @@ class RequestWikiDataFactoryTest extends TuleapTestCase {
             $this->user_manager
         );
 
-        $this->wiki_page = stub('WikiPage')->getPagename()->returns('wiki_page');
+        $this->wiki_page = stub(\Tuleap\PHPWiki\WikiPage::class)->getPagename()->returns('wiki_page');
         stub($this->wiki_page)->getId()->returns(1940);
         stub($this->wiki_page)->getGid()->returns(200);
     }

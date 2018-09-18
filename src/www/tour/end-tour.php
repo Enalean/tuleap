@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,7 +23,7 @@ require_once('pre.php');
 
 $tour_name = $request->get('tour_name');
 
-$tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new Url());
+$tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
 $current_tour = $tour_factory->getTour($current_user, $tour_name);
 
 $stats_dao  = new Tuleap_TourUsageStatsDao();

@@ -60,10 +60,11 @@ class URLVerification {
     /**
      * Returns a instance of Url
      *
-     * @return Url
+     * @return URL
      */
-    function getUrl() {
-        return new Url();
+    function getUrl()
+    {
+        return new URL();
     }
 
     /**

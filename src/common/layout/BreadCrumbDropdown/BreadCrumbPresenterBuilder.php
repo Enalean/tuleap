@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\layout\BreadCrumbDropdown;
+namespace Tuleap\Layout\BreadCrumbDropdown;
 
 class BreadCrumbPresenterBuilder
 {

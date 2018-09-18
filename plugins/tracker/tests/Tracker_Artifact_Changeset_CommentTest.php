@@ -52,7 +52,7 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, mock('UserXMLExportedCollection'));
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 
@@ -83,7 +83,7 @@ class Tracker_Artifact_Changeset_CommentTest extends TuleapTestCase {
                 <comments/>';
 
         $changeset_node    = new SimpleXMLElement($xml);
-        $user_xml_exporter = new UserXmlExporter($this->user_manager, mock('UserXMLExportedCollection'));
+        $user_xml_exporter = new UserXMLExporter($this->user_manager, mock('UserXMLExportedCollection'));
 
         $comment->exportToXML($changeset_node, $user_xml_exporter);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,6 @@ namespace Tuleap\FRS\Tests\REST\Packages;
 use Guzzle\Http\Exception\ClientErrorResponseException;
 use REST_TestDataBuilder;
 use RestBase;
-
-require_once dirname(__FILE__).'/../bootstrap.php';
 
 /**
  * @group FRSTests

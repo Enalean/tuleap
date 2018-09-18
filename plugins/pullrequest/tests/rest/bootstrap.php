@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,5 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once dirname(__FILE__).'/../../../../tests/lib/autoload.php';
 require_once dirname(__FILE__).'/PullRequestDataBuilder.php';

@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\PHPWiki\WikiPage;
+
 rcs_id('$Id: editpage.php,v 1.96 2005/05/06 17:54:22 rurban Exp $');
 
 require_once('lib/Template.php');
@@ -119,7 +122,7 @@ class PageEditor
             $this_content = explode("\n", $this->_content);
             $other_content = $this->current->getContent();
             include_once("lib/diff3.php");
-            $diff = new diff3($orig_content, $this_content, $other_content);
+            $diff = new Diff3($orig_content, $this_content, $other_content);
             $output = $diff->merged_output(_("Your version"), _("Other version"));
             // Set the content of the textarea to the merged diff
             // output, and update the version

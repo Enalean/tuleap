@@ -150,7 +150,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
     }
     function create(Codendi_Request $request) {
         $content_id = false;
-        $vId = new Valid_Uint('chart_id');
+        $vId = new Valid_UInt('chart_id');
         $vId->setErrorMessage("Can't add empty chart id");
         $vId->required();
         if($request->validInArray('chart', $vId)) {
@@ -166,7 +166,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();
         if (($chart = $request->get('chart')) && $request->valid($vContentId)) {
-            $vId = new Valid_Uint('chart_id');
+            $vId = new Valid_UInt('chart_id');
             if($request->validInArray('chart', $vId)) {
                 $id = " chart_id   = ". db_escape_int($chart['chart_id']) ." ";
             } else {

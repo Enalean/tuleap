@@ -26,7 +26,6 @@ use UserHelper;
 use UserImport;
 use UserManager;
 
-require_once 'common/autoload.php';
 require_once('common/user/UserImportCollection.php');
 
 class UserImportTest extends TuleapTestCase

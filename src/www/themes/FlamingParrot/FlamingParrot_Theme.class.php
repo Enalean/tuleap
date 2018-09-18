@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Glyph\GlyphFinder;
-use Tuleap\layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\OpenGraph\NoOpenGraphPresenter;
 

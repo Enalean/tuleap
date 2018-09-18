@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,7 +38,7 @@ class Wiki_PermissionsManagerTest extends TuleapTestCase {
         $this->project   = stub('Project')->getUnixName()->returns('perceval');
         stub($this->project)->getId()->returns(200);
 
-        $this->wiki_page = stub('WikiPage')->getId()->returns(101);
+        $this->wiki_page = stub(\Tuleap\PHPWiki\WikiPage::class)->getId()->returns(101);
         stub($this->wiki_page)->getGid()->returns(200);
 
         $literalizer              = new UGroupLiteralizer();

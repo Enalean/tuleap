@@ -38,7 +38,7 @@ class Tracker_FormElement_Field_List_BindFactory
     private $ugroups_value_dao;
 
     public function __construct(UgroupManager $ugroup_manager = null) {
-        $this->ugroup_manager    = $ugroup_manager ? $ugroup_manager : new UgroupManager();
+        $this->ugroup_manager    = $ugroup_manager ? $ugroup_manager : new UGroupManager();
     }
 
     private function getUgroupsValueDao() {

@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 #
-# Copyright (c) Enalean, 2015 - 2017. All rights reserved
+# Copyright (c) Enalean, 2015 - 2018. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -25,7 +25,6 @@ use Tuleap\Templating\Mustache\GettextCollector;
 use Tuleap\Templating\Mustache\GettextExtractor;
 use Tuleap\Templating\Mustache\GettextSectionContentTransformer;
 
-require_once __DIR__ .'/../../src/common/autoload.php';
 require_once __DIR__ .'/../../src/vendor/autoload.php';
 
 $basedir = $argv[1];

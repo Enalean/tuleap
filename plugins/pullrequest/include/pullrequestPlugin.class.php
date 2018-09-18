@@ -46,7 +46,7 @@ use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Layout\ScriptAsset;
+use Tuleap\layout\ScriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
 use Tuleap\PullRequest\Dao as PullRequestDao;

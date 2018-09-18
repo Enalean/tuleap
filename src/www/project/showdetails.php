@@ -70,7 +70,7 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$currentproject= new project($group_id);
+$currentproject= new Project($group_id);
 
 site_project_header(array('title'=>$Language->getText('project_showdetails','proj_details'),'group'=>$group_id,'toptab'=>'summary'));
 

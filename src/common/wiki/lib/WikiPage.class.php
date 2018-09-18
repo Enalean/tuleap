@@ -1,7 +1,7 @@
 <?php
 /* 
  * Copyright 2005, STMicroelectronics
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet
  *
@@ -21,6 +21,14 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+namespace Tuleap\PHPWiki;
+
+use EventManager;
+use UserManager;
+use Wiki_PermissionsManager;
+use WikiDao;
+use WikiPageWrapper;
 
 require_once('www/project/admin/permissions.php');
 
@@ -269,7 +277,7 @@ class WikiPage {
     public function isAutorized($uid) {
         if($this->referenced == true) {
             $userCanAccess = false;
-            $eM =& EventManager::instance();
+            $eM = EventManager::instance();
             $eM->processEvent('userCanAccessWikiDocument', array(
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
@@ -373,7 +381,7 @@ class WikiPage {
      * @return string[] List of pagename
      */
     public function &getAllAdminPages() {
-        $WikiPageAdminPages = WikiPage::getAdminPages();
+        $WikiPageAdminPages = self::getAdminPages();
 
         $allPages = array();
 
@@ -394,7 +402,7 @@ class WikiPage {
      * @return string[] List of pagename
      */
     public function &getAllInternalPages() {
-        $WikiPageDefaultPages = WikiPage::getDefaultPages();
+        $WikiPageDefaultPages = self::getDefaultPages();
 
         $allPages = array();
 
@@ -415,8 +423,8 @@ class WikiPage {
      * @return string[] List of pagename
      */
     public function &getAllUserPages() {
-        $WikiPageAdminPages = WikiPage::getAdminPages();
-        $WikiPageDefaultPages = WikiPage::getDefaultPages();
+        $WikiPageAdminPages = self::getAdminPages();
+        $WikiPageDefaultPages = self::getDefaultPages();
 
         $allPages = array();
 

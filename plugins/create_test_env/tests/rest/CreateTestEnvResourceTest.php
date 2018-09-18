@@ -21,8 +21,6 @@
 
 namespace Tuleap\CreateTestEnv\REST;
 
-require_once __DIR__.'/../../../../tests/rest/lib/autoload.php';
-
 class CreateTestEnvResourceTest extends \RestBase
 {
 

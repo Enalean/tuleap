@@ -1,4 +1,6 @@
 <?php //-*-php-*-
+use Tuleap\PHPWiki\WikiPage;
+
 rcs_id('$Id: WikiDB.php,v 1.135 2005/09/11 14:19:44 rurban Exp $');
 
 require_once('lib/PageType.php');

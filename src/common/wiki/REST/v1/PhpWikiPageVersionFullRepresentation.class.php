@@ -21,8 +21,8 @@
 
 namespace Tuleap\PhpWiki\REST\v1;
 
+use Tuleap\PHPWiki\WikiPage;
 use WikiPageVersion;
-use WikiPage;
 
 class PhpWikiPageVersionFullRepresentation extends PhpWikiPageVersionRepresentation {
 

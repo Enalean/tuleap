@@ -22,8 +22,6 @@ namespace Tuleap\REST;
 
 use RestBase;
 
-require_once dirname(__FILE__) . '/../lib/autoload.php';
-
 /**
  * @group BacklogItemsTest
  */

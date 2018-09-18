@@ -19,4 +19,3 @@
  */
 
 require_once  __DIR__ . '/../include/trackerPlugin.class.php';
-require_once __DIR__ . '/../../../tests/lib/autoload.php';

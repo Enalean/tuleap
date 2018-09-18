@@ -20,7 +20,6 @@
 
 require_once 'common/tracker/ArtifactType.class.php';
 require_once __DIR__ . '/../../../plugins/tracker/include/trackerPlugin.class.php';
-require_once __DIR__ . '/../bootstrap.php';
 
 abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     private static $defect_tracker_converted = false;

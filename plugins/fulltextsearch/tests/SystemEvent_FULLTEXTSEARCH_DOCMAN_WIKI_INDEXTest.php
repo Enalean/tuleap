@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -33,7 +33,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_WIKI_INDEXTest extends SystemEvent_FULLT
             array($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log)
         );
 
-        $this->wiki_page = stub('WikiPage')->getMetadata()->returns(array());
+        $this->wiki_page = stub(\Tuleap\PHPWiki\WikiPage::class)->getMetadata()->returns(array());
         stub($event)->getWikiPage()->returns($this->wiki_page);
 
         $event->injectDependencies($this->actions, $this->item_factory, $this->version_factory, $this->link_version_factory);
