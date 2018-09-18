@@ -36,14 +36,10 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
     private $pull_request_updater;
 
     /**
-     * @var GitRepository
-     */
-    private $git_repository;
-
-    /**
      * @var Dao
      */
     private $dao;
+    private $git_exec_factory;
 
     public function setUp()
     {
@@ -64,9 +60,10 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $reference_manager = mock('ReferenceManager');
 
         $this->dao = new Dao();
-        $this->inline_comments_dao = mock('Tuleap\PullRequest\InlineComment\Dao');
+        $this->inline_comments_dao    = mock('Tuleap\PullRequest\InlineComment\Dao');
         $this->git_repository_factory = mock('GitRepositoryFactory');
-        $this->pull_request_updater = new PullRequestUpdater(
+        $this->git_exec_factory       = \Mockery::mock(GitExecFactory::class);
+        $this->pull_request_updater   = new PullRequestUpdater(
             new Factory($this->dao, $reference_manager),
             mock('Tuleap\PullRequest\PullRequestMerger'),
             $this->inline_comments_dao,
@@ -74,6 +71,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
             new FileUniDiffBuilder(),
             mock('Tuleap\PullRequest\Timeline\TimelineEventCreator'),
             $this->git_repository_factory,
+            $this->git_exec_factory,
             mock(GitPullRequestReferenceUpdater::class)
         );
 
@@ -95,14 +93,15 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $pr2_id = $this->dao->create(1, 'title', 'description', 1, 0, 'dev', 'sha1', 1, 'other', 'sha2', 0);
         $pr3_id = $this->dao->create(1, 'title', 'description', 1, 0, 'master', 'sha1', 1, 'other', 'sha2', 0);
 
-        $git_repo = mock('\GitRepository');
+        $git_repo = mock(GitRepository::class);
         stub($git_repo)->getId()->returns(1);
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
-        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
+        stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
+        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));
 
-        $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
+        $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
@@ -118,14 +117,15 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $pr1_id = $this->dao->create(2, 'title', 'description', 1, 0, 'dev', 'sha1', 2, 'master', 'sha2', 0);
         $pr2_id = $this->dao->create(2, 'title', 'description', 1, 0, 'master', 'sha1', 2, 'dev', 'sha2', 0);
 
-        $git_repo = mock('\GitRepository');
+        $git_repo = mock(GitRepository::class);
         stub($git_repo)->getId()->returns(1);
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
-        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
+        stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
+        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));
 
-        $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
+        $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);
@@ -147,9 +147,10 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
 
         stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
 
-        stub($this->git_repository_factory)->getRepositoryById()->returns(mock(GitRepository::class));
+        stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
+        $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));
 
-        $this->pull_request_updater->updatePullRequests($this->user, $this->git_exec, $git_repo, 'dev', 'sha1new');
+        $this->pull_request_updater->updatePullRequests($this->user, $git_repo, 'dev', 'sha1new');
 
         $pr1 = $this->dao->searchByPullRequestId($pr1_id);
         $pr2 = $this->dao->searchByPullRequestId($pr2_id);

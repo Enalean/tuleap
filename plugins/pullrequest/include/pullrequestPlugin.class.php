@@ -263,7 +263,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             $repository = $params['repository'];
             $user       = $params['user'];
 
-            $git_exec = new GitExec($repository->getFullPath(), $repository->getFullPath());
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $this->abandonFromSourceBranch($user, $repository, $branch_name);
             } else {
@@ -277,12 +276,13 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                     new FileUniDiffBuilder(),
                     $this->getTimelineEventCreator(),
                     $this->getRepositoryFactory(),
+                    new \Tuleap\PullRequest\GitExecFactory(),
                     new GitPullRequestReferenceUpdater(
                         new GitPullRequestReferenceDAO(),
                         new GitPullRequestReferenceNamespaceAvailabilityChecker()
                     )
                 );
-                $pull_request_updater->updatePullRequests($user, $git_exec, $repository, $branch_name, $new_rev);
+                $pull_request_updater->updatePullRequests($user, $repository, $branch_name, $new_rev);
             }
 
             if (! $user->isAnonymous()) {
