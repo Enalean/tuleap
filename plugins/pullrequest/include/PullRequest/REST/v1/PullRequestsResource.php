@@ -42,6 +42,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\REST\v1\GitCommitRepresentationBuilder;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -174,13 +175,17 @@ class PullRequestsResource extends AuthenticatedResource
      */
     private $git_plugin;
     /**
-     * @var Git_GitRepositoryUrlManager
+     * @var GitCommitRepresentationBuilder
      */
-    private $url_manager;
+    private $commit_representation_builder;
+    /**
+     * @var CommitStatusRetriever
+     */
+    private $status_retriever;
 
     public function __construct()
     {
-        $this->git_repository_factory = new GitRepositoryFactory(
+        $this->git_repository_factory  = new GitRepositoryFactory(
             new GitDao(),
             ProjectManager::instance()
         );
@@ -251,7 +256,13 @@ class PullRequestsResource extends AuthenticatedResource
         );
 
         $this->git_plugin  = PluginFactory::instance()->getPluginByName('git');
-        $this->url_manager = new Git_GitRepositoryUrlManager($this->git_plugin);
+        $url_manager = new Git_GitRepositoryUrlManager($this->git_plugin);
+
+        $this->status_retriever = new CommitStatusRetriever(new CommitStatusDAO);
+        $this->commit_representation_builder = new GitCommitRepresentationBuilder(
+            $this->status_retriever,
+            $url_manager
+        );
     }
 
     /**
@@ -296,7 +307,7 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
-            new CommitStatusRetriever(new CommitStatusDAO),
+            $this->status_retriever,
             $this->getGitoliteAccessURLGenerator()
         );
 
@@ -349,8 +360,8 @@ class PullRequestsResource extends AuthenticatedResource
         $commit_factory = new PullRequestsCommitRepresentationFactory(
             $this->getExecutor($git_repository),
             $provider->GetProject(),
-            $this->url_manager,
-            $this->git_repository_factory
+            $this->git_repository_factory,
+            $this->commit_representation_builder
         );
 
         try {

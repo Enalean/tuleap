@@ -172,7 +172,8 @@ class RepositoryTest extends TestBase {
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
-                        ]
+                        ],
+                        'commit_status' => null
                     ],
                 ],
                 [
@@ -195,7 +196,8 @@ class RepositoryTest extends TestBase {
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
-                        ]
+                        ],
+                        'commit_status' => null
                     ]
                 ],
             ],
@@ -243,7 +245,8 @@ class RepositoryTest extends TestBase {
                             'ldap_id'      => 'tester1',
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
-                        ]
+                        ],
+                        'commit_status' => null
                     ]
                 ]
             ],

@@ -36,6 +36,19 @@
                 </div>
             </div>
         </div>
+        <div class="pull-request-commits-list-commit-spacer"></div>
+        <div class="tlp-badge-success tlp-badge-outline pull-request-commits-list-commit-last-status tlp-tooltip tlp-tooltip-left"
+             data-tlp-tooltip="{{ ::commit.getCommitStatusMessage() }}"
+            ng-if="commit.isCommitStatusASuccess()"
+        >
+            <span translate>CI</span> <i class="fa fa-check pull-request-commits-list-commit-last-status-icon"></i>
+        </div>
+        <div class="tlp-badge-danger pull-request-commits-list-commit-last-status tlp-tooltip tlp-tooltip-left"
+             data-tlp-tooltip="{{ ::commit.getCommitStatusMessage() }}"
+             ng-if="commit.isCommitStatusAFailure()"
+        >
+            <span translate>CI</span> <i class="fa fa-remove pull-request-commits-list-commit-last-status-icon"></i>
+        </div>
         <div
            class="tlp-badge-secondary tlp-badge-outline pull-request-commits-list-commit-badge"
         >

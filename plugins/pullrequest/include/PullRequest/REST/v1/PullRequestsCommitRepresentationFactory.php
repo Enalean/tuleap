@@ -21,10 +21,9 @@
 namespace Tuleap\PullRequest\REST\v1;
 
 use Git_Exec;
-use Git_GitRepositoryUrlManager;
 use GitRepositoryFactory;
 use Tuleap\Git\GitPHP\Project;
-use Tuleap\Git\REST\v1\GitCommitRepresentation;
+use Tuleap\Git\REST\v1\GitCommitRepresentationBuilder;
 use Tuleap\PullRequest\PullRequest;
 
 class PullRequestsCommitRepresentationFactory
@@ -38,24 +37,24 @@ class PullRequestsCommitRepresentationFactory
      */
     private $project;
     /**
-     * @var Git_GitRepositoryUrlManager
-     */
-    private $url_manager;
-    /**
      * @var GitRepositoryFactory
      */
     private $repository_factory;
+    /**
+     * @var GitCommitRepresentationBuilder
+     */
+    private $commit_representation_builder;
 
     public function __construct(
         Git_Exec $git_exec,
         Project $project,
-        Git_GitRepositoryUrlManager $url_manager,
-        GitRepositoryFactory $repository_factory
+        GitRepositoryFactory $repository_factory,
+        GitCommitRepresentationBuilder $commit_representation_builder
     ) {
-        $this->git_exec           = $git_exec;
-        $this->project            = $project;
-        $this->url_manager        = $url_manager;
-        $this->repository_factory = $repository_factory;
+        $this->git_exec                      = $git_exec;
+        $this->project                       = $project;
+        $this->repository_factory            = $repository_factory;
+        $this->commit_representation_builder = $commit_representation_builder;
     }
 
     /**
@@ -71,13 +70,11 @@ class PullRequestsCommitRepresentationFactory
 
         $repository_destination_id = $pull_request->getRepoDestId();
         $repository_destination    = $this->repository_factory->getRepositoryById($repository_destination_id);
-        $repository_path           = $this->url_manager->getRepositoryBaseUrl($repository_destination);
 
         $commits_collection = [];
         foreach ($all_references as $reference) {
-            $representation = new GitCommitRepresentation();
-            $representation->build(
-                $repository_path,
+            $representation = $this->commit_representation_builder->build(
+                $repository_destination,
                 $this->project->GetCommit($reference)
             );
 

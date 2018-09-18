@@ -52,6 +52,7 @@ use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CommitStatus\CommitDoesNotExistException;
 use Tuleap\Git\CommitStatus\CommitStatusCreator;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\CommitStatus\InvalidCommitReferenceException;
 use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
@@ -138,6 +139,10 @@ class RepositoryResource extends AuthenticatedResource
      * @var Git_GitRepositoryUrlManager
      */
     private $url_manager;
+    /**
+     * @var GitCommitRepresentationBuilder
+     */
+    private $commit_representation_builder;
 
     public function __construct()
     {
@@ -302,7 +307,10 @@ class RepositoryResource extends AuthenticatedResource
             $event_manager
         );
 
-        $this->url_manager = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
+        $status_retriever = new CommitStatusRetriever(new CommitStatusDAO);
+        $url_manager      = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
+
+        $this->commit_representation_builder = new GitCommitRepresentationBuilder($status_retriever, $url_manager);
     }
 
     /**
@@ -746,7 +754,7 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkLimit($limit);
 
-        $repository_path = $this->getRepositoryPathById($id);
+        $repository = $this->getRepositoryForCurrentUser($id);
 
         $project = $this->getGitPHPProject($id);
 
@@ -759,8 +767,7 @@ class RepositoryResource extends AuthenticatedResource
         foreach ($sliced_branches_refs as $branch) {
             $name = $branch->GetName();
             try {
-                $commit_representation = new GitCommitRepresentation();
-                $commit_representation->build($repository_path, $branch->GetCommit());
+                $commit_representation = $this->commit_representation_builder->build($repository, $branch->GetCommit());
 
                 $branch_representation = new GitBranchRepresentation();
                 $branch_representation->build($name, $commit_representation);
@@ -811,7 +818,7 @@ class RepositoryResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkLimit($limit);
 
-        $repository_path = $this->getRepositoryPathById($id);
+        $repository = $this->getRepositoryForCurrentUser($id);
 
         $project = $this->getGitPHPProject($id);
 
@@ -824,8 +831,7 @@ class RepositoryResource extends AuthenticatedResource
         foreach ($sliced_tags_refs as $tag) {
             $name = $tag->GetName();
             try {
-                $commit_representation = new GitCommitRepresentation();
-                $commit_representation->build($repository_path, $tag->GetCommit());
+                $commit_representation = $this->commit_representation_builder->build($repository, $tag->GetCommit());
 
                 $tag_representation = new GitTagRepresentation();
                 $tag_representation->build($name, $commit_representation);
@@ -962,15 +968,13 @@ class RepositoryResource extends AuthenticatedResource
     /**
      * @param $id
      *
-     * @return string
+     * @return GitRepository
      * @throws RestException
      */
-    private function getRepositoryPathById($id)
+    private function getRepositoryForCurrentUser($id)
     {
-        $user            = $this->getCurrentUser();
-        $repository      = $this->getRepository($user, $id);
-        $repository_path = $this->url_manager->getRepositoryBaseUrl($repository);
+        $user = $this->getCurrentUser();
 
-        return $repository_path;
-}
+        return $this->getRepository($user, $id);
+    }
 }
