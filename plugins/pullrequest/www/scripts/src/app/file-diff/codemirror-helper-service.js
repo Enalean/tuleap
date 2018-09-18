@@ -50,17 +50,18 @@ function CodeMirrorHelperService(
         displayPlaceholderWidget
     });
 
-    function displayInlineComment(codemirror, comment, line_number) {
+    function displayInlineComment(code_mirror, comment, line_number) {
         const child_scope = $rootScope.$new(true);
         child_scope.comment = comment;
         const inline_comment_element = $compile(
             '<inline-comment comment="comment"></inline-comment>'
         )(child_scope)[0];
+
+        const options = getWidgetPlacementOptions(code_mirror, line_number);
+
         // Wait for angular to actually render the component so that it has a height
         return $timeout(() => {
-            return codemirror.addLineWidget(line_number, inline_comment_element, {
-                coverGutter: true
-            });
+            return code_mirror.addLineWidget(line_number, inline_comment_element, options);
         });
     }
 
@@ -89,14 +90,7 @@ function CodeMirrorHelperService(
             ></new-inline-comment>
         `)(child_scope)[0];
 
-        const options = {
-            coverGutter: true
-        };
-        const line_handle = code_mirror.getLineHandle(display_line_number);
-        const placeholder_index = getPlaceholderWidgetIndex(line_handle);
-        if (placeholder_index !== -1) {
-            options.insertAt = placeholder_index;
-        }
+        const options = getWidgetPlacementOptions(code_mirror, display_line_number);
         // Wait for angular to actually render the component so that it has a height
         return $timeout(() => {
             const widget = code_mirror.addLineWidget(
@@ -109,6 +103,18 @@ function CodeMirrorHelperService(
         });
     }
 
+    function getWidgetPlacementOptions(code_mirror, display_line_number) {
+        const options = {
+            coverGutter: true
+        };
+        const line_handle = code_mirror.getLineHandle(display_line_number);
+        const placeholder_index = getPlaceholderWidgetIndex(line_handle);
+        if (placeholder_index !== -1) {
+            options.insertAt = placeholder_index;
+        }
+        return options;
+    }
+
     function getPlaceholderWidgetIndex(handle) {
         if (!handle.widgets) {
             return -1;
@@ -119,13 +125,25 @@ function CodeMirrorHelperService(
     }
 
     function displayPlaceholderWidget(widget_params) {
-        const { code_mirror, handle, widget_height, display_above_line } = widget_params;
+        const {
+            code_mirror,
+            handle,
+            widget_height,
+            display_above_line,
+            is_comment_placeholder
+        } = widget_params;
+
         const options = {
             coverGutter: true,
             above: display_above_line
         };
         const elem = $document[0].createElement("div");
         elem.classList.add("pull-request-file-diff-placeholder-block");
+
+        if (is_comment_placeholder) {
+            elem.classList.add("pull-request-file-diff-comment-placeholder-block");
+        }
+
         elem.style.height = `${widget_height}px`;
 
         code_mirror.addLineWidget(handle, elem, options);

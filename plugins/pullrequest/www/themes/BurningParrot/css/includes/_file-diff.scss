@@ -19,7 +19,7 @@
     float: left;
 
     // scss-lint:disable SelectorFormat
-    .pull-request-side-by-side-diff-can-comment > .CodeMirror-gutter-elt:hover {
+    .CodeMirror-gutter-elt:hover {
         background: $tlp-theme-color;
         color: $tlp-ui-white;
         font-weight: 600;

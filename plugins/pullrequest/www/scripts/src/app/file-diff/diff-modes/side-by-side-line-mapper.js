@@ -30,18 +30,18 @@ function buildLineToLineHandlesMap(lines, line_to_group_map, left_code_mirror, r
 
         const group = line_to_group_map.get(line.unidiff_offset);
         const group_first_line_unidiff_offset = group.unidiff_offsets[0];
-        const group_previous_line = array[group_first_line_unidiff_offset - 2];
+        const group_last_line_unidiff_offset =
+            group.unidiff_offsets[group.unidiff_offsets.length - 1];
         if (group.type === DELETED_GROUP) {
-            const placeholder_line_number = group_previous_line
-                ? group_previous_line.new_offset - 1
-                : 0;
+            const group_next_line = array[group_last_line_unidiff_offset];
+            const placeholder_line_number = group_next_line ? group_next_line.new_offset - 1 : 0;
             const left_handle = left_code_mirror.getLineHandle(line.old_offset - 1);
             const right_handle = right_code_mirror.getLineHandle(placeholder_line_number);
             accumulator.set(line, { left_handle, right_handle });
             return accumulator;
         }
-
         if (group.type === ADDED_GROUP) {
+            const group_previous_line = array[group_first_line_unidiff_offset - 2];
             const placeholder_line_number = group_previous_line
                 ? group_previous_line.old_offset - 1
                 : 0;

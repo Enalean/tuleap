@@ -19,6 +19,7 @@
 
 import { buildLineGroups } from "./side-by-side-line-grouper.js";
 import { buildLineToLineHandlesMap } from "./side-by-side-line-mapper.js";
+import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper.js";
 
 let diff_lines;
 let first_line_to_group_map;
@@ -88,6 +89,26 @@ function getLeftLine(line_number) {
     return left_lines[line_number];
 }
 
+function getLineOfHandle(handle) {
+    for (const [key, value] of line_to_line_handles_map) {
+        const line_group = getGroupOfLine(key);
+        if (value.left_handle === handle && line_group.type === DELETED_GROUP) {
+            return key;
+        }
+        if (value.right_handle === handle && line_group.type === ADDED_GROUP) {
+            return key;
+        }
+
+        if (
+            line_group.type === UNMOVED_GROUP &&
+            (value.left_handle === handle || value.right_handle === handle)
+        ) {
+            return key;
+        }
+    }
+    return null;
+}
+
 export {
     initDataAndCodeMirrors,
     isFirstLineOfGroup,
@@ -98,5 +119,6 @@ export {
     hasNextLine,
     getNextLine,
     getRightLine,
-    getLeftLine
+    getLeftLine,
+    getLineOfHandle
 };
