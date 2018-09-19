@@ -20,5 +20,5 @@
 git_dir_path=$(git rev-parse --git-dir 2>/dev/null)
 repository_path=$(cd "$git_dir_path"; pwd)
 
-sudo -u codendiadm /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/git/hooks/post-receive.php "$repository_path" 2> /dev/null
+sudo -u codendiadm /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/plugins/git/hooks/post-receive.php "$repository_path" 2> /dev/null
 # END OF NEEDED CODENDI BLOCK

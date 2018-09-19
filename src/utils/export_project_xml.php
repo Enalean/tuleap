@@ -1,7 +1,7 @@
-#!/usr/share/codendi/src/utils/php-launcher.sh
+#!/usr/share/tuleaps/src/utils/php-launcher.sh
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *

@@ -1,4 +1,4 @@
 # postfix execute aliases command as `nobody`
 # we need to allow `nobody` to execute script on behalf of codendiadm
 Defaults:nobody !requiretty
-nobody ALL= (codendiadm) NOPASSWD: /usr/share/codendi/plugins/tracker/bin/emailgateway-wrapper.sh
+nobody ALL= (codendiadm) NOPASSWD: /usr/share/tuleap/plugins/tracker/bin/emailgateway-wrapper.sh

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -51,8 +51,8 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingGitGc {
         } else {
             $this->logger->warn(
                 'Cannot run git gc on gitolite admin working copy. '.
-                'Please run as root: /usr/share/codendi/src/utils/php-launcher.sh '.
-                '/usr/share/codendi/plugins/git/bin/gl-admin-housekeeping.php'
+                'Please run as root: /usr/share/tuleap/src/utils/php-launcher.sh '.
+                '/usr/share/tuleap/plugins/git/bin/gl-admin-housekeeping.php'
             );
         }
     }
