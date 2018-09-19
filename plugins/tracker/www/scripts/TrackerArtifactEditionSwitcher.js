@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -298,6 +298,9 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                 .find(".tracker_hidden_edition_field")
                 .show();
             $(element)
+                .find(".tracker_formelement_read_and_edit_edition_section")
+                .show();
+            $(element)
                 .find(".auto-computed-label")
                 .hide();
             $(element)
@@ -358,9 +361,12 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
         var removeReadOnlyElements = function(element) {
             $(element)
                 .children(
-                    ":not(.tracker_formelement_label,.tracker_hidden_edition_field, .artifact-link-value-reverse, .tracker_formelement_edit, .auto-computed-label,.back-to-autocompute)"
+                    ":not(.tracker_formelement_label,.tracker_hidden_edition_field, .tracker_formelement_read_and_edit, .artifact-link-value-reverse, .tracker_formelement_edit, .auto-computed-label,.back-to-autocompute)"
                 )
                 .remove();
+            $(element)
+                .find(".tracker_formelement_read_and_edit_read_section")
+                .hide();
         };
 
         var removeUnwrappedText = function(element) {

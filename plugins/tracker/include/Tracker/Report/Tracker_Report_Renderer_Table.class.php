@@ -1152,12 +1152,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         }
                     }
                     if (isset($matching_ids['nature'])) {
-                        $artifact_id = $row['id'];
-                        $nature = $matching_ids['nature'][$artifact_id];
-                        if ($read_only) {
-                            $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
-                            $html .= "<td>$forward_label</td>";
-                        } else {
+                        $artifact_id   = $row['id'];
+                        $nature        = $matching_ids['nature'][$artifact_id];
+                        $forward_label = Codendi_HTMLPurifier::instance()->purify($nature->forward_label);
+                        $html         .= '<td class="tracker_formelement_read_and_edit_read_section">' . $forward_label . '</td>';
+                        if (! $read_only) {
                             $project = $this->report->getTracker()->getProject();
                             $natures = $this->getAllUsableTypesInProjectWithCache($project);
                             $natures_presenter = array();
@@ -1172,8 +1171,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     'is_selected'   => ($selected_nature == $nature_i->shortname)
                                 );
                             }
+
                             $name = "artifact[{$artifactlink_field_id}][natures][{$row['id']}]";
-                            $html .= '<td>';
+                            $html .= '<td class="tracker_formelement_read_and_edit_edition_section">';
                             $html .= $renderer->renderToString(
                                 'artifactlink-nature-selector',
                                 new NatureSelectorPresenter($natures_presenter, $name, '')

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,30 +50,28 @@ class ArtifactLinkInformationPrepender
         $read_only
     ) {
         if ($reverse_artifact_links) {
-            return;
+            return '';
         }
 
         $value            = false;
         $folder_hierarchy = $this->hierarchy_builder->getHierarchyOfFolderForArtifact($artifact);
-        if ($read_only) {
-            if ($folder_hierarchy) {
-                $value = $this->fetchLinkToFolder($folder_hierarchy);
-            }
-        } else {
+
+        if (empty($folder_hierarchy)) {
+            return '';
+        }
+        if ($folder_hierarchy) {
+            $value = '<div class="tracker_formelement_read_and_edit_read_section">' . $this->fetchLinkToFolder($folder_hierarchy) . '</div>';
+        }
+        if (! $read_only) {
             $current_folder = null;
             if ($folder_hierarchy) {
                 $current_folder = end($folder_hierarchy);
             }
-            $value = $this->fetchSelectBox($artifact, $current_user, $current_folder);
+            $value .= '<div class="tracker_formelement_read_and_edit_edition_section">' .
+                $this->fetchSelectBox($artifact, $current_user, $current_folder) . '</div>';
         }
 
-        if (! $value) {
-            return;
-        }
-
-        $current_folder = $GLOBALS['Language']->getText('plugin_folders', 'current_folder');
-
-        return '<p>' . $current_folder . ' ' . $value . '</p>';
+        return '<p>' . $GLOBALS['Language']->getText('plugin_folders', 'current_folder') . ' ' . $value . '</p>';
     }
 
     private function fetchLinkToFolder(array $folder_hierarchy)
