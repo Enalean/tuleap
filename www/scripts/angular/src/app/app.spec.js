@@ -7,6 +7,7 @@ import "./artifact-links-graph/artifact-links-model-service.spec.js";
 import "./campaign/campaign-edit-controller.spec.js";
 import "./campaign/campaign-list-controller.spec.js";
 import "./campaign/campaign-service.spec.js";
+import "./campaign/edit-campaign/edit-campaign-model-builder.spec.js";
 import "./execution-collection/execution-rest-service.spec.js";
 import "./execution-collection/execution-service.spec.js";
 import "./execution/execution-detail-controller.spec.js";

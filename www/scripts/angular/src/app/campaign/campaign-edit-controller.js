@@ -1,6 +1,11 @@
 import _ from "lodash";
 
-import { sortAlphabetically } from "../ksort.js";
+import { UNCATEGORIZED } from "../definition/definition-constants.js";
+import {
+    buildInitialTestsList,
+    buildCategory,
+    buildTest
+} from "./edit-campaign/edit-campaign-model-builder.js";
 
 export default CampaignEditCtrl;
 
@@ -87,47 +92,6 @@ function CampaignEditCtrl(
         return ExecutionService.loadExecutions(campaign_id).then(function() {
             return ExecutionService.executionsForCampaign(campaign_id);
         });
-    }
-
-    function buildInitialTestsList(definitions, executions) {
-        let tests_list = {};
-
-        _.forEach(definitions, function(definition) {
-            var category = definition.category;
-
-            if (!_.has(tests_list, category)) {
-                tests_list[category] = buildCategory(category);
-            }
-
-            tests_list[category].tests[definition.id] = buildTest(definition, null, false);
-        });
-
-        _.forEach(executions, function(execution) {
-            var definition = execution.definition;
-            var category = definition.category || DefinitionService.UNCATEGORIZED;
-
-            _.merge(tests_list[category].tests[definition.id], {
-                execution: execution,
-                selected: true
-            });
-        });
-
-        return sortAlphabetically(tests_list);
-    }
-
-    function buildCategory(category) {
-        return {
-            tests: {},
-            label: category
-        };
-    }
-
-    function buildTest(definition, execution, selected) {
-        return {
-            definition: definition,
-            execution: execution,
-            selected: selected
-        };
     }
 
     function selectedTests(category) {
@@ -229,7 +193,7 @@ function CampaignEditCtrl(
     }
 
     function addTest(definition) {
-        var category = definition.category || DefinitionService.UNCATEGORIZED;
+        var category = definition.category || UNCATEGORIZED;
 
         if (!_.has($scope.tests_list, category)) {
             $scope.tests_list[category] = buildCategory(category);

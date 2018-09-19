@@ -6,7 +6,4 @@ import DefinitionService from "./definition-service.js";
 
 export default angular
     .module("definition", ["restangular"])
-    .service("DefinitionService", DefinitionService)
-    .constant("DefinitionConstants", {
-        UNCATEGORIZED: "Uncategorized"
-    }).name;
+    .service("DefinitionService", DefinitionService).name;

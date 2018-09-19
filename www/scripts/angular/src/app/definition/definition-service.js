@@ -1,19 +1,20 @@
 import _ from "lodash";
+import { UNCATEGORIZED } from "./definition-constants.js";
 
 import { getDefinitions as tlpGetDefinitions } from "../api/rest-querier.js";
 
 export default DefinitionService;
 
-DefinitionService.$inject = ["Restangular", "$q", "DefinitionConstants", "SharedPropertiesService"];
+DefinitionService.$inject = ["Restangular", "$q", "SharedPropertiesService"];
 
-function DefinitionService(Restangular, $q, DefinitionConstants, SharedPropertiesService) {
+function DefinitionService(Restangular, $q, SharedPropertiesService) {
     var rest = Restangular.withConfig(function(RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl("/api/v1");
     });
 
     return {
-        UNCATEGORIZED: DefinitionConstants.UNCATEGORIZED,
+        UNCATEGORIZED,
         getDefinitions,
         getDefinitionReports,
         getArtifactById,
@@ -30,7 +31,7 @@ function DefinitionService(Restangular, $q, DefinitionConstants, SharedPropertie
     function categorize(definitions) {
         return _.map(definitions, function(definition) {
             return _.merge(definition, {
-                category: definition.category || DefinitionConstants.UNCATEGORIZED
+                category: definition.category || UNCATEGORIZED
             });
         });
     }
