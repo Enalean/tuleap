@@ -1,52 +1,44 @@
-<div class="tlp-pane-container">
-    <section ng-click="::summary_controller.goToOverview()" class="tlp-pane-section pull-request-summary">
-        <div class="tlp-avatar"><img ng-src="{{ ::summary_controller.author.avatar_url }}"></div>
+<section ng-click="::summary_controller.goToOverview()" class="pull-request-summary">
+    <div class="tlp-avatar"><img ng-src="{{ ::summary_controller.author.avatar_url }}"></div>
 
-        <div class="pull-request-summary-info">
-            <div class="pull-request-summary-title">
-                <span
-                    class="pull-request-summary-title"
-                    ng-bind-html="::summary_controller.pull_request.title"
-                    ng-click="$event.stopPropagation()"
-                ></span>
-            </div>
-
-            <div class="pull-request-summary-metadata">
-                <a ng-href="{{ ::summary_controller.author.user_url }}"
-                    ng-click="$event.stopPropagation()"
-                    ng-bind="::summary_controller.author.display_name"
-                    class="pull-request-summary-author"
-                ></a>
-                <span class="pull-request-summary-creation-date">
-                    <i class="fa fa-calendar"></i>{{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
-                </span>
-                <pull-request-refs
-                    class="pull-request-summary-refs"
-                    pull-request-data="::summary_controller.pull_request"
-                ></pull-request-refs>
-            </div>
+    <div class="pull-request-summary-info">
+        <div class="pull-request-summary-title">
+            <span
+                class="pull-request-summary-title"
+                ng-bind-html="::summary_controller.pull_request.title"
+                ng-click="$event.stopPropagation()"
+            ></span>
         </div>
 
-        <labels-box class="pull-request-summary-labels-box"
-                    pull-request-id="{{ ::summary_controller.pull_request.id }}"
-                    project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
-        ></labels-box>
-    </section>
-</div>
+        <div class="pull-request-summary-metadata">
+            <a ng-href="{{ ::summary_controller.author.user_url }}"
+                ng-click="$event.stopPropagation()"
+                ng-bind="::summary_controller.author.display_name"
+                class="pull-request-summary-author"
+            ></a>
+            <span class="pull-request-summary-creation-date">
+                <i class="fa fa-calendar"></i>{{ ::summary_controller.pull_request.creation_date | amDateFormat: 'YYYY-MM-DD HH:mm' }}
+            </span>
+            <pull-request-refs
+                class="pull-request-summary-refs"
+                pull-request-data="::summary_controller.pull_request"
+            ></pull-request-refs>
+        </div>
+    </div>
 
-<div class="tlp-pane-container"
-    ng-if="summary_controller.isAbandoned() || summary_controller.isMerged()"
->
-    <section class="tlp-pane-section pull-request-summary-status-section">
-        <span
-            ng-if="::summary_controller.isAbandoned()"
-            class="pull-request-summary-status tlp-badge-secondary"
-            translate
-        >Abandoned</span>
-        <span
-            ng-if="::summary_controller.isMerged()"
-            class="pull-request-summary-status tlp-badge-success"
-            translate
-        >Merged</span>
-    </section>
-</div>
+    <labels-box class="pull-request-summary-labels-box"
+                pull-request-id="{{ ::summary_controller.pull_request.id }}"
+                project-id="{{ ::summary_controller.pull_request.repository_dest.project.id }}"
+    ></labels-box>
+
+    <span
+        ng-if="::summary_controller.isAbandoned()"
+        class="pull-request-summary-status tlp-badge-secondary"
+        translate
+    >Abandoned</span>
+    <span
+        ng-if="::summary_controller.isMerged()"
+        class="pull-request-summary-status tlp-badge-success"
+        translate
+    >Merged</span>
+</section>

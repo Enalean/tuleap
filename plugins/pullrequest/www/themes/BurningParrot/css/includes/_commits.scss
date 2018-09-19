@@ -24,22 +24,11 @@
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
-.pull-request-commits-list {
-    padding: 0;
-}
-
 .pull-request-commits-list-commit {
     display: flex;
     flex: 1 0 auto;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid $tlp-ui-border-light;
-    color: $tlp-typo-default-text-color;
-
-    &:hover {
-        background-color: transparentize($tlp-theme-color, .9);
-        text-decoration: none;
-    }
+    justify-content: space-between;
 }
 
 .pull-request-commits-list-commit-spacer {

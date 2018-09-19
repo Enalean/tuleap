@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,10 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-@import 'density';
-@import 'colors/common-colors';
-@import 'colors/purple-colors';
-@import 'colors/computed-colors';
-@import 'margins';
-@import 'names';
+$tlp-theme-color-hover-background: mix($tlp-theme-color, $tlp-ui-white, 7);
+$tlp-theme-color-dimmed-background: mix($tlp-theme-background-color, $tlp-ui-white, 50);
+$tlp-theme-color-dimmed-hover-background: mix($tlp-theme-background-color, $tlp-ui-white, 90);
+$tlp-theme-color-dimmed-hover-border: mix($tlp-ui-dimmed, $tlp-ui-white, 50);

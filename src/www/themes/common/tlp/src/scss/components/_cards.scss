@@ -1,0 +1,95 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tlp-card {
+    margin: 0 0 $tlp-spacing;
+    padding: $tlp-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: $tlp-ui-white;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.tlp-card-inactive {
+    background: darken($tlp-theme-color-dimmed-background, 1%);
+}
+
+.tlp-card-selectable {
+    display: block;
+    transition: border-color 100ms linear;
+    color: $tlp-typo-default-text-color;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $tlp-theme-color;
+        text-decoration: none;
+
+        &.tlp-card-inactive {
+            border-color: $tlp-theme-color-dimmed-hover-border;
+        }
+    }
+}
+
+.tlp-pane-section-for-cards,
+.tlp-pane-section-for-cards-under-tabs {
+    > .tlp-card {
+        margin: 0;
+        border: 0;
+        border-bottom: 1px solid $tlp-ui-border-light;
+        border-radius: 0;
+
+        &:last-child {
+            border: 0;
+        }
+    }
+
+    > .tlp-card-selectable {
+        transition: background-color 100ms linear;
+
+        &:hover {
+            border-color: $tlp-ui-border-light;
+            background-color: $tlp-theme-color-hover-background;
+            text-decoration: none;
+        }
+    }
+
+    > .tlp-card-inactive {
+        border: 0;
+        background: $tlp-theme-color-dimmed-background;
+
+        &:hover {
+            background-color: $tlp-theme-color-dimmed-hover-background;
+        }
+
+        + .tlp-card-inactive {
+            border-top: 1px solid darken($tlp-ui-border-light, 1%);
+        }
+
+        + .tlp-card:not(.tlp-card-inactive) {
+            border-top: 1px solid $tlp-ui-border-light;
+        }
+    }
+}
+
+.tlp-pane-section-for-cards-under-tabs {
+    padding: $tlp-spacing 0 0;
+}

@@ -10,27 +10,6 @@
     .pull-requests-list {
         display: flex;
         flex-direction: column;
-        flex-wrap: nowrap;
-        align-content: flex-start;
-        align-items: stretch;
-        justify-content: space-around;
-    }
-
-    .pull-request-list-item {
-        transition: border-color 100ms linear;
-        cursor: pointer;
-
-        &:hover {
-            border-color: $tlp-theme-color;
-        }
-
-        &.closed {
-            background: transparentize($tlp-ui-white, .7);
-
-            &:hover {
-                border-color: transparentize($tlp-ui-dimmed, .7);
-            }
-        }
     }
 
     > .pull-request-loading {
