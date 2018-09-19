@@ -159,6 +159,12 @@ class Blob extends FilesystemObject implements GitObjectType
     public static function FileType($octMode, $local = false) // @codingStandardsIgnoreLine
     {
         $mode = octdec($octMode);
+        if ($mode === 57344) {
+            if ($local) {
+                return dgettext('tuleap-git', 'submodule');
+            }
+            return 'submodule';
+        }
         if (($mode & 0x4000) == 0x4000) {
             if ($local) {
                 return __('directory');
@@ -520,5 +526,10 @@ class Blob extends FilesystemObject implements GitObjectType
     public function isBlob()
     {
         return  true;
+    }
+
+    public function isSubmodule()
+    {
+        return false;
     }
 }

@@ -1,3 +1,4 @@
+
 {*
  *  blob.tpl
  *  gitphp: A PHP git repository browser

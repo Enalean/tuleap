@@ -20,20 +20,38 @@
 
 namespace Tuleap\Git\GitPHP;
 
-interface GitObjectType
+final class Submodule extends GitObject implements GitObjectType
 {
-    /**
-     * @return boolean
-     */
-    public function isTree();
+    private $path;
 
-    /**
-     * @return boolean
-     */
-    public function isBlob();
+    public function __construct($path, $hash)
+    {
+        parent::__construct(null, $hash);
+        $this->path = $path;
+    }
 
-    /**
-     * @return bool
-     */
-    public function isSubmodule();
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function getName()
+    {
+        return basename($this->path);
+    }
+
+    public function isTree()
+    {
+        return false;
+    }
+
+    public function isBlob()
+    {
+        return false;
+    }
+
+    public function isSubmodule()
+    {
+        return true;
+    }
 }

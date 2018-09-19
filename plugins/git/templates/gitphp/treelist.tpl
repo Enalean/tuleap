@@ -11,7 +11,11 @@
 
 {foreach from=$tree->GetContents() item=treeitem}
   <tr class="{cycle values="light,dark"}">
-    <td class="monospace perms">{$treeitem->GetModeString()|escape}</td>
+    {if $treeitem->isSubmodule() }
+      <td></td>
+    {else}
+      <td class="monospace perms">{$treeitem->GetModeString()|escape}</td>
+    {/if}
     {if $treeitem->isBlob() }
       <td class="filesize">{$treeitem->GetSize()|escape}</td>
       <td></td>
@@ -36,6 +40,11 @@
 	 | 
 	<a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
       </td>
+    {elseif $treeitem->isSubmodule() }
+      <td class="filesize"></td>
+      <td class="expander"></td>
+      <td class="list fileName">{$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
+      <td class="link"></td>
     {/if}
   </tr>
 {/foreach}

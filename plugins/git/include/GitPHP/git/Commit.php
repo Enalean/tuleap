@@ -156,6 +156,8 @@ class Commit extends GitObject
      */
     protected $treePaths = array();
 
+    private $commit_paths = [];
+
     /**
      * hashPathsRead
      *
@@ -762,6 +764,10 @@ class Commit extends GitObject
             return $this->treePaths[$path];
         }
 
+        if (isset($this->commit_paths[$path])) {
+            return $this->commit_paths[$path];
+        }
+
         return '';
     }
 
@@ -803,6 +809,10 @@ class Commit extends GitObject
                 $path = $obj->GetPath();
                 $this->treePaths[trim($path)] = $hash;
                 $this->ReadHashPathsRaw($obj);
+            } elseif ($obj instanceof Submodule) {
+                $hash = $obj->GetHash();
+                $path = $obj->getPath();
+                $this->commit_paths[trim($path)] = $hash;
             }
         }
     }

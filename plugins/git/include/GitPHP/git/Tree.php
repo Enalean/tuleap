@@ -149,13 +149,13 @@ class Tree extends FilesystemObject implements GitObjectType
 
             $octmode = octdec($mode);
 
-            if ($octmode == 57344) {
-                // submodules not currently supported
-                continue;
-            }
-
             if (!empty($this->path)) {
                 $path = $this->path . '/' . $path;
+            }
+
+            if ($octmode === 57344) {
+                $this->contents[] = new Submodule($path, $hash);
+                continue;
             }
 
             $obj = null;
@@ -278,6 +278,11 @@ class Tree extends FilesystemObject implements GitObjectType
     }
 
     public function isBlob()
+    {
+        return false;
+    }
+
+    public function isSubmodule()
     {
         return false;
     }
