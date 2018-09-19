@@ -39,6 +39,8 @@ use ReferenceManager;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
+use Tuleap\Git\GitPHP\Commit;
+use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
@@ -585,22 +587,33 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
 
-        $executor_repo_destination = $this->getExecutor($git_repository_destination);
-        $dest_content              = $this->getDestinationContent($pull_request, $executor_repo_destination, $path);
-        $src_content               = $this->getSourceContent($pull_request, $executor_repo_destination, $path);
+        $git_project = (new ProjectProvider($git_repository_destination))->GetProject();
+        $commit_src  = $git_project->GetCommit($pull_request->getSha1Src());
+        $commit_dest = $git_project->GetCommit($pull_request->getSha1Dest());
 
-        if ($src_content === null && $dest_content === null) {
+        $object_reference_src  = $commit_src->PathToHash($path);
+        $object_reference_dest = $commit_dest->PathToHash($path);
+
+        if ($object_reference_src === '' && $object_reference_dest === '') {
             throw new RestException(404, 'The file does not exist');
         }
 
-        list($mime_type, $charset) = MimeDetector::getMimeInfo($path, $dest_content, $src_content);
+        $object_src  = $git_project->GetObject($object_reference_src, $object_type_src) ?: null;
+        $object_dest = $git_project->GetObject($object_reference_dest, $object_type_dest) ?: null;
+
+        $mime_type = 'text/plain';
+        $charset   = 'utf-8';
+        if ($object_type_src === Pack::OBJ_BLOB || $object_type_dest === Pack::OBJ_BLOB) {
+            list($mime_type, $charset) = MimeDetector::getMimeInfo($path, $object_dest, $object_src);
+        }
 
         if ($charset === "binary") {
             $diff = new FileUniDiff();
             $inline_comments = array();
         } else {
-            $unidiff_builder = new FileUniDiffBuilder();
-            $diff            = $unidiff_builder->buildFileUniDiffFromCommonAncestor(
+            $executor_repo_destination = $this->getExecutor($git_repository_destination);
+            $unidiff_builder           = new FileUniDiffBuilder();
+            $diff                      = $unidiff_builder->buildFileUniDiffFromCommonAncestor(
                 $executor_repo_destination,
                 $path,
                 $pull_request->getSha1Dest(),
@@ -648,11 +661,14 @@ class PullRequestsResource extends AuthenticatedResource
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
         $user                            = $this->user_manager->getCurrentUser();
 
-        $executor     = $this->getExecutor($git_repository_destination);
-        $dest_content = $this->getDestinationContent($pull_request, $executor, $comment_data->file_path);
-        $src_content  = $this->getSourceContent($pull_request, $executor, $comment_data->file_path);
+        $git_project = (new ProjectProvider($git_repository_destination))->GetProject();
+        $commit_src  = $git_project->GetCommit($pull_request->getSha1Src());
+        $commit_dest = $git_project->GetCommit($pull_request->getSha1Dest());
 
-        if ($src_content === null && $dest_content === null) {
+        $object_reference_src  = $commit_src->PathToHash($comment_data->file_path);
+        $object_reference_dest = $commit_dest->PathToHash($comment_data->file_path);
+
+        if ($object_reference_src === '' && $object_reference_dest === '') {
             throw new RestException(404, 'The file does not exist');
         }
 
@@ -669,29 +685,6 @@ class PullRequestsResource extends AuthenticatedResource
             $comment_data->content,
             $git_repository_source->getProjectId()
         );
-    }
-
-
-    private function getSourceContent(PullRequest $pull_request, GitExec $executor, $path)
-    {
-        try {
-            $src_content  = $executor->getFileContent($pull_request->getSha1Src(), $path);
-        } catch (Git_Command_Exception $exception) {
-            $src_content = null;
-        }
-
-        return $src_content;
-    }
-
-    private function getDestinationContent(PullRequest $pull_request, GitExec $executor, $path)
-    {
-        try {
-            $dest_content  = $executor->getFileContent($pull_request->getSha1Dest(), $path);
-        } catch (Git_Command_Exception $exception) {
-            $dest_content = null;
-        }
-
-        return $dest_content;
     }
 
     /**
