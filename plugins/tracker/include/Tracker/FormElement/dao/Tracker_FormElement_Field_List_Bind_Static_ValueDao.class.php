@@ -273,6 +273,14 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                             AND cv.field_id = v.field_id
                         )
                     WHERE cv.field_id = $field_id
+                    UNION
+                    SELECT tracker_workflow_trigger_rule_static_value.value_id
+                    FROM tracker_workflow_trigger_rule_static_value
+                    WHERE tracker_workflow_trigger_rule_static_value.value_id = $value_id
+                    UNION
+                    SELECT tracker_workflow_trigger_rule_trg_field_static_value.value_id
+                    FROM tracker_workflow_trigger_rule_trg_field_static_value
+                    WHERE tracker_workflow_trigger_rule_trg_field_static_value.value_id = $value_id
                     ";
 
             foreach ($this->retrieve($sql) as $row) {
