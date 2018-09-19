@@ -59,7 +59,7 @@ class MediaWikiPlugin extends Plugin {
 
     public function __construct ($id=0) {
         parent::__construct($id);
-        $this->name = "mediawiki" ;
+        $this->setName("mediawiki");
         $this->text = "Mediawiki" ; // To show in the tabs, use...
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICE_ICON);
@@ -210,7 +210,7 @@ class MediaWikiPlugin extends Plugin {
             $project = $this->getProjectFromRequest();
             if ($this->isSearchEntryAvailable($project)) {
                 $params['search_entries'][] = array(
-                    'value'    => $this->name,
+                    'value'    => $this->getName(),
                     'label'    => $this->text,
                     'selected' => $this->isSearchEntrySelected($params['type_of_search']),
                 );
@@ -228,7 +228,7 @@ class MediaWikiPlugin extends Plugin {
             $query   = $params['query'];
             $project = $query->getProject();
 
-            if ($query->getTypeOfSearch() == $this->name && $this->isSearchEntryAvailable($project)) {
+            if ($query->getTypeOfSearch() == $this->getName() && $this->isSearchEntryAvailable($project)) {
                 if (! $project->isError()) {
                    util_return_to($this->getMediawikiSearchURI($project, $query->getWords()));
                 }
@@ -241,7 +241,7 @@ class MediaWikiPlugin extends Plugin {
         public function search_types_presenters($params) {
             if ($this->isSearchEntryAvailable($params['project'])) {
                 $params['project_presenters'][] = new Search_SearchTypePresenter(
-                    $this->name,
+                    $this->getName(),
                     $this->text,
                     array(),
                     $this->getMediawikiSearchURI($params['project'], $params['words'])
@@ -268,7 +268,7 @@ class MediaWikiPlugin extends Plugin {
         }
 
         private function isSearchEntrySelected($type_of_search) {
-            return ($type_of_search == $this->name) || $this->isMediawikiUrl();
+            return ($type_of_search == $this->getName()) || $this->isMediawikiUrl();
         }
 
         private function isMediawikiUrl() {
