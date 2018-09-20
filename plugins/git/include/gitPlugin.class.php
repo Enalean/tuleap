@@ -106,6 +106,8 @@ use Tuleap\Git\Repository\Settings\WebhookAddController;
 use Tuleap\Git\Repository\Settings\WebhookDeleteController;
 use Tuleap\Git\Repository\Settings\WebhookEditController;
 use Tuleap\Git\Repository\Settings\WebhookRouter;
+use Tuleap\Git\Repository\View\CommitForCurrentTreeRetriever;
+use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
 use Tuleap\Git\Repository\View\RepositoryHeaderPresenterBuilder;
 use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
@@ -2533,7 +2535,8 @@ class GitPlugin extends Plugin
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
                     $this->getThemeManager(),
-                    $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES)
+                    $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES),
+                    new FilesHeaderPresenterBuilder(new CommitForCurrentTreeRetriever())
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {

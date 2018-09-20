@@ -145,6 +145,9 @@ msgstr ""
 "Le dépôt est en attente de transfert vers gerrit. Veuillez revenir dans "
 "quelques minutes."
 
+msgid "Undefined"
+msgstr "Indéfini"
+
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr "L'utilisateur \"%s\" a été ajouté aux notifications"

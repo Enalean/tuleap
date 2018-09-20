@@ -126,6 +126,9 @@ msgid ""
 "in a few minutes."
 msgstr ""
 
+msgid "Undefined"
+msgstr ""
+
 #, php-format
 msgid "User \"%s\" successfully added to notifications"
 msgstr ""
