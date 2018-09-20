@@ -1,8 +1,24 @@
+import { sprintf } from "sprintf-js";
+
 export default CommitsController;
 
-CommitsController.$inject = ["$state", "$window", "CommitsRestService", "SharedPropertiesService"];
+CommitsController.$inject = [
+    "$state",
+    "$window",
+    "gettextCatalog",
+    "moment",
+    "CommitsRestService",
+    "SharedPropertiesService"
+];
 
-function CommitsController($state, $window, CommitsRestService, SharedPropertiesService) {
+function CommitsController(
+    $state,
+    $window,
+    gettextCatalog,
+    moment,
+    CommitsRestService,
+    SharedPropertiesService
+) {
     const self = this;
 
     Object.assign(self, {
@@ -65,11 +81,25 @@ function CommitsController($state, $window, CommitsRestService, SharedProperties
             $window.location.href = commit.author.user_url;
         };
 
+        const isCommitStatus = name => commit.commit_status && commit.commit_status.name === name;
+        const isCommitStatusASuccess = () => isCommitStatus("success");
+        const isCommitStatusAFailure = () => isCommitStatus("failure");
+        const getCommitStatusMessage = () => {
+            const message = isCommitStatusASuccess()
+                ? gettextCatalog.getString("Continuous integration status: Success on %s")
+                : gettextCatalog.getString("Continuous integration status: Failure on %s");
+
+            return sprintf(message, moment(commit.commit_status.date).format("YYYY-MM-DD HH:mm"));
+        };
+
         return {
             short_id: commit.id.substring(0, 10),
             avatar_url,
             display_name,
             goToAuthor,
+            isCommitStatusASuccess,
+            isCommitStatusAFailure,
+            getCommitStatusMessage,
             ...commit
         };
     }

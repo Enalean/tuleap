@@ -35,6 +35,10 @@ msgstr ""
 msgid "Binary file"
 msgstr ""
 
+#: src/app/commits/commits.tpl.html
+msgid "CI"
+msgstr ""
+
 #: src/app/file-diff/new-inline-comment.html
 #: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
@@ -66,6 +70,14 @@ msgstr ""
 
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Commits"
+msgstr ""
+
+#: src/app/commits/commits-controller.js
+msgid "Continuous integration status: Failure on %s"
+msgstr ""
+
+#: src/app/commits/commits-controller.js
+msgid "Continuous integration status: Success on %s"
 msgstr ""
 
 #: src/app/overview/overview.tpl.html

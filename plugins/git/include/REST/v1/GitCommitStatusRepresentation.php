@@ -15,35 +15,29 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Git\CommitStatus;
+namespace Tuleap\Git\REST\v1;
 
-final class CommitStatusUnknown implements CommitStatus
+use Tuleap\Git\CommitStatus\CommitStatus;
+use Tuleap\REST\JsonCast;
+
+class GitCommitStatusRepresentation
 {
-    const NAME = 'unknown';
-
-    private $date;
-
-    public function __construct()
-    {
-        $this->date = new \DateTimeImmutable;
-    }
-
     /**
-     * @return string
+     * @var string
      */
-    public function getStatusName()
-    {
-        return self::NAME;
-    }
-
+    public $name;
     /**
-     * @return \DateTimeImmutable
+     * @var date
      */
-    public function getDate()
+    public $date;
+
+    public function build(CommitStatus $commit_status)
     {
-        return $this->date;
+        $this->name = $commit_status->getStatusName();
+        $this->date = JsonCast::toDate($commit_status->getDate()->getTimestamp());
     }
 }

@@ -43,6 +43,10 @@ msgstr "Une erreur est survenue durant l’unes de vos dernières actions."
 msgid "Binary file"
 msgstr "Fichier binaire"
 
+#: src/app/commits/commits.tpl.html
+msgid "CI"
+msgstr "IC"
+
 #: src/app/file-diff/new-inline-comment.html
 #: src/app/overview/edit-modal/edit-modal.tpl.html
 #: src/app/overview/merge-modal/merge-modal.tpl.html
@@ -75,6 +79,14 @@ msgstr "Commenter"
 #: src/app/pull-request/pull-request.tpl.html
 msgid "Commits"
 msgstr "Commits"
+
+#: src/app/commits/commits-controller.js
+msgid "Continuous integration status: Failure on %s"
+msgstr "Status intégration continue : Échec le %s"
+
+#: src/app/commits/commits-controller.js
+msgid "Continuous integration status: Success on %s"
+msgstr "Status intégration continue : Succès le %s"
 
 #: src/app/overview/overview.tpl.html
 msgid "Deprecated REST route"

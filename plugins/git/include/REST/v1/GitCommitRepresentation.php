@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\REST\v1;
 
+use Tuleap\Git\CommitStatus\CommitStatus;
+use Tuleap\Git\CommitStatus\CommitStatusUnknown;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\MinimalUserRepresentation;
@@ -59,8 +61,12 @@ class GitCommitRepresentation
      * @var string
      */
     public $html_url;
+    /**
+     * @var \Tuleap\Git\REST\v1\GitCommitStatusRepresentation
+     */
+    public $commit_status;
 
-    public function build($repository_path, Commit $commit)
+    public function build($repository_path, Commit $commit, CommitStatus $commit_status)
     {
         $this->id            = $commit->GetHash();
         $this->title         = $commit->GetTitle();
@@ -82,6 +88,12 @@ class GitCommitRepresentation
         if ($author !== null) {
             $author_representation = new MinimalUserRepresentation();
             $this->author = $author_representation->build($author);
+        }
+
+        $this->commit_status = null;
+        if ($commit_status->getStatusName() !== CommitStatusUnknown::NAME) {
+            $this->commit_status = new GitCommitStatusRepresentation();
+            $this->commit_status->build($commit_status);
         }
     }
 }

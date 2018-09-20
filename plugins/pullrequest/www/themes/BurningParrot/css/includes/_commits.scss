@@ -32,7 +32,6 @@
     display: flex;
     flex: 1 0 auto;
     align-items: center;
-    justify-content: space-between;
     padding: 20px;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
@@ -41,6 +40,19 @@
         background-color: transparentize($tlp-theme-color, .9);
         text-decoration: none;
     }
+}
+
+.pull-request-commits-list-commit-spacer {
+    flex: 1 1 auto;
+    min-width: $tlp-spacing;
+}
+
+.pull-request-commits-list-commit-last-status {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.pull-request-commits-list-commit-last-status-icon {
+    margin: 0 0 0 3px;
 }
 
 .pull-request-commits-list-commit-metadata {
