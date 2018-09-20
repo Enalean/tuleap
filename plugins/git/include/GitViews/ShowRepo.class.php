@@ -52,7 +52,7 @@ class GitViews_ShowRepo {
     public function display(Git_URL $url) {
         $git_php_viewer = new GitViews_GitPhpViewer($this->repository, $this->request->getCurrentUser());
         if ($url->isADownload($this->request)) {
-            $view = new GitViews_ShowRepo_Download($git_php_viewer);
+            $view = new GitViews_ShowRepo_Download($git_php_viewer, $this->request);
         } else {
             $view = new GitViews_ShowRepo_Content(
                 $this->repository,

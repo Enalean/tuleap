@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,7 +68,7 @@ class GitViews_ShowRepo_Content {
 
         if ($this->repository->isCreated()) {
             $is_download = false;
-            $html       .= $this->gitphp_viewer->getContent($is_download);
+            $html       .= $this->gitphp_viewer->getContent($is_download, $this->request);
 
             $this->access_logger->logAccess($this->repository, $this->request->getCurrentUser());
         } else {

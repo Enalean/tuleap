@@ -1,25 +1,27 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Tree Diff
- *
- * Represents differences between two commit trees
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
-
-/**
- * TreeDiff class
- *
- * @package GitPHP
- * @subpackage Git
- */
-class TreeDiff implements \Iterator
+class TreeDiff implements \Iterator, \Countable
 {
 
     /**
@@ -137,14 +139,18 @@ class TreeDiff implements \Iterator
             $args[] = escapeshellarg($this->fromHash);
         }
 
-        $args[] = escapeshellarg($this->toHash);
+        $stat_args = array_merge($args, ['--numstat']);
 
+        $args[] = escapeshellarg($this->toHash);
+        $stat_args[] = escapeshellarg($this->toHash);
+
+        $stats_indexed_by_filename = $this->getStatsIndexedByFilename($exe, $stat_args);
         $diffTreeLines = explode("\n", $exe->Execute(GitExe::DIFF_TREE, $args));
         foreach ($diffTreeLines as $line) {
             $trimmed = trim($line);
             if ((strlen($trimmed) > 0) && (substr_compare($trimmed, ':', 0, 1) === 0)) {
                 try {
-                    $this->fileDiffs[] = new FileDiff($this->project, $trimmed);
+                    $this->fileDiffs[] = new FileDiff($this->project, $trimmed, '', $stats_indexed_by_filename);
                 } catch (\Exception $e) {
                 }
             }
@@ -295,5 +301,29 @@ class TreeDiff implements \Iterator
         }
 
         return count($this->fileDiffs);
+    }
+
+    /**
+     * @param GitExe $exe
+     * @param array  $stat_args
+     *
+     * @return array
+     */
+    private function getStatsIndexedByFilename(GitExe $exe, array $stat_args)
+    {
+        $stats_indexed_by_filename = [];
+        $diff_stats                = explode("\n", $exe->Execute(GitExe::DIFF, $stat_args));
+        foreach ($diff_stats as $line) {
+            if (! trim($line)) {
+                continue;
+            }
+            list($added, $removed, $filename) = explode("\t", $line);
+            $stats_indexed_by_filename[$filename] = [
+                'added'   => $added,
+                'removed' => $removed
+            ];
+        }
+
+        return $stats_indexed_by_filename;
     }
 }

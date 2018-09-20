@@ -23,9 +23,7 @@ namespace Tuleap\Git\GitViews;
 
 use EventManager;
 use HTTPRequest;
-use PFUser;
 use Project;
-use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 
@@ -35,21 +33,14 @@ class GitViewHeader
      * @var EventManager
      */
     private $event_manager;
-    /**
-     * @var GitCrumbBuilder
-     */
-    private $service_crumb_builder;
 
     /**
-     * @param EventManager          $event_manager
-     * @param GitCrumbBuilder       $service_crumb_builder
+     * @param EventManager $event_manager
      */
     public function __construct(
-        EventManager $event_manager,
-        GitCrumbBuilder $service_crumb_builder
+        EventManager $event_manager
     ) {
-        $this->event_manager         = $event_manager;
-        $this->service_crumb_builder = $service_crumb_builder;
+        $this->event_manager = $event_manager;
     }
 
     public function header(

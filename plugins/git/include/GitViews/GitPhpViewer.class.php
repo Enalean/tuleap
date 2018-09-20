@@ -43,18 +43,27 @@ class GitViews_GitPhpViewer {
         $this->current_user = $current_user;
     }
 
-    public function getContent($is_download)
+    public function getContent($is_download, HTTPRequest $request)
     {
         set_time_limit(300);
-        if (! $is_download) {
+        if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
             echo '<div id="gitphp" class="plugin_git_gitphp">';
         }
 
         $this->displayGitPHP();
 
-        if (! $is_download) {
+        if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
             echo '</div>';
         }
+    }
+
+    private function canDisplayEnclosingDiv(HTTPRequest $request)
+    {
+        if (! \ForgeConfig::get('git_repository_bp')) {
+            return true;
+        }
+
+        return $request->get('a') !== 'commit';
     }
 
     private function displayGitPHP()

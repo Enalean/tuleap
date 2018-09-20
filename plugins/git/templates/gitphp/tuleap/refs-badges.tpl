@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+{*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +15,15 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
+ *}
 
-class GitViews_ShowRepo_Download
-{
-    /**
-     * @var GitViews_GitPhpViewer
-     */
-    private $gitphp_viewer;
-    /**
-     * @var HTTPRequest
-     */
-    private $request;
-
-    public function __construct(GitViews_GitPhpViewer $gitphp_viewer, HTTPRequest $request)
-    {
-        $this->gitphp_viewer = $gitphp_viewer;
-        $this->request       = $request;
-    }
-
-    public function display()
-    {
-        $is_download = true;
-        $this->gitphp_viewer->getContent($is_download, $this->request);
-        exit;
-    }
-}
+{foreach from=$commit->GetHeads() item=commithead}
+    <a href="{$SCRIPT_NAME}?a=shortlog&amp;h=refs/heads/{$commithead->GetName()|urlencode}" class="tlp-badge-primary tlp-badge-outline">{$commithead->GetName()|escape}</a>
+{/foreach}
+{foreach from=$commit->GetTags() item=committag}
+    <a href="{$SCRIPT_NAME}?a=tag&amp;h={$committag->GetName()|urlencode}"
+       class="tlp-badge-primary {if !$committag->LightTag()}tagTip{/if}"
+    >
+        {$committag->GetName()|escape}
+    </a>
+{/foreach}
