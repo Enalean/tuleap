@@ -8,9 +8,9 @@
     <div class="pull-request-commits-loading"></div>
 </section>
 
-<section class="tlp-pane-section pull-request-commits-list" ng-if="commits.shouldDisplayListOfCommits()">
+<section class="tlp-pane-section-for-cards-under-tabs" ng-if="commits.shouldDisplayListOfCommits()">
     <a ng-repeat="commit in commits.list track by commit.id"
-       class="pull-request-commits-list-commit"
+       class="tlp-card tlp-card-selectable pull-request-commits-list-commit"
        ng-href="{{ ::commit.html_url }}"
     >
         <div class="pull-request-commits-list-commit-metadata">

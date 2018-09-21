@@ -1,7 +1,6 @@
 .pull-request-summary {
     display: flex;
     align-items: center;
-    padding: $tlp-spacing;
 
     > .tlp-avatar {
         flex: 0 0 auto;
@@ -46,16 +45,14 @@
 
     .select2.select2-container--disabled > .selection > .item-labels-box-select2 {
         min-height: auto;
-
+        // scss-lint:disable SelectorDepth, SelectorFormat
         > .select2-selection__rendered > .select2-selection__choice {
             margin: 1px 3px;
         }
+        // scss-lint:enable SelectorDepth, SelectorFormat
     }
 }
 
-.pull-request-summary-status-section {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    height: 100%;
+.pull-request-summary-status {
+    margin: 0 0 0 $tlp-spacing;
 }

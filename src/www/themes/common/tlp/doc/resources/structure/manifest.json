@@ -3,6 +3,7 @@
   "children": [
     "layout",
     "panes",
+    "cards",
     "alerts",
     "tabs",
     "pagination"

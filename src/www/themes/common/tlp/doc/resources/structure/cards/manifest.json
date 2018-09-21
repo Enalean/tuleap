@@ -1,0 +1,9 @@
+{
+  "label": "Cards",
+  "shortcode": ".tlp-card",
+  "children": [
+    "simple",
+    "selectable",
+    "panes"
+  ]
+}
