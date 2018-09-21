@@ -20,14 +20,11 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use InoOicClient\Flow\Exception\AuthorizationException;
-use InoOicClient\Flow\Exception\TokenRequestException;
 use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationResponse;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
-use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoResponseException;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
 
@@ -89,10 +86,9 @@ class Flow
 
     /**
      * @return FlowResponse
-     * @throws AuthorizationException
-     * @throws TokenRequestException
-     * @throws UserInfoResponseException
+     * @throws MalformedIDTokenException
      * @throws \Http\Client\Exception
+     * @throws \Tuleap\OpenIDConnectClient\Provider\ProviderNotFoundException
      */
     public function process(\HTTPRequest $request)
     {

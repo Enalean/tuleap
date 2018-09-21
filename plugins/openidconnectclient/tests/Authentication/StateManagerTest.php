@@ -24,13 +24,8 @@ use Tuleap\OpenIDConnectClient\Authentication\State;
 
 require_once(__DIR__ . '/../bootstrap.php');
 
-class StateManagerTest extends TuleapTestCase {
-
-    public function skip()
-    {
-        $this->skipIf(PHP_VERSION_ID > 70000);
-    }
-
+class StateManagerTest extends TuleapTestCase
+{
     public function itValidatesValidState() {
         $key           = 'Tuleap_key';
         $return_to     = '/return_to';
@@ -57,7 +52,7 @@ class StateManagerTest extends TuleapTestCase {
         $state_storage->setReturnValue('loadState', $stored_state);
 
         $state_manager = new StateManager($state_storage, $state_factory);
-        $this->expectException('InoOicClient\Oic\Authorization\State\Exception\StateMismatchException');
+        $this->expectException(State\StateMismatchException::class);
         $state_manager->validateState($signed_state);
     }
 
@@ -67,7 +62,7 @@ class StateManagerTest extends TuleapTestCase {
         $state_storage->setReturnValue('loadState', null);
 
         $state_manager = new StateManager($state_storage, $state_factory);
-        $this->expectException('InoOicClient\Oic\Authorization\State\Exception\InvalidLocalStateException');
+        $this->expectException(State\InvalidLocalStateException::class);
         $state_manager->validateState('signed_state');
     }
 
@@ -77,7 +72,7 @@ class StateManagerTest extends TuleapTestCase {
         $state_storage->setReturnValue('loadState', 'stored_state_hash');
 
         $state_manager = new StateManager($state_storage, $state_factory);
-        $this->expectException('InoOicClient\Oic\Authorization\State\Exception\InvalidRemoteStateException');
+        $this->expectException(State\InvalidRemoteStateException::class);
         $state_manager->validateState(null);
     }
 }
