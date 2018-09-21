@@ -83,12 +83,13 @@ class Controller {
         $this->logger                      = $logger;
     }
 
-    public function login($return_to, $login_time) {
+    public function login(\HTTPRequest $request, $return_to, $login_time)
+    {
         require_once('account.php');
         $this->checkIfUserAlreadyLogged($return_to);
 
         try {
-            $flow_response = $this->flow->process();
+            $flow_response = $this->flow->process($request);
         } catch (Exception $ex) {
             $this->logger->error($ex->getMessage());
             $this->logger->debug($ex->getTraceAsString());

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -68,7 +68,7 @@ class Router {
                 $this->account_linker_controller->linkExistingAccount($request);
                 break;
             default:
-                $this->login_controller->login($request->get('return_to'), $request->getTime());
+                $this->login_controller->login($request, $request->get('return_to'), $request->getTime());
         }
     }
 

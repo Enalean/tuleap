@@ -20,9 +20,9 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use InoOicClient\Flow\Basic;
 use InoOicClient\Flow\Exception\AuthorizationException;
 use InoOicClient\Flow\Exception\TokenRequestException;
+use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationResponse;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestCreator;
 use Tuleap\OpenIDConnectClient\Authentication\Token\TokenRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestCreator;
@@ -30,9 +30,13 @@ use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoRequestSender;
 use Tuleap\OpenIDConnectClient\Authentication\UserInfo\UserInfoResponseException;
 use ForgeConfig;
 use Tuleap\OpenIDConnectClient\Provider\ProviderManager;
-use Exception;
 
-class Flow extends Basic {
+class Flow
+{
+    /**
+     * @var StateManager
+     */
+    private $state_manager;
     /**
      * @var ProviderManager
      */
@@ -67,7 +71,7 @@ class Flow extends Basic {
         UserInfoRequestCreator $user_info_request_creator,
         UserInfoRequestSender $user_info_request_sender
     ) {
-        $this->setStateManager($state_manager);
+        $this->state_manager             = $state_manager;
         $this->provider_manager          = $provider_manager;
         $this->token_request_creator     = $token_request_creator;
         $this->token_request_sender      = $token_request_sender;
@@ -90,41 +94,26 @@ class Flow extends Basic {
      * @throws UserInfoResponseException
      * @throws \Http\Client\Exception
      */
-    public function process() {
-        try {
-            $authorization_response = $this->getAuthorizationDispatcher()->getAuthorizationResponse();
-            $signed_state           = $authorization_response->getState();
-            $state                  = $this->getStateManager()->validateState($signed_state);
-            $provider               = $this->provider_manager->getById($state->getProviderId());
-        } catch(Exception $ex) {
-            throw new AuthorizationException(
-                sprintf("Exception during authorization: [%s] %s", get_class($ex), $ex->getMessage()),
-                null,
-                $ex
-            );
-        }
+    public function process(\HTTPRequest $request)
+    {
+        $authorization_response = AuthorizationResponse::buildFromHTTPRequest($request);
+        $signed_state           = $authorization_response->getState();
+        $state                  = $this->state_manager->validateState($signed_state);
+        $provider               = $this->provider_manager->getById($state->getProviderId());
 
-        try {
-            $token_request  = $this->token_request_creator->createTokenRequest(
-                $provider,
-                $authorization_response,
-                $this->getRedirectUri()
-            );
-            $token_response = $this->token_request_sender->sendTokenRequest($token_request);
-            $id_token       = $this->id_token_verifier->validate($provider, $state->getNonce(),
-                $token_response->getIDToken());
-        } catch (Exception $ex) {
-            throw new TokenRequestException(
-                sprintf("Exception during token request: [%s] %s", get_class($ex), $ex->getMessage()),
-                null,
-                $ex
-            );
-        }
+        $token_request  = $this->token_request_creator->createTokenRequest(
+            $provider,
+            $authorization_response,
+            $this->getRedirectUri()
+        );
+        $token_response = $this->token_request_sender->sendTokenRequest($token_request);
+        $id_token       = $this->id_token_verifier->validate($provider, $state->getNonce(),
+            $token_response->getIDToken());
 
         $user_info_request  = $this->user_info_request_creator->createUserInfoRequest($provider, $token_response);
         $user_info_response = $this->user_info_request_sender->sendUserInfoRequest($user_info_request);
 
-        $this->getStateManager()->clearState();
+        $this->state_manager->clearState();
 
         return new FlowResponse($provider, $state->getReturnTo(), $id_token['sub'], $user_info_response->getClaims());
     }

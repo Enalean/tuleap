@@ -21,7 +21,7 @@
 namespace Tuleap\OpenIDConnectClient\Authentication\Token;
 
 use Http\Message\RequestFactory;
-use InoOicClient\Oic\Authorization\Response as AuthorizationResponse;
+use Tuleap\OpenIDConnectClient\Authentication\Authorization\AuthorizationResponse;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class TokenRequestCreator
