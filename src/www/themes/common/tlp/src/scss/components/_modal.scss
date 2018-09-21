@@ -53,20 +53,44 @@ $tlp-modal-transition: 100ms ease-out;
     }
 }
 
-.tlp-modal-danger > .tlp-modal-header {
-    background: $tlp-ui-danger;
+.tlp-modal-danger {
+    > .tlp-modal-header {
+        background: $tlp-ui-danger;
+    }
+
+    .tlp-modal-subtitle {
+        color: $tlp-ui-danger;
+    }
 }
 
-.tlp-modal-warning > .tlp-modal-header {
-    background: $tlp-ui-warning;
+.tlp-modal-warning {
+    > .tlp-modal-header {
+        background: $tlp-ui-warning;
+    }
+
+    .tlp-modal-subtitle {
+        color: $tlp-ui-warning;
+    }
 }
 
-.tlp-modal-success > .tlp-modal-header {
-    background: $tlp-ui-success;
+.tlp-modal-success {
+    > .tlp-modal-header {
+        background: $tlp-ui-success;
+    }
+
+    .tlp-modal-subtitle {
+        color: $tlp-ui-success;
+    }
 }
 
-.tlp-modal-info > .tlp-modal-header {
-    background: $tlp-ui-info;
+.tlp-modal-info {
+    > .tlp-modal-header {
+        background: $tlp-ui-info;
+    }
+
+    .tlp-modal-subtitle {
+        color: $tlp-ui-info;
+    }
 }
 
 .tlp-modal-header {
@@ -97,7 +121,7 @@ $tlp-modal-transition: 100ms ease-out;
 }
 
 .tlp-modal-subtitle {
-    color: $tlp-ui-dimmed;
+    color: $tlp-theme-color;
     font-size: 20px;
     font-weight: 600;
 }
