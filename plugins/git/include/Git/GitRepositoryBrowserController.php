@@ -25,6 +25,7 @@ use GitPlugin;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
+use Tuleap\Git\Repository\View\FilesHeaderPresenterBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -58,6 +59,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * @var GitRepositoryHeaderDisplayer
      */
     private $header_displayer;
+    /**
+     * @var FilesHeaderPresenterBuilder
+     */
+    private $files_header_presenter_builder;
 
     public function __construct(
         \GitRepositoryFactory $repository_factory,
@@ -65,19 +70,22 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         \Git_Mirror_MirrorDataMapper $mirror_data_mapper,
         History\GitPhpAccessLogger $access_logger,
         \ThemeManager $theme_manager,
-        GitRepositoryHeaderDisplayer $header_displayer
+        GitRepositoryHeaderDisplayer $header_displayer,
+        FilesHeaderPresenterBuilder $files_header_presenter_builder
     ) {
-        $this->repository_factory = $repository_factory;
-        $this->project_manager    = $project_manager;
-        $this->mirror_data_mapper = $mirror_data_mapper;
-        $this->access_logger      = $access_logger;
-        $this->theme_manager      = $theme_manager;
-        $this->header_displayer   = $header_displayer;
+        $this->repository_factory             = $repository_factory;
+        $this->project_manager                = $project_manager;
+        $this->mirror_data_mapper             = $mirror_data_mapper;
+        $this->access_logger                  = $access_logger;
+        $this->theme_manager                  = $theme_manager;
+        $this->header_displayer               = $header_displayer;
+        $this->files_header_presenter_builder = $files_header_presenter_builder;
     }
 
     /**
      * @param HTTPRequest $request
-     * @param array $variables
+     * @param array       $variables
+     *
      * @return \Project
      * @throws NotFoundException
      */
@@ -95,8 +103,9 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
      * Is able to process a request routed by FrontRouter
      *
      * @param HTTPRequest $request
-     * @param BaseLayout $layout
-     * @param array $variables
+     * @param BaseLayout  $layout
+     * @param array       $variables
+     *
      * @throws NotFoundException
      * @throws ForbiddenException
      * @return void
@@ -108,7 +117,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
             throw new NotFoundException(dgettext("tuleap-git", "Git service is disabled."));
         }
 
-        $repository = $this->repository_factory->getByProjectNameAndPath($variables['project_name'], $variables['path'].'.git');
+        $repository = $this->repository_factory->getByProjectNameAndPath(
+            $variables['project_name'],
+            $variables['path'] . '.git'
+        );
         if (! $repository) {
             throw new NotFoundException("Repository does not exist");
         }
@@ -145,7 +157,10 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         if (! $url->isADownload($request)) {
             $this->header_displayer->display($request, $layout, $current_user, $repository);
-            $renderer->renderToPage('repository/files/header', []);
+            $renderer->renderToPage(
+                'repository/files/header',
+                $this->files_header_presenter_builder->build($request, $repository)
+            );
         }
 
         $index_view->display($url);

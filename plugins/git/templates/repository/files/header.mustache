@@ -1,4 +1,13 @@
 <div class="tlp-framed-horizontally">
+    {{# can_display_selector }}
+        <p>
+            <span class="tlp-badge-secondary tlp-badge-outline">
+                {{# is_undefined }}<em>{{/ is_undefined }}
+                    {{ head_name }}
+                {{# is_undefined }}</em>{{/ is_undefined }}
+                </span>
+        </p>
+    {{/ can_display_selector }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header">
