@@ -71,22 +71,4 @@ class CreateTestProjectTest extends TestCase
             [ '', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'Test project for aaaaaaaaaaaaaaaaaaaaaaa' ],
         ];
     }
-
-    /**
-     * @test
-     */
-    public function it_uses_the_default_project_template_shipped_by_plugin() // @codingStandardsIgnoreLine
-    {
-        $create = new CreateTestProject('foo', 'bar', CreateTestProject::DEFAULT_ARCHIVE);
-        $this->assertEquals(realpath(__DIR__.'/../../resources/sample-project/project.xml'), realpath($create->getProjectXMLFilePath()));
-    }
-
-    /**
-     * @test
-     */
-    public function it_uses_a_config_deployed_in_etc() // @codingStandardsIgnoreLine
-    {
-        $create = new CreateTestProject('foo', 'bar', 'sp-prj-2');
-        $this->assertEquals(realpath(__DIR__.'/_fixtures/create_test_env/resources/sp-prj-2/project.xml'), realpath($create->getProjectXMLFilePath()));
-    }
 }

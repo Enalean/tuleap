@@ -31,12 +31,13 @@ class CreateTestProject
     private $full_name;
     private $unix_name;
     private $archive_dir_name;
+    private $archive_base_dir;
 
-    public function __construct($user_name, $user_realname, $archive_dir_name)
+    public function __construct($user_name, $user_realname, $archive_base_dir)
     {
         $this->user_name        = $user_name;
         $this->user_realname    = $user_realname;
-        $this->archive_dir_name = basename($archive_dir_name);
+        $this->archive_base_dir = $archive_base_dir;
     }
 
     /**
@@ -61,13 +62,7 @@ class CreateTestProject
 
     public function getProjectXMLFilePath()
     {
-        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot').'/'.\create_test_envPlugin::NAME.'/resources';
-        $project_xml_path = $etc_base_dir.'/'.$this->archive_dir_name.'/project.xml';
-        if (file_exists($project_xml_path)) {
-            return $project_xml_path;
-        }
-
-        return __DIR__.'/../../resources/sample-project/project.xml';
+        return $this->archive_base_dir.'/project.xml';
     }
 
     /**

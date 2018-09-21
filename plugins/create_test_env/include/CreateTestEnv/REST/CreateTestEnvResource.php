@@ -113,13 +113,16 @@ class CreateTestEnvResource
         if ($tmp_name === null) {
             return;
         }
-        if (file_exists($tmp_name.'/project.xml')) {
-            unlink($tmp_name.'/project.xml');
-        }
-        if (file_exists($tmp_name.'/users.xml')) {
-            unlink($tmp_name.'/users.xml');
-        }
         if (is_dir($tmp_name)) {
+            $iterator = new \DirectoryIterator($tmp_name);
+            foreach ($iterator as $file) {
+                if ($file->isDot()) {
+                    continue;
+                }
+                if ($file->isFile()) {
+                    unlink($file->getPathname());
+                }
+            }
             rmdir($tmp_name);
         }
     }

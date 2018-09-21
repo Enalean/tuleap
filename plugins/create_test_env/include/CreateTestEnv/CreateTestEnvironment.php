@@ -75,11 +75,15 @@ class CreateTestEnvironment
             throw new Exception\InvalidPasswordException($this->password_sanity_checker->getErrors());
         }
 
+        $archive_base_dir = $this->getArchiveBaseDir($archive);
+
         $create_test_user = new CreateTestUser($firstname, $lastname, $email, $login);
         $this->serializeXmlIntoFile($create_test_user->generateXML(), 'users.xml');
 
-        $create_test_project = new CreateTestProject($create_test_user->getUserName(), $create_test_user->getRealName(), $archive);
+        $create_test_project = new CreateTestProject($create_test_user->getUserName(), $create_test_user->getRealName(), $archive_base_dir);
         $this->serializeXmlIntoFile($create_test_project->generateXML(), 'project.xml');
+
+        $this->copyExtraFiles($archive_base_dir);
 
         $this->execImport();
 
@@ -96,6 +100,16 @@ class CreateTestEnvironment
 
         $base_url = \HTTPRequest::instance()->getServerUrl();
         $this->notifier->notify("New project created for {$this->user->getRealName()} ({$this->user->getEmail()}): $base_url/projects/{$this->project->getUnixNameLowerCase()}. #{$this->user->getUnixName()}");
+    }
+
+    private function getArchiveBaseDir($archive_dir_name)
+    {
+        $etc_base_dir = \ForgeConfig::get('sys_custompluginsroot').'/'.\create_test_envPlugin::NAME.'/resources';
+        $project_xml_path = $etc_base_dir.'/'.$archive_dir_name.'/project.xml';
+        if (file_exists($project_xml_path)) {
+            return $etc_base_dir.'/'.$archive_dir_name;
+        }
+        return __DIR__.'/../../resources/sample-project';
     }
 
     public function getProject()
@@ -116,6 +130,16 @@ class CreateTestEnvironment
         }
         if ($xml->saveXML($this->output_dir.DIRECTORY_SEPARATOR.$filename) !== true) {
             throw new Exception\UnableToWriteFileException("Unable to write file ".$this->output_dir.DIRECTORY_SEPARATOR.$filename);
+        }
+    }
+
+    private function copyExtraFiles($archive_base_dir)
+    {
+        $iterator = new \DirectoryIterator($archive_base_dir);
+        foreach ($iterator as $file) {
+            if ($file->isFile() && ! in_array($file->getBasename(), ['project.xml', 'users.xml'])) {
+                copy($file->getPathname(), $this->output_dir.'/'.$file->getBasename());
+            }
         }
     }
 
