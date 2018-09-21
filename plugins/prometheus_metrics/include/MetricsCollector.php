@@ -23,6 +23,7 @@ namespace Tuleap\PrometheusMetrics;
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
 class MetricsCollector
@@ -45,23 +46,38 @@ class MetricsCollector
      * @var NbUsersByStatusBuilder
      */
     private $nb_user_builder;
+    /**
+     * @var \EventManager
+     */
+    private $event_manager;
 
-    public function __construct(Prometheus $prometheus, MetricsCollectorDao $dao, NbUsersByStatusBuilder $nb_user_builder)
-    {
+    public function __construct(
+        Prometheus $prometheus,
+        MetricsCollectorDao $dao,
+        NbUsersByStatusBuilder $nb_user_builder,
+        \EventManager $event_manager
+    ) {
         $this->prometheus      = $prometheus;
         $this->dao             = $dao;
         $this->nb_user_builder = $nb_user_builder;
+        $this->event_manager   = $event_manager;
     }
 
     public static function build(Prometheus $prometheus)
     {
-        return new self($prometheus, new MetricsCollectorDao(), new NbUsersByStatusBuilder(new UserCounterDao()));
+        return new self(
+            $prometheus,
+            new MetricsCollectorDao(),
+            new NbUsersByStatusBuilder(new UserCounterDao()),
+            \EventManager::instance()
+        );
     }
 
     public function collect()
     {
         $this->setUsersByStatus();
         $this->setProjectsByStatus();
+        $this->event_manager->processEvent(new CollectTuleapComputedMetrics($this->prometheus));
     }
 
     private function setUsersByStatus()
