@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013-2017. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -77,7 +77,7 @@ class PostReceiveMailSender
         $mail_raw_output  = array();
         $exit_status_code = 0;
         exec('GIT_DIR=' . escapeshellarg($repository->getFullPath()) .
-            ' /usr/share/codendi/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
+            ' /usr/share/tuleap/plugins/git/hooks/post-receive-email ' . escapeshellarg($oldrev) . ' ' .
             escapeshellarg($newrev) . ' ' . escapeshellarg($refname), $mail_raw_output, $exit_status_code);
 
         $subject       = isset($mail_raw_output[0]) ? $mail_raw_output[0] : self::DEFAULT_MAIL_SUBJECT;

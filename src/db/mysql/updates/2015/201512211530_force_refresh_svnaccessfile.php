@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2015. All rights reserved
+ * Copyright (c) Enalean 2015-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,6 @@ class b201512211530_force_refresh_svnaccessfile extends ForgeUpgrade_Bucket {
     }
 
     public function up() {
-        exec('/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/svn/force_refresh_svnaccessfile.php');
+        exec('/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/svn/force_refresh_svnaccessfile.php');
     }
 }

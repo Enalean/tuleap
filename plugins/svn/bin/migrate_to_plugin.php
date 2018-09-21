@@ -1,4 +1,4 @@
-#!/usr/share/codendi/src/utils/php-launcher.sh
+#!/usr/share/tuleap/src/utils/php-launcher.sh
 <?php
 /**
  * Copyright Enalean (c) 2018. All rights reserved.
