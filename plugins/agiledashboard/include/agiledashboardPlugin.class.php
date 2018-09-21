@@ -590,6 +590,13 @@ class AgileDashboardPlugin extends Plugin {
     {
         if ($this->isAnAgiledashboardRequest()) {
             echo $this->getMinifiedAssetHTML()."\n";
+
+            $include_assets = new IncludeAssets(
+                $this->getFilesystemPath() . '/www/assets',
+                $this->getPluginPath() . '/assets'
+            );
+
+            echo $include_assets->getHTMLSnippet("home-burndowns.js");
         }
     }
 

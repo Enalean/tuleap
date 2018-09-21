@@ -64,8 +64,7 @@
         }
     },
     "javascript": [
-        "www/js/display-angular-feedback.js",
-        "www/js/home.js"
+        "www/js/display-angular-feedback.js"
     ],
     "gettext-js": {
         "burnup-chart": {
