@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,7 +27,6 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class PullRequestInlineCommentRepresentationBuilder
 {
-
     /** @var UserManager */
     private $user_manager;
 
@@ -55,7 +54,8 @@ class PullRequestInlineCommentRepresentationBuilder
                 $user_representation,
                 $row['post_date'],
                 $row['content'],
-                $project_id
+                $project_id,
+                $row['position']
             );
         }
 
