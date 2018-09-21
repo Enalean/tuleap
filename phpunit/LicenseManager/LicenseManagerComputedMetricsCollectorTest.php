@@ -20,34 +20,20 @@
 
 namespace Tuleap\Enalean\LicenseManager;
 
-use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
-use Tuleap\Webhook\Emitter;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tuleap\Instrument\Prometheus\Prometheus;
 
-class StatusActivityEmitter
+class LicenseManagerComputedMetricsCollectorTest extends TestCase
 {
-    /**
-     * @var Emitter
-     */
-    private $webhook_emitter;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct(Emitter $webhook_emitter)
+    public function testComputedMetricsAreSet()
     {
-        $this->webhook_emitter = $webhook_emitter;
-    }
+        $prometheus = \Mockery::mock(Prometheus::class);
+        $prometheus->shouldReceive('gaugeSet')->atLeast()->once();
 
-    public function emit(UserCounterPayload $payload, $webhook_url)
-    {
-        $this->emitWebhook($payload, $webhook_url);
-    }
-
-    private function emitWebhook(UserCounterPayload $payload, $webhook_url)
-    {
-        if (! $webhook_url) {
-            return;
-        }
-
-        $webhook = new UserCounterWebhook($webhook_url);
-
-        $this->webhook_emitter->emit($payload, $webhook);
+        $collector = new LicenseManagerComputedMetricsCollector($prometheus, 10);
+        $collector->collect();
     }
 }

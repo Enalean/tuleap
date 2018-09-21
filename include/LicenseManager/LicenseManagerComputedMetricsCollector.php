@@ -20,34 +20,31 @@
 
 namespace Tuleap\Enalean\LicenseManager;
 
-use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
-use Tuleap\Webhook\Emitter;
+use Tuleap\Instrument\Prometheus\Prometheus;
 
-class StatusActivityEmitter
+class LicenseManagerComputedMetricsCollector
 {
     /**
-     * @var Emitter
+     * @var Prometheus
      */
-    private $webhook_emitter;
+    private $prometheus;
+    /**
+     * @var int
+     */
+    private $max_users;
 
-    public function __construct(Emitter $webhook_emitter)
+    public function __construct(Prometheus $prometheus, $max_users)
     {
-        $this->webhook_emitter = $webhook_emitter;
+        $this->prometheus = $prometheus;
+        $this->max_users  = $max_users;
     }
 
-    public function emit(UserCounterPayload $payload, $webhook_url)
+    public function collect()
     {
-        $this->emitWebhook($payload, $webhook_url);
-    }
-
-    private function emitWebhook(UserCounterPayload $payload, $webhook_url)
-    {
-        if (! $webhook_url) {
-            return;
-        }
-
-        $webhook = new UserCounterWebhook($webhook_url);
-
-        $this->webhook_emitter->emit($payload, $webhook);
+        $this->prometheus->gaugeSet(
+            'licence_max_users',
+            'Maximum number of users allowed on the instance',
+            $this->max_users
+        );
     }
 }

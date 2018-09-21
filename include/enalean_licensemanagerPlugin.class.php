@@ -21,12 +21,13 @@
 use Tuleap\Admin\Homepage\StatisticsBadgePresenter;
 use Tuleap\Admin\Homepage\StatisticsPresenter;
 use Tuleap\Admin\Homepage\UserCounterDao;
+use Tuleap\Enalean\LicenseManager\LicenseManagerComputedMetricsCollector;
 use Tuleap\Enalean\LicenseManager\StatusActivityEmitter;
 use Tuleap\Enalean\LicenseManager\Webhook\StatusLogger;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
-use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
 use Tuleap\Webhook\Emitter;
 
 require_once 'autoload.php';
@@ -50,6 +51,8 @@ class enalean_licensemanagerPlugin extends Plugin
         $this->addHook('project_admin_activate_user', 'userStatusActivity', true);
         $this->addHook('project_admin_delete_user',   'userStatusActivity', true);
         $this->addHook('project_admin_suspend_user',  'userStatusActivity', true);
+
+        $this->addHook(CollectTuleapComputedMetrics::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -76,7 +79,7 @@ class enalean_licensemanagerPlugin extends Plugin
 
         $webhook_emitter = new Emitter(MessageFactoryBuilder::build(), HttpClientFactory::createClient(), new StatusLogger());
 
-        $emitter = new StatusActivityEmitter($webhook_emitter,  Prometheus::instance());
+        $emitter = new StatusActivityEmitter($webhook_emitter);
         $emitter->emit($payload, $this->getWebhookUrl());
     }
 
@@ -143,6 +146,18 @@ class enalean_licensemanagerPlugin extends Plugin
                 )
             )
         );
+    }
+
+    /**
+     * @see CollectTuleapComputedMetrics
+     */
+    public function collectComputedMetrics(CollectTuleapComputedMetrics $collect_tuleap_computed_metrics)
+    {
+        $license_manager_collector = new LicenseManagerComputedMetricsCollector(
+            $collect_tuleap_computed_metrics->getPrometheus(),
+            $this->getMaxUsers()
+        );
+        $license_manager_collector->collect();
     }
 
     /**

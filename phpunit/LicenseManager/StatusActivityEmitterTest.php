@@ -25,7 +25,6 @@ require_once __DIR__ . '/../bootstrap.php';
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Enalean\LicenseManager\Webhook\UserCounterPayload;
-use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Webhook\Emitter;
 
 class StatusActivityEmitterTest extends TestCase
@@ -34,12 +33,10 @@ class StatusActivityEmitterTest extends TestCase
 
     public function testWebhookIsCalledWhenAvailable()
     {
-        $emitter    = \Mockery::mock(Emitter::class);
+        $emitter = \Mockery::mock(Emitter::class);
         $emitter->shouldReceive('emit')->once();
-        $prometheus = \Mockery::mock(Prometheus::class);
-        $prometheus->shouldReceive('gaugeSet')->once();
 
-        $status_activity_emitter = new StatusActivityEmitter($emitter, $prometheus);
+        $status_activity_emitter = new StatusActivityEmitter($emitter);
 
         $payload = \Mockery::mock(UserCounterPayload::class);
         $payload->shouldReceive('getPayload')->andReturns(['users' => [], 'max_users' => 0]);
@@ -49,11 +46,9 @@ class StatusActivityEmitterTest extends TestCase
 
     public function testWebhookDoesNotTryToEmitWhenNoURLIsProvided()
     {
-        $emitter    = \Mockery::mock(Emitter::class);
-        $prometheus = \Mockery::mock(Prometheus::class);
-        $prometheus->shouldReceive('gaugeSet')->once();
+        $emitter = \Mockery::mock(Emitter::class);
 
-        $status_activity_emitter = new StatusActivityEmitter($emitter, $prometheus);
+        $status_activity_emitter = new StatusActivityEmitter($emitter);
 
         $payload = \Mockery::mock(UserCounterPayload::class);
         $payload->shouldReceive('getPayload')->andReturns(['users' => [], 'max_users' => 0]);
