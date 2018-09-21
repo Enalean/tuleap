@@ -40,7 +40,7 @@ class SOAPRequestValidatorTrackerWhitelistedUser implements SOAPRequestValidator
         $this->request_validator = $request_validator;
         $whitelisted_users_setting = \ForgeConfig::get('soap_tracker_whitelisted_users');
         if ($whitelisted_users_setting === false) {
-            $this->whitelisted_usernames = null;
+            $this->whitelisted_usernames = [];
         } else {
             $this->whitelisted_usernames = array_map('trim', explode(',', $whitelisted_users_setting));
         }
@@ -49,9 +49,6 @@ class SOAPRequestValidatorTrackerWhitelistedUser implements SOAPRequestValidator
     public function continueSession($session_key)
     {
         $user = $this->request_validator->continueSession($session_key);
-        if ($this->whitelisted_usernames === null) {
-            return $user;
-        }
         if (in_array($user->getUserName(), $this->whitelisted_usernames, true)) {
             return $user;
         }

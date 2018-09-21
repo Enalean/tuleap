@@ -39,6 +39,7 @@ setup_tuleap() {
 	-e 's#/home/users##' \
 	-e 's#/home/groups##' \
 	> /etc/tuleap/conf/local.inc
+	echo '$soap_tracker_whitelisted_users = "rest_api_tester_1";' >> /etc/tuleap/conf/local.inc
 
     mkdir -p /etc/tuleap/plugins/docman/etc
 	cat /usr/share/tuleap/plugins/docman/etc/docman.inc.dist | \

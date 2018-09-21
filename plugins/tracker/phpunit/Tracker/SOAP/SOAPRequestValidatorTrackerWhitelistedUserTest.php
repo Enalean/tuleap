@@ -38,7 +38,10 @@ class SOAPRequestValidatorTrackerWhitelistedUserTest extends TestCase
         \ForgeConfig::restore();
     }
 
-    public function testAllUsersAreWhitelistedByDefault()
+    /**
+     * @expectedException \Tuleap\Tracker\SOAP\NotTrackerWhitelistedUserException
+     */
+    public function testAllUsersAreBlockedByDefault()
     {
         $request_validator           = \Mockery::mock(SOAPRequestValidator::class);
         $whitelist_request_validator = new SOAPRequestValidatorTrackerWhitelistedUser($request_validator);
