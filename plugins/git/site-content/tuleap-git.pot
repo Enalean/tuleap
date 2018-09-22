@@ -113,6 +113,9 @@ msgstr ""
 msgid "Repository does not exist"
 msgstr ""
 
+msgid "Select a branch or tag"
+msgstr ""
+
 msgid "Settings"
 msgstr ""
 
