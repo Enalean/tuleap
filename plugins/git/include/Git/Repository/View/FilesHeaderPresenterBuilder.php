@@ -23,6 +23,7 @@ namespace Tuleap\Git\Repository\View;
 use ForgeConfig;
 use GitRepository;
 use HTTPRequest;
+use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Ref;
 
 class FilesHeaderPresenterBuilder
@@ -46,32 +47,29 @@ class FilesHeaderPresenterBuilder
     public function build(HTTPRequest $request, GitRepository $repository)
     {
         if (! ForgeConfig::get('git_repository_bp')) {
-            return new FilesHeaderPresenter(false, '');
+            return new FilesHeaderPresenter(false, '', '');
         }
 
         $action = $request->get('a');
         if ($action !== 'tree' && $action !== false) {
-            return new FilesHeaderPresenter(false, '');
+            return new FilesHeaderPresenter(false, '', '');
         }
 
-        $head_name = $this->getHeadNameForCurrentCommit($request, $repository);
+        $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
+        $head_name = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : '';
+        $committer_epoch = $commit ? $commit->GetCommitterEpoch() : '';
 
-        return new FilesHeaderPresenter(true, $head_name);
+        return new FilesHeaderPresenter(true, $head_name, $committer_epoch);
     }
 
     /**
-     * @param HTTPRequest   $request
-     * @param GitRepository $repository
+     * @param HTTPRequest $request
+     * @param Commit $commit
      *
      * @return string
      */
-    private function getHeadNameForCurrentCommit(HTTPRequest $request, GitRepository $repository)
+    private function getHeadNameForCurrentCommit(HTTPRequest $request, Commit $commit)
     {
-        $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
-        if (! $commit) {
-            return '';
-        }
-
         /** @var Ref[] $refs */
         $refs = array_merge($commit->GetHeads(), $commit->GetTags());
         if (empty($refs)) {

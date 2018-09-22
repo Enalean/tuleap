@@ -20,9 +20,11 @@
 import initAlreadyForkedModal from "./already-forked-modal.js";
 import initCopyButton from "./copy-button.js";
 import initCloneBarDropdown from "./clone-bar-dropdown.js";
+import initBranchTagSelector from "./branch-tag-selector.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initAlreadyForkedModal();
     initCopyButton();
     initCloneBarDropdown();
+    initBranchTagSelector();
 });
