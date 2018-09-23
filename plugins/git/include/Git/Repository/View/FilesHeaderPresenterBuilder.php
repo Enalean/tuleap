@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Repository\View;
 
 use ForgeConfig;
+use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
@@ -32,34 +33,61 @@ class FilesHeaderPresenterBuilder
      * @var CommitForCurrentTreeRetriever
      */
     private $commit_retriever;
+    /**
+     * @var Git_GitRepositoryUrlManager
+     */
+    private $url_manager;
 
-    public function __construct(CommitForCurrentTreeRetriever $commit_retriever)
-    {
+    public function __construct(
+        CommitForCurrentTreeRetriever $commit_retriever,
+        Git_GitRepositoryUrlManager $url_manager
+    ) {
         $this->commit_retriever = $commit_retriever;
+        $this->url_manager      = $url_manager;
     }
 
     /**
-     * @param HTTPRequest   $request
+     * @param HTTPRequest $request
      * @param GitRepository $repository
      *
      * @return FilesHeaderPresenter
      */
     public function build(HTTPRequest $request, GitRepository $repository)
     {
-        if (! ForgeConfig::get('git_repository_bp')) {
-            return new FilesHeaderPresenter(false, '', '');
+        $repository_url = $this->url_manager->getRepositoryBaseUrl($repository);
+
+        if (!ForgeConfig::get('git_repository_bp')) {
+            return new FilesHeaderPresenter(
+                $repository,
+                $repository_url,
+                false,
+                '',
+                ''
+            );
         }
 
         $action = $request->get('a');
         if ($action !== 'tree' && $action !== false) {
-            return new FilesHeaderPresenter(false, '', '');
+            return new FilesHeaderPresenter(
+                $repository,
+                $repository_url,
+                false,
+                '',
+                ''
+            );
         }
 
         $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
         $head_name = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : '';
         $committer_epoch = $commit ? $commit->GetCommitterEpoch() : '';
 
-        return new FilesHeaderPresenter(true, $head_name, $committer_epoch);
+        return new FilesHeaderPresenter(
+            $repository,
+            $repository_url,
+            true,
+            $head_name,
+            $committer_epoch
+        );
     }
 
     /**

@@ -127,6 +127,28 @@
     }
 }
 
+.git-repository-branch-tag-selector-tabs {
+    flex-wrap: nowrap;
+}
+
+.git-repository-branch-tag-selector-refs {
+    display: flex;
+    flex-direction: column;
+    max-height: 40vh;
+    overflow-y: auto;
+}
+
+.git-repository-branch-tag-selector-empty {
+    margin: 0 $tlp-spacing;
+    color: $tlp-ui-dimmed;
+    font-style: italic;
+}
+
+.git-repository-branch-tag-selector-is-loading {
+    height: 30px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+}
+
 /* scss-lint:disable SelectorFormat */
 .plugin_git_gitphp {
     border: 1px solid #e3e3e3;

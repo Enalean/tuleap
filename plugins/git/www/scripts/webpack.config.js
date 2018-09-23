@@ -20,6 +20,7 @@ const path = require("path");
 const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
+const assets_public_path = "/plugins/git/assets/";
 
 const path_to_badge = path.resolve(
     __dirname,
@@ -53,10 +54,10 @@ const webpack_config_for_permisssions_per_group = {
 const webpack_config_for_repositories = {
     entry: {
         "repositories-list": "./repositories/src/index.js",
-        repository: "./repository/index.js"
+        repository: "./repository/src/index.js"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     externals: {
         tlp: "tlp"
     },

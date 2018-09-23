@@ -20,6 +20,8 @@
 
 namespace Tuleap\Git\Repository\View;
 
+use GitRepository;
+
 class FilesHeaderPresenter
 {
     /** @var bool */
@@ -30,9 +32,15 @@ class FilesHeaderPresenter
     public $is_undefined = false;
     /** @var int */
     public $committer_epoch;
+    /** @var int */
+    public $repository_id;
+    /** @var string */
+    public $repository_url;
 
-    public function __construct($can_display_selector, $head_name, $committer_epoch)
+    public function __construct(GitRepository $repository, $repository_url, $can_display_selector, $head_name, $committer_epoch)
     {
+        $this->repository_id        = $repository->getId();
+        $this->repository_url       = $repository_url;
         $this->can_display_selector = $can_display_selector;
         if ($head_name) {
             $this->head_name = $head_name;

@@ -42,4 +42,32 @@ export default function initBranchTagSelector() {
 
         button.insertBefore(span, caret);
     }
+
+    const mount_point = document.createElement("div");
+    button.parentNode.insertBefore(mount_point, button.nextSibling);
+
+    button.addEventListener("click", async () => {
+        if (button.classList.contains("git-repository-branch-tag-selector-button-loaded")) {
+            return;
+        }
+        if (button.classList.contains("disabled")) {
+            return;
+        }
+
+        caret.classList.remove("fa-caret-down");
+        caret.classList.add("fa-spin", "fa-spinner");
+        button.classList.add("disabled");
+        try {
+            const {
+                init
+            } = await import(/* webpackChunkName: "branch-tag-selector" */ "../branch-tag-selector/src/index.js");
+            init(mount_point, button);
+
+            button.classList.add("git-repository-branch-tag-selector-button-loaded");
+        } finally {
+            caret.classList.add("fa-caret-down");
+            caret.classList.remove("fa-spin", "fa-spinner");
+            button.classList.remove("disabled");
+        }
+    });
 }
