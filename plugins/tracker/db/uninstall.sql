@@ -87,7 +87,7 @@ DROP TABLE IF EXISTS tracker_reminder;
 DROP TABLE IF EXISTS tracker_workflow_trigger_rule_static_value;
 DROP TABLE IF EXISTS tracker_workflow_trigger_rule_trg_field_static_value;
 DROP TABLE IF EXISTS tracker_artifact_unsubscribe;
-DROP TABLE IF EXISTS tracker_email_notification_log;
+DROP TABLE IF EXISTS tracker_post_creation_event_log;
 
 DROP TABLE IF EXISTS plugin_tracker_config;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
@@ -99,6 +99,7 @@ DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
 DROP TABLE IF EXISTS plugin_tracker_projects_unused_artifactlink_types;
 DROP TABLE IF EXISTS plugin_tracker_deleted_artifacts;
 DROP TABLE IF EXISTS plugin_tracker_source_artifact_id;
+DROP TABLE IF EXISTS plugin_tracker_artifact_pending_removal;
 
 DROP TABLE IF EXISTS tracker_report_criteria_comment_value;
 DROP TABLE IF EXISTS plugin_tracker_webhook_url;

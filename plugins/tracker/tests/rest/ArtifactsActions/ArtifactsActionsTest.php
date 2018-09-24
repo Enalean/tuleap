@@ -143,16 +143,18 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals((int) $artifact_json['assignees'][0]["id"], REST_TestDataBuilder::TEST_USER_3_ID);
 
         $changeset_response = $this->getResponse(
-            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=5")
+            $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=10")
         );
 
         $this->assertEquals($changeset_response->getStatusCode(), 200);
         $changeset_json = $changeset_response->json();
 
-        $this->assertEquals(count($changeset_json), 3);
+        $this->assertEquals(count($changeset_json), 5);
         $this->assertEquals($changeset_json[0]['last_comment']['body'], "API 1 comment");
         $this->assertEquals($changeset_json[1]['last_comment']['body'], "API 2 comment");
-        $this->assertEquals($changeset_json[2]['last_comment']['body'], "Artifact was moved from 'Base' tracker in 'Move artifact' project.");
+        $this->assertEquals($changeset_json[2]['last_comment']['body'], "API 1 comment");
+        $this->assertEquals($changeset_json[3]['last_comment']['body'], "API 2 comment");
+        $this->assertEquals($changeset_json[4]['last_comment']['body'], "Artifact was moved from 'Base' tracker in 'Move artifact' project.");
     }
 
     /**
