@@ -1,12 +1,18 @@
 <div class="tlp-framed-horizontally">
     {{# can_display_selector }}
-        <p>
-            <span class="tlp-badge-secondary tlp-badge-outline">
+        <div class="tlp-dropdown git-repository-branch-tag-selector">
+            <button
+                type="button"
+                id="git-repository-branch-tag-selector-button"
+                class="tlp-button-primary tlp-button-outline"
+                title="{{# dgettext }}tuleap-git | Select a branch or tag{{/ dgettext }}"
+            >
                 {{# is_undefined }}<em>{{/ is_undefined }}
                     {{ head_name }}
                 {{# is_undefined }}</em>{{/ is_undefined }}
-                </span>
-        </p>
+                <i class="fa fa-caret-down tlp-button-icon-right"></i>
+            </button>
+        </div>
     {{/ can_display_selector }}
     <section class="tlp-pane">
         <div class="tlp-pane-container">
