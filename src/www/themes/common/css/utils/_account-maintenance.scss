@@ -41,6 +41,10 @@ h3.account-title {
     display: block;
 }
 
+#account-access-keys {
+    border: 0;
+}
+
 #account-shell .ssh-keys-table,
 #account-svn-tokens .svn-tokens-table {
     width: 100%;
@@ -57,11 +61,11 @@ h3.account-title {
     }
 }
 
-.svn-generated-token {
+.svn-generated-token, .generated-access-key {
     font-weight: bold;
 }
 
-#svn-tokens-generate-modal {
+#svn-tokens-generate-modal, #access-keys-generate-modal {
     .modal-body {
         > p {
             margin: 0 0 20px;

@@ -1,0 +1,62 @@
+<div id="account-access-keys">
+    <h3 class="account-title">
+        <i class="fa fa-unlock-alt" aria-hidden="true"></i> {{# gettext }}Personal API access keys{{/ gettext }}
+    </h3>
+
+    <p class="alert alert-warning">
+        <i class="fa fa-wrench" aria-hidden="true"></i>
+        {{# gettext }}Access keys are not yet saved but soon you will be able to use it instead of password to access the REST API{{/ gettext }}
+    </p>
+
+    <p class="help">
+        {{# gettext }}You can use API access keys to access the REST API from scripts or command line.
+        However, these access keys are like password and should be guarded carefully.{{/ gettext }}
+    </p>
+
+    {{# last_access_key }}
+        <div class="alert alert-success">
+            <p><i class="fa fa-check" aria-hidden="true"></i> {{# gettext }}Make sure you copy new access key, you won't be able to see it again!{{/ gettext }}</p>
+            <p class="generated-access-key">{{ last_access_key }}</p>
+        </div>
+    {{/ last_access_key }}
+
+    <div>
+        <a class="btn btn-primary" href="#access-keys-generate-modal" data-toggle="modal">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{# gettext }}Generate new key{{/ gettext }}
+        </a>
+    </div>
+</div>
+<div id="access-keys-generate-modal"
+     class="modal hide fade"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="access-keys-generate-modal-title"
+     aria-hidden="true"
+>
+    <div class="modal-header">
+        <h3><i class="fa fa-unlock-alt" aria-hidden="true"></i><span id="access-keys-generate-modal-title">
+            {{# gettext }}New personal API access key{{/ gettext }}
+        </span></h3>
+    </div>
+
+    <form action="/account/access_key/create" method="post">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <div class="modal-body">
+            <p>
+                {{# gettext }}A personal API access key will be automatically generated at the form submission.
+                The description is not required but it can help you to manage your access keys.{{/ gettext }}
+            </p>
+
+            <label for="access-key-description">Access key description</label>
+            <textarea id="access-key-description" name="access-key-description" rows="5"
+                      placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">{{ btn_close_label }}</button>
+            <input type="submit" class="btn btn-primary" value="{{# gettext }}Generate new key{{/ gettext }}">
+        </div>
+    </form>
+</div>
