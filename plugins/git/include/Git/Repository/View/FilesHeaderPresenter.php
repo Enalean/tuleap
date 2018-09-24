@@ -28,8 +28,10 @@ class FilesHeaderPresenter
     public $head_name;
     /** @var bool */
     public $is_undefined = false;
+    /** @var int */
+    public $committer_epoch;
 
-    public function __construct($can_display_selector, $head_name)
+    public function __construct($can_display_selector, $head_name, $committer_epoch)
     {
         $this->can_display_selector = $can_display_selector;
         if ($head_name) {
@@ -38,5 +40,6 @@ class FilesHeaderPresenter
             $this->head_name    = dgettext('tuleap-git', 'Undefined');
             $this->is_undefined = true;
         }
+        $this->committer_epoch = $committer_epoch;
     }
 }

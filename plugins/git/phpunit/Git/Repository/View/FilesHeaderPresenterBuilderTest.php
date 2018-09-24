@@ -76,6 +76,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([$first_head, $second_head]);
         $commit->allows()->GetTags()->andReturn([]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -86,6 +87,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('dev', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsFirstTagNameIfNoBranch()
@@ -102,6 +104,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([$first_tag, $second_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -112,6 +115,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsRequestedRef()
@@ -130,6 +134,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([$first_head]);
         $commit->allows()->GetTags()->andReturn([$first_tag, $second_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -140,6 +145,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12-1', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedTag()
@@ -158,6 +164,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([$first_head]);
         $commit->allows()->GetTags()->andReturn([$first_tag, $second_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -168,6 +175,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12-1', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedBranch()
@@ -186,6 +194,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([$first_head, $second_head]);
         $commit->allows()->GetTags()->andReturn([$first_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -196,6 +205,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('feature', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsHashIfNoBranchNorTag()
@@ -208,6 +218,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([]);
         $commit->allows()->GetHash()->andReturn('a1b2c3d4e5f6');
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -218,6 +229,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('a1b2c3d4e5f6', $presenter->head_name);
+        $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
     public function testHeadNameIsUndefinedIfNoCommitForCurrentTree()
@@ -235,6 +247,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($presenter->can_display_selector);
         $this->assertTrue($presenter->is_undefined);
         $this->assertEquals('Undefined', $presenter->head_name);
+        $this->assertEquals('', $presenter->committer_epoch);
     }
 
     public function testSelectorIsNotDisplayedIfConfigDisallowsIt()
@@ -246,6 +259,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([]);
         $commit->allows()->GetHash()->andReturn('a1b2c3d4e5f6');
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
@@ -266,6 +280,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([]);
         $commit->allows()->GetHash()->andReturn('a1b2c3d4e5f6');
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()

@@ -6,6 +6,8 @@
                 id="git-repository-branch-tag-selector-button"
                 class="tlp-button-primary tlp-button-outline"
                 title="{{# dgettext }}tuleap-git | Select a branch or tag{{/ dgettext }}"
+                data-is-undefined="{{# is_undefined }}1{{/ is_undefined }}"
+                data-committer-epoch="{{ committer_epoch }}"
             >
                 {{# is_undefined }}<em>{{/ is_undefined }}
                     {{ head_name }}

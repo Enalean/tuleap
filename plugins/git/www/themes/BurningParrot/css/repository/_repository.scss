@@ -115,6 +115,18 @@
     margin: 0 0 $tlp-spacing;
 }
 
+.git-repository-branch-tag-selector-button-time {
+    margin: 0 5px;
+    color: transparentize($tlp-theme-color, .3);
+    font-size: 12px;
+
+    &::before {
+        content: '\f017'; // fa-clock-o
+        margin: 0 3px 0 0;
+        font-family: 'FontAwesome';
+    }
+}
+
 /* scss-lint:disable SelectorFormat */
 .plugin_git_gitphp {
     border: 1px solid #e3e3e3;
