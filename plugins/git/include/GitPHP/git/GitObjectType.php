@@ -36,4 +36,9 @@ interface GitObjectType
      * @return bool
      */
     public function isSubmodule();
+
+    /**
+     * @return string
+     */
+    public function GetName(); // phpcs:ignore
 }

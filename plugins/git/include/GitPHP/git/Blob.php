@@ -28,7 +28,7 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Git
  */
-class Blob extends FilesystemObject implements GitObjectType
+class Blob extends FilesystemObject
 {
 
     /**

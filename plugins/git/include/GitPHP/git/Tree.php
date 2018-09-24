@@ -27,7 +27,7 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Git
  */
-class Tree extends FilesystemObject implements GitObjectType
+class Tree extends FilesystemObject
 {
 
     /**
