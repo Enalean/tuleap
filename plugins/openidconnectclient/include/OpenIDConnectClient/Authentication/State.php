@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,8 @@ namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Firebase\JWT\JWT;
 
-class State extends \InoOicClient\Oic\Authorization\State\State {
+class State
+{
     const SIGNATURE_ALGORITHM = 'HS256';
 
     /**

@@ -5,6 +5,5 @@
     }
   },
   "require": {
-    "ivan-novakov/php-openid-connect-client": "dev-maintenance#adaf56496407c1fba8b30e066c3e7a0402f7c242"
   }
 }

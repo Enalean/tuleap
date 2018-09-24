@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,33 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use InoOicClient\Oic\Authorization\State\Storage\Session;
+class StateStorage
+{
+    const AUTHORIZATION_STATE = 'tuleap_oidc_authorization_state';
 
-class StateStorage extends Session {
-
-    public function saveState(\InoOicClient\Oic\Authorization\State\State $state) {
+    public function saveState(State $state)
+    {
         $stored_state = new SessionState(
             $state->getSecretKey(),
             $state->getReturnTo(),
             $state->getNonce()
         );
-        $this->container->offsetSet(self::VAR_AUTHORIZATION_STATE, $stored_state);
+        $_SESSION[self::AUTHORIZATION_STATE] = $stored_state;
     }
 
-    public function clear() {
-        $this->container->offsetUnset(self::VAR_AUTHORIZATION_STATE);
+    /**
+     * @return null|SessionState
+     */
+    public function loadState()
+    {
+        if (! isset($_SESSION[self::AUTHORIZATION_STATE])) {
+            return null;
+        }
+        return $_SESSION[self::AUTHORIZATION_STATE];
+    }
+
+    public function clear()
+    {
+        unset($_SESSION[self::AUTHORIZATION_STATE]);
     }
 }

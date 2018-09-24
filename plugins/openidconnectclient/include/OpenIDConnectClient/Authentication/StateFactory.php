@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,9 @@
 
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
-use InoOicClient\Oic\Authorization\State\StateFactoryInterface;
 use RandomNumberGenerator;
 
-class StateFactory implements StateFactoryInterface
+class StateFactory
 {
     /**
      * @var string

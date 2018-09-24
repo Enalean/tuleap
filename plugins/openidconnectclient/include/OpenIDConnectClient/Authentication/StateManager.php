@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,16 +21,27 @@
 namespace Tuleap\OpenIDConnectClient\Authentication;
 
 use Exception;
-use InoOicClient\Oic\Authorization\State\Manager;
-use InoOicClient\Oic\Authorization\State\Exception\InvalidLocalStateException;
-use InoOicClient\Oic\Authorization\State\Exception\InvalidRemoteStateException;
-use InoOicClient\Oic\Authorization\State\Exception\StateMismatchException;
+use Tuleap\OpenIDConnectClient\Authentication\State\InvalidLocalStateException;
+use Tuleap\OpenIDConnectClient\Authentication\State\InvalidRemoteStateException;
+use Tuleap\OpenIDConnectClient\Authentication\State\StateMismatchException;
 use Tuleap\OpenIDConnectClient\Provider\Provider;
 
-class StateManager extends Manager {
+class StateManager
+{
 
-    public function __construct(StateStorage $state_storage, StateFactory $state_factory) {
-        parent::__construct($state_storage, $state_factory);
+    /**
+     * @var StateStorage
+     */
+    private $state_storage;
+    /**
+     * @var StateFactory
+     */
+    private $state_factory;
+
+    public function __construct(StateStorage $state_storage, StateFactory $state_factory)
+    {
+        $this->state_storage = $state_storage;
+        $this->state_factory = $state_factory;
     }
 
     /**
@@ -39,15 +50,16 @@ class StateManager extends Manager {
      * @throws InvalidRemoteStateException
      * @throws StateMismatchException
      */
-    public function validateState($signed_state) {
-        $stored_state = $this->getStorage()->loadState();
+    public function validateState($signed_state)
+    {
+        $stored_state = $this->state_storage->loadState();
 
         if($stored_state === null && $signed_state !== null) {
             throw new InvalidLocalStateException('Invalid stored state hash - empty string');
         }
 
         if($stored_state !== null && $signed_state === null) {
-            throw new InvalidRemoteStateException("The server did not return a state hash");
+            throw new InvalidRemoteStateException('The server did not return a state hash');
         }
 
         if($stored_state !== null && $signed_state !== null) {
@@ -67,14 +79,16 @@ class StateManager extends Manager {
     /**
      * @return State
      */
-    public function initState(Provider $provider, $return_to) {
-        $state = $this->getFactory()->createState($provider->getId(), $return_to);
-        $this->getStorage()->saveState($state);
+    public function initState(Provider $provider, $return_to)
+    {
+        $state = $this->state_factory->createState($provider->getId(), $return_to);
+        $this->state_storage->saveState($state);
 
         return $state;
     }
 
-    public function clearState() {
-        $this->getStorage()->clear();
+    public function clearState()
+    {
+        $this->state_storage->clear();
     }
 }
