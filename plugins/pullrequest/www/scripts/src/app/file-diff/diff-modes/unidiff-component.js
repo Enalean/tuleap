@@ -22,6 +22,7 @@ import { getComments } from "../comments-state.js";
 import { getCollapsibleCodeSections } from "../../code-collapse/code-collapse-service.js";
 
 import "./modes.js";
+import { POSITION_LEFT, POSITION_RIGHT } from "../inline-comment-positions.js";
 
 export default {
     template: `<div class="pull-request-unidiff" resize></div>`,
@@ -49,6 +50,10 @@ function controller(
     CodeMirrorHelperService
 ) {
     const self = this;
+
+    const GUTTER_NEWLINES = "gutter-newlines";
+    const GUTTER_OLDLINES = "gutter-oldlines";
+
     Object.assign(self, {
         $onInit: init
     });
@@ -58,7 +63,7 @@ function controller(
         const unidiff_options = {
             readOnly: true,
             lineWrapping: true,
-            gutters: ["gutter-oldlines", "gutter-newlines"],
+            gutters: [GUTTER_OLDLINES, GUTTER_NEWLINES],
             mode: self.diff.mime_type
         };
 
@@ -86,13 +91,24 @@ function controller(
         TooltipService.setupTooltips();
     }
 
-    function addNewComment(code_mirror, line_number) {
+    function getCommentPosition(line_number, gutter) {
+        const line = self.diff.lines[line_number];
+
+        return gutter === GUTTER_OLDLINES && line.new_offset === null
+            ? POSITION_LEFT
+            : POSITION_RIGHT;
+    }
+
+    function addNewComment(code_mirror, line_number, gutter) {
+        const comment_position = getCommentPosition(line_number, gutter);
+
         CodeMirrorHelperService.showCommentForm(
             code_mirror,
             Number(line_number) + 1,
             line_number,
             self.filePath,
-            self.pullRequestId
+            self.pullRequestId,
+            comment_position
         );
     }
 
@@ -106,7 +122,7 @@ function controller(
             if (line.old_offset) {
                 unidiff_codemirror.setGutterMarker(
                     line_number,
-                    "gutter-oldlines",
+                    GUTTER_OLDLINES,
                     document.createTextNode(line.old_offset)
                 );
             } else {
@@ -119,7 +135,7 @@ function controller(
             if (line.new_offset) {
                 unidiff_codemirror.setGutterMarker(
                     line_number,
-                    "gutter-newlines",
+                    GUTTER_NEWLINES,
                     document.createTextNode(line.new_offset)
                 );
             } else {

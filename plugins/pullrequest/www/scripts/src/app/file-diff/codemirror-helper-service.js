@@ -69,11 +69,12 @@ function CodeMirrorHelperService(
         unidiff_offset,
         display_line_number,
         file_path,
-        pull_request_id
+        pull_request_id,
+        position
     ) {
         const child_scope = $rootScope.$new(true);
         child_scope.submitCallback = comment_text => {
-            return postComment(unidiff_offset, comment_text, file_path, pull_request_id)
+            return postComment(unidiff_offset, comment_text, file_path, pull_request_id, position)
                 .then(comment => {
                     addComment(comment);
                     return self.displayInlineComment(code_mirror, comment, display_line_number);
@@ -130,12 +131,13 @@ function CodeMirrorHelperService(
         code_mirror.addLineWidget(handle, elem, options);
     }
 
-    function postComment(unidiff_offset, comment_text, file_path, pull_request_id) {
+    function postComment(unidiff_offset, comment_text, file_path, pull_request_id, position) {
         return FileDiffRestService.postInlineComment(
             pull_request_id,
             file_path,
             unidiff_offset,
-            comment_text
+            comment_text,
+            position
         );
     }
 

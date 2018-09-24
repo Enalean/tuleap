@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,7 +59,8 @@ class InlineCommentCreator
             $comment_data->file_path,
             $post_date,
             $comment_data->unidiff_offset,
-            $comment_data->content
+            $comment_data->content,
+            $comment_data->position
         );
 
         $this->reference_manager->extractCrossRef(
