@@ -73,6 +73,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $submitted_on;
 
     protected $changesets;
+    /**
+     * @var Tracker_Artifact_Changeset|null
+     */
+    private $last_changeset;
 
     /**
      * @var array of Tracker_Artifact
@@ -1118,13 +1122,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
      */
-    public function getLastChangeset() {
-        if ($this->changesets === null) {
-            return $this->getChangesetFactory()->getLastChangeset($this);
-        } else {
-            $changesets = $this->getChangesets();
-            return end($changesets);
+    public function getLastChangeset()
+    {
+        if ($this->last_changeset !== null) {
+            return $this->last_changeset;
         }
+        if ($this->changesets === null) {
+            $this->last_changeset = $this->getChangesetFactory()->getLastChangeset($this);
+            return $this->last_changeset;
+        }
+        $changesets           = $this->getChangesets();
+        $this->last_changeset = end($changesets);
+        return $this->last_changeset;
     }
 
     /**
@@ -1213,23 +1222,31 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->changesets;
     }
 
-    public function forceFetchAllChangesets() {
-        $this->changesets = $this->getChangesetFactory()->getChangesetsForArtifact($this);
+    public function forceFetchAllChangesets()
+    {
+        $this->changesets     = $this->getChangesetFactory()->getChangesetsForArtifact($this);
+        $this->last_changeset = null;
     }
 
     /**
      * @param array $changesets array of Tracker_Artifact_Changeset
      */
-    public function setChangesets(array $changesets) {
-        $this->changesets = $changesets;
+    public function setChangesets(array $changesets)
+    {
+        $this->changesets     = $changesets;
+        $this->last_changeset = null;
     }
 
-    public function clearChangesets() {
-        $this->changesets = null;
+    public function clearChangesets()
+    {
+        $this->changesets     = null;
+        $this->last_changeset = null;
     }
 
-    public function addChangeset(Tracker_Artifact_Changeset $changeset) {
+    public function addChangeset(Tracker_Artifact_Changeset $changeset)
+    {
         $this->changesets[$changeset->getId()] = $changeset;
+        $this->last_changeset                  = null;
     }
 
     /**
@@ -1301,6 +1318,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getChangeset($changeset_id) {
         if (! isset($this->changesets[$changeset_id])) {
             $this->changesets[$changeset_id] = $this->getChangesetFactory()->getChangeset($this, $changeset_id);
+            $this->last_changeset            = null;
         }
         return $this->changesets[$changeset_id];
     }
