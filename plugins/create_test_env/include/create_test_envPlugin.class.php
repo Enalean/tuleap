@@ -78,8 +78,6 @@ class create_test_envPlugin extends Plugin
 
         $this->addHook(UserConnectionUpdateEvent::NAME);
         $this->addHook(Event::SERVICE_IS_USED);
-        $this->addHook(ArtifactCreated::NAME);
-        $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -159,27 +157,6 @@ class create_test_envPlugin extends Plugin
         $project = ProjectManager::instance()->getProject($params['group_id']);
         $verb = $params['is_used'] ? 'activated' : 'desactivated';
         $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getUnconvertedPublicName()}]({$platform_url}/project/admin/servicebar.php?group_id={$project->getID()}). #project-admin #{$current_user->getUnixName()}");
-    }
-
-    public function trackerArtifactCreated(ArtifactCreated $event)
-    {
-        $request      = HTTPRequest::instance();
-        $current_user = $request->getCurrentUser();
-        $platform_url = $request->getServerUrl();
-        $artifact     = $event->getArtifact();
-        $project      = $artifact->getTracker()->getProject();
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) created an [artifact]($platform_url/plugins/tracker/?aid={$artifact->getId()}) in [{$project->getUnconvertedPublicName()}]({$platform_url}/projects/{$project->getUnixNameLowerCase()}). #tracker #{$current_user->getUnixName()}");
-    }
-
-    // @codingStandardsIgnoreLine
-    public function tracker_event_artifact_post_update(array $params)
-    {
-        $request      = HTTPRequest::instance();
-        $current_user = $request->getCurrentUser();
-        $platform_url = $request->getServerUrl();
-        $artifact     = $params['artifact'];
-        $project      = $artifact->getTracker()->getProject();
-        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) updated an [artifact]($platform_url/plugins/tracker/?aid={$artifact->getId()}) in [{$project->getUnconvertedPublicName()}]({$platform_url}/projects/{$project->getUnixNameLowerCase()}). #tracker #{$current_user->getUnixName()}");
     }
 
     private function notify($text)
