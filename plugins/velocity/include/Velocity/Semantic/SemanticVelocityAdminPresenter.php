@@ -22,6 +22,7 @@ namespace Tuleap\Velocity\Semantic;
 
 use CSRFSynchronizerToken;
 use Tracker;
+use Tuleap\AgileDashboard\Semantic\SemanticDone;
 
 class SemanticVelocityAdminPresenter
 {
@@ -90,6 +91,8 @@ class SemanticVelocityAdminPresenter
      */
     public $has_a_selected_field;
 
+    public $url_done_semantic;
+
     public function __construct(
         array $possible_velocity_field,
         CSRFSynchronizerToken $csrf_token,
@@ -113,6 +116,13 @@ class SemanticVelocityAdminPresenter
             [
                 "tracker" => $tracker->getId(),
                 "func"    => "admin-semantic"
+            ]
+        );
+        $this->url_done_semantic         = TRACKER_BASE_URL . '/?' . http_build_query(
+            [
+                "tracker"  => $tracker->getId(),
+                "func"     => "admin-semantic",
+                "semantic" => SemanticDone::NAME,
             ]
         );
 
