@@ -1,24 +1,28 @@
 <?php
-
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Controller Commitdiff
- *
- * Controller for displaying a commitdiff
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
-/**
- * Commitdiff controller class
- *
- * @package GitPHP
- * @subpackage Controller
- */
+use GitPHP\Commit\CommitPresenter;
+
 class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
 
@@ -50,6 +54,9 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
     {
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
             return 'commitdiffplain.tpl';
+        }
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/commit-diff.tpl';
         }
         return 'commitdiff.tpl';
     }
@@ -116,8 +123,8 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        $co = $this->project->GetCommit($this->params['hash']);
-        $this->tpl->assign('commit', $co);
+        $commit = $this->project->GetCommit($this->params['hash']);
+        $this->tpl->assign('commit', $commit);
 
         if (isset($this->params['hashparent'])) {
             $this->tpl->assign("hashparent", $this->params['hashparent']);
@@ -128,7 +135,15 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
             $this->tpl->assign('extrascripts', array('commitdiff'));
         }
 
-        $treediff = new TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));
+        $treediff = new TreeDiff(
+            $this->project,
+            $this->params['hash'],
+            (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
+        );
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $commit_presenter = new CommitPresenter($commit, $treediff);
+            $this->tpl->assign('commit_presenter', $commit_presenter);
+        }
         $this->tpl->assign('treediff', $treediff);
     }
 }

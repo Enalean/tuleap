@@ -63,7 +63,7 @@ class GitViews_GitPhpViewer {
             return true;
         }
 
-        return ! in_array($request->get('a'), ['commit', 'tree', false], true);
+        return ! in_array($request->get('a'), ['commit', 'tree', 'commitdiff', false], true);
     }
 
     private function displayGitPHP()
