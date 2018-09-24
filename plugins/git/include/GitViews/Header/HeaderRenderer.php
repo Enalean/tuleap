@@ -140,8 +140,7 @@ class HeaderRenderer
         BreadCrumbCollection $breadcrumbs
     ) {
         $headers = new GitViewHeader(
-            $this->event_manager,
-            $this->service_crumb_builder
+            $this->event_manager
         );
         $headers->header($request, $GLOBALS['HTML'], $project, $breadcrumbs);
     }

@@ -1,17 +1,25 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
-
-/**
- * GitPHP File Diff
- *
- * Represents a single file difference
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Git
- */
 
 /**
  * Commit class
@@ -184,22 +192,26 @@ class FileDiff
     protected $commit;
 
     /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     * @param mixed $project project
+     * @var array
+     */
+    private $stats = [];
+
+    /**
+     * @param mixed  $project  project
      * @param string $fromHash source hash, can also be a diff-tree info line
-     * @param string $toHash target hash, required if $fromHash is a hash
-     * @return mixed FileDiff object
+     * @param string $toHash   target hash, required if $fromHash is a hash
+     * @param array  $stats_indexed_by_filename
+     *
      * @throws \Exception on invalid parameters
      */
-    public function __construct($project, $fromHash, $toHash = '')
+    public function __construct($project, $fromHash, $toHash = '', array $stats_indexed_by_filename = [])
     {
         $this->project = $project;
 
         if ($this->ParseDiffTreeLine($fromHash)) {
+            if (isset($stats_indexed_by_filename[$this->toFile])) {
+                $this->stats = $stats_indexed_by_filename[$this->toFile];
+            }
             return;
         }
 
@@ -209,6 +221,21 @@ class FileDiff
 
         $this->fromHash = $fromHash;
         $this->toHash = $toHash;
+    }
+
+    public function hasStats()
+    {
+        return ! empty($this->stats);
+    }
+
+    public function getAddedStats()
+    {
+        return $this->stats['added'];
+    }
+
+    public function getRemovedStats()
+    {
+        return $this->stats['removed'];
     }
 
     /**

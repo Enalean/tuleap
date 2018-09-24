@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,17 +25,20 @@
 .tlp-button-bar-item {
     margin: 0 -1px 0 0;
 
-    &:first-child > label[class*="tlp-button"] {
+    &:first-child > label[class*="tlp-button"],
+    &:first-child > a[class*="tlp-button"] {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }
 
-    &:last-child > label[class*="tlp-button"] {
+    &:last-child > label[class*="tlp-button"],
+    &:last-child > a[class*="tlp-button"] {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
 
-    &:not(:first-child):not(:last-child) > label[class*="tlp-button"] {
+    &:not(:first-child):not(:last-child) > label[class*="tlp-button"],
+    &:not(:first-child):not(:last-child) > a[class*="tlp-button"] {
         border-radius: 0;
     }
 }

@@ -400,6 +400,16 @@ class Commit extends GitObject
     }
 
     /**
+     * @return string
+     */
+    public function getCommitterEmail()
+    {
+        preg_match('/<(.*)>/', $this->GetCommitter(), $matches);
+
+        return isset($matches[1]) ? $matches[1] : '';
+    }
+
+    /**
      * GetCommitterName
      *
      * Gets the author's name only
