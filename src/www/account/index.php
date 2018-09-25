@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\user\AccessKey\LastAccessKeyIdentifierStore;
+
 require_once 'pre.php';
 
 session_require(array('isloggedin'=>'1'));
@@ -177,6 +180,12 @@ if (isset($_SESSION['last_svn_token'])) {
 
 $user_default_format = user_get_preference('user_edition_default_format');
 
+$last_access_key_identifier_store = new LastAccessKeyIdentifierStore(
+    (new KeyFactory)->getEncryptionKey(),
+    $_SESSION
+);
+$last_access_key = $last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier();
+
 $default_formats = array(
     array(
         'label'    => $Language->getText('account_preferences', 'html_format'),
@@ -200,7 +209,7 @@ $presenter = new User_PreferencesPresenter(
     $ssh_keys_extra_html,
     $svn_token_presenters,
     $third_paty_html,
-    $csrf->fetchHTMLInput(),
+    $csrf,
     $tracker_formats,
     $languages_html,
     $user_helper_preferences,
@@ -208,7 +217,8 @@ $presenter = new User_PreferencesPresenter(
     $all_csv_separator,
     $all_csv_dateformat,
     $last_svn_token,
-    $default_formats
+    $default_formats,
+    $last_access_key
 );
 
 $HTML->header(array(

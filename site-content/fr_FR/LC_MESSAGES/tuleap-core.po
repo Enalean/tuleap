@@ -44,6 +44,16 @@ msgstr ""
 "Un service non disponible ne peut être activé. Pour activer ce service, vous "
 "devez au préalable le rendre disponible."
 
+msgid ""
+"A personal API access key will be automatically generated at the form "
+"submission.\n"
+"                The description is not required but it can help you to "
+"manage your access keys."
+msgstr ""
+"Une nouvelle clé d'accès sera généré lors de soumission du formulaire.\n"
+"                La description n'est pas requise mais peut vous aider à "
+"gérer vos clés d'accès."
+
 msgid "A project cannot be its own parent."
 msgstr "Un projet ne peut être son propre parent."
 
@@ -52,6 +62,14 @@ msgstr "Accès"
 
 msgid "Access Logs"
 msgstr "Journal des accès"
+
+msgid ""
+"Access keys are not yet saved but soon you will be able to use it instead of "
+"password to access the REST API"
+msgstr ""
+"Les clés d'accès ne sont pour le moment pas sauvegardées mais vous pourrez "
+"prochainement les utiliser à la place de votre mot de passe pour accèder à "
+"l'API REST"
 
 msgid "Accessibility"
 msgstr "Accessibilité"
@@ -419,6 +437,9 @@ msgstr "Interdit"
 msgid "Forums"
 msgstr "Forums"
 
+msgid "Generate new key"
+msgstr "Générer une nouvelle clé"
+
 msgid "Git"
 msgstr "Git"
 
@@ -520,6 +541,11 @@ msgstr "Liens"
 msgid "Lists"
 msgstr "Listes"
 
+msgid "Make sure you copy new access key, you won't be able to see it again!"
+msgstr ""
+"Assurez-vous de copier la nouvelle clé d'accès, vous ne pourrez plus la voir "
+"de nouveau !"
+
 msgid "Maximum number of projects waiting for validation (-1 means no limits)"
 msgstr ""
 "Nombre maximum de projets dans la file d'attente de validation (-1 pour pas "
@@ -582,6 +608,9 @@ msgstr "Nb membres"
 
 msgid "New email address:"
 msgstr "Nouvelle adresse e-mail"
+
+msgid "New personal API access key"
+msgstr ""
 
 msgid "News"
 msgstr "Annonces"
@@ -679,6 +708,9 @@ msgstr "Permissions pour les services dépréciés"
 
 msgid "Permissions per group"
 msgstr "Permissions par groupe"
+
+msgid "Personal API access keys"
+msgstr "Clés personnelles d'accès à l'API"
 
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
@@ -1189,6 +1221,9 @@ msgstr "Message de bienvenue et informations générales pour les utilisateurs"
 msgid "Welcome, %s."
 msgstr "Bienvenue, %s"
 
+msgid "What's this access key for?"
+msgstr "À quel usage cette clé d'accès est destiné ?"
+
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
@@ -1290,6 +1325,17 @@ msgstr "Vous ne pouvez pas supprimer un groupe utilisateurs système"
 
 msgid "You can only edit your own widgets."
 msgstr "Vous ne pouvez éditer que vos propres widgets."
+
+msgid ""
+"You can use API access keys to access the REST API from scripts or command "
+"line.\n"
+"        However, these access keys are like password and should be guarded "
+"carefully."
+msgstr ""
+"Vous pouvez utiliser les clés d'accès API pour accéder à l'API REST à partir "
+"de scripts ou de la ligne de commande.\n"
+"        Cependant ces clés sont similaires à des mots de passe et doivent "
+"être conservés précautionneusement."
 
 msgid "You can use markdown to format your text"
 msgstr "Vous pouvez utiliser du markdwon pour formater votre texte"

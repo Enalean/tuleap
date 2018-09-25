@@ -26,6 +26,13 @@ msgid ""
 "to available before."
 msgstr ""
 
+msgid ""
+"A personal API access key will be automatically generated at the form "
+"submission.\n"
+"                The description is not required but it can help you to "
+"manage your access keys."
+msgstr ""
+
 msgid "A project cannot be its own parent."
 msgstr ""
 
@@ -33,6 +40,11 @@ msgid "Access"
 msgstr ""
 
 msgid "Access Logs"
+msgstr ""
+
+msgid ""
+"Access keys are not yet saved but soon you will be able to use it instead of "
+"password to access the REST API"
 msgstr ""
 
 msgid "Accessibility"
@@ -384,6 +396,9 @@ msgstr ""
 msgid "Forums"
 msgstr ""
 
+msgid "Generate new key"
+msgstr ""
+
 msgid "Git"
 msgstr ""
 
@@ -480,6 +495,9 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
+msgid "Make sure you copy new access key, you won't be able to see it again!"
+msgstr ""
+
 msgid "Maximum number of projects waiting for validation (-1 means no limits)"
 msgstr ""
 
@@ -537,6 +555,9 @@ msgid "Nb members"
 msgstr ""
 
 msgid "New email address:"
+msgstr ""
+
+msgid "New personal API access key"
 msgstr ""
 
 msgid "News"
@@ -633,6 +654,9 @@ msgid "Permissions for deprecated services"
 msgstr ""
 
 msgid "Permissions per group"
+msgstr ""
+
+msgid "Personal API access keys"
 msgstr ""
 
 msgid "Platform administration"
@@ -1100,6 +1124,9 @@ msgstr ""
 msgid "Welcome, %s."
 msgstr ""
 
+msgid "What's this access key for?"
+msgstr ""
+
 msgid ""
 "Why don't you start by editing your dashboard <br> and adding some widgets?"
 msgstr ""
@@ -1176,6 +1203,13 @@ msgid "You can not delete system user groups"
 msgstr ""
 
 msgid "You can only edit your own widgets."
+msgstr ""
+
+msgid ""
+"You can use API access keys to access the REST API from scripts or command "
+"line.\n"
+"        However, these access keys are like password and should be guarded "
+"carefully."
 msgstr ""
 
 msgid "You can use markdown to format your text"

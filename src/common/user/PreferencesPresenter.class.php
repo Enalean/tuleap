@@ -39,6 +39,11 @@ class User_PreferencesPresenter {
     /** @var SVN_TokenPresenter[] */
     public $svn_tokens;
 
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    public $csrf_token;
+
     public $csrf_input_html;
 
     /** @var array */
@@ -67,6 +72,11 @@ class User_PreferencesPresenter {
      */
     public $default_formats;
 
+    /**
+     * @var string
+     */
+    public $last_access_key;
+
     public $user_language;
     public $user_has_accessibility_mode;
     public $is_condensed;
@@ -83,7 +93,7 @@ class User_PreferencesPresenter {
         $ssh_keys_extra_html,
         $svn_tokens,
         $third_party_html,
-        $csrf_input_html,
+        CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
         array $languages_html,
         array $user_helper_preferences,
@@ -91,7 +101,8 @@ class User_PreferencesPresenter {
         array $all_csv_separator,
         array $all_csv_dateformat,
         $last_svn_token,
-        array $default_formats
+        array $default_formats,
+        $last_access_key
     ) {
         $this->user                    = $user;
         $this->can_change_real_name    = $can_change_real_name;
@@ -102,7 +113,8 @@ class User_PreferencesPresenter {
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
         $this->svn_tokens              = $svn_tokens;
         $this->third_party_html        = $third_party_html;
-        $this->csrf_input_html         = $csrf_input_html;
+        $this->csrf_token              = $csrf_token;
+        $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
         $this->tracker_formats         = $tracker_formats;
         $this->languages_html          = $languages_html;
         $this->user_helper_preferences = $user_helper_preferences;
@@ -111,6 +123,7 @@ class User_PreferencesPresenter {
         $this->all_csv_dateformat      = $all_csv_dateformat;
         $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
+        $this->last_access_key         = $last_access_key;
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);

@@ -39,6 +39,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Trove\TroveCatListController;
+use Tuleap\user\AccessKey\AccessKeyCreationController;
 
 class RouteCollector
 {
@@ -103,6 +104,11 @@ class RouteCollector
             });
             $r->post('/project-creation/categories', function () {
                 return new TroveCatListController();
+            });
+        });
+        $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
+            $r->post('/access_key/create', function () {
+                return new AccessKeyCreationController();
             });
         });
 
