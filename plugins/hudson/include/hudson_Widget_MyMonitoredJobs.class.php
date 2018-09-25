@@ -22,12 +22,6 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-require_once('HudsonOverviewWidget.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('PluginHudsonJobDao.class.php');
-require_once('HudsonJob.class.php');
-
 class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
 {
 

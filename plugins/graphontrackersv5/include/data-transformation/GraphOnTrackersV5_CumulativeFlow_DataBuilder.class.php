@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * Originally written by Yoann Celton, 2013. Jtekt Europe SAS.
  *
@@ -20,8 +20,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once 'common/user/UserManager.class.php';
 
 class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
 

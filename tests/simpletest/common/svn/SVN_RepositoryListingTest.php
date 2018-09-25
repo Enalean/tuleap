@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once 'common/user/User.class.php';
-require_once 'common/user/UserManager.class.php';
-require_once 'common/project/Project.class.php';
-require_once 'common/svn/SVN_RepositoryListing.class.php';
 
 class SVN_RepositoryListing_getSvnPathTest extends TuleapTestCase {
 

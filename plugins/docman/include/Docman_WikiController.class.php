@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2008. All Rights Reserved.
  *
  * Originally written by Sabri LABBENE, 2008
@@ -20,11 +20,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'Docman_Controller.class.php';
-require_once 'Docman_WikiRequest.class.php';
-require_once 'Docman_Log.class.php';
-require_once 'Docman_ItemDao.class.php';
-require_once 'Docman_ItemFactory.class.php';
 
 class Docman_WikiController extends Docman_Controller {
 
@@ -89,13 +84,11 @@ class Docman_WikiController extends Docman_Controller {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');
 
-        require_once 'Docman_PermissionsManager.class.php';
         $dPM = Docman_PermissionsManager::instance($group_id);
 
         $item_factory = $this->getItemFactory();
         $references = $item_factory->getWikiPageReferencers($wiki_page, $group_id);
 
-        require_once 'common/user/UserManager.class.php';
         $uM = UserManager::instance();
 
         $can_access = true;

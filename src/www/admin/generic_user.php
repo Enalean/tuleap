@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -24,7 +24,6 @@
 
 require_once 'pre.php';
 require_once 'www/admin/admin_utils.php';
-require_once 'common/user/GenericUserFactory.class.php';
 
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();

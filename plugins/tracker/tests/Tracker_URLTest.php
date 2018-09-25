@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -37,9 +37,7 @@ Mock::generatePartial('Tracker_URL',
                       )
 );
 
-require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
 class Tracker_URLTest extends TuleapTestCase {

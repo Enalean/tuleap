@@ -17,9 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/project/Project_SOAPServer.class.php';
-require_once 'common/user/GenericUserFactory.class.php';
-
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 

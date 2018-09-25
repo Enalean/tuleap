@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2012 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
-use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
 require_once 'pre.php';
 

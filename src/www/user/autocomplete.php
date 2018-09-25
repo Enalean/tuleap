@@ -23,7 +23,7 @@
  */
 
 use Tuleap\User\RequestFromAutocompleter;
-use Tuleap\user\UserAutocompletePostSearchEvent;
+use Tuleap\User\UserAutocompletePostSearchEvent;
 
 require_once('pre.php');
 

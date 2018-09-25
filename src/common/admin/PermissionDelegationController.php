@@ -19,13 +19,13 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\user\GroupCannotRemoveLastAdministrationPermission;
+use Tuleap\User\GroupCannotRemoveLastAdministrationPermission;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
-use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermission;
-use Tuleap\user\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
+use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
-use Tuleap\user\UserCannotRemoveLastAdministrationPermission;
+use Tuleap\User\UserCannotRemoveLastAdministrationPermission;
 
 class Admin_PermissionDelegationController {
 

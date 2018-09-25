@@ -170,7 +170,6 @@ function account_groupnamevalid($name) {
 
 // print out shell selects
 function account_shellselects($current) {
-    include_once 'common/user/User.class.php';
     if (!$current) {
         $current = '/sbin/nologin';
     }

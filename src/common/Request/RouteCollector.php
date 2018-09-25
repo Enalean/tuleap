@@ -39,7 +39,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Trove\TroveCatListController;
-use Tuleap\user\AccessKey\AccessKeyCreationController;
+use Tuleap\User\AccessKey\AccessKeyCreationController;
 
 class RouteCollector
 {

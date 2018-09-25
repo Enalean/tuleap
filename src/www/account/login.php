@@ -24,8 +24,6 @@ header("Cache-Control: no-cache, no-store, must-revalidate");
 
 require_once('pre.php');
 require_once('account.php');
-require_once('common/include/CookieManager.class.php');
-require_once('common/user/LoginController.class.php');
 
 $login_controller = new User_LoginController($request);
 

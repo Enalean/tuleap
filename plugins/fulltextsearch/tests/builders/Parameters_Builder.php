@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/Docman_File_Builder.php';
-require_once __DIR__.'/../../../docman/include/Docman_Version.class.php';
-require_once 'common/user/User.class.php';
-
-
 function aSetOfParameters() {
     return new Parameters_Builder();
 }

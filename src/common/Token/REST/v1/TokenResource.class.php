@@ -23,7 +23,7 @@ use Luracast\Restler\RestException;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\REST\Header;
 use Exception;
-use Tuleap\user\PasswordVerifier;
+use Tuleap\User\PasswordVerifier;
 use UserManager;
 use EventManager;
 use User_LoginManager;

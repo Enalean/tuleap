@@ -181,7 +181,7 @@ class trackerPlugin extends Plugin {
         $this->addHook(WorkerEvent::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
 
-        $this->addHook(\Tuleap\user\UserAutocompletePostSearchEvent::NAME);
+        $this->addHook(\Tuleap\User\UserAutocompletePostSearchEvent::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
 
@@ -1585,9 +1585,9 @@ class trackerPlugin extends Plugin {
     }
 
     /**
-     * @see \Tuleap\user\UserAutocompletePostSearchEvent
+     * @see \Tuleap\User\UserAutocompletePostSearchEvent
      */
-    public function userAutocompletePostSearch(\Tuleap\user\UserAutocompletePostSearchEvent $event)
+    public function userAutocompletePostSearch(\Tuleap\User\UserAutocompletePostSearchEvent $event)
     {
         $additional_information = $event->getAdditionalInformation();
         if (! isset($additional_information['tracker_id'])) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,6 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once 'common/system_event/SystemEvent.class.php';
-require_once 'common/user/UserManager.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'common/backend/BackendSVN.class.php';
-require_once dirname(__FILE__).'/../LDAP_ProjectManager.class.php';
 
 /**
  * Manage rename of LDAP users in the whole platform.

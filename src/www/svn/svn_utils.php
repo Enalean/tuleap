@@ -21,10 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/user/UserHelper.class.php');
-require_once('common/reference/CrossReferenceFactory.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-
 function svn_header($params) {
     global $group_id, $Language, $there_are_specific_permissions;
 

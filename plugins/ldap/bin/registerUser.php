@@ -1,8 +1,6 @@
 <?php
 
 require_once('pre.php');
-require_once(dirname(__FILE__).'/../include/LDAP_UserManager.class.php');
-require_once 'common/user/UserManager.class.php';
 
 /**
  * Extract parameters from user input

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 
 require_once('pre.php');
-require_once 'common/user/GenericUserFactory.class.php';
 
 // Valid group id
 $valid_groupid = new Valid_GroupId();

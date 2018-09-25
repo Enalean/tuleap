@@ -71,7 +71,6 @@ Mock::generate('Tracker_FormElement_Field_Value_ListDao');
 
 Mock::generate('Tracker_FormElement_Field_ListDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 Mock::generate('Workflow');
@@ -84,17 +83,14 @@ Mock::generate('Tracker_Artifact_ChangesetValue');
 
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 
-require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generate('Tracker');
 
 Mock::generate('TransitionFactory');
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
 

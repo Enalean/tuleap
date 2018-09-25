@@ -20,16 +20,6 @@
  */
 
 require_once 'pre.php';
-require_once 'common/project/Project_SOAPServer.class.php';
-require_once 'common/soap/SOAP_RequestLimitatorFactory.class.php';
-require_once 'common/user/GenericUserFactory.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionFactory.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionValueManager.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionDao.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionValueDao.class.php';
-require_once 'common/project/CustomDescription/CustomDescriptionValueFactory.class.php';
-require_once 'common/project/Service/ServiceUsageFactory.class.php';
-require_once 'common/project/Service/ServiceUsageManager.class.php';
 
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;

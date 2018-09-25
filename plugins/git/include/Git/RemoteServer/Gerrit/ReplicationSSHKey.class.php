@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All rights reserved
+ * Copyright (c) Enalean, 2013-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-
-require_once 'common/user/IHaveAnSSHKey.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
     const KEYNAME_PREFIX  = 'gerrit_';
