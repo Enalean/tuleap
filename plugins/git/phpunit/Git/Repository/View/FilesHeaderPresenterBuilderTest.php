@@ -74,6 +74,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn(false);
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
         $second_head = Mockery::mock(Head::class);
@@ -103,6 +105,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn(false);
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $first_tag = Mockery::mock(Tag::class);
         $first_tag->allows()->GetName()->andReturn('v12');
         $second_tag = Mockery::mock(Tag::class);
@@ -131,6 +135,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('git_repository_bp', '1');
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn('v12-1');
+
+        $this->repository->allows()->isCreated()->andReturns(true);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -163,6 +169,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn('refs/tags/v12-1');
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
         $first_tag = Mockery::mock(Tag::class);
@@ -193,6 +201,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('git_repository_bp', '1');
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn('refs/heads/feature');
+
+        $this->repository->allows()->isCreated()->andReturns(true);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -225,6 +235,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('a')->andReturn('tree');
         $this->request->allows()->get('hb')->andReturn(false);
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([]);
@@ -249,6 +261,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('git_repository_bp', '1');
         $this->request->allows()->get('a')->andReturn('tree');
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
                                ->with($this->request, $this->repository)
@@ -268,6 +282,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::set('git_repository_bp', '0');
         $this->request->allows()->get('a')->andReturn('tree');
 
+        $this->repository->allows()->isCreated()->andReturns(true);
+
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
         $commit->allows()->GetTags()->andReturn([]);
@@ -286,8 +302,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectorIsNotDisplayedIfWeAreNotOnATree()
     {
-        ForgeConfig::set('git_repository_bp', '0');
+        ForgeConfig::set('git_repository_bp', '1');
         $this->request->allows()->get('a')->andReturn('commit');
+
+        $this->repository->allows()->isCreated()->andReturns(true);
 
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
@@ -299,6 +317,18 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
                                ->getCommitOfCurrentTree()
                                ->with($this->request, $this->repository)
                                ->andReturn($commit);
+
+        $presenter = $this->builder->build($this->request, $this->repository);
+
+        $this->assertFalse($presenter->can_display_selector);
+    }
+
+    public function testSelectorIsNotDisplayedIfRepositoryIsNotCreated()
+    {
+        ForgeConfig::set('git_repository_bp', '1');
+        $this->request->allows()->get('a')->andReturn('tree');
+
+        $this->repository->allows()->isCreated()->andReturns(false);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 

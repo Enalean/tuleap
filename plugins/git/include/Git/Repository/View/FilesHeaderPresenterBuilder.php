@@ -56,27 +56,25 @@ class FilesHeaderPresenterBuilder
     {
         $repository_url = $this->url_manager->getRepositoryBaseUrl($repository);
 
-        if (!ForgeConfig::get('git_repository_bp')) {
-            return new FilesHeaderPresenter(
-                $repository,
-                $repository_url,
-                false,
-                '',
-                false,
-                ''
-            );
+        $cannot_be_displayed_presenter = new FilesHeaderPresenter(
+            $repository,
+            $repository_url,
+            false,
+            '',
+            false,
+            ''
+        );
+        if (! ForgeConfig::get('git_repository_bp')) {
+            return $cannot_be_displayed_presenter;
+        }
+
+        if (! $repository->isCreated()) {
+            return $cannot_be_displayed_presenter;
         }
 
         $action = $request->get('a');
         if ($action !== 'tree' && $action !== false) {
-            return new FilesHeaderPresenter(
-                $repository,
-                $repository_url,
-                false,
-                '',
-                false,
-                ''
-            );
+            return $cannot_be_displayed_presenter;
         }
 
         $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
