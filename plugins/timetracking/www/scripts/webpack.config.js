@@ -23,7 +23,8 @@ const assets_dir_path = path.resolve(__dirname, "../assets");
 
 const webpack_config = {
     entry: {
-        "widget-timetracking": "./personal-timetracking-widget/src/index.js"
+        "widget-timetracking": "./personal-timetracking-widget/src/index.js",
+        "timetracking-overview": "./timetracking-overview-widget/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

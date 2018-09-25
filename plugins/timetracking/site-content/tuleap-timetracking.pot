@@ -22,6 +22,9 @@ msgstr ""
 msgid "Delete the time"
 msgstr ""
 
+msgid "Displays time spent on multiple trackers"
+msgstr ""
+
 msgid "Displays your time tracking of the whole platform."
 msgstr ""
 
@@ -101,6 +104,9 @@ msgid "Time tracking is disabled for tracker."
 msgstr ""
 
 msgid "Time tracking is enabled for tracker."
+msgstr ""
+
+msgid "Timetracking overview"
 msgstr ""
 
 msgid "Update"

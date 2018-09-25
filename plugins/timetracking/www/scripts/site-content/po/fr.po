@@ -42,8 +42,14 @@ msgstr "Du"
 msgid "Load more"
 msgstr "Voir plus"
 
+msgid "No time have been found for this period and these trackers"
+msgstr "Aucun temps n'a été trouvé pour cette période et ces outils de suivi"
+
 msgid "No tracked time have been found for this period"
 msgstr "Aucun temps suivi n'a été trouvé pour cette période"
+
+msgid "No trackers selected"
+msgstr "Aucun élément séléctionné"
 
 msgid "Please check time's format (hh:mm)"
 msgstr "Vérifiez le format du temps (hh:mm)"
@@ -80,3 +86,6 @@ msgstr "Temps"
 
 msgid "To"
 msgstr "Au"
+
+msgid "Tracker"
+msgstr "Outil de suivi"

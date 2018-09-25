@@ -35,7 +35,13 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
+msgid "No time have been found for this period and these trackers"
+msgstr ""
+
 msgid "No tracked time have been found for this period"
+msgstr ""
+
+msgid "No trackers selected"
 msgstr ""
 
 msgid "Please check time's format (hh:mm)"
@@ -72,4 +78,7 @@ msgid "Times"
 msgstr ""
 
 msgid "To"
+msgstr ""
+
+msgid "Tracker"
 msgstr ""
