@@ -20,7 +20,7 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-(<template>
+<template>
     <tr>
         <td>
             <widget-link-to-artifact
@@ -32,17 +32,16 @@
             {{ get_formatted_aggregated_time(timeData) }}
         </td>
         <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal"
-            v-on:click="show_modal">
-            {{ show_times_label }}
+            v-on:click="show_modal" v-translate>
+            Details
         </td>
         <widget-modal-times
             ref="timetracking_modal"
         />
     </tr>
-</template>)
-(<script>
+</template>
+<script>
 import { mapGetters, mapMutations } from "vuex";
-import { gettext_provider } from "../gettext-provider.js";
 import { modal as createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
@@ -64,8 +63,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["get_formatted_aggregated_time"]),
-        show_times_label: () => gettext_provider.gettext("Details")
+        ...mapGetters(["get_formatted_aggregated_time"])
     },
     methods: {
         ...mapMutations(["setAddMode"]),
@@ -82,4 +80,4 @@ export default {
         );
     }
 };
-</script>)
+</script>

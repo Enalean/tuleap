@@ -23,6 +23,7 @@
 
 import mutations from "./mutations.js";
 import initial_state from "./state.js";
+import { REST_FEEDBACK_ADD, ERROR_OCCURED, REST_FEEDBACK_EDIT } from "../constants";
 
 describe("Store mutations", () => {
     let state;
@@ -62,7 +63,7 @@ describe("Store mutations", () => {
         });
 
         it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
-            state.rest_feedback.message = "Time successfully added";
+            state.rest_feedback.message = REST_FEEDBACK_ADD;
             state.rest_feedback.type = "success";
             mutations.setAddMode(state, true);
 
@@ -73,7 +74,7 @@ describe("Store mutations", () => {
 
         it("Given a widget with states updated with error message, Then we call setAddMode, states must change", () => {
             state.is_add_mode = true;
-            state.rest_feedback.message = "An error occured";
+            state.rest_feedback.message = ERROR_OCCURED;
             state.rest_feedback.type = "danger";
             mutations.setAddMode(state, false);
 
@@ -97,9 +98,9 @@ describe("Store mutations", () => {
                 id: 1,
                 minutes: 40
             };
-            mutations.replaceInCurrentTimes(state, [updated_time, "Time successfully updated"]);
+            mutations.replaceInCurrentTimes(state, [updated_time, REST_FEEDBACK_EDIT]);
             expect(state.current_times).toEqual([updated_time]);
-            expect(state.rest_feedback.message).toEqual("Time successfully updated");
+            expect(state.rest_feedback.message).toEqual(REST_FEEDBACK_EDIT);
             expect(state.rest_feedback.type).toEqual("success");
         });
     });

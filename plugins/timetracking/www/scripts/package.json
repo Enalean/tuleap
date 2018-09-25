@@ -7,8 +7,8 @@
   "private": true,
   "dependencies": {
     "luxon": "^0.5.3",
-    "node-gettext": "^2.0.0",
     "vue": "^2.5.13",
+    "vue-gettext": "^2.0.31",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -21,6 +21,7 @@
     "build": "rm -rf ../assets/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9090 coverage/",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'",
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find . -type f -name '*.vue')"
   }
 }

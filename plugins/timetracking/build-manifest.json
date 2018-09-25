@@ -35,9 +35,9 @@
             "is_revisioned": true
         }
     },
-    "gettext-js": {
-        "permissions-per-group": {
-            "src": "www/scripts/personal-timetracking-widget/src",
+    "gettext-vue": {
+        "personal-timetracking": {
+            "scripts": "www/scripts/personal-timetracking-widget",
             "po": "www/scripts/personal-timetracking-widget/po"
         }
     },

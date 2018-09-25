@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU General Public License
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
-(<template>
+<template>
     <tr>
         <td class="tlp-form-element">
             <span class="tlp-prepend"></span>
@@ -64,12 +64,11 @@
             </button>
         </td>
     </tr>
-</template>)
-(<script>
+</template>
+<script>
 import { DateTime } from "luxon";
 import { formatMinutes } from "../../time-formatters.js";
 import { TIME_REGEX } from "../../constants.js";
-import { gettext_provider } from "../../gettext-provider.js";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
 
@@ -100,9 +99,9 @@ export default {
                 const id = this.timeData ? this.timeData.id : this.current_artifact.id;
                 this.$emit("validateTime", this.date, id, this.time, this.step);
             } else {
-                this.error_message = gettext_provider.gettext("Please check time's format (hh:mm)");
+                this.error_message = this.$gettext("Please check time's format (hh:mm)");
                 if (!this.time) {
-                    this.error_message = gettext_provider.gettext("Time is required");
+                    this.error_message = this.$gettext("Time is required");
                 }
             }
         }
@@ -116,4 +115,4 @@ export default {
         });
     }
 };
-</script>)
+</script>

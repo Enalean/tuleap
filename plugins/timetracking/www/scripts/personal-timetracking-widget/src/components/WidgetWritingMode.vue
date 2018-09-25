@@ -17,12 +17,12 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <form class="timetracking-writing-mode">
         <div class="timetracking-writing-mode-selected-dates">
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-start-date" class="tlp-label">{{ start_date_label }} <i class="fa fa-asterisk"></i></label>
+                <label for="timetracking-start-date" class="tlp-label"><translate> From </translate><i class="fa fa-asterisk"></i></label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     <input type="text"
@@ -36,7 +36,7 @@
             </div>
 
             <div class="tlp-form-element timetracking-writing-mode-selected-date">
-                <label for="timetracking-end-date" class="tlp-label">{{ end_date_label }} <i class="fa fa-asterisk"></i></label>
+                <label for="timetracking-end-date" class="tlp-label"><translate> To </translate><i class="fa fa-asterisk"></i></label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                     <input type="text"
@@ -52,30 +52,29 @@
         </div>
         <div class="timetracking-writing-mode-actions">
             <button class="tlp-button-primary tlp-button-outline"
-                type="button"
-                v-on:click="toggleReadingMode()"
-            >{{ cancel_label }}</button>
+                    type="button"
+                    v-on:click="toggleReadingMode()"
+                    v-translate>
+                Cancel
+            </button>
             <button class="tlp-button-primary timetracking-writing-search"
-                type="button"
-                v-on:click="changeDates"
-            >{{ search_label }}</button>
+                    type="button"
+                    v-on:click="changeDates"
+                    v-translate>
+                Search
+            </button>
         </div>
     </form>
-</template>)
-(<script>
+</template>
+<script>
 import { datePicker } from "tlp";
-import { gettext_provider } from "../gettext-provider.js";
 import { mapState, mapMutations, mapActions } from "vuex";
 
 export default {
     name: "WidgetWritingMode",
 
     computed: {
-        ...mapState(["start_date", "end_date"]),
-        start_date_label: () => gettext_provider.gettext("From"),
-        end_date_label: () => gettext_provider.gettext("To"),
-        cancel_label: () => gettext_provider.gettext("Cancel"),
-        search_label: () => gettext_provider.gettext("Search")
+        ...mapState(["start_date", "end_date"])
     },
     methods: {
         ...mapMutations(["toggleReadingMode"]),
@@ -88,4 +87,4 @@ export default {
         [this.$refs.start_date, this.$refs.end_date].forEach(element => datePicker(element));
     }
 };
-</script>)
+</script>
