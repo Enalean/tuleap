@@ -4,6 +4,16 @@ CREATE TABLE plugin_create_test_env_bot (
   UNIQUE bot_id_idx(bot_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_create_test_env_activity;
+CREATE TABLE plugin_create_test_env_activity (
+  user_id INT(11) UNSIGNED NOT NULL,
+  project_id INT(11) UNSIGNED NOT NULL,
+  service VARCHAR(64) DEFAULT '',
+  action  TEXT,
+  time    INT(11) UNSIGNED NOT NULL,
+  INDEX idx_time(time)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_callmeback_email;
 CREATE TABLE plugin_callmeback_email (
   email_to varchar(255) NOT NULL,

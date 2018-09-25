@@ -26,7 +26,7 @@ class User_LoginManagerTest extends TuleapTestCase {
     public function setUp()
     {
         parent::setUp();
-        $this->event_manager     = mock('EventManager');
+        $this->event_manager     = Mockery::mock(EventManager::class);
         $this->user_manager      = mock('UserManager');
         $this->password_verifier = mock(\Tuleap\user\PasswordVerifier::class);
         $this->login_manager     = new User_LoginManager(
@@ -45,22 +45,25 @@ class User_LoginManagerTest extends TuleapTestCase {
         );
         stub($this->password_verifier)->verifyPassword()->returns(true);
 
-        expect($this->event_manager)->processEvent()->count(2);
-        expect($this->event_manager)->processEvent(
-            Event::SESSION_BEFORE_LOGIN,
-            array(
+        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_BEFORE_LOGIN,
+            [
                 'loginname' => 'john',
                 'passwd'  => 'password',
                 'auth_success' => false,
                 'auth_user_id' => null,
                 'auth_user_status' => null
-            )
-        )->at(0);
+            ]
+        )->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_AFTER_LOGIN, Mockery::any())->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($hook) {
+            return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
+        }))->once();
 
         $this->login_manager->authenticate('john', 'password');
     }
 
     public function itUsesDbAuthIfPluginDoesntAnswer() {
+        $this->event_manager->shouldReceive('processEvent')->times(3);
         stub($this->password_verifier)->verifyPassword()->returns(true);
         stub($this->user_manager)->getUserByUserName()->returns(
             aUser()->withPassword('password')->withStatus(PFUser::STATUS_ACTIVE)->build()
@@ -71,18 +74,21 @@ class User_LoginManagerTest extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionWhenUserIsNotFound() {
+        $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException('User_InvalidPasswordException');
         stub($this->user_manager)->getUserByUserName()->returns(null);
         $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWhenPasswordIsWrong() {
+        $this->event_manager->shouldReceive('processEvent')->once();
         $this->expectException('User_InvalidPasswordWithUserException');
         stub($this->user_manager)->getUserByUserName()->returns(aUser()->withPassword('pa')->build());
         $this->login_manager->authenticate('john', 'password');
     }
 
     public function itThrowsAnExceptionWithUserWhenPasswordIsWrong() {
+        $this->event_manager->shouldReceive('processEvent')->once();
         $exception_catched = false;
         $user = aUser()->withPassword('pa')->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);
@@ -101,19 +107,23 @@ class User_LoginManagerTest extends TuleapTestCase {
 
         stub($this->password_verifier)->verifyPassword()->returns(true);
 
-        expect($this->event_manager)->processEvent()->count(2);
-        expect($this->event_manager)->processEvent(
+        $this->event_manager->shouldReceive('processEvent')->with(Event::SESSION_BEFORE_LOGIN, Mockery::any())->once();
+        $this->event_manager->shouldReceive('processEvent')->with(
             Event::SESSION_AFTER_LOGIN,
-            array(
+            [
                 'user' => $user,
-                'allow_codendi_login'  => true,
-            )
-        )->at(1);
+                'allow_codendi_login'  => true
+            ]
+            )->once();
+        $this->event_manager->shouldReceive('processEvent')->with(Mockery::on(function ($hook) {
+            return $hook instanceof \Tuleap\User\UserAuthenticationSucceeded;
+        }))->once();
 
         $this->login_manager->authenticate('john', 'password');
     }
 
     public function itReturnsTheUserOnSuccess() {
+        $this->event_manager->shouldReceive('processEvent')->times(3);
         stub($this->password_verifier)->verifyPassword()->returns(true);
         $user = aUser()->withPassword('password')->withStatus(PFUser::STATUS_ACTIVE)->build();
         stub($this->user_manager)->getUserByUserName()->returns($user);

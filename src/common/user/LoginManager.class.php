@@ -107,6 +107,8 @@ class User_LoginManager
             throw new User_InvalidPasswordWithUserException($user);
         }
 
+        $this->event_manager->processEvent(new \Tuleap\User\UserAuthenticationSucceeded($user));
+
         return $user;
     }
 

@@ -16,17 +16,34 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\CreateTestEnv\Plugin;
+namespace Tuleap\User;
 
-class PluginInfo extends \PluginFileInfo
+use PFUser;
+use Tuleap\Event\Dispatchable;
+
+class UserAuthenticationSucceeded implements Dispatchable
 {
+    const NAME = 'userAuthenticationSucceeded';
 
-    public function __construct(\Plugin $plugin)
+    /**
+     * @var PFUser
+     */
+    private $user;
+
+    public function __construct(PFUser $user)
     {
-        parent::__construct($plugin, 'config');
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+        $this->user = $user;
+    }
+
+    /**
+     * @return PFUser
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }
