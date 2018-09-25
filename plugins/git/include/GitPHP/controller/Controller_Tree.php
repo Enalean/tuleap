@@ -21,6 +21,8 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use GitPHP\Commit\TreePresenter;
+
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
 
@@ -50,6 +52,9 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/tree.tpl';
+        }
         return 'tree.tpl';
     }
 
@@ -148,6 +153,10 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         }
         if (isset($this->params['file'])) {
             $tree->SetPath($this->params['file']);
+        }
+
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $this->tpl->assign('tree_presenter', new TreePresenter($tree));
         }
         $this->tpl->assign('tree', $tree);
     }
