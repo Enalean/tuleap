@@ -10,6 +10,8 @@
                 data-committer-epoch="{{ committer_epoch }}"
                 data-repository-id="{{ repository_id }}"
                 data-repository-url="{{ repository_url }}"
+                data-is-tag="{{# is_tag }}1{{/is_tag}}"
+                data-current-ref-name="{{^ is_undefined }}{{ head_name }}{{/ is_undefined }}"
             >
                 {{# is_undefined }}<em>{{/ is_undefined }}
                     {{ head_name }}

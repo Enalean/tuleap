@@ -29,6 +29,8 @@ class FilesHeaderPresenter
     /** @var string */
     public $head_name;
     /** @var bool */
+    public $is_tag;
+    /** @var bool */
     public $is_undefined = false;
     /** @var int */
     public $committer_epoch;
@@ -37,8 +39,14 @@ class FilesHeaderPresenter
     /** @var string */
     public $repository_url;
 
-    public function __construct(GitRepository $repository, $repository_url, $can_display_selector, $head_name, $committer_epoch)
-    {
+    public function __construct(
+        GitRepository $repository,
+        $repository_url,
+        $can_display_selector,
+        $head_name,
+        $is_tag,
+        $committer_epoch
+    ) {
         $this->repository_id        = $repository->getId();
         $this->repository_url       = $repository_url;
         $this->can_display_selector = $can_display_selector;
@@ -49,5 +57,6 @@ class FilesHeaderPresenter
             $this->is_undefined = true;
         }
         $this->committer_epoch = $committer_epoch;
+        $this->is_tag          = $is_tag;
     }
 }

@@ -34,6 +34,8 @@ export function init(mount_point, button) {
 
     const repository_id = Number(button.dataset.repositoryId);
     const repository_url = button.dataset.repositoryUrl;
+    const is_tag = Boolean(button.dataset.isTag);
+    const current_ref_name = button.dataset.currentRefName;
 
     const RootComponent = Vue.extend(App);
 
@@ -41,7 +43,9 @@ export function init(mount_point, button) {
         propsData: {
             button,
             repository_id,
-            repository_url
+            repository_url,
+            is_tag,
+            current_ref_name
         }
     }).$mount(mount_point);
 }
