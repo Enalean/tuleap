@@ -18,7 +18,7 @@
  */
 
 import Gettext from "node-gettext";
-import french_translations from "./po/fr.po";
+import french_translations from "../po/fr.po";
 
 export default function initCopyButton() {
     const copy_button = document.getElementById("git-repository-copy-url");

@@ -8,6 +8,8 @@
                 title="{{# dgettext }}tuleap-git | Select a branch or tag{{/ dgettext }}"
                 data-is-undefined="{{# is_undefined }}1{{/ is_undefined }}"
                 data-committer-epoch="{{ committer_epoch }}"
+                data-repository-id="{{ repository_id }}"
+                data-repository-url="{{ repository_url }}"
             >
                 {{# is_undefined }}<em>{{/ is_undefined }}
                     {{ head_name }}

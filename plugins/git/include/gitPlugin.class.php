@@ -2536,7 +2536,10 @@ class GitPlugin extends Plugin
                     $this->getGitPhpAccessLogger(),
                     $this->getThemeManager(),
                     $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES),
-                    new FilesHeaderPresenterBuilder(new CommitForCurrentTreeRetriever())
+                    new FilesHeaderPresenterBuilder(
+                        new CommitForCurrentTreeRetriever(),
+                        $this->getGitRepositoryUrlManager()
+                    )
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{path:.*}', function () {

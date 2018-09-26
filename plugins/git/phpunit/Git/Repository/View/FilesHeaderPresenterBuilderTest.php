@@ -21,6 +21,7 @@
 namespace Tuleap\Git\Repository\View;
 
 use ForgeConfig;
+use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
 use Mockery;
@@ -54,7 +55,12 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request          = Mockery::mock(HTTPRequest::class);
         $this->repository       = Mockery::mock(GitRepository::class);
         $this->commit_retriever = Mockery::mock(CommitForCurrentTreeRetriever::class);
-        $this->builder          = new FilesHeaderPresenterBuilder($this->commit_retriever);
+
+        $this->repository->allows()->getId()->andReturns(123);
+
+        $url_manager = Mockery::spy(Git_GitRepositoryUrlManager::class);
+
+        $this->builder = new FilesHeaderPresenterBuilder($this->commit_retriever, $url_manager);
     }
 
     protected function tearDown()

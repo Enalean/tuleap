@@ -57,7 +57,7 @@
             "po": "www/scripts/permissions-per-group/po"
         },
         "repository": {
-            "src": "www/scripts/repository",
+            "src": "www/scripts/repository/src",
             "po": "www/scripts/repository/po"
         }
     },
@@ -65,6 +65,10 @@
         "git-repositories": {
             "scripts": "www/scripts/repositories/src",
             "po": "www/scripts/repositories/po"
+        },
+        "branch-tag-selector": {
+            "scripts": "www/scripts/repository/branch-tag-selector/src",
+            "po": "www/scripts/repository/branch-tag-selector/po"
         }
     },
     "components": [

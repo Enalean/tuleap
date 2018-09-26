@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
+msgid "An error occurred while loading branches"
+msgstr ""
+
+msgid "An error occurred while loading tags"
+msgstr ""
+
+msgid "Branches"
+msgstr ""
+
+msgid "Tags"
+msgstr ""
+
+msgid "There isn't any branches defined yet"
+msgstr ""
+
+msgid "There isn't any tags defined yet"
+msgstr ""
