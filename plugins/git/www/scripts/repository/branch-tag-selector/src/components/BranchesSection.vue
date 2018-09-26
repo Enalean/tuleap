@@ -24,7 +24,11 @@
            v-bind:key="branch.commit.id"
            v-bind:href="repository_url + '?a=tree&hb=' + branch.name"
            class="tlp-dropdown-menu-item"
-           role="menuitem">{{ branch.name }}</a>
+           role="menuitem"
+        >
+            <i class="fa fa-check fa-fw tlp-dropdown-menu-item-icon" v-if="! is_tag && branch.name === current_ref_name"></i>
+            {{ branch.name }}
+        </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_branches">
             <div class="tlp-alert-danger" translate>
                 An error occurred while loading branches
@@ -46,7 +50,9 @@ export default {
     props: {
         repository_id: Number,
         repository_url: String,
-        is_displaying_branches: Boolean
+        is_displaying_branches: Boolean,
+        is_tag: Boolean,
+        current_ref_name: String
     },
     data() {
         return {

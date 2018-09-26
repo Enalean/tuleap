@@ -37,11 +37,15 @@
                 v-bind:repository_id="repository_id"
                 v-bind:repository_url="repository_url"
                 v-bind:is_displaying_branches="is_displaying_branches"
+                v-bind:is_tag="is_tag"
+                v-bind:current_ref_name="current_ref_name"
         ></branches-section>
         <tags-section
                 v-bind:repository_id="repository_id"
                 v-bind:repository_url="repository_url"
                 v-bind:is_displaying_branches="is_displaying_branches"
+                v-bind:is_tag="is_tag"
+                v-bind:current_ref_name="current_ref_name"
         ></tags-section>
     </div>
 </template>
@@ -59,7 +63,9 @@ export default {
     props: {
         button: HTMLButtonElement,
         repository_id: Number,
-        repository_url: String
+        repository_url: String,
+        is_tag: Boolean,
+        current_ref_name: String
     },
     data() {
         return {

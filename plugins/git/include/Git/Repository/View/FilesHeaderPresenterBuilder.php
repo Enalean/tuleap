@@ -62,6 +62,7 @@ class FilesHeaderPresenterBuilder
                 $repository_url,
                 false,
                 '',
+                false,
                 ''
             );
         }
@@ -73,12 +74,13 @@ class FilesHeaderPresenterBuilder
                 $repository_url,
                 false,
                 '',
+                false,
                 ''
             );
         }
 
         $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
-        $head_name = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : '';
+        list($head_name, $is_tag) = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : ['', false];
         $committer_epoch = $commit ? $commit->GetCommitterEpoch() : '';
 
         return new FilesHeaderPresenter(
@@ -86,6 +88,7 @@ class FilesHeaderPresenterBuilder
             $repository_url,
             true,
             $head_name,
+            $is_tag,
             $committer_epoch
         );
     }
@@ -94,27 +97,78 @@ class FilesHeaderPresenterBuilder
      * @param HTTPRequest $request
      * @param Commit $commit
      *
-     * @return string
+     * @return array [string, bool]
      */
     private function getHeadNameForCurrentCommit(HTTPRequest $request, Commit $commit)
     {
         /** @var Ref[] $refs */
-        $refs = array_merge($commit->GetHeads(), $commit->GetTags());
-        if (empty($refs)) {
-            return $commit->GetHash();
+        if (empty($commit->GetHeads()) && empty($commit->GetTags())) {
+            return [$commit->GetHash(), false];
         }
 
+        $matching_ref = $this->searchRequestedRef($request, $commit);
+        if ($matching_ref) {
+            return $matching_ref;
+        }
+
+        if (! empty($commit->GetHeads())) {
+            return $this->firstBranch($commit);
+        }
+
+        return $this->firstTag($commit);
+    }
+
+    /**
+     * @param Ref[] $refs
+     *
+     * @return string[]
+     */
+    private function flattenRefsWithName(array $refs)
+    {
         $refs_names = array_map(
             function (Ref $ref) {
                 return $ref->GetName();
             },
             $refs
         );
+        return $refs_names;
+    }
+
+    /**
+     * @param Commit $commit
+     * @return array
+     */
+    private function firstBranch(Commit $commit)
+    {
+        return [$commit->GetHeads()[0]->GetName(), false];
+    }
+
+    /**
+     * @param Commit $commit
+     * @return array
+     */
+    private function firstTag(Commit $commit)
+    {
+        return [$commit->GetTags()[0]->GetName(), true];
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @param Commit $commit
+     * @return array|null
+     */
+    private function searchRequestedRef(HTTPRequest $request, Commit $commit)
+    {
         $requested_hashbase = preg_replace('%^refs/(?:tags|heads)/%', '', $request->get('hb'));
-        if (array_search($requested_hashbase, $refs_names) !== false) {
-            return $requested_hashbase;
+
+        $matching_ref = null;
+        if (array_search($requested_hashbase, $this->flattenRefsWithName($commit->GetHeads())) !== false) {
+            $matching_ref = [$requested_hashbase, false];
+        }
+        if (array_search($requested_hashbase, $this->flattenRefsWithName($commit->GetTags())) !== false) {
+            $matching_ref = [$requested_hashbase, true];
         }
 
-        return $refs_names[0];
+        return $matching_ref;
     }
 }

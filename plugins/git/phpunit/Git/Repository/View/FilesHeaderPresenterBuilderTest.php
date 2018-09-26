@@ -93,6 +93,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('dev', $presenter->head_name);
+        $this->assertFalse($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -121,6 +122,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12', $presenter->head_name);
+        $this->assertTrue($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -151,6 +153,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12-1', $presenter->head_name);
+        $this->assertTrue($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -181,6 +184,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('v12-1', $presenter->head_name);
+        $this->assertTrue($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -211,6 +215,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('feature', $presenter->head_name);
+        $this->assertFalse($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -235,6 +240,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($presenter->can_display_selector);
         $this->assertEquals('a1b2c3d4e5f6', $presenter->head_name);
+        $this->assertFalse($presenter->is_tag);
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
@@ -253,6 +259,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($presenter->can_display_selector);
         $this->assertTrue($presenter->is_undefined);
         $this->assertEquals('Undefined', $presenter->head_name);
+        $this->assertFalse($presenter->is_tag);
         $this->assertEquals('', $presenter->committer_epoch);
     }
 
