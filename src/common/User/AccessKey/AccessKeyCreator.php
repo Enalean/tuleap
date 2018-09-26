@@ -26,18 +26,37 @@ class AccessKeyCreator
      * @var LastAccessKeyIdentifierStore
      */
     private $last_access_key_identifier_store;
+    /**
+     * @var AccessKeyDAO
+     */
+    private $dao;
+    /**
+     * @var AccessKeyVerificationStringHasher
+     */
+    private $hasher;
 
-    public function __construct(LastAccessKeyIdentifierStore $last_access_key_identifier_store)
-    {
+    public function __construct(
+        LastAccessKeyIdentifierStore $last_access_key_identifier_store,
+        AccessKeyDAO $dao,
+        AccessKeyVerificationStringHasher $hasher
+    ) {
         $this->last_access_key_identifier_store = $last_access_key_identifier_store;
+        $this->dao                              = $dao;
+        $this->hasher                           = $hasher;
     }
 
-    public function create()
+    public function create(\PFUser $user, $description)
     {
         $verification_string = AccessKeyVerificationString::generateNewAccessKeyVerificationString();
+        $current_time        = new \DateTimeImmutable();
 
-        $key_id_for_demonstration_purpose = 1;
-        $access_key                       = new AccessKey($key_id_for_demonstration_purpose, $verification_string);
+        $key_id     = $this->dao->create(
+            $user->getId(),
+            $this->hasher->computeHash($verification_string),
+            $current_time->getTimestamp(),
+            $description
+        );
+        $access_key = new AccessKey($key_id, $verification_string);
 
         $this->last_access_key_identifier_store->storeLastGeneratedAccessKeyIdentifier($access_key);
     }
