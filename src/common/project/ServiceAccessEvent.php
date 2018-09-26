@@ -16,17 +16,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\CreateTestEnv\Plugin;
+namespace Tuleap\Project;
 
-class PluginInfo extends \PluginFileInfo
+use Tuleap\Event\Dispatchable;
+
+class ServiceAccessEvent implements Dispatchable
 {
+    const NAME = 'serviceAccessEvent';
 
-    public function __construct(\Plugin $plugin)
+    /**
+     * @var string
+     */
+    private $service_name;
+
+    /**
+     * @var string
+     */
+    public function __construct($service_name)
     {
-        parent::__construct($plugin, 'config');
+        $this->service_name = $service_name;
+    }
 
-        $this->setPluginDescriptor(new PluginDescriptor());
+    /**
+     * @return string
+     */
+    public function getServiceName()
+    {
+        return $this->service_name;
     }
 }

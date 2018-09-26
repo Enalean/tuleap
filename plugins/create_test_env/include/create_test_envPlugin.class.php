@@ -20,6 +20,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Tuleap\CreateTestEnv\ActivityLogger\ActivityLoggerDao;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\BotMattermost\Bot\BotDao;
 use Tuleap\BotMattermost\Bot\BotFactory;
@@ -33,10 +34,12 @@ use Tuleap\CreateTestEnv\NotificationBotSaveController;
 use Tuleap\CreateTestEnv\REST\ResourcesInjector as CreateTestEnvResourcesInjector;
 use Tuleap\CallMeBack\REST\ResourcesInjector as CallMeBackResourcesInjector;
 use Tuleap\CreateTestEnv\Plugin\PluginInfo;
+use Tuleap\Project\ServiceAccessEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CreateTestEnv\Notifier;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
+use Tuleap\User\UserAuthenticationSucceeded;
 use Tuleap\User\UserConnectionUpdateEvent;
 use Tuleap\Admin\AdminPageRenderer;
 
@@ -76,8 +79,14 @@ class create_test_envPlugin extends Plugin
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook('site_admin_option_hook');
 
+        $this->addHook(UserAuthenticationSucceeded::NAME);
         $this->addHook(UserConnectionUpdateEvent::NAME);
         $this->addHook(Event::SERVICE_IS_USED);
+        $this->addHook(ArtifactCreated::NAME);
+        $this->addHook(TRACKER_EVENT_ARTIFACT_POST_UPDATE);
+        $this->addHook(ServiceAccessEvent::NAME);
+
+        $this->addHook('codendi_daily_start');
 
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
@@ -141,11 +150,51 @@ class create_test_envPlugin extends Plugin
         ];
     }
 
+    public function trackerArtifactCreated(ArtifactCreated $event)
+    {
+        $request      = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
+        $artifact     = $event->getArtifact();
+        $project      = $artifact->getTracker()->getProject();
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Created artifact #".$artifact->getId());
+    }
+
+    // @codingStandardsIgnoreLine
+    public function tracker_event_artifact_post_update(array $params)
+    {
+        $request      = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
+        $artifact     = $params['artifact'];
+        $project      = $artifact->getTracker()->getProject();
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'tracker', "Updated artifact #".$artifact->getId());
+    }
+
+    public function userAuthenticationSucceeded(UserAuthenticationSucceeded $event)
+    {
+        $platform_url = HTTPRequest::instance()->getServerUrl();
+        $current_user = $event->getUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
+        $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) logged in $platform_url. #connection #{$current_user->getUnixName()}");
+        (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Login');
+    }
+
     public function userConnectionUpdateEvent(UserConnectionUpdateEvent $event)
     {
         $platform_url = HTTPRequest::instance()->getServerUrl();
         $current_user = $event->getUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
         $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) is using $platform_url. #connection #{$current_user->getUnixName()}");
+        (new ActivityLoggerDao())->insert($current_user->getId(), 0, 'platform', 'Connexion');
     }
 
     // @codingStandardsIgnoreLine
@@ -153,15 +202,78 @@ class create_test_envPlugin extends Plugin
     {
         $request = HTTPRequest::instance();
         $current_user = $request->getCurrentUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
         $platform_url = $request->getServerUrl();
         $project = ProjectManager::instance()->getProject($params['group_id']);
         $verb = $params['is_used'] ? 'activated' : 'desactivated';
         $this->notify("[{$current_user->getRealName()}](mailto:{$current_user->getEmail()}) $verb service {$params['shortname']} in [{$project->getUnconvertedPublicName()}]({$platform_url}/project/admin/servicebar.php?group_id={$project->getID()}). #project-admin #{$current_user->getUnixName()}");
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project->getID(), 'project_admin', "$verb service {$params['shortname']}");
+    }
+
+    public function serviceAccessEvent(ServiceAccessEvent $event)
+    {
+        $request = HTTPRequest::instance();
+        $current_user = $request->getCurrentUser();
+        if ($current_user->isSuperUser()) {
+            return;
+        }
+        $project = $request->getProject();
+        $project_id = 0;
+        if ($project && ! $project->isError()) {
+            $project_id = $project->getID();
+        }
+        (new ActivityLoggerDao())->insert($current_user->getId(), $project_id, $event->getServiceName(), "Access");
     }
 
     private function notify($text)
     {
         (new Notifier(new NotificationBotDao()))->notify($text);
+    }
+
+    // @codingStandardsIgnoreLine
+    public function codendi_daily_start()
+    {
+        $emails = $this->getDailyActivityNotificationEmails();
+        if (count($emails) === 0) {
+            return;
+        }
+        $dao = new ActivityLoggerDao();
+        $now = new DateTimeImmutable();
+        $yesterday = $now->sub(new DateInterval('P1DT30M'));
+        $csv_handle = fopen('php://temp', 'w+');
+        fputcsv($csv_handle, ['user_id', 'login', 'email', 'service', 'action', 'time']);
+        foreach ($dao->fetchActivityBetweenDates($yesterday->getTimestamp(), $now->getTimestamp()) as $row) {
+            fputcsv($csv_handle, $row);
+        }
+        rewind($csv_handle);
+
+        $zip_file_name = tempnam(ForgeConfig::get('codendi_cache_dir'), 'create_test_env_daily_zip_');
+        try {
+            $date_tag = $now->format('Y-m-d');
+            $zip = new ZipArchive();
+            $zip->open($zip_file_name, ZipArchive::CREATE);
+            $zip->addFromString("csv-export-$date_tag.csv", stream_get_contents($csv_handle));
+            $zip->close();
+            fclose($csv_handle);
+
+            $mail = new Codendi_Mail();
+            $mail->setTo(implode(',', $emails));
+            $mail->setSubject("[create_test_env] Activity snapshot at ".$now->format('c'));
+            $mail->addAttachment(file_get_contents($zip_file_name), 'application/zip', "csv-export-$date_tag.zip");
+            $mail->send();
+        } finally {
+            unlink($zip_file_name);
+            $one_year_ago = $now->sub(new DateInterval('P1Y'));
+            $dao->purgeOldData($one_year_ago->getTimestamp());
+        }
+    }
+
+    private function getDailyActivityNotificationEmails()
+    {
+        $str_value = $this->getPluginInfo()->getPropertyValueForName('create_test_env_daily_snapshot_email');
+        return array_filter(array_map('trim', explode(',', $str_value)));
     }
 
     public function cssfile($params)

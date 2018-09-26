@@ -28,5 +28,6 @@ class ServiceInstrumentation
     public static function increment($service)
     {
         \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, 'Total number of project service access', ['service' => $service]);
+        \EventManager::instance()->processEvent(new ServiceAccessEvent($service));
     }
 }
