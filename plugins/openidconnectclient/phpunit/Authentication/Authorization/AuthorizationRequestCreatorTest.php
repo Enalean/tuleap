@@ -37,10 +37,6 @@ class AuthorizationRequestCreatorTest extends TestCase
 
     protected function setUp()
     {
-        if (PHP_VERSION_ID > 70000) {
-            $this->markTestSkipped('Not yet compatible with PHP 7');
-        }
-
         $state = \Mockery::mock(State::class);
         $state->shouldReceive('getSignedState')->andReturns(self::SIGNED_STATE);
         $state->shouldReceive('getNonce')->andReturns(self::NONCE_FOR_TEST);
