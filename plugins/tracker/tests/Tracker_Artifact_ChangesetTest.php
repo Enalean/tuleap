@@ -40,7 +40,6 @@ Mock::generatePartial(
 Mock::generate('Tracker_Artifact_Changeset');
 Mock::generate('Tracker_FormElement_Field_Date');
 Mock::generate('Tracker_Artifact_Changeset_ValueDao');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
@@ -49,10 +48,8 @@ Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker');
 Mock::generate('Tracker_Artifact_Changeset_Comment');
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generate('UserHelper');

@@ -31,7 +31,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\user\PasswordVerifier;
+use Tuleap\User\PasswordVerifier;
 use UserDao;
 
 class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWithProject

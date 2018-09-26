@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletorBuilder;
-use Tuleap\user\PasswordVerifier;
+use Tuleap\User\PasswordVerifier;
 
 require_once 'pre.php';
 

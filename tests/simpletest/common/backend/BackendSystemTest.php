@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
  *
@@ -23,17 +23,10 @@
  */
 
 
-require_once('common/backend/BackendSystem.class.php');
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
-require_once(dirname(__FILE__).'/../user/UserTestBuilder.php');
-require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
-require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once('common/frs/FRSFileFactory.class.php');
 Mock::generate('FRSFileFactory');
 Mock::generate('WikiAttachment');
 Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManager',

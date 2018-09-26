@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/user/UserManager.class.php');
-require_once('common/dao/ArtifactFieldDao.class.php');
-require_once('common/dao/CodendiDataAccess.class.php');
-require_once('common/tracker/ArtifactReportField.class.php');
-
 //
 // Sort functions - Must be outside the classes
 //

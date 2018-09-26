@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,11 +22,6 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningDao.class.php';
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once('common/user/User.class.php');
 
 Mock::generate('PlanningDao');
 Mock::generate('TrackerFactory');

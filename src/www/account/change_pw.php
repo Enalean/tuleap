@@ -35,7 +35,7 @@ function register_valid($user_id, CSRFSynchronizerToken $csrf, $old_password_req
 	}
 
     $password_handler  = PasswordHandlerFactory::getPasswordHandler();
-    $password_verifier = new \Tuleap\user\PasswordVerifier($password_handler);
+    $password_verifier = new \Tuleap\User\PasswordVerifier($password_handler);
     if ($old_password_required && ! $password_verifier->verifyPassword($user, $request->get('form_oldpw'))) {
 		$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_change_pw', 'incorrect_old_password'));
 		return 0;

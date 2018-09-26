@@ -25,13 +25,10 @@ Mock::generatePartial(
     array('getUserHelper', 'getUserManager', 'getId')
 );
 
-require_once('common/user/UserHelper.class.php');
 Mock::generate('UserHelper');
 
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_List_Bind_UsersValueTest extends TuleapTestCase {

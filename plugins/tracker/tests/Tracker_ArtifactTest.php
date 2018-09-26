@@ -19,13 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('bootstrap.php');
-require_once('common/dao/include/DataAccessResult.class.php');
-require_once('common/user/User.class.php');
-require_once('common/include/Response.class.php');
-require_once('common/language/BaseLanguage.class.php');
-require_once('common/reference/ReferenceManager.class.php');
-require_once('common/user/UserManager.class.php');
+require_once __DIR__ . '/bootstrap.php';
 
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends Workflow {
     function before(&$fields_data, $submitter, $artifact) {

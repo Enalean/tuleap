@@ -19,11 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/widget/Widget.class.php';
-require_once 'common/user/UserManager.class.php';
-require_once 'common/include/Toggler.class.php';
-
-
 /**
  * Widget_MyArtifacts
  *

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\user\AccessKey;
+namespace Tuleap\User\AccessKey;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
@@ -26,7 +26,7 @@ use Tuleap\Cryptography\ConcealedString;
 class AccessKeyVerificationStringTest extends TestCase
 {
     /**
-     * @expectedException \Tuleap\user\AccessKey\IncorrectSizeVerificationStringException
+     * @expectedException \Tuleap\User\AccessKey\IncorrectSizeVerificationStringException
      */
     public function testIncorrectlySizedVerificationStringAreRejected()
     {

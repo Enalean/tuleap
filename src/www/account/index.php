@@ -19,7 +19,7 @@
  */
 
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\user\AccessKey\LastAccessKeyIdentifierStore;
+use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 
 require_once 'pre.php';
 

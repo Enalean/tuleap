@@ -19,7 +19,7 @@
 
 namespace Tuleap\REST;
 
-use Tuleap\user\PasswordVerifier;
+use Tuleap\User\PasswordVerifier;
 use User_LoginManager;
 use User_PasswordExpirationChecker;
 use EventManager;

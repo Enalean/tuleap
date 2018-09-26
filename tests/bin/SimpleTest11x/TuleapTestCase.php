@@ -20,7 +20,7 @@
  * @codingStandardsIgnoreFile
  */
 
-require_once __DIR__.'/../../simpletest/common/user/UserTestBuilder.php';
+require_once __DIR__.'/../../simpletest/common/User/UserTestBuilder.php';
 require_once __DIR__.'/../../simpletest/common/include/builders/aRequest.php';
 require_once __DIR__.'/../../simpletest/common/project/aMockProject.php';
 require_once __DIR__.'/../../simpletest/common/project/aMockUGroup.php';

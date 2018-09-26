@@ -23,24 +23,18 @@
  *
  */
 
-require_once('common/valid/Rule.class.php');
 Mock::generatePartial('Rule_UserName', 'Rule_UserNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend', '_getSystemEventManager'));
 
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 Mock::generate('PFUser');
 
-require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('common/backend/Backend.class.php');
 Mock::generate('Backend');
 
-require_once('common/system_event/SystemEventManager.class.php');
 Mock::generate('SystemEventManager');
 
 class Rule_UserNameIntegrationTest extends TuleapTestCase {

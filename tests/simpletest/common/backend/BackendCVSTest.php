@@ -1,7 +1,7 @@
 <?php
 /*
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
- * Copyright (c) Enalean 2011 - 2017. All rights reserved
+ * Copyright (c) Enalean 2011 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,16 +21,10 @@
  */
 
 
-require_once('common/backend/BackendCVS.class.php');
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
-require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
-require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 
 

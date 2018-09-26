@@ -2,14 +2,7 @@
 require_once('database.php');
 require_once('www/include/utils.php');
 
-require_once('common/tracker/ArtifactImport.class.php');
-//Mock::generatePartial('ArtifactImport','ArtifactImportTestVersion',array());
-
-require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-
-//require_once('common/tracker/ArtifactField.class.php');
-//Mock::generatePartial('ArtifactField','ArtifactFieldTestVersion',array('getLabel','getName','isEmptyOk','getDisplayType','isDateField'));
 
 //substitute ArtifactField
 class ArtifactImportTest_ArtifactField {
@@ -28,10 +21,8 @@ Mock::generate('ArtifactImportTest_ArtifactField','ArtifactFieldImportVersion');
 Mock::generatePartial('ArtifactImport','ArtifactImportFollowUpCommentsTestVersion', array());
 Mock::generatePartial('ArtifactImport', 'ArtifactImportTestVersion', array('getUserManager', 'getUserByUserName'));
 
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
 
-require_once('common/tracker/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');
 /*class ArtifactImportTest_ArtifactFieldFactory {
   function getFieldFromName() {}
@@ -40,12 +31,10 @@ Mock::generate('ArtifactFieldFactory');
 Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
 */
 
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
 
 
-require_once('common/tracker/ArtifactType.class.php');
 Mock::generatePartial('ArtifactType','ArtifactTypeTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
 /*class ArtifactType {
   function getName() {}

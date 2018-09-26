@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) The Codendi Team, Xerox, 2009. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -19,21 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/backend/BackendSVN.class.php');
-require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once('common/user/User.class.php');
 Mock::generate('PFUser');
-require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
-require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once('common/dao/UGroupDao.class.php');
 Mock::generate('UGroupDao');
 Mock::generate('ProjectUGroup');
-require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
-require_once('common/svn/SVNAccessFile.class.php');
 Mock::generate('SVNAccessFile');
 Mock::generate('EventManager');
 

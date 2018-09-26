@@ -1,8 +1,6 @@
 <?php
 
 require_once('session.php');
-require_once('common/include/CookieManager.class.php');
-require_once('common/user/User_SOAPServer.class.php');
 define('invalid_session_fault', '3001');
 define('login_fault', '3002');
 
