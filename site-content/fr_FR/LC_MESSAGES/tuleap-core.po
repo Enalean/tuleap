@@ -541,9 +541,10 @@ msgstr "Liens"
 msgid "Lists"
 msgstr "Listes"
 
-msgid "Make sure you copy new access key, you won't be able to see it again!"
+msgid ""
+"Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
-"Assurez-vous de copier la nouvelle clé d'accès, vous ne pourrez plus la voir "
+"Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la voir "
 "de nouveau !"
 
 msgid "Maximum number of projects waiting for validation (-1 means no limits)"

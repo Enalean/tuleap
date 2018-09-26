@@ -897,6 +897,16 @@ CREATE TABLE user_lost_password (
 );
 
 
+CREATE TABLE user_access_key (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  verifier VARCHAR(255) NOT NULL,
+  creation_date INT(11) UNSIGNED NOT NULL,
+  description TEXT,
+  last_usage INT(11) UNSIGNED DEFAULT NULL,
+  last_ip VARCHAR(45) DEFAULT NULL
+);
+
 #
 # Table structure for table 'user_bookmarks'
 #

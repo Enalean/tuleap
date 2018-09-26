@@ -27,13 +27,20 @@ class AccessKeyCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testNewlyCreatedKeyIsAddedToTheLastAccesskeyIdentifierStore()
+    public function testNewlyCreatedKeyIsCreatedAndAddedToTheLastAccessKeyIdentifierStore()
     {
         $store              = \Mockery::mock(LastAccessKeyIdentifierStore::class);
-        $access_key_creator = new AccessKeyCreator($store);
+        $dao                = \Mockery::mock(AccessKeyDAO::class);
+        $hasher             = \Mockery::mock(AccessKeyVerificationStringHasher::class);
+        $access_key_creator = new AccessKeyCreator($store, $dao, $hasher);
 
+        $hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
+        $dao->shouldReceive('create')->once()->andReturns(1);
         $store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
 
-        $access_key_creator->create();
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturns(102);
+
+        $access_key_creator->create($user, 'description');
     }
 }

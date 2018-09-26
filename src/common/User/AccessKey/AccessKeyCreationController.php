@@ -41,9 +41,14 @@ class AccessKeyCreationController implements DispatchableWithRequest
             new LastAccessKeyIdentifierStore(
                 (new KeyFactory)->getEncryptionKey(),
                 $_SESSION
-            )
+            ),
+            new AccessKeyDAO(),
+            new AccessKeyVerificationStringHasher()
         );
-        $access_key_creator->create();
+
+        $description = $request->get('access-key-description') ?: '';
+
+        $access_key_creator->create($current_user, $description);
 
         $layout->redirect('/account/#account-access-keys');
     }
