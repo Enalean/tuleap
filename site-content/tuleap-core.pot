@@ -43,8 +43,8 @@ msgid "Access Logs"
 msgstr ""
 
 msgid ""
-"Access keys are not yet saved but soon you will be able to use it instead of "
-"password to access the REST API"
+"Access keys will soon be usable instead of your password to access the REST "
+"API"
 msgstr ""
 
 msgid "Accessibility"
@@ -399,6 +399,9 @@ msgstr ""
 msgid "Generate new key"
 msgstr ""
 
+msgid "Generated on"
+msgstr ""
+
 msgid "Git"
 msgstr ""
 
@@ -486,6 +489,12 @@ msgstr ""
 msgid "Labels"
 msgstr ""
 
+msgid "Last used by"
+msgstr ""
+
+msgid "Last used on"
+msgstr ""
+
 msgid "Link"
 msgstr ""
 
@@ -555,6 +564,9 @@ msgstr ""
 msgid "Nb members"
 msgstr ""
 
+msgid "Never"
+msgstr ""
+
 msgid "New email address:"
 msgstr ""
 
@@ -565,6 +577,9 @@ msgid "News"
 msgstr ""
 
 msgid "News {{ user_group_name }} can see"
+msgstr ""
+
+msgid "No API access keys"
 msgstr ""
 
 msgid "No children projects"

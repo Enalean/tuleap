@@ -64,12 +64,11 @@ msgid "Access Logs"
 msgstr "Journal des accès"
 
 msgid ""
-"Access keys are not yet saved but soon you will be able to use it instead of "
-"password to access the REST API"
+"Access keys will soon be usable instead of your password to access the REST "
+"API"
 msgstr ""
-"Les clés d'accès ne sont pour le moment pas sauvegardées mais vous pourrez "
-"prochainement les utiliser à la place de votre mot de passe pour accèder à "
-"l'API REST"
+"Les clés d'accès pourront prochainement être utilisées pour accèder à l'API "
+"REST"
 
 msgid "Accessibility"
 msgstr "Accessibilité"
@@ -440,6 +439,9 @@ msgstr "Forums"
 msgid "Generate new key"
 msgstr "Générer une nouvelle clé"
 
+msgid "Generated on"
+msgstr "Générée le"
+
 msgid "Git"
 msgstr "Git"
 
@@ -532,6 +534,12 @@ msgstr "Le label n'a pas été édité."
 msgid "Labels"
 msgstr "Labels"
 
+msgid "Last used by"
+msgstr "Utilisée pour la dernière fois par"
+
+msgid "Last used on"
+msgstr "Utilisée pour la dernière fois le"
+
 msgid "Link"
 msgstr "Lien"
 
@@ -544,8 +552,8 @@ msgstr "Listes"
 msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
-"Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la voir "
-"de nouveau !"
+"Assurez-vous de copier votre nouvelle clé d'accès, vous ne pourrez plus la "
+"voir de nouveau !"
 
 msgid "Maximum number of projects waiting for validation (-1 means no limits)"
 msgstr ""
@@ -607,6 +615,9 @@ msgstr "Barre de menu"
 msgid "Nb members"
 msgstr "Nb membres"
 
+msgid "Never"
+msgstr "Jamais"
+
 msgid "New email address:"
 msgstr "Nouvelle adresse e-mail"
 
@@ -618,6 +629,9 @@ msgstr "Annonces"
 
 msgid "News {{ user_group_name }} can see"
 msgstr "Annonces que {{ user_group_name }} peuvent voir"
+
+msgid "No API access keys"
+msgstr "Aucune clé d'accès à l'API"
 
 msgid "No children projects"
 msgstr "Aucun projet enfant"
