@@ -26,6 +26,7 @@ use GitRepository;
 use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Ref;
+use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilder
 {
@@ -37,17 +38,23 @@ class FilesHeaderPresenterBuilder
      * @var Git_GitRepositoryUrlManager
      */
     private $url_manager;
+    /**
+     * @var GitPHPProjectRetriever
+     */
+    private $gitphp_project_retriever;
 
     public function __construct(
+        GitPHPProjectRetriever $gitphp_project_retriever,
         CommitForCurrentTreeRetriever $commit_retriever,
         Git_GitRepositoryUrlManager $url_manager
     ) {
-        $this->commit_retriever = $commit_retriever;
-        $this->url_manager      = $url_manager;
+        $this->gitphp_project_retriever = $gitphp_project_retriever;
+        $this->commit_retriever         = $commit_retriever;
+        $this->url_manager              = $url_manager;
     }
 
     /**
-     * @param HTTPRequest $request
+     * @param HTTPRequest   $request
      * @param GitRepository $repository
      *
      * @return FilesHeaderPresenter
@@ -77,7 +84,14 @@ class FilesHeaderPresenterBuilder
             return $cannot_be_displayed_presenter;
         }
 
-        $commit = $this->commit_retriever->getCommitOfCurrentTree($request, $repository);
+        $gitphp_project = $this->gitphp_project_retriever->getFromRepository($repository);
+        $commit         = $this->commit_retriever->getCommitOfCurrentTree($request, $gitphp_project);
+        if (! $commit) {
+            if (empty($gitphp_project->GetRefs())) {
+                return $cannot_be_displayed_presenter;
+            }
+        }
+
         list($head_name, $is_tag) = $commit ? $this->getHeadNameForCurrentCommit($request, $commit) : ['', false];
         $committer_epoch = $commit ? $commit->GetCommitterEpoch() : '';
 
@@ -93,7 +107,7 @@ class FilesHeaderPresenterBuilder
 
     /**
      * @param HTTPRequest $request
-     * @param Commit $commit
+     * @param Commit      $commit
      *
      * @return array [string, bool]
      */
@@ -129,11 +143,13 @@ class FilesHeaderPresenterBuilder
             },
             $refs
         );
+
         return $refs_names;
     }
 
     /**
      * @param Commit $commit
+     *
      * @return array
      */
     private function firstBranch(Commit $commit)
@@ -143,6 +159,7 @@ class FilesHeaderPresenterBuilder
 
     /**
      * @param Commit $commit
+     *
      * @return array
      */
     private function firstTag(Commit $commit)
@@ -152,7 +169,8 @@ class FilesHeaderPresenterBuilder
 
     /**
      * @param HTTPRequest $request
-     * @param Commit $commit
+     * @param Commit      $commit
+     *
      * @return array|null
      */
     private function searchRequestedRef(HTTPRequest $request, Commit $commit)

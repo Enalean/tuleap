@@ -27,7 +27,9 @@ use HTTPRequest;
 use Mockery;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Head;
+use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\GitPHP\Tag;
+use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -47,20 +49,34 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
      * @var CommitForCurrentTreeRetriever
      */
     private $commit_retriever;
+    /**
+     * @var GitPHPProjectRetriever
+     */
+    private $gitphp_project_retriever;
+    /**
+     * @var Project
+     */
+    private $gitphp_project;
 
     protected function setUp()
     {
         ForgeConfig::store();
 
-        $this->request          = Mockery::mock(HTTPRequest::class);
-        $this->repository       = Mockery::mock(GitRepository::class);
-        $this->commit_retriever = Mockery::mock(CommitForCurrentTreeRetriever::class);
+        $this->request                  = Mockery::mock(HTTPRequest::class);
+        $this->repository               = Mockery::mock(GitRepository::class);
+        $this->gitphp_project           = Mockery::mock(Project::class);
+        $this->commit_retriever         = Mockery::mock(CommitForCurrentTreeRetriever::class);
+        $this->gitphp_project_retriever = Mockery::mock(GitPHPProjectRetriever::class);
 
         $this->repository->allows()->getId()->andReturns(123);
 
         $url_manager = Mockery::spy(Git_GitRepositoryUrlManager::class);
 
-        $this->builder = new FilesHeaderPresenterBuilder($this->commit_retriever, $url_manager);
+        $this->builder = new FilesHeaderPresenterBuilder(
+            $this->gitphp_project_retriever,
+            $this->commit_retriever,
+            $url_manager
+        );
     }
 
     protected function tearDown()
@@ -75,6 +91,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn(false);
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -88,7 +108,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -106,6 +126,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn(false);
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $first_tag = Mockery::mock(Tag::class);
         $first_tag->allows()->GetName()->andReturn('v12');
@@ -119,7 +143,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -137,6 +161,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn('v12-1');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -152,7 +180,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -170,6 +198,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn('refs/tags/v12-1');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -185,7 +217,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -203,6 +235,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn('refs/heads/feature');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $first_head = Mockery::mock(Head::class);
         $first_head->allows()->GetName()->andReturn('dev');
@@ -218,7 +254,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -236,6 +272,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('hb')->andReturn(false);
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
@@ -245,7 +285,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -256,16 +296,21 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
-    public function testHeadNameIsUndefinedIfNoCommitForCurrentTree()
+    public function testHeadNameIsUndefinedIfNoCommitForCurrentTreeButThereIsAnExistingRefInTheRepository()
     {
         ForgeConfig::set('git_repository_bp', '1');
         $this->request->allows()->get('a')->andReturn('tree');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+                                       ->getFromRepository()
+                                       ->with($this->repository)
+                                       ->andReturns($this->gitphp_project);
+        $this->gitphp_project->allows()->GetRefs()->andReturns([Mockery::mock(Head::class)]);
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn(null);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -277,12 +322,38 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('', $presenter->committer_epoch);
     }
 
+    public function testSelectorIsNotDisplayedIfNoCommitForCurrentTreeAndNoRefInTheRepository()
+    {
+        ForgeConfig::set('git_repository_bp', '1');
+        $this->request->allows()->get('a')->andReturn('tree');
+
+        $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+                                       ->getFromRepository()
+                                       ->with($this->repository)
+                                       ->andReturns($this->gitphp_project);
+        $this->gitphp_project->allows()->GetRefs()->andReturns([]);
+
+        $this->commit_retriever->allows()
+                               ->getCommitOfCurrentTree()
+                               ->with($this->request, $this->gitphp_project)
+                               ->andReturn(null);
+
+        $presenter = $this->builder->build($this->request, $this->repository);
+
+        $this->assertFalse($presenter->can_display_selector);
+    }
+
     public function testSelectorIsNotDisplayedIfConfigDisallowsIt()
     {
         ForgeConfig::set('git_repository_bp', '0');
         $this->request->allows()->get('a')->andReturn('tree');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
@@ -292,7 +363,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
@@ -306,6 +377,10 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->request->allows()->get('a')->andReturn('commit');
 
         $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
 
         $commit = Mockery::mock(Commit::class);
         $commit->allows()->GetHeads()->andReturn([]);
@@ -315,7 +390,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->commit_retriever->allows()
                                ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->repository)
+                               ->with($this->request, $this->gitphp_project)
                                ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
