@@ -30,7 +30,8 @@ describe("getTrackedTimes() -", () => {
     it("the REST API will be queried with ISO-8601 dates and the times returned", async () => {
         Settings.defaultZoneName = "Europe/Paris";
         const limit = 1,
-            offset = 0;
+            offset = 0,
+            user_id = 102;
 
         const times = [
             [
@@ -55,9 +56,8 @@ describe("getTrackedTimes() -", () => {
             return_json: times
         });
 
-        const result = await getTrackedTimes("2018-03-08", "2018-03-15", limit, offset);
-
-        expect(tlp.get).toHaveBeenCalledWith("/api/v1/timetracking", {
+        const result = await getTrackedTimes(user_id, "2018-03-08", "2018-03-15", limit, offset);
+        expect(tlp.get).toHaveBeenCalledWith("/api/v1/users/" + user_id + "/timetracking", {
             params: {
                 limit,
                 offset,

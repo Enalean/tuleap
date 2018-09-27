@@ -19,12 +19,15 @@
 
 namespace Tuleap\User\REST\v1;
 
+use EventManager;
 use PFUser;
+use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryRetriever;
+use Tuleap\Widget\Event\UserTimeRetriever;
 use UserManager;
 use UGroupLiteralizer;
 use PaginatedUserCollection;
@@ -45,9 +48,10 @@ use Tuleap\REST\AuthenticatedResource;
  */
 class UserResource extends AuthenticatedResource {
 
-    const MAX_LIMIT      = 50;
-    const DEFAULT_LIMIT  = 10;
-    const DEFAULT_OFFSET = 0;
+    const MAX_LIMIT       = 50;
+    const DEFAULT_LIMIT   = 10;
+    const DEFAULT_OFFSET  = 0;
+    const MAX_TIMES_BATCH = 100;
 
     /** @var UserManager */
     private $user_manager;
@@ -66,6 +70,9 @@ class UserResource extends AuthenticatedResource {
      */
     private $history_retriever;
 
+    /** @var EventManager */
+    private $event_manager;
+
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
@@ -75,6 +82,7 @@ class UserResource extends AuthenticatedResource {
         $this->ugroup_literalizer = new UGroupLiteralizer();
         $this->rest_user_manager  = RestUserManager::build();
         $this->history_retriever  = new HistoryRetriever(\EventManager::instance());
+        $this->event_manager     = EventManager::instance();
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
@@ -290,7 +298,58 @@ class UserResource extends AuthenticatedResource {
         $preference_representation->build($key, $value);
 
         return $preference_representation;
+    }
 
+    /**
+     * Get Timetracking times
+     *
+     * Get the times in all projects for the current user and a given time period
+     *
+     * <br><br>
+     * Notes on the query parameter
+     * <ol>
+     *  <li>You have to specify a start_date and an end_date</li>
+     *  <li>One day minimum between the two dates</li>
+     *  <li>end_date must be greater than start_date</li>
+     *  <li>Dates must be in ISO date format</li>
+     * </ol>
+     *
+     * Example of query:
+     * <br><br>
+     * {
+     *   "start_date": "2018-03-01T00:00:00+01",
+     *   "end_date"  : "2018-03-31T00:00:00+01"
+     * }
+     * @url GET/{id}/timetracking
+     * @access protected
+     *
+     * @param int $id user's id
+     * @param string $query JSON object of search criteria properties {@from query}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 100}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @return TimetrackingRepresentationBase[] {@type TimetrackingRepresentationBase}
+     * @throws RestException
+     */
+    protected function getUserTimes($id, $query, $limit = self::MAX_TIMES_BATCH, $offset = self::DEFAULT_OFFSET)
+    {
+        $this->checkAccess();
+
+        $this->sendAllowHeaders();
+        $user_time_retriever = new UserTimeRetriever(
+            $id,
+            $query,
+            $limit,
+            $offset
+        );
+
+        $this->event_manager->processEvent($user_time_retriever);
+
+        if ($user_time_retriever->getTimes() !== null) {
+            return $user_time_retriever->getTimes();
+        } else {
+            throw new RestException(404, 'Timetracking plugin not activated');
+        }
     }
 
     /**

@@ -33,6 +33,7 @@ export async function getTimes(context) {
     try {
         context.commit("resetErrorMessage");
         const { times, total } = await getTrackedTimes(
+            context.state.user_id,
             context.state.start_date,
             context.state.end_date,
             context.state.pagination_limit,

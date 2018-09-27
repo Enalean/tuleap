@@ -38,13 +38,11 @@ class TimetrackingTest extends TimetrackingBase
                 "end_date"   => "2018-03-10T00:00:00+01"
             ])
         );
-
-        $response = $this->getResponse(
-            $this->client->get("timetracking?query=$query"),
-            TimetrackingDataBuilder::USER_TESTER_NAME
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("users/".$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
         );
-
-        $times_by_artifact   = $response->json();
+        $times_by_artifact = $response->json();
         $current_artifact_id = key($times_by_artifact);
         $times               = $times_by_artifact[ $current_artifact_id ];
 
@@ -67,9 +65,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -98,9 +96,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -130,9 +128,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -162,9 +160,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -194,9 +192,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -228,9 +226,9 @@ class TimetrackingTest extends TimetrackingBase
         $exception_thrown = false;
 
         try {
-            $this->getResponse(
-                $this->client->get("timetracking?query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?query=$query")
             );
         } catch (ClientErrorResponseException $exception) {
             $response = $exception->getResponse();
@@ -260,9 +258,9 @@ class TimetrackingTest extends TimetrackingBase
         $times_ids = [ 1, 2 ];
 
         for ($offset = 0; $offset <= 1; $offset ++) {
-            $response = $this->getResponse(
-                $this->client->get("timetracking?limit=1&offset=$offset&query=$query"),
-                TimetrackingDataBuilder::USER_TESTER_NAME
+            $response = $this->getResponseByName(
+                TimetrackingDataBuilder::USER_TESTER_NAME,
+                $this->client->get('users/'.$this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME]."/timetracking?limit=1&offset=$offset&query=$query")
             );
 
             $artifact_times      = $response->json();
@@ -275,7 +273,6 @@ class TimetrackingTest extends TimetrackingBase
             $this->assertEquals($times[0]['id'], $times_ids[ $offset ]);
         }
     }
-
     public function testAddTimeSuccess()
     {
         $query = json_encode([
@@ -285,7 +282,6 @@ class TimetrackingTest extends TimetrackingBase
             "step"        => "etape"
         ]);
         $response = $this->getResponse($this->client->post('/api/v1/timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
-
         $this->assertEquals($response->getStatusCode(), 201);
     }
 

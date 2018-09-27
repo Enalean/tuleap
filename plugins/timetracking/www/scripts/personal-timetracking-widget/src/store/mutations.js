@@ -49,6 +49,10 @@ export default {
         state.is_add_mode = false;
     },
 
+    initUserId(state, user_id) {
+        state.user_id = user_id;
+    },
+
     setAddMode(state, is_add_mode) {
         state.is_add_mode = is_add_mode;
         if (

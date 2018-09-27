@@ -32,11 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const locale = document.body.dataset.userLocale;
     Vue.config.language = locale;
-
+    const user_id = parseInt(document.body.dataset.userId, 10);
     const vue_mount_point = document.getElementById("personal-timetracking-widget");
 
     if (vue_mount_point) {
         const rootComponent = Vue.extend(Widget);
-        new rootComponent({}).$mount(vue_mount_point);
+        new rootComponent({
+            propsData: {
+                userId: user_id
+            }
+        }).$mount(vue_mount_point);
     }
 });
