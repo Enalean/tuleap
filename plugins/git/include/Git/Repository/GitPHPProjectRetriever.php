@@ -18,31 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\Repository\View;
+namespace Tuleap\Git\Repository;
 
 use GitRepository;
-use HTTPRequest;
-use Tuleap\Git\GitPHP\Commit;
-use Tuleap\Git\GitPHP\Project;
+use Tuleap\Git\GitPHP\ProjectProvider;
 
-class CommitForCurrentTreeRetriever
+class GitPHPProjectRetriever
 {
     /**
-     * @param HTTPRequest $request
-     * @param Project     $gitphp_project
+     * @param GitRepository $repository
      *
-     * @return Commit|null
+     * @return \Tuleap\Git\GitPHP\Project
      */
-    public function getCommitOfCurrentTree(HTTPRequest $request, Project $gitphp_project)
+    public function getFromRepository(GitRepository $repository)
     {
-        $hashbase = 'HEAD';
-        if ($request->exist('h')) {
-            $hashbase = $request->get('h');
-        }
-        if ($request->exist('hb')) {
-            $hashbase = $request->get('hb');
-        }
+        $provider = new ProjectProvider($repository);
 
-        return $gitphp_project->GetCommit($hashbase);
+        return $provider->GetProject();
     }
 }

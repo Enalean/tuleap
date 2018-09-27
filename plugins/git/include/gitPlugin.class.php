@@ -97,6 +97,7 @@ use Tuleap\Git\PermissionsPerGroup\RepositorySimpleRepresentationBuilder;
 use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Git\RemoteServer\Gerrit\Restrictor;
 use Tuleap\Git\Repository\DescriptionUpdater;
+use Tuleap\Git\Repository\GitPHPProjectRetriever;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayerBuilder;
 use Tuleap\Git\Repository\RepositoryFromRequestRetriever;
@@ -2537,6 +2538,7 @@ class GitPlugin extends Plugin
                     $this->getThemeManager(),
                     $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES),
                     new FilesHeaderPresenterBuilder(
+                        new GitPHPProjectRetriever(),
                         new CommitForCurrentTreeRetriever(),
                         $this->getGitRepositoryUrlManager()
                     )
