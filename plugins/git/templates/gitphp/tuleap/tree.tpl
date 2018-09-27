@@ -17,21 +17,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
+{if $commit}
+    {assign var=treecommit value=$tree->GetCommit()}
+    {assign var=treecommittree value=$treecommit->GetTree()}
 
-{assign var=treecommit value=$tree->GetCommit()}
-{assign var=treecommittree value=$treecommit->GetTree()}
-
-{if $tree->GetName()}
-    <p>
-        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
-        -->{foreach from=$tree->GetPathTree() item=pathtreepiece}<!--
-            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
-            -->/<!--
-        -->{/foreach}<!--
-        --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
-    </p>
+    {if $tree->GetName()}
+        <p>
+            <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
+            -->{foreach from=$tree->GetPathTree() item=pathtreepiece}<!--
+                --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
+                -->/<!--
+            -->{/foreach}<!--
+            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
+        </p>
+    {/if}
 {/if}
-
 <table class="tlp-table">
     <thead>
         <tr>
