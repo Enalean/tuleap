@@ -1,9 +1,6 @@
-#modified-files {
-    padding: $tlp-spacing $tlp-spacing 0;
-}
-
 .pull-request-files-header {
     display: flex;
+    margin: 0 0 $tlp-spacing;
 }
 
 .pull-request-file-switcher {
