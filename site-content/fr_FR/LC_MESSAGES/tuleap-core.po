@@ -63,6 +63,12 @@ msgstr "Accès"
 msgid "Access Logs"
 msgstr "Journal des accès"
 
+msgid "Access key description"
+msgstr "Description de la clé d'accès"
+
+msgid "Access keys have been successfully deleted."
+msgstr "Les clés d'accès ont été supprimées avec succès."
+
 msgid ""
 "Access keys will soon be usable instead of your password to access the REST "
 "API"
@@ -853,6 +859,9 @@ msgstr "Supprimer du groupe"
 
 msgid "Remove group member"
 msgstr "Supprimer un membre du groupe"
+
+msgid "Revoke selected access keys"
+msgstr "Révoquer les clés d'accès sélectionnées"
 
 msgid "SVN"
 msgstr "SVN"

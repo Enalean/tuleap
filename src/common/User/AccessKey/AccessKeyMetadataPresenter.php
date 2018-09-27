@@ -22,6 +22,7 @@ namespace Tuleap\User\AccessKey;
 
 class AccessKeyMetadataPresenter
 {
+    public $id;
     public $creation_date;
     public $description;
     public $last_used_on;
@@ -29,6 +30,7 @@ class AccessKeyMetadataPresenter
 
     public function __construct(AccessKeyMetadata $access_key_information)
     {
+        $this->id            = $access_key_information->getID();
         $this->creation_date = $access_key_information->getCreationDate()->format(
             $GLOBALS['Language']->getText('system', 'datefmt')
         );

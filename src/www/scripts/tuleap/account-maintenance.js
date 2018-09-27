@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,10 +22,12 @@
         popover_is_displayed = false;
 
     $(document).ready(function() {
-        var ssh_keys_delete_button = $("#button-delete-keys"),
+        const ssh_keys_delete_button = $("#button-delete-keys"),
             svn_tokens_delete_button = $("#button-delete-svn-tokens"),
-            ssk_keys_checkboxes = $('input[type="checkbox"][name="ssh_key_selected[]"]');
-        svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]');
+            access_keys_delete_button = $("#button-revoke-access-tokens"),
+            ssk_keys_checkboxes = $('input[type="checkbox"][name="ssh_key_selected[]"]'),
+            svn_tokens_checkboxes = $('input[type="checkbox"][name="svn-tokens-selected[]"]'),
+            access_keys_checkboxes = $('input[type="checkbox"][name="access-keys-selected[]"]');
 
         loadAvatarReset();
         loadAvatarPreview();
@@ -51,6 +53,13 @@
             changeDeleteButtonStatusDependingCheckboxesStatus(
                 svn_tokens_delete_button,
                 svn_tokens_checkboxes
+            );
+        });
+
+        access_keys_checkboxes.change(function() {
+            changeDeleteButtonStatusDependingCheckboxesStatus(
+                access_keys_delete_button,
+                access_keys_checkboxes
             );
         });
 
