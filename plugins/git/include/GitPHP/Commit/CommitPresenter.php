@@ -58,8 +58,8 @@ class CommitPresenter
         /** @var FileDiff $line_diff */
         foreach ($tree_diff as $line_diff) {
             if ($line_diff->hasStats()) {
-                $this->stats_added   += $line_diff->getAddedStats();
-                $this->stats_removed += $line_diff->getRemovedStats();
+                $this->stats_added   += (int) $line_diff->getAddedStats();
+                $this->stats_removed += (int) $line_diff->getRemovedStats();
             }
         }
 

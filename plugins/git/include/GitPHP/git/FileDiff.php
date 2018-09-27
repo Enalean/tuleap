@@ -223,6 +223,15 @@ class FileDiff
         $this->toHash = $toHash;
     }
 
+    public function isBinaryFile()
+    {
+        $blob = $this->GetToBlob();
+        if (! $blob) {
+            return false;
+        }
+        return $blob->IsBinary();
+    }
+
     public function hasStats()
     {
         return ! empty($this->stats);
@@ -404,7 +413,7 @@ class FileDiff
      * Gets the to file blob
      *
      * @access public
-     * @return mixed blob object
+     * @return null|Blob
      */
     public function GetToBlob() // @codingStandardsIgnoreLine
     {

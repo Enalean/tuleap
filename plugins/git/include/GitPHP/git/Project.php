@@ -1215,6 +1215,7 @@ class Project
      *
      * @access public
      * @param string $hash blob hash
+     * @return Blob
      */
     public function GetBlob($hash) // @codingStandardsIgnoreLine
     {
