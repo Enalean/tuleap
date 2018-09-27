@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-    {include file='tuleap/commit-title-metadata.tpl'}
-</section>
+{include file='tuleap/commit-title-metadata.tpl'}
+
 <section class="tlp-pane-section">
     <h2 class="tlp-pane-subtitle">
         <i class="tlp-pane-title-icon fa fa-copy"></i> {t}Modified Files{/t}
@@ -63,3 +63,4 @@
             {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
         </div>
     {/foreach}
+</section>

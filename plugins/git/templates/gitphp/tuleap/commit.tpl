@@ -17,7 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-    {include file='tuleap/commit-title-metadata.tpl'}
-</section>
-<section class="tlp-pane-section">
-    {include file='tuleap/commit-files.tpl'}
+{include file='tuleap/commit-title-metadata.tpl'}
+{include file='tuleap/commit-files.tpl'}

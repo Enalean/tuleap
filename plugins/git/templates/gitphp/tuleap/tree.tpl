@@ -32,35 +32,38 @@
         </p>
     {/if}
 {/if}
-<table class="tlp-table">
-    <thead>
-        <tr>
-            <th>{t}Name{/t}</th>
-        </tr>
-    </thead>
-    <tbdoy>
-        {if $commit}
-            {foreach from=$tree_presenter->sorted_content item=treeitem}
-                <tr>
-                    {if $treeitem->isBlob() }
-                        <td>
-                            <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
-                                <i class="fa fa-file-text-o fa-fw"></i> {$treeitem->GetName()|escape}
-                            </a>
-                        </td>
-                    {elseif $treeitem->isTree() }
-                        <td>
-                            <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
-                                <i class="fa fa-folder fa-fw"></i> {$treeitem->GetName()|escape}
-                            </a>
-                        </td>
-                    {elseif $treeitem->isSubmodule() }
-                        <td><i class="fa fa-folder-o fa-fw"></i> {$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
-                    {/if}
-                </tr>
-            {/foreach}
-        {else}
-            <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
-        {/if}
-    </tbdoy>
-</table>
+
+<section class="tlp-pane-section">
+    <table class="tlp-table">
+        <thead>
+            <tr>
+                <th>{t}Name{/t}</th>
+            </tr>
+        </thead>
+        <tbdoy>
+            {if $commit}
+                {foreach from=$tree_presenter->sorted_content item=treeitem}
+                    <tr>
+                        {if $treeitem->isBlob() }
+                            <td>
+                                <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
+                                    <i class="fa fa-file-text-o fa-fw"></i> {$treeitem->GetName()|escape}
+                                </a>
+                            </td>
+                        {elseif $treeitem->isTree() }
+                            <td>
+                                <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
+                                    <i class="fa fa-folder fa-fw"></i> {$treeitem->GetName()|escape}
+                                </a>
+                            </td>
+                        {elseif $treeitem->isSubmodule() }
+                            <td><i class="fa fa-folder-o fa-fw"></i> {$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
+                        {/if}
+                    </tr>
+                {/foreach}
+            {else}
+                <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
+            {/if}
+        </tbdoy>
+    </table>
+</section>
