@@ -4,9 +4,7 @@
             {{ edit_modal.kanban.label }}
             <p class="edit-kanban-title-tracker">
                 <i class="fa fa-info-circle edit-kanban-title-tracker-icon"></i>
-                <span translate
-                translate-params-tracker-link="edit_modal.title_tracker_link"
-                >Based on the {{ trackerLink }} tracker.</span>
+                <span ng-bind-html="edit_modal.title_tracker_link"></span>
             </p>
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" aria-label="{{ Close | translate }}">&times;</div>

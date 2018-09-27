@@ -28,7 +28,7 @@ msgstr ""
 msgid "Backlog"
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Based on the {{ trackerLink }} tracker."
 msgstr ""
 
