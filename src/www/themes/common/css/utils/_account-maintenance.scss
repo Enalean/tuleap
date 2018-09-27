@@ -46,7 +46,8 @@ h3.account-title {
 }
 
 #account-shell .ssh-keys-table,
-#account-svn-tokens .svn-tokens-table {
+#account-svn-tokens .svn-tokens-table,
+.access-keys-table {
     width: 100%;
 
     > tbody > tr > td {

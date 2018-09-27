@@ -40,6 +40,11 @@ class User_PreferencesPresenter {
     public $svn_tokens;
 
     /**
+     * @var \Tuleap\User\AccessKey\AccessKeyMetadataPresenter[]
+     */
+    public $access_keys;
+
+    /**
      * @var CSRFSynchronizerToken
      */
     public $csrf_token;
@@ -92,6 +97,7 @@ class User_PreferencesPresenter {
         array $user_access,
         $ssh_keys_extra_html,
         $svn_tokens,
+        $access_keys,
         $third_party_html,
         CSRFSynchronizerToken $csrf_token,
         array $tracker_formats,
@@ -112,6 +118,7 @@ class User_PreferencesPresenter {
         $this->user_access             = $user_access;
         $this->ssh_keys_extra_html     = $ssh_keys_extra_html;
         $this->svn_tokens              = $svn_tokens;
+        $this->access_keys             = $access_keys;
         $this->third_party_html        = $third_party_html;
         $this->csrf_token              = $csrf_token;
         $this->csrf_input_html         = $csrf_token->fetchHTMLInput();
@@ -398,6 +405,11 @@ class User_PreferencesPresenter {
 
     public function generate_svn_token_modal_button_help() {
         return $GLOBALS['Language']->getText('account_options', 'generate_svn_token_modal_button_help');
+    }
+
+    public function has_access_keys()
+    {
+        return count($this->access_keys) > 0;
     }
 
 

@@ -20,31 +20,24 @@
 
 namespace Tuleap\User\AccessKey;
 
-use Tuleap\DB\DataAccessObject;
-
-class AccessKeyDAO extends DataAccessObject
+class AccessKeyMetadataPresenter
 {
-    /**
-     * @return int
-     */
-    public function create($user_id, $hashed_verification_string, $current_time, $description)
-    {
-        return (int) $this->getDB()->insertReturnId(
-            'user_access_key',
-            [
-                'user_id'       => $user_id,
-                'verifier'      => $hashed_verification_string,
-                'creation_date' => $current_time,
-                'description'   => $description
-            ]
-        );
-    }
+    public $creation_date;
+    public $description;
+    public $last_used_on;
+    public $last_used_by;
 
-    public function searchMetadataByUserID($user_id)
+    public function __construct(AccessKeyMetadata $access_key_information)
     {
-        return $this->getDB()->run(
-            'SELECT creation_date, description, last_usage, last_ip FROM user_access_key WHERE user_id = ?',
-            $user_id
+        $this->creation_date = $access_key_information->getCreationDate()->format(
+            $GLOBALS['Language']->getText('system', 'datefmt')
         );
+        $this->description   = $access_key_information->getDescription();
+        if ($access_key_information->getLastUsedDate() !== null) {
+            $this->last_used_on = $access_key_information->getLastUsedDate()->format(
+                $GLOBALS['Language']->getText('system', 'datefmt')
+            );
+        }
+        $this->last_used_by = $access_key_information->getLastUsedIP();
     }
 }
