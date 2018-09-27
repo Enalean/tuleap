@@ -1,5 +1,5 @@
-# 
-# /* 
+#
+# /*
 #  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
 #  *
 #  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -78,13 +78,13 @@ plugin_graphontrackersv5_boxtable	chart_properties	Chart Properties
 plugin_graphontrackersv5_boxtable	preview	Preview
 plugin_graphontrackersv5_include_report	add_chart	Add a Chart
 plugin_graphontrackersv5_include_report	confirm_del	'Are you sure that you want to delete this chart ?'
-plugin_graphontrackersv5_include_report	return_report	Go back to report 
+plugin_graphontrackersv5_include_report	return_report	Go back to report
 plugin_graphontrackersv5_include_report	return_renderer	Go back to charts
-plugin_graphontrackersv5_include_report	return_reports	Go back to graphic reports 
-plugin_graphontrackersv5_report	title	Charts 
+plugin_graphontrackersv5_include_report	return_reports	Go back to graphic reports
+plugin_graphontrackersv5_report	title	Charts
 plugin_graphontrackersv5_include_report	tooltip_edit	Edit Chart
 plugin_graphontrackersv5_include_report	tooltip_del	Delete Chart
-plugin_graphontrackersv5_report	btn_go	Go 
+plugin_graphontrackersv5_report	btn_go	Go
 #
 #-----------------------------------------------
 # Script:include/HTML_Element.class.php
@@ -95,10 +95,10 @@ plugin_graphontrackersv5_graph	automatic	Auto
 # Scipt:data-access/GraphOnTrackersV5_Chart.class.php
 #
 plugin_graphontrackersv5_property	id	Id
-plugin_graphontrackersv5_property	title	Title 
+plugin_graphontrackersv5_property	title	Title
 plugin_graphontrackersv5_property	rank	Rank
 plugin_graphontrackersv5_property	height	Height
-plugin_graphontrackersv5_property	width	Width 
+plugin_graphontrackersv5_property	width	Width
 plugin_graphontrackersv5_property	description	Description
 #-----------------------------------------------
 # Scipt:data-access/GraphOnTrackersV5_Chart_Pie.class.php
@@ -108,7 +108,7 @@ plugin_graphontrackersv5_pie_property	pie_field_base	Source Data
 # Scipt:data-access/GraphOnTrackersV5_Chart_Bar.class.php
 #
 plugin_graphontrackersv5_bar_property	bar_field_base	Source Data
-plugin_graphontrackersv5_bar_property	bar_field_base_desc	Field on which computation will be based. 
+plugin_graphontrackersv5_bar_property	bar_field_base_desc	Field on which computation will be based.
 plugin_graphontrackersv5_bar_property	bar_field_group	Group by
 #-----------------------------------------------
 # Scipt:data-access/GraphOnTrackers_Chart_Gantt.class.php
@@ -197,6 +197,5 @@ plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_stop_date	Fini
 plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_day	Day
 plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_week	Week
 plugin_graphontrackersv5_cumulative_flow	cumulative_flow_property_month	Month
-plugin_graphontrackersv5_cumulative_flow	error_too_many_points	Please choose a smaller period, or increase the scale
 
 plugin_graphontrackersv5	field_not_found	Unable to find the needed field to build the chart "$1". Please edit the chart and ajust settings.

@@ -22,90 +22,73 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+namespace Tuleap\GraphOnTrackersV5;
+
+use GraphOnTrackersV5_CumulativeFlow_DataBuilder;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/bootstrap.php';
 
-class TestableFlowChartDataBuilder extends GraphOnTrackersV5_CumulativeFlow_DataBuilder {
-    public function filterEmptyLines(array $array) {
-        return parent::filterEmptyLines($array);
-    }
-}
-
 class CumulativeFlowChartTest extends TestCase
 {
-    public function testFilterEmptyLines() {
-        $initial_array= array(
-            "1393891200" => array
-                (
-                    "8" => 0           , "7" => 0,
-                    "6" => 0           , "5 - Major" => 0,
-                    "9 - Critical" => 0, "4" => 0,
-                    "3" => 0           , "2" => 0,
-                    "1 - Ordinary" => 0, "None" => 0
-                ),
-            "1393977600" => array
-                (
-                    "8" => 0           , "7" => 0,
-                    "6" => 0           , "5 - Major" => 0,
-                    "9 - Critical" => 0, "4" => 0,
-                    "3" => 0           , "2" => 0,
-                    "1 - Ordinary" => 0, "None" => 0
-                ),
-            "1394064000" => array
-                (
-                    "8" => 0           , "7" => 0,
-                    "6" => 0           , "5 - Major" => 0,
-                    "9 - Critical" => 0, "4" => 3,
-                    "3" => 1           , "2" => 1,
-                    "1 - Ordinary" => 0, "None" => 0
-                ),
-            "1394150400" => array
-                (
-                    "8" => 0           , "7" => 0,
-                    "6" => 0           , "5 - Major" => 0,
-                    "9 - Critical" => 0, "4" => 3,
-                    "3" => 1           , "2" => 1,
-                    "1 - Ordinary" => 0, "None" => 0
-                ),
-            "1394236800" => array
-                (
-                    "8" => 0           , "7" => 0,
-                    "6" => 0           , "5 - Major" => 0,
-                    "9 - Critical" => 0, "4" => 3,
-                    "3" => 1           , "2" => 1,
-                    "1 - Ordinary" => 0, "None" => 1
-                )
-        );
-        $expected_array = array(
-            "1393891200" => array
-                (
-                    "4" => 0           , "3" => 0,
-                    "2" => 0           , "None" => 0
-                ),
-            "1393977600" => array
-                (
-                    "4" => 0           , "3" => 0,
-                    "2" => 0           , "None" => 0
-                ),
-            "1394064000" => array
-                (
-                    "4" => 3           , "3" => 1,
-                    "2" => 1           , "None" => 0
-                ),
-            "1394150400" => array
-                (
-                    "4" => 3           , "3" => 1,
-                    "2" => 1           , "None" => 0
-                ),
-            "1394236800" => array
-                (
-                    "4" => 3          , "3" => 1,
-                    "2" => 1          , "None" =>1
-                )
-        );
+    private $data_builder;
 
-        $data_builder = new TestableFlowChartDataBuilder(null, null);
-        $this->assertEquals($data_builder->filterEmptyLines($initial_array), $expected_array);
+    public function setUp()
+    {
+        $this->data_builder = new GraphOnTrackersV5_CumulativeFlow_DataBuilder(null, null);
+    }
+
+    public function testGetColumns()
+    {
+        $all_columns = [
+            100 => [
+                'id' => 100,
+                'label' => 'None',
+                'color' => null,
+                'values' => [
+                    1 => [
+                        'date' => 1,
+                        'count' => 0
+                    ],
+                    2 => [
+                        'date' => 2,
+                        'count' => 0
+                    ]
+                ]
+            ],
+            200 => [
+                'id' => 200,
+                'label' => 'Todo',
+                'color' => 'fiesta-red',
+                'values' => [
+                    1 => [
+                        'date' => 1,
+                        'count' => 1
+                    ],
+                    2 => [
+                        'date' => 2,
+                        'count' => 6
+                    ]
+                ]
+            ]
+        ];
+        $only_used_columns = [
+            [
+                'id' => 200,
+                'label' => 'Todo',
+                'color' => 'fiesta-red',
+                'values' => [
+                    [
+                        'date' => 1,
+                        'count' => 1
+                    ], [
+                        'date' => 2,
+                        'count' => 6
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertEquals($this->data_builder->getColumns($all_columns), $only_used_columns);
     }
 }

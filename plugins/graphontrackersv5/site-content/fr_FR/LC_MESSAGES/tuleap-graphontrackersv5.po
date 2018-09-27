@@ -1,0 +1,27 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.1.1\n"
+
+msgid "No data to display."
+msgstr "Aucune donnée à afficher."
+
+msgid "No start date defined."
+msgstr "Aucune date de début définie."
+
+msgid "Please choose a smaller period, or increase the scale."
+msgstr "Veuillez choisir une période plus courte, ou augmenter l'échelle."
+
+msgid "Start date must be before the end date."
+msgstr "La date de début doit être avant la date de fin."
+
+msgid "Unable to render the chart"
+msgstr "Impossible de construire le graphique"

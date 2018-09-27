@@ -105,4 +105,37 @@ form[name=edit_chart_form] label {
     .graph-element-#{$color-name} {
         fill: map-get($colors, 'primary');
     }
+
+    .cumulative-flowchart-legend-color-#{$color-name} {
+        background-color: map-get($colors, 'primary');
+    }
+}
+
+.cumulative-flowchart-legend {
+    display: flex;
+    height: 60px;
+}
+
+.cumulative-flowchart-legend-list {
+    flex: 1 1 auto;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.cumulative-flowchart-legend-list-item {
+    display: flex;
+    align-items: center;
+}
+
+.cumulative-flowchart-legend-color {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    min-height: 0;
+    margin: 0 5px 0 0;
+    border-radius: 50%;
+    opacity: .8;
 }
