@@ -5,24 +5,24 @@ export default EditKanbanCtrl;
 
 EditKanbanCtrl.$inject = [
     "$scope",
+    "gettextCatalog",
     "KanbanService",
     "ColumnCollectionService",
     "SharedPropertiesService",
     "RestErrorService",
     "FilterTrackerReportService",
-    "gettextCatalog",
     "modal_instance",
     "rebuild_scrollbars"
 ];
 
 function EditKanbanCtrl(
     $scope,
+    gettextCatalog,
     KanbanService,
     ColumnCollectionService,
     SharedPropertiesService,
     RestErrorService,
     FilterTrackerReportService,
-    gettextCatalog,
     modal_instance,
     rebuild_scrollbars
 ) {
@@ -37,12 +37,12 @@ function EditKanbanCtrl(
     self.adding_column = false;
     self.deleting_column = false;
     self.new_column_label = "";
-    self.title_tracker_link =
-        "<a class='edit-kanban-title-tracker-link' href='/plugins/tracker/?tracker=" +
-        self.kanban.tracker.id +
-        "'>" +
-        self.kanban.tracker.label +
-        "</a>";
+    const tracker_link = `<a class="edit-kanban-title-tracker-link" href="/plugins/tracker/?tracker=${
+        self.kanban.tracker.id
+    }">${self.kanban.tracker.label}</a>`;
+    self.title_tracker_link = gettextCatalog.getString("Based on the {{ trackerLink }} tracker.", {
+        trackerLink: tracker_link
+    });
     self.info_tracker_link =
         "<a href='/plugins/tracker/?tracker=" +
         self.kanban.tracker.id +
