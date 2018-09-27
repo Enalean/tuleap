@@ -23,35 +23,46 @@ namespace Tuleap\Git\REST\v1;
 
 use Git_GitRepositoryUrlManager;
 use GitRepository;
-use Tuleap\Git\CommitStatus\CommitStatusRetriever;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\GitPHP\Commit;
 
 class GitCommitRepresentationBuilder
 {
     /**
-     * @var CommitStatusRetriever
+     * @var CommitMetadataRetriever
      */
-    private $status_retriever;
+    private $metadata_retriever;
     /**
      * @var Git_GitRepositoryUrlManager
      */
     private $url_manager;
 
-    public function __construct(CommitStatusRetriever $status_retriever, Git_GitRepositoryUrlManager $url_manager)
+    public function __construct(CommitMetadataRetriever $metadata_retriever, Git_GitRepositoryUrlManager $url_manager)
     {
-        $this->status_retriever = $status_retriever;
-        $this->url_manager      = $url_manager;
+        $this->metadata_retriever = $metadata_retriever;
+        $this->url_manager        = $url_manager;
     }
 
-    public function build(GitRepository $repository, Commit $commit)
+    /**
+     * @return GitCommitRepresentationCollection
+     */
+    public function build(GitRepository $repository, Commit ...$commits)
     {
-        $commit_status = $this->status_retriever->getLastCommitStatus($repository, $commit->GetHash());
+        $metadata = $this->metadata_retriever->getMetadataByRepositoryAndCommits($repository, ...$commits);
 
+        $commit_representation_iterator = new \MultipleIterator(\MultipleIterator::MIT_NEED_ALL);
+        $commit_representation_iterator->attachIterator(new \ArrayIterator($commits));
+        $commit_representation_iterator->attachIterator(new \ArrayIterator($metadata));
+
+        $representations = [];
         $repository_path = $this->url_manager->getRepositoryBaseUrl($repository);
 
-        $commit_representation = new GitCommitRepresentation();
-        $commit_representation->build($repository_path, $commit, $commit_status);
+        foreach ($commit_representation_iterator as list($commit, $metadata)) {
+            $commit_representation = new GitCommitRepresentation();
+            $commit_representation->build($repository_path, $commit, $metadata);
+            $representations[] = $commit_representation;
+        }
 
-        return $commit_representation;
+        return new GitCommitRepresentationCollection(...$representations);
     }
 }

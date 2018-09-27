@@ -36,9 +36,13 @@ class CommitStatusRetrieverTest extends TestCase
 
         $repository = \Mockery::mock(\GitRepository::class);
 
-        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReference')->andReturns(
-            ['status' => CommitStatusWithKnownStatus::STATUS_SUCCESS, 'date' => 1528892466]
-        );
+        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([
+            [
+                'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
+                'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
+                'date'             => 1528892466
+            ]
+        ]);
         $repository->shouldReceive('getId');
 
         $commit_status = $commit_status_retriever->getLastCommitStatus(
@@ -57,7 +61,7 @@ class CommitStatusRetrieverTest extends TestCase
 
         $repository = \Mockery::mock(\GitRepository::class);
 
-        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReference')->andReturns([]);
+        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([]);
         $repository->shouldReceive('getId');
 
         $commit_status = $commit_status_retriever->getLastCommitStatus(
@@ -66,5 +70,35 @@ class CommitStatusRetrieverTest extends TestCase
         );
 
         $this->assertInstanceOf(CommitStatusUnknown::class, $commit_status);
+    }
+
+    public function testASetOfCommitStatusCanBeRetrieved()
+    {
+        $dao = \Mockery::mock(CommitStatusDAO::class);
+
+        $commit_status_retriever = new CommitStatusRetriever($dao);
+
+        $repository = \Mockery::mock(\GitRepository::class);
+
+        $dao->shouldReceive('getLastCommitStatusByRepositoryIdAndCommitReferences')->andReturns([
+            [
+                'commit_reference' => '38762cf7f55934b34d179ae6a4c80cadccbb7f0a',
+                'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
+                'date'             => 1528892466
+            ],
+            [
+                'commit_reference' => '23badb142cabe3e604ceb5fd5d243354e8e9f491',
+                'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
+                'date'             => 1528898888
+            ]
+        ]);
+        $repository->shouldReceive('getId');
+
+        $commit_statuses = $commit_status_retriever->getLastCommitStatuses(
+            $repository,
+            ['38762cf7f55934b34d179ae6a4c80cadccbb7f0a', '23badb142cabe3e604ceb5fd5d243354e8e9f491']
+        );
+
+        $this->assertCount(2, $commit_statuses);
     }
 }

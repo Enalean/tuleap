@@ -37,13 +37,32 @@ class CommitStatusRetriever
      */
     public function getLastCommitStatus(\GitRepository $repository, $commit_reference)
     {
-        $row = $this->dao->getLastCommitStatusByRepositoryIdAndCommitReference($repository->getId(), $commit_reference);
+        return $this->getLastCommitStatuses($repository, [$commit_reference])[0];
+    }
 
-        if (empty($row)) {
-            return new CommitStatusUnknown;
+    /**
+     * @return CommitStatus[]
+     */
+    public function getLastCommitStatuses(\GitRepository $repository, array $commit_references)
+    {
+        $statuses           = [];
+        $commit_status_rows = $this->dao->getLastCommitStatusByRepositoryIdAndCommitReferences(
+            $repository->getId(),
+            $commit_references
+        );
+        $commit_status_rows_indexed_by_reference = [];
+        foreach ($commit_status_rows as $commit_status_row) {
+            $commit_status_rows_indexed_by_reference[$commit_status_row['commit_reference']] = $commit_status_row;
+        }
+        foreach ($commit_references as $commit_reference) {
+            if (! isset($commit_status_rows_indexed_by_reference[$commit_reference])) {
+                $statuses[] = new CommitStatusUnknown;
+                continue;
+            }
+            $date = new \DateTimeImmutable('@' . $commit_status_row['date']);
+            $statuses[] = new CommitStatusWithKnownStatus($commit_status_row['status'], $date);
         }
 
-        $date = new \DateTimeImmutable('@' . $row['date']);
-        return new CommitStatusWithKnownStatus($row['status'], $date);
+        return $statuses;
     }
 }

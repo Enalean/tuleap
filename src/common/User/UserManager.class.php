@@ -293,14 +293,9 @@ class UserManager {
      *
      * @return PFUser or null if no user found
      */
-    public function getUserByEmail($email) {
-        $users = $this->getDao()->searchByEmail($email);
-
-        if (count($users)) {
-            return $this->getUserInstanceFromRow($users->getRow());
-        } else {
-            return null; // No account found
-        }
+    public function getUserByEmail($email)
+    {
+        return $this->getUserCollectionByEmails([$email])->getUserByEmail($email);
     }
 
     public function getAllUsersByEmail($email) {
@@ -310,6 +305,19 @@ class UserManager {
         }
         return $users;
     }
+
+    /**
+     * @return \Tuleap\User\UserEmailCollection
+     */
+    public function getUserCollectionByEmails(array $emails)
+    {
+        $users = [];
+        foreach ($this->getDao()->searchByEmailList($emails) as $user_row) {
+            $users[] = $this->getUserInstanceFromRow($user_row);
+        }
+        return new \Tuleap\User\UserEmailCollection(...$users);
+    }
+
     /**
      * Returns a user that correspond to an identifier
      * The identifier can be prepended with a type.

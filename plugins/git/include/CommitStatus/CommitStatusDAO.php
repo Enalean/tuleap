@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\CommitStatus;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class CommitStatusDAO extends DataAccessObject
@@ -37,14 +38,25 @@ class CommitStatusDAO extends DataAccessObject
         );
     }
 
-    public function getLastCommitStatusByRepositoryIdAndCommitReference($repository_id, $commit_reference)
+    public function getLastCommitStatusByRepositoryIdAndCommitReferences($repository_id, array $commit_references)
     {
-        $sql = 'SELECT status, date
-                FROM plugin_git_commit_status
-                WHERE repository_id = ? AND commit_reference = ?
-                ORDER BY id DESC
-                LIMIT 1';
+        if (empty($commit_references)) {
+            return [];
+        }
+        $commit_references_in_condition = EasyStatement::open()->in('?*', $commit_references);
 
-        return $this->getDB()->row($sql, $repository_id, $commit_reference);
+        $sql = "SELECT commit_status1.commit_reference, commit_status1.status, commit_status1.date
+                FROM plugin_git_commit_status AS commit_status1
+                LEFT JOIN plugin_git_commit_status AS commit_status2 ON (
+                  commit_status1.repository_id = commit_status2.repository_id AND
+                  commit_status1.commit_reference = commit_status2.commit_reference AND
+                  commit_status1.id < commit_status2.id
+                )
+                WHERE
+                  commit_status1.repository_id = ? AND
+                  commit_status1.commit_reference IN ($commit_references_in_condition) AND
+                  commit_status2.id IS NULL";
+
+        return $this->getDB()->safeQuery($sql, array_merge([$repository_id], $commit_references_in_condition->values()));
     }
 }

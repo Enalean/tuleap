@@ -36,10 +36,10 @@ use Project_AccessProjectNotFoundException;
 use ProjectHistoryDao;
 use ProjectManager;
 use ReferenceManager;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
-use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Pack;
 use Tuleap\Git\GitPHP\ProjectProvider;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -261,8 +261,9 @@ class PullRequestsResource extends AuthenticatedResource
         $url_manager = new Git_GitRepositoryUrlManager($this->git_plugin);
 
         $this->status_retriever = new CommitStatusRetriever(new CommitStatusDAO);
+        $metadata_retriever     = new CommitMetadataRetriever($this->status_retriever, $this->user_manager);
         $this->commit_representation_builder = new GitCommitRepresentationBuilder(
-            $this->status_retriever,
+            $metadata_retriever,
             $url_manager
         );
     }

@@ -870,6 +870,7 @@ CREATE TABLE user (
   has_avatar TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
+  INDEX idx_user_mail(email(10)),
   KEY idx_user_user (status)
 );
 

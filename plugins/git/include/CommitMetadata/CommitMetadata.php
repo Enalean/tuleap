@@ -18,41 +18,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\REST\v1;
+namespace Tuleap\Git\CommitMetadata;
 
-use Tuleap\Git\REST\v1\GitCommitRepresentation;
+use Tuleap\Git\CommitStatus\CommitStatus;
 
-class GitCommitRepresentationCollection
+class CommitMetadata
 {
     /**
-     * @var GitCommitRepresentation[]
+     * @var CommitStatus
      */
-    private $commits_collection = [];
+    private $last_commit_status;
     /**
-     * @var int
+     * @var null|\PFUser
      */
-    private $total_size;
+    private $author;
 
-    /**
-     * @param GitCommitRepresentation[]
-     * @param int      $total_size
-     */
-    public function __construct(array $commits_representations, $total_size)
+    public function __construct(CommitStatus $last_commit_status, \PFUser $author = null)
     {
-        $this->commits_collection = $commits_representations;
-        $this->total_size = $total_size;
+        $this->last_commit_status = $last_commit_status;
+        $this->author             = $author;
     }
 
     /**
-     * @return GitCommitRepresentation[]
+     * @return CommitStatus
      */
-    public function getCommitsCollection()
+    public function getCommitStatus()
     {
-        return $this->commits_collection;
+        return $this->last_commit_status;
     }
 
-    public function getSize()
+    /**
+     * @return null|\PFUser
+     */
+    public function getAuthor()
     {
-        return $this->total_size;
+        return $this->author;
     }
 }

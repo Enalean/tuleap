@@ -49,6 +49,7 @@ use ProjectManager;
 use SystemEventManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\CommitStatus\CommitDoesNotExistException;
 use Tuleap\Git\CommitStatus\CommitStatusCreator;
 use Tuleap\Git\CommitStatus\CommitStatusDAO;
@@ -307,10 +308,11 @@ class RepositoryResource extends AuthenticatedResource
             $event_manager
         );
 
-        $status_retriever = new CommitStatusRetriever(new CommitStatusDAO);
-        $url_manager      = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
+        $status_retriever   = new CommitStatusRetriever(new CommitStatusDAO);
+        $metadata_retriever = new CommitMetadataRetriever($status_retriever, $this->user_manager);
+        $url_manager        = new Git_GitRepositoryUrlManager(PluginFactory::instance()->getPluginByName('git'));
 
-        $this->commit_representation_builder = new GitCommitRepresentationBuilder($status_retriever, $url_manager);
+        $this->commit_representation_builder = new GitCommitRepresentationBuilder($metadata_retriever, $url_manager);
     }
 
     /**
@@ -763,11 +765,22 @@ class RepositoryResource extends AuthenticatedResource
         $total_size           = count($branches_refs);
         $sliced_branches_refs = array_slice($branches_refs, $offset, $limit);
 
+        $commits = [];
+        foreach ($sliced_branches_refs as $branch) {
+            try {
+                $commits[] = $branch->GetCommit();
+            } catch (GitRepoRefNotFoundException $e) {
+                // ignore the tag if by any chance it is invalid
+            }
+        }
+
+        $commit_representation_collection = $this->commit_representation_builder->build($repository, ...$commits);
+
         $result = [];
         foreach ($sliced_branches_refs as $branch) {
             $name = $branch->GetName();
             try {
-                $commit_representation = $this->commit_representation_builder->build($repository, $branch->GetCommit());
+                $commit_representation = $commit_representation_collection->getRepresentation($branch->GetCommit());
 
                 $branch_representation = new GitBranchRepresentation();
                 $branch_representation->build($name, $commit_representation);
@@ -827,11 +840,22 @@ class RepositoryResource extends AuthenticatedResource
         $total_size       = count($tags_refs);
         $sliced_tags_refs = array_slice($tags_refs, $offset, $limit);
 
+        $commits = [];
+        foreach ($sliced_tags_refs as $tag) {
+            try {
+                $commits[] = $tag->GetCommit();
+            } catch (GitRepoRefNotFoundException $e) {
+                // ignore the tag if by any chance it is invalid
+            }
+        }
+
+        $commit_representation_collection = $this->commit_representation_builder->build($repository, ...$commits);
+
         $result = [];
         foreach ($sliced_tags_refs as $tag) {
             $name = $tag->GetName();
             try {
-                $commit_representation = $this->commit_representation_builder->build($repository, $tag->GetCommit());
+                $commit_representation = $commit_representation_collection->getRepresentation($tag->GetCommit());
 
                 $tag_representation = new GitTagRepresentation();
                 $tag_representation->build($name, $commit_representation);
