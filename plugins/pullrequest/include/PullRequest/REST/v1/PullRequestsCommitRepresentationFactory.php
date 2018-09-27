@@ -58,7 +58,7 @@ class PullRequestsCommitRepresentationFactory
     }
 
     /**
-     * @return GitCommitRepresentationCollection
+     * @return PullRequestGitCommitRepresentationPartialCollection
      * @throws \Git_Command_Exception
      */
     public function getPullRequestCommits(PullRequest $pull_request, $limit, $offset)
@@ -71,16 +71,19 @@ class PullRequestsCommitRepresentationFactory
         $repository_destination_id = $pull_request->getRepoDestId();
         $repository_destination    = $this->repository_factory->getRepositoryById($repository_destination_id);
 
-        $commits_collection = [];
+        $commits = [];
         foreach ($all_references as $reference) {
-            $representation = $this->commit_representation_builder->build(
-                $repository_destination,
-                $this->project->GetCommit($reference)
-            );
-
-            $commits_collection[] = $representation;
+            $commits[] = $this->project->GetCommit($reference);
         }
 
-        return new GitCommitRepresentationCollection($commits_collection, $total_size);
+        $commit_representation_collection = $this->commit_representation_builder->build(
+            $repository_destination,
+            ...$commits
+        );
+
+        return new PullRequestGitCommitRepresentationPartialCollection(
+            $commit_representation_collection->getWholeCollectionAsArray(),
+            $total_size
+        );
     }
 }

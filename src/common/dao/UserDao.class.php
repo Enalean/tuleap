@@ -82,6 +82,26 @@ class UserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchByEmailList(array $emails)
+    {
+        if (empty($emails)) {
+            return new DataAccessResultEmpty();
+        }
+        $emails_escaped = $this->da->quoteSmartImplode(',', $emails);
+
+        $sql = "SELECT user1.*
+                FROM user AS user1
+                LEFT JOIN user AS user2 ON (
+                  user1.email = user2.email AND
+                  user1.user_id > user2.user_id
+                )
+                WHERE
+                  user1.email IN ($emails_escaped) AND
+                  user2.user_id IS NULL";
+
+        return $this->retrieve($sql);
+    }
+
     /**
      * Searches User by ldapid
      * @return DataAccessResult
