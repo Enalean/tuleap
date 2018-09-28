@@ -465,8 +465,6 @@ class RepositoryResource extends AuthenticatedResource
     }
 
     /**
-     * Post a build status
-     *
      * <b>This endpoint is deprecated, the route {id}/statuses/{commit_reference} must be used instead.</b>
      *
      * @url POST {id}/build_status
@@ -486,6 +484,19 @@ class RepositoryResource extends AuthenticatedResource
     public function postBuildStatus($id, BuildStatusPOSTRepresentation $build_status_data)
     {
         Header::allowOptionsPost();
+
+        $whitelisted_repositories = array_map(
+            'trim',
+            explode(',',
+                \ForgeConfig::get('rest_git_build_status_whitelisted_repositories_id', '')
+            )
+        );
+        if (! in_array($id, $whitelisted_repositories)) {
+            throw new RestException(
+                410,
+                'This endpoint is no more available, you must migrate to the POST {id}/statuses/{commit_reference} endpoint'
+            );
+        }
 
         if (! $build_status_data->isStatusValid()) {
             throw new RestException(400, $build_status_data->status . ' is not a valid status.');
