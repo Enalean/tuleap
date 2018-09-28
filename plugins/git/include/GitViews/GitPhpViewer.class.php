@@ -35,6 +35,7 @@ class GitViews_GitPhpViewer
         'commitdiff',
         'shortlog',
         'tree',
+        'blobdiff',
         false
     ];
 

@@ -59,8 +59,6 @@
                 {/if}
             </span>
         </div>
-        <div class="diffBlob">
-            {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
-        </div>
+        {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
     {/foreach}
 </section>
