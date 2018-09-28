@@ -37,4 +37,16 @@ class AccessKeyVerificationStringHasherTest extends TestCase
 
         $this->assertNotEmpty($hashed_verification_string);
     }
+
+    public function testVerificationStringCanBeVerified()
+    {
+        $access_key_verification_string = \Mockery::mock(AccessKeyVerificationString::class);
+        $access_key_verification_string->shouldReceive('getString')
+            ->andReturns(new ConcealedString('random_string'));
+        $precomputed_hash_value = '528b36022f3bc7b1de66f30bbd011bb84fce3067c5eb593400d1b39055c32891';
+
+        $hasher = new AccessKeyVerificationStringHasher();
+
+        $this->assertTrue($hasher->verifyHash($access_key_verification_string, $precomputed_hash_value));
+    }
 }

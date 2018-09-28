@@ -83,13 +83,6 @@ msgstr "Description de la clé d'accès"
 msgid "Access keys have been successfully deleted."
 msgstr "Les clés d'accès ont été supprimées avec succès."
 
-msgid ""
-"Access keys will soon be usable instead of your password to access the REST "
-"API"
-msgstr ""
-"Les clés d'accès pourront prochainement être utilisées pour accèder à l'API "
-"REST"
-
 msgid "Accessibility"
 msgstr "Accessibilité"
 

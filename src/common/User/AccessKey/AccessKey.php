@@ -25,7 +25,9 @@ use Tuleap\Cryptography\ConcealedString;
 
 class AccessKey
 {
-    const VERIFIER_LENGTH = 32;
+    const PREFIX  = 'tlp-k1-';
+    const PATTERN = '/' . self::PREFIX . '(?<key_id>\d+)\.(?<verifier>[[:xdigit:]]+)/';
+
     /**
      * @var int
      */
@@ -42,12 +44,42 @@ class AccessKey
     }
 
     /**
+     * @return self
+     */
+    public static function buildFromIdentifier($identifier)
+    {
+        if (preg_match(self::PATTERN, $identifier, $matches) !== 1) {
+            throw new InvalidIdentifierFormatException();
+        }
+        $verification_string = new AccessKeyVerificationString(
+            new ConcealedString(Encoding::hexDecode($matches['verifier']))
+        );
+        return new self((int) $matches['key_id'], $verification_string);
+    }
+
+    /**
+     * @return int
+     */
+    public function getID()
+    {
+        return $this->access_key_id;
+    }
+
+    /**
+     * @return AccessKeyVerificationString
+     */
+    public function getVerificationString()
+    {
+        return $this->verification_string;
+    }
+
+    /**
      * @return ConcealedString
      */
     public function getIdentifier()
     {
         return new ConcealedString(
-            'tlp-k1-' . $this->access_key_id . '.' . Encoding::hexEncode($this->verification_string->getString())
+            self::PREFIX . $this->access_key_id . '.' . Encoding::hexEncode($this->verification_string->getString())
         );
     }
 }

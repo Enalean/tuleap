@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,22 +21,23 @@ namespace Tuleap\REST;
 
 use \Luracast\Restler\iAuthenticate;
 
-class TokenAuthentication implements iAuthenticate {
-
-    public function __isAllowed() {
-        $tokenIsAllowed = new TokenIsAllowed();
-        return $tokenIsAllowed->isAllowed();
+class TuleapRESTAuthentication implements iAuthenticate
+{
+    public function __isAllowed()
+    {
+        return (new RESTAuthenticationFlowIsAllowed)->isAllowed();
     }
 
-    public static function __getMaximumSupportedVersion() {
+    public static function __getMaximumSupportedVersion()
+    {
         return 2;
     }
 
     /**
      * Needed due to iAuthenticate interface since Restler v3.0.0-RC6
      */
-    public function __getWWWAuthenticateString() {
-        return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'"';
+    public function __getWWWAuthenticateString()
+    {
+        return 'Basic realm="'.AuthenticatedResource::REALM.'" Token realm="'.AuthenticatedResource::REALM.'" AccessKey realm="'.AuthenticatedResource::REALM.'"';
     }
-
 }

@@ -58,11 +58,6 @@ msgstr ""
 msgid "Access keys have been successfully deleted."
 msgstr ""
 
-msgid ""
-"Access keys will soon be usable instead of your password to access the REST "
-"API"
-msgstr ""
-
 msgid "Accessibility"
 msgstr ""
 

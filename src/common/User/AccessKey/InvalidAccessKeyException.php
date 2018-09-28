@@ -20,21 +20,10 @@
 
 namespace Tuleap\User\AccessKey;
 
-class AccessKeyVerificationStringHasher
+class InvalidAccessKeyException extends AccessKeyException
 {
-    /**
-     * @return string
-     */
-    public function computeHash(AccessKeyVerificationString $verification_string)
+    public function __construct()
     {
-        return hash('sha256', $verification_string->getString());
-    }
-
-    /**
-     * @return bool
-     */
-    public function verifyHash(AccessKeyVerificationString $verification_string, $known_verification_string)
-    {
-        return hash_equals($known_verification_string, $this->computeHash($verification_string));
+        parent::__construct('The access key is not valid');
     }
 }

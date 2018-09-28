@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,14 +22,16 @@ namespace Tuleap\REST;
 use \Luracast\Restler\InvalidAuthCredentials;
 
 use Rest_Exception_InvalidTokenException;
+use Tuleap\User\AccessKey\AccessKeyException;
 use User_LoginException;
 
-class TokenIsAllowed {
-    
+class RESTAuthenticationFlowIsAllowed
+{
     /** @var UserManager */
     private $user_manager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager = UserManager::build();
     }
 
@@ -37,7 +39,8 @@ class TokenIsAllowed {
      * @return boolean
      * @throws RestException
      */
-    public function isAllowed() {
+    public function isAllowed()
+    {
         try {
             if ($this->requestIsOption() || $this->currentUserIsNotAnonymous()) {
                 return true;
@@ -46,19 +49,21 @@ class TokenIsAllowed {
             throw new InvalidAuthCredentials(403, $exception->getMessage());
         } catch (Rest_Exception_InvalidTokenException $exception) {
             throw new InvalidAuthCredentials(401, $exception->getMessage());
+        } catch (AccessKeyException $exception) {
+            throw new InvalidAuthCredentials(401, 'Invalid access key');
         }
 
         return false;
     }
 
-    private function requestIsOption() {
+    private function requestIsOption()
+    {
         return strtoupper($_SERVER['REQUEST_METHOD']) === 'OPTIONS';
     }
 
-    private function currentUserIsNotAnonymous() {
+    private function currentUserIsNotAnonymous()
+    {
         $user = $this->user_manager->getCurrentUser();
-        if ($user && ! $user->isAnonymous()) {
-            return true;
-        }
+        return $user && ! $user->isAnonymous();
     }
 }

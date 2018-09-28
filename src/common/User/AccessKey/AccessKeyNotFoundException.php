@@ -20,21 +20,10 @@
 
 namespace Tuleap\User\AccessKey;
 
-class AccessKeyVerificationStringHasher
+class AccessKeyNotFoundException extends AccessKeyException
 {
-    /**
-     * @return string
-     */
-    public function computeHash(AccessKeyVerificationString $verification_string)
+    public function __construct($key_id)
     {
-        return hash('sha256', $verification_string->getString());
-    }
-
-    /**
-     * @return bool
-     */
-    public function verifyHash(AccessKeyVerificationString $verification_string, $known_verification_string)
-    {
-        return hash_equals($known_verification_string, $this->computeHash($verification_string));
+        parent::__construct("Access key #$key_id does not exist");
     }
 }
