@@ -24,9 +24,6 @@ use Graph;
 use BarPlot;
 use DateLocale;
 
-require_once $GLOBALS['jpgraph_dir'] . '/jpgraph.php';
-require_once $GLOBALS['jpgraph_dir'] . '/jpgraph_bar.php';
-
 /**
  * Display data
  *
@@ -255,6 +252,7 @@ class SampleGraph
             $this->graph->img->SetMargin(60, 120, 20, 40);
         }
 
+        require_once __DIR__ . '/../../../../../src/common/chart/EmptyImageAntiAliasPolyfill.php';
         //management of the axes scales
         if ($this->filter == 'hour') {
             $this->graph->SetScale("linlin");

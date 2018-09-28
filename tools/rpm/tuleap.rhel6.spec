@@ -47,9 +47,7 @@ Requires: vixie-cron >= 4.1-9, tmpwatch
 Requires: php56-php-mysqlnd, php56-php-pdo, php56-php-xml, php56-php-mbstring, php56-php-gd
 Requires: php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-cli
 Requires: php56-php-bcmath, php56-php-fpm, php56-php-opcache, php56-php-pecl-jsonc, php56-php-pecl-zip
-Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 
-Requires: jpgraph-%{PKG_NAME}
 Requires: ckeditor >= 4.3.2
 
 Requires: curl
@@ -985,6 +983,7 @@ fi
 %{APP_DIR}/src/glyphs
 %{APP_DIR}/src/common
 %{APP_DIR}/src/vendor
+%{APP_DIR}/src/embedded_vendor
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade

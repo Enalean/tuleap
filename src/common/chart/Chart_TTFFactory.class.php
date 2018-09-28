@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,28 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Chart_TTFFactory {
-    const RHEL6 = 'rhel6';
-    const RHEL5 = 'rhel5';
-
-    private static $dejavu_path = array(
-        self::RHEL5 => 'dejavu-lgc',
-        self::RHEL6 => 'dejavu',
-    );
-
-    public static function setUserFont($jpgraph_object) {
-        if (is_dir(TTF_DIR.DIRECTORY_SEPARATOR.self::$dejavu_path[self::RHEL6])) {
-            $dejavu_path = self::$dejavu_path[self::RHEL6];
-        } else {
-            $dejavu_path = self::$dejavu_path[self::RHEL5];
-        }
-
+class Chart_TTFFactory
+{
+    public static function setUserFont($jpgraph_object)
+    {
         $jpgraph_object->SetUserFont(
-            $dejavu_path.'/DejaVuLGCSans.ttf',
-            $dejavu_path.'/DejaVuLGCSans-Bold.ttf',
-            $dejavu_path.'/DejaVuLGCSans-Oblique.ttf',
-            $dejavu_path.'/DejaVuLGCSans-BoldOblique.ttf'
+            'DejaVuSans.ttf',
+            'DejaVuSans-Bold.ttf',
+            'DejaVuSans-Oblique.ttf',
+            'DejaVuSans-BoldOblique.ttf'
         );
     }
 }
-

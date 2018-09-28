@@ -21,11 +21,6 @@
 
 use Tuleap\Chart\ColorsForCharts;
 
-require_once('jpgraph.php');
-require_once('jpgraph_gantt.php');
-require_once('jpgraph_line.php');
-require_once('jpgraph_bar.php');
-require_once('jpgraph_date.php');
 
 /**
 * Chart
@@ -67,15 +62,12 @@ class Chart
         $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
         $this->jpgraph_instance->SetMarginColor($this->getChartBackgroundColor());
         $this->jpgraph_instance->SetFrame(true, $this->getMainColor(), 0);
+
         if ($aWidth && $aHeight) {
-            // Commented because php56-php-gd from remi-safe
-            // does not rely on the GD library bundle with PHP
-            // but by the one provided by the OS which does not
-            // include the antiliasing feature
-            if (function_exists('imageantialias')) {
-                $this->jpgraph_instance->img->SetAntiAliasing();
-            }
+            require_once __DIR__ . '/EmptyImageAntiAliasPolyfill.php';
+            $this->jpgraph_instance->img->SetAntiAliasing();
         }
+
         Chart_TTFFactory::setUserFont($this->jpgraph_instance);
 
         //Fix margin

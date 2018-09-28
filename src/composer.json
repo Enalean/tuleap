@@ -3,7 +3,7 @@
     "psr-4": {
       "Tuleap\\": ["common/"]
     },
-    "classmap": ["common/"],
+    "classmap": ["common/", "embedded_vendor/"],
     "exclude-from-classmap": ["common/wiki/phpwiki/"]
   },
   "autoload-dev": {

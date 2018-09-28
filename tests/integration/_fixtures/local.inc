@@ -143,11 +143,7 @@ $alias_file      = "/etc/aliases.codendi";
 $sys_extra_plugin_path = '';
 
 // 3rd Party libraries
-$jpgraph_dir      = "/usr/share/jpgraph";
 $ckeditor_dir     = "/usr/share/ckeditor";
-
-// TrueType font dir (be careful, the leading / is mandatory).
-$ttf_font_dir     = "/usr/share/fonts/";
 
 // ForgeUpgrade config file
 $forgeupgrade_file = "/etc/tuleap/forgeupgrade/config.ini";
