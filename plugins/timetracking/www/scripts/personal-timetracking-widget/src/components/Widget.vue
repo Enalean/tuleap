@@ -17,15 +17,15 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <div class="timetracking-widget">
         <widget-reading-mode v-if="reading_mode"/>
         <widget-writing-mode v-else/>
         <widget-artifact-table/>
     </div>
-</template>)
+</template>
 
-(<script>
+<script>
 import { mapState } from "vuex";
 import store from "../store/index.js";
 import WidgetReadingMode from "./WidgetReadingMode.vue";
@@ -44,4 +44,4 @@ export default {
         ...mapState(["reading_mode"])
     }
 };
-</script>)
+</script>

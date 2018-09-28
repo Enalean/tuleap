@@ -17,15 +17,15 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <a v-bind:href="artifact.html_url">
         <span class="tlp-badge-outline timetracking-badge-direct-link-to-artifact"
               v-bind:class="badge_color"
         >{{ artifact.xref }}</span>
         <span>{{ artifact.title }}</span>
     </a>
-</template>)
-(<script>
+</template>
+<script>
 export default {
     name: "WidgetLinkToArtifact",
     props: {
@@ -37,4 +37,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

@@ -17,7 +17,7 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <widget-modal-edit-time
         v-if="edit_mode"
         v-bind:time-data="timeData"
@@ -38,8 +38,8 @@
             </span>
         </td>
     </tr>
-</template>)
-(<script>
+</template>
+<script>
 import { formatMinutes } from "../../time-formatters.js";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 
@@ -69,4 +69,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

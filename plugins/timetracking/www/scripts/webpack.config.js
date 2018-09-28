@@ -41,11 +41,14 @@ const webpack_config = {
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
-            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()]
+    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
+    resolveLoader: {
+        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
+    }
 };
 
 if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "watch") {

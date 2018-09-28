@@ -1,7 +1,14 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
 msgid "Add"
 msgstr ""
 
-msgid "An error occured"
+msgid "An error occurred"
 msgstr ""
 
 msgid "Artifact"

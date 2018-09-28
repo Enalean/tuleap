@@ -17,13 +17,13 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <table class="tlp-table">
         <thead>
         <tr>
-            <th>{{ date_message }}</th>
-            <th>{{ steps_label }}</th>
-            <th>{{ time_label }}</th>
+            <th v-translate> Date </th>
+            <th v-translate> Steps </th>
+            <th v-translate> Times </th>
         </tr>
         </thead>
         <tbody>
@@ -46,11 +46,10 @@
         </tr>
         </tfoot>
     </table>
-</template>)
+</template>
 
-(<script>
+<script>
 import { mapState, mapGetters } from "vuex";
-import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalRow from "./WidgetModalRow.vue";
 import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 
@@ -59,10 +58,7 @@ export default {
     components: { WidgetModalRow, WidgetModalEditTime },
     computed: {
         ...mapState(["is_add_mode", "current_times"]),
-        ...mapGetters(["get_formatted_aggregated_time"]),
-        time_label: () => gettext_provider.gettext("Times"),
-        date_message: () => gettext_provider.gettext("Date"),
-        steps_label: () => gettext_provider.gettext("Steps")
+        ...mapGetters(["get_formatted_aggregated_time"])
     },
     methods: {
         setAddMode() {
@@ -73,4 +69,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

@@ -24,6 +24,7 @@
 import * as actions from "./actions.js";
 import { rewire$loadFirstBatchOfTimes } from "./actions.js";
 import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURED } from "../constants";
 
 describe("Store actions", () => {
     let context;
@@ -101,7 +102,7 @@ describe("Store actions", () => {
 
                 await actions.getTimes(context);
                 expect(context.commit).toHaveBeenCalledWith("resetErrorMessage");
-                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "An error occured");
+                expect(context.commit).toHaveBeenCalledWith("setErrorMessage", ERROR_OCCURED);
             });
         });
 
@@ -128,7 +129,7 @@ describe("Store actions", () => {
 
                 await actions.addTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    "An error occured",
+                    ERROR_OCCURED,
                     "danger"
                 ]);
             });
@@ -151,7 +152,7 @@ describe("Store actions", () => {
                 await actions.addTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("pushCurrentTimes", [
                     [time],
-                    "Time successfully added"
+                    REST_FEEDBACK_ADD
                 ]);
                 expect(loadFirstBatchOfTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");
@@ -181,7 +182,7 @@ describe("Store actions", () => {
 
                 await actions.updateTime(context, ["2018-01-01", 1, "11:11", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("setRestFeedback", [
-                    "An error occured",
+                    ERROR_OCCURED,
                     "danger"
                 ]);
             });
@@ -205,7 +206,7 @@ describe("Store actions", () => {
                 await actions.updateTime(context, ["2018-01-01", 1, "00:20", "oui"]);
                 expect(context.commit).toHaveBeenCalledWith("replaceInCurrentTimes", [
                     time,
-                    "Time successfully updated"
+                    REST_FEEDBACK_EDIT
                 ]);
                 expect(loadFirstBatchOfTimes).toHaveBeenCalled();
                 expect(context.commit).not.toHaveBeenCalledWith("setRestFeedback");

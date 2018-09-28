@@ -17,38 +17,32 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(
 <template>
     <div class="timetracking-reading-mode"
          v-on:click="toggleReadingMode()"
     >
         <div class="timetracking-reading-mode-dates">
             <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label">{{ start_date_label }}</label>
+                <label class="tlp-label" v-translate> From </label>
                 <span>{{ start_date }}</span>
             </div>
             <div class="tlp-property timetracking-reading-date">
-                <label class="tlp-label">{{ end_date_label }}</label>
+                <label class="tlp-label" v-translate> To </label>
                 <span>{{ end_date }}</span>
             </div>
         </div>
     </div>
 </template>
-)(
 <script>
-import { gettext_provider } from "../gettext-provider.js";
 import { mapState, mapMutations } from "vuex";
 
 export default {
     name: "WidgetReadingMode",
     computed: {
-        ...mapState(["start_date", "end_date"]),
-        start_date_label: () => gettext_provider.gettext("From"),
-        end_date_label: () => gettext_provider.gettext("To")
+        ...mapState(["start_date", "end_date"])
     },
     methods: {
         ...mapMutations(["toggleReadingMode"])
     }
 };
 </script>
-)

@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { gettext_provider } from "../gettext-provider.js";
 import {
     getTrackedTimes,
     addTime as addTimeQuerrier,
     updateTime as updateTimeQuerrier
 } from "../api/rest-querier.js";
+import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURED } from "../constants.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);
@@ -47,10 +47,7 @@ export async function getTimes(context) {
 export async function addTime(context, [date, artifact, time_value, step]) {
     try {
         const response = await addTimeQuerrier(date, artifact, time_value, step);
-        context.commit("pushCurrentTimes", [
-            [response],
-            gettext_provider.gettext("Time successfully added")
-        ]);
+        context.commit("pushCurrentTimes", [[response], REST_FEEDBACK_ADD]);
         return loadFirstBatchOfTimes(context);
     } catch (rest_error) {
         return showRestError(context, rest_error);
@@ -60,10 +57,7 @@ export async function addTime(context, [date, artifact, time_value, step]) {
 export async function updateTime(context, [date, time_id, time_value, step]) {
     try {
         const response = await updateTimeQuerrier(date, time_id, time_value, step);
-        context.commit("replaceInCurrentTimes", [
-            response,
-            gettext_provider.gettext("Time successfully updated")
-        ]);
+        context.commit("replaceInCurrentTimes", [response, REST_FEEDBACK_EDIT]);
         return loadFirstBatchOfTimes(context);
     } catch (rest_error) {
         return showRestError(context, rest_error);
@@ -88,7 +82,7 @@ async function showErrorMessage(context, rest_error) {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);
     } catch (error) {
-        context.commit("setErrorMessage", gettext_provider.gettext("An error occured"));
+        context.commit("setErrorMessage", ERROR_OCCURED);
     }
 }
 
@@ -97,9 +91,6 @@ async function showRestError(context, rest_error) {
         const { error } = await rest_error.response.json();
         return context.commit("setRestFeedback", [error.code + " " + error.message, "danger"]);
     } catch (error) {
-        return context.commit("setRestFeedback", [
-            gettext_provider.gettext("An error occured"),
-            "danger"
-        ]);
+        return context.commit("setRestFeedback", [ERROR_OCCURED, "danger"]);
     }
 }

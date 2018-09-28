@@ -17,19 +17,19 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <div class="timetracking-artifacts-table">
         <div v-if="has_rest_error" class="tlp-alert-danger">
-            {{ error_message }}
+            {{ error }}
         </div>
         <div v-if="is_loading" class="timetracking-loader"></div>
         <table v-if="can_results_be_displayed" class="tlp-table">
             <thead>
                 <tr>
-                    <th>{{ artifact_label }}</th>
-                    <th>{{ project_label }}</th>
+                    <th v-translate> Artifact </th>
+                    <th v-translate> Project </th>
                     <th class="tlp-table-cell-numeric">
-                        {{ time_label }}
+                        <translate> Time </translate>
                         <span class="tlp-tooltip tlp-tooltip-left timetracking-time-tooltip"
                             v-bind:data-tlp-tooltip="time_format_tooltip"
                             v-bind:aria-label="time_format_tooltip"
@@ -42,8 +42,8 @@
             </thead>
             <tbody>
                 <tr v-if="! has_data_to_display">
-                    <td colspan="4" class="tlp-table-cell-empty">
-                        {{ empty_state }}
+                    <td colspan="4" class="tlp-table-cell-empty" v-translate>
+                        No tracked time have been found for this period
                     </td>
                 </tr>
                 <artifact-table-row v-for="time in times"
@@ -69,13 +69,12 @@
                 v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
-                {{ load_more_label }}
+                <translate> Load more </translate>
             </button>
         </div>
     </div>
-</template>)
-(<script>
-import { gettext_provider } from "../gettext-provider.js";
+</template>
+<script>
 import { mapState, mapGetters } from "vuex";
 import ArtifactTableRow from "./WidgetArtifactTableRow.vue";
 
@@ -98,14 +97,14 @@ export default {
         has_data_to_display() {
             return this.times.length > 0;
         },
-        time_format_tooltip: () =>
-            gettext_provider.gettext("The time is displayed in hours:minutes"),
-        empty_state: () =>
-            gettext_provider.gettext("No tracked time have been found for this period"),
-        artifact_label: () => gettext_provider.gettext("Artifact"),
-        project_label: () => gettext_provider.gettext("Project"),
-        time_label: () => gettext_provider.gettext("Time"),
-        load_more_label: () => gettext_provider.gettext("Load more")
+        time_format_tooltip() {
+            return this.$gettext("The time is displayed in hours:minutes");
+        },
+        error() {
+            return this.error_message === "error"
+                ? this.$gettext("An error occurred")
+                : this.error_message;
+        }
     },
     mounted() {
         this.$store.dispatch("loadFirstBatchOfTimes");
@@ -118,4 +117,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

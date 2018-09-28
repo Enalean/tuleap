@@ -17,12 +17,12 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-(<template>
+<template>
     <div class="tlp-modal" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
                 <i class="fa fa-pencil tlp-modal-title-icon"></i>
-                {{ edit_time }}
+                <translate> Detailed times </translate>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
                 &times;
@@ -31,25 +31,22 @@
         <widget-modal-content v-if="current_artifact"/>
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button v-on:click="reloadTimes" type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
-                {{ close_label }}
+                <translate> Close </translate>
             </button>
         </div>
     </div>
-</template>)
-(<script>
+</template>
+<script>
 import { mapGetters, mapActions } from "vuex";
-import { gettext_provider } from "../../gettext-provider.js";
 import WidgetModalContent from "./WidgetModalContent.vue";
 export default {
     name: "WidgetModalTimes",
     components: { WidgetModalContent },
     computed: {
-        ...mapGetters(["current_artifact"]),
-        close_label: () => gettext_provider.gettext("Close"),
-        edit_time: () => gettext_provider.gettext("Detailed times")
+        ...mapGetters(["current_artifact"])
     },
     methods: {
         ...mapActions(["reloadTimes"])
     }
 };
-</script>)
+</script>
