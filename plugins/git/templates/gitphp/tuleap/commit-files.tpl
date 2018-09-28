@@ -53,16 +53,23 @@
         <tr>
             <td class="{$commit_presenter->getStatusClassname($diffline)}">{$diffline->GetStatus()|escape}</td>
             <td>{$diffline->GetFromFile()|escape}</td>
-            <td class="tlp-table-cell-numeric git-repository-commit-file-stat-added">
-                {if (! empty($diffline->hasStats()))}
-                    +{$diffline->getAddedStats()}
-                {/if}
-            </td>
-            <td class="git-repository-commit-file-stat-removed">
-                {if (! empty($diffline->hasStats()))}
-                    −{$diffline->getRemovedStats()}
-                {/if}
-            </td>
+            {if (! $diffline->isBinaryFile())}
+                <td class="tlp-table-cell-numeric git-repository-commit-file-stat-added">
+                    {if (! empty($diffline->hasStats()))}
+                        +{$diffline->getAddedStats()}
+                    {/if}
+                </td>
+                <td class="git-repository-commit-file-stat-removed">
+                    {if (! empty($diffline->hasStats()))}
+                        −{$diffline->getRemovedStats()}
+                    {/if}
+                </td>
+            {/if}
+            {if ($diffline->isBinaryFile())}
+                <td class="git-repository-commit-file-stat-binary" colspan="2">
+                    {t}Binary file{/t}
+                </td>
+            {/if}
             <td class="tlp-table-cell-actions">
                 <a href="{$commit_presenter->getDiffLink($diffline)}"
                    class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
