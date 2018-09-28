@@ -23,6 +23,7 @@ namespace Tuleap\Git\GitPHP;
 
 class TreeDiff implements \Iterator, \Countable
 {
+    const EMPTY_TREE_HASH = "4b825dc642cb6eb9a060e54bf8d69288fbee4904";
 
     /**
      * fromHash
@@ -134,7 +135,7 @@ class TreeDiff implements \Iterator, \Countable
         }
 
         if (empty($this->fromHash)) {
-            $args[] = '--root';
+            $args[] = escapeshellarg(self::EMPTY_TREE_HASH);
         } else {
             $args[] = escapeshellarg($this->fromHash);
         }
