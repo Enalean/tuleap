@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class AccessKeyDAO extends DataAccessObject
@@ -43,8 +44,20 @@ class AccessKeyDAO extends DataAccessObject
     public function searchMetadataByUserID($user_id)
     {
         return $this->getDB()->run(
-            'SELECT creation_date, description, last_usage, last_ip FROM user_access_key WHERE user_id = ?',
+            'SELECT id, creation_date, description, last_usage, last_ip FROM user_access_key WHERE user_id = ?',
             $user_id
+        );
+    }
+
+    public function deleteByUserIDAndKeyIDs($user_id, array $key_ids)
+    {
+        if (empty($key_ids)) {
+            return;
+        }
+
+        $this->getDB()->delete(
+            'user_access_key',
+            EasyStatement::open()->with('user_id = ?', $user_id)->andIn('id IN (?*)', $key_ids)
         );
     }
 }

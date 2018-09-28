@@ -23,6 +23,10 @@ namespace Tuleap\User\AccessKey;
 class AccessKeyMetadata
 {
     /**
+     * @var int
+     */
+    private $id;
+    /**
      * @var \DateTimeImmutable
      */
     private $creation_date;
@@ -40,16 +44,23 @@ class AccessKeyMetadata
     private $last_used_ip;
 
     public function __construct(
+        $id,
         \DateTimeImmutable $creation_date,
         $description,
         \DateTimeImmutable $last_used_date = null,
         $last_used_ip = null
     ) {
 
+        $this->id             = $id;
         $this->creation_date  = $creation_date;
         $this->description    = $description;
         $this->last_used_date = $last_used_date;
         $this->last_used_ip   = $last_used_ip;
+    }
+
+    public function getID()
+    {
+        return $this->id;
     }
 
     /**

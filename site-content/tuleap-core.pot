@@ -42,6 +42,12 @@ msgstr ""
 msgid "Access Logs"
 msgstr ""
 
+msgid "Access key description"
+msgstr ""
+
+msgid "Access keys have been successfully deleted."
+msgstr ""
+
 msgid ""
 "Access keys will soon be usable instead of your password to access the REST "
 "API"
@@ -794,6 +800,9 @@ msgid "Remove from users group"
 msgstr ""
 
 msgid "Remove group member"
+msgstr ""
+
+msgid "Revoke selected access keys"
 msgstr ""
 
 msgid "SVN"

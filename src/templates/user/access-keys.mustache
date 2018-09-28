@@ -20,49 +20,64 @@
         </div>
     {{/ last_access_key }}
 
-    <table class="table access-keys-table">
-        <thead>
-        <tr>
-            <th></th>
-            <th>{{# gettext }}Generated on{{/ gettext }}</th>
-            <th>{{# gettext }}Last used on{{/ gettext }}</th>
-            <th>{{# gettext }}Last used by{{/ gettext }}</th>
-            <th>{{# gettext }}Description{{/ gettext }}</th>
-        </tr>
-        </thead>
-        {{# has_access_keys }}
-            <tbody>
-            {{# access_keys }}
-                <tr>
-                    <td></td>
-                    <td>{{ creation_date }}</td>
-                    <td>
-                        {{# last_used_on }}{{ last_used_on }}{{/ last_used_on }}
-                        {{^ last_used_on }}{{# gettext }}Never{{/ gettext }}{{/ last_used_on }}
-                    </td>
-                    <td>
-                        {{# last_used_by }}{{ last_used_by }}{{/ last_used_by }}
-                        {{^ last_used_by }}-{{/ last_used_by }}
-                    </td>
-                    <td>{{ description }}</td>
-                </tr>
-            {{/ access_keys }}
-            </tbody>
-        {{/ has_access_keys }}
-        {{^ has_access_keys }}
-            <tbody>
+    <form action="/account/access_key/revoke" method="post">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <table class="table access-keys-table">
+            <thead>
             <tr>
-                <td class="table-cell-empty" colspan="5">{{# gettext }}No API access keys{{/ gettext }}</td>
+                <th></th>
+                <th>{{# gettext }}Generated on{{/ gettext }}</th>
+                <th>{{# gettext }}Last used on{{/ gettext }}</th>
+                <th>{{# gettext }}Last used by{{/ gettext }}</th>
+                <th>{{# gettext }}Description{{/ gettext }}</th>
             </tr>
-            </tbody>
-        {{/ has_access_keys }}
-    </table>
+            </thead>
+            {{# has_access_keys }}
+                <tbody>
+                {{# access_keys }}
+                    <tr>
+                        <td><input type="checkbox" name="access-keys-selected[]" value="{{ id }}"/></td>
+                        <td>{{ creation_date }}</td>
+                        <td>
+                            {{# last_used_on }}{{ last_used_on }}{{/ last_used_on }}
+                            {{^ last_used_on }}{{# gettext }}Never{{/ gettext }}{{/ last_used_on }}
+                        </td>
+                        <td>
+                            {{# last_used_by }}{{ last_used_by }}{{/ last_used_by }}
+                            {{^ last_used_by }}-{{/ last_used_by }}
+                        </td>
+                        <td>{{ description }}</td>
+                    </tr>
+                {{/ access_keys }}
+                </tbody>
+            {{/ has_access_keys }}
+            {{^ has_access_keys }}
+                <tbody>
+                <tr>
+                    <td class="table-cell-empty" colspan="5">{{# gettext }}No API access keys{{/ gettext }}</td>
+                </tr>
+                </tbody>
+            {{/ has_access_keys }}
+        </table>
 
-    <div>
-        <a class="btn btn-primary" href="#access-keys-generate-modal" data-toggle="modal">
-            <i class="fa fa-plus" aria-hidden="true"></i> {{# gettext }}Generate new key{{/ gettext }}
-        </a>
-    </div>
+        <div>
+            <a class="btn btn-primary" href="#access-keys-generate-modal" data-toggle="modal">
+                <i class="fa fa-plus" aria-hidden="true"></i> {{# gettext }}Generate new key{{/ gettext }}
+            </a>
+            {{# has_access_keys }}
+                <button type="submit"
+                        id="button-revoke-access-tokens"
+                        name="revoke-access-tokens"
+                        class="btn btn-danger"
+                        disabled
+                >
+                    <i class="fa fa-trash-o" aria-hidden="true"></i> {{# gettext }}Revoke selected access keys{{/ gettext }}
+                </button>
+            {{/ has_access_keys }}
+        </div>
+    </form>
 </div>
 <div id="access-keys-generate-modal"
      class="modal hide fade"
@@ -87,7 +102,7 @@
                 The description is not required but it can help you to manage your access keys.{{/ gettext }}
             </p>
 
-            <label for="access-key-description">Access key description</label>
+            <label for="access-key-description">{{# gettext }}Access key description{{/ gettext }}</label>
             <textarea id="access-key-description" name="access-key-description" rows="5"
                       placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
         </div>

@@ -20,7 +20,7 @@
 
 namespace Tuleap\User\AccessKey;
 
-class AccessKeyMetadataRetriever
+class AccessKeyRevoker
 {
     /**
      * @var AccessKeyDAO
@@ -32,21 +32,8 @@ class AccessKeyMetadataRetriever
         $this->dao = $dao;
     }
 
-    /**
-     * @return AccessKeyMetadata[]
-     */
-    public function getMetadataByUser(\PFUser $user)
+    public function revokeASetOfUserAccessKeys(\PFUser $user, array $access_key_ids)
     {
-        $all_metadata = [];
-        foreach ($this->dao->searchMetadataByUserID($user->getId()) as $metadata) {
-            $all_metadata[] = new AccessKeyMetadata(
-                $metadata['id'],
-                new \DateTimeImmutable('@' . $metadata['creation_date']),
-                $metadata['description'],
-                $metadata['last_usage'] === null ? null : new \DateTimeImmutable('@' . $metadata['last_usage']),
-                $metadata['last_ip']
-            );
-        }
-        return $all_metadata;
+        $this->dao->deleteByUserIDAndKeyIDs($user->getId(), $access_key_ids);
     }
 }

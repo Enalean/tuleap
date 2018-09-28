@@ -40,6 +40,7 @@ use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
 use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
+use Tuleap\User\AccessKey\AccessKeyRevocationController;
 
 class RouteCollector
 {
@@ -109,6 +110,9 @@ class RouteCollector
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {
             $r->post('/access_key/create', function () {
                 return new AccessKeyCreationController();
+            });
+            $r->post('/access_key/revoke', function () {
+                return new AccessKeyRevocationController();
             });
         });
 
