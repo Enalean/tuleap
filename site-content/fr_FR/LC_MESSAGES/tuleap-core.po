@@ -44,6 +44,20 @@ msgstr ""
 "Un service non disponible ne peut être activé. Pour activer ce service, vous "
 "devez au préalable le rendre disponible."
 
+#, php-format
+msgid ""
+"A personal API access key (%s) was recently added to your account %s.\n"
+"\n"
+"Visit %s for more information."
+msgstr ""
+"Une clé personnelle d'accès à l'API (%s) a récemment été ajoutée à votre "
+"compte %s.\n"
+"\n"
+"Visitez %s pour plus d'informations."
+
+msgid "A personal API access key has been added to your account"
+msgstr "Une clé personnelle d'accès à l'API a été ajoutée à votre compte"
+
 msgid ""
 "A personal API access key will be automatically generated at the form "
 "submission.\n"
@@ -628,7 +642,7 @@ msgid "New email address:"
 msgstr "Nouvelle adresse e-mail"
 
 msgid "New personal API access key"
-msgstr ""
+msgstr "Nouvelle clé personnelle d'accès à l'API"
 
 msgid "News"
 msgstr "Annonces"

@@ -34,15 +34,21 @@ class AccessKeyCreator
      * @var AccessKeyVerificationStringHasher
      */
     private $hasher;
+    /**
+     * @var AccessKeyCreationNotifier
+     */
+    private $notifier;
 
     public function __construct(
         LastAccessKeyIdentifierStore $last_access_key_identifier_store,
         AccessKeyDAO $dao,
-        AccessKeyVerificationStringHasher $hasher
+        AccessKeyVerificationStringHasher $hasher,
+        AccessKeyCreationNotifier $notifier
     ) {
         $this->last_access_key_identifier_store = $last_access_key_identifier_store;
         $this->dao                              = $dao;
         $this->hasher                           = $hasher;
+        $this->notifier                         = $notifier;
     }
 
     public function create(\PFUser $user, $description)
@@ -58,6 +64,7 @@ class AccessKeyCreator
         );
         $access_key = new AccessKey($key_id, $verification_string);
 
+        $this->notifier->notifyCreation($user, $description);
         $this->last_access_key_identifier_store->storeLastGeneratedAccessKeyIdentifier($access_key);
     }
 }

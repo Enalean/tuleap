@@ -32,11 +32,13 @@ class AccessKeyCreatorTest extends TestCase
         $store              = \Mockery::mock(LastAccessKeyIdentifierStore::class);
         $dao                = \Mockery::mock(AccessKeyDAO::class);
         $hasher             = \Mockery::mock(AccessKeyVerificationStringHasher::class);
-        $access_key_creator = new AccessKeyCreator($store, $dao, $hasher);
+        $notifier            = \Mockery::mock(AccessKeyCreationNotifier::class);
+        $access_key_creator = new AccessKeyCreator($store, $dao, $hasher, $notifier);
 
         $hasher->shouldReceive('computeHash')->andReturns('hashed_identifier');
         $dao->shouldReceive('create')->once()->andReturns(1);
         $store->shouldReceive('storeLastGeneratedAccessKeyIdentifier')->once();
+        $notifier->shouldReceive('notifyCreation')->once();
 
         $user = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);

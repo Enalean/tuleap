@@ -43,7 +43,8 @@ class AccessKeyCreationController implements DispatchableWithRequest
                 $_SESSION
             ),
             new AccessKeyDAO(),
-            new AccessKeyVerificationStringHasher()
+            new AccessKeyVerificationStringHasher(),
+            new AccessKeyCreationNotifier($request->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 
         $description = $request->get('access-key-description') ?: '';
