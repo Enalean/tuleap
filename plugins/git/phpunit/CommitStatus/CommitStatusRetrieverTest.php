@@ -88,7 +88,7 @@ class CommitStatusRetrieverTest extends TestCase
             ],
             [
                 'commit_reference' => '23badb142cabe3e604ceb5fd5d243354e8e9f491',
-                'status'           => CommitStatusWithKnownStatus::STATUS_SUCCESS,
+                'status'           => CommitStatusWithKnownStatus::STATUS_FAILURE,
                 'date'             => 1528898888
             ]
         ]);
@@ -100,5 +100,9 @@ class CommitStatusRetrieverTest extends TestCase
         );
 
         $this->assertCount(2, $commit_statuses);
+        $this->assertSame(1528892466, $commit_statuses[0]->getDate()->getTimestamp());
+        $this->assertSame(CommitStatusWithKnownStatus::STATUS_SUCCESS_NAME, $commit_statuses[0]->getStatusName());
+        $this->assertSame(1528898888, $commit_statuses[1]->getDate()->getTimestamp());
+        $this->assertSame(CommitStatusWithKnownStatus::STATUS_FAILURE_NAME, $commit_statuses[1]->getStatusName());
     }
 }

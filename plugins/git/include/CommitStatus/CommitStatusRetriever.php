@@ -59,8 +59,9 @@ class CommitStatusRetriever
                 $statuses[] = new CommitStatusUnknown;
                 continue;
             }
-            $date = new \DateTimeImmutable('@' . $commit_status_row['date']);
-            $statuses[] = new CommitStatusWithKnownStatus($commit_status_row['status'], $date);
+            $commit_status_row = $commit_status_rows_indexed_by_reference[$commit_reference];
+            $date              = new \DateTimeImmutable('@' . $commit_status_row['date']);
+            $statuses[]        = new CommitStatusWithKnownStatus($commit_status_row['status'], $date);
         }
 
         return $statuses;
