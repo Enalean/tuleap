@@ -36,6 +36,7 @@ describe("Frs", function() {
                 timeout: 60000
             });
 
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="package-name"]').contains("My first package");
         });
 
@@ -46,6 +47,7 @@ describe("Frs", function() {
                 timeout: 60000
             });
 
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="package-name"]').contains("My first package edited");
         });
 
@@ -53,6 +55,8 @@ describe("Frs", function() {
             cy.get("[data-test=remove-package]").click({
                 timeout: 60000
             });
+
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="package-name"]').should("not.exist");
         });
     });
@@ -71,6 +75,7 @@ describe("Frs", function() {
                 timeout: 60000
             });
 
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="release-name"]').contains("My release name");
         });
 
@@ -81,12 +86,14 @@ describe("Frs", function() {
                 timeout: 60000
             });
 
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="release-name"]').contains("My release name edited");
         });
 
         it("can delete a release", function() {
             cy.get("[data-test=release-delete-button]").click({ force: true, timeout: 60000 });
 
+            cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="release-name"]').should("not.exist");
         });
     });
