@@ -1,0 +1,59 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.git-repository-commit-diff-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.git-repository-commit-diff-file-header {
+    display: flex;
+    margin: $tlp-spacing 0 0;
+    padding: $tlp-half-spacing $tlp-spacing;
+    background: $tlp-theme-background-color;
+}
+
+.git-repository-commit-diff-file-header-spacer {
+    flex: 1;
+}
+
+.git-repository-commit-diff-file-header-element:not(:first-child) {
+    margin: 0 0 0 $tlp-spacing;
+}
+
+.git-repository-diff {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.git-repository-diff-line {
+    white-space: pre-wrap;
+}
+
+.git-repository-diff-line-plus {
+    color: $tlp-ui-success;
+}
+
+.git-repository-diff-line-minus {
+    color: $tlp-ui-danger;
+}
+
+.git-repository-diff-line-at {
+    color: #990099;
+}

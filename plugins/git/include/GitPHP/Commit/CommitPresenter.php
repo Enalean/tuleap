@@ -105,6 +105,11 @@ class CommitPresenter
             );
     }
 
+    public function getCommitListLink()
+    {
+        return '?' . http_build_query(['a' => 'commit', 'h' => $this->commit->getHash()]);
+    }
+
     public function getDiffLink(FileDiff $diff_line)
     {
         return '?' .

@@ -17,7 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-    {include file='tuleap/commit-title-metadata.tpl'}
-</section>
-<section class="tlp-pane-section">
-    {include file='tuleap/commit-files.tpl'}
+<div class="git-repository-diff">
+    {foreach from=$diff item=diffline}
+        {if substr($diffline,0,1)=="+"}
+            <div class="git-repository-diff-line git-repository-diff-line-plus">{$diffline|escape:'html'}</div>
+        {elseif substr($diffline,0,1)=="-"}
+            <div class="git-repository-diff-line git-repository-diff-line-minus">{$diffline|escape:'html'}</div>
+        {elseif substr($diffline,0,1)=="@"}
+            <div class="git-repository-diff-line git-repository-diff-line-at">{$diffline|escape:'html'}</div>
+        {else}
+            <div class="git-repository-diff-line">{$diffline|escape:'html'}</div>
+        {/if}
+    {/foreach}
+</div>
