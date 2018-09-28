@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #, php-format
 msgid ""
@@ -850,6 +850,9 @@ msgstr "Projets dans la catégorie selectionnée"
 msgid "Public information"
 msgstr "Informations publiques"
 
+msgid "REST projects management"
+msgstr "Gestion des projets via REST"
+
 msgid "RSS"
 msgstr "RSS"
 
@@ -1119,6 +1122,10 @@ msgid ""
 msgstr ""
 "Cette permission donne le droit de gérer les administrateurs de la "
 "plateforme. Chaque utilisateur ajouté sera un adminstrateur de la plateforme."
+
+msgid ""
+"This permission grants the right to manage projects through the REST api"
+msgstr "Cette permission donne le droit de gérer les projets via l'api REST"
 
 msgid "This project doesn't use any services with permissions."
 msgstr "Ce project n'utilise pas de service avec des permissions."

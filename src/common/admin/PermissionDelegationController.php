@@ -25,6 +25,7 @@ use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\User\UserCannotRemoveLastAdministrationPermission;
 
 class Admin_PermissionDelegationController {

@@ -18,12 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\User;
+
+use EventManager;
+use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+use User_ForgeUGroup;
+use User_ForgeUserGroupPermission;
+use User_ForgeUserGroupPermission_NotFoundException;
+use User_ForgeUserGroupPermission_ProjectApproval;
+use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
+use User_ForgeUserGroupPermission_UserManagement;
+use User_ForgeUserGroupPermissionsDao;
 
-class User_ForgeUserGroupPermissionsFactory {
-
+class User_ForgeUserGroupPermissionsFactory // @codingStandardsIgnoreLine
+{
     const GET_PERMISSION_DELEGATION = 'get_permission_delegation';
 
     /**
@@ -48,7 +59,8 @@ class User_ForgeUserGroupPermissionsFactory {
      * @return User_ForgeUserGroupPermission
      * @throws User_ForgeUserGroupPermission_NotFoundException
      */
-    public function getForgePermissionById($permission_id) {
+    public function getForgePermissionById($permission_id)
+    {
         $all_permissions = $this->getAllAvailableForgePermissions();
 
         if (array_key_exists($permission_id, $all_permissions)) {
@@ -61,7 +73,8 @@ class User_ForgeUserGroupPermissionsFactory {
     /**
      * @return User_ForgeUserGroupPermission[]
      */
-    public function getAllUnusedForgePermissionsForForgeUserGroup(UserForgeUGroupPresenter $user_group) {
+    public function getAllUnusedForgePermissionsForForgeUserGroup(UserForgeUGroupPresenter $user_group)
+    {
         $unused_permissions    = array();
         $group_permissions_ids = $this->extractPermissionIds($this->permissions_dao->getPermissionsForForgeUGroup($user_group->id));
         $all_permissions_ids   = $this->getAllAvailableForgePermissionIds();
@@ -75,7 +88,8 @@ class User_ForgeUserGroupPermissionsFactory {
         return $unused_permissions;
     }
 
-    private function extractPermissionIds($permissions) {
+    private function extractPermissionIds($permissions)
+    {
         $permission_ids = array();
 
         if ($permissions) {
@@ -87,11 +101,13 @@ class User_ForgeUserGroupPermissionsFactory {
         return $permission_ids;
     }
 
-    private function getAllAvailableForgePermissionIds() {
+    private function getAllAvailableForgePermissionIds()
+    {
         return array_keys($this->getAllAvailableForgePermissions());
     }
 
-    public function getAllAvailableForgePermissions() {
+    public function getAllAvailableForgePermissions()
+    {
         $plugins_permission = array();
 
         $params = array(
@@ -103,18 +119,14 @@ class User_ForgeUserGroupPermissionsFactory {
             $params
         );
 
-        $all_permissions = $plugins_permission + array(
-            User_ForgeUserGroupPermission_ProjectApproval::ID
-                => new User_ForgeUserGroupPermission_ProjectApproval(),
-            User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID
-                => new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
-            User_ForgeUserGroupPermission_UserManagement::ID
-                => new User_ForgeUserGroupPermission_UserManagement(),
-            RetrieveSystemEventsInformationApi::ID
-                => new RetrieveSystemEventsInformationApi(),
-            SiteAdministratorPermission::ID
-                => new SiteAdministratorPermission()
-        );
+        $all_permissions = $plugins_permission + [
+            User_ForgeUserGroupPermission_ProjectApproval::ID                   => new User_ForgeUserGroupPermission_ProjectApproval(),
+            User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID => new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation(),
+            User_ForgeUserGroupPermission_UserManagement::ID                    => new User_ForgeUserGroupPermission_UserManagement(),
+            RetrieveSystemEventsInformationApi::ID                              => new RetrieveSystemEventsInformationApi(),
+            SiteAdministratorPermission::ID                                     => new SiteAdministratorPermission(),
+            RestProjectManagementPermission::ID                                 => new RestProjectManagementPermission()
+        ];
 
         return $all_permissions;
     }
@@ -122,7 +134,8 @@ class User_ForgeUserGroupPermissionsFactory {
     /**
      * @return User_ForgeUserGroupPermission[]
      */
-    public function getPermissionsForForgeUserGroup(User_ForgeUGroup $user_group) {
+    public function getPermissionsForForgeUserGroup(User_ForgeUGroup $user_group)
+    {
         $permissions   = array();
         $user_group_id = $user_group->getId();
 
@@ -139,8 +152,8 @@ class User_ForgeUserGroupPermissionsFactory {
         return array_values($permissions);
     }
 
-    private function instantiateFromRow($row) {
+    private function instantiateFromRow($row)
+    {
         return $this->getForgePermissionById($row['permission_id']);
     }
-
 }

@@ -18,12 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\User;
+
+use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
-use \Tuleap\User\ForgeUserGroupPermission\RetrieveSystemEventsInformationApi;
 use Tuleap\User\ForgeUserGroupPermission\UserForgeUGroupPresenter;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
+use TuleapTestCase;
+use User_ForgeUGroup;
+use User_ForgeUserGroupPermission_ProjectApproval;
+use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
+use User_ForgeUserGroupPermission_UserManagement;
+use User_ForgeUserGroupPermissionsDao;
 
-class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TuleapTestCase {
-
+class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TuleapTestCase // @codingStandardsIgnoreLine
+{
     /**
      * @var User_ForgeUserGroupPermissionsDao
      */
@@ -34,12 +44,14 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
      */
     protected $factory;
 
-    public function setUp() {
+    public function setUp()
+    {
         $this->dao     = mock('User_ForgeUserGroupPermissionsDao');
-        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao,  mock('EventManager'));
+        $this->factory = new User_ForgeUserGroupPermissionsFactory($this->dao, mock('EventManager'));
     }
 
-    public function itReturnsEmptyArrayIfNoResultsInDb() {
+    public function itReturnsEmptyArrayIfNoResultsInDb()
+    {
         $user_group = new User_ForgeUGroup(101, '', '');
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);
@@ -48,7 +60,8 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
         $this->assertEqual(0, count($all));
     }
 
-    public function itReturnsAnArrayOfDistinctPermissions() {
+    public function itReturnsAnArrayOfDistinctPermissions()
+    {
         $user_group  = new User_ForgeUGroup(101, '', '');
         $expected_id = User_ForgeUserGroupPermission_ProjectApproval::ID;
 
@@ -67,21 +80,24 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
         $this->assertEqual($expected_id, $permission->getId());
     }
 
-    public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions() {
-        $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
-        $expected_id1    = User_ForgeUserGroupPermission_ProjectApproval::ID;
-        $expected_id4    = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
-        $expected_id5    = User_ForgeUserGroupPermission_UserManagement::ID;
-        $expected_id6    = RetrieveSystemEventsInformationApi::ID;
-        $expected_id7    = SiteAdministratorPermission::ID;
+    public function itReturnsEmptyArrayIfAllForgeUserGroupHasAllPermissions()
+    {
+        $user_group   = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
+        $expected_id1 = User_ForgeUserGroupPermission_ProjectApproval::ID;
+        $expected_id4 = User_ForgeUserGroupPermission_RetrieveUserMembershipInformation::ID;
+        $expected_id5 = User_ForgeUserGroupPermission_UserManagement::ID;
+        $expected_id6 = RetrieveSystemEventsInformationApi::ID;
+        $expected_id7 = SiteAdministratorPermission::ID;
+        $expected_id8 = RestProjectManagementPermission::ID;
 
-        $permission_ids = array (
-            array('permission_id' => $expected_id1),
-            array('permission_id' => $expected_id4),
-            array('permission_id' => $expected_id5),
-            array('permission_id' => $expected_id6),
-            array('permission_id' => $expected_id7),
-        );
+        $permission_ids = [
+            ['permission_id' => $expected_id1],
+            ['permission_id' => $expected_id4],
+            ['permission_id' => $expected_id5],
+            ['permission_id' => $expected_id6],
+            ['permission_id' => $expected_id7],
+            ['permission_id' => $expected_id8]
+        ];
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns($permission_ids);
         $all = $this->factory->getAllUnusedForgePermissionsForForgeUserGroup($user_group);
@@ -89,7 +105,8 @@ class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends Tul
         $this->assertEqual(0, count($all));
     }
 
-    public function itReturnsArrayIfAllForgeUserGroupHasNoPermission() {
+    public function itReturnsArrayIfAllForgeUserGroupHasNoPermission()
+    {
         $user_group      = new UserForgeUGroupPresenter(new User_ForgeUGroup(101, '', ''), true);
 
         stub($this->dao)->getPermissionsForForgeUGroup(101)->returns(false);

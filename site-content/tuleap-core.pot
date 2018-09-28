@@ -788,6 +788,9 @@ msgstr ""
 msgid "Public information"
 msgstr ""
 
+msgid "REST projects management"
+msgstr ""
+
 msgid "RSS"
 msgstr ""
 
@@ -1028,6 +1031,10 @@ msgstr ""
 msgid ""
 "This permission grants the right to manage platform administration users. "
 "Every single user added here will be a platform administrator."
+msgstr ""
+
+msgid ""
+"This permission grants the right to manage projects through the REST api"
 msgstr ""
 
 msgid "This project doesn't use any services with permissions."
