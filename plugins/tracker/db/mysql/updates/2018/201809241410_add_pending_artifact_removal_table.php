@@ -18,33 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
-
-use BackendLogger;
-use ProjectHistoryDao;
-use Tracker_ArtifactDao;
-use WrapperLogger;
-
-class ArtifactDeletorBuilder
+class b201809241410_add_pending_artifact_removal_table extends ForgeUpgrade_Bucket // phpcs:ignore
 {
-    /**
-     * @return ArtifactDeletor
-     */
-    public static function build()
+    public function description()
     {
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
+        return 'Add table tracker_artifact_pending_removal to store artifact id who need to be archive before removal.';
+    }
 
-        $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
-            new PendingArtifactRemovalDao(),
-            $logger,
-            \UserManager::instance()
-        );
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
 
-        return new ArtifactDeletor(
-            new Tracker_ArtifactDao(),
-            new ProjectHistoryDao(),
-            new PendingArtifactRemovalDao(),
-            $async_artifact_archive_runner
-        );
+    public function up()
+    {
+        $sql = "CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact";
+
+        $this->db->createTable('plugin_tracker_artifact_pending_removal', $sql);
     }
 }

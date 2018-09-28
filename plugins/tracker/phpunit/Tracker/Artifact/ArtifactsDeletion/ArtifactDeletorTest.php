@@ -25,91 +25,49 @@ require_once __DIR__ . '/../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElement_Field_ComputedDaoCache;
-use Tuleap\Tracker\Artifact\ArtifactWithTrackerStructureExporter;
-use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
+use ProjectHistoryDao;
+use Tracker_ArtifactDao;
 
 class ArtifactDeletorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    protected function setUp()
+    public function testArtifactBecomePendingDeletionOnDelete()
     {
-        parent::setUp();
-        \ForgeConfig::store();
-        \ForgeConfig::set('tmp_dir', '/do_not_exist_nothing_will_be_written_during_the_test');
-    }
+        $artifact_id = 101;
 
-    protected function tearDown()
-    {
-        \ForgeConfig::restore();
-        parent::tearDown();
-    }
-
-    public function testArtifactIsDeleted()
-    {
-        $user        = Mockery::mock(\PFUser::class);
-        $changesets  = [
-            Mockery::mock(\Tracker_Artifact_Changeset::class),
-            Mockery::mock(\Tracker_Artifact_Changeset::class),
-            Mockery::mock(\Tracker_Artifact_Changeset::class)
-        ];
-        foreach ($changesets as $changeset) {
-            $changeset->shouldReceive('delete')->with($user)->once();
-        }
-
-        $artifact = Mockery::mock(\Tracker_Artifact::class);
-        $artifact->shouldReceive('getChangesets')->andReturn($changesets);
-        $artifact->shouldReceive('getId');
-
-        $tracker = Mockery::mock(\Tracker::class);
-        $tracker->shouldReceive('getGroupId');
-        $tracker->shouldReceive('getName');
-        $artifact->shouldReceive('getTracker')->andReturn($tracker);
-        $artifact->shouldReceive('getTrackerId');
-
-        $artifact_dao = Mockery::mock(\Tracker_ArtifactDao::class);
-        $artifact_dao->shouldReceive('startTransaction')->once();
-        $artifact_dao->shouldReceive('deleteArtifactLinkReference')->once();
-        $artifact_dao->shouldReceive('deleteUnsubscribeNotificationForArtifact')->once();
-        $artifact_dao->shouldReceive('delete')->once();
-        $artifact_dao->shouldReceive('commit')->once();
-
-        $permissions_manager = Mockery::mock(\PermissionsManager::class);
-        $permissions_manager->shouldReceive('clearPermission');
-
-        $cross_reference_manager = Mockery::mock(\CrossReferenceManager::class);
-        $cross_reference_manager->shouldReceive('deleteEntity');
-
-        $tracker_artifact_priority_manager = Mockery::mock(\Tracker_Artifact_PriorityManager::class);
-        $tracker_artifact_priority_manager->shouldReceive('deletePriority');
-
-        $project_history_dao = Mockery::mock(\ProjectHistoryDao::class);
-        $project_history_dao->shouldReceive('groupAddHistory')->once();
-
-        $event_manager = Mockery::mock(\EventManager::class);
-        $event_manager->shouldReceive('processEvent')->twice();
-
-        $artifact_with_tracker_structure_exporter = Mockery::mock(ArtifactWithTrackerStructureExporter::class);
-        $artifact_with_tracker_structure_exporter->shouldReceive('exportArtifactAndTrackerStructureToXML');
-
-        $computed_cache_dao = Mockery::mock(Tracker_FormElement_Field_ComputedDaoCache::class);
-        $computed_cache_dao->shouldReceive('deleteAllArtifactCacheValues')->once();
-
-        $recently_visited_dao = Mockery::mock(RecentlyVisitedDao::class);
-        $recently_visited_dao->shouldReceive('deleteVisitByArtifactId')->once();
+        $dao                          = Mockery::mock(Tracker_ArtifactDao::class);
+        $project_history_dao          = Mockery::mock(ProjectHistoryDao::class);
+        $pending_artifact_removal_dao = Mockery::mock(PendingArtifactRemovalDao::class);
+        $artifact_runnner             = Mockery::mock(AsynchronousArtifactsDeletionActionsRunner::class);
 
         $artifact_deletor = new ArtifactDeletor(
-            $artifact_dao,
-            $permissions_manager,
-            $cross_reference_manager,
-            $tracker_artifact_priority_manager,
+            $dao,
             $project_history_dao,
-            $event_manager,
-            $artifact_with_tracker_structure_exporter,
-            $computed_cache_dao,
-            $recently_visited_dao
+            $pending_artifact_removal_dao,
+            $artifact_runnner
         );
+
+        $tracker = Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn("My tracker name");
+        $tracker->shouldReceive('getGroupId')->andReturn(104);
+
+        $artifact = Mockery::mock(\Tracker_Artifact::class);
+        $artifact->shouldReceive("getId")->andReturn($artifact_id);
+        $artifact->shouldReceive('getTrackerId')->andReturn(4);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $user     = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('getId')->andReturn(110);
+
+        $dao->shouldReceive("startTransaction");
+        $pending_artifact_removal_dao->shouldReceive("addArtifactToPendingRemoval")->withArgs([$artifact_id]);
+        $dao->shouldReceive("delete")->withArgs([$artifact_id]);
+        $dao->shouldReceive("commit");
+
+        $artifact_runnner->shouldReceive("executeArchiveAndArtifactDeletion")->withArgs([$artifact, $user]);
+
+        $project_history_dao->shouldReceive("groupAddHistory");
 
         $artifact_deletor->delete($artifact, $user);
     }

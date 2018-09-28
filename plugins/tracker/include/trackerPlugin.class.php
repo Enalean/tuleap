@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
@@ -27,6 +26,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
+use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
@@ -36,11 +36,15 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
-use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\AsynchronousArtifactsDeletionActionsRunner;
+use Tuleap\Tracker\Artifact\ArtifactsDeletion\PendingArtifactRemovalDao;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunnerDao;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousSupervisor;
 use Tuleap\Tracker\Artifact\LatestHeartbeatsCollector;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
@@ -75,6 +79,7 @@ use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\PermissionsPerGroup\ProjectAdminPermissionPerGroupPresenterBuilder;
 use Tuleap\Tracker\ProjectDeletionEvent;
+use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Reference\ReferenceCreator;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Webhook\Actions\WebhookCreateController;
@@ -398,7 +403,7 @@ class trackerPlugin extends Plugin {
                     new BurndownCacheDateRetriever()
                 );
                 break;
-            default:
+                default:
                 break;
         }
     }
@@ -1484,7 +1489,7 @@ class trackerPlugin extends Plugin {
         $user = $params['user'];
 
         $visit_retriever = new \Tuleap\Tracker\RecentlyVisited\VisitRetriever(
-            new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao(),
+            new RecentlyVisitedDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance())
         );
@@ -1501,7 +1506,7 @@ class trackerPlugin extends Plugin {
         $user = $params['user'];
 
         $visit_cleaner = new \Tuleap\Tracker\RecentlyVisited\VisitCleaner(
-            new \Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao()
+            new RecentlyVisitedDao()
         );
         $visit_cleaner->clearVisitedArtifacts($user);
     }
@@ -1540,8 +1545,17 @@ class trackerPlugin extends Plugin {
 
     public function workerEvent(WorkerEvent $event)
     {
-        $async_actions_runner = new \Tuleap\Tracker\Artifact\Changeset\PostCreation\AsynchronousActionsRunner();
+        $async_actions_runner = new AsynchronousActionsRunner();
         $async_actions_runner->addListener($event);
+
+        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
+
+        $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
+            new PendingArtifactRemovalDao(),
+            $logger,
+            $this->getUserManager()
+        );
+        $async_artifact_archive_runner->addListener($event);
     }
 
     public function permissionPerGroupPaneCollector(PermissionPerGroupPaneCollector $event)

@@ -548,6 +548,9 @@ CREATE TABLE tracker_artifact(
   INDEX idx_changeset_tracker(last_changeset_id, tracker_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_artifact_pending_removal;
+CREATE TABLE plugin_tracker_artifact_pending_removal LIKE tracker_artifact;
+
 DROP TABLE IF EXISTS tracker_artifact_priority_rank;
 CREATE TABLE tracker_artifact_priority_rank(
     artifact_id INT(11) PRIMARY KEY,

@@ -20,31 +20,32 @@
 
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
-use BackendLogger;
-use ProjectHistoryDao;
-use Tracker_ArtifactDao;
-use WrapperLogger;
+use Tuleap\DB\DataAccessObject;
 
-class ArtifactDeletorBuilder
+class PendingArtifactRemovalDao extends DataAccessObject
 {
-    /**
-     * @return ArtifactDeletor
-     */
-    public static function build()
+    public function addArtifactToPendingRemoval($artifact_id)
     {
-        $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
+        $sql = "INSERT INTO plugin_tracker_artifact_pending_removal
+                  SELECT * FROM tracker_artifact
+                  WHERE id = ?";
 
-        $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
-            new PendingArtifactRemovalDao(),
-            $logger,
-            \UserManager::instance()
-        );
+        $this->getDB()->run($sql, $artifact_id);
+    }
 
-        return new ArtifactDeletor(
-            new Tracker_ArtifactDao(),
-            new ProjectHistoryDao(),
-            new PendingArtifactRemovalDao(),
-            $async_artifact_archive_runner
-        );
+    public function getPendingArtifactById($artifact_id)
+    {
+        $sql = "SELECT * FROM plugin_tracker_artifact_pending_removal
+                  WHERE id = ?";
+
+        return $this->getDB()->row($sql, $artifact_id);
+    }
+
+    public function removeArtifact($artifact_id)
+    {
+        $sql = "DELETE FROM plugin_tracker_artifact_pending_removal
+                  WHERE id = ?";
+
+        $this->getDB()->run($sql, $artifact_id);
     }
 }
