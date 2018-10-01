@@ -29,6 +29,7 @@ namespace Tuleap\Git\GitPHP;
  */
 class Commit extends GitObject
 {
+    const HEADER_PGP = 'gpgsig';
 
     /**
      * dataRead
@@ -128,6 +129,11 @@ class Commit extends GitObject
      * @access protected
      */
     protected $comment = array();
+
+    /**
+     * @var null|string
+     */
+    private $pgp_signature;
 
     /**
      * readTree
@@ -519,6 +525,17 @@ class Commit extends GitObject
     }
 
     /**
+     * @return null|string
+     */
+    public function getPGPSignature()
+    {
+        if (! $this->dataRead) {
+            $this->ReadData();
+        }
+        return $this->pgp_signature;
+    }
+
+    /**
      * SearchComment
      *
      * Gets the lines of the comment matching the given pattern
@@ -598,8 +615,17 @@ class Commit extends GitObject
         $lines = explode("\n", $data);
 
         $header = true;
+        $is_parsing_pgp_signature = false;
 
         foreach ($lines as $i => $line) {
+            if ($is_parsing_pgp_signature) {
+                if (strlen($line) > 0 && $line[0] === ' ') {
+                    $this->pgp_signature .= ltrim($line, ' ') . "\n";
+                    continue;
+                }
+                $this->pgp_signature      = rtrim($this->pgp_signature);
+                $is_parsing_pgp_signature = false;
+            }
             if ($header && preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
                 /* Tree */
                 try {
@@ -626,6 +652,9 @@ class Commit extends GitObject
                 $this->committer = $regs[1];
                 $this->committerEpoch = $regs[2];
                 $this->committerTimezone = $regs[3];
+            } else if ($header && strpos($line, self::HEADER_PGP . ' ') === 0) {
+                $this->pgp_signature      = substr($line, strlen(self::HEADER_PGP . ' ')) . "\n";
+                $is_parsing_pgp_signature = true;
             } else {
                 /* commit comment */
                 $header = false;

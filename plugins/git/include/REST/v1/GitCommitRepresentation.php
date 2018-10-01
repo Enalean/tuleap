@@ -66,6 +66,10 @@ class GitCommitRepresentation
      * @var \Tuleap\Git\REST\v1\GitCommitStatusRepresentation
      */
     public $commit_status;
+    /**
+     * @var \Tuleap\Git\REST\v1\GitCommitVerificationRepresentation
+     */
+    public $verification;
 
     public function build($repository_path, Commit $commit, CommitMetadata $commit_metadata)
     {
@@ -75,6 +79,8 @@ class GitCommitRepresentation
         $this->author_name   = $commit->GetAuthorName();
         $this->author_email  = $commit->getAuthorEmail();
         $this->authored_date = JsonCast::toDate($commit->GetAuthorEpoch());
+        $this->verification  = new GitCommitVerificationRepresentation();
+        $this->verification->build($commit->getPGPSignature());
 
         $this->html_url = $repository_path . '?' . http_build_query(
             [
