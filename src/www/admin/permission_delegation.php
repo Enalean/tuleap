@@ -20,6 +20,7 @@
 
 use Tuleap\Admin\PermissionDelegation\PermissionPresenterBuilder;
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once 'pre.php';
 

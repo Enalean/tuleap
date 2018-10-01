@@ -48,6 +48,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\MediaWiki\MediawikiMaintenanceWrapper;
 use Tuleap\MediaWiki\XMLMediaWikiExporter;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
+use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
