@@ -39,7 +39,7 @@
      {$geshiout}
    {else}
      {* Just plain display *}
-<table class="code" id="blobData">
+<table class="code" id="git-repository-blob-file">
 <tbody>
 <tr class="li1">
 <td class="ln">

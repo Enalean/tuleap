@@ -54,6 +54,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($this->params['plain']) && $this->params['plain']) {
             return 'blobplain.tpl';
         }
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/blob.tpl';
+        }
         return 'blob.tpl';
     }
 
@@ -198,7 +201,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                     $geshi->set_language($lang);
                     $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
                     $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
-                    $geshi->set_overall_id('blobData');
+                    $geshi->set_overall_id('git-repository-blob-file');
                     $this->tpl->assign('geshiout', $geshi->parse_code());
                     $this->tpl->assign('extracss', $geshi->get_stylesheet());
                     $this->tpl->assign('geshi', true);
