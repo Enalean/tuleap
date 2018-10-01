@@ -9,9 +9,7 @@ const path_to_tlp = path.resolve(__dirname, "../../../../src/www/themes/common/t
 
 const webpack_config_for_trackers = {
     entry: {
-        "tracker-report-expert-mode": "./report/index.js",
-        "tracker-permissions-per-group": "./permissions-per-group/src/index.js",
-        TrackerAdminFields: "./TrackerAdminFields.js"
+        "tracker-permissions-per-group": "./permissions-per-group/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
@@ -90,9 +88,11 @@ const webpack_config_for_burndown_chart = {
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
 };
 
-const webpack_config_for_artifacts = {
+const webpack_config_for_vue = {
     entry: {
-        MoveArtifactModal: "./artifact-action-buttons/src/index.js"
+        "tracker-report-expert-mode": "./report/index.js",
+        MoveArtifactModal: "./artifact-action-buttons/src/index.js",
+        TrackerAdminFields: "./TrackerAdminFields.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
@@ -116,27 +116,27 @@ const webpack_config_for_artifacts = {
     },
     plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases(webpack_configurator.easygettext_loader_alias)
+        alias: webpack_configurator.easygettext_loader_alias
     }
 };
 
 if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
     webpack_config_for_artifact_modal.devtool = "cheap-module-eval-source-map";
     webpack_config_for_burndown_chart.devtool = "cheap-module-eval-source-map";
-    webpack_config_for_artifacts.devtool = "cheap-module-eval-source-map";
+    webpack_config_for_vue.devtool = "cheap-module-eval-source-map";
 }
 
 if (process.env.NODE_ENV === "production") {
     module.exports = [
         webpack_config_for_trackers,
         webpack_config_for_burndown_chart,
-        webpack_config_for_artifacts
+        webpack_config_for_vue
     ];
 } else {
     module.exports = [
         webpack_config_for_trackers,
         webpack_config_for_artifact_modal,
         webpack_config_for_burndown_chart,
-        webpack_config_for_artifacts
+        webpack_config_for_vue
     ];
 }

@@ -20,16 +20,16 @@
 <template>
     <div class="colorpicker-switch" v-bind:class="{ 'colorpicker-switch-to-old-palette': ! isOldPaletteShown }">
         <a v-bind:class="{ 'colorpicker-switch-disabled': isSwitchDisabled }"
-           v-bind:title="getSwitchTitle"
+           v-bind:title="switch_title"
            v-on:click="switchPalette"
            href="javascript:;"
         >
             <i class="fa fa-random"></i>
-            <span v-if="isOldPaletteShown">
-                {{ switchDefaultPaletteLabel }}
+            <span v-if="isOldPaletteShown" v-translate>
+                Switch to default colors
             </span>
-            <span v-else>
-                {{ switchOldPaletteLabel }}
+            <span v-else v-translate>
+                Switch to old colors
             </span>
         </a>
     </div>
@@ -46,12 +46,12 @@ export default {
         isSwitchDisabled: Boolean
     },
     computed: {
-        getSwitchTitle() {
-            if (this.isSwitchDisabled) {
-                return this.switchDisabledTitle;
-            }
-
-            return "";
+        switch_title() {
+            return this.isSwitchDisabled
+                ? this.$gettext(
+                      "You can't switch to old colors because the field is currently being used by the card background color semantic"
+                  )
+                : "";
         }
     },
     methods: {

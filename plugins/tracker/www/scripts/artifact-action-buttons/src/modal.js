@@ -21,7 +21,7 @@ import Vue from "vue";
 import MoveModal from "./components/MoveModal.vue";
 import { setFromTracker } from "./from-tracker-presenter.js";
 import GetTextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
+import french_translations from "../../po/fr.po";
 
 export function init(vue_mount_point) {
     Vue.use(GetTextPlugin, {

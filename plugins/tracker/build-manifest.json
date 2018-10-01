@@ -93,9 +93,9 @@
         }
     },
     "gettext-vue": {
-        "artifact-action-buttons": {
-            "scripts": "www/scripts/artifact-action-buttons/src",
-            "po" : "www/scripts/artifact-action-buttons/po"
+        "tracker": {
+            "scripts": "www/scripts/",
+            "po": "www/scripts/po"
         }
     },
     "components": [
