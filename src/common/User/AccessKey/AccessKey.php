@@ -52,7 +52,7 @@ class AccessKey
             throw new InvalidIdentifierFormatException();
         }
         $verification_string = new AccessKeyVerificationString(
-            new ConcealedString(Encoding::hexDecode($matches['verifier']))
+            new ConcealedString(\sodium_hex2bin($matches['verifier']))
         );
         return new self((int) $matches['key_id'], $verification_string);
     }
@@ -79,7 +79,7 @@ class AccessKey
     public function getIdentifier()
     {
         return new ConcealedString(
-            self::PREFIX . $this->access_key_id . '.' . Encoding::hexEncode($this->verification_string->getString())
+            self::PREFIX . $this->access_key_id . '.' . \sodium_bin2hex((string) $this->verification_string->getString())
         );
     }
 }
