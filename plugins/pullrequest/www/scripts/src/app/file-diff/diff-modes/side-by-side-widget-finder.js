@@ -17,40 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./new-inline-comment.html";
+export { getCommentPlaceholderWidget };
 
-export default {
-    templateUrl: "new-inline-comment.html",
-    controller,
-    bindings: {
-        submitCallback: "<",
-        codemirrorWidget: "<"
+function getCommentPlaceholderWidget(handle) {
+    if (!handle.widgets) {
+        return null;
     }
-};
-
-export const NAME = "new-inline-comment";
-
-function controller() {
-    const self = this;
-    Object.assign(self, {
-        comment: "",
-        is_loading: false,
-        submit,
-        cancel
+    return handle.widgets.find(widget => {
+        return widget.node.classList.contains("pull-request-file-diff-comment-placeholder-block");
     });
-
-    function submit() {
-        self.is_loading = true;
-        self.submitCallback(self.comment)
-            .then(() => {
-                self.codemirrorWidget.clear();
-            })
-            .finally(() => {
-                self.is_loading = false;
-            });
-    }
-
-    function cancel() {
-        self.codemirrorWidget.clear();
-    }
 }

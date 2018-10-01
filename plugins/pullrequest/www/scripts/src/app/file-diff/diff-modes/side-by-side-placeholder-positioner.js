@@ -17,13 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./inline-comment.tpl.html";
+import { DELETED_GROUP } from "./side-by-side-line-grouper.js";
+import { getGroupOfLine, getLineOfHandle } from "./side-by-side-lines-state.js";
 
-export default {
-    templateUrl: "inline-comment.tpl.html",
-    bindings: {
-        comment: "<"
+export { getDisplayAboveLineForWidget };
+
+function getDisplayAboveLineForWidget(handle) {
+    const line_of_handle = getLineOfHandle(handle);
+
+    if (line_of_handle) {
+        const line_group = getGroupOfLine(line_of_handle);
+        if (line_group.type === DELETED_GROUP) {
+            return true;
+        }
     }
-};
 
-export const NAME = "inline-comment";
+    return false;
+}

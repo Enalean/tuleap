@@ -17,32 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { buildCodePlaceholderWidget } from "./side-by-side-code-placeholder-builder.js";
 import { ADDED_GROUP, DELETED_GROUP } from "./side-by-side-line-grouper.js";
 import {
-    getWidgetCreationParams,
-    getUnmovedLineWidgetCreationParams
-} from "./side-by-side-widget-builder.js";
-import {
-    rewire$getGroupLines,
     rewire$getLineHandles,
     rewire$getGroupOfLine,
+    rewire$getGroupLines,
     rewire$hasNextLine,
     rewire$getNextLine,
-    restore as restoreLinesState
+    restore as restoreState
 } from "./side-by-side-lines-state.js";
 
-describe("side-by-side widget builder", () => {
+describe("side-by-side code placeholder builder", () => {
     const left_code_mirror = {};
     const right_code_mirror = {};
-    let getGroupLines, getLineHandles, getGroupOfLine, hasNextLine, getNextLine;
+    let getLineHandles, getGroupOfLine, getGroupLines, hasNextLine, getNextLine;
 
     beforeEach(() => {
-        getGroupLines = jasmine.createSpy("getGroupLines");
-        rewire$getGroupLines(getGroupLines);
         getLineHandles = jasmine.createSpy("getLineHandles");
         rewire$getLineHandles(getLineHandles);
         getGroupOfLine = jasmine.createSpy("getGroupOfLine");
         rewire$getGroupOfLine(getGroupOfLine);
+        getGroupLines = jasmine.createSpy("getGroupLines");
+        rewire$getGroupLines(getGroupLines);
         hasNextLine = jasmine.createSpy("hasNextLine");
         rewire$hasNextLine(hasNextLine);
         getNextLine = jasmine.createSpy("getNextLine");
@@ -50,52 +47,10 @@ describe("side-by-side widget builder", () => {
     });
 
     afterEach(() => {
-        restoreLinesState();
+        restoreState();
     });
 
-    describe("getWidgetCreationParams()", () => {
-        describe("Unmoved lines -", () => {
-            it("Given an unmoved line with a comment (line widget), left and right code mirrors, then it will return the left code mirror (where the line widget will go), the left line handle where to attach it and the height difference between the left and right handles", () => {
-                const unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-                const left_handle = { height: 20 };
-                const fake_widget = {};
-                const right_handle = { height: 57, widgets: [fake_widget] };
-                getLineHandles
-                    .withArgs(unmoved_line)
-                    .and.returnValue({ left_handle, right_handle });
-
-                const widget_params = getWidgetCreationParams(
-                    unmoved_line,
-                    left_code_mirror,
-                    right_code_mirror
-                );
-
-                expect(widget_params).toEqual({
-                    code_mirror: left_code_mirror,
-                    handle: left_handle,
-                    widget_height: 37,
-                    display_above_line: false
-                });
-            });
-
-            it("Given an unmoved line without comment, then it will return null", () => {
-                const unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-                const left_handle = { height: 40 };
-                const right_handle = { height: 40 };
-                getLineHandles
-                    .withArgs(unmoved_line)
-                    .and.returnValue({ left_handle, right_handle });
-
-                const widget_params = getWidgetCreationParams(
-                    unmoved_line,
-                    left_code_mirror,
-                    right_code_mirror
-                );
-
-                expect(widget_params).toBeNull();
-            });
-        });
-
+    describe("buildCodePlaceholderWidget()", () => {
         describe("Deleted group -", () => {
             it("Given the first line of a deleted group, then it will return the right code mirror (where the line widget will go), the right line handle and the sum of the group's line handles' heights", () => {
                 const first_deleted_line = { unidiff_offset: 2, old_offset: 2, new_offset: null };
@@ -119,7 +74,7 @@ describe("side-by-side widget builder", () => {
                     .withArgs(group)
                     .and.returnValue([first_deleted_line, second_deleted_line]);
 
-                const widget_params = getWidgetCreationParams(
+                const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,
                     group,
                     left_code_mirror,
@@ -130,7 +85,8 @@ describe("side-by-side widget builder", () => {
                     code_mirror: right_code_mirror,
                     handle: first_right_handle,
                     widget_height: 60,
-                    display_above_line: false
+                    display_above_line: true,
+                    is_comment_placeholder: false
                 });
             });
 
@@ -156,7 +112,7 @@ describe("side-by-side widget builder", () => {
                     .withArgs(group)
                     .and.returnValue([first_deleted_line, second_deleted_line]);
 
-                const widget_params = getWidgetCreationParams(
+                const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,
                     left_code_mirror,
                     right_code_mirror
@@ -166,7 +122,8 @@ describe("side-by-side widget builder", () => {
                     code_mirror: right_code_mirror,
                     handle: first_right_handle,
                     widget_height: 57,
-                    display_above_line: false
+                    display_above_line: true,
+                    is_comment_placeholder: false
                 });
             });
         });
@@ -194,7 +151,7 @@ describe("side-by-side widget builder", () => {
                     .withArgs(group)
                     .and.returnValue([first_added_line, second_added_line]);
 
-                const widget_params = getWidgetCreationParams(
+                const widget_params = buildCodePlaceholderWidget(
                     first_added_line,
                     left_code_mirror,
                     right_code_mirror
@@ -204,7 +161,8 @@ describe("side-by-side widget builder", () => {
                     code_mirror: left_code_mirror,
                     handle: first_left_handle,
                     widget_height: 60,
-                    display_above_line: false
+                    display_above_line: false,
+                    is_comment_placeholder: false
                 });
             });
 
@@ -230,7 +188,7 @@ describe("side-by-side widget builder", () => {
                     .withArgs(group)
                     .and.returnValue([first_added_line, second_added_line]);
 
-                const widget_params = getWidgetCreationParams(
+                const widget_params = buildCodePlaceholderWidget(
                     first_added_line,
                     left_code_mirror,
                     right_code_mirror
@@ -240,13 +198,14 @@ describe("side-by-side widget builder", () => {
                     code_mirror: left_code_mirror,
                     handle: first_left_handle,
                     widget_height: 57,
-                    display_above_line: false
+                    display_above_line: false,
+                    is_comment_placeholder: false
                 });
             });
         });
 
         describe("First line modified -", () => {
-            it("Given the first line is modified (it will appear as deleted and then added), then the opposite placeholder for the added group must be added above the line to keep the scrolling height", () => {
+            it("Given the first line is modified (it will appear as deleted and then added), then the height of the first line will not be subtracted from the height of the widget", () => {
                 const first_deleted_line = { unidiff_offset: 1, old_offset: 1, new_offset: null };
                 const second_added_line = { unidiff_offset: 2, old_offset: null, new_offset: 1 };
                 hasNextLine.withArgs(first_deleted_line).and.returnValue(true);
@@ -274,7 +233,7 @@ describe("side-by-side widget builder", () => {
                 getGroupLines.withArgs(deleted_group).and.returnValue([first_deleted_line]);
                 getGroupLines.withArgs(added_group).and.returnValue([second_added_line]);
 
-                const widget_params = getWidgetCreationParams(
+                const widget_params = buildCodePlaceholderWidget(
                     first_deleted_line,
                     left_code_mirror,
                     right_code_mirror
@@ -284,35 +243,9 @@ describe("side-by-side widget builder", () => {
                     code_mirror: right_code_mirror,
                     handle: right_handle,
                     widget_height: 40,
-                    display_above_line: true
+                    display_above_line: true,
+                    is_comment_placeholder: false
                 });
-            });
-        });
-    });
-
-    describe("getUnmovedLineWidgetCreationParams()", () => {
-        it("Given an unmoved line and given it had already a placeholder on the right side, then it will return the left handle to attach another placeholder and the height of the line minus that of the placeholder to keep the scroll in sync", () => {
-            const unmoved_line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
-            const left_handle = { height: 20 };
-            const classList = jasmine.createSpyObj("classList", ["contains"]);
-            classList.contains
-                .withArgs("pull-request-file-diff-placeholder-block")
-                .and.returnValue(true);
-            const placeholder_widget = {
-                node: {
-                    classList
-                },
-                height: 48
-            };
-            const right_handle = { height: 108, widgets: [placeholder_widget] };
-            getLineHandles.and.returnValue({ left_handle, right_handle });
-
-            const widget_params = getUnmovedLineWidgetCreationParams(unmoved_line);
-
-            expect(widget_params).toEqual({
-                handle: left_handle,
-                widget_height: 40,
-                display_above_line: false
             });
         });
     });

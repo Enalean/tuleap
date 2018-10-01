@@ -20,13 +20,15 @@
 import {
     initDataAndCodeMirrors,
     getCommentLine,
-    getGroupLines
+    getGroupLines,
+    getLineOfHandle
 } from "./side-by-side-lines-state.js";
 import { rewire$buildLineGroups, restore as restoreGrouper } from "./side-by-side-line-grouper.js";
 import {
     rewire$buildLineToLineHandlesMap,
     restore as restoreMapper
 } from "./side-by-side-line-mapper.js";
+import { ADDED_GROUP, DELETED_GROUP, UNMOVED_GROUP } from "./side-by-side-line-grouper";
 
 describe("side-by-side lines state", () => {
     let buildLineGroups, buildLineToLineHandlesMap, left_code_mirror, right_code_mirror;
@@ -94,6 +96,117 @@ describe("side-by-side lines state", () => {
             const group_lines = getGroupLines(group);
 
             expect(group_lines).toEqual([second_line, third_line]);
+        });
+    });
+
+    describe("getLineOfHandle()", () => {
+        it("Given handles matching an unmoved line, then it will return the unmoved line", () => {
+            const line = { unidiff_offset: 1, old_offset: 1, new_offset: 1 };
+            const left_handle = {};
+            const right_handle = {};
+            const unmoved_group = { type: UNMOVED_GROUP };
+            buildLineGroups.and.returnValue({
+                line_to_group_map: new Map([[line.unidiff_offset, unmoved_group]])
+            });
+            buildLineToLineHandlesMap.and.returnValue(
+                new Map([
+                    [
+                        line,
+                        {
+                            left_handle,
+                            right_handle
+                        }
+                    ]
+                ])
+            );
+            initDataAndCodeMirrors([line], left_code_mirror, right_code_mirror);
+
+            expect(getLineOfHandle(left_handle)).toBe(line);
+            expect(getLineOfHandle(right_handle)).toBe(line);
+        });
+
+        it("Given the left handle of an added line, then it will return the opposite line (not the added line)", () => {
+            const added_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
+            const opposite_line = { unidiff_offset: 2, old_offset: 1, new_offset: 2 };
+            const added_handle = {};
+            const opposite_left_handle = {};
+            const opposite_right_handle = {};
+            const added_group = { type: ADDED_GROUP };
+            const unmoved_group = { type: UNMOVED_GROUP };
+            buildLineGroups.and.returnValue({
+                line_to_group_map: new Map([
+                    [added_line.unidiff_offset, added_group],
+                    [opposite_line.unidiff_offset, unmoved_group]
+                ])
+            });
+            buildLineToLineHandlesMap.and.returnValue(
+                new Map([
+                    [
+                        added_line,
+                        {
+                            left_handle: opposite_left_handle,
+                            right_handle: added_handle
+                        }
+                    ],
+                    [
+                        opposite_line,
+                        {
+                            left_handle: opposite_left_handle,
+                            right_handle: opposite_right_handle
+                        }
+                    ]
+                ])
+            );
+            initDataAndCodeMirrors(
+                [added_line, opposite_line],
+                left_code_mirror,
+                right_code_mirror
+            );
+
+            expect(getLineOfHandle(added_handle)).toBe(added_line);
+            expect(getLineOfHandle(opposite_left_handle)).toBe(opposite_line);
+        });
+
+        it("Given the right handle of a deleted line, then it will return the opposite line (not the deleted line)", () => {
+            const opposite_line = { unidiff_offset: 1, old_offset: null, new_offset: 1 };
+            const deleted_line = { unidiff_offset: 2, old_offset: 1, new_offset: null };
+            const opposite_left_handle = {};
+            const opposite_right_handle = {};
+            const deleted_handle = { a: "a" };
+            const added_group = { type: ADDED_GROUP };
+            const deleted_group = { type: DELETED_GROUP };
+            buildLineGroups.and.returnValue({
+                line_to_group_map: new Map([
+                    [opposite_line.unidiff_offset, added_group],
+                    [deleted_line.unidiff_offset, deleted_group]
+                ])
+            });
+            buildLineToLineHandlesMap.and.returnValue(
+                new Map([
+                    [
+                        opposite_line,
+                        {
+                            left_handle: opposite_left_handle,
+                            right_handle: opposite_right_handle
+                        }
+                    ],
+                    [
+                        deleted_line,
+                        {
+                            left_handle: deleted_handle,
+                            right_handle: opposite_right_handle
+                        }
+                    ]
+                ])
+            );
+            initDataAndCodeMirrors(
+                [opposite_line, deleted_line],
+                left_code_mirror,
+                right_code_mirror
+            );
+
+            expect(getLineOfHandle(deleted_handle)).toBe(deleted_line);
+            expect(getLineOfHandle(opposite_right_handle)).toBe(opposite_line);
         });
     });
 });
