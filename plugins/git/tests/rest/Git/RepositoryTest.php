@@ -173,7 +173,8 @@ class RepositoryTest extends TestBase {
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
                         ],
-                        'commit_status' => null
+                        'commit_status' => null,
+                        'verification'  => ['signature' => null]
                     ],
                 ],
                 [
@@ -197,7 +198,8 @@ class RepositoryTest extends TestBase {
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
                         ],
-                        'commit_status' => null
+                        'commit_status' => null,
+                        'verification'  => ['signature' => null]
                     ]
                 ],
             ],
@@ -246,7 +248,8 @@ class RepositoryTest extends TestBase {
                             'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                             'is_anonymous' => false
                         ],
-                        'commit_status' => null
+                        'commit_status' => null,
+                        'verification'  => ['signature' => null]
                     ]
                 ]
             ],
