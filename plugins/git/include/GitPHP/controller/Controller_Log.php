@@ -3,6 +3,10 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use GitPHP\Commit\CommitPresenter;
+use GitPHP\Shortlog\ShortlogPresenterBuilder;
+use UserManager;
+
 /**
  * GitPHP Controller Log
  *
@@ -48,6 +52,10 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/shortlog.tpl';
+        }
+
         return 'shortlog.tpl';
     }
 
@@ -112,6 +120,11 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
                 $revlist = array_slice($revlist, 0, 100);
             }
             $this->tpl->assign('revlist', $revlist);
+
+            if (\ForgeConfig::get('git_repository_bp')) {
+                $builder = new ShortlogPresenterBuilder(UserManager::instance());
+                $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($revlist));
+            }
         }
 
         if (isset($this->params['mark'])) {

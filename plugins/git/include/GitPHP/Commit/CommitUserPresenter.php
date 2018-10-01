@@ -36,9 +36,13 @@ class CommitUserPresenter
     public function build($email)
     {
         $user_manager = \UserManager::instance();
-        $user_helper  = \UserHelper::instance();
 
-        $user = $user_manager->getUserByEmail($email);
+        $this->buildFromTuleapUser($user_manager->getUserByEmail($email));
+    }
+
+    public function buildFromTuleapUser(\PFUser $user = null)
+    {
+        $user_helper = \UserHelper::instance();
         $this->is_a_tuleap_user = $user !== null;
         if ($this->is_a_tuleap_user) {
             $this->has_avatar   = $user->hasAvatar();

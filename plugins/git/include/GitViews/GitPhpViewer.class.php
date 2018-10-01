@@ -27,7 +27,16 @@ use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
 use Tuleap\Git\GitPHP\Resource;
 
-class GitViews_GitPhpViewer {
+class GitViews_GitPhpViewer
+{
+    const GLOSSIFIED_GITPHP_ACTIONS = [
+        'commit',
+        'commitdiff',
+        'shortlog',
+        'tree',
+        false
+    ];
+
     /**
      * @var GitRepository
      */
@@ -47,13 +56,13 @@ class GitViews_GitPhpViewer {
     {
         set_time_limit(300);
         if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
-            echo '<div id="gitphp" class="plugin_git_gitphp">';
+            echo '<section class="tlp-pane-section"><div id="gitphp" class="plugin_git_gitphp">';
         }
 
         $this->displayGitPHP();
 
         if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
-            echo '</div>';
+            echo '</div></section>';
         }
     }
 
@@ -63,7 +72,7 @@ class GitViews_GitPhpViewer {
             return true;
         }
 
-        return ! in_array($request->get('a'), ['commit', 'tree', 'commitdiff', false], true);
+        return ! in_array($request->get('a'), self::GLOSSIFIED_GITPHP_ACTIONS, true);
     }
 
     private function displayGitPHP()

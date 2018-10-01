@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,16 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import initAlreadyForkedModal from "./already-forked-modal.js";
-import initCopyButton from "./copy-button.js";
-import initCloneBarDropdown from "./clone-bar-dropdown.js";
-import initBranchTagSelector from "./branch-tag-selector.js";
-import initShortlog from "./shortlog.js";
+namespace GitPHP\Shortlog;
 
-document.addEventListener("DOMContentLoaded", () => {
-    initAlreadyForkedModal();
-    initCopyButton();
-    initCloneBarDropdown();
-    initBranchTagSelector();
-    initShortlog();
-});
+class ShortlogCommitsPerDayPresenter
+{
+    /** @var string */
+    public $day;
+    /** @var ShortlogCommitPresenter[] */
+    public $commits = [];
+
+    public function __construct($day)
+    {
+        $this->day = $day;
+    }
+
+    public function add(ShortlogCommitPresenter $commit)
+    {
+        $this->commits[] = $commit;
+    }
+}
