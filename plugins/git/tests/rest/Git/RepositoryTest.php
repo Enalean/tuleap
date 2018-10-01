@@ -141,7 +141,8 @@ class RepositoryTest extends TestBase {
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETBranches() {
+    public function testGETBranches()
+    {
         $response  = $this->getResponse($this->client->get(
             'git/'.GitDataBuilder::REPOSITORY_GIT_ID . '/branches'
         ));
@@ -155,14 +156,15 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'master',
                     'commit' => [
-                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
-                        'id'            => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
-                        'title'         => '04',
-                        'message'       => '04',
-                        'author_name'   => 'Test User 1',
-                        'author_email'  => 'test_user_1@example.com',
-                        'authored_date' => '2018-09-05T11:12:07+02:00',
-                        'author'        => [
+                        'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
+                        'id'             => '8957aa17cf3f56658d91d1c67f60e738f3fdcb3e',
+                        'title'          => '04',
+                        'message'        => '04',
+                        'author_name'    => 'Test User 1',
+                        'author_email'   => 'test_user_1@example.com',
+                        'authored_date'  => '2018-09-05T11:12:07+02:00',
+                        'committed_date' => '2018-09-05T11:12:07+02:00',
+                        'author'         => [
                             'id'           => 102,
                             'uri'          => 'users/102',
                             'user_url'     => '/users/rest_api_tester_1',
@@ -180,14 +182,15 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'branch_file_02',
                     'commit' => [
-                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=bcbc8956071c646493d484c64a6034b663e073e0',
-                        'id'            => 'bcbc8956071c646493d484c64a6034b663e073e0',
-                        'title'         => '03',
-                        'message'       => '03',
-                        'author_name'   => 'Test User 1',
-                        'author_email'  => 'test_user_1@example.com',
-                        'authored_date' => '2018-09-05T11:10:39+02:00',
-                        'author'        => [
+                        'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=bcbc8956071c646493d484c64a6034b663e073e0',
+                        'id'             => 'bcbc8956071c646493d484c64a6034b663e073e0',
+                        'title'          => '03',
+                        'message'        => '03',
+                        'author_name'    => 'Test User 1',
+                        'author_email'   => 'test_user_1@example.com',
+                        'authored_date'  => '2018-09-05T11:10:39+02:00',
+                        'committed_date' => '2018-09-05T11:10:39+02:00',
+                        'author'         => [
                             'id'           => 102,
                             'uri'          => 'users/102',
                             'user_url'     => '/users/rest_api_tester_1',
@@ -230,14 +233,15 @@ class RepositoryTest extends TestBase {
                 [
                     'name' => 'v0',
                     'commit' => [
-                        'html_url'      => '/plugins/git/test-git/repo01?a=commit&h=5d408503daf6f1348e264122cfa8fc89a30f7f12',
-                        'id'            => '5d408503daf6f1348e264122cfa8fc89a30f7f12',
-                        'title'         => 'First commit',
-                        'message'       => 'First commit',
-                        'author_name'   => 'Test User 1',
-                        'authored_date' => '2018-09-05T11:05:05+02:00',
-                        'author_email'  => 'test_user_1@example.com',
-                        'author'        => [
+                        'html_url'       => '/plugins/git/test-git/repo01?a=commit&h=5d408503daf6f1348e264122cfa8fc89a30f7f12',
+                        'id'             => '5d408503daf6f1348e264122cfa8fc89a30f7f12',
+                        'title'          => 'First commit',
+                        'message'        => 'First commit',
+                        'author_name'    => 'Test User 1',
+                        'authored_date'  => '2018-09-05T11:05:05+02:00',
+                        'committed_date' => '2018-09-05T11:05:05+02:00',
+                        'author_email'   => 'test_user_1@example.com',
+                        'author'         => [
                             'id'           => 102,
                             'uri'          => 'users/102',
                             'user_url'     => '/users/rest_api_tester_1',
