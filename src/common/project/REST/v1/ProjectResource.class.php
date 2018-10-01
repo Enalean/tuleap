@@ -131,7 +131,10 @@ class ProjectResource extends AuthenticatedResource {
         $ugroup_user_dao         = new UGroupUserDao();
         $this->event_manager     = EventManager::instance();
 
-        $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao());
+        $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
+            new User_ForgeUserGroupPermissionsDao()
+        );
+
         $widget_factory = new WidgetFactory(
             $this->user_manager,
             $this->forge_ugroup_permissions_manager,
@@ -408,12 +411,21 @@ class ProjectResource extends AuthenticatedResource {
      * @throws 403
      * @throws 404
      *
-     * @return Tuleap\Project\REST\ProjectRepresentation
+     * @return ProjectRepresentation
      */
     public function getId($id) {
         $this->checkAccess();
 
         $this->sendAllowHeadersForProject();
+
+        $user = $this->user_manager->getCurrentUser();
+
+        if ($this->isUserDelegatedRestProjectManager($user)) {
+            return $this->getProjectRepresentation(
+                $this->getProjectForRestProjectManager($id)
+            );
+        }
+
         return $this->getProjectRepresentation($this->getProjectForUser($id));
     }
 
@@ -440,6 +452,23 @@ class ProjectResource extends AuthenticatedResource {
         $user    = $this->user_manager->getCurrentUser();
 
         ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
+
+        return $project;
+    }
+
+    /**
+     * @throws 403
+     * @throws 404
+     *
+     * @return Project
+     */
+    private function getProjectForRestProjectManager($project_id) {
+        $project = $this->project_manager->getProject($project_id);
+
+        if ($project->isError()) {
+            throw new RestException(404, "Project does not exist");
+        }
+
         return $project;
     }
 
@@ -457,7 +486,7 @@ class ProjectResource extends AuthenticatedResource {
      * Get a ProjectRepresentation
      *
      * @param Project $project
-     * @return Tuleap\Project\REST\ProjectRepresentation
+     * @return ProjectRepresentation
      */
     private function getProjectRepresentation(Project $project) {
         $resources = array();
