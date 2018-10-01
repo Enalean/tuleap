@@ -553,9 +553,6 @@ class RepositoryResource extends AuthenticatedResource
     /**
      * Post a commit status
      *
-     * <pre>
-     * /!\ REST route under construction and subject to changes /!\
-     * </pre>
      * @url    POST {id_or_path}/statuses/{commit_reference}
      *
      * @access hybrid
