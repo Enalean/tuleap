@@ -37,4 +37,24 @@ class AccessKeyTest extends TestCase
 
         $this->assertStringStartsWith('tlp-k1-', $identifier->getString());
     }
+
+    public function testCanBeBuiltFromAnIdentifier()
+    {
+        $expected_id                  = 15;
+        $hex_verification_string      = '7f2c5f68b1c802c21486cf88a7d4209d9685b43b5f1661fb1528759c5387fd13';
+        $identifier                   = "tlp-k1-$expected_id.$hex_verification_string";
+
+        $access_key = AccessKey::buildFromIdentifier($identifier);
+
+        $this->assertSame($expected_id, $access_key->getID());
+        $this->assertSame($hex_verification_string, bin2hex($access_key->getVerificationString()->getString()));
+    }
+
+    /**
+     * @expectedException \Tuleap\User\AccessKey\InvalidIdentifierFormatException
+     */
+    public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
+    {
+        AccessKey::buildFromIdentifier('incorrect_identifier');
+    }
 }

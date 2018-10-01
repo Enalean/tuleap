@@ -19,6 +19,10 @@
 
 namespace Tuleap\REST;
 
+use Tuleap\User\AccessKey\AccessKey;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyVerificationStringHasher;
+use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\PasswordVerifier;
 use User_LoginManager;
 use User_PasswordExpirationChecker;
@@ -38,23 +42,35 @@ class UserManager {
     /** @var User_LoginManager */
     private $login_manager;
 
+    /**
+     * @var AccessKeyVerifier
+     */
+    private $access_key_verifier;
+
     const HTTP_TOKEN_HEADER     = 'X-Auth-Token';
     const PHP_HTTP_TOKEN_HEADER = 'HTTP_X_AUTH_TOKEN';
 
     const HTTP_USER_HEADER      = 'X-Auth-UserId';
     const PHP_HTTP_USER_HEADER  = 'HTTP_X_AUTH_USERID';
 
+    const HTTP_ACCESS_KEY_HEADER     = 'X-Auth-AccessKey';
+    const PHP_HTTP_ACCESS_KEY_HEADER = 'HTTP_X_AUTH_ACCESSKEY';
 
-    public function __construct(\UserManager $user_manager, User_LoginManager $login_manager) {
-        $this->user_manager  = $user_manager;
-        $this->login_manager = $login_manager;
+    public function __construct(
+        \UserManager $user_manager,
+        User_LoginManager $login_manager,
+        AccessKeyVerifier $access_key_verifier
+    ) {
+        $this->user_manager        = $user_manager;
+        $this->login_manager       = $login_manager;
+        $this->access_key_verifier = $access_key_verifier;
     }
 
-    public static function build() {
-        $self             = __CLASS__;
+    public static function build()
+    {
         $user_manager     = \UserManager::instance();
         $password_handler = PasswordHandlerFactory::getPasswordHandler();
-        return new $self(
+        return new self(
             $user_manager,
             new User_LoginManager(
                 EventManager::instance(),
@@ -62,15 +78,16 @@ class UserManager {
                 new PasswordVerifier($password_handler),
                 new User_PasswordExpirationChecker(),
                 $password_handler
-            )
+            ),
+            new AccessKeyVerifier(new AccessKeyDAO(), new AccessKeyVerificationStringHasher(), $user_manager)
         );
     }
 
     /**
      * Return user of current request in REST context
      *
-     * Tries to get authenticcation scheme from cookie if any, fallback on token
-     * authentication
+     * Tries to get authentication scheme from cookie if any, fallback on token
+     * or access key authentication
      *
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_StatusDeletedException
@@ -81,17 +98,22 @@ class UserManager {
      *
      * @return \PFUser
      */
-    public function getCurrentUser() {
-        try {
-            $user = $this->getUserFromCookie();
-            if ($user->isAnonymous()) {
-                $user = $this->getUserFromToken();
-                $this->login_manager->validateAndSetCurrentUser($user);
-            }
+    public function getCurrentUser()
+    {
+        $user = $this->getUserFromCookie();
+        if (! $user->isAnonymous()) {
             return $user;
+        }
+        try {
+            $user = $this->getUserFromTuleapRESTAuthenticationFlows();
         } catch (NoAuthenticationHeadersException $exception) {
             return $this->user_manager->getUserAnonymous();
         }
+        if ($user === null) {
+            return $this->user_manager->getUserAnonymous();
+        }
+        $this->login_manager->validateAndSetCurrentUser($user);
+        return $user;
     }
 
     /**
@@ -108,7 +130,52 @@ class UserManager {
     }
 
     /**
-     * @return PFUser
+     * @return null|\PFUser
+     * @throws NoAuthenticationHeadersException
+     * @throws \Rest_Exception_InvalidTokenException
+     */
+    private function getUserFromTuleapRESTAuthenticationFlows()
+    {
+        if ($this->isTryingToUseAccessKeyAuthentication()) {
+            return $this->getUserFromAccessKey();
+        }
+        if ($this->isTryingToUseTokenAuthentication()) {
+            return $this->getUserFromToken();
+        }
+        return null;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isTryingToUseAccessKeyAuthentication()
+    {
+        return isset($_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER]);
+    }
+
+    /**
+     * @return bool
+     */
+    private function isTryingToUseTokenAuthentication()
+    {
+        return isset($_SERVER[self::PHP_HTTP_TOKEN_HEADER]);
+    }
+
+    private function getUserFromAccessKey()
+    {
+        if (! isset($_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER])) {
+            throw new NoAuthenticationHeadersException(self::HTTP_ACCESS_KEY_HEADER);
+        }
+
+        $access_key_identifier = $_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER];
+        $access_key            = AccessKey::buildFromIdentifier($access_key_identifier);
+
+        $request = \HTTPRequest::instance();
+        return $this->access_key_verifier->getUser($access_key, $request->getIPAddress());
+    }
+
+    /**
+     * @return \PFUser
      * @throws NoAuthenticationHeadersException
      * @throws \Rest_Exception_InvalidTokenException
      */

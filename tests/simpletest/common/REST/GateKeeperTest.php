@@ -48,21 +48,21 @@ class GateKeeper_TokenAndHTTPS_Test  extends GateKeeperTest {
         stub($this->request)->getServerUrl()->returns('http://example.com');
     }
 
-    public function itThrowsExceptionWhenTokenAuthenticationWithoutSSL() {
+    public function itThrowsExceptionWhenTokenOrAccessKeyAuthenticationWithoutSSL() {
         stub($this->request)->isSecure()->returns(false);
         $this->expectException('Exception');
 
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
     }
 
-    public function itLetsPassWhenTokenAuthenticationWithSSL() {
+    public function itLetsPassWhenTokenOrAccessKeyAuthenticationWithSSL() {
         stub($this->request)->isSecure()->returns(true);
 
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
         $this->assertTrue(true, 'No exception should be raised');
     }
 
-    public function itLetsPassWhenTokenAuthenticationWithoutSSLButWithDebug() {
+    public function itLetsPassWhenTokenOrAccessKeyAuthenticationWithoutSSLButWithDebug() {
         stub($this->request)->isSecure()->returns(false);
         $GLOBALS['DEBUG_MODE'] = 1;
 

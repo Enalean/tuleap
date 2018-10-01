@@ -1,0 +1,119 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\User\AccessKey;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class AccessKeyVerifierTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $dao;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $hasher;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $user_manager;
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $access_key;
+    /**
+     * @var AccessKeyVerifier
+     */
+    private $verifier;
+
+    protected function setUp()
+    {
+        $this->dao          = \Mockery::mock(AccessKeyDAO::class);
+        $this->hasher       = \Mockery::mock(AccessKeyVerificationStringHasher::class);
+        $this->user_manager = \Mockery::mock(\UserManager::class);
+        $this->access_key   = \Mockery::mock(AccessKey::class);
+        $this->verifier     = new AccessKeyVerifier($this->dao, $this->hasher, $this->user_manager);
+    }
+
+    public function testAUserCanRetrievedFromItsAccessKey()
+    {
+        $this->access_key->shouldReceive('getID')->andReturns(1);
+        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'valid']
+        );
+        $verification_string = \Mockery::mock(AccessKeyVerificationString::class);
+        $this->access_key->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+        $expected_user = \Mockery::mock(\PFUser::class);
+        $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($expected_user);
+        $this->dao->shouldReceive('updateAccessKeyUsageByID')->once();
+
+        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+    }
+
+    /**
+     * @expectedException \Tuleap\User\AccessKey\AccessKeyNotFoundException
+     */
+    public function testVerificationFailsWhenKeyCanNotBeFound()
+    {
+        $this->access_key->shouldReceive('getID')->andReturns(1);
+        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(null);
+
+        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+    }
+
+    /**
+     * @expectedException \Tuleap\User\AccessKey\InvalidAccessKeyException
+     */
+    public function testVerificationFailsWhenVerificationStringDoesNotMatch()
+    {
+        $this->access_key->shouldReceive('getID')->andReturns(1);
+        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'invalid']
+        );
+        $this->access_key->shouldReceive('getVerificationString')
+            ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
+        $this->hasher->shouldReceive('verifyHash')->andReturns(false);
+
+        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+    }
+
+    /**
+     * @expectedException \Tuleap\User\AccessKey\AccessKeyMatchingUnknownUserException
+     */
+    public function testVerificationFailsWhenTheCorrespondingTuleapCanNotBeFound()
+    {
+        $this->access_key->shouldReceive('getID')->andReturns(1);
+        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'valid']
+        );
+        $this->access_key->shouldReceive('getVerificationString')
+            ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
+        $this->hasher->shouldReceive('verifyHash')->andReturns(true);
+        $this->user_manager->shouldReceive('getUserById')->andReturns(null);
+
+        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+    }
+}

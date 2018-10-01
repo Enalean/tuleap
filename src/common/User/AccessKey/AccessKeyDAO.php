@@ -41,6 +41,14 @@ class AccessKeyDAO extends DataAccessObject
         );
     }
 
+    /**
+     * @return null|array
+     */
+    public function searchHashedVerifierAndUserIDByID($key_id)
+    {
+        return $this->getDB()->row('SELECT verifier, user_id FROM user_access_key WHERE id = ?', $key_id);
+    }
+
     public function searchMetadataByUserID($user_id)
     {
         return $this->getDB()->run(
@@ -59,5 +67,15 @@ class AccessKeyDAO extends DataAccessObject
             'user_access_key',
             EasyStatement::open()->with('user_id = ?', $user_id)->andIn('id IN (?*)', $key_ids)
         );
+    }
+
+    public function updateAccessKeyUsageByID($id, $current_time, $ip_address)
+    {
+        $sql = 'UPDATE user_access_key
+                JOIN user_access ON (user_access_key.user_id = user_access.user_id)
+                SET user_access_key.last_usage = ?, user_access_key.last_ip = ?, user_access.last_access_date = ?
+                WHERE user_access_key.id = ?';
+
+        $this->getDB()->run($sql, $current_time, $ip_address, $current_time, $id);
     }
 }

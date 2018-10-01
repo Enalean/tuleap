@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\TuleapRESTAuthentication;
+
 define('IS_SCRIPT', true);
 
 require_once 'pre.php';
@@ -96,8 +99,8 @@ switch ($version) {
 EventManager::instance()->processEvent($event, array('restler' => $restler));
 $restler->addAPIClass('Explorer');
 
-$restler->addAuthenticationClass('\\Tuleap\\REST\\TokenAuthentication');
-$restler->addAuthenticationClass('\\Tuleap\\REST\\BasicAuthentication');
+$restler->addAuthenticationClass('\\' . TuleapRESTAuthentication::class);
+$restler->addAuthenticationClass('\\' . BasicAuthentication::class);
 
 $restler->onComplete(function() use ($restler) {
     \Tuleap\Request\RequestInstrumentation::incrementRest($restler->responseCode);
