@@ -18,6 +18,7 @@
  */
 
 $codemirror-like-line-numbers-color: #8c8c8c;
+$gitphp-code-font: normal normal 1em / 1.2em monospace;
 
 .git-repository-blob-header {
     display: flex;
@@ -39,23 +40,40 @@ $codemirror-like-line-numbers-color: #8c8c8c;
     text-align: center;
 }
 
-#git-repository-blob-file {
+#git-repository-blob-file,
+#git-repository-blame-file {
     width: 100%;
     background: $tlp-ui-white;
+    font: $gitphp-code-font;
 
     > tbody {
-        > .li1 > .de1 {
-            padding: 5px;
-        }
-
-        > .li1 > .ln {
-            padding: 5px $tlp-half-spacing;
-            border-right: 1px solid $tlp-ui-border-light;
-            text-align: right;
-
+        > .li1 {
+            // scss-lint:disable NestingDepth
             > .de1 {
-                color: $codemirror-like-line-numbers-color;
+                padding: 5px;
+
+                > .de1 {
+                    padding: 0;
+                    background: none;
+                    color: $tlp-typo-default-text-color;
+                    font: $gitphp-code-font;
+                }
             }
+
+            > .ln {
+                width: 1px;
+                padding: 5px $tlp-half-spacing;
+                border-right: 1px solid $tlp-ui-border-light;
+                text-align: right;
+
+                > .de1 {
+                    padding: 0;
+                    background: none;
+                    color: $codemirror-like-line-numbers-color;
+                    font: $gitphp-code-font;
+                }
+            }
+            // scss-lint:enable NestingDepth
         }
     }
 }

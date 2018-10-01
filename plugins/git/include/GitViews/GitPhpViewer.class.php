@@ -31,6 +31,7 @@ class GitViews_GitPhpViewer
 {
     const GLOSSIFIED_GITPHP_ACTIONS = [
         'blob',
+        'blame',
         'commit',
         'commitdiff',
         'shortlog',
