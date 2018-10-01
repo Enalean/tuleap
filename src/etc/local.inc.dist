@@ -336,10 +336,10 @@ $sys_exchange_policy_url = '';
 // Default value is about 2 weeks: 3600*24*14=1209600
 $sys_session_lifetime = 1209600;
 
-// Delay between 2 updates of "last access" date for a user
-// Default is 6 hours, it's good enough if you want to know the day a user was seen
+// Delay (in seconds) between 2 updates of "last access" date for a user
+// Default is 1 hour, it's good enough if you want to know the day a user was seen
 // A number to low will degrade performances
-$last_access_resolution = 21600;
+$last_access_resolution = 3600;
 
 // Duration before deleting pending accounts which have not been activated
 // (in days)

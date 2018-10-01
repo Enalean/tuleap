@@ -27,6 +27,10 @@ class AccessKeyVerifierTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    const LAST_ACCESS_RESOLUTION             = 3600;
+    const IP_ADDRESS_REQUESTING_VERIFICATION = '2001:db8::1777';
+
+
     /**
      * @var \Mockery\MockInterface
      */
@@ -55,22 +59,67 @@ class AccessKeyVerifierTest extends TestCase
         $this->user_manager = \Mockery::mock(\UserManager::class);
         $this->access_key   = \Mockery::mock(AccessKey::class);
         $this->verifier     = new AccessKeyVerifier($this->dao, $this->hasher, $this->user_manager);
+        \ForgeConfig::store();
     }
 
-    public function testAUserCanRetrievedFromItsAccessKey()
+    protected function tearDown()
     {
+        \ForgeConfig::restore();
+    }
+
+    /**
+     * @dataProvider lastAccessValuesProvider
+     */
+    public function testAUserCanBeRetrievedFromItsAccessKey($expect_to_log_access, $last_usage, $last_ip)
+    {
+        \ForgeConfig::set('last_access_resolution', self::LAST_ACCESS_RESOLUTION);
         $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'valid']
+        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => $last_usage, 'last_ip' => $last_ip]
         );
         $verification_string = \Mockery::mock(AccessKeyVerificationString::class);
         $this->access_key->shouldReceive('getVerificationString')->andReturns($verification_string);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $expected_user = \Mockery::mock(\PFUser::class);
         $this->user_manager->shouldReceive('getUserById')->with(101)->andReturns($expected_user);
-        $this->dao->shouldReceive('updateAccessKeyUsageByID')->once();
+        if ($expect_to_log_access) {
+            $this->dao->shouldReceive('updateAccessKeyUsageByID')->once();
+        } else {
+            $this->dao->shouldReceive('updateAccessKeyUsageByID')->never();
+        }
 
         $this->verifier->getUser($this->access_key, '2001:db8::1777');
+    }
+
+    public function lastAccessValuesProvider()
+    {
+        return [
+            [ // Different IP and last seen outside of the last access resolution
+                true,
+                (new \DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
+                '192.0.2.7'
+            ],
+            [ // Different IP and last seen inside of the last access resolution
+                true,
+                (new \DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
+                '192.0.2.7'
+            ],
+            [ // Same IP and last seen outside of the last access resolution
+                true,
+                (new \DateTimeImmutable('- ' . 2 * self::LAST_ACCESS_RESOLUTION . ' seconds'))->getTimestamp(),
+                self::IP_ADDRESS_REQUESTING_VERIFICATION
+            ],
+            [ // Same IP and last seen inside of the last access resolution
+                false,
+                (new \DateTimeImmutable(self::LAST_ACCESS_RESOLUTION / 2 . ' seconds'))->getTimestamp(),
+                self::IP_ADDRESS_REQUESTING_VERIFICATION
+            ],
+            [ // Access token never used before
+                true,
+                null,
+                null
+            ],
+        ];
     }
 
     /**
@@ -79,7 +128,7 @@ class AccessKeyVerifierTest extends TestCase
     public function testVerificationFailsWhenKeyCanNotBeFound()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(null);
+        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(null);
 
         $this->verifier->getUser($this->access_key, '2001:db8::1777');
     }
@@ -90,14 +139,14 @@ class AccessKeyVerifierTest extends TestCase
     public function testVerificationFailsWhenVerificationStringDoesNotMatch()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'invalid']
+        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'invalid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
         );
         $this->access_key->shouldReceive('getVerificationString')
             ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(false);
 
-        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+        $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 
     /**
@@ -106,14 +155,14 @@ class AccessKeyVerifierTest extends TestCase
     public function testVerificationFailsWhenTheCorrespondingTuleapCanNotBeFound()
     {
         $this->access_key->shouldReceive('getID')->andReturns(1);
-        $this->dao->shouldReceive('searchHashedVerifierAndUserIDByID')->andReturns(
-            ['user_id' => 101, 'verifier' => 'valid']
+        $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
+            ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
         );
         $this->access_key->shouldReceive('getVerificationString')
             ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(true);
         $this->user_manager->shouldReceive('getUserById')->andReturns(null);
 
-        $this->verifier->getUser($this->access_key, '2001:db8::1777');
+        $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
     }
 }

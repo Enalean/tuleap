@@ -83,6 +83,9 @@ msgstr "Description de la clé d'accès"
 msgid "Access keys have been successfully deleted."
 msgstr "Les clés d'accès ont été supprimées avec succès."
 
+msgid "Accesses from less than %s might not be visible"
+msgstr "Les accès d'il y a moins de %s peuvent ne pas apparaître"
+
 msgid "Accessibility"
 msgstr "Accessibilité"
 

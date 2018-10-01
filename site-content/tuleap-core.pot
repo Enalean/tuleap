@@ -58,6 +58,9 @@ msgstr ""
 msgid "Access keys have been successfully deleted."
 msgstr ""
 
+msgid "Accesses from less than %s might not be visible"
+msgstr ""
+
 msgid "Accessibility"
 msgstr ""
 
