@@ -23,11 +23,6 @@ use Tuleap\Git\History\GitPhpAccessLogger;
 
 class GitViews_ShowRepo_Content {
 
-    const PAGE_TYPE       = 'a';
-    const PAGE_TYPE_TREE  = 'tree';
-    const FOLDER_TREE     = 'f';
-    const OLD_COMMIT_TREE = 'hb';
-
     /**
      * @var HTTPRequest
      */
@@ -74,55 +69,8 @@ class GitViews_ShowRepo_Content {
         } else {
             $html .= $this->getWaitingForRepositoryCreationInfo();
         }
-        if ($this->isATreePage()) {
-            $html .= $this->getMarkdownFilesDiv();
-        }
 
         echo $html;
-    }
-
-    private function isATreePage()
-    {
-        return ! $this->request->exist(self::PAGE_TYPE) ||
-            $this->request->get(self::PAGE_TYPE) === self::PAGE_TYPE_TREE;
-    }
-
-    private function getMarkdownFilesDiv()
-    {
-        $commit_sha1       = $this->getCurrentCommitSha1();
-        $node              = $this->getCurrentNode();
-        $repository_path   = ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/' . $this->repository->getPath();
-        $git_markdown_file = new GitMarkdownFile(
-            new Git_Exec($repository_path, $repository_path),
-            new ContentInterpretor()
-        );
-
-        $readme_file = $git_markdown_file->getReadmeFileContent($node, $commit_sha1);
-
-        if ($readme_file) {
-            $presenter = new ReadmeMarkdownPresenter($readme_file['file_name'], $readme_file['file_content']);
-            $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(GIT_BASE_DIR).'/templates');
-
-            return $renderer->renderToString('readme_markdown', $presenter);
-        }
-    }
-
-    private function getCurrentNode()
-    {
-        if ($this->request->exist(self::FOLDER_TREE)) {
-            return $this->request->get(self::FOLDER_TREE).'/';
-        }
-
-        return '';
-    }
-
-    private function getCurrentCommitSha1()
-    {
-        if ($this->request->exist(self::OLD_COMMIT_TREE)) {
-            return $this->request->get(self::OLD_COMMIT_TREE);
-        }
-
-        return 'HEAD';
     }
 
     private function getWaitingForRepositoryCreationInfo()

@@ -196,34 +196,6 @@ class Git_Exec
     }
 
     /**
-     * Return content of a tree object
-     *
-     * @param String $rev
-     * @param String $path
-     *
-     * @return array of filenames under $path
-     */
-    public function lsTree($rev, $path) {
-        $output = array();
-        $this->gitCmdWithOutput('ls-tree --name-only '. escapeshellarg($rev) .' '. escapeshellarg($path), $output);
-
-        return $output;
-    }
-
-    /**
-     * @param String $rev
-     * @param String $filename
-     *
-     * @return string
-     */
-    public function getFileContent($rev, $filename) {
-        $output = array();
-        $this->gitCmdWithOutput('show '. escapeshellarg($rev) .':'. escapeshellarg($filename), $output);
-
-        return implode(PHP_EOL, $output);
-    }
-
-    /**
      * Return the object type (commit, tag, etc);
      *
      * @param String $rev

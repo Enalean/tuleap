@@ -22,9 +22,11 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\TreePresenter;
+use Tuleap\Markdown\ContentInterpretor;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
+    const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
     /**
      * __construct
@@ -148,6 +150,19 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         $tree = $this->project->GetTree($this->params['hash']);
+
+        $readme_tree_item = $this->getReadmeTreeItem($tree);
+        $this->tpl->assign('readme_content', $readme_tree_item);
+        if ($readme_tree_item !== null) {
+            $content_interpretor = new ContentInterpretor();
+            $this->tpl->assign(
+                'readme_content_interpreted',
+                $content_interpretor->getInterpretedContent(
+                    $readme_tree_item->GetData()
+                )
+            );
+        }
+
         if (!$tree->GetCommit()) {
             $tree->SetCommit($commit);
         }
@@ -159,5 +174,22 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $this->tpl->assign('tree_presenter', new TreePresenter($tree));
         }
         $this->tpl->assign('tree', $tree);
+    }
+
+    /**
+     * @return null|Blob
+     */
+    private function getReadmeTreeItem(Tree $tree)
+    {
+        foreach ($tree->GetContents() as $content) {
+            if (! $content->isBlob()) {
+                continue;
+            }
+            if (preg_match(self::README_FILE_PATTERN, $content->GetName()) === 1) {
+                return $content;
+            }
+        }
+
+        return null;
     }
 }
