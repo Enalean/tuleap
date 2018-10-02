@@ -21,7 +21,11 @@
 
 namespace Tuleap\Git;
 
+use Git_URL;
 use GitPlugin;
+use GitRepository;
+use GitViews_GitPhpViewer;
+use GitViews_ShowRepo_Content;
 use HTTPRequest;
 use TemplateRendererFactory;
 use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
@@ -134,44 +138,37 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
-        $url = new \Git_URL(
-            $this->project_manager,
-            $this->repository_factory,
-            $_SERVER['REQUEST_URI']
+        $git_php_viewer = new GitViews_GitPhpViewer($repository, $request->getCurrentUser());
+
+        $url = $this->getURL($request, $repository);
+        if ($url->isADownload($request)) {
+            $git_php_viewer->displayContentWithoutEnclosingDiv();
+
+            return;
+        }
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
+
+        $this->header_displayer->display($request, $layout, $current_user, $repository);
+        $renderer->renderToPage(
+            'repository/files/header',
+            $this->files_header_presenter_builder->build($request, $repository)
         );
 
-        $request->set('action', 'view');
-        $request->set('group_id', $repository->getProjectId());
-        $request->set('repo_id', $repository->getId());
-
-        $this->addUrlParametersToRequest($request, $url);
-
-        $index_view = new \GitViews_ShowRepo(
+        $view = new GitViews_ShowRepo_Content(
             $repository,
+            $git_php_viewer,
             $request,
             $this->mirror_data_mapper,
             $this->access_logger
         );
+        $view->display();
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(GIT_TEMPLATE_DIR);
-
-        if (! $url->isADownload($request)) {
-            $this->header_displayer->display($request, $layout, $current_user, $repository);
-            $renderer->renderToPage(
-                'repository/files/header',
-                $this->files_header_presenter_builder->build($request, $repository)
-            );
-        }
-
-        $index_view->display($url);
-
-        if (! $url->isADownload($request)) {
-            $renderer->renderToPage('repository/files/footer', []);
-            $layout->footer([]);
-        }
+        $renderer->renderToPage('repository/files/footer', []);
+        $layout->footer([]);
     }
 
-    private function addUrlParametersToRequest(HTTPRequest $request, \Git_URL $url)
+    private function addUrlParametersToRequest(HTTPRequest $request, Git_URL $url)
     {
         $url_parameters_as_string = $url->getParameters();
         if (! $url_parameters_as_string) {
@@ -213,5 +210,28 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         }
 
         $response->permanentRedirect($parsed_url['path'] . '?' . http_build_query($query_parameters));
+    }
+
+    /**
+     * @param HTTPRequest   $request
+     * @param GitRepository $repository
+     *
+     * @return Git_URL
+     */
+    private function getURL(HTTPRequest $request, GitRepository $repository)
+    {
+        $url = new Git_URL(
+            $this->project_manager,
+            $this->repository_factory,
+            $_SERVER['REQUEST_URI']
+        );
+
+        $request->set('action', 'view');
+        $request->set('group_id', $repository->getProjectId());
+        $request->set('repo_id', $repository->getId());
+
+        $this->addUrlParametersToRequest($request, $url);
+
+        return $url;
     }
 }
