@@ -63,3 +63,12 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 .de1 {
     border: 0;
 }
+
+.git-repository-blob-diff-header {
+    display: flex;
+    align-items: center;
+}
+
+.git-repository-blob-diff-header-link {
+    margin: 0 $tlp-half-spacing 0 0;
+}
