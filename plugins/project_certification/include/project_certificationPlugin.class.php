@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class project_certificationPlugin extends Plugin // phpcs:ignore
@@ -37,5 +39,21 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         }
 
         return $this->pluginInfo;
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(Event::REGISTER_PROJECT_CREATION);
+
+        return parent::getHooksAndCallbacks();
+    }
+
+    /**
+     * @see \Event::REGISTER_PROJECT_CREATION
+     */
+    public function registerProjectCreation(array $params)
+    {
+        $dao = new ProjectOwnerDAO();
+        $dao->save($params['group_id'], $params['project_administrator']->getId());
     }
 }

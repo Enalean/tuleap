@@ -325,6 +325,7 @@ class ProjectCreator {
             'template_id'           => $template_id,
             'project_creation_data' => $data,
             'legacy_service_usage'  => $legacy,
+            'project_administrator' => $admin_user,
         ));
 
         if ($data->projectShouldInheritFromTemplate()) {
