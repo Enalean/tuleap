@@ -1,0 +1,13 @@
+msgid ""
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Adds project owner role"
+msgstr "Ajoute le rôle du propriétaire du projet"
+
+msgid "Project certification"
+msgstr "Certification de projet"

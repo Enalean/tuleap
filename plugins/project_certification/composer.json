@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ProjectCertification\\": "include/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
