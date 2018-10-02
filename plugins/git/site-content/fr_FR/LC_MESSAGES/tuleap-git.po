@@ -76,6 +76,9 @@ msgstr "Cloner ou télécharger"
 msgid "Clone or download:"
 msgstr "Cloner ou télécharger :"
 
+msgid "Commits"
+msgstr "Commits"
+
 msgid "Copy to clipboard"
 msgstr "Copier dans le presse papier"
 

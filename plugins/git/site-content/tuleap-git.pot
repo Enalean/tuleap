@@ -59,6 +59,9 @@ msgstr ""
 msgid "Clone or download:"
 msgstr ""
 
+msgid "Commits"
+msgstr ""
+
 msgid "Copy to clipboard"
 msgstr ""
 
