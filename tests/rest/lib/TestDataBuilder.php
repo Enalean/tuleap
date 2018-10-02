@@ -21,6 +21,7 @@
 
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\WidgetFactory;
 
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
@@ -136,53 +137,61 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $user_5->setPassword(self::TEST_USER_5_PASS);
         $this->user_manager->updateDb($user_5);
 
+        $delegated_rest_project_manager = $this->user_manager->getUserByUserName(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME);
+        $delegated_rest_project_manager->setPassword(self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS);
+        $this->user_manager->updateDb($delegated_rest_project_manager);
+
         return $this;
     }
 
-    public function delegatePermissionsToRetrieveMembership()
+    public function delegateForgePermissions()
     {
-        $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
+        $forge_permission_delegate = $this->user_manager->getUserByUserName(self::TEST_USER_3_NAME);
 
+        $retrieve_membership_permission = new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
+        $this->delegatePermissionToUser(
+            $forge_permission_delegate,
+            $retrieve_membership_permission,
+            'grokmirror users'
+        );
+
+        $manage_users_permission = new User_ForgeUserGroupPermission_UserManagement();
+        $this->delegatePermissionToUser(
+            $forge_permission_delegate,
+            $manage_users_permission,
+            'site remote admins'
+        );
+
+        $rest_project_management_delegate = $user = $this->user_manager->getUserByUserName(
+            self::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME
+        );
+
+        $manage_project_through_rest_permission = new RestProjectManagementPermission();
+        $this->delegatePermissionToUser(
+            $rest_project_management_delegate,
+            $manage_project_through_rest_permission,
+            'REST projects managers'
+        );
+
+        return $this;
+    }
+
+    private function delegatePermissionToUser($user, $forge_ugroup_permission, $forge_ugroup_name)
+    {
         // Create group
         $user_group_dao     = new UserGroupDao();
         $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
-        $user_group         = $user_group_factory->createForgeUGroup('grokmirror users', '');
+        $user_group         = $user_group_factory->createForgeUGroup($forge_ugroup_name, '');
 
         // Grant Retrieve Membership permissions
-        $permission                     = new User_ForgeUserGroupPermission_RetrieveUserMembershipInformation();
         $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
         $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
-        $user_group_permissions_manager->addPermission($user_group, $permission);
+        $user_group_permissions_manager->addPermission($user_group, $forge_ugroup_permission);
 
         // Add user to group
         $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
         $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_users_dao);
         $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
-
-        return $this;
-    }
-
-    public function delegatePermissionsToManageUser()
-    {
-        $user = $this->user_manager->getUserById(self::TEST_USER_3_ID);
-
-        // Create group
-        $user_group_dao     = new UserGroupDao();
-        $user_group_factory = new User_ForgeUserGroupFactory($user_group_dao);
-        $user_group         = $user_group_factory->createForgeUGroup('site remote admins', '');
-
-        // Grant Retrieve Membership permissions
-        $permission                     = new User_ForgeUserGroupPermission_UserManagement();
-        $permissions_dao                = new User_ForgeUserGroupPermissionsDao();
-        $user_group_permissions_manager = new User_ForgeUserGroupPermissionsManager($permissions_dao);
-        $user_group_permissions_manager->addPermission($user_group, $permission);
-
-        // Add user to group
-        $user_group_users_dao     = new User_ForgeUserGroupUsersDao();
-        $user_group_users_manager = new User_ForgeUserGroupUsersManager($user_group_users_dao);
-        $user_group_users_manager->addUserToForgeUserGroup($user, $user_group);
-
-        return $this;
     }
 
     public function deleteTracker()
@@ -192,6 +201,18 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         $tracker = $this->getDeletedTracker();
 
         $this->tracker_factory->markAsDeleted($tracker->getId());
+
+        return $this;
+    }
+
+    public function deleteProject()
+    {
+        echo "Delete deleted-project";
+
+        $project_manager = ProjectManager::instance();
+
+        $project = $project_manager->getProjectByUnixName("deleted-project");
+        $project_manager->updateStatus($project, PROJECT::STATUS_DELETED);
 
         return $this;
     }

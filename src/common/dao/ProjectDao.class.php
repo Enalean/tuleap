@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016 - 2018. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -655,5 +655,21 @@ class ProjectDao extends DataAccessObject {
              FROM user_group INNER JOIN user USING(user_id)
              WHERE user_group.group_id=". $this->da->quoteSmart($project_id) ."
                  AND user.status IN ('A', 'R')");
+    }
+
+    public function getProjectsWithStatusForREST($project_status, $offset, $limit)
+    {
+        $project_status = $this->da->quoteSmart($project_status);
+        $offset         = $this->da->escapeInt($offset);
+        $limit          = $this->da->escapeInt($limit);
+
+        $sql = "SELECT SQL_CALC_FOUND_ROWS groups.*
+                FROM groups
+                WHERE status = $project_status
+                  AND group_id > 100
+                ORDER BY group_id ASC
+                LIMIT $offset, $limit";
+
+        return $this->retrieve($sql);
     }
 }

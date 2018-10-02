@@ -32,31 +32,37 @@ class Project extends Group implements PFO_Project {
      * The project is active
      */
     const STATUS_ACTIVE = 'A';
-    
+    const STATUS_ACTIVE_LABEL = 'active';
+
     /**
      * The project is pending
      */
     const STATUS_PENDING = 'P';
+    const STATUS_PENDING_LABEL = 'pending';
 
     /**
      * The project is incomplete
      */
     const STATUS_INCOMPLETE = 'I';
+    const STATUS_INCOMPLETE_LABEL = 'incomplete';
 
     /**
      * The project is holding
      */
     const STATUS_HOLDING = 'H';
+    const STATUS_HOLDING_LABEL = 'holding';
 
     /**
      * The project is deleted
      */
     const STATUS_DELETED = 'D';
+    const STATUS_DELETED_LABEL = 'deleted';
 
     /**
      * The project is system
      */
     const STATUS_SYSTEM = 's';
+    const STATUS_SYSTEM_LABEL = 'system';
 
     const SITE_NEWS_PROJECT_ID = 46;
     const ADMIN_PROJECT_ID     = 100;
@@ -71,19 +77,19 @@ class Project extends Group implements PFO_Project {
     private $service_data_array = null;
     private $cache_active_services;
     private $services;
-    
+
     /**
      * @var array The classnames for services
      */
     private $serviceClassnames;
-    
+
     /*
 		basically just call the parent to set up everything
                 and set up services arrays
     */
     function __construct($param) {
         parent::__construct($param);
-        
+
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
         $this->project_data_array = $this->data_array;
@@ -194,7 +200,7 @@ class Project extends Group implements PFO_Project {
      * Return service corresponding to project
      *
      * @param String $service_name
-     * 
+     *
      * @return Service
      */
     public function getService($service_name) {
@@ -203,7 +209,7 @@ class Project extends Group implements PFO_Project {
     }
 
     /**
-     * 
+     *
      * @return array
      */
     public function getAllUsedServices() {
@@ -213,7 +219,7 @@ class Project extends Group implements PFO_Project {
                 $used_services[] = $service->getShortName();
             }
         }
-        
+
         return $used_services;
     }
 
@@ -229,15 +235,15 @@ class Project extends Group implements PFO_Project {
         $this->cacheServices();
         return $this->cache_active_services;
     }
-    
+
     function usesHomePage() {
         return $this->usesService(Service::HOMEPAGE);
     }
-    
+
     function usesAdmin() {
         return $this->usesService(Service::ADMIN);
     }
-    
+
     function usesSummary() {
         return $this->usesService(Service::SUMMARY);
     }
@@ -276,7 +282,7 @@ class Project extends Group implements PFO_Project {
     //whether or not this group has opted to use wiki
     function usesWiki() {
         return $this->usesService(Service::WIKI);
-    }   
+    }
 
 
     // Generic versions
@@ -292,7 +298,7 @@ class Project extends Group implements PFO_Project {
     function getHomePage() {
         return $this->usesHomePage() ? $this->getServiceLink(Service::HOMEPAGE) : '';
     }
-    
+
     function getWikiPage(){
         return $this->getServiceLink(Service::WIKI);
     }
@@ -300,23 +306,23 @@ class Project extends Group implements PFO_Project {
     function getForumPage(){
         return $this->getServiceLink(Service::FORUM);
     }
-    
+
     function getMailPage(){
         return $this->getServiceLink(Service::ML);
     }
-    
+
     function getCvsPage(){
         return $this->getServiceLink(Service::CVS);
     }
-    
+
     function getSvnPage(){
         return $this->getServiceLink(Service::SVN);
     }
-    
+
     function getTrackerPage(){
         return $this->getServiceLink(Service::TRACKERV3);
     }
-    
+
     /*
 
     Subversion and CVS settings
@@ -342,7 +348,7 @@ class Project extends Group implements PFO_Project {
     function getCVSpreamble() {
         return $this->project_data_array['cvs_preamble'];
     }
-    
+
     function isCVSPrivate() {
         return $this->project_data_array['cvs_is_private'];
     }
@@ -362,7 +368,7 @@ class Project extends Group implements PFO_Project {
     function canChangeSVNLog(){
         return $this->project_data_array['svn_can_change_log'];
     }
-    
+
     function getSVNpreamble() {
         return $this->project_data_array['svn_preamble'];
     }
@@ -371,7 +377,7 @@ class Project extends Group implements PFO_Project {
         // TODO XXXX not implemented yet.
         return false;
     }
-    
+
     function getSVNAccess() {
         return $this->project_data_array['svn_accessfile'];
     }
@@ -422,53 +428,53 @@ class Project extends Group implements PFO_Project {
         }
         return $subprojects;
     }
-    
+
     public function getProjectsDescFieldsValue()
     {
         $sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id=' . db_ei($this->getGroupId());
-        
+
         $descfieldsvalue = array();
         if ($res = db_query($sql)) {
             while($data = db_fetch_array($res)) {
                 $descfieldsvalue[] = $data;
             }
         }
-        
+
         return $descfieldsvalue;
     }
-    
+
     function displayProjectsDescFieldsValue(){
         $descfieldsvalue = $this->getProjectsDescFieldsValue();
         $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
         $descfields      = $fields_factory->getAllDescriptionFields();
 
         $hp = Codendi_HTMLPurifier::instance();
-    	
+
     	for($i=0;$i<sizeof($descfields);$i++){
-	
+
 			$displayfieldname[$i]=$descfields[$i]['desc_name'];
 			$displayfieldvalue[$i]='';
 			for($j=0;$j<sizeof($descfieldsvalue);$j++){
-				
+
 				if($descfieldsvalue[$j]['group_desc_id']==$descfields[$i]['group_desc_id']){
 					$displayfieldvalue[$i]=$descfieldsvalue[$j]['value'];
-				}	
+				}
 			}
-			
+
 			$descname=$displayfieldname[$i];
                         if (preg_match('/(.*):(.*)/', $descname, $matches)) {
                             if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                                 $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                             }
                         }
-			
+
 			echo "<h3>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</h3>";
 			echo "<p>";
 			echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
 			echo "</p>";
-			
+
 		}
-    	
+
     }
 
     private function getUGroupManager() {

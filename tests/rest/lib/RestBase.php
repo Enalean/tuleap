@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 use Guzzle\Http\Client;
 use Test\Rest\RequestWrapper;
 use Test\Rest\Cache;
+use Tuleap\Project\ProjectStatusMapper;
 
 class RestBase extends PHPUnit_Framework_TestCase
 {
@@ -48,6 +49,7 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $project_public_id;
     protected $project_public_member_id;
     protected $project_pbi_id;
+    protected $project_deleted_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -115,6 +117,7 @@ class RestBase extends PHPUnit_Framework_TestCase
         $this->project_public_id          = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
         $this->project_public_member_id   = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
         $this->project_pbi_id             = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
+        $this->project_deleted_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }
@@ -143,23 +146,20 @@ class RestBase extends PHPUnit_Framework_TestCase
     {
         $offset = 0;
         $limit  = 50;
-        $query  = http_build_query(
-            array('limit' => $limit, 'offset' => $offset)
-        );
+        $query_for_active_projects  = http_build_query([
+            'limit' => $limit, 'offset' => $offset
+        ]);
 
-        do {
-            $response = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->setup_client->get("projects/?$query")
-            );
+        $this->getProjectsIdsWithQuery($query_for_active_projects, $limit);
 
-            $projects          = $response->json();
-            $number_of_project = (int) (string) $response->getHeader('X-Pagination-Size');
+        $deleted_status_label = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(Project::STATUS_DELETED);
+        $query_for_deleted_projects = http_build_query([
+            'limit'  => $limit,
+            'offset' => $offset,
+            'query'  => json_encode(["with_status" => $deleted_status_label])
+        ]);
 
-            $this->addProjectIdFromRequestData($projects);
-
-            $offset += $limit;
-        } while ($offset < $number_of_project);
+        $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
     }
 
     private function addProjectIdFromRequestData(array $projects)
@@ -345,5 +345,25 @@ class RestBase extends PHPUnit_Framework_TestCase
             $ids[$artifact['title']] = $artifact['id'];
         }
         return $ids;
+    }
+
+    private function getProjectsIdsWithQuery($query, $limit)
+    {
+        $offset = 0;
+
+        do {
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->setup_client->get("projects/?$query")
+            );
+
+            $projects = $response->json();
+
+            $number_of_project = (int)(string)$response->getHeader('X-Pagination-Size');
+
+            $this->addProjectIdFromRequestData($projects);
+
+            $offset += $limit;
+        } while ($offset < $number_of_project);
     }
 }

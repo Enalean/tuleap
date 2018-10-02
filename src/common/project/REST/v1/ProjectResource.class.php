@@ -47,6 +47,7 @@ use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
 use Tuleap\Project\ProjectRegistrationDisabledException;
+use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -64,6 +65,7 @@ use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\v1\OrderRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
+use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
 use UGroupDao;
@@ -115,6 +117,11 @@ class ProjectResource extends AuthenticatedResource {
      */
     private $json_decoder;
 
+    /**
+     * @var User_ForgeUserGroupPermissionsManager
+     */
+    private $forge_ugroup_permissions_manager;
+
     public function __construct() {
         $this->user_manager      = UserManager::instance();
         $this->project_manager   = ProjectManager::instance();
@@ -124,10 +131,12 @@ class ProjectResource extends AuthenticatedResource {
         $ugroup_user_dao         = new UGroupUserDao();
         $this->event_manager     = EventManager::instance();
 
+        $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao());
         $widget_factory = new WidgetFactory(
-        $this->user_manager,
-        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
-        $this->event_manager);
+            $this->user_manager,
+            $this->forge_ugroup_permissions_manager,
+            $this->event_manager
+        );
 
         $widget_dao        = new DashboardWidgetDao($widget_factory);
         $project_dao       = new ProjectDashboardDao($widget_dao);
@@ -236,6 +245,9 @@ class ProjectResource extends AuthenticatedResource {
      *   <li>a property "is_tracker_admin" to search projects the current user is administrator of at least one tracker.
      *     Example: <pre>{"is_tracker_admin": true}</pre>
      *   </li>
+     *   <li>a property "with_status" to search projects the current user is member of with a specific status.
+     *     Example: <pre>{"with_status": "deleted"}</pre>
+     *   </li>
      * </ul>
      * </p>
      *
@@ -246,6 +258,10 @@ class ProjectResource extends AuthenticatedResource {
      * <p>
      *   <strong>/!\</strong> Please note that {"is_tracker_admin": false} is not supported and will result
      *   in a 400 Bad Request error.
+     * </p>
+     * <p>
+     *   <strong>/!\</strong> Please note that querying with { "with_status" } will throw a 403 Forbidden Error
+     *   if you are not member of the REST project management delegation.
      * </p>
      *
      * @url GET
@@ -314,11 +330,13 @@ class ProjectResource extends AuthenticatedResource {
     private function getMyAndPublicProjectsFromExactMatch($query, PFUser $user, $offset, $limit)
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (! isset($json_query['shortname'])
+        if (
+            ! isset($json_query['shortname'])
             && ! isset($json_query['is_member_of'])
             && ! isset($json_query['is_tracker_admin'])
+            && ! isset($json_query['with_status'])
         ) {
-            throw new RestException(400, "You can only search on 'shortname', 'is_member_of': true or 'is_tracker_admin': true");
+            throw new RestException(400, "You can only search on 'shortname', 'is_member_of': true, 'is_tracker_admin': true or 'with_status'");
         }
 
         if (isset($json_query['is_member_of']) && ! $json_query['is_member_of']) {
@@ -330,6 +348,23 @@ class ProjectResource extends AuthenticatedResource {
                 400,
                 "Searching for projects you are not administrator of at least one tracker is not supported. Use 'is_tracker_admin': true"
             );
+        }
+
+        $with_status = $json_query['with_status'];
+        if (isset($with_status)) {
+            if (! $user->isSuperUser() && ! $this->isUserDelegatedRestProjectManager($user)) {
+                throw new RestException(
+                    403,
+                    "You don't have enough rights to perform a query using 'with_status'"
+                );
+            }
+
+            if ((! $with_status || ! ProjectStatusMapper::isValidProjectStatusLabel($with_status))) {
+                throw new RestException(
+                    400,
+                    "Please provide a valid status: 'active', 'pending', 'incomplete', 'holding', 'deleted'"
+                );
+            }
         }
 
         if (isset($json_query['shortname'])) {
@@ -344,6 +379,12 @@ class ProjectResource extends AuthenticatedResource {
             $this->event_manager->processEvent($event);
 
             return $event->getPaginatedProjects();
+        } else if (isset($with_status)) {
+            return $this->project_manager->getProjectsWithStatusForREST(
+                ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($with_status),
+                $offset,
+                $limit
+            );
         } else {
             return $this->project_manager->getMyProjectsForREST(
                 $user,
@@ -1391,5 +1432,10 @@ class ProjectResource extends AuthenticatedResource {
         if (!$this->limitValueIsAcceptable($limit)) {
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
+    }
+
+    private function isUserDelegatedRestProjectManager(PFUser $user)
+    {
+        return $this->forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
     }
 }

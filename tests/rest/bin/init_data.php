@@ -26,8 +26,8 @@ $data_builder = new REST_TestDataBuilder();
 $data_builder
     ->instanciateFactories()
     ->generateUsers()
-    ->delegatePermissionsToRetrieveMembership()
-    ->delegatePermissionsToManageUser()
+    ->delegateForgePermissions()
     ->generateCrossTracker()
     ->deleteTracker()
+    ->deleteProject()
     ->activateDebug();
