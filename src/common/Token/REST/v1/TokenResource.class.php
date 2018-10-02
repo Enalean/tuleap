@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,10 @@ class TokenResource {
     /**
      * Generate a token
      *
-     * Generate a token for authentication for the current user
+     * Generate a token for authentication for the current user<br/>
+     *
+     * <b>The use of a personal access key should be preferred,
+     * consult the documentation for more information</b>
      *
      * @url POST
      * @status 201
@@ -93,7 +96,10 @@ class TokenResource {
     /**
      * Expire a token
      *
-     * Expire a given token of the current user
+     * Expire a given token of the current user<br/>
+     *
+     * <b>The use of a personal access key should be preferred,
+     * consult the documentation for more information</b>
      *
      * @url DELETE {id}
      *
@@ -120,7 +126,10 @@ class TokenResource {
     /**
      * Expire all tokens
      *
-     * Expire all tokens of the current user
+     * Expire all tokens of the current user<br>
+     *
+     * <b>The use of a personal access key should be preferred,
+     * consult the documentation for more information</b>
      *
      * @url DELETE
      */
