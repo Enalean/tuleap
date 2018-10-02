@@ -38,7 +38,11 @@
     "gettext-vue": {
         "personal-timetracking": {
             "scripts": "www/scripts/personal-timetracking-widget",
-            "po": "www/scripts/personal-timetracking-widget/po"
+            "po": "www/scripts/site-content/po"
+        },
+        "timetracking-overview-widget": {
+            "scripts": "www/scripts/timetracking-overview-widget",
+            "po": "www/scripts/site-content/po"
         }
     },
     "components": [

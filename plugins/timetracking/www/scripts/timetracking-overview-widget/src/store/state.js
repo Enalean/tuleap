@@ -16,27 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { DateTime } from "luxon";
 
-import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
-import french_translations from "../../site-content/po/fr.po";
-import Widget from "./components/Widget.vue";
+const state = {
+    start_date: DateTime.local()
+        .minus({ weeks: 1 })
+        .toISODate(),
+    end_date: DateTime.local().toISODate()
+};
 
-document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
-
-    const vue_mount_point = document.getElementById("personal-timetracking-widget");
-
-    if (vue_mount_point) {
-        const rootComponent = Vue.extend(Widget);
-        new rootComponent({}).$mount(vue_mount_point);
-    }
-});
+export default state;

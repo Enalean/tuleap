@@ -37,6 +37,9 @@ msgstr "Supprimer"
 msgid "Delete the time"
 msgstr "Supprimer ce temps"
 
+msgid "Displays time spent on multiple trackers"
+msgstr "Affiche les temps passés sur les différents trackers"
+
 msgid "Displays your time tracking of the whole platform."
 msgstr "Afficher votre suivi de temps de toute la plateforme."
 
@@ -117,6 +120,9 @@ msgstr "Le suivi de temps est désactivé pour ce tracker."
 
 msgid "Time tracking is enabled for tracker."
 msgstr "Le suivi de temps est activé pour ce tracker."
+
+msgid "Timetracking overview"
+msgstr "Apperçu des suivis de temps"
 
 msgid "Update"
 msgstr "Mettre à jour"

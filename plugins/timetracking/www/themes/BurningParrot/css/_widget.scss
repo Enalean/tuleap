@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget-content-timetracking {
+.dashboard-widget-content-timetracking,
+.dashboard-widget-content-timetracking-overview {
     margin: 0;
 }
 
@@ -29,7 +30,6 @@
         cursor: pointer;
     }
 }
-
 
 .timetracking-writing-mode-actions {
     display: flex;
@@ -53,7 +53,8 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
-.timetracking-artifacts-table {
+.timetracking-artifacts-table,
+.timetracking-overview-widget-table {
     margin: $tlp-spacing;
 }
 
@@ -156,4 +157,18 @@
     &::after {
         opacity: 1;
     }
+}
+
+.timetracking-overview-trackers-empty {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    color: $tlp-theme-color;
+    font-style: italic;
+}
+
+.timetracking-overview-tracker-selector {
+    display: flex;
+    align-items: center;
+    margin: $tlp-spacing $tlp-half-spacing 0;
 }

@@ -18,25 +18,24 @@
  */
 
 import Vue from "vue";
+import TimeTrackingOverview from "./components/TimeTrackingOverview.vue";
 import GetTextPlugin from "vue-gettext";
 import french_translations from "../../site-content/po/fr.po";
-import Widget from "./components/Widget.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
-
-    const vue_mount_point = document.getElementById("personal-timetracking-widget");
-
+    const vue_mount_point = document.getElementById("timetracking-overview-widget");
     if (vue_mount_point) {
-        const rootComponent = Vue.extend(Widget);
+        const rootComponent = Vue.extend(TimeTrackingOverview);
+        Vue.use(GetTextPlugin, {
+            translations: {
+                fr: french_translations.messages
+            },
+            silent: true
+        });
+
+        const locale = document.body.dataset.userLocale;
+        Vue.config.language = locale;
+
         new rootComponent({}).$mount(vue_mount_point);
     }
 });

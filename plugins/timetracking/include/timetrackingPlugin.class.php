@@ -38,6 +38,7 @@ use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
 use Tuleap\Timetracking\Router;
+use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 
 require_once 'constants.php';
@@ -241,11 +242,15 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         if ($get_widget_event->getName() === UserWidget::NAME) {
             $get_widget_event->setWidget(new UserWidget());
         }
+        if ($get_widget_event->getName() === TimeTrackingOverview::NAME) {
+            $get_widget_event->setWidget(new TimeTrackingOverview());
+        }
     }
 
     public function getUserWidgetList(\Tuleap\Widget\Event\GetUserWidgetList $event)
     {
         $event->addWidget(UserWidget::NAME);
+        $event->addWidget(TimeTrackingOverview::NAME);
     }
 
     public function fill_project_history_sub_events($params) // @codingStandardsIgnoreLine
@@ -267,6 +272,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             );
 
             $params['javascript_files'][] = $include_assets->getFileURL('widget-timetracking.js');
+            $params['javascript_files'][] = $include_assets->getFileURL('timetracking-overview.js');
         }
     }
 
