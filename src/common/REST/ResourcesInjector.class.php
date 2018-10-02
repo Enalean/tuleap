@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@ use Tuleap\Label\REST\LabelRepresentation;
 use \Tuleap\Project\REST\ProjectRepresentation;
 use \Tuleap\Token\REST\TokenRepresentation;
 use \Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\User\AccessKey\REST\AccessKeyResource;
 use \Tuleap\User\REST\UserRepresentation;
 use \Tuleap\REST\v1\PhpWikiPageRepresentation;
 use \Tuleap\User\REST\v1\UserMembershipRepresentation;
@@ -37,7 +38,8 @@ use \Project;
  */
 class ResourcesInjector {
 
-    public function populate(Restler $restler) {
+    public function populate(Restler $restler)
+    {
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\ProjectResource',   ProjectRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Token\\REST\\TokenResource',       TokenRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Project\\REST\\UserGroupResource', UserGroupRepresentation::ROUTE);
@@ -46,6 +48,7 @@ class ResourcesInjector {
         $restler->addAPIClass('\\Tuleap\\PhpWiki\\REST\\v1\\PhpWikiResource',  PhpWikiPageRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\JWT\\REST\\v1\\JWTResource',  JWTRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\SystemEvent\\REST\\v1\\SystemEventResource',  SystemEventRepresentation::ROUTE);
+        $restler->addAPIClass(AccessKeyResource::class,  AccessKeyResource::ROUTE);
     }
 
     public function declareProjectResources(array &$resources, Project $project)
