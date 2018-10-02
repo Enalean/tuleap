@@ -131,19 +131,19 @@ class TmpDir
         }
 
         if (empty($this->dir)) {
-            throw new \Exception(__('No tmpdir defined'));
+            throw new \Exception(dgettext("gitphp", 'No tmpdir defined'));
         }
 
         if (file_exists($this->dir)) {
             if (is_dir($this->dir)) {
                 if (!is_writeable($this->dir)) {
-                    throw new \Exception(sprintf(__('Specified tmpdir %1$s is not writable'), $this->dir));
+                    throw new \Exception(sprintf(dgettext("gitphp", 'Specified tmpdir %1$s is not writable'), $this->dir));
                 }
             } else {
-                throw new \Exception(sprintf(__('Specified tmpdir %1$s is not a directory'), $this->dir));
+                throw new \Exception(sprintf(dgettext("gitphp", 'Specified tmpdir %1$s is not a directory'), $this->dir));
             }
         } elseif (!mkdir($this->dir, 0700)) {
-            throw new \Exception(sprintf(__('Could not create tmpdir %1$s'), $this->dir));
+            throw new \Exception(sprintf(dgettext("gitphp", 'Could not create tmpdir %1$s'), $this->dir));
         }
     }
 

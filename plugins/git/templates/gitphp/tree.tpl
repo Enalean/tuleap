@@ -54,7 +54,7 @@
              {include file='treelist.tpl'}
          </table>
      {else}
-         <em>{t}No commits{/t}</em>
+         <em>{t domain="gitphp"}No commits{/t}</em>
      {/if}
  </div>
 

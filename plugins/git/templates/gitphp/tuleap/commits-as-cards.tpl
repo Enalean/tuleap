@@ -89,14 +89,14 @@
                     <a class="tlp-button-primary tlp-button-outline tlp-button-small"
                        href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
                     >
-                        {t}Details{/t}
+                        {t domain="gitphp"}Details{/t}
                     </a>
                 </div>
                 <div class="tlp-button-bar-item">
                     <a class="tlp-button-primary tlp-button-outline tlp-button-small"
                        href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
                     >
-                        {t}Diff{/t}
+                        {t domain="gitphp"}Diff{/t}
                     </a>
                 </div>
                 <div class="tlp-button-bar-item tlp-dropdown">
@@ -110,18 +110,18 @@
                         <a class="tlp-dropdown-menu-item"
                            href="{$SCRIPT_NAME}?a=tree&amp;h={$revtree->GetHash()|urlencode}&amp;hb={$commit_presenter->commit->GetHash()|urlencode}"
                         >
-                            {t}Tree{/t}
+                            {t domain="gitphp"}Tree{/t}
                         </a>
                         <a class="tlp-dropdown-menu-item"
                            href="{$SCRIPT_NAME}?a=snapshot&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip"
                         >
-                            {t}Snapshot{/t}
+                            {t domain="gitphp"}Snapshot{/t}
                         </a>
                         {if $mark}
                             {if $mark->GetHash() == $commit_presenter->commit->GetHash()}
                                 <a class="tlp-dropdown-menu-item"
                                    href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}">
-                                    {t}Deselect{/t}
+                                    {t domain="gitphp"}Deselect{/t}
                                 </a>
                             {else}
                                 {if $mark->GetCommitterEpoch() > $commit_presenter->commit->GetCommitterEpoch()}
@@ -134,13 +134,13 @@
 
                                 <a class="tlp-dropdown-menu-item"
                                    href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$markbase->GetHash()|urlencode}&amp;hp={$markparent->GetHash()|urlencode}">
-                                    {t}Diff with selected{/t}
+                                    {t domain="gitphp"}Diff with selected{/t}
                                 </a>
                             {/if}
                         {else}
                             <a class="tlp-dropdown-menu-item"
                                href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">
-                                {t}Select for diff{/t}
+                                {t domain="gitphp"}Select for diff{/t}
                             </a>
                         {/if}
                     </div>

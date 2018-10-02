@@ -11,22 +11,22 @@
    {include file='nav.tpl' treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=unified">{t}unified{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=unified">{t domain="gitphp"}unified{/t}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside">{t}side by side{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside">{t domain="gitphp"}side by side{/t}</a>
    {/if}
     |
-   <a href="{$SCRIPT_NAME}?a=blobdiff_plain&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=blobdiff_plain&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$blobparent target='blob'}
- 
+
  <div class="page_body">
    <div class="diff_info">
      {* Display the from -> to diff header *}
-     {t}blob{/t}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}">{if $file}a/{$file|escape}{else}{$blobparent->GetHash()|escape}{/if}</a> -&gt; {t}blob{/t}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$blob->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}">{if $file}b/{$file|escape}{else}{$blob->GetHash()|escape}{/if}</a>
+     {t domain="gitphp"}blob{/t}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}">{if $file}a/{$file|escape}{else}{$blobparent->GetHash()|escape}{/if}</a> -&gt; {t domain="gitphp"}blob{/t}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$blob->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}">{if $file}b/{$file|escape}{else}{$blob->GetHash()|escape}{/if}</a>
    </div>
    {if $sidebyside}
    {* Display the sidebysidediff *}

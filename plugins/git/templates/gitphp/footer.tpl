@@ -8,7 +8,7 @@
     <div class="page_footer">
         <div class="page_footer_text">
 	</div>
-        <a href="{$SCRIPT_NAME}?a=rss&amp;noheader=1" class="rss_logo">{t}RSS{/t}</a>
-        <a href="{$SCRIPT_NAME}?a=atom&amp;noheader=1" class="rss_logo">{t}Atom{/t}</a>
+        <a href="{$SCRIPT_NAME}?a=rss&amp;noheader=1" class="rss_logo">{t domain="gitphp"}RSS{/t}</a>
+        <a href="{$SCRIPT_NAME}?a=atom&amp;noheader=1" class="rss_logo">{t domain="gitphp"}Atom{/t}</a>
     </div>
   </body>

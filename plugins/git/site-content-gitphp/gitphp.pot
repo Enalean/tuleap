@@ -1,0 +1,371 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "%1 file changed:"
+msgid_plural "%1 files changed:"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d day ago"
+msgid_plural "%1$d days ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d hour ago"
+msgid_plural "%1$d hours ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d min ago"
+msgid_plural "%1$d min ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d month ago"
+msgid_plural "%1$d months ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d sec ago"
+msgid_plural "%1$d sec ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d week ago"
+msgid_plural "%1$d weeks ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$d year ago"
+msgid_plural "%1$d years ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#, php-format
+msgid "%1$s is attempting directory traversal"
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a directory"
+msgstr ""
+
+#, php-format
+msgid "%1$s is not a git repository"
+msgstr ""
+
+#, php-format
+msgid "%1$s is outside of the projectroot"
+msgstr ""
+
+msgid "(deleted)"
+msgstr ""
+
+msgid "(new)"
+msgstr ""
+
+msgid "(show all)"
+msgstr ""
+
+msgid "Atom"
+msgstr ""
+
+msgid "Author"
+msgstr ""
+
+msgid "Author name, description, …"
+msgstr ""
+
+msgid "Binary file"
+msgstr ""
+
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
+msgstr ""
+
+msgid "Blame"
+msgstr ""
+
+msgid "Commit"
+msgstr ""
+
+msgid "Committer"
+msgstr ""
+
+#, php-format
+msgid "Could not create tmpdir %1$s"
+msgstr ""
+
+#, php-format
+msgid ""
+"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
+"\" config value."
+msgstr ""
+
+msgid "Deselect"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Diff"
+msgstr ""
+
+msgid "Diff with selected"
+msgstr ""
+
+msgid "Files"
+msgstr ""
+
+msgid "Go to diff"
+msgstr ""
+
+msgid "HEAD"
+msgstr ""
+
+msgid "Hash"
+msgstr ""
+
+msgid "History"
+msgstr ""
+
+msgid "Inline diff"
+msgstr ""
+
+#, php-format
+msgid "Invalid hash %1$s"
+msgstr ""
+
+msgid "Invalid search type"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Modified Files"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "No commits"
+msgstr ""
+
+#, php-format
+msgid "No matches for \"%1$s\""
+msgstr ""
+
+msgid "No tmpdir defined"
+msgstr ""
+
+msgid "Parent"
+msgstr ""
+
+msgid "Parents"
+msgstr ""
+
+msgid "Plain"
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Project is required"
+msgstr ""
+
+msgid "RSS"
+msgstr ""
+
+msgid "Reference"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search has been disabled"
+msgstr ""
+
+msgid "Select for diff"
+msgstr ""
+
+msgid "Side by side diff"
+msgstr ""
+
+msgid "Snapshot"
+msgstr ""
+
+#, php-format
+msgid "Specified tmpdir %1$s is not a directory"
+msgstr ""
+
+#, php-format
+msgid "Specified tmpdir %1$s is not writable"
+msgstr ""
+
+msgid "Terms"
+msgstr ""
+
+msgid "Tree"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Unified diff"
+msgstr ""
+
+#, php-format
+msgid "You must enter search text of at least %1$d character"
+msgid_plural "You must enter search text of at least %1$d characters"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "atom"
+msgstr ""
+
+msgid "author"
+msgstr ""
+
+msgid "blame"
+msgstr ""
+
+msgid "blob"
+msgstr ""
+
+msgid "blobdiff"
+msgstr ""
+
+msgid "changed"
+msgstr ""
+
+msgid "changed from %1 to %2"
+msgstr ""
+
+msgid "changed from %1 to %2 mode: %3"
+msgstr ""
+
+msgid "changed from %1 to %2 mode: %3 -> %4"
+msgstr ""
+
+msgid "changed mode: %1"
+msgstr ""
+
+msgid "changed mode: %1 -> %2"
+msgstr ""
+
+msgid "commit"
+msgstr ""
+
+msgid "commitdiff"
+msgstr ""
+
+msgid "committer"
+msgstr ""
+
+msgid "deleted %1"
+msgstr ""
+
+msgid "deselect"
+msgstr ""
+
+msgid "diff"
+msgstr ""
+
+msgid "diff to current"
+msgstr ""
+
+msgid "diff with selected"
+msgstr ""
+
+msgid "directory"
+msgstr ""
+
+msgid "file"
+msgstr ""
+
+msgid "first"
+msgstr ""
+
+msgid "heads"
+msgstr ""
+
+msgid "history"
+msgstr ""
+
+msgid "log"
+msgstr ""
+
+msgid "moved from %1 with %2%% similarity"
+msgstr ""
+
+msgid "moved from %1 with %2%% similarity, mode: %3"
+msgstr ""
+
+msgid "new %1"
+msgstr ""
+
+msgid "new %1 with mode %2"
+msgstr ""
+
+msgid "next"
+msgstr ""
+
+msgid "object"
+msgstr ""
+
+msgid "parent"
+msgstr ""
+
+msgid "plain"
+msgstr ""
+
+msgid "prev"
+msgstr ""
+
+msgid "right now"
+msgstr ""
+
+msgid "rss"
+msgstr ""
+
+msgid "search"
+msgstr ""
+
+msgid "select for diff"
+msgstr ""
+
+msgid "selected"
+msgstr ""
+
+msgid "side by side"
+msgstr ""
+
+msgid "snapshot"
+msgstr ""
+
+msgid "symlink"
+msgstr ""
+
+msgid "tag"
+msgstr ""
+
+msgid "tags"
+msgstr ""
+
+msgid "tree"
+msgstr ""
+
+msgid "unified"
+msgstr ""
+
+msgid "unknown"
+msgstr ""

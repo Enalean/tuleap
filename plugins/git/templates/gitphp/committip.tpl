@@ -6,9 +6,9 @@
  *  Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
 <div>
-{t}author{/t}: {$commit->GetAuthor()|escape} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+{t domain="gitphp"}author{/t}: {$commit->GetAuthor()|escape} ({$commit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
 <br />
-{t}committer{/t}: {$commit->GetCommitter()|escape} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
+{t domain="gitphp"}committer{/t}: {$commit->GetCommitter()|escape} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
 <br /><br />
 {foreach from=$commit->GetComment() item=line}
 {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}

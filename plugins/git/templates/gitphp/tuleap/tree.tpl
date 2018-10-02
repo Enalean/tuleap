@@ -33,7 +33,7 @@
                     -->{/foreach}<!--
                     --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
                 {else}
-                    {t}Files{/t}
+                    {t domain="gitphp"}Files{/t}
                 {/if}
             </h1>
         </div>
@@ -41,7 +41,7 @@
             <table class="tlp-table">
                 <thead>
                     <tr>
-                        <th>{t}Name{/t}</th>
+                        <th>{t domain="gitphp"}Name{/t}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +66,7 @@
                             </tr>
                         {/foreach}
                     {else}
-                        <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
+                        <td class="tlp-table-cell-empty">{t domain="gitphp"}No commits{/t}</td>
                     {/if}
                 </tbody>
             </table>

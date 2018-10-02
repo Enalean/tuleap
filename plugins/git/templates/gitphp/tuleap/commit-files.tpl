@@ -19,7 +19,7 @@
 
 <section class="tlp-pane-section">
     <h2 class="tlp-pane-title">
-        <i class="tlp-pane-title-icon fa fa-copy"></i> {t}Modified Files{/t}
+        <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
     </h2>
     <div class="tlp-table-actions">
         <div class="tlp-table-actions-spacer"></div>
@@ -27,14 +27,14 @@
             <div class="tlp-button-bar-item">
                 <input type="radio" class="tlp-button-bar-checkbox" checked>
                 <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                    {t}List{/t}
+                    {t domain="gitphp"}List{/t}
                 </label>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    {t}Inline diff{/t}
+                    {t domain="gitphp"}Inline diff{/t}
                 </a>
             </div>
         </div>
@@ -43,7 +43,7 @@
         <thead>
             <tr>
                 <th></th>
-                <th>{t}Name{/t}</th>
+                <th>{t domain="gitphp"}Name{/t}</th>
                 <th class="tlp-table-cell-numeric"></th>
                 <th></th>
                 <th></th>
@@ -68,14 +68,14 @@
                 {/if}
                 {if ($diffline->isBinaryFile())}
                     <td class="git-repository-commit-file-stat-binary" colspan="2">
-                        {t}Binary file{/t}
+                        {t domain="gitphp"}Binary file{/t}
                     </td>
                 {/if}
                 <td class="tlp-table-cell-actions">
                     <a href="{$commit_presenter->getDiffLink($diffline)}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        <i class="fa fa-long-arrow-right tlp-button-icon"></i> {t}Go to diff{/t}
+                        <i class="fa fa-long-arrow-right tlp-button-icon"></i> {t domain="gitphp"}Go to diff{/t}
                     </a>
                     <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"

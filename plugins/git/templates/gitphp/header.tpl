@@ -18,10 +18,10 @@
               <input type="hidden" name="a" value="search" />
               <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()|escape}{else}HEAD{/if}" />
               <select name="st">
-                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}commit{/t}</option>
-                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}author{/t}</option>
-                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t}committer{/t}</option>
-              </select> {t}search{/t}: <input type="text" name="s" {if $search}value="{$search|escape}"{/if} />
+                <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t domain="gitphp"}commit{/t}</option>
+                <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t domain="gitphp"}author{/t}</option>
+                <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t domain="gitphp"}committer{/t}</option>
+              </select> {t domain="gitphp"}search{/t}: <input type="text" name="s" {if $search}value="{$search|escape}"{/if} />
             </div>
           </form>
         {/if}

@@ -172,6 +172,7 @@ class GitPlugin extends Plugin
     {
         parent::__construct($id);
         bindtextdomain('tuleap-git', __DIR__.'/../site-content');
+        bindtextdomain('gitphp', __DIR__.'/../site-content-gitphp');
 
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->addHook('site_admin_option_hook', 'site_admin_option_hook', false);

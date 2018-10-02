@@ -210,6 +210,24 @@ class DiffExe
     }
 
     /**
+     * @throws MessageException
+     */
+    public function checkIsValid()
+    {
+        if (! $this->Valid()) {
+            throw new MessageException(
+                sprintf(
+                    dgettext("gitphp", 'Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'),
+                    $this->GetBinary(),
+                    'diffbin'
+                ),
+                true,
+                500
+            );
+        }
+    }
+
+    /**
      * Diff
      *
      * Convenience function to run diff with the default settings

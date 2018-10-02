@@ -667,7 +667,7 @@ class GitActions extends PluginActions
             if ($this->users_to_notify_dao->insert($repository_id, $user->getId())) {
                 $controller->addInfo(
                     sprintf(
-                        dgettext('plugin-git', 'User "%s" successfully added to notifications'),
+                        dgettext('tuleap-git', 'User "%s" successfully added to notifications'),
                         $user_helper->getDisplayNameFromUser($user)
                     )
                 );
@@ -679,7 +679,7 @@ class GitActions extends PluginActions
             } else {
                 $controller->addError(
                     sprintf(
-                        dgettext('plugin-git', 'Cannot add user "%s"'),
+                        dgettext('tuleap-git', 'Cannot add user "%s"'),
                         $user_helper->getDisplayNameFromUser($user)
                     )
                 );
@@ -704,7 +704,7 @@ class GitActions extends PluginActions
             if ($this->ugroups_to_notify_dao->insert($repository_id, $ugroup->getId())) {
                 $controller->addInfo(
                     sprintf(
-                        dgettext('plugin-git', 'User group "%s" successfully added to notifications'),
+                        dgettext('tuleap-git', 'User group "%s" successfully added to notifications'),
                         $ugroup->getTranslatedName()
                     )
                 );
@@ -716,7 +716,7 @@ class GitActions extends PluginActions
             } else {
                 $controller->addError(
                     sprintf(
-                        dgettext('plugin-git', 'Cannot add user group "%s"'),
+                        dgettext('tuleap-git', 'Cannot add user group "%s"'),
                         $ugroup->getTranslatedName()
                     )
                 );

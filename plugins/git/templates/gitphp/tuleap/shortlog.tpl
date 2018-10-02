@@ -24,7 +24,7 @@
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">
                     <i class="tlp-pane-title-icon fa fa-search"></i>
-                    {t}Search{/t}
+                    {t domain="gitphp"}Search{/t}
                 </h1>
             </div>
             <section class="tlp-pane-section">
@@ -32,28 +32,28 @@
                 <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()|escape}{else}HEAD{/if}" />
 
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="search-type">Type</label>
+                    <label class="tlp-label" for="search-type">{t domain="gitphp"}Type{/t}</label>
                     <select id="search-type" class="tlp-select" name="st">
-                        <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}Commit{/t}</option>
-                        <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}Author{/t}</option>
-                        <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t}Committer{/t}</option>
+                        <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t domain="gitphp"}Commit{/t}</option>
+                        <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t domain="gitphp"}Author{/t}</option>
+                        <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t domain="gitphp"}Committer{/t}</option>
                     </select>
                 </div>
 
                 <div class="tlp-form-element">
-                    <label class="tlp-label" for="search">Terms</label>
+                    <label class="tlp-label" for="search">{t domain="gitphp"}Terms{/t}</label>
                     <input type="text"
                            class="tlp-input"
                            id="search"
                            name="s"
-                           placeholder="{t}Author name, description, …{/t}"
+                           placeholder="{t domain="gitphp"}Author name, description, …{/t}"
                            {if $search}value="{$search|escape}"{/if}
                            required>
                 </div>
 
                 <div class="tlp-pane-section-submit">
                     <button type="submit" class="tlp-button-primary tlp-button-wide">
-                        <i class="fa fa-search tlp-button-icon"></i> {t}Search{/t}
+                        <i class="fa fa-search tlp-button-icon"></i> {t domain="gitphp"}Search{/t}
                     </button>
                 </div>
             </section>
@@ -61,7 +61,7 @@
     </section>
     {if empty($shortlog_presenter)}
         <p class="empty-page-text git-repository-shortlog-results">
-            {t}No commits{/t}
+            {t domain="gitphp"}No commits{/t}
         </p>
     {else}
         <section id="git-repository-shortlog" class="git-repository-shortlog-results">
@@ -73,14 +73,14 @@
                         {if $page > 0}
                             <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page-1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                               title="{t}Previous{/t}"
+                               title="{t domain="gitphp"}Previous{/t}"
                             >
                                 <i class="fa fa-angle-left"></i>
                             </a>
                         {else}
                             <button type="button"
                                     class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                                    title="{t}Previous{/t}"
+                                    title="{t domain="gitphp"}Previous{/t}"
                                     disabled
                             >
                                 <i class="fa fa-angle-left"></i>
@@ -89,14 +89,14 @@
                         {if $hasmorerevs }
                             <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                               title="{t}Next{/t}"
+                               title="{t domain="gitphp"}Next{/t}"
                             >
                                 <i class="fa fa-angle-right"></i>
                             </a>
                         {else}
                             <button type="button"
                                     class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                                    title="{t}Next{/t}"
+                                    title="{t domain="gitphp"}Next{/t}"
                                     disabled
                             >
                                 <i class="fa fa-angle-right"></i>

@@ -47,13 +47,13 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
     public function __construct()
     {
         if (! Config::GetInstance()->GetValue('search', true)) {
-            throw new MessageException(__('Search has been disabled'), true);
+            throw new MessageException(dgettext("gitphp", 'Search has been disabled'), true);
         }
 
         parent::__construct();
 
         if (!$this->project) {
-            throw new MessageException(__('Project is required'), true);
+            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
 
@@ -85,7 +85,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return __('search');
+            return dgettext("gitphp", 'search');
         }
         return 'search';
     }
@@ -104,7 +104,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-            throw new  MessageException(sprintf(__n('You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
+            throw new  MessageException(sprintf(dngettext("gitphp", 'You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
         }
 
         if (isset($_GET['h'])) {
@@ -146,12 +146,12 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
                     $results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
                     break;
                 default:
-                    throw new MessageException(__('Invalid search type'));
+                    throw new MessageException(dgettext("gitphp", 'Invalid search type'));
             }
         }
 
         if (count($results) < 1) {
-            throw new MessageException(sprintf(__('No matches for "%1$s"'), $this->params['search']), false);
+            throw new MessageException(sprintf(dgettext("gitphp", 'No matches for "%1$s"'), $this->params['search']), false);
         }
 
         if (count($results) > 100) {

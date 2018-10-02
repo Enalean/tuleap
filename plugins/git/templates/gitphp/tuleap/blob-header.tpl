@@ -39,7 +39,7 @@
                 <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
                     class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    {t}Plain{/t}
+                    {t domain="gitphp"}Plain{/t}
                 </a>
             </div>
             {if $blob->GetPath()}
@@ -48,7 +48,7 @@
                         <a href="{$SCRIPT_NAME}?a=blame&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
                             class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
-                            {t}Blame{/t}
+                            {t domain="gitphp"}Blame{/t}
                         </a>
                     </div>
                 {/if}
@@ -56,7 +56,7 @@
                     <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                         class="tlp-button-primary tlp-button-outline tlp-button-small"
                     >
-                        {t}History{/t}
+                        {t domain="gitphp"}History{/t}
                     </a>
                 </div>
             {/if}

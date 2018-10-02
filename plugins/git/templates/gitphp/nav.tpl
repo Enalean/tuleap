@@ -10,25 +10,25 @@
  *}
 
    {if $current=='shortlog' || !$commit}
-     {t}log{/t}
+     {t domain="gitphp"}log{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?a=shortlog{if $logcommit}&amp;h={$logcommit->GetHash()|urlencode}{/if}{if $logmark}&amp;m={$logmark->GetHash()|urlencode}{/if}">{t}log{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=shortlog{if $logcommit}&amp;h={$logcommit->GetHash()|urlencode}{/if}{if $logmark}&amp;m={$logmark->GetHash()|urlencode}{/if}">{t domain="gitphp"}log{/t}</a>
    {/if}
    |
    {if $current=='commit' || !$commit}
-     {t}commit{/t}
+     {t domain="gitphp"}commit{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?a=commit&amp;h={$commit->GetHash()|urlencode}">{t}commit{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=commit&amp;h={$commit->GetHash()|urlencode}">{t domain="gitphp"}commit{/t}</a>
    {/if}
-   | 
+   |
    {if $current=='commitdiff' || !$commit}
-     {t}commitdiff{/t}
+     {t domain="gitphp"}commitdiff{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}">{t}commitdiff{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}">{t domain="gitphp"}commitdiff{/t}</a>
    {/if}
-   | 
+   |
    {if $current=='tree'}
-     {t}tree{/t}
+     {t domain="gitphp"}tree{/t}
    {else}
-     <a href="{$SCRIPT_NAME}?a=tree{if $treecommit}&amp;hb={$treecommit->GetHash()|urlencode}{/if}{if $tree}&amp;h={$tree->GetHash()|urlencode}{/if}">{t}tree{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=tree{if $treecommit}&amp;hb={$treecommit->GetHash()|urlencode}{/if}{if $tree}&amp;h={$tree->GetHash()|urlencode}{/if}">{t domain="gitphp"}tree{/t}</a>
    {/if}

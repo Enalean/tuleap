@@ -25,7 +25,6 @@ use Tuleap\Git\GitPHP\Controller_Message;
 use Tuleap\Git\GitPHP\DiffExe;
 use Tuleap\Git\GitPHP\MessageException;
 use Tuleap\Git\GitPHP\ProjectList;
-use Tuleap\Git\GitPHP\Resource;
 
 class GitViews_GitPhpViewer
 {
@@ -97,27 +96,15 @@ class GitViews_GitPhpViewer
 
     private function displayGitPHP()
     {
-        Resource::Instantiate($this->current_user->getLanguageID());
-
         try {
             $this->setupGitPHPConfiguration();
-            /*
-             * Use the default language in the config if user has no preference
-             * with en_US as the fallback
-             */
-            if (! Resource::Instantiated()) {
-                 Resource::Instantiate( Config::GetInstance()->GetValue('locale', 'en_US'));
-            }
 
             /*
              * Check for required executables
              */
             if (!function_exists('xdiff_string_diff')) {
                 $exe = new DiffExe();
-                if (!$exe->Valid()) {
-                    throw new MessageException(sprintf(Tuleap\Git\GitPHP\__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'),
-                        $exe->GetBinary(), 'diffbin'), true, 500);
-                }
+                $exe->checkIsValid();
             }
             unset($exe);
 
@@ -130,14 +117,6 @@ class GitViews_GitPhpViewer
             }
 
         } catch (Exception $e) {
-            if (! Resource::Instantiated()) {
-                /*
-                 * In case an error was thrown before instantiating
-                 * the resource manager
-                 */
-                Resource::Instantiate('en_US');
-            }
-
             $controller = new Controller_Message();
             $controller->SetParam('message', $e->getMessage());
             if ($e instanceof MessageException) {
