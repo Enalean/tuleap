@@ -449,7 +449,7 @@ class Blob extends FilesystemObject
         foreach ($historylines as $line) {
             if (preg_match('/^([0-9a-fA-F]{40})/', $line, $regs)) {
                 $commit = $this->GetProject()->GetCommit($regs[1]);
-            } elseif ($commit) {
+            } elseif (isset($commit)) {
                 try {
                     $history = new FileDiff($this->GetProject(), $line);
                     $history->SetCommit($commit);

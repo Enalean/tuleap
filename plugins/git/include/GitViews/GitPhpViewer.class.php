@@ -30,6 +30,7 @@ use Tuleap\Git\GitPHP\Resource;
 class GitViews_GitPhpViewer
 {
     const GLOSSIFIED_GITPHP_ACTIONS = [
+        'history',
         'blob',
         'blame',
         'commit',
