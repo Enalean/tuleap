@@ -50,7 +50,10 @@ describe("code-collapse-service", () => {
 
         it("Given a file of 24 lines having a deleted line on l.12 and a comment on l.20, then it should return 2 section wrapping around the deleted line and the comment.", () => {
             const unchanged_sections = getUnchangedSections(file_modifications, [
-                { unidiff_offset: 20 }
+                {
+                    content: "A wild inline commment",
+                    unidiff_offset: 20
+                }
             ]);
 
             expect(unchanged_sections).toEqual([
@@ -60,7 +63,27 @@ describe("code-collapse-service", () => {
                 },
                 {
                     start: 12,
-                    end: 20
+                    end: 19
+                }
+            ]);
+        });
+
+        it("Given a file of 24 lines, when there is a comment a the end of the file, then it shouldn't be wrapped.", () => {
+            const unchanged_sections = getUnchangedSections(file_modifications, [
+                {
+                    content: "A wild inline commment",
+                    unidiff_offset: 23
+                }
+            ]);
+
+            expect(unchanged_sections).toEqual([
+                {
+                    start: 0,
+                    end: 10
+                },
+                {
+                    start: 12,
+                    end: 22
                 }
             ]);
         });

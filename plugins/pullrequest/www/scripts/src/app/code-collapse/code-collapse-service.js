@@ -38,9 +38,9 @@ function getUnchangedSections(code, inline_comments) {
     let nb_lines_unchanged = 0;
     let previous_line_offsets = 0;
 
-    code.forEach(({ old_offset, new_offset }, line_number) => {
+    code.forEach(({ old_offset, new_offset, unidiff_offset }, line_number) => {
         const line_offset = Math.abs(new_offset - old_offset);
-        const is_line_commented = isThereACommentOnThisLine(line_number, inline_comments);
+        const is_line_commented = isThereACommentOnThisLine(unidiff_offset, inline_comments);
 
         if (line_offset === previous_line_offsets && !is_line_commented) {
             nb_lines_unchanged++;
@@ -49,9 +49,15 @@ function getUnchangedSections(code, inline_comments) {
         }
 
         if (is_line_commented) {
+            let end = line_number;
+
+            if (end === code.length - 1) {
+                end--;
+            }
+
             collapsible_sections.push({
                 start: next_section_beginning,
-                end: line_number
+                end
             });
 
             next_section_beginning = line_number + 1;
