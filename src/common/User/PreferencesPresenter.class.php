@@ -82,6 +82,11 @@ class User_PreferencesPresenter {
      */
     public $last_access_key;
 
+    /**
+     * @var string
+     */
+    public $last_access_resolution;
+
     public $user_language;
     public $user_has_accessibility_mode;
     public $is_condensed;
@@ -131,6 +136,8 @@ class User_PreferencesPresenter {
         $this->last_svn_token          = $last_svn_token;
         $this->default_formats         = $default_formats;
         $this->last_access_key         = $last_access_key;
+
+        $this->last_access_resolution  = DateHelper::distanceOfTimeInWords(0, ForgeConfig::get('last_access_resolution'));
 
         $this->user_language               = $user->getShortLocale();
         $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);

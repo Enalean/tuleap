@@ -24,7 +24,15 @@
             <tr>
                 <th></th>
                 <th>{{# gettext }}Generated on{{/ gettext }}</th>
-                <th>{{# gettext }}Last used on{{/ gettext }}</th>
+                <th>
+                    {{# gettext }}Last used on{{/ gettext }}
+                    <span
+                            class="access-keys-accesses-warning"
+                            title="{{# gettext }}Accesses from less than %s might not be visible | {{ last_access_resolution }} {{/ gettext }}"
+                    >
+                        <i class="fa fas fa-question-circle" aria-hidden="true"></i>
+                    </span>
+                </th>
                 <th>{{# gettext }}Last used by{{/ gettext }}</th>
                 <th>{{# gettext }}Description{{/ gettext }}</th>
             </tr>

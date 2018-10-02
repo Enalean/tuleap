@@ -44,9 +44,9 @@ class AccessKeyDAO extends DataAccessObject
     /**
      * @return null|array
      */
-    public function searchHashedVerifierAndUserIDByID($key_id)
+    public function searchAccessKeyVerificationAndTraceabilityDataByID($key_id)
     {
-        return $this->getDB()->row('SELECT verifier, user_id FROM user_access_key WHERE id = ?', $key_id);
+        return $this->getDB()->row('SELECT verifier, user_id, last_usage, last_ip FROM user_access_key WHERE id = ?', $key_id);
     }
 
     public function searchMetadataByUserID($user_id)

@@ -66,6 +66,10 @@ h3.account-title {
     font-weight: bold;
 }
 
+.access-keys-accesses-warning {
+    cursor: help;
+}
+
 #svn-tokens-generate-modal, #access-keys-generate-modal {
     .modal-body {
         > p {

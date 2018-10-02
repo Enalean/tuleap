@@ -50,7 +50,7 @@ class AccessKeyVerifier
      */
     public function getUser(AccessKey $access_key, $ip_address_requesting_verification)
     {
-        $row = $this->dao->searchHashedVerifierAndUserIDByID($access_key->getID());
+        $row = $this->dao->searchAccessKeyVerificationAndTraceabilityDataByID($access_key->getID());
         if ($row === null) {
             throw new AccessKeyNotFoundException($access_key->getID());
         }
@@ -64,13 +64,29 @@ class AccessKeyVerifier
             throw new AccessKeyMatchingUnknownUserException($row['user_id']);
         }
 
+        $this->updateLastAccessInformationIfNeeded(
+            $access_key,
+            $row['last_usage'],
+            $row['last_ip'],
+            $ip_address_requesting_verification
+        );
+
+        return $user;
+    }
+
+    private function updateLastAccessInformationIfNeeded(AccessKey $access_key, $last_usage, $last_ip, $ip_address_requesting_verification)
+    {
         $current_time = new \DateTimeImmutable();
+        if ($last_usage !== null && $last_ip !== null &&
+            $last_ip === $ip_address_requesting_verification &&
+            ($current_time->getTimestamp() - $last_usage) < (int) \ForgeConfig::get('last_access_resolution')
+        ) {
+            return;
+        }
         $this->dao->updateAccessKeyUsageByID(
             $access_key->getID(),
             $current_time->getTimestamp(),
             $ip_address_requesting_verification
         );
-
-        return $user;
     }
 }
