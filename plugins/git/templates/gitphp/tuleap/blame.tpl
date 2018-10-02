@@ -37,7 +37,7 @@
             <div class="tlp-button-bar">
                 <div class="tlp-button-bar-item">
                     <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
-                        class="tlp-button-primary tlp-button-outline tlp-button-small"
+                       class="tlp-button-primary tlp-button-outline tlp-button-small"
                     >
                         {t}Plain{/t}
                     </a>
@@ -46,7 +46,7 @@
                     {if !$datatag}
                         <div class="tlp-button-bar-item">
                             <a href="{$SCRIPT_NAME}?a=blame&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
-                                class="tlp-button-primary tlp-button-outline tlp-button-small"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small"
                             >
                                 {t}Blame{/t}
                             </a>
@@ -54,7 +54,7 @@
                     {/if}
                     <div class="tlp-button-bar-item">
                         <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
-                            class="tlp-button-primary tlp-button-outline tlp-button-small"
+                           class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             {t}History{/t}
                         </a>
@@ -65,35 +65,51 @@
     </div>
 </section>
 <section class="git-repository-blob-body">
-    {if $datatag}
-        {* We're trying to display an image *}
-        <div class="git-repository-blob-image">
-            <img src="data:{$mime};base64,{$data}" />
-        </div>
-    {elseif $geshi}
+    {if $geshi}
         <style type="text/css">{$extracss}</style>
-        {* We're using the highlighted output from geshi *}
-        {$geshiout}
+        {$geshihead}
+        <td class="ln git-repository-blame-line">
+            {foreach from=$blob->GetData(true) item=blobline name=blob}
+                {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
+                {if $blamecommit}
+                    {if $opened}</div>{/if}
+                    <div class="de1 git-repository-blame-cell">
+                    {assign var=opened value=true}
+                    <a href="{$SCRIPT_NAME}?a=commit&amp;h={$blamecommit->GetHash()|urlencode}"
+                       title="{$blamecommit->GetTitle()|htmlspecialchars}"
+                    >{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d"}</a>
+                    <span title="{$blamecommit->GetAuthor()|escape}">{$blamecommit->GetAuthorName()|escape}</span>
+                {/if}
+                <br/>
+                {/foreach}
+            {if $opened}</div>{/if}
+        </td>
+        {$geshibody}
+        {$geshifoot}
     {else}
-        {* Just plain display *}
-        <table class="code" id="git-repository-blob-file">
+        <table id="git-repository-blame-file" class="git-repository-blame-file-no-geshi">
             <tbody>
-                <tr class="li1">
-                    <td class="ln">
-                        <pre class="de1">
-{foreach from=$bloblines item=line name=bloblines}
-{$smarty.foreach.bloblines.iteration}
-{/foreach}
-</pre>
-                    </td>
-                    <td class="de1">
-                        <pre class="de1">
-{foreach from=$bloblines item=line name=bloblines}
-{$line|escape}
-{/foreach}
-</pre>
-                    </td>
-                </tr>
+                {foreach from=$blob->GetData(true) item=blobline name=blob}
+                    {assign var=blamecommit value=$blame[$smarty.foreach.blob.iteration]}
+                    <tr class="li1">
+                        <td class="ln git-repository-blame-line">
+                            {if $blamecommit}
+                                <div class="de1 git-repository-blame-cell">
+                                    <a href="{$SCRIPT_NAME}?a=commit&amp;h={$blamecommit->GetHash()|urlencode}"
+                                       title="{$blamecommit->GetTitle()|htmlspecialchars}"
+                                    >{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d"}</a>
+                                    <span title="{$blamecommit->GetAuthor()|escape}">{$blamecommit->GetAuthorName()|escape}</span>
+                                </div>
+                            {/if}
+                        </td>
+                        <td class="ln">
+                            <pre class="de1">{$smarty.foreach.blob.iteration}</pre>
+                        </td>
+                        <td class="de1">
+                            <pre class="de1">{$blobline|escape}</pre>
+                        </td>
+                    </tr>
+                {/foreach}
             </tbody>
         </table>
     {/if}
