@@ -1,18 +1,29 @@
 <?php
-
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Controller History
- *
- * Controller for displaying file history
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
+use GitPHP\Shortlog\ShortlogPresenterBuilder;
+use UserManager;
+
 /**
  * History controller class
  *
@@ -48,6 +59,10 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/history.tpl';
+        }
+
         return 'history.tpl';
     }
 
@@ -105,5 +120,14 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
         $blob->SetCommit($co);
         $blob->SetPath($this->params['file']);
         $this->tpl->assign('blob', $blob);
+
+        $commits_of_history = array_map(
+            function (FileDiff $file_diff) {
+                return $file_diff->GetCommit();
+            },
+            $blob->GetHistory()
+        );
+        $builder = new ShortlogPresenterBuilder(UserManager::instance());
+        $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($commits_of_history));
     }
 }
