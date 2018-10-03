@@ -1,8 +1,4 @@
 <?php
-
-
-namespace Tuleap\Git\GitPHP;
-
 /**
  * GitPHP ControllerBase
  *
@@ -13,6 +9,9 @@ namespace Tuleap\Git\GitPHP;
  * @package GitPHP
  * @subpackage Controller
  */
+
+namespace Tuleap\Git\GitPHP;
+
 /**
  * ControllerBase class
  *
@@ -38,6 +37,7 @@ abstract class ControllerBase
      * Current project
      *
      * @access protected
+     * @var Project
      */
     protected $project;
 

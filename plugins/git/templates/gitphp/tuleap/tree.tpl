@@ -42,7 +42,7 @@
                 <th>{t}Name{/t}</th>
             </tr>
         </thead>
-        <tbdoy>
+        <tbody>
             {if $commit}
                 {foreach from=$tree_presenter->sorted_content item=treeitem}
                     <tr>
@@ -66,6 +66,21 @@
             {else}
                 <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
             {/if}
-        </tbdoy>
+        </tbody>
     </table>
 </section>
+{if $readme_content }
+</div>
+</section>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-file-text-o tlp-pane-title-icon"></i> {$readme_content->GetName()|escape}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            {$readme_content_interpreted}
+        </section>
+{/if}

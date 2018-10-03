@@ -728,6 +728,8 @@ class Project
      * Get a commit for this project
      *
      * @access public
+     *
+     * @return Commit|null
      */
     public function GetCommit($hash) // @codingStandardsIgnoreLine
     {
