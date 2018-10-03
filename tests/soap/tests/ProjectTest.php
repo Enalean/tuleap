@@ -68,12 +68,13 @@ class ProjectTest extends SOAPBase
     public function testAddUserToUserGroup()
     {
         $session_hash = $this->getSessionHash();
+        $test_user_2_id = $this->getUserID(SOAP_TestDataBuilder::TEST_USER_2_NAME);
 
         $response = $this->soap_project->addUserToUGroup(
             $session_hash,
             SOAP_TestDataBuilder::PROJECT_PRIVATE_MEMBER_ID,
             TestDataBuilder::STATIC_UGROUP_1_ID,
-            TestDataBuilder::TEST_USER_2_ID
+            $test_user_2_id
         );
 
         $this->assertTrue($response);

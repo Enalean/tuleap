@@ -40,16 +40,19 @@ class UserTest extends SOAPBase {
         parent::tearDown();
     }
 
-    public function testGetUserInfo() {
+    public function testGetUserInfo()
+    {
         $session_hash = $this->getSessionHash();
+
+        $test_user_1_id = $this->getUserID(SOAP_TestDataBuilder::TEST_USER_1_NAME);
 
         $response = $this->soap_base->getUserInfo(
             $session_hash,
-            SOAP_TestDataBuilder::TEST_USER_1_ID
+            $test_user_1_id
         );
 
-        $this->assertEquals($response->identifier, SOAP_TestDataBuilder::TEST_USER_1_ID);
-        $this->assertEquals($response->id, SOAP_TestDataBuilder::TEST_USER_1_ID);
+        $this->assertEquals($response->identifier, $test_user_1_id);
+        $this->assertEquals($response->id, $test_user_1_id);
         $this->assertEquals($response->username, SOAP_TestDataBuilder::TEST_USER_1_NAME);
         $this->assertEquals($response->real_name, SOAP_TestDataBuilder::TEST_USER_1_REALNAME);
         $this->assertEquals($response->email, SOAP_TestDataBuilder::TEST_USER_1_EMAIL);

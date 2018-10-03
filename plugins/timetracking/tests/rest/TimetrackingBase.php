@@ -38,5 +38,7 @@ class TimetrackingBase extends RestBase
         $project_id                      = $this->getProjectId(self::PROJECT_NAME);
         $this->tracker_timetracking      = $this->tracker_ids[ $project_id ][ self::TRACKER_NAME ];
         $this->timetracking_artifact_ids = $this->getArtifacts($this->tracker_timetracking);
+        $this->timetracking_user_test    = $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+
     }
 }

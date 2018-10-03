@@ -103,8 +103,8 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME],
                     'user_url'     => '/users/rest_api_restricted_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_EMAIL,
                     'real_name'    => '',
@@ -116,8 +116,8 @@ class UserGroupTest extends RestBase {
                     'is_anonymous' => false
                 ),
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
                     'user_url'     => '/users/rest_api_tester_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
                     'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
@@ -129,8 +129,8 @@ class UserGroupTest extends RestBase {
                     'is_anonymous' => false
                 ),
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
                     'user_url'     => '/users/rest_api_tester_2',
                     'email'        => REST_TestDataBuilder::TEST_USER_2_EMAIL,
                     'real_name'    => '',
@@ -142,8 +142,8 @@ class UserGroupTest extends RestBase {
                     'is_anonymous' => false
                 ),
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_3_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_3_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
                     'user_url'     => '/users/rest_api_tester_3',
                     'email'        => REST_TestDataBuilder::TEST_USER_3_EMAIL,
                     'real_name'    => '',
@@ -166,8 +166,8 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
                     'user_url'     => '/users/rest_api_tester_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
                     'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
@@ -190,8 +190,8 @@ class UserGroupTest extends RestBase {
             $response->json(),
             array(
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_1_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_1_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
                     'user_url'     => '/users/rest_api_tester_1',
                     'email'        => REST_TestDataBuilder::TEST_USER_1_EMAIL,
                     'real_name'    => REST_TestDataBuilder::TEST_USER_1_REALNAME,
@@ -203,8 +203,8 @@ class UserGroupTest extends RestBase {
                     'is_anonymous' => false
                 ),
                 array(
-                    'id'           => REST_TestDataBuilder::TEST_USER_2_ID,
-                    'uri'          => 'users/'.REST_TestDataBuilder::TEST_USER_2_ID,
+                    'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
+                    'uri'          => 'users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
                     'user_url'     => '/users/rest_api_tester_2',
                     'email'        => REST_TestDataBuilder::TEST_USER_2_EMAIL,
                     'real_name'    => '',
@@ -225,8 +225,8 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInProjectMembersAddsMembers() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_4_ID)
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_4_NAME])
         ));
 
         $response = $this->getResponse($this->client->put(
@@ -252,10 +252,10 @@ class UserGroupTest extends RestBase {
 
     private function restoreProjectMembersToAvoidBreakingOtherTests() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_3_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID)
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME])
         ));
 
         $response_put = $this->getResponse($this->client->put(
@@ -268,10 +268,10 @@ class UserGroupTest extends RestBase {
             'user_groups/'.REST_TestDataBuilder::STATIC_PRIVATE_MEMBER_UGROUP_DEVS_ID.'/users',
             null,
             json_encode(array(
-                array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
-                array('id' => REST_TestDataBuilder::TEST_USER_5_ID),
-                array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_1_ID),
-                array('id' => REST_TestDataBuilder::TEST_USER_RESTRICTED_2_ID)
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_5_NAME]),
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_1_NAME]),
+                array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_RESTRICTED_2_NAME])
             ))
         ));
     }
@@ -282,7 +282,7 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInProjectAdmins() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::TEST_USER_2_ID)
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME])
         ));
 
         $response = $this->getResponse($this->client->put(
@@ -374,9 +374,9 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInUserGroup() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::TEST_USER_1_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_2_ID),
-            array('id' => REST_TestDataBuilder::TEST_USER_3_ID)
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]),
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME])
         ));
 
         $response = $this->getResponse($this->client->put(
@@ -405,8 +405,8 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInUserGroupWithTwoDifferentIds() {
         $put_resource = json_encode(array(
-            array('id'       => REST_TestDataBuilder::TEST_USER_1_ID),
-            array('id'       => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('id'       => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            array('id'       => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]),
             array('username' => REST_TestDataBuilder::TEST_USER_3_NAME)
         ));
 
@@ -425,8 +425,8 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInUserGroupWithUnknownKey() {
         $put_resource = json_encode(array(
-            array('unknown' => REST_TestDataBuilder::TEST_USER_1_ID),
-            array('id'      => REST_TestDataBuilder::TEST_USER_2_ID),
+            array('unknown' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]),
+            array('id'      => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]),
             array('id'       => REST_TestDataBuilder::TEST_USER_3_NAME)
         ));
 
@@ -445,7 +445,7 @@ class UserGroupTest extends RestBase {
      */
     public function testPutUsersInUserGroupWithNonAdminUser() {
         $put_resource = json_encode(array(
-            array('id' => REST_TestDataBuilder::TEST_USER_1_ID)
+            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME])
         ));
 
         $this->getResponseWithUser2($this->client->put(
@@ -462,7 +462,7 @@ class UserGroupTest extends RestBase {
     public function testPutUsersInUserGroupWithNonValidRepresentation() {
         $put_resource = json_encode(array(
             array(
-                'id'       => REST_TestDataBuilder::TEST_USER_1_ID,
+                'id'       => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
                 'username' => REST_TestDataBuilder::TEST_USER_1_NAME
             )
         ));

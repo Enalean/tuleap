@@ -84,7 +84,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'));
-        $this->assertEquals($file_representation['submitted_by'], REST_TestDataBuilder::TEST_USER_1_ID);
+        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
 
         $this->assertEquals(17, (string) $response->getHeader('X-DISK-USAGE'));
         $this->assertEquals(self::$DEFAULT_QUOTA, (string) $response->getHeader('X-QUOTA'));
@@ -129,7 +129,7 @@ class ArtifactFilesTest extends ArtifactFileBase
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'.$second_chunk));
-        $this->assertEquals($file_representation['submitted_by'], REST_TestDataBuilder::TEST_USER_1_ID);
+        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
 
         return $file_id;
     }

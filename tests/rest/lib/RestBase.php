@@ -26,8 +26,8 @@ use Tuleap\Project\ProjectStatusMapper;
 
 class RestBase extends PHPUnit_Framework_TestCase
 {
-    protected $base_url  = 'https://localhost/api/v1';
-    private   $setup_url = 'https://localhost/api/v1';
+    protected $base_url = 'https://localhost/api/v1';
+    private $setup_url  = 'https://localhost/api/v1';
 
     /**
      * @var Client
@@ -35,8 +35,8 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $client;
 
     /**
-    * @var Client
-    */
+     * @var Client
+     */
     protected $setup_client;
 
     /**
@@ -62,24 +62,26 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $project_ids = array();
     protected $tracker_ids = array();
     protected $user_groups_ids = array();
+    protected $user_ids = [];
 
     protected $release_artifact_ids = array();
-    protected $epic_artifact_ids    = array();
-    protected $story_artifact_ids   = array();
-    protected $sprint_artifact_ids  = array();
+    protected $epic_artifact_ids = array();
+    protected $story_artifact_ids = array();
+    protected $sprint_artifact_ids = array();
 
     protected $cache;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         if (isset($_ENV['TULEAP_HOST'])) {
-            $this->base_url  = $_ENV['TULEAP_HOST'].'/api/v1';
-            $this->setup_url = $_ENV['TULEAP_HOST'].'/api/v1';
+            $this->base_url  = $_ENV['TULEAP_HOST'] . '/api/v1';
+            $this->setup_url = $_ENV['TULEAP_HOST'] . '/api/v1';
         }
 
         $this->cache = Cache::instance();
 
-        $this->client       = new Client($this->base_url);
+        $this->client = new Client($this->base_url);
         $this->client->setSslVerification(false, false, false);
         $this->setup_client = new Client($this->setup_url);
         $this->setup_client->setSslVerification(false, false, false);
@@ -98,17 +100,22 @@ class RestBase extends PHPUnit_Framework_TestCase
         parent::setUp();
 
         $this->project_ids = $this->cache->getProjectIds();
-        if (! $this->project_ids) {
+        if (!$this->project_ids) {
             $this->initProjectIds();
         }
 
         $this->tracker_ids = $this->cache->getTrackerIds();
-        if (! $this->tracker_ids) {
+        if (!$this->tracker_ids) {
             $this->initTrackerIds();
         }
 
+        $this->user_ids = $this->cache->getUserIds();
+        if (!$this->user_ids) {
+            $this->initUserIds();
+        }
+
         $this->user_groups_ids = $this->cache->getUserGroupIds();
-        if (! $this->user_groups_ids) {
+        if (!$this->user_groups_ids) {
             $this->initUserGroupsId();
         }
 
@@ -130,15 +137,18 @@ class RestBase extends PHPUnit_Framework_TestCase
         );
     }
 
-    protected function getResponseWithoutAuth($request) {
+    protected function getResponseWithoutAuth($request)
+    {
         return $this->rest_request->getResponseWithoutAuth($request);
     }
 
-    protected function getResponseByName($name, $request) {
+    protected function getResponseByName($name, $request)
+    {
         return $this->rest_request->getResponseByName($name, $request);
     }
 
-    protected function getResponseByBasicAuth($username, $password, $request) {
+    protected function getResponseByBasicAuth($username, $password, $request)
+    {
         return $this->rest_request->getResponseByBasicAuth($username, $password, $request);
     }
 
@@ -202,7 +212,7 @@ class RestBase extends PHPUnit_Framework_TestCase
             );
 
             $trackers          = $response->json();
-            $number_of_tracker = (int) (string) $response->getHeader('X-Pagination-Size');
+            $number_of_tracker = (int)(string)$response->getHeader('X-Pagination-Size');
 
             $this->addTrackerIdFromRequestData($trackers, $tracker_ids);
 
@@ -278,17 +288,17 @@ class RestBase extends PHPUnit_Framework_TestCase
 
         $artifacts = $this->getArtifacts($tracker_id);
 
-        $index     = 1;
+        $index = 1;
         foreach ($artifacts as $artifact) {
             $retrieved_artifact_ids[$index] = $artifact['id'];
             $index++;
         }
     }
 
-    protected function getArtifacts($tracker_id) : array
+    protected function getArtifacts($tracker_id): array
     {
         $artifacts = $this->cache->getArtifacts($tracker_id);
-        if (! $artifacts) {
+        if (!$artifacts) {
             $query = http_build_query(
                 array('order' => 'asc')
             );
@@ -328,7 +338,7 @@ class RestBase extends PHPUnit_Framework_TestCase
             );
 
             $ugroups = $response->json();
-            foreach($ugroups as $ugroup) {
+            foreach ($ugroups as $ugroup) {
                 $this->user_groups_ids[$project_id][$ugroup['short_name']] = $ugroup['id'];
             }
             $this->cache->setUserGroupIds($this->user_groups_ids);
@@ -336,7 +346,7 @@ class RestBase extends PHPUnit_Framework_TestCase
         }
     }
 
-    protected function getArtifactIdsIndexedByTitle(string $project_name, string $tracker_name) : array
+    protected function getArtifactIdsIndexedByTitle(string $project_name, string $tracker_name): array
     {
         $tracker_id = $this->cache->getTrackerInProject($project_name, $tracker_name);
 
@@ -365,5 +375,40 @@ class RestBase extends PHPUnit_Framework_TestCase
 
             $offset += $limit;
         } while ($offset < $number_of_project);
+    }
+
+    protected function initUserId($user_name)
+    {
+        $query = urlencode(
+            json_encode([
+                "username" => $user_name
+            ])
+        );
+
+        $response = $this->getResponseByName(
+            TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("users/?query=$query")
+        );
+        $user     = $response->json();
+
+        $this->addUserIdFromRequestData($user[0]);
+    }
+
+    private function initUserIds()
+    {
+        $this->initUserId(TestDataBuilder::ADMIN_USER_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_1_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_2_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_3_NAME);
+        $this->initUserId(REST_TestDataBuilder::TEST_USER_4_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_5_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_RESTRICTED_1_NAME);
+        $this->initUserId(TestDataBuilder::TEST_USER_RESTRICTED_2_NAME);
+    }
+
+    private function addUserIdFromRequestData($user)
+    {
+        $this->user_ids[$user["username"]] = $user["id"];
+        $this->cache->setUserId($user);
     }
 }

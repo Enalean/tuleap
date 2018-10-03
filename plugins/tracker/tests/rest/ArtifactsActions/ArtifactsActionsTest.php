@@ -140,7 +140,7 @@ class ArtifactsActionsTest extends TrackerBase
         $this->assertEquals($artifact_json['values_by_field']['initialv2']['manual_value'], 25);
         $this->assertEquals($artifact_json['status'], 'On going');
         $this->assertEquals(count($artifact_json['assignees']), 1);
-        $this->assertEquals((int) $artifact_json['assignees'][0]["id"], REST_TestDataBuilder::TEST_USER_3_ID);
+        $this->assertEquals((int) $artifact_json['assignees'][0]["id"], $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME]);
 
         $changeset_response = $this->getResponse(
             $this->client->get("artifacts/$artifact_id/changesets?fields=comments&limit=10")

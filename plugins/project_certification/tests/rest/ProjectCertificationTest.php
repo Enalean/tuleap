@@ -73,7 +73,7 @@ class ProjectCertificationTest extends \RestBase
         $this->assertSame(200, $response->getStatusCode());
         $project_certification_representation = $response->json();
         $this->assertSame(
-            \REST_TestDataBuilder::ADMIN_ID,
+            $this->user_ids[\REST_TestDataBuilder::ADMIN_USER_NAME],
             $project_certification_representation['project_owner']['id']
         );
     }

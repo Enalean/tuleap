@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class TestDataBuilder {
-
-    const ADMIN_ID             = 101;
+class TestDataBuilder
+{
     const ADMIN_USER_NAME      = 'admin';
     const ADMIN_REAL_NAME      = 'Site Administrator';
     const ADMIN_DISPLAY_NAME   = 'Site Administrator (admin)';
@@ -28,7 +27,6 @@ class TestDataBuilder {
     const ADMIN_STATUS         = 'A';
     const ADMIN_PASSWORD       = 'welcome0';
 
-    const TEST_USER_1_ID          = 102;
     const TEST_USER_1_NAME        = 'rest_api_tester_1';
     const TEST_USER_1_REALNAME    = 'Test User 1';
     const TEST_USER_1_DISPLAYNAME = 'Test User 1 (rest_api_tester_1)';
@@ -37,35 +35,30 @@ class TestDataBuilder {
     const TEST_USER_1_LDAPID      = 'tester1';
     const TEST_USER_1_STATUS      = 'A';
 
-    const TEST_USER_2_ID          = 103;
     const TEST_USER_2_NAME        = 'rest_api_tester_2';
     const TEST_USER_2_DISPLAYNAME = ' (rest_api_tester_2)';
     const TEST_USER_2_PASS        = 'welcome0';
     const TEST_USER_2_STATUS      = 'A';
     const TEST_USER_2_EMAIL       = 'test_user_2@example.com';
 
-    const TEST_USER_3_ID          = 104;
     const TEST_USER_3_NAME        = 'rest_api_tester_3';
     const TEST_USER_3_DISPLAYNAME = ' (rest_api_tester_3)';
     const TEST_USER_3_PASS        = 'welcome0';
     const TEST_USER_3_STATUS      = 'A';
     const TEST_USER_3_EMAIL       = 'test_user_3@example.com';
 
-    const TEST_USER_5_ID          = 106;
     const TEST_USER_5_NAME        = 'rest_api_tester_5';
     const TEST_USER_5_DISPLAYNAME = ' (rest_api_tester_5)';
     const TEST_USER_5_PASS        = 'welcome0';
     const TEST_USER_5_STATUS      = 'A';
     const TEST_USER_5_EMAIL       = 'test_user_5@example.com';
 
-    const TEST_USER_RESTRICTED_1_ID          = 107;
     const TEST_USER_RESTRICTED_1_NAME        = 'rest_api_restricted_1';
     const TEST_USER_RESTRICTED_1_DISPLAYNAME = ' (rest_api_restricted_1)';
     const TEST_USER_RESTRICTED_1_PASS        = 'welcome0';
     const TEST_USER_RESTRICTED_1_STATUS      = 'R';
     const TEST_USER_RESTRICTED_1_EMAIL       = 'rest_api_restricted_1@example.com';
 
-    const TEST_USER_RESTRICTED_2_ID          = 108;
     const TEST_USER_RESTRICTED_2_NAME        = 'rest_api_restricted_2';
     const TEST_USER_RESTRICTED_2_DISPLAYNAME = ' (rest_api_restricted_2)';
     const TEST_USER_RESTRICTED_2_PASS        = 'welcome0';
@@ -125,8 +118,8 @@ class TestDataBuilder {
 
     public function __construct()
     {
-        $this->project_manager      = ProjectManager::instance();
-        $this->user_manager         = UserManager::instance();
+        $this->project_manager = ProjectManager::instance();
+        $this->user_manager    = UserManager::instance();
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
         $GLOBALS['sys_lf'] = '\n';
