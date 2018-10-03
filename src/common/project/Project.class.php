@@ -50,7 +50,7 @@ class Project extends Group implements PFO_Project {
      * The project is holding
      */
     const STATUS_HOLDING = 'H';
-    const STATUS_HOLDING_LABEL = 'holding';
+    const STATUS_HOLDING_LABEL = 'suspended';
 
     /**
      * The project is deleted
