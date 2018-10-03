@@ -1,0 +1,26 @@
+        <div class="widget-project-members-members">
+            <span class="widget-project-members-members-count">{{ project_member_count }}</span>
+            <span class="widget-project-members-members-label">
+                {{# ngettext }}Member | Members | {{ project_member_count }}{{/ ngettext }}
+            </span>
+        </div>
+        <a href="{{ view_members_link }}"
+           class="tlp-button-primary tlp-button-outline tlp-button-wide"
+        >{{# gettext }}View members{{/ gettext }}</a>
+    </section>
+</div>
+<div class="tlp-pane-container dashboard-widget-container widget-project-members-administrators">
+    <div class="tlp-pane-header">
+        <h2 class="tlp-pane-subtitle">{{# gettext }}Administrators{{/ gettext }}</h2>
+    </div>
+    <section class="tlp-pane-section-for-cards">
+        {{# administrators }}
+            <a class="tlp-card tlp-card-selectable" href="/users/{{ user_name }}">
+                <div class="tlp-avatar widget-project-members-avatar">
+                    {{# has_avatar }}
+                        <img src="/users/{{ user_name }}/avatar.png">
+                    {{/ has_avatar }}
+                </div>
+                {{ username_display }}
+            </a>
+        {{/ administrators }}

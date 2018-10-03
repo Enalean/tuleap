@@ -16,7 +16,7 @@
             {{# widget_columns}}
                 <div class="dashboard-widgets-column {{# can_update_dashboards }}dragula-container{{/ can_update_dashboards }}" data-column-id="{{ column_id }}">
                     {{# widgets }}
-                        <section class="tlp-pane dashboard-widget
+                        <section class="tlp-pane dashboard-widget {{ widget_name }}
                                     {{# is_minimized }}dashboard-widget-minimized{{/is_minimized}}
                                  "
                                  data-widget-id="{{ widget_id }}"

@@ -196,10 +196,6 @@ include_project_home	not_official_site	<P>NOTE: This project entry is maintained
 include_project_home	more_info	Plus d'information
 include_project_home	no_short_desc	Ce projet n'a pas encore soumis une description courte. Vous pouvez <a href="$1">la soumettre</a> maintenant.
 include_project_home	other_info	Autre information
-include_project_home	devel_info	Équipe de projet
-include_project_home	proj_admins	Administrateurs du projet
-include_project_home	proj_members	Membres du projet
-include_project_home	view_members	Voir les membres
 include_project_home	latest_file_releases	Derniers fichiers publiés
 include_project_home	package	Paquet
 include_project_home	version	Version
