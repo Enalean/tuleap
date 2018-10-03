@@ -1,0 +1,11 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Docman\\": "include/"
+    },
+    "classmap": ["include/"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
