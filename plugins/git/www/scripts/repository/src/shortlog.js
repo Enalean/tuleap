@@ -54,7 +54,7 @@ function redirectUserIfClickOnACard(event, shortlog, nb_shown_dropdown) {
 
 function getCommitCardTheUserHasClickedOn(event, shortlog, nb_shown_dropdown) {
     const element = event.target.closest(
-        ".git-repository-shortlog, .git-repository-commit-card, a, button"
+        "#git-repository-shortlog, .git-repository-commit-card, a, button"
     );
     if (!element) {
         return;
