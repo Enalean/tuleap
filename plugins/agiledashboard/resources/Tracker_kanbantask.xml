@@ -189,7 +189,11 @@
       <renderers>
         <renderer type="table" rank="0" chunksz="15">
           <name>Results</name>
-          <columns/>
+          <columns>
+            <field REF="F938"/>
+            <field REF="F925"/>
+            <field REF="F931"/>
+          </columns>
         </renderer>
       </renderers>
     </report>
@@ -200,7 +204,11 @@
       <renderers>
         <renderer type="table" rank="0" chunksz="15">
           <name>Results</name>
-          <columns/>
+          <columns>
+            <field REF="F938"/>
+            <field REF="F925"/>
+            <field REF="F931"/>
+          </columns>
         </renderer>
       </renderers>
     </report>
