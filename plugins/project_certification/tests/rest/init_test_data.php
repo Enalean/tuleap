@@ -18,28 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProjectCertification\ProjectOwner;
+require_once __DIR__ . '/../../../../src/vendor/autoload.php';
 
-use Tuleap\DB\DataAccessObject;
-
-class ProjectOwnerDAO extends DataAccessObject
-{
-    public function save($project_id, $user_id)
-    {
-        $this->getDB()->insert(
-            'plugin_project_certification_project_owner',
-            ['project_id' => $project_id, 'user_id' => $user_id]
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function searchByProjectID($project_id)
-    {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
-        );
-    }
-}
+$plugin_manager = PluginManager::instance();
+$plugin_manager->installAndActivate('project_certification');

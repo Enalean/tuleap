@@ -19,6 +19,7 @@
  */
 
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
+use Tuleap\ProjectCertification\REST\ProjectCertificationResource;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -44,6 +45,7 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
+        $this->addHook(Event::REST_RESOURCES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -55,5 +57,13 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     {
         $dao = new ProjectOwnerDAO();
         $dao->save($params['group_id'], $params['project_administrator']->getId());
+    }
+
+    /**
+     * @see \Event::REST_RESOURCES
+     */
+    public function restResources(array $params)
+    {
+        $params['restler']->addAPIClass(ProjectCertificationResource::class, 'project_certification');
     }
 }

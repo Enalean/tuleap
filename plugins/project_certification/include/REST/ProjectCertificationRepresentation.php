@@ -18,28 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProjectCertification\ProjectOwner;
+namespace Tuleap\ProjectCertification\REST;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ProjectOwnerDAO extends DataAccessObject
+class ProjectCertificationRepresentation
 {
-    public function save($project_id, $user_id)
-    {
-        $this->getDB()->insert(
-            'plugin_project_certification_project_owner',
-            ['project_id' => $project_id, 'user_id' => $user_id]
-        );
-    }
-
     /**
-     * @return array
+     * @var MinimalUserRepresentation {@type \Tuleap\User\REST\MinimalUserRepresentation}
      */
-    public function searchByProjectID($project_id)
+    public $project_owner;
+
+    public function build(\PFUser $project_owner = null)
     {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
-        );
+        if ($project_owner !== null) {
+            $user_representation = new MinimalUserRepresentation();
+            $user_representation->build($project_owner);
+            $this->project_owner = $user_representation;
+        }
     }
 }
