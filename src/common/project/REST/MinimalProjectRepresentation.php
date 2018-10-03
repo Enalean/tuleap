@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Project\REST;
 
 use Project;
+use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\REST\JsonCast;
 
 class MinimalProjectRepresentation
@@ -47,11 +48,19 @@ class MinimalProjectRepresentation
      */
     public $shortname;
 
+    /**
+     * @var string
+     */
+    public $status;
+
     public function buildMinimal(Project $project)
     {
         $this->id        = JsonCast::toInt($project->getID());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $project->getUnconvertedPublicName();
         $this->shortname = $project->getUnixName();
+        $this->status    = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(
+            $project->getStatus()
+        );
     }
 }

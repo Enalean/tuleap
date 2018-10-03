@@ -18,14 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Tuleap\REST\ProjectBase;
+namespace Tuleap\REST;
+
+use Guzzle\Http\Exception\BadResponseException;
+use REST_TestDataBuilder;
 
 /**
  * @group ProjectTests
  */
 class ProjectTest extends ProjectBase
 {
-    private function getBasicAuthResponse($request) {
+    private function getBasicAuthResponse($request)
+    {
         return $this->getResponseByBasicAuth(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             REST_TestDataBuilder::TEST_USER_1_PASS,
@@ -33,7 +37,8 @@ class ProjectTest extends ProjectBase
         );
     }
 
-    public function testPOST(){
+    public function testPOST()
+    {
 
         $post_resource = json_encode(array(
                 'label' => 'Test Request 9747',
@@ -43,7 +48,7 @@ class ProjectTest extends ProjectBase
                 'template_id' => 100
             ));
 
-        $response = $this->getResponse($this->client->post('projects',null,$post_resource));
+        $response = $this->getResponse($this->client->post('projects', null, $post_resource));
         $project = $response->json();
         $this->assertArrayHasKey("id", $project);
         $this->assertEquals($response->getStatusCode(), 201);
@@ -171,7 +176,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
-    private function valuesArePresent(array $values, array $array) {
+    private function valuesArePresent(array $values, array $array)
+    {
         foreach ($values as $value) {
             if (! in_array($value, $array)) {
                 return false;
@@ -181,7 +187,8 @@ class ProjectTest extends ProjectBase
         return true;
     }
 
-    private function getIds(array $json_with_id) {
+    private function getIds(array $json_with_id)
+    {
         $ids = array();
         foreach ($json_with_id as $json) {
             $ids[] = $json['id'];
@@ -189,7 +196,8 @@ class ProjectTest extends ProjectBase
         return $ids;
     }
 
-    public function testProjectReprensationContainsShortname() {
+    public function testProjectReprentationContainsShortname()
+    {
         $response     = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("projects/$this->project_pbi_id"));
         $json_project = $response->json();
 
@@ -225,7 +233,8 @@ class ProjectTest extends ProjectBase
         $this->fail('Admin should be able to get private projects even if she is not member of');
     }
 
-    public function testGETbyIdForAdmin() {
+    public function testGETbyIdForAdmin()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.$this->project_private_member_id));
 
         $json_project = $response->json();
@@ -291,32 +300,54 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOPTIONSprojects() {
+    public function testGETbyIdForDelegatedRestProjectManager()
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->get('projects/'. $this->project_deleted_id));
+
+        $json_project = $response->json();
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($json_project['status'], 'deleted');
+    }
+
+    public function testOPTIONSprojects()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testOPTIONSbyIdForAdmin() {
+    public function testOPTIONSbyIdForAdmin()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOPTIONSbyIdForProjectMember() {
+    public function testOPTIONSbyIdForDelegatedRestProjectManager()
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->options('projects/'.$this->project_deleted_id));
+
+        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testOPTIONSbyIdForProjectMember()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('projects/'.$this->project_private_member_id));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETbyIdForForbiddenUser() {
+    public function testGETbyIdForForbiddenUser()
+    {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
             $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get('projects/'.REST_TestDataBuilder::ADMIN_PROJECT_ID));
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
+        } catch (BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
             $exception = true;
         }
@@ -324,12 +355,13 @@ class ProjectTest extends ProjectBase
         $this->assertTrue($exception);
     }
 
-    public function testGETBadRequest() {
+    public function testGETBadRequest()
+    {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
             $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/abc'));
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
+        } catch (BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 400);
             $exception = true;
         }
@@ -337,12 +369,13 @@ class ProjectTest extends ProjectBase
         $this->assertTrue($exception);
     }
 
-    public function testGETUnknownProject() {
+    public function testGETUnknownProject()
+    {
         // Cannot use @expectedException as we want to check status code.
         $exception = false;
         try {
             $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/1234567890'));
-        } catch (Guzzle\Http\Exception\BadResponseException $e) {
+        } catch (BadResponseException $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 404);
             $exception = true;
         }
@@ -350,7 +383,8 @@ class ProjectTest extends ProjectBase
         $this->assertTrue($exception);
     }
 
-    public function testGETmilestones() {
+    public function testGETmilestones()
+    {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('projects/'.$this->project_private_member_id.'/milestones')
@@ -377,7 +411,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETmilestonesDoesNotContainStatusCountInSlimRepresentation() {
+    public function testGETmilestonesDoesNotContainStatusCountInSlimRepresentation()
+    {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->get('projects/'.$this->project_private_member_id.'/milestones?fields=slim')
@@ -394,20 +429,23 @@ class ProjectTest extends ProjectBase
     }
 
 
-    public function testOPTIONSmilestones() {
+    public function testOPTIONSmilestones()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/milestones'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testOPTIONStrackers() {
+    public function testOPTIONStrackers()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/trackers'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGETtrackers() {
+    public function testGETtrackers()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->get('projects/'.$this->project_private_member_id.'/trackers'));
 
         $trackers = $response->json();
@@ -471,7 +509,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOPTIONSbacklog() {
+    public function testOPTIONSbacklog()
+    {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/backlog'));
 
         $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
@@ -516,7 +555,8 @@ class ProjectTest extends ProjectBase
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function testPUTbacklogWithoutPermission() {
+    public function testPUTbacklogWithoutPermission()
+    {
         $response_put = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->put('projects/'.$this->project_private_member_id.'/backlog', null, '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'));
 
         $this->assertEquals($response_put->getStatusCode(), 403);
@@ -624,13 +664,15 @@ class ProjectTest extends ProjectBase
         $this->assertEquals(array('labels' => array()), $response->json());
     }
 
-    public function testOPTIONSUserGroups() {
+    public function testOPTIONSUserGroups()
+    {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/user_groups'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETUserGroupsContainingStaticUGroups() {
+    public function testGETUserGroupsContainingStaticUGroups()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/user_groups'));
         $expected_result = array(
 
@@ -722,18 +764,22 @@ class ProjectTest extends ProjectBase
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function testPATCHbacklogWithoutPermission() {
+    public function testPATCHbacklogWithoutPermission()
+    {
         $response_patch = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->put('projects/'.$this->project_private_member_id.'/backlog',
-            null,
-            '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']')
+            $this->client->put(
+                'projects/'.$this->project_private_member_id.'/backlog',
+                null,
+                '['.$this->epic_artifact_ids[7].','.$this->epic_artifact_ids[5].','.$this->epic_artifact_ids[6].']'
+            )
         );
 
         $this->assertEquals($response_patch->getStatusCode(), 403);
     }
 
-    public function testPATCHbacklog() {
+    public function testPATCHbacklog()
+    {
         $uri = 'projects/'.$this->project_private_member_id.'/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
@@ -791,7 +837,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($third_item['label'], "Epic epoc");
     }
 
-    public function testPATCHbacklogMoveBackAndForthInTopBacklog() {
+    public function testPATCHbacklogMoveBackAndForthInTopBacklog()
+    {
         $uri = 'projects/'.$this->project_private_member_id.'/backlog';
         $backlog_items = $this->getResponse($this->client->get($uri))->json();
 
@@ -863,17 +910,20 @@ class ProjectTest extends ProjectBase
         );
     }
 
-    private function getIdsOrderedByPriority($uri) {
+    private function getIdsOrderedByPriority($uri)
+    {
         return $this->getIds($this->getResponse($this->client->get($uri))->json());
     }
 
-    public function testOPTIONSWiki() {
+    public function testOPTIONSWiki()
+    {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/phpwiki'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
     }
 
-    public function testGETWiki() {
+    public function testGETWiki()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki'));
 
         $expected_result = array(
@@ -894,7 +944,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($expected_result, $response->json());
     }
 
-    public function testGETWikiWithGoodPagename() {
+    public function testGETWikiWithGoodPagename()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=WithContent'));
 
         $expected_result = array(
@@ -910,7 +961,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($expected_result, $response->json());
     }
 
-    public function testGETWikiWithGoodPagenameAndASpace() {
+    public function testGETWikiWithGoodPagenameAndASpace()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=With+Space'));
 
         $expected_result = array(
@@ -926,7 +978,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($expected_result, $response->json());
     }
 
-    public function testGETWikiWithGoodRelativePagename() {
+    public function testGETWikiWithGoodRelativePagename()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename=With'));
 
         $expected_result = array(
@@ -954,7 +1007,8 @@ class ProjectTest extends ProjectBase
         );
     }
 
-    public function testGETWikiWithNotExistingPagename() {
+    public function testGETWikiWithNotExistingPagename()
+    {
         $response = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/phpwiki?pagename="no"'));
 
         $expected_result = array(
@@ -964,7 +1018,8 @@ class ProjectTest extends ProjectBase
         $this->assertEquals($expected_result, $response->json());
     }
 
-    public function testGETWithBasicAuth() {
+    public function testGETWithBasicAuth()
+    {
         $response      = $this->getBasicAuthResponse($this->client->get('projects'));
         $json_projects = $response->json();
 
