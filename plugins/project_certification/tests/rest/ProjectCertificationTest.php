@@ -48,7 +48,8 @@ class ProjectCertificationTest extends \RestBase
 
     public function testProjectHasAProjectOwnerAtCreation()
     {
-        $creation_response = $this->getResponse(
+        $creation_response = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
             $this->client->post(
                 'projects',
                 null,
@@ -59,8 +60,7 @@ class ProjectCertificationTest extends \RestBase
                     'is_public'   => true,
                     'template_id' => $this->project_private_id
                 ])
-            ),
-            \REST_TestDataBuilder::TEST_USER_1_NAME
+            )
         );
         $this->assertSame(201, $creation_response->getStatusCode());
         $new_project_id = $creation_response->json()['id'];
@@ -73,7 +73,7 @@ class ProjectCertificationTest extends \RestBase
         $this->assertSame(200, $response->getStatusCode());
         $project_certification_representation = $response->json();
         $this->assertSame(
-            \REST_TestDataBuilder::TEST_USER_1_ID,
+            \REST_TestDataBuilder::ADMIN_ID,
             $project_certification_representation['project_owner']['id']
         );
     }

@@ -191,36 +191,44 @@ class ProjectResource extends AuthenticatedResource {
      * @param string $shortname Name of the project
      * @param string $description Full description of the project
      * @param string $label A short description of the project
-     * @param boolean $is_public Define the visibility of the project
+     * @param bool $is_public Define the visibility of the project
      * @param int $template_id Template for this project.
      *
      *
-     * @return Tuleap\Project\REST\ProjectRepresentation
+     * @return ProjectRepresentation
+     * @throws 400
+     * @throws 403
+     * @throws 429
      */
     protected function post($shortname, $description, $label, $is_public, $template_id)
     {
         $this->checkAccess();
 
+        $user = $this->user_manager->getCurrentUser();
+
+        if (! $user->isSuperUser() && ! $this->isUserDelegatedRestProjectManager($user)) {
+            throw new RestException(403, 'You are not allowed to create a project through the api');
+        }
+
         if (! $this->project_manager->userCanCreateProject($this->user_manager->getCurrentUser())) {
             throw new RestException(429, 'Too many projects were created');
         }
 
-        $data = array(
-            'project' => array(
+        $data = [
+            'project' => [
                 'form_short_description' => $description,
                 'is_test'                => false,
                 'is_public'              => $is_public,
                 'built_from_template'    => $template_id,
-             ));
+            ]
+        ];
 
         try {
-            $project = $this->project_creator->create($shortname, $label, $data);
+            $project = $this->project_creator->createFromRest($shortname, $label, $data);
         } catch (Project_InvalidShortName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
         } catch (Project_InvalidFullName_Exception $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (ProjectRegistrationDisabledException $exception) {
-            throw new RestException(403, $exception->getMessage());
         }
 
         $project_representation = $this->getProjectRepresentation($project);
