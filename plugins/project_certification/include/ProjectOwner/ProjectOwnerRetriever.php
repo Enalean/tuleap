@@ -20,26 +20,32 @@
 
 namespace Tuleap\ProjectCertification\ProjectOwner;
 
-use Tuleap\DB\DataAccessObject;
-
-class ProjectOwnerDAO extends DataAccessObject
+class ProjectOwnerRetriever
 {
-    public function save($project_id, $user_id)
+    /**
+     * @var ProjectOwnerDAO
+     */
+    private $dao;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
+
+    public function __construct(ProjectOwnerDAO $dao, \UserManager $user_manager)
     {
-        $this->getDB()->insert(
-            'plugin_project_certification_project_owner',
-            ['project_id' => $project_id, 'user_id' => $user_id]
-        );
+        $this->dao          = $dao;
+        $this->user_manager = $user_manager;
     }
 
     /**
-     * @return array
+     * @return \PFUser|null
      */
-    public function searchByProjectID($project_id)
+    public function getProjectOwner(\Project $project)
     {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
-        );
+        $row = $this->dao->searchByProjectID($project->getID());
+        if (empty($row)) {
+            return null;
+        }
+        return $this->user_manager->getUserById($row['user_id']);
     }
 }

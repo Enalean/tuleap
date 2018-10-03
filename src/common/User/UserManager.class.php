@@ -97,7 +97,7 @@ class UserManager {
 
     /**
      * @param int the user_id of the user to find
-     * @return PFUser or null if the user is not found
+     * @return PFUser|null if the user is not found
      */
     function getUserById($user_id) {
         if (!isset($this->_users[$user_id])) {
