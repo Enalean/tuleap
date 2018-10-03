@@ -76,7 +76,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
             $field_values = $field->getVisibleValuesPlusNoneIfAny();
         } else {
             foreach ($filter as $value_id) {
-                $field_values[] = $field->getListValueById($value_id);
+                $field_values[] = $field->getBind()->getValue($value_id);
             }
         }
 
