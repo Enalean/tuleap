@@ -24,6 +24,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
@@ -62,7 +63,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
             //Tracker report renderer
             $this->addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
-            $this->addHook('tracker_report_renderer_from_xml',  'tracker_report_renderer_from_xml', false);
+            $this->addHook(ImportRendererFromXmlEvent::NAME);
             $this->addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
             $this->addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
             $this->addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
@@ -130,23 +131,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
     /**
      * This hook ask to create a new instance of a renderer from XML
-     *
-     * @param mixed instance Output row. must contain the new instance
-     * @param string type the type of the new renderer
-     * @param array xml describing the renderer
-     * @param Report report the report
-     *
-     * @return void
      */
-    public function tracker_report_renderer_from_xml($params) {
-        if ($params['type'] == self::RENDERER_TYPE) {
-            require_once('GraphOnTrackersV5_Renderer.class.php');
-            $params['row']['id'] = 0;
-            $params['row']['name'] = (string)$params['xml']->name;
-            $params['row']['description'] = (string)$params['xml']->description;
-            $params['row']['rank'] = (int)$params['xml']->rank;
-            $params['row']['charts'] = $params['xml']->charts;
-            $params['row']['mapping'] = $params['mapping'];
+    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event) {
+        if ($event->getType() === self::RENDERER_TYPE) {
+            $event->setRowKey('charts', $event->getXml()->charts);
+            $event->setRowKey('mapping', $event->getXmlMapping());
         }
     }
 

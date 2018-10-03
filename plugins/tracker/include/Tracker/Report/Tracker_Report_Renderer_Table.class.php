@@ -1945,9 +1945,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping)
+    public function exportToXml(SimpleXMLElement $root, array $xmlMapping)
     {
-        parent::exportToXML($root, $xmlMapping);
+        parent::exportToXml($root, $xmlMapping);
         $root->addAttribute('chunksz', $this->chunksz);
         if ($this->multisort) {
             $root->addAttribute('multisort', $this->multisort);
@@ -2338,7 +2338,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *
      * @param Tracker_Report_Renderer $renderer containing the columns
      */
-    public function afterSaveObject($renderer) {
+    public function afterSaveObject(Tracker_Report_Renderer $renderer) {
         $renderer->injectUnsavedColumnsInRendererDB($this);
         $this->saveAggregates($renderer->getAggregates());
         $this->saveSort($renderer->getSort());

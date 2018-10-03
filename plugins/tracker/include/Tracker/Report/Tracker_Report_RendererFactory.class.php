@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/event/EventManager.class.php');
-
+use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 class Tracker_Report_RendererFactory {
     
@@ -47,12 +46,11 @@ class Tracker_Report_RendererFactory {
     protected static $_instance;
     
     /**
-     * The singleton method
+     * @return Tracker_Report_RendererFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new self();
         }
         return self::$_instance;
     }
@@ -63,7 +61,7 @@ class Tracker_Report_RendererFactory {
     /**
      * @param int $id the id of the report renderer to retrieve
      * @param Report $report the report of the renderer
-     * @return ReportRenderer identified by id (null if not found)
+     * @return Tracker_Report_Renderer identified by id (null if not found)
      */
     public function getReportRendererById($id, $report, $store_in_session = true) {
         $row = $this->getDao()
@@ -329,13 +327,7 @@ class Tracker_Report_RendererFactory {
         $this->getDao()->forceOrder($report->id, $report_renderers);
     }
     // }}}
-    
-    
-    
-    
-    
-    // {{{ Protected
-    
+
     protected $dao;
     /**
      * @return Tracker_Report_RendererDao
@@ -520,22 +512,16 @@ class Tracker_Report_RendererFactory {
              //not yet implemented
                 break;
             default:
-                $this->getEventManager()->processEvent(
-                    'tracker_report_renderer_from_xml',
-                    array(
-                        'row'     => &$row,
-                        'type'    => $row['renderer_type'],
-                        'xml'     => $xml,
-                        'mapping' => $xmlMapping,
-                        'report'  => $report,
-                    )
+                $event = new ImportRendererFromXmlEvent(
+                    $row,
+                    (string) $att['type'],
+                    $xml,
+                    $xmlMapping
                 );
+                $this->getEventManager()->processEvent($event);
+                $row = $event->getRow();
         }
 
         return $this->getInstanceFromRow($row, $report, false);
     }
-    
-    // }}}
 }
-
-?>
