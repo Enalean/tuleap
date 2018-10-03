@@ -1,0 +1,1 @@
+DROP TABLE plugin_project_certification_project_owner;

@@ -29,6 +29,7 @@ class Event {
      * 'group_id'              => Integer: Id of the new project
      * 'template_id'           => Integer: Id of the template project
      * 'project_creation_data' => ProjectCreationData: Data passed for project creation
+     * 'project_administrator' => PFUser: Administrator of the project
      */
     const REGISTER_PROJECT_CREATION = 'register_project_creation';
 
