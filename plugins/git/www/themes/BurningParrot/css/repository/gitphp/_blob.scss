@@ -23,6 +23,7 @@ $gitphp-code-font: normal normal 1em / 1.2em monospace;
 .git-repository-blob-header {
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid $tlp-ui-border-light;
 }
 
 .git-repository-blob-header-actions {

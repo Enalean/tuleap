@@ -1,4 +1,4 @@
-{*
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -15,11 +15,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *}
+ */
 
-<section class="tlp-pane">
-    <div class="tlp-pane-container">
-        {include file='tuleap/commit-title-metadata.tpl'}
-        {include file='tuleap/commit-files.tpl'}
-    </div>
-</section>
+.git-repository-tree-icon {
+    margin: 0 3px 0 0;
+}

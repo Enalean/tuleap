@@ -18,69 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-<section class="tlp-pane-section">
-
-    {if $commit}
-        {assign var=treecommit value=$tree->GetCommit()}
-        {assign var=treecommittree value=$treecommit->GetTree()}
-
-        {if $tree->GetName()}
-            <p>
-                <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
-                -->{foreach from=$tree->GetPathTree() item=pathtreepiece}<!--
-                    --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
-                    -->/<!--
-                -->{/foreach}<!--
-                --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
-            </p>
-        {/if}
-    {/if}
-
-    <table class="tlp-table">
-        <thead>
-            <tr>
-                <th>{t}Name{/t}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {if $commit}
-                {foreach from=$tree_presenter->sorted_content item=treeitem}
-                    <tr>
-                        {if $treeitem->isBlob() }
-                            <td>
-                                <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
-                                    <i class="fa fa-file-text-o fa-fw"></i> {$treeitem->GetName()|escape}
-                                </a>
-                            </td>
-                        {elseif $treeitem->isTree() }
-                            <td>
-                                <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
-                                    <i class="fa fa-folder fa-fw"></i> {$treeitem->GetName()|escape}
-                                </a>
-                            </td>
-                        {elseif $treeitem->isSubmodule() }
-                            <td><i class="fa fa-folder-o fa-fw"></i> {$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
-                        {/if}
-                    </tr>
-                {/foreach}
-            {else}
-                <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
-            {/if}
-        </tbody>
-    </table>
-</section>
-{if $readme_content }
-</div>
-</section>
-
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
             <h1 class="tlp-pane-title">
-                <i class="fa fa-file-text-o tlp-pane-title-icon"></i> {$readme_content->GetName()|escape}
+                <i class="tlp-pane-title-icon fa fa-files-o"></i>
+                {if $commit && $tree->GetName()}
+                    {assign var=treecommit value=$tree->GetCommit()}
+                    {assign var=treecommittree value=$treecommit->GetTree()}
+                    <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$treecommittree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
+                        -->{foreach from=$tree->GetPathTree() item=pathtreepiece}<!--
+                        --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a><!--
+                        -->/<!--
+                    -->{/foreach}<!--
+                    --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$treecommit->GetHash()|urlencode}&amp;h={$tree->GetHash()|urlencode}&amp;f={$tree->GetPath()|urlencode}">{$tree->GetName()|escape}</a>/
+                {else}
+                    {t}Files{/t}
+                {/if}
             </h1>
         </div>
         <section class="tlp-pane-section">
-            {$readme_content_interpreted}
+            <table class="tlp-table">
+                <thead>
+                    <tr>
+                        <th>{t}Name{/t}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {if $commit}
+                        {foreach from=$tree_presenter->sorted_content item=treeitem}
+                            <tr>
+                                {if $treeitem->isBlob() }
+                                    <td>
+                                        <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
+                                            <i class="fa fa-file-text-o fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
+                                        </a>
+                                    </td>
+                                {elseif $treeitem->isTree() }
+                                    <td>
+                                        <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">
+                                            <i class="fa fa-folder fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
+                                        </a>
+                                    </td>
+                                {elseif $treeitem->isSubmodule() }
+                                    <td><i class="fa fa-folder-o fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape} @ {$treeitem->GetHash()|escape}</td>
+                                {/if}
+                            </tr>
+                        {/foreach}
+                    {else}
+                        <td class="tlp-table-cell-empty">{t}No commits{/t}</td>
+                    {/if}
+                </tbody>
+            </table>
         </section>
+    </div>
+</section>
+
+{if $readme_content}
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-file-text-o tlp-pane-title-icon"></i> {$readme_content->GetName()|escape}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                {$readme_content_interpreted}
+            </section>
+        </div>
+    </section>
 {/if}

@@ -151,7 +151,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
 
         $this->header_displayer->display($request, $layout, $current_user, $repository);
         $renderer->renderToPage(
-            'repository/files/header',
+            'repository/gitphp/header',
             $this->files_header_presenter_builder->build($request, $repository)
         );
 
@@ -164,7 +164,7 @@ class GitRepositoryBrowserController implements DispatchableWithRequest, Dispatc
         );
         $view->display();
 
-        $renderer->renderToPage('repository/files/footer', []);
+        $renderer->renderToPage('repository/gitphp/footer', []);
         $layout->footer([]);
     }
 

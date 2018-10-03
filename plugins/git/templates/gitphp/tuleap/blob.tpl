@@ -18,39 +18,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-{include file='tuleap/blob-header.tpl'}
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        {include file='tuleap/blob-header.tpl'}
 
-<section class="git-repository-blob-body">
-    {if $datatag}
-        {* We're trying to display an image *}
-        <div class="git-repository-blob-image">
-            <img src="data:{$mime};base64,{$data}" />
-        </div>
-    {elseif $geshi}
-        <style type="text/css">{$extracss}</style>
-        {* We're using the highlighted output from geshi *}
-        {$geshiout}
-    {else}
-        {* Just plain display *}
-        <table class="code" id="git-repository-blob-file">
-            <tbody>
-                <tr class="li1">
-                    <td class="ln">
-                        <pre class="de1">
+        <section class="git-repository-blob-body">
+            {if $datatag}
+                {* We're trying to display an image *}
+                <div class="git-repository-blob-image">
+                    <img src="data:{$mime};base64,{$data}" />
+                </div>
+            {elseif $geshi}
+                <style type="text/css">{$extracss}</style>
+                {* We're using the highlighted output from geshi *}
+                {$geshiout}
+            {else}
+                {* Just plain display *}
+                <table class="code" id="git-repository-blob-file">
+                    <tbody>
+                        <tr class="li1">
+                            <td class="ln">
+                                <pre class="de1">
 {foreach from=$bloblines item=line name=bloblines}
 {$smarty.foreach.bloblines.iteration}
 {/foreach}
 </pre>
-                    </td>
-                    <td class="de1">
-                        <pre class="de1">
+                            </td>
+                            <td class="de1">
+                                <pre class="de1">
 {foreach from=$bloblines item=line name=bloblines}
 {$line|escape}
 {/foreach}
 </pre>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    {/if}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {/if}
+        </section>
+    </div>
 </section>
