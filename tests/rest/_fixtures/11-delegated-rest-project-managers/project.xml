@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="deleted-project" full-name="deleted-project" description="A deleted project" access="private">
+    <long-description></long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="Project members">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

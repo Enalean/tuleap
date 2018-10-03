@@ -116,6 +116,7 @@ seed_data() {
     load_project /usr/share/tuleap/tests/rest/_fixtures/08-public-including-restricted
     load_project /usr/share/tuleap/tests/rest/_fixtures/09-burndown-cache-generation
     load_project /usr/share/tuleap/tests/rest/_fixtures/10-permissions-on-artifacts
+    load_project /usr/share/tuleap/tests/rest/_fixtures/11-delegated-rest-project-managers
 
     echo "Load initial data"
     "$PHP_CLI" -d include_path=/usr/share/tuleap/src/www/include:/usr/share/tuleap/src /usr/share/tuleap/tests/rest/bin/init_data.php

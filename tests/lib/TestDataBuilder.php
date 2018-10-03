@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -72,6 +72,12 @@ class TestDataBuilder {
     const TEST_USER_RESTRICTED_2_STATUS      = 'R';
     const TEST_USER_RESTRICTED_2_EMAIL       = 'rest_api_restricted_2@example.com';
 
+    const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME        = "rest_api_delegated_rest_project_manager";
+    const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_DISPLAYNAME = ' (rest_api_delegated_rest_project_manager)';
+    const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_PASS        = 'welcome0';
+    const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_STATUS      = 'A';
+    const TEST_USER_DELEGATED_REST_PROJECT_MANAGER_EMAIL       = 'rest_api_delegated_rest_project_manager@example.com';
+
     const ADMIN_PROJECT_ID = 100;
 
     const PROJECT_PRIVATE_MEMBER_SHORTNAME = 'private-member';
@@ -83,6 +89,7 @@ class TestDataBuilder {
     const PROJECT_BACKLOG_DND              = 'dragndrop';
     const PROJECT_COMPUTED_FIELDS          = 'computedfields';
     const PROJECT_BURNDOWN                 = 'burndown-generation';
+    const PROJECT_DELETED_SHORTNAME        = 'deleted-project';
 
     const STATIC_UGROUP_1_ID    = 101;
     const STATIC_UGROUP_1_LABEL = 'static_ugroup_1';

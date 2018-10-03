@@ -793,6 +793,19 @@ class ProjectManager
         return $this->getPaginatedProjects($matching_projects, $total_size);
     }
 
+    public function getProjectsWithStatusForREST($project_status, $offset, $limit)
+    {
+        $matching_projects = $this->_getDao()->getProjectsWithStatusForREST(
+            $project_status,
+            $offset,
+            $limit
+        );
+
+        $total_size = $this->_getDao()->foundRows();
+
+        return $this->getPaginatedProjects($matching_projects, $total_size);
+    }
+
     private function getPaginatedProjects(LegacyDataAccessResultInterface $result, $total_size)
     {
         $projects = array();
