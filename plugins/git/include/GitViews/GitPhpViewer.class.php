@@ -56,18 +56,23 @@ class GitViews_GitPhpViewer
         $this->current_user = $current_user;
     }
 
-    public function getContent($is_download, HTTPRequest $request)
+    public function displayContent(HTTPRequest $request)
     {
-        set_time_limit(300);
-        if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
+        if ($this->canDisplayEnclosingDiv($request)) {
             echo '<section class="tlp-pane-section"><div id="gitphp" class="plugin_git_gitphp">';
         }
 
-        $this->displayGitPHP();
+        $this->displayContentWithoutEnclosingDiv();
 
-        if (! $is_download && $this->canDisplayEnclosingDiv($request)) {
+        if ($this->canDisplayEnclosingDiv($request)) {
             echo '</div></section>';
         }
+    }
+
+    public function displayContentWithoutEnclosingDiv()
+    {
+        set_time_limit(300);
+        $this->displayGitPHP();
     }
 
     private function canDisplayEnclosingDiv(HTTPRequest $request)

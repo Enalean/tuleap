@@ -59,18 +59,13 @@ class GitViews_ShowRepo_Content {
 
     public function display()
     {
-        $html = '';
-
         if ($this->repository->isCreated()) {
-            $is_download = false;
-            $html       .= $this->gitphp_viewer->getContent($is_download, $this->request);
+            $this->gitphp_viewer->displayContent($this->request);
 
             $this->access_logger->logAccess($this->repository, $this->request->getCurrentUser());
         } else {
-            $html .= $this->getWaitingForRepositoryCreationInfo();
+            echo $this->getWaitingForRepositoryCreationInfo();
         }
-
-        echo $html;
     }
 
     private function getWaitingForRepositoryCreationInfo()
