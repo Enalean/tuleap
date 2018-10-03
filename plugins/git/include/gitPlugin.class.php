@@ -2536,7 +2536,7 @@ class GitPlugin extends Plugin
                     $this->getMirrorDataMapper(),
                     $this->getGitPhpAccessLogger(),
                     $this->getThemeManager(),
-                    $this->getGitRepositoryHeaderDisplayer(RepositoryHeaderPresenterBuilder::TAB_FILES),
+                    $this->getGitRepositoryHeaderDisplayer(),
                     new FilesHeaderPresenterBuilder(
                         new GitPHPProjectRetriever(),
                         new CommitForCurrentTreeRetriever(),
@@ -2557,7 +2557,16 @@ class GitPlugin extends Plugin
      * protected for testing purpose
      * @return GitRepositoryHeaderDisplayer
      */
-    protected function getGitRepositoryHeaderDisplayer($selected_tab) {
+    protected function getGitRepositoryHeaderDisplayer() {
+        $selected_tab = RepositoryHeaderPresenterBuilder::TAB_FILES;
+
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff'];
+            if (in_array(HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
+                $selected_tab = RepositoryHeaderPresenterBuilder::TAB_COMMITS;
+            }
+        }
+
         $header_displayed_builder = new GitRepositoryHeaderDisplayerBuilder();
         return $header_displayed_builder->build($selected_tab);
     }

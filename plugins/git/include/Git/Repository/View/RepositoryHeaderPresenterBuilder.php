@@ -33,7 +33,8 @@ use PFUser;
 
 class RepositoryHeaderPresenterBuilder
 {
-    const TAB_FILES = 'tab-files';
+    const TAB_FILES   = 'tab-files';
+    const TAB_COMMITS = 'tab-commits';
 
     /**
      * @var Git_GitRepositoryUrlManager
@@ -180,7 +181,11 @@ class RepositoryHeaderPresenterBuilder
 
     private function buildTabsPresenter(GitRepository $repository)
     {
-        $tabs          = [$this->getFilesTab($repository)];
+        $tabs = [$this->getFilesTab($repository)];
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $tabs[] = $this->getCommitsTab($repository);
+        }
+
         $external_tabs = $this->getExternalsTabs($repository);
         if (count($external_tabs) > 0) {
             $tabs = array_merge($tabs, $external_tabs);
@@ -198,6 +203,25 @@ class RepositoryHeaderPresenterBuilder
             $this->url_manager->getRepositoryBaseUrl($repository),
             dgettext("tuleap-git", "Files"),
             self::TAB_FILES,
+            false,
+            0
+        );
+    }
+
+
+    private function getCommitsTab(GitRepository $repository)
+    {
+        $is_selected = $this->selected_tab === self::TAB_COMMITS;
+
+        return new TabPresenter(
+            $is_selected,
+            $this->url_manager->getRepositoryBaseUrl($repository) .'?'. http_build_query(
+                [
+                    'a' => 'shortlog'
+                ]
+            ),
+            dgettext("tuleap-git", "Commits"),
+            self::TAB_COMMITS,
             false,
             0
         );
