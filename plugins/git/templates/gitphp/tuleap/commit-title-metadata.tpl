@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-<section class="tlp-pane-section">
-    <h1 class="tlp-pane-subtitle">
+<div class="tlp-pane-header">
+    <h1 class="tlp-pane-title">
         {$commit->GetTitle()|escape}
         {include file='tuleap/refs-badges.tpl' commit=$commit}
     </h1>
+</div>
+<section class="tlp-pane-section">
     <div class="git-repository-commit-metadata">
         <section class="git-repository-commit-metadata-section">
             {if $commit_presenter->has_description}

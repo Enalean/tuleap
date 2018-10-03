@@ -19,13 +19,13 @@
  *}
 
 {if empty($shortlog_presenter)}
-    <section class="tlp-pane-section">
+    <p class="empty-page-text">
         {t}No commits{/t}
-    </section>
+    </p>
 {else}
-    <section class="tlp-pane-section-for-cards" id="git-repository-shortlog">
+    <section id="git-repository-shortlog">
         {foreach from=$shortlog_presenter->commits item=commits_per_day}
-            <h2 class="tlp-pane-subtitle git-repository-shortlog-day">
+            <h2 class="git-repository-shortlog-day">
                 <i class="fa fa-calendar tlp-pane-title-icon"></i>
                 {$commits_per_day->day | escape}
             </h2>

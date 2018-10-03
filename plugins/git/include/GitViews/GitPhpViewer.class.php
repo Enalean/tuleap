@@ -59,13 +59,23 @@ class GitViews_GitPhpViewer
     public function displayContent(HTTPRequest $request)
     {
         if ($this->canDisplayEnclosingDiv($request)) {
-            echo '<section class="tlp-pane-section"><div id="gitphp" class="plugin_git_gitphp">';
+            echo '
+                <section class="tlp-pane">
+                    <div class="tlp-pane-container">
+                        <div class="tlp-pane-header">
+                            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-files-o"></i> Files</h1>
+                        </div>
+                        <section class="tlp-pane-section">
+                            <div id="gitphp" class="plugin_git_gitphp">';
         }
 
         $this->displayContentWithoutEnclosingDiv();
 
         if ($this->canDisplayEnclosingDiv($request)) {
-            echo '</div></section>';
+            echo '          </div>
+                        </section>
+                    </div>
+                </section>';
         }
     }
 

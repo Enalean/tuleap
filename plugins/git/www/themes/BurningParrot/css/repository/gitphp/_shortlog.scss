@@ -23,6 +23,15 @@
 
 .git-repository-shortlog-day {
     margin: $tlp-double-spacing $tlp-spacing $tlp-half-spacing;
+
+    &:not(.tlp-pane-subtitle) {
+        margin: $tlp-spacing 0;
+        color: $tlp-theme-color;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
 }
 
 .git-repository-commit-card {

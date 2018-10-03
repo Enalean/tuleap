@@ -64,7 +64,7 @@
 </div>
 </section>
 
-
+{if $readme_content}
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
@@ -75,3 +75,4 @@
         <section class="tlp-pane-section">
             {$readme_content_interpreted}
         </section>
+{/if}
