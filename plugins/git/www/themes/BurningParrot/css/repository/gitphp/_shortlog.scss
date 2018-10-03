@@ -17,6 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.git-repository-shortlog-container {
+    display: flex;
+    align-items: flex-start;
+}
+
+.git-repository-shortlog-search {
+    width: 300px;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.git-repository-shortlog-results {
+    width: 100%;
+}
+
 .git-repository-shortlog-pagination {
     margin: $tlp-spacing;
 }
@@ -31,6 +45,10 @@
         font-weight: 600;
         letter-spacing: .5px;
         text-transform: uppercase;
+
+        &:first-child {
+            margin: 0 0 $tlp-spacing;
+        }
     }
 }
 
@@ -66,4 +84,15 @@
 
 .git-repository-commit-card-info-metadata-date-icon {
     margin: 0 3px 0 0;
+}
+
+@media screen and (max-width: 900px) {
+    .git-repository-shortlog-container {
+        flex-direction: column;
+    }
+
+    .git-repository-shortlog-search {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
 }

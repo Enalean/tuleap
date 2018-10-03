@@ -18,149 +18,191 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-{if empty($shortlog_presenter)}
-    <p class="empty-page-text">
-        {t}No commits{/t}
-    </p>
-{else}
-    <section id="git-repository-shortlog">
-        {foreach from=$shortlog_presenter->commits item=commits_per_day}
-            <h2 class="git-repository-shortlog-day">
-                <i class="fa fa-calendar tlp-pane-title-icon"></i>
-                {$commits_per_day->day | escape}
-            </h2>
-            {foreach from=$commits_per_day->commits item=commit_presenter}
-                <div class="tlp-card tlp-card-selectable git-repository-commit-card" data-href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}">
-                    <div class="tlp-avatar git-repository-commit-card-avatar">
-                        {if ($commit_presenter->author->has_avatar)}
-                            <img src="{$commit_presenter->author->avatar_url|escape}">
-                        {/if}
-                    </div>
+<div class="git-repository-shortlog-container">
+    <section class="tlp-pane git-repository-shortlog-search">
+        <form method="get" action="{$SCRIPT_NAME}" class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="tlp-pane-title-icon fa fa-search"></i>
+                    {t}Search{/t}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <input type="hidden" name="a" value="search" />
+                <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()|escape}{else}HEAD{/if}" />
 
-                    <div class="git-repository-commit-card-info">
-                        <p class="git-repository-commit-card-info-title">{$commit_presenter->commit->GetTitle()|escape}</p>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="search-type">Type</label>
+                    <select id="search-type" class="tlp-select" name="st">
+                        <option {if $searchtype == 'commit'}selected="selected"{/if} value="commit">{t}Commit{/t}</option>
+                        <option {if $searchtype == 'author'}selected="selected"{/if} value="author">{t}Author{/t}</option>
+                        <option {if $searchtype == 'committer'}selected="selected"{/if} value="committer">{t}Committer{/t}</option>
+                    </select>
+                </div>
 
-                        <div class="git-repository-commit-card-info-metadata">
-                            <span class="git-repository-commit-card-info-metadata-username">
-                                {if ($commit_presenter->author->is_a_tuleap_user)}
-                                    <a href="{$commit_presenter->author->url|escape}">{$commit_presenter->author->display_name|escape}</a>
-                                {else}
-                                    {$commit_presenter->commit->getAuthorName()|escape}
-                                {/if}
-                            </span>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="search">Terms</label>
+                    <input type="text"
+                           class="tlp-input"
+                           id="search"
+                           name="s"
+                           placeholder="{t}Author name, description, …{/t}"
+                           {if $search}value="{$search|escape}"{/if}
+                           required>
+                </div>
 
-                            <span class="git-repository-commit-card-info-metadata-date">
-                                <i class="fa fa-clock-o git-repository-commit-card-info-metadata-date-icon"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
-                            </span>
-
-                            {include file='tuleap/refs-badges.tpl' commit=$commit_presenter->commit}
+                <div class="tlp-pane-section-submit">
+                    <button type="submit" class="tlp-button-primary tlp-button-wide">
+                        <i class="fa fa-search tlp-button-icon"></i> {t}Search{/t}
+                    </button>
+                </div>
+            </section>
+        </form>
+    </section>
+    {if empty($shortlog_presenter)}
+        <p class="empty-page-text git-repository-shortlog-results">
+            {t}No commits{/t}
+        </p>
+    {else}
+        <section id="git-repository-shortlog" class="git-repository-shortlog-results">
+            {foreach from=$shortlog_presenter->commits item=commits_per_day}
+                <h2 class="git-repository-shortlog-day">
+                    <i class="fa fa-calendar tlp-pane-title-icon"></i>
+                    {$commits_per_day->day | escape}
+                </h2>
+                {foreach from=$commits_per_day->commits item=commit_presenter}
+                    <div class="tlp-card tlp-card-selectable git-repository-commit-card" data-href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}">
+                        <div class="tlp-avatar git-repository-commit-card-avatar">
+                            {if ($commit_presenter->author->has_avatar)}
+                                <img src="{$commit_presenter->author->avatar_url|escape}">
+                            {/if}
                         </div>
-                    </div>
 
-                    {assign var=revtree value=$commit_presenter->commit->GetTree()}
-                    <div class="tlp-button-bar">
-                        <div class="tlp-button-bar-item">
-                            <a class="tlp-button-primary tlp-button-outline tlp-button-small"
-                               href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
-                            >
-                                {t}Details{/t}
-                            </a>
-                        </div>
-                        <div class="tlp-button-bar-item">
-                            <a class="tlp-button-primary tlp-button-outline tlp-button-small"
-                               href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
-                            >
-                                {t}Diff{/t}
-                            </a>
-                        </div>
-                        <div class="tlp-button-bar-item tlp-dropdown">
-                            <button type="button"
-                                    class="commit-more-actions tlp-button-primary tlp-button-small tlp-button-outline"
-                            >
-                                <i class="fa fa-ellipsis-h tlp-button-icon"></i>
-                                <i class="fa fa-caret-down tlp-button-icon-right"></i>
-                            </button>
-                            <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
-                                <a class="tlp-dropdown-menu-item"
-                                   href="{$SCRIPT_NAME}?a=tree&amp;h={$revtree->GetHash()|urlencode}&amp;hb={$commit_presenter->commit->GetHash()|urlencode}"
-                                >
-                                    {t}Tree{/t}
-                                </a>
-                                <a class="tlp-dropdown-menu-item"
-                                   href="{$SCRIPT_NAME}?a=snapshot&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip"
-                                >
-                                    {t}Snapshot{/t}
-                                </a>
-                                {if $mark}
-                                    {if $mark->GetHash() == $commit_presenter->commit->GetHash()}
-                                        <a class="tlp-dropdown-menu-item"
-                                           href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}">
-                                            {t}Deselect{/t}
-                                        </a>
+                        <div class="git-repository-commit-card-info">
+                            <p class="git-repository-commit-card-info-title">{$commit_presenter->commit->GetTitle()|escape}</p>
+
+                            <div class="git-repository-commit-card-info-metadata">
+                                <span class="git-repository-commit-card-info-metadata-username">
+                                    {if ($commit_presenter->author->is_a_tuleap_user)}
+                                        <a href="{$commit_presenter->author->url|escape}">{$commit_presenter->author->display_name|escape}</a>
                                     {else}
-                                        {if $mark->GetCommitterEpoch() > $commit_presenter->commit->GetCommitterEpoch()}
-                                            {assign var=markbase value=$mark}
-                                            {assign var=markparent value=$commit}
-                                        {else}
-                                            {assign var=markbase value=$commit}
-                                            {assign var=markparent value=$mark}
-                                        {/if}
+                                        {$commit_presenter->commit->getAuthorName()|escape}
+                                    {/if}
+                                </span>
 
+                                <span class="git-repository-commit-card-info-metadata-date">
+                                    <i class="fa fa-clock-o git-repository-commit-card-info-metadata-date-icon"></i>{if $commit_presenter->commit->GetAge() > 60*60*24*7*2}{$commit_presenter->commit_date|escape}{else}{$commit_presenter->commit->GetAge()|agestring|escape}{/if}
+                                </span>
+
+                                {include file='tuleap/refs-badges.tpl' commit=$commit_presenter->commit}
+                            </div>
+                        </div>
+
+                        {assign var=revtree value=$commit_presenter->commit->GetTree()}
+                        <div class="tlp-button-bar">
+                            <div class="tlp-button-bar-item">
+                                <a class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                   href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
+                                >
+                                    {t}Details{/t}
+                                </a>
+                            </div>
+                            <div class="tlp-button-bar-item">
+                                <a class="tlp-button-primary tlp-button-outline tlp-button-small"
+                                   href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit_presenter->commit->GetHash()|urlencode}"
+                                >
+                                    {t}Diff{/t}
+                                </a>
+                            </div>
+                            <div class="tlp-button-bar-item tlp-dropdown">
+                                <button type="button"
+                                        class="commit-more-actions tlp-button-primary tlp-button-small tlp-button-outline"
+                                >
+                                    <i class="fa fa-ellipsis-h tlp-button-icon"></i>
+                                    <i class="fa fa-caret-down tlp-button-icon-right"></i>
+                                </button>
+                                <div class="tlp-dropdown-menu tlp-dropdown-menu-right" role="menu">
+                                    <a class="tlp-dropdown-menu-item"
+                                       href="{$SCRIPT_NAME}?a=tree&amp;h={$revtree->GetHash()|urlencode}&amp;hb={$commit_presenter->commit->GetHash()|urlencode}"
+                                    >
+                                        {t}Tree{/t}
+                                    </a>
+                                    <a class="tlp-dropdown-menu-item"
+                                       href="{$SCRIPT_NAME}?a=snapshot&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip"
+                                    >
+                                        {t}Snapshot{/t}
+                                    </a>
+                                    {if $mark}
+                                        {if $mark->GetHash() == $commit_presenter->commit->GetHash()}
+                                            <a class="tlp-dropdown-menu-item"
+                                               href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}">
+                                                {t}Deselect{/t}
+                                            </a>
+                                        {else}
+                                            {if $mark->GetCommitterEpoch() > $commit_presenter->commit->GetCommitterEpoch()}
+                                                {assign var=markbase value=$mark}
+                                                {assign var=markparent value=$commit}
+                                            {else}
+                                                {assign var=markbase value=$commit}
+                                                {assign var=markparent value=$mark}
+                                            {/if}
+
+                                            <a class="tlp-dropdown-menu-item"
+                                               href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$markbase->GetHash()|urlencode}&amp;hp={$markparent->GetHash()|urlencode}">
+                                                {t}Diff with selected{/t}
+                                            </a>
+                                        {/if}
+                                    {else}
                                         <a class="tlp-dropdown-menu-item"
-                                           href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$markbase->GetHash()|urlencode}&amp;hp={$markparent->GetHash()|urlencode}">
-                                            {t}Diff with selected{/t}
+                                           href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">
+                                            {t}Select for diff{/t}
                                         </a>
                                     {/if}
-                                {else}
-                                    <a class="tlp-dropdown-menu-item"
-                                       href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">
-                                        {t}Select for diff{/t}
-                                    </a>
-                                {/if}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {/foreach}
             {/foreach}
-        {/foreach}
 
-        {if $hasmorerevs || $page > 0}
-            {if $commit}
-                <div class="tlp-pagination git-repository-shortlog-pagination">
-                    {if $page > 0}
-                        <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page-1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
-                           class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                           title="{t}Previous{/t}"
-                        >
-                            <i class="fa fa-angle-left"></i>
-                        </a>
-                    {else}
-                        <button type="button"
-                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                                title="{t}Previous{/t}"
-                                disabled
-                        >
-                            <i class="fa fa-angle-left"></i>
-                        </button>
-                    {/if}
-                    {if $hasmorerevs }
-                        <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
-                           class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                           title="{t}Next{/t}"
-                        >
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    {else}
-                        <button type="button"
-                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
-                                title="{t}Next{/t}"
-                                disabled
-                        >
-                            <i class="fa fa-angle-right"></i>
-                        </button>
-                    {/if}
-                </div>
+            {if $hasmorerevs || $page > 0}
+                {if $commit}
+                    <div class="tlp-pagination git-repository-shortlog-pagination">
+                        {if $page > 0}
+                            <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page-1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               title="{t}Previous{/t}"
+                            >
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        {else}
+                            <button type="button"
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    title="{t}Previous{/t}"
+                                    disabled
+                            >
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                        {/if}
+                        {if $hasmorerevs }
+                            <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               title="{t}Next{/t}"
+                            >
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        {else}
+                            <button type="button"
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    title="{t}Next{/t}"
+                                    disabled
+                            >
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                        {/if}
+                    </div>
+                {/if}
             {/if}
-        {/if}
-    </section>
-{/if}
+        </section>
+    {/if}
+</div>
