@@ -204,6 +204,10 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
                 $accLineplot = new AccLinePlot($lineplots);
                 $graph->Add($accLineplot);
             }
+
+            $graph->legend->SetPos(0.05, 0.5, 'right', 'center');
+            $graph->legend->SetColumns(1);
+
             if ($lineAdded) {
             $graph->legend->SetReverse();
             $graph->xaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics', $groupBy));

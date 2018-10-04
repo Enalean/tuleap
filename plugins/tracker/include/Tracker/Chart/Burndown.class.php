@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -192,6 +192,7 @@ class Tracker_Chart_Burndown
         $graph->xaxis->SetTickLabels($this->graph_data_human_dates);
 
         $remaining_effort = new LinePlot($this->graph_data_remaining_effort);
+        $graph->Add($remaining_effort);
         $remaining_effort->SetColor($colors[1] . ':0.7');
         $remaining_effort->SetWeight(2);
         $remaining_effort->SetLegend('Remaining effort');
@@ -199,12 +200,14 @@ class Tracker_Chart_Burndown
         $remaining_effort->mark->SetColor($colors[1] . ':0.7');
         $remaining_effort->mark->SetFillColor($colors[1]);
         $remaining_effort->mark->SetSize(3);
-        $graph->Add($remaining_effort);
 
         $ideal_burndown = new LinePlot($this->graph_data_ideal_burndown);
+        $graph->Add($ideal_burndown);
         $ideal_burndown->SetColor($colors[0] . ':1.25');
         $ideal_burndown->SetLegend('Ideal Burndown');
-        $graph->Add($ideal_burndown);
+
+        $graph->legend->SetPos(0.05, 0.5, 'right', 'center');
+        $graph->legend->SetColumns(1);
 
         return $graph;
     }

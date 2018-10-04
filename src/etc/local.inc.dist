@@ -227,11 +227,7 @@ $sys_plugins_editable_configuration = 1;
 $sys_plugins_that_can_not_be_disabled_from_the_web_ui = '';
 
 // 3rd Party libraries
-$jpgraph_dir      = '/usr/share/jpgraph';
 $ckeditor_dir     = '/usr/share/ckeditor';
-
-// TrueType font dir (be careful, the leading / is mandatory).
-$ttf_font_dir     = '/usr/share/fonts/';
 
 // ForgeUpgrade config file
 $forgeupgrade_file = '/etc/tuleap/forgeupgrade/config.ini';

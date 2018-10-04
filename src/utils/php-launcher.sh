@@ -55,7 +55,7 @@ PEAR_PATH="/usr/share/pear"
 # Include path is only defined in php.conf (and not php.ini).
 # It was also reported that 8MB (default memory limit) is not sufficient in some cases.
 if [ -z "$PHP_PARAMS" ]; then
-    PHP_PARAMS="-q -d include_path=/usr/share/php:/usr/share/pear:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src:/usr/share/jpgraph:. -d memory_limit=256M"
+    PHP_PARAMS="-q -d include_path=/usr/share/php:/usr/share/pear:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:/usr/share/codendi/src/www/include:/usr/share/codendi/src:. -d memory_limit=256M"
 fi
 
 php_display_errors="-d error_reporting=0"

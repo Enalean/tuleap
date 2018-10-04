@@ -37,7 +37,7 @@ AutoReqProv: no
 # Php and web related stuff
 Requires: php56-php, php56-php-mysql, php56-php-xml, php56-php-mbstring, php56-php-gd, php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-opcache, php56-php-fpm, rh-mysql57-mysql
 
-Requires: highlight, forgeupgrade >= 1.6, ckeditor, jpgraph-tuleap, nginx, logrotate
+Requires: highlight, forgeupgrade >= 1.6, ckeditor, nginx, logrotate
 
 # Unit file
 Requires: systemd
@@ -773,6 +773,7 @@ fi
 %{APP_DIR}/src/glyphs
 %{APP_DIR}/src/common
 %{APP_DIR}/src/vendor
+%{APP_DIR}/src/embedded_vendor
 %{APP_DIR}/src/db
 %{APP_DIR}/src/etc
 %{APP_DIR}/src/forgeupgrade

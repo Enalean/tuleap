@@ -51,15 +51,6 @@ ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 bindtextdomain('tuleap-core', ForgeConfig::get('sys_incdir'));
 textdomain('tuleap-core');
 
-// Fix path if needed
-if (isset($GLOBALS['jpgraph_dir'])) {
-    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
-}
-
-if(!defined('TTF_DIR')) {
-    define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
-}
-
 $xml_security = new XML_Security();
 $xml_security->disableExternalLoadOfEntities();
 
