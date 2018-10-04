@@ -49,7 +49,7 @@ class CommitPresenter
     public function __construct(Commit $commit, TreeDiff $tree_diff)
     {
         $this->commit            = $commit;
-        $this->description       = $this->buildCommitDescription();
+        $this->description       = $this->commit->getDescription();
         $this->has_description   = ! empty($this->description);
         $this->number_of_parents = count($commit->getParents());
 
@@ -68,14 +68,6 @@ class CommitPresenter
 
         $this->committer = new CommitUserPresenter();
         $this->committer->build($commit->getCommitterEmail());
-    }
-
-    private function buildCommitDescription()
-    {
-        $comment = $this->commit->getComment();
-        array_shift($comment);
-
-        return trim(implode("\n", $comment));
     }
 
     public function getStatusClassname(FileDiff $diff_line)
