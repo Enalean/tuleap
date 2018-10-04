@@ -79,6 +79,10 @@
                 </div>
             </div>
 
+            <div class="tlp-badge-secondary tlp-badge-outline git-repository-commit-card-hash">
+                {$commit_presenter->short_id}
+            </div>
+
             {assign var=revtree value=$commit_presenter->commit->GetTree()}
             <div class="tlp-button-bar">
                 <div class="tlp-button-bar-item">

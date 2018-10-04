@@ -586,10 +586,6 @@ class Commit extends GitObject
             return [];
         }
 
-        if (!$this->dataRead) {
-            $this->ReadData();
-        }
-
         return preg_grep('/' . preg_quote($pattern, '/') . '/i', $this->getDescriptionAsArray());
     }
 

@@ -67,6 +67,10 @@
     font-size: 14px;
 }
 
+.git-repository-commit-card-hash {
+    margin: 0 $tlp-spacing 0 0;
+}
+
 .git-repository-commit-card-info {
     flex: 1 1 auto;
     margin: 0 $tlp-spacing 0 0;

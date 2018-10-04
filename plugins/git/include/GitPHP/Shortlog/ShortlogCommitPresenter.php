@@ -28,6 +28,8 @@ class ShortlogCommitPresenter
 {
     /** @var Commit */
     public $commit;
+    /** @var string */
+    public $short_id;
     /** @var CommitUserPresenter */
     public $author;
     /** @var string */
@@ -35,7 +37,8 @@ class ShortlogCommitPresenter
 
     public function __construct(Commit $commit, UserEmailCollection $authors_by_email)
     {
-        $this->commit = $commit;
+        $this->commit   = $commit;
+        $this->short_id = substr($commit->GetHash(), 0, 10);
 
         $this->author = new CommitUserPresenter();
         $this->author->buildFromTuleapUser($authors_by_email->getUserByEmail($commit->getAuthorEmail()));
