@@ -145,9 +145,11 @@
 }
 
 .git-repository-branch-tag-selector-empty {
-    margin: 0 $tlp-spacing;
-    color: $tlp-ui-dimmed;
+    margin: $tlp-spacing;
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 14px;
     font-style: italic;
+    white-space: nowrap;
 }
 
 .git-repository-branch-tag-selector-is-loading {
