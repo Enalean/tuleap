@@ -110,6 +110,13 @@ class MembersController
             return;
         }
 
-        $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
+        try {
+            $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
+        } catch (CannotRemoveLastProjectAdministratorException $ex) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                _('The last project administrator cannot be removed.')
+            );
+        }
     }
 }

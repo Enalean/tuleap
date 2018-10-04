@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -73,6 +73,9 @@ class DynamicUGroupMembersUpdater
         }
     }
 
+    /**
+     * @throws CannotRemoveLastProjectAdministratorException
+     */
     public function removeUser(Project $project, ProjectUGroup $ugroup, PFUser $user)
     {
         switch ($ugroup->getId()) {
@@ -102,9 +105,20 @@ class DynamicUGroupMembersUpdater
         $this->event_manager->processEvent(new UserBecomesProjectAdmin($project, $user));
     }
 
+    /**
+     * @throws CannotRemoveLastProjectAdministratorException
+     */
     private function removeProjectAdministrator(Project $project, PFUser $user)
     {
-        $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
+        $this->user_permissions_dao->startTransaction();
+        try {
+            if (! $this->user_permissions_dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
+                throw new CannotRemoveLastProjectAdministratorException($user, $project);
+            }
+            $this->user_permissions_dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
+        } finally {
+            $this->user_permissions_dao->commit();
+        }
         $this->event_manager->processEvent(new UserIsNoLongerProjectAdmin($project, $user));
     }
 

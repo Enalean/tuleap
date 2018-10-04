@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,6 +61,9 @@ class UserPermissionsDao extends DataAccessObject
         return $this->update($sql);
     }
 
+    /**
+     * @return int
+     */
     public function removeUserFromProjectAdmin($project_id, $user_id)
     {
         $project_id = $this->da->escapeInt($project_id);
@@ -72,6 +75,24 @@ class UserPermissionsDao extends DataAccessObject
                   AND user_id = $user_id";
 
         return $this->update($sql);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isThereOtherProjectAdmin($project_id, $user_id)
+    {
+        $project_id = $this->da->escapeInt($project_id);
+        $user_id    = $this->da->escapeInt($user_id);
+        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
+
+        $sql = "SELECT NULL
+                FROM user_group
+                JOIN user ON (user.user_id = user_group.user_id)
+                WHERE (user.status='A' OR user.status='R' OR user.status='S') AND
+                  group_id = $project_id AND user_group.user_id != $user_id AND admin_flags = $admin_flag";
+
+        return count($this->retrieve($sql)) > 0;
     }
 
     public function isUserPartOfProjectAdmins($project_id, $user_id)
