@@ -554,7 +554,43 @@ class Commit extends GitObject
             $this->ReadData();
         }
 
-        return preg_grep('/' . $pattern . '/i', $this->comment);
+        return preg_grep('/' . preg_quote($pattern, '/') . '/i', $this->comment);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDescriptionAsArray()
+    {
+        $comment = $this->GetComment();
+        array_shift($comment);
+
+        return $comment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return trim(implode("\n", $this->getDescriptionAsArray()));
+    }
+
+    /**
+     * @param string $pattern
+     * @return string[]
+     */
+    public function searchDescription($pattern)
+    {
+        if (empty($pattern)) {
+            return [];
+        }
+
+        if (!$this->dataRead) {
+            $this->ReadData();
+        }
+
+        return preg_grep('/' . preg_quote($pattern, '/') . '/i', $this->getDescriptionAsArray());
     }
 
     /**

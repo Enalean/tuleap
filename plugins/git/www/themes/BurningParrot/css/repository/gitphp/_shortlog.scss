@@ -29,6 +29,15 @@
 
 .git-repository-shortlog-results {
     width: 100%;
+
+    > .git-repository-shortlog-day {
+        margin: $tlp-spacing 0;
+
+        &:first-child {
+            margin: 0 0 $tlp-spacing;
+        }
+    }
+
 }
 
 .git-repository-shortlog-pagination {
@@ -37,19 +46,6 @@
 
 .git-repository-shortlog-day {
     margin: $tlp-double-spacing $tlp-spacing $tlp-half-spacing;
-
-    &:not(.tlp-pane-subtitle) {
-        margin: $tlp-spacing 0;
-        color: $tlp-theme-color;
-        font-size: 15px;
-        font-weight: 600;
-        letter-spacing: .5px;
-        text-transform: uppercase;
-
-        &:first-child {
-            margin: 0 0 $tlp-spacing;
-        }
-    }
 }
 
 .git-repository-commit-card {
@@ -64,6 +60,11 @@
 
 .git-repository-commit-card-info-title {
     margin: 0 0 $tlp-half-spacing;
+}
+
+.git-repository-commit-card-info-description {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
 }
 
 .git-repository-commit-card-info {

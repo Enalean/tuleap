@@ -1,17 +1,29 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Tuleap\Git\GitPHP;
 
-/**
- * GitPHP Controller Search
- *
- * Controller for running a search
- *
- * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
- * @package GitPHP
- * @subpackage Controller
- */
+use GitPHP\Shortlog\ShortlogPresenterBuilder;
+use UserManager;
+
 /**
  * Search controller class
  *
@@ -55,6 +67,9 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
+        if (\ForgeConfig::get('git_repository_bp')) {
+            return 'tuleap/shortlog.tpl';
+        }
         return 'search.tpl';
     }
 
@@ -140,7 +155,11 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         if (count($results) > 100) {
-            $this->tpl->assign('hasmore', true);
+            if (\ForgeConfig::get('git_repository_bp')) {
+                $this->tpl->assign('hasmorerevs', true);
+            } else {
+                $this->tpl->assign('hasmore', true);
+            }
             $results = array_slice($results, 0, 100, true);
         }
         $this->tpl->assign('results', $results);
@@ -148,5 +167,10 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $co->GetTree());
 
         $this->tpl->assign('page', $this->params['page']);
+
+        if (\ForgeConfig::get('git_repository_bp')) {
+            $builder = new ShortlogPresenterBuilder(UserManager::instance());
+            $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($results));
+        }
     }
 }

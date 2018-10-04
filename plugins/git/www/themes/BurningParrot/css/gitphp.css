@@ -95,8 +95,12 @@
 #gitphp span.latenight {
 	color: #cc0000;
 }
-#gitphp span.searchmatch {
+#gitphp span.git-repository-highlight {
+	padding: 0;
+	background: none;
 	color: #e00000;
+	box-shadow: none;
+	border-radius: 0;
 }
 #gitphp div.message {
 	padding: 12px;
