@@ -44,8 +44,8 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/constants.php';
 
 class DocmanPlugin extends Plugin
 {
