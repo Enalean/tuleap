@@ -17,9 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-<section class="tlp-pane">
+<section class="tlp-pane git-repository-commit">
     <div class="tlp-pane-container">
         {include file='tuleap/commit-title-metadata.tpl'}
+    </div>
+</section>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
         {include file='tuleap/commit-files.tpl'}
     </div>
 </section>
