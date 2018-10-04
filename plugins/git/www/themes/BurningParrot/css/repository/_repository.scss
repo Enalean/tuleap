@@ -153,7 +153,8 @@
 }
 
 .git-repository-branch-tag-selector-is-loading {
-    height: 30px;
+    height: 40px;
+    margin: $tlp-spacing 0;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
