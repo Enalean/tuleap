@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,7 @@ class Cache
     private $project_ids     = array();
     private $tracker_ids     = array();
     private $user_groups_ids = array();
+    private $user_ids        = array();
     private $tokens          = array();
 
     private $artifacts = array();
@@ -111,5 +112,14 @@ class Cache
             return $this->tokens[$username];
         }
         return null;
+    }
+
+    public function setUserId($user)
+    {
+        $this->user_ids[$user["username"]] = $user["id"];
+    }
+
+    public function getUserIds(){
+        return $this->user_ids;
     }
 }

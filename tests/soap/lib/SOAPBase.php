@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class SOAPBase extends PHPUnit_Framework_TestCase {
+class SOAPBase extends PHPUnit_Framework_TestCase
+{
 
     protected $server_base_url;
     protected $base_wsdl;
@@ -35,7 +36,10 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
     /** @var SoapClient */
     protected $soap_project;
 
-    public function setUp() {
+    private static $user_ids;
+
+    public function setUp()
+    {
         parent::setUp();
 
         $this->login              = SOAP_TestDataBuilder::TEST_USER_1_NAME;
@@ -49,8 +53,8 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
         $this->context = stream_context_create([
             'ssl' => [
                 // set some SSL/TLS specific options
-                'verify_peer' => false,
-                'verify_peer_name' => false,
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
                 'allow_self_signed' => true
             ]
         ]);
@@ -66,14 +70,41 @@ class SOAPBase extends PHPUnit_Framework_TestCase {
             $this->server_project_url,
             array('cache_wsdl' => WSDL_CACHE_NONE, 'stream_context' => $this->context)
         );
+
+        if (self::$user_ids === null) {
+            $this->initUserIds();
+        }
     }
 
     /**
      * @return string
      */
-    protected function getSessionHash() {
+    protected function getSessionHash()
+    {
         // Establish connection to the server
         return $this->soap_base->login($this->login, $this->password)->session_hash;
     }
 
+    private function initUserIds()
+    {
+        $session_hash = $this->getSessionHash();
+        $all_user_information = $this->soap_base->checkUsersExistence($session_hash, [SOAP_TestDataBuilder::TEST_USER_1_NAME, SOAP_TestDataBuilder::TEST_USER_2_NAME]);
+
+        self::$user_ids = [];
+
+        foreach ($all_user_information as $user_information) {
+            self::$user_ids[$user_information->username] = (int) $user_information->id;
+        }
+    }
+
+    /**
+     * @return null|int
+     */
+    protected function getUserID($username)
+    {
+        if (! isset(self::$user_ids[$username])) {
+            return null;
+        }
+        return self::$user_ids[$username];
+    }
 }

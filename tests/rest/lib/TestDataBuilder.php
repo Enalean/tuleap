@@ -26,8 +26,6 @@ use Tuleap\Widget\WidgetFactory;
 
 class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
 {
-
-    const TEST_USER_4_ID          = 105;
     const TEST_USER_4_NAME        = 'rest_api_tester_4';
     const TEST_USER_4_PASS        = 'welcome0';
     const TEST_USER_4_STATUS      = 'A';
@@ -268,10 +266,12 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
             )
         );
 
+        $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
+
         $user_report_id  = $cross_tracker_saver->create();
-        $widget_dao->create(REST_TestDataBuilder::TEST_USER_1_ID, 'u', 2, 'crosstrackersearch', $user_report_id);
+        $widget_dao->create($test_user_1_id, 'u', 2, 'crosstrackersearch', $user_report_id);
         $project_report_id  = $cross_tracker_saver->create();
-        $widget_dao->create(REST_TestDataBuilder::TEST_USER_1_ID, 'g', 3, 'crosstrackersearch', $project_report_id);
+        $widget_dao->create($test_user_1_id, 'g', 3, 'crosstrackersearch', $project_report_id);
 
         return $this;
     }

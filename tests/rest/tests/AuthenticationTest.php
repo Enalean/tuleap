@@ -68,7 +68,7 @@ class AuthenticationTest extends RestBase {
             $request = $this->client->get('projects');
             $request
                 ->setHeader('X-Auth-Token', 'wrong_token')
-                ->setHeader('X-Auth-UserId', REST_TestDataBuilder::TEST_USER_1_ID);
+                ->setHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
             $request->send();
         } catch(Guzzle\Http\Exception\ClientErrorResponseException $e) {
             $this->assertEquals(401, $e->getResponse()->getStatusCode());
