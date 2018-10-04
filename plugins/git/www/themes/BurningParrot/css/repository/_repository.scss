@@ -61,7 +61,6 @@
 .git-repository-actions {
     display: flex;
     flex: 1 1 auto;
-    align-items: baseline;
     margin: 5px 0 $tlp-spacing;
 }
 
@@ -75,6 +74,7 @@
 }
 
 .git-repository-clone-label {
+    align-self: center;
     margin: 0 5px 0 0;
 }
 
