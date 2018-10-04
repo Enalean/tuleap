@@ -21,6 +21,8 @@
 
 namespace Tuleap\CreateTestEnv;
 
+use Tuleap\CreateTestEnv\XMLDateUpdater\DateUpdater;
+
 class CreateTestProject
 {
     const DEFAULT_ARCHIVE = 'sample-project';
@@ -30,7 +32,6 @@ class CreateTestProject
 
     private $full_name;
     private $unix_name;
-    private $archive_dir_name;
     private $archive_base_dir;
 
     public function __construct($user_name, $user_realname, $archive_base_dir)
@@ -46,6 +47,27 @@ class CreateTestProject
      * @throws Exception\InvalidProjectUnixNameException
      */
     public function generateXML()
+    {
+        $xml = $this->getXMLBasedOnTemplate();
+
+        if (file_exists($this->archive_base_dir.'/reference_date.txt')) {
+            $updater = new DateUpdater(
+                new \DateTimeImmutable(trim(file_get_contents($this->archive_base_dir.'/reference_date.txt'))),
+                new \DateTimeImmutable()
+            );
+
+            $updater->updateDateValuesInXML($xml);
+        }
+
+        return $xml;
+    }
+
+    /**
+     * @return \SimpleXMLElement
+     * @throws Exception\InvalidProjectFullNameException
+     * @throws Exception\InvalidProjectUnixNameException
+     */
+    private function getXMLBasedOnTemplate()
     {
         $engine = new \Mustache_Engine();
         $xml_str = $engine->render(
