@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2018-10-05 10:40+0200\n"
+"PO-Revision-Date: 2018-10-05 10:48+0200\n"
 "Last-Translator: Zaran Krleza <zaran.krleza@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -227,6 +227,11 @@ msgstr "Pas de révisions"
 
 # Error message when a user's search didn't produce any results
 # %1$s: the user's search string
+msgid "No matches for \"%1\""
+msgstr "Pas de résultats pour \"%1\""
+
+# Error message when a user's search didn't produce any results
+# %1$s: the user's search string
 #, php-format
 msgid "No matches for \"%1$s\""
 msgstr "Pas de résultats pour \"%1$s\""
@@ -271,6 +276,11 @@ msgstr "Rechercher"
 # Error message when a user tries to search but searching has been disabled in the config
 msgid "Search has been disabled"
 msgstr "La recherche a été désactivée"
+
+# Error message when a user's search query is too short
+# %1$d: the minimum number of characters
+msgid "Search text of at least 2 characters"
+msgstr "La recherche doit comporter au moins 2 caractères"
 
 # Link beside commits - selects this commit to be used in a diff
 msgid "Select for diff"
