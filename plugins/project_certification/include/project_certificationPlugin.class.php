@@ -18,8 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
+use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
+use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\ProjectCertification\ProjectAdmin\IndexController;
+use Tuleap\ProjectCertification\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectCertification\REST\ProjectCertificationResource;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -46,6 +52,8 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     {
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(NavigationPresenter::NAME);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -65,5 +73,43 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     public function restResources(array $params)
     {
         $params['restler']->addAPIClass(ProjectCertificationResource::class, 'project_certification');
+    }
+
+    public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)
+    {
+        $project_id = $presenter->getProjectId();
+        $html_url = $this->getPluginPath() . '/project/' . urlencode($project_id) . '/admin';
+        $presenter->addItem(
+            new NavigationItemPresenter(
+                dgettext('tuleap-project_certification', 'Project certification'),
+                $html_url,
+                IndexController::PANE_SHORTNAME,
+                $presenter->getCurrentPaneShortname()
+            )
+        );
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $routes)
+    {
+        $routes->getRouteCollector()->addGroup(
+            $this->getPluginPath(),
+            function (FastRoute\RouteCollector $r) {
+                $r->get(
+                    '/project/{project_id:\d+}/admin',
+                    function () {
+                        return new IndexController(
+                            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
+                            ProjectManager::instance(),
+                            new HeaderNavigationDisplayer(),
+                            new ProjectOwnerPresenterBuilder(
+                                new ProjectOwnerDAO(),
+                                UserManager::instance(),
+                                UserHelper::instance()
+                            )
+                        );
+                    }
+                );
+            }
+        );
     }
 }

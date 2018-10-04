@@ -1,5 +1,25 @@
+msgid ""
+"A project owner is a project administrator responsible for this project.\n"
+"                        There must always be a project owner."
+msgstr ""
+
 msgid "Adds project owner role"
 msgstr ""
 
+msgid "Current project owner:"
+msgstr ""
+
 msgid "Project certification"
+msgstr ""
+
+msgid "Project does not exist."
+msgstr ""
+
+msgid "Project owner"
+msgstr ""
+
+msgid "This project has no owner."
+msgstr ""
+
+msgid "You must be project administrator to access this page."
 msgstr ""
