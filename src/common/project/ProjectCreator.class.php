@@ -87,7 +87,7 @@ class ProjectCreator {
     /**
      * @var ProjectManager
      */
-    private $projectManager;
+    private $project_manager;
 
     /**
      * @var ReferenceManager
@@ -102,12 +102,12 @@ class ProjectCreator {
     /**
      * @var Rule_ProjectName
      */
-    private $ruleShortName;
+    private $rule_short_name;
 
     /**
      * @var Rule_ProjectFullName
      */
-    private $ruleFullName;
+    private $rule_full_name;
 
     private $send_notifications;
 
@@ -144,9 +144,9 @@ class ProjectCreator {
         $this->force_activation        = $force_activation;
         $this->reference_manager       = $reference_manager;
         $this->user_manager            = $user_manager;
-        $this->ruleShortName           = new Rule_ProjectName();
-        $this->ruleFullName            = new Rule_ProjectFullName();
-        $this->projectManager          = $projectManager;
+        $this->rule_short_name         = new Rule_ProjectName();
+        $this->rule_full_name          = new Rule_ProjectFullName();
+        $this->project_manager         = $projectManager;
         $this->frs_permissions_creator = $frs_permissions_creator;
         $this->ugroup_duplicator       = $ugroup_duplicator;
         $this->dashboard_duplicator    = $dashboard_duplicator;
@@ -159,6 +159,8 @@ class ProjectCreator {
      *
      * @param ProjectCreationData $data project data
      * @return Project created
+     * @throws ProjectRegistrationDisabledException
+     * @throws Project_Creation_Exception
      */
     public function build(ProjectCreationData $data)
     {
@@ -166,19 +168,9 @@ class ProjectCreator {
             throw new ProjectRegistrationDisabledException();
         }
 
-        if (!$this->ruleShortName->isValid($data->getUnixName())) {
-            throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
-        }
+        $this->checkProjectCreationData($data);
 
-        if (!$this->ruleFullName->isValid($data->getFullName())) {
-            throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
-        }
-
-        $id = $this->createProject($data);
-        if ($id) {
-            return $this->projectManager->getProject($id);
-        }
-        throw new Project_Creation_Exception();
+        return $this->processProjectCreation($data);
     }
 
     /**
@@ -202,11 +194,23 @@ class ProjectCreator {
      * @return Project
      */
     public function create($shortName, $publicName, array $data) {
-        $creationData = ProjectCreationData::buildFromFormArray($data);
+        $creationData = $this->getProjectCreationData($shortName, $publicName, $data);
 
-        $creationData->setUnixName($shortName);
-        $creationData->setFullName($publicName);
         return $this->build($creationData);
+    }
+
+    /**
+     * @throws Project_Creation_Exception
+     * @throws Project_InvalidFullName_Exception
+     * @throws Project_InvalidShortName_Exception
+     */
+    public function createFromRest($short_name, $public_name, array $data)
+    {
+        $creation_data = $this->getProjectCreationData($short_name, $public_name, $data);
+
+        $this->checkProjectCreationData($creation_data);
+
+        return $this->processProjectCreation($creation_data);
     }
 
     private function fakeGroupIdIntoHTTPParams($group_id){
@@ -255,7 +259,7 @@ class ProjectCreator {
         $this->setProjectAdmin($group_id, $admin_user);
 
         // Instanciate all services from the project template that are 'active'
-        $group = $this->projectManager->getProject($group_id);
+        $group = $this->project_manager->getProject($group_id);
         if (!$group || !is_object($group)) {
             exit_no_group();
         }
@@ -263,7 +267,7 @@ class ProjectCreator {
         $this->fakeGroupIdIntoHTTPParams($group_id);
 
         $template_id    = $group->getTemplate();
-        $template_group = $this->projectManager->getProject($template_id);
+        $template_group = $this->project_manager->getProject($template_id);
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
           exit_no_group();
         }
@@ -420,7 +424,7 @@ class ProjectCreator {
 
     // define a module
     private function initFileModule($group_id){
-        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->projectManager->getProject($group_id)->getUnixName()."')");
+        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$this->project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));
@@ -513,12 +517,12 @@ class ProjectCreator {
 
     //Add the import of the message to requester from the parent project if defined
     private function setMessageToRequesterFromTemplate($group_id, $template_id) {
-        $dar = $this->projectManager->getMessageToRequesterForAccessProject($template_id);
+        $dar = $this->project_manager->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            $result = $this->projectManager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
+            $result = $this->project_manager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
         } else {
-            $result = $this->projectManager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
+            $result = $this->project_manager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
@@ -705,11 +709,51 @@ class ProjectCreator {
 
         if ($this->force_activation || $auto_approval == PROJECT_APPROVAL_AUTO) {
             if ($this->send_notifications) {
-                $this->projectManager->activate($group);
+                $this->project_manager->activate($group);
             } else {
-                $this->projectManager->activateWithoutNotifications($group);
+                $this->project_manager->activateWithoutNotifications($group);
             }
         }
     }
 
+    /**
+     * @param ProjectCreationData $data
+     * @throws Project_InvalidFullName_Exception
+     * @throws Project_InvalidShortName_Exception
+     */
+    private function checkProjectCreationData(ProjectCreationData $data)
+    {
+        if (!$this->rule_short_name->isValid($data->getUnixName())) {
+            throw new Project_InvalidShortName_Exception($this->rule_short_name->getErrorMessage());
+        }
+
+        if (!$this->rule_full_name->isValid($data->getFullName())) {
+            throw new Project_InvalidFullName_Exception($this->rule_full_name->getErrorMessage());
+        }
+    }
+
+    /**
+     * @param ProjectCreationData $data
+     * @return Project
+     * @throws Project_Creation_Exception
+     */
+    private function processProjectCreation(ProjectCreationData $data)
+    {
+        $id = $this->createProject($data);
+        if (!$id) {
+            throw new Project_Creation_Exception();
+        }
+
+        return $this->project_manager->getProject($id);
+    }
+
+    private function getProjectCreationData($short_name, $public_name, array $data)
+    {
+        $creation_data = ProjectCreationData::buildFromFormArray($data);
+
+        $creation_data->setUnixName($short_name);
+        $creation_data->setFullName($public_name);
+
+        return $creation_data;
+    }
 }

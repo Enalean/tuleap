@@ -37,18 +37,80 @@ class ProjectTest extends ProjectBase
         );
     }
 
-    public function testPOST()
+    public function testPOSTForRegularUser()
     {
+        $post_resource = json_encode([
+            'label' => 'Test Request 9747',
+            'shortname'  => 'test9747',
+            'description' => 'Test of Request 9747 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => 100
+        ]);
 
-        $post_resource = json_encode(array(
-                'label' => 'Test Request 9747',
-                'shortname'  => 'test9747',
-                'description' => 'Test of Request 9747 for REST API Project Creation',
-                'is_public' => true,
-                'template_id' => 100
-            ));
+        $has_exception_been_catched = false;
 
-        $response = $this->getResponse($this->client->post('projects', null, $post_resource));
+        // Cannot use @expectedException as we want to check status code.
+        try {
+            $response = $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_2_NAME,
+                $this->client->post(
+                    'projects',
+                    null,
+                    $post_resource
+                )
+            );
+        } catch (BadResponseException $exception) {
+            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
+
+            $has_exception_been_catched = true;
+        }
+
+        $this->assertTrue($has_exception_been_catched);
+    }
+
+    public function testPOSTForAdmin()
+    {
+        $post_resource = json_encode([
+            'label' => 'Test Request 9747',
+            'shortname'  => 'test9747',
+            'description' => 'Test of Request 9747 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => 100
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->post(
+                'projects',
+                null,
+                $post_resource
+            )
+        );
+
+        $project = $response->json();
+        $this->assertArrayHasKey("id", $project);
+        $this->assertEquals($response->getStatusCode(), 201);
+    }
+
+    public function testPOSTForRestProjectManager()
+    {
+        $post_resource = json_encode([
+            'label' => 'Test Request 9748',
+            'shortname'  => 'test9748',
+            'description' => 'Test of Request 9748 for REST API Project Creation',
+            'is_public' => true,
+            'template_id' => 100
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME,
+            $this->client->post(
+                'projects',
+                null,
+                $post_resource
+            )
+        );
+
         $project = $response->json();
         $this->assertArrayHasKey("id", $project);
         $this->assertEquals($response->getStatusCode(), 201);
@@ -196,7 +258,7 @@ class ProjectTest extends ProjectBase
         return $ids;
     }
 
-    public function testProjectReprentationContainsShortname()
+    public function testProjectRepresentationContainsShortname()
     {
         $response     = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("projects/$this->project_pbi_id"));
         $json_project = $response->json();
