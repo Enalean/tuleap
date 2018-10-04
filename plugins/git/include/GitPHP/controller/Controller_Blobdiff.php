@@ -58,6 +58,11 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
         if (\ForgeConfig::get('git_repository_bp') && ! isset($this->params['sidebyside'])) {
             return 'tuleap/blob-diff.tpl';
         }
+
+        if (\ForgeConfig::get('git_repository_bp') && isset($this->params['sidebyside'])) {
+            return 'tuleap/blob-diff-side-by-side.tpl';
+        }
+
         return 'blobdiff.tpl';
     }
 
