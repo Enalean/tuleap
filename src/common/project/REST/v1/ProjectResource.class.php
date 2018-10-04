@@ -46,7 +46,6 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
-use Tuleap\Project\ProjectRegistrationDisabledException;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
@@ -206,7 +205,7 @@ class ProjectResource extends AuthenticatedResource {
 
         $user = $this->user_manager->getCurrentUser();
 
-        if (! $user->isSuperUser() && ! $this->isUserDelegatedRestProjectManager($user)) {
+        if (! $this->isUserARestProjectManager($user)) {
             throw new RestException(403, 'You are not allowed to create a project through the api');
         }
 
@@ -363,7 +362,7 @@ class ProjectResource extends AuthenticatedResource {
 
         $with_status = $json_query['with_status'];
         if (isset($with_status)) {
-            if (! $user->isSuperUser() && ! $this->isUserDelegatedRestProjectManager($user)) {
+            if (! $this->isUserARestProjectManager($user)) {
                 throw new RestException(
                     403,
                     "You don't have enough rights to perform a query using 'with_status'"
@@ -550,7 +549,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->checkAgileEndpointsAvailable();
 
         $plannings = $this->plannings($id, $limit, $offset, Event::REST_GET_PROJECT_PLANNINGS);
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForPlanning();
 
         return $plannings;
     }
@@ -562,7 +561,7 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function optionsPlannings($id) {
         $this->checkAgileEndpointsAvailable();
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForPlanning();
     }
 
     /**
@@ -588,7 +587,7 @@ class ProjectResource extends AuthenticatedResource {
         $heartbeats = new HeartbeatsRepresentation();
         $heartbeats->build($event);
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForHeartBeat();
 
         return $heartbeats;
     }
@@ -599,7 +598,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsHeartbeats($id) {
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForHeartBeat();
     }
 
     /**
@@ -634,7 +633,7 @@ class ProjectResource extends AuthenticatedResource {
             $collection->getLabels()
         );
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForLabels();
         Header::sendPaginationHeaders($limit, $offset, $collection->getTotalSize(), self::MAX_LIMIT);
 
         return array(
@@ -648,7 +647,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsLabels($id) {
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForLabels();
     }
 
     private function plannings($id, $limit, $offset, $event) {
@@ -710,7 +709,7 @@ class ProjectResource extends AuthenticatedResource {
             $milestones = array();
         }
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForMilestones();
 
         return $milestones;
     }
@@ -722,7 +721,7 @@ class ProjectResource extends AuthenticatedResource {
      */
     public function optionsMilestones($id) {
         $this->checkAgileEndpointsAvailable();
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForMilestones();
     }
 
     private function milestones($id, $representation_type, $query, $limit, $offset, $order, $event) {
@@ -787,7 +786,7 @@ class ProjectResource extends AuthenticatedResource {
             $query
         );
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForTracker();
 
         return $trackers;
     }
@@ -798,7 +797,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsTrackers($id) {
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForTracker();
     }
 
     private function getRepresentationsForTrackers($id, $representation, $limit, $offset, $query)
@@ -1015,6 +1014,60 @@ class ProjectResource extends AuthenticatedResource {
         $this->sendAllowHeadersForBacklog();
     }
 
+    /**
+     * Project partial update
+     *
+     * Partial update of a Project
+     * <br/>
+     *
+     * <br/>
+     * This partial update allows a REST project manager to toggle the status of a given project from active to suspended and conversely.
+     * <br/>
+     *
+     * <br/>
+     * Example:
+     * <pre>
+     * {
+     *   "status": "suspended"
+     * }
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access hybrid
+     * @status 200
+     *
+     * @param int $id Id of the project
+     * @param PATCHProjectRepresentation $patch_resource {@from body} {@type Tuleap\Project\REST\v1\PATCHProjectRepresentation}
+     *
+     * @throws 400
+     * @throws 401
+     * @throws 403
+     * @throws 404
+     */
+    public function patchProject($id, PATCHProjectRepresentation $patch_resource)
+    {
+        $this->checkAccess();
+
+        $user = $this->user_manager->getCurrentUser();
+
+        if (! $this->isUserARestProjectManager($user)) {
+            throw new RestException(403, 'You are not allowed to change the status of a project');
+        }
+
+        if ($id > 0 && $id <= Project::ADMIN_PROJECT_ID) {
+            throw new RestException(403, 'You are not allowed to change the status of a system project.');
+        }
+
+        $project = $this->getProjectForRestProjectManager($id);
+
+        $this->project_manager->updateStatus(
+            $project,
+            ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($patch_resource->status)
+        );
+
+        $this->sendAllowHeadersForProject();
+    }
+
     private function backlogItems($id, $limit, $offset, $event) {
         $project = $this->getProjectForUser($id);
         $result  = array();
@@ -1043,7 +1096,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsUserGroups($id) {
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForUserGroups();
     }
 
     /**
@@ -1071,7 +1124,7 @@ class ProjectResource extends AuthenticatedResource {
         $ugroups     = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
         $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForUserGroups();
 
         return $user_groups;
     }
@@ -1120,7 +1173,7 @@ class ProjectResource extends AuthenticatedResource {
         );
 
         if ($activated) {
-            $this->sendAllowHeadersForProject();
+            $this->sendAllowHeadersForGit();
         } else {
             throw new RestException(404, 'Git plugin not activated');
         }
@@ -1250,7 +1303,7 @@ class ProjectResource extends AuthenticatedResource {
         );
 
         if ($result->repositories !== null) {
-            $this->sendAllowHeadersForProject();
+            $this->sendAllowHeadersForGit();
             $this->sendPaginationHeaders($limit, $offset, $total_git_repositories);
             return $result;
         } else {
@@ -1272,7 +1325,7 @@ class ProjectResource extends AuthenticatedResource {
         $this->event_manager->processEvent($event);
 
         if ($event->isPluginActivated()) {
-            $this->sendAllowHeadersForProject();
+            $this->sendAllowHeadersForSvn();
         } else {
             throw new RestException(404, 'SVN plugin not activated');
         }
@@ -1325,7 +1378,7 @@ class ProjectResource extends AuthenticatedResource {
             throw new RestException(404, 'SVN plugin not activated');
         }
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForSvn();
         $this->sendPaginationHeaders($limit, $offset, $event->getTotalRepositories());
 
         return array('repositories' => $event->getRepositoriesRepresentations());
@@ -1355,7 +1408,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int $id Id of the project
      */
     public function optionsWiki($id) {
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForWiki();
     }
 
     /**
@@ -1402,7 +1455,7 @@ class ProjectResource extends AuthenticatedResource {
             $wiki_pages['pages'][] = $representation;
         }
 
-        $this->sendAllowHeadersForProject();
+        $this->sendAllowHeadersForWiki();
         $this->sendPaginationHeaders($limit, $offset, $all_pages->getTotalSize());
 
         return $wiki_pages;
@@ -1448,11 +1501,56 @@ class ProjectResource extends AuthenticatedResource {
     }
 
     private function sendAllowHeadersForProject() {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPostPatch();
     }
 
     private function sendAllowHeadersForBacklog() {
         Header::allowOptionsGetPutPatch();
+    }
+
+    private function sendAllowHeadersForSvn()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForPlanning()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForMilestones()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForTracker()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForLabels()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForUserGroups()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForWiki()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForHeartBeat()
+    {
+        Header::allowOptionsGet();
+    }
+
+    private function sendAllowHeadersForGit()
+    {
+        Header::allowOptionsGet();
     }
 
     private function sendPaginationHeaders($limit, $offset, $size) {
@@ -1474,5 +1572,14 @@ class ProjectResource extends AuthenticatedResource {
     private function isUserDelegatedRestProjectManager(PFUser $user)
     {
         return $this->forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
+    }
+
+    /**
+     * @param PFUser $user
+     * @return bool
+     */
+    private function isUserARestProjectManager(PFUser $user)
+    {
+        return $user->isSuperUser() || $this->isUserDelegatedRestProjectManager($user);
     }
 }

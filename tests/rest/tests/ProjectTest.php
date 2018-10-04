@@ -376,14 +376,14 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSbyIdForAdmin()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -391,7 +391,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME, $this->client->options('projects/'.$this->project_deleted_id));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -399,7 +399,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('projects/'.$this->project_private_member_id));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -495,14 +495,14 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/milestones'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONStrackers()
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->options('projects/'.$this->project_private_member_id.'/trackers'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -716,7 +716,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/labels'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETLabels()
@@ -730,7 +730,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/user_groups'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETUserGroupsContainingStaticUGroups()
@@ -981,7 +981,7 @@ class ProjectTest extends ProjectBase
     {
         $response = $this->getResponse($this->client->options('projects/'.$this->project_private_member_id.'/phpwiki'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETWiki()
@@ -1096,5 +1096,55 @@ class ProjectTest extends ProjectBase
                 $this->getIds($json_projects)
             )
         );
+    }
+
+    public function testPATCHWithRegularUser()
+    {
+        $patch_resource = json_encode([
+            'status' => 'suspended'
+        ]);
+
+        $has_exception_been_caught = false;
+
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_2_NAME,
+                $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+            );
+        } catch (BadResponseException $exception) {
+            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
+
+            $has_exception_been_caught = true;
+        }
+
+        $this->assertTrue($has_exception_been_caught);
+    }
+
+    public function testPATCHWithAdmin()
+    {
+        $patch_resource = json_encode([
+            'status' => 'suspended'
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPATCHWithRestProjectManager()
+    {
+        $patch_resource = json_encode([
+            'status' => 'active'
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME,
+            $this->client->patch('projects/'. $this->project_deleted_id, null, $patch_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }
