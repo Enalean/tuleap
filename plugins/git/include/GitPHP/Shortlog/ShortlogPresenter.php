@@ -22,15 +22,17 @@ namespace GitPHP\Shortlog;
 
 class ShortlogPresenter
 {
-    /** @var array */
-    public $commits;
+    /** @var ShortlogCommitsPerDayPresenter[] */
+    public $commits = [];
+
+    /** @var ShortlogCommitsPerDayPresenter */
+    public $first_commit;
 
     /**
      * @param ShortlogCommitPresenter[] $commits_presenters
      */
     public function __construct(array $commits_presenters)
     {
-        $this->commits = [];
         foreach ($commits_presenters as $commit_presenter) {
             $committed_on  = new \DateTimeImmutable('@' . $commit_presenter->commit->GetCommitterEpoch());
             $committed_day = $committed_on->format($GLOBALS['Language']->getText('system', 'datefmt_short'));
@@ -38,6 +40,10 @@ class ShortlogPresenter
                 $this->commits[$committed_day] = new ShortlogCommitsPerDayPresenter($committed_day);
             }
             $this->commits[$committed_day]->add($commit_presenter);
+        }
+
+        if (count($commits_presenters) > 0) {
+            $this->first_commit = array_values($commits_presenters)[0];
         }
     }
 }

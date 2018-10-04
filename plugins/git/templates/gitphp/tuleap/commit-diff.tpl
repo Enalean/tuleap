@@ -29,23 +29,25 @@
             <h2 class="tlp-pane-title">
                 <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
             </h2>
-            <div class="git-repository-commit-diff-actions">
-                <div class="tlp-button-bar">
-                    <div class="tlp-button-bar-item">
-                        <a href="{$commit_presenter->getCommitListLink()}"
-                           class="tlp-button-primary tlp-button-outline tlp-button-small"
-                        >
-                            {t domain="gitphp"}List{/t}
-                        </a>
-                    </div>
-                    <div class="tlp-button-bar-item">
-                        <input type="radio" class="tlp-button-bar-checkbox" checked>
-                        <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                            {t domain="gitphp"}Inline diff{/t}
-                        </label>
+            {if ! $commit_presenter->is_diff_between_two_commits}
+                <div class="git-repository-commit-diff-actions">
+                    <div class="tlp-button-bar">
+                        <div class="tlp-button-bar-item">
+                            <a href="{$commit_presenter->getCommitListLink()}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small"
+                            >
+                                {t domain="gitphp"}List{/t}
+                            </a>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <input type="radio" class="tlp-button-bar-checkbox" checked>
+                            <label class="tlp-button-primary tlp-button-outline tlp-button-small">
+                                {t domain="gitphp"}Inline diff{/t}
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {/if}
             {foreach from=$treediff item=filediff}
                 <div class="git-repository-commit-diff-file-header">
                     <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element git-repository-commit-file-status"

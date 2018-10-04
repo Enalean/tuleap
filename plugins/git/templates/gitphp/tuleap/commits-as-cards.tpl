@@ -120,15 +120,15 @@
                         {if $mark}
                             {if $mark->GetHash() == $commit_presenter->commit->GetHash()}
                                 <a class="tlp-dropdown-menu-item"
-                                   href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}">
+                                   href="{$SCRIPT_NAME}?a=shortlog&amp;h={$shortlog_presenter->first_commit->commit->getHash()|urlencode}&amp;pg={$page}">
                                     {t domain="gitphp"}Deselect{/t}
                                 </a>
                             {else}
                                 {if $mark->GetCommitterEpoch() > $commit_presenter->commit->GetCommitterEpoch()}
                                     {assign var=markbase value=$mark}
-                                    {assign var=markparent value=$commit}
+                                    {assign var=markparent value=$commit_presenter->commit}
                                 {else}
-                                    {assign var=markbase value=$commit}
+                                    {assign var=markbase value=$commit_presenter->commit}
                                     {assign var=markparent value=$mark}
                                 {/if}
 
@@ -139,7 +139,7 @@
                             {/if}
                         {else}
                             <a class="tlp-dropdown-menu-item"
-                               href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit_presenter->commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">
+                               href="{$SCRIPT_NAME}?a=shortlog&amp;h={$shortlog_presenter->first_commit->commit->getHash()|urlencode}&amp;pg={$page}&amp;m={$commit_presenter->commit->GetHash()|urlencode}">
                                 {t domain="gitphp"}Select for diff{/t}
                             </a>
                         {/if}
