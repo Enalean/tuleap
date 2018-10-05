@@ -146,12 +146,16 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
                     $results = $this->project->SearchCommitter($this->params['search'], $co->GetHash(), 101, ($this->params['page'] * 100));
                     break;
                 default:
-                    throw new MessageException(dgettext("gitphp", 'Invalid search type'));
+                    throw new MessageException(dgettext("gitphp", 'Invalid search type'), true);
             }
         }
 
         if (count($results) < 1) {
-            throw new MessageException(sprintf(dgettext("gitphp", 'No matches for "%1$s"'), $this->params['search']), false);
+            if (\ForgeConfig::get('git_repository_bp')) {
+                $this->tpl->assign('hasemptysearchresults', true);
+            } else {
+                throw new MessageException(sprintf(dgettext("gitphp", 'No matches for "%1$s"'), $this->params['search']), false);
+            }
         }
 
         if (count($results) > 100) {

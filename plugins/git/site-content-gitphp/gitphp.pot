@@ -160,6 +160,9 @@ msgstr ""
 msgid "No commits"
 msgstr ""
 
+msgid "No matches for \"%1\""
+msgstr ""
+
 #, php-format
 msgid "No matches for \"%1$s\""
 msgstr ""
@@ -192,6 +195,9 @@ msgid "Search"
 msgstr ""
 
 msgid "Search has been disabled"
+msgstr ""
+
+msgid "Search text of at least 2 characters"
 msgstr ""
 
 msgid "Select for diff"

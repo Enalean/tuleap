@@ -48,6 +48,8 @@
                            name="s"
                            placeholder="{t domain="gitphp"}Author name, description, …{/t}"
                            {if $search}value="{$search|escape}"{/if}
+                           pattern="{literal}.{2,}{/literal}"
+                           title="{t domain="gitphp"}Search text of at least 2 characters{/t}"
                            required>
                 </div>
 
@@ -59,9 +61,13 @@
             </section>
         </form>
     </section>
-    {if empty($shortlog_presenter)}
+    {if empty($shortlog_presenter) || $hasemptysearchresults}
         <p class="empty-page-text git-repository-shortlog-results">
-            {t domain="gitphp"}No commits{/t}
+            {if $hasemptysearchresults}
+                {t domain="gitphp" 1=$search}No matches for "%1"{/t}
+            {else}
+                {t domain="gitphp"}No commits{/t}
+            {/if}
         </p>
     {else}
         <section id="git-repository-shortlog" class="git-repository-shortlog-results">
