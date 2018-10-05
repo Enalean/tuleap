@@ -78,7 +78,7 @@ class AccessKeyTest extends RestBase
     private function getAccessKeys(): array
     {
         $response = $this->getResponse(
-            $this->client->get('users/'.REST_TestDataBuilder::TEST_USER_1_ID.'/access_keys'),
+            $this->client->get('users/'.$this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME].'/access_keys'),
             REST_TestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertSame(200, $response->getStatusCode());
