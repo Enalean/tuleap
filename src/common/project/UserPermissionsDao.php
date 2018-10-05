@@ -20,7 +20,7 @@
 
 namespace Tuleap\Project;
 
-use DataAccessObject;
+use Tuleap\DB\DataAccessObject;
 
 class UserPermissionsDao extends DataAccessObject
 {
@@ -30,51 +30,32 @@ class UserPermissionsDao extends DataAccessObject
     const NEWS_WRITER_FLAG   = '1';
     const NEWS_ADMIN_FLAG    = '2';
 
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->enableExceptionsOnError();
-    }
-
     public function isUserPartOfProjectMembers($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
+        $sql  = 'SELECT NULL FROM user_group WHERE group_id = ? AND user_id = ?';
+        $rows = $this->getDB()->run($sql, $project_id, $user_id);
 
-        $sql = "SELECT NULL FROM user_group WHERE group_id = $project_id AND user_id = $user_id";
-
-        return count($this->retrieve($sql)) > 0;
+        return count($rows) > 0;
     }
 
     public function addUserAsProjectAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
+        $sql = 'UPDATE user_group
+                SET admin_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET admin_flags = $admin_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::PROJECT_ADMIN_FLAG, $project_id, $user_id);
     }
 
-    /**
-     * @return int
-     */
     public function removeUserFromProjectAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-
         $sql = "UPDATE user_group
                 SET admin_flags = ''
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
+                WHERE group_id = ?
+                  AND user_id = ?";
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $user_id);
     }
 
     /**
@@ -82,195 +63,171 @@ class UserPermissionsDao extends DataAccessObject
      */
     public function isThereOtherProjectAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
-
         $sql = "SELECT NULL
                 FROM user_group
                 JOIN user ON (user.user_id = user_group.user_id)
                 WHERE (user.status='A' OR user.status='R' OR user.status='S') AND
-                  group_id = $project_id AND user_group.user_id != $user_id AND admin_flags = $admin_flag";
+                  group_id = ? AND user_group.user_id != ? AND admin_flags = ?";
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::PROJECT_ADMIN_FLAG);
+
+        return count($rows) > 0;
     }
 
+    /**
+     * @return bool
+     */
     public function isUserPartOfProjectAdmins($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->quoteSmart(self::PROJECT_ADMIN_FLAG);
-
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM user_group
-                WHERE group_id = $project_id AND user_id = $user_id AND admin_flags = $admin_flag";
+                WHERE group_id = ? AND user_id = ? AND admin_flags = ?';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::PROJECT_ADMIN_FLAG);
+
+        return count($rows) > 0;
     }
 
     public function addUserAsWikiAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->escapeInt(self::WIKI_ADMIN_FLAG);
+        $sql = 'UPDATE user_group
+                SET wiki_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET wiki_flags = $admin_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::WIKI_ADMIN_FLAG, $project_id, $user_id);
     }
 
     public function removeUserFromWikiAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-
-        $sql = "UPDATE user_group
+        $sql = 'UPDATE user_group
                 SET wiki_flags = 0
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $user_id);
     }
 
     public function isUserPartOfWikiAdmins($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->escapeInt(self::WIKI_ADMIN_FLAG);
-
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM user_group
-                WHERE group_id = $project_id AND user_id = $user_id AND wiki_flags = $admin_flag";
+                WHERE group_id = ? AND user_id = ? AND wiki_flags = ?';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::WIKI_ADMIN_FLAG);
+
+        return count($rows) > 0;
     }
 
     public function addUserAsForumAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->escapeInt(self::FORUM_ADMIN_FLAG);
+        $sql = 'UPDATE user_group
+                SET forum_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET forum_flags = $admin_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::FORUM_ADMIN_FLAG, $project_id, $user_id);
     }
 
     public function removeUserFromForumAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-
-        $sql = "UPDATE user_group
+        $sql = 'UPDATE user_group
                 SET forum_flags = 0
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $user_id);
     }
 
     public function isUserPartOfForumAdmins($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $admin_flag = $this->da->escapeInt(self::FORUM_ADMIN_FLAG);
-
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM user_group
-                WHERE group_id = $project_id AND user_id = $user_id AND forum_flags = $admin_flag";
+                WHERE group_id = ? AND user_id = ? AND forum_flags = ?';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::FORUM_ADMIN_FLAG);
+
+        return count($rows) > 0;
     }
 
     public function addUserAsNewsEditor($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $news_flag  = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
+        $sql = 'UPDATE user_group
+                SET news_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET news_flags = $news_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::NEWS_WRITER_FLAG, $project_id, $user_id);
     }
 
     public function removeUserFromNewsEditor($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-
-        $sql = "UPDATE user_group
+        $sql = 'UPDATE user_group
                 SET news_flags = 0
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        return $this->update($sql);
+        $this->getDB()->run($sql, $project_id, $user_id);
     }
 
     public function isUserPartOfNewsEditors($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $news_flag  = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
-
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM user_group
-                WHERE group_id = $project_id AND user_id = $user_id AND news_flags = $news_flag";
+                WHERE group_id = ? AND user_id = ? AND news_flags = ?';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::NEWS_WRITER_FLAG);
+
+        return count($rows) > 0;
     }
 
     public function addUserAsNewsAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $news_flag = $this->da->escapeInt(self::NEWS_ADMIN_FLAG);
+        $sql = 'UPDATE user_group
+                SET news_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET news_flags = $news_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::NEWS_ADMIN_FLAG, $project_id, $user_id);
     }
 
     public function removeUserFromNewsAdmin($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $news_flag  = $this->da->escapeInt(self::NEWS_WRITER_FLAG);
+        $sql = 'UPDATE user_group
+                SET news_flags = ?
+                WHERE group_id = ?
+                  AND user_id = ?';
 
-        $sql = "UPDATE user_group
-                SET news_flags = $news_flag
-                WHERE group_id = $project_id
-                  AND user_id = $user_id";
-
-        return $this->update($sql);
+        $this->getDB()->run($sql, self::NEWS_WRITER_FLAG, $project_id, $user_id);
     }
 
     public function isUserPartOfNewsAdmins($project_id, $user_id)
     {
-        $project_id = $this->da->escapeInt($project_id);
-        $user_id    = $this->da->escapeInt($user_id);
-        $news_flag  = $this->da->escapeInt(self::NEWS_ADMIN_FLAG);
-
-
-        $sql = "SELECT NULL
+        $sql = 'SELECT NULL
                 FROM user_group
-                WHERE group_id = $project_id AND user_id = $user_id AND news_flags = $news_flag";
+                WHERE group_id = ? AND user_id = ? AND news_flags = ?';
 
-        return count($this->retrieve($sql)) > 0;
+        $rows = $this->getDB()->run($sql, $project_id, $user_id, self::NEWS_ADMIN_FLAG);
+
+        return count($rows) > 0;
+    }
+
+    public function wrapAtomicOperationsOnUserProjectPermissions(callable $atomic_operations)
+    {
+        $does_transaction_needs_to_be_started = $this->getDB()->inTransaction() === false;
+        if ($does_transaction_needs_to_be_started) {
+            $this->getDB()->beginTransaction();
+        }
+        try {
+            $atomic_operations($this);
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->commit();
+            }
+        } catch (\Exception $e) {
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->rollBack();
+            }
+            throw $e;
+        }
     }
 }

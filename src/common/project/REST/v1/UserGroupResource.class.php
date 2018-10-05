@@ -24,6 +24,7 @@ use PFUser;
 use ProjectManager;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsUGroupMemberChecker;
 use Tuleap\Project\REST\UserGroupPOSTRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -224,10 +225,14 @@ class UserGroupResource extends AuthenticatedResource {
      * <br><br>
      * <p>Concerning the group <b>project members</b>, please note:</p>
      * <ul>
-     * <li>* Suspended users will be removed from the group if they are not provided</li>
-     * <li>* Suspended users will not be added to the group, even if they are provided</li>
-     * <li>* Project admins will not be removed from the group, even if they are provided</li>
+     * <li>Suspended users will be removed from the group if they are not provided</li>
+     * <li>Suspended users will not be added to the group, even if they are provided</li>
+     * <li>Project admins will not be removed from the group, even if they are provided</li>
      * </ul>
+     *
+     * <p>Concerning the group <b>project administrators</b>, please note that the users will be added
+     * if needed to the project members group.
+     * </p>
      *
      * @url PUT {id}/users
      *
@@ -254,14 +259,22 @@ class UserGroupResource extends AuthenticatedResource {
 
         try {
             $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references);
-        } catch (Exception $exception) {
-            throw new RestException(500, "An error occured while setting members in ugroup");
+        } catch (CannotRemoveLastProjectAdministratorException $exception) {
+            throw new RestException(400, 'The last project administrator cannot be removed');
+        } catch (\Exception $ex) {
+            throw $ex;
         }
     }
 
-    private function checkUgroupValidity(ProjectUGroup $user_group) {
-        if (! $user_group->isStatic() && $user_group->getId() != ProjectUGroup::PROJECT_MEMBERS) {
-            throw new RestException(400, "Only project members can be taken into account for the dynamic user groups");
+    private function checkUgroupValidity(ProjectUGroup $user_group)
+    {
+        if (! $user_group->isStatic() &&
+            (int) $user_group->getId() !== ProjectUGroup::PROJECT_MEMBERS &&
+            (int) $user_group->getId() !== ProjectUGroup::PROJECT_ADMIN) {
+            throw new RestException(
+                400,
+                'Only project members or administrators can be taken into account for the dynamic user groups'
+            );
         }
 
         if ($user_group->getSourceGroup() !== null) {

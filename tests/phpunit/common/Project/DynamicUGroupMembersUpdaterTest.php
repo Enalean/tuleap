@@ -40,14 +40,24 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
      * @var \Mockery\MockInterface
      */
     private $event_manager;
+    /**
+     * @var \Mockery\Matcher\Closure
+     */
+    private $mockery_matcher_callback_wrapped_operations;
 
     protected function setUp()
     {
-        $this->dao            = \Mockery::mock(UserPermissionsDao::class);
-        $globals              = array_merge([], $GLOBALS);
-        $this->ugroup_binding = \Mockery::mock(\UGroupBinding::class);
-        $GLOBALS              = $globals;
-        $this->event_manager  = \Mockery::mock(\EventManager::class);
+        $this->dao                                         = \Mockery::mock(UserPermissionsDao::class);
+        $globals                                           = array_merge([], $GLOBALS);
+        $this->ugroup_binding                              = \Mockery::mock(\UGroupBinding::class);
+        $GLOBALS                                           = $globals;
+        $this->event_manager                               = \Mockery::mock(\EventManager::class);
+        $this->mockery_matcher_callback_wrapped_operations = \Mockery::on(
+            function (callable $operations) {
+                $operations($this->dao);
+                return true;
+            }
+        );
     }
 
     /**
@@ -64,9 +74,9 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
 
-        $this->dao->shouldReceive('startTransaction')->once();
+        $this->dao->shouldReceive('wrapAtomicOperationsOnUserProjectPermissions')
+            ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(false);
-        $this->dao->shouldReceive('commit')->once();
 
         $updater->removeUser($project, $admin_ugroup, $user);
     }
@@ -82,10 +92,10 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
 
-        $this->dao->shouldReceive('startTransaction')->once();
+        $this->dao->shouldReceive('wrapAtomicOperationsOnUserProjectPermissions')
+            ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(true);
         $this->dao->shouldReceive('removeUserFromProjectAdmin')->once();
-        $this->dao->shouldReceive('commit')->once();
         $this->event_manager->shouldReceive('processEvent')->once();
 
         $updater->removeUser($project, $admin_ugroup, $user);

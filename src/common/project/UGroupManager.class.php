@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use Tuleap\Project\UserPermissionsDao;
 use Tuleap\User\UserGroup\NameTranslator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
@@ -41,11 +43,21 @@ class UGroupManager {
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var DynamicUGroupMembersUpdater
+     */
+    private $dynamic_ugroup_members_updater;
 
-    public function __construct(UGroupDao $dao = null, EventManager $event_manager = null, UGroupUserDao $ugroup_user_dao = null) {
-        $this->dao             = $dao;
-        $this->event_manager   = $event_manager;
-        $this->ugroup_user_dao = $ugroup_user_dao;
+    public function __construct(
+        UGroupDao $dao = null,
+        EventManager $event_manager = null,
+        UGroupUserDao $ugroup_user_dao = null,
+        DynamicUGroupMembersUpdater $dynamic_ugroup_members_updater = null
+    ) {
+        $this->dao                            = $dao;
+        $this->event_manager                  = $event_manager;
+        $this->ugroup_user_dao                = $ugroup_user_dao;
+        $this->dynamic_ugroup_members_updater = $dynamic_ugroup_members_updater;
     }
 
     /**
@@ -87,6 +99,21 @@ class UGroupManager {
         if ($row) {
             return $this->instanciateGroupForProject($project, $row);
         }
+    }
+
+    /**
+     * @return DynamicUGroupMembersUpdater
+     */
+    private function getDynamicUGroupMembersUpdater()
+    {
+        if ($this->dynamic_ugroup_members_updater === null) {
+            $this->dynamic_ugroup_members_updater = new DynamicUGroupMembersUpdater(
+                new UserPermissionsDao(),
+                new UGroupBinding($this->getUGroupUserDao(), $this),
+                $this->getEventManager()
+            );
+        }
+        return $this->dynamic_ugroup_members_updater;
     }
 
     public function instanciateGroupForProject(Project $project, array $row) {
@@ -404,19 +431,23 @@ class UGroupManager {
         return ugroup_add_user_to_ugroup($project_id, $ugroup_id, $user_id);
     }
 
-    public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references) {
+    /**
+     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException
+     */
+    public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references)
+    {
         $this->getDao()->startTransaction();
 
         $current_members   = $this->getUgroupMembers($user_group);
         $members_to_remove = $this->getUsersToRemove($current_members, $users_from_references);
         $members_to_add    = $this->getUsersToAdd($current_members, $users_from_references);
 
-        foreach ($members_to_remove as $member_to_remove) {
-            $this->removeUserFromUserGroup($user_group, $member_to_remove);
-        }
-
         foreach ($members_to_add as $member_to_add) {
             $this->addUserToUserGroup($user_group, $member_to_add);
+        }
+
+        foreach ($members_to_remove as $member_to_remove) {
+            $this->removeUserFromUserGroup($user_group, $member_to_remove);
         }
 
         $this->getDao()->commit();
@@ -445,21 +476,35 @@ class UGroupManager {
 
     private function addUserToUserGroup(ProjectUGroup $user_group, PFUser $user)
     {
-        if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            $send_notifications = true;
-            $check_user_status  = true;
-            return account_add_user_obj_to_group($user_group->getProjectId(), $user, $check_user_status, $send_notifications);
+        switch ((int) $user_group->getId()) {
+            case ProjectUGroup::PROJECT_MEMBERS:
+                $send_notifications = true;
+                $check_user_status  = true;
+                account_add_user_obj_to_group($user_group->getProjectId(), $user, $check_user_status, $send_notifications);
+                break;
+            case ProjectUGroup::PROJECT_ADMIN:
+                $this->getDynamicUGroupMembersUpdater()->addUser($user_group->getProject(), $user_group, $user);
+                break;
+            default:
+                $user_group->addUser($user);
         }
-
-        return $user_group->addUser($user);
     }
 
-    private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user) {
-        if ($user_group->getId() == ProjectUGroup::PROJECT_MEMBERS) {
-            return $this->getUserRemover()->removeUserFromProject($user_group->getProjectId(), $user->getId());
+    /**
+     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException
+     */
+    private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user)
+    {
+        switch ((int) $user_group->getId()) {
+            case ProjectUGroup::PROJECT_MEMBERS:
+                $this->getUserRemover()->removeUserFromProject($user_group->getProjectId(), $user->getId());
+                break;
+            case ProjectUGroup::PROJECT_ADMIN:
+                $this->getDynamicUGroupMembersUpdater()->removeUser($user_group->getProject(), $user_group, $user);
+                break;
+            default:
+                $user_group->removeUser($user);
         }
-
-        return $user_group->removeUser($user);
     }
 
     /**

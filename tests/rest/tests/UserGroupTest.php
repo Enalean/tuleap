@@ -278,20 +278,36 @@ class UserGroupTest extends RestBase {
 
     /**
      * @depends testPutUsersInProjectMembersAddsMembers
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function testPutUsersInProjectAdmins() {
-        $put_resource = json_encode(array(
-            array('id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME])
-        ));
-
+    public function testPutUsersInProjectAdmins()
+    {
+        $put_resource = json_encode([
+            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
+            ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]],
+        ]);
         $response = $this->getResponse($this->client->put(
             'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
             null,
             $put_resource
         ));
+        $this->assertEquals($response->getStatusCode(), 200);
 
-        $this->assertEquals($response->getStatusCode(), 400);
+        $response_get_admins = $this->getResponse($this->client->get(
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users'
+        ));
+        $admins_after_update = $response_get_admins->json();
+        $this->assertCount(2, $admins_after_update);
+        $this->assertEquals($admins_after_update[0]['id'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+        $this->assertEquals($admins_after_update[1]['id'], $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME]);
+
+        $response = $this->getResponse($this->client->put(
+            'user_groups/'.$this->project_private_member_id.'_'.REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+            null,
+            json_encode([
+                ['id' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]],
+            ])
+        ));
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 
     /**
