@@ -35,6 +35,10 @@ class CommitPresenter
     public $description;
     public $has_description;
     public $number_of_parents;
+    /**
+     * @var bool
+     */
+    public $is_diff_between_two_commits;
     /** @var Commit */
     private $commit;
     /** @var int */
@@ -48,10 +52,11 @@ class CommitPresenter
 
     public function __construct(Commit $commit, TreeDiff $tree_diff)
     {
-        $this->commit            = $commit;
-        $this->description       = $this->commit->getDescription();
-        $this->has_description   = ! empty($this->description);
-        $this->number_of_parents = count($commit->getParents());
+        $this->commit                      = $commit;
+        $this->description                 = $this->commit->getDescription();
+        $this->has_description             = ! empty($this->description);
+        $this->number_of_parents           = count($commit->getParents());
+        $this->is_diff_between_two_commits = $this->isDiffBetweenTwoCommits();
 
         $this->stats_added   = 0;
         $this->stats_removed = 0;
@@ -114,5 +119,17 @@ class CommitPresenter
                     'f'  => $diff_line->getToFile()
                 ]
             );
+    }
+
+    /**
+     * @return bool
+     */
+    private function isDiffBetweenTwoCommits()
+    {
+        if (! isset($_GET['a']) && $_GET['a'] !== "commitdiff") {
+            return false;
+        }
+
+        return isset($_GET['hp']);
     }
 }
