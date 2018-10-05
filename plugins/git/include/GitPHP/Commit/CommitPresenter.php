@@ -105,6 +105,18 @@ class CommitPresenter
             );
     }
 
+    public function getCommitDiffSideBySideLink()
+    {
+        return '?' .
+            http_build_query(
+                [
+                    'a' => 'commitdiff',
+                    'h' => $this->commit->getHash(),
+                    'o' => 'side-by-side'
+                ]
+            );
+    }
+
     public function getCommitListLink()
     {
         return '?' . http_build_query(['a' => 'commit', 'h' => $this->commit->getHash()]);

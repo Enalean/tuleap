@@ -29,6 +29,7 @@
             <h2 class="tlp-pane-title">
                 <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
             </h2>
+
             {if ! $commit_presenter->is_diff_between_two_commits}
                 <div class="git-repository-commit-diff-actions">
                     <div class="tlp-button-bar">
@@ -40,24 +41,24 @@
                             </a>
                         </div>
                         <div class="tlp-button-bar-item">
-                            <a href="{$commit_presenter->getCommitDiffSideBySideLink()}"
-                               class="tlp-button-primary tlp-button-outline tlp-button-small"
-                            >
-                                <i class="fa fa-files-o tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
-                            </a>
-                        </div>
-                        <div class="tlp-button-bar-item">
                             <input type="radio" class="tlp-button-bar-checkbox" checked>
                             <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                                <i class="fa fa-file-o"></i> {t domain="gitphp"}Inline diff{/t}
+                                <i class="fa fa-files-o tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
                             </label>
+                        </div>
+                        <div class="tlp-button-bar-item">
+                            <a href="{$commit_presenter->getCommitDiffLink()}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small"
+                            >
+                                <i class="fa fa-file-o tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
+                            </a>
                         </div>
                     </div>
                 </div>
             {/if}
             {foreach from=$treediff item=filediff}
                 <div class="git-repository-commit-diff-file-header">
-                    <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element git-repository-commit-file-status"
+                    <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element"
                     >{$filediff->GetStatus()|escape}</span>
                     <a href="{$commit_presenter->getDiffLink($filediff)}"
                        class="git-repository-commit-diff-file-header-element"
@@ -74,7 +75,7 @@
                         {/if}
                     </span>
                 </div>
-                {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
+                {include file='tuleap/file-diff-side-by-side.tpl' diffsplit=$filediff->GetDiffSplit()}
             {/foreach}
         </section>
     </div>
