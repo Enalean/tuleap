@@ -21,6 +21,8 @@
 
 namespace Tuleap\Widget\ProjectMembers;
 
+use ForgeConfig;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class ProjectMembers extends Widget
@@ -66,6 +68,15 @@ class ProjectMembers extends Widget
         return $renderer->renderToString(
             'project-members',
             new ProjectMembersPresenter($project, $administrators)
+        );
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets');
+
+        return array(
+            array('file' => $include_assets->getFileURL('widget-project-members.js'))
         );
     }
 }

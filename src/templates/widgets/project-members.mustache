@@ -10,12 +10,12 @@
     </section>
 </div>
 <div class="tlp-pane-container dashboard-widget-container widget-project-members-administrators">
-    <div class="tlp-pane-header">
-        <h2 class="tlp-pane-subtitle">{{# gettext }}Administrators{{/ gettext }}</h2>
+    <div class="tlp-pane-header dashboard-widget-header">
+        <h2 class="tlp-pane-subtitle widget-project-members-administrators-title">{{# gettext }}Administrators{{/ gettext }}</h2>
     </div>
     <section class="tlp-pane-section-for-cards">
         {{# administrators }}
-            <a class="tlp-card tlp-card-selectable" href="/users/{{ user_name }}">
+            <a class="tlp-card tlp-card-selectable widget-project-members-administrators-card" href="/users/{{ user_name }}">
                 <div class="tlp-avatar widget-project-members-avatar">
                     {{# has_avatar }}
                         <img src="/users/{{ user_name }}/avatar.png">

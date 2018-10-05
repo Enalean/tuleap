@@ -52,14 +52,15 @@
 .dashboard-widget-container.widget-project-members-administrators {
     flex: 5 1 auto;
     width: auto;
+}
 
-    .tlp-pane-subtitle {
-        margin: 0;
-    }
+.widget-project-members-administrators-title {
+    margin: 0;
+    line-height: 22px;
+}
 
-    .tlp-card {
-        padding: $tlp-half-spacing $tlp-spacing;
-    }
+.widget-project-members-administrators-card {
+    padding: $tlp-half-spacing $tlp-spacing;
 }
 
 .widget-project-members-avatar {
