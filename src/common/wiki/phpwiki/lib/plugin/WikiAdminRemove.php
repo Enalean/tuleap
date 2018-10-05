@@ -132,7 +132,7 @@ extends WikiPlugin_WikiAdminSelect
         $args = $this->getArgs($argstr, $request);
         if (!is_numeric($args['min_age']))
             $args['min_age'] = -1;
-        $this->_args =& $args;
+        $this->_args = $args;
         /*if (!empty($args['exclude']))
             $exclude = explodePageList($args['exclude']);
         else

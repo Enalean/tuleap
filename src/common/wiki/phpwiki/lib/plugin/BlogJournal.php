@@ -42,7 +42,7 @@ extends WikiPlugin_WikiBlog
 
     function run($dbi, $argstr, &$request, $basepage) {
         if (is_array($argstr)) { // can do with array also.
-            $args =& $argstr;
+            $args = $argstr;
             if (!isset($args['order'])) $args['order'] = 'reverse';
         } else {
             $args = $this->getArgs($argstr, $request);

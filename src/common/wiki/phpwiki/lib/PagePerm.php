@@ -372,8 +372,8 @@ class PagePermission {
     function isMember($user, $group) {
         global $request;
         if ($group === ACL_EVERY) return true;
-        if (!isset($this->_group)) $member =& $request->getGroup();
-        else $member =& $this->_group;
+        if (!isset($this->_group)) $member = $request->getGroup();
+        else $member = $this->_group;
         //$user = & $request->_user;
         if ($group === ACL_ADMIN)   // WIKI_ADMIN or member of _("Administrators")
             return $user->isAdmin() or 
@@ -545,7 +545,7 @@ class PagePermission {
     function asEditableTable($type) {
         global $WikiTheme;
         if (!isset($this->_group)) { 
-            $this->_group =& $GLOBALS['request']->getGroup();
+            $this->_group = $GLOBALS['request']->getGroup();
         }
         $table = HTML::table();
         $table->pushContent(HTML::tr(
@@ -682,7 +682,7 @@ class PagePermission {
     function asRwxString($owner,$group=false) {
         global $request;
         // simplify object => rwxrw---x+ string as in cygwin (+ denotes additional ACLs)
-        $perm =& $this->perm;
+        $perm = $this->perm;
         // get effective user and group
         $s = '---------+';
         if (isset($perm['view'][$owner]) or 

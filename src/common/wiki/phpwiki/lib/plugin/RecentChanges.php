@@ -426,7 +426,8 @@ extends _RecentChanges_HtmlFormatter
         $linkurl = new RawXml(str_replace('<img ', '<img style="height:2ex" ', asXML($linkurl)));
         return $linkurl;
     }
-    function pageLink ($rev) {
+    function pageLink ($rev, $link_text = false)
+    {
         $linkurl = parent::pageLink($rev);
         $linkurl->setAttr('target', '_content');
         return $linkurl;
@@ -854,7 +855,7 @@ extends WikiPlugin
     // box is used to display a fixed-width, narrow version with common header.
     // just a numbered list of limit pagenames, without date.
     function box($args = false, $request = false, $basepage = false) {
-        if (!$request) $request =& $GLOBALS['request'];
+        if (!$request) $request = $GLOBALS['request'];
         if (!isset($args['limit'])) $args['limit'] = 15;
         $args['format'] = 'box';
         $args['show_minor'] = false;

@@ -1937,7 +1937,7 @@ class WikiDB_Array_PageIterator
         reset($this->_pages);
     }
     function next() {
-        $c =& current($this->_pages);
+        $c = current($this->_pages);
         next($this->_pages);
         return $c !== false ? $this->_dbi->getPage($c) : false;
     }
@@ -1966,7 +1966,7 @@ class WikiDB_Array_generic_iter
             reset($this->_array);
     }
     function next() {
-        $c =& current($this->_array);
+        $c = current($this->_array);
         next($this->_array);
         return $c !== false ? $c : false;
     }
@@ -2088,7 +2088,7 @@ class WikiDB_cache
                 // If we have retrieved all data, we may as well set the cache for 
                 // $need_content = false
                 if ($need_content){
-                    $cache[$pagename][$version]['0'] =& $cache[$pagename][$version]['1'];
+                    $cache[$pagename][$version]['0'] = $cache[$pagename][$version]['1'];
                 }
             }
             $vdata = $cache[$pagename][$version][$nc];
@@ -2097,7 +2097,7 @@ class WikiDB_cache
             $readdata = true;
 	}
         if ($readdata && $vdata && !empty($vdata['%pagedata'])) {
-            $this->_pagedata_cache[$pagename] =& $vdata['%pagedata'];
+            $this->_pagedata_cache[$pagename] = $vdata['%pagedata'];
         }
         return $vdata;
     }

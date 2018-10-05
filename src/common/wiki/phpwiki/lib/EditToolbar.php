@@ -124,7 +124,7 @@ function undo_save() {
             $WikiTheme->addMoreHeaders(JavaScript('',array('src' => $WikiTheme->_findData("toolbar.js"))));
         }
 
-        $this->tokens['EDIT_TOOLBAR'] =& $this->_generate();
+        $this->tokens['EDIT_TOOLBAR'] = $this->_generate();
     }
 
     function getTokens () {
@@ -266,7 +266,7 @@ function undo_save() {
         global $WikiTheme;
 
         require_once('lib/TextSearchQuery.php');
-        $dbi =& $GLOBALS['request']->_dbi;
+        $dbi = $GLOBALS['request']->_dbi;
         // KEYWORDS formerly known as $KeywordLinkRegexp
         $pages = $dbi->titleSearch(new TextSearchQuery(KEYWORDS, true));
         if ($pages) {
@@ -337,7 +337,7 @@ function undo_save() {
 
     function pagesPulldown($query, $case_exact=false, $regex='auto') {
         require_once('lib/TextSearchQuery.php');
-        $dbi =& $GLOBALS['request']->_dbi;
+        $dbi = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));
         if ($page_iter->count()) {
             global $WikiTheme;
@@ -361,7 +361,7 @@ function undo_save() {
     //TODO: make the result cached
     function templatePulldown($query, $case_exact=false, $regex='auto') {
         require_once('lib/TextSearchQuery.php');
-        $dbi =& $GLOBALS['request']->_dbi;
+        $dbi = $GLOBALS['request']->_dbi;
         $page_iter = $dbi->titleSearch(new TextSearchQuery($query, $case_exact, $regex));
         $count = 0;
         if ($page_iter->count()) {

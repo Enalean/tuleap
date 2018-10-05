@@ -37,11 +37,10 @@ function addBuddy($user, $buddy, $dbi)
 
 function getBuddies($fromUser, $dbi, $thePage = ""){
     $START_DELIM = $thePage . _("Buddies:");
-    $DELIM = ",";
-    
-    $buddies_array = getPageTextData($fromUser, $dbi, $START_DELIM, $DELIM);
+
+    $buddies_array = getPageTextData($fromUser, $dbi, $START_DELIM);
     if (count($buddies_array) == 0 and $thePage !== "") {
-        $buddies_array = getPageTextData($fromUser, $dbi, _("Buddies:"), $DELIM);
+        $buddies_array = getPageTextData($fromUser, $dbi, _("Buddies:"));
     }
     return $buddies_array;
 }

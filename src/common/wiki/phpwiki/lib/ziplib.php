@@ -526,8 +526,7 @@ define('MIME_TOKEN_REGEXP', "[-!#-'*+.0-9A-Z^-~]+");
 function MimeContentTypeHeader ($type, $subtype, $params)
 {
     $header = "Content-Type: $type/$subtype";
-    reset($params);
-    while (list($key, $val) = each($params)) {
+    foreach ($params as $key => $val) {
         //FIXME:  what about non-ascii printables in $val?
         if (!preg_match('/^' . MIME_TOKEN_REGEXP . '$/', $val))
             $val = '"' . addslashes($val) . '"';
@@ -724,13 +723,12 @@ function ParseMimeMultipart($data, $boundary)
 function GenerateFootnotesFromRefs($params)
 {
     $footnotes = array();
-    reset($params);
-    while (list($p, $reference) = each($params)) {
+    foreach ($params as $p => $reference) {
             if (preg_match('/^ref([1-9][0-9]*)$/', $p, $m))
                 $footnotes[$m[1]] = sprintf(_("[%d] See [%s]"),
                                             $m[1], rawurldecode($reference));
     }
-    
+
     if (sizeof($footnotes) > 0) {
         ksort($footnotes);
         return "-----\n"

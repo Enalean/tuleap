@@ -32,7 +32,7 @@ function check_php_version ($a = '0', $b = '0', $c = '0') {
   */
 foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
     if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k]))
-        $GLOBALS['HTTP_'.$k.'_VARS'] =& $GLOBALS['_'.$k];
+        $GLOBALS['HTTP_'.$k.'_VARS'] = $GLOBALS['_'.$k];
 }
 unset($k);
 

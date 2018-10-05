@@ -163,7 +163,7 @@ class WikiDB_backend
      */
     function delete_page($pagename) {
         $mtime = time();
-        $user =& $GLOBALS['request']->_user;
+        $user = $GLOBALS['request']->_user;
         $vdata = array('author' => $user->getId(),
                        'author_id' => $user->getAuthenticatedId(),
                        'mtime' => $mtime);
@@ -604,7 +604,7 @@ class WikiDB_backend_search
     function __construct($search, &$dbh) {
         $this->_dbh = $dbh;
         $this->_case_exact =  $search->_case_exact;
-        $this->_stoplist   =& $search->_stoplist;
+        $this->_stoplist   = $search->_stoplist;
         $this->_stoplisted = array();
     }
     function _quote($word) {

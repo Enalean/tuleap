@@ -108,7 +108,7 @@ extends WikiPlugin
     }
 
     function box($args=false, $request=false, $basepage=false) {
-        if (!$request) $request =& $GLOBALS['request'];
+        if (!$request) $request = $GLOBALS['request'];
         extract($args);
         if (empty($title)) $title = _("RssFeed");
         if (empty($url))   $url = 'http://phpwiki.sourceforge.net/phpwiki/RecentChanges?format=rss';

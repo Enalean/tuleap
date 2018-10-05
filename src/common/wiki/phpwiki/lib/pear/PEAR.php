@@ -619,21 +619,7 @@ class PEAR
     */
     function loadExtension($ext)
     {
-        if (!extension_loaded($ext)) {
-            if (OS_WINDOWS) {
-                $suffix = '.dll';
-            } elseif (PHP_OS == 'HP-UX') {
-                $suffix = '.sl';
-            } elseif (PHP_OS == 'AIX') {
-                $suffix = '.a';
-            } elseif (PHP_OS == 'OSX') {
-                $suffix = '.bundle';
-            } else {
-                $suffix = '.so';
-            }
-            return @dl('php_'.$ext.$suffix) || @dl($ext.$suffix);
-        }
-        return true;
+        return extension_loaded($ext);
     }
 
     // }}}
@@ -647,8 +633,7 @@ function _PEAR_call_destructors()
     if (is_array($_PEAR_destructor_object_list) &&
         sizeof($_PEAR_destructor_object_list))
     {
-        reset($_PEAR_destructor_object_list);
-        while (list($k, $objref) = each($_PEAR_destructor_object_list)) {
+        foreach ($_PEAR_destructor_object_list as $objref) {
             $classname = get_class($objref);
             while ($classname) {
                 $destructor = "_$classname";

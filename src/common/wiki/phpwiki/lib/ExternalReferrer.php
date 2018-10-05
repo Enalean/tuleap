@@ -82,7 +82,7 @@ class SearchEngines {
             $this->searchEngines[SERVER_URL] = array("engine" => "DEBUG", "query1" => "s=", "query2" => "", "url" => SCRIPT_NAME);
         }
         $ref = $url;
-        while (list($key,$var) = @each($this->searchEngines)) {
+        foreach ($this->searchEngines as $key => $var) {
             if (stristr($ref, $key)) {
                 unset($ref);
                 $ref["engine"] = $var["engine"];

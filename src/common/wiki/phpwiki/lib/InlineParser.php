@@ -781,7 +781,7 @@ class InlineTransformer
                 // No start pattern found before end pattern.
                 // We're all done!
                 if (isset($markup) and is_object($markup) and isa($markup,'Markup_plugin')) {
-                    $current =& $output->_content[count($output->_content)-1];
+                    $current = $output->_content[count($output->_content)-1];
                     $current->setTightness(true,true);
                 }
                 $output->pushContent($match->prematch);

@@ -88,7 +88,7 @@ extends WikiPluginCached
         global $request;
         if (! defined('USECACHE') or !USECACHE)
             return _("no cache used");
-        $dbi =& $this->_dbi;
+        $dbi = $this->_dbi;
         $cache = $dbi->_cache;
         $s  = _("cached pagedata:") . " " . count($cache->_pagedata_cache);
         $s .= ", " . _("cached versiondata:");
@@ -138,8 +138,7 @@ extends WikiPluginCached
     // number of anonymous edits?
     //   easy. related to the view/edit rate in accessstats.
     function userstats() {
-        global $request;
-        $dbi =& $this->_dbi;
+        $dbi = $this->_dbi;
         $h = 0;
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
@@ -201,8 +200,7 @@ extends WikiPluginCached
     //  %d pages less than 3 hits (<10%)    <10% percent of the leastpopular
     //  %d pages more than 100 hits (>90%)  >90% percent of the mostpopular
     function hitstats() {
-        global $request;
-        $dbi =& $this->_dbi;
+        $dbi = $this->_dbi;
         $hits = array();
         $page_iter = $dbi->getAllPages(true);
         while ($page = $page_iter->next()) {
@@ -285,7 +283,7 @@ extends WikiPluginCached
     function run($dbi, $argstr, &$request, $basepage) {
         // don't parse argstr for name=value pairs. instead we use just 'name'
         //$args = $this->getArgs($argstr, $request);
-        $this->_dbi =& $dbi;
+        $this->_dbi = $dbi;
         $args['seperator'] = ' ';
         $availableargs = // name => callback + 0 args
             array ('appname' => create_function('',"return 'PhpWiki';"),

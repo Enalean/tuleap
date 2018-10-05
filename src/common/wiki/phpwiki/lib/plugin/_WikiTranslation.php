@@ -400,7 +400,7 @@ class _PageList_Column_customlang extends _PageList_Column {
     function __construct($field, $from_lang, $plugin) {
         $this->_field = $field;
         $this->_from_lang = $from_lang;
-        $this->_plugin =& $plugin;
+        $this->_plugin = $plugin;
         $this->_what = $plugin->args['what'];
         $this->_noT = $plugin->args['noT'];
         $this->_nolinks = $plugin->args['nolinks'];

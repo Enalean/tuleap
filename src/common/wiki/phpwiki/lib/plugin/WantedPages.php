@@ -118,15 +118,15 @@ extends WikiPlugin
         }
         // reference obviously doesn't work, so force an update to add _wpagelist to parentobj
         if (isset($pagelist->_columns[1]) and $pagelist->_columns[1]->_field == 'wanted')
-            $pagelist->_columns[1]->parentobj =& $pagelist;
+            $pagelist->_columns[1]->parentobj = $pagelist;
         return $pagelist;
     }
 };
 
 // which links to the missing page
 class _PageList_Column_WantedPages_wanted extends _PageList_Column {
-    function __construct (&$params) {
-        $this->parentobj =& $params[3];
+    function __construct ($params) {
+        $this->parentobj = $params[3];
         parent::__construct($params[0],$params[1],$params[2]);
     }
     function _getValue(&$page, $revision_handle) {

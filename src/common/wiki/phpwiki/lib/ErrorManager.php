@@ -313,7 +313,7 @@ class ErrorManager
         if (empty($errors)) return '';
         $flushed = HTML();
         for ($i=0; $i<count($errors); $i++) {
-            $error =& $errors[$i];
+            $error = $errors[$i];
             if (!is_object($error)) {
                 continue;
             }

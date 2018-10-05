@@ -62,7 +62,7 @@ extends WikiPlugin_RecentChanges
     // box is used to display a fixed-width, narrow version with common header.
     // just a numbered list of limit pagenames, without date.
     function box($args = false, $request = false, $basepage = false) {
-        if (!$request) $request =& $GLOBALS['request'];
+        if (!$request) $request = $GLOBALS['request'];
         if (!isset($args['limit'])) $args['limit'] = 15;
         $args['format'] = 'box';
         $args['show_minor'] = false;

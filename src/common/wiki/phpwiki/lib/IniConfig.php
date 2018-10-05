@@ -554,7 +554,6 @@ function fixup_dynamic_configs($file) {
     }
 
     // language dependent updates:
-    $WikiNameRegexp = pcre_fix_posix_classes($WikiNameRegexp);
     //if ($KeywordLinkRegexp) $KeywordLinkRegexp = pcre_fix_posix_classes($KeywordLinkRegexp);
     if (!defined('CATEGORY_GROUP_PAGE'))
         define('CATEGORY_GROUP_PAGE',_("CategoryGroup"));

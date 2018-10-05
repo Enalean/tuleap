@@ -554,7 +554,7 @@ class Request_SessionVars {
     }
     
     function delete($key) {
-        if (!function_usable('ini_get') or ini_get('register_globals'))
+        if (!function_usable('ini_get'))
             unset($GLOBALS[$key]);
         if (DEBUG) trigger_error("delete session $key", E_USER_WARNING);
         unset($_SESSION[$key]);
@@ -575,7 +575,7 @@ class Request_UploadedFile {
         if (!isset($_FILES[$postname]))
             return false;
         
-        $fileinfo =& $_FILES[$postname];
+        $fileinfo = $_FILES[$postname];
         if ($fileinfo['error']) {
             // See https://sourceforge.net/forum/message.php?msg_id=3093651
             $err = (int) $fileinfo['error'];

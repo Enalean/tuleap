@@ -211,7 +211,7 @@ function MakeWikiZip (&$request)
         $ErrorManager->pushErrorHandler(new WikiFunctionCb('_dump_error_handler'));
     }
 
-    $dbi =& $request->_dbi;
+    $dbi = $request->_dbi;
     $thispage = $request->getArg('pagename'); // for "Return to ..."
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
         $excludeList = explodePageList($exclude); 
@@ -288,7 +288,7 @@ function MakeWikiZipHtml (&$request)
     $request->_TemplatesProcessed = array();
     $zipname = "wikihtml.zip";
     $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $zipname);
-    $dbi =& $request->_dbi;
+    $dbi = $request->_dbi;
     $thispage = $request->getArg('pagename'); // for "Return to ..."
     if ($exclude = $request->getArg('exclude')) {   // exclude which pagenames
         $excludeList = explodePageList($exclude); 
@@ -442,7 +442,7 @@ function SavePage (&$request, &$pageinfo, $source, $filename)
     if ($pagename ==_("InterWikiMap"))
         $content = _tryinsertInterWikiMap($content);
 
-    $dbi =& $request->_dbi;
+    $dbi = $request->_dbi;
     $page = $dbi->getPage($pagename);
 
     // Try to merge if updated pgsrc contents are different. This
@@ -594,7 +594,7 @@ function RevertPage (&$request)
                  HTML::dd(_("missing required version argument")));
         return;
     }
-    $dbi =& $request->_dbi;
+    $dbi = $request->_dbi;
     $page = $dbi->getPage($pagename);
     $current = $page->getCurrentRevision();
     if ($current->getVersion() == 0) {
@@ -985,7 +985,7 @@ function SetupWiki (&$request)
     // "...pagename has edit conflicts - skipped  (Merge Edit ) (Restore Anyway)"
     //$request->setArg('overwrite', false);
     LoadAny($request, $pgsrc);
-    $dbi =& $request->_dbi;
+    $dbi = $request->_dbi;
 
     // Ensure that all mandatory pages are loaded
     $finder = new FileFinder;

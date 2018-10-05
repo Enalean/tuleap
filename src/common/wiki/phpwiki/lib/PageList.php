@@ -237,20 +237,20 @@ class _PageList_Column extends _PageList_Column_base {
  */
 class _PageList_Column_custom extends _PageList_Column {
     function __construct($params) {
-    	$this->_pagelist =& $params[3];
+    	$this->_pagelist = $params[3];
         parent::__construct($params[0], $params[1], $params[2]);
     }
 }
 
 class _PageList_Column_size extends _PageList_Column {
-    function format (&$pagelist, $page_handle, &$revision_handle) {
+    function format ($pagelist, $page_handle, &$revision_handle) {
         return HTML::td($this->_tdattr,
                         HTML::raw('&nbsp;'),
-                        $this->_getValue($pagelist, $page_handle, $revision_handle),
+                        $this->_getValue($page_handle, $revision_handle, $pagelist),
                         HTML::raw('&nbsp;'));
     }
     
-    function _getValue (&$pagelist, $page_handle, &$revision_handle) {
+    function _getValue ($page_handle, &$revision_handle, &$pagelist = []) {
         if (!$revision_handle or (!$revision_handle->_data['%content'] 
                                   or $revision_handle->_data['%content'] === true)) {
             $revision_handle = $page_handle->getCurrentRevision(true);
@@ -303,7 +303,7 @@ class _PageList_Column_checkbox extends _PageList_Column {
                                      ));
         parent::__construct($field, $heading, 'center');
     }
-    function _getValue ($pagelist, $page_handle, &$revision_handle) {
+    function _getValue ($page_handle, &$revision_handle, $pagelist = []) {
         $pagename = $page_handle->getName();
         $selected = !empty($pagelist->_selected[$pagename]);
         if (strstr($pagename,'[') or strstr($pagename,']')) {
@@ -323,7 +323,7 @@ class _PageList_Column_checkbox extends _PageList_Column {
     function format ($pagelist, $page_handle, &$revision_handle) {
         return HTML::td($this->_tdattr,
                         HTML::raw('&nbsp;'),
-                        $this->_getValue($pagelist, $page_handle, $revision_handle),
+                        $this->_getValue($page_handle, $revision_handle, $pagelist),
                         HTML::raw('&nbsp;'));
     }
     // don't sort this javascript button
@@ -425,7 +425,7 @@ class _PageList_Column_content extends _PageList_Column {
 class _PageList_Column_author extends _PageList_Column {
     function __construct ($field, $default_heading, $align = false) {
         parent::__construct($field, $default_heading, $align);
-        $this->dbi =& $GLOBALS['request']->getDbh();
+        $this->dbi = $GLOBALS['request']->getDbh();
     }
 
     function _getValue ($page_handle, &$revision_handle) {
@@ -702,7 +702,7 @@ class PageList {
 
     function maxLen() {
         global $request;
-        $dbi =& $request->getDbh();
+        $dbi = $request->getDbh();
         if (isa($dbi,'WikiDB_SQL')) {
             extract($dbi->_backend->_table_names);
             $res = $dbi->_backend->_dbh->getOne("SELECT max(length(pagename)) FROM $page_tbl");
@@ -993,9 +993,9 @@ class PageList {
         if (!empty($customPageListColumns)) {
             foreach ($customPageListColumns as $column => $params) {
                 $class_name = array_shift($params);
-                $params[3] =& $this;
+                $params[3] = $this;
                 $class = new $class_name($params);
-                $this->_types[$column] =& $class;
+                $this->_types[$column] = $class;
             }
         }
     }
@@ -1065,9 +1065,9 @@ class PageList {
      **/
     function addColumnObject($col) {
     	if (is_array($col)) {// custom column object
-    	    $params =& $col;
+    	    $params = $col;
             $class_name = array_shift($params);
-            $params[3] =& $this;
+            $params[3] = $this;
             $col = new $class_name($params);
         }
         $heading = $col->getHeading();
@@ -1337,7 +1337,7 @@ function flipAll(formObj) {
             // group those pages together with same $h
             $j = 0;
             for ($i=0; $i < count($this->_pages); $i++) {
-                $page =& $this->_pages[$i];
+                $page = $this->_pages[$i];
                 $h = substr($page->getName(), 0, 1);
                 if ($h != $cur_h and $i > $j) {
                     $this->_saveOptions(array('cols' => 0, 'azhead' => 0));
@@ -1469,8 +1469,8 @@ extends PageList {
         parent::__construct($columns, $exclude, $options);
     }
 
-    function addPageList ($array) {
-        while (list($pagename,$selected) = each($array)) {
+    function addPageList (&$array) {
+        foreach ($array as $pagename => $selected) {
             if ($selected) $this->addPageSelected((string)$pagename);
             $this->addPage((string)$pagename);
         }

@@ -157,7 +157,7 @@ class WikiViews extends Views {
         $wp = new WikiPage($_REQUEST['id']);
         $pagename = $wp->getPagename();
 
-        $eM =& EventManager::instance();
+        $eM = EventManager::instance();
         $referenced = false;
         $eM->processEvent('isWikiPageReferenced', array(
                           'referenced' => &$referenced,

@@ -165,7 +165,8 @@ extends _RecentChanges_HtmlFormatter
                                  'value' => $rev->getVersion()));
     }
 
-    function pageLink ($rev) {
+    function pageLink ($rev, $text_link=false)
+    {
         $text = fmt("Version %d", $rev->getVersion());
         return _RecentChanges_HtmlFormatter::pageLink($rev, $text);
     }

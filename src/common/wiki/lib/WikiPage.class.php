@@ -45,7 +45,7 @@ require_once('www/project/admin/permissions.php');
 class WikiPage {
  /* private int */   var $id;       /* wiki_page.id */
  /* private string*/ var $pagename; /* wiki_page.pagename */
- /* private int */   var $gid;      /* wiki_page.group_id */
+ /* private int */   static $gid;      /* wiki_page.group_id */
  /* private bool */  var $empty;    /* */
 
     /** @var WikiPageWrapper */
@@ -71,16 +71,16 @@ class WikiPage {
           }
           else {
             //Given number is group_id from wiki_page table
-            $this->gid      = (int) $id;
+            self::$gid      = (int) $id;
             $this->pagename = $pagename;
             $this->findPageId();
-            $this->wrapper  = new WikiPageWrapper($this->gid);
+            $this->wrapper  = new WikiPageWrapper(self::$gid);
           }
         }
         else {
           $this->id       = 0;
           $this->pagename = '';
-          $this->gid      = 0;
+          self::$gid      = 0;
           $this->wrapper  = null;
         }
 
@@ -90,7 +90,7 @@ class WikiPage {
     }
 
     private function setGid($project_id) {
-        $this->gid     = $project_id;
+        self::$gid     = $project_id;
         $this->wrapper = new WikiPageWrapper($project_id);
     }
 
@@ -199,7 +199,7 @@ class WikiPage {
 
     private function findPageId() {
         $res = db_query(' SELECT id FROM wiki_page'.
-                        ' WHERE group_id="'.db_ei($this->gid).'"'.
+                        ' WHERE group_id="'.db_ei(self::$gid).'"'.
                         ' AND pagename="'.db_es($this->pagename).'"');
         if(db_numrows($res) > 1) {
             exit_error($GLOBALS['Language']->getText('global','error'),
@@ -221,7 +221,7 @@ class WikiPage {
         }
         $row = db_fetch_array($res);
 
-        $this->gid =  $row['group_id'];
+        self::$gid =  $row['group_id'];
         $this->pagename =  $row['pagename'];
     }
 
@@ -240,7 +240,7 @@ class WikiPage {
         if($this->exist()) {
           $res = db_query(' SELECT wiki_page.id'
                           .' FROM wiki_page, wiki_nonempty'
-                          .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+                          .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                           .' AND wiki_page.id="'.db_ei($this->id).'"'
                           .' AND wiki_nonempty.id=wiki_page.id');
           if(db_numrows($res) == 1) {
@@ -267,7 +267,7 @@ class WikiPage {
             'isWikiPageReferenced', array(
                 'referenced' => &$referenced,
                 'wiki_page'  => $this->pagename,
-                'group_id'   => $this->gid
+                'group_id'   => self::$gid
             )
         );
 
@@ -281,7 +281,7 @@ class WikiPage {
             $eM->processEvent('userCanAccessWikiDocument', array(
                             'canAccess' => &$userCanAccess,
                             'wiki_page'  => $this->pagename,
-                            'group_id' => $this->gid
+                            'group_id' => self::$gid
                             ));
             if(!$userCanAccess) {
                 return false;
@@ -289,7 +289,7 @@ class WikiPage {
         } else {
             // Check if user is authorized.
             if($this->permissionExist()) {
-                if (!permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, $this->gid)) {
+                if (!permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, self::$gid)) {
                     return false;
                 }
             }
@@ -301,7 +301,7 @@ class WikiPage {
         global $feedback;
 
         list ($ret, $feedback) = permission_process_selection_form(
-            $this->gid,
+            self::$gid,
             Wiki_PermissionsManager::WIKI_PERMISSION_READ,
             $this->id,
             $groups
@@ -312,7 +312,7 @@ class WikiPage {
 
     public function resetPermissions() {
         return permission_clear_all(
-            $this->gid,
+            self::$gid,
             Wiki_PermissionsManager::WIKI_PERMISSION_READ,
             $this->id
         );
@@ -327,12 +327,12 @@ class WikiPage {
 
     public function log($user_id) {
       $sql = "INSERT INTO wiki_log(user_id,group_id,pagename,time) "
-            ."VALUES ('".db_ei($user_id)."','".db_ei($this->gid)."','".db_es($this->pagename)."','".db_ei(time())."')";
+            ."VALUES ('".db_ei($user_id)."','".db_ei(self::$gid)."','".db_es($this->pagename)."','".db_ei(time())."')";
       db_query($sql);
     }
 
     public function render($lite=false, $full_screen=false) {
-      $wpw = new WikiPageWrapper($this->gid);
+      $wpw = new WikiPageWrapper(self::$gid);
       $wpw->render($lite, $full_screen);
     }
 
@@ -354,7 +354,7 @@ class WikiPage {
      * @return int Group Identifier
      */
     public function getGid() {
-        return $this->gid;
+        return self::$gid;
     }
 
     /**
@@ -380,14 +380,14 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function &getAllAdminPages() {
+    public function getAllAdminPages() {
         $WikiPageAdminPages = self::getAdminPages();
 
         $allPages = array();
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+                        .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageAdminPages).'")');
         while($row = db_fetch_array($res)) {
@@ -401,14 +401,14 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function &getAllInternalPages() {
+    public function getAllInternalPages() {
         $WikiPageDefaultPages = self::getDefaultPages();
 
         $allPages = array();
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+                        .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename IN ("'.implode('","', $WikiPageDefaultPages).'")');
         while($row = db_fetch_array($res)) {
@@ -422,7 +422,7 @@ class WikiPage {
     /**
      * @return string[] List of pagename
      */
-    public function &getAllUserPages() {
+    public function getAllUserPages() {
         $WikiPageAdminPages = self::getAdminPages();
         $WikiPageDefaultPages = self::getDefaultPages();
 
@@ -430,7 +430,7 @@ class WikiPage {
 
         $res = db_query(' SELECT pagename'
                         .' FROM wiki_page, wiki_nonempty'
-                        .' WHERE wiki_page.group_id="'.db_ei($this->gid).'"'
+                        .' WHERE wiki_page.group_id="'.db_ei(self::$gid).'"'
                         .' AND wiki_nonempty.id=wiki_page.id'
                         .' AND wiki_page.pagename NOT IN ("'.implode('","', $WikiPageDefaultPages).'",
                                                           "'.implode('","', $WikiPageAdminPages).'")');
@@ -455,7 +455,7 @@ class WikiPage {
         $all_internal_pages = array_merge($this->getAllUserPages(), $this->wrapper->getProjectEmptyLinks());
 
         foreach ($all_internal_pages as $internal_page_name) {
-            $wiki_page = new WikiPage($this->gid, $internal_page_name);
+            $wiki_page = new WikiPage(self::$gid, $internal_page_name);
 
             if (! $wiki_page->isReferenced()) {
                 $indexable_pages[] = $wiki_page;
@@ -467,7 +467,7 @@ class WikiPage {
         $default_pages_used = array_merge($this->getAllInternalPages(), $this->getAdminPages());
 
         foreach ($default_pages_used as $default_page_name) {
-            $wiki_page = new WikiPage($this->gid, $default_page_name);
+            $wiki_page = new WikiPage(self::$gid, $default_page_name);
             $version   = $wiki_page->getCurrentVersion();
             if ($version > 1) {
                 $indexable_pages[] = $wiki_page;

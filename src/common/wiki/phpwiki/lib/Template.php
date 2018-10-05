@@ -11,10 +11,10 @@ class Template
     /**
      * name optionally of form "theme/template" to include parent templates in children
      */
-    function __construct ($name, &$request, $args = false) {
+    function __construct ($name, $request, $args = false) {
         global $WikiTheme;
 
-        $this->_request =& $request;
+        $this->_request = $request;
         $this->_basepage = $request->getArg('pagename');
 
         if (strstr($name, "/")) {

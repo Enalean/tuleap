@@ -165,9 +165,10 @@ class Wiki {
       // The language of the wiki is the language of all its wiki documents.
       if (!$this->language_id) {
           // We only support one language for all the wiki documents of a project.
-          $wei =& WikiEntry::getEntryIterator($this->gid);
+          $entry = new WikiEntry();
+          $wei   = $entry->getEntryIterator($this->gid);
           if ($wei->valid()) {
-              $we =& $wei->current(); // get first element  
+              $we = $wei->current(); // get first element
               $this->language_id = $we->getLanguage_id();
           }
       }

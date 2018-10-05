@@ -141,7 +141,7 @@ function displayPage(&$request, $template=false) {
     }
     
     // {{{ Codendi hook to insert stuff between navbar and header
-    $eM =& EventManager::instance();
+    $eM = EventManager::instance();
     
     $ref_html = '';
     $crossref_fact= new CrossReferenceFactory($pagename, ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);

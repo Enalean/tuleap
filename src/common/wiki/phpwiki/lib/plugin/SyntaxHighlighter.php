@@ -126,7 +126,7 @@ extends WikiPlugin
 
     function run($dbi, $argstr, &$request, $basepage) {
         extract($this->getArgs($argstr, $request));
-        $source =& $this->source;
+        $source = $this->source;
         if (empty($syntax)) {
             return $this->error(_("Syntax language not specified."));
         }

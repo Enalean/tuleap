@@ -636,7 +636,7 @@ extends _WikiUser
         if (!is_object($prefs)) {
             if (is_object($this->_prefs)) {
                 $updated = $this->_prefs->updatePrefs($prefs);
-                $prefs =& $this->_prefs;
+                $prefs = $this->_prefs;
             } else {
                 // update the prefs values from scratch. This could leed to unnecessary
                 // side-effects: duplicate emailVerified, ...
@@ -645,7 +645,7 @@ extends _WikiUser
             }
         } else {
             if (!isset($this->_prefs))
-                $this->_prefs =& $prefs;
+                $this->_prefs = $prefs;
             else
                 $updated = $this->_prefs->isChanged($prefs);
         }
@@ -910,7 +910,7 @@ extends _AnonUser
                 $local_params['dsn'] = $local_params['auth_dsn'];
                 $dbh = WikiDB::open($local_params);
             }       
-            $this->_auth_dbi =& $dbh->_backend->_dbh;    
+            $this->_auth_dbi = $dbh->_backend->_dbh;
         }
         return $this->_auth_dbi;
     }
@@ -1493,7 +1493,7 @@ extends _UserPreference
         if (empty($notify))
             $data = array();
         else 
-            $data =& $notify;
+            $data = $notify;
         // expand to existing pages only or store matches?
         // for now we store (glob-style) matches which is easier for the user
         $pages = $this->_page_split($value);
@@ -1790,7 +1790,7 @@ class UserPreferences
             else $newvalue = $pref->sanify($value);
 	    $pref->set($name, $newvalue);
         }
-        $this->_prefs[$name] =& $pref;
+        $this->_prefs[$name] = $pref;
         return true;
     }
     /**
@@ -1800,14 +1800,14 @@ class UserPreferences
         $count = 0;
         if ($init) $this->_init = $init;
         if (is_object($prefs)) {
-            $type = 'emailVerified'; $obj =& $this->_prefs['email'];
+            $type = 'emailVerified'; $obj = $this->_prefs['email'];
             $obj->_init = $init;
             if ($obj->get($type) !== $prefs->get($type)) {
                 if ($obj->set($type,$prefs->get($type)))
                     $count++;
             }
             foreach (array_keys($this->_prefs) as $type) {
-            	$obj =& $this->_prefs[$type];
+            	$obj = $this->_prefs[$type];
                 $obj->_init = $init;
                 if ($prefs->get($type) !== $obj->get($type)) {
                     // special systemdefault prefs: (probably not needed)
@@ -1828,14 +1828,14 @@ class UserPreferences
 	    }
 	    */
 	    // emailVerified at first, the rest later
-            $type = 'emailVerified'; $obj =& $this->_prefs['email'];
+            $type = 'emailVerified'; $obj = $this->_prefs['email'];
             $obj->_init = $init;
             if (isset($prefs[$type]) and $obj->get($type) !== $prefs[$type]) {
                 if ($obj->set($type,$prefs[$type]))
                     $count++;
             }
             foreach (array_keys($this->_prefs) as $type) {
-            	$obj =& $this->_prefs[$type];
+            	$obj = $this->_prefs[$type];
                 $obj->_init = $init;
                 if (!isset($prefs[$type]) and isa($obj,"_UserPreference_bool")) 
                     $prefs[$type] = false;

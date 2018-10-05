@@ -32,11 +32,6 @@ function isCGI() {
             @preg_match('/CGI/',$_ENV['GATEWAY_INTERFACE']));
 }
 
-// essential internal stuff
-if (check_php_version(5,3)) {
-    ini_set('magic_quotes_runtime', 0);
-}
-
 /** 
  * Browser Detection Functions
  *
@@ -186,7 +181,7 @@ function guessing_setlocale ($category, $locale) {
                                'german', 'ge'),
                  'es' => array('es_ES', 'es_MX', 'es_AR', 'spanish'),
                  'nl' => array('nl_NL', 'dutch'),
-                 'fr' => array('fr_FR', 'français', 'french'),
+                 'fr' => array('fr_FR', 'franï¿½ais', 'french'),
                  'it' => array('it_IT'),
                  'sv' => array('sv_SE'),
                  'ja.utf-8'  => array('ja_JP','ja_JP.utf-8','japanese'),
@@ -267,7 +262,7 @@ function update_locale($loc) {
     }
 
     // To get the POSIX character classes in the PCRE's (e.g.
-    // [[:upper:]]) to match extended characters (e.g. GrüßGott), we have
+    // [[:upper:]]) to match extended characters (e.g. Grï¿½ï¿½Gott), we have
     // to set the locale, using setlocale().
     //
     // The problem is which locale to set?  We would like to recognize all
@@ -291,76 +286,6 @@ function update_locale($loc) {
     }
 
     return $loc;
-}
-
-/** string pcre_fix_posix_classes (string $regexp)
-*
-* Older version (pre 3.x?) of the PCRE library do not support
-* POSIX named character classes (e.g. [[:alnum:]]).
-*
-* This is a helper function which can be used to convert a regexp
-* which contains POSIX named character classes to one that doesn't.
-*
-* All instances of strings like '[:<class>:]' are replaced by the equivalent
-* enumerated character class.
-*
-* Implementation Notes:
-*
-* Currently we use hard-coded values which are valid only for
-* ISO-8859-1.  Also, currently on the classes [:alpha:], [:alnum:],
-* [:upper:] and [:lower:] are implemented.  (The missing classes:
-* [:blank:], [:cntrl:], [:digit:], [:graph:], [:print:], [:punct:],
-* [:space:], and [:xdigit:] could easily be added if needed.)
-*
-* This is a hack.  I tried to generate these classes automatically
-* using ereg(), but discovered that in my PHP, at least, ereg() is
-* slightly broken w.r.t. POSIX character classes.  (It includes
-* "\xaa" and "\xba" in [:alpha:].)
-*
-* So for now, this will do.  --Jeff <dairiki@dairiki.org> 14 Mar, 2001
-*/
-function pcre_fix_posix_classes ($regexp) {
-    global $charset;
-    if (!isset($charset))
-        $charset = CHARSET; // get rid of constant. pref is dynamic and language specific
-    if (in_array($GLOBALS['LANG'], array('zh')))
-        $charset = 'utf-8';
-    if (strstr($GLOBALS['LANG'],'.utf-8'))
-        $charset = 'utf-8';
-    elseif (strstr($GLOBALS['LANG'],'.euc-jp'))
-        $charset = 'euc-jp';
-    elseif (in_array($GLOBALS['LANG'], array('ja')))
-        //$charset = 'utf-8';
-        $charset = 'euc-jp';
-
-    if (strtolower($charset) == 'utf-8') { // thanks to John McPherson
-        // until posix class names/pcre work with utf-8
-	if (preg_match('/[[:upper:]]/', '\xc4\x80'))
-            return $regexp;    
-        // utf-8 non-ascii chars: most common (eg western) latin chars are 0xc380-0xc3bf
-        // we currently ignore other less common non-ascii characters
-        // (eg central/east european) latin chars are 0xc432-0xcdbf and 0xc580-0xc5be
-        // and indian/cyrillic/asian languages
-        
-        // this replaces [[:lower:]] with utf-8 match (Latin only)
-        $regexp = preg_replace('/\[\[\:lower\:\]\]/','(?:[a-z]|\xc3[\x9f-\xbf]|\xc4[\x81\x83\x85\x87])',
-                               $regexp);
-        // this replaces [[:upper:]] with utf-8 match (Latin only)
-        $regexp = preg_replace('/\[\[\:upper\:\]\]/','(?:[A-Z]|\xc3[\x80-\x9e]|\xc4[\x80\x82\x84\x86])',
-                               $regexp);
-    } elseif (preg_match('/[[:upper:]]/', 'Ä')) {
-        // First check to see if our PCRE lib supports POSIX character
-        // classes.  If it does, there's nothing to do.
-        return $regexp;
-    }
-    static $classes = array(
-                            'alnum' => "0-9A-Za-z\xc0-\xd6\xd8-\xf6\xf8-\xff",
-                            'alpha' => "A-Za-z\xc0-\xd6\xd8-\xf6\xf8-\xff",
-                            'upper' => "A-Z\xc0-\xd6\xd8-\xde",
-                            'lower' => "a-z\xdf-\xf6\xf8-\xff"
-                            );
-    $keys = join('|', array_keys($classes));
-    return preg_replace("/\[:($keys):]/e", '$classes["\1"]', $regexp);
 }
 
 function deduce_script_name() {

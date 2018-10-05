@@ -50,7 +50,7 @@ extends WikiPlugin
         if ( isset($user->_prefs) and 
              isset($user->_prefs->_prefs) and 
              isset($user->_prefs->_method) ) {
-            $pref =& $user->_prefs;
+            $pref = $user->_prefs;
         } else {
             $pref = $user->getPreferences();
         }
@@ -64,7 +64,7 @@ extends WikiPlugin
 
     function run($dbi, $argstr, &$request, $basepage) {
         $args = $this->getArgs($argstr, $request);
-        $user =& $request->_user;
+        $user = $request->_user;
         if (isa($request,'MockRequest'))
             return '';
         if ((!$request->isActionPage($request->getArg('pagename')) 

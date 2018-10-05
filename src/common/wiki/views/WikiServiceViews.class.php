@@ -59,7 +59,7 @@ class WikiServiceViews extends WikiViews {
                                                           array($pm->getProject($this->gid)->getPublicName()));
 		$this->base_url = '/wiki/index.php?group_id='.$this->gid;
     }
-    $GLOBALS['wiki_view'] =& $this;
+    $GLOBALS['wiki_view'] = $this;
   }
 
   /**
@@ -148,7 +148,7 @@ class WikiServiceViews extends WikiViews {
    * Display project pages.
    */
   function _browseProjectWikiPages() {
-    $allPages =& WikiPage::getAllUserPages();
+    $allPages = WikiPage::getAllUserPages();
     $this->_browsePages($allPages);
   }
 
@@ -159,7 +159,7 @@ class WikiServiceViews extends WikiViews {
    */
   function _browseEmptyWikiPages() {
     $wpw = new WikiPageWrapper($this->gid);
-    $allPages =& $wpw->getProjectEmptyLinks();
+    $allPages = $wpw->getProjectEmptyLinks();
     $this->_browsePages($allPages);
   }
 
