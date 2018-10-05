@@ -360,8 +360,8 @@ class ProjectResource extends AuthenticatedResource {
             );
         }
 
-        $with_status = $json_query['with_status'];
-        if (isset($with_status)) {
+        if (isset($json_query['with_status'])) {
+            $with_status = $json_query['with_status'];
             if (! $this->isUserARestProjectManager($user)) {
                 throw new RestException(
                     403,
