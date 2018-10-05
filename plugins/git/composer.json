@@ -9,5 +9,11 @@
     "smarty/smarty": "^2.6",
     "geshi/geshi": "^1.0",
     "smarty-gettext/smarty-gettext": "^1.5"
+  },
+  "config": {
+    "platform": {
+      "ext-gettext": "0"
+    },
+    "sort-packages": true
   }
 }
