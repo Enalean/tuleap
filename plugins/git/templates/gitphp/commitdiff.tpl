@@ -19,11 +19,11 @@
    {include file='nav.tpl' current='commitdiff' logcommit=$commit treecommit=$commit}
    <br />
    {if $sidebyside}
-   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&amp;o=unified">{t}unified{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&amp;o=unified">{t domain="gitphp"}unified{/t}</a>
    {else}
-   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent}{/if}&amp;o=sidebyside">{t}side by side{/t}</a>
+   <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent}{/if}&amp;o=sidebyside">{t domain="gitphp"}side by side{/t}</a>
    {/if}
-   | <a href="{$SCRIPT_NAME}?a=commitdiff_plain&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&noheader=1">{t}plain{/t}</a>
+   | <a href="{$SCRIPT_NAME}?a=commitdiff_plain&amp;h={$commit->GetHash()|urlencode}{if $hashparent}&amp;hp={$hashparent|urlencode}{/if}&noheader=1">{t domain="gitphp"}plain{/t}</a>
  </div>
 
  {include file='title.tpl' titlecommit=$commit}
@@ -31,12 +31,12 @@
    {* Commit data *}
    <table cellspacing="0">
      <tr>
-       <td>{t}author{/t}</td>
+       <td>{t domain="gitphp"}author{/t}</td>
        <td>{$commit->GetAuthorName()|escape}</td>
      </tr>
      <tr>
        <td></td>
-       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
        {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
        {if $hourlocal < 6}
        (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()|escape})</td>
@@ -45,7 +45,7 @@
        {/if}
      </tr>
      <tr>
-       <td>{t}committer{/t}</td>
+       <td>{t domain="gitphp"}committer{/t}</td>
        <td>{$commit->GetCommitterName()|escape}</td>
      </tr>
      <tr>
@@ -87,14 +87,14 @@
      <div class="SBSTOC">
        <ul>
        <li class="listcount">
-       {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t} <a href="#" class="showAll">{t}(show all){/t}</a></li>
+       {t domain="gitphp" count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t} <a href="#" class="showAll">{t domain="gitphp"}(show all){/t}</a></li>
        {foreach from=$treediff item=filediff}
        <li>
        <a href="#{$filediff->GetFromHash()|escape}_{$filediff->GetToHash()|escape}" class="SBSTOCItem">
        {if $filediff->GetStatus() == 'A'}
-         {if $filediff->GetToFile()}{$filediff->GetToFile()|escape}{else}{$filediff->GetToHash()|escape}{/if} {t}(new){/t}
+         {if $filediff->GetToFile()}{$filediff->GetToFile()|escape}{else}{$filediff->GetToHash()|escape}{/if} {t domain="gitphp"}(new){/t}
        {elseif $filediff->GetStatus() == 'D'}
-         {if $filediff->GetFromFile()}{$filediff->GetFromFile()|escape}{else}{$filediff->GetToFile()|escape}{/if} {t}(deleted){/t}
+         {if $filediff->GetFromFile()}{$filediff->GetFromFile()|escape}{else}{$filediff->GetToFile()|escape}{/if} {t domain="gitphp"}(deleted){/t}
        {elseif $filediff->GetStatus() == 'M'}
          {if $filediff->GetFromFile()}
 	   {assign var=fromfilename value=$filediff->GetFromFile()}
@@ -125,7 +125,7 @@
        {assign var=localfromtype value=$filediff->GetFromFileType(1)}
        {$localfromtype}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$filediff->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetFromFile()}&amp;f={$filediff->GetFromFile()|urlencode}{/if}">{if $filediff->GetFromFile()}a/{$filediff->GetFromFile()|escape}{else}{$filediff->GetFromHash()|escape}{/if}</a>
        {if $filediff->GetStatus() == 'D'}
-         {t}(deleted){/t}
+         {t domain="gitphp"}(deleted){/t}
        {/if}
      {/if}
 
@@ -138,7 +138,7 @@
        {$localtotype}:<a href="{$SCRIPT_NAME}?a=blob&amp;h={$filediff->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}{if $filediff->GetToFile()}&amp;f={$filediff->GetToFile()|urlencode}{/if}">{if $filediff->GetToFile()}b/{$filediff->GetToFile()|escape}{else}{$filediff->GetToHash()|escape}{/if}</a>
 
        {if $filediff->GetStatus() == 'A'}
-         {t}(new){/t}
+         {t domain="gitphp"}(new){/t}
        {/if}
      {/if}
      </div>

@@ -37,7 +37,7 @@
         <div class="git-repository-commit-metadata-properties">
             <div class="git-repository-commit-metadata-properties-group">
                 <div class="tlp-property">
-                    <label class="tlp-label">{t}Author{/t}</label>
+                    <label class="tlp-label">{t domain="gitphp"}Author{/t}</label>
 
                     <div class="git-repository-commit-metadata-username-date">
                         {if ($commit_presenter->author->is_a_tuleap_user)}
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="tlp-property">
-                    <label class="tlp-label">{t}Committer{/t}</label>
+                    <label class="tlp-label">{t domain="gitphp"}Committer{/t}</label>
                     <div class="git-repository-commit-metadata-username-date">
                         {if ($commit_presenter->committer->is_a_tuleap_user)}
                             <a href="{$commit_presenter->committer->url|escape}">
@@ -85,13 +85,13 @@
             </div>
             <div class="git-repository-commit-metadata-properties-group">
                 <div class="tlp-property">
-                    <label class="tlp-label">{t}Hash{/t}</label>
+                    <label class="tlp-label">{t domain="gitphp"}Hash{/t}</label>
                     <span>{$commit->getHash()|escape}</span>
                 </div>
 
                 {if $commit_presenter->number_of_parents == 1}
                     <div class="tlp-property">
-                        <label class="tlp-label">{t}Parent{/t}</label>
+                        <label class="tlp-label">{t domain="gitphp"}Parent{/t}</label>
                         {foreach from=$commit->GetParents() item=parent}
                             <a href="{$SCRIPT_NAME}?a=commit&amp;h={$parent->GetHash()|urlencode}">{$parent->GetHash()|escape}</a>
                         {/foreach}
@@ -99,7 +99,7 @@
                 {/if}
                 {if $commit_presenter->number_of_parents > 1}
                     <div class="tlp-property">
-                        <label class="tlp-label">{t}Parents{/t}</label>
+                        <label class="tlp-label">{t domain="gitphp"}Parents{/t}</label>
                         <ul>
                             {foreach from=$commit->GetParents() item=parent}
                                 <li>
@@ -110,7 +110,7 @@
                     </div>
                 {/if}
                 <div class="tlp-property">
-                    <label class="tlp-label">{t}Reference{/t}</label>
+                    <label class="tlp-label">{t domain="gitphp"}Reference{/t}</label>
                     <span>git #{$project->GetProject()|substr:0:-4|escape}/{$commit->GetHash()|escape}</span>
                 </div>
             </div>

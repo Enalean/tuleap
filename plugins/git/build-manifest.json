@@ -71,6 +71,14 @@
             "po": "www/scripts/repository/branch-tag-selector/po"
         }
     },
+    "gettext-smarty": {
+        "gitphp": {
+            "smarty_to_gettext": "vendor/smarty-gettext/smarty-gettext/tsmarty2c.php",
+            "scripts-templates": "templates/gitphp",
+            "scripts-php": "include/GitPHP",
+            "po": "site-content-gitphp"
+        }
+    },
     "components": [
         "www/scripts"
     ]

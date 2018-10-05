@@ -38,7 +38,7 @@ class Controller_Feed extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (!$this->project) {
-            throw new MessageException(__('Project is required'), true);
+            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
 
@@ -72,13 +72,13 @@ class Controller_Feed extends ControllerBase // @codingStandardsIgnoreLine
     {
         if ($this->params['format'] === self::FEED_FORMAT_RSS) {
             if ($local) {
-                return __('rss');
+                return dgettext("gitphp", 'rss');
             } else {
                 return 'rss';
             }
         } elseif ($this->params['format'] === self::FEED_FORMAT_ATOM) {
             if ($local) {
-                return __('atom');
+                return dgettext("gitphp", 'atom');
             } else {
                 return 'atom';
             }

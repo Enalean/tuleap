@@ -12,21 +12,21 @@
   {include file='nav.tpl' logcommit=$commit treecommit=$commit}
   <br />
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}">{t}first{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}">{t domain="gitphp"}first{/t}</a>
   {else}
-    {t}first{/t}
+    {t domain="gitphp"}first{/t}
   {/if}
-    &sdot; 
+    &sdot;
   {if $page > 0}
-    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{if $page > 1}&amp;pg={$page-1}{/if}" accesskey="p" title="Alt-p">{t domain="gitphp"}prev{/t}</a>
   {else}
-    {t}prev{/t}
+    {t domain="gitphp"}prev{/t}
   {/if}
-    &sdot; 
+    &sdot;
   {if $hasmore}
-    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+    <a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" accesskey="n" title="Alt-n">{t domain="gitphp"}next{/t}</a>
   {else}
-    {t}next{/t}
+    {t domain="gitphp"}next{/t}
   {/if}
   <br />
 </div>
@@ -57,14 +57,14 @@
       {/if}
       </td>
       {assign var=resulttree value=$result->GetTree()}
-      <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$result->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$result->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;h={$resulttree->GetHash()|urlencode}&amp;hb={$result->GetHash()|urlencode}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$result->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+      <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$result->GetHash()}">{t domain="gitphp"}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$result->GetHash()}">{t domain="gitphp"}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;h={$resulttree->GetHash()|urlencode}&amp;hb={$result->GetHash()|urlencode}">{t domain="gitphp"}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$result->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t domain="gitphp"}snapshot{/t}</a>
       </td>
     </tr>
   {/foreach}
 
   {if $hasmore}
     <tr>
-      <td><a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" title="Alt-n">{t}next{/t}</a></td>
+      <td><a href="{$SCRIPT_NAME}?a=search&amp;h={$commit->GetHash()|urlencode}&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}&amp;pg={$page+1}" title="Alt-n">{t domain="gitphp"}next{/t}</a></td>
     </tr>
   {/if}
 </table>

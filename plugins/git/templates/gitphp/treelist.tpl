@@ -23,11 +23,11 @@
         <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}" class="list">{$treeitem->GetName()|escape}</a>
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t}blob{/t}</a>
-	 | 
-	<a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t}history{/t}</a>
-	 | 
-	<a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+        <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t domain="gitphp"}blob{/t}</a>
+	 |
+	<a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t domain="gitphp"}history{/t}</a>
+	 |
+	<a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
       </td>
     {elseif $treeitem->isTree() }
       <td class="filesize"></td>
@@ -36,9 +36,9 @@
         <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}" class="treeLink">{$treeitem->GetName()|escape}</a>
       </td>
       <td class="link">
-        <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t}tree{/t}</a>
-	 | 
-	<a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+        <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}">{t domain="gitphp"}tree{/t}</a>
+	 |
+	<a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$treeitem->GetHash()|urlencode}&amp;f={$treeitem->GetPath()|urlencode}&amp;noheader=1" class="snapshotTip">{t domain="gitphp"}snapshot{/t}</a>
       </td>
     {elseif $treeitem->isSubmodule() }
       <td class="filesize"></td>

@@ -11,15 +11,15 @@
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1">{t}plain{/t}</a> |
+   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a> |
    {if ($head !== null) && ($commit->GetHash() != $head->GetHash()) && ($head->PathToHash($blob->GetPath()))}
-     <a href="{$SCRIPT_NAME}?a=blob&amp;hb=HEAD&amp;f={$blob->GetPath()|urlencode}">{t}HEAD{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=blob&amp;hb=HEAD&amp;f={$blob->GetPath()|urlencode}">{t domain="gitphp"}HEAD{/t}</a>
    {else}
-     {t}HEAD{/t}
+     {t domain="gitphp"}HEAD{/t}
    {/if}
    {if $blob->GetPath()}
-    | <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{t}history{/t}</a>
-   {if !$datatag} | <a href="{$SCRIPT_NAME}?a=blame&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}" id="blameLink">{t}blame{/t}</a>{/if}
+    | <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{t domain="gitphp"}history{/t}</a>
+   {if !$datatag} | <a href="{$SCRIPT_NAME}?a=blame&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}" id="blameLink">{t domain="gitphp"}blame{/t}</a>{/if}
    {/if}
    <br />
  </div>

@@ -174,7 +174,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
             -o - \
         | msggrep \
             --msgctxt \
-            --regexp=$translated_plugin \
+            --regexp='$translated_plugin\b' \
             - \
         | sed '/^msgctxt/d' \
         > $default");
@@ -189,7 +189,7 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
             -o - \
         | msggrep \
             --msgctxt \
-            --regexp=$translated_plugin \
+            --regexp='$translated_plugin\b' \
             - \
         | sed '/^msgctxt/d' \
         > $plural");
@@ -272,7 +272,58 @@ EOS;
 
                 exec("msgcat --no-location --sort-output -o $template $vue_template");
 
-                info("[$translated_plugin][js][$component] Merging .pot file into .po files");
+                info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
+                exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+            }
+        }
+
+        if (isset($json['gettext-smarty']) && is_array($json['gettext-smarty'])) {
+            foreach ($json['gettext-smarty'] as $component => $gettext) {
+                info("[$translated_plugin][smarty][$component] Generating default .pot file");
+                $smarty_to_gettext   = escapeshellarg("$path/${gettext['smarty_to_gettext']}");
+                $scripts_php         = escapeshellarg("$path/${gettext['scripts-php']}");
+                $scripts_templates   = escapeshellarg("$path/${gettext['scripts-templates']}");
+                $po                  = escapeshellarg("$path/${gettext['po']}");
+                $template_php        = escapeshellarg("$path/${gettext['po']}/$component-php.pot");
+                $template_php_plural = escapeshellarg("$path/${gettext['po']}/$component-php-plural.pot");
+                $template_smarty     = escapeshellarg("$path/${gettext['po']}/$component-smarty.pot");
+                $template            = escapeshellarg("$path/${gettext['po']}/$component.pot");
+                $domain              = escapeshellarg($component);
+                executeCommandAndExitIfStderrNotEmpty("(cd $scripts_templates && $smarty_to_gettext -d=$domain -o $template_smarty .)");
+                executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
+                    | xargs xgettext \
+                        --keyword='dgettext:1c,2' \
+                        --default-domain=$component \
+                        --from-code=UTF-8 \
+                        --omit-header \
+                        -o - \
+                    | msggrep \
+                        --msgctxt \
+                        --regexp='$component\b' \
+                        - \
+                    | sed '/^msgctxt/d' \
+                    > $template_php");
+
+                executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
+                    | xargs xgettext \
+                        --keyword='dngettext:1c,2,3' \
+                        --default-domain=$component \
+                        --from-code=UTF-8 \
+                        --omit-header \
+                        -o - \
+                    | msggrep \
+                        --msgctxt \
+                        --regexp='$component\b' \
+                        - \
+                    | sed '/^msgctxt/d' \
+                    > $template_php_plural");
+
+                exec("msgcat --no-location --sort-output -o $template $template_php $template_php_plural $template_smarty");
+                executeCommandAndExitIfStderrNotEmpty("rm $template_php");
+                executeCommandAndExitIfStderrNotEmpty("rm $template_php_plural");
+                executeCommandAndExitIfStderrNotEmpty("rm $template_smarty");
+
+                info("[$translated_plugin][smarty][$component] Merging .pot file into .po files");
                 exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
             }
         }

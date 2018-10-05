@@ -20,18 +20,18 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         <div class="tlp-pane-header">
-            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-files-o"></i> {t}Files{/t}</h1>
+            <h1 class="tlp-pane-title"><i class="tlp-pane-title-icon fa fa-files-o"></i> {t domain="gitphp"}Files{/t}</h1>
         </div>
         <section class="tlp-pane-section">
             <div class="git-repository-blob-diff-header">
                 <a href="{$SCRIPT_NAME}?a=commit&amp;h={$commit->GetHash()|urlencode}"
                    class="git-repository-blob-diff-header-link"
-                >{t}Commit{/t}</a>
+                >{t domain="gitphp"}Commit{/t}</a>
                 <div class="tlp-button-bar">
                     <div class="tlp-button-bar-item">
                         <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$blobparent->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$file|urlencode}&amp;o=sidebyside"
                            class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-bottom"
-                           data-tlp-tooltip="{t}Side by side diff{/t}"
+                           data-tlp-tooltip="{t domain="gitphp"}Side by side diff{/t}"
                         >
                             <i class="fa fa-files-o tlp-button-icon"></i>
                         </a>
@@ -39,7 +39,7 @@
                     <div class="tlp-button-bar-item">
                         <input type="radio" class="tlp-button-bar-checkbox" checked>
                         <label class="tlp-button-primary tlp-button-outline tlp-button-small tlp-tooltip tlp-tooltip-bottom"
-                               data-tlp-tooltip="{t}Unified diff{/t}"
+                               data-tlp-tooltip="{t domain="gitphp"}Unified diff{/t}"
                         >
                             <i class="fa fa-file-o tlp-button-icon"></i>
                         </label>

@@ -38,7 +38,7 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (!$this->project) {
-            throw new MessageException(__('Project is required'), true);
+            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
 
@@ -71,7 +71,7 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return __('log');
+            return dgettext("gitphp", 'log');
         }
         return 'log';
     }

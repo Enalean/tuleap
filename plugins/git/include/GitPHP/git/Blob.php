@@ -167,26 +167,26 @@ class Blob extends FilesystemObject
         }
         if (($mode & 0x4000) == 0x4000) {
             if ($local) {
-                return __('directory');
+                return dgettext("gitphp", 'directory');
             } else {
                 return 'directory';
             }
         } elseif (($mode & 0xA000) == 0xA000) {
             if ($local) {
-                return __('symlink');
+                return dgettext("gitphp", 'symlink');
             } else {
                 return 'symlink';
             }
         } elseif (($mode & 0x8000) == 0x8000) {
             if ($local) {
-                return __('file');
+                return dgettext("gitphp", 'file');
             } else {
                 return 'file';
             }
         }
 
         if ($local) {
-            return __('unknown');
+            return dgettext("gitphp", 'unknown');
         } else {
             return 'unknown';
         }

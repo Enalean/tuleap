@@ -16,7 +16,7 @@
        <tr class="{cycle values="light,dark"}">
          <td><em>{$headcommit->GetAge()|agestring}</em></td>
          <td><a href="{$SCRIPT_NAME}?a=shortlog&amp;h=refs/heads/{$head->GetName()|urlencode}" class="list"><strong>{$head->GetName()|escape}</strong></a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?a=shortlog&amp;h=refs/heads/{$head->GetName()|urlencode}">{t}log{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$headcommit->GetHash()}">{t}tree{/t}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=shortlog&amp;h=refs/heads/{$head->GetName()|urlencode}">{t domain="gitphp"}log{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$headcommit->GetHash()}">{t domain="gitphp"}tree{/t}</a></td>
        </tr>
    {/foreach}
    {if $hasmoreheads}

@@ -16,7 +16,7 @@
  {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$blob target='blob'}
- 
+
  <table cellspacing="0">
    {* Display each history line *}
    {foreach from=$blob->GetHistory() item=historyitem}
@@ -27,7 +27,7 @@
        <td><a href="{$SCRIPT_NAME}?a=commit&amp;h={$historycommit->GetHash()}" class="list commitTip" {if strlen($historycommit->GetTitle()) > 50}title="{$historycommit->GetTitle()}"{/if}><strong>{$historycommit->GetTitle(50)|escape:'html'}</strong></a>
        {include file='refbadges.tpl' commit=$historycommit}
        </td>
-       <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$historycommit->GetHash()}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$historycommit->GetHash()|urlencode}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=blob&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}">{t}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$historyitem->GetToHash()|urlencode}&amp;hb={$historycommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{t}diff to current{/t}</a>{/if}
+       <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$historycommit->GetHash()}">{t domain="gitphp"}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$historycommit->GetHash()|urlencode}">{t domain="gitphp"}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=blob&amp;hb={$historycommit->GetHash()}&amp;f={$blob->GetPath()}">{t domain="gitphp"}blob{/t}</a>{if $blob->GetHash() != $historyitem->GetToHash()} | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$blob->GetHash()|urlencode}&amp;hp={$historyitem->GetToHash()|urlencode}&amp;hb={$historycommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{t domain="gitphp"}diff to current{/t}</a>{/if}
        </td>
      </tr>
    {/foreach}

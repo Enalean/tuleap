@@ -44,7 +44,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (!$this->project) {
-            throw new MessageException(__('Project is required'), true);
+            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
 
@@ -79,7 +79,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return __('blame');
+            return dgettext("gitphp", 'blame');
         }
         return 'blame';
     }

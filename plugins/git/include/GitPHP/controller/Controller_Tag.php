@@ -33,7 +33,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
     {
         parent::__construct();
         if (!$this->project) {
-            throw new MessageException(__('Project is required'), true);
+            throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
 
@@ -65,7 +65,7 @@ class Controller_Tag extends ControllerBase // @codingStandardsIgnoreLine
     public function GetName($local = false) // @codingStandardsIgnoreLine
     {
         if ($local) {
-            return __('tag');
+            return dgettext("gitphp", 'tag');
         }
         return 'tag';
     }

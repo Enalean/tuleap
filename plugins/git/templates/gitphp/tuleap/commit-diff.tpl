@@ -27,7 +27,7 @@
     <div class="tlp-pane-container">
         <section class="tlp-pane-section">
             <h2 class="tlp-pane-title">
-                <i class="tlp-pane-title-icon fa fa-copy"></i> {t}Modified Files{/t}
+                <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
             </h2>
             <div class="git-repository-commit-diff-actions">
                 <div class="tlp-button-bar">
@@ -35,13 +35,13 @@
                         <a href="{$commit_presenter->getCommitListLink()}"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
-                            {t}List{/t}
+                            {t domain="gitphp"}List{/t}
                         </a>
                     </div>
                     <div class="tlp-button-bar-item">
                         <input type="radio" class="tlp-button-bar-checkbox" checked>
                         <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                            {t}Inline diff{/t}
+                            {t domain="gitphp"}Inline diff{/t}
                         </label>
                     </div>
                 </div>

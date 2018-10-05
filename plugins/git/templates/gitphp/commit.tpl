@@ -21,17 +21,17 @@
 {else}
 	{include file='title.tpl' titlecommit=$commit titletree=$tree target='tree'}
 {/if}
- 
+
  <div class="title_text">
    {* Commit data *}
    <table cellspacing="0">
      <tr>
-       <td>{t}author{/t}</td>
+       <td>{t domain="gitphp"}author{/t}</td>
        <td>{$commit->GetAuthorName()|escape}</td>
      </tr>
      <tr>
        <td></td>
-       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+       <td> {$commit->GetAuthorEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
        {assign var=hourlocal value=$commit->GetAuthorLocalEpoch()|date_format:"%H"}
        {if $hourlocal < 6}
        (<span class="latenight">{$commit->GetAuthorLocalEpoch()|date_format:"%R"}</span> {$commit->GetAuthorTimezone()|escape})</td>
@@ -40,7 +40,7 @@
        {/if}
      </tr>
      <tr>
-       <td>{t}committer{/t}</td>
+       <td>{t domain="gitphp"}committer{/t}</td>
        <td>{$commit->GetCommitterName()|escape}</td>
      </tr>
      <tr>
@@ -48,19 +48,19 @@
        <td> {$commit->GetCommitterEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} ({$commit->GetCommitterLocalEpoch()|date_format:"%R"} {$commit->GetCommitterTimezone()|escape})</td>
      </tr>
      <tr>
-       <td>{t}commit{/t}</td>
+       <td>{t domain="gitphp"}commit{/t}</td>
        <td class="monospace">{$commit->GetHash()|escape}</td>
      </tr>
      <tr>
-       <td>{t}tree{/t}</td>
+       <td>{t domain="gitphp"}tree{/t}</td>
        <td class="monospace"><a href="{$SCRIPT_NAME}?a=tree&amp;h={$tree->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}" class="list">{$tree->GetHash()|escape}</a></td>
-       <td class="link"><a href="{$SCRIPT_NAME}?a=tree&amp;h={$tree->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a></td>
+       <td class="link"><a href="{$SCRIPT_NAME}?a=tree&amp;h={$tree->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}">{t domain="gitphp"}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$commit->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t domain="gitphp"}snapshot{/t}</a></td>
      </tr>
      {foreach from=$commit->GetParents() item=par}
        <tr>
-         <td>{t}parent{/t}</td>
+         <td>{t domain="gitphp"}parent{/t}</td>
 	 <td class="monospace"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$par->GetHash()|urlencode}" class="list">{$par->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$par->GetHash()|urlencode}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}&amp;hp={$par->GetHash()|urlencode}">{t}commitdiff{/t}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$par->GetHash()|urlencode}">{t domain="gitphp"}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$commit->GetHash()|urlencode}&amp;hp={$par->GetHash()|urlencode}">{t domain="gitphp"}commitdiff{/t}</a></td>
        </tr>
      {/foreach}
        <tr>
@@ -97,14 +97,14 @@
  </div>
  <div class="list_head">
    {if $treediff->Count() > 10}
-     {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}
+     {t domain="gitphp" count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}
    {/if}
  </div>
  <table cellspacing="0">
    {* Loop and show files changed *}
    {foreach from=$treediff item=diffline}
      <tr class="{cycle values="light,dark"}">
-	 
+
        {if $diffline->GetStatus() == "A"}
          <td>
 	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}" class="list">
@@ -117,17 +117,17 @@
 	     [
 	     {if $diffline->ToFileIsRegular()}
 	       {assign var=tomode value=$diffline->GetToModeShort()}
-	       {t 1=$localtotype 2=$tomode}new %1 with mode %2{/t}
+	       {t domain="gitphp" 1=$localtotype 2=$tomode}new %1 with mode %2{/t}
 	     {else}
-	     {t 1=$localtotype}new %1{/t}
+	     {t domain="gitphp" 1=$localtotype}new %1{/t}
 	     {/if}
 	     ]
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t}blob{/t}</a>
-	    | 
-	   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t domain="gitphp"}blob{/t}</a>
+	    |
+	   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "D"}
          {assign var=parent value=$commit->GetParent()}
@@ -139,15 +139,15 @@
          <td>
 	   <span class="deletedfile">
 	     {assign var=localfromtype value=$diffline->GetFromFileType(1)}
-	     [ {t 1=$localfromtype}deleted %1{/t} ]
+	     [ {t domain="gitphp" 1=$localfromtype}deleted %1{/t} ]
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t}blob{/t}</a>
-	    | 
-	   <a href="{$SCRIPT_NAME}?a=history&amp;h={$parent->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t}history{/t}</a>
-	    | 
-	   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetFromHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t domain="gitphp"}blob{/t}</a>
+	    |
+	   <a href="{$SCRIPT_NAME}?a=history&amp;h={$parent->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t domain="gitphp"}history{/t}</a>
+	    |
+	   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetFromHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "M" || $diffline->GetStatus() == "T"}
          <td>
@@ -172,30 +172,30 @@
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
 		     {assign var=frommode value=$diffline->GetFromModeShort()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
-		     {t 1=$localfromtype 2=$localtotype 3=$frommode 4=$tomode}changed from %1 to %2 mode: %3 -> %4{/t}
+		     {t domain="gitphp" 1=$localfromtype 2=$localtotype 3=$frommode 4=$tomode}changed from %1 to %2 mode: %3 -> %4{/t}
 		   {elseif $diffline->ToFileIsRegular()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
-		     {t 1=$localfromtype 2=$localtotype 3=$tomode}changed from %1 to %2 mode: %3{/t}
+		     {t domain="gitphp" 1=$localfromtype 2=$localtotype 3=$tomode}changed from %1 to %2 mode: %3{/t}
 		   {else}
-		     {t 1=$localfromtype 2=$localtotype}changed from %1 to %2{/t}
+		     {t domain="gitphp" 1=$localfromtype 2=$localtotype}changed from %1 to %2{/t}
 		   {/if}
 		 {else}
-		   {t 1=$localfromtype 2=$localtotype}changed from %1 to %2{/t}
+		   {t domain="gitphp" 1=$localfromtype 2=$localtotype}changed from %1 to %2{/t}
 		 {/if}
 	       {else}
 	         {if $diffline->FileModeChanged()}
 		   {if $diffline->FromFileIsRegular() && $diffline->ToFileIsRegular()}
 		     {assign var=frommode value=$diffline->GetFromModeShort()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
-		     {t 1=$frommode 2=$tomode}changed mode: %1 -> %2{/t}
+		     {t domain="gitphp" 1=$frommode 2=$tomode}changed mode: %1 -> %2{/t}
 		   {elseif $diffline->ToFileIsRegular()}
 		     {assign var=tomode value=$diffline->GetToModeShort()}
-		     {t 1=$tomode}changed mode: %1{/t}
+		     {t domain="gitphp" 1=$tomode}changed mode: %1{/t}
 		   {else}
-		     {t}changed{/t}
+		     {t domain="gitphp"}changed{/t}
 		   {/if}
 		 {else}
-		   {t}changed{/t}
+		   {t domain="gitphp"}changed{/t}
 		 {/if}
 	       {/if}
 	       ]
@@ -203,12 +203,12 @@
 	   {/if}
 	 </td>
          <td class="link">
-           <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t}blob{/t}</a>
+           <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t domain="gitphp"}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$diffline->GetToHash()|urlencode}&amp;hp={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t}diff{/t}</a>
+	     | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$diffline->GetToHash()|urlencode}&amp;hp={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t domain="gitphp"}diff{/t}</a>
 	   {/if}
-	     | <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t}history{/t}</a>
-             | <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+	     | <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$diffline->GetFromFile()|urlencode}">{t domain="gitphp"}history{/t}</a>
+             | <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
 	 </td>
        {elseif $diffline->GetStatus() == "R"}
          <td>
@@ -224,19 +224,19 @@
 	     {assign var=similarity value=$diffline->GetSimilarity()}
 	     {if $diffline->GetFromMode() != $diffline->GetToMode()}
 	       {assign var=tomode value=$diffline->GetToModeShort()}
-	       {t escape=no 1=$fromfilelink 2=$similarity 3=$tomode}moved from %1 with %2%% similarity, mode: %3{/t}
+	       {t domain="gitphp" escape=no 1=$fromfilelink 2=$similarity 3=$tomode}moved from %1 with %2%% similarity, mode: %3{/t}
 	     {else}
-	       {t escape=no 1=$fromfilelink 2=$similarity}moved from %1 with %2%% similarity{/t}
+	       {t domain="gitphp" escape=no 1=$fromfilelink 2=$similarity}moved from %1 with %2%% similarity{/t}
 	     {/if}
 	     ]
 	   </span>
 	 </td>
          <td class="link">
-	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}">{t}blob{/t}</a>
+	   <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}">{t domain="gitphp"}blob{/t}</a>
 	   {if $diffline->GetToHash() != $diffline->GetFromHash()}
-	     | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$diffline->GetToHash()|urlencode}&amp;hp={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t}diff{/t}</a>
+	     | <a href="{$SCRIPT_NAME}?a=blobdiff&amp;h={$diffline->GetToHash()|urlencode}&amp;hp={$diffline->GetFromHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}">{t domain="gitphp"}diff{/t}</a>
 	   {/if}
-	    | <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}&amp;noheader=1">{t}plain{/t}</a>
+	    | <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$diffline->GetToHash()|urlencode}&amp;f={$diffline->GetToFile()|urlencode}&amp;noheader=1">{t domain="gitphp"}plain{/t}</a>
 	 </td>
        {/if}
 

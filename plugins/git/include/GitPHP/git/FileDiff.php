@@ -867,7 +867,7 @@ class FileDiff
         }
         $output = '';
         if ($isBinary) {
-            $output = sprintf(__('Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
+            $output = sprintf(dgettext("gitphp", 'Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
         } else {
             if ($header) {
                 $output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";

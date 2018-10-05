@@ -10,11 +10,11 @@
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()|urlencode}"&noheader=1>{t}plain{/t}</a> |
+   <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()|urlencode}"&noheader=1>{t domain="gitphp"}plain{/t}</a> |
    {if $commit->GetHash() != $head->GetHash()}
-     <a href="{$SCRIPT_NAME}?a=blame&amp;hb=HEAD&amp;f={$blob->GetPath()|urlencode}"&noheader=1>{t}HEAD{/t}</a>
+     <a href="{$SCRIPT_NAME}?a=blame&amp;hb=HEAD&amp;f={$blob->GetPath()|urlencode}"&noheader=1>{t domain="gitphp"}HEAD{/t}</a>
    {else}
-     {t}HEAD{/t}
+     {t domain="gitphp"}HEAD{/t}
    {/if}
     | blame
    <br />
@@ -23,7 +23,7 @@
  {include file='title.tpl' titlecommit=$commit}
 
  {include file='path.tpl' pathobject=$blob target='blob'}
- 
+
  <div class="page_body">
    {if $geshi}
      {$geshihead}

@@ -24,21 +24,21 @@
 			<a href="{$SCRIPT_NAME}?a=tree" class="title">&nbsp;</a>
 		{elseif $target == 'shortlog'}
 			{if $disablelink}
-			  {t}log{/t}
+			  {t domain="gitphp"}log{/t}
 			{else}
-			  <a href="{$SCRIPT_NAME}?a=shortlog" class="title">{t}log{/t}</a>
+			  <a href="{$SCRIPT_NAME}?a=shortlog" class="title">{t domain="gitphp"}log{/t}</a>
 			{/if}
 		{elseif $target == 'tags'}
 			{if $disablelink}
-			  {t}tags{/t}
+			  {t domain="gitphp"}tags{/t}
 			{else}
-			  <a href="{$SCRIPT_NAME}?a=tags" class="title">{t}tags{/t}</a>
+			  <a href="{$SCRIPT_NAME}?a=tags" class="title">{t domain="gitphp"}tags{/t}</a>
 			{/if}
 		{elseif $target == 'heads'}
 			{if $disablelink}
-			  {t}heads{/t}
+			  {t domain="gitphp"}heads{/t}
 			{else}
-			  <a href="{$SCRIPT_NAME}?a=heads" class="title">{t}heads{/t}</a>
+			  <a href="{$SCRIPT_NAME}?a=heads" class="title">{t domain="gitphp"}heads{/t}</a>
 			{/if}
 		{else}
 			&nbsp;

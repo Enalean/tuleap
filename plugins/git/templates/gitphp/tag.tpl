@@ -25,26 +25,26 @@
  <div class="title_text">
    <table cellspacing="0">
      <tr>
-       <td>{t}object{/t}</td>
+       <td>{t domain="gitphp"}object{/t}</td>
        {if $objtype == 'commit'}
          <td class="monospace"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}">{t}commit{/t}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=commit&amp;h={$object->GetHash()|urlencode}">{t domain="gitphp"}commit{/t}</a></td>
        {elseif $objtype == 'tag'}
          <td class="monospace"><a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}">{t}tag{/t}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=tag&amp;h={$object->GetName()|urlencode}">{t domain="gitphp"}tag{/t}</a></td>
        {elseif $objtype == 'blob'}
          <td class="monospace"><a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}" class="list">{$object->GetHash()|escape}</a></td>
-         <td class="link"><a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{t}blob{/t}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?a=blob&amp;h={$object->GetHash()|urlencode}">{t domain="gitphp"}blob{/t}</a></td>
        {/if}
      </tr>
      {if $tag->GetTagger()|escape}
        <tr>
-         <td>{t}author{/t}</td>
+         <td>{t domain="gitphp"}author{/t}</td>
 	 <td>{$tag->GetTagger()|escape}</td>
        </tr>
        <tr>
          <td></td>
-	 <td> {$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"} 
+	 <td> {$tag->GetTaggerEpoch()|date_format:"%a, %d %b %Y %H:%M:%S %z"}
 	 {assign var=hourlocal value=$tag->GetTaggerLocalEpoch()|date_format:"%H"}
 	 {if $hourlocal < 6}
 	 (<span class="latenight">{$tag->GetTaggerLocalEpoch()|date_format:"%R"}</span> {$tag->GetTaggerTimezone()|escape})

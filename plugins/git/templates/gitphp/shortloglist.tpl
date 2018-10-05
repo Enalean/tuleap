@@ -22,12 +22,12 @@
        </td>
        <td class="link">
          {assign var=revtree value=$rev->GetTree()}
-         <a href="{$SCRIPT_NAME}?a=commit&amp;h={$rev->GetHash()|urlencode}">{t}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$rev->GetHash()}">{t}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;h={$revtree->GetHash()|urlencode}&amp;hb={$rev->GetHash()|urlencode}">{t}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$rev->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t}snapshot{/t}</a>
+         <a href="{$SCRIPT_NAME}?a=commit&amp;h={$rev->GetHash()|urlencode}">{t domain="gitphp"}commit{/t}</a> | <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$rev->GetHash()}">{t domain="gitphp"}commitdiff{/t}</a> | <a href="{$SCRIPT_NAME}?a=tree&amp;h={$revtree->GetHash()|urlencode}&amp;hb={$rev->GetHash()|urlencode}">{t domain="gitphp"}tree{/t}</a> | <a href="{$SCRIPT_NAME}?a=snapshot&amp;h={$rev->GetHash()|urlencode}&amp;noheader=1" class="snapshotTip">{t domain="gitphp"}snapshot{/t}</a>
 	 {if $source == 'shortlog'}
-	  | 
+	  |
 	  {if $mark}
 	    {if $mark->GetHash() == $rev->GetHash()}
-	      <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page}">{t}deselect{/t}</a>
+	      <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page}">{t domain="gitphp"}deselect{/t}</a>
 	    {else}
 	      {if $mark->GetCommitterEpoch() > $rev->GetCommitterEpoch()}
 	        {assign var=markbase value=$mark}
@@ -36,22 +36,22 @@
 	        {assign var=markbase value=$rev}
 		{assign var=markparent value=$mark}
 	      {/if}
-	      <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$markbase->GetHash()|urlencode}&amp;hp={$markparent->GetHash()|urlencode}">{t}diff with selected{/t}</a>
+	      <a href="{$SCRIPT_NAME}?a=commitdiff&amp;h={$markbase->GetHash()|urlencode}&amp;hp={$markparent->GetHash()|urlencode}">{t domain="gitphp"}diff with selected{/t}</a>
 	    {/if}
 	  {else}
-	    <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$rev->GetHash()|urlencode}">{t}select for diff{/t}</a>
+	    <a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page}&amp;m={$rev->GetHash()|urlencode}">{t domain="gitphp"}select for diff{/t}</a>
 	  {/if}
 	{/if}
        </td>
      </tr>
    {foreachelse}
-     <tr><td><em>{t}No commits{/t}</em></td></tr>
+     <tr><td><em>{t domain="gitphp"}No commits{/t}</em></td></tr>
    {/foreach}
 
    {if $hasmorerevs}
      <tr>
      {if $source == 'shortlog'}
-       <td><a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}" title="Alt-n">{t}next{/t}</a></td>
+       <td><a href="{$SCRIPT_NAME}?a=shortlog&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}" title="Alt-n">{t domain="gitphp"}next{/t}</a></td>
      {/if}
      </tr>
    {/if}

@@ -10,7 +10,7 @@
  *}
 
 <div>
-{t}tag{/t}: {$tag->GetName()|escape}
+{t domain="gitphp"}tag{/t}: {$tag->GetName()|escape}
 <br />
 {foreach from=$tag->GetComment() item=line}
 {if strncasecmp(trim($line),'-----BEGIN PGP',14) == 0}

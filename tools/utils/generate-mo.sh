@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) Enalean, 2015 - 2017. All rights reserved
+# Copyright (c) Enalean, 2015 - 2018. All rights reserved
 #
 # This file is a part of Tuleap.
 #
@@ -18,6 +18,7 @@
 # along with Tuleap. If not, see <http://www.gnu.org/licenses/
 #
 
+curdir=$(dirname "$0")
 basedir=$1
 
 info() {
@@ -43,3 +44,5 @@ do
         msgfmt -o "$locale_dir/tuleap-$translated_plugin.mo" "$f"
     done
 done < <(find "$basedir/plugins/" -maxdepth 1 -mindepth 1 -type d -print0 | sort -z)
+
+"$curdir/generate-smarty-mo.php" "$basedir"
