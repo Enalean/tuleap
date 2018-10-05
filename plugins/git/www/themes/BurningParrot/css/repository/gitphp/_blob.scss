@@ -18,12 +18,23 @@
  */
 
 $codemirror-like-line-numbers-color: #8c8c8c;
-$gitphp-code-font: normal normal 1em / 1.2em monospace;
+$gitphp-code-font: normal normal 14px / 20px monospace;
 
 .git-repository-blob-header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $tlp-ui-border-light;
+
+    > .git-repository-blob-header-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 400;
+
+        > a {
+            color: inherit;
+        }
+    }
 }
 
 .git-repository-blob-header-actions {
@@ -65,6 +76,7 @@ $gitphp-code-font: normal normal 1em / 1.2em monospace;
                 width: 1px;
                 padding: 5px $tlp-half-spacing;
                 border-right: 1px solid $tlp-ui-border-light;
+                background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
                 text-align: right;
 
                 > .de1 {

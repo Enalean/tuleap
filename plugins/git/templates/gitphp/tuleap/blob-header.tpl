@@ -19,8 +19,8 @@
  *}
 
 <section class="tlp-pane-header git-repository-blob-header">
-    <h1 class="tlp-pane-title">
-        <i class="tlp-pane-title-icon fa fa-files-o"></i>
+    <h1 class="git-repository-blob-header-title">
+        <i class="tlp-pane-title-icon fa fa-file-text-o"></i>
         {assign var=blobcommit value=$blob->GetCommit()}
         {assign var=blobtree value=$blobcommit->GetTree()}
 
