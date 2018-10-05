@@ -26,14 +26,8 @@
     {foreach from=$commits_per_day->commits item=commit_presenter}
         <div class="tlp-card tlp-card-selectable git-repository-commit-card" data-href="{$SCRIPT_NAME}?a=commit&amp;h={$commit_presenter->commit->GetHash()|urlencode}">
             <div class="tlp-avatar git-repository-commit-card-avatar">
-                {if $searchtype == 'committer'}
-                    {if ($commit_presenter->committer->has_avatar)}
-                        <img src="{$commit_presenter->committer->avatar_url|escape}">
-                    {/if}
-                {else}
-                    {if ($commit_presenter->author->has_avatar)}
-                        <img src="{$commit_presenter->author->avatar_url|escape}">
-                    {/if}
+                {if ($commit_presenter->author->has_avatar)}
+                    <img src="{$commit_presenter->author->avatar_url|escape}">
                 {/if}
             </div>
 
@@ -55,19 +49,22 @@
                     <span class="git-repository-commit-card-info-metadata-username">
                         {if $searchtype == 'author'}
                             {if ($commit_presenter->author->is_a_tuleap_user)}
-                                <a href="{$commit_presenter->author->url|escape}">{$commit_presenter->author->display_name|highlight:$search}</a>
+                                <a href="{$commit_presenter->author->url|highlight:$search}">
+                                    {$commit_presenter->author->display_name|highlight:$search}</a>
                             {else}
                                 {$commit_presenter->commit->getAuthorName()|highlight:$search}
                             {/if}
                         {elseif $searchtype == 'committer'}
                             {if ($commit_presenter->committer->is_a_tuleap_user)}
-                                <a href="{$commit_presenter->committer->url|escape}">{$commit_presenter->committer->display_name|highlight:$search}</a>
+                                <a href="{$commit_presenter->committer->url|highlight:$search}">
+                                        {$commit_presenter->committer->display_name|highlight:$search}</a>
                             {else}
                                 {$commit_presenter->commit->GetCommitterName()|highlight:$search}
                             {/if}
                         {else}
                             {if ($commit_presenter->author->is_a_tuleap_user)}
-                                <a href="{$commit_presenter->author->url|escape}">{$commit_presenter->author->display_name|escape}</a>
+                                <a href="{$commit_presenter->author->url|escape}">
+                                    {$commit_presenter->author->display_name|escape}</a>
                             {else}
                                 {$commit_presenter->commit->getAuthorName()|escape}
                             {/if}

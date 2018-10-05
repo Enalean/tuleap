@@ -42,26 +42,18 @@ class ShortlogPresenterBuilder
      */
     public function getShortlogPresenter(array $commits)
     {
-        $emails = array_reduce(
-            $commits,
-            function (array $emails, Commit $commit) {
-                $emails['authors'][] = $commit->getAuthorEmail();
-                $emails['committers'][] = $commit->getCommitterEmail();
-
-                return $emails;
+        $author_emails = array_map(
+            function (Commit $commit) {
+                return $commit->getAuthorEmail();
             },
-            [
-                'authors' => [],
-                'committers' => []
-            ]
+            $commits
         );
-        $authors_by_email    = $this->user_manager->getUserCollectionByEmails(array_unique($emails['authors']));
-        $committers_by_email = $this->user_manager->getUserCollectionByEmails(array_unique($emails['committers']));
+        $authors_by_email = $this->user_manager->getUserCollectionByEmails($author_emails);
 
         return new ShortlogPresenter(
             array_map(
-                function (Commit $commit) use ($authors_by_email, $committers_by_email) {
-                    return new ShortlogCommitPresenter($commit, $authors_by_email, $committers_by_email);
+                function (Commit $commit) use ($authors_by_email) {
+                    return new ShortlogCommitPresenter($commit, $authors_by_email);
                 },
                 $commits
             )

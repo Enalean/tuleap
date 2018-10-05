@@ -35,19 +35,13 @@ class ShortlogCommitPresenter
     /** @var string */
     public $commit_date;
 
-    public function __construct(
-        Commit $commit,
-        UserEmailCollection $authors_by_email,
-        UserEmailCollection $committers_by_email
-    ) {
+    public function __construct(Commit $commit, UserEmailCollection $authors_by_email)
+    {
         $this->commit   = $commit;
         $this->short_id = substr($commit->GetHash(), 0, 10);
 
         $this->author = new CommitUserPresenter();
         $this->author->buildFromTuleapUser($authors_by_email->getUserByEmail($commit->getAuthorEmail()));
-
-        $this->committer = new CommitUserPresenter();
-        $this->committer->buildFromTuleapUser($committers_by_email->getUserByEmail($commit->getCommitterEmail()));
 
         $committed_on      = new \DateTimeImmutable('@' . $commit->GetCommitterEpoch());
         $this->commit_date = $committed_on->format($GLOBALS['Language']->getText('system', 'datefmt'));
