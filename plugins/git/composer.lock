@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0388af705a865e504ef7ea8a434c632f",
+    "content-hash": "cd919aa1154867d0adfbb90011e296ba",
     "packages": [
         {
             "name": "geshi/geshi",
@@ -159,5 +159,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "ext-gettext": "0"
+    }
 }
