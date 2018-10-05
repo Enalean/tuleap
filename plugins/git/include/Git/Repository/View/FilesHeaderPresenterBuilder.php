@@ -80,7 +80,7 @@ class FilesHeaderPresenterBuilder
         }
 
         $action = $request->get('a');
-        if ($action !== 'tree' && $action !== false) {
+        if (! in_array($action, ['blob', 'blame', 'history', 'blobdiff', 'tree', false], true)) {
             return $cannot_be_displayed_presenter;
         }
 

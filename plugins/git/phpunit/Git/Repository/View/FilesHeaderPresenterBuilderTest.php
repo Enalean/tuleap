@@ -371,10 +371,13 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($presenter->can_display_selector);
     }
 
-    public function testSelectorIsNotDisplayedIfWeAreNotOnATree()
+    /**
+     * @dataProvider provideActionsThatShouldNotDisplayTheSelector
+     */
+    public function testSelectorIsNotDisplayedIfWeAreOnACommitView($action)
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('commit');
+        $this->request->allows()->get('a')->andReturn($action);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -389,13 +392,22 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
         $this->assertFalse($presenter->can_display_selector);
+    }
+
+    public function provideActionsThatShouldNotDisplayTheSelector()
+    {
+        return [
+            ['commit'],
+            ['shortlog'],
+            ['search']
+        ];
     }
 
     public function testSelectorIsNotDisplayedIfRepositoryIsNotCreated()
