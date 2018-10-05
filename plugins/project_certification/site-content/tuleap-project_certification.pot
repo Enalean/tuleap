@@ -9,6 +9,9 @@ msgstr ""
 msgid "Current project owner:"
 msgstr ""
 
+msgid "Owner"
+msgstr ""
+
 msgid "Project certification"
 msgstr ""
 

@@ -26,6 +26,9 @@ msgstr "Ajoute le rôle du responsable du projet"
 msgid "Current project owner:"
 msgstr "Responsable actuel du projet :"
 
+msgid "Owner"
+msgstr "Responsable"
+
 msgid "Project certification"
 msgstr "Certification de projet"
 

@@ -21,6 +21,7 @@
 namespace Tuleap\Widget\ProjectMembers;
 
 use Project;
+use Tuleap\Widget\Event\UserWithStarBadgeCollector;
 use UGroupUserDao;
 
 class AdministratorPresenterBuilder
@@ -31,12 +32,19 @@ class AdministratorPresenterBuilder
     private $user_manager;
     /** @var \UserHelper */
     private $user_helper;
+    /** @var \EventManager */
+    private $event_manager;
 
-    public function __construct(UGroupUserDao $dao, \UserManager $user_manager, \UserHelper $user_helper)
-    {
-        $this->dao          = $dao;
-        $this->user_manager = $user_manager;
-        $this->user_helper  = $user_helper;
+    public function __construct(
+        UGroupUserDao $dao,
+        \UserManager $user_manager,
+        \UserHelper $user_helper,
+        \EventManager $event_manager
+    ) {
+        $this->dao           = $dao;
+        $this->user_manager  = $user_manager;
+        $this->user_helper   = $user_helper;
+        $this->event_manager = $event_manager;
     }
 
     /**
@@ -44,15 +52,24 @@ class AdministratorPresenterBuilder
      */
     public function build(Project $project)
     {
-        $presenters = [];
+        $administrators = [];
         $rows       = $this->dao->searchUserByDynamicUGroupId(\ProjectUGroup::PROJECT_ADMIN, $project->getID());
         foreach ($rows as $row) {
             $administrator = $this->user_manager->getUserById($row['user_id']);
             if ($administrator) {
-                $administrator_presenter = new AdministratorPresenter($this->user_helper);
-                $administrator_presenter->build($administrator);
-                $presenters[] = $administrator_presenter;
+                $administrators[] = $administrator;
             }
+        }
+
+        $collector = new UserWithStarBadgeCollector($project, $administrators);
+        $this->event_manager->processEvent($collector);
+
+        $badged_administrator = $collector->getUserWithStarBadge();
+        $presenters = [];
+        foreach ($administrators as $user) {
+            $administrator_presenter = new AdministratorPresenter($this->user_helper);
+            $administrator_presenter->build($user, $badged_administrator);
+            $presenters[] = $administrator_presenter;
         }
 
         return $presenters;

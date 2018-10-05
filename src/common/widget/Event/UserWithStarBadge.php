@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.massmail-project-member-link {
-    text-decoration: none;
-}
+namespace Tuleap\Widget\Event;
 
-.massmail-project-member-link-icon {
-    padding: 0 5px 0 0;
-}
+class UserWithStarBadge
+{
+    private $badge_label;
 
-.massmail-project-member-link:hover {
-    text-decoration: underline;
+    /** @var \PFUser */
+    private $user;
+
+    public function __construct(\PFUser $user, $badge_label)
+    {
+        $this->user        = $user;
+        $this->badge_label = $badge_label;
+    }
+
+    public function isUserBadged(\PFUser $user)
+    {
+        return $user === $this->user;
+    }
+
+    public function getBadgeLabel()
+    {
+        return $this->badge_label;
+    }
 }
