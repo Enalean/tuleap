@@ -18,7 +18,7 @@
  *}
 
 <section class="tlp-pane-section">
-    <h2 class="tlp-pane-subtitle">
+    <h2 class="tlp-pane-title">
         <i class="tlp-pane-title-icon fa fa-copy"></i> {t}Modified Files{/t}
     </h2>
     <div class="tlp-table-actions">
@@ -27,14 +27,14 @@
             <div class="tlp-button-bar-item">
                 <input type="radio" class="tlp-button-bar-checkbox" checked>
                 <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                    <i class="fa fa-list tlp-button-icon"></i> {t}List{/t}
+                    {t}List{/t}
                 </label>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    <i class="fa fa-list-alt tlp-button-icon"></i> {t}Inline diff{/t}
+                    {t}Inline diff{/t}
                 </a>
             </div>
         </div>
@@ -52,7 +52,7 @@
         <tbody>
         {foreach from=$treediff item=diffline}
             <tr>
-                <td class="{$commit_presenter->getStatusClassname($diffline)}">{$diffline->GetStatus()|escape}</td>
+                <td class="git-repository-commit-file-status {$commit_presenter->getStatusClassname($diffline)}">{$diffline->GetStatus()|escape}</td>
                 <td>{$diffline->GetFromFile()|escape}</td>
                 {if (! $diffline->isBinaryFile())}
                     <td class="tlp-table-cell-numeric git-repository-commit-file-stat-added">
@@ -76,6 +76,11 @@
                        class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
                     >
                         <i class="fa fa-long-arrow-right tlp-button-icon"></i> {t}Go to diff{/t}
+                    </a>
+                    <a href="{$SCRIPT_NAME}?a=blob&amp;h={$diffline->GetToHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$diffline->GetToFile()}"
+                       class="tlp-table-cell-actions-button tlp-button-primary tlp-button-outline tlp-button-small"
+                    >
+                        <i class="fa fa-file-text-o tlp-button-icon"></i> {t}View file{/t}
                     </a>
                 </td>
             </tr>
