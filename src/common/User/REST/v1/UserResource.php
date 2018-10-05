@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,9 @@
 namespace Tuleap\User\REST\v1;
 
 use PFUser;
+use Tuleap\User\AccessKey\AccessKeyDAO;
+use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
+use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
 use Tuleap\User\History\HistoryCleaner;
 use Tuleap\User\History\HistoryRetriever;
 use UserManager;
@@ -543,5 +546,56 @@ class UserResource extends AuthenticatedResource {
         if ($requested_user_id != $current_user->getId()) {
             throw new RestException(403, 'You can only access to your own history');
         }
+    }
+
+    /**
+     * @url OPTIONS {id}/access_keys
+     *
+     * @access protected
+     */
+    public function optionAccessKey($id)
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get the access keys of a user
+     *
+     * @url GET {id}/access_keys
+     *
+     * @param int $id Id of the user
+     * @param int $limit  Number of elements displayed {@from path}{@min 1}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     *
+     * @access protected
+     *
+     * @throws 403
+     *
+     * @return array {@type \Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation}
+     */
+    public function getAccessKeys($id, $limit = self::MAX_LIMIT, $offset = 0)
+    {
+        $this->optionAccessKey($id);
+        $this->checkAccess();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        if ($id != $current_user->getId()) {
+            throw new RestException(403, 'You can only access to your own access keys');
+        }
+
+        $access_key_metadata_retriever = new AccessKeyMetadataRetriever(new AccessKeyDAO());
+        $all_access_key_medatada       = $access_key_metadata_retriever->getMetadataByUser($current_user);
+
+        Header::sendPaginationHeaders($limit, $offset, count($all_access_key_medatada), self::MAX_LIMIT);
+
+        $access_key_representations = [];
+        foreach (array_slice($all_access_key_medatada, $offset, $limit) as $access_key_metadata) {
+            $representation = new UserAccessKeyRepresentation();
+            $representation->build($access_key_metadata);
+            $access_key_representations[] = $representation;
+        }
+
+        return $access_key_representations;
     }
 }
