@@ -17,34 +17,79 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.git-repository-commit-metadata {
+.git-repository-commit-title {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    font-size: 20px;
+
+    > a[class*='tlp-badge'] {
+        margin: 0 0 0 5px;
+
+        &:first-of-type {
+            margin: 0 0 0 $tlp-half-spacing;
+        }
+    }
+}
+
+.git-repository-commit-info {
     display: flex;
     flex-wrap: wrap;
 }
 
-.git-repository-commit-metadata-header {
-    margin: 0 0 $tlp-spacing;
-    font-size: 20px;
+.git-repository-commit-metadata {
+    flex: 1 1 auto;
 }
 
-.git-repository-commit-metadata-section {
+.git-repository-commit-metadata-properties {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.git-repository-commit-metadata-properties-group {
+    margin: 0;
+
+    &:first-child {
+        margin: 0 $tlp-double-spacing $tlp-spacing 0;
+    }
+}
+
+.git-repository-commit-description {
+    min-width: 300px;
     margin: 0 $tlp-double-spacing $tlp-spacing 0;
-}
-
-.git-repository-commit-metadata-description {
-    margin: 0 0 $tlp-spacing;
     padding: 0 0 0 $tlp-half-spacing;
-    border-left: 3px solid $tlp-theme-color;
+    border-left: 2px solid $tlp-theme-color;
     white-space: pre;
 }
 
-.git-repository-commit-metadata-username {
+.git-repository-commit-reference {
+    font-size: 12px;
+    font-style: italic;
+}
+
+.git-repository-commit-metadata-username-date {
     display: flex;
     align-items: center;
 }
 
 .git-repository-commit-metadata-username-avatar {
+    flex: 0 0 auto;
     margin: 0 5px 0 0;
+}
+
+.git-repository-commit-metadata-date {
+    margin: 0 0 0 $tlp-half-spacing;
+    font-size: 14px;
+
+    > .fa-clock-o {
+        margin: 0 2px 0 0;
+        font-size: 12px;
+    }
+}
+
+.git-repository-commit-metadata-changes {
+    margin: 0 0 $tlp-double-spacing;
+    font-size: 24px;
 }
 
 .git-repository-commit-file-stat-added,
