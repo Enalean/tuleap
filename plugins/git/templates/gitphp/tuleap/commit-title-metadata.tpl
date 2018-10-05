@@ -19,14 +19,32 @@
 
 <div class="tlp-pane-header">
     <h2 class="git-repository-commit-title">
-        {$commit->GetTitle()|escape}
+        {php}
+            $commit_presenter = $this->get_template_vars('commit_presenter');
+            $commit           = $this->get_template_vars('commit');
+            echo $commit_presenter->purifier->purify(
+                $commit->GetTitle(),
+                CODENDI_PURIFIER_BASIC_NOBR,
+                HTTPRequest::instance()->getProject()->getID()
+            );
+        {/php}
         {include file='tuleap/refs-badges.tpl' commit=$commit}
     </h2>
 </div>
 
 <section class="tlp-pane-section git-repository-commit-info">
     {if $commit_presenter->has_description}
-        <p class="git-repository-commit-description">{$commit_presenter->description|escape}</p>
+        <p class="git-repository-commit-description">
+{php}
+    $commit_presenter = $this->get_template_vars('commit_presenter');
+    $description      = $commit_presenter->description;
+    echo $commit_presenter->purifier->purify(
+        $description,
+        CODENDI_PURIFIER_BASIC_NOBR,
+        HTTPRequest::instance()->getProject()->getID()
+    );
+{/php}
+        </p>
     {/if}
     <div class="git-repository-commit-metadata">
         <div class="git-repository-commit-metadata-changes">
@@ -86,7 +104,7 @@
             <div class="git-repository-commit-metadata-properties-group">
                 <div class="tlp-property">
                     <label class="tlp-label">{t domain="gitphp"}Hash{/t}</label>
-                    <span>{$commit->getHash()|escape}</span>
+                    <span>{$commit->GetHash()|escape}</span>
                 </div>
 
                 {if $commit_presenter->number_of_parents == 1}
