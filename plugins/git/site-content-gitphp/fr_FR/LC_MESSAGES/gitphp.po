@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2018-10-05 10:48+0200\n"
+"PO-Revision-Date: 2018-10-08 10:35+0200\n"
 "Last-Translator: Zaran Krleza <zaran.krleza@gmail.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -285,6 +285,10 @@ msgstr "La recherche doit comporter au moins 2 caractères"
 # Link beside commits - selects this commit to be used in a diff
 msgid "Select for diff"
 msgstr "Marquer pour diff"
+
+# Link beside commits - selects this commit to be used in a diff
+msgid "Selected for diff"
+msgstr "Marqué pour diff"
 
 msgid "Side by side diff"
 msgstr "Diff côte à côte"

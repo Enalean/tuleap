@@ -23,7 +23,14 @@
         {include file='tuleap/blob-header.tpl'}
 
         <section class="tlp-pane-section-for-cards" id="git-repository-shortlog">
-            {include file="tuleap/commits-as-cards.tpl"}
+            {foreach from=$shortlog_presenter->commits item=commits_per_day}
+                <h2 class="tlp-pane-subtitle git-repository-shortlog-day">
+                    <i class="fa fa-calendar tlp-pane-title-icon"></i>
+                    {$commits_per_day->day | escape}
+                </h2>
+
+                {include file="tuleap/commits-list.tpl"}
+            {/foreach}
         </section>
     </div>
 </section>
