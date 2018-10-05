@@ -20,9 +20,13 @@
 <section class="tlp-pane">
     <div class="tlp-pane-container">
         {include file='tuleap/commit-title-metadata.tpl'}
+    </div>
+</section>
 
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
         <section class="tlp-pane-section">
-            <h2 class="tlp-pane-subtitle">
+            <h2 class="tlp-pane-title">
                 <i class="tlp-pane-title-icon fa fa-copy"></i> {t}Modified Files{/t}
             </h2>
             <div class="git-repository-commit-diff-actions">
@@ -31,20 +35,20 @@
                         <a href="{$commit_presenter->getCommitListLink()}"
                            class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
-                            <i class="fa fa-list tlp-button-icon"></i> {t}List{/t}
+                            {t}List{/t}
                         </a>
                     </div>
                     <div class="tlp-button-bar-item">
                         <input type="radio" class="tlp-button-bar-checkbox" checked>
                         <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                            <i class="fa fa-list-alt tlp-button-icon"></i> {t}Inline diff{/t}
+                            {t}Inline diff{/t}
                         </label>
                     </div>
                 </div>
             </div>
             {foreach from=$treediff item=filediff}
                 <div class="git-repository-commit-diff-file-header">
-                    <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element"
+                    <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element git-repository-commit-file-status"
                     >{$filediff->GetStatus()|escape}</span>
                     <a href="{$commit_presenter->getDiffLink($filediff)}"
                        class="git-repository-commit-diff-file-header-element"

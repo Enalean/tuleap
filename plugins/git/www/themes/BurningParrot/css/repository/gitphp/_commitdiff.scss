@@ -24,9 +24,13 @@
 
 .git-repository-commit-diff-file-header {
     display: flex;
-    margin: $tlp-spacing 0 0;
-    padding: $tlp-half-spacing $tlp-spacing;
-    background: $tlp-theme-background-color;
+    margin: $tlp-spacing -#{$tlp-spacing} $tlp-half-spacing;
+    padding: $tlp-spacing;
+    background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
+
+    .git-repository-commit-file-status {
+        font-size: 16px;
+    }
 }
 
 .git-repository-commit-diff-file-header-spacer {
@@ -39,7 +43,8 @@
 
 .git-repository-diff {
     font-family: monospace;
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .git-repository-diff-line {
