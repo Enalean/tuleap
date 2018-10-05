@@ -126,6 +126,16 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
         return '';
     }
 
+
+    public function GetFullPath() // @codingStandardsIgnoreLine
+    {
+        if (!(isset($_GET['f']))) {
+            return $this->path;
+        }
+
+        return $_GET['f'] . "/" . $this->path;
+    }
+
     /**
      * SetPath
      *
