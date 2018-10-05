@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,9 @@ msgstr "Ajouter un utilisateur non membre du projet"
 
 msgid "Administrator"
 msgstr "Administrateur"
+
+msgid "Administrators"
+msgstr "Administrateurs"
 
 msgid "Agile Dashboard"
 msgstr "Agile Dashboard"
@@ -565,6 +568,9 @@ msgstr "Liens"
 msgid "Lists"
 msgstr "Listes"
 
+msgid "Lists the project members."
+msgstr "Affiche la liste des membres du projet."
+
 msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
@@ -588,6 +594,11 @@ msgstr "Description du groupe"
 
 msgid "Mediawiki"
 msgstr "Mediawiki"
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] "Membre"
+msgstr[1] "Membres"
 
 msgid "Member name"
 msgstr "Nom du membre"
@@ -781,6 +792,9 @@ msgstr "Export des données"
 
 msgid "Project History"
 msgstr "Historique du projet"
+
+msgid "Project Team"
+msgstr "Équipe du projet"
 
 msgid "Project administration"
 msgstr "Administration du projet"
@@ -1235,6 +1249,9 @@ msgstr "Groupes liés à celui-ci"
 
 msgid "Verify accessiblity mode value"
 msgstr "Vérifiez la valeur du mode d'accessibilité"
+
+msgid "View members"
+msgstr "Voir les membres"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "

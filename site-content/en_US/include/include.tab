@@ -202,10 +202,6 @@ include_project_home	not_official_site	<P>NOTE: This project entry is maintained
 include_project_home	more_info	More information
 include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.
 include_project_home	other_info	Other information
-include_project_home	devel_info	Project Team
-include_project_home	proj_admins	Project Admins
-include_project_home	proj_members	Project Members
-include_project_home	view_members	View Members
 include_project_home	latest_file_releases	Latest File Releases
 include_project_home	package	Package
 include_project_home	version	Version

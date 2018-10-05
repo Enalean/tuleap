@@ -97,6 +97,9 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
+msgid "Administrators"
+msgstr ""
+
 msgid "Agile Dashboard"
 msgstr ""
 
@@ -518,6 +521,9 @@ msgstr ""
 msgid "Lists"
 msgstr ""
 
+msgid "Lists the project members."
+msgstr ""
+
 msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
@@ -535,6 +541,11 @@ msgstr ""
 
 msgid "Mediawiki"
 msgstr ""
+
+msgid "Member"
+msgid_plural "Members"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Member name"
 msgstr ""
@@ -722,6 +733,9 @@ msgid "Project Data Export"
 msgstr ""
 
 msgid "Project History"
+msgstr ""
+
+msgid "Project Team"
 msgstr ""
 
 msgid "Project administration"
@@ -1139,6 +1153,9 @@ msgid "Users groups bound to this one"
 msgstr ""
 
 msgid "Verify accessiblity mode value"
+msgstr ""
+
+msgid "View members"
 msgstr ""
 
 msgid ""

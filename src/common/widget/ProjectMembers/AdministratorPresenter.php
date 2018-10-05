@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.widget-project-team-project-members-title {
-    display: inline-block;
-    margin: $tlp-half-spacing 0 0;
-}
+namespace Tuleap\Widget\ProjectMembers;
 
-.massmail-project-member-link {
-    text-decoration: none;
-}
+class AdministratorPresenter
+{
+    /** @var bool */
+    public $has_avatar;
+    public $user_name;
+    public $username_display;
 
-.massmail-project-member-link:hover {
-    text-decoration: underline;
+    /** @var \UserHelper */
+    private $user_helper;
+
+    public function __construct(\UserHelper $user_helper)
+    {
+        $this->user_helper = $user_helper;
+    }
+
+    public function build(\PFUser $user)
+    {
+        $this->has_avatar       = $user->hasAvatar();
+        $this->user_name        = $user->getUserName();
+        $this->username_display = $this->user_helper->getDisplayNameFromUser($user);
+    }
 }

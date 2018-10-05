@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -20,25 +20,27 @@
 
 namespace Tuleap\Widget;
 
-use ForgeConfig;
+use EventManager;
 use TemplateRendererFactory;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Widget\Event\GetProjectWidgetList;
 use Tuleap\Widget\Event\GetUserWidgetList;
 use Tuleap\Widget\Event\GetWidget;
-use UserManager;
-use User_ForgeUserGroupPermissionsManager;
+use Tuleap\Widget\ProjectMembers\ProjectMembers;
 use User_ForgeUserGroupPermission_ProjectApproval;
-use EventManager;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
 use Widget;
 use Widget_Contacts;
 use Widget_MyAdmin;
-use Widget_MyImageViewer;
-use Widget_MyProjects;
+use Widget_MyArtifacts;
 use Widget_MyBookmarks;
+use Widget_MyImageViewer;
+use Widget_MyLatestSvnCommits;
 use Widget_MyMonitoredForums;
 use Widget_MyMonitoredFp;
-use Widget_MyLatestSvnCommits;
-use Widget_MyArtifacts;
+use Widget_MyProjects;
 use Widget_MyRss;
 use Widget_MySystemEvent;
 use Widget_ProjectDescription;
@@ -47,12 +49,9 @@ use Widget_ProjectLatestCvsCommits;
 use Widget_ProjectLatestFileReleases;
 use Widget_ProjectLatestNews;
 use Widget_ProjectLatestSvnCommits;
-use Widget_ProjectMembers;
 use Widget_ProjectPublicAreas;
 use Widget_ProjectRss;
 use Widget_ProjectSvnStats;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
 
 class WidgetFactory
 {
@@ -142,7 +141,7 @@ class WidgetFactory
                 $widget = new ProjectHeartbeat();
                 break;
             case 'projectmembers':
-                $widget = new Widget_ProjectMembers();
+                $widget = new ProjectMembers();
                 break;
             case 'projectlatestfilereleases':
                 $widget = new Widget_ProjectLatestFileReleases();
