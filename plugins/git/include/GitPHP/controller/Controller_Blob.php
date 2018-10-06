@@ -167,6 +167,10 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         $blob = $this->project->GetBlob($this->params['hash']);
+        if (! $blob) {
+            throw new NotFoundException();
+        }
+
         if (!empty($this->params['file'])) {
             $blob->SetPath($this->params['file']);
         }

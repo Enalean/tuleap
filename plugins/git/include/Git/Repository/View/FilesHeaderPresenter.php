@@ -38,6 +38,8 @@ class FilesHeaderPresenter
     public $repository_id;
     /** @var string */
     public $repository_url;
+    /** @var array */
+    public $json_encoded_parameters;
 
     public function __construct(
         GitRepository $repository,
@@ -45,7 +47,8 @@ class FilesHeaderPresenter
         $can_display_selector,
         $head_name,
         $is_tag,
-        $committer_epoch
+        $committer_epoch,
+        array $url_parameters
     ) {
         $this->repository_id        = $repository->getId();
         $this->repository_url       = $repository_url;
@@ -58,5 +61,7 @@ class FilesHeaderPresenter
         }
         $this->committer_epoch = $committer_epoch;
         $this->is_tag          = $is_tag;
+
+        $this->json_encoded_parameters  = json_encode($url_parameters);
     }
 }

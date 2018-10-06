@@ -24,12 +24,12 @@
         {assign var=blobcommit value=$blob->GetCommit()}
         {assign var=blobtree value=$blobcommit->GetTree()}
 
-        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;h={$blobtree->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
+        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
         -->{foreach from=$blob->GetPathTree() item=pathtreepiece}<!--
-            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;h={$pathtreepiece->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a>/<!--
+            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a>/<!--
         -->{/foreach}<!--
         -->{if $blob->isBlob()}<!--
-            --><a href="{$SCRIPT_NAME}?a=blob&amp;h={$blob->GetHash()|urlencode}&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
+            --><a href="{$SCRIPT_NAME}?a=blob&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
         {/if}
     </h1>
 
@@ -45,7 +45,7 @@
             {if $blob->GetPath()}
                 {if !$datatag}
                     <div class="tlp-button-bar-item">
-                        <a href="{$SCRIPT_NAME}?a=blame&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
+                        <a href="{$SCRIPT_NAME}?a=blame&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
                             class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             {t domain="gitphp"}Blame{/t}
@@ -53,7 +53,7 @@
                     </div>
                 {/if}
                 <div class="tlp-button-bar-item">
-                    <a href="{$SCRIPT_NAME}?a=history&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                    <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                         class="tlp-button-primary tlp-button-outline tlp-button-small"
                     >
                         {t domain="gitphp"}History{/t}

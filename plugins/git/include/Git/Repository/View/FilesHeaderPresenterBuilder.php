@@ -69,7 +69,8 @@ class FilesHeaderPresenterBuilder
             false,
             '',
             false,
-            ''
+            '',
+            []
         );
         if (! ForgeConfig::get('git_repository_bp')) {
             return $cannot_be_displayed_presenter;
@@ -101,7 +102,8 @@ class FilesHeaderPresenterBuilder
             true,
             $head_name,
             $is_tag,
-            $committer_epoch
+            $committer_epoch,
+            $this->getURLParameters($request)
         );
     }
 
@@ -186,5 +188,24 @@ class FilesHeaderPresenterBuilder
         }
 
         return $matching_ref;
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @return array
+     */
+    private function getURLParameters(HTTPRequest $request)
+    {
+        $parameters = [];
+        $parameters_to_keep = ['a', 'f'];
+        foreach ($parameters_to_keep as $key) {
+            if ($request->exist($key)) {
+                $parameters[$key] = $request->get($key);
+            } elseif ($key === 'a') {
+                $parameters[$key] = 'tree';
+            }
+        }
+
+        return $parameters;
     }
 }

@@ -50,13 +50,13 @@
                             <tr>
                                 {if $treeitem->isBlob() }
                                     <td>
-                                        <a href="{$SCRIPT_NAME}?a=blob&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
+                                        <a href="{$SCRIPT_NAME}?a=blob&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
                                             <i class="fa fa-file-text-o fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
                                         </a>
                                     </td>
                                 {elseif $treeitem->isTree() }
                                     <td>
-                                        <a href="{$SCRIPT_NAME}?a=tree&amp;h={$treeitem->GetHash()|urlencode}&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
+                                        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$commit->GetHash()|urlencode}&amp;f={$treeitem->GetFullPath()|urlencode}">
                                             <i class="fa fa-folder fa-fw git-repository-tree-icon"></i>{$treeitem->GetName()|escape}
                                         </a>
                                     </td>

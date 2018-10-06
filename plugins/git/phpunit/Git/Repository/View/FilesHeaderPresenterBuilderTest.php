@@ -84,11 +84,24 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         ForgeConfig::restore();
     }
 
+    private function setRequest(array $parameters)
+    {
+        $possible_parameters = ['a', 'h', 'hb', 'f'];
+        foreach ($possible_parameters as $key) {
+            if (isset($parameters[$key])) {
+                $this->request->allows()->exist($key)->andReturn(true);
+                $this->request->allows()->get($key)->andReturn($parameters[$key]);
+            } else {
+                $this->request->allows()->exist($key)->andReturn(false);
+                $this->request->allows()->get($key)->andReturn(false);
+            }
+        }
+    }
+
     public function testHeadNameIsFirstBranchName()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn(false);
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -122,8 +135,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testHeadNameIsFirstTagNameIfNoBranch()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn(false);
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -157,8 +169,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testHeadNameIsRequestedRef()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn('v12-1');
+        $this->setRequest(['a' => 'tree', 'hb' => 'v12-1']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -179,9 +190,9 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $commit->allows()->GetCommitterEpoch()->andReturn(12345);
 
         $this->commit_retriever->allows()
-                               ->getCommitOfCurrentTree()
-                               ->with($this->request, $this->gitphp_project)
-                               ->andReturn($commit);
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
 
         $presenter = $this->builder->build($this->request, $this->repository);
 
@@ -191,11 +202,93 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(12345, $presenter->committer_epoch);
     }
 
+    public function testCurrentURLParamatersExceptHashbaseAndHashbaseArePassedAsArrayToTheSelector()
+    {
+        ForgeConfig::set('git_repository_bp', '1');
+        $this->setRequest([
+            'a' => 'blame',
+            'hb' => 'v12-1',
+            'h' => 'd3c5d469b37586aa924577054162c31b6bf03a9a',
+            'f' => 'app.js'
+        ]);
+
+        $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
+
+        $first_head = Mockery::mock(Head::class);
+        $first_head->allows()->GetName()->andReturn('dev');
+        $first_tag = Mockery::mock(Tag::class);
+        $first_tag->allows()->GetName()->andReturn('v12');
+        $second_tag = Mockery::mock(Tag::class);
+        $second_tag->allows()->GetName()->andReturn('v12-1');
+
+        $commit = Mockery::mock(Commit::class);
+        $commit->allows()->GetHeads()->andReturn([$first_head]);
+        $commit->allows()->GetTags()->andReturn([$first_tag, $second_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
+
+        $this->commit_retriever->allows()
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
+
+        $presenter = $this->builder->build($this->request, $this->repository);
+
+        $this->assertTrue($presenter->can_display_selector);
+        $this->assertEquals('v12-1', $presenter->head_name);
+        $this->assertTrue($presenter->is_tag);
+
+        $parameters = json_decode($presenter->json_encoded_parameters, true);
+        $this->assertEquals('blame', $parameters['a']);
+        $this->assertEquals('app.js', $parameters['f']);
+        $this->assertFalse(isset($parameters['hb']));
+        $this->assertFalse(isset($parameters['h']));
+    }
+
+    public function testTreeIsDefaultViewIfRequestIsEmpty()
+    {
+        ForgeConfig::set('git_repository_bp', '1');
+        $this->setRequest([]);
+
+        $this->repository->allows()->isCreated()->andReturns(true);
+        $this->gitphp_project_retriever->allows()
+            ->getFromRepository()
+            ->with($this->repository)
+            ->andReturns($this->gitphp_project);
+
+        $first_head = Mockery::mock(Head::class);
+        $first_head->allows()->GetName()->andReturn('dev');
+        $first_tag = Mockery::mock(Tag::class);
+        $first_tag->allows()->GetName()->andReturn('v12');
+        $second_tag = Mockery::mock(Tag::class);
+        $second_tag->allows()->GetName()->andReturn('v12-1');
+
+        $commit = Mockery::mock(Commit::class);
+        $commit->allows()->GetHeads()->andReturn([$first_head]);
+        $commit->allows()->GetTags()->andReturn([$first_tag, $second_tag]);
+        $commit->allows()->GetCommitterEpoch()->andReturn(12345);
+
+        $this->commit_retriever->allows()
+            ->getCommitOfCurrentTree()
+            ->with($this->request, $this->gitphp_project)
+            ->andReturn($commit);
+
+        $presenter = $this->builder->build($this->request, $this->repository);
+
+        $this->assertTrue($presenter->can_display_selector);
+        $this->assertEquals('dev', $presenter->head_name);
+
+        $parameters = json_decode($presenter->json_encoded_parameters, true);
+        $this->assertEquals('tree', $parameters['a']);
+    }
+
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedTag()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn('refs/tags/v12-1');
+        $this->setRequest(['a' => 'tree', 'hb' => 'refs/tags/v12-1']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -231,8 +324,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedBranch()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn('refs/heads/feature');
+        $this->setRequest(['a' => 'tree', 'hb' => 'refs/heads/feature']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -268,8 +360,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testHeadNameIsHashIfNoBranchNorTag()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
-        $this->request->allows()->get('hb')->andReturn(false);
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -299,7 +390,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testHeadNameIsUndefinedIfNoCommitForCurrentTreeButThereIsAnExistingRefInTheRepository()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -325,7 +416,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testSelectorIsNotDisplayedIfNoCommitForCurrentTreeAndNoRefInTheRepository()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -347,7 +438,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testSelectorIsNotDisplayedIfConfigDisallowsIt()
     {
         ForgeConfig::set('git_repository_bp', '0');
-        $this->request->allows()->get('a')->andReturn('tree');
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -377,7 +468,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testSelectorIsNotDisplayedIfWeAreOnACommitView($action)
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn($action);
+        $this->setRequest(['a' => $action]);
 
         $this->repository->allows()->isCreated()->andReturns(true);
         $this->gitphp_project_retriever->allows()
@@ -413,7 +504,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function testSelectorIsNotDisplayedIfRepositoryIsNotCreated()
     {
         ForgeConfig::set('git_repository_bp', '1');
-        $this->request->allows()->get('a')->andReturn('tree');
+        $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(false);
 

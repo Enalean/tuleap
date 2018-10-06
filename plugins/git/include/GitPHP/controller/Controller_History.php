@@ -92,13 +92,16 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
+        if (isset($_GET['hb'])) {
+            $this->params['hashbase'] = $_GET['hb'];
+        } else {
+            $this->params['hashbase'] = 'HEAD';
+        }
         if (isset($_GET['f'])) {
             $this->params['file'] = $_GET['f'];
         }
         if (isset($_GET['h'])) {
             $this->params['hash'] = $_GET['h'];
-        } else {
-            $this->params['hash'] = 'HEAD';
         }
     }
 
@@ -111,12 +114,19 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        $co = $this->project->GetCommit($this->params['hash']);
+        $co = $this->project->GetCommit($this->params['hashbase']);
+        if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
+            $this->params['hash'] = $co->PathToHash($this->params['file']);
+        }
+
         $this->tpl->assign('commit', $co);
         $this->tpl->assign('tree', $co->GetTree());
 
-        $blobhash = $co->PathToHash($this->params['file']);
-        $blob = $this->project->GetBlob($blobhash);
+        $blob = $this->project->GetBlob($this->params['hash']);
+        if (! $blob) {
+            throw new NotFoundException();
+        }
+
         $blob->SetCommit($co);
         $blob->SetPath($this->params['file']);
         $this->tpl->assign('blob', $blob);

@@ -22,7 +22,7 @@
         <div class="git-repository-branch-tag-selector-is-loading" v-if="is_loading_branches"></div>
         <a v-for="branch in branches"
            v-bind:key="branch.commit.id"
-           v-bind:href="repository_url + '?a=tree&hb=' + branch.name"
+           v-bind:href="url(branch.name)"
            class="tlp-dropdown-menu-item"
            role="menuitem"
         >
@@ -44,6 +44,7 @@
 </template>
 <script>
 import { recursiveGet } from "tlp";
+import encodeData from "../helpers/encodeData.js";
 
 export default {
     name: "BranchesSection",
@@ -52,7 +53,8 @@ export default {
         repository_url: String,
         is_displaying_branches: Boolean,
         is_tag: Boolean,
-        current_ref_name: String
+        current_ref_name: String,
+        url_parameters: Object
     },
     data() {
         return {
@@ -79,6 +81,9 @@ export default {
                 this.is_loading_branches = false;
                 this.are_branches_loaded = true;
             }
+        },
+        url(hb) {
+            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb });
         }
     }
 };
