@@ -43,6 +43,8 @@ class FilesHeaderPresenterBuilder
      */
     private $gitphp_project_retriever;
 
+    const GITPHP_VIEWS_WITH_SELECTOR = ['shortlog', 'search', 'blob', 'blame', 'history', 'blobdiff', 'tree', false];
+
     public function __construct(
         GitPHPProjectRetriever $gitphp_project_retriever,
         CommitForCurrentTreeRetriever $commit_retriever,
@@ -81,7 +83,7 @@ class FilesHeaderPresenterBuilder
         }
 
         $action = $request->get('a');
-        if (! in_array($action, ['blob', 'blame', 'history', 'blobdiff', 'tree', false], true)) {
+        if (! in_array($action, self::GITPHP_VIEWS_WITH_SELECTOR, true)) {
             return $cannot_be_displayed_presenter;
         }
 
@@ -197,7 +199,7 @@ class FilesHeaderPresenterBuilder
     private function getURLParameters(HTTPRequest $request)
     {
         $parameters = [];
-        $parameters_to_keep = ['a', 'f'];
+        $parameters_to_keep = ['a', 'f', 's', 'st'];
         foreach ($parameters_to_keep as $key) {
             if ($request->exist($key)) {
                 $parameters[$key] = $request->get($key);

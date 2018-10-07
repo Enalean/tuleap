@@ -85,10 +85,10 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
-        if (isset($_GET['h'])) {
-            $this->params['hash'] = $_GET['h'];
+        if (isset($_GET['hb'])) {
+            $this->params['hashbase'] = $_GET['hb'];
         } else {
-            $this->params['hash'] = 'HEAD';
+            $this->params['hashbase'] = 'HEAD';
         }
         if (isset($_GET['pg'])) {
             $this->params['page'] = $_GET['pg'];
@@ -109,11 +109,12 @@ class Controller_Log extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        $this->tpl->assign('commit', $this->project->GetCommit($this->params['hash']));
+        $this->tpl->assign('commit', $this->project->GetCommit($this->params['hashbase']));
+        $this->tpl->assign('hashbase', $this->params['hashbase']);
         $this->tpl->assign('head', $this->project->GetHeadCommit());
         $this->tpl->assign('page', $this->params['page']);
 
-        $revlist = $this->project->GetLog($this->params['hash'], 101, ($this->params['page'] * 100));
+        $revlist = $this->project->GetLog($this->params['hashbase'], 101, ($this->params['page'] * 100));
         if ($revlist) {
             if (count($revlist) > 100) {
                 $this->tpl->assign('hasmorerevs', true);

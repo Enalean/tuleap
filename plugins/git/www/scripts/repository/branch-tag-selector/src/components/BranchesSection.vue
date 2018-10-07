@@ -44,7 +44,7 @@
 </template>
 <script>
 import { recursiveGet } from "tlp";
-import encodeData from "../helpers/encodeData.js";
+import encodeData from "../helpers/encode-data.js";
 
 export default {
     name: "BranchesSection",
@@ -82,8 +82,8 @@ export default {
                 this.are_branches_loaded = true;
             }
         },
-        url(hb) {
-            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb });
+        url(ref) {
+            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
         }
     }
 };

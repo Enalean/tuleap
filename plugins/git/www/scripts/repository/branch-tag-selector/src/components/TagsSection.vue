@@ -44,7 +44,7 @@
 </template>
 <script>
 import { recursiveGet } from "tlp";
-import encodeData from "../helpers/encodeData.js";
+import encodeData from "../helpers/encode-data.js";
 
 export default {
     name: "TagsSection",
@@ -79,8 +79,8 @@ export default {
                 this.are_tags_loaded = true;
             }
         },
-        url(hb) {
-            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb });
+        url(ref) {
+            return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
         }
     },
     watch: {

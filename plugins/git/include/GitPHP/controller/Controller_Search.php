@@ -107,10 +107,10 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
             throw new  MessageException(sprintf(dngettext("gitphp", 'You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
         }
 
-        if (isset($_GET['h'])) {
-            $this->params['hash'] = $_GET['h'];
+        if (isset($_GET['hb'])) {
+            $this->params['hashbase'] = $_GET['hb'];
         } else {
-            $this->params['hash'] = 'HEAD';
+            $this->params['hashbase'] = 'HEAD';
         }
         if (isset($_GET['pg'])) {
             $this->params['page'] = $_GET['pg'];
@@ -128,8 +128,9 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        $co = $this->project->GetCommit($this->params['hash']);
+        $co = $this->project->GetCommit($this->params['hashbase']);
         $this->tpl->assign('commit', $co);
+        $this->tpl->assign('hashbase', $this->params['hashbase']);
 
         $results = array();
         if ($co) {
