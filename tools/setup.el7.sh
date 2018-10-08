@@ -109,23 +109,19 @@ if [ ${tuleap_installed:-false} = "false" ] || \
         fi
     done
 
-    if [ "${assumeyes}" = "true" ]; then
-        _setupLocalInc
-    else
+    if [ -f "${tuleap_conf}/${local_inc}" ]; then
         _infoMessage "Saving ${local_inc} file"
         ${mv} "${tuleap_conf}/${local_inc}" \
             "${tuleap_conf}/${local_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
-        _setupLocalInc
     fi
+    _setupLocalInc
 
-    if [ "${assumeyes}" = "true" ]; then
-        _setupDatabaseInc
-    else
+    if [ -f "${tuleap_conf}/${database_inc}" ]; then
         _infoMessage "Saving ${database_inc} file"
         ${mv} "${tuleap_conf}/${database_inc}" \
             "${tuleap_conf}/${database_inc}.$(date +%Y-%m-%d_%H-%M-%S)"
-        _setupDatabaseInc
     fi
+    _setupDatabaseInc
 
     _setupForgeupgrade
     _phpActivePlugin "tracker" "${tuleap_unix_user}"
