@@ -148,6 +148,8 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
                 default:
                     throw new MessageException(dgettext("gitphp", 'Invalid search type'), true);
             }
+
+            $this->tpl->assign('tree', $co->GetTree());
         }
 
         if (count($results) < 1) {
@@ -167,8 +169,6 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
             $results = array_slice($results, 0, 100, true);
         }
         $this->tpl->assign('results', $results);
-
-        $this->tpl->assign('tree', $co->GetTree());
 
         $this->tpl->assign('page', $this->params['page']);
 
