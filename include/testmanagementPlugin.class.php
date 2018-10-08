@@ -19,6 +19,9 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
+use Tuleap\Glyph\GlyphFinder;
+use Tuleap\Glyph\GlyphLocation;
+use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -37,6 +40,8 @@ use Tuleap\TestManagement\XML\Exporter;
 use Tuleap\TestManagement\XMLImport;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
@@ -71,6 +76,7 @@ class testmanagementPlugin extends Plugin
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(ProjectServiceBeforeActivation::NAME);
+        $this->addHook(GlyphLocationsCollector::NAME);
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -79,7 +85,7 @@ class testmanagementPlugin extends Plugin
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('javascript_file');
             $this->addHook('cssfile');
-            $this->addHook(TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION);
+            $this->addHook(AdditionalArtifactActionButtonsFetcher::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_LINK_NATURE_REQUESTED);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
@@ -207,26 +213,41 @@ class testmanagementPlugin extends Plugin
         }
     }
 
-    public function tracker_event_complement_reference_information(array $params) {
-        $tracker = $params['artifact']->getTracker();
+    public function additionalArtifactActionButtonsFetcher(AdditionalArtifactActionButtonsFetcher $event) {
+        $tracker = $event->getArtifact()->getTracker();
         $project = $tracker->getProject();
 
         $plugin_testmanagement_is_used = $project->usesService($this->getServiceShortname());
-        if ($plugin_testmanagement_is_used) {
-            $reference_information = array(
-                'title' => $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_title'),
-                'links' => array()
-            );
 
-            $link = array(
-                'icon' => $this->getPluginPath() . '/themes/BurningParrot/images/artifact-link-graph.svg',
-                'link' => $this->getPluginPath() . '/?group_id=' . $tracker->getGroupId() . '#!/graph/' . $params['artifact']->getId(),
-                'label'=> $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_url')
-            );
-
-            $reference_information['links'][] = $link;
-            $params['reference_information'][] = $reference_information;
+        if (! $plugin_testmanagement_is_used) {
+            return;
         }
+
+        $link_label = $GLOBALS['Language']->getText('plugin_testmanagement', 'references_graph_url');
+
+        $url = $this->getPluginPath() . '/?'
+            . http_build_query(['group_id' =>$tracker->getGroupId()])
+            . '#!/graph/'
+            .urlencode($event->getArtifact()->getId());
+
+        $glyph_finder = new GlyphFinder(EventManager::instance());
+        $glyph = $glyph_finder->get('dependencies-graph');
+
+        $link = new AdditionalButtonLinkPresenter(
+            $link_label,
+            $url,
+            $glyph
+        );
+
+        $event->addLinkPresenter($link);
+    }
+
+    public function collectGlyphLocations(GlyphLocationsCollector $glyph_locations_collector)
+    {
+        $glyph_locations_collector->addLocation(
+            'dependencies-graph',
+            new GlyphLocation(__DIR__. '../../glyphs')
+        );
     }
 
     /**
