@@ -1,0 +1,37 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-star tlp-pane-title-icon"></i>
+                    {{# dgettext }} tuleap-project_certification | Project owner{{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>
+                    {{# dgettext }}
+                        tuleap-project_certification |
+                        A project owner is a project administrator responsible for this project.
+                        There must always be a project owner.
+                    {{/ dgettext }}
+                </p>
+                {{# has_project_owner }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">{{# dgettext }} tuleap-project_certification | Current project owner:{{/ dgettext }}</label>
+                        <div class="tlp-avatar project-admin-project-certification-owner-avatar">
+                            {{# has_avatar }}
+                                <img src="{{ avatar_url }}">
+                            {{/ has_avatar }}
+                        </div>
+                        {{ username_display }}
+                    </div>
+                {{/ has_project_owner }}
+                {{^ has_project_owner }}
+                    <p class="tlp-alert-danger">
+                        {{# dgettext }}tuleap-project_certification | This project has no owner.{{/ dgettext }}
+                    </p>
+                {{/ has_project_owner }}
+            </section>
+        </div>
+    </section>
+</div>
