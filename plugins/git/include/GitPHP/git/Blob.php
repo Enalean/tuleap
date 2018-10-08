@@ -439,6 +439,7 @@ class Blob extends FilesystemObject
         $args[] = '--git-dir=' . escapeshellarg($this->GetProject()->GetPath());
         $args[] = GitExe::DIFF_TREE;
         $args[] = '-r';
+        $args[] = '--root';
         $args[] = '--stdin';
         $args[] = '--';
         $args[] = escapeshellarg($this->GetPath());
@@ -494,6 +495,7 @@ class Blob extends FilesystemObject
         $args = array();
         $args[] = '-s';
         $args[] = '-l';
+        $args[] = '--root';
         if ($this->commit) {
             $args[] = escapeshellarg($this->commit->GetHash());
         } else {

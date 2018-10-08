@@ -150,6 +150,9 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         $tree = $this->project->GetTree($this->params['hash']);
+        if (! $tree) {
+            throw new NotFoundException();
+        }
 
         $readme_tree_item = $this->getReadmeTreeItem($tree);
         $this->tpl->assign('readme_content', $readme_tree_item);

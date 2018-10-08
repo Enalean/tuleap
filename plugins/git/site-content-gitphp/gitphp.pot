@@ -220,6 +220,9 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
+msgid "The requested resource cannot be found."
+msgstr ""
+
 msgid "Tree"
 msgstr ""
 

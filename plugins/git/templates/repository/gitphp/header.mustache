@@ -12,6 +12,7 @@
                 data-repository-url="{{ repository_url }}"
                 data-is-tag="{{# is_tag }}1{{/is_tag}}"
                 data-current-ref-name="{{^ is_undefined }}{{ head_name }}{{/ is_undefined }}"
+                data-url-parameters="{{ json_encoded_parameters }}"
             >
                 {{# is_undefined }}<em>{{/ is_undefined }}
                     {{ head_name }}

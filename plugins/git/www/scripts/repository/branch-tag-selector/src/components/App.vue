@@ -39,6 +39,7 @@
                 v-bind:is_displaying_branches="is_displaying_branches"
                 v-bind:is_tag="is_tag"
                 v-bind:current_ref_name="current_ref_name"
+                v-bind:url_parameters="url_parameters"
         ></branches-section>
         <tags-section
                 v-bind:repository_id="repository_id"
@@ -46,6 +47,7 @@
                 v-bind:is_displaying_branches="is_displaying_branches"
                 v-bind:is_tag="is_tag"
                 v-bind:current_ref_name="current_ref_name"
+                v-bind:url_parameters="url_parameters"
         ></tags-section>
     </div>
 </template>
@@ -65,7 +67,8 @@ export default {
         repository_id: Number,
         repository_url: String,
         is_tag: Boolean,
-        current_ref_name: String
+        current_ref_name: String,
+        url_parameters: Object
     },
     data() {
         return {
