@@ -113,13 +113,15 @@ class Massmail extends SystemEvent
     private function flood(Codendi_Mail $mail, $recipients, &$errors, &$has_success)
     {
         $nb_rows = db_numrows($recipients);
-        $tolist  = '';
+        $tolist  = [];
         $noreply = ForgeConfig::get('sys_noreply');
 
         for ($i = 1; $i <= $nb_rows; $i++) {
-            $tolist .= db_result($recipients, $i - 1, 'email') . ', ';
+            $tolist[] = db_result($recipients, $i - 1, 'email');
             if ($i % 25 == 0) {
-                $mail->setBcc($tolist, true);
+                foreach ($tolist as $to) {
+                    $mail->setBcc($to, true);
+                }
                 $mail->setTo($noreply, true);
                 if ($mail->send()) {
                     $has_success = true;
@@ -127,18 +129,20 @@ class Massmail extends SystemEvent
                     $errors .= $tolist;
                 }
                 usleep(2000000);
-                $tolist = '';
+                $tolist = [];
             }
         }
 
         //send the last of the messages.
-        if (strlen($tolist) > 0) {
-            $mail->setBcc($tolist, true);
+        if (count($tolist) > 0) {
+            foreach ($tolist as $to) {
+                $mail->setBcc($to, true);
+            }
             $mail->setTo($noreply, true);
             if ($mail->send()) {
                 $has_success = true;
             } else {
-                $errors .= $tolist;
+                $errors .= implode(', ', $tolist);
             }
         }
     }

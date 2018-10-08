@@ -776,10 +776,7 @@ function plugin_forumml_process_mail($plug,$reply=false) {
 	 		$continue = false;
 	 	} else {
 	 		// add list of cc users to mail mime
-	 		if (count($cc_array) > 0) {
-	 			$cc_list = util_normalize_emails(implode(',',$cc_array));	 			
-				$mail->setCc($cc_list,true);
-	 		}
+            $mail->setCc($cc_array,true);
 	 	}
 	}
 
