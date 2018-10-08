@@ -18,12 +18,14 @@
                 {{# has_project_owner }}
                     <div class="tlp-property">
                         <label class="tlp-label">{{# dgettext }} tuleap-project_certification | Current project owner:{{/ dgettext }}</label>
-                        <div class="tlp-avatar project-admin-project-certification-owner-avatar">
-                            {{# has_avatar }}
-                                <img src="{{ avatar_url }}">
-                            {{/ has_avatar }}
-                        </div>
-                        {{ username_display }}
+                        <a href="/users/{{ user_name }}">
+                            <div class="tlp-avatar project-admin-project-certification-owner-avatar">
+                                {{# has_avatar }}
+                                    <img src="{{ avatar_url }}">
+                                {{/ has_avatar }}
+                            </div><!--
+                            -->{{ username_display }}
+                        </a>
                     </div>
                 {{/ has_project_owner }}
                 {{^ has_project_owner }}
