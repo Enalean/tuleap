@@ -27,6 +27,7 @@ class ProjectOwnerPresenter
     public $has_avatar;
     public $avatar_url;
     public $username_display;
+    public $user_name;
 
     /** @var \UserHelper */
     private $user_helper;
@@ -42,6 +43,7 @@ class ProjectOwnerPresenter
         if ($this->has_project_owner) {
             $this->has_avatar       = $project_owner->hasAvatar();
             $this->avatar_url       = $project_owner->getAvatarUrl();
+            $this->user_name        = $project_owner->getUserName();
             $this->username_display = $this->user_helper->getDisplayNameFromUser($project_owner);
         }
     }
