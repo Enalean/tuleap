@@ -41,6 +41,7 @@
     margin: 0 0 0 $tlp-spacing;
 }
 
+.git-repository-diff-side-by-side,
 .git-repository-diff {
     font-family: monospace;
     font-size: 14px;
@@ -49,6 +50,16 @@
 
 .git-repository-diff-line {
     white-space: pre-wrap;
+}
+
+.git-repository-diff-side-by-side-line {
+    display: flex;
+    justify-content: space-around;
+
+    > div {
+        width: 50%;
+        white-space: pre-wrap;
+    }
 }
 
 .git-repository-diff-line-plus {
