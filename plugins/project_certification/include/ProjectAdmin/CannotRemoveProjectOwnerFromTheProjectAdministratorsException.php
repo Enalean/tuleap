@@ -18,14 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Project\Admin\ProjectUGroup;
+namespace Tuleap\ProjectCertification\ProjectAdmin;
 
-final class CannotRemoveLastProjectAdministratorException extends CannotRemoveUserMembershipToUserGroupException
+use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException;
+
+final class CannotRemoveProjectOwnerFromTheProjectAdministratorsException extends CannotRemoveUserMembershipToUserGroupException
 {
-    public function __construct(\PFUser $last_project_administrator, \Project $project)
+    public function __construct(\Project $project, \PFUser $user)
     {
-        $user_id    = $last_project_administrator->getId();
         $project_id = $project->getID();
-        parent::__construct("Cannot remove user #$user_id as it is the last project administrator of project #$project_id");
+        $user_id    = $user->getId();
+        parent::__construct(
+            "User #$user_id is the project owner of project #$project_id and therefore cannot be removed from the project administrators"
+        );
     }
 }

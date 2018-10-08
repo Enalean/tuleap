@@ -21,9 +21,13 @@
 use Tuleap\Project\Admin\Navigation\HeaderNavigationDisplayer;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
+use Tuleap\Project\Admin\ProjectUGroup\ApproveProjectAdministratorRemoval;
+use Tuleap\Project\Admin\ProjectUGroup\ProjectUGroupMemberUpdatable;
+use Tuleap\ProjectCertification\ProjectAdmin\CannotRemoveProjectOwnerFromTheProjectAdministratorsException;
 use Tuleap\ProjectCertification\ProjectAdmin\IndexController;
 use Tuleap\ProjectCertification\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
+use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectCertification\REST\ProjectCertificationResource;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -54,6 +58,8 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(NavigationPresenter::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(ProjectUGroupMemberUpdatable::NAME);
+        $this->addHook(ApproveProjectAdministratorRemoval::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -111,5 +117,44 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
                 );
             }
         );
+    }
+
+    public function projectUGroupMemberUpdatable(ProjectUGroupMemberUpdatable $ugroup_member_update)
+    {
+        $ugroup = $ugroup_member_update->getGroup();
+        if ((int) $ugroup->getId() !== ProjectUGroup::PROJECT_ADMIN &&
+            (int) $ugroup->getId() !== ProjectUGroup::PROJECT_MEMBERS) {
+            return;
+        }
+        $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance());
+        $project_owner           = $project_owner_retriever->getProjectOwner($ugroup->getProject());
+        if ($project_owner === null) {
+            return;
+        }
+        foreach ($ugroup_member_update->getMembers() as $member) {
+            if ($member->getId() === $project_owner->getId()) {
+                $ugroup_member_update->markUserHasNotUpdatable(
+                    $project_owner,
+                    dgettext('tuleap-project_certification', 'The project owner cannot be removed.')
+                );
+                return;
+            }
+        }
+    }
+
+    public function approveProjectAdministratorRemoval(ApproveProjectAdministratorRemoval $project_administrator_removal)
+    {
+        $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance());
+        $project_owner           = $project_owner_retriever->getProjectOwner($project_administrator_removal->getProject());
+        if ($project_owner === null) {
+            return;
+        }
+
+        if ($project_owner->getId() === $project_administrator_removal->getUserToRemove()->getId()) {
+            throw new CannotRemoveProjectOwnerFromTheProjectAdministratorsException(
+                $project_administrator_removal->getProject(),
+                $project_owner
+            );
+        }
     }
 }

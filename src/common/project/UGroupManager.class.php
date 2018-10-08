@@ -432,7 +432,7 @@ class UGroupManager {
     }
 
     /**
-     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException
+     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException
      */
     public function syncUgroupMembers(ProjectUGroup $user_group, array $users_from_references)
     {
@@ -491,7 +491,7 @@ class UGroupManager {
     }
 
     /**
-     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException
+     * @throws \Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException
      */
     private function removeUserFromUserGroup(ProjectUGroup $user_group, PFUser $user)
     {

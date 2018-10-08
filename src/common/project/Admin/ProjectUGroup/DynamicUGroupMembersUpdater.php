@@ -74,7 +74,7 @@ class DynamicUGroupMembersUpdater
     }
 
     /**
-     * @throws CannotRemoveLastProjectAdministratorException
+     * @throws CannotRemoveUserMembershipToUserGroupException
      */
     public function removeUser(Project $project, ProjectUGroup $ugroup, PFUser $user)
     {
@@ -106,7 +106,7 @@ class DynamicUGroupMembersUpdater
     }
 
     /**
-     * @throws CannotRemoveLastProjectAdministratorException
+     * @throws CannotRemoveUserMembershipToUserGroupException
      */
     private function removeProjectAdministrator(Project $project, PFUser $user)
     {
@@ -115,6 +115,7 @@ class DynamicUGroupMembersUpdater
                 if (! $dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
                     throw new CannotRemoveLastProjectAdministratorException($user, $project);
                 }
+                $this->event_manager->processEvent(new ApproveProjectAdministratorRemoval($project, $user));
                 $dao->removeUserFromProjectAdmin($project->getID(), $user->getId());
             }
         );

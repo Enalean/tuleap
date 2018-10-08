@@ -20,12 +20,38 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-final class CannotRemoveLastProjectAdministratorException extends CannotRemoveUserMembershipToUserGroupException
+class ApproveProjectAdministratorRemoval
 {
-    public function __construct(\PFUser $last_project_administrator, \Project $project)
+    const NAME = 'approveProjectAdministratorRemoval';
+
+    /**
+     * @var \Project
+     */
+    private $project;
+    /**
+     * @var \PFUser
+     */
+    private $project_admin_to_remove;
+
+    public function __construct(\Project $project, \PFUser $project_admin_to_remove)
     {
-        $user_id    = $last_project_administrator->getId();
-        $project_id = $project->getID();
-        parent::__construct("Cannot remove user #$user_id as it is the last project administrator of project #$project_id");
+        $this->project                   = $project;
+        $this->project_admin_to_remove = $project_admin_to_remove;
+    }
+
+    /**
+     * @return \Project
+     */
+    public function getProject()
+    {
+        return $this->project;
+    }
+
+    /**
+     * @return \PFUser
+     */
+    public function getUserToRemove()
+    {
+        return $this->project_admin_to_remove;
     }
 }

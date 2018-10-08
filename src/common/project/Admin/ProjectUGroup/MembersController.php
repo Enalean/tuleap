@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -112,10 +112,10 @@ class MembersController
 
         try {
             $this->dynamic_ugroup_members_updater->removeUser($project, $ugroup, $user);
-        } catch (CannotRemoveLastProjectAdministratorException $ex) {
+        } catch (CannotRemoveUserMembershipToUserGroupException $ex) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                _('The last project administrator cannot be removed.')
+                $ex->getMessage()
             );
         }
     }
