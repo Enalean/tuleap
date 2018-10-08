@@ -86,7 +86,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     private function setRequest(array $parameters)
     {
-        $possible_parameters = ['a', 'h', 'hb', 'f'];
+        $possible_parameters = ['a', 'h', 'hb', 'f', 's', 'st'];
         foreach ($possible_parameters as $key) {
             if (isset($parameters[$key])) {
                 $this->request->allows()->exist($key)->andReturn(true);
@@ -495,9 +495,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function provideActionsThatShouldNotDisplayTheSelector()
     {
         return [
-            ['commit'],
-            ['shortlog'],
-            ['search']
+            ['commit']
         ];
     }
 

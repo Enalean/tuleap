@@ -29,7 +29,7 @@
             </div>
             <section class="tlp-pane-section">
                 <input type="hidden" name="a" value="search" />
-                <input type ="hidden" name="h" value="{if $commit}{$commit->GetHash()|escape}{else}HEAD{/if}" />
+                <input type ="hidden" name="hb" value="{$hashbase|escape}" />
 
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="search-type">{t domain="gitphp"}Type{/t}</label>
@@ -77,7 +77,7 @@
                 {if $commit}
                     <div class="tlp-pagination git-repository-shortlog-pagination">
                         {if $page > 0}
-                            <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page-1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
+                            <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;hb={$hashbase|urlencode}&amp;pg={$page-1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
                                title="{t domain="gitphp"}Previous{/t}"
                             >
@@ -93,7 +93,7 @@
                             </button>
                         {/if}
                         {if $hasmorerevs }
-                            <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;h={$commit->GetHash()|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
+                            <a href="{$SCRIPT_NAME}?a={if $search}search&amp;s={$search|urlencode}&amp;st={$searchtype|urlencode}{else}shortlog{/if}&amp;hb={$hashbase|urlencode}&amp;pg={$page+1|urlencode}{if $mark}&amp;m={$mark->GetHash()|urlencode}{/if}"
                                class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
                                title="{t domain="gitphp"}Next{/t}"
                             >
