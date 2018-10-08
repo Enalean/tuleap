@@ -87,7 +87,9 @@ class Tree extends FilesystemObject
 
         if ($this->contentsRead && !$this->contentsReferenced) {
             foreach ($this->contents as $obj) {
-                $obj->SetCommit($commit);
+                if (! $obj->isSubmodule()) {
+                    $obj->SetCommit($commit);
+                }
             }
         }
     }
