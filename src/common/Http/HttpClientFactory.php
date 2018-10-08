@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,12 +21,13 @@
 namespace Tuleap\Http;
 
 use Http\Client\Common\Plugin\ErrorPlugin;
+use Http\Client\Common\Plugin\RedirectPlugin;
 use Http\Client\Common\PluginClient;
 use Http\Adapter\Guzzle6\Client;
 
 class HttpClientFactory
 {
-    const TIMEOUT = 5;
+    private const TIMEOUT = 5;
 
     /**
      * @return \Http\Client\HttpClient|\Http\Client\HttpAsyncClient
@@ -58,6 +59,12 @@ class HttpClientFactory
     {
         $client = Client::createWithConfig($config);
 
-        return new PluginClient($client, [new ErrorPlugin()]);
+        return new PluginClient(
+            $client,
+            [
+                new ErrorPlugin(),
+                new RedirectPlugin()
+            ]
+        );
     }
 }

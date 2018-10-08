@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi 2001-2009.
  *
  * This file is a part of Tuleap.
@@ -19,15 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Widget.class.php');
-require_once('common/date/DateHelper.class.php');
+use Tuleap\Http\HttpClientFactory;
+use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\RSS\FeedHTTPClient;
+use Zend\Feed\Reader\Reader as FeedReader;
 
 /**
 * Widget_Rss
 *
 * Rss reader
 */
-/* abstract */ class Widget_Rss extends Widget {
+abstract class Widget_Rss extends Widget
+{
     var $rss_title;
     var $rss_url;
 
@@ -41,31 +44,29 @@ require_once('common/date/DateHelper.class.php');
         return $this->rss_title ?: 'RSS Reader';
     }
     function getContent() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $content = '';
-        if ($this->rss_url) {
-            require_once('common/rss/libs/SimplePie/simplepie.inc');
-            if (!is_dir($GLOBALS['codendi_cache_dir'] .'/rss')) {
-                mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
-            }
-            $rss = new SimplePie($this->rss_url, $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-            $content .= '<table class="tlp-table" width="100%">';
-            $i = 0;
-            foreach($rss->get_items(0, 10) as $item) {
-                $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
-                if ($image = $item->get_link(0, 'image')) {
-                    //hack to display twitter avatar
-                    $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" width="48" height="48" style="float:left; margin-right:1em;" />';
-                }
-                $content .= '<a href="'. $item->get_link() .'">'. $hp->purify($item->get_title(), CODENDI_PURIFIER_STRIP_HTML) .'</a>';
-                if ($item->get_date()) {
-                    $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'"> - '. DateHelper::timeAgoInWords($item->get_date('U')) .'</span>';
-                }
-                $content .= '</td></tr>';
-            }
-            $content .= '</table>';
+        if (! $this->rss_url) {
+            return '';
         }
-        return $content;
+        $hp      = Codendi_HTMLPurifier::instance();
+        $content = '<table class="tlp-table">';
+        try {
+            $feed = $this->retrieveFeed($this->rss_url);
+        } catch (\Http\Client\Exception $ex) {
+            return '<div class="tlp-alert-warning">' . _('An issue occurred while retrieving the RSS feed') . '</div>' .  $content . '</table>';
+        }
+
+        $sliced_feed = new LimitIterator($feed, 0, 10);
+        foreach ($sliced_feed as $entry) {
+            $content .= '<tr><td>';
+            $content .= '<a href="'. $hp->purify($entry->getLink()) .'">'. $hp->purify($entry->getTitle(), CODENDI_PURIFIER_STRIP_HTML) .'</a>';
+            $date     = $entry->getDateCreated();
+            if ($date !== null) {
+                $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date->getTimestamp()) .'"> - '. DateHelper::timeAgoInWords($date->getTimestamp()) .'</span>';
+            }
+            $content .= '</td></tr>';
+        }
+
+        return $content . '</table>';
     }
     function isAjax() {
         return true;
@@ -172,12 +173,12 @@ require_once('common/date/DateHelper.class.php');
             $vTitle = new Valid_String('title');
             $vTitle->required();
             if (!$request->validInArray('rss', $vTitle)) {
-                require_once('common/rss/libs/SimplePie/simplepie.inc');
-                if (!is_dir($GLOBALS['codendi_cache_dir'] .'/rss')) {
-                    mkdir($GLOBALS['codendi_cache_dir'] .'/rss');
+                try {
+                    $feed         = $this->retrieveFeed($rss['url']);
+                    $rss['title'] = $feed->getTitle();
+                } catch (\Http\Client\Exception $ex) {
+                    $rss['title'] = $request->get('title');
                 }
-                $rss_reader = new SimplePie($rss['url'], $GLOBALS['codendi_cache_dir'] .'/rss', null, $GLOBALS['sys_proxy']);
-                $rss['title'] = $rss_reader->get_title();
             }
             $sql = 'INSERT INTO widget_rss (owner_id, owner_type, title, url) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($rss['title']) ."', '". db_escape_string($rss['url']) ."')";
             $res = db_query($sql);
@@ -219,5 +220,27 @@ require_once('common/date/DateHelper.class.php');
     function isUnique() {
         return false;
     }
+
+    /**
+     * @throws \Http\Client\Exception
+     */
+    private function retrieveFeed(string $url) : \Zend\Feed\Reader\Feed\FeedInterface
+    {
+        $http_client = new FeedHTTPClient(HttpClientFactory::createClient(), MessageFactoryBuilder::build());
+        FeedReader::setHttpClient($http_client);
+        $cache_dir = ForgeConfig::get('codendi_cache_dir') . '/rss';
+        if (! is_dir($cache_dir) && ! mkdir($cache_dir) && ! is_dir($cache_dir)) {
+            throw new \RuntimeException(sprintf('RSS cache directory "%s" was not created', $cache_dir));
+        }
+        $cache     = Zend\Cache\StorageFactory::factory(array(
+            'adapter' => [
+                'name'    => 'filesystem',
+                'options' => ['cache_dir' => $cache_dir],
+            ],
+        ));
+        FeedReader::setCache($cache);
+        FeedReader::useHttpConditionalGet();
+
+        return FeedReader::import($url);
+    }
 }
-?>
