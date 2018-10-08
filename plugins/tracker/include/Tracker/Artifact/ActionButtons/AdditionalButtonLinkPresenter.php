@@ -20,20 +20,28 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-class ArtifactGrapDependenciesButtonPresenter
+use Tuleap\Glyph\Glyph;
+
+class AdditionalButtonLinkPresenter
 {
     /**
      * @var string
      */
-    public $label;
+    public $link_label;
+
     /**
      * @var string
      */
     public $url;
+    /**
+     * @var string
+     */
+    public $glyph;
 
-    public function __construct($label, $url)
+    public function __construct($link_label, $url, Glyph $glyph = null)
     {
-        $this->label = $label;
-        $this->url   = $url;
+        $this->link_label = $link_label;
+        $this->url        = $url;
+        $this->glyph      = $glyph ? $glyph->getInlineString(): '';
     }
 }

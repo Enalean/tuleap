@@ -10,7 +10,11 @@
             {{> action-buttons/original-email }}
             {{> action-buttons/copy-artifact }}
             {{> action-buttons/move-artifact-button }}
-            {{> action-buttons/graph-dependencies }}
+
+            {{# additional_buttons }}
+                {{> action-buttons/additional-action-button }}
+            {{/additional_buttons}}
+
             {{# divider }}
                 <li class="divider" id="tracker-move-artifact-divider"></li>
             {{/ divider }}
