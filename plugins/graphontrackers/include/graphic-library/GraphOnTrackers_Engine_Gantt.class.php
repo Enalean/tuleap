@@ -20,7 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('GraphOnTrackers_Engine.class.php');
+
+use Tuleap\chart\GanttVerticalLine;
 
 class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
     
@@ -153,13 +154,13 @@ class GraphOnTrackers_Engine_Gantt extends GraphOnTrackers_Engine {
         
         // asOfDate setup 
         if ($this->asOfDate == 0) {
-            $dateRep  = date("Y-m-d",strtotime('now'));
-            $dateDisp = date("m-d-Y",strtotime('now'));
-            $vline = new GanttVLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $dateRep  = date("Y-m-d", strtotime('now'));
+            $dateDisp = date("m-d-Y", strtotime('now'));
+            $vline    = new GanttVerticalLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         } else {
             $dateRep  = date("Y-m-d",$this->asOfDate);
             $dateDisp = date("m-d-Y",$this->asOfDate);
-            $vline = new GanttVLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $vline    = new GanttVerticalLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         }
         $vline->SetDayOffset(0.5);
         $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7); 
