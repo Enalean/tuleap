@@ -1,4 +1,7 @@
 <?php
+
+use Tuleap\chart\GanttVerticalLine;
+
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
@@ -20,7 +23,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('GraphOnTrackersV5_Engine.class.php');
 
 class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     
@@ -138,8 +140,6 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
     * Builds gantt graph
     */
     function buildGraph() {
-        require_once('common/chart/Chart_Gantt.class.php');
-              
         $this->graph = new Chart_Gantt($this->width,$this->height,"auto");
 
         // title setup
@@ -162,15 +162,15 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         if ($this->asOfDate == 0) {
             $dateRep  = date("Y-m-d", $_SERVER['REQUEST_TIME']);
             $dateDisp = date("m-d-Y", $_SERVER['REQUEST_TIME']);
-            $vline = new GanttVLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $vline = new GanttVerticalLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         } else {
             $dateRep  = $this->asOfDate;
             $dateDisp = date("m-d-Y",strtotime($this->asOfDate));
-            $vline = new GanttVLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
+            $vline = new GanttVerticalLine($dateRep,$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         }
         $vline->SetDayOffset(0.5);
         $vline->title->SetFont($this->graph->getFont(), FS_NORMAL, 7); 
-        $vline->title->setColor($this->graph->getMainColor());
+        $vline->title->SetColor($this->graph->getMainColor());
         $this->graph->Add($vline);
         
         //scale setup
@@ -192,7 +192,7 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
             if (($s == 0 && $d == 0 && $f != 0)
                 || ($s == 0 && $d != 0 && $f == 0)
                 || ($s == 0 && $d != 0 && $f == $d)
-                ) 
+                )
             {
                 $this->addMilestone($i, $this->data[$i], array('date' => max($this->data[$i]['due'], $this->data[$i]['finish'])));
             }
