@@ -28,6 +28,8 @@ use Tuleap\Git\GitPHP\ProjectList;
 
 class GitViews_GitPhpViewer
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     const GLOSSIFIED_GITPHP_ACTIONS = [
         'blob',
         'blobdiff',
@@ -87,7 +89,7 @@ class GitViews_GitPhpViewer
 
     private function canDisplayEnclosingDiv(HTTPRequest $request)
     {
-        if (! \ForgeConfig::get('git_repository_bp')) {
+        if (! $this->isTuleapBeauGitActivated()) {
             return true;
         }
 

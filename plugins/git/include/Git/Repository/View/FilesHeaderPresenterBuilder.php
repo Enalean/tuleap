@@ -20,7 +20,6 @@
 
 namespace Tuleap\Git\Repository\View;
 
-use ForgeConfig;
 use Git_GitRepositoryUrlManager;
 use GitRepository;
 use HTTPRequest;
@@ -30,6 +29,8 @@ use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilder
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     /**
      * @var CommitForCurrentTreeRetriever
      */
@@ -74,7 +75,7 @@ class FilesHeaderPresenterBuilder
             '',
             []
         );
-        if (! ForgeConfig::get('git_repository_bp')) {
+        if (! $this->isTuleapBeauGitActivated()) {
             return $cannot_be_displayed_presenter;
         }
 

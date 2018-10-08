@@ -31,6 +31,7 @@ use GeSHi;
  */
 class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -61,7 +62,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($this->params['plain']) && $this->params['plain']) {
             return 'blobplain.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/blob.tpl';
         }
         return 'blob.tpl';

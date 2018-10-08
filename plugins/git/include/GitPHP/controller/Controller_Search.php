@@ -32,6 +32,8 @@ use UserManager;
  */
 class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     const SEARCH_COMMIT    = 'commit';
     const SEARCH_AUTHOR    = 'author';
     const SEARCH_COMMITTER = 'committer';
@@ -67,7 +69,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/shortlog.tpl';
         }
         return 'search.tpl';
@@ -154,7 +156,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         if (count($results) < 1) {
-            if (\ForgeConfig::get('git_repository_bp')) {
+            if ($this->isTuleapBeauGitActivated()) {
                 $this->tpl->assign('hasemptysearchresults', true);
             } else {
                 throw new MessageException(sprintf(dgettext("gitphp", 'No matches for "%1$s"'), $this->params['search']), false);
@@ -162,7 +164,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         }
 
         if (count($results) > 100) {
-            if (\ForgeConfig::get('git_repository_bp')) {
+            if ($this->isTuleapBeauGitActivated()) {
                 $this->tpl->assign('hasmorerevs', true);
             } else {
                 $this->tpl->assign('hasmore', true);
@@ -173,7 +175,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 
         $this->tpl->assign('page', $this->params['page']);
 
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             $builder = new ShortlogPresenterBuilder(UserManager::instance());
             $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($results));
         }

@@ -31,6 +31,7 @@ use GeSHi;
  */
 class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -61,7 +62,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($this->params['js']) && $this->params['js']) {
             return 'blamedata.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/blame.tpl';
         }
         return 'blame.tpl';

@@ -26,6 +26,8 @@ use Tuleap\Markdown\ContentInterpretor;
 
 class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     const README_FILE_PATTERN = '/^readme\.(markdown|mdown|mkdn|md|mkd|mdwn|mdtxt|mdtext|text)$/i';
 
     /**
@@ -54,7 +56,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/tree.tpl';
         }
         return 'tree.tpl';
@@ -173,7 +175,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $tree->SetPath($this->params['file']);
         }
 
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             $this->tpl->assign('tree_presenter', new TreePresenter($tree));
         }
         $this->tpl->assign('tree', $tree);

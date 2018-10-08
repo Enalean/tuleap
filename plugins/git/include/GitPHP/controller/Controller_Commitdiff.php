@@ -25,6 +25,7 @@ use GitPHP\Commit\CommitPresenter;
 
 class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -55,10 +56,10 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
             return 'commitdiffplain.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp') && ! isset($this->params['diff-mode'])) {
+        if ($this->isTuleapBeauGitActivated() && ! isset($this->params['diff-mode'])) {
             return 'tuleap/commit-diff.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp') && isset($this->params['diff-mode'])) {
+        if ($this->isTuleapBeauGitActivated() && isset($this->params['diff-mode'])) {
             return 'tuleap/commit-diff-side-by-side.tpl';
         }
 
@@ -147,7 +148,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
             $this->params['hash'],
             (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
         );
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             $commit_presenter = new CommitPresenter($commit, $treediff);
             $this->tpl->assign('commit_presenter', $commit_presenter);
         }
