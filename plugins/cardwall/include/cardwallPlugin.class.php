@@ -32,6 +32,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 /**
  * CardwallPlugin
@@ -80,6 +81,7 @@ class cardwallPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
             $this->addHook(IsFieldUsedInASemanticEvent::NAME);
+            $this->addHook(ImportRendererFromXmlEvent::NAME);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -160,29 +162,13 @@ class cardwallPlugin extends Plugin
      */
     public function tracker_report_renderer_instance($params) {
         if ($params['type'] == self::RENDERER_TYPE) {
-            //First retrieve specific properties of the renderer that are not saved in the generic table
-            if ( !isset($row['field_id']) ) {
-                $row['field_id'] = null;
-                if ($params['store_in_session']) {
-                    $this->report_session = new Tracker_Report_Session($params['report']->id);
-                    $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
-                    $row['field_id'] = $this->report_session->get("field_id");
-                }
-                if (!$row['field_id']) {
-                    $dao = new Cardwall_RendererDao();
-                    $cardwall_row = $dao->searchByRendererId($params['row']['id'])->getRow();
-                    if ($cardwall_row) {
-                        $row['field_id'] = $cardwall_row['field_id'];
-                    }
-                }
-            }
-
             $report = $params['report'];
             $config = new Cardwall_OnTop_ConfigEmpty();
 
             if ($report->tracker_id != 0) {
                 $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
             }
+
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
                 $this,
@@ -192,12 +178,55 @@ class cardwallPlugin extends Plugin
                 $params['row']['name'],
                 $params['row']['description'],
                 $params['row']['rank'],
-                $row['field_id'],
+                $this->getFieldForInstance($params),
                 $this->getPluginInfo()->getPropVal('display_qr_code')
             );
+
             if ($params['store_in_session']) {
                 $params['instance']->initiateSession();
             }
+        }
+    }
+
+    private function getFieldForInstance(array $params)
+    {
+        if (isset($params['row']['from_xml_field'])) {
+            return $params['row']['from_xml_field'];
+        }
+
+        $field_id = null;
+        if ($params['store_in_session']) {
+            $this->report_session = new Tracker_Report_Session($params['report']->id);
+            $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
+            $field_id = $this->report_session->get("field_id");
+        }
+        if (! $field_id) {
+            $dao = new Cardwall_RendererDao();
+            $cardwall_row = $dao->searchByRendererId($params['row']['id'])->getRow();
+            if ($cardwall_row) {
+                $field_id = $cardwall_row['field_id'];
+            }
+        }
+        if ($field_id !== null) {
+            return $this->getFieldForCardwallFromId($field_id);
+        }
+        return null;
+    }
+
+    private function getFieldForCardwallFromId($id)
+    {
+        $field = Tracker_FormElementFactory::instance()->getFormElementById($id);
+        if ($field && $field->userCanRead() && $field instanceof Tracker_FormElement_Field_Selectbox) {
+            return $field;
+        }
+        return null;
+    }
+
+    public function importRendererFromXmlEvent(ImportRendererFromXmlEvent $event)
+    {
+        if ($event->getType() === self::RENDERER_TYPE) {
+            $attributes = $event->getXml()->attributes();
+            $event->setRowKey('from_xml_field', $event->getFieldFromXMLReference((string) $attributes['field_id']));
         }
     }
 

@@ -39,12 +39,11 @@ class GraphOnTrackersV5_ChartFactory {
     protected static $_instance;
     
     /**
-     * The singleton method
+     * @return GraphOnTrackersV5_ChartFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new self();
         }
         return self::$_instance;
     }

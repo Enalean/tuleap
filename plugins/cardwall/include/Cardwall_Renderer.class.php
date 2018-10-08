@@ -23,20 +23,21 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
-require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
-
 class Cardwall_Renderer extends Tracker_Report_Renderer
 {
-    /**
-     * @var Plugin
-     */
+    /** @var Plugin  */
     protected $plugin;
 
-    private $enable_qr_code = true;
+    private $enable_qr_code;
 
     /** @var Cardwall_OnTop_Config */
     private $config;
+
+    /** @var Tracker_FormElement_Field_Selectbox  */
+    private $field;
+
+    /** @var Tracker_Report_Session */
+    private $report_session;
 
     /**
      * Constructor
@@ -47,50 +48,39 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param string $name           the name of the renderer
      * @param string $description    the description of the renderer
      * @param int    $rank           the rank
-     * @param int    $field_id       the field id
+     * @param Tracker_FormElement_Field_Selectbox    $field       the field
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
     public function __construct(Plugin $plugin, Cardwall_OnTop_IConfig $config,
-                                $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
+                                $id, $report, $name, $description, $rank, Tracker_FormElement_Field_Selectbox $field = null, $enable_qr_code = false) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
-        $this->field_id       = $field_id;
+        $this->field          = $field;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
     }
 
-    public function initiateSession() {
+    /**
+     * @return Tracker_FormElement_Field_Selectbox
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    public function initiateSession()
+    {
         $this->report_session = new Tracker_Report_Session($this->report->id);
+        $field_id = '';
+        if ($this->field !== null) {
+            $field_id = $this->field->getId();
+        }
         $this->report_session->changeSessionNamespace("renderers");
-        $this->report_session->set("{$this->id}.field_id",   $this->field_id);
+        $this->report_session->set("{$this->id}.field_id", $field_id);
     }
 
     private function getFormElementFactory() {
         return Tracker_FormElementFactory::instance();
-    }
-
-    /**
-     * @return Tracker_FormElement_Field
-     */
-    private function getField() {
-        $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
-        if ($field) {
-            if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
-                $field = null;
-            }
-        }
-        return $field;
-    }
-
-    /**
-     * @return int
-     */
-    private function getFieldId() {
-        $field = $this->getField();
-
-        if ($field) {
-            return $field->getId();
-        }
     }
 
     /**
@@ -103,7 +93,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      */
     public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
-        $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->getField(), $used_sb);
+        $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->field, $used_sb);
         return $this->fetchCards($matching_ids, $user, $form);
     }
 
@@ -127,35 +117,34 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     private function getPresenter(array $artifact_ids, PFUser $user, $form = null)
     {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
-        $field              = $this->getField();
 
-        if (! $field) {
+        if ($this->field === null) {
             $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
-            $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+            $field_provider      = new Cardwall_FieldProviders_CustomFieldRetriever($this->field);
             $column_preferences  = new Cardwall_UserPreferences_Autostack_AutostackRenderer($user, $this->report);
 
             $filter = '';
             if (! $this->report->is_in_expert_mode) {
                 foreach ($this->report->getCriteria() as $criterion) {
-                    if ($criterion->field->id === $field->getId()) {
-                        $filter = $field->getCriteriaValue($criterion);
+                    if ($criterion->field->id === $this->field->getId()) {
+                        $filter = $this->field->getCriteriaValue($criterion);
                         break;
                     }
                 }
             }
 
             if (is_array($filter)) {
-                $columns = $this->config->getFilteredRendererColumns($field, $filter);
+                $columns = $this->config->getFilteredRendererColumns($this->field, $filter);
             } else {
-                $columns = $this->config->getRendererColumns($field);
+                $columns = $this->config->getRendererColumns($this->field);
             }
 
             $column_autostack    = new Cardwall_UserPreferences_UserPreferencesAutostackFactory();
             $column_autostack->setAutostack($columns, $column_preferences);
             $display_preferences = new Cardwall_UserPreferences_UserPreferencesDisplayUser(Cardwall_UserPreferences_UserPreferencesDisplayUser::DISPLAY_AVATARS);
             $mapping_collection  = $this->config->getCardwallMappings(
-                array($field->getId() => $field),
+                array($this->field->getId() => $this->field),
                 $columns
             );
             $background_color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
@@ -178,7 +167,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             $board         = $board_builder->getBoard($artifact_ids, $columns, $mapping_collection);
         }
 
-        return new Cardwall_RendererPresenter($board, $redirect_parameter, $field, $form);
+        return new Cardwall_RendererPresenter($board, $redirect_parameter, $this->field, $form);
     }
 
     /*----- Implements below some abstract methods ----*/
@@ -197,10 +186,14 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             //Update the field_id parameter
             if (isset($renderer_parameters['columns'])) {
                 $new_columns_field = (int)$renderer_parameters['columns'];
-                if ($new_columns_field && ($this->field_id != $new_columns_field)) {
+                if ($new_columns_field && (
+                        ($this->field !== null && ($this->field->getId() !== $new_columns_field))
+                    ||
+                        ($this->field === null)
+                    )) {
                     $this->report_session->set("{$this->id}.field_id", $new_columns_field);
                     $this->report_session->setHasChanged();
-                    $this->field_id = $new_columns_field;
+                    $this->field = $this->getFormElementFactory()->getFieldById($new_columns_field);
                 }
             }
 
@@ -262,7 +255,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
     public function duplicate($from_renderer, $field_mapping) { }
 
-    public function afterSaveObject($renderer) { }
+    public function afterSaveObject(Tracker_Report_Renderer $renderer)
+    {
+        if ($renderer->getField() !== null) {
+            $this->getDao()->save($this->id, $renderer->getField()->getId());
+        }
+    }
 
     /**
      * Save field_id in db
@@ -270,8 +268,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param int $renderer_id the id of the renderer
      */
     protected function saveRendererProperties($renderer_id) {
-        $dao = $this->getDao();
-        $dao->save($renderer_id, $this->field_id);
+        $this->getDao()->save($renderer_id, $this->field->getId());
     }
 
     /**
@@ -287,9 +284,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
-        parent::exportToXML($root, $formsMapping);
-        if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
+    public function exportToXml(SimpleXMLElement $root, array $formsMapping) {
+        parent::exportToXml($root, $formsMapping);
+        if ($this->field !== null && ($mapping = (string)array_search($this->field->getId(), $formsMapping))) {
             $root->addAttribute('field_id', $mapping);
         }
     }

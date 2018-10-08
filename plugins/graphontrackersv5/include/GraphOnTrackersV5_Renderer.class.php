@@ -297,8 +297,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
-        parent::exportToXML($root, $formsMapping);
+    public function exportToXml(SimpleXMLElement $root, array $formsMapping) {
+        parent::exportToXml($root, $formsMapping);
         $child = $root->addChild('charts');
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $grandchild = $child->addChild('chart');
@@ -309,9 +309,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     /**
      * Finnish saving renderer to database by creating charts
      *
-     * @param Report_Renderer $renderer containing the charts
+     * @param Tracker_Report_Renderer $renderer containing the charts
      */
-    public function afterSaveObject($renderer) {
+    public function afterSaveObject(Tracker_Report_Renderer $renderer) {
         $cf = $this->getChartFactory();
         foreach ($renderer->getCharts() as $chart) {
             $chartDB = $cf->createDb($this->id, $chart);

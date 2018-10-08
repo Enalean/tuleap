@@ -125,9 +125,9 @@ abstract class Tracker_Report_Renderer
     /**
      * Finishes import by saving specific properties
      *
-     * @param Object $renderer containig the parameters to save
+     * @param Tracker_Report_Renderer $renderer containig the parameters to save
      */
-    public abstract function afterSaveObject($renderer);
+    public abstract function afterSaveObject(Tracker_Report_Renderer $renderer);
 
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         $this->processRequest($tracker_manager, $request, $current_user);
@@ -279,7 +279,7 @@ abstract class Tracker_Report_Renderer
      *
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, array $xmlMapping) {
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);
         // if old ids are important, modify code here
@@ -293,5 +293,3 @@ abstract class Tracker_Report_Renderer
         }
     }
 }
-
-?>
