@@ -17,6 +17,80 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.git-repository-files-readme {
+    display: flex;
+    align-items: flex-start;
+
+    @media screen and (max-width: 1400px) {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.git-repository-files {
+    flex: 0 0 auto;
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+
+    @media screen and (max-width: 1400px) {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+
+    &:only-child {
+        margin: 0 0 $tlp-spacing;
+    }
+
+    td {
+        word-break: break-all;
+    }
+
+}
+
+.git-repository-files-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 400;
+
+    > a {
+        color: inherit;
+    }
+}
+
 .git-repository-tree-icon {
     margin: 0 3px 0 0;
+}
+
+.git-repository-readme {
+    flex: 1 1 auto;
+    width: calc(50% - #{$tlp-half-spacing});
+    margin: 0 0 $tlp-spacing $tlp-half-spacing;
+
+    @media screen and (max-width: 1400px) {
+        width: 100%;
+        margin: 0 0 $tlp-spacing;
+    }
+}
+
+.git-repository-readme-content {
+    h1 {
+        margin: 0 0 20px;
+        font-size: 40px;
+    }
+
+    pre {
+        margin: 0 0 20px;
+        overflow-x: auto;
+    }
+
+    p,
+    ol,
+    ul,
+    pre,
+    blockquote {
+        + h2,
+        + h3 {
+            margin-top: 40px;
+        }
+    }
 }
