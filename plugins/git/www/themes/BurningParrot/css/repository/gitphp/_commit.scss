@@ -59,7 +59,7 @@
     margin: 0 $tlp-double-spacing $tlp-spacing 0;
     padding: 0 0 0 $tlp-half-spacing;
     border-left: 2px solid $tlp-theme-color;
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 .git-repository-commit-reference {
