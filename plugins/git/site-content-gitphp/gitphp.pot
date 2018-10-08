@@ -203,6 +203,9 @@ msgstr ""
 msgid "Select for diff"
 msgstr ""
 
+msgid "Selected for diff"
+msgstr ""
+
 msgid "Side by side diff"
 msgstr ""
 
