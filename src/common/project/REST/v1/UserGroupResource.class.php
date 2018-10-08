@@ -24,7 +24,7 @@ use PFUser;
 use ProjectManager;
 use ProjectUGroup;
 use Tuleap\Project\Admin\ProjectUGroup\CannotCreateUGroupException;
-use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveLastProjectAdministratorException;
+use Tuleap\Project\Admin\ProjectUGroup\CannotRemoveUserMembershipToUserGroupException;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsUGroupMemberChecker;
 use Tuleap\Project\REST\UserGroupPOSTRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
@@ -259,8 +259,8 @@ class UserGroupResource extends AuthenticatedResource {
 
         try {
             $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references);
-        } catch (CannotRemoveLastProjectAdministratorException $exception) {
-            throw new RestException(400, 'The last project administrator cannot be removed');
+        } catch (CannotRemoveUserMembershipToUserGroupException $exception) {
+            throw new RestException(400, $exception->getMessage());
         } catch (\Exception $ex) {
             throw $ex;
         }

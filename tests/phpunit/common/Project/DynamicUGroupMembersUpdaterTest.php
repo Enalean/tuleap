@@ -95,8 +95,11 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $this->dao->shouldReceive('wrapAtomicOperationsOnUserProjectPermissions')
             ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(true);
+        $this->event_manager->shouldReceive('processEvent')
+            ->with(\Mockery::type(ApproveProjectAdministratorRemoval::class))->once();
         $this->dao->shouldReceive('removeUserFromProjectAdmin')->once();
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')
+            ->with(\Mockery::type(UserIsNoLongerProjectAdmin::class))->once();
 
         $updater->removeUser($project, $admin_ugroup, $user);
     }

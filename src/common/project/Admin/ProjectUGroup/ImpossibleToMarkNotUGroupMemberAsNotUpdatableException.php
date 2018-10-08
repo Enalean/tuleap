@@ -20,12 +20,14 @@
 
 namespace Tuleap\Project\Admin\ProjectUGroup;
 
-final class CannotRemoveLastProjectAdministratorException extends CannotRemoveUserMembershipToUserGroupException
+class ImpossibleToMarkNotUGroupMemberAsNotUpdatableException extends \RuntimeException
 {
-    public function __construct(\PFUser $last_project_administrator, \Project $project)
+    public function __construct(\ProjectUGroup $group, \PFUser $user)
     {
-        $user_id    = $last_project_administrator->getId();
-        $project_id = $project->getID();
-        parent::__construct("Cannot remove user #$user_id as it is the last project administrator of project #$project_id");
+        $ugroup_id = $group->getId();
+        $user_id   = $user->getId();
+        parent::__construct(
+            "The user #$user_id is not part of #$ugroup_id so he can not be marked as not updatable"
+        );
     }
 }

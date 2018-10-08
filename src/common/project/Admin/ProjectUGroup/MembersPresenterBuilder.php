@@ -61,8 +61,10 @@ class MembersPresenterBuilder
     {
         $ugroup_members = array();
 
+        $ugroup_members_updatable = new ProjectUGroupMemberUpdatable($ugroup);
+        $this->event_manager->processEvent($ugroup_members_updatable);
+
         $members                   = $ugroup->getMembersIncludingSuspended();
-        $is_the_last_project_admin = (int) $ugroup->getId() === ProjectUGroup::PROJECT_ADMIN && count($members) === 1;
 
         foreach ($members as $key => $member) {
             $ugroup_members[$key]['profile_page_url'] = "/users/" . urlencode($member->getUserName()) . "/";
@@ -81,7 +83,9 @@ class MembersPresenterBuilder
             $ugroup_members[$key]['has_avatar']                = $member->hasAvatar();
             $ugroup_members[$key]['user_name']                 = $member->getUserName();
             $ugroup_members[$key]['user_id']                   = $member->getId();
-            $ugroup_members[$key]['is_the_last_project_admin'] = $is_the_last_project_admin;
+            $updatable_error_messages                          = $ugroup_members_updatable->getUserUpdatableErrorMessages($member);
+            $ugroup_members[$key]['is_member_updatable']       = count($updatable_error_messages) === 0;
+            $ugroup_members[$key]['member_updatable_messages'] = $updatable_error_messages;
             $ugroup_members[$key]['is_news_admin']             = $is_news_admin;
         }
 

@@ -35,6 +35,9 @@ msgstr "Ce projet n'existe pas."
 msgid "Project owner"
 msgstr "Responsable du projet"
 
+msgid "The project owner cannot be removed."
+msgstr "Il n'est pas possible de supprimer le responsable du projet."
+
 msgid "This project has no owner."
 msgstr "Ce projet n'a pas de responsable."
 

@@ -18,6 +18,9 @@ msgstr ""
 msgid "Project owner"
 msgstr ""
 
+msgid "The project owner cannot be removed."
+msgstr ""
+
 msgid "This project has no owner."
 msgstr ""
 
