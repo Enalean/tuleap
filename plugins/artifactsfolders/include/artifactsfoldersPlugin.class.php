@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,7 @@ use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
 use Tuleap\XML\PHPCast;
 
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 class ArtifactsFoldersPlugin extends Plugin
