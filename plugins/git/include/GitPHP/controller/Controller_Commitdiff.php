@@ -55,9 +55,13 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
             return 'commitdiffplain.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if (\ForgeConfig::get('git_repository_bp') && ! isset($this->params['diff-mode'])) {
             return 'tuleap/commit-diff.tpl';
         }
+        if (\ForgeConfig::get('git_repository_bp') && isset($this->params['diff-mode'])) {
+            return 'tuleap/commit-diff-side-by-side.tpl';
+        }
+
         return 'commitdiff.tpl';
     }
 
@@ -94,6 +98,9 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
         }
         if (isset($_GET['hp'])) {
             $this->params['hashparent'] = $_GET['hp'];
+        }
+        if (isset($_GET['o'])) {
+            $this->params['diff-mode'] = $_GET['o'];
         }
     }
 

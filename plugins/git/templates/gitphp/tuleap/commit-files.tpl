@@ -27,14 +27,21 @@
             <div class="tlp-button-bar-item">
                 <input type="radio" class="tlp-button-bar-checkbox" checked>
                 <label class="tlp-button-primary tlp-button-outline tlp-button-small">
-                    {t domain="gitphp"}List{/t}
+                    <i class="fa fa-list"></i>  {t domain="gitphp"}List{/t}
                 </label>
+            </div>
+            <div class="tlp-button-bar-item">
+                <a href="{$commit_presenter->getCommitDiffSideBySideLink()}"
+                   class="tlp-button-primary tlp-button-outline tlp-button-small"
+                >
+                    <i class="fa fa-files-o tlp-button-icon"></i> {t domain="gitphp"}Side by side diff{/t}
+                </a>
             </div>
             <div class="tlp-button-bar-item">
                 <a href="{$commit_presenter->getCommitDiffLink()}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small"
                 >
-                    {t domain="gitphp"}Inline diff{/t}
+                    <i class="fa fa-file-o tlp-button-icon"></i> {t domain="gitphp"}Inline diff{/t}
                 </a>
             </div>
         </div>
