@@ -8,13 +8,7 @@
                 </h1>
             </div>
             <section class="tlp-pane-section">
-                <p>
-                    {{# dgettext }}
-                        tuleap-project_certification |
-                        A project owner is a project administrator responsible for this project.
-                        There must always be a project owner.
-                    {{/ dgettext }}
-                </p>
+                <p>{{ project_owner_description }}</p>
                 {{# has_project_owner }}
                     <div class="tlp-property">
                         <label class="tlp-label">{{# dgettext }} tuleap-project_certification | Current project owner:{{/ dgettext }}</label>
