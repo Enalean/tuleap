@@ -68,15 +68,6 @@ class Blob extends FilesystemObject
     protected $history = array();
 
     /**
-     * historyRead
-     *
-     * Stores whether the history has been read
-     *
-     * @access protected
-     */
-    protected $historyRead = false;
-
-    /**
      * blame
      *
      * Stores blame info
@@ -403,37 +394,31 @@ class Blob extends FilesystemObject
      *
      * Gets the history of this file
      *
-     * @access public
+     * @param int $count number of entries to get
+     * @param int $skip  number of entries to skip
+     *
      * @return array array of filediff changes
      */
-    public function GetHistory() // @codingStandardsIgnoreLine
+    public function GetPaginatedHistory($count = PHP_INT_MAX, $skip = 0) // @codingStandardsIgnoreLine
     {
-        if (!$this->historyRead) {
-            $this->ReadHistory();
-        }
-
-        return $this->history;
-    }
-
-    /**
-     * ReadHistory
-     *
-     * Reads the file history
-     *
-     * @access private
-     */
-    private function ReadHistory() // @codingStandardsIgnoreLine
-    {
-        $this->historyRead = true;
+        $this->history = [];
 
         $exe = new GitExe($this->GetProject());
 
-        $args = array();
+        $args = [];
+        $args[] = '--max-count=' . escapeshellarg($count);
+        $args[] = '--skip=' . escapeshellarg($skip);
         if (isset($this->commit)) {
             $args[] = $this->commit->GetHash();
         } else {
             $args[] = 'HEAD';
         }
+        $args[] = '--';
+        $args[] = escapeshellarg($this->GetPath());
+
+        $revlist = $exe->Execute(GitExe::REV_LIST, $args);
+        $hasmore = substr_count($revlist, "\n") >= $count;
+
         $args[] = '|';
         $args[] = $exe->GetBinary();
         $args[] = '--git-dir=' . escapeshellarg($this->GetProject()->GetPath());
@@ -460,6 +445,15 @@ class Blob extends FilesystemObject
                 unset($commit);
             }
         }
+
+        return [$this->history, $hasmore];
+    }
+
+    public function GetHistory() // @codingStandardsIgnoreLine
+    {
+        list($history,) = $this->GetPaginatedHistory(PHP_INT_MAX, 0);
+
+        return $history; //for legacy gitphp view
     }
 
     /**

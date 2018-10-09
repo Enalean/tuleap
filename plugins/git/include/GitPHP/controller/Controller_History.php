@@ -103,6 +103,11 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($_GET['h'])) {
             $this->params['hash'] = $_GET['h'];
         }
+        if (isset($_GET['pg'])) {
+            $this->params['page'] = $_GET['pg'];
+        } else {
+            $this->params['page'] = 0;
+        }
     }
 
     /**
@@ -121,6 +126,8 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
 
         $this->tpl->assign('commit', $co);
         $this->tpl->assign('tree', $co->GetTree());
+        $this->tpl->assign('hashbase', $this->params['hashbase']);
+        $this->tpl->assign('page', $this->params['page']);
 
         $blob = $this->project->GetBlob($this->params['hash']);
         if (! $blob) {
@@ -131,12 +138,18 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
         $blob->SetPath($this->params['file']);
         $this->tpl->assign('blob', $blob);
 
+        list($history, $hasmore) = $blob->GetPaginatedHistory(101, $this->params['page'] * 100);
+        if ($hasmore) {
+            $this->tpl->assign('hasmorerevs', true);
+            $history = array_slice($history, 0, 100);
+        }
         $commits_of_history = array_map(
             function (FileDiff $file_diff) {
                 return $file_diff->GetCommit();
             },
-            $blob->GetHistory()
+            $history
         );
+
         $builder = new ShortlogPresenterBuilder(UserManager::instance());
         $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($commits_of_history));
     }
