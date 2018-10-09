@@ -24,7 +24,9 @@
                 <span class="widget-project-members-username">{{ username_display }}</span>
                 <span class="widget-project-members-spacer"></span>
                 {{# star_badge_presenter }}
-                    <span class="tlp-badge-warning widget-project-members-badge">
+                    <span class="tlp-badge-warning widget-project-members-badge tlp-tooltip tlp-tooltip-left"
+                          data-tlp-tooltip="{{ tooltip_text }}"
+                    >
                         <i class="fa fa-star tlp-badge-icon"></i> {{ label }}
                     </span>
                 {{/ star_badge_presenter }}
