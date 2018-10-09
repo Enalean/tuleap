@@ -26,6 +26,8 @@
 require_once(dirname(__FILE__).'/../../constants.php');
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactGraphDependenciesButtonPresenterBuilder;
@@ -396,6 +398,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             TRACKER_TEMPLATE_DIR
         );
 
+        $event_manager = $this->getEventManager();
+
         $builder = new ArtifactActionButtonPresenterBuilder(
             new ArtifactNotificationActionButtonPresenterBuilder(
                 $this->getUnsubscribersNotificationDao(),
@@ -410,9 +414,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     new ArtifactsDeletionConfig(new ArtifactsDeletionConfigDAO()),
                     new UserDeletionRetriever(new ArtifactsDeletionDAO())
                 ),
-                $this->getEventManager()
+                $event_manager
             ),
-            new ArtifactGraphDependenciesButtonPresenterBuilder($this->getEventManager())
+            new AdditionalArtifactActionButtonsPresenterBuilder($event_manager)
         );
 
         $action_buttons_presenters = $builder->build($this->getCurrentUser(), $this);

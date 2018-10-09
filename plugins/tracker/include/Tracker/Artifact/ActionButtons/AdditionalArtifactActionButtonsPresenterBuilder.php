@@ -20,36 +20,28 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use Tracker_Artifact;
+use EventManager;
 
-class ArtifactGraphDependenciesButtonPresenterBuilder
+class AdditionalArtifactActionButtonsPresenterBuilder
 {
     /**
-     * @var \EventManager
+     * @var EventManager
      */
     private $event_manager;
 
-    public function __construct(\EventManager $event_manager)
+    public function __construct(EventManager $event_manager)
     {
         $this->event_manager = $event_manager;
     }
 
-    public function getGraphReferencesButton(Tracker_Artifact $artifact)
+    public function build(\Tracker_Artifact $artifact)
     {
-        $reference_information = [];
+        $action_buttons_fetcher = new AdditionalArtifactActionButtonsFetcher($artifact);
+
         $this->event_manager->processEvent(
-            TRACKER_EVENT_COMPLEMENT_REFERENCE_INFORMATION,
-            [
-                'artifact'              => $artifact,
-                'reference_information' => &$reference_information
-            ]
+            $action_buttons_fetcher
         );
 
-        if (! empty($reference_information)) {
-            return new ArtifactGrapDependenciesButtonPresenter(
-                $reference_information[0]['links'][0]['label'],
-                $reference_information[0]['links'][0]['link']
-            );
-        }
+        return $action_buttons_fetcher->getAdditionalLinks();
     }
 }
