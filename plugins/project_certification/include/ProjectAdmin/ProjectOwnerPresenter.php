@@ -22,6 +22,8 @@ namespace Tuleap\ProjectCertification\ProjectAdmin;
 
 class ProjectOwnerPresenter
 {
+    public $project_owner_description;
+    /** @var bool */
     public $has_project_owner;
     /** @var bool */
     public $has_avatar;
@@ -32,9 +34,10 @@ class ProjectOwnerPresenter
     /** @var \UserHelper */
     private $user_helper;
 
-    public function __construct(\UserHelper $user_helper)
+    public function __construct(\UserHelper $user_helper, \BaseLanguage $language)
     {
-        $this->user_helper = $user_helper;
+        $this->user_helper               = $user_helper;
+        $this->project_owner_description = $language->getText('plugin_project_certification', 'project_owner_description');
     }
 
     public function build(\PFUser $project_owner = null)

@@ -113,7 +113,8 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
                             new ProjectOwnerPresenterBuilder(
                                 new ProjectOwnerDAO(),
                                 UserManager::instance(),
-                                UserHelper::instance()
+                                UserHelper::instance(),
+                                $GLOBALS['Language']
                             )
                         );
                     }

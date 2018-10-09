@@ -12,14 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.1.1\n"
 
-msgid ""
-"A project owner is a project administrator responsible for this project.\n"
-"                        There must always be a project owner."
-msgstr ""
-"Un responsable de projet est un administrateur de projet responsable de "
-"celui-ci.\n"
-"Il doit toujours y avoir un responsable de projet."
-
 msgid "Adds project owner role"
 msgstr "Ajoute le rôle du responsable du projet"
 

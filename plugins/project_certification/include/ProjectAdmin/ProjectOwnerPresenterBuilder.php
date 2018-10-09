@@ -32,12 +32,19 @@ class ProjectOwnerPresenterBuilder
     private $user_manager;
     /** @var \UserHelper */
     private $user_helper;
+    /** @var \BaseLanguage */
+    private $language;
 
-    public function __construct(ProjectOwnerDAO $dao, UserManager $user_manager, \UserHelper $user_helper)
-    {
+    public function __construct(
+        ProjectOwnerDAO $dao,
+        UserManager $user_manager,
+        \UserHelper $user_helper,
+        \BaseLanguage $language
+    ) {
         $this->dao          = $dao;
         $this->user_manager = $user_manager;
         $this->user_helper  = $user_helper;
+        $this->language     = $language;
     }
 
     public function build(Project $project)
@@ -45,7 +52,7 @@ class ProjectOwnerPresenterBuilder
         $row = $this->dao->searchByProjectID($project->getID());
         $project_owner = $this->user_manager->getUserById($row['user_id']);
 
-        $presenter = new ProjectOwnerPresenter($this->user_helper);
+        $presenter = new ProjectOwnerPresenter($this->user_helper, $this->language);
         $presenter->build($project_owner);
         return $presenter;
     }
