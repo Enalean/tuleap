@@ -49,6 +49,8 @@ class CommitPresenter
     public $author;
     /** @var CommitUserPresenter */
     public $committer;
+    /** @var \Codendi_HTMLPurifier */
+    public $purifier;
 
     public function __construct(Commit $commit, TreeDiff $tree_diff)
     {
@@ -57,6 +59,7 @@ class CommitPresenter
         $this->has_description             = ! empty($this->description);
         $this->number_of_parents           = count($commit->getParents());
         $this->is_diff_between_two_commits = $this->isDiffBetweenTwoCommits();
+        $this->purifier                    = \Codendi_HTMLPurifier::instance();
 
         $this->stats_added   = 0;
         $this->stats_removed = 0;
