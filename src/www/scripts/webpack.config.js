@@ -9,8 +9,7 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 const webpack_config_for_dashboards = {
     entry: {
         dashboard: "./dashboards/dashboard.js",
-        "widget-project-heartbeat": "./dashboards/widgets/project-heartbeat/index.js",
-        "widget-project-members": "./dashboards/widgets/project-members/index.js"
+        "widget-project-heartbeat": "./dashboards/widgets/project-heartbeat/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

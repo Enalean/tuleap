@@ -17,8 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-widget.projectmembers > .dashboard-widget-container:first-of-type {
-    width: auto;
+.dashboard-widget.projectmembers {
+    position: relative;
+    flex-wrap: wrap;
+
+    > .dashboard-widget-container:first-of-type {
+        width: auto;
+    }
+
+    .dashboard-widget-icons {
+        position: absolute;
+        right: $tlp-spacing;
+    }
 }
 
 .dashboard-widget-content.dashboard-widget-content-projectmembers {
