@@ -50,7 +50,7 @@
     <div class="git-repository-commit-metadata">
         <div class="git-repository-commit-metadata-changes">
             <span class="git-repository-commit-metadata-changes-added">+{$commit_presenter->stats_added|escape}</span>
-            <span class="git-repository-commit-metadata-changes-removed">-{$commit_presenter->stats_removed|escape}</span>
+            <span class="git-repository-commit-metadata-changes-removed">−{$commit_presenter->stats_removed|escape}</span>
         </div>
 
         <div class="git-repository-commit-metadata-properties">
