@@ -61,7 +61,8 @@ class ProjectMembers extends Widget
         $builder = new AdministratorPresenterBuilder(
             new \UGroupUserDao(),
             \UserManager::instance(),
-            new \UserHelper()
+            \UserHelper::instance(),
+            \EventManager::instance()
         );
         $administrators = $builder->build($project);
 

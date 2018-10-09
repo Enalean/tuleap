@@ -21,6 +21,12 @@
                         <img src="/users/{{ user_name }}/avatar.png">
                     {{/ has_avatar }}
                 </div>
-                {{ username_display }}
+                <span class="widget-project-members-username">{{ username_display }}</span>
+                <span class="widget-project-members-spacer"></span>
+                {{# star_badge_presenter }}
+                    <span class="tlp-badge-warning widget-project-members-badge">
+                        <i class="fa fa-star tlp-badge-icon"></i> {{ label }}
+                    </span>
+                {{/ star_badge_presenter }}
             </a>
         {{/ administrators }}

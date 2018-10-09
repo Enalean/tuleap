@@ -28,8 +28,10 @@ use Tuleap\ProjectCertification\ProjectAdmin\IndexController;
 use Tuleap\ProjectCertification\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerRetriever;
+use Tuleap\ProjectCertification\ProjectOwner\UserWithStarBadgeFinder;
 use Tuleap\ProjectCertification\REST\ProjectCertificationResource;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\Widget\Event\UserWithStarBadgeCollector;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -60,6 +62,7 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(ProjectUGroupMemberUpdatable::NAME);
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
+        $this->addHook(UserWithStarBadgeCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -145,7 +148,9 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     public function approveProjectAdministratorRemoval(ApproveProjectAdministratorRemoval $project_administrator_removal)
     {
         $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), UserManager::instance());
-        $project_owner           = $project_owner_retriever->getProjectOwner($project_administrator_removal->getProject());
+        $project_owner           = $project_owner_retriever->getProjectOwner(
+            $project_administrator_removal->getProject()
+        );
         if ($project_owner === null) {
             return;
         }
@@ -156,5 +161,12 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
                 $project_owner
             );
         }
+    }
+
+    public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector)
+    {
+        $dao    = new ProjectOwnerDAO();
+        $finder = new UserWithStarBadgeFinder($dao);
+        $finder->findBadgedUser($collector);
     }
 }

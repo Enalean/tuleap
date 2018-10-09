@@ -20,12 +20,16 @@
 
 namespace Tuleap\Widget\ProjectMembers;
 
+use Tuleap\Widget\Event\UserWithStarBadge;
+
 class AdministratorPresenter
 {
     /** @var bool */
     public $has_avatar;
     public $user_name;
     public $username_display;
+    /** @var BadgePresenter */
+    public $star_badge_presenter;
 
     /** @var \UserHelper */
     private $user_helper;
@@ -35,10 +39,18 @@ class AdministratorPresenter
         $this->user_helper = $user_helper;
     }
 
-    public function build(\PFUser $user)
+    public function build(\PFUser $user, UserWithStarBadge $badged_user = null)
     {
         $this->has_avatar       = $user->hasAvatar();
         $this->user_name        = $user->getUserName();
         $this->username_display = $this->user_helper->getDisplayNameFromUser($user);
+        if ($this->userHasStarBadge($user, $badged_user)) {
+            $this->star_badge_presenter = new BadgePresenter($badged_user->getBadgeLabel());
+        }
+    }
+
+    private function userHasStarBadge(\PFUser $user, UserWithStarBadge $badged_user = null)
+    {
+        return $badged_user !== null && $badged_user->isUserBadged($user);
     }
 }

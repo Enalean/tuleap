@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.massmail-project-member-link-icon {
-    padding: 0 5px 0 0;
+namespace Tuleap\Widget\ProjectMembers;
+
+class BadgePresenter
+{
+    public $label;
+
+    public function __construct($label)
+    {
+        $this->label = $label;
+    }
 }
