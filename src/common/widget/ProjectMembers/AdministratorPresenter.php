@@ -45,7 +45,10 @@ class AdministratorPresenter
         $this->user_name        = $user->getUserName();
         $this->username_display = $this->user_helper->getDisplayNameFromUser($user);
         if ($this->userHasStarBadge($user, $badged_user)) {
-            $this->star_badge_presenter = new BadgePresenter($badged_user->getBadgeLabel());
+            $this->star_badge_presenter = new BadgePresenter(
+                $badged_user->getBadgeLabel(),
+                $badged_user->getBadgeTooltipText()
+            );
         }
     }
 

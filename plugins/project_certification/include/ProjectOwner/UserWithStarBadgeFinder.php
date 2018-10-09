@@ -27,10 +27,13 @@ class UserWithStarBadgeFinder
 {
     /** @var ProjectOwnerDAO */
     private $project_owner_dao;
+    /** @var \BaseLanguage */
+    private $language;
 
-    public function __construct(ProjectOwnerDAO $project_owner_dao)
+    public function __construct(ProjectOwnerDAO $project_owner_dao, \BaseLanguage $language)
     {
         $this->project_owner_dao = $project_owner_dao;
+        $this->language          = $language;
     }
 
     public function findBadgedUser(UserWithStarBadgeCollector $collector)
@@ -43,7 +46,8 @@ class UserWithStarBadgeFinder
                 $collector->setUserWithStarBadge(
                     new UserWithStarBadge(
                         $user,
-                        dgettext('tuleap-project_certification', 'Owner')
+                        dgettext('tuleap-project_certification', 'Owner'),
+                        $this->language->getText('plugin_project_certification', 'project_owner_description')
                     )
                 );
                 return;

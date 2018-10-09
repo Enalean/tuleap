@@ -23,9 +23,11 @@ namespace Tuleap\Widget\ProjectMembers;
 class BadgePresenter
 {
     public $label;
+    public $tooltip_text;
 
-    public function __construct($label)
+    public function __construct($label, $tooltip_text)
     {
-        $this->label = $label;
+        $this->label        = $label;
+        $this->tooltip_text = $tooltip_text;
     }
 }

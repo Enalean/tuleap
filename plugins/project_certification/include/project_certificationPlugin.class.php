@@ -167,7 +167,7 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
     public function userWithStarBadgeCollector(UserWithStarBadgeCollector $collector)
     {
         $dao    = new ProjectOwnerDAO();
-        $finder = new UserWithStarBadgeFinder($dao);
+        $finder = new UserWithStarBadgeFinder($dao, $GLOBALS['Language']);
         $finder->findBadgedUser($collector);
     }
 }

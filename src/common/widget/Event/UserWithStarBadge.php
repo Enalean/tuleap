@@ -23,14 +23,15 @@ namespace Tuleap\Widget\Event;
 class UserWithStarBadge
 {
     private $badge_label;
-
     /** @var \PFUser */
     private $user;
+    private $badge_tooltip_text;
 
-    public function __construct(\PFUser $user, $badge_label)
+    public function __construct(\PFUser $user, $badge_label, $badge_tooltip_text)
     {
-        $this->user        = $user;
-        $this->badge_label = $badge_label;
+        $this->user               = $user;
+        $this->badge_label        = $badge_label;
+        $this->badge_tooltip_text = $badge_tooltip_text;
     }
 
     public function isUserBadged(\PFUser $user)
@@ -41,5 +42,10 @@ class UserWithStarBadge
     public function getBadgeLabel()
     {
         return $this->badge_label;
+    }
+
+    public function getBadgeTooltipText()
+    {
+        return $this->badge_tooltip_text;
     }
 }
