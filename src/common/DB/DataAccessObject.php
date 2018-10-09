@@ -52,4 +52,29 @@ class DataAccessObject
     {
         return $this->db->single('SELECT FOUND_ROWS()');
     }
+
+    /**
+     * Wrap a set of operations that must be executed atomically when interacting
+     * with the DAO data source
+     *
+     * @return void
+     */
+    public function wrapAtomicOperations(callable $atomic_operations)
+    {
+        $does_transaction_needs_to_be_started = $this->getDB()->inTransaction() === false;
+        if ($does_transaction_needs_to_be_started) {
+            $this->getDB()->beginTransaction();
+        }
+        try {
+            $atomic_operations($this);
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->commit();
+            }
+        } catch (\Exception $e) {
+            if ($does_transaction_needs_to_be_started) {
+                $this->getDB()->rollBack();
+            }
+            throw $e;
+        }
+    }
 }

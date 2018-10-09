@@ -21,8 +21,12 @@
 namespace Tuleap\ProjectCertification\REST;
 
 use Luracast\Restler\RestException;
+use Tuleap\Project\REST\UserRESTReferenceRepresentation;
+use Tuleap\Project\REST\UserRESTReferenceRetriever;
+use Tuleap\ProjectCertification\ProjectOwner\OnlyProjectAdministratorCanBeSetAsProjectOwnerException;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerRetriever;
+use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerUpdater;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
@@ -38,7 +42,7 @@ class ProjectCertificationResource extends AuthenticatedResource
      */
     public function option($project_id)
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     /**
@@ -57,12 +61,7 @@ class ProjectCertificationResource extends AuthenticatedResource
     public function get($project_id)
     {
         $user_manager = \UserManager::instance();
-        if (! $this->canUserManageProjectCertification($user_manager->getCurrentUser())) {
-            throw new RestException(
-                403,
-                'You need to be a site administrator or have REST project management permission delegation'
-            );
-        }
+        $this->checkUserManageProjectCertification($user_manager->getCurrentUser());
 
         try {
             $project = \ProjectManager::instance()->getValidProject($project_id);
@@ -81,15 +80,73 @@ class ProjectCertificationResource extends AuthenticatedResource
     }
 
     /**
-     * @return bool
+     * Update project certification information
+     *
+     * Notes on the user reference format. It can be:
+     * <ul>
+     * <li>{"id": user_id}</li>
+     * <li>{"username": user_name}</li>
+     * <li>{"email": user_email}</li>
+     * <li>{"ldap_id": user_ldap_id}</li>
+     * </ul>
+     *
+     * @url PUT {project_id}
+     *
+     * @access protected
+     *
+     * @param int $project_id ID of the project
+     * @param ProjectCertificationPUTRepresentation $project_certification_representation {@from body}
+     *
+     * @status 200
      */
-    private function canUserManageProjectCertification(\PFUser $user)
+    public function put($project_id, ProjectCertificationPUTRepresentation $project_certification_representation)
+    {
+        $user_manager = \UserManager::instance();
+        $this->checkUserManageProjectCertification($user_manager->getCurrentUser());
+
+        try {
+            $project = \ProjectManager::instance()->getValidProject($project_id);
+        } catch (\Project_NotFoundException $exception) {
+            throw new RestException(404, 'Project not found');
+        }
+
+        $project_owner_representation = $project_certification_representation->project_owner;
+
+        $user_retriever_rest_reference = new UserRESTReferenceRetriever($user_manager);
+        $project_owner                 = $user_retriever_rest_reference->getUserFromReference(
+            $project_owner_representation
+        );
+
+        if ($project_owner === null) {
+            throw new RestException(
+                400,
+                "User with reference $project_owner_representation not known"
+            );
+        }
+
+        $project_owner_updater = new ProjectOwnerUpdater(new ProjectOwnerDAO());
+        try {
+            $project_owner_updater->updateProjectOwner($project, $project_owner);
+        } catch (OnlyProjectAdministratorCanBeSetAsProjectOwnerException $ex) {
+            throw new RestException(400, $ex->getMessage());
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkUserManageProjectCertification(\PFUser $user)
     {
         $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
         );
         $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
-        return $user->isSuperUser() ||
-            $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission());
+        if (! $user->isSuperUser() &&
+            ! $forge_ugroup_permissions_manager->doesUserHavePermission($user, new RestProjectManagementPermission())) {
+            throw new RestException(
+                403,
+                'You need to be a site administrator or have REST project management permission delegation'
+            );
+        }
     }
 }

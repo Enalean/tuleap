@@ -110,7 +110,7 @@ class DynamicUGroupMembersUpdater
      */
     private function removeProjectAdministrator(Project $project, PFUser $user)
     {
-        $this->user_permissions_dao->wrapAtomicOperationsOnUserProjectPermissions(
+        $this->user_permissions_dao->wrapAtomicOperations(
             function (UserPermissionsDao $dao) use ($project, $user) {
                 if (! $dao->isThereOtherProjectAdmin($project->getID(), $user->getId())) {
                     throw new CannotRemoveLastProjectAdministratorException($user, $project);

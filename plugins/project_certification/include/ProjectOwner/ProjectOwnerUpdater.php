@@ -20,29 +20,27 @@
 
 namespace Tuleap\ProjectCertification\ProjectOwner;
 
-use Tuleap\DB\DataAccessObject;
-
-class ProjectOwnerDAO extends DataAccessObject
+class ProjectOwnerUpdater
 {
-    public function save($project_id, $user_id)
+    /**
+     * @var ProjectOwnerDAO
+     */
+    private $dao;
+
+    public function __construct(ProjectOwnerDAO $dao)
     {
-        $this->getDB()->run(
-            'INSERT INTO plugin_project_certification_project_owner (project_id, user_id) VALUES (?, ?)
-             ON DUPLICATE KEY UPDATE user_id = ?',
-            $project_id,
-            $user_id,
-            $user_id
-        );
+        $this->dao = $dao;
     }
 
-    /**
-     * @return array
-     */
-    public function searchByProjectID($project_id)
+    public function updateProjectOwner(\Project $project, \PFUser $new_project_owner)
     {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
+        $this->dao->wrapAtomicOperations(
+            function (ProjectOwnerDAO $dao) use ($project, $new_project_owner) {
+                if (! $new_project_owner->isAdmin($project->getID())) {
+                    throw new OnlyProjectAdministratorCanBeSetAsProjectOwnerException($new_project_owner);
+                }
+                $dao->save($project->getID(), $new_project_owner->getId());
+            }
         );
     }
 }
