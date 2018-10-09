@@ -65,7 +65,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      *
      * @access protected
      */
-    protected $pathTree;
+    protected $pathTree = [];
 
     /**
      * pathTreeRead
