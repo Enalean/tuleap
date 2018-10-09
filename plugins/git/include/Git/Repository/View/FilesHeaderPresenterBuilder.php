@@ -199,7 +199,7 @@ class FilesHeaderPresenterBuilder
     private function getURLParameters(HTTPRequest $request)
     {
         $parameters = [];
-        $parameters_to_keep = ['a', 'f', 's', 'st'];
+        $parameters_to_keep = ['a', 'f', 's', 'st', 'm'];
         foreach ($parameters_to_keep as $key) {
             if ($request->exist($key)) {
                 $parameters[$key] = $request->get($key);
