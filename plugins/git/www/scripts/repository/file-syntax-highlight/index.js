@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,37 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#git-repository-blame-file {
-    > tbody > .li1 > .ln.git-repository-blame-line {
-        text-align: left;
-        white-space: nowrap;
-    }
+import Prism from "prismjs";
+import "prism-languages";
 
-    &.git-repository-blame-file-no-geshi > tbody > .li1 {
-        > .ln {
-            padding: 0 $tlp-half-spacing;
-        }
-
-        > .de1 {
-            padding: 0 5px;
-        }
-
-        &:first-child {
-            > .de1 > .de1 {
-                padding: 5px 0 0;
-            }
-        }
-
-        &:last-child {
-            > .de1 > .de1 {
-                padding: 0 0 5px;
-            }
-        }
-    }
-}
-
-.git-repository-blame-cell {
-    max-width: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    Prism.highlightAll();
+});

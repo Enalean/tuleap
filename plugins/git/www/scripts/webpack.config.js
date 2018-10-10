@@ -54,7 +54,8 @@ const webpack_config_for_permisssions_per_group = {
 const webpack_config_for_repositories = {
     entry: {
         "repositories-list": "./repositories/src/index.js",
-        repository: "./repository/src/index.js"
+        repository: "./repository/src/index.js",
+        "repository-file-syntax-highlight": "./repository/file-syntax-highlight/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),

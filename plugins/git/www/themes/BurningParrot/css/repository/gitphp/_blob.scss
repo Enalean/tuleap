@@ -54,47 +54,62 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 
 #git-repository-blob-file,
 #git-repository-blame-file {
+    display: flex;
     width: 100%;
     background: $tlp-ui-white;
     font: $gitphp-code-font;
-
-    > tbody {
-        > .li1 {
-            // scss-lint:disable NestingDepth
-            > .de1 {
-                padding: 5px;
-
-                > .de1 {
-                    padding: 0;
-                    background: none;
-                    color: $tlp-typo-default-text-color;
-                    font: $gitphp-code-font;
-                }
-            }
-
-            > .ln {
-                width: 1px;
-                padding: 5px $tlp-half-spacing;
-                border-right: 1px solid $tlp-ui-border-light;
-                background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
-                text-align: right;
-
-                > .de1 {
-                    padding: 0;
-                    background: none;
-                    color: $codemirror-like-line-numbers-color;
-                    font: $gitphp-code-font;
-                }
-            }
-            // scss-lint:enable NestingDepth
-        }
-    }
+    line-height: 1.5;
 }
 
-.de1 {
+
+.git-repository-blob-file-code,
+.git-repository-blob-file-linenumbers {
+    padding: 5px $tlp-half-spacing;
     border: 0;
+    font: $gitphp-code-font;
+}
+
+.git-repository-blob-file-linenumbers {
+    border-right: 1px solid $tlp-ui-border-light;
+    background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
+    color: $codemirror-like-line-numbers-color;
+    line-height: 1.5;
+    text-align: right;
+    vertical-align: top;
+    white-space: pre;
+}
+
+.git-repository-blob-file-code {
+    background: none;
+    color: $tlp-typo-default-text-color;
+    font: $gitphp-code-font;
+    line-height: 1.5;
+
+    &[class*="language-"] {
+        margin: 0;
+        padding: 5px $tlp-half-spacing;
+        background: none;
+    }
+
+    > code[class*="language-"] {
+        font: $gitphp-code-font;
+        text-shadow: none;
+    }
 }
 
 .git-repository-blob-diff-header-link {
     margin: 0 $tlp-half-spacing 0 0;
+}
+
+.git-repository-blame-line {
+    padding: 5px $tlp-half-spacing;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.git-repository-blame-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

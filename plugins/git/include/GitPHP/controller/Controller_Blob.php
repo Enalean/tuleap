@@ -22,6 +22,8 @@
 namespace Tuleap\Git\GitPHP;
 
 use GeSHi;
+use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * Blob controller class
@@ -216,26 +218,28 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
 
         $this->tpl->assign('extrascripts', array('blame'));
 
-        if (Config::GetInstance()->GetValue('geshi', true)) {
-            $geshi = new GeSHi("", 'php');
-            if ($geshi) {
-                $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(), '.'), 1));
-                if (!empty($lang)) {
-                    $geshi->enable_classes();
-                    $geshi->enable_strict_mode(GESHI_MAYBE);
-                    $geshi->set_source($blob->GetData());
-                    $geshi->set_language($lang);
-                    $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
-                    $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
-                    $geshi->set_overall_id('git-repository-blob-file');
-                    $this->tpl->assign('geshiout', $geshi->parse_code());
-                    $this->tpl->assign('extracss', $geshi->get_stylesheet());
-                    $this->tpl->assign('geshi', true);
-                    return;
-                }
-            }
+        if ($this->isTuleapBeauGitActivated()) {
+            $detector = new LanguageDetectorForPrismJS();
+            $this->tpl->assign('language', $detector->getLanguageFromExtension(substr(strrchr($blob->GetName(), '.'), 1)));
+            $this->tpl->assign('bloblines', $blob->GetData(true));
+            $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets', GIT_BASE_URL . '/assets');
+            $GLOBALS['Response']->includeFooterJavascriptFile(
+                $include_assets->getFileURL('repository-file-syntax-highlight.js')
+            );
+            return;
         }
 
-        $this->tpl->assign('bloblines', $blob->GetData(true));
+        $geshi = new GeSHi("", 'php');
+        $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(), '.'), 1));
+        $geshi->enable_classes();
+        $geshi->enable_strict_mode(GESHI_MAYBE);
+        $geshi->set_source($blob->GetData());
+        $geshi->set_language($lang);
+        $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+        $geshi->set_overall_id('git-repository-blob-file');
+        $this->tpl->assign('geshiout', $geshi->parse_code());
+        $this->tpl->assign('extracss', $geshi->get_stylesheet());
+        $this->tpl->assign('geshi', true);
     }
 }
