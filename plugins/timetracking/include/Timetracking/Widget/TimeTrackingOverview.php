@@ -21,6 +21,7 @@
 namespace Tuleap\Timetracking\Widget;
 
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class TimeTrackingOverview extends Widget
@@ -57,5 +58,16 @@ class TimeTrackingOverview extends Widget
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 
         return $renderer->renderToString('timetracking-overview', []);
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/assets',
+            TIMETRACKING_BASE_URL . '/assets'
+        );
+        return [
+            ['file' => $include_assets->getFileURL('timetracking-overview.js')]
+        ];
     }
 }
