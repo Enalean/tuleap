@@ -2564,7 +2564,7 @@ class GitPlugin extends Plugin
         $selected_tab = RepositoryHeaderPresenterBuilder::TAB_FILES;
 
         if ($this->isTuleapBeauGitActivated()) {
-            $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'search'];
+            $gitphp_actions_displayed_in_commits_tab = ['shortlog', 'commit', 'commitdiff', 'blobdiff', 'search'];
             if (in_array(HTTPRequest::instance()->get('a'), $gitphp_actions_displayed_in_commits_tab, true)) {
                 $selected_tab = RepositoryHeaderPresenterBuilder::TAB_COMMITS;
             }

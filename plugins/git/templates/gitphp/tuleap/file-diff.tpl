@@ -20,9 +20,9 @@
 <div class="git-repository-diff">
     {foreach from=$diff item=diffline}
         {if substr($diffline,0,1)=="+"}
-            <div class="git-repository-diff-line git-repository-diff-line-plus">{$diffline|escape:'html'}</div>
+            <div class="git-repository-diff-line git-repository-diff-line-added">{$diffline|escape:'html'}</div>
         {elseif substr($diffline,0,1)=="-"}
-            <div class="git-repository-diff-line git-repository-diff-line-minus">{$diffline|escape:'html'}</div>
+            <div class="git-repository-diff-line git-repository-diff-line-deleted">{$diffline|escape:'html'}</div>
         {elseif substr($diffline,0,1)=="@"}
             <div class="git-repository-diff-line git-repository-diff-line-at">{$diffline|escape:'html'}</div>
         {else}

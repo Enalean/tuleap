@@ -25,7 +25,7 @@
 
 <section class="tlp-pane">
     <div class="tlp-pane-container">
-        <section class="tlp-pane-section">
+        <section class="tlp-pane-header git-repository-commit-diff-header">
             <h2 class="tlp-pane-title">
                 <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
             </h2>
@@ -56,6 +56,8 @@
                     </div>
                 </div>
             {/if}
+        </section>
+        <section>
             {foreach from=$treediff item=filediff}
                 <div class="git-repository-commit-diff-file-header">
                     <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element"

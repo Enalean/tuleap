@@ -17,14 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.git-repository-commit-diff-actions {
+.git-repository-commit-diff-header {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .git-repository-commit-diff-file-header {
     display: flex;
-    margin: $tlp-spacing -#{$tlp-spacing} $tlp-half-spacing;
     padding: $tlp-spacing;
     background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
 
@@ -54,23 +54,53 @@
 
 .git-repository-diff-side-by-side-line {
     display: flex;
-    justify-content: space-around;
+    width: 100%;
+    margin: 0 $tlp-spacing;
+}
 
-    > div {
-        width: 50%;
-        white-space: pre-wrap;
+.git-repository-diff-line-left,
+.git-repository-diff-line-right {
+    width: calc(50% - #{$tlp-spacing});
+    min-height: 20px;
+    white-space: pre-wrap;
+}
+
+.git-repository-diff-line-left {
+    padding: 0 $tlp-half-spacing 0 0;
+    border-right: 1px solid $tlp-ui-border-light;
+}
+
+.git-repository-diff-line-right {
+    padding: 0 0 0 $tlp-half-spacing;
+}
+
+.git-repository-diff-side-by-side > .git-repository-diff-side-by-side-line {
+    &:first-child {
+        > .git-repository-diff-line-left {
+            padding: $tlp-spacing $tlp-half-spacing 0 0;
+        }
+
+        > .git-repository-diff-line-right {
+            padding: $tlp-spacing 0 0 $tlp-half-spacing;
+        }
+    }
+
+    &:last-child {
+        > .git-repository-diff-line-left {
+            padding: 0 $tlp-half-spacing $tlp-spacing 0;
+        }
+
+        > .git-repository-diff-line-right {
+            padding: 0 0 $tlp-spacing $tlp-half-spacing;
+        }
     }
 }
 
-.git-repository-diff-line-empty {
-    height: 20px;
-}
-
-.git-repository-diff-line-plus {
+.git-repository-diff-line-added {
     color: $tlp-ui-success;
 }
 
-.git-repository-diff-line-minus {
+.git-repository-diff-line-deleted {
     color: $tlp-ui-danger;
 }
 
