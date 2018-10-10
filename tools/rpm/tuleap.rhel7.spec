@@ -419,7 +419,7 @@ BurningParrot, default theme starting Tuleap 10
 #
 # Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in tools plugins site-content src VERSION AUTHORS LICENSE; do
+for i in tools plugins site-content src VERSION LICENSE; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -767,7 +767,6 @@ fi
 %{APP_DIR}/tools
 %{APP_DIR}/site-content
 %{APP_DIR}/VERSION
-%{APP_DIR}/AUTHORS
 %{APP_DIR}/LICENSE
 # Split src for src/www/themes
 %dir %{APP_DIR}/src
