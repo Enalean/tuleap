@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ * Copyright Enalean (c) 2011 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -23,7 +23,8 @@
  */
 require_once('common/system_event/SystemEvent.class.php');
 
-class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
+class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent
+{
     const NAME = 'GIT_GERRIT_PROJECT_DELETE';
 
     /**
@@ -44,15 +45,16 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
     public function injectDependencies(
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        Git_Driver_Gerrit_GerritDriverFactory $factory)
-    {
+        Git_Driver_Gerrit_GerritDriverFactory $factory
+    ) {
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $gerrit_server_factory;
         $this->driver_factory     = $factory;
     }
 
-    public function process() {
-        $parameters   = $this->getParametersAsArray();
+    public function process()
+    {
+        $parameters = $this->getParametersAsArray();
 
         if (! empty($parameters[0])) {
             $repository_id = (int) $parameters[0];
@@ -70,8 +72,11 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
 
         $repository = $this->repository_factory->getRepositoryById($repository_id);
         if (! $repository) {
-            $this->error('Failed to find repository ' . $repository_id);
-            return false;
+            $repository = $this->repository_factory->getDeletedRepository($repository_id);
+            if (! $repository) {
+                $this->error('Failed to find repository ' . $repository_id);
+                return false;
+            }
         }
 
         $server  = $this->server_factory->getServerById($remote_server_id);
@@ -96,10 +101,10 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
     }
 
     private function deleteGerritProject(
-            GitRepository $repository,
-            Git_RemoteServer_GerritServer $server,
-            Project $project,
-            $backend
+        GitRepository $repository,
+        Git_RemoteServer_GerritServer $server,
+        Project $project,
+        $backend
     ) {
         try {
             $this->driver_factory->getDriver($server)->deleteProject(
@@ -117,7 +122,8 @@ class SystemEvent_GIT_GERRIT_PROJECT_DELETE extends SystemEvent {
         return true;
     }
 
-    public function verbalizeParameters($with_link) {
+    public function verbalizeParameters($with_link)
+    {
         return $this->parameters;
     }
 }
