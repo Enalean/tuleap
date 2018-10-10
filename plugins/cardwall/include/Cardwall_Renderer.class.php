@@ -51,8 +51,17 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param Tracker_FormElement_Field_Selectbox    $field       the field
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct(Plugin $plugin, Cardwall_OnTop_IConfig $config,
-                                $id, $report, $name, $description, $rank, Tracker_FormElement_Field_Selectbox $field = null, $enable_qr_code = false) {
+    public function __construct(
+        Plugin $plugin,
+        Cardwall_OnTop_IConfig $config,
+        $id,
+        $report,
+        $name,
+        $description,
+        $rank,
+        Tracker_FormElement_Field_Selectbox $field = null,
+        $enable_qr_code = false
+    ) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
         $this->field          = $field;
@@ -267,8 +276,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      *
      * @param int $renderer_id the id of the renderer
      */
-    protected function saveRendererProperties($renderer_id) {
-        $this->getDao()->save($renderer_id, $this->field->getId());
+    protected function saveRendererProperties($renderer_id)
+    {
+        if ($this->field !== null) {
+            $this->getDao()->save($renderer_id, $this->field->getId());
+        }
     }
 
     /**
