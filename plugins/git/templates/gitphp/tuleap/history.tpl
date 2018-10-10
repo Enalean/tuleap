@@ -31,6 +31,46 @@
 
                 {include file="tuleap/commits-list.tpl"}
             {/foreach}
+
+
+            {if $hasmorerevs || $page > 0}
+                {if $commit}
+                    <div class="tlp-pagination git-repository-shortlog-pagination">
+                        {if $page > 0}
+                            <a href="{$SCRIPT_NAME}?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page-1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               title="{t domain="gitphp"}Previous{/t}"
+                            >
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                        {else}
+                            <button type="button"
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    title="{t domain="gitphp"}Previous{/t}"
+                                    disabled
+                            >
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                        {/if}
+                        {if $hasmorerevs }
+                            <a href="{$SCRIPT_NAME}?a=history&amp;hb={$hashbase|urlencode}&amp;pg={$page+1|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                               class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                               title="{t domain="gitphp"}Next{/t}"
+                            >
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        {else}
+                            <button type="button"
+                                    class="tlp-button-primary tlp-button-outline tlp-button-small tlp-pagination-button"
+                                    title="{t domain="gitphp"}Next{/t}"
+                                    disabled
+                            >
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                        {/if}
+                    </div>
+                {/if}
+            {/if}
         </section>
     </div>
 </section>
