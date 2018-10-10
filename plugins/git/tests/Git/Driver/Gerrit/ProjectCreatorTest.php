@@ -179,7 +179,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
                     $this->membership_manager,
                     $this->umbrella_manager,
                     $this->template_factory,
-                    $this->template_processor
+                    $this->template_processor,
+                    $this->getGitExec($this->gerrit_tmpdir)
         );
 
         stub($this->repository)->getProject()->returns($this->project);
@@ -193,6 +194,13 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_with_registered)->returns(true);
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_WRITE, $this->repository_with_registered)->returns(true);
         stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_WPLUS, $this->repository_with_registered)->returns(true);
+    }
+
+    protected function getGitExec($dir)
+    {
+        $git_exec = new Git_Exec($dir);
+        $git_exec->allowUsageOfFileProtocol();
+        return $git_exec;
     }
 
     public function tearDown() {
@@ -262,7 +270,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                     $this->membership_manager,
                     $this->umbrella_manager,
                     $this->template_factory,
-                    $this->template_processor
+                    $this->template_processor,
+                    $this->getGitExec($this->gerrit_tmpdir)
         );
         $this->expectException('Git_Driver_Gerrit_ProjectCreator_ProjectAlreadyExistsException');
 
@@ -272,7 +281,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function itDoesNotSetPermsIfMigrateAccessRightIsFalse() {
         $project_creator = partial_mock(
-            'Git_Driver_Gerrit_ProjectCreator',
+            Git_Driver_Gerrit_ProjectCreator::class,
             array('exportGitBranches'),
             array($this->gerrit_tmpdir,
                 $this->gerrit_driver_factory,
@@ -281,7 +290,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                 $this->membership_manager,
                 $this->umbrella_manager,
                 $this->template_factory,
-                $this->template_processor
+                $this->template_processor,
+                $this->getGitExec($this->gerrit_tmpdir),
             )
         );
 
@@ -294,7 +304,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
         $project_creator = partial_mock(
-            'Git_Driver_Gerrit_ProjectCreator',
+            Git_Driver_Gerrit_ProjectCreator::class,
             array('exportGitBranches'),
             array($this->gerrit_tmpdir,
                 $this->gerrit_driver_factory,
@@ -303,7 +313,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
                 $this->membership_manager,
                 $this->umbrella_manager,
                 $this->template_factory,
-                $this->template_processor
+                $this->template_processor,
+                $this->getGitExec($this->gerrit_tmpdir),
             )
         );
 

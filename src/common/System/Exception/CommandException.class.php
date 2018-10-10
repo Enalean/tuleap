@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class System_Command_CommandException extends RuntimeException {
+class System_Command_CommandException extends RuntimeException
+{
     public $command;
     public $output;
     public $return_value;
 
-    public function __construct($command, $output, $return_value) {
+    public function __construct($command, $output, $return_value)
+    {
         $this->command      = $command;
         $this->output       = $output;
         $this->return_value = $return_value;
         $message = 'Command execution failure: '.$command.' (return value: '.$return_value."):\n".implode("\n", $output);
         parent::__construct($message, $return_value);
+    }
+
+    public function getCommand()
+    {
+        return $this->command;
+    }
+
+    public function getOutput()
+    {
+        return $this->output;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReturnValue()
+    {
+        return $this->return_value;
     }
 }

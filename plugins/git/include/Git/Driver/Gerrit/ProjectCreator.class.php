@@ -111,6 +111,12 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_Template_TemplateFactory */
     private $template_factory;
 
+    /** @var Git_Driver_Gerrit_Template_TemplateProcessor */
+    private $template_processor;
+
+    /** @var Git_Exec */
+    private $git_exec;
+
     public function __construct(
         $dir,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
@@ -119,7 +125,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         Git_Driver_Gerrit_MembershipManager $membership_manager,
         Git_Driver_Gerrit_UmbrellaProjectManager $umbrella_manager,
         Git_Driver_Gerrit_Template_TemplateFactory $template_factory,
-        Git_Driver_Gerrit_Template_TemplateProcessor $template_processor
+        Git_Driver_Gerrit_Template_TemplateProcessor $template_processor,
+        Git_Exec $git_exec
     ) {
         $this->dir                = $dir;
         $this->driver_factory     = $driver_factory;
@@ -129,6 +136,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->umbrella_manager   = $umbrella_manager;
         $this->template_factory   = $template_factory;
         $this->template_processor = $template_processor;
+        $this->git_exec           = $git_exec;
+        $this->git_exec->allowUsageOfExtProtocol();
     }
 
     /**
@@ -227,8 +236,8 @@ class Git_Driver_Gerrit_ProjectCreator {
     protected function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
         $gerrit_project_url = $gerrit_server->getCloneSSHUrl($gerrit_project);
 
-        $executor = new Git_Exec($repository->getFullPath(), $repository->getFullPath());
-        $executor->exportBranchesAndTags($gerrit_project_url);
+        $this->git_exec->setWorkTreeAndGitDir($repository->getFullPath(), $repository->getFullPath());
+        $this->git_exec->exportBranchesAndTags($gerrit_project_url);
     }
 
     private function pushFullTuleapAccessRightsToGerrit(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, array $ugroups, $replication_group, $template_id) {
@@ -250,15 +259,15 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
-        $git_exec = new Git_Exec($this->dir);
+        $this->git_exec->setWorkTree($this->dir);
         if (! is_dir($this->dir)) {
             mkdir($this->dir);
-            $git_exec->init();
-            $git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. ForgeConfig::get('sys_default_domain'));
-            $git_exec->remoteAdd($gerrit_project_url);
+            $this->git_exec->init();
+            $this->git_exec->setLocalCommiter($gerrit_server->getLogin(), 'codendiadm@'. ForgeConfig::get('sys_default_domain'));
+            $this->git_exec->remoteAdd($gerrit_project_url);
         }
-        $git_exec->pullBranch('origin', 'refs/meta/config');
-        $git_exec->checkoutBranch('FETCH_HEAD');
+        $this->git_exec->pullBranch('origin', 'refs/meta/config');
+        $this->git_exec->checkoutBranch('FETCH_HEAD');
     }
 
     /**
@@ -393,20 +402,20 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function removeFromSection($section, $permission, $value) {
-        $exec = new Git_Exec($this->dir);
-        $exec->configFile($this->dir.'/project.config', "--unset access.$section/*.$permission '$value'");
+        $this->git_exec->setWorkTree($this->dir);
+        $this->git_exec->configFile($this->dir.'/project.config', "--unset access.$section/*.$permission '$value'");
     }
 
     private function addToSection($section, $permission, $value) {
-        $exec = new Git_Exec($this->dir);
-        $exec->configFile($this->dir.'/project.config', "--add access.$section/*.$permission '$value'");
+        $this->git_exec->setWorkTree($this->dir);
+        $this->git_exec->configFile($this->dir.'/project.config', "--add access.$section/*.$permission '$value'");
     }
     private function pushToServer() {
-        $exec = new Git_Exec($this->dir);
-        $exec->add($this->dir.'/project.config');
-        $exec->add($this->dir.'/groups');
-        $exec->commit('Updated project config and access rights');
-        $exec->push('origin HEAD:refs/meta/config');
+        $this->git_exec->setWorkTree($this->dir);
+        $this->git_exec->add($this->dir.'/project.config');
+        $this->git_exec->add($this->dir.'/groups');
+        $this->git_exec->commit('Updated project config and access rights');
+        $this->git_exec->push('origin HEAD:refs/meta/config');
     }
 
     public function removeTemporaryDirectory() {
