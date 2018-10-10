@@ -1495,7 +1495,8 @@ class GitPlugin extends Plugin
             $this->getGerritMembershipManager(),
             $this->getGerritUmbrellaProjectManager(),
             $this->getTemplateFactory(),
-            $this->getTemplateProcessor()
+            $this->getTemplateProcessor(),
+            new Git_Exec($tmp_dir)
         );
     }
 

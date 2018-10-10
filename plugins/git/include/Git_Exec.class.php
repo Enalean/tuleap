@@ -26,21 +26,43 @@ class Git_Exec
 {
     const GIT212_PATH = '/opt/rh/sclo-git212/root';
 
+    const TRANSPORT_EXT  = 'ext';
+    const TRANSPORT_FILE = 'file';
+
     private $work_tree;
     private $git_dir;
     private $git_cmd;
+    private $allowedTransports = [];
 
     /**
      * @param String $work_tree The git repository path where we should operate
      */
     public function __construct($work_tree, $git_dir = null) {
-        $this->work_tree = $work_tree;
         if ( ! $git_dir) {
-            $this->git_dir = $work_tree.'/.git';
+            $this->setWorkTree($work_tree);
         } else {
-            $this->git_dir = $git_dir;
+            $this->setWorkTreeAndGitDir($work_tree, $git_dir);
         }
         $this->git_cmd = self::getGitCommand();
+    }
+
+    /**
+     * @param String $work_tree
+     */
+    public function setWorkTree($work_tree)
+    {
+        $this->work_tree = $work_tree;
+        $this->git_dir   = $this->work_tree.'/.git';
+    }
+
+    /**
+     * @param String $work_tree
+     * @param String $git_dir
+     */
+    public function setWorkTreeAndGitDir($work_tree, $git_dir)
+    {
+        $this->work_tree = $work_tree;
+        $this->git_dir   = $git_dir;
     }
 
     public static function buildFromRepository(GitRepository $repository)
@@ -51,6 +73,24 @@ class Git_Exec
     public static function isGit212Installed()
     {
         return is_file(self::GIT212_PATH.'/usr/bin/git');
+    }
+
+    /**
+     * Whitelist usage of 'ext' protocol
+     *
+     * Starting git 2.12 exotic protocols are disabled by default by git client. 'ext' (used by gerrit to manage the
+     * choice of ssh keys @see Git_RemoteServer_GerritServer::getCloneSSHUrl) should be explicitely whitelisted then.
+     *
+     * @see https://github.com/git/git/commit/f1762d772e9b415a3163abf5f217fc3b71a3b40e
+     */
+    public function allowUsageOfExtProtocol()
+    {
+        $this->allowedTransports []= self::TRANSPORT_EXT;
+    }
+
+    public function allowUsageOfFileProtocol()
+    {
+        $this->allowedTransports []= self::TRANSPORT_FILE;
     }
 
     public function init() {
@@ -314,14 +354,31 @@ class Git_Exec
         return $this->execInPath($cmd, $output);
     }
 
-    protected function execInPath($cmd, &$output) {
-        $retVal = 1;
-        $git = $this->git_cmd.' --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
-        exec("$git $cmd 2>&1", $output, $retVal);
-        if ($retVal == 0) {
+    /**
+     * @param $cmd
+     * @param $output
+     * @return bool
+     * @throws Git_Command_Exception
+     */
+    protected function execInPath($cmd, &$output)
+    {
+        $git = $this->getAllowedProtocolEnvVariable();
+        $git .= $this->git_cmd.' --work-tree='.escapeshellarg($this->work_tree).' --git-dir='.escapeshellarg($this->git_dir);
+        $git .= ' '.$cmd;
+        try {
+            $command = new System_Command();
+            $output = $command->exec($git);
             return true;
-        } else {
-            throw new Git_Command_Exception("$git $cmd", $output, $retVal);
+        } catch (System_Command_CommandException $exception) {
+            throw new Git_Command_Exception($exception->getCommand(), $exception->getOutput(), $exception->getReturnValue());
         }
+    }
+
+    private function getAllowedProtocolEnvVariable()
+    {
+        if (count($this->allowedTransports) > 0) {
+            return 'GIT_ALLOW_PROTOCOL='.implode(':', $this->allowedTransports).' ';
+        }
+        return '';
     }
 }
