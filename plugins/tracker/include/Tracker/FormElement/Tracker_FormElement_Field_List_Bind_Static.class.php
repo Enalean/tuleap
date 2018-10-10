@@ -179,8 +179,10 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             return null;
         }
     }
+
     /**
      * @return array
+     * @throws Tracker_FormElement_InvalidFieldValueException
      */
     public function getValue($value_id) {
         if (! isset($this->values[$value_id])) {
