@@ -223,36 +223,49 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $html;
     }
 
+    /**
+     * @param Tracker_Artifact[] $parents
+     * @param string             $padding_prefix
+     *
+     * @return string
+     */
     private function fetchParentsTitle(array $parents, $padding_prefix = '') {
         $html   = '';
         $parent = array_pop($parents);
         if ($parent) {
             $html .= '<ul class="tracker-hierarchy">';
+
             $html .= '<li>';
             $html .= $padding_prefix;
-            $html .= '<div class="tree-last">&nbsp;</div>';
+
+            $html .= '<span class="tree-last">&nbsp;</span>';
             if ($parents) {
                 $html .= $parent->fetchDirectLinkToArtifactWithTitle();
             } else {
                 $html .= $parent->getXRefAndTitle();
             }
             if ($parents) {
-                $html .= '</a>';
+                $html .= "</li><li>";
+
                 $div_prefix = '';
                 $div_suffix = '';
-                if (count($parents) == 1) {
-                    $div_prefix = '<div class="tracker_artifact_title">';
-                    $div_suffix = '</div>';
+                if (count($parents) === 1) {
+                    $div_prefix = '<span class="tracker_artifact_title">';
+                    $div_suffix = '</span>';
                 }
                 $html .= $div_prefix;
-                $html .= $this->fetchParentsTitle($parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
+                $html .= $this->fetchParentsTitle(
+                    $parents,
+                    $padding_prefix . '<span class="tree-blank">&nbsp;</span>'
+                );
                 $html .= $div_suffix;
+
+            } else {
+                $html .= $parent->fetchActionButtons();
             }
+
             $html .= '</li>';
             $html .= '</ul>';
-
-
-            $html .= $parent->fetchActionButtons();
         }
         return $html;
     }
