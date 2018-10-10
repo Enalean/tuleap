@@ -20,29 +20,11 @@
 
 namespace Tuleap\ProjectCertification\ProjectOwner;
 
-use Tuleap\DB\DataAccessObject;
-
-class ProjectOwnerDAO extends DataAccessObject
+final class OnlyProjectAdministratorCanBeSetAsProjectOwnerException extends \RuntimeException
 {
-    public function save($project_id, $user_id)
+    public function __construct(\PFUser $new_project_owner)
     {
-        $this->getDB()->run(
-            'INSERT INTO plugin_project_certification_project_owner (project_id, user_id) VALUES (?, ?)
-             ON DUPLICATE KEY UPDATE user_id = ?',
-            $project_id,
-            $user_id,
-            $user_id
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function searchByProjectID($project_id)
-    {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
-        );
+        $user_id = $new_project_owner->getId();
+        parent::__construct("User #$user_id must be a project administrator to be set as the project owner");
     }
 }

@@ -18,31 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\ProjectCertification\ProjectOwner;
+namespace Tuleap\ProjectCertification\REST;
 
-use Tuleap\DB\DataAccessObject;
+use Tuleap\Project\REST\UserRESTReferenceRepresentation;
 
-class ProjectOwnerDAO extends DataAccessObject
+class ProjectCertificationPUTRepresentation
 {
-    public function save($project_id, $user_id)
-    {
-        $this->getDB()->run(
-            'INSERT INTO plugin_project_certification_project_owner (project_id, user_id) VALUES (?, ?)
-             ON DUPLICATE KEY UPDATE user_id = ?',
-            $project_id,
-            $user_id,
-            $user_id
-        );
-    }
-
     /**
-     * @return array
+     * @var UserRESTReferenceRepresentation {@type \Tuleap\Project\REST\UserRESTReferenceRepresentation}
      */
-    public function searchByProjectID($project_id)
-    {
-        return $this->getDB()->row(
-            'SELECT * FROM plugin_project_certification_project_owner WHERE project_id = ?',
-            $project_id
-        );
-    }
+    public $project_owner;
 }

@@ -30,23 +30,16 @@ class ProjectCertificationTest extends \RestBase
             )
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
     public function testProjectOwnerIsNotSetWhenThePluginHasBeenEnabledAfter()
     {
-        $response = $this->getResponse(
-            $this->client->get('project_certification/' . $this->project_private_id),
-            \REST_TestDataBuilder::ADMIN_USER_NAME
-        );
-
-        $this->assertSame(200, $response->getStatusCode());
-        $representation = $response->json();
-        $this->assertNull($representation['project_owner']);
+        $this->assertNull($this->getProjectCertificationRepresentation($this->project_private_id)['project_owner']);
     }
 
-    public function testProjectHasAProjectOwnerAtCreation()
+    public function testProjectHasAProjectOwnerAtCreationAndBeUpdated()
     {
         $creation_response = $this->getResponseByName(
             \REST_TestDataBuilder::ADMIN_USER_NAME,
@@ -65,16 +58,54 @@ class ProjectCertificationTest extends \RestBase
         $this->assertSame(201, $creation_response->getStatusCode());
         $new_project_id = $creation_response->json()['id'];
 
-        $response = $this->getResponse(
-            $this->client->get('project_certification/' . $new_project_id),
-            \REST_TestDataBuilder::ADMIN_USER_NAME
-        );
-
-        $this->assertSame(200, $response->getStatusCode());
-        $project_certification_representation = $response->json();
+        $project_certification_representation = $this->getProjectCertificationRepresentation($new_project_id);
         $this->assertSame(
             $this->user_ids[\REST_TestDataBuilder::ADMIN_USER_NAME],
             $project_certification_representation['project_owner']['id']
         );
+
+        $response_update_admins = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'user_groups/'.$new_project_id.'_'.\REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID.'/users',
+                null,
+                json_encode([
+                    'user_references' => [
+                        ['username' => \REST_TestDataBuilder::ADMIN_USER_NAME],
+                        ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+                    ]
+                ])
+            )
+        );
+        $this->assertSame(200, $response_update_admins->getStatusCode());
+
+        $response_update_project_certification = $this->getResponseByName(
+            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'project_certification/' . $new_project_id,
+                null,
+                json_encode([
+                    'project_owner' => ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+                ])
+            )
+        );
+        $this->assertSame(200, $response_update_project_certification->getStatusCode());
+
+        $updated_project_certification_representation = $this->getProjectCertificationRepresentation($new_project_id);
+        $this->assertSame(
+            $this->user_ids[\REST_TestDataBuilder::TEST_USER_1_NAME],
+            $updated_project_certification_representation['project_owner']['id']
+        );
+    }
+
+    private function getProjectCertificationRepresentation(int $project_id): array
+    {
+        $response = $this->getResponse(
+            $this->client->get('project_certification/' . $project_id),
+            \REST_TestDataBuilder::ADMIN_USER_NAME
+        );
+
+        $this->assertSame(200, $response->getStatusCode());
+        return $response->json();
     }
 }

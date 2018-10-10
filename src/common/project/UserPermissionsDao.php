@@ -211,23 +211,4 @@ class UserPermissionsDao extends DataAccessObject
 
         return count($rows) > 0;
     }
-
-    public function wrapAtomicOperationsOnUserProjectPermissions(callable $atomic_operations)
-    {
-        $does_transaction_needs_to_be_started = $this->getDB()->inTransaction() === false;
-        if ($does_transaction_needs_to_be_started) {
-            $this->getDB()->beginTransaction();
-        }
-        try {
-            $atomic_operations($this);
-            if ($does_transaction_needs_to_be_started) {
-                $this->getDB()->commit();
-            }
-        } catch (\Exception $e) {
-            if ($does_transaction_needs_to_be_started) {
-                $this->getDB()->rollBack();
-            }
-            throw $e;
-        }
-    }
 }

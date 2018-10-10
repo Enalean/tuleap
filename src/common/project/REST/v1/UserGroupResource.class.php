@@ -29,6 +29,8 @@ use Tuleap\Project\Admin\ProjectUGroup\UserIsUGroupMemberChecker;
 use Tuleap\Project\REST\UserGroupPOSTRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRetriever;
+use Tuleap\Project\REST\UserRESTReferenceRepresentation;
+use Tuleap\Project\REST\UserRESTReferenceRetriever;
 use Tuleap\Project\UserPermissionsDao;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -47,12 +49,6 @@ use UserManager;
 class UserGroupResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
-
-    const KEY_ID      = 'id';
-    const USERNAME_ID = 'username';
-    const EMAIL_ID    = 'email';
-    const LDAP_ID_ID  = 'ldap_id';
-
     /**
      * @var UserIsUGroupMemberChecker
      */
@@ -246,16 +242,46 @@ class UserGroupResource extends AuthenticatedResource {
      * @throws 400
      * @throws 404
      */
-    protected function putUsers($id, array $user_references) {
+    protected function putUsers($id, array $user_references)
+    {
         $this->checkAccess();
 
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
         $this->checkUgroupValidity($user_group);
         $this->userCanSeeUserGroupMembers($user_group);
 
-        $this->checkKeysValidity($user_references);
+        /*
+         * This REST endpoint can takes the same data as input with two different bodies.
+         * This body:
+         *     {
+         *          "user_references": [
+         *              {"user_id": 102},
+         *              {"user_id": 103}
+         *          ]
+         *     }
+         * is equivalent to this one:
+         *     [
+         *          {"user_id": 102},
+         *          {"user_id": 103}
+         *     ]
+         *
+         * As this behavior might be used and expected by end users, this endpoint cannot
+         * take another parameter in its body or use a dedicated class to represent its body
+         * without introducing a breaking change.
+         *
+         * A side effect is that the @type annotation cannot be used on the $user_references
+         * param without breaking the requests generated from the API Explorer. To keep everything
+         * in a working state we "cast" the non-typed user references into the expected representations.
+         * This issue with the @type annotation seems fixable with a moderate effort: only the API Explorer
+         * exhibits an issue, Restler is capable of parsing a request with a body formed like one of the
+         * two examples.
+         */
+        $user_references_representations = [];
+        foreach ($user_references as $user_reference) {
+            $user_references_representations[] = UserRESTReferenceRepresentation::buildFromArray($user_reference);
+        }
 
-        $users_from_references = $this->getMembersFromReferences($user_references);
+        $users_from_references = $this->getMembersFromReferences(...$user_references_representations);
 
         try {
             $this->ugroup_manager->syncUgroupMembers($user_group, $users_from_references);
@@ -285,45 +311,21 @@ class UserGroupResource extends AuthenticatedResource {
     }
 
     /**
-     * @return PFUser
-     */
-    private function getUserRegardingKey($key, $value) {
-        if ($key === self::KEY_ID) {
-            return $this->user_manager->getUserById($value);
-        } elseif ($key === self::USERNAME_ID) {
-            return $this->user_manager->getUserByUserName($value);
-        } elseif ($key === self::EMAIL_ID) {
-            $users = $this->user_manager->getAllUsersByEmail($value);
-
-            if (count($users) > 1 ) {
-                throw new RestException(400, "More than one user use the email address $value");
-            } elseif (count($users) === 0) {
-                return null;
-            }
-
-            return $users[0];
-        } elseif ($key === self::LDAP_ID_ID) {
-            $identifier = 'ldapId:' . $value;
-
-            return $this->user_manager->getUserByIdentifier($identifier);
-        }
-    }
-
-    /**
      * @return array
      * @throws RestException
      */
-    private function getMembersFromReferences(array $user_references) {
-        $users_to_add = array();
+    private function getMembersFromReferences(UserRESTReferenceRepresentation ...$representations)
+    {
+        $user_retriever_rest_reference = new UserRESTReferenceRetriever($this->user_manager);
+        $users_to_add                  = [];
 
-        foreach ($user_references as $user_reference) {
-            $key   = key($user_reference);
-            $value = $user_reference[$key];
+        $this->checkKeysValidity(...$representations);
 
-            $user = $this->getUserRegardingKey($key, $value);
+        foreach ($representations as $representation) {
+            $user = $user_retriever_rest_reference->getUserFromReference($representation);
 
             if (! $user) {
-                throw new RestException(400, "User with reference $key: $value not known");
+                throw new RestException(400, "User with reference $representation not known");
             }
 
             $users_to_add[] = $user;
@@ -332,39 +334,24 @@ class UserGroupResource extends AuthenticatedResource {
         return $users_to_add;
     }
 
-    private function checkKeysValidity(array $user_references) {
-        if (empty($user_references)) {
-            return true;
-        }
-
-        $first_key          = null;
-        $available_keywords = array(
-            self::KEY_ID,
-            self::USERNAME_ID,
-            self::EMAIL_ID,
-            self::LDAP_ID_ID,
-        );
-
-        foreach ($user_references as $user_reference) {
-
-            if (count(array_keys($user_reference)) > 1) {
-                throw new RestException(400, "Only one key can be passed in the representation");
-            }
-
-            $key = key($user_reference);
-
-            if (! in_array($key, $available_keywords)) {
-                throw new RestException(400, "key $key not known");
-            }
-
-            if ($first_key === null) {
-                $first_key = $key;
-            } elseif ($first_key !== $key) {
-                throw new RestException(400, "references have to use the same type");
+    /**
+     * @throws RestException
+     */
+    private function checkKeysValidity(UserRESTReferenceRepresentation ...$representations)
+    {
+        $first_key = null;
+        foreach ($representations as $representation) {
+            foreach ($representation as $key => $value) {
+                if ($value === null) {
+                    continue;
+                }
+                if ($first_key === null) {
+                    $first_key = $key;
+                } elseif ($first_key !== $key) {
+                    throw new RestException(400, 'References have to use the same type');
+                }
             }
         }
-
-        return true;
     }
 
     /**

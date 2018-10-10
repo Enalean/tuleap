@@ -74,7 +74,7 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
 
-        $this->dao->shouldReceive('wrapAtomicOperationsOnUserProjectPermissions')
+        $this->dao->shouldReceive('wrapAtomicOperations')
             ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(false);
 
@@ -92,7 +92,7 @@ class DynamicUGroupMembersUpdaterTest extends TestCase
         $user         = \Mockery::mock(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(102);
 
-        $this->dao->shouldReceive('wrapAtomicOperationsOnUserProjectPermissions')
+        $this->dao->shouldReceive('wrapAtomicOperations')
             ->with($this->mockery_matcher_callback_wrapped_operations);
         $this->dao->shouldReceive('isThereOtherProjectAdmin')->andReturns(true);
         $this->event_manager->shouldReceive('processEvent')
