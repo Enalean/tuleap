@@ -583,7 +583,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
             }
-            $html .= '</div>';
+            $html .= '</div></div>';
         }
 
         $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
