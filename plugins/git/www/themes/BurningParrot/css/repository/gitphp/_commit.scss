@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.git-repository-commit-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .git-repository-commit-title {
     display: flex;
     align-items: center;

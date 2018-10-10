@@ -491,7 +491,8 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
     public function provideActionsThatShouldNotDisplayTheSelector()
     {
         return [
-            ['commit']
+            ['commit'],
+            ['blobdiff'],
         ];
     }
 

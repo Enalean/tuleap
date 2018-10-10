@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2018-10-08 10:35+0200\n"
+"PO-Revision-Date: 2018-10-10 12:00+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -320,9 +320,6 @@ msgstr "Arborescence"
 
 msgid "Type"
 msgstr "Type"
-
-msgid "Unified diff"
-msgstr "Diff unifié"
 
 # Error message when a user's search query is too short
 # %1$d: the minimum number of characters

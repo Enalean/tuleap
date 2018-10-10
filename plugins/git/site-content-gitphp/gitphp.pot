@@ -232,9 +232,6 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-msgid "Unified diff"
-msgstr ""
-
 #, php-format
 msgid "You must enter search text of at least %1$d character"
 msgid_plural "You must enter search text of at least %1$d characters"

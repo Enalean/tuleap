@@ -19,19 +19,7 @@
  *}
 
 <section class="tlp-pane-header git-repository-blob-header">
-    <h1 class="git-repository-blob-header-title">
-        <i class="tlp-pane-title-icon fa fa-file-text-o"></i>
-        {assign var=blobcommit value=$blob->GetCommit()}
-        {assign var=blobtree value=$blobcommit->GetTree()}
-
-        <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
-        -->{foreach from=$blob->GetPathTree() item=pathtreepiece}<!--
-            --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a>/<!--
-        -->{/foreach}<!--
-        -->{if $blob->isBlob()}<!--
-            --><a href="{$SCRIPT_NAME}?a=blob&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
-        {/if}
-    </h1>
+    {include file='tuleap/blob-header-title.tpl'}
 
     <div class="git-repository-blob-header-actions">
         <div class="tlp-button-bar">

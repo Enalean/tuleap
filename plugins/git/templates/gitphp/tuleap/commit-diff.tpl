@@ -25,10 +25,11 @@
 
 <section class="tlp-pane">
     <div class="tlp-pane-container">
-        <section class="tlp-pane-section">
+        <section class="tlp-pane-header git-repository-commit-diff-header">
             <h2 class="tlp-pane-title">
                 <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
             </h2>
+
             {if ! $commit_presenter->is_diff_between_two_commits}
                 <div class="git-repository-commit-diff-actions">
                     <div class="tlp-button-bar">
@@ -55,6 +56,8 @@
                     </div>
                 </div>
             {/if}
+        </section>
+        <section>
             {foreach from=$treediff item=filediff}
                 <div class="git-repository-commit-diff-file-header">
                     <span class="{$commit_presenter->getStatusClassname($filediff)} git-repository-commit-diff-file-header-element git-repository-commit-file-status"
@@ -74,7 +77,9 @@
                         {/if}
                     </span>
                 </div>
-                {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
+                <section class="tlp-pane-section">
+                    {include file='tuleap/file-diff.tpl' diff=$filediff->GetDiff('', true, true)}
+                </section>
             {/foreach}
         </section>
     </div>

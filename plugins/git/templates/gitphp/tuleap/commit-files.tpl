@@ -17,13 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *}
 
-<section class="tlp-pane-section">
+<section class="tlp-pane-header git-repository-commit-diff-header">
     <h2 class="tlp-pane-title">
         <i class="tlp-pane-title-icon fa fa-copy"></i> {t domain="gitphp"}Modified Files{/t}
     </h2>
-    <div class="tlp-table-actions">
-        <div class="tlp-table-actions-spacer"></div>
-        <div class="tlp-button-bar tlp-table-actions-element">
+    <div class="git-repository-commit-diff-actions">
+        <div class="tlp-button-bar">
             <div class="tlp-button-bar-item">
                 <input type="radio" class="tlp-button-bar-checkbox" checked>
                 <label class="tlp-button-primary tlp-button-outline tlp-button-small">
@@ -46,6 +45,8 @@
             </div>
         </div>
     </div>
+</section>
+<section class="tlp-pane-section">
     <table class="tlp-table">
         <thead>
             <tr>
