@@ -31,7 +31,7 @@ find www/themes -name '*.scss' | xargs rm -f
 %{__rm} -rf $RPM_BUILD_ROOT
 
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/testmanagement
-%{__cp} -ar include site-content templates db resources README VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/testmanagement
+%{__cp} -ar include site-content templates db glyphs resources README VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/testmanagement
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
