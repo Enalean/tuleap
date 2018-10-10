@@ -86,7 +86,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     private function setRequest(array $parameters)
     {
-        $possible_parameters = ['a', 'h', 'hb', 'f', 's', 'st'];
+        $possible_parameters = ['a', 'h', 'hb', 'f', 's', 'st', 'm'];
         foreach ($possible_parameters as $key) {
             if (isset($parameters[$key])) {
                 $this->request->allows()->exist($key)->andReturn(true);
