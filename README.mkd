@@ -1,0 +1,132 @@
+# What's Tuleap?
+
+**Tuleap Open ALM** is a Libre and Open Source tool for end to end traceability of application and system developments.
+
+Development occurs in realtime on [https://tuleap.net](https://tuleap.net).
+Sources are available in a [Git repository on Tuleap.net](https://tuleap.net/plugins/git/tuleap/tuleap/stable).
+You can find a mirror on [GitHub](https://github.com/Enalean/tuleap).
+
+Use case, screen shots & more on [https://tuleap.org](https://www.tuleap.org/what-is-tuleap).
+
+# How to use it?
+
+
+You should first [install it](https://www.tuleap.org/get-started), it can be either with [RHEL7 packages](https://docs.tuleap.org/installation-guide/full-installation.html)
+or [docker image](https://docs.tuleap.org/installation-guide/docker-image.html) and then you can find on tuleap.org a
+bunch of [documentation](https://docs.tuleap.org/) and [tutorials](https://www.tuleap.org/resources/videos-tutorials).
+
+# I need help!
+
+Join the [chat](https://chat.tuleap.org) and ask your questions.
+
+
+# I want to contribute!
+
+You should find everything you need in the [developer guide](https://docs.tuleap.org/dev.html).
+
+## Contributors
+
+Here are listed only the developers that are working on Tuleap sources. People helping with docs and promotion should also
+be added.
+
+### Integrators
+
+* Benjamin Dauton
+* Sandra Echinard
+* Marie Ange Garnier
+* Thomas Gorka
+* Thomas Grebet
+* Joris Masson
+* Yannis Rossetto
+* Nicolas Terray
+* Manuel Vacelet
+
+### Contributors
+
+* Nouha Terzi
+* Thomas Cottier
+* Lydéric Dubut
+* Romain Lorentz
+* Clarck Robinson
+* Aurélien Tisné
+* Karim Beji
+* Seif Eddine Gamoudi
+
+### Previous contributors (no longer active commiters)
+
+* Jonathan Palm
+* Benjamin Bouillot
+* Matthieu Monnier
+* Christan Bayle
+* Dylan Bowden
+* Yoann Celton
+* Mohamed Amine Doghri
+* Anthony Gauchy
+* Martin Goyot
+* Raphaël Hertzog
+* Ahmed Hosni
+* Hugo Kelfani
+* Savinien Richter
+* Christan Bayle
+* Hatem Ounis
+* Sebastien Nicoulaud
+* Johan Martinsson
+* Gregory Salvan
+* Nicolas Guérin
+* Marc Nazarian
+* Sabri Labbene
+* Mahmoud Maalej
+* Mohamed Chaari
+* Patrice Karatchenzeff
+* Stéphane Bouhet
+* Thierry Jacquin
+* Laurent Julliard
+* Jim Mayer
+* Marie-Luise Schneider
+* John Stidd
+* Vicki Tuttle
+* Anne Hardyau
+* Dan Bressler
+* Quentin Cregan
+* Tim Perdue
+* Uriah Welcome
+* Tony Guntharp
+* Drew Streib
+* Matthew Snelham
+* Darrell Brogdon
+* Patrick McGover
+* David HM Specto
+* Loic Dachary
+* Wallace Lee
+* William K. Hardema
+* Michael Renzman
+* Sebastien Delair
+* Bil Simser
+* Joe Utting
+* Peter Schuller
+* Uwe Hermann
+* Eduardo Blanco
+* Rik Faith
+* Lion Templin
+* Larry Augustin
+* Brian Biles
+* John Hall
+* Steve Westmorelan
+* Chris DiBona
+* Dan Bressler
+* Joe Arruda
+* Jeff Ritter
+* Patrick Wong
+* Neil Doane
+* Rob Walker
+* Robert Flemming
+* Michael Turner
+* Garrett LeSage
+* John Goebel
+* Kit Cosper
+* Eureka Endo
+* Kevin Collins
+* Steve Schaefer
+* Greg Pryzby
+* Adam Frey
+* James Byers
