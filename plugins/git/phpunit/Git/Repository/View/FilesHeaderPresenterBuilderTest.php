@@ -70,6 +70,12 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->repository->allows()->getId()->andReturns(123);
 
+        $project = Mockery::mock(\Project::class);
+        $project->allows()->getID()->andReturns(42);
+        $this->request->allows()->getProject()->andReturns($project);
+
+        HTTPRequest::setInstance($this->request);
+
         $url_manager = Mockery::spy(Git_GitRepositoryUrlManager::class);
 
         $this->builder = new FilesHeaderPresenterBuilder(
@@ -81,6 +87,7 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     protected function tearDown()
     {
+        HTTPRequest::clearInstance();
         ForgeConfig::restore();
     }
 
@@ -100,7 +107,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsFirstBranchName()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -134,7 +140,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsFirstTagNameIfNoBranch()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -168,7 +173,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsRequestedRef()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree', 'hb' => 'v12-1']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -204,7 +208,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testCurrentURLParamatersExceptHashbaseAndHashbaseArePassedAsArrayToTheSelector()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest([
             'a' => 'blame',
             'hb' => 'v12-1',
@@ -250,7 +253,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testTreeIsDefaultViewIfRequestIsEmpty()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest([]);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -287,7 +289,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedTag()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree', 'hb' => 'refs/tags/v12-1']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -323,7 +324,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsRequestedRefEvenIfFullyQualifiedBranch()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree', 'hb' => 'refs/heads/feature']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -359,7 +359,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsHashIfNoBranchNorTag()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -389,7 +388,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testHeadNameIsUndefinedIfNoCommitForCurrentTreeButThereIsAnExistingRefInTheRepository()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -415,7 +413,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectorIsNotDisplayedIfNoCommitForCurrentTreeAndNoRefInTheRepository()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -435,9 +432,9 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($presenter->can_display_selector);
     }
 
-    public function testSelectorIsNotDisplayedIfConfigDisallowsIt()
+    public function testSelectorIsNotDisplayedIfCurrentProjectIsUsingOldInterface()
     {
-        ForgeConfig::set('git_repository_bp', '0');
+        ForgeConfig::set('sys_project_whitelist_that_should_use_deprecated_git_interface', "42");
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -467,7 +464,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
      */
     public function testSelectorIsNotDisplayedIfWeAreOnACommitView($action)
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => $action]);
 
         $this->repository->allows()->isCreated()->andReturns(true);
@@ -501,7 +497,6 @@ class FilesHeaderPresenterBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testSelectorIsNotDisplayedIfRepositoryIsNotCreated()
     {
-        ForgeConfig::set('git_repository_bp', '1');
         $this->setRequest(['a' => 'tree']);
 
         $this->repository->allows()->isCreated()->andReturns(false);

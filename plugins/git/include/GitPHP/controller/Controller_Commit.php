@@ -25,6 +25,7 @@ use GitPHP\Commit\CommitPresenter;
 
 class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -55,7 +56,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
         if (isset($this->params['jstip']) && $this->params['jstip']) {
             return 'committip.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/commit.tpl';
         }
         return 'commit.tpl';
@@ -112,7 +113,7 @@ class Controller_Commit extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $commit->GetTree());
         $treediff = $commit->DiffToParent();
         $treediff->SetRenames(true);
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             $commit_presenter = new CommitPresenter($commit, $treediff);
             $this->tpl->assign('commit_presenter', $commit_presenter);
         }

@@ -32,6 +32,7 @@ use UserManager;
  */
 class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -59,7 +60,7 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/history.tpl';
         }
 

@@ -25,6 +25,7 @@ use GitPHP\Commit\FileDiffPresenter;
 
 class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
 
     /**
      * __construct
@@ -55,11 +56,11 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
         if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
             return 'blobdiffplain.tpl';
         }
-        if (\ForgeConfig::get('git_repository_bp') && ! isset($this->params['sidebyside'])) {
+        if ($this->isTuleapBeauGitActivated() && ! isset($this->params['sidebyside'])) {
             return 'tuleap/blob-diff.tpl';
         }
 
-        if (\ForgeConfig::get('git_repository_bp') && isset($this->params['sidebyside'])) {
+        if ($this->isTuleapBeauGitActivated() && isset($this->params['sidebyside'])) {
             return 'tuleap/blob-diff-side-by-side.tpl';
         }
 

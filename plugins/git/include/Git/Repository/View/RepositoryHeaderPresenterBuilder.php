@@ -33,6 +33,8 @@ use PFUser;
 
 class RepositoryHeaderPresenterBuilder
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     const TAB_FILES   = 'tab-files';
     const TAB_COMMITS = 'tab-commits';
 
@@ -182,7 +184,7 @@ class RepositoryHeaderPresenterBuilder
     private function buildTabsPresenter(GitRepository $repository)
     {
         $tabs = [$this->getFilesTab($repository)];
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             $tabs[] = $this->getCommitsTab($repository);
         }
 

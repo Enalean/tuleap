@@ -29,6 +29,8 @@ namespace Tuleap\Git\GitPHP;
  */
 class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
 {
+    use \Tuleap\Git\Repository\View\FeatureFlag;
+
     /**
      * __construct
      *
@@ -55,7 +57,7 @@ class Controller_Message extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function GetTemplate() // @codingStandardsIgnoreLine
     {
-        if (\ForgeConfig::get('git_repository_bp')) {
+        if ($this->isTuleapBeauGitActivated()) {
             return 'tuleap/message.tpl';
         }
         return 'message.tpl';
