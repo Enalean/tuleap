@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
