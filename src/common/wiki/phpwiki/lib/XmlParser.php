@@ -107,13 +107,13 @@ class XmlParser {
             }
         }
         if (!is_null($this->current)) {
-            $this->current->_content[] =& $node;    // copy or ref?
-            $node->parent =& $this->current;       // ref
+            $this->current->_content[] = $node;    // copy or ref?
+            $node->parent = $this->current;       // ref
         }
-        $this->current =& $node;	  		// ref 
+        $this->current = $node;	  		// ref
         if (empty($this->root)) {
-            $this->root =& $node; 		 	// ref for === test below
-            $GLOBALS['xml_parser_root'] =& $this->root;  // copy
+            $this->root = $node; 		 	// ref for === test below
+            $GLOBALS['xml_parser_root'] = $this->root;  // copy
         }
     }
 
@@ -129,7 +129,7 @@ class XmlParser {
             trigger_error(sprintf("unparsed content outside tags: %s",$data), E_USER_WARNING);
         }
         if ($this->current === $this->root) {   // workaround php OO bug: ref => copy
-            $GLOBALS['xml_parser_root'] =& $this->root; // copy!
+            $GLOBALS['xml_parser_root'] = $this->root; // copy!
             //$this->root = $this->current;       // copy?
         }
     }

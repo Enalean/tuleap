@@ -80,8 +80,8 @@ class WikiAttachmentRevision {
     }
 
     function dbFetch() {
-        $dao =& $this->getDao();
-        $dar =& $dao->getRevision($this->attachmentId, $this->revision);
+        $dao = $this->getDao();
+        $dar = $dao->getRevision($this->attachmentId, $this->revision);
 
         if($dar->rowCount() > 1) {
             trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment_rev', 
@@ -104,7 +104,7 @@ class WikiAttachmentRevision {
     
         /** @todo: add lock */
 
-        $waIter =& $this->getRevisionIterator();
+        $waIter = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
         if(!move_uploaded_file($userfile_tmpname, $file_dir.'/'.$this->revision)) {	
@@ -125,7 +125,7 @@ class WikiAttachmentRevision {
     }
   
     function dbadd() {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $res = $dao->create($this->attachmentId, 
                             $this->owner_id, 
                             $this->date, 
@@ -174,7 +174,7 @@ class WikiAttachmentRevision {
 
 
     function log($userId) {
-        $dao =& $this->getDao();
+        $dao = $this->getDao();
         $dao->log($this->attachmentId, 
                   $this->id, 
                   $this->gid, 
@@ -309,7 +309,7 @@ class WikiAttachmentRevision {
      * @access public static
      * @param  Iterator
      */
-    function &getRevisionIterator($gid=null, $id=null) {
+    function getRevisionIterator($gid=null, $id=null) {
         $warArray = array();
         if($id !== null) {
             $id  = (int) $id;
@@ -320,12 +320,12 @@ class WikiAttachmentRevision {
             $id  = $this->attachmentId;
         }
 
-        $dao =& WikiAttachmentRevision::getDao();
+        $dao = WikiAttachmentRevision::getDao();
         $dar = $dao->getAllRevisions($id);        
-        while($row =& $dar->getRow()) {
+        while($row = $dar->getRow()) {
             $war = new WikiAttachmentRevision($gid);
             $war->setFromRow($row);
-            $warArray[] =& $war;
+            $warArray[] = $war;
             unset($war);
         }
 

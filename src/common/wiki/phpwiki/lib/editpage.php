@@ -78,7 +78,7 @@ class PageEditor
         $tokens = &$this->tokens;
         $tokens['PAGE_LOCKED_MESSAGE'] = '';
         $tokens['CONCURRENT_UPDATE_MESSAGE'] = '';
-        $r =& $this->request;
+        $r = $this->request;
 
         if (isset($r->args['pref']['editWidth'])
             and ($r->getPref('editWidth') != $r->args['pref']['editWidth'])) {
@@ -250,16 +250,16 @@ class PageEditor
         }
         else {
             // Save succeded. We store cross references (if there are).           
-            $reference_manager =& ReferenceManager::instance();
+            $reference_manager = ReferenceManager::instance();
             $reference_manager->extractCrossRef($this->_content, $page->getName(), ReferenceManager::REFERENCE_NATURE_WIKIPAGE, GROUP_ID);
                         
             // Save succeded. We raise an event.
             $new = $this->version + 1; 
             $difflink = WikiURL($page->getName(), array('action'=>'diff'), true);
             $difflink .= "&versions%5b%5d=" . $this->version . "&versions%5b%5d=" . $new;
-            $eM =& EventManager::instance();
-            $uM =& UserManager::instance();
-            $user =& $uM->getCurrentUser();
+            $eM = EventManager::instance();
+            $uM = UserManager::instance();
+            $user = $uM->getCurrentUser();
             $wiki_page = new WikiPage(GROUP_ID, $page->getName());
             $eM->processEvent(
                 "wiki_page_updated",
@@ -664,7 +664,8 @@ extends PageEditor
         return true;
     }
 
-    function getConflictMessage () {
+    function getConflictMessage ($unresolved = false)
+    {
         $message = HTML(HTML::p(fmt("Some of the changes could not automatically be combined.  Please look for sections beginning with '%s', and ending with '%s'.  You will need to edit those sections by hand before you click Save.",
                                     "<<<<<<<",
                                     "======="),

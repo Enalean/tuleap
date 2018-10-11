@@ -47,7 +47,7 @@ extends WikiPlugin_WikiBlog
 
     function run($dbi, $argstr, &$request, $basepage) {
         if (is_array($argstr)) { // can do with array also.
-            $args =& $argstr;
+            $args = $argstr;
             if (!isset($args['order'])) $args['order'] = 'reverse';
         } else {
             $args = $this->getArgs($argstr, $request);
@@ -128,7 +128,7 @@ extends WikiPlugin_WikiBlog
 
     // box is used to display a fixed-width, narrow version with common header
     function box($args=false, $request=false, $basepage=false) {
-        if (!$request) $request =& $GLOBALS['request'];
+        if (!$request) $request = $GLOBALS['request'];
         if (!$args or empty($args['limit'])) $args['limit'] = 10;
         $args['noheader'] = 1;
         return $this->makeBox(_("Archives"), $this->run($request->_dbi, $args, $request, $basepage));

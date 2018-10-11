@@ -88,7 +88,7 @@ extends WikiPlugin
     function run($dbi, $argstr, &$request, $basepage) {
 
         extract($this->getArgs($argstr, $request));
-        $source =& $this->source;
+        $source = $this->source;
 
         $this->sanify_colors($string, $comment, $keyword, $bg, $default, $html);
         $this->set_colors($string, $comment, $keyword, $bg, $default, $html);

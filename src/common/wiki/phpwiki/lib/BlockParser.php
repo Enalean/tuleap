@@ -883,7 +883,7 @@ class Block_oldlists extends Block_list
                     echo "\$this->_content[0]: "; var_dump ($this->_content[0]);
                     
                     for ($i=1; $i < min(5, count($this->_content)); $i++) {
-                        $c =& $this->_content[$i];
+                        $c = $this->_content[$i];
                         echo '$this->_content[',$i,"]: \n";
                         echo "_tag: "; var_dump ($c->_tag);
                         echo "_content: "; var_dump ($c->_content);

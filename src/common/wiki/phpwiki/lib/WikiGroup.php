@@ -73,7 +73,6 @@ class WikiGroup{
      */ 
     function __construct($not_current = false) {
     	$this->not_current = $not_current;
-        //$this->request =& $GLOBALS['request'];
     }
 
     /**
@@ -214,7 +213,7 @@ class WikiGroup{
 
         global $request;
         /* WikiPage users: */
-        $dbh =& $request->_dbi;
+        $dbh = $request->_dbi;
         $page_iter = $dbh->getAllPages();
         $users = array();
         while ($page = $page_iter->next()) {

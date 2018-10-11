@@ -94,7 +94,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->revisionCounter = null;
     }
 
-    public function &getDao() {
+    public function getDao() {
         static $_codendi_wikiattachmentdao_instance;
         
         if(!$_codendi_wikiattachmentdao_instance) {
@@ -117,13 +117,13 @@ class WikiAttachment /* implements UGroupPermission */ {
             $gid = $this->gid;
         }
 
-        $dao =& WikiAttachment::getDao();
-        $dar =& $dao->getList($gid);
+        $dao = WikiAttachment::getDao();
+        $dar = $dao->getList($gid);
         
         while($row = $dar->getRow()) {
             $wa = new WikiAttachment($gid);
             $wa->setFromRow($row);
-            $waArray[] =& $wa;
+            $waArray[] = $wa;
             unset($wa);
         }
 
@@ -159,8 +159,8 @@ class WikiAttachment /* implements UGroupPermission */ {
             }
         }
         
-        $dao =& WikiAttachment::getDao();
-        $dar =& $dao->getListWithCounterOrderedByRevDate($gid);
+        $dao = WikiAttachment::getDao();
+        $dar = $dao->getListWithCounterOrderedByRevDate($gid);
 
         $i = 0;
         $j = 0; // count viewable attch for offset
@@ -180,7 +180,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             if(! $wa->permissionExist() || $wa->isAutorized($uid)) {
                 if($j >= $offset) {
                     $wa->setRevisionCounter($row['nb']);
-                    $waArray[] =& $wa;
+                    $waArray[] = $wa;
                     $i++;
                 }
                 $j++;
@@ -362,7 +362,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     }
 
     public function dbadd() {
-        $dao =& WikiAttachment::getDao();
+        $dao = WikiAttachment::getDao();
         $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
         if(!$created) {            
@@ -400,14 +400,14 @@ class WikiAttachment /* implements UGroupPermission */ {
 
     public function getId() {
         if(!is_numeric($this->id)) {
-            $dao =& WikiAttachment::getDao();
-            $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
+            $dao = WikiAttachment::getDao();
+            $dar = $dao->getIdFromFilename($this->gid, $this->getFilename());
 
             if($dar->rowCount() > 1) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
             } else {
-                $row =& $dar->getRow();
+                $row = $dar->getRow();
                 $this->id = $row['id'];
             }
         }
@@ -459,8 +459,8 @@ class WikiAttachment /* implements UGroupPermission */ {
   
     function initWithId($id=0) {
         $this->id = (int) $id;
-        $dao =& WikiAttachment::getDao();
-        $dar =& $dao->read($this->id);
+        $dao = WikiAttachment::getDao();
+        $dar = $dao->read($this->id);
         $this->setFromRow($dar->getRow());
     }
 
@@ -507,7 +507,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     function count() {
         if($this->revisionCounter === null) {
             $this->getId();
-            $waIter =& WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
+            $waIter = WikiAttachmentRevision::getRevisionIterator($this->gid, $this->id);
             $this->revisionCounter = $waIter->count();
         }
         return $this->revisionCounter;

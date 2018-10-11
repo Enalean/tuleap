@@ -209,7 +209,7 @@ extends WikiPlugin
             $cell_width = 0;
             $numcols = count($photos);
             $keep = $photos;
-            while (list($key, $value) = each($photos)) {
+            foreach ($photos as $value) {
                 list($x,$y,$s,$t) = @getimagesize($value['src']);
                 if ($height != 'auto') $y = $this->newSize($y, $height);
                 if ($width != 'auto') $y = round($y * $this->newSize($x, $width) / $x);
@@ -240,7 +240,7 @@ function display_slides() {
 }
 display_slides();"));
 
-        while (list($key, $value) = each($photos))  {
+        foreach ($photos as $key => $value) {
             if ($p && basename($value["name"]) != "$p") {
                 continue;
             }
@@ -633,7 +633,7 @@ display_slides();"));
         } elseif ($web_location == 1) {
             //TODO: checks if the file is an image
             $contents = preg_split('/\n/',$contents);
-            while (list($key,$value) = each($contents)) {
+            foreach ($contents as $value) {
                 $data = preg_split('/\;/',$value);
                 if (count($data) == 0 || empty($data[0]) 
                                       || preg_match('/^#/',$data[0]) 

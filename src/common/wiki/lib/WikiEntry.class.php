@@ -170,7 +170,7 @@ class WikiEntry {
         while($row = db_fetch_array($res)) {
             $we = new WikiEntry();
             $we->setFromRow($row);
-            $weArray[] =& $we;
+            $weArray[] = $we;
             unset($we);
         }
 

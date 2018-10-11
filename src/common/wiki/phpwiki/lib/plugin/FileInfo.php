@@ -217,7 +217,7 @@ struct VS_VERSIONINFO { struct VS_VERSIONINFO
 	        and $pVer->wValueLength) {
 		// analyze the VS_FIXEDFILEINFO(Value);
 		// $pValue = new ffi_struct($ffi, "VS_FIXEDFILEINFO");
-		$pValue =& $pVer->Value;
+		$pValue = $pVer->Value;
 		return sprintf("%d.%d.%d.%d",
 			       $pValue->dwFileVersionMS >> 16,
 			       $pValue->dwFileVersionMS & 0xFFFF,

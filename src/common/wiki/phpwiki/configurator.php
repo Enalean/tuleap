@@ -1655,9 +1655,9 @@ extends _variable {
         if (!empty($_POST[$this->config_item_name]))
             return $_POST[$this->config_item_name];
         else {
-	    list($option, $label) = each($this->default_value);
-            return $option;
-        }
+            foreach ($this->default_value as $option => $label) {
+                return $option;
+            }
     }
     function get_html() {
 	$output = $this->get_config_item_header();
@@ -1668,7 +1668,7 @@ extends _variable {
 	    $this->default_value = constant($this->get_config_item_name());
 	else
 	    $this->default_value = null;
-        while(list($option, $label) = each($values)) {
+        foreach ($values as $option => $label) {
 	    if (!is_null($this->default_value) and $this->default_value === $option)
 		$output .= "  <option value=\"$option\" selected=\"selected\">$label</option>\n";
 	    else
@@ -2047,12 +2047,13 @@ extends _define {
 	    $this->default_value = constant($name);
 	else {
 	    $this->default_value = null;
-	    list($option, $label) = each($values);
+	    $option = key($values);
+	    $label  = next($values);
 	    $output .= "  <option value=\"$option\" selected=\"selected\">$label</option>\n";
 	}
         /* There can usually, only be two options, there can be
          * three options in the case of a boolean_define_commented_optional */
-        while (list($option, $label) = each($values)) {
+        foreach ($values as $option => $label) {
 	    if (!is_null($this->default_value) and $this->default_value === $option)
 		$output .= "  <option value=\"$option\" selected=\"selected\">$label</option>\n";
 	    else
@@ -2071,7 +2072,8 @@ extends boolean_define {
     function _get_config_line($posted_value) {
         if ($this->description)
             $n = "\n";
-        list($default_value, $label) = each($this->default_value);
+        $default_value = key($this->default_value);
+        next($this->default_value);
         if ($posted_value == $default_value)
             return "${n};" . $this->_config_format($posted_value);
         elseif ($posted_value == '')
@@ -2298,7 +2300,7 @@ if (!empty($_POST['action'])
 <table cellpadding="4" cellspacing="0">
 ';
 
-    while (list($property, $obj) = each($properties)) {
+    foreach ($properties as $property => $obj) {
         echo $obj->get_instructions($property);
         if ($h = $obj->get_html()) {
             if (defined('DEBUG') and DEBUG)  $h = get_class($obj) . "<br />\n" . $h;

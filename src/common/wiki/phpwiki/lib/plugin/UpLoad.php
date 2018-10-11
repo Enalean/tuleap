@@ -205,13 +205,13 @@ ws[cfh]");
                                       'width'  => '100%'));
         $attchTab->pushContent(HTML::tr(HTML::th(_("Attachment")),
                                         HTML::th(_("Number of revision"))));
-        $wai =& WikiAttachment::getListWithCounter(GROUP_ID,
+        $wai = WikiAttachment::getListWithCounter(GROUP_ID,
                                                    user_getid(),
                                                    array('offset' => $offset,
                                                          'nb'     => $limit));
         $wai->rewind();
         while($wai->valid()) {
-            $wa =& $wai->current();
+            $wa = $wai->current();
             
             $filename = basename($wa->getFilename());
             $url = getUploadDataPath().urlencode($filename);

@@ -149,9 +149,9 @@ class CacheableMarkup extends XmlContent {
     function _glean_description($text) {
         static $two_sentences;
         if (!$two_sentences) {
-            $two_sentences = pcre_fix_posix_classes("[.?!][\")]*\s+[\"(]*[[:upper:])]"
-                                                    . ".*"
-                                                    . "[.?!][\")]*\s*[\"(]*([[:upper:])]|$)");
+            $two_sentences = "[.?!][\")]*\s+[\"(]*[[:upper:])]"
+                             . ".*"
+                             . "[.?!][\")]*\s*[\"(]*([[:upper:])]|$)";
         }
         
         if (!isset($this->_description) and preg_match("/$two_sentences/sx", $text))

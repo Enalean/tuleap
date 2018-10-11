@@ -56,7 +56,7 @@ extends XmlParser
         else {
             trigger_error(sprintf("unknown HtmlParser dialect %s",$dialect),E_USER_ERROR);
         }
-        $this->_handlers =& $this->dialect->_handlers;
+        $this->_handlers = $this->dialect->_handlers;
         parent::__construct($encoding);
 	xml_parser_set_option($this->_parser, XML_OPTION_CASE_FOLDING, 0);
 	xml_parser_set_option($this->_parser, XML_OPTION_SKIP_WHITE, 1);
@@ -84,7 +84,7 @@ extends XmlParser
     function wikify ($node, $parent = null) {
         $output = '';
         if( isa($node, 'XmlElement')) {
-            $dialect =& $this->dialect;
+            $dialect = $this->dialect;
             $conv = $dialect->_handlers[$node->_tag];
             if( is_string($conv) and method_exists($dialect, $conv)) {
                 $output = $dialect->$conv($node);

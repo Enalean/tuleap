@@ -361,8 +361,8 @@ class WikiRequest extends Request {
     }
 
     // login or logout or restore state
-    function _setUser (&$user) {
-        $this->_user =& $user;
+    function _setUser ($user) {
+        $this->_user = $user;
         if (defined('MAIN_setUser')) return; // don't set cookies twice
         if ($user->isSignedIn())
             $user->_authhow = 'signin';
@@ -370,7 +370,7 @@ class WikiRequest extends Request {
         // Save userid to prefs..
         if ( empty($this->_user->_prefs)) {
             $this->_user->_prefs = $this->_user->getPreferences();
-            $this->_prefs =& $this->_user->_prefs;
+            $this->_prefs = $this->_user->_prefs;
         }
         $this->_user->_group = $this->getGroup();
         $this->setSessionVar('wiki_user', $user);
@@ -424,7 +424,7 @@ class WikiRequest extends Request {
 	    }
 	    // Is the reason a missing ACL or just wrong user or password?
             if (class_exists('PagePermission')) {
-                $user =& $this->_user;
+                $user = $this->_user;
             	$status = $user->isAuthenticated() ? _("authenticated") : _("not authenticated");
             	$msg = fmt("%s %s %s is disallowed on this wiki for %s user '%s' (level: %s).",
                            _("Missing PagePermission:"),
@@ -924,7 +924,7 @@ class WikiRequest extends Request {
 
     function action_edit () {
         // {{{ Codendi hook to check if this wiki page is editable
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $response = false;
         $html = HTML();
         $em->processEvent('isWikiPageEditable', array(

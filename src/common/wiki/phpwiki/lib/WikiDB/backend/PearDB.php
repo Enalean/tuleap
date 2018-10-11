@@ -239,7 +239,7 @@ extends WikiDB_backend
         
         // check id_cache
         global $request;
-        $cache =& $request->_dbi->_cache->_id_cache;
+        $cache = $request->_dbi->_cache->_id_cache;
         if (isset($cache[$pagename])) {
             if ($cache[$pagename] or !$create_if_missing) {
                 return $cache[$pagename];
@@ -439,34 +439,11 @@ extends WikiDB_backend
     }
 
     /**
-     * Delete page from the database with backup possibility.
-     * i.e save_page('') and DELETE nonempty id
-     * Can be undone and is seen in RecentChanges.
-     */
-    /* // see parent backend.php
-    function delete_page($pagename) {
-        $mtime = time();
-        $user =& $GLOBALS['request']->_user;
-        $vdata = array('author' => $user->getId(),
-                       'author_id' => $user->getAuthenticatedId(),
-                       'mtime' => $mtime);
-
-        $this->lock();
-        $version = $this->get_latest_version($pagename);
-        $this->set_versiondata($pagename, $version+1, $vdata);
-        $this->set_links($pagename, false);
-        $pagedata = get_pagedata($pagename);
-        $this->update_pagedata($pagename, array('hits' => $pagedata['hits']));
-        $this->unlock();
-    }
-    */
-
-    /**
      * Delete page completely from the database.
      * I'm not sure if this is what we want. Maybe just delete the revisions
      */
     function purge_page($pagename) {
-        $dbh = &$this->_dbh;
+        $dbh = $this->_dbh;
         extract($this->_table_names);
         
         $this->lock();

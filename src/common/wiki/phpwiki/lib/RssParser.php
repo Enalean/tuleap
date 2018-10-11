@@ -74,11 +74,11 @@ extends XmlParser {
         if ($tagName == "ITEM") {
             if (empty($this->items)) {
                 $this->items = array();	
-                $GLOBALS['rss_parser_items'] =& $this->items;
+                $GLOBALS['rss_parser_items'] = $this->items;
             } elseif (!empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
             	// override the initial <items> list with detailed <item>'s
                 $this->items = array();
-                $GLOBALS['rss_parser_items'] =& $this->items;
+                $GLOBALS['rss_parser_items'] = $this->items;
             }
             $this->items[] = array("title"       => $this->item['TITLE'],
                                    "description" => @$this->item['DESCRIPTION'],
@@ -98,14 +98,14 @@ extends XmlParser {
                                    "link" => $this->link,
                                    "date" => $this->date,
                                    "divers" => $this->divers);
-            $GLOBALS['rss_parser_channel'] =& $this->channel;
+            $GLOBALS['rss_parser_channel'] = $this->channel;
             $this->title       = "";
             $this->description = "";
             $this->link        = "";
             $this->divers      = "";
             $this->date        = "";
         } elseif ($tagName == "ITEMS") {
-            $GLOBALS['rss_parser_items'] =& $this->items;
+            $GLOBALS['rss_parser_items'] = $this->items;
             $this->item = array("TITLE"       => "",
                                 "DESCRIPTION" => "",
                                 "LINK"        => "");

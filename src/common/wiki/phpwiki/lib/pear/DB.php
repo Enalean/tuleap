@@ -423,13 +423,7 @@ class DB
      */
     function assertExtension($name)
     {
-        if (!extension_loaded($name)) {
-            $dlext = OS_WINDOWS ? '.dll' : '.so';
-            $dlprefix = OS_WINDOWS ? 'php_' : '';
-            @dl($dlprefix . $name . $dlext);
-            return extension_loaded($name);
-        }
-        return true;
+        return extension_loaded($name);
     }
     // }}}
 }

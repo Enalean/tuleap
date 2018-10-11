@@ -541,9 +541,11 @@ function SplitQueryArgs ($query_args = '')
     // FIXME: use the arg-seperator which might not be &
     $split_args = preg_split('/&/D', $query_args);
     $args = array();
-    while (list($key, $val) = each($split_args))
-        if (preg_match('/^ ([^=]+) =? (.*) /x', $val, $m))
+    foreach ($split_args as $val) {
+        if (preg_match('/^ ([^=]+) =? (.*) /x', $val, $m)) {
             $args[$m[1]] = $m[2];
+        }
+    }
     return $args;
 }
 
@@ -670,7 +672,7 @@ class WikiPageName
                         $name = $url;
                     }
                     if (strstr($name, '?'))
-                        list($name, $dummy) = split("?", $name, 2);
+                        list($name, $dummy) = explode('?', $name, 2);
                 }
             }
 	    // FIXME: We should really fix the cause for "/PageName" in the WikiDB
@@ -1092,7 +1094,7 @@ function SplitPagename ($page) {
         $RE[] = "/([^${sep}]+)(${sep})/";
         
         foreach ($RE as $key)
-            $RE[$key] = pcre_fix_posix_classes($key);
+            $RE[$key] = $key;
     }
 
     foreach ($RE as $regexp) {
@@ -1983,11 +1985,6 @@ function isExternalReferrer(&$request) {
  * Useful for PECL overrides: cvsclient, ldap, soap, xmlrpc, pdo, pdo_<driver>
  */
 function loadPhpExtension($extension) {
-    if (!extension_loaded($extension)) {
-        $soname = (isWindows() ? 'php_' : '') . $extension . (isWindows() ? '.dll' : '.so');
-        if (!@dl($soname))
-            return false;
-    }
     return extension_loaded($extension);
 }
 

@@ -10,9 +10,9 @@ extends WikiDB_backend_iterator
         $this->_backend = &$backend;
         $this->_pages = $pages;
         $this->_fulltext = $fulltext;
-        $this->_search  =& $search;
+        $this->_search  = $search;
         $this->_index   = 0;
-        $this->_stoplist =& $search->_stoplist;
+        $this->_stoplist = $search->_stoplist;
         $this->stoplisted = array();
 
         if (isset($options['limit'])) $this->_limit = $options['limit'];
@@ -22,7 +22,7 @@ extends WikiDB_backend_iterator
     }
 
     function _get_content(&$page) {
-        $backend = &$this->_backend;
+        $backend = $this->_backend;
         $pagename = $page['pagename'];
         
         if (!isset($page['versiondata'])) {

@@ -60,7 +60,8 @@ extends WikiPlugin_WikiAdminSelect
 
     function renameHelper($name, $from, $to, $options = false) {
         if ($options['regex']) {
-            return preg_replace('/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':''), $to, $name);
+            $pattern = '/' . str_replace('/', '\/', $from) . '/'.($options['icase']?'i':'');
+            return preg_replace($pattern, $to, $name);
         }
     	elseif ($options['icase'])
     	    return str_ireplace($from, $to, $name);

@@ -52,7 +52,7 @@ extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
         if (empty($userid) or $userid == $request->_user->UserName()) {
-            $user =& $request->_user;
+            $user = $request->_user;
             $userid = $user->UserName();
         } else {
             $user = WikiUser($userid);
@@ -98,7 +98,7 @@ extends WikiPlugin
             $userdata = obj2hash($user, array('_dbi','_request', 'password', 'passwd'));
             $table->pushContent($this->_showhash("User: Object of ".get_class($user), $userdata));
             if (ENABLE_USER_NEW) {
-              $group = &$request->getGroup();
+              $group = $request->getGroup();
               $groups = $group->getAllGroupsIn();
               $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
               unset($groupdata['request']);

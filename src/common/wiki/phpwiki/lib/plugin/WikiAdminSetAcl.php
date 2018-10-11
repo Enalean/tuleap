@@ -63,7 +63,7 @@ extends WikiPlugin_WikiAdminSelect
     function setaclPages(&$request, $pages, $acl) {
         $ul = HTML::ul();
         $count = 0;
-        $dbi =& $request->_dbi; 
+        $dbi = $request->_dbi;
         // check new_group and new_perm
         if (isset($acl['_add_group'])) {
 	    //add groups with perm
@@ -77,8 +77,9 @@ extends WikiPlugin_WikiAdminSelect
         if (isset($acl['_del_group'])) {
 	    //del groups with perm
             foreach ($acl['_del_group'] as $access => $del) {
-                while (list($group,$dummy) = each($del)) 
+                foreach ($del as $group => $dummy) {
                     unset($acl[$access][$group]);
+                }
             }
             unset($acl['_del_group']);
         }

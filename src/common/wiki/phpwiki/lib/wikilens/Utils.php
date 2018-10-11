@@ -55,12 +55,12 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM) {
     $page->save($text, $version + 1, $meta);
 }
  
-function getMembers($groupName, $dbi, $START_DELIM = false, $DELIM = ",") {
+function getMembers($groupName, $dbi, $START_DELIM = false) {
     if (!$START_DELIM) $START_DELIM = _("Members:");	
-    return getPageTextData($groupName, $dbi, $START_DELIM, $DELIM);	
+    return getPageTextData($groupName, $dbi, $START_DELIM);
 }
 
-function getPageTextData($fromUser, $dbi, $START_DELIM, $DELIM) {
+function getPageTextData($fromUser, $dbi, $START_DELIM) {
     if (is_object($fromUser))
         $fromUser = $fromUser->getId();
     if ($fromUser == "")
@@ -82,7 +82,7 @@ function getPageTextData($fromUser, $dbi, $START_DELIM, $DELIM) {
         $singles = $pageArray[$p];
         $singles = substr($singles, strpos($singles, $START_DELIM) + strlen($START_DELIM));
         
-        $retArray = split($DELIM, $singles);
+        $retArray = explode(',', $singles);
     }    
     for ($i = 0; $i < count($retArray); $i++) {
         $retArray[$i] = trim($retArray[$i]);

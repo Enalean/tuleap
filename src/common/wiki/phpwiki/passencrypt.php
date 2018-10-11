@@ -107,7 +107,7 @@ function random_good_password ($minlength = 5, $maxlength = 8) {
   */
 foreach (array('SERVER','GET','POST','ENV') as $k) {
     if (!isset($GLOBALS['HTTP_'.$k.'_VARS']) and isset($GLOBALS['_'.$k]))
-        $GLOBALS['HTTP_'.$k.'_VARS'] =& $GLOBALS['_'.$k];
+        $GLOBALS['HTTP_'.$k.'_VARS'] = $GLOBALS['_'.$k];
 }
 unset($k);
 

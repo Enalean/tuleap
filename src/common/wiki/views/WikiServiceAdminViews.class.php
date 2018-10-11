@@ -79,7 +79,7 @@ class WikiServiceAdminViews extends WikiViews {
              <td>'.$GLOBALS['Language']->getText('wiki_views_wkserviews', 'entry_em').'</td>
            </tr>';
 
-    $allPages =& WikiPage::getAllUserPages();
+    $allPages = WikiPage::getAllUserPages();
     $allPages[]='';
 
     $selectedPage = $purifier->purify($page);
@@ -306,7 +306,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_project', array($hurl));
     if(!$hideFlag){
       print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_pj_all');
-      $allUserPages =& WikiPage::getAllUserPages();
+      $allUserPages = WikiPage::getAllUserPages();
       $this->_browsePages($allUserPages);
     }
 
@@ -316,7 +316,7 @@ class WikiServiceAdminViews extends WikiViews {
     if(!$hideFlag){
       print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_emp_all');
       $wpw = new WikiPageWrapper($this->gid);
-      $allEmptyPages =& $wpw->getProjectEmptyLinks();
+      $allEmptyPages = $wpw->getProjectEmptyLinks();
       $this->_browsePages($allEmptyPages);
     }
 
@@ -325,7 +325,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_admin', array($hurl));
     if(!$hideFlag){
       print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_adm_all');
-      $allAdminPages =& WikiPage::getAllAdminPages();
+      $allAdminPages = WikiPage::getAllAdminPages();
       $this->_browsePages($allAdminPages);
     }
 
@@ -334,7 +334,7 @@ class WikiServiceAdminViews extends WikiViews {
     echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_intern', array($hurl));
     if(!$hideFlag){
       print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_int_all');
-      $allInternalsPages =& WikiPage::getAllInternalPages();
+      $allInternalsPages = WikiPage::getAllInternalPages();
       $this->_browsePages($allInternalsPages);
     }
     
@@ -361,7 +361,7 @@ class WikiServiceAdminViews extends WikiViews {
             if (permission_exist('WIKIPAGE_READ',$page->getId())) {
 	            $status = $GLOBALS['Language']->getText('wiki_views_wkserviews', 'edit_perms');
             }
-            $eM =& EventManager::instance();
+            $eM = EventManager::instance();
             $referenced = false;
             $eM->processEvent('isWikiPageReferenced', array(
                             'referenced' => &$referenced,
@@ -417,7 +417,7 @@ class WikiServiceAdminViews extends WikiViews {
         $wai      = WikiAttachment::getAttachmentIterator($this->gid);
         $wai->rewind();
         while($wai->valid()) {
-            $wa =& $wai->current();
+            $wa = $wai->current();
 
             if ($wa->isActive()) {
                 print '<tr>';
@@ -484,10 +484,10 @@ class WikiServiceAdminViews extends WikiViews {
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_date'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_author'),
                                               $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_size')));
-        $wari =& WikiAttachmentRevision::getRevisionIterator($this->gid, $attachmentId);
+        $wari = WikiAttachmentRevision::getRevisionIterator($this->gid, $attachmentId);
         $wari->rewind();
         while($wari->valid()) {
-            $war =& $wari->current();
+            $war = $wari->current();
 
             print '
              <tr>

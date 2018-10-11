@@ -367,7 +367,7 @@ class WikiPlugin
 
     // box is used to display a fixed-width, narrow version with common header
     function box($args=false, $request=false, $basepage=false) {
-        if (!$request) $request =& $GLOBALS['request'];
+        if (!$request) $request = $GLOBALS['request'];
         $dbi = $request->getDbh();
         return $this->makeBox('', $this->run($dbi, $args, $request, $basepage));
     }

@@ -58,7 +58,7 @@ class WikiPageWrapper {
   /**
    * @return WikiRequest
    */
-  function &getRequest() {
+  function getRequest() {
     define('PHPWIKI_NOMAIN', true);
     IniConfig(PHPWIKI_DIR."/config/config.ini");
     ini_set('include_path', PHPWIKI_DIR.':'.ini_get('include_path'));
@@ -69,10 +69,10 @@ class WikiPageWrapper {
     return new WikiRequest();
   }
 
-  function &getProjectEmptyLinks() {
+  function getProjectEmptyLinks() {
     // Dirty hack to 'give' a WikiRequest object to phpwiki
     // Obscure functions seems require it.
-    $request =& $this->getRequest();
+    $request = $this->getRequest();
 
     $page='ProjectWantedPages';
 
@@ -94,7 +94,7 @@ class WikiPageWrapper {
 
     // Dirty hack to 'give' a WikiRequest object to phpwiki
     // So obscure functions seems require it.
-    $request =& $this->getRequest();
+    $request = $this->getRequest();
 
     $dbi = $request->getDbh();
     require_once(PHPWIKI_DIR."/lib/loadsave.php");
@@ -144,7 +144,7 @@ class WikiPageWrapper {
     function addUploadPage() {
         // Dirty hack to 'give' a WikiRequest object to phpwiki
         // So obscure functions seems require it.
-        $request =& $this->getRequest();
+        $request = $this->getRequest();
         
         $dbi = $request->getDbh();
         require_once(PHPWIKI_DIR."/lib/loadsave.php");

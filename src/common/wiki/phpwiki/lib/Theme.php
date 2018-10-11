@@ -94,7 +94,7 @@ function WikiLink ($page_or_rev, $type = 'known', $label = false) {
             $exists = $page->exists();
         }
         else {
-	    $dbi =& $request->_dbi;
+	    $dbi = $request->_dbi;
             $exists = $dbi->isWikiPage($wikipage->name);
         }
     }
@@ -443,7 +443,7 @@ class Theme {
     function getOwnerMessage ($page) {
         if (!ENABLE_PAGEPERM or !class_exists("PagePermission"))
             return '';
-    	$dbi =& $GLOBALS['request']->_dbi;
+    	$dbi = $GLOBALS['request']->_dbi;
         $owner = $page->getOwner();
     	if ($owner <> ADMIN_USER) {
             //display owner user_name according to the user choice: real name, or Codendi login
@@ -465,7 +465,7 @@ class Theme {
 
     function getAuthorMessage ($revision, $only_authenticated = true) {
         if (!$revision) return '';
-        $dbi =& $GLOBALS['request']->_dbi;
+        $dbi = $GLOBALS['request']->_dbi;
         $author = $revision->get('author_id');
         if ( $author or $only_authenticated ) {
             if (!$author) $author = $revision->get('author');
@@ -1369,7 +1369,7 @@ class PluginSidebarBox extends SidebarBox {
             return $loader->_error(sprintf(_("%s: has no box method"),
                                            get_class($plugin)));
         }*/
-        $this->_plugin   =& $plugin;
+        $this->_plugin   = $plugin;
         $this->_args     = $args ? $args : array();
         $this->_basepage = $basepage;
     }
