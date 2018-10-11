@@ -45,5 +45,21 @@
     "components": [
         "src/www/themes/common/tlp/",
         "src/www/scripts/"
-    ]
+    ],
+    "gettext-js": {
+        "chart-builders": {
+            "src": "src/www/scripts/charts-builders",
+            "po": "src/www/scripts/charts-builders/po"
+        },
+        "project-admin": {
+            "src": "src/www/scripts/project/admin",
+            "po": "src/www/scripts/project/po"
+        }
+    },
+    "gettext-vue": {
+        "core": {
+            "scripts": "src/www/scripts/",
+            "po": "src/www/scripts/po"
+        }
+    }
 }

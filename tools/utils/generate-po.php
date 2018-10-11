@@ -114,43 +114,11 @@ info("[core] Merging .pot file into .po files");
 $site_content = escapeshellarg("$basedir/site-content");
 exec("find $site_content -name 'tuleap-core.po' -exec msgmerge --update \"{}\" $template \;");
 
-info("[core][js] Generating default .pot file");
-foreach (glob("$basedir/src/www/scripts/*", GLOB_ONLYDIR) as $path) {
-    $manifest = "$path/build-manifest.json";
-    if (!is_file($manifest)) {
-        continue;
-    }
+$core_manifest = "$basedir/build-manifest.json";
+$json = json_decode(file_get_contents($core_manifest), true);
 
-    $json = json_decode(file_get_contents($manifest), true);
-    if (isset($json['gettext-js']) && is_array($json['gettext-js'])) {
-        foreach ($json['gettext-js'] as $component => $gettext) {
-            info("[core][js][$component] Generating default .pot file");
-            $src      = escapeshellarg("$path/${gettext['src']}");
-            $po       = escapeshellarg("$path/${gettext['po']}");
-            $template = escapeshellarg("$path/${gettext['po']}/template.pot");
-            executeCommandAndExitIfStderrNotEmpty("find $src \
-                        \( -name '*.js' -o -name '*.vue' \) \
-                        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
-                    | xargs xgettext \
-                        --language=JavaScript \
-                        --default-domain=core \
-                        --from-code=UTF-8 \
-                        --no-location \
-                        --sort-output \
-                        --omit-header \
-                        -o - \
-                    | sed '/^msgctxt/d' \
-                    > $template");
-
-            info("[core][js][$component] Merging .pot file into .po files");
-            exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
-        }
-    }
-
-    info("[core][js] Merging $component .pot file into .po files");
-    exec("find $path -name '*.po' -exec msgmerge --update \"{}\" $template \;");
-}
-
+gettextJS("core", $basedir, $json);
+gettextVue("core", $basedir, $json);
 
 foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
     $translated_plugin = basename($path);
@@ -234,98 +202,118 @@ EOS;
     $manifest = "$path/build-manifest.json";
     if (is_file($manifest)) {
         $json = json_decode(file_get_contents($manifest), true);
-        if (isset($json['gettext-js']) && is_array($json['gettext-js'])) {
-            foreach ($json['gettext-js'] as $component => $gettext) {
-                info("[$translated_plugin][js][$component] Generating default .pot file");
-                $src      = escapeshellarg("$path/${gettext['src']}");
-                $po       = escapeshellarg("$path/${gettext['po']}");
-                $template = escapeshellarg("$path/${gettext['po']}/template.pot");
+        gettextJS($translated_plugin, $path, $json);
+        gettextSmarty($translated_plugin, $path, $json);
+        gettextVue($translated_plugin, $path, $json);
+    }
+}
 
-                executeCommandAndExitIfStderrNotEmpty("find $src \
-                        \( -name '*.js' -o -name '*.vue' \) \
-                        -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
-                    | xargs xgettext \
-                        --language=JavaScript \
-                        --default-domain=core \
-                        --from-code=UTF-8 \
-                        --no-location \
-                        --sort-output \
-                        --omit-header \
-                        -o - \
-                    | sed '/^msgctxt/d' \
-                    > $template");
+function gettextJS($translated_plugin, $path, $manifest_json)
+{
 
-                info("[$translated_plugin][js][$component] Merging .pot file into .po files");
-                exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
-            }
-        }
+    if (! isset($manifest_json['gettext-js']) || ! is_array($manifest_json['gettext-js'])) {
+        return;
+    }
 
-        if (isset($json['gettext-vue']) && is_array($json['gettext-vue'])) {
-            foreach ($json['gettext-vue'] as $component => $gettext) {
-                info("[$translated_plugin][vue][$component] Generating default .pot file");
-                $scripts           = escapeshellarg("$path/${gettext['scripts']}");
-                $po                = escapeshellarg("$path/${gettext['po']}");
-                $template          = escapeshellarg("$path/${gettext['po']}/template.pot");
-                $vue_template_path = "$path/${gettext['po']}/template.pot";
-                $vue_template      = escapeshellarg($vue_template_path);
-                executeCommandAndExitIfStderrNotEmpty("(cd $scripts && npm run extract-gettext-cli -- --output $template)");
+    foreach ($manifest_json['gettext-js'] as $component => $gettext) {
+        info("[$translated_plugin][js][$component] Generating default .pot file");
+        $src      = escapeshellarg("$path/${gettext['src']}");
+        $po       = escapeshellarg("$path/${gettext['po']}");
+        $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
-                exec("msgcat --no-location --sort-output -o $template $vue_template");
+        executeCommandAndExitIfStderrNotEmpty("find $src \
+                            \( -name '*.js' -o -name '*.vue' \) \
+                            -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
+                        | xargs xgettext \
+                            --language=JavaScript \
+                            --default-domain=core \
+                            --from-code=UTF-8 \
+                            --no-location \
+                            --sort-output \
+                            --omit-header \
+                            -o - \
+                        | sed '/^msgctxt/d' \
+                        > $template");
 
-                info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
-                exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
-            }
-        }
+        info("[$translated_plugin][js][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+    }
+}
 
-        if (isset($json['gettext-smarty']) && is_array($json['gettext-smarty'])) {
-            foreach ($json['gettext-smarty'] as $component => $gettext) {
-                info("[$translated_plugin][smarty][$component] Generating default .pot file");
-                $smarty_to_gettext   = escapeshellarg("$path/${gettext['smarty_to_gettext']}");
-                $scripts_php         = escapeshellarg("$path/${gettext['scripts-php']}");
-                $scripts_templates   = escapeshellarg("$path/${gettext['scripts-templates']}");
-                $po                  = escapeshellarg("$path/${gettext['po']}");
-                $template_php        = escapeshellarg("$path/${gettext['po']}/$component-php.pot");
-                $template_php_plural = escapeshellarg("$path/${gettext['po']}/$component-php-plural.pot");
-                $template_smarty     = escapeshellarg("$path/${gettext['po']}/$component-smarty.pot");
-                $template            = escapeshellarg("$path/${gettext['po']}/$component.pot");
-                $domain              = escapeshellarg($component);
-                executeCommandAndExitIfStderrNotEmpty("(cd $scripts_templates && $smarty_to_gettext -d=$domain -o $template_smarty .)");
-                executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
-                    | xargs xgettext \
-                        --keyword='dgettext:1c,2' \
-                        --default-domain=$component \
-                        --from-code=UTF-8 \
-                        --omit-header \
-                        -o - \
-                    | msggrep \
-                        --msgctxt \
-                        --regexp='$component\b' \
-                        - \
-                    | sed '/^msgctxt/d' \
-                    > $template_php");
+function gettextVue($translated_plugin, $path, $manifest_json)
+{
+    if (! isset($manifest_json['gettext-vue']) || ! is_array($manifest_json['gettext-vue'])) {
+        return;
+    }
 
-                executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
-                    | xargs xgettext \
-                        --keyword='dngettext:1c,2,3' \
-                        --default-domain=$component \
-                        --from-code=UTF-8 \
-                        --omit-header \
-                        -o - \
-                    | msggrep \
-                        --msgctxt \
-                        --regexp='$component\b' \
-                        - \
-                    | sed '/^msgctxt/d' \
-                    > $template_php_plural");
+    foreach ($manifest_json['gettext-vue'] as $component => $gettext) {
+        info("[$translated_plugin][vue][$component] Generating default .pot file");
+        $scripts           = escapeshellarg("$path/${gettext['scripts']}");
+        $po                = escapeshellarg("$path/${gettext['po']}");
+        $template          = escapeshellarg("$path/${gettext['po']}/template.pot");
+        $vue_template_path = "$path/${gettext['po']}/template.pot";
+        $vue_template      = escapeshellarg($vue_template_path);
+        executeCommandAndExitIfStderrNotEmpty("(cd $scripts && npm run extract-gettext-cli -- --output $template)");
 
-                exec("msgcat --no-location --sort-output -o $template $template_php $template_php_plural $template_smarty");
-                executeCommandAndExitIfStderrNotEmpty("rm $template_php");
-                executeCommandAndExitIfStderrNotEmpty("rm $template_php_plural");
-                executeCommandAndExitIfStderrNotEmpty("rm $template_smarty");
+        exec("msgcat --no-location --sort-output -o $template $vue_template");
 
-                info("[$translated_plugin][smarty][$component] Merging .pot file into .po files");
-                exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
-            }
-        }
+        info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
+    }
+}
+
+function gettextSmarty($translated_plugin, $path, $manifest_json)
+{
+    if (! isset($manifest_json['gettext-smarty']) || ! is_array($manifest_json['gettext-smarty'])) {
+        return;
+    }
+
+    foreach ($manifest_json['gettext-smarty'] as $component => $gettext) {
+        info("[$translated_plugin][smarty][$component] Generating default .pot file");
+        $smarty_to_gettext   = escapeshellarg("$path/${gettext['smarty_to_gettext']}");
+        $scripts_php         = escapeshellarg("$path/${gettext['scripts-php']}");
+        $scripts_templates   = escapeshellarg("$path/${gettext['scripts-templates']}");
+        $po                  = escapeshellarg("$path/${gettext['po']}");
+        $template_php        = escapeshellarg("$path/${gettext['po']}/$component-php.pot");
+        $template_php_plural = escapeshellarg("$path/${gettext['po']}/$component-php-plural.pot");
+        $template_smarty     = escapeshellarg("$path/${gettext['po']}/$component-smarty.pot");
+        $template            = escapeshellarg("$path/${gettext['po']}/$component.pot");
+        $domain              = escapeshellarg($component);
+        executeCommandAndExitIfStderrNotEmpty("(cd $scripts_templates && $smarty_to_gettext -d=$domain -o $template_smarty .)");
+        executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
+                | xargs xgettext \
+                    --keyword='dgettext:1c,2' \
+                    --default-domain=$component \
+                    --from-code=UTF-8 \
+                    --omit-header \
+                    -o - \
+                | msggrep \
+                    --msgctxt \
+                    --regexp='$component\b' \
+                    - \
+                | sed '/^msgctxt/d' \
+                > $template_php");
+
+        executeCommandAndExitIfStderrNotEmpty("find $scripts_php -name '*.php' \
+                | xargs xgettext \
+                    --keyword='dngettext:1c,2,3' \
+                    --default-domain=$component \
+                    --from-code=UTF-8 \
+                    --omit-header \
+                    -o - \
+                | msggrep \
+                    --msgctxt \
+                    --regexp='$component\b' \
+                    - \
+                | sed '/^msgctxt/d' \
+                > $template_php_plural");
+
+        exec("msgcat --no-location --sort-output -o $template $template_php $template_php_plural $template_smarty");
+        executeCommandAndExitIfStderrNotEmpty("rm $template_php");
+        executeCommandAndExitIfStderrNotEmpty("rm $template_php_plural");
+        executeCommandAndExitIfStderrNotEmpty("rm $template_smarty");
+
+        info("[$translated_plugin][smarty][$component] Merging .pot file into .po files");
+        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \;");
     }
 }

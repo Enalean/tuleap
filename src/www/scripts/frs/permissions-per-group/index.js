@@ -22,8 +22,10 @@
  */
 
 import Vue from "vue";
-import NewsPermissions from "./BaseFRSPackagePermissions.vue";
-import { gettext_provider } from "./gettext-provider.js";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../../po/fr.po";
+
+import FRSPermissions from "./BaseFRSPackagePermissions.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("frs-packages-permissions-per-group");
@@ -32,10 +34,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const rootComponent = Vue.extend(NewsPermissions);
-    const locale = document.body.dataset.userLocale;
+    Vue.use(GettextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
 
-    gettext_provider.setLocale(locale);
+    const rootComponent = Vue.extend(FRSPermissions);
+    const locale = document.body.dataset.userLocale;
+    Vue.config.language = locale;
 
     new rootComponent({
         propsData: { ...vue_mount_point.dataset }

@@ -103,11 +103,14 @@ const webpack_config_for_vue_components = {
     module: {
         rules: [
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files,
+            webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
     },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
+    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
+    resolveLoader: {
+        alias: webpack_configurator.easygettext_loader_alias
+    }
 };
 
 module.exports = [
