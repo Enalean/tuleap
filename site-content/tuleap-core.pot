@@ -907,6 +907,9 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
+msgid "That user does not exist."
+msgstr ""
+
 #, php-format
 msgid "The dashboard \"%s\" already exists."
 msgstr ""
