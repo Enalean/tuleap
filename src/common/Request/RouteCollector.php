@@ -21,6 +21,7 @@
 
 namespace Tuleap\Request;
 
+use Codendi_HTMLPurifier;
 use EventManager;
 use FastRoute;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
@@ -43,6 +44,7 @@ use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
+use Tuleap\User\Profile\ProfilePresenterBuilder;
 
 class RouteCollector
 {
@@ -119,7 +121,9 @@ class RouteCollector
         });
 
         $r->addRoute(['GET'], '/users/{name}[/]', function () {
-            return new ProfileController();
+            return new ProfileController(
+                new ProfilePresenterBuilder(EventManager::instance(), Codendi_HTMLPurifier::instance())
+            );
         });
 
         $r->addRoute(['GET'], '/users/{name}/avatar.png', function () {

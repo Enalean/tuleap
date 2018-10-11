@@ -550,7 +550,15 @@ msgstr[1] ""
 msgid "Member name"
 msgstr ""
 
+msgid "Member of {{ nb_projects }} project"
+msgid_plural "Member of {{ nb_projects }} projects"
+msgstr[0] ""
+msgstr[1] ""
+
 msgid "Member removal"
+msgstr ""
+
+msgid "Member since %s"
 msgstr ""
 
 msgid "Members"
@@ -1353,6 +1361,12 @@ msgid "my_service"
 msgstr ""
 
 msgid "permissions"
+msgstr ""
+
+msgid "{{ nb_members }} members"
+msgstr ""
+
+msgid "{{ real_name }} doesn't seem to be member of any projects you can see."
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

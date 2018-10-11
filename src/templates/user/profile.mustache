@@ -1,0 +1,78 @@
+<section class="user-profile">
+    <section class="user-profile-basic-information">
+        <div class="tlp-avatar-jumbo user-profile-avatar">
+            {{# has_avatar }}
+                <img src="{{ avatar_url }}" alt="{{# gettext }}User avatar{{/ gettext }}">
+            {{/ has_avatar }}
+        </div>
+        <div class="user-profile-identity">
+            <div class="user-profile-member-information">
+                <h1 class="user-profile-title">{{ real_name }}</h1>
+                {{# status }}
+                    <span class="tlp-badge-{{ status_level }} {{# status_is_active }}user-profile-status-active{{/ status_is_active }}">
+                        {{ status_label }}
+                    </span>
+                {{/ status }}
+            </div>
+            <div class="user-profile-member-information">
+                <span>@{{ user_name }}</span>
+                <span class="user-profile-id">#{{ id }}</span>
+            </div>
+            <div class="user-profile-member-information">
+                <a href="mailto:{{ email }}" class="user-profile-email">{{ email }}</a>
+                <span class="user-profile-member-since tlp-tooltip tlp-tooltip-left"
+                      data-tlp-tooltip="{{# gettext }}Member since %s | {{ member_since_date_long }}{{/gettext}}"
+                >
+                    <i class="fa fa-calendar user-profile-calendar"></i>
+                    {{ member_since_date }}
+                </span>
+            </div>
+            {{# additional_entries }}
+                <div class="user-profile-member-information">
+                    <div>
+                        <span class="user-profile-additional-information-value tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{ label }}">
+                            {{{ purified_value }}}
+                        </span>
+                    </div>
+                </div>
+            {{/ additional_entries }}
+        </div>
+    </section>
+</section>
+{{# nb_projects }}
+    <div class="user-profile-projects">
+        <div class="user-profile-has-projects">
+            <h2>{{# ngettext }}
+                Member of {{ nb_projects }} project |
+                Member of {{ nb_projects }} projects |
+                {{ nb_projects }}
+            {{/ ngettext }}</h2>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <section class="tlp-pane-section-for-cards">
+                        {{# projects }}
+                            <a class="tlp-card tlp-card-selectable user-profile-project" href="/projects/{{ unix_name }}/">
+                                <p class="user-profile-project-title-description">
+                                    {{ public_name }}
+                                    <small class="user-profile-project-description">{{ description }}</small>
+                                </p>
+                                <label class="tlp-badge-primary tlp-badge-outline user-profile-project-nb-members">
+                                    <i class="fa fa-users tlp-badge-icon"></i>
+                                    {{# gettext }}{{ nb_members }} members{{/gettext}}
+                                </label>
+                            </a>
+                        {{/ projects }}
+                    </section>
+                </div>
+            </section>
+        </div>
+    </div>
+{{/ nb_projects }}
+{{^ nb_projects }}
+    <div class="empty-page">
+        <p class="empty-page-text user-profile-no-project">
+            {{# gettext }}{{ real_name }} doesn't seem to be member of any projects you can see.{{/gettext}}
+        </p>
+        {{> profile-tumbleweed-svg }}
+    </div>
+{{/ nb_projects }}
