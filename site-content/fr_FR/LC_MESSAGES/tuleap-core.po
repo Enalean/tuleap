@@ -970,6 +970,9 @@ msgstr "Patron utilisé par ce projet"
 msgid "Templates"
 msgstr "Patrons de projet"
 
+msgid "That user does not exist."
+msgstr "Cet utilisateur n'existe pas"
+
 #, php-format
 msgid "The dashboard \"%s\" already exists."
 msgstr "Le tableau de bord \"%s\" existe déjà."

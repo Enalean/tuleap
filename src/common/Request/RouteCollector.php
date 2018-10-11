@@ -41,6 +41,8 @@ use Tuleap\Password\Configuration\PasswordConfigurationSaver;
 use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
+use Tuleap\User\Profile\AvatarController;
+use Tuleap\User\Profile\ProfileController;
 
 class RouteCollector
 {
@@ -114,6 +116,14 @@ class RouteCollector
             $r->post('/access_key/revoke', function () {
                 return new AccessKeyRevocationController();
             });
+        });
+
+        $r->addRoute(['GET'], '/users/{name}[/]', function () {
+            return new ProfileController();
+        });
+
+        $r->addRoute(['GET'], '/users/{name}/avatar.png', function () {
+            return new AvatarController();
         });
 
         $collect_routes = new CollectRoutesEvent($r);
