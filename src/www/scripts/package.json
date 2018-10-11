@@ -20,7 +20,7 @@
     "phptomoment": "0.0.2",
     "smooth-scrollbar": "^7.4.1",
     "sprintf-js": "^1.1.1",
-    "vue": "^2.5.13",
+    "vue": "^2.5.17",
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {

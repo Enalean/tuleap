@@ -8,8 +8,8 @@
   "dependencies": {
     "dompurify": "^1.0.8",
     "mustache": "^2.3.0",
-    "vue": "^2.5.13",
-    "vue-gettext": "^2.0.31"
+    "vue": "^2.5.17",
+    "vue-gettext": "^2.1.0"
   },
   "devDependencies": {
     "concurrently": "^3.5.0"
