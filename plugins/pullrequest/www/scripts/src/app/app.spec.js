@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import "tlp-mocks";
 
 import "./code-collapse/code-collapse-service.spec.js";

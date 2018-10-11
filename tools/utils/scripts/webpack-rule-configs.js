@@ -17,9 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const BabelPresetEnv = require("babel-preset-env");
-const BabelPluginObjectRestSpread = require("babel-plugin-transform-object-rest-spread");
-const BabelPluginSyntaxDynamicImport = require("babel-plugin-syntax-dynamic-import");
+const BabelPresetEnv = require("@babel/preset-env");
+const BabelPluginSyntaxDynamicImport = require("@babel/plugin-syntax-dynamic-import");
 const BabelPluginRewireExports = require("babel-plugin-rewire-exports").default;
 const BabelPluginIstanbul = require("babel-plugin-istanbul").default;
 
@@ -29,7 +28,8 @@ const babel_preset_env_ie_config = [
         targets: {
             ie: 11
         },
-        modules: false
+        modules: false,
+        useBuiltIns: "entry"
     }
 ];
 
@@ -40,14 +40,13 @@ const babel_preset_env_chrome_config = [
             browsers: ["last 2 Chrome versions"]
         },
         modules: false,
-        useBuiltIns: true,
-        shippedProposals: true
+        useBuiltIns: "usage"
     }
 ];
 
 const babel_options_ie11 = {
     presets: [babel_preset_env_ie_config],
-    plugins: [BabelPluginObjectRestSpread, BabelPluginSyntaxDynamicImport]
+    plugins: [BabelPluginSyntaxDynamicImport]
 };
 
 const babel_options_karma = {
@@ -56,16 +55,11 @@ const babel_options_karma = {
         production: babel_options_ie11,
         test: {
             presets: [babel_preset_env_chrome_config],
-            plugins: [
-                BabelPluginObjectRestSpread,
-                BabelPluginSyntaxDynamicImport,
-                BabelPluginRewireExports
-            ]
+            plugins: [BabelPluginSyntaxDynamicImport, BabelPluginRewireExports]
         },
         coverage: {
             presets: [babel_preset_env_chrome_config],
             plugins: [
-                BabelPluginObjectRestSpread,
                 BabelPluginSyntaxDynamicImport,
                 BabelPluginRewireExports,
                 [

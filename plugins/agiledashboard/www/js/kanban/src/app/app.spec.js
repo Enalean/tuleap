@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import "angular-tlp/index.spec.js";
 import "card-fields/index.spec.js";
 import "./app-kanban-controller.spec.js";

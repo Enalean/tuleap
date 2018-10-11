@@ -5,19 +5,18 @@
   "license": "GPL-2.0",
   "private": true,
   "dependencies": {
-    "babel-polyfill": "^6.26.0"
+    "@babel/polyfill": "^7.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
     "angular-gettext-loader": "^1.0.1",
     "angular-gettext-plugin": "^1.0.1",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.5",
-    "babel-loader": "^7.1.5",
-    "babel-plugin-istanbul": "^4.1.5",
-    "babel-plugin-rewire-exports": "^0.5.0",
-    "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.4",
+    "babel-plugin-istanbul": "^5.0.1",
+    "babel-plugin-rewire-exports": "^1.0.1",
     "concurrently": "^4.0.1",
     "del": "^2.2.1",
     "easygettext": "^2.6.4",

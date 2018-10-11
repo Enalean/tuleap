@@ -1,5 +1,3 @@
-import "babel-polyfill";
-
 import "card-fields/index.spec.js";
 import "./planning-controller.spec.js";
 import "./backlog-item-collection/backlog-item-collection-service.spec.js";
