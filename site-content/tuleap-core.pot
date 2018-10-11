@@ -952,8 +952,8 @@ msgid "The page you are looking for does not exist"
 msgstr ""
 
 msgid ""
-"The password must not be considered as compromised due to his presence in "
-"known data breaches."
+"The password must not be considered as compromised (this password is present "
+"in known data breaches)"
 msgstr ""
 
 msgid "The password policy has been successfully updated."
