@@ -157,6 +157,12 @@ msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Ask to join"
+msgstr ""
+
+msgid "Ask to join this project"
+msgstr ""
+
 msgid "Available (also available for new projects)"
 msgstr ""
 
@@ -428,6 +434,9 @@ msgstr ""
 msgid "Global permissions"
 msgstr ""
 
+msgid "Go to my home page"
+msgstr ""
+
 msgid "Go up"
 msgstr ""
 
@@ -568,6 +577,12 @@ msgid "Members of user groups"
 msgstr ""
 
 msgid "Membership management"
+msgstr ""
+
+msgid "Message sent to administrator should not be empty."
+msgstr ""
+
+msgid "Message to project administrators"
 msgstr ""
 
 msgid "Missing Information. PLEASE fill in all required information."
@@ -728,6 +743,9 @@ msgstr ""
 msgid "Please select a file to upload"
 msgstr ""
 
+msgid "Please write something meaningful for the admin."
+msgstr ""
+
 msgid "Please, enter a http:// or https:// link"
 msgstr ""
 
@@ -744,6 +762,9 @@ msgid "Project History"
 msgstr ""
 
 msgid "Project Team"
+msgstr ""
+
+msgid "Project access error"
 msgstr ""
 
 msgid "Project administration"
@@ -1036,6 +1057,9 @@ msgstr ""
 msgid "This group does not have any members yet."
 msgstr ""
 
+msgid "This is a private project."
+msgstr ""
+
 msgid "This is a system group, you cannot delete it."
 msgstr ""
 
@@ -1312,6 +1336,9 @@ msgid ""
 "%s\n"
 "\n"
 "-- The %s Team"
+msgstr ""
+
+msgid "You may only have access to private projects you are member of."
 msgstr ""
 
 msgid "You must be a project admin to edit this widget."

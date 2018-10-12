@@ -1,0 +1,2 @@
+msgid "Message sent to administrators should not be the default one."
+msgstr ""

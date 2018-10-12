@@ -191,6 +191,12 @@ msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] "Et un autre groupe que vous ne pouvez pas administrer."
 msgstr[1] "Et %d autres groupes que vous ne pouvez pas administrer."
 
+msgid "Ask to join"
+msgstr "Demander à rejoindre"
+
+msgid "Ask to join this project"
+msgstr "Demander à rejoindre ce projet"
+
 msgid "Available (also available for new projects)"
 msgstr "Disponible (également disponible dans les nouveaux projets)"
 
@@ -470,6 +476,9 @@ msgstr "Accès global"
 msgid "Global permissions"
 msgstr "Permissions globales"
 
+msgid "Go to my home page"
+msgstr "Aller à ma page personnelle"
+
 msgid "Go up"
 msgstr "Niveau supérieur"
 
@@ -622,6 +631,12 @@ msgstr "Membre des groupes"
 
 msgid "Membership management"
 msgstr "Gestion des membres"
+
+msgid "Message sent to administrator should not be empty."
+msgstr "Le message envoyé à l'administrateur ne doit pas être vide."
+
+msgid "Message to project administrators"
+msgstr "Message aux administrateurs de projet"
 
 msgid "Missing Information. PLEASE fill in all required information."
 msgstr "Information manquante. Veuillez saisir les informations demandées."
@@ -786,6 +801,9 @@ msgstr ""
 msgid "Please select a file to upload"
 msgstr "Veuillez sélectionner un fichier à téléverser"
 
+msgid "Please write something meaningful for the admin."
+msgstr "Veuillez soumettre un message pertinent afin d'aider l'administrateur."
+
 msgid "Please, enter a http:// or https:// link"
 msgstr "Veuillez utiliser un lien http:// ou https://"
 
@@ -803,6 +821,9 @@ msgstr "Historique du projet"
 
 msgid "Project Team"
 msgstr "Équipe du projet"
+
+msgid "Project access error"
+msgstr "Erreur d'accès au projet"
 
 msgid "Project administration"
 msgstr "Administration du projet"
@@ -1117,6 +1138,9 @@ msgstr ""
 
 msgid "This group does not have any members yet."
 msgstr "Ce groupe n'a pas encore de membres."
+
+msgid "This is a private project."
+msgstr "Ce projet est privé."
 
 msgid "This is a system group, you cannot delete it."
 msgstr "Ceci est un groupe système, vous ne pouvez pas le supprimer."
@@ -1453,6 +1477,9 @@ msgstr ""
 "%s\n"
 "\n"
 "-- L'équipe %s"
+
+msgid "You may only have access to private projects you are member of."
+msgstr "Vous pouvez seulement accéder aux projets dont vous êtes membres."
 
 msgid "You must be a project admin to edit this widget."
 msgstr ""

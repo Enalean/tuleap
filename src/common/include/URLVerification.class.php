@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\Error\PermissionDeniedPrivateProjectController;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
@@ -442,18 +444,30 @@ class URLVerification {
         $error->buildInterface($user, $project);
         exit;
     }
-    
-    /**
-     * Display error message for restricted project
-     *
-     * @param URL $url Accessed url
-     * 
-     * @return void
-     */
-    function displayPrivateProjectError(URL $url, PFUser $user, Project $project = null) {
+
+    public function displayPrivateProjectError(URL $url, PFUser $user, Project $project = null)
+    {
         $GLOBALS['Response']->send401UnauthorizedHeader();
-        $sendMail = new Error_PermissionDenied_PrivateProject($url);
-        $sendMail->buildInterface($user, $project);
+
+        if ($user->isAnonymous()) {
+            $event_manager = EventManager::instance();
+            $redirect = new URLRedirect($event_manager);
+            $redirect->redirectToLogin();
+        }
+
+        $sendMail = new PermissionDeniedPrivateProjectController(
+            new ThemeManager(
+                new BurningParrotCompatiblePageDetector(
+                    new Tuleap\Request\CurrentPage(),
+                    new \User_ForgeUserGroupPermissionsManager(
+                        new \User_ForgeUserGroupPermissionsDao()
+                    )
+                )
+            ),
+            \ProjectManager::instance(),
+            new \Tuleap\error\PlaceHolderBuilder(ProjectManager::instance())
+        );
+        $sendMail->displayError($user, $project);
         exit;
     }
 

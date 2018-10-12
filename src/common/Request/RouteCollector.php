@@ -32,6 +32,8 @@ use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
+use Tuleap\error\PermissionDeniedMailSender;
+use Tuleap\error\PlaceHolderBuilder;
 use Tuleap\Layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -128,6 +130,10 @@ class RouteCollector
 
         $r->addRoute(['GET'], '/users/{name}/avatar.png', function () {
             return new AvatarController();
+        });
+
+        $r->addRoute(['POST'], '/join-private-project-mail/', function () {
+            return new PermissionDeniedMailSender(new PlaceHolderBuilder(\ProjectManager::instance()));
         });
 
         $collect_routes = new CollectRoutesEvent($r);
