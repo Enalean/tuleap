@@ -1486,6 +1486,9 @@ msgstr "Vous n'avez aucun tableau de bord."
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes d'utilisateurs."
 
+msgid "You have a restricted user account."
+msgstr "Vous avez un compte utilisateur restreint."
+
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
@@ -1509,7 +1512,11 @@ msgstr ""
 "-- L'équipe %s"
 
 msgid "You may only have access to private projects you are member of."
-msgstr "Vous pouvez seulement accéder aux projets dont vous êtes membres."
+msgstr ""
+"Vous pouvez seulement accéder aux projets privés dont vous êtes membre."
+
+msgid "You may only have access to projects you are member of."
+msgstr "Vous pouvez seulement accéder aux projets dont vous êtes membre."
 
 msgid "You must be a project admin to edit this widget."
 msgstr ""

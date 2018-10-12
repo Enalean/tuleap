@@ -1348,6 +1348,9 @@ msgstr ""
 msgid "You don't have permissions to see user groups."
 msgstr ""
 
+msgid "You have a restricted user account."
+msgstr ""
+
 #, php-format
 msgid "You have not rights to update dashboards of the project \"%s\"."
 msgstr ""
@@ -1363,6 +1366,9 @@ msgid ""
 msgstr ""
 
 msgid "You may only have access to private projects you are member of."
+msgstr ""
+
+msgid "You may only have access to projects you are member of."
 msgstr ""
 
 msgid "You must be a project admin to edit this widget."

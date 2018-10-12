@@ -153,7 +153,17 @@ class RouteCollector
         });
 
         $r->addRoute(['POST'], '/join-private-project-mail/', function () {
-            return new PermissionDeniedMailSender(new PlaceHolderBuilder(\ProjectManager::instance()));
+            return new PermissionDeniedMailSender(
+                new PlaceHolderBuilder(\ProjectManager::instance()),
+                new \CSRFSynchronizerToken("/join-private-project-mail/")
+            );
+        });
+
+        $r->addRoute(['POST'], '/join-project-restricted-user-mail/', function () {
+            return new PermissionDeniedMailSender(
+                new PlaceHolderBuilder(\ProjectManager::instance()),
+                new \CSRFSynchronizerToken("/join-project-restricted-user-mail/")
+            );
         });
 
         $collect_routes = new CollectRoutesEvent($r);

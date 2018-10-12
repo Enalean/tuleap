@@ -34,16 +34,21 @@ class PermissionDeniedMailSender extends Error_PermissionDenied implements Dispa
      * @var PlaceHolderBuilder
      */
     private $place_holder_builder;
+    /**
+     * @var \CSRFSynchronizerToken
+     */
+    private $token;
 
-    public function __construct(PlaceHolderBuilder $place_holder_builder, Url $url = null)
+    public function __construct(PlaceHolderBuilder $place_holder_builder, \CSRFSynchronizerToken $token, Url $url = null)
     {
         parent::__construct($url);
         $this->place_holder_builder = $place_holder_builder;
+        $this->token                = $token;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $this->getToken()->check("/my/");
+        $this->token->check("/my/");
 
         $valid_message = new Valid_Text('msg_private_project');
         $valid_message->required();
@@ -70,13 +75,5 @@ class PermissionDeniedMailSender extends Error_PermissionDenied implements Dispa
 
     public function returnBuildInterfaceParam()
     {
-    }
-
-    /**
-     * @return \CSRFSynchronizerToken
-     */
-    private function getToken()
-    {
-        return new \CSRFSynchronizerToken("/join-private-project-mail/");
     }
 }
