@@ -20,7 +20,7 @@
 
 namespace Tuleap\User\Admin;
 
-use PFUser;
+use Tuleap\User\StatusPresenter;
 
 class UserListResultsUserPresenter
 {
@@ -33,9 +33,7 @@ class UserListResultsUserPresenter
     public $nb_admin_of;
     public $nb_member_of_title;
     public $nb_admin_of_title;
-    public $status_label;
-    public $status_level;
-    public $status_is_important;
+    public $status;
 
     public function __construct(
         $id,
@@ -57,42 +55,6 @@ class UserListResultsUserPresenter
         $this->admin_of_title      = $GLOBALS['Language']->getText('admin_userlist', 'admin_of', $nb_admin_of);
         $this->not_member_of_title = $GLOBALS['Language']->getText('admin_userlist', 'not_member_of');
 
-        switch ($status) {
-            case PFUser::STATUS_ACTIVE:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'active');
-                $this->status_level        = 'success';
-                $this->status_is_important = false;
-                break;
-            case PFUser::STATUS_RESTRICTED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'restricted');
-                $this->status_level        = 'warning';
-                $this->status_is_important = false;
-                break;
-            case PFUser::STATUS_DELETED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'deleted');
-                $this->status_level        = 'danger';
-                $this->status_is_important = false;
-                break;
-            case PFUser::STATUS_SUSPENDED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'suspended');
-                $this->status_level        = 'secondary';
-                $this->status_is_important = false;
-                break;
-            case PFUser::STATUS_PENDING:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'pending');
-                $this->status_level        = 'info';
-                $this->status_is_important = true;
-                break;
-            case PFUser::STATUS_VALIDATED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'validated');
-                $this->status_level        = 'info';
-                $this->status_is_important = true;
-                break;
-            case PFUser::STATUS_VALIDATED_RESTRICTED:
-                $this->status_label        = $GLOBALS['Language']->getText('admin_userlist', 'validated_restricted');
-                $this->status_level        = 'info';
-                $this->status_is_important = true;
-                break;
-        }
+        $this->status = new StatusPresenter($status);
     }
 }

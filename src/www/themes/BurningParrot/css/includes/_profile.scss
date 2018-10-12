@@ -1,0 +1,182 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
+
+.user-profile {
+    display: flex;
+    justify-content: center;
+    padding: $tlp-double-spacing;
+    border-bottom: 5px solid $tlp-theme-color;
+    background: $tlp-theme-sidebar-background-color;
+    color: $tlp-ui-white;
+}
+
+.user-profile-basic-information {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 720px;
+}
+
+.user-profile-avatar {
+    flex: 0 0 auto;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.user-profile-identity {
+    flex: 1 0 auto;
+}
+
+.user-profile-status-active {
+    visibility: hidden;
+}
+
+.user-profile-email {
+    max-width: 350px;
+    overflow: hidden;
+    color: $theme-color-on-dark-background;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-profile-title {
+    margin: 0 $tlp-spacing 0 0;
+    color: $theme-color-on-dark-background;
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 26px;
+}
+
+.user-profile-member-information {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 0 0 $tlp-half-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
+.user-profile-additional-information-label {
+    margin: 0 5px 0 0;
+    color: $tlp-ui-dimmed;
+}
+
+.user-profile-additional-information-label-icon {
+    margin: 0 0 0 5px;
+}
+
+.user-profile-additional-information-value > a {
+    color: $theme-color-on-dark-background;
+}
+
+.user-profile-member-since,
+.user-profile-id {
+    margin: 0 0 0 $tlp-spacing;
+    white-space: nowrap;
+}
+
+.user-profile-member-since {
+    position: relative;
+    padding: 0 0 0 20px;
+}
+
+.user-profile-calendar {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    font-size: 12px;
+}
+
+.user-profile-projects {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $tlp-double-spacing;
+}
+
+.user-profile-has-projects {
+    width: 100%;
+    max-width: 720px;
+}
+
+.user-profile-no-project {
+    max-width: 720px;
+    margin: 0 $tlp-spacing 60px;
+}
+
+.user-profile-project {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-profile-project-nb-members {
+    cursor: pointer;
+}
+
+.user-profile-project-title-description {
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.user-profile-project-description {
+    display: block;
+    max-width: 500px;
+    overflow: hidden;
+    color: $tlp-ui-dimmed;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-profile-projects-no-rights {
+    font-size: 20px;
+}
+
+.user-profile-projects-tumbleweed,
+.user-profile-projects-stem,
+.user-profile-projects-earth {
+    stroke: $tlp-theme-color;
+}
+
+.user-profile-projects-flower {
+    fill: $tlp-theme-color;
+}
+
+@media screen and (max-width: 800px) {
+    .user-profile-status-active,
+    .user-profile-project-description {
+        display: none;
+    }
+
+    .user-profile-member-information {
+        flex-direction: column;
+    }
+
+    .user-profile-title {
+        margin: 0 0 $tlp-half-spacing;
+    }
+
+    .user-profile-member-since,
+    .user-profile-id {
+        margin: $tlp-half-spacing 0 0;
+    }
+}

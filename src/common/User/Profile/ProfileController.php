@@ -20,14 +20,31 @@
 
 namespace Tuleap\User\Profile;
 
+use ForgeConfig;
 use HTTPRequest;
+use PFUser;
+use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use UserHelper;
 use UserManager;
 
 class ProfileController implements DispatchableWithRequest
 {
+    /**
+     * @var ProfilePresenterBuilder
+     */
+    private $presenter_builder;
+
+    /**
+     * ProfileController constructor.
+     */
+    public function __construct(ProfilePresenterBuilder $presenter_builder)
+    {
+        $this->presenter_builder = $presenter_builder;
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         $user = UserManager::instance()->getUserByLoginName($variables['name']);
@@ -35,6 +52,34 @@ class ProfileController implements DispatchableWithRequest
             throw new NotFoundException(_("That user does not exist."));
         }
 
-        require_once('user_home.php');
+        $current_user = $request->getCurrentUser();
+        if ($current_user->isAnonymous()) {
+            $layout->redirect('/account/login.php');
+
+            return;
+        }
+
+        if (ForgeConfig::get('display_deprecated_user_home')) {
+            require_once('user_home.php');
+
+            return;
+        }
+
+
+        $layout->header(['title' => UserHelper::instance()->getDisplayNameFromUser($user)]);
+        $this->renderToPage($user, $current_user);
+        $layout->footer([]);
+    }
+
+    /**
+     * @param $user
+     * @param $current_user
+     */
+    private function renderToPage(PFUser $user, PFUser $current_user)
+    {
+        $renderer = TemplateRendererFactory::build()->getRenderer(
+            ForgeConfig::get('codendi_dir') . '/src/templates/user'
+        );
+        $renderer->renderToPage('profile', $this->presenter_builder->getPresenter($user, $current_user));
     }
 }

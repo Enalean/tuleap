@@ -58,7 +58,13 @@ class BurningParrotCompatiblePageDetector
             || $this->isInContact()
             || $this->isInHelp()
             || $this->isInBurningParrotCompatiblePage()
-            || $this->isSoftwareMap();
+            || $this->isSoftwareMap()
+            || $this->isUserHome();
+    }
+
+    private function isUserHome()
+    {
+        return ! \ForgeConfig::get('display_deprecated_user_home') && strpos($_SERVER['REQUEST_URI'], '/users/') === 0;
     }
 
     private function isManagingLabels()

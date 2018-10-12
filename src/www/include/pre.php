@@ -181,6 +181,7 @@ $current_user = $user_manager->getCurrentUser();
 $current_locale = $current_user->getLocale();
 setlocale(LC_CTYPE, "$current_locale.UTF-8");
 setlocale(LC_MESSAGES, "$current_locale.UTF-8");
+setlocale(LC_TIME, "$current_locale.UTF-8");
 
 //library to set up context help
 require_once('help.php');

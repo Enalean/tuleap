@@ -114,11 +114,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="tlp-badge-{{ status_level }}
-                                            {{^ status_is_important }}tlp-badge-outline{{/ status_is_important}}"
-                                        >
-                                            {{ status_label }}
-                                        </span>
+                                        {{# status }}
+                                            <span class="tlp-badge-{{ status_level }}
+                                                {{^ status_is_important }}tlp-badge-outline{{/ status_is_important}}"
+                                            >
+                                                {{ status_label }}
+                                            </span>
+                                        {{/ status }}
                                     </td>
                                     {{# display_nb_projects }}
                                         <td class="tlp-table-cell-numeric">

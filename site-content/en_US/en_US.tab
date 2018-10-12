@@ -22,6 +22,8 @@
 system	locale	en_US
 system	locale_label	English
 system	strftimefmt	%Y %B %e  %H:%M
+system	strfdatefmt	%B %e, %Y
+system	strfdateshortfmt	%b %e, %Y
 system	datefmt	Y-m-d H:i
 system	datefmt_full	Y-m-d H:i:s
 system	datefmt_short	Y-m-d
