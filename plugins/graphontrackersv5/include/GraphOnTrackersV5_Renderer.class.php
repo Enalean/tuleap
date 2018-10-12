@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
@@ -120,13 +121,15 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget(PFUser $user) {
+    public function fetchWidget(PFUser $user)
+    {
         $html = '';
         $in_dashboard = $readonly = true;
         $store_in_session = false;
         if ($in_dashboard) {
             $html .= $this->fetchAdditionalButton($this->report->getTracker());
         }
+        $this->includeJavascriptDependencies();
         $html .= $this->fetchCharts($user, $in_dashboard, $readonly, $store_in_session);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
@@ -391,5 +394,15 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
 
     public function getIcon() {
         return 'fa fa-bar-chart-o';
+    }
+
+    private function includeJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
+            '/assets/graphontrackersv5/scripts'
+        );
+        /** @var \Tuleap\Layout\BaseLayout */
+        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('graphontrackersv5.js'));
     }
 }

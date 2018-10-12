@@ -77,7 +77,6 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
             $this->addHook('javascript_file');
-            $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         }
         $this->allowedForProject = array();
@@ -339,17 +338,6 @@ class GraphOnTrackersV5Plugin extends Plugin {
             $include_assets = $this->getMinifiedAssets();
 
             echo $include_assets->getHTMLSnippet($this->getName().'.js');
-        }
-    }
-
-    /**
-     * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
-     */
-    public function burning_parrot_get_javascript_files(array $params)
-    {
-        if ($this->currentRequestIsForDashboards()) {
-            $include_assets = $this->getMinifiedAssets();
-            $params['javascript_files'][] = $include_assets->getFileURL($this->getName().'.js');
         }
     }
 

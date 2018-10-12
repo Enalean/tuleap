@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
 
 /**
@@ -198,5 +200,16 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
 
     function getCategory() {
         return 'trackers';
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
+            '/assets/graphontrackersv5/scripts'
+        );
+        return [
+            ['file' => $include_assets->getFileURL('graphontrackersv5.js')]
+        ];
     }
 }
