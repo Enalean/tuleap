@@ -12,9 +12,8 @@ msgstr ""
 "X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#, javascript-format
-msgid "%s has no permission for agiledashboard plannings"
-msgstr "%s n'a pas de permission sur les plannings du tableau de bord agile"
+msgid "%{ user_group } has no permission for agiledashboard plannings"
+msgstr "%{ user_group } n'a pas de permission sur les plannings du tableau de bord agile"
 
 msgid "Agiledashboard has no planning defined"
 msgstr "Le tableau de bord agile n'a pas de planning défini"

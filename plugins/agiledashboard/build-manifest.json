@@ -66,19 +66,21 @@
     "javascript": [
         "www/js/display-angular-feedback.js"
     ],
-    "gettext-js": {
-        "burnup-chart": {
-            "src": "www/js/burnup-chart/src",
-            "po": "www/js/burnup-chart/po"
-        },
-        "permissions-per-group": {
-            "src": "www/js/permissions-per-group/src",
-            "po": "www/js/permissions-per-group/po"
-        }
-    },
     "components": [
         "www/js",
         "www/js/kanban",
         "www/js/planning-v2"
-    ]
+    ],
+    "gettext-js": {
+        "burnup-chart": {
+            "src": "www/js/burnup-chart/src",
+            "po": "www/js/burnup-chart/po"
+        }
+    },
+    "gettext-vue": {
+        "permissions-per-group": {
+            "scripts": "www/js/",
+            "po": "www/js/permissions-per-group/po"
+        }
+    }
 }
