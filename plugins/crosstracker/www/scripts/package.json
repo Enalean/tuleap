@@ -9,7 +9,7 @@
     "extendable-error": "^0.1.5",
     "moment": "^2.18.1",
     "phptomoment": "0.0.2",
-    "vue": "^2.5.16",
+    "vue": "^2.5.17",
     "vue-gettext": "^2.1.0"
   },
   "devDependencies": {},
