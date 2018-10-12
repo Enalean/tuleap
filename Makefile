@@ -33,7 +33,7 @@ $(RPM_TMP)/SPECS/%.spec: $(BASE_DIR)/%.spec
 
 .PHONY: build
 build:
-	cd /build/src && make generate-mo
+	cd /build/src && scl enable php72 'make generate-mo'
 
 $(RPM_TMP)/SOURCES/$(NAME_VERSION).tar.gz: build $(RPM_TMP)
 	[ -h $(RPM_TMP)/SOURCES/$(NAME_VERSION) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(NAME_VERSION)
