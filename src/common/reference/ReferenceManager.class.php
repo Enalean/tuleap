@@ -481,20 +481,10 @@ class ReferenceManager {
             \s          #blank separator
             \#          #dash (2 en 1)
             (?P<project_name>[\w-_]+:)? #optional project name (followed by a colon)
-            (?P<value>(?:&amp;|\w|/|&)+) #any combination of &, &amp;, a word or a slash
+            (?P<value>(?:&amp;|\w|/|&)+?) #any combination of &, &amp;, a word or a slash
+            (?P<after_reference>&(?:\#(?:\d+|[xX][[:xdigit:]]+)|quot);|(?=[^\w&/])|$) # Exclude HTML dec, hex and some (quot) named entities from the end of the reference
         `x";
         return $exp;
-    }
-
-    // callback function
-    public function _insertRefCallback($match) {
-        $desc         = '';
-        $ref_instance = $this->_getReferenceInstanceFromMatch($match);
-        if (! $ref_instance) {
-            return $match['key']." #".$match['project_name'].$match['value'];
-        } else {
-            return $this->buildLinkForReference($ref_instance);
-        }
     }
 
     /*
@@ -552,7 +542,17 @@ class ReferenceManager {
             $exp = $this->_getExpForRef();
 
             $html = $this->convertToUTF8($html);
-            $html = preg_replace_callback($exp, array($this, '_insertRefCallback'), $html);
+            $html = preg_replace_callback(
+                $exp,
+                function($match) {
+                    $ref_instance = $this->_getReferenceInstanceFromMatch($match);
+                    if (!$ref_instance) {
+                        return $match['key'] . " #" . $match['project_name'] . $match['value'] . $match['after_reference'];
+                    }
+                    return $this->buildLinkForReference($ref_instance) . $match['after_reference'];
+                },
+                $html
+            );
 
             foreach($this->additional_references as $reftype) {
                 $self = $this;
