@@ -62,7 +62,6 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook('fill_project_history_sub_events');
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);
 
@@ -261,19 +260,6 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             'timetracking_disabled',
             'timetracking_permissions_updated'
         );
-    }
-
-    public function burningParrotGetJavascriptFiles(array $params)
-    {
-        if ($this->isInDashboard()) {
-            $include_assets = new IncludeAssets(
-                TIMETRACKING_BASE_DIR . '/www/assets',
-                $this->getPluginPath() . '/assets'
-            );
-
-            $params['javascript_files'][] = $include_assets->getFileURL('widget-timetracking.js');
-            $params['javascript_files'][] = $include_assets->getFileURL('timetracking-overview.js');
-        }
     }
 
     public function burningParrotGetStylesheets(array $params)

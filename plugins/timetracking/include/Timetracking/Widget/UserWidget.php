@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Timetracking\Widget;
 
 use TemplateRendererFactory;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class UserWidget extends Widget
@@ -67,5 +68,16 @@ class UserWidget extends Widget
     public function getIcon()
     {
         return "fa-clock-o";
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/assets',
+            TIMETRACKING_BASE_URL . '/assets'
+        );
+        return [
+            ['file' => $include_assets->getFileURL('widget-timetracking.js')]
+        ];
     }
 }
