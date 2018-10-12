@@ -18,7 +18,7 @@
  */
 
 const path = require("path");
-const webpack_config = require("../webpack.config.js")[3];
+const webpack_config = require("../webpack.config.js")[2];
 const karma_configurator = require("../../../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
