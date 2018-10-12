@@ -29,5 +29,5 @@ async function getSVNPermissions(project_id) {
         }
     });
 
-    return await response.json();
+    return response.json();
 }
