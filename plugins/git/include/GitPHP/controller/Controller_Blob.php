@@ -175,6 +175,20 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         if (!empty($this->params['file'])) {
             $blob->SetPath($this->params['file']);
         }
+
+        $pathtree = [];
+        $path = dirname($blob->GetPath());
+        while ($path !== '.') {
+            $name = basename($path);
+            $pathtreepiece = new \stdClass();
+            $pathtreepiece->name = $name;
+            $pathtreepiece->path = $path;
+            $pathtree[] = $pathtreepiece;
+
+            $path = dirname($path);
+        };
+        $this->tpl->assign('pathtree', array_reverse($pathtree));
+
         $blob->SetCommit($commit);
         $this->tpl->assign('blob', $blob);
 

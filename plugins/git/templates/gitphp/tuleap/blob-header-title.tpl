@@ -24,8 +24,8 @@
     {assign var=blobtree value=$blobcommit->GetTree()}
 
     <a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}">{$project->GetProject()|escape}</a>/<!--
-    -->{foreach from=$blob->GetPathTree() item=pathtreepiece}<!--
-        --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->GetPath()|urlencode}">{$pathtreepiece->GetName()|escape}</a>/<!--
+    -->{foreach from=$pathtree item=pathtreepiece}<!--
+        --><a href="{$SCRIPT_NAME}?a=tree&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$pathtreepiece->path|urlencode}">{$pathtreepiece->name|escape}</a>/<!--
     -->{/foreach}<!--
     -->{if $blob->isBlob()}<!--
         --><a href="{$SCRIPT_NAME}?a=blob&amp;hb={$blobcommit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}">{$blob->GetName()|escape}</a>
