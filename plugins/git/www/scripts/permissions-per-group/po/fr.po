@@ -3,16 +3,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Thomas Gorka <thomas.gorka@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.1.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#, javascript-format
 msgid "%s has no permission for any repository in this project"
 msgstr "%s n'a de permission pour aucun dépôt de ce projet"
 
@@ -31,6 +30,9 @@ msgstr "Dépôt"
 msgid "Repository name"
 msgstr "Nom du dépôt"
 
+msgid "Repository permissions"
+msgstr "Permissions du dépôt"
+
 msgid "Rewinders"
 msgstr "Droits de rewind"
 
@@ -45,9 +47,3 @@ msgstr "Il n'y a pas de dépôt correspondant"
 
 msgid "Writers"
 msgstr "Droits d'écriture"
-
-#~ msgid "Repository permissions"
-#~ msgstr "Permissions du dépôt"
-
-#~ msgid "View repositories permissions"
-#~ msgstr "Voir les permissions des dépôts"

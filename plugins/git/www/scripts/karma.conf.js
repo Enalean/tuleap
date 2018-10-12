@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 const path = require("path");
-const webpack_config = require("./webpack.config.js")[1];
+const webpack_config = require("./webpack.config.js");
 const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";

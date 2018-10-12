@@ -52,17 +52,20 @@
         "www/themes/BurningParrot/js/modal-add-mirror.js",
         "www/themes/BurningParrot/js/modal-mirror-configuration.js"
     ],
+    "components": [
+        "www/scripts"
+    ],
     "gettext-js": {
-        "permissions-per-group": {
-            "src": "www/scripts/permissions-per-group/src",
-            "po": "www/scripts/permissions-per-group/po"
-        },
         "repository": {
             "src": "www/scripts/repository/src",
             "po": "www/scripts/repository/po"
         }
     },
     "gettext-vue": {
+        "permissions-per-group": {
+            "scripts": "www/scripts/permissions-per-group/",
+            "po": "www/scripts/permissions-per-group/po"
+        },
         "git-repositories": {
             "scripts": "www/scripts/repositories/src",
             "po": "www/scripts/repositories/po"
@@ -79,8 +82,5 @@
             "scripts-php": "include/GitPHP",
             "po": "site-content-gitphp"
         }
-    },
-    "components": [
-        "www/scripts"
-    ]
+    }
 }

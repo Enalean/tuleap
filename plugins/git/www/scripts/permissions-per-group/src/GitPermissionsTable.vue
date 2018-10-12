@@ -1,58 +1,55 @@
-/**
-* Copyright (c) Enalean, 2018. All Rights Reserved.
-*
-* This file is a part of Tuleap.
-*
-* Tuleap is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Tuleap is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+<!--
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(
 <template>
     <table class="tlp-table permission-per-group-table" id="permission-per-group-git-repositories">
         <thead>
-        <tr class="permission-per-group-sextuple-column-table">
-            <th>{{ repository_label  }}</th>
-            <th>{{ branch_label  }}</th>
-            <th>{{ tag_label  }}</th>
-            <th>{{ readers_label  }}</th>
-            <th>{{ writers_label  }}</th>
-            <th>{{ rewinders_label  }}</th>
-        </tr>
+            <tr class="permission-per-group-sextuple-column-table">
+                <th v-translate>Repository</th>
+                <th v-translate>Branch</th>
+                <th v-translate>Tag</th>
+                <th v-translate>Readers</th>
+                <th v-translate>Writers</th>
+                <th v-translate>Rewinders</th>
+            </tr>
         </thead>
 
         <tbody v-if="is_empty_state_shown">
-        <tr>
-            <td colspan="6" class="tlp-table-cell-empty">
-                {{ empty_state }}
-            </td>
-        </tr>
+            <tr>
+                <td colspan="6" class="tlp-table-cell-empty">
+                    {{ empty_state }}
+                </td>
+            </tr>
         </tbody>
 
         <git-permissions-table-repository
-                v-for="repository in repositories"
-                v-bind:key="repository.repository_id"
-                v-bind:repository="repository"
-                v-bind:filter="filter"
-                v-on:filtered="togglePermission"
+            v-for="repository in repositories"
+            v-bind:key="repository.repository_id"
+            v-bind:repository="repository"
+            v-bind:filter="filter"
+            v-on:filtered="togglePermission"
         />
     </table>
 </template>
-)
-(
+
 <script>
 import GitPermissionsTableRepository from "./GitPermissionsTableRepository.vue";
-import { gettext_provider } from "./gettext-provider.js";
 import { sprintf } from "sprintf-js";
 
 export default {
@@ -78,17 +75,15 @@ export default {
         }
     },
     computed: {
-        no_repo_empty_state: () => gettext_provider.gettext("No repository found for project"),
-        filter_empty_state: () => gettext_provider.gettext("There isn't any matching repository"),
-        repository_label: () => gettext_provider.gettext("Repository"),
-        branch_label: () => gettext_provider.gettext("Branch"),
-        tag_label: () => gettext_provider.gettext("Tag"),
-        readers_label: () => gettext_provider.gettext("Readers"),
-        writers_label: () => gettext_provider.gettext("Writers"),
-        rewinders_label: () => gettext_provider.gettext("Rewinders"),
+        no_repo_empty_state() {
+            return this.$gettext("No repository found for project");
+        },
+        filter_empty_state() {
+            return this.$gettext("There isn't any matching repository");
+        },
         ugroup_empty_state() {
             return sprintf(
-                gettext_provider.gettext("%s has no permission for any repository in this project"),
+                this.$gettext("%s has no permission for any repository in this project"),
                 this.selectedUgroupName
             );
         },
@@ -118,4 +113,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

@@ -1,4 +1,10 @@
-#, javascript-format
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
 msgid "%s has no permission for any repository in this project"
 msgstr ""
 
@@ -15,6 +21,9 @@ msgid "Repository"
 msgstr ""
 
 msgid "Repository name"
+msgstr ""
+
+msgid "Repository permissions"
 msgstr ""
 
 msgid "Rewinders"
