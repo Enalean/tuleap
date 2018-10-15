@@ -324,6 +324,9 @@ msgstr ""
 "Merci d'activer le lien entre artéfacts \"_is_child\" afin de pouvoir "
 "définir une hiérarchie entre outils de suivi."
 
+msgid "Preview"
+msgstr "Prévisualisation"
+
 msgid "Remove"
 msgstr "Enlever"
 

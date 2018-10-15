@@ -574,7 +574,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $parent_tracker = $this->getTracker()->getParent();
 
             if (! $is_submit) {
-                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add"><i class="fa fa-plus"></i> Add artifacts</a>';
+                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add">';
+                $html .= dgettext('tuleap-tracker', 'Preview');
+                $html .= '</a>';
             }
 
             $html .= '</div>';
@@ -583,7 +585,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
             }
-            $html .= '</div></div>';
+            $html .= '</div>';
         }
 
         $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
@@ -631,6 +633,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '</div>';
         }
         $html .= '</div>';
+        if (! $read_only) {
+            $html .= '</div>';
+        }
 
         return $html;
     }
