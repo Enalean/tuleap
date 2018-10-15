@@ -1,0 +1,51 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
+msgid "%{ user_group } can't see any news"
+msgstr ""
+
+msgid "%{ user_group } has no permissions for any package or release"
+msgstr ""
+
+msgid "News"
+msgstr ""
+
+msgid "News are loading"
+msgstr ""
+
+msgid "No packages found for project"
+msgstr ""
+
+msgid "Package"
+msgstr ""
+
+msgid "Packages are loading"
+msgstr ""
+
+msgid "Private"
+msgstr ""
+
+msgid "Public"
+msgstr ""
+
+msgid "Readers"
+msgstr ""
+
+msgid "Release"
+msgstr ""
+
+msgid "See all news"
+msgstr ""
+
+msgid "See all packages permissions"
+msgstr ""
+
+msgid "The project hasn't any news"
+msgstr ""
+
+msgid "Visibility"
+msgstr ""

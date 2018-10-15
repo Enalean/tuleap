@@ -22,15 +22,28 @@
  */
 
 import Vue from "vue";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../../po/fr.po";
+
 import NewsPermissions from "./BaseNewsPermissions.vue";
-import { gettext_provider } from "./gettext-provider.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const vue_mount_point = document.getElementById("news-permission-per-group");
+
+    if (!vue_mount_point) {
+        return;
+    }
+
+    Vue.use(GettextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
     const rootComponent = Vue.extend(NewsPermissions);
     const locale = document.body.dataset.userLocale;
-
-    gettext_provider.setLocale(locale);
+    Vue.config.language = locale;
 
     new rootComponent({
         propsData: { ...vue_mount_point.dataset }

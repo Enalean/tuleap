@@ -13,9 +13,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#, javascript-format
-msgid "%s has no permissions for any package or release"
-msgstr "%s n'a de permission sur aucun paquet ou version"
+msgid "%{ user_group } can't see any news"
+msgstr "%{ user_group } n'a accès à aucune annonce"
+
+msgid "%{ user_group } has no permissions for any package or release"
+msgstr "%{ user_group } n'a de permission sur aucun paquet ou version"
+
+msgid "News"
+msgstr "Annonces"
+
+msgid "News are loading"
+msgstr "Les annonces sont en train de charger"
 
 msgid "No packages found for project"
 msgstr "Pas de paquet trouvé pour ce projet"
@@ -26,11 +34,26 @@ msgstr "Paquet"
 msgid "Packages are loading"
 msgstr "Les paquets sont en train de charger"
 
+msgid "Private"
+msgstr "Privée"
+
+msgid "Public"
+msgstr "Publique"
+
 msgid "Readers"
 msgstr "Lecteurs"
 
 msgid "Release"
 msgstr "Version"
 
+msgid "See all news"
+msgstr "Voir toutes les annonces"
+
 msgid "See all packages permissions"
 msgstr "Voir toutes les permissions des paquets"
+
+msgid "The project hasn't any news"
+msgstr "Le projet ne possède aucune annonce"
+
+msgid "Visibility"
+msgstr "Visibilité"

@@ -1,8 +1,0 @@
-{
-  "gettext-js": {
-    "project-admin": {
-      "src": "admin",
-      "po": "po"
-    }
-  }
-}
