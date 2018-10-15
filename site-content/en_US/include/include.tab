@@ -2,7 +2,7 @@
 #  *
 #  * Include scripts message catalog (English)
 #  *
-#  * Codendi 
+#  * Codendi
 #  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 #  * http://www.codendi.com
 #  *
@@ -40,7 +40,7 @@ include_cache	unable_open_cache	Unable to open cache file for writing after obta
 #
 #-----------------------------------------------
 # Script: SF/www/include/exit.php
-#   
+#
 include_exit	error	Error
 include_exit	info	Information
 include_exit	perm_denied	Permission Denied
@@ -66,13 +66,13 @@ include_exit	data_type	related to service:
 include_exit	project_status_D	This project is deleted
 include_exit	project_status_I	This project is incomplete
 include_exit	project_status_P	This project is pending
-include_exit	project_status_H	This project is holding
+include_exit	project_status_H	This project is suspended
 include_exit	project_status_s	This is a system project
 include_exit	project_status_	This project is incomplete
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php
-#   
+#
 include_features_boxes	stats	Statistics
 include_features_boxes	top_download_yesterday	Top Downloads Yesterday
 include_features_boxes	newest_releases	Newest Releases
@@ -197,7 +197,7 @@ include_project	services_not_found	Services not found for this group
 #
 #-----------------------------------------------
 # Script: SF/www/include/project_home.php
-#  
+#
 include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
 include_project_home	more_info	More information
 include_project_home	no_short_desc	This project has not yet submitted a short description.You can <a href="$1"> submit it</a> now.

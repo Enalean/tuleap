@@ -284,7 +284,7 @@ admin_groupedit	group_type	Project Type
 admin_groupedit	status_I	Incomplete
 admin_groupedit	status_A	Active
 admin_groupedit	status_P	Pending
-admin_groupedit	status_H	Holding
+admin_groupedit	status_H	Suspended
 admin_groupedit	status_D	Deleted
 admin_groupedit	status_s	System
 admin_groupedit	public	Public?
@@ -827,7 +827,7 @@ admin_projectlist	active	Active
 admin_projectlist	system	System
 admin_projectlist	pending	Pending
 admin_projectlist	incomplete	Incomplete
-admin_projectlist	holding	Holding
+admin_projectlist	suspended	Suspended
 admin_projectlist	deleted	Deleted
 admin_projectlist	matching_projects	Matching projects
 admin_projectlist	no_matching_projects	No matching projects

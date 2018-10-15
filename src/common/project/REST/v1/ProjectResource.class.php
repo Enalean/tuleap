@@ -372,7 +372,7 @@ class ProjectResource extends AuthenticatedResource {
             if ((! $with_status || ! ProjectStatusMapper::isValidProjectStatusLabel($with_status))) {
                 throw new RestException(
                     400,
-                    "Please provide a valid status: 'active', 'pending', 'incomplete', 'holding', 'deleted'"
+                    "Please provide a valid status: 'active', 'pending', 'incomplete', 'suspended', 'deleted'"
                 );
             }
         }
