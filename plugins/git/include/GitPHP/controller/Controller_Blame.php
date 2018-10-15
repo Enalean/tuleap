@@ -22,6 +22,8 @@
 namespace Tuleap\Git\GitPHP;
 
 use GeSHi;
+use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
+use Tuleap\Layout\IncludeAssets;
 
 /**
  * Blame controller class
@@ -149,36 +151,41 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
 
         $this->tpl->assign('tree', $commit->GetTree());
 
-        if (Config::GetInstance()->GetValue('geshi', true)) {
-            $geshi = new GeSHi("", 'php');
-            if ($geshi) {
-                $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(), '.'), 1));
-                if (! empty($lang)) {
-                    $geshi->enable_classes();
-                    $geshi->enable_strict_mode(GESHI_MAYBE);
-                    $geshi->set_source($blob->GetData());
-                    $geshi->set_language($lang);
-                    $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
-                    $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
-                    $geshi->set_overall_id('git-repository-blame-file');
-                    $output = $geshi->parse_code();
+        if ($this->isTuleapBeauGitActivated()) {
+            $detector = new LanguageDetectorForPrismJS();
+            $this->tpl->assign('language', $detector->getLanguageFromExtension(substr(strrchr($blob->GetName(), '.'), 1)));
+            $this->tpl->assign('bloblines', $blob->GetData(true));
+            $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets', GIT_BASE_URL . '/assets');
+            $GLOBALS['Response']->includeFooterJavascriptFile(
+                $include_assets->getFileURL('repository-file-syntax-highlight.js')
+            );
+            return;
+        }
 
-                    $bodystart = strpos($output, '<td');
-                    $bodyend   = strrpos($output, '</tr>');
+        $geshi = new GeSHi("", 'php');
+        $lang = $geshi->get_language_name_from_extension(substr(strrchr($blob->GetName(), '.'), 1));
+        $geshi->enable_classes();
+        $geshi->enable_strict_mode(GESHI_MAYBE);
+        $geshi->set_source($blob->GetData());
+        $geshi->set_language($lang);
+        $geshi->set_header_type(GESHI_HEADER_PRE_TABLE);
+        $geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
+        $geshi->set_overall_id('git-repository-blame-file');
+        $output = $geshi->parse_code();
 
-                    if (($bodystart !== false) && ($bodyend !== false)) {
-                        $geshihead = substr($output, 0, $bodystart);
-                        $geshifoot = substr($output, $bodyend);
-                        $geshibody = substr($output, $bodystart, $bodyend);
+        $bodystart = strpos($output, '<td');
+        $bodyend   = strrpos($output, '</tr>');
 
-                        $this->tpl->assign('geshihead', $geshihead);
-                        $this->tpl->assign('geshibody', $geshibody);
-                        $this->tpl->assign('geshifoot', $geshifoot);
-                        $this->tpl->assign('extracss', $geshi->get_stylesheet());
-                        $this->tpl->assign('geshi', true);
-                    }
-                }
-            }
+        if (($bodystart !== false) && ($bodyend !== false)) {
+            $geshihead = substr($output, 0, $bodystart);
+            $geshifoot = substr($output, $bodyend);
+            $geshibody = substr($output, $bodystart, $bodyend);
+
+            $this->tpl->assign('geshihead', $geshihead);
+            $this->tpl->assign('geshibody', $geshibody);
+            $this->tpl->assign('geshifoot', $geshifoot);
+            $this->tpl->assign('extracss', $geshi->get_stylesheet());
+            $this->tpl->assign('geshi', true);
         }
     }
 }

@@ -9,6 +9,7 @@
         },
         "BurningParrot": {
             "files": [
+                "www/themes/BurningParrot/css/syntax-highlight.scss",
                 "www/themes/BurningParrot/css/git-blue.scss",
                 "www/themes/BurningParrot/css/git-blue-condensed.scss",
                 "www/themes/BurningParrot/css/git-green.scss",

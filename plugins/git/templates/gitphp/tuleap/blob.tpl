@@ -28,32 +28,17 @@
                 <div class="git-repository-blob-image">
                     <img src="data:{$mime};base64,{$data}" />
                 </div>
-            {elseif $geshi}
-                <style type="text/css">{$extracss}</style>
-                {* We're using the highlighted output from geshi *}
-                {$geshiout}
             {else}
                 {* Just plain display *}
-                <table class="code" id="git-repository-blob-file">
-                    <tbody>
-                        <tr class="li1">
-                            <td class="ln">
-                                <pre class="de1">
-{foreach from=$bloblines item=line name=bloblines}
+                <div id="git-repository-blob-file">
+                    <pre class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
 {$smarty.foreach.bloblines.iteration}
 {/foreach}
 </pre>
-                            </td>
-                            <td class="de1">
-                                <pre class="de1">
-{foreach from=$bloblines item=line name=bloblines}
+                    <pre class="git-repository-blob-file-code"><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
 {$line|escape}
-{/foreach}
-</pre>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+{/foreach}</code></pre>
+                </div>
             {/if}
         </section>
     </div>

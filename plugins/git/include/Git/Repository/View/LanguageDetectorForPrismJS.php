@@ -16,26 +16,29 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-namespace Tuleap\Layout;
+namespace Tuleap\Git\Repository\View;
 
-class CssAsset
+class LanguageDetectorForPrismJS
 {
-    /** @var IncludeAssets */
-    protected $include_assets;
-    /** @var string */
-    protected $name;
+    private static $EXTENSIONS = [
+        'js'   => 'javascript',
+        'py'   => 'python',
+        'rb'   => 'ruby',
+        'ps1'  => 'powershell',
+        'psm1' => 'powershell',
+        'sh'   => 'bash',
+        'bat'  => 'batch',
+        'h'    => 'c',
+        'tex'  => 'latex',
+        'vue'  => 'javascript',
+        'mkd'  => 'markdown',
+        'yml'  => 'yaml'
+    ];
 
-    public function __construct(IncludeAssets $include_assets, $name)
+    public function getLanguageFromExtension($extension)
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
-    }
-
-    public function getFileURL(ThemeVariation $variant)
-    {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        return isset(self::$EXTENSIONS[$extension]) ? self::$EXTENSIONS[$extension] : $extension;
     }
 }

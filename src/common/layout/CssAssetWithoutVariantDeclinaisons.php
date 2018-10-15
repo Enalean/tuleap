@@ -21,21 +21,10 @@
 
 namespace Tuleap\Layout;
 
-class CssAsset
+class CssAssetWithoutVariantDeclinaisons extends CssAsset
 {
-    /** @var IncludeAssets */
-    protected $include_assets;
-    /** @var string */
-    protected $name;
-
-    public function __construct(IncludeAssets $include_assets, $name)
-    {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
-    }
-
     public function getFileURL(ThemeVariation $variant)
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        return $this->include_assets->getFileURL($this->name . '.css');
     }
 }
