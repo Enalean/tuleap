@@ -43,7 +43,7 @@ class ProjectListSearchFieldsPresenterBuilder
             $this->getStatusValuePresenter(Project::STATUS_SYSTEM, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'system')),
             $this->getStatusValuePresenter(Project::STATUS_PENDING, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'pending')),
             $this->getStatusValuePresenter(Project::STATUS_INCOMPLETE, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'incomplete')),
-            $this->getStatusValuePresenter(Project::STATUS_HOLDING, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'suspended')),
+            $this->getStatusValuePresenter(Project::STATUS_SUSPENDED, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'suspended')),
             $this->getStatusValuePresenter(Project::STATUS_DELETED, $status_values, $GLOBALS['Language']->getText('admin_projectlist', 'deleted')),
         );
     }

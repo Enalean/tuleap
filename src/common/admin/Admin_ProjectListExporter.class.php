@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright Enalean (c) 2018. All rights reserved.
  * Copyright (c) STMicroelectronics, 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -116,7 +117,7 @@ class Admin_ProjectListExporter {
             case Project::STATUS_PENDING:
                 $status = $GLOBALS['Language']->getText('admin_groupedit','status_P');
                 break;
-            case Project::STATUS_HOLDING:
+            case Project::STATUS_SUSPENDED:
                 $status = $GLOBALS['Language']->getText('admin_groupedit','status_H');
                 break;
             case Project::STATUS_DELETED:
