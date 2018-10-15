@@ -34,7 +34,7 @@ include_cache	unable_open_cache	Impossible d'ouvrir le fichier cache en écritur
 #
 #-----------------------------------------------
 # Script: SF/www/include/exit.php
-#   
+#
 include_exit	error	Erreur
 include_exit	info	Information
 include_exit	perm_denied	Permission refusée
@@ -60,13 +60,13 @@ include_exit	data_type	appartenant au service :
 include_exit	project_status_D	Ce projet est supprimé
 include_exit	project_status_I	Ce projet est incomplet
 include_exit	project_status_P	Ce projet est en attente
-include_exit	project_status_H	Ce projet est en suspend
+include_exit	project_status_H	Ce projet est suspendu
 include_exit	project_status_s	Ceci est un projet système
 include_exit	project_status_	Ce projet est incomplet
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php
-#   
+#
 include_features_boxes	stats	Statistiques
 include_features_boxes	top_download_yesterday	Top téléchargements hier
 include_features_boxes	newest_releases	Versions récentes
@@ -191,7 +191,7 @@ include_project	services_not_found	Services introuvable pour ce groupe
 #
 #-----------------------------------------------
 # Script: SF/www/include/project_home.php
-#  
+#
 include_project_home	not_official_site	<P>NOTE: This project entry is maintained by the $1 staff. We are not \nthe official site for this product. Additional copyright information may be found on this project's homepage.\n
 include_project_home	more_info	Plus d'information
 include_project_home	no_short_desc	Ce projet n'a pas encore soumis une description courte. Vous pouvez <a href="$1">la soumettre</a> maintenant.
