@@ -63,31 +63,43 @@ describe("Frs", function() {
 
     context("Frs releases", function() {
         it("can create a new release", function() {
+            cy.server();
             cy.get("[data-test=create-new-package]").click();
             cy.get("[data-test=frs-create-package]").type("Package to test release");
             cy.get("[data-test=frs-create-package-button]").click({
                 timeout: 60000
             });
 
+            cy.visitProjectService("frs-project", "Files");
+
+            cy.route("/file/admin/frsajax.php*").as("createRelease");
             cy.get("[data-test=create-release]").click({ force: true });
             cy.get("[data-test=release-name]").type("My release name");
             cy.get("[data-test=create-release-button]").click({
                 timeout: 60000
             });
+            cy.wait("@createRelease", { timeout: 60000 });
 
             cy.visitProjectService("frs-project", "Files");
             cy.get('[data-test="release-name"]').contains("My release name");
         });
 
         it("can update a release", function() {
+            cy.server();
+            cy.visitProjectService("frs-project", "Files");
+
+            cy.route("/file/admin/frsajax.php*").as("createRelease");
             cy.get("[data-test=edit-release]").click({ force: true });
             cy.get("[data-test=release-name]").type(" edited");
             cy.get("[data-test=create-release-button]").click({
                 timeout: 60000
             });
 
+            cy.wait("@createRelease", { timeout: 60000 });
+
             cy.visitProjectService("frs-project", "Files");
-            cy.get('[data-test="release-name"]').contains("My release name edited");
+            cy.get("[data-test=edit-release]").click({ force: true });
+            cy.get('[data-test="release-name"]').should("have.value", "My release name edited");
         });
 
         it("can delete a release", function() {
