@@ -22,32 +22,37 @@
     {include file='tuleap/blob-header-title.tpl'}
 
     <div class="git-repository-blob-header-actions">
-        <div class="tlp-button-bar">
-            <div class="tlp-button-bar-item">
-                <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
-                    class="tlp-button-primary tlp-button-outline tlp-button-small"
+        <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
+           class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-plain"
+           title="{t domain="gitphp"}Download file{/t}"
+        >
+            {t domain="gitphp"}Download{/t}
+        </a>
+        {if $blob->GetPath()}
+            {if $datatag}
+                <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                   class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-history-datatag"
                 >
-                    {t domain="gitphp"}Plain{/t}
+                    {t domain="gitphp"}History{/t}
                 </a>
-            </div>
-            {if $blob->GetPath()}
-                {if !$datatag}
+            {else}
+                <div class="tlp-button-bar git-repository-blob-header-actions-bar">
                     <div class="tlp-button-bar-item">
                         <a href="{$SCRIPT_NAME}?a=blame&amp;f={$blob->GetPath()|urlencode}&amp;hb={$commit->GetHash()|urlencode}"
-                            class="tlp-button-primary tlp-button-outline tlp-button-small"
+                           class="tlp-button-primary tlp-button-outline tlp-button-small"
                         >
                             {t domain="gitphp"}Blame{/t}
                         </a>
                     </div>
-                {/if}
-                <div class="tlp-button-bar-item">
-                    <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
-                        class="tlp-button-primary tlp-button-outline tlp-button-small"
-                    >
-                        {t domain="gitphp"}History{/t}
-                    </a>
+                    <div class="tlp-button-bar-item">
+                        <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
+                            class="tlp-button-primary tlp-button-outline tlp-button-small"
+                        >
+                            {t domain="gitphp"}History{/t}
+                        </a>
+                    </div>
                 </div>
             {/if}
-        </div>
+        {/if}
     </div>
 </section>

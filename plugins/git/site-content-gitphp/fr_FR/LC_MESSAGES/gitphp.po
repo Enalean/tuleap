@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: GitPHP 0.2.0\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2018-10-10 12:00+0200\n"
+"PO-Revision-Date: 2018-10-16 13:28+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
 "Language: fr_FR\n"
@@ -140,6 +140,12 @@ msgstr "Fichiers binaires %1$s et %2$s diffèrent"
 msgid "Blame"
 msgstr "Annoter"
 
+msgid "Browse"
+msgstr "Naviguer"
+
+msgid "Browse repository at this commit"
+msgstr "Naviguer dans les sources du dépôt à ce commit"
+
 # Used as link to and title for page displaying info about a single commit in the project
 msgid "Commit"
 msgstr "Commit"
@@ -176,6 +182,15 @@ msgstr "Diff"
 # Link beside commits - diffs this commit against the currently selected commit
 msgid "Diff with selected"
 msgstr "Diff avec marqué"
+
+msgid "Download"
+msgstr "Télécharger"
+
+msgid "Download commit as plain text file"
+msgstr "Télécharger le commit en tant que fichier texte"
+
+msgid "Download file"
+msgstr "Télécharger le fichier"
 
 msgid "Files"
 msgstr "Fichiers"
@@ -249,10 +264,6 @@ msgstr "Parent"
 # The parent is the commit preceding this one in the project history
 msgid "Parents"
 msgstr "Parents"
-
-# Used as a link to a plaintext version of a page
-msgid "Plain"
-msgstr "Brut"
 
 msgid "Previous"
 msgstr "Précédent"

@@ -92,6 +92,12 @@ msgstr ""
 msgid "Blame"
 msgstr ""
 
+msgid "Browse"
+msgstr ""
+
+msgid "Browse repository at this commit"
+msgstr ""
+
 msgid "Commit"
 msgstr ""
 
@@ -118,6 +124,15 @@ msgid "Diff"
 msgstr ""
 
 msgid "Diff with selected"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download commit as plain text file"
+msgstr ""
+
+msgid "Download file"
 msgstr ""
 
 msgid "Files"
@@ -174,9 +189,6 @@ msgid "Parent"
 msgstr ""
 
 msgid "Parents"
-msgstr ""
-
-msgid "Plain"
 msgstr ""
 
 msgid "Previous"
