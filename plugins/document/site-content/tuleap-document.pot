@@ -1,0 +1,5 @@
+msgid "Document"
+msgstr ""
+
+msgid "Provides a modern interface for the Document Manager service"
+msgstr ""

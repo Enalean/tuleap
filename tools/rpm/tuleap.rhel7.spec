@@ -429,6 +429,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/label
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/crosstracker
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/textualreport
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/dynamic_credentials
