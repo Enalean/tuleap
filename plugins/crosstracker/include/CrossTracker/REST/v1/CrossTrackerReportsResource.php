@@ -38,6 +38,7 @@ use Tuleap\CrossTracker\CrossTrackerReportFactory;
 use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
+use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -135,6 +136,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
     private $validator;
     /** @var InvalidComparisonCollectorVisitor */
     private $invalid_comparisons_collector;
+    /** @var CrossTrackerArtifactRepresentationFactory */
+    private $representation_factory;
 
     public function __construct()
     {
@@ -359,6 +362,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
         $this->query_parser = new QueryParameterParser(new JsonDecoder());
+        $this->representation_factory = new CrossTrackerArtifactRepresentationFactory();
     }
 
     /**
@@ -451,6 +455,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
                 $limit,
                 $offset
             );
+            $representations = $this->representation_factory->buildRepresentationsForReport($artifacts, $current_user);
         } catch (CrossTrackerReportNotFoundException $exception) {
             throw new RestException(404, null, array('i18n_error_message' => "Report not found"));
         } catch (TrackerNotFoundException $exception) {
@@ -478,9 +483,9 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             throw new RestException(400, null, array('i18n_error_message' => $exception->getMessage()));
         }
 
-        $this->sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize());
+        $this->sendPaginationHeaders($limit, $offset, $representations->getTotalSize());
 
-        return array("artifacts" => $artifacts->getArtifacts());
+        return array("artifacts" => $representations->getArtifacts());
     }
 
     /**
