@@ -827,7 +827,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $classname .= 'link';
             } else if ($extracolumn === self::EXTRACOLUMN_UNLINK) {
                 $classname .= 'unlink';
-                $content = '<input type="checkbox" title="'. $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title') .'" class="tracker-artifact-link-mass-unlink">';
+                $content = '<input type="checkbox" disabled title="'. $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title') .'" class="tracker-artifact-link-mass-unlink">';
             } else {
                 $display_extracolumn = false;
             }

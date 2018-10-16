@@ -21,7 +21,8 @@ codendi.locales['tracker_artifact'] = {
     enable_notifications_alternate_text: 'Recevoir les notifications de cet artefact',
     notification_update_error: 'Une erreur est survenue lors de la modification de vos paramaètres de notification',
     please_select_at_least_one: 'Merci de choisir au moins une de ces options',
-    please_fill_out: 'Merci de remplir ce champ'
+    please_fill_out: 'Merci de remplir ce champ',
+    artifactlink_async_loading: 'La recherche et la prévisualisation de liens d\'artéfact ne sont pas disponible lorsque des liens sont en train d\'être chargés.'
 };
 codendi.locales['tracker_renderer'] = {
     order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'

@@ -297,9 +297,13 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
             $(element)
                 .find(".tracker_hidden_edition_field")
                 .show();
-            $(element)
-                .find(".tracker_formelement_read_and_edit_edition_section")
-                .show();
+            $$(".tracker_formelement_read_and_edit_edition_section").each(function (section) {
+                if (section.classList.contains('tracker-form-element-artifactlink-section')) {
+                    section.style.display = 'flex';
+                } else {
+                    section.show();
+                }
+            });
             $(element)
                 .find(".auto-computed-label")
                 .hide();

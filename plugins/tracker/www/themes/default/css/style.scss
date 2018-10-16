@@ -90,6 +90,24 @@ div.tracker-cant-delete {
     top: -21px;
 }
 
+.tracker-form-element-artifactlink-section-loading-spinner {
+    margin: 0 5px 0 0;
+}
+
+.tracker-form-element-artifactlink-tab-spinner {
+    margin: 0 0 0 5px;
+}
+
+.tracker-form-element-artifactlink-renderer-async {
+    height: 100px;
+    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+
+    &.loaded {
+        height: auto;
+        background: none;
+    }
+}
+
 .tracker-form-element-artifactlink-add {
     margin-left: 20px;
 }
