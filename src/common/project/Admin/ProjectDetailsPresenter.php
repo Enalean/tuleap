@@ -155,7 +155,7 @@ class ProjectDetailsPresenter
             Project::STATUS_INCOMPLETE => $GLOBALS['Language']->getText('admin_groupedit', 'status_I'),
             Project::STATUS_ACTIVE     => $GLOBALS['Language']->getText('admin_groupedit', 'status_A'),
             Project::STATUS_PENDING    => $GLOBALS['Language']->getText('admin_groupedit', 'status_P'),
-            Project::STATUS_HOLDING    => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
+            Project::STATUS_SUSPENDED  => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
             Project::STATUS_DELETED    => $GLOBALS['Language']->getText('admin_groupedit', 'status_D')
         );
 

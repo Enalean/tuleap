@@ -86,7 +86,7 @@ class ProjectListResultsPresenterBuilder
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'incomplete');
                 $status_class = 'tlp-badge-warning';
                 break;
-            case Project::STATUS_HOLDING:
+            case Project::STATUS_SUSPENDED:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'suspended');
                 $status_class = 'tlp-badge-secondary';
                 break;

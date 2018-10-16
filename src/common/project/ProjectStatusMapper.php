@@ -28,7 +28,7 @@ class ProjectStatusMapper
         Project::STATUS_DELETED_LABEL,
         Project::STATUS_PENDING_LABEL,
         Project::STATUS_ACTIVE_LABEL,
-        Project::STATUS_HOLDING_LABEL,
+        Project::STATUS_SUSPENDED_LABEL,
         Project::STATUS_INCOMPLETE_LABEL,
         Project::STATUS_SYSTEM_LABEL
     ];
@@ -37,7 +37,7 @@ class ProjectStatusMapper
         Project::STATUS_DELETED_LABEL    => Project::STATUS_DELETED,
         Project::STATUS_PENDING_LABEL    => Project::STATUS_PENDING,
         Project::STATUS_ACTIVE_LABEL     => Project::STATUS_ACTIVE,
-        Project::STATUS_HOLDING_LABEL    => Project::STATUS_HOLDING,
+        Project::STATUS_SUSPENDED_LABEL  => Project::STATUS_SUSPENDED,
         Project::STATUS_INCOMPLETE_LABEL => Project::STATUS_INCOMPLETE,
         Project::STATUS_SYSTEM_LABEL     => Project::STATUS_SYSTEM
     ];
