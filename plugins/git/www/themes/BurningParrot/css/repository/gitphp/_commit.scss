@@ -23,6 +23,10 @@
     justify-content: space-between;
 }
 
+.git-repository-commit-header-actions {
+    white-space: nowrap;
+}
+
 .git-repository-commit-title {
     display: flex;
     align-items: center;
@@ -36,6 +40,11 @@
             margin: 0 0 0 $tlp-half-spacing;
         }
     }
+}
+
+.git-repository-commit-action {
+    margin: 0 0 0 $tlp-spacing;
+    overflow: auto;
 }
 
 .git-repository-commit-info {

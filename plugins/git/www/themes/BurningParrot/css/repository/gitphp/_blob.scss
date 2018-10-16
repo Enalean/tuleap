@@ -38,6 +38,12 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 }
 
 .git-repository-blob-header-actions {
+    display: flex;
+}
+
+.git-repository-blob-header-plain,
+.git-repository-blob-header-actions-bar,
+.git-repository-blob-header-history-datatag {
     margin: 0 0 0 $tlp-spacing;
 }
 
