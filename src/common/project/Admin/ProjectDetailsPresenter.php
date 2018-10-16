@@ -68,6 +68,7 @@ class ProjectDetailsPresenter
     public $instructions_desc;
     public $is_system;
     public $is_active;
+    public $is_status_invalid;
     /**
      * @var ProjectAccessPresenter
      */
@@ -90,6 +91,11 @@ class ProjectDetailsPresenter
         $this->description = $project->getDescription();
         $this->is_system   = $project->getStatus() === Project::STATUS_SYSTEM;
         $this->is_active   = $project->isActive();
+
+        $this->is_status_invalid = ! array_key_exists(
+            $project->getStatus(),
+            $this->getAssignableProjectStatuses()
+        );
 
         $this->links = array();
         EventManager::instance()->processEvent(
@@ -151,13 +157,7 @@ class ProjectDetailsPresenter
 
     private function getStatus(Project $project)
     {
-        $labels = array(
-            Project::STATUS_INCOMPLETE => $GLOBALS['Language']->getText('admin_groupedit', 'status_I'),
-            Project::STATUS_ACTIVE     => $GLOBALS['Language']->getText('admin_groupedit', 'status_A'),
-            Project::STATUS_PENDING    => $GLOBALS['Language']->getText('admin_groupedit', 'status_P'),
-            Project::STATUS_SUSPENDED  => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
-            Project::STATUS_DELETED    => $GLOBALS['Language']->getText('admin_groupedit', 'status_D')
-        );
+        $labels = $this->getAssignableProjectStatuses();
 
         $all_status = array();
         foreach ($labels as $key => $status) {
@@ -169,5 +169,18 @@ class ProjectDetailsPresenter
         }
 
         return $all_status;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAssignableProjectStatuses()
+    {
+        return [
+            Project::STATUS_ACTIVE => $GLOBALS['Language']->getText('admin_groupedit', 'status_A'),
+            Project::STATUS_PENDING => $GLOBALS['Language']->getText('admin_groupedit', 'status_P'),
+            Project::STATUS_SUSPENDED => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
+            Project::STATUS_DELETED => $GLOBALS['Language']->getText('admin_groupedit', 'status_D')
+        ];
     }
 }

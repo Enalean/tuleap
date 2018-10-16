@@ -970,6 +970,12 @@ msgstr ""
 msgid "The password policy has been successfully updated."
 msgstr ""
 
+#, php-format
+msgid ""
+"The project \"%s\" is not in a valid state and cannot be displayed in the "
+"list. Please do the necessary."
+msgstr ""
+
 msgid "The requested dashboard does not exist."
 msgstr ""
 

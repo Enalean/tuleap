@@ -210,11 +210,10 @@ class ProjectManager
     public function getAllProjectsButDeleted() {
 
         $projects_active     = $this->getProjectsByStatus(Project::STATUS_ACTIVE);
-        $projects_incomplete = $this->getProjectsByStatus(Project::STATUS_INCOMPLETE);
         $projects_pending    = $this->getProjectsByStatus(Project::STATUS_PENDING);
         $projects_holding    = $this->getProjectsByStatus(Project::STATUS_SUSPENDED);
 
-        return array_merge($projects_active, $projects_incomplete, $projects_pending, $projects_holding);
+        return array_merge($projects_active, $projects_pending, $projects_holding);
     }
 
     /**

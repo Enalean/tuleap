@@ -28,7 +28,7 @@ include_account	reserved	Name is reserved.
 include_account	reserved_cvs	Name is reserved for CVS.
 include_account	reserved_dns	Name is reserved for DNS purposes.
 include_account	dns_error	Short name cannot contain underscore or dot.
-include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name  
+include_account	used_by_svn	This short name is not available: An SVN directory already exists with this name
 include_account	used_by_cvs	This short name is not available: An CVS directory already exists with this name
 include_account	used_by_sys	This short name is not available: A home project already exists with this name
 include_account	change_pwd_err	Please update your password first
@@ -64,11 +64,9 @@ include_exit	mail_subject_private_project	$2 requests to be member of "$1" priva
 include_exit	mail_subject_restricted_user	Restricted user $2 requests to be member of "$1" project
 include_exit	data_type	related to service:
 include_exit	project_status_D	This project is deleted
-include_exit	project_status_I	This project is incomplete
 include_exit	project_status_P	This project is pending
 include_exit	project_status_H	This project is suspended
 include_exit	project_status_s	This is a system project
-include_exit	project_status_	This project is incomplete
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php
@@ -336,7 +334,7 @@ include_user_home	unkown	Unkown
 include_user_home	proj_info	Project info
 include_user_home	is_member	This developer is a member of the following projects
 include_user_home	not_member	This developer is not a member of any projects.
-include_user_home	send_message_to	Send a Message to 
+include_user_home	send_message_to	Send a Message to
 include_user_home	your_address	Your Email Address
 include_user_home	your_name	Your Name
 include_user_home	send_message	Send Message

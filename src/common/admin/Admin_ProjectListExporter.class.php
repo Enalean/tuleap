@@ -111,9 +111,6 @@ class Admin_ProjectListExporter {
             case Project::STATUS_ACTIVE:
                 $status = $GLOBALS['Language']->getText('admin_groupedit','status_A');
                 break;
-            case Project::STATUS_INCOMPLETE:
-                $status = $GLOBALS['Language']->getText('admin_groupedit','status_I');
-                break;
             case Project::STATUS_PENDING:
                 $status = $GLOBALS['Language']->getText('admin_groupedit','status_P');
                 break;

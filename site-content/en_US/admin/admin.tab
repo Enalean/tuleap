@@ -63,7 +63,6 @@ admin_main	all_users	All <a href="$1">users</a>
 admin_main	all_groups	All <a href="$1">projects</a>
 admin_main	review_pending_projects	Review pending projects
 admin_main	review_pending_projects_empty	No projects to validate
-admin_main	incomplete_group	Projects in <a href="$1"><B>I</B> (incomplete) status</A>
 admin_main	pending_group	Projects in <a href="$1"><B>P</B> (pending) status</A>
 admin_main	deleted_group	Projects in <a href="$1"><B>D</B> (deleted) status</A>
 admin_main	header_svc	Service administration
@@ -281,7 +280,6 @@ admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
 admin_groupedit	pending_data	Show pending project data
 admin_groupedit	group_type	Project Type
-admin_groupedit	status_I	Incomplete
 admin_groupedit	status_A	Active
 admin_groupedit	status_P	Pending
 admin_groupedit	status_H	Suspended
@@ -826,7 +824,6 @@ admin_projectlist	any	Any
 admin_projectlist	active	Active
 admin_projectlist	system	System
 admin_projectlist	pending	Pending
-admin_projectlist	incomplete	Incomplete
 admin_projectlist	suspended	Suspended
 admin_projectlist	deleted	Deleted
 admin_projectlist	matching_projects	Matching projects

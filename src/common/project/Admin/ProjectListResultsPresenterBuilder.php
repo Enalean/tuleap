@@ -37,9 +37,22 @@ class ProjectListResultsPresenterBuilder
         $matching_projects = array();
 
         foreach ($projects as $row) {
+            if (! $this->isProjectStatusValid($row['status'])) {
+                $GLOBALS['Response']->addFeedback(
+                    \Feedback::ERROR,
+                    sprintf(
+                        _('The project "%s" is not in a valid state and cannot be displayed in the list. Please do the necessary.'),
+                        $row['unix_group_name']
+                    )
+                );
+
+                continue;
+            }
+
+
             list($status_label, $status_class) = $this->getStatusDisplay($row['status']);
-            $type_label                        = $this->getTypeLabel($row['type']);
-            $project_name                      = util_unconvert_htmlspecialchars($row['group_name']);
+            $type_label = $this->getTypeLabel($row['type']);
+            $project_name = util_unconvert_htmlspecialchars($row['group_name']);
 
             $matching_projects[] = new ProjectListResultsProjectPresenter(
                 $row['group_id'],
@@ -82,10 +95,6 @@ class ProjectListResultsPresenterBuilder
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'pending');
                 $status_class = 'tlp-badge-info';
                 break;
-            case Project::STATUS_INCOMPLETE:
-                $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'incomplete');
-                $status_class = 'tlp-badge-warning';
-                break;
             case Project::STATUS_SUSPENDED:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'suspended');
                 $status_class = 'tlp-badge-secondary';
@@ -93,10 +102,6 @@ class ProjectListResultsPresenterBuilder
             case Project::STATUS_DELETED:
                 $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'deleted');
                 $status_class = 'tlp-badge-danger tlp-badge-outline';
-                break;
-            default:
-                $status_label = $GLOBALS['Language']->getText('admin_projectlist', 'incomplete');
-                $status_class = 'tlp-badge-warning';
                 break;
         }
 
@@ -111,5 +116,16 @@ class ProjectListResultsPresenterBuilder
     {
         $localized_types = TemplateSingleton::instance()->getLocalizedTypes();
         return $localized_types[$type];
+    }
+
+    private function isProjectStatusValid($status_letter)
+    {
+        return in_array($status_letter, [
+            Project::STATUS_ACTIVE,
+            Project::STATUS_SYSTEM,
+            Project::STATUS_PENDING,
+            Project::STATUS_SUSPENDED,
+            Project::STATUS_DELETED
+        ]);
     }
 }
