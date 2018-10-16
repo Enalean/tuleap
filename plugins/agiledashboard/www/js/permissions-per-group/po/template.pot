@@ -1,5 +1,11 @@
-#, javascript-format
-msgid "%s has no permission for agiledashboard plannings"
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: easygettext\n"
+"Project-Id-Version: \n"
+
+msgid "%{ user_group } has no permission for agiledashboard plannings"
 msgstr ""
 
 msgid "Agiledashboard has no planning defined"
