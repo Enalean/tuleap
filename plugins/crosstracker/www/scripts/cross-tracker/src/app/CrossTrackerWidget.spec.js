@@ -19,16 +19,17 @@
 
 import Vue from "vue";
 import { mockFetchError } from "tlp-mocks";
+import { createStore } from "./store/index.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import { rewire$isAnonymous, restore as restoreUser } from "./user-service.js";
+import { restore as restoreUser, rewire$isAnonymous } from "./user-service.js";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
 import {
-    rewire$getReport,
-    rewire$getReportContent,
+    restore as restoreRest,
     rewire$getQueryResult,
-    restore as restoreRest
+    rewire$getReport,
+    rewire$getReportContent
 } from "./rest-querier.js";
 
 describe("CrossTrackerWidget", () => {
@@ -65,6 +66,7 @@ describe("CrossTrackerWidget", () => {
 
     function instantiateComponent() {
         const vm = new Widget({
+            store: createStore(),
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
