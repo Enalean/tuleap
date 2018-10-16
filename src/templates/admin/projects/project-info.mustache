@@ -18,6 +18,7 @@
                         {{> csrf_token_input }}
                     {{/ csrf_token }}
                     <input type="hidden" name="group_id" value="{{ id }}">
+                    <input type="hidden" name="action" value="update-project">
                     <div class="tlp-pane-header">
                         <h1 class="tlp-pane-title">
                             <i class="fa fa-list tlp-pane-title-icon"></i> {{ project_details_label }}
