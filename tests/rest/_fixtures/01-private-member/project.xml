@@ -3,6 +3,7 @@
     <long-description>A test project</long-description>
     <services>
         <service shortname="plugin_tracker" enabled="true" />
+        <service shortname="docman" enabled="1"/>
     </services>
     <ugroups>
         <ugroup name="project_members" description="">
