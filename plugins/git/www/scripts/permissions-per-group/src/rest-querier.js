@@ -30,5 +30,5 @@ async function getGitPermissions(project_id, selected_ugroup_id) {
         }
     });
 
-    return await response.json();
+    return response.json();
 }

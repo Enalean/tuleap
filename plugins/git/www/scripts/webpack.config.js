@@ -27,32 +27,9 @@ const path_to_badge = path.resolve(
     "../../../../src/www/scripts/project/admin/permissions-per-group/"
 );
 
-const webpack_config_for_permisssions_per_group = {
+const webpack_config_for_vue = {
     entry: {
-        "permission-per-group": "./permissions-per-group/src/index.js"
-    },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: {
-        tlp: "tlp"
-    },
-    resolve: {
-        alias: {
-            "permission-badge": path_to_badge
-        }
-    },
-    module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_po_files,
-            webpack_configurator.rule_vue_loader
-        ]
-    },
-    plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()]
-};
-
-const webpack_config_for_repositories = {
-    entry: {
+        "permission-per-group": "./permissions-per-group/src/index.js",
         "repositories-list": "./repositories/src/index.js",
         repository: "./repository/src/index.js",
         "repository-blob": [
@@ -66,7 +43,9 @@ const webpack_config_for_repositories = {
         tlp: "tlp"
     },
     resolve: {
-        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_mocks_alias)
+        alias: webpack_configurator.extendAliases(webpack_configurator.tlp_mocks_alias, {
+            "permission-badge": path_to_badge
+        })
     },
     module: {
         rules: [
@@ -77,8 +56,8 @@ const webpack_config_for_repositories = {
     },
     plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
+        alias: webpack_configurator.easygettext_loader_alias
     }
 };
 
-module.exports = [webpack_config_for_permisssions_per_group, webpack_config_for_repositories];
+module.exports = webpack_config_for_vue;

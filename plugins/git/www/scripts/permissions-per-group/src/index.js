@@ -18,20 +18,29 @@
  */
 
 import Vue from "vue";
+import GettextPlugin from "vue-gettext";
+import french_translations from "../po/fr.po";
 import GitPermissions from "./GitPermissions.vue";
-import { gettext_provider } from "./gettext-provider.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const vue_mount_points = document.getElementById("git-permission-per-group");
+    const vue_mount_point = document.getElementById("git-permission-per-group");
 
-    if (vue_mount_points) {
-        const rootComponent = Vue.extend(GitPermissions);
-        const locale = document.body.dataset.userLocale;
-
-        gettext_provider.setLocale(locale);
-
-        new rootComponent({
-            propsData: { ...vue_mount_points.dataset }
-        }).$mount(vue_mount_points);
+    if (!vue_mount_point) {
+        return;
     }
+
+    Vue.use(GettextPlugin, {
+        translations: {
+            fr: french_translations.messages
+        },
+        silent: true
+    });
+
+    const locale = document.body.dataset.userLocale;
+    Vue.config.language = locale;
+
+    const RootComponent = Vue.extend(GitPermissions);
+    new RootComponent({
+        propsData: { ...vue_mount_point.dataset }
+    }).$mount(vue_mount_point);
 });
