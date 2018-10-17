@@ -172,6 +172,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     public abstract function getFieldData($soap_value, $is_multiple);
     /**
      * @return array
+     * @throws Tracker_FormElement_InvalidFieldValueException
      */
     public abstract function getValue($value_id);
     /**
