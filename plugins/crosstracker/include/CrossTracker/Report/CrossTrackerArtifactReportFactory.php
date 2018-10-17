@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker\Report;
 
 use PFUser;
 use Tracker;
@@ -33,6 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
+use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 class CrossTrackerArtifactReportFactory
 {
@@ -75,7 +76,7 @@ class CrossTrackerArtifactReportFactory
      * @param int $limit
      * @param int $offset
      *
-     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     * @return ArtifactMatchingReportCollection
      *
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
@@ -89,7 +90,6 @@ class CrossTrackerArtifactReportFactory
         if ($report->getExpertQuery() === "") {
             return $this->getArtifactsFromGivenTrackers(
                 $report->getTrackers(),
-                $current_user,
                 $limit,
                 $offset
             );
@@ -105,23 +105,22 @@ class CrossTrackerArtifactReportFactory
 
     /**
      * @param Tracker[] $trackers
-     * @param PFUser $current_user
      * @param           $limit
      * @param           $offset
      *
-     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     * @return ArtifactMatchingReportCollection
      */
-    private function getArtifactsFromGivenTrackers(array $trackers, PFUser $current_user, $limit, $offset)
+    private function getArtifactsFromGivenTrackers(array $trackers, $limit, $offset)
     {
         if (count($trackers) === 0) {
-            return new PaginatedCollectionOfCrossTrackerArtifacts(array(), 0);
+            return new ArtifactMatchingReportCollection(array(), 0);
         }
 
         $trackers_id = $this->getTrackersId($trackers);
 
         $result     = $this->artifact_report_dao->searchArtifactsFromTracker($trackers_id, $limit, $offset);
         $total_size = $this->artifact_report_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($current_user, $result, $total_size);
+        return $this->buildCollectionOfArtifacts($result, $total_size);
     }
 
     /**
@@ -130,7 +129,7 @@ class CrossTrackerArtifactReportFactory
      * @param int $limit
      * @param int $offset
      *
-     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     * @return ArtifactMatchingReportCollection
      *
      * @throws SearchablesAreInvalidException
      * @throws SearchablesDoNotExistException
@@ -156,7 +155,7 @@ class CrossTrackerArtifactReportFactory
             $offset
         );
         $total_size = $this->expert_query_dao->foundRows();
-        return $this->buildCollectionOfArtifacts($current_user, $results, $total_size);
+        return $this->buildCollectionOfArtifacts($results, $total_size);
     }
 
     private function getTrackersId(array $trackers)
@@ -171,23 +170,20 @@ class CrossTrackerArtifactReportFactory
     }
 
     /**
-     * @param PFUser $current_user
      * @param array $results
      * @param int $total_size
-     * @return PaginatedCollectionOfCrossTrackerArtifacts
+     * @return ArtifactMatchingReportCollection
      */
-    private function buildCollectionOfArtifacts(PFUser $current_user, array $results, $total_size)
+    private function buildCollectionOfArtifacts(array $results, $total_size)
     {
         $artifacts = array();
         foreach ($results as $artifact) {
             $artifact = $this->artifact_factory->getArtifactById($artifact['id']);
-            if ($artifact->userCanView()) {
-                $artifact_representation = new CrossTrackerArtifactReportRepresentation();
-                $artifact_representation->build($artifact, $current_user);
-                $artifacts[] = $artifact_representation;
+            if ($artifact) {
+                $artifacts[] = $artifact;
             }
         }
 
-        return new PaginatedCollectionOfCrossTrackerArtifacts($artifacts, $total_size);
+        return new ArtifactMatchingReportCollection($artifacts, $total_size);
     }
 }
