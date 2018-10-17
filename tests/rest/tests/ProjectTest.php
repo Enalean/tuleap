@@ -200,6 +200,11 @@ class ProjectTest extends ProjectBase
             $json_projects[0]['additional_informations']['agiledashboard']['root_planning']['milestone_tracker']['id']
         );
 
+        $this->assertEquals(
+            $this->releases_tracker_id,
+            $json_projects[0]['additional_informations']['document']['root_item']['item_id']
+        );
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

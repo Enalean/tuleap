@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Document\Items\ItemDao;
+use Tuleap\Document\REST\v1\ItemRepresentationBuilder;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class documentPlugin extends Plugin // phpcs:ignore
@@ -28,6 +31,13 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->setScope(self::SCOPE_PROJECT);
 
         bindtextdomain('tuleap-document', __DIR__.'/../site-content');
+    }
+
+    public function getHooksAndCallbacks()
+    {
+        $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
+
+        return parent::getHooksAndCallbacks();
     }
 
     /**
@@ -45,5 +55,28 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function getDependencies()
     {
         return ['docman'];
+    }
+
+    /**
+     * @see Event::REST_PROJECT_ADDITIONAL_INFORMATIONS
+     */
+    public function rest_project_additional_informations($params) // phpcs:ignore
+    {
+        /**
+         * @var $project Project
+         */
+        $project = $params['project'];
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $item_representation_builder = new ItemRepresentationBuilder(new ItemDao());
+        $item_representation = $item_representation_builder->build($project);
+
+        if (! $item_representation) {
+            return;
+        }
+
+        $params['informations'][$this->getName()]['root_item'] = $item_representation;
     }
 }
