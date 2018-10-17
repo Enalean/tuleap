@@ -19,14 +19,14 @@
 
 import Vue from "vue";
 import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
-import { createStore } from "./store/index.js";
-import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
+import { createStore } from "../store/index.js";
+import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";
 import {
     rewire$getReportContent,
     rewire$getQueryResult,
     restore as restoreRest
-} from "./rest-querier.js";
+} from "../api/rest-querier.js";
 
 describe("ArtifactTable", () => {
     let Widget, writingCrossTrackerReport, getReportContent, getQueryResult;

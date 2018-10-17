@@ -35,6 +35,9 @@ msgstr ""
 msgid "Example: @title = 'value'"
 msgstr ""
 
+msgid "Export CSV"
+msgstr ""
+
 msgid "Last update by"
 msgstr ""
 

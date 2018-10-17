@@ -24,7 +24,7 @@ import ReadingMode from "./ReadingMode.vue";
 import { rewire$isAnonymous, restore as restoreUser } from "../user-service.js";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report.js";
-import { rewire$updateReport, restore as restoreRest } from "../rest-querier.js";
+import { rewire$updateReport, restore as restoreRest } from "../api/rest-querier.js";
 
 describe("ReadingMode", () => {
     let ReadingModeElement,

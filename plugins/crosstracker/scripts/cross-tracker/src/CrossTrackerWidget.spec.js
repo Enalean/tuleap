@@ -26,11 +26,11 @@ import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
 import {
-    restore as restoreRest,
     rewire$getQueryResult,
     rewire$getReport,
-    rewire$getReportContent
-} from "./rest-querier.js";
+    rewire$getReportContent,
+    restore as restoreRest
+} from "./api/rest-querier.js";
 
 describe("CrossTrackerWidget", () => {
     let Widget,

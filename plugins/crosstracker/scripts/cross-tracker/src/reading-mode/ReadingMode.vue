@@ -51,7 +51,7 @@
 import { mapState } from "vuex";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { isAnonymous } from "../user-service.js";
-import { updateReport } from "../rest-querier.js";
+import { updateReport } from "../api/rest-querier.js";
 
 export default {
     components: { TrackerListReadingMode },

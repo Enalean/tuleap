@@ -65,7 +65,7 @@
 </template>
 <script>
 import { getSortedProjectsIAmMemberOf } from "./projects-cache.js";
-import { getTrackersOfProject } from "../rest-querier.js";
+import { getTrackersOfProject } from "../api/rest-querier.js";
 
 export default {
     name: "TrackerSelection",

@@ -22,7 +22,7 @@ import { mockFetchError } from "tlp-mocks";
 import { createStore } from "../store/index.js";
 import TrackerSelection from "./TrackerSelection.vue";
 import { rewire$getSortedProjectsIAmMemberOf, restore } from "./projects-cache.js";
-import { rewire$getTrackersOfProject, restore as restoreRest } from "../rest-querier.js";
+import { rewire$getTrackersOfProject, restore as restoreRest } from "../api/rest-querier.js";
 
 describe("TrackerSelection", () => {
     let Selection, selectedTrackers;
