@@ -169,7 +169,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
             $this->tpl->assign('bloblines', $blob->GetData(true));
             $include_assets = new IncludeAssets(__DIR__ . '/../../../www/assets', GIT_BASE_URL . '/assets');
             $GLOBALS['Response']->includeFooterJavascriptFile(
-                $include_assets->getFileURL('repository-file-syntax-highlight.js')
+                $include_assets->getFileURL('repository-blob.js')
             );
             return;
         }

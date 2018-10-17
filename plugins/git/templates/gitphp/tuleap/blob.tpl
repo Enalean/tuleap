@@ -31,13 +31,19 @@
             {else}
                 {* Just plain display *}
                 <div id="git-repository-blob-file">
-                    <pre class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
-{$smarty.foreach.bloblines.iteration}
+                    <div class="git-repository-blob-file-linenumbers">{foreach from=$bloblines item=line name=bloblines}
+<a href="#L{$smarty.foreach.bloblines.iteration}"
+   id="L{$smarty.foreach.bloblines.iteration}"
+   class="git-repository-blob-file-linenumbers-line"
+>{$smarty.foreach.bloblines.iteration}</a>
 {/foreach}
-</pre>
-                    <pre class="git-repository-blob-file-code"><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
+</div>
+                    <pre class="git-repository-blob-file-code"><!--
+                        --><div class="git-repository-highlight-line" id="git-repository-highlight-line"></div><!--
+                        --><code class="language-{$language}">{foreach from=$bloblines item=line name=bloblines}
 {$line|escape}
-{/foreach}</code></pre>
+{/foreach}</code><!--
+                    --></pre>
                 </div>
             {/if}
         </section>

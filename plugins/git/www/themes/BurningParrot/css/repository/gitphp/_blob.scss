@@ -70,22 +70,46 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 
 .git-repository-blob-file-code,
 .git-repository-blob-file-linenumbers {
-    padding: 5px $tlp-half-spacing;
     border: 0;
     font: $gitphp-code-font;
 }
 
 .git-repository-blob-file-linenumbers {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding: 5px 0;
     border-right: 1px solid $tlp-ui-border-light;
     background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
-    color: $codemirror-like-line-numbers-color;
     line-height: 1.5;
     text-align: right;
     vertical-align: top;
-    white-space: pre;
 }
 
+.git-repository-blob-file-linenumbers-line {
+    width: 100%;
+    padding: 0 $tlp-half-spacing;
+    color: $codemirror-like-line-numbers-color;
+
+    &:target {
+        background: transparentize($tlp-theme-color, .5);
+        color: $tlp-ui-white;
+    }
+
+    &:hover {
+        background: $tlp-theme-color;
+        color: $tlp-ui-white;
+        text-decoration: none;
+    }
+}
+
+$under-code: 1;
+$above-highlight-line: 2;
+
 .git-repository-blob-file-code {
+    position: relative;
+    width: 100%;
+    padding: 5px $tlp-half-spacing;
     background: none;
     color: $tlp-typo-default-text-color;
     font: $gitphp-code-font;
@@ -98,8 +122,23 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
     }
 
     > code[class*="language-"] {
+        position: relative;
+        z-index: $above-highlight-line;
         font: $gitphp-code-font;
         text-shadow: none;
+    }
+}
+
+.git-repository-highlight-line {
+    display: none;
+    position: absolute;
+    width: 100%;
+    margin-left: -10px;
+    background: linear-gradient(to right, transparentize($tlp-theme-color, .95) 60%, transparent 70%);
+
+    &.shown {
+        display: block;
+        z-index: $under-code;
     }
 }
 
@@ -109,9 +148,15 @@ $gitphp-code-font: normal normal 14px / 20px monospace;
 
 .git-repository-blame-line {
     padding: 5px $tlp-half-spacing;
+    border-right: 1px solid $tlp-ui-border-light;
+    background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
     text-align: left;
     vertical-align: top;
     white-space: nowrap;
+}
+
+.git-repository-blame-linenumbers {
+    vertical-align: top;
 }
 
 .git-repository-blame-cell {
