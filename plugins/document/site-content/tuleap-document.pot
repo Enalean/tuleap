@@ -1,5 +1,11 @@
 msgid "Document"
 msgstr ""
 
+msgid "Document manager"
+msgstr ""
+
+msgid "Project not found"
+msgstr ""
+
 msgid "Provides a modern interface for the Document Manager service"
 msgstr ""

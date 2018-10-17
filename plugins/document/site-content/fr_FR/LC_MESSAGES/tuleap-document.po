@@ -9,5 +9,11 @@ msgstr ""
 msgid "Document"
 msgstr "Document"
 
+msgid "Document manager"
+msgstr "Gestionnaire de document"
+
+msgid "Project not found"
+msgstr "Projet non trouvé"
+
 msgid "Provides a modern interface for the Document Manager service"
 msgstr "Fournit une interface moderne au service de gestion des documents"

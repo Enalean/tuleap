@@ -20,6 +20,8 @@
 
 use Tuleap\Document\Items\ItemDao;
 use Tuleap\Document\REST\v1\ItemRepresentationBuilder;
+use Tuleap\Document\Tree\DocumentTreeController;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -36,6 +38,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function getHooksAndCallbacks()
     {
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -78,5 +81,14 @@ class documentPlugin extends Plugin // phpcs:ignore
         }
 
         $params['informations'][$this->getName()]['root_item'] = $item_representation;
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name:[A-z0-9-]+}[/]', function () {
+                return new DocumentTreeController(ProjectManager::instance());
+            });
+        });
     }
 }

@@ -1,0 +1,14 @@
+{
+    "name": "document",
+    "themes": {
+    },
+    "gettext-vue": {
+        "document": {
+            "scripts": "scripts/document/",
+            "po": "scripts/document/po"
+        }
+    },
+    "components": [
+        "scripts/document/"
+    ]
+}
