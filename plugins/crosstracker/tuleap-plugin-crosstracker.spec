@@ -21,8 +21,10 @@ Requires:	php(language) >= 5.3, tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist},
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
 
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/crosstracker
-%{__cp} -ar bin db include site-content templates README.mkd VERSION www $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/crosstracker
+%{__cp} -ar bin db include site-content templates README.mkd VERSION $RPM_BUILD_ROOT/%{_datadir}/tuleap/plugins/crosstracker
+%{__cp} -ar assets $RPM_BUILD_ROOT/%{_datadir}/tuleap/src/www/assets/crosstracker
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -30,3 +32,4 @@ Requires:	php(language) >= 5.3, tuleap = @@TULEAP_VERSION@@-@@RELEASE@@%{?dist},
 %files
 %defattr(-,root,root,-)
 %{_datadir}/tuleap/plugins/crosstracker
+%{_datadir}/tuleap/src/www/assets/crosstracker

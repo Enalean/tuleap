@@ -21,16 +21,16 @@
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\ProjectDeletionEvent;
 
 require_once __DIR__ . '/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class crosstrackerPlugin extends Plugin
+class crosstrackerPlugin extends Plugin // phpcs:ignore
 {
     public function __construct($id)
     {
@@ -123,14 +123,20 @@ class crosstrackerPlugin extends Plugin
     public function burningParrotGetStylesheets(array $params)
     {
         $current_page = new CurrentPage();
+        $current_user = HTTPRequest::instance()->getCurrentUser();
 
-        if ($current_page->isDashboard()) {
-            $theme_include_assets = new IncludeAssets(
-                CROSSTRACKER_BASE_DIR . '/www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
-            );
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
+        if (! $current_page->isDashboard()) {
+            return;
         }
+
+        $css_assets              = new CssAsset(
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/crosstracker/BurningParrot',
+                '/assets/crosstracker/BurningParrot'
+            ),
+            'style'
+        );
+        $theme_variation         = new ThemeVariation($params['variant'], $current_user);
+        $params['stylesheets'][] = $css_assets->getFileURL($theme_variation);
     }
 }

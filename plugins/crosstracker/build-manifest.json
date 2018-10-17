@@ -4,37 +4,33 @@
     "themes": {
         "BurningParrot": {
             "files": [
-                "www/themes/BurningParrot/css/style-blue.scss",
-                "www/themes/BurningParrot/css/style-blue-condensed.scss",
-                "www/themes/BurningParrot/css/style-green.scss",
-                "www/themes/BurningParrot/css/style-green-condensed.scss",
-                "www/themes/BurningParrot/css/style-grey.scss",
-                "www/themes/BurningParrot/css/style-grey-condensed.scss",
-                "www/themes/BurningParrot/css/style-orange.scss",
-                "www/themes/BurningParrot/css/style-orange-condensed.scss",
-                "www/themes/BurningParrot/css/style-purple.scss",
-                "www/themes/BurningParrot/css/style-purple-condensed.scss",
-                "www/themes/BurningParrot/css/style-red.scss",
-                "www/themes/BurningParrot/css/style-red-condensed.scss"
+                "themes/BurningParrot/css/style-blue.scss",
+                "themes/BurningParrot/css/style-blue-condensed.scss",
+                "themes/BurningParrot/css/style-green.scss",
+                "themes/BurningParrot/css/style-green-condensed.scss",
+                "themes/BurningParrot/css/style-grey.scss",
+                "themes/BurningParrot/css/style-grey-condensed.scss",
+                "themes/BurningParrot/css/style-orange.scss",
+                "themes/BurningParrot/css/style-orange-condensed.scss",
+                "themes/BurningParrot/css/style-purple.scss",
+                "themes/BurningParrot/css/style-purple-condensed.scss",
+                "themes/BurningParrot/css/style-red.scss",
+                "themes/BurningParrot/css/style-red-condensed.scss"
             ],
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss",
                 "../tracker/www/scripts/node_modules"
             ],
-            "watched_includes": [
-                "www/themes/BurningParrot/css/**/_*.scss"
-            ],
-            "target_dir": "www/themes/BurningParrot/assets",
+            "watched_includes": ["themes/BurningParrot/css/**/_*.scss"],
+            "target_dir": "../../src/www/assets/crosstracker/BurningParrot",
             "is_revisioned": true
         }
     },
-    "components": [
-        "www/scripts/"
-    ],
+    "components": ["scripts/"],
     "gettext-vue": {
         "cross-tracker": {
-            "scripts": "www/scripts/",
-            "po": "www/scripts/cross-tracker/po"
+            "scripts": "scripts/",
+            "po": "scripts/cross-tracker/po"
         }
     }
 }

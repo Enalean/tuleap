@@ -19,7 +19,7 @@
 
 const path = require("path");
 const webpack_config = require("./webpack.config.js");
-const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
+const karma_configurator = require("../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
 webpack_config.entry = null;
@@ -33,9 +33,9 @@ module.exports = function(config) {
     );
 
     Object.assign(base_config, {
-        files: ["cross-tracker/src/app/app.spec.js"],
+        files: ["cross-tracker/src/app.spec.js"],
         preprocessors: {
-            "cross-tracker/src/app/app.spec.js": ["webpack"]
+            "cross-tracker/src/app.spec.js": ["webpack"]
         }
     });
 

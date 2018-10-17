@@ -1,11 +1,11 @@
 const path = require("path");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "../assets");
+const assets_dir_path = path.resolve(__dirname, "../../../src/www/assets/crosstracker/scripts");
 
 const webpack_config = {
     entry: {
-        "cross-tracker": "./cross-tracker/src/app/index.js"
+        "cross-tracker": "./cross-tracker/src/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
@@ -17,7 +17,7 @@ const webpack_config = {
             {
                 "plugin-tracker-TQL": path.resolve(
                     __dirname,
-                    "../../../tracker/www/scripts/report/TQL-CodeMirror"
+                    "../../tracker/www/scripts/report/TQL-CodeMirror"
                 )
             },
             webpack_configurator.tlp_mocks_alias
