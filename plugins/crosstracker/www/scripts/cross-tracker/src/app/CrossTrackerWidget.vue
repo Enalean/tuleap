@@ -58,6 +58,7 @@
 </template>
 <script>
 import ArtifactTable from "./ArtifactTable.vue";
+import { mapState } from "vuex";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import { isAnonymous } from "./user-service.js";
@@ -75,13 +76,13 @@ export default {
     data() {
         return {
             is_loading: true,
-            reading_mode: true,
             is_saved: true,
             error_message: null,
             success_message: null
         };
     },
     computed: {
+        ...mapState(["reading_mode"]),
         is_user_anonymous() {
             return isAnonymous();
         },
@@ -106,7 +107,7 @@ export default {
 
             this.writingCrossTrackerReport.duplicateFromReport(this.readingCrossTrackerReport);
             this.hideFeedbacks();
-            this.reading_mode = false;
+            this.$store.commit("switchToWritingMode");
         },
 
         switchToReadingMode({ saved_state }) {
@@ -117,7 +118,7 @@ export default {
             }
             this.hideFeedbacks();
             this.is_saved = saved_state;
-            this.reading_mode = true;
+            this.$store.commit("switchToReadingMode");
         },
 
         async loadBackendReport() {
