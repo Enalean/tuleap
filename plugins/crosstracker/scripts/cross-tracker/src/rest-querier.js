@@ -30,7 +30,7 @@ export {
 
 async function getReport(report_id) {
     const response = await get("/api/v1/cross_tracker_reports/" + report_id);
-    return await response.json();
+    return response.json();
 }
 
 async function getReportContent(report_id, limit, offset) {
@@ -66,7 +66,7 @@ async function updateReport(report_id, trackers_id, expert_query) {
         },
         body: JSON.stringify({ trackers_id, expert_query })
     });
-    return await response.json();
+    return response.json();
 }
 
 async function getSortedProjectsIAmMemberOf() {
@@ -80,8 +80,8 @@ async function getSortedProjectsIAmMemberOf() {
     return json.sort(({ label: label_a }, { label: label_b }) => label_a.localeCompare(label_b));
 }
 
-async function getTrackersOfProject(project_id) {
-    return await recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
+function getTrackersOfProject(project_id) {
+    return recursiveGet("/api/v1/projects/" + project_id + "/trackers", {
         params: {
             limit: 50,
             representation: "minimal"

@@ -173,7 +173,7 @@ export default {
                         this.error_message = error_details.error.i18n_error_message;
                     }
                 },
-                error => {
+                () => {
                     this.error_message = this.$gettext("An error occured");
                 }
             );

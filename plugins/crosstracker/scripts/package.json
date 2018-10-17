@@ -15,13 +15,14 @@
   },
   "devDependencies": {},
   "config": {
-    "bin": "../../../../node_modules/.bin/"
+    "bin": "../../../node_modules/.bin/",
+    "assets": "../../../src/www/assets/crosstracker/scripts"
   },
   "scripts": {
-    "build": "rm -rf ../assets/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
+    "build": "rm -rf $npm_package_config_assets/* && NODE_ENV=production $npm_package_config_bin/webpack --mode=production",
     "coverage": "rm -rf ./coverage/* && NODE_ENV=coverage $npm_package_config_bin/karma start ./karma.conf.js && $npm_package_config_bin/http-server -os -a 0.0.0.0 -p 9000 coverage/",
     "test": "NODE_ENV=test $npm_package_config_bin/karma start ./karma.conf.js",
     "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/karma start ./karma.conf.js'",
-    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find cross-tracker/src/app/ -type f -name '*.vue')"
+    "extract-gettext-cli": "$npm_package_config_bin/gettext-extract --attribute v-translate $(find cross-tracker/src/ -type f -name '*.vue')"
   }
 }

@@ -153,8 +153,8 @@ class ProjectCrossTrackerSearch extends Widget
     public function getJavascriptDependencies()
     {
         $cross_tracker_include_assets = new IncludeAssets(
-            CROSSTRACKER_BASE_DIR . '/www/assets',
-            CROSSTRACKER_BASE_URL . '/assets'
+            __DIR__ . '/../../../../../src/www/assets/crosstracker/scripts',
+            '/assets/crosstracker/scripts'
         );
 
         return array(

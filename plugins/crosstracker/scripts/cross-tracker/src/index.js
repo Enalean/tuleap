@@ -19,7 +19,7 @@
 
 import Vue from "vue";
 import GettextPlugin from "vue-gettext";
-import french_translations from "../../po/fr.po";
+import french_translations from "../po/fr.po";
 
 import { createStore } from "./store/index.js";
 import { init as initUser } from "./user-service.js";

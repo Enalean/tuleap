@@ -439,6 +439,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/fulltextsearch
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_certification
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_certification
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity

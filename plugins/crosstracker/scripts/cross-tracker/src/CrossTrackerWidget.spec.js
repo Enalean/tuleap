@@ -193,7 +193,7 @@ describe("CrossTrackerWidget", () => {
             );
         });
 
-        it("When there is an error in REST error, a generic error message will be shown", async () => {
+        it("When there is an error in REST error, a generic error message will be shown", () => {
             getReport.and.returnValue(
                 Promise.reject({
                     response: {
