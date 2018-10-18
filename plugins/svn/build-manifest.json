@@ -45,13 +45,13 @@
         "www/scripts/svn-admin-notifications.js",
         "www/scripts/svn-admin-notifications-popover.js"
     ],
-    "gettext-js": {
-        "permissions-per-group": {
-            "src": "www/scripts/permissions-per-group/src",
-            "po": "www/scripts/permissions-per-group/po"
-        }
-    },
     "components": [
         "www/scripts"
-    ]
+    ],
+    "gettext-vue": {
+        "permissions-per-group": {
+            "scripts": "www/scripts/",
+            "po": "www/scripts/permissions-per-group/po"
+        }
+    }
 }
