@@ -35,6 +35,9 @@ import WidgetArtifactTable from "./WidgetArtifactTable.vue";
 export default {
     name: "Widget",
     store,
+    props: {
+        userId: Number
+    },
     components: {
         WidgetReadingMode,
         WidgetWritingMode,
@@ -42,6 +45,9 @@ export default {
     },
     computed: {
         ...mapState(["reading_mode"])
+    },
+    created() {
+        this.$store.commit("initUserId", this.userId);
     }
 };
 </script>

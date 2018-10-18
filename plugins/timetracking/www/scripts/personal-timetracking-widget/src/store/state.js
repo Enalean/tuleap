@@ -19,6 +19,7 @@
 import { DateTime } from "luxon";
 
 const state = {
+    user_id: null,
     start_date: DateTime.local()
         .minus({ weeks: 1 })
         .toISODate(),

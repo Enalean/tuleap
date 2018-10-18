@@ -32,13 +32,8 @@ use Tracker_ArtifactFactory;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
-use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupSaver;
-use Tuleap\Timetracking\Permissions\PermissionsRetriever;
-use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
-use Tuleap\Timetracking\Time\TimeRetriever;
-use Tuleap\Timetracking\Time\TimeUpdater;
 
 class TimetrackingDataBuilder extends REST_TestDataBuilder
 {

@@ -22,25 +22,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Timetracking\REST;
+namespace Tuleap\REST\v1;
 
-use Tuleap\Timetracking\REST\v1\TimetrackingRepresentation;
+use Tuleap\Project\REST\MinimalProjectRepresentation;
+use Tuleap\Timetracking\REST\v1\MinimalArtifactRepresentation;
 
-/**
-  * Inject resource into restler
-  */
-class ResourcesInjector
+class TimetrackingRepresentationBase
 {
+    const NAME = "timetracking";
 
-    public function populate(\Luracast\Restler\Restler $restler)
-    {
-        $restler->addAPIClass(
-            '\\Tuleap\\Timetracking\\REST\\v1\\TimetrackingResource',
-            TimetrackingRepresentation::NAME
-        );
-        $restler->addAPIClass(
-            '\\Tuleap\\Timetracking\\REST\\v1\\UserResource',
-            'users'
-        );
-    }
+    /**
+     * @var MinimalArtifactRepresentation
+     */
+    public $artifact;
+
+    /**
+     * @var MinimalProjectRepresentation
+     */
+    public $project;
+
+    /**
+     * @var string
+     */
+    public $date;
+
+    /**
+     * @var int
+     */
+    public $minutes;
+
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $step;
 }

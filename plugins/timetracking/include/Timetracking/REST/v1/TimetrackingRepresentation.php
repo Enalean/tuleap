@@ -27,42 +27,11 @@ namespace Tuleap\Timetracking\REST\v1;
 use Tracker_ArtifactFactory;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\Timetracking\Time\Time;
 
-class TimetrackingRepresentation
+class TimetrackingRepresentation extends TimetrackingRepresentationBase
 {
-    const NAME = "timetracking";
-
-    /**
-     * @var MinimalArtifactRepresentation
-     */
-    public $artifact;
-
-    /**
-     * @var MinimalProjectRepresentation
-     */
-    public $project;
-
-    /**
-     * @var string
-     */
-    public $date;
-
-    /**
-     * @var int
-     */
-    public $minutes;
-
-    /**
-     * @var int
-     */
-    public $id;
-
-    /**
-     * @var string
-     */
-    public $step;
-
     public function build(Time $time)
     {
         $this->artifact = $this->getArtifactRepresentation($time);

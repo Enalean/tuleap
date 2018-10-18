@@ -30,13 +30,13 @@ const headers = {
     "content-type": "application/json"
 };
 
-async function getTrackedTimes(start_date, end_date, limit, offset) {
+async function getTrackedTimes(user_id, start_date, end_date, limit, offset) {
     const query = JSON.stringify({
         start_date: formatDatetimeToISO(start_date),
         end_date: formatDatetimeToISO(end_date)
     });
 
-    const response = await get("/api/v1/timetracking", {
+    const response = await get(`/api/v1/users/${user_id}/timetracking`, {
         params: {
             limit,
             offset,
