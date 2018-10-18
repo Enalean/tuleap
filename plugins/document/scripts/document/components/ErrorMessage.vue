@@ -18,37 +18,19 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <error-message />
-        <spinner />
-        <div class="empty-page">
-            <p class="empty-page-text" v-if="has_loaded_without_error">
-                <translate>Project has no documentation yet.</translate>
-            </p>
-        </div>
+    <div v-if="hasError" class="tlp-alert-danger">
+        {{ error_message }}
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
-
-import ErrorMessage from "./ErrorMessage.vue";
-import Spinner from "./Spinner.vue";
+import { mapGetters, mapState } from "vuex";
 
 export default {
-    name: "App",
-    components: { ErrorMessage, Spinner },
-    props: {
-        projectId: String
-    },
-    mounted() {
-        this.$store.commit("setProjectId", this.projectId);
-        this.$store.dispatch("loadRootDocumentId");
-    },
+    name: "ErrorMessage",
     computed: {
         ...mapGetters(["hasError"]),
         ...mapState({
-            has_loaded_without_error: (state, getters) =>
-                !state.is_loading_root_document && !getters.hasError
+            error_message: "message"
         })
     }
 };
