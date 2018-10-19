@@ -96,10 +96,10 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/api/'), $this->request);
     }
 
-    public function testCheckNotActiveProjectError()
+    public function testCheckNotActiveAndNotSuspendedProjectError()
     {
         $GLOBALS['group_id'] = 1;
-        $project = Mockery::mock(Project::class, ['isActive' => false, 'isPublic' => true, 'isError' => false, 'getStatus' => 'S']);
+        $project = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => false, 'isPublic' => true, 'isError' => false, 'getStatus' => 'S']);
         $project_manager = Mockery::mock(ProjectManager::class);
         $project_manager->shouldReceive('getProject')->andReturn($project);
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
@@ -111,7 +111,20 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
     }
 
-    public function testCheckActiveProjectNoError()
+    public function testCheckNotActiveBecauseSuspendedProjectError()
+    {
+        $GLOBALS['group_id'] = 1;
+        $project = Mockery::mock(Project::class, ['isActive' => false, 'isSuspended' => true, 'isPublic' => true, 'isError' => false, 'getStatus' => 'H']);
+        $project_manager = Mockery::mock(ProjectManager::class);
+        $project_manager->shouldReceive('getProject')->andReturn($project);
+        $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
+
+        $this->url_verification->shouldReceive('displaySuspendedProjectError')->once();
+
+        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
+    }
+
+        public function testCheckActiveProjectNoError()
     {
         $GLOBALS['group_id'] = 1;
         $project = Mockery::mock(Project::class, ['isActive' => true, 'isPublic' => true, 'isError' => false, 'getID' => 101]);

@@ -514,4 +514,9 @@ class Project extends Group implements PFO_Project {
     {
         return (int) $this->getID() === self::ADMIN_PROJECT_ID;
     }
+
+    public function isSuspended()
+    {
+        return $this->getStatus() === self::STATUS_SUSPENDED;
+    }
 }
