@@ -63,6 +63,9 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $this->addHook(ProjectUGroupMemberUpdatable::NAME);
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
         $this->addHook(UserWithStarBadgeCollector::NAME);
+        $this->addHook('project_is_suspended_or_pending');
+        $this->addHook('project_is_active');
+        $this->addHook('project_is_deleted');
 
         return parent::getHooksAndCallbacks();
     }
@@ -169,5 +172,28 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $dao    = new ProjectOwnerDAO();
         $finder = new UserWithStarBadgeFinder($dao, $GLOBALS['Language']);
         $finder->findBadgedUser($collector);
+    }
+
+    public function project_is_suspended_or_pending(array $params) //phpcs:ignore
+    {
+        $this->notifyProjectMembers($params);
+    }
+
+    public function project_is_active(array $params) //phpcs:ignore
+    {
+        $this->notifyProjectMembers($params);
+    }
+
+    public function project_is_deleted(array $params) //phpcs:ignore
+    {
+        $this->notifyProjectMembers($params);
+    }
+
+    private function notifyProjectMembers(array $params)
+    {
+        $project_id = $params['group_id'];
+
+        $sender = new \Tuleap\ProjectCertification\Notification\Sender(ProjectManager::instance());
+        $sender->sendNotification($project_id);
     }
 }

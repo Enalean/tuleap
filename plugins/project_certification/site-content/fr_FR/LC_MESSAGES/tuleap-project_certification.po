@@ -18,6 +18,10 @@ msgstr "Ajoute le rôle du responsable du projet"
 msgid "Current project owner:"
 msgstr "Responsable actuel du projet :"
 
+#, php-format
+msgid "Failed to send notification to user %s ."
+msgstr "Erreur lors de l'envoi de la notification à l'utilisateur %s ."
+
 msgid "Owner"
 msgstr "Responsable"
 
