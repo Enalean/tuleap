@@ -41,12 +41,6 @@ class Project extends Group implements PFO_Project {
     const STATUS_PENDING_LABEL = 'pending';
 
     /**
-     * The project is incomplete
-     */
-    const STATUS_INCOMPLETE = 'I';
-    const STATUS_INCOMPLETE_LABEL = 'incomplete';
-
-    /**
      * The project is suspended
      */
     const STATUS_SUSPENDED = 'H';

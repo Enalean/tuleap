@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -125,7 +125,7 @@ class Group {
 	}
 
 	/*
-		Statuses include I,H,A,D
+		Statuses include H,A,D
 	*/
 	function getStatus() {
 		return $this->data_array['status'];

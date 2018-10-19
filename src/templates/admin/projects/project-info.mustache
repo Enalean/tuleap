@@ -62,6 +62,10 @@
                                                 name="form_status"
                                                 {{# can_change_status }}disabled{{/ can_change_status }}
                                         >
+                                            {{# is_status_invalid }}
+                                                <option value="" selected>&nbsp</option>
+                                            {{/ is_status_invalid}}
+
                                             {{# status }}
                                                 <option value="{{ key }}" {{# is_current }}selected{{/ is_current }}>
                                                     {{ status }}

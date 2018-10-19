@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,6 @@ class AdminSidebarPresenter
     public $projects_nav_all_projects;
     public $projects_nav_pending_projects;
     public $projects_nav_configuration;
-    public $projects_nav_incomplete_projects;
     public $projects_nav_deleted_projects;
 
     public $configuration_section_title;

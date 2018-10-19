@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #, php-format
 msgid ""
@@ -1038,6 +1038,14 @@ msgstr ""
 
 msgid "The password policy has been successfully updated."
 msgstr "La politique des mots de passe a correctement été mise à jour."
+
+#, php-format
+msgid ""
+"The project \"%s\" is not in a valid state and cannot be displayed in the "
+"list. Please do the necessary."
+msgstr ""
+"Le projet %s n'est pas dans un état valide et ne peut pas être affiché dans "
+"la liste. Veuillez faire le nécessaire."
 
 msgid "The requested dashboard does not exist."
 msgstr "Le tableau de bord demandé n’existe pas."

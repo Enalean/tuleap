@@ -4,18 +4,13 @@
 # Copyright 1999-2000 (c) The SourceForge Crew
 # http:#sourceforge.net
 #
-# 
+#
 
 use DBI;
 
 require("../include.pl");  # Include all the predefined functions
 
 &db_connect;
-
-#one hour ago for invalid projects
-$then=(time()-3600);
-$rel = $dbh->prepare("DELETE FROM groups WHERE status='I' and register_time < '$then'");
-$rel->execute();
 
 # Pending user accounts
 # default (see local.inc) is 60 days
