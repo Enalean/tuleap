@@ -21,7 +21,9 @@ const state = {
     project_root_document_id: null,
     project_id: null,
     is_loading_root_document: true,
-    message: null
+    error_message: null,
+    project_name: null,
+    is_user_administrator: false
 };
 
 export default state;

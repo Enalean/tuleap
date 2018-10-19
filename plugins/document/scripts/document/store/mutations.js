@@ -23,14 +23,16 @@ export default {
     },
 
     setErrorMessage(state, message) {
-        state.message = message;
+        state.error_message = message;
     },
 
     switchLoadingRootDocument(state, status) {
         state.is_loading_root_document = status;
     },
 
-    setProjectId(state, project_id) {
+    initDocumentTree(state, [project_id, name, user_is_admin]) {
         state.project_id = project_id;
+        state.project_name = name;
+        state.is_user_administrator = user_is_admin;
     }
 };

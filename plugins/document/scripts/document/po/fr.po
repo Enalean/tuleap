@@ -12,5 +12,14 @@ msgstr ""
 "X-Generator: Poedit 2.0.8\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Administration"
+msgstr "Administration"
+
+msgid "Documents"
+msgstr "Documents"
+
+msgid "Project documentation"
+msgstr "Documentation du projet"
+
 msgid "Project has no documentation yet."
 msgstr "Le projet n'a pas encore de documentation."

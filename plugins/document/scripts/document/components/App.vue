@@ -20,6 +20,7 @@
 <template>
     <div class="tlp-framed">
         <error-message />
+        <document-breadcrumb />
         <spinner />
         <div class="empty-page">
             <p class="empty-page-text" v-if="has_loaded_without_error">
@@ -27,25 +28,32 @@
             </p>
         </div>
     </div>
+
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 import ErrorMessage from "./ErrorMessage.vue";
 import Spinner from "./Spinner.vue";
+import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
 
 export default {
     name: "App",
-    components: { ErrorMessage, Spinner },
+    components: { ErrorMessage, Spinner, DocumentBreadcrumb },
     props: {
-        projectId: String
+        projectId: Number,
+        projectName: String,
+        userIsAdmin: Boolean
     },
     mounted() {
-        this.$store.commit("setProjectId", this.projectId);
+        this.$store.commit("initDocumentTree", [
+            this.projectId,
+            this.projectName,
+            this.userIsAdmin
+        ]);
         this.$store.dispatch("loadRootDocumentId");
     },
     computed: {
-        ...mapGetters(["hasError"]),
         ...mapState({
             has_loaded_without_error: (state, getters) =>
                 !state.is_loading_root_document && !getters.hasError
