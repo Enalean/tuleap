@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\TransitionListValidator;
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
 
@@ -712,23 +713,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             }
 
             if ($valid) {
-                //Check permissions on transition
-                if (!$last_changeset || $last_changeset->getValue($this) == null) {
-                    $from = null;
-                    $to = $value;
-                } else {
-                    $list_values = $last_changeset->getValue($this)->getListValues();
-                    $from        = reset($list_values);
-                    if (is_a($value, Tracker_Artifact_ChangesetValue_List::class)) {
-                        $to = $value->getId();
-                    }else {
-                        $to = $value;
-                    }
-                }
-                $transition_id = $this->getTransitionId($from, $to);
-                if (!$this->userCanMakeTransition($transition_id)) {
-                        $valid = false;
-                 }
+                $valid = $this->getTransitionListValidator()->checkTransition(
+                    $this,
+                    $value,
+                    $last_changeset
+                );
             }
         }
 
@@ -766,6 +755,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             }
             return null;
         }
+    }
+
+    private function getTransitionListValidator()
+    {
+        return new TransitionListValidator(TransitionFactory::instance());
     }
 
     /**
