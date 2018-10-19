@@ -1,0 +1,41 @@
+<div class="tlp-modal" role="dialog" aria-labelledby="join-project-modal" id="join-project-modal">
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="join-project-modal">
+            <i class="fa fa-long-arrow-right"></i> {{# gettext }}Ask to join this project{{/ gettext }}
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
+            &times;
+        </div>
+    </div>
+    <form action="/join-private-project-mail/" method="post" name="display_form">
+        <div class="tlp-modal-body">
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="msg_private_project">
+                    {{# gettext }}Message to project administrators{{/ gettext }}  <i class="fa fa-asterisk"></i>
+                </label>
+
+                <textarea rows="5"git-repository-clone-button-text
+                          cols="70"
+                          class="tlp-textarea"
+                          name="msg_private_project"
+                          id="message-private-project"
+                          required
+                          placeholder="{{ placeholder }}">{{ placeholder }}</textarea>
+            </div>
+
+            <input id="groupId" name="groupId" value="{{ project_id }}" type="hidden">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+
+        </div>
+        <div class="tlp-modal-footer">
+            <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
+                {{# gettext }}Cancel{{/ gettext }}
+            </button>
+            <button type="submit" name="Submit" class="tlp-button-primary tlp-modal-action" id="send-join-message-button">
+                <i class="fa fa-long-arrow-right"></i> {{# gettext }}Ask to join{{/ gettext }}
+            </button>
+        </div>
+    </form>
+</div>

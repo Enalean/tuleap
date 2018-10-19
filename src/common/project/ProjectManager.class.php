@@ -554,7 +554,7 @@ class ProjectManager
      *
      * @param Integer $groupId
      *
-     * @return DataAceesResult
+     * @return DataAccessResult
      */
     public function getMessageToRequesterForAccessProject($groupId) {
         $dao = $this->_getDao();

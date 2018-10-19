@@ -66,6 +66,12 @@ main[role=main]:not(.tlp-framed) > #feedback {
     text-align: center;
 }
 
+.empty-page-small-text {
+    color: transparentize($tlp-theme-color, .7);
+    font-size: $tlp-spacing;
+    text-align: center;
+}
+
 .empty-page-icon,
 .empty-pane-icon {
     margin: 0 0 30px;

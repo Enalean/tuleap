@@ -73,7 +73,8 @@ const webpack_config_for_burning_parrot_code = {
         "site-admin-system-events-notifications": "./admin/system-events-notifications.js",
         "site-admin-trackers-pending-removal": "./admin/trackers-pending-removal.js",
         "site-admin-user-details": "./admin/userdetails.js",
-        "site-admin-generate-pie-charts": "./admin/generate-pie-charts.js"
+        "site-admin-generate-pie-charts": "./admin/generate-pie-charts.js",
+        "access-denied-error": "./BurningParrot/access-denied-error.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),

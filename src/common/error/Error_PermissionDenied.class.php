@@ -215,7 +215,7 @@ abstract class Error_PermissionDenied {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
         }
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('include_exit', 'request_sent'), CODENDI_PURIFIER_DISABLED);
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('include_exit', 'request_sent'));
         $GLOBALS['Response']->redirect('/my');
         exit;
     }
