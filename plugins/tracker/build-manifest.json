@@ -62,6 +62,7 @@
         "www/scripts/TrackerArtifact.js",
         "www/scripts/TrackerArtifactEmailActions.js",
         "www/scripts/TrackerArtifactLink.js",
+        "www/scripts/LoadTrackerArtifactLink.js",
         "www/scripts/TrackerCreate.js",
         "www/scripts/TrackerFormElementFieldPermissions.js",
         "www/scripts/TrackerDateReminderForms.js",

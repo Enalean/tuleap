@@ -22,6 +22,7 @@
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
@@ -546,11 +547,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         if (! $read_only) {
             $read_only_class = '';
-            $html .= '<div class="tracker_formelement_read_and_edit_edition_section">';
+            $html .= '<section class="tracker_formelement_read_and_edit_edition_section tracker-form-element-artifactlink-section">';
+            $html .= '<div>';
             $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
                              size="40"
+                             data-preview-label="'. $hp->purify(dgettext('tuleap-tracker', 'Preview')) .'"
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             if($artifact->getTracker()->isProjectAllowedToUseNature()) {
@@ -569,29 +572,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 );
             }
             $html .= '</span>';
+            $html .= '</div>';
 
             $is_submit      = $artifact->getId() == -1;
             $parent_tracker = $this->getTracker()->getParent();
-
-            if (! $is_submit) {
-                $html .= '<a href="#" class="btn tracker-form-element-artifactlink-add">';
-                $html .= dgettext('tuleap-tracker', 'Preview');
-                $html .= '</a>';
-            }
-
-            $html .= '</div>';
 
             if ($parent_tracker && $is_submit) {
                 $can_create   = true;
                 $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $can_create);
             }
             $html .= '</div>';
+            $html .= '</section>'; // end of tracker_formelement_read_and_edit_edition_section
         }
 
         $html .= '<div class="tracker-form-element-artifactlink-list '.$read_only_class.'">';
         if ($artifact_links_to_render->hasArtifactLinksToDisplay()) {
             $this_project_id = $this->getTracker()->getProject()->getGroupId();
             foreach ($artifact_links_to_render->getArtifactLinksForPerTrackerDisplay() as $artifact_links_per_tracker) {
+                /** @var ArtifactLinksToRenderForPerTrackerTable $artifact_links_per_tracker */
                 $renderer = $artifact_links_per_tracker->getRenderer();
                 if ($renderer === null) {
                     $html .= $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
@@ -609,16 +607,38 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     $project_name .= $hp->purify($project->getUnixName(), CODENDI_PURIFIER_CONVERT_HTML);
                     $project_name .= '</abbr>)';
                 }
-                $tracker = $artifact_links_per_tracker->getTracker();
                 $html   .= '<h2 class="tracker-form-element-artifactlink-tracker_'. $tracker->getId() .'">';
                 $html   .= $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . $project_name;
                 $html   .= '</h2>';
 
-                $matching_ids = $artifact_links_per_tracker->getMatchingIDs();
-                if ($from_aid == null) {
-                    $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false);
+                $matching_artifact_ids_as_string = $artifact_links_per_tracker->getMatchingIDs()['id'];
+                $async_limit = ForgeConfig::get('tracker_artifactlink_async_limit', 50);
+                if (substr_count($matching_artifact_ids_as_string, ',') < $async_limit) {
+                    $html .= $this->fetchRendererAsArtifactLink(
+                        $artifact_links_per_tracker,
+                        $read_only,
+                        $prefill_removed_values,
+                        $prefill_edited_natures,
+                        $reverse_artifact_links,
+                        $from_aid
+                    );
                 } else {
-                    $html .= $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false, $from_aid);
+                    $html .= '<div
+                        class="tracker-form-element-artifactlink-renderer-async"
+                        data-field-id="' . (int) $this->getId() . '"
+                        data-renderer-data="' . Codendi_HTMLPurifier::instance()->purify(
+                            json_encode(
+                                [
+                                    'artifact_id'            => $artifact->getId(),
+                                    'tracker_id'             => $tracker->getId(),
+                                    'reverse_artifact_links' => $reverse_artifact_links,
+                                    'read_only'              => $read_only,
+                                    'from_aid'               => $from_aid,
+                                    'prefill_removed_values' => $prefill_removed_values,
+                                    'prefill_edited_natures' => $prefill_edited_natures
+                                ]
+                            )
+                        ) . '"></div>';
                 }
                 $html .= '</div>';
             }
@@ -638,6 +658,24 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         }
 
         return $html;
+    }
+
+    private function fetchRendererAsArtifactLink(
+        ArtifactLinksToRenderForPerTrackerTable $artifact_links_per_tracker,
+        $read_only,
+        $prefill_removed_values,
+        $prefill_edited_natures,
+        $reverse_artifact_links,
+        $from_aid
+    ) {
+        $renderer = $artifact_links_per_tracker->getRenderer();
+        if (! $renderer) {
+            return '';
+        }
+
+        $matching_ids = $artifact_links_per_tracker->getMatchingIDs();
+
+        return $renderer->fetchAsArtifactLink($matching_ids, $this->getId(), $read_only, $prefill_removed_values, $prefill_edited_natures, $reverse_artifact_links, false, $from_aid);
     }
 
     private function fetchNatureTables(ArtifactLinksToRender $artifact_links_to_render, $is_reverse_artifact_links)
@@ -810,6 +848,51 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 echo json_encode($json);
                 exit();
                 break;
+            case 'artifactlink-renderer-async':
+                session_write_close();
+                if (! $request->isAjax()) {
+                    return;
+                }
+
+                if (! $request->get('renderer_data')) {
+                    return;
+                }
+
+                $renderer_data = json_decode($request->get('renderer_data'), true);
+                if (! $renderer_data) {
+                    return;
+                }
+
+                $artifact_id      = $renderer_data['artifact_id'];
+                $artifact = $this->getArtifactFactory()->getArtifactByIdUserCanView($current_user, $artifact_id);
+                if (! $artifact) {
+                    return;
+                }
+
+                if ($renderer_data['reverse_artifact_links']) {
+                    $artifact_links_to_render = $this->getReverseArtifactLinksToRender($artifact);
+                } else {
+                    $artifact_links_to_render = $this->getArtifactLinksToRenderFromChangesetValue(
+                        $artifact->getValue($this)
+                    );
+                }
+
+                $target_tracker_id = $renderer_data['tracker_id'];
+                $tracker = $this->getTrackerFactory()->getTrackerById($target_tracker_id);
+                $artifact_links_per_tracker = $artifact_links_to_render->getArtifactLinksForAGivenTracker($tracker);
+                if (! $artifact_links_per_tracker) {
+                    return;
+                }
+
+                echo $this->fetchRendererAsArtifactLink(
+                    $artifact_links_per_tracker,
+                    $renderer_data['read_only'],
+                    $renderer_data['prefill_removed_values'],
+                    $renderer_data['prefill_edited_natures'],
+                    $renderer_data['reverse_artifact_links'],
+                    $renderer_data['from_aid']
+                );
+                break;
             default:
                 parent::process($layout, $request, $current_user);
                 break;
@@ -930,12 +1013,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         );
     }
 
-    private function fetchReverseLinks(Tracker_Artifact $artifact)
+    private function getReverseArtifactLinksToRender(Tracker_Artifact $artifact)
     {
         $reverse_links = $this->getReverseLinks($artifact->getId());
-        $from_aid      = $artifact->getId();
 
-        $reverse_artifact_links_to_render = new ArtifactLinksToRender(
+        return new ArtifactLinksToRender(
             $this->getCurrentUser(),
             $this,
             $this->getTrackerFactory(),
@@ -943,6 +1025,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $this->getNaturePresenterFactory(),
             ...$reverse_links
         );
+    }
+
+    private function fetchReverseLinks(Tracker_Artifact $artifact)
+    {
+        $from_aid = $artifact->getId();
+
+        $reverse_artifact_links_to_render = $this->getReverseArtifactLinksToRender($artifact);
 
         return $this->fetchHtmlWidget(
             $artifact,

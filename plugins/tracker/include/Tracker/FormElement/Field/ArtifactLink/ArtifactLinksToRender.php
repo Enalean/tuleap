@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Tracker;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 
@@ -243,6 +244,27 @@ class ArtifactLinksToRender
                 yield $artifact_links_per_tracker;
             }
         }
+    }
+
+    /**
+     * @param Tracker $tracker
+     *
+     * @return ArtifactLinksToRenderForPerTrackerTable|null
+     */
+    public function getArtifactLinksForAGivenTracker(Tracker $tracker)
+    {
+        $project_id = $tracker->getGroupId();
+        $tracker_id = $tracker->getId();
+
+        if (! isset($this->grouped_by_project_then_tracker[$project_id])) {
+            return null;
+        }
+
+        if (! isset($this->grouped_by_project_then_tracker[$project_id][$tracker_id])) {
+            return null;
+        }
+
+        return $this->grouped_by_project_then_tracker[$project_id][$tracker_id];
     }
 
     public function getArtifactLinksForPerNatureDisplay()

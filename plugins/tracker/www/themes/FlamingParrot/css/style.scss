@@ -119,6 +119,10 @@
     .move-artifact-display-more-field-fully-migrated {
         color: darken($ui-color-info, 30%);
     }
+
+    .tracker-form-element-artifactlink-section-loading {
+        margin: 0 0 0 20px;
+    }
 }
 
 body {
