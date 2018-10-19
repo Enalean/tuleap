@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -25,12 +25,11 @@ if ( preg_match_all('/^\/plugins\/proftpd\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/(
     $_REQUEST['group_id'] = $_GET['group_id'] = $matches[1][0];
 }
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('proftpd');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('proftpd');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $request = new HTTPRequest(array('controller' => 'explorer'));
     $p->process($request);
 } else {
     header('Location: '.get_server_url());
 }
-?>
