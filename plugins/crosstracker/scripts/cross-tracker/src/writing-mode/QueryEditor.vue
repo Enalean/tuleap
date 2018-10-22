@@ -129,4 +129,4 @@ export default {
         }
     }
 };
-</script>)
+</script>

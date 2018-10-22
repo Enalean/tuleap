@@ -5,37 +5,6 @@ const assets_dir_path = path.resolve(__dirname, "../assets");
 const assets_public_path = "assets/";
 const manifest_plugin = webpack_configurator.getManifestPlugin();
 
-const path_to_tlp = path.resolve(__dirname, "../../../../src/www/themes/common/tlp/");
-
-const webpack_config_for_trackers = {
-    entry: {
-        "tracker-permissions-per-group": "./permissions-per-group/src/index.js"
-    },
-    context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: {
-        codendi: "codendi"
-    },
-    resolve: {
-        alias: {
-            // TLP is not included in FlamingParrot
-            "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.js"),
-            "permission-badge": path.resolve(
-                __dirname,
-                "../../../../src/www/scripts/project/admin/permissions-per-group/"
-            )
-        }
-    },
-    module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
-            webpack_configurator.rule_po_files,
-            webpack_configurator.rule_vue_loader
-        ]
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()]
-};
-
 const webpack_config_for_artifact_modal = {
     entry: "./angular-artifact-modal/index.js",
     context: path.resolve(__dirname),
@@ -44,14 +13,14 @@ const webpack_config_for_artifact_modal = {
         tlp: "tlp"
     },
     resolve: {
-        modules: [
-            "node_modules",
-            // This ensures that dependencies resolve their imported modules in angular-artifact-modal's node_modules
-            path.resolve(__dirname, "node_modules")
-        ],
         alias: webpack_configurator.extendAliases(
-            {},
-            webpack_configurator.angular_artifact_modal_aliases
+            webpack_configurator.angular_artifact_modal_aliases,
+            {
+                // Those are needed for tests
+                angular$: path.resolve(__dirname, "node_modules/angular"),
+                "angular-mocks$": path.resolve(__dirname, "node_modules/angular-mocks"),
+                jquery$: path.resolve(__dirname, "node_modules/jquery")
+            }
         )
     },
     module: {
@@ -71,12 +40,14 @@ const webpack_config_for_burndown_chart = {
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
     resolve: {
-        modules: [path.resolve(__dirname, "node_modules")],
         alias: {
             "charts-builders": path.resolve(
                 __dirname,
                 "../../../../src/www/scripts/charts-builders/"
-            )
+            ),
+            "d3-array$": path.resolve(__dirname, "node_modules/d3-array"),
+            "d3-scale$": path.resolve(__dirname, "node_modules/d3-scale"),
+            "d3-axis$": path.resolve(__dirname, "node_modules/d3-axis")
         }
     },
     module: {
@@ -88,9 +59,15 @@ const webpack_config_for_burndown_chart = {
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
 };
 
+const path_to_badge = path.resolve(
+    __dirname,
+    "../../../../src/www/scripts/project/admin/permissions-per-group/"
+);
+
 const webpack_config_for_vue = {
     entry: {
         "tracker-report-expert-mode": "./report/index.js",
+        "tracker-permissions-per-group": "./permissions-per-group/src/index.js",
         MoveArtifactModal: "./artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./TrackerAdminFields.js"
     },
@@ -104,7 +81,10 @@ const webpack_config_for_vue = {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
             webpack_configurator.tlp_mocks_alias,
-            webpack_configurator.jquery_mocks_alias
+            webpack_configurator.jquery_mocks_alias,
+            {
+                "permission-badge": path_to_badge
+            }
         )
     },
     module: {
@@ -127,14 +107,9 @@ if (process.env.NODE_ENV === "watch" || process.env.NODE_ENV === "test") {
 }
 
 if (process.env.NODE_ENV === "production") {
-    module.exports = [
-        webpack_config_for_trackers,
-        webpack_config_for_burndown_chart,
-        webpack_config_for_vue
-    ];
+    module.exports = [webpack_config_for_burndown_chart, webpack_config_for_vue];
 } else {
     module.exports = [
-        webpack_config_for_trackers,
         webpack_config_for_artifact_modal,
         webpack_config_for_burndown_chart,
         webpack_config_for_vue

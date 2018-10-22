@@ -13,9 +13,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#, javascript-format
-msgid "%s has no permission for trackers"
-msgstr "%s n'a aucune permission au niveau des outils de suivi"
+msgid "%{ user_group } has no permission for trackers"
+msgstr "%{ user_group } n'a aucune permission au niveau des outils de suivi"
 
 msgid "Granted groups"
 msgstr "Groupes autorisés"

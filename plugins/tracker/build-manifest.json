@@ -83,24 +83,24 @@
         "www/scripts/tracker-admin-notifications-popover.js",
         "www/scripts/tracker-webhooks.js"
     ],
+    "components": [
+        "grammar/",
+        "www/scripts/"
+    ],
     "gettext-js": {
         "burndown-chart": {
             "src": "www/scripts/burndown-chart/src",
             "po": "www/scripts/burndown-chart/po"
-        },
-        "permissions-per-group": {
-            "src": "www/scripts/permissions-per-group/src",
-            "po" : "www/scripts/permissions-per-group/po"
         }
     },
     "gettext-vue": {
         "tracker": {
             "scripts": "www/scripts/",
             "po": "www/scripts/po"
+        },
+        "permissions-per-group": {
+            "scripts": "www/scripts/permissions-per-group/",
+            "po": "www/scripts/permissions-per-group/po"
         }
-    },
-    "components": [
-        "grammar/",
-        "www/scripts/"
-    ]
+    }
 }

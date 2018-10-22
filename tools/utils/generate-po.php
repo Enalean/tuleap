@@ -222,7 +222,7 @@ function gettextJS($translated_plugin, $path, $manifest_json)
         $template = escapeshellarg("$path/${gettext['po']}/template.pot");
 
         executeCommandAndExitIfStderrNotEmpty("find $src \
-                            \( -name '*.js' -o -name '*.vue' \) \
+                            -name '*.js' \
                             -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
                         | xargs xgettext \
                             --language=JavaScript \

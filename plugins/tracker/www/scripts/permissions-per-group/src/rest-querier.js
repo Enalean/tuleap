@@ -34,5 +34,5 @@ async function getTrackerPermissions(project_id, selected_ugroup_id) {
         }
     });
 
-    return await response.json();
+    return response.json();
 }

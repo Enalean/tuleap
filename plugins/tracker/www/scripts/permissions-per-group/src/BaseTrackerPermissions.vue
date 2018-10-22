@@ -1,27 +1,23 @@
-/**
-* Copyright Enalean (c) 2018. All rights reserved.
-*
-* Tuleap and Enalean names and logos are registrated trademarks owned by
-* Enalean SAS. All other trademarks or names are properties of their respective
-* owners.
-*
-* This file is a part of Tuleap.
-*
-* Tuleap is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Tuleap is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+<!--
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-(<template>
+<template>
     <section class="tlp-pane-section">
         <div class="tlp-alert-danger" v-if="hasError">
             {{ error }}
@@ -29,24 +25,23 @@
 
         <div class="permission-per-group-load-button" v-if="isButtonLoadAllDisplayed">
             <button class="tlp-button-primary tlp-button-outline"
-                    v-on:click="loadAll"
-            >
-                {{ button_tracker_permissions_label }}
-            </button>
+                    v-on:click="loadAll()"
+                    v-translate
+            >See all tracker permissions</button>
         </div>
 
         <div class="permission-per-group-loader" v-if="is_loading"></div>
 
-        <tracker-permissions-table v-if="is_loaded"
+        <tracker-permissions-table
+            v-if="is_loaded"
             v-bind:tracker-permissions="tracker_permissions"
             v-bind:selected-ugroup-name="selectedUgroupName"
         >
         </tracker-permissions-table>
     </section>
-</template>)
-(<script>
+</template>
+<script>
 import { getTrackerPermissions } from "./rest-querier.js";
-import { gettext_provider } from "./gettext-provider.js";
 import TrackerPermissionsTable from "./TrackerPermissionsTable.vue";
 
 export default {
@@ -73,9 +68,7 @@ export default {
         },
         isButtonLoadAllDisplayed() {
             return !this.is_loaded && !this.is_loading;
-        },
-        button_tracker_permissions_label: () =>
-            gettext_provider.gettext("See all tracker permissions")
+        }
     },
     methods: {
         async loadAll() {
@@ -97,4 +90,4 @@ export default {
         }
     }
 };
-</script>)
+</script>
