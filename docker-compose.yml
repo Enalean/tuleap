@@ -89,6 +89,15 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prom-data:/prometheus
 
+  ldap-admin:
+    image: osixia/phpldapadmin:0.7.1
+    volumes:
+      - ldap-data:/data
+    ports:
+      - "6443:443"
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap
+
 volumes:
   tuleap-data:
   ldap-data:
