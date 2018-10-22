@@ -26,7 +26,6 @@ class ForgeAccess_AdminController
 {
     const TEMPLATE                  = 'access_choice';
     const ACCESS_KEY                = ForgeAccess::CONFIG;
-    const PROJECT_ADMIN_KEY         = ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY;
     const SUPER_PUBLIC_PROJECTS_KEY = ForgeAccess::SUPER_PUBLIC_PROJECTS;
 
     /**
@@ -90,7 +89,6 @@ class ForgeAccess_AdminController
             count($this->user_dao->searchByStatus(PFUser::STATUS_RESTRICTED)),
             ForgeConfig::get(NameTranslator::CONFIG_AUTHENTICATED_LABEL),
             ForgeConfig::get(NameTranslator::CONFIG_REGISTERED_LABEL),
-            ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY),
             ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE),
             ForgeConfig::get(ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT)
         );
@@ -108,7 +106,6 @@ class ForgeAccess_AdminController
 
         $updated  = false;
         $updated |= $this->updateAccessValue();
-        $updated |= $this->updateProjectAdminValue();
 
         if ($updated) {
             $this->response->addFeedback(
@@ -164,15 +161,6 @@ class ForgeAccess_AdminController
         }
 
         return true;
-    }
-
-    /** @return bool true if updated */
-    private function updateProjectAdminValue() {
-        $new_value = $this->getToggleValue(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
-        if ($new_value !== -1) {
-            return $this->manager->updateProjectAdminVisibility($new_value);
-        }
-        return false;
     }
 
     public function updateAnonymousAccess() {

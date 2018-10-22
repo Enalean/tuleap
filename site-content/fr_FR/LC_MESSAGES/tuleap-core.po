@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #, php-format
 msgid ""
@@ -517,6 +517,16 @@ msgstr ""
 "désactiver ce contrôle afin d'éviter de ralentir la vérification de la "
 "conformité d'un mot de passe avec les politiques de sécurité."
 
+msgid ""
+"If, in your organization, the strict privacy of the projects must be "
+"preserved by 'design', then you should uncheck this option so that project "
+"admins cannot disclose confidential resources to other platform users."
+msgstr ""
+"Si, dans votre organisation, la confidentialité des projets doit être "
+"impérativement préservée, alors vous pouvez décocher cette option afin que "
+"les administrateurs projets ne puissent pas divulguer par mégarde des "
+"ressources confidentielles aux autres utilisateurs de la plateforme."
+
 msgid "Image"
 msgstr "Image"
 
@@ -828,6 +838,9 @@ msgstr "Erreur d'accès au projet"
 msgid "Project administration"
 msgstr "Administration du projet"
 
+msgid "Project administrators can choose project visibility"
+msgstr "Les administrateurs de projet peuvent choisir la visibilité du projet"
+
 msgid ""
 "Project admins can't be removed from project. You must remove them from "
 "Project administrators group first."
@@ -885,6 +898,9 @@ msgstr "Projets créés à partir de ce patron"
 
 msgid "Projects in category"
 msgstr "Projets dans la catégorie selectionnée"
+
+msgid "Projects visibility"
+msgstr "Visibilité des projets"
 
 msgid "Public information"
 msgstr "Informations publiques"
@@ -989,6 +1005,9 @@ msgstr ""
 "La soumission de ce formulaire déclenchera l'envoi d'un e-mail à votre "
 "nouvelle adresse incluant un lien à visiter pour confirmer définitivement le "
 "changement."
+
+msgid "Successfully updated."
+msgstr "Mis à jour avec succès."
 
 msgid "System groups"
 msgstr "Groupes système"
@@ -1295,6 +1314,9 @@ msgstr "Vérifiez la valeur du mode d'accessibilité"
 
 msgid "View members"
 msgstr "Voir les membres"
+
+msgid "Visibility"
+msgstr "Visibilité"
 
 msgid ""
 "We are sorry you caught an error, something meaningful was logged for site "

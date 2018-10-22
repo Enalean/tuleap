@@ -156,9 +156,6 @@ admin_main	error_label	Erreurs
 
 admin_main	configure_access_controls	Droits d'accès
 admin_main	platform_access_control	Droits d'accès de la plateforme
-admin_main	projects_visibility	Visibilité des projets
-admin_main	projects_visibility_label	Les administrateurs de projet peuvent choisir la visibilité du projet
-admin_main	projects_visibility_help	Si, dans votre organisation, la confidentialité des projets doit être impérativement préservée, alors vous pouvez décocher cette option afin que les administrateurs projets ne puissent pas divulguer par mégarde des ressources confidentielles aux autres utilisateurs de la plateforme.
 admin_main	localinc_obsolete_message	<h4><i class="fa fa-exclamation-triangle"></i> Votre fichier local.inc n'est pas à jour !</h4><p>Il semble que votre fichier local.inc contient des définitions de variables qui ne sont plus utilisées et pourrait entraîner des confusions.</p><p>Merci d'éditer <code>$1</code> et de supprimer les variables suivantes : <code>$sys_allow_anon</code> et <code>$sys_allow_restricted_users</code>.</p>
 admin_main	access_anonymous_label	Accès anonyme autorisé
 admin_main	access_anonymous_desc	Les utilisateurs anonymes peuvent accéder aux parties publiques de la plateforme.

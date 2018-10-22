@@ -8,12 +8,6 @@
     data-ugroup_authenticated_users="{{ ugroup_authenticated_users }}"
     data-ugroup_registered_users="{{ ugroup_registered_users }}"
 >
-    <input
-        type="hidden"
-        name="project_admin_can_choose_visibility"
-        {{# project_admin_can_choose }}value="1"{{/ project_admin_can_choose }}
-        {{^ project_admin_can_choose }}value="0"{{/ project_admin_can_choose }}
-    >
     {{# csrf_token }}
         {{> csrf_token_input }}
     {{/ csrf_token }}
@@ -113,40 +107,6 @@
                         disabled
                     ><i class="fa fa-save tlp-button-icon"></i>
                     {{ btn_submit }}</button>
-                </div>
-            </section>
-        </div>
-    </div>
-</form>
-
-<form action="" method="POST">
-    <input type="hidden" name="update" value="1">
-    {{# csrf_token }}
-        {{> csrf_token_input }}
-    {{/ csrf_token }}
-
-    <div class="tlp-pane">
-        <div class="tlp-pane-container">
-            <div class="tlp-pane-header">
-                <h1 class="tlp-pane-title"><i class="fa fa-eye tlp-pane-title-icon"></i> {{ projects_visibility }}</h1>
-            </div>
-            <section class="tlp-pane-section">
-                <div class="tlp-form-element">
-                    <label class="tlp-label" for="toggle-project-admin-can-choose-visibility">
-                        {{ projects_visibility_label }}
-                    </label>
-                    <div class="tlp-switch">
-                        <input
-                            type="checkbox"
-                            name="project_admin_can_choose_visibility"
-                            id="toggle-project-admin-can-choose-visibility"
-                            class="tlp-switch-checkbox"
-                            value="1"
-                            {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }}
-                        >
-                        <label for="toggle-project-admin-can-choose-visibility" class="tlp-switch-button" aria-hidden></label>
-                    </div>
-                    <p class="tlp-text-info">{{ projects_visibility_help }}</p>
                 </div>
             </section>
         </div>

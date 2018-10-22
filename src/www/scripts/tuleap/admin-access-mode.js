@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,10 +45,6 @@
             }
         });
 
-        form.find("[name=project_admin_can_choose_visibility]").click(function() {
-            enableSubmitButton();
-        });
-
         form.find("[type=text]").keydown(function() {
             enableSubmitButton();
         });
@@ -56,10 +52,6 @@
         if (current_access_mode === "restricted") {
             $("#siteadmin-access-customize-ugroup-labels").show();
         }
-
-        $("#toggle-project-admin-can-choose-visibility").change(function() {
-            $(this)[0].form.submit();
-        });
 
         $("#toggle-anonymous-can-see-site-homepage").change(function() {
             $(this)[0].form.submit();
