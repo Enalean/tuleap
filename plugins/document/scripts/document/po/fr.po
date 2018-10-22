@@ -18,8 +18,14 @@ msgstr "Administration"
 msgid "Documents"
 msgstr "Documents"
 
+msgid "New document"
+msgstr "Nouveau document"
+
 msgid "Project documentation"
 msgstr "Documentation du projet"
 
-msgid "Project has no documentation yet."
-msgstr "Le projet n'a pas encore de documentation."
+msgid "There is no document here."
+msgstr "Il n'y a pas de documents ici."
+
+msgid "You should start by adding a new one."
+msgstr "Vous devriez commencer par en ajouter un nouveau."

@@ -23,7 +23,7 @@
 import { mapState } from "vuex";
 
 export default {
-    name: "Spinner",
+    name: "DocumentSpinner",
     computed: {
         ...mapState({
             can_show_spinner: state =>

@@ -18,28 +18,37 @@
   -->
 
 <template>
-    <div class="tlp-framed">
-        <error-message />
-        <document-breadcrumb />
-        <spinner />
-        <div class="empty-page">
-            <p class="empty-page-text" v-if="has_loaded_without_error">
-                <translate>Project has no documentation yet.</translate>
-            </p>
+    <div>
+        <document-breadcrumb/>
+        <div class="tlp-framed">
+            <error-message />
+            <document-spinner />
+            <div class="empty-page" v-if="has_loaded_without_error">
+                <empty-docman-svg/>
+                <p class="empty-page-text">
+                    <translate>There is no document here.</translate>
+                    <br/>
+                    <translate>You should start by adding a new one.</translate>
+                </p>
+                <button type="button" class="tlp-button-primary" disabled>
+                    <i class="fa fa-plus tlp-button-icon"></i>
+                    <translate>New document</translate>
+                </button>
+            </div>
         </div>
     </div>
-
 </template>
 <script>
 import { mapState } from "vuex";
 
 import ErrorMessage from "./ErrorMessage.vue";
-import Spinner from "./Spinner.vue";
+import DocumentSpinner from "./DocumentSpinner.vue";
 import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
+import EmptyDocmanSvg from "./EmptyDocmanSvg.vue";
 
 export default {
     name: "App",
-    components: { ErrorMessage, Spinner, DocumentBreadcrumb },
+    components: { ErrorMessage, DocumentSpinner, DocumentBreadcrumb, EmptyDocmanSvg },
     props: {
         projectId: Number,
         projectName: String,

@@ -11,8 +11,14 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
+msgid "New document"
+msgstr ""
+
 msgid "Project documentation"
 msgstr ""
 
-msgid "Project has no documentation yet."
+msgid "There is no document here."
+msgstr ""
+
+msgid "You should start by adding a new one."
 msgstr ""

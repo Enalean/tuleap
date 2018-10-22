@@ -24,7 +24,7 @@
                v-bind:href="document_tree_url"
                v-bind:title="document_tree_title"
             >
-                <i class="breadcrumb-link-icon fa fa-file-text-o"></i>
+                <i class="breadcrumb-link-icon fa fa-folder-open"></i>
                 <translate>Documents</translate>
             </a>
             <nav class="breadcrumb-switch-menu" v-if="is_admin">
