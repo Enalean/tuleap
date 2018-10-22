@@ -1,1 +1,4 @@
 plugin_project_certification	project_owner_description	Project owner is accountable for project visibility, permissions & groups membership.
+
+plugin_project_certification	email_status_change_title	Project status updated
+plugin_project_certification	email_status_change_body	The status of the project $1 has been updated.
