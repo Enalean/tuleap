@@ -47,12 +47,11 @@
                     v-for="artifact of artifacts"
                     v-bind:artifact="artifact"
                     v-bind:key="artifact.id"
-                ></artifact-table-row>
+                />
             </tbody>
         </table>
         <div class="tlp-pagination">
-            <button
-                    class="tlp-button-primary tlp-button-outline tlp-button-small"
+            <button class="tlp-button-primary tlp-button-outline tlp-button-small"
                     type="button"
                     v-if="is_load_more_displayed === true"
                     v-on:click="loadMoreArtifacts"
@@ -66,17 +65,16 @@
 </template>
 
 <script>
+import moment from "moment";
+import { mapState } from "vuex";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
 import { getReportContent, getQueryResult } from "./rest-querier.js";
-import moment from "moment";
 import { getUserPreferredDateFormat } from "./user-service.js";
 
 export default {
     name: "ArtifactTable",
     components: { ArtifactTableRow },
     props: {
-        isReportSaved: Boolean,
-        isReportInReadingMode: Boolean,
         reportId: String,
         writingCrossTrackerReport: Object
     },
@@ -91,14 +89,15 @@ export default {
         };
     },
     computed: {
+        ...mapState(["reading_mode", "is_report_saved"]),
         report_state() {
             // We just need to react to certain changes in this
-            return [this.isReportInReadingMode, this.isReportSaved];
+            return [this.reading_mode, this.is_report_saved];
         }
     },
     watch: {
         report_state() {
-            if (this.isReportInReadingMode === true) {
+            if (this.reading_mode === true) {
                 this.refreshArtifactList();
             }
         }
@@ -142,7 +141,7 @@ export default {
         },
 
         getArtifactsFromReportOrUnsavedQuery() {
-            if (this.isReportSaved === true) {
+            if (this.is_report_saved === true) {
                 return getReportContent(this.reportId, this.limit, this.current_offset);
             }
 

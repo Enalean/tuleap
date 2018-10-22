@@ -31,29 +31,26 @@
             v-if="is_reading_mode_shown"
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            v-bind:is-report-saved="is_saved"
             v-bind:is-report-in-error="has_error"
             v-bind:report-id="reportId"
             v-on:switchToWritingMode="switchToWritingMode"
             v-on:saved="reportSaved"
             v-on:cancelled="reportCancelled"
             v-on:restError="showRestError"
-        ></reading-mode>
+        />
         <writing-mode
             v-if="! reading_mode"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:switchToReadingMode="switchToReadingMode"
             v-on:error="showError"
             v-on:clearErrors="hideFeedbacks"
-        ></writing-mode>
+        />
         <artifact-table
             v-if="! is_loading"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-bind:is-report-saved="is_saved"
-            v-bind:is-report-in-reading-mode="reading_mode"
             v-bind:report-id="reportId"
             v-on:restError="showRestError"
-        ></artifact-table>
+        />
     </div>
 </template>
 <script>
@@ -76,13 +73,12 @@ export default {
     data() {
         return {
             is_loading: true,
-            is_saved: true,
             error_message: null,
             success_message: null
         };
     },
     computed: {
-        ...mapState(["reading_mode"]),
+        ...mapState(["reading_mode", "is_report_saved"]),
         is_user_anonymous() {
             return isAnonymous();
         },
@@ -117,8 +113,7 @@ export default {
                 this.readingCrossTrackerReport.duplicateFromReport(this.writingCrossTrackerReport);
             }
             this.hideFeedbacks();
-            this.is_saved = saved_state;
-            this.$store.commit("switchToReadingMode");
+            this.$store.commit("switchToReadingMode", { saved_state });
         },
 
         async loadBackendReport() {
@@ -148,13 +143,13 @@ export default {
         reportSaved() {
             this.initReports();
             this.hideFeedbacks();
-            this.is_saved = true;
             this.success_message = this.$gettext("Report has been successfully saved");
+            this.$store.commit("switchReportToSaved");
         },
 
         reportCancelled() {
             this.hideFeedbacks();
-            this.is_saved = true;
+            this.$store.commit("switchReportToSaved");
         },
 
         showError(error) {

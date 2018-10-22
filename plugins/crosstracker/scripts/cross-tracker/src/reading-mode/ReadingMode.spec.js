@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import { rewire$isAnonymous, restore as restoreUser } from "../user-service.js";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";
@@ -43,6 +44,7 @@ describe("ReadingMode", () => {
 
     function instantiateComponent() {
         const vm = new ReadingModeElement({
+            store: createStore(),
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,

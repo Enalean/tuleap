@@ -19,6 +19,7 @@
 
 import Vue from "vue";
 import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { createStore } from "./store/index.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";
 import {
@@ -28,13 +29,12 @@ import {
 } from "./rest-querier.js";
 
 describe("ArtifactTable", () => {
-    let Widget, reportId, writingCrossTrackerReport, isReportSaved, getReport, getQuery;
+    let Widget, reportId, writingCrossTrackerReport, getReport, getQuery;
 
     beforeEach(() => {
         Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
         reportId = "86";
-        isReportSaved = true;
 
         getReport = jasmine.createSpy("getReportContent");
         mockFetchSuccess(getReport);
@@ -50,8 +50,8 @@ describe("ArtifactTable", () => {
 
     function instantiateComponent() {
         const vm = new Widget({
+            store: createStore(),
             propsData: {
-                isReportSaved,
                 reportId,
                 writingCrossTrackerReport
             }
@@ -63,8 +63,10 @@ describe("ArtifactTable", () => {
 
     describe("loadArtifacts() -", () => {
         it("Given report is saved, it loads artifacts of report", () => {
-            isReportSaved = true;
             const vm = instantiateComponent();
+            vm.$store.replaceState({
+                is_report_saved: true
+            });
 
             vm.loadArtifacts();
 
@@ -72,8 +74,10 @@ describe("ArtifactTable", () => {
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
-            isReportSaved = false;
             const vm = instantiateComponent();
+            vm.$store.replaceState({
+                is_report_saved: false
+            });
 
             vm.loadArtifacts();
 

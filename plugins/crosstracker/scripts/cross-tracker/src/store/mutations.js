@@ -18,11 +18,16 @@
  */
 
 export default {
-    switchToReadingMode(state) {
+    switchToReadingMode(state, { saved_state }) {
         state.reading_mode = true;
+        state.is_report_saved = saved_state;
     },
 
     switchToWritingMode(state) {
         state.reading_mode = false;
+    },
+
+    switchReportToSaved(state) {
+        state.is_report_saved = true;
     }
 };
