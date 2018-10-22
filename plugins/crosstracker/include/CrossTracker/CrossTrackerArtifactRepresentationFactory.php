@@ -18,8 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\REST\v1;
+namespace Tuleap\CrossTracker;
 
+use Tuleap\CrossTracker\Report\CSV\CSVRepresentation;
+use Tuleap\CrossTracker\Report\CSV\PaginatedCollectionOfCSVRepresentations;
+use Tuleap\CrossTracker\REST\v1\CrossTrackerArtifactReportRepresentation;
+use Tuleap\CrossTracker\REST\v1\PaginatedCollectionOfCrossTrackerArtifacts;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 class CrossTrackerArtifactRepresentationFactory
@@ -40,5 +44,24 @@ class CrossTrackerArtifactRepresentationFactory
         }
 
         return new PaginatedCollectionOfCrossTrackerArtifacts($representations, $collection->getTotalSize());
+    }
+
+    public function buildRepresentationsForCSV(ArtifactMatchingReportCollection $collection, \PFUser $current_user)
+    {
+        $header_line = new CSVRepresentation();
+        $header_line->build(["id"], $current_user);
+        $representations = [$header_line];
+
+        foreach ($collection->getArtifacts() as $artifact) {
+            if (! $artifact->userCanView($current_user)) {
+                continue;
+            }
+            $csv_representation = new CSVRepresentation();
+            $values = [$artifact->getId()];
+            $csv_representation->build($values, $current_user);
+            $representations[] = $csv_representation;
+        }
+
+        return new PaginatedCollectionOfCSVRepresentations($representations, $collection->getTotalSize());
     }
 }

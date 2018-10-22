@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 
 #, php-format
 msgid "%s cannot be compared to '%s'."
@@ -44,11 +44,23 @@ msgstr "%s ne peut pas être comparé à '%s'."
 msgid "%s is not supported for the operator %s."
 msgstr "%s ne supporte pas l'opérateur %s."
 
+msgid ""
+"'limit' and 'offset' are required parameters. Please add them in the query."
+msgstr ""
+"'limit' et 'offset' sont des paramètres requis. Merci de les ajouter à la "
+"requête."
+
 msgid "Cross trackers search"
 msgstr "Recherche multi trackers"
 
 msgid "Error while parsing the query"
 msgstr "Erreur pendant l'analyse de la requête"
+
+msgid "Invalid value for 'limit'. It must be an integer"
+msgstr "La valeur pour 'limit' est incorrecte. 'limit' doit être un entier"
+
+msgid "Invalid value for 'offset'. It must be an integer"
+msgstr "La valeur pour 'offset' est incorrecte. 'offset' doit être un entier"
 
 #, php-format
 msgid ""
@@ -204,11 +216,22 @@ msgstr "Un tracker ou plus n'a pas été trouvé : %s"
 msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
 
+msgid "Project not found"
+msgstr "Le projet n'a pas été trouvé"
+
+#, php-format
+msgid "Report with id %d not found"
+msgstr "Le rapport avec l'identifiant %d n'a pas été trouvé"
+
 msgid "Search artifacts that are in different trackers"
 msgstr "Permet la recherche d'artefacts à travers plusieurs outils de suivi"
 
 msgid "Search into multiple trackers and multiple projects."
 msgstr "Rechercher dans plusieurs outils de suivi et plusieurs projets."
+
+#, php-format
+msgid "The maximum value for 'limit' is %d"
+msgstr "La valeur maximum pour 'limit' est %d"
 
 msgid "You cannot access all projects of the search"
 msgstr "Vous ne pouvez pas accéder à tous les projets de cette recherche"
@@ -226,3 +249,6 @@ msgstr ""
 msgid "You cannot access all trackers of the search"
 msgstr ""
 "Vous ne pouvez pas accéder à tous les outils de suivi de cette recherche"
+
+msgid "You don't have permission to access this project"
+msgstr "Vous n'avez pas la permission d'accéder à ce projet"

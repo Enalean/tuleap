@@ -30,10 +30,20 @@ msgstr ""
 msgid "%s is not supported for the operator %s."
 msgstr ""
 
+msgid ""
+"'limit' and 'offset' are required parameters. Please add them in the query."
+msgstr ""
+
 msgid "Cross trackers search"
 msgstr ""
 
 msgid "Error while parsing the query"
+msgstr ""
+
+msgid "Invalid value for 'limit'. It must be an integer"
+msgstr ""
+
+msgid "Invalid value for 'offset'. It must be an integer"
 msgstr ""
 
 #, php-format
@@ -142,10 +152,21 @@ msgstr ""
 msgid "One tracker or more is duplicated in list: %s"
 msgstr ""
 
+msgid "Project not found"
+msgstr ""
+
+#, php-format
+msgid "Report with id %d not found"
+msgstr ""
+
 msgid "Search artifacts that are in different trackers"
 msgstr ""
 
 msgid "Search into multiple trackers and multiple projects."
+msgstr ""
+
+#, php-format
+msgid "The maximum value for 'limit' is %d"
 msgstr ""
 
 msgid "You cannot access all projects of the search"
@@ -158,4 +179,7 @@ msgid "You cannot access all the fields used to filter the search"
 msgstr ""
 
 msgid "You cannot access all trackers of the search"
+msgstr ""
+
+msgid "You don't have permission to access this project"
 msgstr ""

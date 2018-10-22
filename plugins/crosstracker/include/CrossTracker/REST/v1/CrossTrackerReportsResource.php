@@ -32,6 +32,7 @@ use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
+use Tuleap\CrossTracker\CrossTrackerArtifactRepresentationFactory;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
