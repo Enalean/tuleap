@@ -63,7 +63,8 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $this->addHook(ProjectUGroupMemberUpdatable::NAME);
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
         $this->addHook(UserWithStarBadgeCollector::NAME);
-        $this->addHook('project_is_suspended_or_pending');
+        $this->addHook('project_is_suspended');
+        $this->addHook('project_is_pending');
         $this->addHook('project_is_active');
         $this->addHook('project_is_deleted');
 
@@ -174,7 +175,12 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $finder->findBadgedUser($collector);
     }
 
-    public function project_is_suspended_or_pending(array $params) //phpcs:ignore
+    public function project_is_suspended(array $params) //phpcs:ignore
+    {
+        $this->notifyProjectMembers($params);
+    }
+
+    public function project_is_pending(array $params) //phpcs:ignore
     {
         $this->notifyProjectMembers($params);
     }

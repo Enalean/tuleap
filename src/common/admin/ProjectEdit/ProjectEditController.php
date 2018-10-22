@@ -124,9 +124,14 @@ class ProjectEditController
                 'group_id' => $project->group_id
             ];
 
-            if ($form_status === Project::STATUS_SUSPENDED || $form_status == Project::STATUS_PENDING) {
+            if ($form_status === Project::STATUS_SUSPENDED) {
                 $this->event_manager->processEvent(
-                    'project_is_suspended_or_pending',
+                    'project_is_suspended',
+                    $event_params
+                );
+            } else if ($form_status === Project::STATUS_PENDING) {
+                $this->event_manager->processEvent(
+                    'project_is_pending',
                     $event_params
                 );
             } else if ($form_status === Project::STATUS_ACTIVE) {
