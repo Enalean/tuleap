@@ -1,6 +1,30 @@
 {
     "name": "document",
     "themes": {
+        "BurningParrot": {
+            "files": [
+                "themes/BurningParrot/document-blue.scss",
+                "themes/BurningParrot/document-blue-condensed.scss",
+                "themes/BurningParrot/document-green.scss",
+                "themes/BurningParrot/document-green-condensed.scss",
+                "themes/BurningParrot/document-grey.scss",
+                "themes/BurningParrot/document-grey-condensed.scss",
+                "themes/BurningParrot/document-orange.scss",
+                "themes/BurningParrot/document-orange-condensed.scss",
+                "themes/BurningParrot/document-purple.scss",
+                "themes/BurningParrot/document-purple-condensed.scss",
+                "themes/BurningParrot/document-red.scss",
+                "themes/BurningParrot/document-red-condensed.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/common/tlp/src/scss"
+            ],
+            "watched_includes": [
+                "themes/BurningParrot/**/_*.scss"
+            ],
+            "target_dir": "../../src/www/assets/document/BurningParrot",
+            "is_revisioned": true
+        }
     },
     "gettext-vue": {
         "document": {

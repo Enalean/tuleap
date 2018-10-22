@@ -16,39 +16,18 @@
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <template>
-    <div class="tlp-framed">
-        <error-message />
-        <spinner />
-        <div class="empty-page">
-            <p class="empty-page-text" v-if="has_loaded_without_error">
-                <translate>Project has no documentation yet.</translate>
-            </p>
-        </div>
-    </div>
+    <div class="document-list-loading" v-if="can_show_spinner"></div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
-
-import ErrorMessage from "./ErrorMessage.vue";
-import Spinner from "./Spinner.vue";
+import { mapState } from "vuex";
 
 export default {
-    name: "App",
-    components: { ErrorMessage, Spinner },
-    props: {
-        projectId: String
-    },
-    mounted() {
-        this.$store.commit("setProjectId", this.projectId);
-        this.$store.dispatch("loadRootDocumentId");
-    },
+    name: "Spinner",
     computed: {
-        ...mapGetters(["hasError"]),
         ...mapState({
-            has_loaded_without_error: (state, getters) =>
-                !state.is_loading_root_document && !getters.hasError
+            can_show_spinner: state =>
+                state.error_message !== null && state.is_loading_root_document
         })
     }
 };

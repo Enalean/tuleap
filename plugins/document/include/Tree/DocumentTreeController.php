@@ -24,6 +24,7 @@ use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
@@ -48,13 +49,14 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
 
         $project = $this->getProject($request, $variables);
 
+        $this->includeCssFiles($layout);
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'document-tree',
-            []
+            ["project_id" => $project->getID()]
         );
 
         $layout->footer(["without_content" => true]);
@@ -102,6 +104,19 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 'group'  => $project->getID(),
                 'toptab' => 'docman'
             ]
+        );
+    }
+
+    private function includeCssFiles(BaseLayout $layout)
+    {
+        $layout->addCssAsset(
+            new CssAsset(
+                new IncludeAssets(
+                    __DIR__ . '/../../../../src/www/assets/document/BurningParrot',
+                    '/assets/document/BurningParrot'
+                ),
+                'document'
+            )
         );
     }
 }
