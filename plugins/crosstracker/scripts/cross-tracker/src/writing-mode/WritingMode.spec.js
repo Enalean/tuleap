@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import { createStore } from "../store/index.js";
 import WritingMode from "./WritingMode.vue";
 import {
     default as WritingCrossTrackerReport,
@@ -34,6 +35,7 @@ describe("WritingMode", () => {
 
     function instantiateComponent() {
         const vm = new Writing({
+            store: createStore(),
             propsData: {
                 writingCrossTrackerReport
             }
@@ -106,12 +108,12 @@ describe("WritingMode", () => {
             spyOn(writingCrossTrackerReport, "removeTracker").and.callThrough();
             const tracker = { tracker_id: 46 };
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            spyOn(vm.$store, "commit");
 
             vm.removeTrackerFromSelection(tracker);
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
-            expect(vm.$emit).toHaveBeenCalledWith("clearErrors");
+            expect(vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
             expect(vm.selected_trackers).toEqual([
                 {
                     tracker_id: 61,
@@ -154,14 +156,14 @@ describe("WritingMode", () => {
             const vm = instantiateComponent();
             const selected_project = { id: 656, label: "ergatogyne" };
             const selected_tracker = { id: 53, label: "observingly" };
-            spyOn(vm, "$emit");
+            spyOn(vm.$store, "commit");
 
             vm.addTrackerToSelection({
                 selected_project,
                 selected_tracker
             });
 
-            expect(vm.$emit).toHaveBeenCalledWith("error", jasmine.any(String));
+            expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", jasmine.any(String));
         });
     });
 });

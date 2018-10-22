@@ -18,12 +18,14 @@
  */
 
 import Vue from "vue";
+import { mockFetchError } from "tlp-mocks";
+import { createStore } from "../store/index.js";
 import TrackerSelection from "./TrackerSelection.vue";
 import { rewire$getSortedProjectsIAmMemberOf, restore } from "./projects-cache.js";
 import { rewire$getTrackersOfProject, restore as restoreRest } from "../rest-querier.js";
 
 describe("TrackerSelection", () => {
-    let Selection, errorDisplayer, selectedTrackers;
+    let Selection, selectedTrackers;
 
     beforeEach(() => {
         Selection = Vue.extend(TrackerSelection);
@@ -32,11 +34,13 @@ describe("TrackerSelection", () => {
 
     function instantiateComponent() {
         const vm = new Selection({
+            store: createStore(),
             propsData: {
                 selectedTrackers
             }
         });
         vm.$mount();
+        spyOn(vm.$store, "commit");
 
         return vm;
     }
@@ -80,21 +84,17 @@ describe("TrackerSelection", () => {
             expect(vm.is_loader_shown).toBe(false);
         });
 
-        it("when there is a REST error, it will be displayed", () => {
-            getProjects.and.returnValue(Promise.reject(500));
+        it("when there is a REST error, then it will be displayed", () => {
+            mockFetchError(getProjects, { status: 500 });
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
 
-            vm.loadProjects().then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.$emit).toHaveBeenCalledWith("error", jasmine.any(String));
-                    expect(errorDisplayer.displayError).toHaveBeenCalled();
-                    expect(vm.is_loader_shown).toBe(false);
-                }
-            );
+            return vm.loadProjects().then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith(
+                    "setErrorMessage",
+                    jasmine.any(String)
+                );
+                expect(vm.is_loader_shown).toBe(false);
+            });
         });
     });
 
@@ -133,20 +133,17 @@ describe("TrackerSelection", () => {
         });
 
         it("when there is a REST error, it will be displayed", () => {
-            getTrackers.and.returnValue(Promise.reject(500));
+            mockFetchError(getTrackers, { status: 500 });
             const project_id = 34;
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
 
-            vm.loadTrackers(project_id).then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.$emit).toHaveBeenCalledWith("error", jasmine.any(String));
-                    expect(vm.is_loader_shown).toBe(false);
-                }
-            );
+            return vm.loadTrackers(project_id).then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith(
+                    "setErrorMessage",
+                    jasmine.any(String)
+                );
+                expect(vm.is_loader_shown).toBe(false);
+            });
         });
     });
 

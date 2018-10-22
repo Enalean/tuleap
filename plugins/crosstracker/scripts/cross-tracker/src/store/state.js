@@ -20,7 +20,9 @@
 const state = {
     report_id: null,
     reading_mode: true,
-    is_report_saved: true
+    is_report_saved: true,
+    error_message: null,
+    success_message: null
 };
 
 export default state;

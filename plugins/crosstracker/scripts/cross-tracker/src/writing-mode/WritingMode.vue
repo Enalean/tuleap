@@ -22,16 +22,15 @@
         <tracker-selection
             v-bind:selected-trackers="selected_trackers"
             v-on:trackerAdded="addTrackerToSelection"
-            v-on:error="$emit('error', $event)"
-        ></tracker-selection>
+        />
         <tracker-list-writing-mode
             v-bind:trackers="selected_trackers"
             v-on:trackerRemoved="removeTrackerFromSelection"
-        ></tracker-list-writing-mode>
+        />
         <query-editor
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
             v-on:triggerSearch="search"
-        ></query-editor>
+        />
         <div class="writing-mode-actions">
             <button
                 class="tlp-button-primary tlp-button-outline writing-mode-actions-cancel"
@@ -81,8 +80,8 @@ export default {
                 this.updateSelectedTrackers();
             } catch (error) {
                 if (error instanceof TooManyTrackersSelectedError) {
-                    this.$emit(
-                        "error",
+                    this.$store.commit(
+                        "setErrorMessage",
                         this.$gettext("Tracker selection is limited to 10 trackers")
                     );
                 } else {
@@ -94,7 +93,7 @@ export default {
         removeTrackerFromSelection({ tracker_id }) {
             this.writingCrossTrackerReport.removeTracker(tracker_id);
             this.updateSelectedTrackers();
-            this.$emit("clearErrors");
+            this.$store.commit("resetFeedbacks");
         },
 
         updateSelectedTrackers() {

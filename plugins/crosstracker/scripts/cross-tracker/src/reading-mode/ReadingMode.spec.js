@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  */
 
 import Vue from "vue";
+import { mockFetchError } from "tlp-mocks";
 import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
 import { rewire$isAnonymous, restore as restoreUser } from "../user-service.js";
@@ -30,14 +31,12 @@ describe("ReadingMode", () => {
         isAnonymous,
         backendCrossTrackerReport,
         readingCrossTrackerReport,
-        isReportInError,
         updateReport;
 
     beforeEach(() => {
         ReadingModeElement = Vue.extend(ReadingMode);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
-        isReportInError = false;
     });
 
     function instantiateComponent() {
@@ -45,8 +44,7 @@ describe("ReadingMode", () => {
             store: createStore(),
             propsData: {
                 backendCrossTrackerReport,
-                readingCrossTrackerReport,
-                isReportInError
+                readingCrossTrackerReport
             }
         });
         vm.$mount();
@@ -120,41 +118,46 @@ describe("ReadingMode", () => {
         });
 
         it("Given the report is in error, then nothing will happen", async () => {
-            isReportInError = true;
             const vm = instantiateComponent();
+            vm.$store.replaceState({
+                error_message: "Error"
+            });
 
             await vm.saveReport();
             expect(updateReport).not.toHaveBeenCalled();
         });
 
-        it("When there is a REST error, an event will be emitted", () => {
-            updateReport.and.returnValue(Promise.reject(500));
-            const vm = instantiateComponent();
-            spyOn(vm, "$emit");
-
-            vm.saveReport().then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.$emit).toHaveBeenCalledWith("restError", 500);
+        it("When there is a REST error, then it will be shown", () => {
+            const error_json = {
+                error: {
+                    message: "Report not found"
                 }
-            );
+            };
+            mockFetchError(updateReport, { error_json });
+            const vm = instantiateComponent();
+            spyOn(vm.$store, "commit");
+
+            return vm.saveReport().then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith(
+                    "setErrorMessage",
+                    "Report not found"
+                );
+            });
         });
     });
 
     describe("cancelReport() -", () => {
-        it("when I click on 'Cancel', then the reading report will be reset and an event will be emitted", () => {
+        it("when I click on 'Cancel', then the reading report will be reset", () => {
             spyOn(readingCrossTrackerReport, "duplicateFromReport");
             const vm = instantiateComponent();
-            spyOn(vm, "$emit");
+            spyOn(vm.$store, "commit");
 
             vm.cancelReport();
 
             expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 backendCrossTrackerReport
             );
-            expect(vm.$emit).toHaveBeenCalledWith("cancelled");
+            expect(vm.$store.commit).toHaveBeenCalledWith("discardUnsavedReport");
         });
     });
 });

@@ -29,18 +29,18 @@ import {
 } from "./rest-querier.js";
 
 describe("ArtifactTable", () => {
-    let Widget, writingCrossTrackerReport, getReport, getQuery;
+    let Widget, writingCrossTrackerReport, getReportContent, getQueryResult;
 
     beforeEach(() => {
         Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
 
-        getReport = jasmine.createSpy("getReportContent");
-        mockFetchSuccess(getReport);
-        rewire$getReportContent(getReport);
+        getReportContent = jasmine.createSpy("getReportContent");
+        mockFetchSuccess(getReportContent);
+        rewire$getReportContent(getReportContent);
 
-        getQuery = jasmine.createSpy("getQueryResult");
-        rewire$getQueryResult(getQuery);
+        getQueryResult = jasmine.createSpy("getQueryResult");
+        rewire$getQueryResult(getQueryResult);
     });
 
     afterEach(() => {
@@ -68,7 +68,7 @@ describe("ArtifactTable", () => {
 
             vm.loadArtifacts();
 
-            expect(getReport).toHaveBeenCalled();
+            expect(getReportContent).toHaveBeenCalled();
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
@@ -79,24 +79,38 @@ describe("ArtifactTable", () => {
 
             vm.loadArtifacts();
 
-            expect(getQuery).toHaveBeenCalled();
+            expect(getQueryResult).toHaveBeenCalled();
         });
 
         it("when there is a REST error, it will be displayed", () => {
-            mockFetchError(getReport, { status: 500 });
+            mockFetchError(getReportContent, { status: 500 });
             const vm = instantiateComponent();
+            spyOn(vm.$store, "commit");
 
-            vm.loadArtifacts().then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.$emit).toHaveBeenCalledWith(
-                        "restError",
-                        "Error while fetching the query result"
-                    );
+            return vm.loadArtifacts().then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith(
+                    "setErrorMessage",
+                    "An error occurred"
+                );
+            });
+        });
+
+        it("when there is a translated REST error, it will be shown", () => {
+            const vm = instantiateComponent();
+            const error_json = {
+                error: {
+                    i18n_error_message: "Error while parsing the query"
                 }
-            );
+            };
+            mockFetchError(getReportContent, { status: 400, error_json });
+            spyOn(vm.$store, "commit");
+
+            return vm.loadArtifacts().then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith(
+                    "setErrorMessage",
+                    "Error while parsing the query"
+                );
+            });
         });
     });
 });

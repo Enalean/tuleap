@@ -131,8 +131,18 @@ export default {
                 this.artifacts = this.artifacts.concat(new_artifacts);
             } catch (error) {
                 this.is_load_more_displayed = false;
-                this.$emit("restError", error);
-                throw error;
+                if (error.hasOwnProperty("response")) {
+                    const error_json = await error.response.json();
+                    if (
+                        error_json &&
+                        error_json.hasOwnProperty("error") &&
+                        error_json.error.hasOwnProperty("i18n_error_message")
+                    ) {
+                        this.$store.commit("setErrorMessage", error_json.error.i18n_error_message);
+                    } else {
+                        this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));
+                    }
+                }
             } finally {
                 this.is_loading = false;
                 this.is_loading_more = false;

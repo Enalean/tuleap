@@ -72,6 +72,7 @@ describe("CrossTrackerWidget", () => {
             }
         });
         vm.$mount();
+        spyOn(vm.$store, "commit");
 
         return vm;
     }
@@ -86,7 +87,7 @@ describe("CrossTrackerWidget", () => {
             restoreUser();
         });
 
-        it("when I switch to the writing mode, then the  writing report will be updated and the feedbacks hidden", () => {
+        it("when I switch to the writing mode, then the  writing report will be updated and a mutation will be committed", () => {
             const vm = instantiateComponent();
 
             vm.switchToWritingMode();
@@ -94,9 +95,7 @@ describe("CrossTrackerWidget", () => {
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 readingCrossTrackerReport
             );
-            expect(vm.error_message).toBe(null);
-            expect(vm.success_message).toBe(null);
-            expect(vm.reading_mode).toBe(false);
+            expect(vm.$store.commit).toHaveBeenCalledWith("switchToWritingMode");
         });
 
         it("Given I am browsing anonymously, when I try to switch to writing mode, then nothing will happen", () => {
@@ -111,32 +110,28 @@ describe("CrossTrackerWidget", () => {
     });
 
     describe("switchToReadingMode() -", () => {
-        it("When I switch to the reading mode with saved state, then the writing report will be updated and the feedbacks hidden", () => {
+        it("When I switch to the reading mode with saved state, then the writing report will be updated and a mutation will be committed", () => {
             const vm = instantiateComponent();
 
-            vm.switchToReadingMode({ saved_state: true });
+            const payload = { saved_state: true };
+            vm.switchToReadingMode(payload);
 
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 readingCrossTrackerReport
             );
-            expect(vm.is_report_saved).toBe(true);
-            expect(vm.error_message).toBe(null);
-            expect(vm.success_message).toBe(null);
-            expect(vm.reading_mode).toBe(true);
+            expect(vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", payload);
         });
 
-        it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated and the feedbacks hidden", () => {
+        it("When I switch to the reading mode with unsaved state, then a batch of artifacts will be loaded, the reading report will be updated and a mutation will be committed", () => {
             const vm = instantiateComponent();
 
-            vm.switchToReadingMode({ saved_state: false });
+            const payload = { saved_state: false };
+            vm.switchToReadingMode(payload);
 
             expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 writingCrossTrackerReport
             );
-            expect(vm.is_report_saved).toBe(false);
-            expect(vm.error_message).toBe(null);
-            expect(vm.success_message).toBe(null);
-            expect(vm.reading_mode).toBe(true);
+            expect(vm.$store.commit).toHaveBeenCalledWith("switchToReadingMode", payload);
         });
     });
 
@@ -172,49 +167,22 @@ describe("CrossTrackerWidget", () => {
         });
 
         it("When there is a REST error, it will be shown", () => {
-            const i18n_error_message = "Error while parsing the query";
+            const message = "Report 41 not found";
             mockFetchError(getReport, {
                 error_json: {
-                    error: { i18n_error_message }
+                    error: { message }
                 }
             });
             const vm = instantiateComponent();
 
-            vm.loadBackendReport().then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.error_message).toEqual(i18n_error_message);
-                }
-            );
-        });
-
-        it("When there is an error in REST error, a generic error message will be shown", () => {
-            getReport.and.returnValue(
-                Promise.reject({
-                    response: {
-                        json() {
-                            return Promise.reject();
-                        }
-                    }
-                })
-            );
-            const vm = instantiateComponent();
-
-            vm.loadBackendReport().then(
-                () => {
-                    fail();
-                },
-                () => {
-                    expect(vm.error_message).toEqual("An error occured");
-                }
-            );
+            return vm.loadBackendReport().then(() => {
+                expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", message);
+            });
         });
     });
 
     describe("reportSaved() -", () => {
-        it("when the report is saved, then the feedbacks will be hidden and a success message will be shown", () => {
+        it("when the report is saved, then the reports will be updated and a mutation will be committed", () => {
             const vm = instantiateComponent();
 
             vm.reportSaved();
@@ -225,21 +193,10 @@ describe("CrossTrackerWidget", () => {
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 readingCrossTrackerReport
             );
-            expect(vm.error_message).toBe(null);
-            expect(vm.is_report_saved).toBe(true);
-            expect(vm.success_message).toEqual(jasmine.any(String));
-        });
-    });
-
-    describe("reportCancelled() -", () => {
-        it("when the 'Cancel' button is clicked in Reading mode, then the feedbacks will be hidden", () => {
-            const vm = instantiateComponent();
-
-            vm.reportCancelled();
-
-            expect(vm.error_message).toBe(null);
-            expect(vm.success_message).toBe(null);
-            expect(vm.is_report_saved).toBe(true);
+            expect(vm.$store.commit).toHaveBeenCalledWith(
+                "switchReportToSaved",
+                jasmine.any(String)
+            );
         });
     });
 });

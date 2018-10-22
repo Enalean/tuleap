@@ -57,8 +57,7 @@ export default {
     components: { TrackerListReadingMode },
     props: {
         backendCrossTrackerReport: Object,
-        readingCrossTrackerReport: Object,
-        isReportInError: Boolean
+        readingCrossTrackerReport: Object
     },
     data() {
         return {
@@ -74,7 +73,7 @@ export default {
             return this.readingCrossTrackerReport.expert_query !== "";
         },
         is_save_disabled() {
-            return this.is_loading || this.isReportInError;
+            return this.is_loading || this.$store.getters.has_error_message;
         }
     },
     methods: {
@@ -106,8 +105,10 @@ export default {
 
                 this.$emit("saved");
             } catch (error) {
-                this.$emit("restError", error);
-                throw error;
+                if (error.hasOwnProperty("response")) {
+                    const error_json = await error.response.json();
+                    this.$store.commit("setErrorMessage", error_json.error.message);
+                }
             } finally {
                 this.is_loading = false;
             }
@@ -115,7 +116,7 @@ export default {
 
         cancelReport() {
             this.readingCrossTrackerReport.duplicateFromReport(this.backendCrossTrackerReport);
-            this.$emit("cancelled");
+            this.$store.commit("discardUnsavedReport");
         }
     }
 };
