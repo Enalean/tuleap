@@ -841,9 +841,6 @@ msgstr "Modération de la création de projets"
 msgid "Project creation moderation settings"
 msgstr "Paramètres de création de projets"
 
-msgid "Project creation settings"
-msgstr "Paramètres de création de projets"
-
 msgid "Project does not exist"
 msgstr "Le projet n'existe pas"
 
@@ -864,6 +861,9 @@ msgstr "Nom du projet..."
 
 msgid "Project registration is disabled"
 msgstr "L'enregistrement de project est désactivé"
+
+msgid "Project settings"
+msgstr "Configuration des projets"
 
 msgid "Project templates"
 msgstr "Patrons de projet"
