@@ -61,6 +61,8 @@ include_exit	project_status_D	Ce projet est supprimé
 include_exit	project_status_P	Ce projet est en attente
 include_exit	project_status_H	Ce projet est suspendu
 include_exit	project_status_s	Ceci est un projet système
+
+include_exit	project_suspended_cutom_message	Tous les accès à ses ressources sont temporairement désactivés.
 #
 #-----------------------------------------------
 # Script: SF/www/include/features_boxes.php

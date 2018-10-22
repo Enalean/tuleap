@@ -21,12 +21,14 @@
 
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Error\PermissionDeniedPrivateProjectController;
+use Tuleap\error\ProjectAccessSuspendedController;
 use Tuleap\Project\Admin\MembershipDelegationDao;
+use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
- * (anonymous, user status, project privacy, ...) and manage redirection when needed  
+ * (anonymous, user status, project privacy, ...) and manage redirection when needed
  */
 class URLVerification {
 
@@ -154,7 +156,7 @@ class URLVerification {
      *
      * This method returns the ideal URL to use to access a ressource. It doesn't
      * check if the URL is valid or not.
-     * It conserves the same entree for protocol (i.e host or  request)  when it not has 
+     * It conserves the same entree for protocol (i.e host or  request)  when it not has
      * been modified by one of the methods dedicated to verify its validity.
      *
      * @param Array $server
@@ -295,7 +297,7 @@ class URLVerification {
 
         // Restricted users cannot access any page belonging to a project they are not a member of.
         // In addition, the following URLs are forbidden (value overriden in site-content file)
-        $forbidden_url = array( 
+        $forbidden_url = array(
           '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
           '/project/register.php',    // Register a new project
           '/export',      // Codendi XML feeds
@@ -303,7 +305,7 @@ class URLVerification {
           );
         // Default values are very restrictive, but they can be overriden in the site-content file
         // Default support project is project 1.
-        $allow_welcome_page=false;       // Allow access to welcome page 
+        $allow_welcome_page=false;       // Allow access to welcome page
         $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
         $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
         $allow_access_to_project_forums      = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
@@ -319,7 +321,7 @@ class URLVerification {
         // Customizable security settings for restricted users:
         include($GLOBALS['Language']->getContent('include/restricted_user_permissions','en_US'));
         // End of customization
-        
+
         // For convenient reasons, admin can customize those variables as arrays
         // but for performances reasons we prefer to use hashes (avoid in_array)
         // so we transform array(101) => array(101=>0)
@@ -368,19 +370,19 @@ class URLVerification {
             isset($allow_access_to_project_news[$group_id])) {
             $user_is_allowed=true;
         }
-        
-        if (strpos($req_uri,'/news/') === 0 && 
+
+        if (strpos($req_uri,'/news/') === 0 &&
             $allow_news_browsing) {
             $user_is_allowed=true;
          }
-        
+
         if (strpos($req_uri,'/forum/') === 0 &&
             isset($allow_access_to_project_forums[$group_id])) {
               $user_is_allowed=true;
          }
 
         // Codendi trackers
-        if (strpos($req_uri,'/tracker/') === 0 && 
+        if (strpos($req_uri,'/tracker/') === 0 &&
             isset($allow_access_to_project_trackers[$group_id])) {
             $user_is_allowed=true;
         }
@@ -392,7 +394,7 @@ class URLVerification {
         }
 
         // Codendi documents and wiki
-        if (((strpos($req_uri,'/docman/') === 0) || 
+        if (((strpos($req_uri,'/docman/') === 0) ||
             (strpos($req_uri,'/plugins/docman/') === 0) ||
             (strpos($req_uri,'/wiki/') === 0)) &&
             isset($allow_access_to_project_docs[$group_id])) {
@@ -404,13 +406,13 @@ class URLVerification {
             isset($allow_access_to_project_mail[$group_id])) {
             $user_is_allowed=true;
         }
-        
+
         // Codendi file releases
         if (strpos($req_uri,'/file/') === 0 &&
             isset($allow_access_to_project_frs[$group_id])) {
             $user_is_allowed=true;
         }
-        
+
         // References
         if (strpos($req_uri,'/goto') === 0 &&
             isset($allow_access_to_project_refs[$group_id])) {
@@ -436,7 +438,7 @@ class URLVerification {
      * Display error message for restricted user.
      *
      * @param URL $url Accessed url
-     * 
+     *
      * @return void
      */
     function displayRestrictedUserError(URL $url, PFUser $user, Project $project = null) {
@@ -445,29 +447,33 @@ class URLVerification {
         exit;
     }
 
-    public function displayPrivateProjectError(URL $url, PFUser $user, Project $project = null)
+    public function displayPrivateProjectError(PFUser $user, Project $project = null)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
 
-        if ($user->isAnonymous()) {
-            $event_manager = EventManager::instance();
-            $redirect = new URLRedirect($event_manager);
-            $redirect->redirectToLogin();
-        }
+        $this->checkUserIsLoggedIn($user);
 
+        $project_manager = \ProjectManager::instance();
         $sendMail = new PermissionDeniedPrivateProjectController(
-            new ThemeManager(
-                new BurningParrotCompatiblePageDetector(
-                    new Tuleap\Request\CurrentPage(),
-                    new \User_ForgeUserGroupPermissionsManager(
-                        new \User_ForgeUserGroupPermissionsDao()
-                    )
-                )
-            ),
-            \ProjectManager::instance(),
-            new \Tuleap\error\PlaceHolderBuilder(ProjectManager::instance())
+            $this->getThemeManager(),
+            $project_manager,
+            new \Tuleap\error\PlaceHolderBuilder($project_manager)
         );
         $sendMail->displayError($user, $project);
+        exit;
+    }
+
+    public function displaySuspendedProjectError(PFUser $user, Project $project)
+    {
+        $GLOBALS['Response']->send401UnauthorizedHeader();
+
+        $this->checkUserIsLoggedIn($user);
+
+        $suspended_project_controller = new ProjectAccessSuspendedController(
+            $this->getThemeManager()
+        );
+
+        $suspended_project_controller->displayError($user);
         exit;
     }
 
@@ -479,7 +485,7 @@ class URLVerification {
      * Limit responsability of each method for sake of simplicity. For instance:
      * getRedirectionURL will not check all the server name or script name details
      * (localhost, api, etc). It only cares about generating the right URL.
-     * 
+     *
      * @param Array $server
      *
      * @return void
@@ -525,7 +531,7 @@ class URLVerification {
                 if (! isset($project)) {
                     $project = null;
                 }
-                $this->displayPrivateProjectError($url, $user, $project);
+                $this->displayPrivateProjectError($user, $project);
             } catch (Project_AccessProjectNotFoundException $exception) {
                 $this->exitError(
                     $GLOBALS['Language']->getText('include_html','g_not_exist'),
@@ -533,9 +539,11 @@ class URLVerification {
                 );
             } catch (Project_AccessDeletedException $exception) {
                 $this->exitError(
-                    $GLOBALS['Language']->getText('include_session','insufficient_g_access'),
+                    $GLOBALS['Language']->getText('include_session', 'insufficient_g_access'),
                     $exception->getMessage()
                 );
+            } catch (ProjectAccessSuspendedException $exception) {
+                $this->displaySuspendedProjectError($user, $project);
             } catch (User_PasswordExpiredException $exception) {
                 if (! $this->isPageAllowedWhenPasswordExpired($server)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('include_account', 'change_pwd_err'));
@@ -556,13 +564,14 @@ class URLVerification {
     /**
      * Ensure given user can access given project
      *
-     * @param PFUser  $user
+     * @param PFUser $user
      * @param Project $project
      * @return boolean
      * @throws Project_AccessProjectNotFoundException
      * @throws Project_AccessDeletedException
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
+     * @throws ProjectAccessSuspendedException
      */
     public function userCanAccessProject(PFUser $user, Project $project) {
         if ($project->isError()) {
@@ -570,6 +579,10 @@ class URLVerification {
         } elseif ($user->isSuperUser()) {
             return true;
         } elseif (! $project->isActive()) {
+            if ($project->isSuspended()) {
+                throw new ProjectAccessSuspendedException();
+            }
+
             throw new Project_AccessDeletedException($project);
         } elseif ($user->isMember($project->getID())) {
             return true;
@@ -607,7 +620,7 @@ class URLVerification {
     /**
      * Ensure given user can access given project and user is admin of the project
      *
-     * @param PFUser  $user
+     * @param PFUser $user
      * @param Project $project
      * @return boolean
      *
@@ -616,6 +629,7 @@ class URLVerification {
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
      * @throws Project_AccessNotAdminException
+     * @throws ProjectAccessSuspendedException
      */
     public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project) {
         if ($this->userCanAccessProject($user, $project)) {
@@ -627,7 +641,7 @@ class URLVerification {
     }
 
     /**
-     * @param PFUser  $user
+     * @param PFUser $user
      * @param Project $project
      * @return boolean
      *
@@ -636,6 +650,7 @@ class URLVerification {
      * @throws Project_AccessRestrictedException
      * @throws Project_AccessPrivateException
      * @throws Project_AccessNotAdminException
+     * @throws ProjectAccessSuspendedException
      */
     public function userCanManageProjectMembership(PFUser $user, Project $project)
     {
@@ -680,6 +695,33 @@ class URLVerification {
     function header($location) {
         header('Location: '.$location);
         exit;
+    }
+
+    /**
+     * @param PFUser $user
+     */
+    private function checkUserIsLoggedIn(PFUser $user)
+    {
+        if ($user->isAnonymous()) {
+            $event_manager = EventManager::instance();
+            $redirect = new URLRedirect($event_manager);
+            $redirect->redirectToLogin();
+        }
+    }
+
+    /**
+     * @return ThemeManager
+     */
+    private function getThemeManager()
+    {
+        return new ThemeManager(
+            new BurningParrotCompatiblePageDetector(
+                new Tuleap\Request\CurrentPage(),
+                new \User_ForgeUserGroupPermissionsManager(
+                    new \User_ForgeUserGroupPermissionsDao()
+                )
+            )
+        );
     }
 
 }
