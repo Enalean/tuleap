@@ -32,7 +32,6 @@
             v-bind:backend-cross-tracker-report="backendCrossTrackerReport"
             v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
             v-bind:is-report-in-error="has_error"
-            v-bind:report-id="reportId"
             v-on:switchToWritingMode="switchToWritingMode"
             v-on:saved="reportSaved"
             v-on:cancelled="reportCancelled"
@@ -48,7 +47,6 @@
         <artifact-table
             v-if="! is_loading"
             v-bind:writing-cross-tracker-report="writingCrossTrackerReport"
-            v-bind:report-id="reportId"
             v-on:restError="showRestError"
         />
     </div>
@@ -67,8 +65,7 @@ export default {
     props: {
         backendCrossTrackerReport: Object,
         readingCrossTrackerReport: Object,
-        writingCrossTrackerReport: Object,
-        reportId: String
+        writingCrossTrackerReport: Object
     },
     data() {
         return {
@@ -78,7 +75,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["reading_mode", "is_report_saved"]),
+        ...mapState(["reading_mode", "is_report_saved", "report_id"]),
         is_user_anonymous() {
             return isAnonymous();
         },
@@ -119,7 +116,7 @@ export default {
         async loadBackendReport() {
             this.is_loading = true;
             try {
-                const { trackers, expert_query } = await getReport(this.reportId);
+                const { trackers, expert_query } = await getReport(this.report_id);
                 this.backendCrossTrackerReport.init(trackers, expert_query);
                 this.initReports();
             } catch (error) {

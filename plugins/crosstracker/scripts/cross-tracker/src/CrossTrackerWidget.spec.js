@@ -38,7 +38,6 @@ describe("CrossTrackerWidget", () => {
         backendCrossTrackerReport,
         readingCrossTrackerReport,
         writingCrossTrackerReport,
-        reportId,
         getReport,
         getReportContent,
         getQueryResult;
@@ -48,7 +47,6 @@ describe("CrossTrackerWidget", () => {
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        reportId = "86";
 
         spyOn(writingCrossTrackerReport, "duplicateFromReport");
         spyOn(readingCrossTrackerReport, "duplicateFromReport");
@@ -70,8 +68,7 @@ describe("CrossTrackerWidget", () => {
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
-                writingCrossTrackerReport,
-                reportId
+                writingCrossTrackerReport
             }
         });
         vm.$mount();

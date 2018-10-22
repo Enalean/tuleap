@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
 
         const store = createStore();
+        store.commit("initWithDataset", { report_id });
 
         const vue_mount_point = widget_element.querySelector(".vue-mount-point");
         new Widget({
@@ -62,8 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             propsData: {
                 backendCrossTrackerReport: backend_cross_tracker_report,
                 readingCrossTrackerReport: reading_cross_tracker_report,
-                writingCrossTrackerReport: writing_cross_tracker_report,
-                reportId: report_id
+                writingCrossTrackerReport: writing_cross_tracker_report
             }
         }).$mount(vue_mount_point);
     }

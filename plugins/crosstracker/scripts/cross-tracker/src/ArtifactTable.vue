@@ -75,7 +75,6 @@ export default {
     name: "ArtifactTable",
     components: { ArtifactTableRow },
     props: {
-        reportId: String,
         writingCrossTrackerReport: Object
     },
     data() {
@@ -89,7 +88,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["reading_mode", "is_report_saved"]),
+        ...mapState(["reading_mode", "is_report_saved", "report_id"]),
         report_state() {
             // We just need to react to certain changes in this
             return [this.reading_mode, this.is_report_saved];
@@ -142,11 +141,11 @@ export default {
 
         getArtifactsFromReportOrUnsavedQuery() {
             if (this.is_report_saved === true) {
-                return getReportContent(this.reportId, this.limit, this.current_offset);
+                return getReportContent(this.report_id, this.limit, this.current_offset);
             }
 
             return getQueryResult(
-                this.reportId,
+                this.report_id,
                 this.writingCrossTrackerReport.getTrackerIds(),
                 this.writingCrossTrackerReport.expert_query,
                 this.limit,

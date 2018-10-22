@@ -58,8 +58,7 @@ export default {
     props: {
         backendCrossTrackerReport: Object,
         readingCrossTrackerReport: Object,
-        isReportInError: Boolean,
-        reportId: String
+        isReportInError: Boolean
     },
     data() {
         return {
@@ -67,7 +66,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["is_report_saved"]),
+        ...mapState(["is_report_saved", "report_id"]),
         is_user_anonymous() {
             return isAnonymous();
         },
@@ -99,7 +98,7 @@ export default {
             const new_expert_query = this.backendCrossTrackerReport.getExpertQuery();
             try {
                 const { trackers, expert_query } = await updateReport(
-                    this.reportId,
+                    this.report_id,
                     tracker_ids,
                     new_expert_query
                 );

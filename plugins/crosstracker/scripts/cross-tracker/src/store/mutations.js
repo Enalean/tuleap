@@ -18,6 +18,10 @@
  */
 
 export default {
+    initWithDataset(state, dataset) {
+        state.report_id = dataset.report_id;
+    },
+
     switchToReadingMode(state, { saved_state }) {
         state.reading_mode = true;
         state.is_report_saved = saved_state;
