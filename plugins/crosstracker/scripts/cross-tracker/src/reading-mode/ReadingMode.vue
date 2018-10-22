@@ -20,25 +20,25 @@
 <template>
     <div class="cross-tracker-reading-mode">
         <div class="reading-mode-report"
-            v-bind:class="{'disabled': is_user_anonymous}"
-            v-on:click="switchToWritingMode"
+             v-bind:class="{'disabled': is_user_anonymous}"
+             v-on:click="switchToWritingMode"
         >
             <tracker-list-reading-mode
                 v-bind:reading-cross-tracker-report="readingCrossTrackerReport"
-            ></tracker-list-reading-mode>
+            />
             <div class="reading-mode-query"
-                v-if="is_expert_query_not_empty"
+                 v-if="is_expert_query_not_empty"
             >{{ readingCrossTrackerReport.expert_query }}</div>
         </div>
         <div class="reading-mode-actions"
-            v-if="! isReportSaved"
+             v-if="! is_report_saved"
         >
             <button class="tlp-button-primary tlp-button-outline reading-mode-actions-cancel"
-                    v-on:click="cancelReport"
+                    v-on:click="cancelReport()"
                     v-translate
             >Cancel</button>
             <button class="tlp-button-primary"
-                    v-on:click="saveReport"
+                    v-on:click="saveReport()"
                     v-bind:class="{'disabled': is_save_disabled}"
             >
                 <i v-if="is_loading" class="tlp-button-icon fa fa-spinner fa-spin"></i>
@@ -48,6 +48,7 @@
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
 import { isAnonymous } from "../user-service.js";
 import { updateReport } from "../rest-querier.js";
@@ -57,7 +58,6 @@ export default {
     props: {
         backendCrossTrackerReport: Object,
         readingCrossTrackerReport: Object,
-        isReportSaved: Boolean,
         isReportInError: Boolean,
         reportId: String
     },
@@ -67,6 +67,7 @@ export default {
         };
     },
     computed: {
+        ...mapState(["is_report_saved"]),
         is_user_anonymous() {
             return isAnonymous();
         },

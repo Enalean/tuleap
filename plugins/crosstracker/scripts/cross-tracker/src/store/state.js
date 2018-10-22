@@ -18,7 +18,8 @@
  */
 
 const state = {
-    reading_mode: true
+    reading_mode: true,
+    is_report_saved: true
 };
 
 export default state;

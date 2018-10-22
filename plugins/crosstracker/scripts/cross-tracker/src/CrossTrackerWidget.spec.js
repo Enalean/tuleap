@@ -122,7 +122,7 @@ describe("CrossTrackerWidget", () => {
             expect(writingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 readingCrossTrackerReport
             );
-            expect(vm.is_saved).toBe(true);
+            expect(vm.is_report_saved).toBe(true);
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(true);
@@ -136,7 +136,7 @@ describe("CrossTrackerWidget", () => {
             expect(readingCrossTrackerReport.duplicateFromReport).toHaveBeenCalledWith(
                 writingCrossTrackerReport
             );
-            expect(vm.is_saved).toBe(false);
+            expect(vm.is_report_saved).toBe(false);
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
             expect(vm.reading_mode).toBe(true);
@@ -229,7 +229,7 @@ describe("CrossTrackerWidget", () => {
                 readingCrossTrackerReport
             );
             expect(vm.error_message).toBe(null);
-            expect(vm.is_saved).toBe(true);
+            expect(vm.is_report_saved).toBe(true);
             expect(vm.success_message).toEqual(jasmine.any(String));
         });
     });
@@ -242,7 +242,7 @@ describe("CrossTrackerWidget", () => {
 
             expect(vm.error_message).toBe(null);
             expect(vm.success_message).toBe(null);
-            expect(vm.is_saved).toBe(true);
+            expect(vm.is_report_saved).toBe(true);
         });
     });
 });
