@@ -22,7 +22,7 @@ admin_sidebar	projects_section_title	Projects
 admin_sidebar	projects_search_placeholder	Id, unix name…
 admin_sidebar	projects_nav_all_projects	All projects
 admin_sidebar	projects_nav_pending_projects	Pending projects
-admin_sidebar	projects_nav_configuration	Projects configuration
+admin_sidebar	projects_nav_configuration	Project settings
 admin_sidebar	configuration_section_title	Global configuration
 admin_sidebar	configuration_nav_global_access_rights	Global access rights
 admin_sidebar	configuration_nav_homepage	Homepage

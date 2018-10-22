@@ -781,9 +781,6 @@ msgstr ""
 msgid "Project creation moderation settings"
 msgstr ""
 
-msgid "Project creation settings"
-msgstr ""
-
 msgid "Project does not exist"
 msgstr ""
 
@@ -803,6 +800,9 @@ msgid "Project name..."
 msgstr ""
 
 msgid "Project registration is disabled"
+msgstr ""
+
+msgid "Project settings"
 msgstr ""
 
 msgid "Project templates"
