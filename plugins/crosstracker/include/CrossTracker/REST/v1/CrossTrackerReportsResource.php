@@ -40,6 +40,7 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
+use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -363,7 +364,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
         $this->query_parser = new QueryParameterParser(new JsonDecoder());
-        $this->representation_factory = new CrossTrackerArtifactRepresentationFactory();
+        $this->representation_factory = new CrossTrackerArtifactRepresentationFactory(new CSVRepresentationBuilder());
     }
 
     /**

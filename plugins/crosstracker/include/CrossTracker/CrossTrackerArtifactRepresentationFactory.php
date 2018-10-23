@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker;
 
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentation;
+use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
 use Tuleap\CrossTracker\Report\CSV\PaginatedCollectionOfCSVRepresentations;
 use Tuleap\CrossTracker\REST\v1\CrossTrackerArtifactReportRepresentation;
 use Tuleap\CrossTracker\REST\v1\PaginatedCollectionOfCrossTrackerArtifacts;
@@ -28,6 +29,16 @@ use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 
 class CrossTrackerArtifactRepresentationFactory
 {
+    /**
+     * @var CSVRepresentationBuilder
+     */
+    private $csv_builder;
+
+    public function __construct(CSVRepresentationBuilder $csv_builder)
+    {
+        $this->csv_builder = $csv_builder;
+    }
+
     /**
      * @return PaginatedCollectionOfCrossTrackerArtifacts
      */
@@ -48,18 +59,14 @@ class CrossTrackerArtifactRepresentationFactory
 
     public function buildRepresentationsForCSV(ArtifactMatchingReportCollection $collection, \PFUser $current_user)
     {
-        $header_line = new CSVRepresentation();
-        $header_line->build(["id"], $current_user);
-        $representations = [$header_line];
+        $representations = [$this->csv_builder->buildHeaderLine($current_user)];
 
         foreach ($collection->getArtifacts() as $artifact) {
             if (! $artifact->userCanView($current_user)) {
                 continue;
             }
-            $csv_representation = new CSVRepresentation();
-            $values = [$artifact->getId()];
-            $csv_representation->build($values, $current_user);
-            $representations[] = $csv_representation;
+
+            $representations[] = $this->csv_builder->build($artifact, $current_user);
         }
 
         return new PaginatedCollectionOfCSVRepresentations($representations, $collection->getTotalSize());
