@@ -7,14 +7,14 @@
             &times;
         </div>
     </div>
-    <form action="/join-private-project-mail/" method="post" name="display_form">
+    <form action="{{ join_url }}" method="post" name="display_form">
         <div class="tlp-modal-body">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="msg_private_project">
                     {{# gettext }}Message to project administrators{{/ gettext }}  <i class="fa fa-asterisk"></i>
                 </label>
 
-                <textarea rows="5"git-repository-clone-button-text
+                <textarea rows="5"
                           cols="70"
                           class="tlp-textarea"
                           name="msg_private_project"

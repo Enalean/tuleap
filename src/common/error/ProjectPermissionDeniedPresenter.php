@@ -22,7 +22,7 @@ namespace Tuleap\Error;
 
 use Project;
 
-class PermissionDeniedPrivateProjectPresenter
+class ProjectPermissionDeniedPresenter
 {
     public $project_id;
     public $placeholder;
@@ -30,12 +30,13 @@ class PermissionDeniedPrivateProjectPresenter
      * @var \CSRFSynchronizerToken
      */
     public $csrf_token;
-    public $user_locale;
+    public $join_url;
 
-    public function __construct(Project $project, \CSRFSynchronizerToken $token, $placeholder)
+    public function __construct(Project $project, \CSRFSynchronizerToken $token, $placeholder, $join_url)
     {
         $this->project_id  = $project->getID();
         $this->placeholder = $placeholder;
         $this->csrf_token  = $token;
+        $this->join_url    = $join_url;
     }
 }

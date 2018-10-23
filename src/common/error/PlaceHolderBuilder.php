@@ -38,7 +38,7 @@ class PlaceHolderBuilder
     {
         $result = $this->project_manager->getMessageToRequesterForAccessProject($project->getID());
 
-        $default_message =  _("Please write something meaningful for the admin.");
+        $default_message = _("Please write something meaningful for the admin.");
         if (! $result) {
             return $default_message;
         }

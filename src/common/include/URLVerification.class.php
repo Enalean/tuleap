@@ -20,8 +20,11 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\error\ErrorDependenciesInjector;
 use Tuleap\Error\PermissionDeniedPrivateProjectController;
 use Tuleap\error\ProjectAccessSuspendedController;
+use Tuleap\Error\PermissionDeniedRestrictedAccountController;
+use Tuleap\error\PlaceHolderBuilder;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
@@ -441,9 +444,15 @@ class URLVerification {
      *
      * @return void
      */
-    function displayRestrictedUserError(URL $url, PFUser $user, Project $project = null) {
-        $error = new Error_PermissionDenied_RestrictedUser($url);
-        $error->buildInterface($user, $project);
+    public function displayRestrictedUserError(URL $url, PFUser $user, Project $project = null)
+    {
+        $GLOBALS['Response']->send401UnauthorizedHeader();
+        $sendMail = new PermissionDeniedRestrictedAccountController(
+            $this->getThemeManager(),
+            new ErrorDependenciesInjector(),
+            new PlaceHolderBuilder(ProjectManager::instance())
+        );
+        $sendMail->displayError($user, $project);
         exit;
     }
 
@@ -453,11 +462,10 @@ class URLVerification {
 
         $this->checkUserIsLoggedIn($user);
 
-        $project_manager = \ProjectManager::instance();
         $sendMail = new PermissionDeniedPrivateProjectController(
             $this->getThemeManager(),
-            $project_manager,
-            new \Tuleap\error\PlaceHolderBuilder($project_manager)
+            new PlaceHolderBuilder(ProjectManager::instance()),
+            new ErrorDependenciesInjector()
         );
         $sendMail->displayError($user, $project);
         exit;
