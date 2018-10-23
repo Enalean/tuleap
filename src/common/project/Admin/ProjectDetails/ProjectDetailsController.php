@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -469,7 +469,7 @@ class ProjectDetailsController
     private function updateProjectVisibility(PFUser $user, Project $project, HTTPRequest $request)
     {
         if ($this->project_visibility_configuration->canUserConfigureProjectVisibility($user, $project)) {
-            if ($project->getAccess() != $request->get('project_visibility')) {
+            if ($project->getAccess() !== $request->get('project_visibility')) {
                 if ($request->get('term_of_service')) {
                     $this->project_manager->setAccess($project, $request->get('project_visibility'));
                     $this->project_manager->clear($project->getID());
