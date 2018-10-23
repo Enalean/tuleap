@@ -177,29 +177,27 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
 
     public function project_is_suspended(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params);
+        $this->notifyProjectMembers($params['group_id'], Project::STATUS_SUSPENDED);
     }
 
     public function project_is_pending(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params);
+        $this->notifyProjectMembers($params['group_id'], Project::STATUS_PENDING);
     }
 
     public function project_is_active(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params);
+        $this->notifyProjectMembers($params['group_id'], Project::STATUS_ACTIVE);
     }
 
     public function project_is_deleted(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params);
+        $this->notifyProjectMembers($params['group_id'], Project::STATUS_DELETED);
     }
 
-    private function notifyProjectMembers(array $params)
+    private function notifyProjectMembers($project_id, $status)
     {
-        $project_id = $params['group_id'];
-
         $sender = new \Tuleap\ProjectCertification\Notification\Sender(ProjectManager::instance());
-        $sender->sendNotification($project_id);
+        $sender->sendNotification($project_id, $status);
     }
 }

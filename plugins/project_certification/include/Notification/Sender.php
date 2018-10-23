@@ -40,7 +40,7 @@ class Sender
         $this->project_manager = $project_manager;
     }
 
-    public function sendNotification($project_id)
+    public function sendNotification($project_id, $status)
     {
         $project = $this->project_manager->getProject($project_id);
 
@@ -50,27 +50,31 @@ class Sender
         }
 
         foreach ($project->getMembers() as $project_member) {
-            $this->sendMailPerProjectMember($project, $project_member);
+            $this->sendMailPerProjectMember($project, $project_member, $status);
         }
     }
 
-    private function sendMailPerProjectMember(Project $project, PFUser $user)
+    private function sendMailPerProjectMember(Project $project, PFUser $user, $status)
     {
         $user_language = $user->getLanguage();
+        $purifier      = Codendi_HTMLPurifier::instance();
+
+        $title = $user_language->getText(
+            'plugin_project_certification',
+            'email_status_change_title'
+        );
+
+        $body = $user_language->getText(
+            'plugin_project_certification',
+            "email_status_change_body_status_$status",
+            $project->getPublicName()
+        );
 
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
-        $mail->setSubject($user_language->getText(
-            'plugin_project_certification',
-            'email_status_change_title'
-        ));
-
-        $mail->setBodyHtml($user_language->getText(
-            'plugin_project_certification',
-            'email_status_change_body',
-            $project->getPublicName()
-        ));
+        $mail->setSubject($purifier->purify($title, CODENDI_PURIFIER_STRIP_HTML));
+        $mail->setBodyHtml($purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML));
 
         $is_sent = $mail->send();
         if (! $is_sent) {
