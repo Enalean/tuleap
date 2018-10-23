@@ -31,6 +31,7 @@ class ProjectCreationNavBarPresenter
     public $webhooks_is_active   = false;
     public $fields_is_active     = false;
     public $categories_is_active = false;
+    public $visibility_is_active = false;
 
     public $are_trove_categories_enabled = false;
 

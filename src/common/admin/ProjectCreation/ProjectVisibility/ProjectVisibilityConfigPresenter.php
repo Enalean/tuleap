@@ -41,12 +41,18 @@ class ProjectVisibilityConfigPresenter
      */
     public $project_admin_can_choose;
 
+    /**
+     * @var bool
+     */
+    public $send_mail_on_project_visibility_change;
+
     public function __construct(
         ProjectCreationNavBarPresenter $menu_tabs,
         \CSRFSynchronizerToken $csrf_token
     ) {
-        $this->navbar                   = $menu_tabs;
-        $this->csrf_token               = $csrf_token;
-        $this->project_admin_can_choose = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+        $this->navbar                                 = $menu_tabs;
+        $this->csrf_token                             = $csrf_token;
+        $this->project_admin_can_choose               = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+        $this->send_mail_on_project_visibility_change = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE);
     }
 }

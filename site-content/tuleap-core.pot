@@ -468,6 +468,11 @@ msgid "Homepage"
 msgstr ""
 
 msgid ""
+"If enabled, an email will be sent to all the project members if the "
+"visibility of the project is changed."
+msgstr ""
+
+msgid ""
 "If your instance can not access the Internet, it is preferable to disable "
 "the verification to avoid a slowness during password compliance check."
 msgstr ""
@@ -893,6 +898,9 @@ msgid "Search"
 msgstr ""
 
 msgid "See permissions"
+msgstr ""
+
+msgid "Send an email when the project visibility changes"
 msgstr ""
 
 msgid "Send confirmation to new address"

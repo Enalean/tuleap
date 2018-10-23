@@ -510,6 +510,13 @@ msgid "Homepage"
 msgstr "Page d'accueil"
 
 msgid ""
+"If enabled, an email will be sent to all the project members if the "
+"visibility of the project is changed."
+msgstr ""
+"Si activé, un email sera envoyé à tous les membres du projet lorsque sa "
+"visibilité change."
+
+msgid ""
 "If your instance can not access the Internet, it is preferable to disable "
 "the verification to avoid a slowness during password compliance check."
 msgstr ""
@@ -958,6 +965,9 @@ msgstr "Rechercher"
 
 msgid "See permissions"
 msgstr "Voir les permissions"
+
+msgid "Send an email when the project visibility changes"
+msgstr "Envoyer un email lorsque la visibilité d'un projet change"
 
 msgid "Send confirmation to new address"
 msgstr "Envoyer la confirmation"
