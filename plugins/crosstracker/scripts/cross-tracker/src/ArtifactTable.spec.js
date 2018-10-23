@@ -29,12 +29,11 @@ import {
 } from "./rest-querier.js";
 
 describe("ArtifactTable", () => {
-    let Widget, reportId, writingCrossTrackerReport, getReport, getQuery;
+    let Widget, writingCrossTrackerReport, getReport, getQuery;
 
     beforeEach(() => {
         Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
-        reportId = "86";
 
         getReport = jasmine.createSpy("getReportContent");
         mockFetchSuccess(getReport);
@@ -52,7 +51,6 @@ describe("ArtifactTable", () => {
         const vm = new Widget({
             store: createStore(),
             propsData: {
-                reportId,
                 writingCrossTrackerReport
             }
         });

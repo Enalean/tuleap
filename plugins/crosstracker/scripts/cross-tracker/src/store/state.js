@@ -18,6 +18,7 @@
  */
 
 const state = {
+    report_id: null,
     reading_mode: true,
     is_report_saved: true
 };

@@ -30,7 +30,6 @@ describe("ReadingMode", () => {
         isAnonymous,
         backendCrossTrackerReport,
         readingCrossTrackerReport,
-        reportId,
         isReportInError,
         updateReport;
 
@@ -38,7 +37,6 @@ describe("ReadingMode", () => {
         ReadingModeElement = Vue.extend(ReadingMode);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
-        reportId = "26";
         isReportInError = false;
     });
 
@@ -48,8 +46,7 @@ describe("ReadingMode", () => {
             propsData: {
                 backendCrossTrackerReport,
                 readingCrossTrackerReport,
-                isReportInError,
-                reportId
+                isReportInError
             }
         });
         vm.$mount();
