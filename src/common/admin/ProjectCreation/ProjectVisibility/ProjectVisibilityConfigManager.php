@@ -24,7 +24,9 @@ use ForgeConfig;
 
 class ProjectVisibilityConfigManager
 {
-    const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY = 'project_admin_can_choose_visibility';
+    const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY    = 'project_admin_can_choose_visibility';
+    const SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE = 'send_mail_on_project_visibility_change';
+
     /**
      * @var \ConfigDao
      */
@@ -35,14 +37,14 @@ class ProjectVisibilityConfigManager
         $this->config_dao = $config_dao;
     }
 
-    public function updateProjectAdminVisibility($new_value)
+    public function updateVisibilityOption($forge_config_option, $new_value)
     {
-        $old_value = (bool) ForgeConfig::get(ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY);
+        $old_value = (bool) ForgeConfig::get($forge_config_option);
 
         if ($old_value === $new_value) {
             return;
         }
 
-        $this->config_dao->save(self::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY, $new_value);
+        $this->config_dao->save($forge_config_option, $new_value);
     }
 }

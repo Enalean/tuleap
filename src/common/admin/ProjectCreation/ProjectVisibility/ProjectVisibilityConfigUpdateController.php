@@ -50,8 +50,14 @@ class ProjectVisibilityConfigUpdateController implements DispatchableWithRequest
         $csrf_token = new CSRFSynchronizerToken('/admin/project-creation/visibility');
         $csrf_token->check();
 
-        $this->visibility_config_manager->updateProjectAdminVisibility(
+        $this->visibility_config_manager->updateVisibilityOption(
+            ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY,
             $request->get('project_admin_can_choose_visibility')
+        );
+
+        $this->visibility_config_manager->updateVisibilityOption(
+            ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE,
+            $request->get('send_mail_on_visibility_change')
         );
 
         $GLOBALS['Response']->addFeedback(\Feedback::INFO, _('Successfully updated.'));
