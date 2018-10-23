@@ -41,14 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const AppComponent = Vue.extend(App);
+    const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
+    const project_name = vue_mount_point.dataset.projectName;
+    const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
 
-    const project_id = vue_mount_point.dataset.projectId;
+    const AppComponent = Vue.extend(App);
 
     new AppComponent({
         store,
         propsData: {
-            projectId: project_id
+            projectId: project_id,
+            projectName: project_name,
+            userIsAdmin: user_is_admin
         }
     }).$mount(vue_mount_point);
 });

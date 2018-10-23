@@ -5,5 +5,14 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "Administration"
+msgstr ""
+
+msgid "Documents"
+msgstr ""
+
+msgid "Project documentation"
+msgstr ""
+
 msgid "Project has no documentation yet."
 msgstr ""

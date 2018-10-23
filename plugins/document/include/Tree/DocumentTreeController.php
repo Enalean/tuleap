@@ -56,7 +56,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'document-tree',
-            ["project_id" => $project->getID()]
+            new DocumentTreePresenter($project, $request->getCurrentUser())
         );
 
         $layout->footer(["without_content" => true]);

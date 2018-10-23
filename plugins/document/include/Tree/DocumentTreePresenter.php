@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,4 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const has_error = state => state.error_message !== null;
+namespace Tuleap\Document\Tree;
+
+class DocumentTreePresenter
+{
+    /**
+     * @var int
+     */
+    public $project_id;
+    /**
+     * @var string
+     */
+    public $project_name;
+    /**
+     * @var bool
+     */
+    public $user_is_admin;
+
+    public function __construct(\Project $project, \PFUser $user)
+    {
+        $this->project_id    = $project->getID();
+        $this->project_name  = $project->getUnixNameLowerCase();
+        $this->user_is_admin = $user->isAdmin($project->getID());
+    }
+}
