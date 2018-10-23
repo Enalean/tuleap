@@ -813,6 +813,10 @@ project_privacy	tooltip_private	<p class='project-privacy'>Project privacy set t
 project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big>. <br />By default, its content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
 project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Project privacy set to <big><strong>public</strong></big>. <br />By default, its content is available to all authenticated, but not restricted, users.<br />Please note that more restrictive permissions might exist on some items.</p>
 
+project_privacy	email_visibility_change_title	The privacy policy of the project $1 has changed
+project_privacy	email_visibility_change_body_private	The project $1 is now private.
+project_privacy	email_visibility_change_body_public	The project $1 is now public.
+project_privacy	email_visibility_change_body_unrestricted	The project $1 is now public and accessible to restricted users.
 
 project_service	service_not_used	$1 service is not enabled
 project	does_not_exist	The project doesn't exist

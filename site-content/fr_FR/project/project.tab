@@ -812,6 +812,11 @@ project_privacy	tooltip_private	<p class='project-privacy'>Le niveau de confiden
 project_privacy	tooltip_public_w_anon	<p class='project-privacy'>Le niveau de confidentialité du projet est : <big><strong>public</strong></big>. <br />Par défault, son contenu est accessible à tout utilisateur (authentifié ou non).<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
 project_privacy	tooltip_public_wo_anon	<p class='project-privacy'>Le niveau de confidentialité du projet est : <big><strong>public</strong></big>. <br />Par défault, son contenu est accessible à tout utilisateur authentifié non restreint.<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
 
+project_privacy	email_visibility_change_title	Changement du niveau confidentialité du projet $1
+project_privacy	email_visibility_change_body_private	Le projet $1 est désormais privé.
+project_privacy	email_visibility_change_body_public	Le projet $1 est désormais public.
+project_privacy	email_visibility_change_body_unrestricted	Le projet $1 est désormais public et accessible aux utilisateurs restreints.
+
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas
 #-----------------------------------------------
