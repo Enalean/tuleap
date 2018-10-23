@@ -1,10 +1,10 @@
 <?php
-/*
+/**
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  * SourceForge: Breaking Down the Barriers to Open Source Development
  * Copyright 1999-2000 (c) The SourceForge Crew
  * http://sourceforge.net
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -249,7 +249,6 @@ class BaseLanguage {
     function loadLanguage($lang) {
         if($this->lang != $lang) {
             $this->lang = $lang;
-            setlocale (LC_TIME, $lang);
             $this->loadFromSerialized($lang) || $this->loadFromPHP($lang) || $this->loadFromTabs($lang);
         }
     }
