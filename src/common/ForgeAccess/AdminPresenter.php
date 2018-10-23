@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -18,11 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class ForgeAccess_AdminPresenter {
-
-    /** @var bool */
-    public $project_admin_can_choose;
-
+class ForgeAccess_AdminPresenter
+{
     /** @var int */
     public $nb_restricted_users;
 
@@ -75,15 +72,6 @@ class ForgeAccess_AdminPresenter {
     public $who_can_access;
 
     /** @var string */
-    public $projects_visibility;
-
-    /** @var string */
-    public $projects_visibility_label;
-
-    /** @var string */
-    public $projects_visibility_help;
-
-    /** @var string */
     public $platform_access_control_label;
 
     /** @var string */
@@ -100,7 +88,6 @@ class ForgeAccess_AdminPresenter {
         $nb_restricted_users,
         $ugroup_authenticated_users,
         $ugroup_registered_users,
-        $project_admin_can_choose,
         $anonymous_can_see_site_homepage,
         $anonymous_can_see_contact
     ) {
@@ -109,7 +96,6 @@ class ForgeAccess_AdminPresenter {
         $this->localinc_path                   = $localinc_path;
         $this->current_access_mode             = $current_access_mode;
         $this->nb_restricted_users             = $nb_restricted_users;
-        $this->project_admin_can_choose        = $project_admin_can_choose;
         $this->anonymous_can_see_site_homepage = $anonymous_can_see_site_homepage;
         $this->anonymous_can_see_contact       = $anonymous_can_see_contact;
 
@@ -153,9 +139,6 @@ class ForgeAccess_AdminPresenter {
         $this->customize_ugroups_label_info           = $GLOBALS['Language']->getText('admin_main', 'customize_ugroups_label_info');
 
         $this->platform_access_control_label = $GLOBALS['Language']->getText('admin_main', 'platform_access_control');
-        $this->projects_visibility           = $GLOBALS['Language']->getText('admin_main', 'projects_visibility');
-        $this->projects_visibility_label     = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_label');
-        $this->projects_visibility_help      = $GLOBALS['Language']->getText('admin_main', 'projects_visibility_help');
     }
 
     private function isLocalIncObsolete() {

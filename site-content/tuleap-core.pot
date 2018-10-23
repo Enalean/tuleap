@@ -472,6 +472,12 @@ msgid ""
 "the verification to avoid a slowness during password compliance check."
 msgstr ""
 
+msgid ""
+"If, in your organization, the strict privacy of the projects must be "
+"preserved by 'design', then you should uncheck this option so that project "
+"admins cannot disclose confidential resources to other platform users."
+msgstr ""
+
 msgid "Image"
 msgstr ""
 
@@ -770,6 +776,9 @@ msgstr ""
 msgid "Project administration"
 msgstr ""
 
+msgid "Project administrators can choose project visibility"
+msgstr ""
+
 msgid ""
 "Project admins can't be removed from project. You must remove them from "
 "Project administrators group first."
@@ -824,6 +833,9 @@ msgid "Projects created from this template"
 msgstr ""
 
 msgid "Projects in category"
+msgstr ""
+
+msgid "Projects visibility"
 msgstr ""
 
 msgid "Public information"
@@ -925,6 +937,9 @@ msgstr ""
 msgid ""
 "Submitting the form below will mail a confirmation URL to the new email "
 "address. Visiting this link will complete the email change."
+msgstr ""
+
+msgid "Successfully updated."
 msgstr ""
 
 msgid "System groups"
@@ -1197,6 +1212,9 @@ msgid "Verify accessiblity mode value"
 msgstr ""
 
 msgid "View members"
+msgstr ""
+
+msgid "Visibility"
 msgstr ""
 
 msgid ""

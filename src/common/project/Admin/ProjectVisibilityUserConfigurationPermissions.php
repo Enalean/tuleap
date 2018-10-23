@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017. All rights reserved.
+ * Copyright Enalean (c) 2017 - 2018. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -24,17 +24,17 @@
 
 namespace Tuleap\Project\Admin;
 
-use ForgeAccess;
 use ForgeConfig;
 use PFUser;
 use Project;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 
 class ProjectVisibilityUserConfigurationPermissions
 {
     public function canUserConfigureProjectVisibility(PFUser $user, Project $project)
     {
         return $user->isSuperUser()
-            || (ForgeConfig::get(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
+            || (ForgeConfig::get(ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY)
                 && $user->isAdmin($project->getID())
             );
     }

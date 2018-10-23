@@ -22,11 +22,18 @@
 namespace Tuleap\Request;
 
 use Codendi_HTMLPurifier;
+use ConfigDao;
 use EventManager;
 use FastRoute;
+use ForgeAccess_ForgePropertiesManager;
+use PermissionsManager;
+use ProjectManager;
 use Tuleap\Admin\ProjectCreation\ProjectCategoriesDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsDisplayController;
 use Tuleap\Admin\ProjectCreation\ProjectFieldsUpdateController;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigDisplayController;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigUpdateController;
 use Tuleap\Admin\ProjectCreation\WebhooksDisplayController;
 use Tuleap\Admin\ProjectCreation\WebhooksUpdateController;
 use Tuleap\Admin\ProjectCreationModerationDisplayController;
@@ -34,6 +41,8 @@ use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\error\PermissionDeniedMailSender;
 use Tuleap\error\PlaceHolderBuilder;
+use Tuleap\FRS\FRSPermissionCreator;
+use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;
@@ -47,6 +56,7 @@ use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
+use UGroupDao;
 
 class RouteCollector
 {
@@ -111,6 +121,16 @@ class RouteCollector
             });
             $r->post('/project-creation/categories', function () {
                 return new TroveCatListController();
+            });
+            $r->get('/project-creation/visibility', function () {
+                return new ProjectVisibilityConfigDisplayController();
+            });
+            $r->post('/project-creation/visibility', function () {
+                return new ProjectVisibilityConfigUpdateController(
+                    new ProjectVisibilityConfigManager(
+                        new ConfigDao()
+                    )
+                );
             });
         });
         $r->addGroup('/account', function (FastRoute\RouteCollector $r) {

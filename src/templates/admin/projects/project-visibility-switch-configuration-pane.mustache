@@ -1,0 +1,40 @@
+<div class="tlp-framed-vertically">
+    {{> creation-settings-tabs }}
+
+    <form action="" method="POST">
+        <input type="hidden" name="update" value="1">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+
+        <div class="tlp-framed-horizontally">
+            <div class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title"><i class="fa fa-eye tlp-pane-title-icon"></i>{{# gettext }}Projects visibility{{/ gettext }}</h1>
+                    </div>
+                    <section class="tlp-pane-section">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="toggle-project-admin-can-choose-visibility">
+                                {{# gettext }}Project administrators can choose project visibility{{/ gettext }}
+                            </label>
+                            <div class="tlp-switch">
+                                <input
+                                    type="checkbox"
+                                    onchange="this.form.submit()"
+                                    name="project_admin_can_choose_visibility"
+                                    id="toggle-project-admin-can-choose-visibility"
+                                    class="tlp-switch-checkbox"
+                                    value="1"
+                                    {{# project_admin_can_choose }}checked{{/ project_admin_can_choose }}
+                                >
+                                <label for="toggle-project-admin-can-choose-visibility" class="tlp-switch-button" aria-hidden></label>
+                            </div>
+                            <p class="tlp-text-info">{{# gettext }}If, in your organization, the strict privacy of the projects must be preserved by 'design', then you should uncheck this option so that project admins cannot disclose confidential resources to other platform users.{{/ gettext }}</p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

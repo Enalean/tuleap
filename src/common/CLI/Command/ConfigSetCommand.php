@@ -27,6 +27,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Instrument\Prometheus\Prometheus;
 
 class ConfigSetCommand extends Command
@@ -41,7 +42,7 @@ class ConfigSetCommand extends Command
         \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
-        \ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
+        ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
         Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
         Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
     ];

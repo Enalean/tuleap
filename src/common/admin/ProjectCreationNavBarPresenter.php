@@ -22,6 +22,7 @@
 namespace Tuleap\Admin;
 
 use Exception;
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigDisplayController;
 
 class ProjectCreationNavBarPresenter
 {
@@ -51,6 +52,9 @@ class ProjectCreationNavBarPresenter
                 break;
             case 'categories':
                 $this->categories_is_active = true;
+                break;
+            case ProjectVisibilityConfigDisplayController::TAB_NAME:
+                $this->visibility_is_active = true;
                 break;
             default:
                 throw new Exception('Must be implemented');

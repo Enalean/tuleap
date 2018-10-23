@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -89,10 +89,6 @@ class ForgeAccess_ForgePropertiesManager
             $this->project_manager->disableAllowRestrictedForAll();
             $this->permission_manager->disableRestrictedAccess();
         }
-    }
-
-    public function updateProjectAdminVisibility($new_value) {
-        return $this->config_dao->save(ForgeAccess::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY, $new_value);
     }
 
     public function updateLabels($authenticated_label, $registered_label) {
