@@ -47,7 +47,7 @@ class PermissionsOnArtifactUGroupRetriever
         $value
     ) {
         if (is_array($value) === false) {
-            $value['u_groups'] = array();
+            $value = ['u_groups' => []];
         }
 
         return $value;
