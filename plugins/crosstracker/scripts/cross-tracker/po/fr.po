@@ -19,7 +19,7 @@ msgstr "Ajouter"
 msgid "Allowed fields"
 msgstr "Champs autorisés"
 
-msgid "An error occured"
+msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
 msgid "Artifact"

@@ -11,7 +11,7 @@ msgstr ""
 msgid "Allowed fields"
 msgstr ""
 
-msgid "An error occured"
+msgid "An error occurred"
 msgstr ""
 
 msgid "Artifact"

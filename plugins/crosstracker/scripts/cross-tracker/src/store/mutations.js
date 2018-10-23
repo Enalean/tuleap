@@ -17,21 +17,47 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    initWithDataset(state, dataset) {
-        state.report_id = dataset.report_id;
-    },
-
-    switchToReadingMode(state, { saved_state }) {
-        state.reading_mode = true;
-        state.is_report_saved = saved_state;
-    },
-
-    switchToWritingMode(state) {
-        state.reading_mode = false;
-    },
-
-    switchReportToSaved(state) {
-        state.is_report_saved = true;
-    }
+export {
+    initWithDataset,
+    setErrorMessage,
+    resetFeedbacks,
+    switchToReadingMode,
+    switchToWritingMode,
+    switchReportToSaved,
+    discardUnsavedReport
 };
+
+function initWithDataset(state, dataset) {
+    state.report_id = dataset.report_id;
+}
+
+function setErrorMessage(state, message) {
+    state.error_message = message;
+}
+
+function resetFeedbacks(state) {
+    state.error_message = null;
+    state.success_message = null;
+}
+
+function switchToReadingMode(state, { saved_state }) {
+    resetFeedbacks(state);
+    state.reading_mode = true;
+    state.is_report_saved = saved_state;
+}
+
+function switchToWritingMode(state) {
+    resetFeedbacks(state);
+    state.reading_mode = false;
+}
+
+function switchReportToSaved(state, message) {
+    state.success_message = message;
+    state.error_message = null;
+    state.is_report_saved = true;
+}
+
+function discardUnsavedReport(state) {
+    resetFeedbacks(state);
+    state.is_report_saved = true;
+}
