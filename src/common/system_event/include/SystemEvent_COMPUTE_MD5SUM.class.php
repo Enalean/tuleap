@@ -137,13 +137,13 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
      * 
      * @return Boolean
      */
-    function sendNotificationMail($user, $file, $bodyContent, $option) {
-        
+    function sendNotificationMail($user, $file, $bodyContent, $option)
+    {
         $mail =  new Codendi_Mail();
-        
-        $language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
-        $language->loadLanguage($user->getLanguageID());
-        
+
+        $factory  = new BaseLanguageFactory();
+        $language = $factory->getBaseLanguage($user->getLocale());
+
         $subject = $GLOBALS['sys_name'] . ' Error in '.$file->getFileLocation();
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setBcc($user->getEmail());
