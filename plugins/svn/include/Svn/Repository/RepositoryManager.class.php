@@ -182,6 +182,12 @@ class RepositoryManager
         );
     }
 
+    /**
+     * @param $path
+     *
+     * @return Repository
+     * @throws CannotFindRepositoryException
+     */
     public function getRepositoryFromSystemPath($path) {
          if (! preg_match('/\/(\d+)\/('.RuleName::PATTERN_REPOSITORY_NAME.')$/', $path, $matches)) {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
@@ -191,6 +197,12 @@ class RepositoryManager
         return $this->getRepositoryIfProjectIsValid($project, $matches[2]);
     }
 
+    /**
+     * @param HTTPRequest $request
+     *
+     * @return Repository
+     * @throws CannotFindRepositoryException
+     */
     public function getRepositoryFromPublicPath(HTTPRequest $request)
     {
         $path    = $request->get('root');
@@ -203,7 +215,14 @@ class RepositoryManager
         return $this->getRepositoryIfProjectIsValid($project, $matches[1]);
     }
 
-    private function getRepositoryIfProjectIsValid($project, $repository_name) {
+    /**
+     * @param $project
+     * @param $repository_name
+     *
+     * @return Repository
+     * @throws CannotFindRepositoryException
+     */
+    private function getRepositoryIfProjectIsValid(Project $project, $repository_name) {
         if (!$project instanceof Project || $project->getID() == null || $project->isError()) {
             throw new CannotFindRepositoryException($GLOBALS['Language']->getText('plugin_svn','find_error'));
         }

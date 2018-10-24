@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2016 - 2017. All rights reserved
+  * Copyright (c) Enalean, 2016 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -127,7 +127,7 @@ class Dao extends DataAccessObject
         $sql = "SELECT groups.*, id, name, CONCAT(unix_group_name, '/', name) AS repository_name,
                     backup_path, repository_deletion_date
                 FROM groups, plugin_svn_repositories
-                WHERE groups.status = 'A' AND project_id = groups.group_id
+                WHERE project_id = groups.group_id
                 AND groups.unix_group_name = $project_name
                 AND plugin_svn_repositories.name = $name";
 
