@@ -29,10 +29,11 @@ class CSVRepresentationBuilder
      */
     public function build(\Tracker_Artifact $artifact, PFUser $user)
     {
-        $tracker_name   = $artifact->getTracker()->getName();
-        $values         = [$artifact->getId(), $tracker_name];
+        $tracker        = $artifact->getTracker();
+        $project_name   = $tracker->getProject()->getUnconvertedPublicName();
+        $tracker_name   = $tracker->getName();
         $representation = new CSVRepresentation();
-        $representation->build($values, $user);
+        $representation->build([$artifact->getId(), $project_name, $tracker_name], $user);
         return $representation;
     }
 
@@ -42,7 +43,7 @@ class CSVRepresentationBuilder
     public function buildHeaderLine(PFUser $user)
     {
         $header_line = new CSVRepresentation();
-        $header_line->build(["id", "tracker"], $user);
+        $header_line->build(["id", "project", "tracker"], $user);
         return $header_line;
     }
 }
