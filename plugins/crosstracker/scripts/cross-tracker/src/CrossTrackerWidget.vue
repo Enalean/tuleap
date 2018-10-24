@@ -44,16 +44,16 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import ArtifactTable from "./ArtifactTable.vue";
+import ArtifactTable from "./components/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import { isAnonymous } from "./user-service.js";
-import { getReport } from "./rest-querier.js";
+import { getReport } from "./api/rest-querier.js";
 
 export default {
-    components: { ErrorMessage, ArtifactTable, ReadingMode, WritingMode },
     name: "CrossTrackerWidget",
+    components: { ErrorMessage, ArtifactTable, ReadingMode, WritingMode },
     props: {
         backendCrossTrackerReport: Object,
         readingCrossTrackerReport: Object,

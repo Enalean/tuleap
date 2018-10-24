@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,21 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getSortedProjectsIAmMemberOf as getProjects } from "../api/rest-querier.js";
-
-export { getSortedProjectsIAmMemberOf };
-
-let cached_projects = [];
-
-async function getSortedProjectsIAmMemberOf() {
-    if (cached_projects.length > 0) {
-        return cached_projects;
+export function download(content, file_name, mime_type) {
+    const link = document.createElement("a");
+    const blob = new Blob([content], { type: mime_type });
+    if (URL && "download" in link) {
+        // html5 "download" attribute supported
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute("download", file_name);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+    } else {
+        // IE11
+        navigator.msSaveBlob(blob, file_name);
     }
-
-    const sorted_projects = await getProjects();
-    cached_projects = sorted_projects.map(({ id, label }) => {
-        return { id, label };
-    });
-
-    return cached_projects;
 }

@@ -27,10 +27,11 @@ Vue.use(GettextPlugin, {
     silent: true
 });
 
-import "./ArtifactTable.spec.js";
+import "./api/rest-querier.spec.js";
+import "./components/ArtifactTable.spec.js";
+import "./components/ExportCSVButton.spec.js";
 import "./CrossTrackerWidget.spec.js";
 import "./reading-mode/ReadingMode.spec.js";
-import "./rest-querier.spec.js";
 import "./store/mutations.spec.js";
 import "./writing-mode/QueryEditor.spec.js";
 import "./writing-mode/TrackerListWritingMode.spec.js";

@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Add"
@@ -42,6 +42,9 @@ msgstr "Erreur à la récupération de la liste des outils de suivi de ce projet
 
 msgid "Example: @title = 'value'"
 msgstr "Exemple : @title = 'valeur'"
+
+msgid "Export CSV"
+msgstr "Export CSV"
 
 msgid "Last update by"
 msgstr "Mis à jour par"

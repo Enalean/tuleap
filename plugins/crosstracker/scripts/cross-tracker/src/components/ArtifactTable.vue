@@ -19,6 +19,9 @@
 
 <template>
     <div class="cross-tracker-artifacts-table">
+        <div class="tlp-table-actions" v-if="should_show_export_button">
+            <export-button/>
+        </div>
         <table class="tlp-table">
             <thead>
                 <tr>
@@ -35,7 +38,7 @@
                     <td colspan="6"><div class="cross-tracker-loader"></div></td>
                 </tr>
             </tbody>
-            <tbody v-else-if="artifacts.length === 0">
+            <tbody v-if="is_table_empty">
                 <tr>
                     <td colspan="6" class="tlp-table-cell-empty" v-translate>
                         No matching artifacts found
@@ -54,7 +57,7 @@
             <button class="tlp-button-primary tlp-button-outline tlp-button-small"
                     type="button"
                     v-if="is_load_more_displayed === true"
-                    v-on:click="loadMoreArtifacts"
+                    v-on:click="loadMoreArtifacts()"
                     v-bind:disabled="is_loading_more"
             >
                 <i v-if="is_loading_more" class="tlp-button-icon fa fa-spinner fa-spin"></i>
@@ -65,15 +68,16 @@
 </template>
 
 <script>
-import moment from "moment";
 import { mapState } from "vuex";
+import moment from "moment";
 import ArtifactTableRow from "./ArtifactTableRow.vue";
-import { getReportContent, getQueryResult } from "./rest-querier.js";
-import { getUserPreferredDateFormat } from "./user-service.js";
+import ExportButton from "./ExportCSVButton.vue";
+import { getReportContent, getQueryResult } from "../api/rest-querier.js";
+import { getUserPreferredDateFormat } from "../user-service.js";
 
 export default {
     name: "ArtifactTable",
-    components: { ArtifactTableRow },
+    components: { ArtifactTableRow, ExportButton },
     props: {
         writingCrossTrackerReport: Object
     },
@@ -92,6 +96,12 @@ export default {
         report_state() {
             // We just need to react to certain changes in this
             return [this.reading_mode, this.is_report_saved];
+        },
+        is_table_empty() {
+            return !this.is_loading && this.artifacts.length === 0;
+        },
+        should_show_export_button() {
+            return this.reading_mode && this.is_report_saved && !this.is_table_empty;
         }
     },
     watch: {

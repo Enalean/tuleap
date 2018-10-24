@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,7 +25,8 @@ export {
     getQueryResult,
     updateReport,
     getSortedProjectsIAmMemberOf,
-    getTrackersOfProject
+    getTrackersOfProject,
+    getCSVReport
 };
 
 async function getReport(report_id) {
@@ -87,4 +88,38 @@ function getTrackersOfProject(project_id) {
             representation: "minimal"
         }
     });
+}
+
+function getCSVReport(report_id) {
+    return recursiveGetCSV("/plugins/crosstracker/csv_export/" + report_id, {
+        limit: 50
+    });
+}
+
+async function recursiveGetCSV(route, params) {
+    const { limit = 50, offset = 0 } = params;
+    const response = await get(route, {
+        params: {
+            ...params,
+            limit,
+            offset
+        }
+    });
+    const results = await response.text();
+    const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+    const new_offset = offset + limit;
+
+    if (new_offset >= total) {
+        return results;
+    }
+
+    const new_params = {
+        ...params,
+        offset: new_offset
+    };
+
+    const second_response = await recursiveGetCSV(route, new_params);
+    const second_results = second_response.split("\r\n");
+    second_results.shift();
+    return results + second_results.join("\r\n");
 }
