@@ -22,6 +22,9 @@ namespace Tuleap\CrossTracker\Report\CSV;
 
 class CSVRepresentation
 {
+    const COMMA_SEPARATOR_NAME = 'comma';
+    const SEMICOLON_SEPARATOR_NAME = 'semicolon';
+    const TAB_SEPARATOR_NAME = 'tab';
     /**
      * @var string[][]
      */
@@ -47,6 +50,23 @@ class CSVRepresentation
             }
             $double_quoted_values[] = "\"$value\"";
         }
-        return implode($this->separator, $double_quoted_values);
+
+
+        return implode($this->getSeparator(), $double_quoted_values);
+    }
+
+    private function getSeparator()
+    {
+        if ($this->separator === self::COMMA_SEPARATOR_NAME) {
+            return ',';
+        }
+        if ($this->separator === self::SEMICOLON_SEPARATOR_NAME) {
+            return ';';
+        }
+        if ($this->separator === self::TAB_SEPARATOR_NAME) {
+            return "\t";
+        }
+
+        return ',';
     }
 }
