@@ -236,7 +236,7 @@ sub apr_is_user_allowed {
     my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
 
     my $is_user_authenticated = 0;
-    if (user_authorization($dbh, $project_id, $tuleap_username) &&
+    if (user_authorization($r, $dbh, $project_id, $tuleap_username) &&
         user_authentication($r, $cfg, $dbh, $username, $user_secret, $tuleap_username)) {
         apr_add_user_to_cache($cfg, $username, $user_secret);
         $is_user_authenticated = 1;
@@ -354,7 +354,7 @@ sub redis_user_authorization() {
     my $dbh = DBI->connect($cfg->{TuleapDSN}, $cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0 });
     my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
 
-    my $user_is_authorized_for_project = user_authorization($dbh, $project_id, $tuleap_username);
+    my $user_is_authorized_for_project = user_authorization($log, $dbh, $project_id, $tuleap_username);
     $redis->setex($cache_key, $cfg->{TuleapCacheLifetime}, $user_is_authorized_for_project);
 
     $dbh->disconnect();
@@ -404,9 +404,9 @@ sub get_tuleap_username() {
 }
 
 sub user_authorization() {
-    my ($dbh, $project_id, $tuleap_username) = @_;
+    my ($r, $dbh, $project_id, $tuleap_username) = @_;
 
-    if (! $tuleap_username || ! can_user_access_project($dbh, $project_id, $tuleap_username)) {
+    if (! $tuleap_username || ! can_user_access_project($r, $dbh, $project_id, $tuleap_username)) {
         return 0;
     }
 
@@ -485,7 +485,7 @@ sub update_user_token_usage {
 }
 
 sub can_user_access_project {
-    my ($dbh, $project_id, $username) = @_;
+    my ($r, $dbh, $project_id, $username) = @_;
 
     my $query = << 'EOF';
     SELECT NULL
@@ -495,8 +495,12 @@ sub can_user_access_project {
     SELECT NULL
     FROM user
     JOIN user_group ON user_group.user_id=user.user_id
+    JOIN groups ON user_group.group_id = groups.group_id
+        AND groups.status = 'A'
     WHERE user.status='R' AND user_name=? AND user_group.group_id=?;
 EOF
+
+    $r->log->notice("[Tuleap.pm][apr] Operation aborted, project is not active");
 
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);

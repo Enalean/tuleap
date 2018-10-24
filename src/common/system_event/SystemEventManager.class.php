@@ -19,6 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\System\ApacheServiceControl;
+use Tuleap\System\ServiceControl;
+use Tuleap\SystemEvent\SystemEvent_PROJECT_ACTIVE;
+
 /**
 * Manager of system events
 *
@@ -49,6 +54,9 @@ class SystemEventManager {
             Event::UPDATE_ALIASES,
             'approve_pending_project',
             'project_is_deleted',
+            'project_is_active',
+            'project_is_suspended',
+            'project_is_pending',
             'project_admin_add_user',
             'project_admin_remove_user',
             'project_admin_activate_user',
@@ -165,6 +173,27 @@ class SystemEventManager {
             $this->createEvent(SystemEvent::TYPE_PROJECT_DELETE,
                                $params['group_id'],
                                SystemEvent::PRIORITY_LOW);
+            break;
+        case 'project_is_active':
+            $this->createEvent(
+                SystemEvent::TYPE_PROJECT_ACTIVE,
+                $params['group_id'],
+                SystemEvent::PRIORITY_LOW
+            );
+            break;
+        case 'project_is_suspended':
+            $this->createEvent(
+                SystemEvent::TYPE_PROJECT_SUSPENDED,
+                $params['group_id'],
+                SystemEvent::PRIORITY_LOW
+            );
+            break;
+        case 'project_is_pending':
+            $this->createEvent(
+                SystemEvent::TYPE_PROJECT_PENDING,
+                $params['group_id'],
+                SystemEvent::PRIORITY_LOW
+            );
             break;
         case Event::PROJECT_RENAME:
             $this->createEvent(SystemEvent::TYPE_PROJECT_RENAME,
@@ -351,6 +380,18 @@ class SystemEventManager {
             return 'Tuleap\SystemEvent\Massmail';
         }
 
+        if ($type === SystemEvent::TYPE_PROJECT_ACTIVE) {
+            return SystemEvent_PROJECT_ACTIVE::class;
+        }
+
+        if ($type === SystemEvent::TYPE_PROJECT_SUSPENDED) {
+            return \Tuleap\SystemEvent\SystemEvent_PROJECT_SUSPENDED::class;
+        }
+
+        if ($type === SystemEvent::TYPE_PROJECT_PENDING) {
+            return \Tuleap\SystemEvent\SystemEvent_PROJECT_PENDING::class;
+        }
+
         return 'SystemEvent_' . $type;
     }
 
@@ -392,7 +433,8 @@ class SystemEventManager {
      *
      * @return SystemEvent
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         $em           = EventManager::instance();
         $sysevent     = null;
         $klass        = null;
@@ -419,13 +461,23 @@ class SystemEventManager {
         case SystemEvent::TYPE_MASSMAIL:
             $klass = $this->getClassForType($row['type']);
             break;
-
         case SystemEvent::TYPE_SVN_UPDATE_HOOKS:
         case SystemEvent::TYPE_SVN_AUTHORIZE_TOKENS:
         case SystemEvent::TYPE_SVN_REVOKE_TOKENS:
         case SystemEvent::TYPE_SVN_AUTH_CACHE_CHANGE:
             $klass = $this->getClassForType($row['type']);
             $klass_params = array(Backend::instance(Backend::SVN));
+            break;
+        case SystemEvent::TYPE_PROJECT_ACTIVE:
+        case SystemEvent::TYPE_PROJECT_SUSPENDED:
+        case SystemEvent::TYPE_PROJECT_PENDING:
+            $klass        = $this->getClassForType($row['type']);
+            $klass_params = [
+                new ApacheConfGenerator(
+                    new ApacheServiceControl(new ServiceControl()),
+                    Backend::instance(Backend::SVN)
+                )
+            ];
             break;
 
         default:

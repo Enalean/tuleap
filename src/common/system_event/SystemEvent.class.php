@@ -41,6 +41,9 @@ abstract class SystemEvent {
     const TYPE_EDIT_SSH_KEYS         = "EDIT_SSH_KEYS";
     const TYPE_PROJECT_CREATE        = "PROJECT_CREATE";
     const TYPE_PROJECT_DELETE        = "PROJECT_DELETE";
+    const TYPE_PROJECT_ACTIVE        = "PROJECT_ACTIVE";
+    const TYPE_PROJECT_SUSPENDED     = "PROJECT_SUSPENDED";
+    const TYPE_PROJECT_PENDING       = "PROJECT_PENDING  ";
     const TYPE_PROJECT_RENAME        = "PROJECT_RENAME";
     const TYPE_UGROUP_MODIFY         = "UGROUP_MODIFY";
     const TYPE_USER_CREATE           = "USER_CREATE";
@@ -54,7 +57,7 @@ abstract class SystemEvent {
     const TYPE_PROJECT_IS_PRIVATE    = "PROJECT_IS_PRIVATE";
     const TYPE_MAILING_LIST_CREATE   = "MAILING_LIST_CREATE";
     const TYPE_MAILING_LIST_DELETE   = "MAILING_LIST_DELETE";
-    const TYPE_SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";    
+    const TYPE_SERVICE_USAGE_SWITCH  = "SERVICE_USAGE_SWITCH";
     const TYPE_ROOT_DAILY            = "ROOT_DAILY";
     const TYPE_COMPUTE_MD5SUM        = "COMPUTE_MD5SUM";
     const TYPE_MASSMAIL              = "MASSMAIL";
