@@ -30,6 +30,8 @@ use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectCertification\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectCertification\ProjectOwner\UserWithStarBadgeFinder;
 use Tuleap\ProjectCertification\REST\ProjectCertificationResource;
+use Tuleap\ProjectCertification\SystemEvents\ProjectCertificationSystemEventManager;
+use Tuleap\ProjectCertification\SystemEvents\ProjectOwnerStatusNotificationSystemEvent;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Widget\Event\UserWithStarBadgeCollector;
 
@@ -67,6 +69,9 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $this->addHook('project_is_pending');
         $this->addHook('project_is_active');
         $this->addHook('project_is_deleted');
+
+        $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
+        $this->addHook(Event::GET_SYSTEM_EVENT_CLASS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -175,29 +180,59 @@ class project_certificationPlugin extends Plugin // phpcs:ignore
         $finder->findBadgedUser($collector);
     }
 
+    public function get_system_event_class($params) // phpcs:ignore
+    {
+        switch ($params['type']) {
+            case ProjectOwnerStatusNotificationSystemEvent::NAME:
+                $params['class'] = ProjectOwnerStatusNotificationSystemEvent::class;
+                $params['dependencies'] = [
+                    new \Tuleap\ProjectCertification\Notification\Sender(\ProjectManager::instance())
+                ];
+                break;
+        }
+    }
+
+    public function system_event_get_types_for_default_queue(array &$params) // phpcs:ignore
+    {
+        $params['types'] = array_merge($params['types'], [ProjectOwnerStatusNotificationSystemEvent::NAME]);
+    }
+
     public function project_is_suspended(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params['group_id'], Project::STATUS_SUSPENDED);
+        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
+            $params['group_id'],
+            Project::STATUS_SUSPENDED
+        );
     }
 
     public function project_is_pending(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params['group_id'], Project::STATUS_PENDING);
+        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
+            $params['group_id'],
+            Project::STATUS_PENDING
+        );
     }
 
     public function project_is_active(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params['group_id'], Project::STATUS_ACTIVE);
+        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
+            $params['group_id'],
+            Project::STATUS_ACTIVE
+        );
     }
 
     public function project_is_deleted(array $params) //phpcs:ignore
     {
-        $this->notifyProjectMembers($params['group_id'], Project::STATUS_DELETED);
+        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
+            $params['group_id'],
+            Project::STATUS_DELETED
+        );
     }
 
-    private function notifyProjectMembers($project_id, $status)
+    private function getSystemEventManager()
     {
-        $sender = new \Tuleap\ProjectCertification\Notification\Sender(ProjectManager::instance());
-        $sender->sendNotification($project_id, $status);
+        return new ProjectCertificationSystemEventManager(
+            SystemEventManager::instance()
+        );
     }
 }

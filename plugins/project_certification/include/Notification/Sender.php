@@ -26,6 +26,7 @@ use ForgeConfig;
 use PFUser;
 use Project;
 use ProjectManager;
+use Tuleap\ProjectCertification\Exceptions\FailedToNotifyProjectMemberException;
 
 class Sender
 {
@@ -40,6 +41,9 @@ class Sender
         $this->project_manager = $project_manager;
     }
 
+    /**
+     * @throws FailedToNotifyProjectMemberException
+     */
     public function sendNotification($project_id, $status)
     {
         $project = $this->project_manager->getProject($project_id);
@@ -54,6 +58,9 @@ class Sender
         }
     }
 
+    /**
+     * @throws FailedToNotifyProjectMemberException
+     */
     private function sendMailPerProjectMember(Project $project, PFUser $user, $status)
     {
         $user_language = $user->getLanguage();
@@ -81,13 +88,7 @@ class Sender
 
         $is_sent = $mail->send();
         if (! $is_sent) {
-            $GLOBALS['Response']->addFeedback(
-                \Feedback::ERROR,
-                sprintf(
-                    dgettext('tuleap-project_certification', 'Failed to send notification to user %s .'),
-                    $user->getName()
-                )
-            );
+            throw new FailedToNotifyProjectMemberException($user);
         }
     }
 }
