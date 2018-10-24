@@ -70,11 +70,14 @@ class Sender
             $project->getPublicName()
         );
 
+        $body_text = $purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML);
+
         $mail = new Codendi_Mail();
         $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
         $mail->setSubject($purifier->purify($title, CODENDI_PURIFIER_STRIP_HTML));
-        $mail->setBodyHtml($purifier->purify($body, CODENDI_PURIFIER_STRIP_HTML));
+        $mail->setBodyHtml($body_text);
+        $mail->setBodyText($body_text);
 
         $is_sent = $mail->send();
         if (! $is_sent) {
