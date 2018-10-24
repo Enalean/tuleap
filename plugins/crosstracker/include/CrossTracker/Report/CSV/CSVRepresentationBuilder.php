@@ -21,20 +21,19 @@
 namespace Tuleap\CrossTracker\Report\CSV;
 
 use PFUser;
+use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
+use Tuleap\CrossTracker\Report\CSV\Format\DateValue;
+use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
+use Tuleap\CrossTracker\Report\CSV\Format\TextValue;
 
 class CSVRepresentationBuilder
 {
-    /**
-     * @return CSVRepresentation
-     */
-    public function build(\Tracker_Artifact $artifact, PFUser $user)
+    /** @var CSVFormatterVisitor  */
+    private $visitor;
+
+    public function __construct(CSVFormatterVisitor $visitor)
     {
-        $tracker        = $artifact->getTracker();
-        $project_name   = $tracker->getProject()->getUnconvertedPublicName();
-        $tracker_name   = $tracker->getName();
-        $representation = new CSVRepresentation();
-        $representation->build([$artifact->getId(), $project_name, $tracker_name], $user);
-        return $representation;
+        $this->visitor = $visitor;
     }
 
     /**
@@ -43,7 +42,50 @@ class CSVRepresentationBuilder
     public function buildHeaderLine(PFUser $user)
     {
         $header_line = new CSVRepresentation();
-        $header_line->build(["id", "project", "tracker"], $user);
+        $header_line->build(
+            [
+                "id",
+                "project",
+                "tracker",
+                "submitted_on",
+                "last_update_date"
+            ],
+            $user
+        );
         return $header_line;
+    }
+
+    /**
+     * @return CSVRepresentation
+     */
+    public function build(\Tracker_Artifact $artifact, PFUser $user)
+    {
+        $formatter_parameters = new FormatterParameters($user);
+        $tracker              = $artifact->getTracker();
+
+        $project_name           = new TextValue($tracker->getProject()->getUnconvertedPublicName());
+        $formatted_project_name = $project_name->accept($this->visitor, $formatter_parameters);
+
+        $tracker_name           = new TextValue($tracker->getName());
+        $formatted_tracker_name = $tracker_name->accept($this->visitor, $formatter_parameters);
+
+        $submitted_on           = new DateValue($artifact->getSubmittedOn(), true);
+        $formatted_submitted_on = $submitted_on->accept($this->visitor, $formatter_parameters);
+
+        $last_update_date           = new DateValue($artifact->getLastUpdateDate(), true);
+        $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
+
+        $representation = new CSVRepresentation();
+        $representation->build(
+            [
+                $artifact->getId(),
+                $formatted_project_name,
+                $formatted_tracker_name,
+                $formatted_submitted_on,
+                $formatted_last_update_date
+            ],
+            $user
+        );
+        return $representation;
     }
 }

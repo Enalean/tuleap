@@ -26,6 +26,7 @@ use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\CSV\CSVExportController;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
+use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -66,6 +67,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\CurrentPage;
+use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
@@ -418,13 +420,16 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
         $report_dao = new CrossTrackerReportDao();
 
+        $csv_representation_builder = new CSVRepresentationBuilder(new CSVFormatterVisitor(new CSVFormatter()));
+        $representation_factory     = new CrossTrackerArtifactRepresentationFactory($csv_representation_builder);
+
         return new CSVExportController(
             new CrossTrackerReportFactory(
                 $report_dao,
                 TrackerFactory::instance()
             ),
             $cross_tracker_artifact_factory,
-            new CrossTrackerArtifactRepresentationFactory(new CSVRepresentationBuilder()),
+            $representation_factory,
             $report_dao,
             ProjectManager::instance(),
             new CrossTrackerPermissionGate(new URLVerification())
