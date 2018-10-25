@@ -29,6 +29,7 @@ use Log_ConsoleLogger;
 use ForgeConfig;
 use Exception;
 use EventManager;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\System\DaemonLocker;
 use System_Command;
@@ -124,12 +125,7 @@ class Worker
                 )
             );
         } else {
-            $this->setLogger(
-                new TruncateLevelLogger(
-                    new BackendLogger($this->log_file),
-                    ForgeConfig::get('sys_logger_level')
-                )
-            );
+            $this->setLogger(new MailLogger());
         }
     }
 
