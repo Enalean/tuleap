@@ -21,7 +21,7 @@ AUTOLOAD_EXCLUDES=^tests|^template
 .DEFAULT_GOAL := help
 
 help:
-	@grep -E '^[a-zA-Z0-9_\-\ ]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z0-9_\-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 	@echo "(Other less used targets are available, open Makefile for details)"
 
 #
@@ -278,7 +278,12 @@ start-distlp:
 	@echo "* Backend web with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-web bash"
 	@echo "* Backend SVN with: docker-compose -f docker-compose.yml -f -f docker-compose-distlp.yml backend-svn bash"
 
-start-mailhog: # Start mailhog to catch emails sent by your Tuleap dev platform
+start-ldap-admin: ## Start ldap administration ui
+	@echo "Start ldap administration ui"
+	@docker-compose up -d ldap-admin
+	@echo "Open your browser at https://localhost:6443"
+
+start-mailhog: ## Start mailhog to catch emails sent by your Tuleap dev platform
 	@echo "Start mailhog to catch emails sent by your Tuleap dev platform"
 	$(DOCKER_COMPOSE) up -d mailhog
 	$(DOCKER_COMPOSE) exec web make -C /usr/share/tuleap deploy-mailhog-conf
