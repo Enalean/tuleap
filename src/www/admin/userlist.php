@@ -111,9 +111,18 @@ if ($request->exist('export')) {
             }
         }
     }
+
+    $vGroupId = new Valid_GroupId();
+    $group_id = 0;
+    if($request->valid($vGroupId)) {
+        if ($request->exist('group_id')) {
+            $group_id = $request->get('group_id');
+        }
+    }
+
     //export user list in csv format
     $user_list_exporter = new Admin_UserListExporter();
-    $user_list_exporter->exportUserList($user_name_search, $current_sort_header, $sort_order, $status_values);
+    $user_list_exporter->exportUserList($group_id, $user_name_search, $current_sort_header, $sort_order, $status_values);
     exit;
 }
 
