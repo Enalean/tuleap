@@ -871,6 +871,7 @@ CREATE TABLE user (
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   INDEX idx_user_mail(email(10)),
+  INDEX idx_ldap_id(ldap_id(10)),
   KEY idx_user_user (status)
 );
 
