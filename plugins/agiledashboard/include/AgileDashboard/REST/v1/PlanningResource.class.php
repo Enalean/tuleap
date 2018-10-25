@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use \Tuleap\REST\Header;
 use \Tuleap\REST\ProjectAuthorization;
 use \Tuleap\REST\AuthenticatedResource;
+use Tuleap\REST\ProjectStatusVerificator;
 use \UserManager;
 use \AgileDashboard_Milestone_MilestoneStatusCounter;
 use \AgileDashboard_BacklogItemDao;
@@ -107,15 +108,27 @@ class PlanningResource extends AuthenticatedResource {
      * @param integer $id
      *
      * @return Planning
+     * @throws RestException 403
+     * @throws RestException 404
      */
     private function getPlanning($id) {
         $planning = PlanningFactory::build()->getPlanning($id);
+        $user     = $this->getCurrentUser();
+
         if (! $planning) {
             throw new RestException(404, 'Planning not found');
         }
+
+        $project = $planning->getPlanningTracker()->getProject();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $project
+        );
+
         ProjectAuthorization::userCanAccessProject(
-            $this->getCurrentUser(),
-            $planning->getPlanningTracker()->getProject(),
+            $user,
+            $project,
             new URLVerification()
         );
 
@@ -154,5 +167,3 @@ class PlanningResource extends AuthenticatedResource {
         Header::allowOptionsGet();
     }
 }
-
-?>
