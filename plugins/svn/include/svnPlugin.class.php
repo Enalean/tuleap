@@ -20,16 +20,18 @@
 
 require_once 'constants.php';
 
+use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
+use Tuleap\error\ProjectAccessSuspendedController;
 use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\project\Event\ProjectRegistrationActivateService;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -619,7 +621,17 @@ class SvnPlugin extends Plugin
                     $repository_manager,
                     ProjectManager::instance(),
                     new AccessHistorySaver(new AccessHistoryDao()),
-                    EventManager::instance()
+                    EventManager::instance(),
+                    new ProjectAccessSuspendedController(
+                        new ThemeManager(
+                            new BurningParrotCompatiblePageDetector(
+                                new Tuleap\Request\CurrentPage(),
+                                new \User_ForgeUserGroupPermissionsManager(
+                                    new \User_ForgeUserGroupPermissionsDao()
+                                )
+                            )
+                        )
+                    )
                 ),
                 EventManager::instance()
             ),

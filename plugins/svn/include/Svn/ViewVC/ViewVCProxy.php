@@ -20,16 +20,17 @@
 
 namespace Tuleap\Svn\ViewVC;
 
+use Codendi_HTMLPurifier;
+use CrossReferenceFactory;
 use EventManager;
+use ForgeConfig;
 use HTTPRequest;
+use Project;
+use ProjectManager;
+use ReferenceManager;
+use Tuleap\error\ProjectAccessSuspendedController;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\Svn\Repository\RepositoryManager;
-use ProjectManager;
-use Project;
-use ForgeConfig;
-use CrossReferenceFactory;
-use ReferenceManager;
-use Codendi_HTMLPurifier;
 
 class ViewVCProxy
 {
@@ -44,17 +45,23 @@ class ViewVCProxy
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ProjectAccessSuspendedController
+     */
+    private $access_suspended_controller;
 
     public function __construct(
         RepositoryManager $repository_manager,
         ProjectManager $project_manager,
         AccessHistorySaver $access_history_saver,
-        EventManager $event_manager
+        EventManager $event_manager,
+        ProjectAccessSuspendedController $access_suspended_controller
     ) {
-        $this->repository_manager   = $repository_manager;
-        $this->project_manager      = $project_manager;
-        $this->access_history_saver = $access_history_saver;
-        $this->event_manager        = $event_manager;
+        $this->repository_manager          = $repository_manager;
+        $this->project_manager             = $project_manager;
+        $this->access_history_saver        = $access_history_saver;
+        $this->event_manager               = $event_manager;
+        $this->access_suspended_controller = $access_suspended_controller;
     }
 
     private function displayViewVcHeader(HTTPRequest $request)
@@ -70,7 +77,7 @@ class ViewVCProxy
             strpos($request_uri, "view=graphimg") !== false ||
             strpos($request_uri, "view=redirect_path") !== false ||
             // ViewVC will redirect URLs with "&rev=" to "&revision=". This is needed by Hudson.
-           strpos($request_uri, "&rev=") !== false ) {
+            strpos($request_uri, "&rev=") !== false) {
             return false;
         }
 
@@ -190,7 +197,11 @@ class ViewVCProxy
             return $GLOBALS['Language']->getText('plugin_svn', 'anonymous_browse_access_denied');
         }
 
-        $project    = $this->project_manager->getProject($request->get('group_id'));
+        $project = $this->project_manager->getProject($request->get('group_id'));
+        if ($project->isSuspended() && ! $user->isSuperUser()) {
+            $this->access_suspended_controller->displayError($user);
+            exit();
+        }
         $repository = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $project);
 
         $this->access_history_saver->saveAccess($user, $repository);
@@ -218,7 +229,7 @@ class ViewVCProxy
 
         list($headers, $body) = http_split_header_body($content);
 
-        $content_type_line   = strtok($content, "\n\t\r\0\x0B");
+        $content_type_line = strtok($content, "\n\t\r\0\x0B");
 
         $content = substr($content, strpos($content, $content_type_line));
 
