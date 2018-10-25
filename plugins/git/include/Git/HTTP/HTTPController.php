@@ -148,6 +148,11 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
+        $project = $this->repository->getProject();
+        if ($project->getStatus() === Project::STATUS_SUSPENDED) {
+            throw new ForbiddenException(dgettext('tuleap-git', 'Project is not active'));
+        }
+
         $this->url = new \Git_URL(
             $this->project_manager,
             $this->repository_factory,

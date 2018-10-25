@@ -124,6 +124,9 @@ msgstr "Personnes notifiées"
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Project is not active"
+msgstr "Le projet n'est pas actif"
+
 msgid "Project not found."
 msgstr "Le projet n'a pas été trouvé."
 

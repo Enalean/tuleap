@@ -107,6 +107,9 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
+msgid "Project is not active"
+msgstr ""
+
 msgid "Project not found."
 msgstr ""
 
