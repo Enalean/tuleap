@@ -1,3 +1,7 @@
+#, php-format
+msgid "%s top backlog"
+msgstr ""
+
 msgid "Add Kanban to dashboard"
 msgstr ""
 

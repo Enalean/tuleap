@@ -12,6 +12,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.0.6\n"
 
+#, php-format
+msgid "%s top backlog"
+msgstr "%s planification générale"
+
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
 
@@ -186,7 +190,8 @@ msgid ""
 "The semantic status cannot de deleted because tracker notifications is set "
 "to \"Status change notifications\"."
 msgstr ""
-"La sémantique statut ne peut être supprimée car la notification des tracker est définie à \"Notifications lors du changement de status \" "
+"La sémantique statut ne peut être supprimée car la notification des tracker "
+"est définie à \"Notifications lors du changement de status \" "
 
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"

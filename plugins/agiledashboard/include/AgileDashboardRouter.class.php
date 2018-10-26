@@ -507,7 +507,10 @@ class AgileDashboardRouter
 
         $top_planning_rendered = $this->executeAction($controller, 'showTop', array());
         $service->displayHeader(
-            $this->getHeaderTitle($request, 'showTop'),
+            sprintf(
+                dgettext('tuleap-agiledashboard', '%s top backlog'),
+                $service->getProject()->getUnconvertedPublicName()
+            ),
             $breadcrumbs,
             [],
             $header_options
