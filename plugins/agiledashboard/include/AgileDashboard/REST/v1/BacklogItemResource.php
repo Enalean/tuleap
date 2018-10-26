@@ -43,6 +43,7 @@ use Tuleap\AgileDashboard\BacklogItem\RemainingEffortValueRetriever;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
@@ -130,8 +131,13 @@ class BacklogItemResource extends AuthenticatedResource
         $this->checkAccess();
         $current_user = $this->getCurrentUser();
         $artifact     = $this->getArtifact($id);
-        $backlog_item = $this->getBacklogItem($current_user, $artifact);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $current_user,
+            $artifact->getTracker()->getProject()
+        );
+
+        $backlog_item                        = $this->getBacklogItem($current_user, $artifact);
         $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
         $backlog_item_representation         = $backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);
 
@@ -264,8 +270,14 @@ class BacklogItemResource extends AuthenticatedResource
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
-        $current_user                        = $this->getCurrentUser();
-        $artifact                            = $this->getArtifact($id);
+        $current_user = $this->getCurrentUser();
+        $artifact     = $this->getArtifact($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $current_user,
+            $artifact->getTracker()->getProject()
+        );
+
         $backlog_items_representations       = array();
         $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
@@ -322,6 +334,7 @@ class BacklogItemResource extends AuthenticatedResource
      * @param array                                                 $add   Ids to add to backlog_items content  {@from body}
      *
      * @throws 400
+     * @throws RestException 403
      * @throws 404
      * @throws 409
      */
@@ -329,6 +342,10 @@ class BacklogItemResource extends AuthenticatedResource
 
         $artifact = $this->getArtifact($id);
         $user     = $this->getCurrentUser();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
 
         try {
             $indexed_children_ids = $this->getChildrenArtifactIds($user, $artifact);

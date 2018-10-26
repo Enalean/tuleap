@@ -59,6 +59,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use URLVerification;
@@ -233,6 +234,10 @@ class MilestoneResource extends AuthenticatedResource {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
+
         try {
             $this->milestone_validator->validateSubmilestonesFromBodyContent($ids, $milestone, $user);
         } catch (IdsFromBodyAreNotUniqueException $exception) {
@@ -296,6 +301,10 @@ class MilestoneResource extends AuthenticatedResource {
     protected function patchSubmilestones($id, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         try {
             if ($add) {
@@ -366,8 +375,13 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkAccess();
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
-        $this->sendAllowHeadersForMilestone($milestone);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
+        $this->sendAllowHeadersForMilestone($milestone);
 
         $milestone_representation = $this->milestone_representation_builder->getMilestoneRepresentation(
             $milestone,
@@ -448,6 +462,11 @@ class MilestoneResource extends AuthenticatedResource {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);
         } catch (MalformedQueryParameterException $exception) {
@@ -505,6 +524,11 @@ class MilestoneResource extends AuthenticatedResource {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
         try {
             $criterion = $this->query_to_criterion_converter->convert($query);
         } catch (MalformedQueryParameterException $exception) {
@@ -544,7 +568,13 @@ class MilestoneResource extends AuthenticatedResource {
         $this->checkAccess();
         $this->checkContentLimit($limit);
 
-        $milestone                           = $this->getMilestoneById($this->getCurrentUser(), $id);
+        $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->getCurrentUser(),
+            $milestone->getProject()
+        );
+
         $backlog                             = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
         $backlog_items                       = $this->getMilestoneContentItems($milestone, $backlog);
         $backlog_items_representations       = array();
@@ -598,6 +628,10 @@ class MilestoneResource extends AuthenticatedResource {
     protected function putContent($id, array $ids) {
         $current_user = $this->getCurrentUser();
         $milestone    = $this->getMilestoneById($current_user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $current_user);
 
@@ -658,18 +692,22 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @url PATCH {id}/content
      *
-     * @param int                                                $id     Id of the milestone
-     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order  Order of the children {@from body}
-     * @param array                                              $add    Ids to add/move to milestone content  {@from body}
+     * @param int $id Id of the milestone
+     * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
+     * @param array $add Ids to add/move to milestone content  {@from body}
      *
-     * @throw 400
-     * @throw 403
-     * @throw 404
-     * @throw 409
+     * @throws 400
+     * @throws RestException 403
+     * @throws 404
+     * @throws 409
      */
     protected function patchContent($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -780,6 +818,11 @@ class MilestoneResource extends AuthenticatedResource {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
         $paginated_backlog_item_representation_builder = new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
             $this->getBacklogItemRepresentationFactory(),
             $this->backlog_item_collection_factory,
@@ -809,16 +852,20 @@ class MilestoneResource extends AuthenticatedResource {
      *
      * @url PUT {id}/backlog
      *
-     * @param int   $id  Id of the milestone
+     * @param int $id Id of the milestone
      * @param array $ids Ids of backlog items {@from body}{@type int}
      *
-     * @throw 400
-     * @throw 403
-     * @throw 404
+     * @throws 400
+     * @throws RestException 403
+     * @throws 404
      */
     protected function putBacklog($id, array $ids) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -879,14 +926,18 @@ class MilestoneResource extends AuthenticatedResource {
      * @param \Tuleap\AgileDashboard\REST\v1\OrderRepresentation $order Order of the children {@from body}
      * @param array                                              $add    Ids to add/move to milestone backlog {@from body}
      *
-     * @throw 400
-     * @throw 403
-     * @throw 404
-     * @throw 409
+     * @throws 400
+     * @throws RestException 403
+     * @throws 404
+     * @throws 409
      */
     protected function patchBacklog($id, OrderRepresentation $order = null, array $add = null) {
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -978,13 +1029,17 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int                  $id   Id of the milestone
      * @param BacklogItemReference $item Reference of the Backlog Item {@from body} {@type BacklogItemReference}
      *
-     * @throw 400
-     * @throw 403
-     * @throw 404
+     * @throws 400
+     * @throws RestException 403
+     * @throws 404
      */
     protected function postBacklog($id, BacklogItemReference $item) {
         $user        = $this->getCurrentUser();
         $milestone   = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $milestone->getProject()
+        );
 
         $this->checkIfUserCanChangePrioritiesInMilestone($milestone, $user);
 
@@ -1042,17 +1097,26 @@ class MilestoneResource extends AuthenticatedResource {
      *
      *
      *
-     * @throws 403
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getCardwall($id) {
         $this->checkAccess();
-        $cardwall = null;
+
+        $cardwall  = null;
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
             array(
                 'version'   => 'v1',
-                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id),
+                'milestone' => $milestone,
                 'cardwall'  => &$cardwall
             )
         );
@@ -1082,16 +1146,27 @@ class MilestoneResource extends AuthenticatedResource {
      * @param int $id Id of the milestone
      *
      * @return \Tuleap\Tracker\REST\Artifact\BurndownRepresentation
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getBurndown($id) {
         $this->checkAccess();
-        $burndown = null;
+
+        $burndown  = null;
+        $user      = $this->getCurrentUser();
+        $milestone = $this->getMilestoneById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $milestone->getProject()
+        );
+
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
             array(
                 'version'   => 'v1',
-                'user'      => $this->getCurrentUser(),
-                'milestone' => $this->getMilestoneById($this->getCurrentUser(), $id),
+                'user'      => $user,
+                'milestone' => $milestone,
                 'burndown'  => &$burndown
             )
         );
