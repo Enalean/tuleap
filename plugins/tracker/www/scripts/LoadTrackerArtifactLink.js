@@ -722,10 +722,10 @@ document.observe("dom:loaded", function() {
         var list_of_renderers_to_load = $$(".tracker-form-element-artifactlink-renderer-async");
         if (list_of_renderers_to_load.size() === 0) {
             init();
+        } else {
+            addGlobalLoadingIndicator();
+            loadAsyncRenderers(list_of_renderers_to_load);
         }
-
-        addGlobalLoadingIndicator();
-        loadAsyncRenderers(list_of_renderers_to_load);
     }
 
     function addGlobalLoadingIndicator() {
