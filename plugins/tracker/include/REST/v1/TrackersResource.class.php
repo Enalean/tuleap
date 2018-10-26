@@ -40,6 +40,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
@@ -125,12 +126,21 @@ class TrackersResource extends AuthenticatedResource {
      * @param int $id Id of the tracker
      *
      * @return Tuleap\Tracker\REST\TrackerRepresentation
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getId($id) {
         $this->checkAccess();
+
         $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $tracker->getProject()
+        );
+
         $this->sendAllowHeaderForTracker();
 
         return $builder->getTrackerRepresentation($user, $tracker);
@@ -154,10 +164,12 @@ class TrackersResource extends AuthenticatedResource {
      * @access hybrid
      *
      * @param int $id Id of the tracker
-     * @param int $limit  Number of elements displayed per page {@from path}{@min 1}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
         $this->checkAccess();
@@ -165,6 +177,12 @@ class TrackersResource extends AuthenticatedResource {
 
         $user        = $this->user_manager->getCurrentUser();
         $tracker     = $this->getTrackerById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $tracker->getProject()
+        );
+
         $all_reports = $this->report_factory->getReportsByTrackerId($tracker->getId(), $user->getId());
 
         $nb_of_reports = count($all_reports);
@@ -236,6 +254,7 @@ class TrackersResource extends AuthenticatedResource {
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
      * @throws RestException 400
      * @throws RestException 404
+     * @throws RestException 403
      */
     public function getArtifacts(
         $id,
@@ -251,6 +270,11 @@ class TrackersResource extends AuthenticatedResource {
 
         $user          = $this->user_manager->getCurrentUser();
         $valid_tracker = $this->getTrackerById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $valid_tracker->getProject()
+        );
 
         if ($query) {
             $artifacts = $this->getArtifactsMatchingFromCriteria($user, $valid_tracker, $query, $offset, $limit);
@@ -401,11 +425,13 @@ class TrackersResource extends AuthenticatedResource {
      * @url GET {id}/parent_artifacts
      * @access hybrid
      *
-     * @param int    $id
-     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
-     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $id
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ParentArtifactReference}
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getParentArtifacts($id, $limit  = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET) {
         $this->checkAccess();
@@ -413,7 +439,13 @@ class TrackersResource extends AuthenticatedResource {
 
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
-        $parent  = $this->getParentTracker($user, $tracker);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $tracker->getProject()
+        );
+
+        $parent = $this->getParentTracker($user, $tracker);
 
         $possible_parents_getr                       = new Tracker_Artifact_PossibleParentsRetriever($this->tracker_artifact_factory);
         list($label, $pagination, $display_selector) = $possible_parents_getr->getPossibleArtifactParents($parent, $user, $limit, $offset);

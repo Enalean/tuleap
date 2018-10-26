@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use \Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\AuthenticatedResource;
 use \Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use \Luracast\Restler\RestException;
+use Tuleap\REST\ProjectStatusVerificator;
 use \Tuleap\Tracker\REST\ReportRepresentation;
 use \Tracker_ReportFactory;
 use \Tracker_ArtifactFactory;
@@ -85,11 +86,18 @@ class ReportsResource extends AuthenticatedResource
      * @param int $id Id of the report
      *
      * @return Tuleap\Tracker\REST\ReportRepresentation
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getId($id) {
         $this->checkAccess();
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $report->getTracker()->getProject()
+        );
 
         $rest_report = new ReportRepresentation();
         $rest_report->build($report);
@@ -131,12 +139,14 @@ class ReportsResource extends AuthenticatedResource
      * @url GET {id}/artifacts
      * @access hybrid
      *
-     * @param int    $id      Id of the report
-     * @param string $values  Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
-     * @param int    $limit   Number of elements displayed per page {@from path}{@min 1}
-     * @param int    $offset  Position of the first element to display {@from path}{@min 0}
+     * @param int $id Id of the report
+     * @param string $values Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ArtifactRepresentation}
+     * @throws RestException 403
+     * @throws RestException 404
      */
     public function getArtifacts(
         $id,
@@ -149,6 +159,11 @@ class ReportsResource extends AuthenticatedResource
 
         $user   = UserManager::instance()->getCurrentUser();
         $report = $this->getReportById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $report->getTracker()->getProject()
+        );
 
         $artifact_collection = $this->report_artifact_factory->getArtifactsMatchingReport(
             $report,

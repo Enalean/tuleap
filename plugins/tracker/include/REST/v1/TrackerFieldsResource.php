@@ -26,6 +26,7 @@ use Tracker_FormElementFactory;
 use Tracker_REST_FieldRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
 
@@ -76,7 +77,8 @@ class TrackerFieldsResource extends AuthenticatedResource
      *
      * @throws 400
      * @throws 401
-     * @throws 404
+     * @throws RestException 403
+     * @throws RestException 404
      */
     protected function patch($id, $patch)
     {
@@ -88,11 +90,17 @@ class TrackerFieldsResource extends AuthenticatedResource
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         $field                = $form_element_factory->getFieldById($id);
+
+
         if (! $field) {
             throw new RestException(404, "Field not found.");
         }
 
         $tracker = $field->getTracker();
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $tracker->getProject()
+        );
+
         if (! $tracker->userIsAdmin($user)) {
             throw new RestException(401, "User is not tracker administrator.");
         }
