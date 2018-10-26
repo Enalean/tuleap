@@ -150,6 +150,11 @@ class Git_Gitolite_ConfigPermissionsSerializer {
         return $repo_config;
     }
 
+    public function denyAccessForRepository()
+    {
+        return self::REMOVE_PERMISSION ."refs/.*$ = @all" . PHP_EOL;
+    }
+
     /**
      * @return string
      */

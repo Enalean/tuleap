@@ -89,7 +89,11 @@ class Git_Gitolite_GitoliteConfWriter {
         return $git_modifications;
     }
 
-    public function dumpProjectRepoConf(Project $project) {
+    /**
+     * @return Git_Gitolite_GitModifications
+     */
+    public function dumpProjectRepoConf(Project $project)
+    {
         $git_modifications = new Git_Gitolite_GitModifications();
         $hostname          = $this->gitoliterc_reader->getHostname();
 
@@ -97,15 +101,42 @@ class Git_Gitolite_GitoliteConfWriter {
             $this->dumpProjectRepoConfForMirrors($project, $git_modifications);
         }
 
+        $config_file_content = $this->project_serializer->dumpProjectRepoConf($project);
+        $this->modifyGitConfigurationFileInGitolite($project, $git_modifications, $config_file_content);
+
+        return $git_modifications;
+    }
+
+    /**
+     * @return Git_Gitolite_GitModifications
+     */
+    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
+    {
+        $git_modifications = new Git_Gitolite_GitModifications();
+        $hostname          = $this->gitoliterc_reader->getHostname();
+
+        if ($hostname) {
+            $this->dumpSuspendedProjectRepositoriesConfigurationForMirrors($project, $git_modifications);
+        }
+
+        $config_file_content = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
+        $this->modifyGitConfigurationFileInGitolite($project, $git_modifications, $config_file_content);
+
+        return $git_modifications;
+    }
+
+    private function modifyGitConfigurationFileInGitolite(
+        Project $project,
+        Git_Gitolite_GitModifications $git_modifications,
+        $config_file_content
+    ) {
         $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . "...");
         $config_file = $this->getProjectPermissionConfFile($project);
         $this->logger->debug("Get Project Permission Conf File: " . $project->getUnixName() . ": done");
 
         $this->logger->debug("Write Git config: " . $project->getUnixName() . "...");
-        $this->writeGitConfig($config_file, $this->project_serializer->dumpProjectRepoConf($project), $git_modifications);
+        $this->writeGitConfig($config_file, $config_file_content, $git_modifications);
         $this->logger->debug("Write Git config: " . $project->getUnixName() . ": done");
-
-        return $git_modifications;
     }
 
     public function updateMirror($mirror_id, $old_hostname) {
@@ -163,6 +194,17 @@ class Git_Gitolite_GitoliteConfWriter {
         }
     }
 
+    private function dumpSuspendedProjectRepositoriesConfigurationForMirrors(
+        Project $project,
+        Git_Gitolite_GitModifications $git_modifications
+    ) {
+        $mirrors = $this->mirror_data_mapper->fetchAllForProject($project);
+        foreach ($mirrors as $mirror) {
+            $this->dumpSuspendedProjectRepositoriesConfigurationForAGivenMirror($project, $mirror, $git_modifications);
+            $this->updateMirrorIncludes($mirror, $git_modifications);
+        }
+    }
+
     private function updateMirrorIncludes(Git_Mirror_Mirror $mirror, Git_Gitolite_GitModifications $git_modifications) {
         if (empty($mirror->hostname)) {
             return;
@@ -182,6 +224,29 @@ class Git_Gitolite_GitoliteConfWriter {
 
         $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
         $this->writeGitConfig($config_file, $this->project_serializer->dumpPartialProjectRepoConf($project, $repositories), $git_modifications);
+    }
+
+    private function dumpSuspendedProjectRepositoriesConfigurationForAGivenMirror(
+        Project $project,
+        Git_Mirror_Mirror $mirror,
+        Git_Gitolite_GitModifications $git_modifications
+    ) {
+        if (empty($mirror->hostname)) {
+            return;
+        }
+
+        $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, array($project->getGroupId()));
+        $this->createConfFolderForMirrorIfNeeded($mirror);
+
+        $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
+        $this->writeGitConfig(
+            $config_file,
+            $this->project_serializer->dumpPartialSuspendedProjectRepositoriesConfiguration(
+                $project,
+                $repositories
+            ),
+            $git_modifications
+        );
     }
 
     private function getProjectPermissionConfFile(Project $project) {

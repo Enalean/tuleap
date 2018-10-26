@@ -244,14 +244,37 @@ class Git_GitoliteDriver {
      *
      * @param Project $project
      */
-    public function dumpProjectRepoConf(Project $project) {
+    public function dumpProjectRepoConf(Project $project)
+    {
         $git_modifications = $this->gitolite_conf_writer->dumpProjectRepoConf($project);
+
+        if ($this->addModifiedConfigurationFiles($git_modifications)) {
+            return $this->updateMainConfIncludes();
+        }
+
+        return false;
+    }
+
+    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
+    {
+        $git_modifications = $this->gitolite_conf_writer->dumpSuspendedProjectRepositoriesConfiguration($project);
+
+        if ($this->addModifiedConfigurationFiles($git_modifications)) {
+            return $this->updateMainConfIncludes();
+        }
+
+        return false;
+    }
+
+    private function addModifiedConfigurationFiles(Git_Gitolite_GitModifications $git_modifications)
+    {
         foreach ($git_modifications->toAdd() as $file) {
             if (! $this->gitExec->add($file)) {
                 return false;
             }
         }
-        return $this->updateMainConfIncludes();
+
+        return true;
     }
 
     public function updateMainConfIncludes() {

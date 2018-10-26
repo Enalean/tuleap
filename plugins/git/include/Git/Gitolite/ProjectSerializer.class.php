@@ -81,6 +81,44 @@ class Git_Gitolite_ProjectSerializer {
         return $project_config;
     }
 
+    public function dumpPartialSuspendedProjectRepositoriesConfiguration(Project $project, array $repositories)
+    {
+        $this->logger->debug("Dumping partial suspended project repo conf for: " . $project->getUnixName());
+        $project_config = '';
+        foreach ($repositories as $repository) {
+
+            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
+            $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
+            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");
+        }
+
+        return $project_config;
+    }
+
+    public function dumpSuspendedProjectRepositoriesConfiguration(Project $project)
+    {
+        $this->logger->debug("Dumping suspended project repo conf for: " . $project->getUnixName());
+
+        $project_config = '';
+        foreach ($this->repository_factory->getAllRepositoriesOfProject($project) as $repository) {
+
+            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . "...");
+            $project_config .= $this->fetchSuspendedRepositoryConfiguration($project, $repository);
+            $this->logger->debug("Fetching disabled repo configuration: " . $repository->getName() . ": done");
+        }
+
+        return $project_config;
+    }
+
+    private function fetchSuspendedRepositoryConfiguration(Project $project, GitRepository $repository)
+    {
+        $repo_full_name = $this->repoFullName($repository, $project->getUnixName());
+        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
+        $repo_config .= $this->permissions_serializer->denyAccessForRepository();
+
+        return $repo_config. PHP_EOL;
+    }
+
     protected function fetchReposConfig(Project $project, GitRepository $repository) {
         $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;

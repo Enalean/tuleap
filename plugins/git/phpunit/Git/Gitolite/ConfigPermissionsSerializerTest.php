@@ -35,7 +35,11 @@ class ConfigPermissionsSerializerTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
+    /**
+     * @var Git_Gitolite_ConfigPermissionsSerializer
+     */
     private $serializer;
+
     private $project;
     private $project_id = 100;
 
@@ -150,5 +154,11 @@ class ConfigPermissionsSerializerTest extends TestCase
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(666, ProjectUGroup::REGISTERED));
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertSame(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
+    }
+
+    public function testItDeniesAllAccessToRepository()
+    {
+        $result = $this->serializer->denyAccessForRepository();
+        $this->assertSame(' - refs/.*$ = @all' . PHP_EOL, $result);
     }
 }
