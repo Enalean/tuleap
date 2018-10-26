@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsRunner;
 
 require_once('utils.php');
@@ -751,7 +752,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
 
     public function executePostCreationActions()
     {
-        ActionsRunner::build(BackendLogger::getDefaultLogger())->executePostCreationActions($this);
+        ActionsRunner::build(new MailLogger())->executePostCreationActions($this);
     }
 
     /**
