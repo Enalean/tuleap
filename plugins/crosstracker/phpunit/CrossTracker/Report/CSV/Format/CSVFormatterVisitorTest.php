@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 
@@ -46,8 +47,8 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitDateValue()
     {
-        $user       = Mockery::mock(\PFUser::class);
-        $date_value = new DateValue(1540456782, true);
+        $user           = Mockery::mock(PFUser::class);
+        $date_value     = new DateValue(1540456782, true);
         $formatted_date = '25/10/2018 10:39';
         $this->date_formatter->shouldReceive('formatDateForCSVForUser')
             ->withArgs([$user, 1540456782, true])
@@ -61,12 +62,37 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitTextValue()
     {
-        $user = \Mockery::mock(\PFUser::class);
+        $user       = Mockery::mock(PFUser::class);
         $parameters = new FormatterParameters($user);
         $text_value = new TextValue('Kara "Starbuck" Thrace');
 
         $result = $text_value->accept($this->visitor, $parameters);
 
         $this->assertEquals('"Kara ""Starbuck"" Thrace"', $result);
+    }
+
+    public function testVisitUserValue()
+    {
+        $user       = Mockery::mock(PFUser::class);
+        $parameters = new FormatterParameters($user);
+
+        $starbuck = Mockery::mock(PFUser::class);
+        $starbuck->shouldReceive('getUserName')->andReturns('starbuck');
+        $user_value = new UserValue($starbuck);
+
+        $result = $user_value->accept($this->visitor, $parameters);
+
+        $this->assertEquals('starbuck', $result);
+    }
+
+    public function testVisitNullUserValue()
+    {
+        $user       = Mockery::mock(PFUser::class);
+        $parameters = new FormatterParameters($user);
+        $user_value = new UserValue(null);
+
+        $result = $user_value->accept($this->visitor, $parameters);
+
+        $this->assertEquals('', $result);
     }
 }

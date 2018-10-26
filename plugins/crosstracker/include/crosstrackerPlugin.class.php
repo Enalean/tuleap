@@ -420,7 +420,10 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
         $report_dao = new CrossTrackerReportDao();
 
-        $csv_representation_builder = new CSVRepresentationBuilder(new CSVFormatterVisitor(new CSVFormatter()));
+        $csv_representation_builder = new CSVRepresentationBuilder(
+            new CSVFormatterVisitor(new CSVFormatter()),
+            $user_manager
+        );
         $representation_factory     = new CrossTrackerArtifactRepresentationFactory($csv_representation_builder);
 
         return new CSVExportController(

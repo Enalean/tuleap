@@ -20,20 +20,31 @@
 
 namespace Tuleap\CrossTracker\Report\CSV\Format;
 
-interface FormatterVisitor
+use PFUser;
+
+class UserValue implements ValueVisitable
 {
-    /**
-     * @return string
-     */
-    public function visitDateValue(DateValue $date_value, FormatterParameters $parameters);
+    /** @var PFUser|null */
+    private $value;
 
     /**
-     * @return string
+     * @param null|PFUser $value
      */
-    public function visitTextValue(TextValue $text_value, FormatterParameters $parameters);
+    public function __construct(PFUser $value = null)
+    {
+        $this->value = $value;
+    }
+
+    public function accept(FormatterVisitor $visitor, FormatterParameters $parameters)
+    {
+        return $visitor->visitUserValue($this, $parameters);
+    }
 
     /**
-     * @return string
+     * @return PFUser|null
      */
-    public function visitUserValue(UserValue $user_value, FormatterParameters $parameters);
+    public function getValue()
+    {
+        return $this->value;
+    }
 }
