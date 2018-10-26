@@ -24,6 +24,7 @@ require_once __DIR__ . '/../../../bootstrap.php';
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 
@@ -31,12 +32,14 @@ class CSVRepresentationBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var Mockery\MockInterface */
+    /** @var MockInterface */
     private $visitor;
     /** @var CSVRepresentationBuilder */
     private $builder;
-    /** @var Mockery\MockInterface */
+    /** @var MockInterface */
     private $user;
+    /** @var MockInterface */
+    private $user_manager;
 
     protected function setUp()
     {
@@ -46,15 +49,19 @@ class CSVRepresentationBuilderTest extends TestCase
         $this->user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn(
             CSVRepresentation::COMMA_SEPARATOR_NAME
         );
-        $this->visitor = Mockery::mock(CSVFormatterVisitor::class);
-        $this->builder = new CSVRepresentationBuilder($this->visitor);
+        $this->visitor      = Mockery::mock(CSVFormatterVisitor::class);
+        $this->user_manager = Mockery::mock(\UserManager::class);
+        $this->builder      = new CSVRepresentationBuilder($this->visitor, $this->user_manager);
     }
 
     public function testBuildHeaderLine()
     {
         $result = $this->builder->buildHeaderLine($this->user);
 
-        $this->assertEquals('id,project,tracker,submitted_on,last_update_date', $result->__toString());
+        $this->assertEquals(
+            'id,project,tracker,submitted_by,submitted_on,last_update_by,last_update_date',
+            $result->__toString()
+        );
     }
 
     public function testBuild()
@@ -71,18 +78,26 @@ class CSVRepresentationBuilderTest extends TestCase
                 'getId'             => $artifact_id,
                 'getTracker'        => $tracker,
                 'getSubmittedOn'    => '1540456782',
-                'getLastUpdateDate' => '1540478708'
+                'getLastUpdateDate' => '1540478708',
+                'getSubmittedBy'    => 992,
+                'getLastModifiedBy' => 851
             ]
         );
+        $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
 
         $formatted_project_name     = '"Atacaman"';
         $formatted_tracker_name     = '"freckly"';
         $formatted_submitted_on     = '25/10/2018 10:39';
         $formatted_last_update_date = '25/10/2018 16:45';
+        $formatted_submitted_by     = '"tszwejbka"';
+        $formatted_last_update_by   = '"akrostag"';
+
         $this->visitor->shouldReceive('visitTextValue')
             ->andReturn($formatted_project_name, $formatted_tracker_name);
         $this->visitor->shouldReceive('visitDateValue')
             ->andReturn($formatted_submitted_on, $formatted_last_update_date);
+        $this->visitor->shouldReceive('visitUserValue')
+            ->andReturn($formatted_submitted_by, $formatted_last_update_by);
 
         $expected_representation = new CSVRepresentation();
         $expected_representation->build(
@@ -90,7 +105,9 @@ class CSVRepresentationBuilderTest extends TestCase
                 $artifact_id,
                 $formatted_project_name,
                 $formatted_tracker_name,
+                $formatted_submitted_by,
                 $formatted_submitted_on,
+                $formatted_last_update_by,
                 $formatted_last_update_date
             ],
             $this->user

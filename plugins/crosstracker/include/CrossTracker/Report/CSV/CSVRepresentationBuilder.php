@@ -25,15 +25,21 @@ use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\DateValue;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\CSV\Format\TextValue;
+use Tuleap\CrossTracker\Report\CSV\Format\UserValue;
+use UserManager;
 
 class CSVRepresentationBuilder
 {
     /** @var CSVFormatterVisitor  */
     private $visitor;
 
-    public function __construct(CSVFormatterVisitor $visitor)
+    /** @var UserManager */
+    private $user_manager;
+
+    public function __construct(CSVFormatterVisitor $visitor, UserManager $user_manager)
     {
-        $this->visitor = $visitor;
+        $this->visitor      = $visitor;
+        $this->user_manager = $user_manager;
     }
 
     /**
@@ -47,7 +53,9 @@ class CSVRepresentationBuilder
                 "id",
                 "project",
                 "tracker",
+                "submitted_by",
                 "submitted_on",
+                "last_update_by",
                 "last_update_date"
             ],
             $user
@@ -69,8 +77,16 @@ class CSVRepresentationBuilder
         $tracker_name           = new TextValue($tracker->getName());
         $formatted_tracker_name = $tracker_name->accept($this->visitor, $formatter_parameters);
 
+        $submitted_by_user      = $this->user_manager->getUserById($artifact->getSubmittedBy());
+        $submitted_by           = new UserValue($submitted_by_user);
+        $formatted_submitted_by = $submitted_by->accept($this->visitor, $formatter_parameters);
+
         $submitted_on           = new DateValue($artifact->getSubmittedOn(), true);
         $formatted_submitted_on = $submitted_on->accept($this->visitor, $formatter_parameters);
+
+        $last_update_by_user      = $this->user_manager->getUserById($artifact->getLastModifiedBy());
+        $last_update_by           = new UserValue($last_update_by_user);
+        $formatted_last_update_by = $last_update_by->accept($this->visitor, $formatter_parameters);
 
         $last_update_date           = new DateValue($artifact->getLastUpdateDate(), true);
         $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
@@ -81,7 +97,9 @@ class CSVRepresentationBuilder
                 $artifact->getId(),
                 $formatted_project_name,
                 $formatted_tracker_name,
+                $formatted_submitted_by,
                 $formatted_submitted_on,
+                $formatted_last_update_by,
                 $formatted_last_update_date
             ],
             $user

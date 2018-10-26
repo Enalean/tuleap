@@ -49,4 +49,13 @@ class CSVFormatterVisitor implements FormatterVisitor
         $escaped_value = str_ireplace('"', '""', $value);
         return '"' . $escaped_value . '"';
     }
+
+    public function visitUserValue(UserValue $user_value, FormatterParameters $parameters)
+    {
+        $user = $user_value->getValue();
+        if ($user === null) {
+            return '';
+        }
+        return $user->getUserName();
+    }
 }

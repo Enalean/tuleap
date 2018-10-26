@@ -365,8 +365,11 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         );
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
-        $this->query_parser = new QueryParameterParser(new JsonDecoder());
-        $csv_representation_builder = new CSVRepresentationBuilder(new CSVFormatterVisitor(new CSVFormatter()));
+        $this->query_parser           = new QueryParameterParser(new JsonDecoder());
+        $csv_representation_builder   = new CSVRepresentationBuilder(
+            new CSVFormatterVisitor(new CSVFormatter()),
+            $this->user_manager
+        );
         $this->representation_factory = new CrossTrackerArtifactRepresentationFactory($csv_representation_builder);
     }
 
