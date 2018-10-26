@@ -32,6 +32,7 @@ use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
 use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
 use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
@@ -350,6 +351,11 @@ class RepositoryResource extends AuthenticatedResource
         $user       = $this->user_manager->getCurrentUser();
         $repository = $this->getRepository($id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $repository->getProject()
+        );
+
         ProjectAuthorization::userCanAccessProject(
             $user,
             $repository->getProject(),
@@ -433,6 +439,10 @@ class RepositoryResource extends AuthenticatedResource
         $user       = $this->user_manager->getCurrentUser();
         $repository = $this->getRepository($id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository->getProject()
+        );
+
         ProjectAuthorization::userCanAccessProject(
             $user,
             $repository->getProject(),
@@ -506,6 +516,11 @@ class RepositoryResource extends AuthenticatedResource
         try {
             $current_user = $this->user_manager->getCurrentUser();
             $repository   = $this->getRepository($id);
+
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+                $repository->getProject()
+            );
+
             ProjectAuthorization::userCanAccessProject(
                 $this->user_manager->getCurrentUser(),
                 $repository->getProject(),
@@ -638,6 +653,11 @@ class RepositoryResource extends AuthenticatedResource
 
         $user    = $this->user_manager->getCurrentUser();
         $project = $this->project_manager->getProject($project_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $project
+        );
+
         if ($project->isError()) {
             throw new RestException(400, "Given project does not exist");
         }
