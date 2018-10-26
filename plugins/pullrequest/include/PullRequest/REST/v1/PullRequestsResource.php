@@ -98,6 +98,7 @@ use Tuleap\PullRequest\Timeline\TimelineEventCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use URLVerification;
 use UserManager;
@@ -308,6 +309,11 @@ class PullRequestsResource extends AuthenticatedResource
         $repository_src                  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest                 = $this->getRepository($pull_request->getRepoDestId());
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $repository_src->getProject()
+        );
+
         $pr_representation_factory = new PullRequestRepresentationFactory(
             $this->access_control_verifier,
             $this->status_retriever,
@@ -357,6 +363,11 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pull_request   = $pull_requests_with_git_reference->getPullRequest();
         $git_repository = $this->getRepository($pull_request->getRepoDestId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $git_repository->getProject()
+        );
 
         $provider = new ProjectProvider($git_repository);
 
@@ -428,6 +439,12 @@ class PullRequestsResource extends AuthenticatedResource
 
         $pull_request_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
+        $dest_repository                 = $this->getRepository($pull_request->getRepoDestId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $dest_repository->getProject()
+        );
 
         $collection = $this->labels_retriever->getPaginatedLabelsForPullRequest($pull_request, $limit, $offset);
         $labels_representation = array_map(
@@ -512,6 +529,10 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $repository_dest                 = $this->getRepository($pull_request->getRepoDestId());
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository_dest->getProject()
+        );
+
         try {
             $this->labels_updater->update($repository_dest->getProjectId(), $pull_request, $body);
         } catch (UnknownLabelException $exception) {
@@ -556,6 +577,11 @@ class PullRequestsResource extends AuthenticatedResource
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
         $executor                        = $this->getExecutor($git_repository_destination);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $git_repository_destination->getProject()
+        );
+
         $file_representation_factory = new PullRequestFileRepresentationFactory($executor);
 
         try {
@@ -598,6 +624,11 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request_with_git_reference = $this->getReadablePullRequestWithGitReference($id);
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $git_repository_destination->getProject()
+        );
 
         $git_project = (new ProjectProvider($git_repository_destination))->GetProject();
         $commit_src  = $git_project->GetCommit($pull_request->getSha1Src());
@@ -661,6 +692,7 @@ class PullRequestsResource extends AuthenticatedResource
      * @param PullRequestInlineCommentPOSTRepresentation $comment_data Comment {@from body} {@type Tuleap\PullRequest\REST\v1\PullRequestInlineCommentPOSTRepresentation}
      *
      * @status 201
+     * @throws RestException 403
      */
     protected function postInline($id, PullRequestInlineCommentPOSTRepresentation $comment_data)
     {
@@ -672,6 +704,10 @@ class PullRequestsResource extends AuthenticatedResource
         $git_repository_source           = $this->getRepository($pull_request->getRepositoryId());
         $git_repository_destination      = $this->getRepository($pull_request->getRepoDestId());
         $user                            = $this->user_manager->getCurrentUser();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $git_repository_destination->getProject()
+        );
 
         $git_project = (new ProjectProvider($git_repository_destination))->GetProject();
         $commit_src  = $git_project->GetCommit($pull_request->getSha1Src());
@@ -756,6 +792,10 @@ class PullRequestsResource extends AuthenticatedResource
         $repository_dest_id  = $content->repository_dest_id;
         $repository_dest     = $this->getRepository($repository_dest_id);
         $branch_dest         = $content->branch_dest;
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository_dest->getProject()
+        );
 
         $this->checkUserCanReadRepository($user, $repository_src);
 
@@ -860,6 +900,10 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $repository_src                  = $this->getRepository($pull_request->getRepositoryId());
         $repository_dest                 = $this->getRepository($pull_request->getRepoDestId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository_dest->getProject()
+        );
 
         $status = $body->status;
         if ($status !== null) {
@@ -974,6 +1018,7 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\TimelineRepresentation}
      *
+     * @throws RestException 403
      * @throws 404
      * @throws 406
      */
@@ -987,6 +1032,11 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $git_repository                  = $this->getRepository($pull_request->getRepositoryId());
         $project_id                      = $git_repository->getProjectId();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $git_repository->getProject()
+        );
 
         $paginated_timeline_representation = $this->paginated_timeline_representation_builder->getPaginatedTimelineRepresentation(
             $id,
@@ -1026,6 +1076,7 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\CommentRepresentation}
      *
+     * @throws RestException 403
      * @throws 404
      * @throws 406
      */
@@ -1039,6 +1090,11 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $git_repository                  = $this->getRepository($pull_request->getRepositoryId());
         $project_id                      = $git_repository->getProjectId();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $git_repository->getProject()
+        );
 
         $paginated_comments_representations = $this->paginated_comments_representations_builder->getPaginatedCommentsRepresentations(
             $id,
@@ -1067,10 +1123,12 @@ class PullRequestsResource extends AuthenticatedResource
      *
      * @access protected
      *
-     * @param int                       $id           Pull request id
+     * @param int $id Pull request id
      * @param CommentPOSTRepresentation $comment_data Comment {@from body} {@type Tuleap\PullRequest\REST\v1\CommentPOSTRepresentation}
      *
      * @status 201
+     * @throws RestException 401
+     * @throws RestException 403
      */
     protected function postComments($id, CommentPOSTRepresentation $comment_data)
     {
@@ -1082,6 +1140,10 @@ class PullRequestsResource extends AuthenticatedResource
         $pull_request                    = $pull_request_with_git_reference->getPullRequest();
         $git_repository                  = $this->getRepository($pull_request->getRepositoryId());
         $project_id                      = $git_repository->getProjectId();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $git_repository->getProject()
+        );
 
         $current_time   = time();
         $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
