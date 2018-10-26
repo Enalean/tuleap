@@ -37,22 +37,12 @@ class CSVRepresentation
     public function build(array $values, \PFUser $user)
     {
         $this->values    = $values;
-        $this->separator = $user->getPreference("user_csv_separator");
+        $this->separator = $user->getPreference('user_csv_separator');
     }
 
     public function __toString()
     {
-        $double_quoted_values = [];
-        foreach ($this->values as $value) {
-            if (is_numeric($value)) {
-                $double_quoted_values[] = $value;
-                continue;
-            }
-            $double_quoted_values[] = "\"$value\"";
-        }
-
-
-        return implode($this->getSeparator(), $double_quoted_values);
+        return implode($this->getSeparator(), $this->values);
     }
 
     private function getSeparator()
