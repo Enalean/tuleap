@@ -151,9 +151,11 @@ if ($json_format) {
         $display_name   = $user_info['display_name'];
         $login          = $user_info['login'];
 
+        $id = ($user_id) ? $user_id : $user_info['display_name'];
+
         $json_entries[] = array(
             'type'       => 'user',
-            'id'         => $display_name,
+            'id'         => $id,
             'text'       => $display_name,
             'avatar_url' => '/users/' . urlencode($login) . '/avatar.png',
             'has_avatar' => (bool)$user_info['has_avatar']
