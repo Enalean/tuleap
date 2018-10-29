@@ -37,6 +37,7 @@ use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use URLVerification;
 use UserManager;
@@ -115,16 +116,21 @@ class CardsResource
      * </ol>
      *
      * @url PUT {id}
-     * @param string $id        Id of the card (format: planningId_artifactId, @see milestones/:id/cardwall)
-     * @param string $label     Label of the card {@from body}
-     * @param array  $values    Card's fields values {@from body}
-     * @param int    $column_id Where the card should stands {@from body}
+     * @param string $id Id of the card (format: planningId_artifactId, @see milestones/:id/cardwall)
+     * @param string $label Label of the card {@from body}
+     * @param array $values Card's fields values {@from body}
+     * @param int $column_id Where the card should stands {@from body}
      *
+     * @throws RestException 403
      */
     protected function putId($id, $label, array $values, $column_id = null) {
         try {
             $current_user = $this->user_manager->getCurrentUser();
             $single_card  = $this->getSingleCard($current_user, $id);
+
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+                $single_card->getArtifact()->getTracker()->getProject()
+            );
 
             $card_updater = new CardUpdater();
             $card_updater->updateCard($current_user, $single_card, $label, $values, $column_id);
