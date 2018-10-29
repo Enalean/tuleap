@@ -88,6 +88,7 @@ use Tuleap\Git\Repository\RepositoryCreator;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use UserManager;
 
@@ -439,6 +440,10 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(400, "Project does not use Git service");
         }
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $project
+        );
+
         if (! $this->git_permission_manager->userIsGitAdmin($user, $project)) {
             throw new RestException(401, "User does not have permissions to create a Git Repository");
         }
@@ -503,6 +508,10 @@ class RepositoryResource extends AuthenticatedResource
         }
 
         $repository = $this->repository_factory->getRepositoryById($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository->getProject()
+        );
 
         if (! $repository) {
             throw new RestException(404, 'Repository not found.');
@@ -582,6 +591,10 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(404, 'Repository not found.');
         }
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository->getProject()
+        );
+
         $repo_ci_token = $this->ci_token_manager->getToken($repository);
         if ($repo_ci_token === null || ! \hash_equals($token, $repo_ci_token)) {
             throw new RestException(403, 'Invalid token');
@@ -651,6 +664,10 @@ class RepositoryResource extends AuthenticatedResource
 
         $user       = $this->getCurrentUser();
         $repository = $this->getRepository($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $repository->getProject()
+        );
 
         if (! $repository->userCanAdmin($user)) {
             throw new RestException(403, 'User is not allowed to migrate repository');

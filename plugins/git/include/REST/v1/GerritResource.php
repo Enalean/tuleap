@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2016 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,6 @@
 namespace Tuleap\Git\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tuleap\Git\REST\v1\GerritServerRepresentation;
 use Tuleap\REST\Header;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\Git\RemoteServer\Gerrit\Permission\ServerPermissionManager;
@@ -34,6 +33,7 @@ use ProjectManager;
 use SystemEventManager;
 use GitRepositoryFactory;
 use Git_SystemEventManager;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 use PFUser;
 
@@ -108,6 +108,12 @@ class GerritResource extends AuthenticatedResource {
 
         if ($for_project) {
             $project = $this->getProjectFromRequest($for_project);
+
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+                $current_user,
+                $project
+            );
+
             $servers = $this->server_factory->getAvailableServersForProject($project);
         } else {
             $servers = $this->server_factory->getUnrestrictedServers();
