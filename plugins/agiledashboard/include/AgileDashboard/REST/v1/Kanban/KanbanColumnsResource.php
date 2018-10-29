@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ use AgileDashboard_UserNotAdminException;
 use AgileDashboard_KanbanColumnNotRemovableException;
 use AgileDashboardStatisticsAggregator;
 use TrackerFactory;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 use PFUser;
 use AgileDashboard_KanbanUserPreferences;
@@ -126,12 +127,18 @@ class KanbanColumnsResource {
      * @param KanbanColumnPATCHRepresentation $column    The kanban column {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanColumnPATCHRepresentation}
      *
      * @throws 401
+     * @throws RestException 403
      * @throws 404
      */
     protected function patch($id, $kanban_id, KanbanColumnPATCHRepresentation $updated_column_properties) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
-        $column       = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
+
+        $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
 
         try {
             if (isset($updated_column_properties->wip_limit) && ! $this->kanban_column_manager->updateWipLimit($current_user, $kanban, $column, $updated_column_properties->wip_limit)) {
@@ -189,12 +196,18 @@ class KanbanColumnsResource {
      * @param int $kanban_id    Id of the Kanban {@from query}
      *
      * @throws 401
+     * @throws RestException 403
      * @throws 404
      */
     protected function delete($id, $kanban_id) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $kanban_id);
-        $column       = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
+
+        $column = $this->kanban_column_factory->getColumnForAKanban($kanban, $id, $current_user);
 
         try {
             if (! $this->kanban_column_manager->deleteColumn($current_user, $kanban, $column)) {
@@ -247,6 +260,14 @@ class KanbanColumnsResource {
      * @return int
      */
     private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
-        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
+        return $this->getKanbanProject($kanban)->getGroupId();
+    }
+
+
+    private function getKanbanProject(AgileDashboard_Kanban $kanban)
+    {
+        $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+
+        return $kanban_tracker->getProject();
     }
 }

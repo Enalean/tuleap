@@ -47,6 +47,7 @@ use TrackerFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\REST\TrackerReference as TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation as ArtifactValuesRepresentation;
@@ -152,11 +153,16 @@ class KanbanItemsResource extends AuthenticatedResource {
      * @param KanbanItemPOSTRepresentation $item The created kanban item {@from body} {@type Tuleap\AgileDashboard\REST\v1\Kanban\KanbanItemPOSTRepresentation}
      *
      * @status 201
+     * @throws RestException 403
      */
     protected function post(KanbanItemPOSTRepresentation $item) {
         $current_user = $this->getCurrentUser();
         $kanban       = $this->getKanban($current_user, $item->kanban_id);
         $tracker      = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $tracker->getProject()
+        );
 
         $updater = new ArtifactCreator(
             new ArtifactValidator(
@@ -219,14 +225,20 @@ class KanbanItemsResource extends AuthenticatedResource {
      * @url GET {id}
      * @access hybrid
      *
-     * @param  int  $id     Id of the artifact
+     * @param  int $id Id of the artifact
      * @return Tuleap\AgileDashboard\REST\v1\Kanban\KanbanRepresentation
+     * @throws RestException 403
      */
     protected function get($id) {
         $this->checkAccess();
 
         $current_user = $this->getCurrentUser();
         $artifact     = $this->artifact_factory->getArtifactById($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $current_user,
+            $artifact->getTracker()->getProject()
+        );
 
         if (! $artifact) {
             throw new RestException(404, 'Kanban item not found.');
