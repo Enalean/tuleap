@@ -94,7 +94,7 @@ class ProjectDetailsPresenter
 
         $this->is_status_invalid = ! array_key_exists(
             $project->getStatus(),
-            $this->getAssignableProjectStatuses()
+            $this->getAssignableProjectStatuses($project)
         );
 
         $this->links = array();
@@ -157,7 +157,7 @@ class ProjectDetailsPresenter
 
     private function getStatus(Project $project)
     {
-        $labels = $this->getAssignableProjectStatuses();
+        $labels = $this->getAssignableProjectStatuses($project);
 
         $all_status = array();
         foreach ($labels as $key => $status) {
@@ -174,13 +174,18 @@ class ProjectDetailsPresenter
     /**
      * @return array
      */
-    private function getAssignableProjectStatuses()
+    private function getAssignableProjectStatuses(Project $project)
     {
-        return [
+        $status = [
             Project::STATUS_ACTIVE => $GLOBALS['Language']->getText('admin_groupedit', 'status_A'),
-            Project::STATUS_PENDING => $GLOBALS['Language']->getText('admin_groupedit', 'status_P'),
             Project::STATUS_SUSPENDED => $GLOBALS['Language']->getText('admin_groupedit', 'status_H'),
-            Project::STATUS_DELETED => $GLOBALS['Language']->getText('admin_groupedit', 'status_D')
+            Project::STATUS_DELETED => $GLOBALS['Language']->getText('admin_groupedit', 'status_D'),
         ];
+
+        if ($project->getStatus() === Project::STATUS_PENDING) {
+            $status[Project::STATUS_PENDING] = $GLOBALS['Language']->getText('admin_groupedit', 'status_P');
+        }
+
+        return $status;
     }
 }
