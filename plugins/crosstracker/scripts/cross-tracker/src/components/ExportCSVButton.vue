@@ -29,6 +29,7 @@
 <script>
 import { mapState } from "vuex";
 import { download } from "../helpers/download-helper.js";
+import { addBOM } from "../helpers/bom-helper.js";
 import { getCSVReport } from "../api/rest-querier.js";
 
 export default {
@@ -47,7 +48,12 @@ export default {
             this.$store.commit("resetFeedbacks");
             try {
                 const report = await getCSVReport(this.report_id);
-                download(report, `export-${this.report_id}.csv`, "text/csv;encoding:utf-8");
+                const report_with_bom = addBOM(report);
+                download(
+                    report_with_bom,
+                    `export-${this.report_id}.csv`,
+                    "text/csv;encoding:utf-8"
+                );
             } catch (error) {
                 if (error.response.status.toString().substring(0, 2) === "50") {
                     this.$store.commit("setErrorMessage", this.$gettext("An error occurred"));

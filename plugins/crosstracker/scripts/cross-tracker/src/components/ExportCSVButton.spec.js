@@ -22,19 +22,23 @@ import { createStore } from "../store/index.js";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import { rewire$getCSVReport, restore as restoreRest } from "../api/rest-querier.js";
 import { rewire$download, restore as restoreDownload } from "../helpers/download-helper.js";
+import { rewire$addBOM, restore as restoreBOM } from "../helpers/bom-helper.js";
 
 describe("ExportCSVButton", () => {
-    let download, getCSVReport;
+    let download, getCSVReport, addBOM;
     beforeEach(() => {
         download = jasmine.createSpy("download");
         rewire$download(download);
         getCSVReport = jasmine.createSpy("getCSVReport");
         rewire$getCSVReport(getCSVReport);
+        addBOM = jasmine.createSpy("addBOM");
+        rewire$addBOM(addBOM);
     });
 
     afterEach(() => {
         restoreRest();
         restoreDownload();
+        restoreBOM();
     });
 
     function instantiateComponent() {
@@ -54,6 +58,7 @@ describe("ExportCSVButton", () => {
             });
             const csv = `"id"\r\n72\r\n17\r\n`;
             getCSVReport.and.returnValue(Promise.resolve(csv));
+            addBOM.and.callFake(csv => csv);
 
             const promise = vm.exportCSV();
 
