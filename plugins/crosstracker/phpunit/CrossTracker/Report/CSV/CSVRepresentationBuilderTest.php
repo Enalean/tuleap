@@ -59,7 +59,7 @@ class CSVRepresentationBuilderTest extends TestCase
         $result = $this->builder->buildHeaderLine($this->user);
 
         $this->assertEquals(
-            'id,project,tracker,title,description,submitted_by,submitted_on,last_update_by,last_update_date',
+            'id,project,tracker,title,description,status,submitted_by,submitted_on,last_update_by,last_update_date',
             $result->__toString()
         );
     }
@@ -83,23 +83,31 @@ class CSVRepresentationBuilderTest extends TestCase
                 'getLastModifiedBy' => 851,
                 'getTitle'          => 'Uncinated unrecantable',
                 'getDescription'    => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                    incididunt ut labore et dolore magna aliqua.'
+                    incididunt ut labore et dolore magna aliqua.',
+                'getStatus'         => 'On going'
             ]
         );
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
 
-        $formatted_project_name     = '"Atacaman"';
-        $formatted_tracker_name     = '"freckly"';
-        $formatted_submitted_on     = '25/10/2018 10:39';
+        $formatted_project_name = '"Atacaman"';
+        $formatted_tracker_name = '"freckly"';
+        $formatted_submitted_on = '25/10/2018 10:39';
         $formatted_last_update_date = '25/10/2018 16:45';
-        $formatted_submitted_by     = '"tszwejbka"';
-        $formatted_last_update_by   = '"akrostag"';
-        $formatted_title            = '"Uncinated unrecantable"';
-        $formatted_description      = '"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+        $formatted_submitted_by = '"tszwejbka"';
+        $formatted_last_update_by = '"akrostag"';
+        $formatted_title = '"Uncinated unrecantable"';
+        $formatted_description = '"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua."';
+        $formatted_status = '"On going"';
 
         $this->visitor->shouldReceive('visitTextValue')
-            ->andReturn($formatted_project_name, $formatted_tracker_name, $formatted_title, $formatted_description);
+            ->andReturn(
+                $formatted_project_name,
+                $formatted_tracker_name,
+                $formatted_title,
+                $formatted_description,
+                $formatted_status
+            );
         $this->visitor->shouldReceive('visitDateValue')
             ->andReturn($formatted_submitted_on, $formatted_last_update_date);
         $this->visitor->shouldReceive('visitUserValue')
@@ -113,6 +121,7 @@ class CSVRepresentationBuilderTest extends TestCase
                 $formatted_tracker_name,
                 $formatted_title,
                 $formatted_description,
+                $formatted_status,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
