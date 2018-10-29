@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ use Tracker_Exception;
 use Tracker_ResourceDoesntExistException;
 use Tuleap\REST\Header;
 use Tracker_Artifact;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 
 class NodeResource {
@@ -61,6 +62,11 @@ class NodeResource {
             $user = UserManager::instance()->getCurrentUser();
 
             $artifact = $factory->getArtifactById($user, $id);
+
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+                $user,
+                $artifact->getTracker()->getProject()
+            );
 
             $this->sendAllowHeaders($artifact);
 

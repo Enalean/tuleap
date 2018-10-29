@@ -40,6 +40,7 @@ use TrackerFactory;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\Execution\DefinitionForExecutionRetriever;
@@ -237,6 +238,11 @@ class ExecutionsResource
         $user     = $this->user_manager->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $artifact->getTracker()->getProject()
+        );
+
         if (! $artifact) {
             throw new RestException(404);
         }
@@ -256,6 +262,7 @@ class ExecutionsResource
      * @return ExecutionRepresentation
      *
      * @throws 400
+     * @throws RestException 403
      * @throws 404
      * @throws 500
      */
@@ -266,6 +273,10 @@ class ExecutionsResource
         $time = 0,
         $results = ''
     ) {
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->tracker_factory->getTrackerById($tracker->id)->getProject()
+        );
+
         try {
             $user    = UserManager::instance()->getCurrentUser();
             $creator = new Tracker_REST_Artifact_ArtifactCreator(
@@ -313,6 +324,11 @@ class ExecutionsResource
     {
         $user               = UserManager::instance()->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $execution_artifact->getTracker()->getProject()
+        );
+
         if (! $execution_artifact->userCanUpdate($user)) {
             throw new RestException(403);
         }
@@ -352,12 +368,18 @@ class ExecutionsResource
      * @return ExecutionRepresentation
      *
      * @throws 400
+     * @throws RestException 403
      * @throws 500
      */
     protected function putId($id, $status, $time = 0, $results = '')
     {
         $user     = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
+
         $this->execution_status_updater->update(
             $artifact,
             $this->getChanges($status, $time, $results, $artifact, $user),
@@ -383,6 +405,10 @@ class ExecutionsResource
     protected function presences($id, $uuid, $remove_from = '') {
         $user = UserManager::instance()->getCurrentUser();
         $artifact = $this->getArtifactById($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
 
         if(! $artifact) {
             throw new RestException(404);
@@ -411,7 +437,16 @@ class ExecutionsResource
     {
         $user               = $this->user_manager->getCurrentUser();
         $execution_artifact = $this->getArtifactById($user, $id);
-        $issue_artifact     = $this->getArtifactById($user, $issue_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $execution_artifact->getTracker()->getProject()
+        );
+
+        $issue_artifact = $this->getArtifactById($user, $issue_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $issue_artifact->getTracker()->getProject()
+        );
 
         if (! $execution_artifact || ! $issue_artifact) {
             throw new RestException(404);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\TestManagement\REST\v1;
 use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use UserManager;
@@ -87,10 +88,17 @@ class DefinitionsResource {
      * @param int $id Id of the definition
      *
      * @return {@type Tuleap\TestManagement\REST\v1\DefinitionRepresentation}
+     *
+     * @throws RestException 403
      */
     protected function getId($id) {
         $user       = $this->user_manager->getCurrentUser();
         $definition = $this->testmanagement_artifact_factory->getArtifactByIdUserCanView($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $definition->getTracker()->getProject()
+        );
 
         if (! $definition) {
             throw new RestException(404, 'The test definition does not exist or is not visible');

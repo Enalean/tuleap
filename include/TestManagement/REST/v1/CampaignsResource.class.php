@@ -54,6 +54,7 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
@@ -299,6 +300,8 @@ class CampaignsResource
      * @param int $id Id of the campaign
      *
      * @return Tuleap\TestManagement\REST\v1\CampaignRepresentation
+     *
+     * @throws RestException 403
      */
     protected function getId($id)
     {
@@ -306,6 +309,11 @@ class CampaignsResource
 
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $campaign->getArtifact()->getTracker()->getProject()
+        );
 
         return $this->campaign_representation_builder->getCampaignRepresentation($user, $campaign);
     }
@@ -330,7 +338,9 @@ class CampaignsResource
      * @param int $offset Position of the first element to display {@from path}
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
+     *
      * @throws 400
+     * @throws RestException 403
      */
     protected function getExecutions($id, $limit = 10, $offset = 0)
     {
@@ -339,6 +349,11 @@ class CampaignsResource
         $user     = $this->user_manager->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
         $artifact = $campaign->getArtifact();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $artifact->getTracker()->getProject()
+        );
 
         $execution_representations = $this->execution_representation_builder
             ->getPaginatedExecutionsRepresentationsForCampaign(
@@ -367,8 +382,9 @@ class CampaignsResource
      * @param array  $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
      * @return array {@type Tuleap\TestManagement\REST\v1\ExecutionRepresentation}
-     * @throws RestException
+     *
      * @throws 400
+     * @throws RestException 403
      */
     protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
     {
@@ -379,6 +395,10 @@ class CampaignsResource
         $project_id        = $project->getID();
         $new_execution_ids = [];
         $executions_to_add = [];
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $project
+        );
 
         foreach ($definition_ids_to_add as $definition_id) {
             $definition = $this->artifact_factory->getArtifactById($definition_id);
@@ -451,15 +471,21 @@ class CampaignsResource
      *
      * @url POST
      *
-     * @param int    $project_id    Id of the project the campaign will belong to
-     * @param string $label         The label of the new campaign
+     * @param int $project_id Id of the project the campaign will belong to
+     * @param string $label The label of the new campaign
      * @param string $test_selector The method used to set initial test definitions for campaign {@from query} {@choice none,all,milestone,report}
-     * @param int    $milestone_id  Id of the milestone with which the campaign will be linked {@from query}
-     * @param int    $report_id     Id of the report to retrieve test definitions for campaign {@from query}
+     * @param int $milestone_id Id of the milestone with which the campaign will be linked {@from query}
+     * @param int $report_id Id of the report to retrieve test definitions for campaign {@from query}
+     *
+     * @throws RestException 403
      */
     protected function post($project_id, $label, $test_selector = 'all', $milestone_id = 0, $report_id = 0)
     {
         $this->options();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->project_manager->getProject($project_id)
+        );
 
         return $this->campaign_creator->createCampaign(
             UserManager::instance()->getCurrentUser(),
@@ -490,6 +516,10 @@ class CampaignsResource
     {
         $user     = UserManager::instance()->getCurrentUser();
         $campaign = $this->getUpdatedCampaign($user, $id, $label, $job_configuration);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $campaign->getArtifact()->getTracker()->getProject()
+        );
 
         if (! $campaign->getArtifact()->userCanUpdate($user)) {
             throw new RestException(403, "You don't have the permission to update this campaign");
@@ -535,6 +565,7 @@ class CampaignsResource
      *
      * @param int $id Id of the campaign
      *
+     * @throws RestException 403
      */
     protected function postAutomatedTests($id)
     {
@@ -542,6 +573,10 @@ class CampaignsResource
 
         $user     = UserManager::instance()->getCurrentUser();
         $campaign = $this->getCampaignUserCanRead($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $campaign->getArtifact()->getTracker()->getProject()
+        );
 
         try {
             $this->automated_triggerer->triggerAutomatedTests($campaign);

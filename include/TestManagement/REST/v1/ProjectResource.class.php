@@ -31,6 +31,7 @@ use TrackerFactory;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\ArtifactFactory;
 use Tuleap\TestManagement\Campaign\CampaignDao;
@@ -157,6 +158,11 @@ class ProjectResource {
 
         $project = $this->getProject($id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user,
+            $project
+        );
+
         $campaign_tracker_id = $this->config->getCampaignTrackerId($project);
         if (! $campaign_tracker_id) {
             throw new RestException(400, 'The campaign tracker id is not well configured');
@@ -195,16 +201,23 @@ class ProjectResource {
      * @url GET {id}/testmanagement_definitions
      *
      * @param int $id Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $limit Number of elements displayed per page {@from path}
      * @param int $offset Position of the first element to display {@from path}
      * @param int $report_id Id of the report from which to get the definitions {@from path}
      *
      * @return array {DefinitionRepresentation}
+     *
+     * @throws RestException 403
      */
     protected function getDefinitions($id, $limit = 10, $offset = 0, $report_id = null) {
         $this->optionsDefinitions($id);
 
         $project = $this->getProject($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user,
+            $project
+        );
 
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
         $tracker    = $this->tracker_factory->getTrackerById($tracker_id);
