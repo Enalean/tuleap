@@ -54,6 +54,7 @@ class CSVRepresentationBuilder
                 "tracker",
                 "title",
                 "description",
+                "status",
                 "submitted_by",
                 "submitted_on",
                 "last_update_by",
@@ -98,6 +99,9 @@ class CSVRepresentationBuilder
         $description           = new TextValue($artifact->getDescription());
         $formatted_description = $description->accept($this->visitor, $formatter_parameters);
 
+        $status           = new TextValue($artifact->getStatus());
+        $formatted_status = $status->accept($this->visitor, $formatter_parameters);
+
         $representation = new CSVRepresentation();
         $representation->build(
             [
@@ -106,6 +110,7 @@ class CSVRepresentationBuilder
                 $formatted_tracker_name,
                 $formatted_title,
                 $formatted_description,
+                $formatted_status,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
