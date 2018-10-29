@@ -53,6 +53,7 @@ class CSVRepresentationBuilder
                 "project",
                 "tracker",
                 "title",
+                "description",
                 "submitted_by",
                 "submitted_on",
                 "last_update_by",
@@ -91,8 +92,11 @@ class CSVRepresentationBuilder
         $last_update_date           = new DateValue($artifact->getLastUpdateDate(), true);
         $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
 
-        $title = new TextValue($artifact->getTitle());
+        $title           = new TextValue($artifact->getTitle());
         $formatted_title = $title->accept($this->visitor, $formatter_parameters);
+
+        $description           = new TextValue($artifact->getDescription());
+        $formatted_description = $description->accept($this->visitor, $formatter_parameters);
 
         $representation = new CSVRepresentation();
         $representation->build(
@@ -101,6 +105,7 @@ class CSVRepresentationBuilder
                 $formatted_project_name,
                 $formatted_tracker_name,
                 $formatted_title,
+                $formatted_description,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
