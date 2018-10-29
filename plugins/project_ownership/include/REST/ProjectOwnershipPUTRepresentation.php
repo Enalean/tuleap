@@ -22,7 +22,7 @@ namespace Tuleap\ProjectOwnership\REST;
 
 use Tuleap\Project\REST\UserRESTReferenceRepresentation;
 
-class ProjectCertificationPUTRepresentation
+class ProjectOwnershipPUTRepresentation
 {
     /**
      * @var UserRESTReferenceRepresentation {@type \Tuleap\Project\REST\UserRESTReferenceRepresentation}

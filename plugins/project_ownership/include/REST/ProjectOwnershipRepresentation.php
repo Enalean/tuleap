@@ -22,7 +22,7 @@ namespace Tuleap\ProjectOwnership\REST;
 
 use Tuleap\User\REST\MinimalUserRepresentation;
 
-class ProjectCertificationRepresentation
+class ProjectOwnershipRepresentation
 {
     /**
      * @var MinimalUserRepresentation {@type \Tuleap\User\REST\MinimalUserRepresentation}
