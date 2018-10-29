@@ -57,6 +57,7 @@ use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\ResourcesInjector;
 use Tuleap\REST\v1\GitRepositoryListRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
@@ -936,6 +937,8 @@ class ProjectResource extends AuthenticatedResource {
         $project = $this->getProjectForUser($id);
         $result  = array();
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
+
         $this->event_manager->processEvent(
             Event::REST_PUT_PROJECT_BACKLOG,
             array(
@@ -984,7 +987,7 @@ class ProjectResource extends AuthenticatedResource {
      * @url PATCH {id}/backlog
      * @access hybrid
      *
-     * @param int                                     $id    Id of the Backlog Item
+     * @param int                                     $id    Id of the project
      * @param \Tuleap\REST\v1\OrderRepresentationBase $order Order of the children {@from body}
      * @param array                                   $add   Add (move) item to the backlog {@from body}
      *
@@ -999,6 +1002,8 @@ class ProjectResource extends AuthenticatedResource {
 
         $project = $this->getProjectForUser($id);
         $result  = array();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
 
         $this->event_manager->processEvent(
             Event::REST_PATCH_PROJECT_BACKLOG,
