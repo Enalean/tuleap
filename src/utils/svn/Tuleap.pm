@@ -343,10 +343,18 @@ sub redis_is_user_allowed {
 sub redis_user_authorization() {
     my ($log, $cfg, $redis, $username, $project_id) = @_;
 
-    my $cache_key = "apache_svn_".$username."_".$project_id;
-    my $cache     = $redis->get($cache_key);
-    if (defined $cache) {
-        return $cache;
+    my $current_timestamp = time();
+
+    my $cache_key             = "apache_svn_".$username. "_" . $project_id;
+    my $cache_set_key         = "apache_svn_project_set_" . $project_id;
+    my $cache_timestamp_added = $redis->zscore($cache_set_key, $username);
+    if (defined $cache_timestamp_added && ($cache_timestamp_added + $cfg->{TuleapCacheLifetime}) > $current_timestamp) {
+        my $cache = $redis->get($cache_key);
+        if (defined $cache) {
+            return $cache;
+        }
+    } elsif (defined $cache_timestamp_added) {
+        $redis->zremrangebyscore($cache_set_key, "-inf", $current_timestamp - $cfg->{TuleapCacheLifetime});
     }
 
     $log->notice("[Tuleap.pm][redis] cache miss authorization for $username in $project_id");
@@ -356,6 +364,7 @@ sub redis_user_authorization() {
 
     my $user_is_authorized_for_project = user_authorization($log, $dbh, $project_id, $tuleap_username);
     $redis->setex($cache_key, $cfg->{TuleapCacheLifetime}, $user_is_authorized_for_project);
+    $redis->zadd($cache_set_key, $current_timestamp, $username);
 
     $dbh->disconnect();
 
@@ -404,9 +413,9 @@ sub get_tuleap_username() {
 }
 
 sub user_authorization() {
-    my ($r, $dbh, $project_id, $tuleap_username) = @_;
+    my ($log, $dbh, $project_id, $tuleap_username) = @_;
 
-    if (! $tuleap_username || ! can_user_access_project($r, $dbh, $project_id, $tuleap_username)) {
+    if (! $tuleap_username || ! can_user_access_project($log, $dbh, $project_id, $tuleap_username)) {
         return 0;
     }
 
@@ -485,7 +494,7 @@ sub update_user_token_usage {
 }
 
 sub can_user_access_project {
-    my ($r, $dbh, $project_id, $username) = @_;
+    my ($log, $dbh, $project_id, $username) = @_;
 
     my $query = << 'EOF';
     SELECT NULL
@@ -499,9 +508,6 @@ sub can_user_access_project {
         AND groups.status = 'A'
     WHERE user.status='R' AND user_name=? AND user_group.group_id=?;
 EOF
-
-    $r->log->notice("[Tuleap.pm][apr] Operation aborted, project is not active");
-
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);
     $statement->bind_param(2, $username, SQL_VARCHAR);
@@ -512,6 +518,10 @@ EOF
 
     $statement->finish();
     undef $statement;
+
+    if (! $can_access) {
+        $log->debug("[Tuleap.pm] Access to project #$project_id has been denied to $username");
+    }
 
     return $can_access;
 }
