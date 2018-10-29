@@ -29,7 +29,7 @@ use Tuleap\ProjectOwnership\ProjectAdmin\ProjectOwnerPresenterBuilder;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerDAO;
 use Tuleap\ProjectOwnership\ProjectOwner\ProjectOwnerRetriever;
 use Tuleap\ProjectOwnership\ProjectOwner\UserWithStarBadgeFinder;
-use Tuleap\ProjectOwnership\REST\ProjectCertificationResource;
+use Tuleap\ProjectOwnership\REST\ProjectOwnershipResource;
 use Tuleap\ProjectOwnership\SystemEvents\ProjectOwnershipSystemEventManager;
 use Tuleap\ProjectOwnership\SystemEvents\ProjectOwnerStatusNotificationSystemEvent;
 use Tuleap\Request\CollectRoutesEvent;
@@ -90,7 +90,7 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
      */
     public function restResources(array $params)
     {
-        $params['restler']->addAPIClass(ProjectCertificationResource::class, 'project_certification');
+        $params['restler']->addAPIClass(ProjectOwnershipResource::class, 'project_ownership');
     }
 
     public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)

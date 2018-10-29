@@ -32,7 +32,7 @@ use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 
-class ProjectCertificationResource extends AuthenticatedResource
+class ProjectOwnershipResource extends AuthenticatedResource
 {
     /**
      * @url OPTIONS {project_id}
@@ -45,7 +45,7 @@ class ProjectCertificationResource extends AuthenticatedResource
     }
 
     /**
-     * Get project certification information
+     * Get project ownership information
      *
      * @url GET {project_id}
      *
@@ -55,12 +55,12 @@ class ProjectCertificationResource extends AuthenticatedResource
      *
      * @status 200
      *
-     * @return \Tuleap\ProjectOwnership\REST\ProjectCertificationRepresentation
+     * @return \Tuleap\ProjectOwnership\REST\ProjectOwnershipRepresentation
      */
     public function get($project_id)
     {
         $user_manager = \UserManager::instance();
-        $this->checkUserManageProjectCertification($user_manager->getCurrentUser());
+        $this->checkUserCanManageProjectOwnership($user_manager->getCurrentUser());
 
         try {
             $project = \ProjectManager::instance()->getValidProject($project_id);
@@ -70,7 +70,7 @@ class ProjectCertificationResource extends AuthenticatedResource
 
         $project_owner_retriever = new ProjectOwnerRetriever(new ProjectOwnerDAO(), $user_manager);
 
-        $representation = new ProjectCertificationRepresentation();
+        $representation = new ProjectOwnershipRepresentation();
         $project_owner  = $project_owner_retriever->getProjectOwner($project);
 
         $representation->build($project_owner);
@@ -79,7 +79,7 @@ class ProjectCertificationResource extends AuthenticatedResource
     }
 
     /**
-     * Update project certification information
+     * Update project ownership information
      *
      * Notes on the user reference format. It can be:
      * <ul>
@@ -94,14 +94,14 @@ class ProjectCertificationResource extends AuthenticatedResource
      * @access protected
      *
      * @param int $project_id ID of the project
-     * @param ProjectCertificationPUTRepresentation $project_certification_representation {@from body}
+     * @param ProjectOwnershipPUTRepresentation $project_ownership_representation {@from body}
      *
      * @status 200
      */
-    public function put($project_id, ProjectCertificationPUTRepresentation $project_certification_representation)
+    public function put($project_id, ProjectOwnershipPUTRepresentation $project_ownership_representation)
     {
         $user_manager = \UserManager::instance();
-        $this->checkUserManageProjectCertification($user_manager->getCurrentUser());
+        $this->checkUserCanManageProjectOwnership($user_manager->getCurrentUser());
 
         try {
             $project = \ProjectManager::instance()->getValidProject($project_id);
@@ -109,7 +109,7 @@ class ProjectCertificationResource extends AuthenticatedResource
             throw new RestException(404, 'Project not found');
         }
 
-        $project_owner_representation = $project_certification_representation->project_owner;
+        $project_owner_representation = $project_ownership_representation->project_owner;
 
         $user_retriever_rest_reference = new UserRESTReferenceRetriever($user_manager);
         $project_owner                 = $user_retriever_rest_reference->getUserFromReference(
@@ -134,7 +134,7 @@ class ProjectCertificationResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function checkUserManageProjectCertification(\PFUser $user)
+    private function checkUserCanManageProjectOwnership(\PFUser $user)
     {
         $forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
