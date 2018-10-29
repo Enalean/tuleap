@@ -1,0 +1,30 @@
+msgid "Adds project owner role"
+msgstr ""
+
+msgid "Current project owner:"
+msgstr ""
+
+#, php-format
+msgid "Failed to send notification to user %s ."
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Project does not exist."
+msgstr ""
+
+msgid "Project owner"
+msgstr ""
+
+msgid "Project ownership"
+msgstr ""
+
+msgid "The project owner cannot be removed."
+msgstr ""
+
+msgid "This project has no owner."
+msgstr ""
+
+msgid "You must be project administrator to access this page."
+msgstr ""

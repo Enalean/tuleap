@@ -1,0 +1,1 @@
+DROP TABLE plugin_project_ownership_project_owner;

@@ -1,0 +1,33 @@
+<div class="tlp-framed-horizontally">
+    <section class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header">
+                <h1 class="tlp-pane-title">
+                    <i class="fa fa-star tlp-pane-title-icon"></i>
+                    {{# dgettext }} tuleap-project_ownership | Project owner{{/ dgettext }}
+                </h1>
+            </div>
+            <section class="tlp-pane-section">
+                <p>{{ project_owner_description }}</p>
+                {{# has_project_owner }}
+                    <div class="tlp-property">
+                        <label class="tlp-label">{{# dgettext }} tuleap-project_ownership | Current project owner:{{/ dgettext }}</label>
+                        <a href="/users/{{ user_name }}">
+                            <div class="tlp-avatar project-admin-project-ownership-owner-avatar">
+                                {{# has_avatar }}
+                                    <img src="{{ avatar_url }}">
+                                {{/ has_avatar }}
+                            </div><!--
+                            -->{{ username_display }}
+                        </a>
+                    </div>
+                {{/ has_project_owner }}
+                {{^ has_project_owner }}
+                    <p class="tlp-alert-danger">
+                        {{# dgettext }}tuleap-project_ownership | This project has no owner.{{/ dgettext }}
+                    </p>
+                {{/ has_project_owner }}
+            </section>
+        </div>
+    </section>
+</div>

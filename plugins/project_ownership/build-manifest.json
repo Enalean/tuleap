@@ -1,0 +1,29 @@
+{
+    "name": "project_ownership",
+    "themes": {
+        "BurningParrot": {
+            "files": [
+                "themes/BurningParrot/project-ownership-project-admin-blue.scss",
+                "themes/BurningParrot/project-ownership-project-admin-blue-condensed.scss",
+                "themes/BurningParrot/project-ownership-project-admin-green.scss",
+                "themes/BurningParrot/project-ownership-project-admin-green-condensed.scss",
+                "themes/BurningParrot/project-ownership-project-admin-grey.scss",
+                "themes/BurningParrot/project-ownership-project-admin-grey-condensed.scss",
+                "themes/BurningParrot/project-ownership-project-admin-orange.scss",
+                "themes/BurningParrot/project-ownership-project-admin-orange-condensed.scss",
+                "themes/BurningParrot/project-ownership-project-admin-purple.scss",
+                "themes/BurningParrot/project-ownership-project-admin-purple-condensed.scss",
+                "themes/BurningParrot/project-ownership-project-admin-red.scss",
+                "themes/BurningParrot/project-ownership-project-admin-red-condensed.scss"
+            ],
+            "includes": [
+                "../../src/www/themes/common/tlp/src/scss"
+            ],
+            "watched_includes": [
+                "themes/BurningParrot/**/_*.scss"
+            ],
+            "target_dir": "../../src/www/assets/project_ownership/BurningParrot",
+            "is_revisioned": true
+        }
+    }
+}
