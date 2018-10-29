@@ -1,0 +1,45 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.2\n"
+
+msgid "Adds project owner role"
+msgstr "Ajoute le rôle du responsable du projet"
+
+msgid "Current project owner:"
+msgstr "Responsable actuel du projet :"
+
+# php-format
+#, php-format
+msgid "Failed to send notification to user %s ."
+msgstr "Erreur lors de l'envoi de la notification à l'utilisateur %s."
+
+msgid "Owner"
+msgstr "Responsable"
+
+msgid "Project does not exist."
+msgstr "Ce projet n'existe pas."
+
+msgid "Project owner"
+msgstr "Responsable du projet"
+
+msgid "Project ownership"
+msgstr "Responsable de projet"
+
+msgid "The project owner cannot be removed."
+msgstr "Il n'est pas possible de supprimer le responsable du projet."
+
+msgid "This project has no owner."
+msgstr "Ce projet n'a pas de responsable."
+
+msgid "You must be project administrator to access this page."
+msgstr "Vous devez être administrateur du projet pour accéder à cette page."
