@@ -59,7 +59,7 @@ class CSVRepresentationBuilderTest extends TestCase
         $result = $this->builder->buildHeaderLine($this->user);
 
         $this->assertEquals(
-            'id,project,tracker,title,submitted_by,submitted_on,last_update_by,last_update_date',
+            'id,project,tracker,title,description,submitted_by,submitted_on,last_update_by,last_update_date',
             $result->__toString()
         );
     }
@@ -81,7 +81,9 @@ class CSVRepresentationBuilderTest extends TestCase
                 'getLastUpdateDate' => '1540478708',
                 'getSubmittedBy'    => 992,
                 'getLastModifiedBy' => 851,
-                'getTitle'          => 'Uncinated unrecantable'
+                'getTitle'          => 'Uncinated unrecantable',
+                'getDescription'    => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua.'
             ]
         );
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
@@ -93,9 +95,11 @@ class CSVRepresentationBuilderTest extends TestCase
         $formatted_submitted_by     = '"tszwejbka"';
         $formatted_last_update_by   = '"akrostag"';
         $formatted_title            = '"Uncinated unrecantable"';
+        $formatted_description      = '"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua."';
 
         $this->visitor->shouldReceive('visitTextValue')
-            ->andReturn($formatted_project_name, $formatted_tracker_name, $formatted_title);
+            ->andReturn($formatted_project_name, $formatted_tracker_name, $formatted_title, $formatted_description);
         $this->visitor->shouldReceive('visitDateValue')
             ->andReturn($formatted_submitted_on, $formatted_last_update_date);
         $this->visitor->shouldReceive('visitUserValue')
@@ -108,6 +112,7 @@ class CSVRepresentationBuilderTest extends TestCase
                 $formatted_project_name,
                 $formatted_tracker_name,
                 $formatted_title,
+                $formatted_description,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
