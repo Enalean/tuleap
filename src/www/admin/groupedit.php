@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright 1999-2000 (c) The SourceForge Crew
  * Copyright (c) Enalean, 2016 - 2018. All rights reserved
+ * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,9 @@ use Tuleap\admin\ProjectEdit\ProjectEditController;
 use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\admin\ProjectEdit\ProjectEditRouter;
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
-use Tuleap\Project\ProjectAccessPresenter;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\Project\ProjectAccessPresenter;
+use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');
@@ -41,7 +42,7 @@ $project_id      = $request->get('group_id');
 $project         = $project_manager->getProject($project_id);
 
 if (!$project || $project->isError()) {
-    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit','error_group'));
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));
     $GLOBALS['Response']->redirect('/admin');
 }
 
@@ -52,7 +53,17 @@ $description_field_builder = new ProjectDescriptionFieldBuilder($fields_factory)
 $all_custom_fields         = $description_field_builder->build($project);
 
 $access_presenter     = new ProjectAccessPresenter($project->getAccess());
-$details_presenter    = new ProjectDetailsPresenter($project, $all_custom_fields, $access_presenter, $csrf_token);
+
+$suspended_and_not_blocked_warnings = new ProjectSuspendedAndNotBlockedWarningCollector($project);
+$event_manager->processEvent($suspended_and_not_blocked_warnings);
+
+$details_presenter    = new ProjectDetailsPresenter(
+    $project,
+    $all_custom_fields,
+    $access_presenter,
+    $csrf_token,
+    $suspended_and_not_blocked_warnings->getWarnings()
+);
 $project_edit_dao     = new ProjectEditDao();
 $system_event_manager = SystemEventManager::instance();
 

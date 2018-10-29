@@ -69,6 +69,8 @@ class ProjectDetailsPresenter
     public $is_system;
     public $is_active;
     public $is_status_invalid;
+    public $is_suspended_status;
+    public $plugin_suspended_and_not_blocked_warnings;
     /**
      * @var ProjectAccessPresenter
      */
@@ -82,7 +84,8 @@ class ProjectDetailsPresenter
         Project $project,
         $all_custom_fields,
         ProjectAccessPresenter $access_presenter,
-        \CSRFSynchronizerToken $csrf_token
+        \CSRFSynchronizerToken $csrf_token,
+        array $plugin_suspended_and_not_blocked_warnings
     ) {
         $this->id          = $project->getID();
         $this->public_name = $project->getUnconvertedPublicName();
@@ -103,9 +106,10 @@ class ProjectDetailsPresenter
             array('project' => $project, 'links' => &$this->links)
         );
 
-        $this->status            = $this->getStatus($project);
-        $this->can_change_status = $project->getStatus() === Project::STATUS_DELETED;
-        $this->types             = $this->getTypes($project);
+        $this->status              = $this->getStatus($project);
+        $this->can_change_status   = $project->getStatus() === Project::STATUS_DELETED;
+        $this->is_suspended_status = $project->getStatus() === Project::STATUS_SUSPENDED;
+        $this->types               = $this->getTypes($project);
 
         $template = ProjectManager::instance()->getProject($project->getTemplate());
         $this->built_from = array(
@@ -137,6 +141,7 @@ class ProjectDetailsPresenter
         $this->instructions_desc     = $GLOBALS['Language']->getText('admin_project', 'instructions_desc');
         $this->access_presenter      = $access_presenter;
         $this->csrf_token            = $csrf_token;
+        $this->plugin_suspended_and_not_blocked_warnings = $plugin_suspended_and_not_blocked_warnings;
     }
 
     private function getTypes(Project $project)

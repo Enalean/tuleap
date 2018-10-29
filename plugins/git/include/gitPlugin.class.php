@@ -135,6 +135,7 @@ use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\HierarchyDisplayer;
+use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
@@ -290,6 +291,7 @@ class GitPlugin extends Plugin
         $this->addHook(UserIsNoLongerProjectAdmin::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(ServiceUrlCollector::NAME);
+        $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2472,6 +2474,18 @@ class GitPlugin extends Plugin
         );
 
         $sections_collector->collectSections($event);
+    }
+
+    public function projectSuspendedAndNotBlockedWarningCollector(ProjectSuspendedAndNotBlockedWarningCollector $event)
+    {
+        if (! $event->getProject()->usesService(self::SERVICE_SHORTNAME)) {
+            return;
+        }
+
+        $gerrit_server_factory = $this->getGerritServerFactory();
+        if ($gerrit_server_factory->hasRemotesSetUp()) {
+            $event->addWarning(dgettext('tuleap-git', 'Gerrit'));
+        }
     }
 
     private function getJSONRepositoriesRetriever()
