@@ -81,6 +81,7 @@ use Tuleap\RealTime\NodeJSClient;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
@@ -314,6 +315,11 @@ class KanbanResource extends AuthenticatedResource
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $this->getKanbanProject($kanban)
+        );
+
         $kanban_representation = $this->kanban_representation_builder->build($kanban, $user);
 
         Header::allowOptionsGetPatchDelete();
@@ -377,6 +383,10 @@ class KanbanResource extends AuthenticatedResource
     ) {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         if ($label) {
             $this->checkUserCanUpdateKanban($user, $kanban);
@@ -497,6 +507,11 @@ class KanbanResource extends AuthenticatedResource
         $kanban            = $this->getKanban($user, $id);
         $column_identifier = new ColumnIdentifier(ColumnIdentifier::BACKLOG_COLUMN);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $this->getKanbanProject($kanban)
+        );
+
         if ($query !== '') {
             $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
             $report               = $this->getReport($user, $kanban, $tracker_report_id);
@@ -579,6 +594,10 @@ class KanbanResource extends AuthenticatedResource
     ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         if ($add) {
             $add->checkFormat();
@@ -754,6 +773,11 @@ class KanbanResource extends AuthenticatedResource
         $kanban            = $this->getKanban($user, $id);
         $column_identifier = new ColumnIdentifier(ColumnIdentifier::ARCHIVE_COLUMN);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $this->getKanbanProject($kanban)
+        );
+
         if ($query !== '') {
             $tracker_report_id    = $this->getTrackerReportIdFromQuery($query);
             $report               = $this->getReport($user, $kanban, $tracker_report_id);
@@ -807,6 +831,10 @@ class KanbanResource extends AuthenticatedResource
     ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         if ($add) {
             $add->checkFormat();
@@ -918,6 +946,11 @@ class KanbanResource extends AuthenticatedResource
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $this->getKanbanProject($kanban)
+        );
+
         if (! $this->columnIsInTracker($kanban, $user, $column_id)) {
             throw new RestException(404);
         }
@@ -985,6 +1018,10 @@ class KanbanResource extends AuthenticatedResource
     ) {
         $current_user = UserManager::instance()->getCurrentUser();
         $kanban       = $this->kanban_factory->getKanban($current_user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         if (! $this->columnIsInTracker($kanban, $current_user, $column_id)) {
             throw new RestException(404);
@@ -1080,10 +1117,15 @@ class KanbanResource extends AuthenticatedResource
      * </pre>
      *
      * @param string $id Id of the kanban
+     * @throws RestException 403
      */
     protected function delete($id) {
         $user   = $this->getCurrentUser();
         $kanban = $this->getKanban($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         $this->checkUserCanUpdateKanban($user, $kanban);
         $this->kanban_dao->delete($id);
@@ -1144,6 +1186,10 @@ class KanbanResource extends AuthenticatedResource
         $kanban_id    = $id;
         $kanban       = $this->getKanban($current_user, $kanban_id);
         $column_label = $column->label;
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         try {
             $new_column_id = $this->kanban_column_manager->createColumn($current_user, $kanban, $column_label);
@@ -1213,12 +1259,17 @@ class KanbanResource extends AuthenticatedResource
      *
      * @throws 400
      * @throws 401
+     * @throws 403
      * @throws 404
      */
     protected function putColumns($id, array $column_ids) {
         $user      = $this->getCurrentUser();
         $kanban_id = $id;
         $kanban    = $this->getKanban($user, $kanban_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
 
         $this->checkColumnIdsExist($user, $kanban, $column_ids);
 
@@ -1296,6 +1347,11 @@ class KanbanResource extends AuthenticatedResource
         $this->checkAccess();
         $user             = $this->getCurrentUser();
         $kanban           = $this->getKanban($user, $id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $this->getKanbanProject($kanban)
+        );
 
         Header::allowOptionsGet();
 
@@ -1411,7 +1467,7 @@ class KanbanResource extends AuthenticatedResource
      * @return int
      */
     private function getProjectIdForKanban(AgileDashboard_Kanban $kanban) {
-        return $this->tracker_factory->getTrackerById($kanban->getTrackerId())->getGroupId();
+        return $this->getKanbanProject($kanban)->getGroupId();
     }
 
     /**
@@ -1480,6 +1536,10 @@ class KanbanResource extends AuthenticatedResource
         $kanban_id    = $id;
         $kanban       = $this->getKanban($current_user, $kanban_id);
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $this->getKanbanProject($kanban)
+        );
+
         foreach ($tracker_report_ids as $report_id) {
             $this->getReport($current_user, $kanban, $report_id);
         }
@@ -1492,5 +1552,12 @@ class KanbanResource extends AuthenticatedResource
         } catch (Exception $exception) {
             throw new RestException(500, "An error occured while saving reports for Kanban");
         }
+    }
+
+    private function getKanbanProject(AgileDashboard_Kanban $kanban)
+    {
+        $kanban_tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());
+
+        return $kanban_tracker->getProject();
     }
 }
