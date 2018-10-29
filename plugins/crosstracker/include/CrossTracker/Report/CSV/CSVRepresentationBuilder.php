@@ -32,7 +32,6 @@ class CSVRepresentationBuilder
 {
     /** @var CSVFormatterVisitor  */
     private $visitor;
-
     /** @var UserManager */
     private $user_manager;
 
@@ -53,6 +52,7 @@ class CSVRepresentationBuilder
                 "id",
                 "project",
                 "tracker",
+                "title",
                 "submitted_by",
                 "submitted_on",
                 "last_update_by",
@@ -91,12 +91,16 @@ class CSVRepresentationBuilder
         $last_update_date           = new DateValue($artifact->getLastUpdateDate(), true);
         $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
 
+        $title = new TextValue($artifact->getTitle());
+        $formatted_title = $title->accept($this->visitor, $formatter_parameters);
+
         $representation = new CSVRepresentation();
         $representation->build(
             [
                 $artifact->getId(),
                 $formatted_project_name,
                 $formatted_tracker_name,
+                $formatted_title,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
