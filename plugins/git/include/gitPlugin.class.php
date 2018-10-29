@@ -114,6 +114,7 @@ use Tuleap\Git\RepositoryList\GitRepositoryListController;
 use Tuleap\Git\RepositoryList\ListPresenterBuilder;
 use Tuleap\Git\RestrictedGerritServerDao;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
+use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 use Tuleap\Git\Webhook\WebhookDao;
 use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
@@ -187,7 +188,9 @@ class GitPlugin extends Plugin
         $this->addHook(Event::GET_REFERENCE);
         $this->addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
         $this->addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
-        $this->addHook('project_is_deleted',                              'project_is_deleted',                           false);
+        $this->addHook('project_is_deleted');
+        $this->addHook('project_is_suspended');
+        $this->addHook('project_is_active');
         $this->addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
         $this->addHook(Event::SERVICE_ICON);
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
@@ -606,6 +609,13 @@ class GitPlugin extends Plugin
                 break;
             case SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME:
                 $params['class'] = 'SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG';
+                $params['dependencies'] = array(
+                    $this->getGitoliteDriver(),
+                    $this->getProjectManager()
+                );
+                break;
+            case ProjectIsSuspended::NAME:
+                $params['class'] = ProjectIsSuspended::class;
                 $params['dependencies'] = array(
                     $this->getGitoliteDriver(),
                     $this->getProjectManager()
@@ -1192,6 +1202,20 @@ class GitPlugin extends Plugin
                 $repository_manager = $this->getRepositoryManager();
                 $repository_manager->deleteProjectRepositories($project);
             }
+        }
+    }
+
+    public function project_is_active(array $params)
+    {
+        if (! empty($params['group_id'])) {
+            $this->getGitSystemEventManager()->queueRegenerateGitoliteConfig($params['group_id']);
+        }
+    }
+
+    public function project_is_suspended(array $params)
+    {
+        if (! empty($params['group_id'])) {
+            $this->getGitSystemEventManager()->queueProjectIsSuspended($params['group_id']);
         }
     }
 

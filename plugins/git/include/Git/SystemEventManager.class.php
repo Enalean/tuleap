@@ -24,6 +24,7 @@
 
 use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
+use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 
 /**
  * I'm responsible to create system events with the right parameters
@@ -249,6 +250,16 @@ class Git_SystemEventManager {
         );
     }
 
+    public function queueProjectIsSuspended($project_id) {
+        $this->system_event_manager->createEvent(
+            ProjectIsSuspended::NAME,
+            $project_id,
+            SystemEvent::PRIORITY_HIGH,
+            SystemEvent::OWNER_APP,
+            ProjectIsSuspended::class
+        );
+    }
+
     public function queueMigrateToTuleapSSHKeyManagement()
     {
         $this->system_event_manager->createEvent(
@@ -296,7 +307,8 @@ class Git_SystemEventManager {
             SystemEvent_GIT_DUMP_ALL_MIRRORED_REPOSITORIES::NAME,
             SystemEvent_GIT_UPDATE_MIRROR::NAME,
             SystemEvent_GIT_DELETE_MIRROR::NAME,
-            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME
+            SystemEvent_GIT_REGENERATE_GITOLITE_CONFIG::NAME,
+            ProjectIsSuspended::NAME
         );
     }
 

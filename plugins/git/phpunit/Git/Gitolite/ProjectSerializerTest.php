@@ -38,7 +38,11 @@ class ProjectSerializerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    /**
+     * @var Git_Gitolite_ProjectSerializer
+     */
     private $project_serializer;
+
     private $repository_factory;
     private $url_manager;
     private $gitolite_permissions_serializer;
@@ -226,6 +230,47 @@ class ProjectSerializerTest extends TestCase
         // Ensure file is correct
         $result     = $this->project_serializer->dumpProjectRepoConf($prj);
         $expected = file_get_contents($this->_fixDir .'/perms/migrated_to_gerrit.conf');
+
+        $this->assertSame($expected, $result);
+    }
+
+    public function testDumpSuspendedProjectRepoPermissions()
+    {
+        $project = Mockery::spy(\Project::class);
+        $project->shouldReceive('getUnixName')->andReturn('project1');
+        $project->shouldReceive('getID')->andReturn(404);
+
+        $repo = new GitRepository();
+        $repo->setId(4);
+        $repo->setProject($project);
+        $repo->setName('test_default');
+        $repo->setMailPrefix('[SCM]');
+        $repo->setNamespace('');
+
+        $repo2 = new GitRepository();
+        $repo2->setId(5);
+        $repo2->setProject($project);
+        $repo2->setName('test_pimped');
+        $repo2->setMailPrefix('[KOIN] ');
+        $repo2->setNamespace('');
+
+        // List all repo
+        $this->repository_factory->shouldReceive('getAllRepositoriesOfProject')
+            ->with($project)
+            ->once()
+            ->andReturn([$repo, $repo2]);
+
+        // Ensure file is correct
+        $result     = $this->project_serializer->dumpSuspendedProjectRepositoriesConfiguration($project);
+        $expected   = <<<EOS
+repo project1/test_default
+ - refs/.*$ = @all
+
+repo project1/test_pimped
+ - refs/.*$ = @all
+
+
+EOS;
 
         $this->assertSame($expected, $result);
     }
