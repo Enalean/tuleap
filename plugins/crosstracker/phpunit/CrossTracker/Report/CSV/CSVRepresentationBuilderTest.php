@@ -59,7 +59,7 @@ class CSVRepresentationBuilderTest extends TestCase
         $result = $this->builder->buildHeaderLine($this->user);
 
         $this->assertEquals(
-            'id,project,tracker,submitted_by,submitted_on,last_update_by,last_update_date',
+            'id,project,tracker,title,submitted_by,submitted_on,last_update_by,last_update_date',
             $result->__toString()
         );
     }
@@ -80,7 +80,8 @@ class CSVRepresentationBuilderTest extends TestCase
                 'getSubmittedOn'    => '1540456782',
                 'getLastUpdateDate' => '1540478708',
                 'getSubmittedBy'    => 992,
-                'getLastModifiedBy' => 851
+                'getLastModifiedBy' => 851,
+                'getTitle'          => 'Uncinated unrecantable'
             ]
         );
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
@@ -91,9 +92,10 @@ class CSVRepresentationBuilderTest extends TestCase
         $formatted_last_update_date = '25/10/2018 16:45';
         $formatted_submitted_by     = '"tszwejbka"';
         $formatted_last_update_by   = '"akrostag"';
+        $formatted_title            = '"Uncinated unrecantable"';
 
         $this->visitor->shouldReceive('visitTextValue')
-            ->andReturn($formatted_project_name, $formatted_tracker_name);
+            ->andReturn($formatted_project_name, $formatted_tracker_name, $formatted_title);
         $this->visitor->shouldReceive('visitDateValue')
             ->andReturn($formatted_submitted_on, $formatted_last_update_date);
         $this->visitor->shouldReceive('visitUserValue')
@@ -105,6 +107,7 @@ class CSVRepresentationBuilderTest extends TestCase
                 $artifact_id,
                 $formatted_project_name,
                 $formatted_tracker_name,
+                $formatted_title,
                 $formatted_submitted_by,
                 $formatted_submitted_on,
                 $formatted_last_update_by,
