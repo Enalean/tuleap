@@ -1019,6 +1019,9 @@ msgstr ""
 msgid "Successfully updated."
 msgstr "Mis à jour avec succès."
 
+msgid "Switching the project status back to \"pending\" is not possible."
+msgstr "Remettre le projet au statut \"en attente\" n'est pas possible."
+
 msgid "System groups"
 msgstr "Groupes système"
 

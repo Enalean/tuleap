@@ -97,6 +97,15 @@ class ProjectEditController
         $project_type = $request->getValidated('group_type', 'string', $project->getType());
 
         if ($this->hasStatusChanged($project, $form_status) || $this->hasTypeChanged($project, $project_type)) {
+            if ($this->hasStatusChanged($project, $form_status) && $form_status === Project::STATUS_PENDING) {
+                $GLOBALS['Response']->addFeedback(
+                    Feedback::ERROR,
+                    _('Switching the project status back to "pending" is not possible.')
+                );
+
+                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. urlencode($project_id));
+            }
+
             $this->dao->updateProjectStatusAndType($form_status, $project_type, $project_id);
 
             $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_groupedit', 'feedback_info'));
@@ -127,11 +136,6 @@ class ProjectEditController
             if ($form_status === Project::STATUS_SUSPENDED) {
                 $this->event_manager->processEvent(
                     'project_is_suspended',
-                    $event_params
-                );
-            } else if ($form_status === Project::STATUS_PENDING) {
-                $this->event_manager->processEvent(
-                    'project_is_pending',
                     $event_params
                 );
             } else if ($form_status === Project::STATUS_ACTIVE) {

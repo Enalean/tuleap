@@ -950,6 +950,9 @@ msgstr ""
 msgid "Successfully updated."
 msgstr ""
 
+msgid "Switching the project status back to \"pending\" is not possible."
+msgstr ""
+
 msgid "System groups"
 msgstr ""
 

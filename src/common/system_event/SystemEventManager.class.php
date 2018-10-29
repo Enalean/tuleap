@@ -56,7 +56,6 @@ class SystemEventManager {
             'project_is_deleted',
             'project_is_active',
             'project_is_suspended',
-            'project_is_pending',
             'project_admin_add_user',
             'project_admin_remove_user',
             'project_admin_activate_user',
@@ -184,13 +183,6 @@ class SystemEventManager {
         case 'project_is_suspended':
             $this->createEvent(
                 SystemEvent::TYPE_PROJECT_SUSPENDED,
-                $params['group_id'],
-                SystemEvent::PRIORITY_LOW
-            );
-            break;
-        case 'project_is_pending':
-            $this->createEvent(
-                SystemEvent::TYPE_PROJECT_PENDING,
                 $params['group_id'],
                 SystemEvent::PRIORITY_LOW
             );

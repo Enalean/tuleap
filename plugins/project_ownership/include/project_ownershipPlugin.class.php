@@ -66,7 +66,6 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $this->addHook(ApproveProjectAdministratorRemoval::NAME);
         $this->addHook(UserWithStarBadgeCollector::NAME);
         $this->addHook('project_is_suspended');
-        $this->addHook('project_is_pending');
         $this->addHook('project_is_active');
         $this->addHook('project_is_deleted');
 
@@ -202,14 +201,6 @@ class project_ownershipPlugin extends Plugin // phpcs:ignore
         $this->getSystemEventManager()->queueNotifyProjectStatusChange(
             $params['group_id'],
             Project::STATUS_SUSPENDED
-        );
-    }
-
-    public function project_is_pending(array $params) //phpcs:ignore
-    {
-        $this->getSystemEventManager()->queueNotifyProjectStatusChange(
-            $params['group_id'],
-            Project::STATUS_PENDING
         );
     }
 
