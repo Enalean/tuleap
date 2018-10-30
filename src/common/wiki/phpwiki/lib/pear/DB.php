@@ -460,7 +460,7 @@ class DB_Error extends PEAR_Error
         if (is_int($code)) {
             parent::__construct('DB Error: ' . DB::errorMessage($code), $code, $mode, $level, $debuginfo);
         } else {
-            $this->PEAR_Error("DB Error: $code", DB_ERROR, $mode, $level, $debuginfo);
+            parent::__construct("DB Error: $code", DB_ERROR, $mode, $level, $debuginfo);
         }
     }
     // }}}
