@@ -11,7 +11,7 @@
     </nav>
 
     {{# is_suspended_status }}
-        <div class="tlp-alert-warning">
+        <section class="tlp-alert-warning site-admin-project-is-supended-warning">
             <i class="fa fa-warning tlp-alert-icon"></i> {{# gettext }}This project is suspended. Only site administrators may access it.
                 However, the following services are not blocked and may still be used:{{/ gettext }}
             <ul>
@@ -23,7 +23,7 @@
                     <li>{{ . }}</li>
                 {{/ plugin_suspended_and_not_blocked_warnings }}
             </ul>
-        </div>
+        </section>
     {{/ is_suspended_status }}
 
     <section class="tlp-framed-horizontally" id="siteadmin-project-information">
