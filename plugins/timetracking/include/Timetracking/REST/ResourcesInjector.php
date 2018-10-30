@@ -38,9 +38,5 @@ class ResourcesInjector
             '\\Tuleap\\Timetracking\\REST\\v1\\TimetrackingResource',
             TimetrackingRepresentation::NAME
         );
-        $restler->addAPIClass(
-            '\\Tuleap\\Timetracking\\REST\\v1\\UserResource',
-            'users'
-        );
     }
 }
