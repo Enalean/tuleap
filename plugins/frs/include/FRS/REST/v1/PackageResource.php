@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 
 class PackageResource extends AuthenticatedResource
@@ -120,14 +121,21 @@ class PackageResource extends AuthenticatedResource
      * @url GET {id}
      * @access hybrid
      *
-     * @param int    $id            ID of the package
+     * @param int $id ID of the package
      *
      * @return \Tuleap\FRS\REST\v1\PackageRepresentation
+     *
+     * @throws RestException 403
      */
     public function getId($id)
     {
         $package = $this->getPackage($id);
-        $project = $this->project_manager->getProject($package->getGroupID());
+        $project = $this->getPackageProject($package);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $project
+        );
 
         $this->sendOptionsHeadersForGetId();
 
@@ -155,11 +163,18 @@ class PackageResource extends AuthenticatedResource
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return \Tuleap\FRS\REST\v1\ReleaseRepresentationPaginatedCollectionRepresentation
+     *
+     * @throws RestException 403
      */
     public function getReleases($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
     {
         $package      = $this->getPackage($id);
         $current_user = $this->user_manager->getCurrentUser();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $current_user,
+            $this->getPackageProject($package)
+        );
 
         $paginated_releases = $this->release_factory->getPaginatedActiveFRSReleasesForUser(
             $package,
@@ -242,6 +257,9 @@ class PackageResource extends AuthenticatedResource
     private function getProject($project_id)
     {
         $project = $this->project_manager->getProject($project_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
+
         if ($project->isError() || ! $project->isActive()) {
             throw new RestException(400, "Given project does not exist");
         }
@@ -266,5 +284,12 @@ class PackageResource extends AuthenticatedResource
     private function sendOptionsHeaders()
     {
         Header::allowOptionsPost();
+    }
+
+    private function getPackageProject(\FRSPackage $package)
+    {
+        return $this->project_manager->getProject(
+            $package->getGroupID()
+        );
     }
 }

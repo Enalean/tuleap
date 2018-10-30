@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 
 class FileResource extends AuthenticatedResource
@@ -62,6 +63,8 @@ class FileResource extends AuthenticatedResource
      * @param int $id ID of the file
      *
      * @return \Tuleap\FRS\REST\v1\FileRepresentation
+     *
+     * @throws RestException 403
      */
     public function getId($id)
     {
@@ -91,6 +94,7 @@ class FileResource extends AuthenticatedResource
 
     /**
      * @return FRSFile
+     * @throws RestException
      */
     private function getFile($id, PFUser $user)
     {
@@ -98,6 +102,11 @@ class FileResource extends AuthenticatedResource
         if (! $file || $file->isDeleted()) {
             throw new RestException(404);
         }
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $file->getGroup()
+        );
 
         $is_user_able_to_read_file = $this->release_factory->userCanRead(
             $file->getGroup()->getID(),
