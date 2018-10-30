@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -597,6 +597,9 @@ msgstr "Listes"
 msgid "Lists the project members."
 msgstr "Affiche la liste des membres du projet."
 
+msgid "Mailing lists (Lists Service)"
+msgstr "Listes de diffusion (Service Listes)"
+
 msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
@@ -897,6 +900,9 @@ msgstr "Type du projet"
 msgid "Project visibility"
 msgstr "Visibilité du projet"
 
+msgid "Project web pages (Home Page Service)"
+msgstr "Pages web de project (Service Site Web)"
+
 msgid "Project web site"
 msgstr "Site web du projet"
 
@@ -941,6 +947,9 @@ msgstr "Supprimer un membre du groupe"
 
 msgid "Revoke selected access keys"
 msgstr "Révoquer les clés d'accès sélectionnées"
+
+msgid "SOAP API"
+msgstr "API SOAP"
 
 msgid "SVN"
 msgstr "SVN"
@@ -1217,6 +1226,15 @@ msgstr "Ce project n'utilise pas de service avec des permissions."
 
 msgid "This project is not categorized yet."
 msgstr "Ce projet n'est pas encore catégorisé."
+
+msgid ""
+"This project is suspended. Only site administrators may access it.\n"
+"                However, the following services are not blocked and may "
+"still be used:"
+msgstr ""
+"Ce projet est suspendu. Seuls les administrateurs de la plateforme y ont "
+"accès. Cependant, les services suivants ne sont pas bloqués et pourraient "
+"encore être utilisés :"
 
 msgid "This reference does not exist"
 msgstr "La référence demandée n'existe pas"

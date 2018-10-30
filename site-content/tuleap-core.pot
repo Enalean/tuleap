@@ -544,6 +544,9 @@ msgstr ""
 msgid "Lists the project members."
 msgstr ""
 
+msgid "Mailing lists (Lists Service)"
+msgstr ""
+
 msgid ""
 "Make sure you copy your new access key, you won't be able to see it again!"
 msgstr ""
@@ -831,6 +834,9 @@ msgstr ""
 msgid "Project visibility"
 msgstr ""
 
+msgid "Project web pages (Home Page Service)"
+msgstr ""
+
 msgid "Project web site"
 msgstr ""
 
@@ -874,6 +880,9 @@ msgid "Remove group member"
 msgstr ""
 
 msgid "Revoke selected access keys"
+msgstr ""
+
+msgid "SOAP API"
 msgstr ""
 
 msgid "SVN"
@@ -1120,6 +1129,12 @@ msgid "This project doesn't use any services with permissions."
 msgstr ""
 
 msgid "This project is not categorized yet."
+msgstr ""
+
+msgid ""
+"This project is suspended. Only site administrators may access it.\n"
+"                However, the following services are not blocked and may "
+"still be used:"
 msgstr ""
 
 msgid "This reference does not exist"
