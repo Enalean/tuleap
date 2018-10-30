@@ -61,6 +61,10 @@ class MailFilter
     {
         $mails = $this->deduplicateEmails($mails);
 
+        foreach ($mails as $email) {
+            $this->logger->debug("Deduplicated email: " . $email);
+        }
+
         if ((bool)ForgeConfig::get('sys_mail_secure_mode') === false) {
             $this->logger->info("Platform is in insecure send mail mode. All notifications sent");
             return $mails;

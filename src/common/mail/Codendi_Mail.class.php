@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Mail\MailLogger;
 use Zend\Mail;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Mime;
@@ -42,6 +43,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @const DO NOT use the common look and feel
      */
     const DISCARD_COMMON_LOOK_AND_FEEL = false;
+    /**
+     * @var BackendLogger
+     */
+    private $logger;
 
     /**
      * @var Mail\Message
@@ -89,6 +94,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $this->message->setEncoding('UTF-8');
         $this->recipient_list_builder = new Mail_RecipientListBuilder(UserManager::instance());
         $this->transport              = new Mail\Transport\Sendmail();
+        $this->logger                 = new MailLogger();
     }
 
     public function setMessageId($message_id)
@@ -483,6 +489,20 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $status = false;
             \Tuleap\Mail\MailInstrumentation::incrementFailure();
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', ForgeConfig::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
+            $this->logger->debug("Mail notification failed");
+            $this->logger->debug("Zend mail Exception: " . $e->getMessage());
+
+            if ($this->message->getHeaders()->get('to')) {
+                $list = $this->message->getHeaders()->get('to')->getAddressList();
+                $addresses = [];
+                foreach ($list as $address) {
+                    $addresses[] = $address->getEmail();
+                }
+                $addresses = implode(',', $addresses);
+                $this->logger->debug("Message sent to: $addresses");
+            } else {
+                $this->logger->debug("No 'to' found");
+            }
         }
         $this->clearRecipients();
         return $status;
