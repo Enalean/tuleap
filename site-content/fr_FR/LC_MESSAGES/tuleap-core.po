@@ -718,6 +718,9 @@ msgstr "Il n'y a aucun label correspondant"
 msgid "No project trove categories"
 msgstr "Aucune catégorie de projet"
 
+msgid "Non active projects cannot be used to be project template"
+msgstr "Les projets non actifs ne peuvent être utilisés comme modèle de projet"
+
 msgid "Not categorized"
 msgstr "Non catégorisé"
 

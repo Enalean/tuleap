@@ -659,6 +659,9 @@ msgstr ""
 msgid "No project trove categories"
 msgstr ""
 
+msgid "Non active projects cannot be used to be project template"
+msgstr ""
+
 msgid "Not categorized"
 msgstr ""
 
