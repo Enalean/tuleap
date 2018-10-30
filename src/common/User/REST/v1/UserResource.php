@@ -21,11 +21,13 @@ namespace Tuleap\User\REST\v1;
 
 use EventManager;
 use PFUser;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\TimetrackingRepresentationBase;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataRetriever;
 use Tuleap\User\AccessKey\REST\UserAccessKeyRepresentation;
 use Tuleap\User\History\HistoryCleaner;
+use Tuleap\User\History\HistoryEntry;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\Widget\Event\UserTimeRetriever;
 use UserManager;
@@ -561,7 +563,16 @@ class UserResource extends AuthenticatedResource {
         $this->checkUserCanAccessToTheHistory($current_user, $id);
 
         $history_representation = new UserHistoryRepresentation();
-        $history_representation->build($this->history_retriever->getHistory($current_user));
+        $history                = $this->history_retriever->getHistory($current_user);
+
+        $filtered_history = array_filter(
+            $history,
+            function (HistoryEntry $entry) use ($current_user) {
+                return $current_user->isSuperUser() || ! $entry->getProject()->isSuspended();
+            }
+        );
+
+        $history_representation->build($filtered_history);
 
         return $history_representation;
     }
