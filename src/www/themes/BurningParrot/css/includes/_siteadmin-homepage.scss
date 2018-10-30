@@ -254,7 +254,8 @@
     background-color: $tlp-ui-success;
 }
 
-.siteadmin-homepage-users-legend-color-suspended {
+.siteadmin-homepage-users-legend-color-suspended,
+.siteadmin-homepage-projects-legend-color-suspended {
     background-color: #cccccc;
 }
 
@@ -299,7 +300,8 @@
     }
 }
 
-.siteadmin-homepage-users-slice-suspended {
+.siteadmin-homepage-users-slice-suspended,
+.siteadmin-homepage-projects-slice-suspended {
 
     > path {
         fill: #cccccc;

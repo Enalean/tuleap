@@ -1452,6 +1452,9 @@ msgstr ""
 msgid "permissions"
 msgstr ""
 
+msgid "suspended"
+msgstr ""
+
 msgid "{{ nb_members }} members"
 msgstr ""
 

@@ -672,4 +672,9 @@ class ProjectDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
+
+    public function getProjectsGroupByStatus()
+    {
+        return $this->retrieve("SELECT status, count(*) AS project_nb FROM groups GROUP BY status");
+    }
 }
