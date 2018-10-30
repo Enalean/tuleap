@@ -75,6 +75,7 @@ use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
+use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
@@ -919,6 +920,8 @@ class ArtifactsResource extends AuthenticatedResource {
         } catch (MoveArtifactNotDoneException $exception) {
             throw new RestException(500, $exception->getMessage());
         } catch (MoveArtifactSemanticsException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        } catch (MoveArtifactTargetProjectNotActiveException $exception) {
             throw new RestException(400, $exception->getMessage());
         } finally {
             Header::sendRateLimitHeaders($limit, $remaining_deletions);
