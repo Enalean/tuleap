@@ -21,11 +21,13 @@
 namespace Tuleap\CrossTracker\Report\CSV;
 
 use PFUser;
+use Tracker_Artifact;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\DateValue;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\CSV\Format\TextValue;
 use Tuleap\CrossTracker\Report\CSV\Format\UserValue;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 use UserManager;
 
 class CSVRepresentationBuilder
@@ -34,32 +36,45 @@ class CSVRepresentationBuilder
     private $visitor;
     /** @var UserManager */
     private $user_manager;
+    /** @var SimilarFieldsFormatter */
+    private $similar_fields_formatter;
 
-    public function __construct(CSVFormatterVisitor $visitor, UserManager $user_manager)
-    {
-        $this->visitor      = $visitor;
-        $this->user_manager = $user_manager;
+    public function __construct(
+        CSVFormatterVisitor $visitor,
+        UserManager $user_manager,
+        SimilarFieldsFormatter $similar_fields_formatter
+    ) {
+        $this->visitor                  = $visitor;
+        $this->user_manager             = $user_manager;
+        $this->similar_fields_formatter = $similar_fields_formatter;
     }
 
     /**
      * @return CSVRepresentation
      */
-    public function buildHeaderLine(PFUser $user)
+    public function buildHeaderLine(PFUser $user, SimilarFieldCollection $similar_fields)
     {
+        $semantic_and_always_there_fields = [
+            "id",
+            "project",
+            "tracker",
+            "title",
+            "description",
+            "status",
+            "submitted_by",
+            "submitted_on",
+            "last_update_by",
+            "last_update_date"
+        ];
+
+        $all_fields = array_merge(
+            $semantic_and_always_there_fields,
+            $similar_fields->getFieldNames()
+        );
+
         $header_line = new CSVRepresentation();
         $header_line->build(
-            [
-                "id",
-                "project",
-                "tracker",
-                "title",
-                "description",
-                "status",
-                "submitted_by",
-                "submitted_on",
-                "last_update_by",
-                "last_update_date"
-            ],
+            $all_fields,
             $user
         );
         return $header_line;
@@ -68,11 +83,38 @@ class CSVRepresentationBuilder
     /**
      * @return CSVRepresentation
      */
-    public function build(\Tracker_Artifact $artifact, PFUser $user)
+    public function build(Tracker_Artifact $artifact, PFUser $user, SimilarFieldCollection $similar_fields)
     {
-        $formatter_parameters = new FormatterParameters($user);
-        $tracker              = $artifact->getTracker();
+        $formatter_parameters                       = new FormatterParameters($user);
+        $semantic_and_always_there_formatted_values = $this->formatSemanticsAndAlwaysThereFields(
+            $artifact,
+            $formatter_parameters
+        );
 
+        $similar_field_values = $this->similar_fields_formatter->formatSimilarFields(
+            $artifact,
+            $similar_fields,
+            $formatter_parameters
+        );
+
+        $all_values = array_merge(
+            $semantic_and_always_there_formatted_values,
+            $similar_field_values
+        );
+
+        $representation = new CSVRepresentation();
+        $representation->build($all_values, $user);
+        return $representation;
+    }
+
+    /**
+     * @return mixed[]
+     */
+    private function formatSemanticsAndAlwaysThereFields(
+        Tracker_Artifact $artifact,
+        FormatterParameters $formatter_parameters
+    ) {
+        $tracker                = $artifact->getTracker();
         $project_name           = new TextValue($tracker->getProject()->getUnconvertedPublicName());
         $formatted_project_name = $project_name->accept($this->visitor, $formatter_parameters);
 
@@ -102,22 +144,17 @@ class CSVRepresentationBuilder
         $status           = new TextValue($artifact->getStatus());
         $formatted_status = $status->accept($this->visitor, $formatter_parameters);
 
-        $representation = new CSVRepresentation();
-        $representation->build(
-            [
-                $artifact->getId(),
-                $formatted_project_name,
-                $formatted_tracker_name,
-                $formatted_title,
-                $formatted_description,
-                $formatted_status,
-                $formatted_submitted_by,
-                $formatted_submitted_on,
-                $formatted_last_update_by,
-                $formatted_last_update_date
-            ],
-            $user
-        );
-        return $representation;
+        return [
+            $artifact->getId(),
+            $formatted_project_name,
+            $formatted_tracker_name,
+            $formatted_title,
+            $formatted_description,
+            $formatted_status,
+            $formatted_submitted_by,
+            $formatted_submitted_on,
+            $formatted_last_update_by,
+            $formatted_last_update_date
+        ];
     }
 }

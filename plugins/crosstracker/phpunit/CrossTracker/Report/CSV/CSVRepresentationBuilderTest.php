@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 
 class CSVRepresentationBuilderTest extends TestCase
 {
@@ -40,26 +41,38 @@ class CSVRepresentationBuilderTest extends TestCase
     private $user;
     /** @var MockInterface */
     private $user_manager;
+    /** @var MockInterface */
+    private $similar_fields;
+    /** @var MockInterface */
+    private $similar_fields_formatter;
 
     protected function setUp()
     {
         parent::setUp();
 
-        $this->user = Mockery::mock(\PFUser::class);
+        $this->similar_fields = Mockery::mock(SimilarFieldCollection::class);
+        $this->user           = Mockery::mock(\PFUser::class);
         $this->user->shouldReceive('getPreference')->withArgs(['user_csv_separator'])->andReturn(
             CSVRepresentation::COMMA_SEPARATOR_NAME
         );
-        $this->visitor      = Mockery::mock(CSVFormatterVisitor::class);
-        $this->user_manager = Mockery::mock(\UserManager::class);
-        $this->builder      = new CSVRepresentationBuilder($this->visitor, $this->user_manager);
+        $this->visitor                  = Mockery::mock(CSVFormatterVisitor::class);
+        $this->user_manager             = Mockery::mock(\UserManager::class);
+        $this->similar_fields_formatter = Mockery::mock(SimilarFieldsFormatter::class);
+        $this->builder                  = new CSVRepresentationBuilder(
+            $this->visitor,
+            $this->user_manager,
+            $this->similar_fields_formatter
+        );
     }
 
     public function testBuildHeaderLine()
     {
-        $result = $this->builder->buildHeaderLine($this->user);
+        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['pentarchical']);
+
+        $result = $this->builder->buildHeaderLine($this->user, $this->similar_fields);
 
         $this->assertEquals(
-            'id,project,tracker,title,description,status,submitted_by,submitted_on,last_update_by,last_update_date',
+            'id,project,tracker,title,description,status,submitted_by,submitted_on,last_update_by,last_update_date,pentarchical',
             $result->__toString()
         );
     }
@@ -71,7 +84,10 @@ class CSVRepresentationBuilderTest extends TestCase
         $tracker = Mockery::mock(\Tracker::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $tracker->shouldReceive('getName')->andReturn('freckly');
-        $artifact    = Mockery::mock(\Tracker_Artifact::class);
+
+        $artifact       = Mockery::mock(\Tracker_Artifact::class);
+        $this->similar_fields->shouldReceive('getFieldNames')->andReturn([]);
+
         $artifact_id = 84;
         $artifact->shouldReceive(
             [
@@ -89,16 +105,16 @@ class CSVRepresentationBuilderTest extends TestCase
         );
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::mock(\PFUser::class));
 
-        $formatted_project_name = '"Atacaman"';
-        $formatted_tracker_name = '"freckly"';
-        $formatted_submitted_on = '25/10/2018 10:39';
+        $formatted_project_name     = '"Atacaman"';
+        $formatted_tracker_name     = '"freckly"';
+        $formatted_submitted_on     = '25/10/2018 10:39';
         $formatted_last_update_date = '25/10/2018 16:45';
-        $formatted_submitted_by = '"tszwejbka"';
-        $formatted_last_update_by = '"akrostag"';
-        $formatted_title = '"Uncinated unrecantable"';
-        $formatted_description = '"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+        $formatted_submitted_by     = '"tszwejbka"';
+        $formatted_last_update_by   = '"akrostag"';
+        $formatted_title            = '"Uncinated unrecantable"';
+        $formatted_description      = '"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua."';
-        $formatted_status = '"On going"';
+        $formatted_status           = '"On going"';
 
         $this->visitor->shouldReceive('visitTextValue')
             ->andReturn(
@@ -112,6 +128,7 @@ class CSVRepresentationBuilderTest extends TestCase
             ->andReturn($formatted_submitted_on, $formatted_last_update_date);
         $this->visitor->shouldReceive('visitUserValue')
             ->andReturn($formatted_submitted_by, $formatted_last_update_by);
+        $this->similar_fields_formatter->shouldReceive('formatSimilarFields')->andReturn([]);
 
         $expected_representation = new CSVRepresentation();
         $expected_representation->build(
@@ -130,7 +147,7 @@ class CSVRepresentationBuilderTest extends TestCase
             $this->user
         );
 
-        $result = $this->builder->build($artifact, $this->user);
+        $result = $this->builder->build($artifact, $this->user, $this->similar_fields);
 
         $this->assertEquals($expected_representation, $result);
     }

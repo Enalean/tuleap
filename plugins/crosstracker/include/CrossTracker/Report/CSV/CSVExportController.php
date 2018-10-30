@@ -25,7 +25,6 @@ use PFUser;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
-use Tuleap\CrossTracker\CrossTrackerArtifactRepresentationFactory;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
@@ -33,6 +32,7 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\BaseLayout;
@@ -56,9 +56,9 @@ class CSVExportController implements DispatchableWithRequest
      */
     private $artifact_report_factory;
     /**
-     * @var CrossTrackerArtifactRepresentationFactory
+     * @var CSVRepresentationFactory
      */
-    private $representation_factory;
+    private $csv_representation_factory;
     /**
      * @var CrossTrackerReportDao
      */
@@ -71,21 +71,27 @@ class CSVExportController implements DispatchableWithRequest
      * @var CrossTrackerPermissionGate
      */
     private $cross_tracker_permission_gate;
+    /**
+     * @var SimilarFieldsMatcher
+     */
+    private $similar_fields_matcher;
 
     public function __construct(
         CrossTrackerReportFactory $report_factory,
         CrossTrackerArtifactReportFactory $artifact_report_factory,
-        CrossTrackerArtifactRepresentationFactory $representation_factory,
+        CSVRepresentationFactory $csv_representation_factory,
         CrossTrackerReportDao $cross_tracker_dao,
         ProjectManager $project_manager,
-        CrossTrackerPermissionGate $cross_tracker_permission_gate
+        CrossTrackerPermissionGate $cross_tracker_permission_gate,
+        SimilarFieldsMatcher $similar_fields_matcher
     ) {
         $this->report_factory                = $report_factory;
         $this->artifact_report_factory       = $artifact_report_factory;
-        $this->representation_factory        = $representation_factory;
+        $this->csv_representation_factory    = $csv_representation_factory;
         $this->cross_tracker_dao             = $cross_tracker_dao;
         $this->project_manager               = $project_manager;
         $this->cross_tracker_permission_gate = $cross_tracker_permission_gate;
+        $this->similar_fields_matcher        = $similar_fields_matcher;
     }
 
     /**
@@ -138,13 +144,18 @@ class CSVExportController implements DispatchableWithRequest
             $this->checkAllProjectAreActive($report);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
-            $collection = $this->artifact_report_factory->getArtifactsMatchingReport(
+            $collection     = $this->artifact_report_factory->getArtifactsMatchingReport(
                 $report,
                 $current_user,
                 $limit,
                 $offset
             );
-            return $this->representation_factory->buildRepresentationsForCSV($collection, $current_user);
+            $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report);
+            return $this->csv_representation_factory->buildRepresentations(
+                $collection,
+                $current_user,
+                $similar_fields
+            );
         } catch (CrossTrackerReportNotFoundException $e) {
             throw new NotFoundException(
                 sprintf(dgettext('tuleap-crosstracker', 'Report with id %d not found'), $report_id)

@@ -25,6 +25,8 @@ class CSVRepresentation
     const COMMA_SEPARATOR_NAME = 'comma';
     const SEMICOLON_SEPARATOR_NAME = 'semicolon';
     const TAB_SEPARATOR_NAME = 'tab';
+    const CSV_EMPTY_VALUE = '""';
+
     /**
      * @var string[][]
      */
