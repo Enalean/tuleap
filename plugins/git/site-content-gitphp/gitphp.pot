@@ -108,12 +108,6 @@ msgstr ""
 msgid "Could not create tmpdir %1$s"
 msgstr ""
 
-#, php-format
-msgid ""
-"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
-"\" config value."
-msgstr ""
-
 msgid "Deselect"
 msgstr ""
 

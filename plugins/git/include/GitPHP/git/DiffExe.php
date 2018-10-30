@@ -28,7 +28,7 @@ class DiffExe
      *
      * @access protected
      */
-    protected $binary;
+    protected $binary = '/usr/bin/diff';
 
     /**
      * unified
@@ -47,23 +47,6 @@ class DiffExe
      * @access protected
      */
     protected $showFunction = true;
-
-    /**
-     * __construct
-     *
-     * Constructor
-     *
-     * @access public
-     */
-    public function __construct()
-    {
-        $binary = Config::GetInstance()->GetValue('diffbin');
-        if (empty($binary)) {
-            $this->binary = DiffExe::DefaultBinary();
-        } else {
-            $this->binary = $binary;
-        }
-    }
 
     /**
      * GetBinary
@@ -190,44 +173,6 @@ class DiffExe
     }
 
     /**
-     * Valid
-     *
-     * Tests if this executable is valid
-     *
-     * @access public
-     * @return boolean true if valid
-     */
-    public function Valid() // @codingStandardsIgnoreLine
-    {
-        if (empty($this->binary)) {
-            return false;
-        }
-
-        $code = 0;
-        $out = exec($this->binary . ' --version', $tmp, $code);
-
-        return $code == 0;
-    }
-
-    /**
-     * @throws MessageException
-     */
-    public function checkIsValid()
-    {
-        if (! $this->Valid()) {
-            throw new MessageException(
-                sprintf(
-                    dgettext("gitphp", 'Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'),
-                    $this->GetBinary(),
-                    'diffbin'
-                ),
-                true,
-                500
-            );
-        }
-    }
-
-    /**
      * Diff
      *
      * Convenience function to run diff with the default settings
@@ -247,19 +192,5 @@ class DiffExe
         $ret = $obj->Execute($fromFile, $fromName, $toFile, $toName);
         unset($obj);
         return $ret;
-    }
-
-    /**
-     * DefaultBinary
-     *
-     * Gets the default binary for the platform
-     *
-     * @access public
-     * @static
-     * @return string binary
-     */
-    public static function DefaultBinary() // @codingStandardsIgnoreLine
-    {
-        return 'diff';
     }
 }
