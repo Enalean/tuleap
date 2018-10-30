@@ -1155,7 +1155,8 @@ CREATE TABLE ugroup (
 CREATE TABLE ugroup_user (
   ugroup_id int(11) NOT NULL,
   user_id int(11) NOT NULL,
-  PRIMARY KEY (ugroup_id, user_id)
+  PRIMARY KEY (ugroup_id, user_id),
+  INDEX idx_user_ugroup(user_id, ugroup_id)
 ) ENGINE=InnoDB;
 
 
