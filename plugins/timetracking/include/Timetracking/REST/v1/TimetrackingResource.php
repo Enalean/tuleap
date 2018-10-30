@@ -30,6 +30,7 @@ use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager;
@@ -113,6 +114,7 @@ class TimetrackingResource extends AuthenticatedResource
      *
      * @throws 400
      * @throws 401
+     * @throws RestException 403
      * @throws 404
      */
     protected function addTime(TimetrackingPOSTRepresentation $item)
@@ -124,6 +126,10 @@ class TimetrackingResource extends AuthenticatedResource
         $current_user = $this->rest_user_manager->getCurrentUser();
 
         $artifact = $this->getArtifact($current_user, $item->artifact_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
 
         try {
             $time_representation = new TimetrackingRepresentation();
@@ -164,6 +170,7 @@ class TimetrackingResource extends AuthenticatedResource
      *
      * @throws 400
      * @throws 401
+     * @throws RestException 403
      * @throws 404
      */
     protected function updateTime($id, TimetrackingPUTRepresentation $item)
@@ -173,12 +180,16 @@ class TimetrackingResource extends AuthenticatedResource
         $this->sendAllowHeaders();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
+        $time         = $this->time_retriever->getTimeByIdForUser($current_user, $id);
 
-        $time = $this->time_retriever->getTimeByIdForUser($current_user, $id);
         if (! $time) {
             throw new RestException(404, dgettext('tuleap-timetracking', "This time does not exist"));
         }
         $artifact = $this->getArtifact($current_user, $time->getArtifactId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
 
         try {
             $time_representation = new TimetrackingRepresentation();
@@ -210,6 +221,7 @@ class TimetrackingResource extends AuthenticatedResource
      * @param int $id Id of the time
      *
      * @throws 401
+     * @throws RestException 403
      * @throws 404
      */
     protected function delete($id)
@@ -222,6 +234,10 @@ class TimetrackingResource extends AuthenticatedResource
 
         $time     = $this->getTime($current_user, $id);
         $artifact = $this->getArtifact($current_user, $time->getArtifactId());
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $artifact->getTracker()->getProject()
+        );
 
         try {
             $this->time_updater->deleteTime($current_user, $artifact, $time);
