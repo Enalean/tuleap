@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+  * Copyright (c) Enalean, 2013 - 2018. All rights reserved
   *
   * This file is a part of Tuleap.
   *
@@ -130,7 +130,13 @@ class Project_OneStepCreation_OneStepCreationValidator {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($this->creation_request->getTemplateId());
 
-        if (! $project->isTemplate() && ! user_ismember($this->creation_request->getTemplateId(), 'A')) {
+        if (! $project->isActive()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                _('Non active projects cannot be used to be project template')
+            );
+            $this->setIsNotValid();
+        } elseif (! $project->isTemplate() && ! user_ismember($this->creation_request->getTemplateId(), 'A')) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
             $this->setIsNotValid();
         }

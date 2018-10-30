@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2013 - 2015. All rights reserved
+ * Copyright (c) Enalean, 2013 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'common/project/OneStepCreation/OneStepCreationValidator.class.php';
 
 class OneStepCreationValidatorTest extends TuleapTestCase {
 
@@ -33,13 +31,14 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         $GLOBALS['grpdir_prefix']       = 'whatever';
 
         $template = stub('Project')->isTemplate()->returns(true);
+        stub($template)->isActive()->returns(true);
 
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
 
-        $project_manager = mock('ProjectManager');
-        ProjectManager::setInstance($project_manager);
-        stub($project_manager)->getProject($this->template_id)->returns($template);
+        $this->project_manager = mock('ProjectManager');
+        ProjectManager::setInstance($this->project_manager);
+        stub($this->project_manager)->getProject($this->template_id)->returns($template);
 
         $system_event_manager = mock('SystemEventManager');
         SystemEventManager::setInstance($system_event_manager);
@@ -119,6 +118,31 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
         $trove_cat  = new TroveCat(1, 'whatever', 'WhatEver');
         $trove_cats = array($trove_cat);
         $validator  = $this->aCreationValidator($request_data, $required_custom_descriptions, $trove_cats);
+
+        $this->assertFalse($validator->validateAndGenerateErrors());
+    }
+
+    public function itReturnsFalseIfSelectedTemplateIsNotActive()
+    {
+        $required_custom_descriptions = array(
+            101 => new Project_CustomDescription_CustomDescription(101, "A REQUIRED description field", "desc", Project_CustomDescription_CustomDescription::REQUIRED, Project_CustomDescription_CustomDescription::TYPE_TEXT, 1),
+        );
+
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => 'my_test proj',
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => 'fdgd',
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => 'short description',
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => true,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => 342,
+            Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => 'approved',
+        );
+
+        $suspended_template = stub('Project')->isTemplate()->returns(true);
+        stub($suspended_template)->isActive()->returns(false);
+
+        stub($this->project_manager)->getProject(342)->returns($suspended_template);
+
+        $validator = $this->aCreationValidator($request_data, $required_custom_descriptions, []);
 
         $this->assertFalse($validator->validateAndGenerateErrors());
     }
