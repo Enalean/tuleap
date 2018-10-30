@@ -19,10 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Svn\ApacheConfGenerator;
+use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
-use Tuleap\SystemEvent\SystemEvent_PROJECT_ACTIVE;
+use Tuleap\SystemEvent\SystemEventSVNAuthenticationCacheRefresh;
+use \Tuleap\Redis;
 
 /**
 * Manager of system events
@@ -174,15 +175,9 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'project_is_active':
-            $this->createEvent(
-                SystemEvent::TYPE_PROJECT_ACTIVE,
-                $params['group_id'],
-                SystemEvent::PRIORITY_LOW
-            );
-            break;
         case 'project_is_suspended':
             $this->createEvent(
-                SystemEvent::TYPE_PROJECT_SUSPENDED,
+                SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
                 $params['group_id'],
                 SystemEvent::PRIORITY_LOW
             );
@@ -372,16 +367,8 @@ class SystemEventManager {
             return 'Tuleap\SystemEvent\Massmail';
         }
 
-        if ($type === SystemEvent::TYPE_PROJECT_ACTIVE) {
-            return SystemEvent_PROJECT_ACTIVE::class;
-        }
-
-        if ($type === SystemEvent::TYPE_PROJECT_SUSPENDED) {
-            return \Tuleap\SystemEvent\SystemEvent_PROJECT_SUSPENDED::class;
-        }
-
-        if ($type === SystemEvent::TYPE_PROJECT_PENDING) {
-            return \Tuleap\SystemEvent\SystemEvent_PROJECT_PENDING::class;
+        if ($type === SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH) {
+            return SystemEventSVNAuthenticationCacheRefresh::class;
         }
 
         return 'SystemEvent_' . $type;
@@ -435,7 +422,6 @@ class SystemEventManager {
         case SystemEvent::TYPE_SYSTEM_CHECK:
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
         case SystemEvent::TYPE_PROJECT_CREATE:
-        case SystemEvent::TYPE_PROJECT_DELETE:
         case SystemEvent::TYPE_PROJECT_RENAME:
         case SystemEvent::TYPE_MEMBERSHIP_CREATE:
         case SystemEvent::TYPE_MEMBERSHIP_DELETE:
@@ -446,7 +432,6 @@ class SystemEventManager {
         case SystemEvent::TYPE_MAILING_LIST_CREATE:
         case SystemEvent::TYPE_MAILING_LIST_DELETE:
         case SystemEvent::TYPE_CVS_IS_PRIVATE:
-        case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
         case SystemEvent::TYPE_COMPUTE_MD5SUM:
@@ -460,16 +445,11 @@ class SystemEventManager {
             $klass = $this->getClassForType($row['type']);
             $klass_params = array(Backend::instance(Backend::SVN));
             break;
-        case SystemEvent::TYPE_PROJECT_ACTIVE:
-        case SystemEvent::TYPE_PROJECT_SUSPENDED:
-        case SystemEvent::TYPE_PROJECT_PENDING:
+        case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
+        case SystemEvent::TYPE_PROJECT_DELETE:
+        case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
             $klass        = $this->getClassForType($row['type']);
-            $klass_params = [
-                new ApacheConfGenerator(
-                    new ApacheServiceControl(new ServiceControl()),
-                    Backend::instance(Backend::SVN)
-                )
-            ];
+            $klass_params = [$this->getSVNAuthenticationCacheInvalidator()];
             break;
 
         default:
@@ -492,6 +472,18 @@ class SystemEventManager {
             call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
         }
         return $sysevent;
+    }
+
+    /**
+     * @return SVNAuthenticationCacheInvalidator
+     */
+    private function getSVNAuthenticationCacheInvalidator()
+    {
+        $redis_client = null;
+        if (Redis\ClientFactory::canClientBeBuiltFromForgeConfig()) {
+            $redis_client = Redis\ClientFactory::fromForgeConfig();
+        }
+        return new SVNAuthenticationCacheInvalidator(new ApacheServiceControl(new ServiceControl()), $redis_client);
     }
 
 

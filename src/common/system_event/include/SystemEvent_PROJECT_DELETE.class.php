@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Tuleap 2018. All rights reserved
+ * Copyright (c) Enalean 2018. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -21,12 +21,25 @@
  * 
  */
 
+use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
+
 /**
 * System Event classes
 *
 */
-class SystemEvent_PROJECT_DELETE extends SystemEvent {
-    
+class SystemEvent_PROJECT_DELETE extends SystemEvent
+{
+    /**
+     * @var SVNAuthenticationCacheInvalidator
+     */
+    private $svn_authentication_cache_invalidator;
+
+    public function injectDependencies(
+        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator
+    ) {
+        $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
+    }
+
     /**
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
@@ -127,6 +140,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
                     $backendSVN->setSVNApacheConfNeedUpdate();
                 }
             }
+            $this->svn_authentication_cache_invalidator->invalidateProjectCache($project);
 
             // Delete Mailing lists
             $backendMailinList = $this->getBackend('MailingList');

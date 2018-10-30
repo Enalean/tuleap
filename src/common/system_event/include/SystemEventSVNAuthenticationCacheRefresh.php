@@ -20,22 +20,20 @@
 
 namespace Tuleap\SystemEvent;
 
-use System_Command_CommandException;
 use SystemEvent;
-use Tuleap\Svn\ApacheConfGenerator;
-use Tuleap\System\ApacheServiceControl;
+use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
-class SystemEvent_PROJECT_SUSPENDED extends SystemEvent // phpcs:ignore
+class SystemEventSVNAuthenticationCacheRefresh extends SystemEvent
 {
     /**
-     * @var ApacheConfGenerator
+     * @var SVNAuthenticationCacheInvalidator
      */
-    private $apache_conf_generator;
+    private $svn_authentication_cache_invalidator;
 
     public function injectDependencies(
-        ApacheConfGenerator $apache_conf_generator
+        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator
     ) {
-        $this->apache_conf_generator  = $apache_conf_generator;
+        $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
     }
 
     /**
@@ -49,16 +47,13 @@ class SystemEvent_PROJECT_SUSPENDED extends SystemEvent // phpcs:ignore
      */
     public function verbalizeParameters($with_link)
     {
-        return 'project: ' . $this->verbalizeProjectId($this->getIdFromParam($this->parameters), $with_link);
+        return 'project: ' . $this->verbalizeProjectId($this->getIdFromParam(), $with_link);
     }
 
     public function process()
     {
-        try {
-            $this->apache_conf_generator->generate();
-            $this->done();
-        } catch (System_Command_CommandException $e) {
-            $this->error($e->getMessage());
-        }
+        $project = $this->getProject($this->getIdFromParam());
+        $this->svn_authentication_cache_invalidator->invalidateProjectCache($project);
+        $this->done();
     }
 }

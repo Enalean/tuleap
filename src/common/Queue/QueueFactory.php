@@ -23,6 +23,7 @@ namespace Tuleap\Queue;
 
 use Logger;
 use ForgeConfig;
+use Tuleap\Redis\ClientFactory as RedisClientFactory;
 
 class QueueFactory
 {
@@ -35,7 +36,7 @@ class QueueFactory
     public static function getPersistentQueue(Logger $logger, $queue_name, $favor = '')
     {
         if ($favor === self::REDIS) {
-            if (ForgeConfig::get('redis_server') !== false) {
+            if (RedisClientFactory::canClientBeBuiltFromForgeConfig()) {
                 return new Redis\RedisPersistentQueue($logger, $queue_name);
             }
             throw new NoQueueSystemAvailableException();

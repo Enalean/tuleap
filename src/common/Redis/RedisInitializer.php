@@ -1,0 +1,79 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\Redis;
+
+use Tuleap\Cryptography\ConcealedString;
+
+class RedisInitializer
+{
+    const CONNECT_TIMEOUT = 0.1;
+
+    /**
+     * @var string|false
+     */
+    private $host;
+    /**
+     * @var string|false
+     */
+    private $port;
+    /**
+     * @var ConcealedString
+     */
+    private $password;
+
+    public function __construct($host, $port, ConcealedString $password)
+    {
+        $this->host     = $host;
+        $this->port     = $port;
+        $this->password = $password;
+    }
+
+    /**
+     * @throws RedisConnectionException
+     * @throws \RedisException
+     * @return void
+     */
+    public function init(\Redis $client)
+    {
+        if ($this->host === false) {
+            throw new RedisConnectionException('No Redis server has been setup');
+        }
+
+        set_error_handler(function ($code, $message) use (&$error_message) {
+            $error_message = $message;
+        });
+        try {
+            $is_connected = $client->connect($this->host, $this->port, self::CONNECT_TIMEOUT);
+        } finally {
+            restore_error_handler();
+        }
+        if (! $is_connected) {
+            throw new RedisConnectionException("Redis connection failed ($error_message)");
+        }
+
+        $trimmed_password = trim($this->password);
+        if ($trimmed_password !== '' && ! $client->auth($trimmed_password)) {
+            $error_message = trim(preg_replace('/^ERR/', '', $client->getLastError()));
+            $error_message = str_replace($trimmed_password, '*********pwd*********', $error_message);
+            throw new RedisConnectionException("Redis authentication failed ($error_message)");
+        }
+    }
+}

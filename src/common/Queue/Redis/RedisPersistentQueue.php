@@ -21,10 +21,9 @@
 
 namespace Tuleap\Queue\Redis;
 
-use Redis;
+use Tuleap\Redis;
 use RedisException;
 use Logger;
-use ForgeConfig;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueServerConnectionException;
 
@@ -43,7 +42,7 @@ class RedisPersistentQueue implements PersistentQueue
     private $logger;
 
     /**
-     * @var Redis
+     * @var \Redis
      */
     private $redis;
     private $event_queue_name;
@@ -116,16 +115,13 @@ class RedisPersistentQueue implements PersistentQueue
      */
     private function connect()
     {
-        $this->logger->debug('Connect to Redis server '.ForgeConfig::get('redis_server').':'.ForgeConfig::get('redis_port'));
-        $this->redis = new Redis();
-        if (! $this->redis->connect(ForgeConfig::get('redis_server'), ForgeConfig::get('redis_port'))) {
-            throw new QueueServerConnectionException('Unable to connect to server');
-        }
-
-        $redis_password = ForgeConfig::get('redis_password');
-        if (trim($redis_password) !== '') {
-            if (! $this->redis->auth($redis_password)) {
-                throw new QueueServerConnectionException('Queue to redis: Unable to authenticate with given password');
+        if ($this->redis === null || ! $this->redis->isConnected()) {
+            try {
+                $this->redis = Redis\ClientFactory::fromForgeConfig();
+            } catch (Redis\RedisConnectionException $exception) {
+                throw new QueueServerConnectionException($exception->getMessage());
+            } catch (RedisException $exception) {
+                throw new QueueServerConnectionException($exception->getMessage());
             }
         }
     }
