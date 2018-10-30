@@ -31,6 +31,7 @@ use Tuleap\Tracker\Action\Move\FeedbackFieldCollectorInterface;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionManager;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
+use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 class MoveArtifact
@@ -105,6 +106,7 @@ class MoveArtifact
      * @throws \Tuleap\Tracker\Artifact\ArtifactsDeletion\DeletionOfArtifactsIsNotAllowedException
      * @throws MoveArtifactNotDoneException
      * @throws MoveArtifactSemanticsException
+     * @throws MoveArtifactTargetProjectNotActiveException
      */
     public function move(
         Tracker_Artifact $artifact,
@@ -112,6 +114,10 @@ class MoveArtifact
         PFUser $user,
         FeedbackFieldCollectorInterface $feedback_field_collector
     ) {
+        if (! $target_tracker->getProject()->isActive()) {
+            throw new MoveArtifactTargetProjectNotActiveException();
+        }
+
         $this->artifact_priority_manager->startTransaction();
 
         $this->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_field_collector);
