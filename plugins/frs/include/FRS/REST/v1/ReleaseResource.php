@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,6 +31,7 @@ use Tuleap\FRS\UploadedLinksDao;
 use Tuleap\FRS\UploadedLinksRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
+use Tuleap\REST\ProjectStatusVerificator;
 use UserManager;
 
 class ReleaseResource extends AuthenticatedResource
@@ -78,6 +79,8 @@ class ReleaseResource extends AuthenticatedResource
      * @param int $id ID of the release
      *
      * @return \Tuleap\FRS\REST\v1\ReleaseRepresentation
+     *
+     * @throws RestException 403
      */
     public function getId($id)
     {
@@ -85,6 +88,12 @@ class ReleaseResource extends AuthenticatedResource
 
         $release = $this->getRelease($id);
         $user    = $this->user_manager->getCurrentUser();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $release->getProject()
+        );
+
         $this->checkUserCanReadRelease($release, $user);
 
         $release_representation = new ReleaseRepresentation();
@@ -106,12 +115,20 @@ class ReleaseResource extends AuthenticatedResource
      * @param int $offset Position of the first file to display {@from path}{@min 0}
      *
      * @return \Tuleap\FRS\REST\v1\CollectionOfFileRepresentation
+     *
+     * @throws RestException 403
      */
     public function getFiles($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
     {
 
         $release = $this->getRelease($id);
         $user    = $this->user_manager->getCurrentUser();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $user,
+            $release->getProject()
+        );
+
         $this->checkUserCanReadRelease($release, $user);
 
         $files_in_release = $release->getFiles();
@@ -161,6 +178,8 @@ class ReleaseResource extends AuthenticatedResource
      *
      * @return \Tuleap\FRS\REST\v1\ReleaseRepresentation
      * @status 201
+     *
+     * @throws RestException 403
      */
     public function post(ReleasePOSTRepresentation $body)
     {
@@ -168,6 +187,10 @@ class ReleaseResource extends AuthenticatedResource
 
         $user    = $this->user_manager->getCurrentUser();
         $package = $this->package_factory->getFRSPackageFromDb($body->package_id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            \ProjectManager::instance()->getProject($package->getGroupID())
+        );
 
         if (! $package) {
             throw new RestException(400, "Package not found");
@@ -220,6 +243,8 @@ class ReleaseResource extends AuthenticatedResource
      *
      * @param int $id
      * @param ReleasePATCHRepresentation $body
+     *
+     * @throws RestException 403
      */
     public function patchId($id, ReleasePATCHRepresentation $body)
     {
@@ -227,6 +252,10 @@ class ReleaseResource extends AuthenticatedResource
 
         $user    = $this->user_manager->getCurrentUser();
         $release = $this->getRelease($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $release->getProject()
+        );
 
         if (! $this->release_factory->userCanUpdate($release->getGroupID(), $release->getReleaseID(), $user->getId())) {
             throw new RestException(403, "Write access to release denied");

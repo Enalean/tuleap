@@ -30,13 +30,13 @@ class FRSFile {
 	/**
      * @var int $file_id the ID of this FRSFile
      */
-    var $file_id;	
+    var $file_id;
     /**
      * @var String $filename the name of this FRSFile
      */
     var $filename;
     /**
-     * @var String $filepath the full path where the file is created  
+     * @var String $filepath the full path where the file is created
      */
     var $filepath;
     /**
@@ -120,15 +120,15 @@ class FRSFile {
             $this->initFromArray($data_array);
         }
     }
-    
+
     function getFileID() {
         return $this->file_id;
     }
-    
+
     function setFileID($file_id) {
         $this->file_id = (int) $file_id;
     }
-    
+
     function getFileName() {
         return $this->filename;
     }
@@ -159,39 +159,39 @@ class FRSFile {
     function getReleaseID() {
         return $this->release_id;
     }
-    
+
     function setReleaseID($release_id) {
         $this->release_id = (int) $release_id;
     }
-    
+
     function getTypeID() {
         return $this->type_id;
     }
-    
+
     function setTypeID($type_id) {
         $this->type_id = (int) $type_id;
     }
-    
+
     function getProcessorID() {
         return $this->processor_id;
     }
-    
+
     function setProcessorID($processor_id) {
         $this->processor_id = (int) $processor_id;
     }
-    
+
     function getReleaseTime() {
         return $this->release_time;
     }
-    
+
     function setReleaseTime($release_time) {
         $this->release_time = (int) $release_time;
     }
-    
+
     function setFileLocation($location) {
         $this->file_location = $location;
     }
-    
+
     /**
      * Returns the location of the file on the server
      *
@@ -216,21 +216,21 @@ class FRSFile {
         }
         return $this->file_size;
     }
-    
+
     function setFileSize($file_size) {
         $this->file_size = $file_size;
     }
-    
+
     static function convertBytesToKbytes($size_in_bytes, $decimals_precision = 0) {
         $size_in_kbytes = $size_in_bytes / 1024;
-        
+
         $decimal_separator = $GLOBALS['Language']->getText('system','decimal_separator');
-        $thousand_separator = $GLOBALS['Language']->getText('system','thousand_separator'); 
+        $thousand_separator = $GLOBALS['Language']->getText('system','thousand_separator');
         // because I don't know how to specify a space in a .tab file
         if ($thousand_separator == "' '") {
-            $thousand_separator = ' ';  
+            $thousand_separator = ' ';
         }
-        return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator); 
+        return number_format($size_in_kbytes, $decimals_precision, $decimal_separator, $thousand_separator);
     }
 
     function getDisplayFileSize() {
@@ -240,27 +240,27 @@ class FRSFile {
         }
         return $this->convertBytesToKbytes($this->getFileSize(), $decimals_precision);
     }
-    
+
     function getPostDate() {
         return $this->post_date;
     }
-    
+
     function setPostDate($post_date) {
         $this->post_date = (int) $post_date;
     }
-    
+
     function getStatus() {
         return $this->status;
     }
-    
+
     function setStatus($status) {
         $this->status = $status;
     }
-    
+
     function isActive() {
         return ($this->status == 'A');
     }
-    
+
     function isDeleted() {
         return ($this->status == 'D');
     }
@@ -340,19 +340,19 @@ class FRSFile {
         $array['reference_md5'] = $this->getReferenceMd5();
         $array['user_id']       = $this->getUserID();
         $array['comment']       = $this->getComment();
-        
+
         return $array;
     }
-    
+
     var $dao;
-    
+
     function &_getFRSFileDao() {
         if (!$this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
-    
+
     /**
      * Determine if the file exists really on the server or not
      *
@@ -361,7 +361,7 @@ class FRSFile {
     function fileExists() {
         return file_exists($this->getFileLocation());
     }
-    
+
     /**
      * Get the Package ID of this File
      *
@@ -375,12 +375,12 @@ class FRSFile {
         $package_id = $release->getPackageID();
         return $package_id;
     }
-    
-    
+
+
     /**
      * Get the Group (the project) of this File
      *
-     * @return Object{Group} the group the file belongs to
+     * @return Project the group the file belongs to
      */
     function getGroup() {
 	if(empty($this->group)) {
@@ -419,10 +419,10 @@ class FRSFile {
 
     /**
      * Log the download of the file in the log system
-     * 
+     *
      * Only log one download attempt per file/user/hour. Driven by SOAP:getFileChunk
      * in order to reduce the amount of download attempt logged.
-     * 
+     *
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
      * @return boolean true if there is no error, false otherwise
      */
@@ -441,8 +441,8 @@ class FRSFile {
     /**
      * userCanDownload : determine if the user can download the file or not
      *
-     * WARNING : for the moment, user can download the file if the user can view the package and can view the release the file belongs to.  
-     *  
+     * WARNING : for the moment, user can download the file if the user can view the package and can view the release the file belongs to.
+     *
      * @param int $user_id the ID of the user. If $user_id is 0, then we take the current user.
      * @return boolean true if the user has permissions to download the file, false otherwise
      */
@@ -450,34 +450,34 @@ class FRSFile {
         if ($user_id == 0) {
             $user_id = user_getid();
         }
-        
+
         $user = UserManager::instance()->getUserById($user_id);
         if ($user) {
             if ($user->isSuperUser()) {
                 return true;
             }
         }
-        
+
         $user_can_download = false;
-        if (! $this->isDeleted()) { 
+        if (! $this->isDeleted()) {
             $group = $this->getGroup();
             $group_id = $group->getID();
             if (permission_exist('RELEASE_READ', $this->getReleaseID())) {
                 if (permission_is_authorized('RELEASE_READ',$this->getReleaseID(),$user_id,$group_id)) {
                     $user_can_download = true;
-                } 
+                }
             } else if (permission_is_authorized('PACKAGE_READ',$this->getPackageID(),$user_id,$group_id)) {
                 $user_can_download = true;
             }
         }
-        return $user_can_download; 	
+        return $user_can_download;
     }
-  
+
     /**
      * download : download the file, i.e. print it to stdout
      *
-     * WARNING : this function does not check permissions, nor does it log the download  
-     *  
+     * WARNING : this function does not check permissions, nor does it log the download
+     *
      * @return boolean true if the user has permissions to download the file, false otherwise
      */
     public function download()
@@ -494,7 +494,7 @@ class FRSFile {
         header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');
         header('Pragma: private');
         header('Cache-control: private, must-revalidate');
-        
+
         header("Content-Type: application/octet-stream");
         header('Content-Disposition: attachment; filename="'. basename($this->getFileName()) .'"');
         if ($file_size > 0){
@@ -522,7 +522,7 @@ class FRSFile {
 
         return true;
     }
-    
+
     /**
      * Returns the HTML content for tooltip when hover a reference with the nature file
      * @returns string HTML content for file tooltip
