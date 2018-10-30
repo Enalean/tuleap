@@ -88,6 +88,16 @@ class BindingController
         $ugroup_source_id  = $this->request->get('source_ugroup');
         $is_valid          = $this->ugroup_manager->checkUGroupValidityByGroupId($project_source_id, $ugroup_source_id);
         $project           = $this->project_manager->getProject($project_source_id);
+
+        if (! $project->isActive()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                _('Cannot bind a ugroup with another located on a non active project.')
+            );
+
+            return;
+        }
+
         if ($is_valid && $project->userIsAdmin()) {
             if ($this->ugroup_binding->addBinding($ugroup->getId(), $ugroup_source_id)) {
                 $this->history_dao->groupAddHistory(

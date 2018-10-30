@@ -181,6 +181,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Cannot bind a ugroup with another located on a non active project."
+msgstr ""
+
 #, php-format
 msgid ""
 "Cannot create the label \"%s\" because another one already exists with same "
