@@ -30,6 +30,7 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker;
 use Tracker_Artifact;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use UserHelper;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -59,7 +60,7 @@ class NotifierCustomSenderTest extends TestCase
     {
         parent::setUp();
 
-        $logger                          = \Mockery::mock(\Logger::class);
+        $logger                          = \Mockery::mock(MailLogger::class);
         $this->recipients_manager        = \Mockery::mock(RecipientsManager::class);
 
         $this->mail_gateway_config       = \Mockery::mock(\Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig::class);

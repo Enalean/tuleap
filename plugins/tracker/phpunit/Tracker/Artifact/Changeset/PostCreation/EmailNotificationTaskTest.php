@@ -24,6 +24,7 @@ require_once __DIR__.'/../../../../bootstrap.php';
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
@@ -46,7 +47,7 @@ class EmailNotificationTaskTest extends TestCase
 
     protected function setUp()
     {
-        $this->logger                          = \Mockery::spy(\Logger::class);
+        $this->logger                          = \Mockery::spy(MailLogger::class);
         $this->mail_gateway_config             = \Mockery::spy(MailGatewayConfig::class);
         $this->config_notification_assigned_to = \Mockery::spy(\ConfigNotificationAssignedTo::class);
         $this->mail_gateway_recipient_factory  = \Mockery::spy(\Tracker_Artifact_MailGateway_RecipientFactory::class);
