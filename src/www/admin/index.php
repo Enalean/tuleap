@@ -48,22 +48,22 @@ $abc_array = array('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','
 
 $em = EventManager::instance();
 
+$project_manager = ProjectManager::instance();
+
 // Get various number of users and projects from status
-$res = db_query("SELECT count(*) AS count FROM groups");
-$row = db_fetch_array($res);
-$total_groups = $row['count'];
+$project_dao = new ProjectDao();
+$projects_by_status = $project_dao->getProjectsGroupByStatus();
+$project_count = [];
+foreach($projects_by_status as $projects) {
+    $project_count[$projects['status']] = $projects['project_nb'];
+}
 
-db_query("SELECT count(*) AS count FROM groups WHERE status='P'");
-$row = db_fetch_array();
-$pending_projects = $row['count'];
-
-$res = db_query("SELECT count(*) AS count FROM groups WHERE status='A'");
-$row = db_fetch_array($res);
-$active_groups = $row['count'];
-
-$res = db_query("SELECT count(*) AS count FROM groups WHERE status='D'");
-$row = db_fetch_array($res);
-$deleted_projects = $row['count'];
+$pending_projects      = null;
+$project_pending_count = 0;
+if (isset($project_count[Project::STATUS_PENDING])) {
+    $pending_projects      = $project_count[Project::STATUS_PENDING];
+    $project_pending_count = $pending_projects;
+}
 
 $builder = new NbUsersByStatusBuilder(new UserCounterDao());
 $nb_users_by_status = $builder->getNbUsersByStatusBuilder();
@@ -177,18 +177,22 @@ $project_stats = new Widget_Static($Language->getText('admin_main', 'stat_projec
 $project_stats->setIcon('fa-pie-chart');
 $project_stats->setAdditionalClass('siteadmin-homepage-statistics');
 
-$statistics_projects_graph = array();
+$statistics_projects_graph = [];
 
-if ($active_groups > 0) {
-    $statistics_projects_graph[] = array( 'key'=> 'active', 'label' => $Language->getText('admin_main', 'sstat_reg_act_g'), 'count' => $active_groups);
+if (isset($project_count[Project::STATUS_ACTIVE])) {
+    $statistics_projects_graph[] = ['key' => 'active', 'label' => $Language->getText('admin_main', 'sstat_reg_act_g'), 'count' => $project_count[Project::STATUS_ACTIVE]];
 }
 
-if ($pending_projects > 0) {
-    $statistics_projects_graph[] = array( 'key'=> 'pending', 'label' => $Language->getText('admin_main', 'sstat_pend_g'), 'count' => $pending_projects);
+if (isset($project_count[Project::STATUS_PENDING])) {
+    $statistics_projects_graph[] = ['key' => 'pending', 'label' => $Language->getText('admin_main', 'sstat_pend_g'), 'count' => $project_count[Project::STATUS_PENDING]];
 }
 
-if ($deleted_projects > 0) {
-    $statistics_projects_graph[] = array( 'key'=> 'deleted', 'label' => $Language->getText('admin_main', 'sstat_deleted'), 'count' => $deleted_projects);
+if (isset($project_count[Project::STATUS_DELETED])) {
+    $statistics_projects_graph[] = ['key' => 'deleted', 'label' => $Language->getText('admin_main', 'sstat_deleted'), 'count' => $project_count[Project::STATUS_DELETED]];
+}
+
+if (isset($project_count[Project::STATUS_SUSPENDED])) {
+    $statistics_projects_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $project_count[Project::STATUS_SUSPENDED]];
 }
 
 $project_stats->setContent('
@@ -241,8 +245,8 @@ if (ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1) {
     $groups_pending       = '<p class="siteadmin-homepage-no-validation">'.$Language->getText('admin_main', 'review_pending_projects_empty').'</p>';
     $groups_pending_class = '';
 
-    if ($pending_projects != 0) {
-        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide">'.$Language->getText('admin_main', 'review_pending_projects').'</a>';
+    if ($project_pending_count > 0) {
+        $groups_pending       = '<a href="approve-pending.php" class="tlp-button-primary tlp-button-wide">' . $Language->getText('admin_main', 'review_pending_projects') . '</a>';
         $groups_pending_class = 'tlp-text-warning';
     }
 
@@ -277,7 +281,8 @@ echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
 
 $display_user_approval_block    = $GLOBALS['sys_user_approval'] == 1 && $pending_users > 0;
-$display_project_approval_block = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1 && $pending_projects > 0;
+$display_project_approval_block = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1 &&
+    $project_pending_count > 0;
 
 if ($display_user_approval_block || $display_project_approval_block) {
     echo '<div class="siteadmin-homepage-row">';

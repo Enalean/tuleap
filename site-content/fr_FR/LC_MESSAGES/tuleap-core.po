@@ -1605,6 +1605,9 @@ msgstr "mon_service"
 msgid "permissions"
 msgstr "permissions"
 
+msgid "suspended"
+msgstr "suspendu"
+
 msgid "{{ nb_members }} members"
 msgstr "{{ nb_members }} membres"
 
