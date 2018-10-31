@@ -97,8 +97,7 @@ class Prometheus
 
     private static function getCollectorRegistry()
     {
-        if (class_exists('Redis') &&
-            ForgeConfig::exists('redis_server') &&
+        if (ForgeConfig::exists('redis_server') &&
             ForgeConfig::exists(self::CONFIG_PROMETHEUS_PLATFORM)) {
             \Prometheus\Storage\Redis::setDefaultOptions(
                 [

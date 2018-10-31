@@ -22,13 +22,25 @@
  */
 
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
+use Tuleap\SVN\SVNAuthenticationCacheInvalidator;
 
 
 /**
 * System Event classes
 *
 */
-class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent {
+class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
+{
+    /**
+     * @var SVNAuthenticationCacheInvalidator
+     */
+    private $svn_authentication_cache_invalidator;
+
+    public function injectDependencies(
+        SVNAuthenticationCacheInvalidator $svn_authentication_cache_invalidator
+    ) {
+        $this->svn_authentication_cache_invalidator = $svn_authentication_cache_invalidator;
+    }
 
     /**
      * Verbalize the parameters so they are readable and much user friendly in

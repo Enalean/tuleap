@@ -46,7 +46,7 @@ Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: php56-php-mysqlnd, php56-php-pdo, php56-php-xml, php56-php-mbstring, php56-php-gd
 Requires: php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-cli
-Requires: php56-php-bcmath, php56-php-fpm, php56-php-opcache, php56-php-pecl-jsonc, php56-php-pecl-zip
+Requires: php56-php-bcmath, php56-php-fpm, php56-php-opcache, php56-php-pecl-jsonc, php56-php-pecl-zip, php56-php-pecl-redis
 
 Requires: ckeditor >= 4.3.2
 
