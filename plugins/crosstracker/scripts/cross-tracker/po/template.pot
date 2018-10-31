@@ -38,6 +38,9 @@ msgstr ""
 msgid "Export CSV"
 msgstr ""
 
+msgid "If you update the query these trackers will be removed from it."
+msgstr ""
+
 msgid "Last update by"
 msgstr ""
 
@@ -78,6 +81,9 @@ msgid "Submitted by"
 msgstr ""
 
 msgid "Submitted on"
+msgstr ""
+
+msgid "The initial query contains trackers from inactive projects:"
 msgstr ""
 
 msgid "Title"

@@ -22,7 +22,8 @@ const state = {
     reading_mode: true,
     is_report_saved: true,
     error_message: null,
-    success_message: null
+    success_message: null,
+    invalid_trackers: []
 };
 
 export default state;

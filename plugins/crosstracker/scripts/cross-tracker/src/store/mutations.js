@@ -24,7 +24,9 @@ export {
     switchToReadingMode,
     switchToWritingMode,
     switchReportToSaved,
-    discardUnsavedReport
+    discardUnsavedReport,
+    setInvalidTrackers,
+    resetInvalidTrackerList
 };
 
 function initWithDataset(state, dataset) {
@@ -60,4 +62,12 @@ function switchReportToSaved(state, message) {
 function discardUnsavedReport(state) {
     resetFeedbacks(state);
     state.is_report_saved = true;
+}
+
+function setInvalidTrackers(state, invalid_trackers) {
+    state.invalid_trackers = invalid_trackers;
+}
+
+function resetInvalidTrackerList(state) {
+    state.invalid_trackers = [];
 }

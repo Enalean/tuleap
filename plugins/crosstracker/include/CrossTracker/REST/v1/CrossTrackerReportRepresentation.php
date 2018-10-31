@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,6 +46,11 @@ class CrossTrackerReportRepresentation
      */
     public $trackers;
 
+    /**
+     * @var array {@type Tuleap\Tracker\REST\TrackerReference}
+     */
+    public $invalid_trackers;
+
     public function build(CrossTrackerReport $report)
     {
         $this->id           = JsonCast::toInt($report->getId());
@@ -54,7 +59,12 @@ class CrossTrackerReportRepresentation
         foreach ($report->getTrackers() as $tracker) {
             $tracker_reference = new TrackerReference();
             $tracker_reference->build($tracker);
-            $this->trackers[] = $tracker_reference;
+
+            if (! $tracker->getProject()->isActive()) {
+                $this->invalid_trackers[] = $tracker_reference;
+            } else {
+                $this->trackers[] = $tracker_reference;
+            }
         }
 
         $this->uri = self::ROUTE . '/' . $this->id;

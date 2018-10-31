@@ -20,3 +20,5 @@
 export const has_error_message = state => state.error_message !== null;
 
 export const has_success_message = state => state.success_message !== null;
+
+export const has_invalid_trackers = state => state.invalid_trackers.length > 0;

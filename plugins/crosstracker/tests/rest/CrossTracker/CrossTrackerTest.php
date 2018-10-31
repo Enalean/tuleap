@@ -53,7 +53,8 @@ class CrossTrackerTest extends RestBase
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
                     )
                 )
-            )
+            ),
+            "invalid_trackers" => null
         );
 
         $this->assertEquals(
@@ -87,7 +88,8 @@ class CrossTrackerTest extends RestBase
                         'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL
                     )
                 )
-            )
+            ),
+            "invalid_trackers" => null
         );
 
         $this->assertEquals(

@@ -46,6 +46,11 @@ msgstr "Exemple : @title = 'valeur'"
 msgid "Export CSV"
 msgstr "Export CSV"
 
+msgid "If you update the query these trackers will be removed from it."
+msgstr ""
+"Si vous mettez à jour cette requête ces outils de suivi seront supprimés de "
+"la recherche."
+
 msgid "Last update by"
 msgstr "Mis à jour par"
 
@@ -87,6 +92,10 @@ msgstr "Auteur"
 
 msgid "Submitted on"
 msgstr "Date de soumission"
+
+msgid "The initial query contains trackers from inactive projects:"
+msgstr ""
+"La requête initiale comporte des outils de suivi provenant de projets inactifs :"
 
 msgid "Title"
 msgstr "Titre"
