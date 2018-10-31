@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015 — 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015 — 2016. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,20 +25,25 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $this->table_name = 'tracker_changeset_value_artifactlink';
     }
     
-    public function searchById($changeset_value_id) {
+    public function searchById($changeset_value_id)
+    {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
 
         $sql = "SELECT cv.*, a.tracker_id, a.last_changeset_id
                 FROM tracker_changeset_value_artifactlink AS cv
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = a.id)
+                    INNER JOIN tracker ON (tracker.id = a.tracker_id)
+                    INNER JOIN groups ON (groups.group_id = tracker.group_id)
                 WHERE changeset_value_id = $changeset_value_id
+                    AND groups.status = 'A'
                 ORDER BY tracker_artifact_priority_rank.rank";
 
         return $this->retrieve($sql);
     }
 
-    public function searchReverseLinksById($artifact_id) {
+    public function searchReverseLinksById($artifact_id)
+    {
         $artifact_id = $this->da->escapeInt($artifact_id);
 
         $sql = "SELECT DISTINCT a.id as artifact_id, a.last_changeset_id, t.group_id, t.item_name as keyword, t.id as tracker_id, artlink.nature as nature
@@ -46,7 +51,9 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                     JOIN tracker                          AS t  ON (t.id = a.tracker_id)
-                WHERE artlink.artifact_id = $artifact_id";
+                    JOIN groups ON (groups.group_id = t.group_id)
+                WHERE artlink.artifact_id = $artifact_id
+                    AND groups.status = 'A'";
 
         return $this->retrieve($sql);
     }
@@ -60,8 +67,10 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
                     JOIN tracker_changeset_value          AS cv ON (cv.id = artlink.changeset_value_id)
                     JOIN tracker_artifact                 AS a  ON (a.last_changeset_id = cv.changeset_id)
                     JOIN tracker                          AS t  ON (t.id = a.tracker_id)
+                    JOIN groups ON (groups.group_id = t.group_id)
                 WHERE artlink.artifact_id = $artifact_id
-                AND nature = $is_child";
+                    AND groups.status = 'A'
+                    AND nature = $is_child";
 
         return $this->retrieve($sql);
     }

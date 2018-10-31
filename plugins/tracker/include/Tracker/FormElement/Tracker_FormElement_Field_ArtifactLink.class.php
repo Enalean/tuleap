@@ -1,7 +1,7 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -1360,11 +1360,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                     FROM tracker_changeset_value_artifactlink AS val
                          INNER JOIN tracker_artifact AS a ON(a.id = val.artifact_id)
                          INNER JOIN tracker AS t ON(t.id = a.tracker_id AND t.deletion_date IS NULL)
+                         INNER JOIN groups ON (t.group_id = groups.group_id)
                          INNER JOIN tracker_changeset_value AS cv
                          ON ( val.changeset_value_id = cv.id
                           AND cv.field_id = $field_id
                           AND cv.changeset_id = $changeset_id
                          )
+                    WHERE groups.status = 'A'
                     ORDER BY val.artifact_id";
             $dao = new DataAccessObject();
             foreach ($dao->retrieve($sql) as $row) {
