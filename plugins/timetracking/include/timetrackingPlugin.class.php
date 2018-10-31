@@ -66,7 +66,8 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\UserTimeRetriever::NAME);
         $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
-        $this->addHook(\Tuleap\widget\Event\GetProjectsWithCriteria::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);
@@ -248,7 +249,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
 
     public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects)
     {
-        $get_projects->addCriteria("with_time_tracking", "'with_time_tracking': true");
+        $get_projects->addCriteria(ProjectResource::TIMETRACKING_CRITERION, "'with_time_tracking': true");
     }
 
     /**
@@ -257,7 +258,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
      */
     public function getProjectsWithCriteria(\Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects)
     {
-        if (! isset($get_projects->getQuery()["with_time_tracking"])) {
+        if (! isset($get_projects->getQuery()[ProjectResource::TIMETRACKING_CRITERION])) {
             return;
         }
         $projects_ressource = new ProjectResource();
@@ -267,6 +268,33 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             $get_projects->getQuery()
         );
         $get_projects->addProjectsWithCriteria($projects);
+    }
+
+    /**
+     * @param \Tuleap\Widget\Event\GetTrackersWithCriteria $get_trackers
+     * @throws Rest_Exception_InvalidTokenException
+     * @throws User_PasswordExpiredException
+     * @throws User_StatusInvalidException
+     * @throws \Luracast\Restler\RestException
+     */
+    public function getTrackersWithCriteria(\Tuleap\Widget\Event\GetTrackersWithCriteria $get_trackers)
+    {
+        if (! isset($get_trackers->getQuery()[ProjectResource::TIMETRACKING_CRITERION])) {
+            return;
+        }
+        $project_ressource       = new ProjectResource();
+        $tracker_representations = $project_ressource->getTrackers(
+            $get_trackers->getQuery(),
+            $get_trackers->getRepresentation(),
+            $get_trackers->getProject(),
+            $get_trackers->getLimit(),
+            $get_trackers->getOffset()
+        );
+
+        if (isset($tracker_representations["trackers"])) {
+            $get_trackers->setTotalTrackers($tracker_representations["total_trackers"]);
+            $get_trackers->addTrackersWithCriteria($tracker_representations["trackers"]);
+        }
     }
 
     public function project_admin_ugroup_deletion(array $params) // @codingStandardsIgnoreLine

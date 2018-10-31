@@ -23,7 +23,6 @@ namespace Tuleap\Timetracking\Time;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker;
-use Tuleap\Timetracking\Admin\AdminDao;
 
 require_once __DIR__.'/../bootstrap.php';
 
@@ -41,7 +40,8 @@ class TimeRetrieverTest extends TestCase
         parent::setUp();
 
         $this->dao                   = \Mockery::spy(\Tuleap\Timetracking\Time\TimeDao::class);
-        $this->admin_dao             = \Mockery::spy(AdminDao::class);
+        $this->admin_dao             = \Mockery::spy(\Tuleap\Timetracking\Admin\AdminDao::class);
+        $this->tracker_dao           = \Mockery::spy(\TrackerDao::class);
         $this->permissions_retriever = \Mockery::spy(\Tuleap\Timetracking\Permissions\PermissionsRetriever::class);
 
         $this->retriever = new TimeRetriever($this->dao, $this->permissions_retriever, $this->admin_dao, \ProjectManager::instance());
@@ -51,6 +51,10 @@ class TimeRetrieverTest extends TestCase
 
         $this->tracker  = \Mockery::spy(Tracker::class);
         $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
+
+        $this->tracker->shouldReceive([
+            'getId'      => 16,
+        ]);
 
         $this->artifact->shouldReceive([
             'getTracker' => $this->tracker,

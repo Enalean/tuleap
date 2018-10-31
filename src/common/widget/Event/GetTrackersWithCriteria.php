@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
  *
  *  Tuleap and Enalean names and logos are registrated trademarks owned by
  *  Enalean SAS. All other trademarks or names are properties of their respective
@@ -20,16 +20,24 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Widget\Event;
 
 use Project;
-use Tuleap\Project\PaginatedProjects;
+use Tracker;
+use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
-class GetProjectsWithCriteria
+class GetTrackersWithCriteria implements Dispatchable
 {
-    const NAME = "getProjectsWithCriteria";
+    const NAME = "getTrackersWithCriteria";
+
+    /**
+     * @var Project
+     */
+    private $project;
 
     /**
      * @var array
@@ -46,21 +54,29 @@ class GetProjectsWithCriteria
     private $offset;
 
     /**
-     * @var Project[]
+     * @var String
      */
-    private $projects_with_criteria = [];
+    private $representation;
 
     /**
-     * @param     $query
-     * @param int $limit
-     * @param int $offset
+     * @var int
      */
-    public function __construct(array $query, $limit, $offset)
+    private $total_trackers = 0;
+
+    /**
+     * @var MinimalTrackerRepresentation[]
+     */
+    private $trackers_with_criteria = [];
+
+    public function __construct(array $query, $limit, $offset, Project $project, $representation = "full")
     {
         $this->query                  = $query;
         $this->limit                  = $limit;
         $this->offset                 = $offset;
-        $this->projects_with_criteria = [];
+        $this->project                = $project;
+        $this->representation         = $representation;
+        $this->total_trackers         = 0;
+        $this->trackers_with_criteria = [];
     }
 
     /**
@@ -88,18 +104,50 @@ class GetProjectsWithCriteria
     }
 
     /**
-     * @return PaginatedProjects
+     * @return Project
      */
-    public function getProjectsWithCriteria()
+    public function getProject()
     {
-        return new PaginatedProjects($this->projects_with_criteria, count($this->projects_with_criteria));
+        return $this->project;
     }
 
     /**
-     * @param Project[]
+     * @return String
      */
-    public function addProjectsWithCriteria(array $projects)
+    public function getRepresentation()
     {
-        $this->projects_with_criteria = array_merge($this->projects_with_criteria, $projects);
+        return $this->representation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalTrackers()
+    {
+        return $this->total_trackers;
+    }
+
+    /**
+     * @param int $total_trackers
+     */
+    public function setTotalTrackers($total_trackers)
+    {
+        $this->total_trackers = $total_trackers;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTrackersWithCriteria()
+    {
+        return $this->trackers_with_criteria;
+    }
+
+    /**
+     * @param array
+     */
+    public function addTrackersWithCriteria(array $trackers)
+    {
+        $this->trackers_with_criteria = array_merge($this->trackers_with_criteria, $trackers);
     }
 }
