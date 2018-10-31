@@ -87,11 +87,16 @@ class TimeDao extends DataAccessObject
                 FROM plugin_timetracking_times AS times
                     INNER JOIN tracker_artifact AS artifacts
                         ON times.artifact_id = artifacts.id
-                    INNER JOIN plugin_timetracking_enabled_trackers AS trackers
-                        ON trackers.tracker_id = artifacts.tracker_id
+                    INNER JOIN plugin_timetracking_enabled_trackers AS timetracking_trackers
+                        ON timetracking_trackers.tracker_id = artifacts.tracker_id
+                    INNER JOIN tracker AS tracker
+                        ON tracker.id = timetracking_trackers.tracker_id
+                    INNER JOIN groups AS projects
+                        ON tracker.group_id = projects.group_id
                 WHERE user_id = ?
                 AND   day BETWEEN CAST(? AS DATE)
                             AND   CAST(? AS DATE)
+                AND projects.status = "A"
                 GROUP BY times.artifact_id
                 ORDER BY times.id
                 LIMIT ?, ?
