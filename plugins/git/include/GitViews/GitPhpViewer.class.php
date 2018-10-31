@@ -101,15 +101,6 @@ class GitViews_GitPhpViewer
         try {
             $this->setupGitPHPConfiguration();
 
-            /*
-             * Check for required executables
-             */
-            if (!function_exists('xdiff_string_diff')) {
-                $exe = new DiffExe();
-                $exe->checkIsValid();
-            }
-            unset($exe);
-
             ProjectList::Instantiate($this->repository);
 
             $controller = Controller::GetController((isset($_GET['a']) ? $_GET['a'] : null));
@@ -136,7 +127,6 @@ class GitViews_GitPhpViewer
     private function setupGitPHPConfiguration()
     {
         $config = Config::GetInstance();
-        $config->SetValue('diffbin', '/usr/bin/diff');
         $config->SetValue('gittmp', '/tmp/');
         $config->SetValue('title', 'Tuleap');
         $config->SetValue('compressformat', \Tuleap\Git\GitPHP\Archive::COMPRESS_BZ2);
