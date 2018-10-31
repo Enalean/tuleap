@@ -37,6 +37,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\User\REST\UserRepresentation;
 use UGroupManager;
@@ -108,6 +109,11 @@ class UserGroupResource extends AuthenticatedResource {
         $ugroup     = $this->user_group_retriever->getExistingUserGroup($id);
         $project_id = $ugroup->getProjectId();
 
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $ugroup->getProject()
+        );
+
         if ($project_id) {
             $this->userCanSeeUserGroups($project_id);
         }
@@ -170,6 +176,12 @@ class UserGroupResource extends AuthenticatedResource {
         $this->checkLimitValueIsAcceptable($limit);
 
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
+            $this->user_manager->getCurrentUser(),
+            $user_group->getProject()
+        );
+
         $this->checkGroupIsViewable($user_group->getId());
         $project_id = $user_group->getProjectId();
         $this->userCanSeeUserGroupMembers($user_group);
@@ -240,6 +252,7 @@ class UserGroupResource extends AuthenticatedResource {
      * @param array $user_references {@from body}
      *
      * @throws 400
+     * @throws RestException 403
      * @throws 404
      */
     protected function putUsers($id, array $user_references)
@@ -247,6 +260,11 @@ class UserGroupResource extends AuthenticatedResource {
         $this->checkAccess();
 
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+            $user_group->getProject()
+        );
+
         $this->checkUgroupValidity($user_group);
         $this->userCanSeeUserGroupMembers($user_group);
 
@@ -526,6 +544,10 @@ class UserGroupResource extends AuthenticatedResource {
             $project_id   = $user_group_representation->project_id;
             $project      = $this->project_manager->getProject($project_id);
             $user         = $this->user_manager->getCurrentUser();
+
+            ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt(
+                $project
+            );
 
             ProjectAuthorization::userCanAccessProjectAndIsProjectAdmin($user, $project);
 
