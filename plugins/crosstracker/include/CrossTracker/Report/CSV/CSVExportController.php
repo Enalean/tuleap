@@ -72,15 +72,6 @@ class CSVExportController implements DispatchableWithRequest
      */
     private $cross_tracker_permission_gate;
 
-    /**
-     * CSVExportController constructor.
-     * @param CrossTrackerReportFactory                 $report_factory
-     * @param CrossTrackerArtifactReportFactory         $artifact_report_factory
-     * @param CrossTrackerArtifactRepresentationFactory $representation_factory
-     * @param CrossTrackerReportDao                     $cross_tracker_dao
-     * @param ProjectManager                            $project_manager
-     * @param CrossTrackerPermissionGate                $cross_tracker_permission_gate
-     */
     public function __construct(
         CrossTrackerReportFactory $report_factory,
         CrossTrackerArtifactReportFactory $artifact_report_factory,
@@ -143,6 +134,9 @@ class CSVExportController implements DispatchableWithRequest
     {
         try {
             $report     = $this->report_factory->getById($report_id);
+
+            $this->checkAllProjectAreActive($report);
+
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
             $collection = $this->artifact_report_factory->getArtifactsMatchingReport(
                 $report,
@@ -233,6 +227,35 @@ class CSVExportController implements DispatchableWithRequest
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $exception) {
             throw new ForbiddenException($exception->getMessage());
+        }
+    }
+
+    /**
+     * @param CrossTrackerReport $report
+     *
+     * @throws ForbiddenException
+     */
+    private function checkAllProjectAreActive(CrossTrackerReport $report)
+    {
+        $non_active_projects = [];
+        foreach ($report->getProjects() as $project) {
+            if (! $project->isActive()) {
+                $non_active_projects[] = $project->getUnconvertedPublicName();
+            }
+        }
+
+        if (count($non_active_projects) > 0) {
+            throw new ForbiddenException(
+                sprintf(
+                    dngettext(
+                        'tuleap-crosstracker',
+                        'Project %s is not active',
+                        'Projects %s are not active',
+                        count($non_active_projects)
+                    ),
+                    implode(", ", $non_active_projects)
+                )
+            );
         }
     }
 }
