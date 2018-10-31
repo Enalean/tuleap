@@ -50,4 +50,19 @@ class AdminDao extends DataAccessObject
 
         return $this->foundRows() > 0;
     }
+
+    public function getProjectstWithEnabledTimetracking($limit, $offset)
+    {
+        $sql = 'SELECT DISTINCT groups.group_id
+                FROM plugin_timetracking_enabled_trackers
+                INNER JOIN tracker AS tracker
+                        ON tracker.id = plugin_timetracking_enabled_trackers.tracker_id
+                 INNER JOIN groups AS groups
+                        ON groups.group_id = tracker.group_id
+                ORDER BY groups.group_name
+                LIMIT ?
+                OFFSET ?';
+
+        return $this->getDB()->run($sql, $limit, $offset);
+    }
 }

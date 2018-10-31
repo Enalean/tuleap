@@ -30,7 +30,9 @@ use Tuleap\Timetracking\ArtifactView\ArtifactViewBuilder;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\Plugin\TimetrackingPluginInfo;
 use Tuleap\Timetracking\REST\ResourcesInjector;
+use Tuleap\Timetracking\REST\v1\ProjectResource;
 use Tuleap\Timetracking\REST\v1\UserResource;
+use Tuleap\Timetracking\Router;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeController;
@@ -38,7 +40,6 @@ use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Timetracking\Time\TimeUpdater;
-use Tuleap\Timetracking\Router;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 
@@ -65,6 +66,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\UserTimeRetriever::NAME);
         $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
+        $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);
@@ -161,7 +163,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
 
         return new TimeController(
             $time_updater,
-            new TimeRetriever($time_dao, $this->getPermissionsRetriever())
+            new TimeRetriever($time_dao, $this->getPermissionsRetriever(), new AdminDao(), \ProjectManager::instance())
         );
     }
 
@@ -189,7 +191,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $artifact   = $params['artifact'];
 
         $permissions_retriever = $this->getPermissionsRetriever();
-        $time_retriever        = new TimeRetriever(new TimeDao(), $permissions_retriever);
+        $time_retriever        = new TimeRetriever(new TimeDao(), $permissions_retriever, new AdminDao(), \ProjectManager::instance());
         $date_formatter        = new DateFormatter();
         $builder               = new ArtifactViewBuilder(
             $this,
@@ -247,6 +249,24 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
     public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects)
     {
         $get_projects->addCriteria("with_time_tracking", "'with_time_tracking': true");
+    }
+
+    /**
+     * @param \Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects
+     * @throws \Luracast\Restler\RestException
+     */
+    public function getProjectsWithCriteria(\Tuleap\Widget\Event\GetProjectsWithCriteria $get_projects)
+    {
+        if (! isset($get_projects->getQuery()["with_time_tracking"])) {
+            return;
+        }
+        $projects_ressource = new ProjectResource();
+        $projects           = $projects_ressource->getProjects(
+            $get_projects->getLimit(),
+            $get_projects->getOffset(),
+            $get_projects->getQuery()
+        );
+        $get_projects->addProjectsWithCriteria($projects);
     }
 
     public function project_admin_ugroup_deletion(array $params) // @codingStandardsIgnoreLine

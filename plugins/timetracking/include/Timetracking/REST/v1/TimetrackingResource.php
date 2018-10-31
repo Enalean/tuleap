@@ -29,11 +29,9 @@ use Luracast\Restler\RestException;
 use Tracker_ArtifactFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\QueryParameterException;
-use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager;
+use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadTimeFormatException;
@@ -77,7 +75,9 @@ class TimetrackingResource extends AuthenticatedResource
         ));
         $this->time_retriever         = new TimeRetriever(
             $time_dao,
-            $permissionsRetriever
+            $permissionsRetriever,
+            new AdminDao(),
+            \ProjectManager::instance()
         );
         $this->time_updater           = new TimeUpdater($time_dao, new TimeChecker(), $permissionsRetriever);
         $this->rest_user_manager      = UserManager::build();
