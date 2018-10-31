@@ -152,6 +152,10 @@ class RouteCollector
             return new AvatarController();
         });
 
+        $r->addRoute(['GET'], '/users/{name}/avatar-{hash}.png', function () {
+            return new AvatarController(['expires' => 'never']);
+        });
+
         $r->addRoute(['POST'], '/join-private-project-mail/', function () {
             return new PermissionDeniedMailSender(
                 new PlaceHolderBuilder(\ProjectManager::instance()),

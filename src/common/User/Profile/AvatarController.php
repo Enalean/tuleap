@@ -22,51 +22,81 @@ namespace Tuleap\User\Profile;
 
 use ForgeConfig;
 use HTTPRequest;
-use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\NotFoundException;
 use UserManager;
 
-class AvatarController implements DispatchableWithRequest
+class AvatarController implements DispatchableWithRequest, DispatchableWithRequestNoAuthz
 {
+    const DEFAULT_AVATAR = __DIR__ . '/../../../www/themes/common/images/avatar_default.png';
+
+    private $never_expires = false;
+
+    const ONE_YEAR_IN_SECONDS = 3600 * 24 * 365;
+
+    public function __construct(array $options = [])
+    {
+        if (isset($options['expires']) && $options['expires'] === 'never') {
+            $this->never_expires = true;
+        }
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $user                = UserManager::instance()->getUserByUserName($variables['name']);
-        $default_avatar_path = ForgeConfig::get('sys_urlroot') . '/themes/common/images/avatar_default.png';
-
-        if (! $user || ! $user->hasAvatar()) {
-            $this->displayAvatar($default_avatar_path);
-            return;
+        $user = UserManager::instance()->getUserByLoginName($variables['name']);
+        if (! $user) {
+            throw new NotFoundException(_("That user does not exist."));
         }
 
-        $user_avatar_path = $this->getUserAvatarPath($user);
-        if (! is_file($user_avatar_path)) {
-            $this->displayAvatar($default_avatar_path);
-            return;
+        if ($user && $user->hasAvatar()) {
+            $user_avatar_path = $user->getAvatarFilePath();
+            if (is_file($user_avatar_path)) {
+                if (isset($variables['hash'])) {
+                    $this->redirectIfStalled($layout, $user_avatar_path, $variables['hash'], $variables['name']);
+                }
+                $this->displayAvatar($user_avatar_path);
+                return;
+            }
         }
 
-        $this->displayAvatar($user_avatar_path);
+        $this->displayAvatar(self::DEFAULT_AVATAR);
+    }
+
+    private function redirectIfStalled(BaseLayout $layout, $user_avatar_path, $hash, $user_name)
+    {
+        $current_hash = hash_file('sha256', $user_avatar_path);
+        if ($current_hash !== $hash) {
+            $layout->permanentRedirect('/users/'.$user_name.'/avatar-'.$current_hash.'.png');
+        }
     }
 
     private function displayAvatar($path)
     {
-        header('Contenttype: image/png');
-        header("CacheControl: nocache, mustrevalidate");
-        header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+        header('Content-Type: image/png');
+        if ($this->never_expires) {
+            header('Cache-Control: max-age='.self::ONE_YEAR_IN_SECONDS);
+        } else {
+            header('Cache-Control: max-age=60');
+        }
         readfile($path);
     }
 
     /**
-     * @param $user_id
+     * Avatar is a public information for all authenticated users
      *
-     * @return string
+     * @param \URLVerification $url_verification
+     * @param \HTTPRequest $request
+     * @param array $variables
+     *
+     * @return boolean Whether access is granted or not
      */
-    private function getUserAvatarPath(PFUser $user)
+    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
     {
-        $user_id     = $user->getId();
-        $avatar_path = ForgeConfig::get('sys_avatar_path', ForgeConfig::get('sys_data_dir') . '/user/avatar/');
-        return $path = $avatar_path . DIRECTORY_SEPARATOR .
-            substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
-            DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
+        if (! ForgeConfig::areAnonymousAllowed() && $request->getCurrentUser()->isAnonymous()) {
+            return false;
+        }
+        return true;
     }
 }

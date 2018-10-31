@@ -363,7 +363,7 @@ class URLVerification {
 
         // Forbid access to other user's page (Developer Profile)
         if ((strpos($req_uri,'/users/') === 0)&&(!$allow_user_browsing)) {
-            if ($req_uri != '/users/'.$user->getName() && $req_uri != '/users/'.$user->getName().'/avatar.png') {
+            if ($req_uri != '/users/'.$user->getName()) {
                 return false;
             }
         }
