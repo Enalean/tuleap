@@ -35,7 +35,7 @@ be added.
 * Sandra Echinard
 * Marie Ange Garnier
 * Thomas Gorka
-* Thomas Grebet
+* Thomas Gerbet
 * Joris Masson
 * Yannis Rossetto
 * Nicolas Terray
