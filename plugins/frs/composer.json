@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\FRS\\": ["include/", "include/FRS/"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
