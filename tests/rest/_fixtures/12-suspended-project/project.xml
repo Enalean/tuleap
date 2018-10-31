@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project unix-name="suspended-project" full-name="suspended-project" description="A suspended project" access="private">
+    <long-description>This project has been suspended. All access to its resources are temporarily disabled.</long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="plugin_tracker" enabled="1"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="Project members">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+    </ugroups>
+    <trackers>
+        <tracker id="T11111" instantiate_for_new_projects="1">
+            <name><![CDATA[LevelOne]]></name>
+            <item_name>LevelOne</item_name>
+            <description><![CDATA[LevelOne]]></description>
+            <color>inca_silver</color>
+            <cannedResponses/>
+            <formElements>
+                <formElement type="string" ID="F19574" rank="3">
+                    <name>name</name>
+                    <label><![CDATA[Name]]></label>
+                    <properties size="30"/>
+                </formElement>
+            </formElements>
+            <artifacts>
+                <artifact id="1">
+                    <changeset>
+                        <submitted_by format="username">rest_api_tester_1</submitted_by>
+                        <submitted_on format="ISO8601">2016-11-17T11:34:06+01:00</submitted_on>
+                        <comments/>
+                        <field_change field_name="name" type="string">
+                            <value><![CDATA[A]]></value>
+                        </field_change>
+                    </changeset>
+                </artifact>
+            </artifacts>
+        </tracker>
+    </trackers>
+</project>
