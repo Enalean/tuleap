@@ -21,7 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Admin\ProjectMembers\ProjectMemberAutocompleteValueExtractor;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersController;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersDAO;
 use Tuleap\Project\Admin\ProjectMembers\ProjectMembersRouter;
@@ -113,8 +112,7 @@ $member_controller = new ProjectMembersController(
     $user_remover,
     $event_manager,
     $ugroup_manager,
-    $user_importer,
-    new ProjectMemberAutocompleteValueExtractor($user_manager)
+    $user_importer
 );
 
 $router = new ProjectMembersRouter(

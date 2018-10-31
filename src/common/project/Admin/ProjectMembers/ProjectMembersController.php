@@ -86,21 +86,16 @@ class ProjectMembersController
      * @var MinimalUGroupPresenter[]
      */
     private $ugroup_presenters = [];
-    /**
-     * @var ProjectMemberAutocompleteValueExtractor
-     */
-    private $extractor;
 
     public function __construct(
-        ProjectMembersDAO $members_dao,
+        ProjectMembersDAO     $members_dao,
         CSRFSynchronizerToken $csrf_token,
-        UserHelper $user_helper,
-        UGroupBinding $user_group_bindings,
-        UserRemover $user_remover,
-        EventManager $event_manager,
-        UGroupManager $ugroup_manager,
-        UserImport $user_importer,
-        ProjectMemberAutocompleteValueExtractor $extractor
+        UserHelper            $user_helper,
+        UGroupBinding         $user_group_bindings,
+        UserRemover           $user_remover,
+        EventManager          $event_manager,
+        UGroupManager         $ugroup_manager,
+        UserImport            $user_importer
     ) {
         $this->members_dao         = $members_dao;
         $this->csrf_token          = $csrf_token;
@@ -110,7 +105,6 @@ class ProjectMembersController
         $this->event_manager       = $event_manager;
         $this->ugroup_manager      = $ugroup_manager;
         $this->user_importer       = $user_importer;
-        $this->extractor           = $extractor;
     }
 
     public function display(HTTPRequest $request)
@@ -149,9 +143,14 @@ class ProjectMembersController
     {
         $this->csrf_token->check();
 
-        $project = $request->getProject();
-        $user    = $this->extractor->getUserFromRequest($request);
-        $this->addUser($project, $request->get('new_project_member'), $user);
+        $project        = $request->getProject();
+        $form_unix_name = $request->get('new_project_member');
+
+        if (! $form_unix_name) {
+            return;
+        }
+
+        account_add_user_to_group($project->getID(), $form_unix_name);
 
         $this->user_group_bindings->reloadUgroupBindingInProject($project);
     }
@@ -287,15 +286,5 @@ class ProjectMembersController
     private function canUserSeeUGroups(PFUser $user, Project $project)
     {
         return $user->isAdmin($project->getID());
-    }
-
-    private function addUser(Project $project, $name, PFUser $user = null)
-    {
-        if ($user !== null) {
-            account_add_user_obj_to_group($project->getID(), $user, false, false);
-            return;
-        }
-
-        account_add_user_to_group($project->getID(), $name);
     }
 }
