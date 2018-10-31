@@ -236,7 +236,7 @@ sub apr_is_user_allowed {
     my $tuleap_username = get_tuleap_username($cfg, $dbh, $username);
 
     my $is_user_authenticated = 0;
-    if (user_authorization($r, $dbh, $project_id, $tuleap_username) &&
+    if (user_authorization($r->log, $dbh, $project_id, $tuleap_username) &&
         user_authentication($r, $cfg, $dbh, $username, $user_secret, $tuleap_username)) {
         apr_add_user_to_cache($cfg, $username, $user_secret);
         $is_user_authenticated = 1;
