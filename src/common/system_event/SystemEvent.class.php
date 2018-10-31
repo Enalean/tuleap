@@ -40,6 +40,7 @@ abstract class SystemEvent {
     const TYPE_SYSTEM_CHECK                             = "SYSTEM_CHECK";
     const TYPE_EDIT_SSH_KEYS                            = "EDIT_SSH_KEYS";
     const TYPE_PROJECT_CREATE                           = "PROJECT_CREATE";
+    const TYPE_PROJECT_ACTIVE                           = "PROJECT_ACTIVE";
     const TYPE_PROJECT_DELETE                           = "PROJECT_DELETE";
     const TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH = "PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH";
     const TYPE_PROJECT_RENAME                           = "PROJECT_RENAME";

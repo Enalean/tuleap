@@ -175,6 +175,10 @@ class SystemEventManager {
                                SystemEvent::PRIORITY_LOW);
             break;
         case 'project_is_active':
+            $this->createEvent(SystemEvent::TYPE_PROJECT_ACTIVE,
+                $params['group_id'],
+                SystemEvent::PRIORITY_LOW);
+            break;
         case 'project_is_suspended':
             $this->createEvent(
                 SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH,
@@ -363,15 +367,16 @@ class SystemEventManager {
 
     private function getClassForType($type)
     {
-        if ($type === SystemEvent::TYPE_MASSMAIL) {
-            return 'Tuleap\SystemEvent\Massmail';
+        switch ($type) {
+            case SystemEvent::TYPE_MASSMAIL:
+                return \Tuleap\SystemEvent\Massmail::class;
+            case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
+                return SystemEventSVNAuthenticationCacheRefresh::class;
+            case SystemEvent::TYPE_PROJECT_ACTIVE:
+                return \Tuleap\SystemEvent\SystemEventProjectActive::class;
+            default:
+                return 'SystemEvent_' . $type;
         }
-
-        if ($type === SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH) {
-            return SystemEventSVNAuthenticationCacheRefresh::class;
-        }
-
-        return 'SystemEvent_' . $type;
     }
 
     private function instanciateSystemEvent($klass, $id, $type, $owner, $parameters, $priority, $status, $create_time, $process_time, $end_time, $log) {
@@ -446,6 +451,7 @@ class SystemEventManager {
             $klass_params = array(Backend::instance(Backend::SVN));
             break;
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
+        case SystemEvent::TYPE_PROJECT_ACTIVE:
         case SystemEvent::TYPE_PROJECT_DELETE:
         case SystemEvent::TYPE_PROJECT_SVN_AUTHENTICATION_CACHE_REFRESH:
             $klass        = $this->getClassForType($row['type']);

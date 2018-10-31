@@ -498,8 +498,8 @@ sub can_user_access_project {
 
     my $query = << 'EOF';
     SELECT NULL
-    FROM user
-    WHERE user.status='A' AND user_name=?
+    FROM user, groups
+    WHERE user.status='A' AND user_name=? AND groups.group_id=? AND groups.status='A'
     UNION ALL
     SELECT NULL
     FROM user
@@ -510,8 +510,9 @@ sub can_user_access_project {
 EOF
     my $statement = $dbh->prepare($query);
     $statement->bind_param(1, $username, SQL_VARCHAR);
-    $statement->bind_param(2, $username, SQL_VARCHAR);
-    $statement->bind_param(3, $project_id, SQL_INTEGER);
+    $statement->bind_param(2, $project_id, SQL_INTEGER);
+    $statement->bind_param(3, $username, SQL_VARCHAR);
+    $statement->bind_param(4, $project_id, SQL_INTEGER);
     $statement->execute();
 
     my $can_access = defined($statement->fetchrow_hashref());
