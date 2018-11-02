@@ -25,6 +25,7 @@ use GitRepository;
 use HTTPRequest;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\Ref;
+use Tuleap\Git\GitPHP\RepositoryAccessException;
 use Tuleap\Git\Repository\GitPHPProjectRetriever;
 
 class FilesHeaderPresenterBuilder
@@ -88,7 +89,11 @@ class FilesHeaderPresenterBuilder
             return $cannot_be_displayed_presenter;
         }
 
-        $gitphp_project = $this->gitphp_project_retriever->getFromRepository($repository);
+        try {
+            $gitphp_project = $this->gitphp_project_retriever->getFromRepository($repository);
+        } catch (RepositoryAccessException $exception) {
+            return $cannot_be_displayed_presenter;
+        }
         $commit         = $this->commit_retriever->getCommitOfCurrentTree($request, $gitphp_project);
         if (! $commit) {
             if (empty($gitphp_project->GetRefs())) {

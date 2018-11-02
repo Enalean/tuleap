@@ -20,27 +20,6 @@
 
 namespace Tuleap\Git\GitPHP;
 
-class ProjectProvider
+class RepositoryNotExistingException extends RepositoryAccessException
 {
-    private $project;
-
-    /**
-     * @throws RepositoryAccessException
-     * @throws RepositoryNotExistingException
-     */
-    public function __construct(\GitRepository $repository)
-    {
-        $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';
-        $project_path = $repository->getFullName() . '.git';
-
-        $this->project = new Project($project_root, $project_path);
-    }
-
-    /**
-     * @return Project
-     */
-    public function GetProject() // @codingStandardsIgnoreLine
-    {
-        return $this->project;
-    }
 }
