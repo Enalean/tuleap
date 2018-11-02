@@ -28,6 +28,7 @@ use Tuleap\CrossTracker\Report\CSV\CSVExportController;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
+use Tuleap\CrossTracker\Report\CSV\Format\FormElementToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
@@ -431,7 +432,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $csv_representation_builder = new CSVRepresentationBuilder(
             $formatter_visitor,
             $user_manager,
-            new SimilarFieldsFormatter($formatter_visitor)
+            new SimilarFieldsFormatter($formatter_visitor, new FormElementToValueVisitor())
         );
         $representation_factory     = new CSVRepresentationFactory($csv_representation_builder);
 
