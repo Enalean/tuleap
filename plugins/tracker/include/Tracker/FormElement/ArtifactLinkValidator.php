@@ -71,12 +71,17 @@ class ArtifactLinkValidator
                 }
 
                 $linked_artifact = $this->getArtifact($field, $artifact_id);
-                if ($this->getArtifact($field, $artifact_id) === null) {
+                if ($linked_artifact === null) {
                     $is_valid = false;
                     continue;
                 }
 
                 if ($this->isTrackerDeleted($linked_artifact, $field, $artifact_id) === true) {
+                    $is_valid = false;
+                    continue;
+                }
+
+                if ($this->isProjectActive($linked_artifact) === false) {
                     $is_valid = false;
                     continue;
                 }
@@ -176,6 +181,26 @@ class ArtifactLinkValidator
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isProjectActive(Tracker_Artifact $artifact)
+    {
+        if (! $artifact->getTracker()->getProject()->isActive()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                sprintf(
+                    dgettext('tuleap-tracker', 'The artifact #%d is not located in an active project.'),
+                    $artifact->getId()
+                )
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
