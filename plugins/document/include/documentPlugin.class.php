@@ -23,6 +23,7 @@ use Tuleap\Document\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Request\CollectRoutesEvent;
 
+require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class documentPlugin extends Plugin // phpcs:ignore

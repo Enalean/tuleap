@@ -19,6 +19,7 @@
  */
 
 require_once 'constants.php';
+require_once 'autoload.php';
 
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;

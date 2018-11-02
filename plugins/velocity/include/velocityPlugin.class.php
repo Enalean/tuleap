@@ -37,6 +37,7 @@ use Tuleap\Velocity\VelocityComputationChecker;
 use Tuleap\Velocity\VelocityDao;
 use Tuleap\Velocity\VelocityRepresentationBuilder;
 
+require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 

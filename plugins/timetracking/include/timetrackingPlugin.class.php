@@ -42,6 +42,7 @@ use Tuleap\Timetracking\Router;
 use Tuleap\Timetracking\Widget\TimeTrackingOverview;
 use Tuleap\Timetracking\Widget\UserWidget;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
