@@ -32,6 +32,7 @@ use Tracker_FormElementFactory;
 use Tracker_GlobalNotificationDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\MessageFactoryBuilder;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
@@ -84,7 +85,7 @@ class ActionsRunner
             new ActionsRunnerDao(),
             new ClearArtifactChangesetCacheTask(),
             new EmailNotificationTask(
-                $logger,
+                new MailLogger(),
                 UserHelper::instance(),
                 new RecipientsManager(
                     Tracker_FormElementFactory::instance(),
