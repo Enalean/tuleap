@@ -41,6 +41,12 @@ msgid "No field is chosen to determine backgorund color"
 msgstr ""
 
 msgid ""
+"Only selectbox and radiobutton bind on static values with no value linked "
+"to\n"
+"                    the old color picker can be used."
+msgstr ""
+
+msgid ""
 "Only static fields with values bound to new color picker can be chosen as "
 "background color"
 msgstr ""

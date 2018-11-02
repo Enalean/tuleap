@@ -13,6 +13,11 @@
             {{# csrf_token }}
                 {{> csrf_token_input }}
             {{/ csrf_token }}
+            <p>
+                {{# dgettext }} tuleap-cardwall | Only selectbox and radiobutton bind on static values with no value linked to
+                    the old color picker can be used.
+                {{/ dgettext }}
+            </p>
             <p> {{# dgettext }} tuleap-cardwall | Choose a field to define card background color {{/ dgettext }}
                 <select name="choose-color-field">
                     <option>{{# dgettext }} tuleap-cardwall | Choose a field... {{/ dgettext }}</option>
