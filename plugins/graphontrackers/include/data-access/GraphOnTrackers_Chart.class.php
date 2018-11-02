@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -154,7 +154,7 @@ abstract class GraphOnTrackers_Chart {
     protected function buildGraph() {
         //Define the artifacts which must be added to the chart
         //based on the user pref (last report, last query
-        $geup =  new GraphicEngineUserPrefs($this->graphic_report->getAtid());
+        $geup =  new graphicEngineUserPrefs($this->graphic_report->getAtid());
         $geup->fetchPrefs();
         $artifacts = $geup->getArtifactsInOrder();
         

@@ -21,7 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GraphOnTrackersPlugin extends Plugin {
+require_once __DIR__ . '/../vendor/autoload.php';
+
+class GraphOnTrackersPlugin extends Plugin
+{
 
 
     var $report_id;

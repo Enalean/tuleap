@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
@@ -32,7 +32,7 @@ class graphicEngineHtml {
     protected $theme_path;
 
     function __construct($group_artifact_id,$user_id,$theme_path) {
-        $this->grf = new graphicReportFactory($group_artifact_id,$user_id);
+        $this->grf = new GraphicReportFactory($group_artifact_id,$user_id);
         $this->theme_path = $theme_path;
     }
 
