@@ -142,7 +142,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      *
      * @param list of emails/user_name $mailList
      *
-     * @return Array of real_name and mail
+     * @return string[] of real_name and mail
      */
     private function validateCommaSeparatedListOfAddresses($comma_separeted_addresses) {
         return $this->recipient_list_builder->getValidRecipientsFromAddresses(preg_split('/[;,]/D', $comma_separeted_addresses));
@@ -206,12 +206,21 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $to = $this->validateCommaSeparatedListOfAddresses($to);
             if (!empty($to)) {
                 foreach ($to as $row) {
-                    $this->message->addTo($row['email'], $row['real_name']);
+                    $this->addTo($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->message->addTo($to , '');
+            $this->addTo($to, '');
         }
+    }
+
+    private function addTo($email, $name)
+    {
+        $email = trim($email);
+        if ($email === '') {
+            return;
+        }
+        $this->message->addTo($email, $name);
     }
 
     /**
@@ -235,12 +244,21 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $bcc = $this->validateCommaSeparatedListOfAddresses($bcc);
             if (!empty($bcc)) {
                 foreach ($bcc as $row) {
-                    $this->message->addBcc($row['email'], $row['real_name']);
+                    $this->addBcc($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->message->addBcc($bcc , '');
+            $this->addBcc($bcc , '');
         }
+    }
+
+    private function addBcc($email, $name)
+    {
+        $email = trim($email);
+        if ($email === '') {
+            return;
+        }
+        $this->message->addBcc($email, $name);
     }
 
     /**
@@ -264,12 +282,21 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $cc = $this->validateCommaSeparatedListOfAddresses($cc);
             if (!empty($cc)) {
                 foreach ($cc as $row) {
-                    $this->message->addCc($row['email'], $row['real_name']);
+                    $this->addCc($row['email'], $row['real_name']);
                 }
             }
         } else {
-            $this->message->addCc($cc, '');
+            $this->addCc($cc, '');
         }
+    }
+
+    private function addCc($email, $name)
+    {
+        $email = trim($email);
+        if ($email === '') {
+            return;
+        }
+        $this->message->addCc($email, $name);
     }
 
     /**

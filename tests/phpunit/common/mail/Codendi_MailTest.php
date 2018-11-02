@@ -82,4 +82,28 @@ class Codendi_MailTest extends TestCase // phpcs:ignore
 
         $mail->setBodyHtml($body, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
     }
+
+    public function testEmptyEmailsAreIgnored()
+    {
+        $mail = new Codendi_Mail();
+        $mail->setTo('', true);
+        $mail->setCc('', true);
+        $mail->setBcc('', true);
+
+        $this->assertEmpty($mail->getTo());
+        $this->assertEmpty($mail->getCc());
+        $this->assertEmpty($mail->getBcc());
+    }
+
+    public function testSpacesOfEmailsAreTrimmed()
+    {
+        $mail = new Codendi_Mail();
+        $mail->setTo('    user@example.com  ', true);
+        $mail->setCc('    user@example.com  ', true);
+        $mail->setBcc('    user@example.com  ', true);
+
+        $this->assertSame('user@example.com', $mail->getTo());
+        $this->assertSame('user@example.com', $mail->getCc());
+        $this->assertSame('user@example.com', $mail->getBcc());
+    }
 }
