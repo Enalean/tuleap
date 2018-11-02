@@ -215,6 +215,18 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
         return $this;
     }
 
+    public function suspendProject()
+    {
+        echo "Suspend supended-project";
+
+        $project_manager = ProjectManager::instance();
+
+        $project = $project_manager->getProjectByUnixName("suspended-project");
+        $project_manager->updateStatus($project, PROJECT::STATUS_SUSPENDED);
+
+        return $this;
+    }
+
     /**
      * @return Tracker
      */

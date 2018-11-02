@@ -30,4 +30,5 @@ $data_builder
     ->generateCrossTracker()
     ->deleteTracker()
     ->deleteProject()
+    ->suspendProject()
     ->activateDebug();

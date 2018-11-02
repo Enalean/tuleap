@@ -24,7 +24,7 @@ use Test\Rest\RequestWrapper;
 use Test\Rest\Cache;
 use Tuleap\Project\ProjectStatusMapper;
 
-class RestBase extends PHPUnit_Framework_TestCase
+class RestBase extends PHPUnit_Framework_TestCase // phpcs:ignore
 {
     protected $base_url = 'https://localhost/api/v1';
     private $setup_url  = 'https://localhost/api/v1';
@@ -50,6 +50,7 @@ class RestBase extends PHPUnit_Framework_TestCase
     protected $project_public_member_id;
     protected $project_pbi_id;
     protected $project_deleted_id;
+    protected $project_suspended_id;
 
     protected $epic_tracker_id;
     protected $releases_tracker_id;
@@ -125,6 +126,7 @@ class RestBase extends PHPUnit_Framework_TestCase
         $this->project_public_member_id   = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME);
         $this->project_pbi_id             = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
         $this->project_deleted_id         = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
+        $this->project_suspended_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }
@@ -162,7 +164,7 @@ class RestBase extends PHPUnit_Framework_TestCase
 
         $this->getProjectsIdsWithQuery($query_for_active_projects, $limit);
 
-        $deleted_status_label = ProjectStatusMapper::getProjectStatusLabelFromStatusFlag(Project::STATUS_DELETED);
+        $deleted_status_label       = Project::STATUS_DELETED_LABEL;
         $query_for_deleted_projects = http_build_query([
             'limit'  => $limit,
             'offset' => $offset,
@@ -170,6 +172,15 @@ class RestBase extends PHPUnit_Framework_TestCase
         ]);
 
         $this->getProjectsIdsWithQuery($query_for_deleted_projects, $limit);
+
+        $suspended_status_label     = Project::STATUS_SUSPENDED_LABEL;
+        $query_for_suspended_projects = http_build_query([
+            'limit'  => $limit,
+            'offset' => $offset,
+            'query'  => json_encode(["with_status" => $suspended_status_label])
+        ]);
+
+        $this->getProjectsIdsWithQuery($query_for_suspended_projects, $limit);
     }
 
     private function addProjectIdFromRequestData(array $projects)
