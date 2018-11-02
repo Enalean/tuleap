@@ -26,7 +26,9 @@ use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\CSV\CSVExportController;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
+use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
+use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryBuilder\CrossTrackerExpertQueryReportDao;
@@ -60,6 +62,8 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqua
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Layout\CssAsset;
@@ -224,11 +228,13 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $list_value_validator           = new ListValueValidator(new EmptyStringAllowed(), $user_manager);
         $list_value_validator_not_empty = new ListValueValidator(new EmptyStringForbidden(), $user_manager);
 
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
         $invalid_comparisons_collector = new InvalidComparisonCollectorVisitor(
             new InvalidSearchableCollectorVisitor(),
             new MetadataChecker(
                 new MetadataUsageChecker(
-                    Tracker_FormElementFactory::instance(),
+                    $form_element_factory,
                     new Tracker_Semantic_TitleDao(),
                     new Tracker_Semantic_DescriptionDao(),
                     new Tracker_Semantic_StatusDao(),
@@ -420,11 +426,14 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
 
         $report_dao = new CrossTrackerReportDao();
 
+        $formatter_visitor = new CSVFormatterVisitor(new CSVFormatter());
+
         $csv_representation_builder = new CSVRepresentationBuilder(
-            new CSVFormatterVisitor(new CSVFormatter()),
-            $user_manager
+            $formatter_visitor,
+            $user_manager,
+            new SimilarFieldsFormatter($formatter_visitor)
         );
-        $representation_factory     = new CrossTrackerArtifactRepresentationFactory($csv_representation_builder);
+        $representation_factory     = new CSVRepresentationFactory($csv_representation_builder);
 
         return new CSVExportController(
             new CrossTrackerReportFactory(
@@ -435,7 +444,8 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             $representation_factory,
             $report_dao,
             ProjectManager::instance(),
-            new CrossTrackerPermissionGate(new URLVerification())
+            new CrossTrackerPermissionGate(new URLVerification()),
+            new SimilarFieldsMatcher(new SupportedFieldsDao(), $form_element_factory)
         );
     }
 }

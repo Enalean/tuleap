@@ -32,7 +32,6 @@ use Tracker_Semantic_StatusDao;
 use Tracker_Semantic_TitleDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerArtifactReportDao;
-use Tuleap\CrossTracker\CrossTrackerArtifactRepresentationFactory;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
 use Tuleap\CrossTracker\CrossTrackerReportFactory;
@@ -40,8 +39,6 @@ use Tuleap\CrossTracker\CrossTrackerReportNotFoundException;
 use Tuleap\CrossTracker\Permission\CrossTrackerPermissionGate;
 use Tuleap\CrossTracker\Permission\CrossTrackerUnauthorizedException;
 use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
-use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
-use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchablesCollectionBuilder;
@@ -82,7 +79,6 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
-use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -366,11 +362,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         $this->cross_tracker_permission_gate  = new CrossTrackerPermissionGate(new URLVerification());
 
         $this->query_parser           = new QueryParameterParser(new JsonDecoder());
-        $csv_representation_builder   = new CSVRepresentationBuilder(
-            new CSVFormatterVisitor(new CSVFormatter()),
-            $this->user_manager
-        );
-        $this->representation_factory = new CrossTrackerArtifactRepresentationFactory($csv_representation_builder);
+        $this->representation_factory = new ArtifactRepresentationFactory();
     }
 
     /**
