@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,9 +26,8 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
-require_once('common/plugin/Plugin.class.php');
-require_once 'constants.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ .  '/../vendor/autoload.php';
 
 class GraphOnTrackersV5Plugin extends Plugin {
 
