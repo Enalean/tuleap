@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Guzzle\Http\Exception\BadResponseException;
 use Tuleap\REST\ArtifactBase;
 
 /**
@@ -667,6 +668,90 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         } catch (Exception $e) {
             $this->assertEquals($e->getResponse()->getStatusCode(), 403);
         }
+    }
+
+    public function testGetSuspendedProjectArtifactForSiteAdmin()
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testGetSuspendedProjectArtifactForRegularUser()
+    {
+        $has_exception_been_caught = false;
+
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->get('artifacts/' . $this->suspended_tracker_artifacts_ids[1])
+            );
+        } catch (BadResponseException $exception) {
+            $this->assertEquals($exception->getResponse()->getStatusCode(), 403);
+
+            $has_exception_been_caught = true;
+        }
+
+        $this->assertTrue($has_exception_been_caught);
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTSuspendedProjectArtifactForSiteAdmin()
+    {
+        $target_artifact_id = $this->suspended_tracker_artifacts_ids[1];
+
+        $put_resource = json_encode(
+            [
+                'values' => [
+                    [
+                        'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
+                        'value'    => "Yolo"
+                    ],
+                ],
+            ]
+        );
+
+        $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->put(
+                'artifacts/' . $target_artifact_id,
+                null,
+                $put_resource
+            )
+        );
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testPUTSuspendedProjectArtifactForRegularUser()
+    {
+        $target_artifact_id = $this->suspended_tracker_artifacts_ids[1];
+
+        $put_resource = json_encode(
+            [
+                'values' => [
+                    [
+                        'field_id' => $this->getFieldByFieldLabel($target_artifact_id, 'name'),
+                        'value'    => "Yolo"
+                    ],
+                ],
+            ]
+        );
+
+        $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->put(
+                'artifacts/' . $target_artifact_id,
+                null,
+                $put_resource
+            )
+        );
     }
 
     private function getFieldIdForFieldLabel($artifact_id, $field_label)

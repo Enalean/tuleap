@@ -21,9 +21,9 @@
     </ugroups>
     <trackers>
         <tracker id="T11111" instantiate_for_new_projects="1">
-            <name><![CDATA[LevelOne]]></name>
-            <item_name>LevelOne</item_name>
-            <description><![CDATA[LevelOne]]></description>
+            <name><![CDATA[suspended_tracker]]></name>
+            <item_name>suspended_tracker</item_name>
+            <description><![CDATA[suspended_tracker]]></description>
             <color>inca_silver</color>
             <cannedResponses/>
             <formElements>

@@ -21,7 +21,6 @@
 namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
-use Luracast\Restler\RestException;
 use REST_TestDataBuilder;
 
 /**
