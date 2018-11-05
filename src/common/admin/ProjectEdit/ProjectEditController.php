@@ -115,6 +115,8 @@ class ProjectEditController
             if ($this->hasTypeChanged($project, $project_type)) {
                 group_add_history('group_type', $project->getType(), $project_id);
             }
+
+            $this->project_manager->removeProjectFromCache($project);
         }
 
         $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='. urlencode($project_id));

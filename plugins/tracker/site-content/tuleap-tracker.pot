@@ -344,6 +344,10 @@ msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr ""
 
 #, php-format
+msgid "The artifact #%d is not located in an active project."
+msgstr ""
+
+#, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr ""
 

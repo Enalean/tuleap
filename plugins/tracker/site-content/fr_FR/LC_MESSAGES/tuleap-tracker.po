@@ -399,6 +399,10 @@ msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr "@comments ne peut pas être comparé à OPEN()."
 
 #, php-format
+msgid "The artifact #%d is not located in an active project."
+msgstr "L'artéfact #%d ne se trouve pas dans un projet actif."
+
+#, php-format
 msgid "The artifact link type \"%s\" cannot be disabled"
 msgstr "Le lien entre artéfacts typé \"%s\" ne peut être désactivé."
 

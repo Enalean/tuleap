@@ -358,6 +358,8 @@ class ProjectManager
         if ($this->_getDao()->updateStatus($project->getId(), 'A')) {
             include_once 'proj_email.php';
 
+            $this->removeProjectFromCache($project);
+
             group_add_history('approved', 'x', $project->getId());
 
             $em = $this->getEventManager();
@@ -388,6 +390,17 @@ class ProjectManager
     {
         if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
+        }
+
+        $this->removeProjectFromCache($project);
+    }
+
+    public function removeProjectFromCache(Project $project)
+    {
+        $project_id = $project->getID();
+
+        if (isset($this->_cached_projects[$project_id])) {
+            unset($this->_cached_projects[$project_id]);
         }
     }
 
