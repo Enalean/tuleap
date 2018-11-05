@@ -29,7 +29,7 @@ class Project_OneStepCreation_OneStepCreationValidator {
     /** @var Project_CustomDescription_CustomDescription[] */
     private $required_custom_descriptions;
 
-    /** @var TroveCats[] */
+    /** @var TroveCat[] */
     private $trove_cats;
 
     public function __construct(
@@ -130,7 +130,7 @@ class Project_OneStepCreation_OneStepCreationValidator {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($this->creation_request->getTemplateId());
 
-        if (! $project->isActive()) {
+        if (! $project->isActive() && ! $project->isTemplate()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 _('Non active projects cannot be used to be project template')

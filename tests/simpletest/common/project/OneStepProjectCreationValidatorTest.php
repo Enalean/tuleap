@@ -146,4 +146,27 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
 
         $this->assertFalse($validator->validateAndGenerateErrors());
     }
+
+    public function itReturnsTrueWhenSelectedTemplateHasATemplateType()
+    {
+        $required_custom_descriptions = [];
+
+        $request_data = [
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME         => 'my_test proj',
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME         => 'fdgd',
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => 'short description',
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC         => true,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID       => 342,
+            Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL      => 'approved',
+        ];
+
+        $suspended_template = stub('Project')->isTemplate()->returns(true);
+        stub($suspended_template)->isActive()->returns(true);
+
+        stub($this->project_manager)->getProject(342)->returns($suspended_template);
+
+        $validator = $this->aCreationValidator($request_data, $required_custom_descriptions, []);
+
+        $this->assertTrue($validator->validateAndGenerateErrors());
+    }
 }
