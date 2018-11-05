@@ -40,9 +40,6 @@ class CSVFormatterVisitor implements FormatterVisitor
         );
     }
 
-    /**
-     * @return string
-     */
     public function visitTextValue(TextValue $text_value, FormatterParameters $parameters)
     {
         $value = $text_value->getValue();
@@ -57,5 +54,10 @@ class CSVFormatterVisitor implements FormatterVisitor
             return '';
         }
         return $user->getUserName();
+    }
+
+    public function visitNumericValue(NumericValue $numeric_value, FormatterParameters $parameters)
+    {
+        return $numeric_value->getValue();
     }
 }

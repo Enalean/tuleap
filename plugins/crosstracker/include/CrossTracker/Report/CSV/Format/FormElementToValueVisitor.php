@@ -64,12 +64,12 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        throw new RuntimeException("Float field is not supported for similar fields matching.");
+        return new NumericValue();
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        throw new RuntimeException("Integer field is not supported for similar fields matching.");
+        return new NumericValue();
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)

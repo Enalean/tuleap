@@ -36,10 +36,17 @@ class CSVFormatterVisitorTest extends TestCase
     private $visitor;
     /** @var Mockery\MockInterface */
     private $date_formatter;
+    /** @var Mockery\MockInterface | PFUser */
+    private $user;
+    /** @var FormatterParameters */
+    private $parameters;
 
     protected function setUp()
     {
         parent::setUp();
+
+        $this->user       = Mockery::mock(PFUser::class);
+        $this->parameters = new FormatterParameters($this->user);
 
         $this->date_formatter = Mockery::mock(CSVFormatter::class);
         $this->visitor        = new CSVFormatterVisitor($this->date_formatter);
@@ -47,56 +54,57 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitDateValue()
     {
-        $user           = Mockery::mock(PFUser::class);
         $date_value     = new DateValue(true);
         $date_value->setValue(1540456782);
         $formatted_date = '25/10/2018 10:39';
         $this->date_formatter->shouldReceive('formatDateForCSVForUser')
-            ->withArgs([$user, 1540456782, true])
+            ->withArgs([$this->user, 1540456782, true])
             ->andReturn($formatted_date);
-        $parameters = new FormatterParameters($user);
 
-        $result = $date_value->accept($this->visitor, $parameters);
+        $result = $date_value->accept($this->visitor, $this->parameters);
 
         $this->assertEquals($formatted_date, $result);
     }
 
     public function testVisitTextValue()
     {
-        $user       = Mockery::mock(PFUser::class);
-        $parameters = new FormatterParameters($user);
         $text_value = new TextValue();
         $text_value->setValue('Kara "Starbuck" Thrace');
 
-        $result = $text_value->accept($this->visitor, $parameters);
+        $result = $text_value->accept($this->visitor, $this->parameters);
 
         $this->assertEquals('"Kara ""Starbuck"" Thrace"', $result);
     }
 
     public function testVisitUserValue()
     {
-        $user       = Mockery::mock(PFUser::class);
-        $parameters = new FormatterParameters($user);
-
         $starbuck = Mockery::mock(PFUser::class);
         $starbuck->shouldReceive('getUserName')->andReturns('starbuck');
         $user_value = new UserValue();
         $user_value->setValue($starbuck);
 
-        $result = $user_value->accept($this->visitor, $parameters);
+        $result = $user_value->accept($this->visitor, $this->parameters);
 
         $this->assertEquals('starbuck', $result);
     }
 
     public function testVisitNullUserValue()
     {
-        $user       = Mockery::mock(PFUser::class);
-        $parameters = new FormatterParameters($user);
         $user_value = new UserValue();
         $user_value->setValue(null);
 
-        $result = $user_value->accept($this->visitor, $parameters);
+        $result = $user_value->accept($this->visitor, $this->parameters);
 
         $this->assertEquals('', $result);
+    }
+
+    public function testVisitNumericValue()
+    {
+        $numeric_value = new NumericValue();
+        $numeric_value->setValue(60.1342);
+
+        $result = $numeric_value->accept($this->visitor, $this->parameters);
+
+        $this->assertEquals(60.1342, $result);
     }
 }
