@@ -36,6 +36,7 @@ use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
@@ -141,7 +142,7 @@ class CSVExportController implements DispatchableWithRequest
         try {
             $report     = $this->report_factory->getById($report_id);
 
-            $this->checkAllProjectAreActive($report);
+            $this->checkAllProjectAreActive($report, $current_user);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
             $collection     = $this->artifact_report_factory->getArtifactsMatchingReport(
@@ -238,6 +239,8 @@ class CSVExportController implements DispatchableWithRequest
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $exception) {
             throw new ForbiddenException($exception->getMessage());
+        } catch (ProjectAccessSuspendedException $exception) {
+            //do nothing
         }
     }
 
@@ -246,9 +249,18 @@ class CSVExportController implements DispatchableWithRequest
      *
      * @throws ForbiddenException
      */
-    private function checkAllProjectAreActive(CrossTrackerReport $report)
+    private function checkAllProjectAreActive(CrossTrackerReport $report, PFUser $user)
     {
         $non_active_projects = [];
+
+        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
+        if ($widget['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
+            $project = $this->project_manager->getProject($widget['project_id']);
+            if (! $user->isAdmin($project->getID())) {
+                return;
+            }
+        }
+
         foreach ($report->getProjects() as $project) {
             if (! $project->isActive()) {
                 $non_active_projects[] = $project->getUnconvertedPublicName();

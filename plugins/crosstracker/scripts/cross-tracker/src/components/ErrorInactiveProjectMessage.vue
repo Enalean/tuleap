@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-alert-danger cross-tracker-report-error" v-if="has_invalid_trackers">
+    <div class="tlp-alert-danger cross-tracker-report-error" v-if="has_invalid_trackers && is_user_admin">
         <translate>The initial query contains trackers from inactive projects:</translate>
         <ul>
             <li v-for="tracker in invalid_trackers" v-bind:key="tracker.id">{{ tracker.label }} ({{ tracker.project.label }})</li>
@@ -33,7 +33,7 @@ export default {
     name: "ErrorInactiveProjectMessage",
     computed: {
         ...mapGetters(["has_invalid_trackers"]),
-        ...mapState(["invalid_trackers"])
+        ...mapState(["invalid_trackers", "is_user_admin"])
     }
 };
 </script>

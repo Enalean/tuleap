@@ -50,7 +50,6 @@ import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
 import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
-import { isAnonymous } from "./user-service.js";
 import { getReport } from "./api/rest-querier.js";
 
 export default {
@@ -73,11 +72,14 @@ export default {
         };
     },
     computed: {
-        ...mapState(["reading_mode", "is_report_saved", "report_id", "success_message"]),
+        ...mapState([
+            "reading_mode",
+            "is_report_saved",
+            "report_id",
+            "success_message",
+            "is_user_admin"
+        ]),
         ...mapGetters(["has_success_message"]),
-        is_user_anonymous() {
-            return isAnonymous();
-        },
         is_reading_mode_shown() {
             return this.reading_mode === true && !this.is_loading;
         }
@@ -87,7 +89,7 @@ export default {
     },
     methods: {
         switchToWritingMode() {
-            if (this.is_user_anonymous) {
+            if (!this.is_user_admin) {
                 return;
             }
 

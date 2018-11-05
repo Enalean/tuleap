@@ -21,7 +21,7 @@
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-table-actions-element"
             v-bind:disabled="is_loading"
-            v-if="! has_error_message && ! has_invalid_trackers"
+            v-if="should_display_export_button"
             v-on:click="exportCSV()"
     ><i class="tlp-button-icon fa fa-download"
         v-bind:class="{'fa-spin fa-spinner': is_loading }"
@@ -42,7 +42,7 @@ export default {
     },
     computed: {
         ...mapState(["report_id"]),
-        ...mapGetters(["has_error_message", "has_invalid_trackers"])
+        ...mapGetters(["should_display_export_button"])
     },
     methods: {
         exportCSV: async function() {

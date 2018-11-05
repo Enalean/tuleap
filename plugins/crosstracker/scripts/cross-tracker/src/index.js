@@ -46,16 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const widget_element of widget_cross_tracker_elements) {
         const report_id = widget_element.dataset.reportId;
         const localized_php_date_format = widget_element.dataset.dateFormat;
-        const is_anonymous = widget_element.dataset.isAnonymous === "true";
+        const is_widget_admin = widget_element.dataset.isWidgetAdmin === "true";
 
-        initUser(is_anonymous, localized_php_date_format, locale);
+        initUser(localized_php_date_format, locale);
 
         const backend_cross_tracker_report = new BackendCrossTrackerReport();
         const reading_cross_tracker_report = new ReadingCrossTrackerReport();
         const writing_cross_tracker_report = new WritingCrossTrackerReport();
 
         const store = createStore();
-        store.commit("initWithDataset", { report_id });
+        store.commit("initWithDataset", { report_id, is_widget_admin });
 
         const vue_mount_point = widget_element.querySelector(".vue-mount-point");
         new Widget({

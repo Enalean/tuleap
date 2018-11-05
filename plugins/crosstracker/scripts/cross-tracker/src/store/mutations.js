@@ -31,6 +31,7 @@ export {
 
 function initWithDataset(state, dataset) {
     state.report_id = dataset.report_id;
+    state.is_user_admin = dataset.is_widget_admin;
 }
 
 function setErrorMessage(state, message) {
