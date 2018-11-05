@@ -57,8 +57,16 @@ class Tracker_SharedFormElementFactory {
         }
         return $this->getRootOriginalField($originalField);
     }
-    
-    private function assertFieldCanBeCopied(Tracker_FormElement $field, PFUser $user) {
+
+    /**
+     * @param Tracker_FormElement $field
+     * @param PFUser              $user
+     *
+     * @throws Exception
+     */
+    private function assertFieldCanBeCopied(Tracker_FormElement $field, PFUser $user)
+    {
+        $this->assertProjectIsActive($field->getTracker()->getProject());
         $this->assertFieldIsReadable($field, $user);
         $this->assertFieldIsStaticSelectbox($field);
     }
@@ -92,7 +100,17 @@ class Tracker_SharedFormElementFactory {
             'original_field_id' => $originField->getId(),
         );
     }
-    
-}
 
-?>
+    /**
+     * @param Project $project
+     *
+     * @throws Exception
+     */
+    private function assertProjectIsActive(Project $project)
+    {
+        if ( ! $project->isActive()) {
+            $exception_message = dgettext('tuleap-tracker', "The provided field can't be shared with this tracker because the project it comes from is not active.");
+            throw new Exception($exception_message);
+        }
+    }
+}

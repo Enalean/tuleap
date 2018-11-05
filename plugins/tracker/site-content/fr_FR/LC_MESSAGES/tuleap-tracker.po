@@ -651,6 +651,13 @@ msgid "The notification could not be saved."
 msgstr "La notification n’a pas pu être enregistrée."
 
 msgid ""
+"The provided field can't be shared with this tracker because the project it "
+"comes from is not active."
+msgstr ""
+"Le champs entré ne peut pas être partagé avec cet outil de suivi parce que "
+"son projet d'origine n'est pas actif."
+
+msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
 "to continue."

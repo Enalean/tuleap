@@ -555,6 +555,11 @@ msgid "The notification could not be saved."
 msgstr ""
 
 msgid ""
+"The provided field can't be shared with this tracker because the project it "
+"comes from is not active."
+msgstr ""
+
+msgid ""
 "The query is considered too complex to be executed by the server.\n"
 "                                Please simplify it (e.g remove comparisons) "
 "to continue."
