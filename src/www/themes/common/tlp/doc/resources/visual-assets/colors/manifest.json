@@ -3,6 +3,7 @@
   "children": [
     "ui",
     "theme",
-    "business"
+    "business",
+    "illustrations"
   ]
 }

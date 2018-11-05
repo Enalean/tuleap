@@ -61,6 +61,10 @@
         updateHexaColor("success");
         updateHexaColor("warning");
         updateHexaColor("danger");
+        updateHexaColor("illustration-primary-color");
+        updateHexaColor("illustration-secondary-light-color");
+        updateHexaColor("illustration-secondary-dark-color");
+        updateHexaColor("illustration-tertiary-color");
     }
 
     function updateHexaColor(name) {
