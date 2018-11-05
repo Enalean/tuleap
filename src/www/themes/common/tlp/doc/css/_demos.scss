@@ -203,10 +203,18 @@
             }
         }
     }
+
+    + .demo {
+        margin: 80px 0 0;
+    }
 }
 
 .doc-example-badges {
     line-height: 30px;
+}
+
+.doc-illustrations-demo {
+    width: 100%;
 }
 
 @media (max-width: 1200px) {

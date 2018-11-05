@@ -221,6 +221,10 @@ $tlp-button-secondary-outline-color: #888888;
     font-size: $tlp-button-large-font-size;
     font-weight: $tlp-button-large-font-weight;
     line-height: $tlp-button-large-line-height;
+
+    > .tlp-button-icon {
+        margin: 0 8px 0 0;
+    }
 }
 
 .tlp-button-small {

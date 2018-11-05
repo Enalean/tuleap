@@ -17,14 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.error-back-to-homepage {
-    margin: 0 0 0 $tlp-half-spacing;
+.tlp-illustration-primary-box {
+    stroke: $tlp-illustration-primary-color;
+    fill: $tlp-illustration-secondary-light-color;
 }
 
-.error-svg-project {
-    margin: 0 0 3 * $tlp-spacing;
+.tlp-illustration-primary-fill {
+    fill: $tlp-illustration-primary-color;
 }
 
-.error-svg-project-fill {
-    fill: $tlp-theme-color;
+.tlp-illustration-tertiary-stroke {
+    stroke: $tlp-illustration-tertiary-color;
 }

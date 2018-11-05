@@ -22,7 +22,19 @@
 $nav-width: 150px;
 $nav-margin: 30px;
 
-@mixin themable($theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal) {
+@mixin themable(
+    $theme-color,
+    $tlp-theme-background-color,
+    $tlp-ui-info,
+    $tlp-ui-success,
+    $tlp-ui-warning,
+    $tlp-ui-danger,
+    $tlp-ui-border-normal,
+    $tlp-illustration-primary-color,
+    $tlp-illustration-secondary-light-color,
+    $tlp-illustration-secondary-dark-color,
+    $tlp-illustration-tertiary-color
+) {
     background: $tlp-theme-background-color;
 
     .doc-section {
@@ -60,6 +72,22 @@ $nav-margin: 30px;
     .doc-color-success { background-color: $tlp-ui-success; }
     .doc-color-warning { background-color: $tlp-ui-warning; }
     .doc-color-danger  { background-color: $tlp-ui-danger; }
+
+    .doc-color-illustration-primary-color {
+        background-color: $tlp-illustration-primary-color;
+    }
+
+    .doc-color-illustration-secondary-light-color {
+        background-color: $tlp-illustration-secondary-light-color;
+    }
+
+    .doc-color-illustration-secondary-dark-color {
+        background-color: $tlp-illustration-secondary-dark-color;
+    }
+
+    .doc-color-illustration-tertiary-color {
+        background-color: $tlp-illustration-tertiary-color;
+    }
 
     .example {
         .tlp-centered {
@@ -119,32 +147,104 @@ body {
 
     &.orange {
         @import 'src/scss/variables/variables-orange';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 
     &.blue {
         @import 'src/scss/variables/variables-blue';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 
     &.green {
         @import 'src/scss/variables/variables-green';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 
     &.grey {
         @import 'src/scss/variables/variables-grey';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 
     &.purple {
         @import 'src/scss/variables/variables-purple';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 
     &.red {
         @import 'src/scss/variables/variables-red';
-        @include themable($tlp-theme-color, $tlp-theme-background-color, $tlp-ui-info, $tlp-ui-success, $tlp-ui-warning, $tlp-ui-danger, $tlp-ui-border-normal);
+        @include themable(
+            $tlp-theme-color,
+            $tlp-theme-background-color,
+            $tlp-ui-info,
+            $tlp-ui-success,
+            $tlp-ui-warning,
+            $tlp-ui-danger,
+            $tlp-ui-border-normal,
+            $tlp-illustration-primary-color,
+            $tlp-illustration-secondary-light-color,
+            $tlp-illustration-secondary-dark-color,
+            $tlp-illustration-tertiary-color
+        );
     }
 }
 

@@ -51,7 +51,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
 
 .empty-page {
     @extend %empty-container;
-    margin: 100px auto 0;
+    margin: 100px auto $tlp-spacing;
 }
 
 .empty-pane {
@@ -59,18 +59,28 @@ main[role=main]:not(.tlp-framed) > #feedback {
 }
 
 .empty-page-text,
-.empty-pane-text {
+.empty-pane-text,
+.empty-page-text-with-small-text {
     margin: 0 0 60px;
     color: transparentize($tlp-theme-color, .7);
     font-size: 30px;
     line-height: 44px;
     text-align: center;
+
+    > .empty-page-small-text {
+        margin: $tlp-half-spacing 0 0;
+    }
 }
 
 .empty-page-small-text {
     color: transparentize($tlp-theme-color, .7);
     font-size: $tlp-spacing;
+    line-height: 20px;
     text-align: center;
+}
+
+.empty-page-text-with-small-text {
+    margin: 0 0 $tlp-double-spacing;
 }
 
 .empty-page-icon,
