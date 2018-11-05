@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -102,11 +102,14 @@ class Tracker_Permission_PermissionChecker {
             return true;
         }
 
+        $project = $tracker->getProject();
+        if (! $project->isActive()) {
+            return false;
+        }
+
         if ($tracker->userIsAdmin($user)) {
             return true;
         }
-
-        $project = $tracker->getProject();
 
         if ($this->userIsRestrictedAndNotMemberOfProject($user, $project)
             || $this->userIsNotMemberOfPrivateProject($user, $project)) {

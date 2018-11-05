@@ -63,10 +63,12 @@ class TrackerTest extends TuleapTestCase {
         $this->project = \Mockery::spy(\Project::class);
         $this->project->shouldReceive('getID')->andReturns(101);
         $this->project->shouldReceive('isPublic')->andReturns(true);
+        $this->project->shouldReceive('isActive')->andReturns(true);
 
         $this->project_private = \Mockery::spy(\Project::class);
         $this->project_private->shouldReceive('getID')->andReturns(102);
         $this->project_private->shouldReceive('isPublic')->andReturns(false);
+        $this->project_private->shouldReceive('isActive')->andReturns(true);
 
         $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->tracker1 = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -1366,6 +1368,21 @@ class TrackerTest extends TuleapTestCase {
         $this->assertFalse($t_access_registered->userCanView($this->tracker_admin));
 
         $this->assertTrue($t_access_registered->userCanView($this->super_admin));
+    }
+
+    public function testTrackerInNotActiveProjectIsOnlyReadableBySuperAdmin()
+    {
+        $project = Mockery::mock(Project::class);
+        $project->shouldReceive('isActive')->andReturns(false);
+
+        $tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $tracker->shouldReceive('getId')->andReturns(7);
+        $tracker->shouldReceive('getGroupId')->andReturns(102);
+        $tracker->shouldReceive('getProject')->andReturns($project);
+
+        $this->assertTrue($tracker->userCanView($this->super_admin));
+        $this->assertFalse($tracker->userCanView($this->project_admin));
+        $this->assertFalse($tracker->userCanView($this->project_member));
     }
 
     public function testHasErrorNoError()
