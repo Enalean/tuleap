@@ -23,6 +23,4 @@ namespace Tuleap\CrossTracker\Report\CSV\Format;
 interface ValueVisitable
 {
     public function accept(FormatterVisitor $visitor, FormatterParameters $parameters);
-
-    public function setValue($value);
 }

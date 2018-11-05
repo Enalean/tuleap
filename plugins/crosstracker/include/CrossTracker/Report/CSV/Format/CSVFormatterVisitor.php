@@ -33,9 +33,13 @@ class CSVFormatterVisitor implements FormatterVisitor
 
     public function visitDateValue(DateValue $date_value, FormatterParameters $parameters)
     {
+        $date = $date_value->getValue();
+        if ($date === null) {
+            return '';
+        }
         return $this->date_formatter->formatDateForCSVForUser(
             $parameters->getUser(),
-            $date_value->getValue(),
+            $date,
             $date_value->isTimeShown()
         );
     }

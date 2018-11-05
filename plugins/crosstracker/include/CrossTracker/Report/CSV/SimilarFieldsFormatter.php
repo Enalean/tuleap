@@ -31,15 +31,11 @@ class SimilarFieldsFormatter
 {
     /** @var CSVFormatterVisitor */
     private $csv_formatter_visitor;
-    /** @var FormElementToValueVisitor */
-    private $form_element_visitor;
 
     public function __construct(
-        CSVFormatterVisitor $csv_formatter_visitor,
-        FormElementToValueVisitor $form_element_visitor
+        CSVFormatterVisitor $csv_formatter_visitor
     ) {
         $this->csv_formatter_visitor = $csv_formatter_visitor;
-        $this->form_element_visitor  = $form_element_visitor;
     }
 
     /**
@@ -77,9 +73,9 @@ class SimilarFieldsFormatter
             return CSVRepresentation::CSV_EMPTY_VALUE;
         }
 
+        $form_element_visitor = new FormElementToValueVisitor($changeset_value);
         /** @var ValueVisitable $value_holder */
-        $value_holder = $field->accept($this->form_element_visitor);
-        $value_holder->setValue($changeset_value->getValue());
+        $value_holder = $field->accept($form_element_visitor);
         return $value_holder->accept($this->csv_formatter_visitor, $parameters);
     }
 }

@@ -25,6 +25,14 @@ class NumericValue implements ValueVisitable
     /** @var int|float */
     private $value;
 
+    /**
+     * @param float|int $value
+     */
+    public function __construct($value)
+    {
+        $this->value = $value;
+    }
+
     public function accept(FormatterVisitor $visitor, FormatterParameters $parameters)
     {
         return $visitor->visitNumericValue($this, $parameters);
@@ -36,10 +44,5 @@ class NumericValue implements ValueVisitable
     public function getValue()
     {
         return $this->value;
-    }
-
-    public function setValue($value)
-    {
-        $this->value = $value;
     }
 }

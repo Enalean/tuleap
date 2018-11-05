@@ -28,10 +28,12 @@ class DateValue implements ValueVisitable
     private $is_time_shown;
 
     /**
+     * @param int  $value
      * @param bool $is_time_shown
      */
-    public function __construct($is_time_shown)
+    public function __construct($value, $is_time_shown)
     {
+        $this->value         = $value;
         $this->is_time_shown = $is_time_shown;
     }
 
@@ -54,13 +56,5 @@ class DateValue implements ValueVisitable
     public function accept(FormatterVisitor $visitor, FormatterParameters $parameters)
     {
         return $visitor->visitDateValue($this, $parameters);
-    }
-
-    /**
-     * @param int $value
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
     }
 }
