@@ -35,13 +35,13 @@ class SimilarFieldsFormatterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var Mockery/MockInterface */
+    /** @var Mockery\MockInterface | CSVFormatterVisitor */
     private $csv_formatter_visitor;
     /** @var FormElementToValueVisitor */
     private $form_element_visitor;
-    /** @var Mockery\MockInterface */
+    /** @var Mockery\MockInterface | FormatterParameters */
     private $parameters;
-    /** @var Mockery/MockInterface */
+    /** @var Mockery\MockInterface | SimilarFieldCollection */
     private $similar_fields;
     /** @var SimilarFieldsFormatter */
     private $formatter;
@@ -73,36 +73,57 @@ class SimilarFieldsFormatterTest extends TestCase
 
         $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('accept')->passthru();
+
         $text_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $text_field->shouldReceive('accept')->passthru();
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['pentarchical', 'semestrial']);
+
+        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
+        $float_field->shouldReceive('accept')->passthru();
+
+        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(
+            [
+                'pentarchical',
+                'semestrial',
+                'overimaginative'
+            ]
+        );
         $this->similar_fields->shouldReceive('getField')
             ->withArgs([$artifact, 'pentarchical'])->andReturn($string_field);
         $this->similar_fields->shouldReceive('getField')
             ->withArgs([$artifact, 'semestrial'])->andReturn($text_field);
+        $this->similar_fields->shouldReceive('getField')
+            ->withArgs([$artifact, 'overimaginative'])->andReturn($float_field);
 
         $string_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $string_changeset_value->shouldReceive('getValue')->andReturn('safari');
+
         $text_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $text_changeset_value->shouldReceive('getValue')->andReturn('inappendiculate gas pearly');
 
+        $float_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Float::class);
+        $float_changeset_value->shouldReceive('getValue')->andReturn(48.6946);
+
         $last_changeset->shouldReceive('getValue')->withArgs([$string_field])->andReturn($string_changeset_value);
         $last_changeset->shouldReceive('getValue')->withArgs([$text_field])->andReturn($text_changeset_value);
+        $last_changeset->shouldReceive('getValue')->withArgs([$float_field])->andReturn($float_changeset_value);
 
 
         $formatted_string_field = '"safari"';
         $formatted_text_field   = '"inappendiculate gas pearly"';
+        $formatted_float_field = 48.6946;
 
         $this->csv_formatter_visitor->shouldReceive('visitTextValue')->andReturn(
             $formatted_string_field,
             $formatted_text_field
         );
+        $this->csv_formatter_visitor->shouldReceive('visitNumericValue')->andReturn($formatted_float_field);
 
         $result = $this->formatter->formatSimilarFields($artifact, $this->similar_fields, $this->parameters);
 
         $this->assertEquals([
             $formatted_string_field,
-            $formatted_text_field
+            $formatted_text_field,
+            $formatted_float_field
         ], $result);
     }
 }
