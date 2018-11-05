@@ -27,7 +27,7 @@ use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CurrentPage;
 
-require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
 class hudsonPlugin extends Plugin

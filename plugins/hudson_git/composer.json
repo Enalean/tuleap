@@ -1,0 +1,11 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\HudsonGit\\": ["include/HudsonGit/", "include/"]
+    },
+    "classmap": ["include/"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
