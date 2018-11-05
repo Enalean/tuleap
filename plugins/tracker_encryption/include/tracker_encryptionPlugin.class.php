@@ -21,6 +21,7 @@
 
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class tracker_encryptionPlugin extends Plugin

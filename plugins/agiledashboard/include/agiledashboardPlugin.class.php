@@ -75,6 +75,8 @@ use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetri
 use Tuleap\Tracker\Semantic\SemanticStatusCanBeDeleted;
 use Tuleap\Tracker\Semantic\SemanticStatusGetDisabledValues;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
+require_once __DIR__ . '/../../cardwall/include/cardwallPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 

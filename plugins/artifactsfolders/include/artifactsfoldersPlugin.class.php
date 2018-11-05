@@ -39,6 +39,7 @@ use Tuleap\ArtifactsFolders\Folder\Dao;
 use Tuleap\ArtifactsFolders\Folder\ArtifactView;
 use Tuleap\XML\PHPCast;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 

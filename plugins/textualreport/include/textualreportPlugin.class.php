@@ -27,6 +27,7 @@ use Tuleap\TextualReport\SinglePagePresenterBuilder;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
 use Tuleap\Tracker\Report\Renderer\Table\ProcessExportEvent;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class textualreportPlugin extends Plugin // @codingStandardsIgnoreLine

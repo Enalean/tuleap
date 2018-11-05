@@ -20,6 +20,7 @@
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 
 use Tuleap\Git\DefaultSettings\Pane\DefaultSettingsPanesCollection;
 use Tuleap\Git\Events\AfterRepositoryCreated;

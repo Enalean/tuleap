@@ -26,6 +26,7 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
 
