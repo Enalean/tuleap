@@ -43,8 +43,9 @@ class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLin
     const LEVEL_THREE_TRACKER_SHORTNAME  = 'LevelThree';
     const LEVEL_FOUR_TRACKER_SHORTNAME   = 'LevelFour';
 
-    const EPICS_TRACKER_LABEL  = 'Epics';
-    const KANBAN_TRACKER_LABEL = 'Kanban Tasks';
+    const EPICS_TRACKER_LABEL         = 'Epics';
+    const KANBAN_TRACKER_LABEL        = 'Kanban Tasks';
+    const SUSPENDED_TRACKER_SHORTNAME = 'suspended_tracker';
 
     const NIVEAU_1_TRACKER_SHORTNAME = 'niveau1';
     const NIVEAU_2_TRACKER_SHORTNAME = 'niveau2';

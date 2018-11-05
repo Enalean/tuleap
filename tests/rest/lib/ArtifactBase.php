@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -32,17 +32,20 @@ class ArtifactBase extends RestBase
     protected $niveau_1_tracker_id;
     protected $niveau_2_tracker_id;
     protected $pokemon_tracker_id;
+    protected $suspended_tracker_id;
 
-    protected $level_one_artifact_ids   = array();
-    protected $level_two_artifact_ids   = array();
-    protected $level_three_artifact_ids = array();
-    protected $level_four_artifact_ids  = array();
-    protected $niveau_1_artifact_ids    = array();
-    protected $niveau_2_artifact_ids    = array();
-    protected $pokemon_artifact_ids     = array();
+    protected $level_one_artifact_ids          = [];
+    protected $level_two_artifact_ids          = [];
+    protected $level_three_artifact_ids        = [];
+    protected $level_four_artifact_ids         = [];
+    protected $niveau_1_artifact_ids           = [];
+    protected $niveau_2_artifact_ids           = [];
+    protected $pokemon_artifact_ids            = [];
+    protected $suspended_tracker_artifacts_ids = [];
 
     protected $project_computed_fields_id;
     protected $project_burndown_id;
+    protected $project_suspended_id;
 
     public function setUp()
     {
@@ -53,17 +56,20 @@ class ArtifactBase extends RestBase
 
         $this->project_computed_fields_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_COMPUTED_FIELDS);
         $this->project_burndown_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_BURNDOWN);
+        $this->project_suspended_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
 
         $this->getTrackerIdsForComputedFieldsProject();
         $this->getLevelOneArtifactIds();
         $this->getLevelTwoArtifactIds();
         $this->getLevelThreeArtifactIds();
         $this->getLevelFourArtifactIds();
+        $this->getSuspendedTrackerId();
 
         $this->getTrackerIdsForBurndownProject();
         $this->getNiveau1ArtifactIds();
         $this->getNiveau2ArtifactIds();
         $this->getPokemonArtifactIds();
+        $this->getSuspendedTrackerArtifactsIds();
     }
 
     private function getTrackerIdsForComputedFieldsProject()
@@ -134,6 +140,19 @@ class ArtifactBase extends RestBase
         $this->getArtifactIds(
             $this->pokemon_tracker_id,
             $this->pokemon_artifact_ids
+        );
+    }
+
+    private function getSuspendedTrackerId()
+    {
+        $this->suspended_tracker_id = $this->tracker_ids[$this->project_suspended_id][REST_TestDataBuilder::SUSPENDED_TRACKER_SHORTNAME];
+    }
+
+    private function getSuspendedTrackerArtifactsIds()
+    {
+        $this->getArtifactIds(
+            $this->suspended_tracker_id,
+            $this->suspended_tracker_artifacts_ids
         );
     }
 }
