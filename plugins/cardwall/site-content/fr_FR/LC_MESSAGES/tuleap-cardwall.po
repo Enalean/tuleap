@@ -33,7 +33,7 @@ msgid "Choose a field to define card background color"
 msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 
 msgid "Choose a field..."
-msgstr "Coisissez un champ..."
+msgstr "Choisissez un champ..."
 
 msgid "Field not found"
 msgstr "Champ non trouvé"
@@ -60,6 +60,15 @@ msgstr ""
 
 msgid "No field is chosen to determine backgorund color"
 msgstr "Aucun champ n'a été choisi pour définir la couleur de fond des cartes."
+
+msgid ""
+"Only selectbox and radiobutton bind on static values with no value linked "
+"to\n"
+"                    the old color picker can be used."
+msgstr ""
+"Seules les listes déroulantes et les boutons radio basés sur des valeurs "
+"statiques qui n'ont aucune de leur valeurs liées à l'ancienne palette de "
+"couleur peuvent être utilisés."
 
 msgid ""
 "Only static fields with values bound to new color picker can be chosen as "
