@@ -35,6 +35,8 @@ class ArtifactLinkValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private $backup_globals;
+
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory
      */
@@ -84,14 +86,16 @@ class ArtifactLinkValidatorTest extends TestCase
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter
      */
     private $nature_no_nature;
+    private $project;
+    private $dao;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->globals = array_merge([], $GLOBALS);
-        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
+        $this->backup_globals = array_merge([], $GLOBALS);
+        $GLOBALS['Response']  = Mockery::spy(\Response::class);
+        $GLOBALS['Language']  = Mockery::spy(BaseLanguage::class);
 
         $this->artifact_factory         = \Mockery::spy(Tracker_ArtifactFactory::class);
         $this->nature_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory::class);
@@ -127,7 +131,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     protected function tearDown()
     {
-        $GLOBALS = $this->globals;
+        $GLOBALS = $this->backup_globals;
 
         parent::tearDown();
     }
