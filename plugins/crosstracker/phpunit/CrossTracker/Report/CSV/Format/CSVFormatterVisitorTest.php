@@ -48,7 +48,8 @@ class CSVFormatterVisitorTest extends TestCase
     public function testVisitDateValue()
     {
         $user           = Mockery::mock(PFUser::class);
-        $date_value     = new DateValue(1540456782, true);
+        $date_value     = new DateValue(true);
+        $date_value->setValue(1540456782);
         $formatted_date = '25/10/2018 10:39';
         $this->date_formatter->shouldReceive('formatDateForCSVForUser')
             ->withArgs([$user, 1540456782, true])
@@ -64,7 +65,8 @@ class CSVFormatterVisitorTest extends TestCase
     {
         $user       = Mockery::mock(PFUser::class);
         $parameters = new FormatterParameters($user);
-        $text_value = new TextValue('Kara "Starbuck" Thrace');
+        $text_value = new TextValue();
+        $text_value->setValue('Kara "Starbuck" Thrace');
 
         $result = $text_value->accept($this->visitor, $parameters);
 
@@ -78,7 +80,8 @@ class CSVFormatterVisitorTest extends TestCase
 
         $starbuck = Mockery::mock(PFUser::class);
         $starbuck->shouldReceive('getUserName')->andReturns('starbuck');
-        $user_value = new UserValue($starbuck);
+        $user_value = new UserValue();
+        $user_value->setValue($starbuck);
 
         $result = $user_value->accept($this->visitor, $parameters);
 
@@ -89,7 +92,8 @@ class CSVFormatterVisitorTest extends TestCase
     {
         $user       = Mockery::mock(PFUser::class);
         $parameters = new FormatterParameters($user);
-        $user_value = new UserValue(null);
+        $user_value = new UserValue();
+        $user_value->setValue(null);
 
         $result = $user_value->accept($this->visitor, $parameters);
 

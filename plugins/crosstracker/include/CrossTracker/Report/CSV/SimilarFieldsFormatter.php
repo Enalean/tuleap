@@ -23,17 +23,23 @@ namespace Tuleap\CrossTracker\Report\CSV;
 use Tracker_Artifact;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
-use Tuleap\CrossTracker\Report\CSV\Format\TextValue;
+use Tuleap\CrossTracker\Report\CSV\Format\FormElementToValueVisitor;
+use Tuleap\CrossTracker\Report\CSV\Format\ValueVisitable;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
 
 class SimilarFieldsFormatter
 {
     /** @var CSVFormatterVisitor */
-    private $visitor;
+    private $csv_formatter_visitor;
+    /** @var FormElementToValueVisitor */
+    private $form_element_visitor;
 
-    public function __construct(CSVFormatterVisitor $visitor)
-    {
-        $this->visitor = $visitor;
+    public function __construct(
+        CSVFormatterVisitor $csv_formatter_visitor,
+        FormElementToValueVisitor $form_element_visitor
+    ) {
+        $this->csv_formatter_visitor = $csv_formatter_visitor;
+        $this->form_element_visitor  = $form_element_visitor;
     }
 
     /**
@@ -71,7 +77,9 @@ class SimilarFieldsFormatter
             return CSVRepresentation::CSV_EMPTY_VALUE;
         }
 
-        $value = new TextValue($changeset_value->getValue());
-        return $value->accept($this->visitor, $parameters);
+        /** @var ValueVisitable $value_holder */
+        $value_holder = $field->accept($this->form_element_visitor);
+        $value_holder->setValue($changeset_value->getValue());
+        return $value_holder->accept($this->csv_formatter_visitor, $parameters);
     }
 }
