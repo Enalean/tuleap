@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Label\\": ["include/Label/"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
