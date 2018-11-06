@@ -19,8 +19,8 @@
  *
  */
 
-class DatAnotherPlugin {
-
+class DatAnotherPlugin // phpcs:ignore
+{
     private $id;
 
     private $counter = 0;
@@ -47,11 +47,9 @@ class DatAnotherPlugin {
 
     public function setName($name)
     {
-
     }
 
     public function setIsRestricted($restricted)
     {
-
     }
 }
