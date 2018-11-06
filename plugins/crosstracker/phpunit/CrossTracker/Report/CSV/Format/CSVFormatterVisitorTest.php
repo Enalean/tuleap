@@ -54,8 +54,7 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitDateValue()
     {
-        $date_value     = new DateValue(true);
-        $date_value->setValue(1540456782);
+        $date_value     = new DateValue(1540456782, true);
         $formatted_date = '25/10/2018 10:39';
         $this->date_formatter->shouldReceive('formatDateForCSVForUser')
             ->withArgs([$this->user, 1540456782, true])
@@ -66,10 +65,18 @@ class CSVFormatterVisitorTest extends TestCase
         $this->assertEquals($formatted_date, $result);
     }
 
+    public function testVisitNullDateValue()
+    {
+        $date_value = new DateValue(null, false);
+
+        $result = $date_value->accept($this->visitor, $this->parameters);
+
+        $this->assertEquals('', $result);
+    }
+
     public function testVisitTextValue()
     {
-        $text_value = new TextValue();
-        $text_value->setValue('Kara "Starbuck" Thrace');
+        $text_value = new TextValue('Kara "Starbuck" Thrace');
 
         $result = $text_value->accept($this->visitor, $this->parameters);
 
@@ -80,8 +87,7 @@ class CSVFormatterVisitorTest extends TestCase
     {
         $starbuck = Mockery::mock(PFUser::class);
         $starbuck->shouldReceive('getUserName')->andReturns('starbuck');
-        $user_value = new UserValue();
-        $user_value->setValue($starbuck);
+        $user_value = new UserValue($starbuck);
 
         $result = $user_value->accept($this->visitor, $this->parameters);
 
@@ -90,8 +96,7 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitNullUserValue()
     {
-        $user_value = new UserValue();
-        $user_value->setValue(null);
+        $user_value = new UserValue(null);
 
         $result = $user_value->accept($this->visitor, $this->parameters);
 
@@ -100,8 +105,7 @@ class CSVFormatterVisitorTest extends TestCase
 
     public function testVisitNumericValue()
     {
-        $numeric_value = new NumericValue();
-        $numeric_value->setValue(60.1342);
+        $numeric_value = new NumericValue(60.1342);
 
         $result = $numeric_value->accept($this->visitor, $this->parameters);
 

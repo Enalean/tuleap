@@ -47,6 +47,14 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 {
+    /** @var \Tracker_Artifact_ChangesetValue */
+    private $changeset_value;
+
+    public function __construct(\Tracker_Artifact_ChangesetValue $changeset_value)
+    {
+        $this->changeset_value = $changeset_value;
+    }
+
     public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
     {
         throw new RuntimeException("Artifact link field is not supported for similar fields matching.");
@@ -54,7 +62,9 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitDate(Tracker_FormElement_Field_Date $field)
     {
-        throw new RuntimeException("Date field is not supported for similar fields matching.");
+        /** @var \Tracker_Artifact_ChangesetValue_Date $date_changeset_value */
+        $date_changeset_value = $this->changeset_value;
+        return new DateValue($date_changeset_value->getTimestamp(), $field->isTimeDisplayed());
     }
 
     public function visitFile(Tracker_FormElement_Field_File $field)
@@ -64,12 +74,12 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitFloat(Tracker_FormElement_Field_Float $field)
     {
-        return new NumericValue();
+        return new NumericValue($this->changeset_value->getValue());
     }
 
     public function visitInteger(Tracker_FormElement_Field_Integer $field)
     {
-        return new NumericValue();
+        return new NumericValue($this->changeset_value->getValue());
     }
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field)
@@ -84,12 +94,12 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitString(Tracker_FormElement_Field_String $field)
     {
-        return new TextValue();
+        return new TextValue($this->changeset_value->getValue());
     }
 
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
-        return new TextValue();
+        return new TextValue($this->changeset_value->getValue());
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)

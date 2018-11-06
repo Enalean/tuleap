@@ -433,7 +433,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $csv_representation_builder = new CSVRepresentationBuilder(
             $formatter_visitor,
             $user_manager,
-            new SimilarFieldsFormatter($formatter_visitor, new FormElementToValueVisitor())
+            new SimilarFieldsFormatter($formatter_visitor)
         );
         $representation_factory     = new CSVRepresentationFactory($csv_representation_builder);
 

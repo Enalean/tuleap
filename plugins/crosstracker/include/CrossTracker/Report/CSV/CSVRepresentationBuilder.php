@@ -115,42 +115,33 @@ class CSVRepresentationBuilder
         FormatterParameters $formatter_parameters
     ) {
         $tracker      = $artifact->getTracker();
-        $project_name = new TextValue();
-        $project_name->setValue($tracker->getProject()->getUnconvertedPublicName());
+        $project_name = new TextValue($tracker->getProject()->getUnconvertedPublicName());
         $formatted_project_name = $project_name->accept($this->visitor, $formatter_parameters);
 
-        $tracker_name = new TextValue();
-        $tracker_name->setValue($tracker->getName());
+        $tracker_name = new TextValue($tracker->getName());
         $formatted_tracker_name = $tracker_name->accept($this->visitor, $formatter_parameters);
 
         $submitted_by_user = $this->user_manager->getUserById($artifact->getSubmittedBy());
-        $submitted_by      = new UserValue();
-        $submitted_by->setValue($submitted_by_user);
+        $submitted_by      = new UserValue($submitted_by_user);
         $formatted_submitted_by = $submitted_by->accept($this->visitor, $formatter_parameters);
 
-        $submitted_on = new DateValue(true);
-        $submitted_on->setValue($artifact->getSubmittedOn());
+        $submitted_on = new DateValue($artifact->getSubmittedOn(), true);
         $formatted_submitted_on = $submitted_on->accept($this->visitor, $formatter_parameters);
 
         $last_update_by_user = $this->user_manager->getUserById($artifact->getLastModifiedBy());
-        $last_update_by      = new UserValue();
-        $last_update_by->setValue($last_update_by_user);
+        $last_update_by      = new UserValue($last_update_by_user);
         $formatted_last_update_by = $last_update_by->accept($this->visitor, $formatter_parameters);
 
-        $last_update_date = new DateValue(true);
-        $last_update_date->setValue($artifact->getLastUpdateDate());
+        $last_update_date = new DateValue($artifact->getLastUpdateDate(), true);
         $formatted_last_update_date = $last_update_date->accept($this->visitor, $formatter_parameters);
 
-        $title = new TextValue();
-        $title->setValue($artifact->getTitle());
+        $title = new TextValue($artifact->getTitle());
         $formatted_title = $title->accept($this->visitor, $formatter_parameters);
 
-        $description = new TextValue();
-        $description->setValue($artifact->getDescription());
+        $description = new TextValue($artifact->getDescription());
         $formatted_description = $description->accept($this->visitor, $formatter_parameters);
 
-        $status = new TextValue();
-        $status->setValue($artifact->getStatus());
+        $status = new TextValue($artifact->getStatus());
         $formatted_status = $status->accept($this->visitor, $formatter_parameters);
 
         return [

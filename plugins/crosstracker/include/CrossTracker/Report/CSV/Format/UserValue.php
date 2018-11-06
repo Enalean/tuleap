@@ -27,6 +27,14 @@ class UserValue implements ValueVisitable
     /** @var PFUser|null */
     private $value;
 
+    /**
+     * @param null|PFUser $value
+     */
+    public function __construct(PFUser $value = null)
+    {
+        $this->value = $value;
+    }
+
     public function accept(FormatterVisitor $visitor, FormatterParameters $parameters)
     {
         return $visitor->visitUserValue($this, $parameters);
@@ -38,13 +46,5 @@ class UserValue implements ValueVisitable
     public function getValue()
     {
         return $this->value;
-    }
-
-    /**
-     * @param PFUser|null $value
-     */
-    public function setValue($value = null)
-    {
-        $this->value = $value;
     }
 }
