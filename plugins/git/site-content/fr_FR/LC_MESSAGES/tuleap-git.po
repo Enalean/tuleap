@@ -124,6 +124,13 @@ msgstr "Aucune notification n'a été définie"
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
+msgid ""
+"Parent project is not active, you are not allowed to migrate your repository "
+"on gerrit."
+msgstr ""
+"Le project parent n'est pas actif, vous n'êtes pas autorisé à migrer votre "
+"dépôt sur gerrit."
+
 msgid "Permission"
 msgstr "Permission"
 

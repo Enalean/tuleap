@@ -86,6 +86,10 @@ class GitViews extends PluginViews {
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         $controller,
@@ -99,7 +103,8 @@ class GitViews extends PluginViews {
         GitPhpAccessLogger $access_loger,
         RegexpFineGrainedRetriever $regexp_retriever,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        HeaderRenderer $header_renderer
+        HeaderRenderer $header_renderer,
+        ProjectManager $project_manager
     ) {
         parent::__construct($controller);
         $this->groupId                                 = (int) $this->request->get('group_id');
@@ -119,6 +124,7 @@ class GitViews extends PluginViews {
         $this->gerrit_server_factory                   = $gerrit_server_factory;
         $this->event_manager                           = EventManager::instance();
         $this->header_renderer                         = $header_renderer;
+        $this->project_manager                         = $project_manager;
     }
 
     public function header()
@@ -164,7 +170,8 @@ class GitViews extends PluginViews {
             $this->default_fine_grained_permission_factory,
             $this->git_permissions_manager,
             $this->regexp_retriever,
-            $this->event_manager
+            $this->event_manager,
+            $this->project_manager
         );
         $repo_management_view->display();
 

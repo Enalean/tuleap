@@ -21,16 +21,16 @@
 namespace Tuleap\Git\GitViews\RepoManagement\Pane;
 
 use Codendi_HTMLPurifier;
-use GitRepository;
 use Codendi_Request;
-use Tuleap\Git\GerritCanMigrateChecker;
-use Git_Driver_Gerrit_GerritDriverFactory;
-use Git_RemoteServer_Gerrit_ProjectNameBuilder;
 use DateHelper;
-use Git_Driver_Gerrit_ProjectCreatorStatus;
-use Git_RemoteServer_GerritServer;
-use Git_Driver_Gerrit_ProjectCreatorStatusDao;
 use Git_Driver_Gerrit_Exception;
+use Git_Driver_Gerrit_GerritDriverFactory;
+use Git_Driver_Gerrit_ProjectCreatorStatus;
+use Git_Driver_Gerrit_ProjectCreatorStatusDao;
+use Git_RemoteServer_Gerrit_ProjectNameBuilder;
+use Git_RemoteServer_GerritServer;
+use GitRepository;
+use Tuleap\Git\GerritCanMigrateChecker;
 
 class Gerrit extends Pane
 {
@@ -58,6 +58,10 @@ class Gerrit extends Pane
      * @var Git_Drive_Gerrit_Template_Template[]
      */
     private $templates;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         GitRepository $repository,
@@ -65,13 +69,16 @@ class Gerrit extends Pane
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         GerritCanMigrateChecker $gerrit_can_migrate_checker,
         array $gerrit_servers,
-        array $gerrit_config_templates
+        array $gerrit_config_templates,
+        \ProjectManager $project_manager
     ) {
         parent::__construct($repository, $request);
         $this->gerrit_servers             = $gerrit_servers;
         $this->driver_factory             = $driver_factory;
         $this->gerrit_can_migrate_checker = $gerrit_can_migrate_checker;
         $this->templates                  = $gerrit_config_templates;
+        $this->repository                 = $repository;
+        $this->project_manager            = $project_manager;
     }
 
     /**
@@ -118,6 +125,15 @@ class Gerrit extends Pane
             $disabled = 'disabled=true';
         }
 
+        $parent                      = $this->project_manager->getParentProject($this->repository->getProjectId());
+        $parent_is_suspended         = false;
+        $parent_is_suspended_message = "";
+        if (! $parent->isActive()) {
+            $disabled                    = 'disabled=true';
+            $parent_is_suspended_message = dgettext('tuleap-git', 'Parent project is not active, you are not allowed to migrate your repository on gerrit.');
+            $parent_is_suspended         = true;
+        }
+
         $name_builder = new Git_RemoteServer_Gerrit_ProjectNameBuilder();
 
         $html .= '<h2>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h2>';
@@ -125,6 +141,12 @@ class Gerrit extends Pane
         $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+
+        if ($parent_is_suspended === true) {
+            $html .= '<p class="alert alert-danger">
+                    ' . $parent_is_suspended_message . '
+                </p>';
+        }
 
         $html .= '<p>';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
@@ -155,9 +177,11 @@ class Gerrit extends Pane
                         <input type="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_delete') .'" />
                     </p>
                 </div>';
-        $html .= '<p id="gerrit_past_project_delete_plugin_diasabled" class="alert alert-info">
-                    '. $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') .'
+        if ($parent_is_suspended !== true) {
+            $html .= '<p id="gerrit_past_project_delete_plugin_diasabled" class="alert alert-info">
+                    ' . $GLOBALS['Language']->getText('plugin_git', 'gerrit_past_project_warn') . '
                 </p>';
+        }
         $html .= '</form>';
         return $html;
     }

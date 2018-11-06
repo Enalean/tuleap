@@ -51,13 +51,15 @@ class MigrationHandlerBaseTest extends TuleapTestCase {
         $this->driver_factory           = mock('Git_Driver_Gerrit_GerritDriverFactory');
         $project_history_dao            = mock('ProjectHistoryDao');
         $this->project_creator_status   = mock('Git_Driver_Gerrit_ProjectCreatorStatus');
+        $this->project_manager          = mock(\ProjectManager::class);
 
         $this->handler = new MigrationHandler(
             $this->git_system_event_manager,
             $this->server_factory,
             $this->driver_factory,
             $project_history_dao,
-            $this->project_creator_status
+            $this->project_creator_status,
+            $this->project_manager
         );
     }
 }
@@ -73,6 +75,7 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
 
     public function itThrowsAnExceptionIfRepositoryCannotBeMigrated() {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(false);
+        stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
@@ -101,6 +104,7 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
 
     public function itThrowsAnExceptionIfRepositoryWillBeMigratedIntoARestrictedGerritServer() {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
@@ -115,8 +119,47 @@ class MigrationHandlerMigrateTest extends MigrationHandlerBaseTest {
         $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
     }
 
+    public function itThrowsAnExceptionIfParentProjectIsNotActive() {
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $project = mock(Project::class);
+        stub($this->project_manager)->getParentProject()->returns($project);
+        stub($project)->isActive()->returns(false);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
+        $remote_server_id   = 1;
+        $gerrit_template_id = "none";
+
+        stub($this->server_factory)->getServerById(1)->returns($this->server);
+        stub($this->server_factory)->getAvailableServersForProject()->returns(array());
+
+        $this->expectException('Tuleap\Git\Exceptions\RepositoryNotMigratedException');
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->never();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
+    public function itMigratesRepositoryWhenParentIsActive() {
+        $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $project = mock(Project::class);
+        stub($this->project_manager)->getParentProject()->returns($project);
+        stub($project)->isActive()->returns(true);
+        stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
+
+        $remote_server_id   = 1;
+        $gerrit_template_id = "none";
+
+        stub($this->server_factory)->getServerById(1)->returns($this->server);
+        stub($this->server_factory)->getAvailableServersForProject()->returns(array(1 => $this->server));
+
+        expect($this->git_system_event_manager)->queueMigrateToGerrit()->once();
+
+        $this->handler->migrate($repository, $remote_server_id, $gerrit_template_id, $this->user);
+    }
+
+
     public function itMigratesRepository() {
         $repository = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        stub($this->project_manager)->getParentProject()->returns(null);
         stub($repository)->getProject()->returns(\Mockery::spy(Project::class));
 
         $remote_server_id   = 1;
