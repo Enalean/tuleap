@@ -40,8 +40,6 @@ Mock::generatePartial('UserManager',
                       )
 );
 
-Mock::generate('DataAccess');
-
 Mock::generate('DataAccessResult');
 
 class UserAccountValidityTest extends TuleapTestCase
@@ -65,7 +63,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dar = new MockDataAccessResult($this);
         $dar->setReturnValue('isError', false);
 
-        $da = new MockDataAccess($this);
+        $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->expectOnce('query', array('UPDATE user SET status = "S", unix_status = "S" WHERE status != "D" AND (toto)', '*'));
         $da->setReturnValue('query', $dar);
         
@@ -88,7 +86,7 @@ class UserAccountValidityTest extends TuleapTestCase
     }
 
     function testSuspendExpiredAccountsDao() {
-        $da = new MockDataAccess($this);
+        $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 1257671329, array(1257671329));
         
         $dao = new UserDaoTestValidity($this);
@@ -135,7 +133,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->expectOnce('delayForBeingNotProjectMembers',array(112));
         $dao->setReturnReference('delayForBeingNotProjectMembers',$darRemovedDate,array(112));
         
-        $da = new MockDataAccess($this);
+        $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 112, array(112));
         $dao->da = $da; 
                     
@@ -198,7 +196,7 @@ class UserAccountValidityTest extends TuleapTestCase
         $dao->setReturnReference('delayForBeingSubscribed',$darAddDate,array(112,1258307747));
         
         
-        $da = new MockDataAccess($this);
+        $da = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $da->setReturnValue('escapeInt', 112, array(112));
         $dao->da = $da; 
                     

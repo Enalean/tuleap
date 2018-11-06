@@ -58,39 +58,29 @@ function db_numrows($qhandle) {
  * @deprecated
  */
 function db_free_result($qhandle) {
-    if ($qhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
-        $qhandle->freeMemory();
-        return;
-    }
-    @mysql_free_result($qhandle);
+    $qhandle->freeMemory();
 }
 
 /**
  * @deprecated
  */
 function db_result($qhandle,$row,$field) {
-    if ($qhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
-        $qhandle->seek($row);
-        $row = $qhandle->current();
-        if ($field === null) {
-            $field = 0;
-        }
-        if (isset($row[$field])) {
-            return $row[$field];
-        }
-        return false;
+    $qhandle->seek($row);
+    $row = $qhandle->current();
+    if ($field === null) {
+        $field = 0;
     }
-    return @mysql_result($qhandle,$row,$field);
+    if (isset($row[$field])) {
+        return $row[$field];
+    }
+    return false;
 }
 
 /**
  * @deprecated
  */
 function db_numfields($lhandle) {
-    if ($lhandle instanceof \Tuleap\DB\Compat\Legacy2018\CompatPDODataAccessResult) {
-        return $lhandle->columnCount();
-    }
-    return @mysql_num_fields($lhandle);
+    return $lhandle->columnCount();
 }
 
 /**
@@ -171,7 +161,6 @@ function db_es($string,$qhandle=false) {
  * NULL in SQL.
  *
  * @see http://php.net/language.types.integer
- * @see DataAccess::escapeInt for tests.
  * @param  mixed $val a value to escape
  * @param  int   $null CODENDI_DB_NOT_NULL or CODENDI_DB_NULL
  *
@@ -204,7 +193,6 @@ function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
 
 /**
  * @deprecated
- * @see DataAccess::escapeIntImplode()
  */
 function db_ei_implode($val) {
     return implode(',', array_map('db_ei', $val));

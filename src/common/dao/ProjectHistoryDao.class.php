@@ -25,7 +25,7 @@ class ProjectHistoryDao extends DataAccessObject {
     /**
      * Constructor of the class
      *
-     * @param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da instance of the DataAccess class
+     * @param \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface $da
      *
      * @return void
      */

@@ -99,7 +99,8 @@ extends Docman_MetadataSqlQueryChunk {
         
         if($this->filter->getValue() !== null &&
            $this->filter->getValue() != '') {
-            $stmt[] = $this->field.' = '.DataAccess::quoteSmart($this->filter->getValue());
+            $data_access = CodendiDataAccess::instance();
+            $stmt[] = $this->field.' = '.$data_access->quoteSmart($this->filter->getValue());
         }
         
         return $stmt;

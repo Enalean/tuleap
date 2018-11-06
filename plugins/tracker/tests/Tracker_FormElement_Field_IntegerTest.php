@@ -26,7 +26,6 @@ Mock::generate('Tracker_Artifact');
 
 Mock::generate('Tracker_FormElement_Field_Value_IntegerDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 require_once('common/include/Response.class.php');

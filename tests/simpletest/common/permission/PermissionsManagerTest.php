@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -688,7 +688,7 @@ class PermissionsManager_savePermissions_SaveDaoTest extends PermissionsManager_
 
     public function setUp() {
         parent::setUp();
-        stub($this->permissions_dao)->getDa()->returns(mock('DataAccess'));
+        stub($this->permissions_dao)->getDa()->returns(mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class));
     }
 
     public function itThrowsExceptionWhenClearFailed() {

@@ -425,7 +425,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     {
         parent::setUp();
 
-        $this->data_access = mock('DataAccess');
+        $this->data_access = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         CodendiDataAccess::setInstance($this->data_access);
     }
 

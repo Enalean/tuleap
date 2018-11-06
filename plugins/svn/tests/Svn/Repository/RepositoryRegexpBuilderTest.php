@@ -1,6 +1,6 @@
 <?php
 /**
-* Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+* Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
 *
 * This file is a part of Tuleap.
 *
@@ -36,7 +36,7 @@ class RepositoryRegexpBuilderTest extends TuleapTestCase {
     public function itReturnsAValidRegexpForARepository()
     {
         $path        = '/directory';
-        $data_access = mock('DataAccess');
+        $data_access = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         stub($data_access)->escapeLikeValue('directory')->returns('directory');
         $this->assertEqual($this->regexp->generateRegexpFromPath($path, $data_access), "^(/(directory|\\*))$|^(/(directory|\\*)/)$");
     }
@@ -44,7 +44,7 @@ class RepositoryRegexpBuilderTest extends TuleapTestCase {
     public function itReturnsAValidRegexpForARepositoryWithSubdirectories()
     {
         $path        = '/directory/subdirectory1/subdirectory2';
-        $data_access = mock('DataAccess');
+        $data_access = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         stub($data_access)->escapeLikeValue('directory')->returns('directory');
         stub($data_access)->escapeLikeValue('subdirectory1')->returns('subdirectory1');
         stub($data_access)->escapeLikeValue('subdirectory2')->returns('subdirectory2');

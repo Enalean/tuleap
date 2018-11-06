@@ -593,7 +593,7 @@ class UserManager_GetUserWithSSHKeyTest extends TuleapTestCase {
 
         $this->user_name = 'toto';
 
-        $data_access = mock('DataAccess');
+        $data_access = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         $data_array  = array('user_name' => $this->user_name);
         stub($data_access)->fetch()->returns($data_array);
         stub($data_access)->numRows()->returns(1);

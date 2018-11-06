@@ -22,7 +22,6 @@
 require_once('bootstrap.php');
 Mock::generate('Tracker_RuleDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 Mock::generate('Tracker');

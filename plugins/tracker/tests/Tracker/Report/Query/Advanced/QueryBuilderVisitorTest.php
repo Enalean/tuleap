@@ -20,6 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
 use CodendiDataAccess;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
@@ -57,7 +58,7 @@ class QueryBuilderVisitorTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        CodendiDataAccess::setInstance(\Mockery::spy(\CodendiDataAccess::class));
+        CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
 
         $this->tracker         = aTracker()->withId(101)->build();
         $this->parameters      = new QueryBuilderParameters($this->tracker);

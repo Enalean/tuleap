@@ -30,7 +30,6 @@ Mock::generate('Tracker_Artifact_ChangesetValue_Float');
 
 Mock::generate('Tracker_FormElement_Field_Value_FloatDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 Mock::generate('Tracker_Artifact');
