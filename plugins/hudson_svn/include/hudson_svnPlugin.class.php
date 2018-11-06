@@ -20,8 +20,8 @@
 
 require_once __DIR__ . '/../../hudson/include/hudsonPlugin.class.php';
 require_once __DIR__ . '/../../svn/include/svnPlugin.class.php';
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/constants.php';
 
 use Tuleap\HudsonSvn\BuildParams;
 use Tuleap\HudsonSvn\Plugin\HudsonSvnPluginInfo;
