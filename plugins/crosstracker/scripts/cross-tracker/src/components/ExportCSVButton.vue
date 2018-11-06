@@ -21,13 +21,14 @@
     <button type="button"
             class="tlp-button-primary tlp-button-outline tlp-table-actions-element"
             v-bind:disabled="is_loading"
+            v-if="! has_error_message && ! has_invalid_trackers"
             v-on:click="exportCSV()"
     ><i class="tlp-button-icon fa fa-download"
         v-bind:class="{'fa-spin fa-spinner': is_loading }"
     ></i> <translate>Export CSV</translate></button>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import { download } from "../helpers/download-helper.js";
 import { addBOM } from "../helpers/bom-helper.js";
 import { getCSVReport } from "../api/rest-querier.js";
@@ -40,7 +41,8 @@ export default {
         };
     },
     computed: {
-        ...mapState(["report_id"])
+        ...mapState(["report_id"]),
+        ...mapGetters(["has_error_message", "has_invalid_trackers"])
     },
     methods: {
         exportCSV: async function() {

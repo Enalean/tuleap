@@ -20,6 +20,7 @@
 <template>
     <div>
         <error-message />
+        <error-inactive-project-message />
         <div class="tlp-alert-info cross-tracker-report-success" v-if="has_success_message">
             {{ success_message }}
         </div>
@@ -43,17 +44,24 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import ArtifactTable from "./components/ArtifactTable.vue";
 import ReadingMode from "./reading-mode/ReadingMode.vue";
 import WritingMode from "./writing-mode/WritingMode.vue";
 import ErrorMessage from "./components/ErrorMessage.vue";
+import ErrorInactiveProjectMessage from "./components/ErrorInactiveProjectMessage.vue";
 import { isAnonymous } from "./user-service.js";
 import { getReport } from "./api/rest-querier.js";
 
 export default {
     name: "CrossTrackerWidget",
-    components: { ErrorMessage, ArtifactTable, ReadingMode, WritingMode },
+    components: {
+        ErrorMessage,
+        ArtifactTable,
+        ReadingMode,
+        WritingMode,
+        ErrorInactiveProjectMessage
+    },
     props: {
         backendCrossTrackerReport: Object,
         readingCrossTrackerReport: Object,
@@ -99,9 +107,15 @@ export default {
         async loadBackendReport() {
             this.is_loading = true;
             try {
-                const { trackers, expert_query } = await getReport(this.report_id);
+                const { trackers, expert_query, invalid_trackers } = await getReport(
+                    this.report_id
+                );
                 this.backendCrossTrackerReport.init(trackers, expert_query);
                 this.initReports();
+
+                if (invalid_trackers.length > 0) {
+                    this.$store.commit("setInvalidTrackers", invalid_trackers);
+                }
             } catch (error) {
                 if (error.hasOwnProperty("response")) {
                     const error_json = await error.response.json();
@@ -119,6 +133,7 @@ export default {
 
         reportSaved() {
             this.initReports();
+            this.$store.commit("resetInvalidTrackerList");
             this.$store.commit(
                 "switchReportToSaved",
                 this.$gettext("Report has been successfully saved")

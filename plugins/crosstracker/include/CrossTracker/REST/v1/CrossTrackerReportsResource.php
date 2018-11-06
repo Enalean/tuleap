@@ -73,6 +73,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqua
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -631,6 +632,12 @@ class CrossTrackerReportsResource extends AuthenticatedResource
         }
     }
 
+    /**
+     * @param PFUser             $user
+     * @param CrossTrackerReport $report
+     *
+     * @throws RestException 403
+     */
     private function checkUserIsAllowedToSeeReport(PFUser $user, CrossTrackerReport $report)
     {
         $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
@@ -647,6 +654,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $ex) {
             throw new RestException(403, null, array('i18n_error_message' => $ex->getMessage()));
+        } catch (ProjectAccessSuspendedException $exception) {
+            //do nothing
         }
     }
 
@@ -654,6 +663,8 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      * @param $id
      *
      * @return CrossTrackerReport
+     * @throws CrossTrackerReportNotFoundException
+     * @throws RestException 403
      */
     private function getReport($id)
     {
