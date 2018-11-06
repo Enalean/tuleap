@@ -21,7 +21,6 @@ import Vue from "vue";
 import { mockFetchError } from "tlp-mocks";
 import { createStore } from "./store/index.js";
 import CrossTrackerWidget from "./CrossTrackerWidget.vue";
-import { restore as restoreUser, rewire$isAnonymous } from "./user-service.js";
 import BackendCrossTrackerReport from "./backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-mode/reading-cross-tracker-report.js";
 import WritingCrossTrackerReport from "./writing-mode/writing-cross-tracker-report.js";
@@ -31,10 +30,11 @@ import {
     rewire$getReportContent,
     restore as restoreRest
 } from "./api/rest-querier.js";
+import initial_state from "./store/state.js";
 
 describe("CrossTrackerWidget", () => {
     let Widget,
-        isAnonymous,
+        state,
         backendCrossTrackerReport,
         readingCrossTrackerReport,
         writingCrossTrackerReport,
@@ -43,6 +43,8 @@ describe("CrossTrackerWidget", () => {
         getQueryResult;
 
     beforeEach(() => {
+        state = { ...initial_state };
+
         Widget = Vue.extend(CrossTrackerWidget);
         backendCrossTrackerReport = new BackendCrossTrackerReport();
         readingCrossTrackerReport = new ReadingCrossTrackerReport();
@@ -74,21 +76,20 @@ describe("CrossTrackerWidget", () => {
         vm.$mount();
         spyOn(vm.$store, "commit");
 
+        state.is_user_admin = false;
+        state.invalid_trackers = [];
+
         return vm;
     }
 
     describe("switchToWritingMode() -", () => {
-        beforeEach(() => {
-            isAnonymous = jasmine.createSpy("isAnonymous").and.returnValue(false);
-            rewire$isAnonymous(isAnonymous);
-        });
-
-        afterEach(() => {
-            restoreUser();
-        });
-
         it("when I switch to the writing mode, then the  writing report will be updated and a mutation will be committed", () => {
             const vm = instantiateComponent();
+
+            vm.$store.replaceState({
+                is_user_admin: true,
+                invalid_trackers: []
+            });
 
             vm.switchToWritingMode();
 
@@ -98,14 +99,18 @@ describe("CrossTrackerWidget", () => {
             expect(vm.$store.commit).toHaveBeenCalledWith("switchToWritingMode");
         });
 
-        it("Given I am browsing anonymously, when I try to switch to writing mode, then nothing will happen", () => {
-            isAnonymous.and.returnValue(true);
+        it("Given I am not admin, when I try to switch to writing mode, then nothing will happen", () => {
             const vm = instantiateComponent();
+
+            vm.$store.replaceState({
+                is_user_admin: false,
+                invalid_trackers: []
+            });
 
             vm.switchToWritingMode();
 
             expect(writingCrossTrackerReport.duplicateFromReport).not.toHaveBeenCalled();
-            expect(vm.reading_mode).toBe(true);
+            expect(vm.$store.commit).not.toHaveBeenCalledWith("switchToWritingMode");
         });
     });
 

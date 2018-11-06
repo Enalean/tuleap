@@ -23,7 +23,8 @@ const state = {
     is_report_saved: true,
     error_message: null,
     success_message: null,
-    invalid_trackers: []
+    invalid_trackers: [],
+    is_user_admin: false
 };
 
 export default state;

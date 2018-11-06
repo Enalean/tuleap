@@ -21,17 +21,12 @@ import Vue from "vue";
 import { mockFetchError } from "tlp-mocks";
 import { createStore } from "../store/index.js";
 import ReadingMode from "./ReadingMode.vue";
-import { rewire$isAnonymous, restore as restoreUser } from "../user-service.js";
 import BackendCrossTrackerReport from "../backend-cross-tracker-report.js";
 import ReadingCrossTrackerReport from "./reading-cross-tracker-report.js";
 import { rewire$updateReport, restore as restoreRest } from "../api/rest-querier.js";
 
 describe("ReadingMode", () => {
-    let ReadingModeElement,
-        isAnonymous,
-        backendCrossTrackerReport,
-        readingCrossTrackerReport,
-        updateReport;
+    let ReadingModeElement, backendCrossTrackerReport, readingCrossTrackerReport, updateReport;
 
     beforeEach(() => {
         ReadingModeElement = Vue.extend(ReadingMode);
@@ -53,27 +48,23 @@ describe("ReadingMode", () => {
     }
 
     describe("switchToWritingMode() -", () => {
-        beforeEach(() => {
-            isAnonymous = jasmine.createSpy("isAnonymous").and.returnValue(false);
-            rewire$isAnonymous(isAnonymous);
-        });
-
-        afterEach(() => {
-            restoreUser();
-        });
-
         it("When I switch to the writing mode, then an event will be emitted", () => {
             const vm = instantiateComponent();
             spyOn(vm, "$emit");
+            vm.$store.replaceState({
+                is_user_admin: true
+            });
 
             vm.switchToWritingMode();
 
             expect(vm.$emit).toHaveBeenCalledWith("switchToWritingMode");
         });
 
-        it("Given I am browsing anonymously, when I try to switch to writing mode, nothing will happen", () => {
-            isAnonymous.and.returnValue(true);
+        it("Given I am browsing as project member, when I try to switch to writing mode, nothing will happen", () => {
             const vm = instantiateComponent();
+            vm.$store.replaceState({
+                is_user_admin: false
+            });
             spyOn(vm, "$emit");
 
             vm.switchToWritingMode();

@@ -20,7 +20,7 @@
 <template>
     <div class="cross-tracker-reading-mode">
         <div class="reading-mode-report"
-             v-bind:class="{'disabled': is_user_anonymous}"
+             v-bind:class="{'disabled': ! is_user_admin}"
              v-on:click="switchToWritingMode"
         >
             <tracker-list-reading-mode
@@ -50,7 +50,6 @@
 <script>
 import { mapState } from "vuex";
 import TrackerListReadingMode from "./TrackerListReadingMode.vue";
-import { isAnonymous } from "../user-service.js";
 import { updateReport } from "../api/rest-querier.js";
 
 export default {
@@ -65,10 +64,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["is_report_saved", "report_id"]),
-        is_user_anonymous() {
-            return isAnonymous();
-        },
+        ...mapState(["is_report_saved", "report_id", "is_user_admin"]),
         is_expert_query_not_empty() {
             return this.readingCrossTrackerReport.expert_query !== "";
         },
@@ -78,7 +74,7 @@ export default {
     },
     methods: {
         switchToWritingMode() {
-            if (this.is_user_anonymous) {
+            if (!this.is_user_admin) {
                 return;
             }
 

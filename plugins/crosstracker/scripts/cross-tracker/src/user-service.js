@@ -20,19 +20,13 @@
 import phptomoment from "phptomoment";
 import moment from "moment";
 
-export { init, isAnonymous, getUserPreferredDateFormat };
+export { init, getUserPreferredDateFormat };
 
-let user_is_anonymous;
 let date_format;
 
-function init(is_anonymous, localized_php_date_format, locale) {
-    user_is_anonymous = is_anonymous;
+function init(localized_php_date_format, locale) {
     date_format = phptomoment(localized_php_date_format);
     moment.locale(locale);
-}
-
-function isAnonymous() {
-    return user_is_anonymous;
 }
 
 function getUserPreferredDateFormat() {
