@@ -22,10 +22,8 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\ProjectListPresenter;
-use Tuleap\Project\Admin\ProjectListSearchFieldsPresenterBuilder;
-use Tuleap\Project\Admin\ProjectListSearchFieldsPresenter;
 use Tuleap\Project\Admin\ProjectListResultsPresenterBuilder;
-use Tuleap\Project\Admin\ProjectListResultsPresenter;
+use Tuleap\Project\Admin\ProjectListSearchFieldsPresenterBuilder;
 
 require_once('pre.php');
 require_once('www/admin/admin_utils.php');

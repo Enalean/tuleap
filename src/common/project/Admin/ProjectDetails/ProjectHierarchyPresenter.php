@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,12 @@ class ProjectHierarchyPresenter
     public $delete_modal_title;
     public $delete_modal_desc;
     public $cancel_button;
+    /**
+     * @var bool
+     */
+    public $is_active = false;
+    public $parent_status_class;
+    public $parent_status_label;
 
     public function __construct(
         array $parent_project_info,
@@ -45,6 +51,12 @@ class ProjectHierarchyPresenter
         $this->parent_project_info       = $parent_project_info;
         $this->purified_project_children = $purified_project_children;
         $this->is_hierarchy_shown        = $is_hierarchy_shown;
+
+        if (isset($parent_project_info['is_active']) && $parent_project_info['is_active'] === false) {
+            $this->is_active           = $parent_project_info['is_active'];
+            $this->parent_status_class = $parent_project_info['status_class'];
+            $this->parent_status_label = $parent_project_info['status_label'];
+        }
 
         $this->project_name_label      = _('Project name');
         $this->empty_children_label    = _('No children projects');

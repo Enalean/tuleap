@@ -44,6 +44,9 @@
                     <label class="tlp-label">{{ parent_project_label }}</label>
                     <p class="tlp-text-muted">
                         <a href="{{ url }}">{{ parent_name }}</a>
+                        {{^ is_active }}
+                            <span class="{{ parent_status_class }}">{{ parent_status_label }}</span>
+                        {{/ is_active }}
                     </p>
                 </div>
             {{/ parent_project_info }}

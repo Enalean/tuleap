@@ -216,7 +216,9 @@ msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Cannot bind a ugroup with another located on a non active project."
-msgstr "Impossible de lier ce groupe d'utilisateurs à un autre se trouvant dans un projet non actif."
+msgstr ""
+"Impossible de lier ce groupe d'utilisateurs à un autre se trouvant dans un "
+"projet non actif."
 
 #, php-format
 msgid ""

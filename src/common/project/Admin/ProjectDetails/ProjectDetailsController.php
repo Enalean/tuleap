@@ -305,7 +305,7 @@ class ProjectDetailsController
 
         if ($request->existAndNonEmpty('parent_project')) {
             $parent_project = $this->project_manager->getProjectFromAutocompleter($request->get('parent_project'));
-            if ($parent_project && $current_user->isMember($parent_project->getId(), 'A')) {
+            if ($parent_project && $parent_project->isActive() && $current_user->isMember($parent_project->getId(), 'A')) {
                 $result = $this->project_manager->setParentProject($group_id, $parent_project->getID());
                 if (! $result) {
                     throw new CannotUpdateProjectHierarchyException();
@@ -419,7 +419,22 @@ class ProjectDetailsController
             $url = '/projects/' . urlencode($parent->getUnixName());
         }
 
-        $parent_project_info['url'] = $url;
+        $parent_project_info['url']    = $url;
+
+        $parent_project_info['is_active']    = $parent->isActive();
+        if (!  $parent->isActive()) {
+            switch ($parent->getStatus()) {
+                case Project::STATUS_SUSPENDED:
+                    $parent_project_info['status_label'] = $GLOBALS['Language']->getText('admin_projectlist', 'suspended');
+                    $parent_project_info['status_class'] = 'tlp-badge-secondary';
+                    break;
+                case Project::STATUS_DELETED:
+                    $parent_project_info['status_label'] = $GLOBALS['Language']->getText('admin_projectlist', 'deleted');
+                    $parent_project_info['status_class'] = 'tlp-badge-danger tlp-badge-outline';
+                    break;
+            }
+        }
+
 
         return $parent_project_info;
     }
