@@ -88,6 +88,10 @@ main[role=main]:not(.tlp-framed) > #feedback {
     margin: 0 0 30px;
 }
 
+.empty-page-illustration {
+    margin: 0 0 3 * $tlp-spacing;
+}
+
 @import 'header';
 @import 'sidebar';
 @import 'toolbar';

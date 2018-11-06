@@ -70,9 +70,12 @@
 {{/ nb_projects }}
 {{^ nb_projects }}
     <div class="empty-page">
+        <div class="empty-page-illustration">
+            {{> svg-profile-tumbleweed }}
+        </div>
+
         <p class="empty-page-text user-profile-no-project">
             {{# gettext }}{{ real_name }} doesn't seem to be member of any projects you can see.{{/gettext}}
         </p>
-        {{> profile-tumbleweed-svg }}
     </div>
 {{/ nb_projects }}
