@@ -38,14 +38,14 @@ export default {
     props: {
         value: String
     },
-    methods: {
-        search(event) {
-            this.$emit("input", event.target.value);
-        }
-    },
     computed: {
         placeholder() {
             return this.$gettext("Repository name");
+        }
+    },
+    methods: {
+        search(event) {
+            this.$emit("input", event.target.value);
         }
     }
 };

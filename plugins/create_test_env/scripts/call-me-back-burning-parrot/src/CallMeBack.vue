@@ -18,6 +18,7 @@
   -->
 <template>
     <div class="call-me-back tlp-dropdown">
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button tlp-button-primary tlp-button-large" ref="call_me_back_button">
             <i class="fa fa-phone"></i>
@@ -43,11 +44,11 @@
                     <div class="tlp-form-element tlp-form-element-prepend">
                         <span class="tlp-prepend"><i class="fa fa-phone"></i></span>
                         <input type="text"
-                            class="tlp-input"
-                            id="call-me-back-phone-number"
-                            name="call_me_back_phone"
-                            placeholder="+33000000000"
-                            v-model="call_me_back_phone"
+                               class="tlp-input"
+                               id="call-me-back-phone-number"
+                               name="call_me_back_phone"
+                               placeholder="+33000000000"
+                               v-model="call_me_back_phone"
                         >
                     </div>
                 </div>
@@ -58,19 +59,19 @@
                     <div class="tlp-form-element tlp-form-element-prepend">
                         <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
                         <input type="text"
-                            ref="call_me_back_date"
-                            class="tlp-input tlp-input-date"
-                            id="call-me-back-date"
-                            name="call_me_back_date"
-                            placeholder="yyyy-mm-dd"
-                            v-model="call_me_back_date"
+                               ref="call_me_back_date"
+                               class="tlp-input tlp-input-date"
+                               id="call-me-back-date"
+                               name="call_me_back_date"
+                               placeholder="yyyy-mm-dd"
+                               v-model="call_me_back_date"
                         >
                     </div>
                 </div>
                 <button type="button"
-                    class="tlp-button-primary tlp-button-wide"
-                    v-on:click="callMeBack"
-                    v-bind:disabled="loading"
+                        class="tlp-button-primary tlp-button-wide"
+                        v-on:click="callMeBack"
+                        v-bind:disabled="loading"
                 >
                     <i class="tlp-button-icon fa fa-spinner fa-spin" v-if="loading"></i>
                     <translate>Call me back</translate>

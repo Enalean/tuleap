@@ -30,7 +30,8 @@
                 v-bind:is-project-admin="group.is_project_admin"
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"/>
+                v-bind:group-name="group.ugroup_name"
+            />
         </td>
 
         <td>
@@ -40,7 +41,8 @@
                 v-bind:is-project-admin="group.is_project_admin"
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"/>
+                v-bind:group-name="group.ugroup_name"
+            />
         </td>
         <td>
             <git-permissions-badge
@@ -49,7 +51,8 @@
                 v-bind:is-project-admin="group.is_project_admin"
                 v-bind:is-static="group.is_static"
                 v-bind:is-custom="group.is_custom"
-                v-bind:group-name="group.ugroup_name"/>
+                v-bind:group-name="group.ugroup_name"
+            />
         </td>
     </tr>
 </template>

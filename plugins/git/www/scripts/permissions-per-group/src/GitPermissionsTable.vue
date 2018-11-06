@@ -67,13 +67,6 @@ export default {
             nb_repo_hidden: 0
         };
     },
-    methods: {
-        togglePermission(event) {
-            if (event.hidden) {
-                this.nb_repo_hidden++;
-            }
-        }
-    },
     computed: {
         no_repo_empty_state() {
             return this.$gettext("No repository found for project");
@@ -110,6 +103,13 @@ export default {
     watch: {
         filter() {
             this.nb_repo_hidden = 0;
+        }
+    },
+    methods: {
+        togglePermission(event) {
+            if (event.hidden) {
+                this.nb_repo_hidden++;
+            }
         }
     }
 };

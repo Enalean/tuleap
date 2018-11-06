@@ -1,32 +1,30 @@
-{
-    "plugins": [
-        "you-dont-need-lodash-underscore",
-        "cypress"
-    ],
-    "extends": [
+module.exports = {
+    plugins: ["you-dont-need-lodash-underscore", "cypress", "vue"],
+    extends: [
         "eslint:recommended",
-        "plugin:you-dont-need-lodash-underscore/all"
+        "plugin:you-dont-need-lodash-underscore/all",
+        "plugin:vue/recommended"
     ],
-    "parser": "vue-eslint-parser",
-    "parserOptions": {
-        "parser": "babel-eslint",
-        "ecmaVersion": 2018,
-        "sourceType": "module"
+    parser: "vue-eslint-parser",
+    parserOptions: {
+        parser: "babel-eslint",
+        ecmaVersion: 2018,
+        sourceType: "module"
     },
-    "env": {
-        "es6": true,
-        "browser": true
+    env: {
+        es6: true,
+        browser: true
     },
-    "rules": {
+    rules: {
         // Possible Errors
         "no-template-curly-in-string": "error",
         // Best Practices
         "array-callback-return": "warn",
         "consistent-return": "warn",
-        "curly": "error",
+        curly: "error",
         "default-case": "warn",
         "dot-notation": "warn",
-        "eqeqeq": "warn",
+        eqeqeq: "warn",
         "no-alert": "error",
         "no-caller": "error",
         "no-div-regex": "error",
@@ -57,43 +55,67 @@
         "no-useless-return": "warn",
         "no-void": "error",
         "no-with": "error",
-        "radix": "error",
-        "require-await": "error"
+        radix: "error",
+        "require-await": "error",
+        // Vue
+        "vue/attributes-order": "off",
+        "vue/component-name-in-template-casing": ["error", "kebab-case"],
+        "vue/html-self-closing": [
+            "error",
+            {
+                html: {
+                    normal: "any",
+                    component: "always"
+                },
+                svg: "any"
+            }
+        ],
+        "vue/html-closing-bracket-spacing": [
+            "error",
+            {
+                selfClosingTag: "never"
+            }
+        ],
+        "vue/html-indent": ["error", 4],
+        "vue/max-attributes-per-line": "off",
+        "vue/no-spaces-around-equal-signs-in-attribute": "error",
+        "vue/prop-name-casing": "off",
+        "vue/require-default-prop": "off",
+        "vue/v-bind-style": ["error", "longform"],
+        "vue/v-on-style": ["error", "longform"]
     },
-    "overrides": [
+    overrides: [
         {
-            "files": ["*.spec.js"],
-            "env": {
-                "jasmine": true
+            files: ["*.spec.js"],
+            env: {
+                jasmine: true
             },
-            "globals": {
+            globals: {
                 // jasmine 3.2
-                "expectAsync": true,
+                expectAsync: true,
                 // jasmine-fixture
-                "affix": true,
+                affix: true,
                 // jasmine-promise-matchers,
-                "installPromiseMatchers": true,
+                installPromiseMatchers: true
             }
         },
         {
-            "files": [
+            files: [
                 "gulpfile.js",
                 "karma.conf.js",
                 "plugins/tracker/grammar/",
                 "tools/**/*.js",
                 "webpack.config.js"
             ],
-            "env": {
-                "node": true
+            env: {
+                node: true
             }
         },
         {
-            "files": [
-                "tests/e2e/**/*.js"
-            ],
-            "env": {
+            files: ["tests/e2e/**/*.js"],
+            env: {
                 "cypress/globals": true
             }
         }
     ]
-}
+};

@@ -81,6 +81,11 @@ import AgileDashboardPermissionsBadge from "permission-badge/PermissionsPerGroup
 export default {
     name: "AgileDashboardPermissions",
     components: { AgileDashboardPermissionsBadge },
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
     data() {
         return {
             is_loaded: false,
@@ -89,10 +94,19 @@ export default {
             error: null
         };
     },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String
+    computed: {
+        isEmpty() {
+            return this.permissions.length === 0;
+        },
+        hasError() {
+            return this.error !== null;
+        },
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        },
+        has_a_selected_u_group() {
+            return this.selectedUgroupName !== "";
+        }
     },
     methods: {
         async loadAll() {
@@ -110,20 +124,6 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    },
-    computed: {
-        isEmpty() {
-            return this.permissions.length === 0;
-        },
-        hasError() {
-            return this.error !== null;
-        },
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
-        },
-        has_a_selected_u_group() {
-            return this.selectedUgroupName !== "";
         }
     }
 };

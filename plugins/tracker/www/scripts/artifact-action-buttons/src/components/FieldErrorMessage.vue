@@ -34,12 +34,12 @@
 <script>
 export default {
     name: "FieldErrorMessage",
-    data() {
-        return { is_minimal_display: true };
-    },
     props: {
         fields: Array,
         type: String
+    },
+    data() {
+        return { is_minimal_display: true };
     },
     computed: {
         fields_to_display() {

@@ -28,7 +28,8 @@
                 name="expert_query"
                 id="expert-query-textarea"
                 v-bind:placeholder="placeholder"
-            >{{ writingCrossTrackerReport.expert_query }}</textarea>
+                v-model="writingCrossTrackerReport.expert_query"
+            ></textarea>
             <p class="tlp-text-muted">
                 <i class="fa fa-info-circle"></i>
                 <translate>You can use: AND, OR, parenthesis. Autocomplete is activated with Ctrl + Space.</translate>

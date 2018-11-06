@@ -18,6 +18,7 @@
   -->
 <template>
     <div class="call-me-back dropup" ref="dropdown">
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-phone"></i>
@@ -46,10 +47,10 @@
                         <i class="fa fa-phone"></i>
                     </span>
                     <input type="text"
-                        id="call-me-back-phone-number"
-                        name="call_me_back_phone"
-                        placeholder="+33000000000"
-                        v-model="call_me_back_phone"
+                           id="call-me-back-phone-number"
+                           name="call_me_back_phone"
+                           placeholder="+33000000000"
+                           v-model="call_me_back_phone"
                     >
                 </div>
                 <label for="call-me-back-date">
@@ -60,17 +61,17 @@
                         <i class="fa fa-calendar"></i>
                     </span>
                     <input type="text"
-                        id="call-me-back-date"
-                        name="call_me_back_date"
-                        data-format="yyyy-MM-dd"
-                        placeholder="yyyy-mm-dd"
-                        v-model="call_me_back_date"
+                           id="call-me-back-date"
+                           name="call_me_back_date"
+                           data-format="yyyy-MM-dd"
+                           placeholder="yyyy-mm-dd"
+                           v-model="call_me_back_date"
                     >
                 </div>
                 <button type="button"
-                    class="btn btn-primary btn-large"
-                    v-on:click="callMeBack"
-                    v-bind:disabled="loading"
+                        class="btn btn-primary btn-large"
+                        v-on:click="callMeBack"
+                        v-bind:disabled="loading"
                 >
                     <i class="fa fa-spinner fa-spin" v-if="loading"></i>
                     <translate>Call me back</translate>

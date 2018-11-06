@@ -24,7 +24,7 @@
          v-on:click="setTransparent"
          v-bind:title="color"
          alt="/themes/FlamingParrot/images/blank16x16.png"
-    />
+    >
 </template>
 
 <script>

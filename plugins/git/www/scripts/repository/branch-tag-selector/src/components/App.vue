@@ -34,21 +34,21 @@
             >Tags</a>
         </nav>
         <branches-section
-                v-bind:repository_id="repository_id"
-                v-bind:repository_url="repository_url"
-                v-bind:is_displaying_branches="is_displaying_branches"
-                v-bind:is_tag="is_tag"
-                v-bind:current_ref_name="current_ref_name"
-                v-bind:url_parameters="url_parameters"
-        ></branches-section>
+            v-bind:repository_id="repository_id"
+            v-bind:repository_url="repository_url"
+            v-bind:is_displaying_branches="is_displaying_branches"
+            v-bind:is_tag="is_tag"
+            v-bind:current_ref_name="current_ref_name"
+            v-bind:url_parameters="url_parameters"
+        />
         <tags-section
-                v-bind:repository_id="repository_id"
-                v-bind:repository_url="repository_url"
-                v-bind:is_displaying_branches="is_displaying_branches"
-                v-bind:is_tag="is_tag"
-                v-bind:current_ref_name="current_ref_name"
-                v-bind:url_parameters="url_parameters"
-        ></tags-section>
+            v-bind:repository_id="repository_id"
+            v-bind:repository_url="repository_url"
+            v-bind:is_displaying_branches="is_displaying_branches"
+            v-bind:is_tag="is_tag"
+            v-bind:current_ref_name="current_ref_name"
+            v-bind:url_parameters="url_parameters"
+        />
     </div>
 </template>
 <script>

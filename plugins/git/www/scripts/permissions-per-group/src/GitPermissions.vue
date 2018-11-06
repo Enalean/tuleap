@@ -41,7 +41,7 @@
         />
         <git-permissions-table v-if="is_loaded"
                                v-bind:repositories="repositories"
-                               v-bind:selectedUgroupName="selectedUgroupName"
+                               v-bind:selected-ugroup-name="selectedUgroupName"
                                v-bind:filter="filter"
         />
     </section>
@@ -53,11 +53,16 @@ import GitInlineFilter from "./GitInlineFilter.vue";
 import { getGitPermissions } from "./rest-querier.js";
 
 export default {
+    name: "GitPermissions",
     components: {
         GitInlineFilter,
         GitPermissionsTable
     },
-    name: "GitPermissions",
+    props: {
+        selectedUgroupId: String,
+        selectedProjectId: String,
+        selectedUgroupName: String
+    },
     data() {
         return {
             is_loaded: false,
@@ -67,10 +72,13 @@ export default {
             filter: ""
         };
     },
-    props: {
-        selectedUgroupId: String,
-        selectedProjectId: String,
-        selectedUgroupName: String
+    computed: {
+        hasError() {
+            return this.error !== null;
+        },
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        }
     },
     methods: {
         async loadAll() {
@@ -88,14 +96,6 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    },
-    computed: {
-        hasError() {
-            return this.error !== null;
-        },
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
         }
     }
 };

@@ -66,6 +66,9 @@ export default {
             selected_trackers: []
         };
     },
+    mounted() {
+        this.updateSelectedTrackers();
+    },
     methods: {
         cancel() {
             this.$emit("switchToReadingMode", { saved_state: true });
@@ -106,9 +109,6 @@ export default {
                 };
             });
         }
-    },
-    mounted() {
-        this.updateSelectedTrackers();
     }
 };
 </script>

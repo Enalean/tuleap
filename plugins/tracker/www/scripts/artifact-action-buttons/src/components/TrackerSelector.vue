@@ -29,8 +29,8 @@
                 v-model="selected_tracker"
         >
             <option disabled
-                selected="selected"
-                v-bind:value="{ tracker_id: null }"
+                    selected="selected"
+                    v-bind:value="{ tracker_id: null }"
             >
                 <translate>Choose tracker...</translate>
             </option>

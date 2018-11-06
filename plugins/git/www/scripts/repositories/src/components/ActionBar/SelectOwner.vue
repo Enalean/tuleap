@@ -31,7 +31,8 @@
             <optgroup v-bind:label="users_forks_label">
                 <option v-for="owner in sorted_repositories_owners"
                         v-bind:key="owner.id"
-                        v-bind:value="owner.id">
+                        v-bind:value="owner.id"
+                >
                     {{ owner.display_name }}
                 </option>
             </optgroup>

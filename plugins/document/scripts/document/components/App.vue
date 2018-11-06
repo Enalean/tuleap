@@ -21,13 +21,13 @@
     <div>
         <document-breadcrumb/>
         <div class="tlp-framed">
-            <error-message />
-            <document-spinner />
+            <error-message/>
+            <document-spinner/>
             <div class="empty-page" v-if="has_loaded_without_error">
                 <empty-docman-svg/>
                 <p class="empty-page-text">
                     <translate>There is no document here.</translate>
-                    <br/>
+                    <br>
                     <translate>You should start by adding a new one.</translate>
                 </p>
                 <button type="button" class="tlp-button-primary" disabled>
@@ -54,6 +54,12 @@ export default {
         projectName: String,
         userIsAdmin: Boolean
     },
+    computed: {
+        ...mapState({
+            has_loaded_without_error: (state, getters) =>
+                !state.is_loading_root_document && !getters.hasError
+        })
+    },
     mounted() {
         this.$store.commit("initDocumentTree", [
             this.projectId,
@@ -61,12 +67,6 @@ export default {
             this.userIsAdmin
         ]);
         this.$store.dispatch("loadRootDocumentId");
-    },
-    computed: {
-        ...mapState({
-            has_loaded_without_error: (state, getters) =>
-                !state.is_loading_root_document && !getters.hasError
-        })
     }
 };
 </script>

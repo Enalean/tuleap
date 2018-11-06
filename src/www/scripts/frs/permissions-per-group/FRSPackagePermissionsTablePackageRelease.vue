@@ -38,11 +38,11 @@ import UgroupBadge from "../../project/admin/permissions-per-group/PermissionsPe
 
 export default {
     name: "ReleasePermissions",
-    props: {
-        release: Object
-    },
     components: {
         UgroupBadge
+    },
+    props: {
+        release: Object
     }
 };
 </script>

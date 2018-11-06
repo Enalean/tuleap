@@ -19,11 +19,11 @@
 
 <template>
     <form role="dialog"
-         aria-labelledby="create-repository-modal-title"
-         id="create-repository-modal"
-         class="tlp-modal"
-         ref="create_modal"
-         v-on:submit="createRepository"
+          aria-labelledby="create-repository-modal-title"
+          id="create-repository-modal"
+          class="tlp-modal"
+          ref="create_modal"
+          v-on:submit="createRepository"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -74,7 +74,7 @@
                     data-test="create_repository"
             >
                 <i class="fa fa-plus tlp-button-icon"
-                    v-bind:class="{'fa-spin fa-spinner': is_loading}"
+                   v-bind:class="{'fa-spin fa-spinner': is_loading}"
                 ></i>
                 <translate>Add project repository</translate>
             </button>
@@ -95,13 +95,6 @@ export default {
             repository_name: ""
         };
     },
-    mounted() {
-        const create_modal = tlpModal(this.$refs.create_modal);
-
-        create_modal.addEventListener("tlp-modal-hidden", this.reset);
-
-        this.$store.commit("setAddRepositoryModal", create_modal);
-    },
     computed: {
         placeholder() {
             return this.$gettext("Repository name");
@@ -112,6 +105,13 @@ export default {
         close_label() {
             return this.$gettext("Close");
         }
+    },
+    mounted() {
+        const create_modal = tlpModal(this.$refs.create_modal);
+
+        create_modal.addEventListener("tlp-modal-hidden", this.reset);
+
+        this.$store.commit("setAddRepositoryModal", create_modal);
     },
     methods: {
         reset() {
