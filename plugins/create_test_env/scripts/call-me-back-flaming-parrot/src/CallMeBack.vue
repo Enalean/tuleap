@@ -20,7 +20,7 @@
     <div class="call-me-back dropup" ref="dropdown">
         <div class="call-me-back-message" v-if="! dropdown_open && message" v-html="sanitized_message"></div>
         <button class="call-me-back-button dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-comments-o"></i>
+            <i class="fa fa-phone"></i>
         </button>
         <div class="call-me-back-form dropdown-menu pull-right dropup" v-on:click.stop>
             <div class="call-me-back-save-the-date" v-if="save_the_date">
