@@ -197,7 +197,8 @@ class RepositoryResource extends AuthenticatedResource
             $this->gerrit_server_factory,
             new Git_Driver_Gerrit_GerritDriverFactory(new GitBackendLogger()),
             $project_history_dao,
-            new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao())
+            new Git_Driver_Gerrit_ProjectCreatorStatus(new Git_Driver_Gerrit_ProjectCreatorStatusDao()),
+            $this->project_manager
         );
 
         $this->ci_token_manager = new CITokenManager(new CITokenDao());

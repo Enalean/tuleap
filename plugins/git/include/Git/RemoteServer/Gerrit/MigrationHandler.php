@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,22 +21,22 @@
 
 namespace Tuleap\Git\RemoteServer\Gerrit;
 
-use GitRepository;
-use Tuleap\Git\GitViews\RepoManagement\Pane;
-use Git_SystemEventManager;
-use Git_RemoteServer_GerritServerFactory;
-use Git_Driver_Gerrit_GerritDriverFactory;
-use ProjectHistoryDao;
 use Git_Driver_Gerrit;
-use Git_RemoteServer_GerritServer;
+use Git_Driver_Gerrit_GerritDriverFactory;
 use Git_Driver_Gerrit_ProjectCreatorStatus;
-use Tuleap\Git\Exceptions\RemoteServerDoesNotExistException;
-use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
-use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
-use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
-use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
-use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
+use Git_RemoteServer_GerritServer;
+use Git_RemoteServer_GerritServerFactory;
+use Git_SystemEventManager;
+use GitRepository;
 use PFUser;
+use ProjectHistoryDao;
+use Tuleap\Git\Exceptions\DeletePluginNotInstalledException;
+use Tuleap\Git\Exceptions\RemoteServerDoesNotExistException;
+use Tuleap\Git\Exceptions\RepositoryAlreadyInQueueForMigrationException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedException;
+use Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException;
+use Tuleap\Git\Exceptions\RepositoryNotMigratedException;
+use Tuleap\Git\GitViews\RepoManagement\Pane;
 
 class MigrationHandler {
 
@@ -64,21 +64,34 @@ class MigrationHandler {
      * @var Git_Driver_Gerrit_ProjectCreatorStatus
      */
     private $project_creator_status;
+    /**
+     * @var \ProjectManager
+     */
+    private $project_manager;
 
     public function __construct(
         Git_SystemEventManager $git_system_event_manager,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Git_Driver_Gerrit_GerritDriverFactory $driver_factory,
         ProjectHistoryDao $history_dao,
-        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status
+        Git_Driver_Gerrit_ProjectCreatorStatus $project_creator_status,
+        \ProjectManager $project_manager
     ) {
         $this->git_system_event_manager = $git_system_event_manager;
         $this->gerrit_server_factory    = $gerrit_server_factory;
         $this->driver_factory           = $driver_factory;
         $this->history_dao              = $history_dao;
-        $this->project_creator_status = $project_creator_status;
+        $this->project_creator_status   = $project_creator_status;
+        $this->project_manager          = $project_manager;
     }
 
+    /**
+     * @throws RepositoryAlreadyInQueueForMigrationException
+     * @throws RepositoryCannotBeMigratedException
+     * @throws RepositoryCannotBeMigratedOnRestrictedGerritServerException
+     * @throws RepositoryNotMigratedException
+     * @throws \Git_RemoteServer_NotFoundException
+     */
     public function migrate(GitRepository $repository, $remote_server_id, $gerrit_template_id, PFUser $user) {
         if (! $repository->canMigrateToGerrit()) {
             throw new RepositoryCannotBeMigratedException();
@@ -86,6 +99,16 @@ class MigrationHandler {
 
         if ($this->project_creator_status->getStatus($repository) === Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE) {
             throw new RepositoryAlreadyInQueueForMigrationException();
+        }
+
+        $parent = $this->project_manager->getParentProject($repository->getProjectId());
+        if ($parent && ! $parent->isActive()) {
+            throw new RepositoryNotMigratedException(
+                dgettext(
+                    'tuleap-git',
+                    "Parent project is not active, you are not allowed to migrate your repository on gerrit."
+                )
+            );
         }
 
         $gerrit_server            = $this->gerrit_server_factory->getServerById($remote_server_id);

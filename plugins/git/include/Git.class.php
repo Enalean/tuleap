@@ -388,7 +388,8 @@ class Git extends PluginController
             $this->access_loger,
             $this->regexp_retriever,
             $this->gerrit_server_factory,
-            $this->header_renderer
+            $this->header_renderer,
+            $this->projectManager
         );
     }
 
@@ -1246,7 +1247,8 @@ class Git extends PluginController
                 $this->gerrit_server_factory,
                 $this->driver_factory,
                 $this->history_dao,
-                $this->project_creator_status
+                $this->project_creator_status,
+                $this->projectManager
             ),
             $this->gerrit_can_migrate_checker,
             $this->fine_grained_updater,

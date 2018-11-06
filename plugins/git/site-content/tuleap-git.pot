@@ -107,6 +107,11 @@ msgstr ""
 msgid "Notified people"
 msgstr ""
 
+msgid ""
+"Parent project is not active, you are not allowed to migrate your repository "
+"on gerrit."
+msgstr ""
+
 msgid "Permission"
 msgstr ""
 
