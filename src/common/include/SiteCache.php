@@ -112,17 +112,6 @@ class SiteCache {
             array('php')
         );
 
-        $plugin_manager    = PluginManager::instance();
-        $plugin_cache_file = $plugin_manager->getCacheFile();
-        if (! file_exists($plugin_cache_file)) {
-            touch($plugin_cache_file);
-        }
-        $this->logger->debug('Restore ownership to ' . $plugin_cache_file);
-        $backend->changeOwnerGroupMode(
-            $plugin_cache_file,
-            ForgeConfig::getApplicationUserLogin(),
-            ForgeConfig::getApplicationUserLogin(),
-            0600
-        );
+        PluginManager::instance()->restoreOwnershipOnCacheFile($this->logger, $backend);
     }
 }

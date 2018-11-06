@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,15 +19,27 @@
  *
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../vendor/autoload.php';
+namespace Tuleap\Plugin;
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+class PluginCacheInfo
+{
+    public $id;
+    public $name;
+    public $is_restricted;
+    public $class;
+    public $path;
+
+    public function __construct($id, $name, $is_restricted, $class, $path)
+    {
+        $this->id            = $id;
+        $this->name          = $name;
+        $this->is_restricted = $is_restricted;
+        $this->class         = $class;
+        $this->path          = $path;
+    }
+
+    public static function __set_state(array $array)
+    {
+        return new self($array['id'], $array['name'], $array['is_restricted'], $array['class'], $array['path']);
+    }
+}

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Plugin\PluginLoader;
 use Tuleap\Plugin\PluginProxyInjectedData;
 
 /**
@@ -93,12 +94,16 @@ class PluginManager {
     }
 
     public function loadPlugins() {
-        $injected_data = $this->getPluginsInjectedData();
-        foreach ($this->getHooksCache() as $plugin) {
-            $this->loadPluginFiles($plugin['path']);
-            $proxy = new PluginProxy($plugin['class'], $plugin['id'], $injected_data);
-            foreach ($plugin['hooks'] as $hook) {
-                $this->addListener($hook, $proxy);
+        if (ForgeConfig::get('plugin_hooks_cache_type') === 'serialized') {
+            (new PluginLoader($this->event_manager, $this->plugin_factory))->loadPlugins();
+        } else {
+            $injected_data = $this->getPluginsInjectedData();
+            foreach ($this->getHooksCache() as $plugin) {
+                $this->loadPluginFiles($plugin['path']);
+                $proxy = new PluginProxy($plugin['class'], $plugin['id'], $injected_data);
+                foreach ($plugin['hooks'] as $hook) {
+                    $this->addListener($hook, $proxy);
+                }
             }
         }
     }
@@ -153,7 +158,7 @@ class PluginManager {
         return $hooks_cache;
     }
 
-    public function getCacheFile() {
+    private function getCacheFile() {
         return ForgeConfig::get('codendi_cache_dir').'/'.self::PLUGIN_HOOK_CACHE_FILE;
     }
 
@@ -242,6 +247,7 @@ class PluginManager {
         if (!$this->_executeSqlStatements('uninstall', $name)) {
             $plugin->uninstall();
             $this->uninstallForgeUpgrade($name);
+            $this->site_cache->invalidatePluginBasedCaches();
             return $this->plugin_factory->removePlugin($plugin);
         } else {
             return false;
@@ -504,9 +510,30 @@ class PluginManager {
         }
     }
 
-    public function invalidateCache() {
+    public function invalidateCache()
+    {
         if (file_exists($this->getCacheFile())) {
             unlink($this->getCacheFile());
+        }
+        PluginLoader::invalidateCache();
+    }
+
+    public function restoreOwnershipOnCacheFile(Logger $logger, Backend $backend)
+    {
+        if (ForgeConfig::get('plugin_hooks_cache_type') === 'serialized') {
+            PluginLoader::restoreOwnershipOnCacheFile($logger, $backend);
+        } else {
+            $plugin_cache_file = $this->getCacheFile();
+            if (! file_exists($plugin_cache_file)) {
+                touch($plugin_cache_file);
+            }
+            $logger->debug('Restore ownership to ' . $plugin_cache_file);
+            $backend->changeOwnerGroupMode(
+                $plugin_cache_file,
+                ForgeConfig::getApplicationUserLogin(),
+                ForgeConfig::getApplicationUserLogin(),
+                0600
+            );
         }
     }
 }

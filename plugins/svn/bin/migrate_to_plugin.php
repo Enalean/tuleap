@@ -54,6 +54,7 @@ use Tuleap\Svn\SvnAdmin;
 use Tuleap\Svn\SvnPermissionManager;
 
 require_once 'pre.php';
+require_once __DIR__.'/../include/svnPlugin.class.php';
 
 function usage()
 {

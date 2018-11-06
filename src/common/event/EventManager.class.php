@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * EventManager
- */
 class EventManager
 {
     private $listeners = array();
@@ -59,6 +56,15 @@ class EventManager
         return self::$instance;
     }
 
+    public function addClosureOnEvent($event, callable $callback)
+    {
+        $this->listeners[$event][] = [
+            'listener'    => null,
+            'callback'    => $callback,
+            'recallEvent' => false,
+        ];
+    }
+
     public function addListener($event, $listener, $callback, $recallEvent) {
         $this->listeners[$event][] = array(
             'listener'    => $listener,
@@ -81,7 +87,8 @@ class EventManager
      * @param \Tuleap\Event\Dispatchable|string $event
      * @param mixed $params
      */
-    public function processEvent($event, $params = array()) {
+    public function processEvent($event, $params = array())
+    {
         if (is_object($event)) {
             $event_name = $event::NAME;
             $params     = $event;
@@ -102,6 +109,15 @@ class EventManager
         $callback     = $entry['callback'];
         $recall_event = $entry['recallEvent'];
 
+        if ($listener === null && is_callable($callback)) {
+            $callback($event, $params);
+        } else {
+            $this->dispatch($event, $listener, $callback, $recall_event, $params);
+        }
+    }
+
+    public function dispatch($event, $listener, $callback, $recall_event, $params)
+    {
         if ($recall_event) {
             $listener->$callback($event, $params);
         } else {

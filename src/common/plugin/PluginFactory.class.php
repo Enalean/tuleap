@@ -257,7 +257,7 @@ class PluginFactory {
          return $this->_getAvailableOrUnavailablePlugins('unavailable', 0);
     }
     /**
-     * @return array of enabled plugins
+     * @return Plugin[]
      */
     function getAvailablePlugins() {
          return $this->_getAvailableOrUnavailablePlugins('available', 1);

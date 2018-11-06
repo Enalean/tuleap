@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,15 +19,31 @@
  *
  */
 
-require_once 'pre.php';
-require_once __DIR__.'/../vendor/autoload.php';
+namespace Tuleap\Plugin;
 
-$data_builder = new REST_TestDataBuilder();
-$data_builder
-    ->instanciateFactories()
-    ->generateUsers()
-    ->delegateForgePermissions()
-    ->deleteTracker()
-    ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+class EventPluginCache
+{
+    /**
+     * @var array
+     */
+    public $plugin_map;
+
+    /**
+     * @var array
+     */
+    public $event_plugin_map;
+
+    public function __construct(array $plugin_map = [], array $event_plugin_map = [])
+    {
+        $this->plugin_map       = $plugin_map;
+        $this->event_plugin_map = $event_plugin_map;
+    }
+
+    public static function __set_state($an_array)
+    {
+        return new self(
+            $an_array['plugin_map'],
+            $an_array['event_plugin_map']
+        );
+    }
+}
