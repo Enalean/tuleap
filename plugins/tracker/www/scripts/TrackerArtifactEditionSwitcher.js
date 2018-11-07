@@ -301,7 +301,7 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
                 if (section.classList.contains('tracker-form-element-artifactlink-section')) {
                     section.style.display = 'flex';
                 } else {
-                    section.show();
+                    section.style.display = "block";
                 }
             });
             $(element)
