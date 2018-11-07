@@ -225,7 +225,7 @@ document.observe("dom:loaded", function() {
     function initSelectArtifactsModal() {
         var artifact_links_values = {};
 
-        var overlay_window = new lightwindow({
+        codendi.tracker.artifact.artifactLink.overlay_window = new lightwindow({
             resizeSpeed: 10,
             delay: 0,
             finalAnimationDuration: 0,
@@ -565,9 +565,9 @@ document.observe("dom:loaded", function() {
             function openCreateArtifactModalOnClickOnCreateButton(evt) {
                 //create a new artifact via artifact links
                 //tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().
-                overlay_window.options.afterFinishWindow = function () {
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {
                 };
-                overlay_window.activateWindow({
+                codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
                     href:
                         codendi.tracker.base_url +
                         "?" +
@@ -587,7 +587,7 @@ document.observe("dom:loaded", function() {
 
             function openSearchArtifactModalOnClickOnLinkButton(evt) {
                 $$("button.tracker-form-element-artifactlink-selector");
-                overlay_window.options.afterFinishWindow = function () {
+                codendi.tracker.artifact.artifactLink.overlay_window.options.afterFinishWindow = function () {
                     if ($("tracker-link-artifact-fast-ways")) {
                         //Tooltips. load only in fast ways panels
                         // since report table are loaded later in
@@ -680,7 +680,7 @@ document.observe("dom:loaded", function() {
                             codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
 
                             //hide the modal window
-                            overlay_window.deactivate();
+                            codendi.tracker.artifact.artifactLink.overlay_window.deactivate();
 
                             //stop the propagation of the event (don't submit any forms)
                             Event.stop(evt);
@@ -689,7 +689,7 @@ document.observe("dom:loaded", function() {
                     }
                 };
 
-                overlay_window.activateWindow({
+                codendi.tracker.artifact.artifactLink.overlay_window.activateWindow({
                     href:
                         location.href.split("?")[0] +
                         "?" +

@@ -137,7 +137,7 @@ codendi.tracker.artifact.artifactLink = {
             }
             input_field.value += aid;
             codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
-            overlay_window.deactivate();
+            codendi.tracker.artifact.artifactLink.overlay_window.deactivate();
         }
     },
     showReverseArtifactLinks: function() {
