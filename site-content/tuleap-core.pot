@@ -728,6 +728,9 @@ msgstr ""
 msgid "Permission Request"
 msgstr ""
 
+msgid "Permission denied"
+msgstr ""
+
 msgid "Permissions delegation"
 msgstr ""
 
@@ -1372,6 +1375,9 @@ msgid ""
 msgstr ""
 
 msgid "You can't remove the last platform administration permission."
+msgstr ""
+
+msgid "You cannot access to this page."
 msgstr ""
 
 msgid "You don't have any dashboards."

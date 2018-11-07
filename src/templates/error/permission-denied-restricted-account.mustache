@@ -1,0 +1,16 @@
+<div class="empty-page">
+    <div class="empty-page-illustration">
+        {{> svg-permission-denied }}
+    </div>
+
+    <div class="empty-page-text-with-small-text">
+        {{# gettext }}You have a restricted user account.{{/ gettext }}
+        <div class="empty-page-small-text">
+            {{# gettext }}You cannot access to this page.{{/ gettext }}
+        </div>
+    </div>
+
+    <a class="tlp-button-primary tlp-button-large" href="/my/">
+        <i class="fa fa-reply tlp-button-icon"></i> {{# gettext }}Go to my home page{{/ gettext }}
+    </a>
+</div>
