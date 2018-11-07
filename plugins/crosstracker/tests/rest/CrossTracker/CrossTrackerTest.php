@@ -54,7 +54,7 @@ class CrossTrackerTest extends RestBase
                     )
                 )
             ),
-            "invalid_trackers" => null
+            "invalid_trackers" => []
         );
 
         $this->assertEquals(
@@ -89,7 +89,7 @@ class CrossTrackerTest extends RestBase
                     )
                 )
             ),
-            "invalid_trackers" => null
+            "invalid_trackers" => []
         );
 
         $this->assertEquals(

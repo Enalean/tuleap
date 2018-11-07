@@ -36,6 +36,14 @@ class CrossTrackerReport
      * @var Tracker[]
      */
     private $trackers;
+    /**
+     * @var Tracker[]|null
+     */
+    private $valid_trackers;
+    /**
+     * @var Tracker[]|null
+     */
+    private $invalid_trackers;
 
     public function __construct($id, $expert_query, array $trackers)
     {
@@ -76,7 +84,35 @@ class CrossTrackerReport
      */
     public function getTrackers()
     {
-        return $this->trackers;
+        if ($this->valid_trackers === null) {
+            $this->populateValidityTrackers();
+        }
+        return $this->valid_trackers;
+    }
+
+    /**
+     * @return Tracker[]
+     */
+    public function getInvalidTrackers()
+    {
+        if ($this->invalid_trackers === null) {
+            $this->populateValidityTrackers();
+        }
+        return $this->invalid_trackers;
+    }
+
+    private function populateValidityTrackers()
+    {
+        $this->valid_trackers   = [];
+        $this->invalid_trackers = [];
+        foreach ($this->trackers as $tracker) {
+            $project = $tracker->getProject();
+            if ($project === null || ! $project->isActive()) {
+                $this->invalid_trackers[] = $tracker;
+            } else {
+                $this->valid_trackers[] = $tracker;
+            }
+        }
     }
 
     /**

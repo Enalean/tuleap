@@ -216,12 +216,6 @@ msgstr "Un tracker ou plus n'a pas été trouvé : %s"
 msgid "One tracker or more is duplicated in list: %s"
 msgstr "Un tracker ou plus est dupliqué : %s"
 
-#, php-format
-msgid "Project %s is not active"
-msgid_plural "Projects %s are not active"
-msgstr[0] "Le projet %s n'est pas actif"
-msgstr[1] "Les projets %s ne sont pas actifs"
-
 msgid "Project not found"
 msgstr "Le projet n'a pas été trouvé"
 

@@ -152,12 +152,6 @@ msgstr ""
 msgid "One tracker or more is duplicated in list: %s"
 msgstr ""
 
-#, php-format
-msgid "Project %s is not active"
-msgid_plural "Projects %s are not active"
-msgstr[0] ""
-msgstr[1] ""
-
 msgid "Project not found"
 msgstr ""
 

@@ -44,12 +44,12 @@ class CrossTrackerReportRepresentation
     /**
      * @var array {@type Tuleap\Tracker\REST\TrackerReference}
      */
-    public $trackers;
+    public $trackers = [];
 
     /**
      * @var array {@type Tuleap\Tracker\REST\TrackerReference}
      */
-    public $invalid_trackers;
+    public $invalid_trackers = [];
 
     public function build(CrossTrackerReport $report)
     {
@@ -60,11 +60,14 @@ class CrossTrackerReportRepresentation
             $tracker_reference = new TrackerReference();
             $tracker_reference->build($tracker);
 
-            if (! $tracker->getProject()->isActive()) {
-                $this->invalid_trackers[] = $tracker_reference;
-            } else {
-                $this->trackers[] = $tracker_reference;
-            }
+            $this->trackers[] = $tracker_reference;
+        }
+
+        foreach ($report->getInvalidTrackers() as $invalid_tracker) {
+            $tracker_reference = new TrackerReference();
+            $tracker_reference->build($invalid_tracker);
+
+            $this->invalid_trackers[] = $tracker_reference;
         }
 
         $this->uri = self::ROUTE . '/' . $this->id;

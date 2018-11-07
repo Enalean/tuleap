@@ -73,7 +73,6 @@ use Tuleap\Layout\ThemeVariation;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
-use Tuleap\Tracker\ProjectDeletionEvent;
 use Tuleap\Tracker\Report\Query\Advanced\DateFormat;
 use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parser;
@@ -108,7 +107,6 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(Event::REST_RESOURCES);
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-            $this->addHook(ProjectDeletionEvent::NAME);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(CollectRoutesEvent::NAME);
         }
@@ -156,12 +154,6 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
     public function uninstall()
     {
         $this->removeOrphanWidgets(array(ProjectCrossTrackerSearch::NAME));
-    }
-
-    public function trackerProjectDeletion(ProjectDeletionEvent $event)
-    {
-        $dao = new CrossTrackerReportDao();
-        $dao->deleteTrackersByGroupId($event->getProjectId());
     }
 
     /** @see Event::REST_RESOURCES */

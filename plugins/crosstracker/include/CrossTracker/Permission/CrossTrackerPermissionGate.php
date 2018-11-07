@@ -21,7 +21,6 @@
 namespace Tuleap\CrossTracker\Permission;
 
 use Tuleap\CrossTracker\CrossTrackerReport;
-use Tuleap\project\ProjectAccessSuspendedException;
 
 class CrossTrackerPermissionGate
 {
@@ -36,9 +35,7 @@ class CrossTrackerPermissionGate
     }
 
     /**
-     * @throws CrossTrackerUnauthorizedProjectException
-     * @throws CrossTrackerUnauthorizedTrackerException
-     * @throws ProjectAccessSuspendedException
+     * @throws CrossTrackerUnauthorizedException
      */
     public function check(\PFUser $user, CrossTrackerReport $report)
     {
@@ -49,11 +46,7 @@ class CrossTrackerPermissionGate
     }
 
     /**
-     * @param \PFUser $user
-     * @param array   $projects
-     *
      * @throws CrossTrackerUnauthorizedProjectException
-     * @throws ProjectAccessSuspendedException
      */
     private function checkProjectsAuthorization(\PFUser $user, array $projects)
     {
@@ -61,8 +54,6 @@ class CrossTrackerPermissionGate
         foreach ($projects as $project) {
             try {
                 $this->url_verification->userCanAccessProject($user, $project);
-            } catch (ProjectAccessSuspendedException $exception) {
-                throw $exception;
             } catch (\Project_AccessException $ex) {
                 throw new CrossTrackerUnauthorizedProjectException();
             }
