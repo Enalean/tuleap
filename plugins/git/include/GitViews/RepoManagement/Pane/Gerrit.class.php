@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -128,7 +128,7 @@ class Gerrit extends Pane
         $parent                      = $this->project_manager->getParentProject($this->repository->getProjectId());
         $parent_is_suspended         = false;
         $parent_is_suspended_message = "";
-        if (! $parent->isActive()) {
+        if ($parent !==null && ! $parent->isActive()) {
             $disabled                    = 'disabled=true';
             $parent_is_suspended_message = dgettext('tuleap-git', 'Parent project is not active, you are not allowed to migrate your repository on gerrit.');
             $parent_is_suspended         = true;

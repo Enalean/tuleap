@@ -885,7 +885,7 @@ class ProjectManager
 
     /**
      * @param int $group_id
-     * @return Project | null
+     * @return Project|null
      */
     public function getParentProject($group_id) {
         return $this->getHierarchyManager()->getParentProject($group_id);
