@@ -88,15 +88,6 @@ class CrossTrackerReportDao extends DataAccessObject
         }
     }
 
-    public function deleteTrackersByGroupId($group_id)
-    {
-        $sql = 'DELETE report.* FROM plugin_crosstracker_report_tracker report
-                  INNER JOIN tracker ON report.tracker_id = tracker.id
-                WHERE tracker.group_id = ?';
-
-        $this->getDB()->run($sql, $group_id);
-    }
-
     public function searchTrackersIdUsedByCrossTrackerByProjectId($project_id)
     {
         $sql = 'SELECT tracker.id

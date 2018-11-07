@@ -140,9 +140,7 @@ class CSVExportController implements DispatchableWithRequest
     private function buildRepresentations(PFUser $current_user, $report_id, $limit, $offset)
     {
         try {
-            $report     = $this->report_factory->getById($report_id);
-
-            $this->checkAllProjectAreActive($report, $current_user);
+            $report = $this->report_factory->getById($report_id);
 
             $this->checkUserIsAllowedToSeeReport($current_user, $report);
             $collection     = $this->artifact_report_factory->getArtifactsMatchingReport(
@@ -239,46 +237,6 @@ class CSVExportController implements DispatchableWithRequest
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $exception) {
             throw new ForbiddenException($exception->getMessage());
-        } catch (ProjectAccessSuspendedException $exception) {
-            //do nothing
-        }
-    }
-
-    /**
-     * @param CrossTrackerReport $report
-     *
-     * @throws ForbiddenException
-     */
-    private function checkAllProjectAreActive(CrossTrackerReport $report, PFUser $user)
-    {
-        $non_active_projects = [];
-
-        $widget = $this->cross_tracker_dao->searchCrossTrackerWidgetByCrossTrackerReportId($report->getId());
-        if ($widget['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
-            $project = $this->project_manager->getProject($widget['project_id']);
-            if (! $user->isAdmin($project->getID())) {
-                return;
-            }
-        }
-
-        foreach ($report->getProjects() as $project) {
-            if (! $project->isActive()) {
-                $non_active_projects[] = $project->getUnconvertedPublicName();
-            }
-        }
-
-        if (count($non_active_projects) > 0) {
-            throw new ForbiddenException(
-                sprintf(
-                    dngettext(
-                        'tuleap-crosstracker',
-                        'Project %s is not active',
-                        'Projects %s are not active',
-                        count($non_active_projects)
-                    ),
-                    implode(", ", $non_active_projects)
-                )
-            );
         }
     }
 }

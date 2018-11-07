@@ -654,8 +654,6 @@ class CrossTrackerReportsResource extends AuthenticatedResource
             $this->cross_tracker_permission_gate->check($user, $report);
         } catch (CrossTrackerUnauthorizedException $ex) {
             throw new RestException(403, null, array('i18n_error_message' => $ex->getMessage()));
-        } catch (ProjectAccessSuspendedException $exception) {
-            //do nothing
         }
     }
 
