@@ -360,7 +360,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
 
     function testRestrictedUserCanAccessSearchOnTracker() {
         $_REQUEST['type_of_search'] = 'tracker';
-        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserProjectError'));
         $GLOBALS['group_id'] = 120;
 
         $urlVerification->setReturnValue('getUrl', '/search/');
@@ -374,7 +374,7 @@ class URLVerification_RedirectionTests extends URLVerificationBaseTest {
             'SCRIPT_NAME' => 'blah'
         );
 
-        stub($urlVerification)->displayRestrictedUserError()->never();
+        stub($urlVerification)->displayRestrictedUserProjectError()->never();
         stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
 
         $urlVerification->checkRestrictedAccess($server, 'stuff');

@@ -1,7 +1,6 @@
 <?php
 /**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
- * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,12 +21,11 @@
 namespace Tuleap\error;
 
 use ForgeConfig;
-use PFUser;
 use Project;
 use TemplateRendererFactory;
 use ThemeManager;
 
-class PermissionDeniedPrivateProjectController
+class PermissionDeniedRestrictedAccountProjectController
 {
     /**
      * @var ThemeManager
@@ -44,15 +42,15 @@ class PermissionDeniedPrivateProjectController
 
     public function __construct(
         ThemeManager $theme_manager,
-        PlaceHolderBuilder $place_holder_builder,
-        ErrorDependenciesInjector $dependencies_injector
+        ErrorDependenciesInjector $dependencies_injector,
+        PlaceHolderBuilder $place_holder_builder
     ) {
         $this->theme_manager         = $theme_manager;
         $this->dependencies_injector = $dependencies_injector;
         $this->place_holder_builder  = $place_holder_builder;
     }
 
-    public function displayError(PFUser $user, Project $project = null)
+    public function displayError(\PFUser $user, Project $project)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
 
@@ -67,8 +65,8 @@ class PermissionDeniedPrivateProjectController
         $placeholder = $this->place_holder_builder->buildPlaceHolder($project);
 
         $renderer->renderToPage(
-            'permission-denied-private-project',
-            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, "/join-private-project-mail/")
+            'permission-denied-restricted-account-project',
+            new ProjectPermissionDeniedPresenter($project, $this->getToken(), $placeholder, "/join-project-restricted-user-mail/")
         );
 
         $layout->footer([]);
@@ -79,6 +77,6 @@ class PermissionDeniedPrivateProjectController
      */
     private function getToken()
     {
-        return new \CSRFSynchronizerToken("/join-private-project-mail/");
+        return new \CSRFSynchronizerToken("/join-project-restricted-user-mail/");
     }
 }

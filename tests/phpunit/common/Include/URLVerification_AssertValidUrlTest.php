@@ -37,7 +37,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->request = Mockery::mock(HTTPRequest::class);
         $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
 
-        $this->url_verification = Mockery::mock(URLVerification::class)->makePartial();
+        $this->url_verification = Mockery::mock(URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->url_verification->shouldReceive('verifyProtocol')->andReturn(false);
         $this->url_verification->shouldReceive('verifyRequest')->andReturn(false);
         $this->url_verification->shouldReceive('getCurrentUser')->andReturn(Mockery::spy(PFUser::class));
@@ -90,7 +90,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
     public function testCheckNotActiveProjectApi()
     {
         $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserError')->never();
+        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/api/'), $this->request);
@@ -105,7 +105,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
 
         $this->url_verification->shouldReceive('exitError')->once();
-        $this->url_verification->shouldReceive('displayRestrictedUserError')->never();
+        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
@@ -133,7 +133,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
 
         $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserError')->never();
+        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
@@ -144,7 +144,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
 
         $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserError')->never();
+        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
@@ -159,7 +159,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getProjectManager')->andReturn($project_manager);
 
         $this->url_verification->shouldReceive('exitError')->never();
-        $this->url_verification->shouldReceive('displayRestrictedUserError')->never();
+        $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
         $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);

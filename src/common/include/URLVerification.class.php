@@ -21,9 +21,10 @@
 
 use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\error\ErrorDependenciesInjector;
-use Tuleap\Error\PermissionDeniedPrivateProjectController;
+use Tuleap\error\PermissionDeniedPrivateProjectController;
+use Tuleap\error\PermissionDeniedRestrictedAccountController;
 use Tuleap\error\ProjectAccessSuspendedController;
-use Tuleap\Error\PermissionDeniedRestrictedAccountController;
+use Tuleap\error\PermissionDeniedRestrictedAccountProjectController;
 use Tuleap\error\PlaceHolderBuilder;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\project\ProjectAccessSuspendedException;
@@ -262,7 +263,7 @@ class URLVerification {
         if ($user->isRestricted()) {
             $url = $this->getUrl();
             if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], null)) {
-                $this->displayRestrictedUserError($url, $user);
+                $this->displayRestrictedUserError($user);
             }
         }
     }
@@ -438,21 +439,44 @@ class URLVerification {
     }
 
     /**
-     * Display error message for restricted user.
+     * Display error message for restricted user in a project
+     *
+     * @protected for test purpose
      *
      * @param URL $url Accessed url
      *
      * @return void
      */
-    public function displayRestrictedUserError(URL $url, PFUser $user, Project $project = null)
+    protected function displayRestrictedUserProjectError(PFUser $user, Project $project)
     {
         $GLOBALS['Response']->send401UnauthorizedHeader();
-        $sendMail = new PermissionDeniedRestrictedAccountController(
+        $controller = new PermissionDeniedRestrictedAccountProjectController(
             $this->getThemeManager(),
             new ErrorDependenciesInjector(),
             new PlaceHolderBuilder(ProjectManager::instance())
         );
-        $sendMail->displayError($user, $project);
+        $controller->displayError($user, $project);
+        exit;
+    }
+
+    /**
+     * Display error message for restricted user.
+     *
+     * @protected for test purpose
+     *
+     * @param URL $url Accessed url
+     *
+     * @return void
+     */
+    protected function displayRestrictedUserError(PFUser $user)
+    {
+        $GLOBALS['Response']->send401UnauthorizedHeader();
+        $controller = new PermissionDeniedRestrictedAccountController(
+            $this->getThemeManager(),
+            new ErrorDependenciesInjector(),
+            new PlaceHolderBuilder(ProjectManager::instance())
+        );
+        $controller->displayError($user);
         exit;
     }
 
@@ -534,7 +558,7 @@ class URLVerification {
                 if (! isset($project)) {
                     $project = null;
                 }
-                $this->displayRestrictedUserError($url, $user, $project);
+                $this->displayRestrictedUserProjectError($user, $project);
             } catch (Project_AccessPrivateException $exception) {
                 if (! isset($project)) {
                     $project = null;

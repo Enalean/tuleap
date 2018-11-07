@@ -44,7 +44,7 @@ class ProjectAccessSuspendedController
         $layout->header(["title" => _("Project access error")]);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
-            ForgeConfig::get('codendi_dir') . '/src/templates/admin/projects/'
+            ForgeConfig::get('codendi_dir') . '/src/templates/error/'
         );
 
         $renderer->renderToPage(

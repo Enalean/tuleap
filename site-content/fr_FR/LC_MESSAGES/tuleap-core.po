@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #, php-format
 msgid ""
@@ -790,6 +790,9 @@ msgstr "Permission"
 msgid "Permission Request"
 msgstr "Demande de permission"
 
+msgid "Permission denied"
+msgstr "Permission refusée"
+
 msgid "Permissions delegation"
 msgstr "Délégation des permissions"
 
@@ -1518,6 +1521,9 @@ msgid "You can't remove the last platform administration permission."
 msgstr ""
 "Vous ne pouvez pas supprimer la dernière permission d'administration de la "
 "plateforme."
+
+msgid "You cannot access to this page."
+msgstr "Vous ne pouvez pas accéder à cette page."
 
 msgid "You don't have any dashboards."
 msgstr "Vous n'avez aucun tableau de bord."
