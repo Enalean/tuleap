@@ -223,7 +223,7 @@ deploy-githooks:
 		{\
 			echo "Creating pre-commit hook";\
 			ln -s ../../tools/utils/githooks/hook-chain .git/hooks/pre-commit;\
-		}
+		};\
 	fi
 
 #
