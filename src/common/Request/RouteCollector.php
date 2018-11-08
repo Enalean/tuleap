@@ -37,7 +37,7 @@ use Tuleap\Admin\ProjectCreationModerationDisplayController;
 use Tuleap\Admin\ProjectCreationModerationUpdateController;
 use Tuleap\Admin\ProjectTemplatesController;
 use Tuleap\Error\PermissionDeniedMailSender;
-use Tuleap\error\PlaceHolderBuilder;
+use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Layout\LegacySiteHomePageController;
 use Tuleap\Layout\SiteHomepageController;
 use Tuleap\Password\Administration\PasswordPolicyDisplayController;

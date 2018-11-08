@@ -18,14 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\error;
+namespace Tuleap\Error;
 
 use ForgeConfig;
-use PFUser;
 use TemplateRendererFactory;
 use ThemeManager;
 
-class ProjectAccessSuspendedController
+class PermissionDeniedRestrictedAccountController
 {
     /**
      * @var ThemeManager
@@ -37,20 +36,17 @@ class ProjectAccessSuspendedController
         $this->theme_manager = $theme_manager;
     }
 
-    public function displayError(PFUser $user)
+    public function displayError(\PFUser $user)
     {
         $layout = $this->theme_manager->getBurningParrot($user);
 
-        $layout->header(["title" => _("Project access error")]);
+        $layout->header(["title" => _("Permission denied")]);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
             ForgeConfig::get('codendi_dir') . '/src/templates/error/'
         );
 
-        $renderer->renderToPage(
-            'permission-denied-suspended-project',
-            new ProjectAccessSuspendedErrorPresenter()
-        );
+        $renderer->renderToPage('permission-denied-restricted-account', []);
 
         $layout->footer([]);
     }

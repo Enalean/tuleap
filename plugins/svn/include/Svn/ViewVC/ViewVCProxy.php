@@ -28,7 +28,7 @@ use HTTPRequest;
 use Project;
 use ProjectManager;
 use ReferenceManager;
-use Tuleap\error\ProjectAccessSuspendedController;
+use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\svn\Event\GetSVNLoginNameEvent;
 use Tuleap\Svn\Repository\RepositoryManager;
 

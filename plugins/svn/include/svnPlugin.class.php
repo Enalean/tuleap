@@ -25,7 +25,7 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
-use Tuleap\error\ProjectAccessSuspendedController;
+use Tuleap\Error\ProjectAccessSuspendedController;
 use Tuleap\Httpd\PostRotateEvent;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\error;
+namespace Tuleap\Error;
 
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;

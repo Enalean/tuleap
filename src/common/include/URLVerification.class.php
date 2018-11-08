@@ -20,12 +20,12 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageDetector;
-use Tuleap\error\ErrorDependenciesInjector;
-use Tuleap\error\PermissionDeniedPrivateProjectController;
-use Tuleap\error\PermissionDeniedRestrictedAccountController;
-use Tuleap\error\ProjectAccessSuspendedController;
-use Tuleap\error\PermissionDeniedRestrictedAccountProjectController;
-use Tuleap\error\PlaceHolderBuilder;
+use Tuleap\Error\ErrorDependenciesInjector;
+use Tuleap\Error\PermissionDeniedPrivateProjectController;
+use Tuleap\Error\PermissionDeniedRestrictedAccountController;
+use Tuleap\Error\ProjectAccessSuspendedController;
+use Tuleap\Error\PermissionDeniedRestrictedAccountProjectController;
+use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Project\Admin\MembershipDelegationDao;
 use Tuleap\project\ProjectAccessSuspendedException;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
