@@ -30,6 +30,7 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
@@ -40,6 +41,10 @@ use Widget_Static;
 
 class BurningParrotTheme extends BaseLayout
 {
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
     /** @var ProjectManager */
     private $project_manager;
 
@@ -62,6 +67,7 @@ class BurningParrotTheme extends BaseLayout
         parent::__construct($root);
         $this->user            = $user;
         $this->project_manager = ProjectManager::instance();
+        $this->user_manager    = UserManager::instance();
         $this->event_manager   = EventManager::instance();
         $this->request         = HTTPRequest::instance();
         $this->renderer        = TemplateRendererFactory::build()->getRenderer($this->getTemplateDir());
@@ -246,6 +252,9 @@ class BurningParrotTheme extends BaseLayout
 
         $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
 
+        $statistics_collection_builder = new StatisticsCollectionBuilder($this->project_manager, $this->user_manager);
+        $statistics_collection = $statistics_collection_builder->build();
+
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $presenter     = new HomePagePresenter(
@@ -254,7 +263,8 @@ class BurningParrotTheme extends BaseLayout
             $most_secure_url,
             $login_presenter,
             $display_new_account_button,
-            $login_url
+            $login_url,
+            $statistics_collection
         );
         $renderer->renderToPage('homepage', $presenter);
     }

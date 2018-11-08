@@ -992,4 +992,9 @@ class ProjectManager
         $current_per_user = $this->_getDao()->countByStatusAndUser($requester->getId(), Project::STATUS_PENDING);
         return $current_per_user < $max_per_user;
     }
+
+    public function countRegisteredProjectsBefore($timestamp)
+    {
+        return $this->_getDao()->countProjectRegisteredBefore($timestamp);
+    }
 }
