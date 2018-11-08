@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 #
-# Codendi
+# Tuleap
+# Copyright (c) Enalean, 2018. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # http://www.codendi.com
 #
@@ -72,7 +73,7 @@ push @files,"$source_dir/www/users";
 my $position = 0;
 chomp $position;
 foreach my $case (@files) {
-    if ($case =~/\/common\/error\/Error_PermissionDenied.class.php/ ) {
+    if ($case =~/\/common\/Error\/Error_PermissionDenied.class.php/ ) {
         last;
     }
     $position++;

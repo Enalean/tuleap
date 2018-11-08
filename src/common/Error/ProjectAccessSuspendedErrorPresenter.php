@@ -18,25 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\error;
+namespace Tuleap\Error;
 
-use Project;
-
-class ProjectPermissionDeniedPresenter
+class ProjectAccessSuspendedErrorPresenter
 {
-    public $project_id;
-    public $placeholder;
-    /**
-     * @var \CSRFSynchronizerToken
-     */
-    public $csrf_token;
-    public $join_url;
+    public $error_message;
 
-    public function __construct(Project $project, \CSRFSynchronizerToken $token, $placeholder, $join_url)
+    public function __construct()
     {
-        $this->project_id  = $project->getID();
-        $this->placeholder = $placeholder;
-        $this->csrf_token  = $token;
-        $this->join_url    = $join_url;
+        $this->error_message = $GLOBALS['Language']->getText('include_exit', 'project_status_H');
+        $this->custom_message = $GLOBALS['Language']->getText('include_exit', 'project_suspended_cutom_message');
     }
 }
