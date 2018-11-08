@@ -42,6 +42,11 @@ abstract class ControllerBase
     protected $project;
 
     /**
+     * @var \GitRepository
+     */
+    private $tuleap_git_repository;
+
+    /**
      * params
      *
      * Parameters
@@ -95,7 +100,8 @@ abstract class ControllerBase
             $this->tpl->cache_dir = $cache;
         }
 
-        $this->project = ProjectList::GetInstance()->GetProject();
+        $this->project               = ProjectList::GetInstance()->GetProject();
+        $this->tuleap_git_repository = ProjectList::GetInstance()->getRepository();
 
         if (isset($_GET['s'])) {
             $this->params['search'] = $_GET['s'];
@@ -242,5 +248,13 @@ abstract class ControllerBase
         $this->LoadData();
 
         $this->tpl->display($this->GetTemplate());
+    }
+
+    /**
+     * @return \GitRepository
+     */
+    protected function getTuleapGitRepository()
+    {
+        return $this->tuleap_git_repository;
     }
 }

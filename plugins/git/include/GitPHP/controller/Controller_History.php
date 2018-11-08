@@ -22,6 +22,9 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Shortlog\ShortlogPresenterBuilder;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use UserManager;
 
 /**
@@ -151,7 +154,14 @@ class Controller_History extends ControllerBase // @codingStandardsIgnoreLine
             $history
         );
 
-        $builder = new ShortlogPresenterBuilder(UserManager::instance());
-        $this->tpl->assign('shortlog_presenter', $builder->getShortlogPresenter($commits_of_history));
+        $commit_metadata_retriever = new CommitMetadataRetriever(
+            new CommitStatusRetriever(new CommitStatusDAO()),
+            UserManager::instance()
+        );
+        $builder = new ShortlogPresenterBuilder($commit_metadata_retriever);
+        $this->tpl->assign(
+            'shortlog_presenter',
+            $builder->getShortlogPresenter($this->getTuleapGitRepository(), ...$commits_of_history)
+        );
     }
 }

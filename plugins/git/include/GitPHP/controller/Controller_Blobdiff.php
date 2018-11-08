@@ -23,6 +23,10 @@ namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\CommitPresenter;
 use GitPHP\Commit\FileDiffPresenter;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
+use UserManager;
 
 class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
@@ -153,7 +157,15 @@ class Controller_Blobdiff extends Controller_DiffBase // @codingStandardsIgnoreL
             $blob->SetCommit($commit);
             $treediff = $commit->DiffToParent();
             $treediff->SetRenames(true);
-            $commit_presenter = new CommitPresenter($commit, $treediff);
+            $commit_metadata_retriever = new CommitMetadataRetriever(
+                new CommitStatusRetriever(new CommitStatusDAO()),
+                UserManager::instance()
+            );
+            $commit_metadata = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
+                $this->getTuleapGitRepository(),
+                $commit
+            );
+            $commit_presenter = new CommitPresenter($commit, $commit_metadata[0], $treediff);
             $this->tpl->assign('commit_presenter', $commit_presenter);
         }
     }

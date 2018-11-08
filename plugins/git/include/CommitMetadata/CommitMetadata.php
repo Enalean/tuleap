@@ -32,11 +32,16 @@ class CommitMetadata
      * @var null|\PFUser
      */
     private $author;
+    /**
+     * @var null|\PFUser
+     */
+    private $committer;
 
-    public function __construct(CommitStatus $last_commit_status, \PFUser $author = null)
+    public function __construct(CommitStatus $last_commit_status, \PFUser $author = null, \PFUser $committer = null)
     {
         $this->last_commit_status = $last_commit_status;
         $this->author             = $author;
+        $this->committer          = $committer;
     }
 
     /**
@@ -53,5 +58,13 @@ class CommitMetadata
     public function getAuthor()
     {
         return $this->author;
+    }
+
+    /**
+     * @return null|\PFUser
+     */
+    public function getCommitter()
+    {
+        return $this->committer;
     }
 }

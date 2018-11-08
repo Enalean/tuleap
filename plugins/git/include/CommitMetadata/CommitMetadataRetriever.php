@@ -40,16 +40,22 @@ class CommitMetadataRetriever
         $this->user_manager     = $user_manager;
     }
 
+    /**
+     * @return CommitMetadata[]
+     */
     public function getMetadataByRepositoryAndCommits(\GitRepository $repository, Commit ...$commits)
     {
-        $commit_references = [];
-        $author_emails     = [];
+        $commit_references  = [];
+        $contributor_emails = [];
         foreach ($commits as $commit) {
-            $commit_references[] = $commit->GetHash();
-            $author_emails[]     = $commit->getAuthorEmail();
+            $commit_references[]  = $commit->GetHash();
+            $contributor_emails[] = $commit->getAuthorEmail();
+            $contributor_emails[] = $commit->getCommitterEmail();
         }
-        $statuses         = $this->status_retriever->getLastCommitStatuses($repository, $commit_references);
-        $authors_by_email = $this->user_manager->getUserCollectionByEmails($author_emails);
+        $statuses                          = $this->status_retriever->getLastCommitStatuses($repository, $commit_references);
+        $non_duplicated_contributor_emails = array_flip(array_flip($contributor_emails));
+        $non_empty_contributor_emails      = array_filter($non_duplicated_contributor_emails);
+        $contributors_by_email             = $this->user_manager->getUserCollectionByEmails($non_empty_contributor_emails);
 
         $metadata = [];
 
@@ -58,9 +64,11 @@ class CommitMetadataRetriever
         $commit_metadata_iterator->attachIterator(new \ArrayIterator($statuses));
 
         foreach ($commit_metadata_iterator as list($commit, $status)) {
-            $author_email = $commit->getAuthorEmail();
-            $author       = $authors_by_email->getUserByEmail($author_email);
-            $metadata[]   = new CommitMetadata($status, $author);
+            $author_email    = $commit->getAuthorEmail();
+            $author          = $contributors_by_email->getUserByEmail($author_email);
+            $committer_email = $commit->getCommitterEmail();
+            $committer       = $contributors_by_email->getUserByEmail($committer_email);
+            $metadata[]   = new CommitMetadata($status, $author, $committer);
         }
 
         return $metadata;
