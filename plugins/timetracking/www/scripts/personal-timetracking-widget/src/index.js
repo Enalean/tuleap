@@ -23,19 +23,20 @@ import french_translations from "../../site-content/po/fr.po";
 import Widget from "./components/Widget.vue";
 
 document.addEventListener("DOMContentLoaded", () => {
-    Vue.use(GetTextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
-    const user_id = parseInt(document.body.dataset.userId, 10);
     const vue_mount_point = document.getElementById("personal-timetracking-widget");
 
     if (vue_mount_point) {
+        Vue.use(GetTextPlugin, {
+            translations: {
+                fr: french_translations.messages
+            },
+            silent: true
+        });
+
+        const locale = document.body.dataset.userLocale;
+        Vue.config.language = locale;
+        const user_id = parseInt(document.body.dataset.userId, 10);
+
         const rootComponent = Vue.extend(Widget);
         new rootComponent({
             propsData: {

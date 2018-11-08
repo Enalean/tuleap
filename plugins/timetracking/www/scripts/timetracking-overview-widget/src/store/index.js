@@ -23,6 +23,10 @@ import state from "./state.js";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
-    state
-});
+export function createStore() {
+    return new Vuex.Store({
+        state: {
+            ...state
+        }
+    });
+}

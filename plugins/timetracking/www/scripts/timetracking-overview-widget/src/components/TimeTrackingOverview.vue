@@ -25,12 +25,10 @@
 </template>
 
 <script>
-import store from "../store/index.js";
 import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 export default {
     name: "TimeTrackingOverview",
-    store,
     components: { TimeTrackingOverviewTable, TimeTrackingOverviewReadingMode }
 };
 </script>
