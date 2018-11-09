@@ -1075,6 +1075,7 @@ CREATE TABLE svn_commits (
   KEY idx_search (group_id, whoid, id),
   KEY idx_repositoryid_date (repositoryid, date),
   INDEX idx_date (date),
+  INDEX reverse_rev (group_id, revision),
   FULLTEXT (description)
 ) ENGINe=MyISAM;
 
