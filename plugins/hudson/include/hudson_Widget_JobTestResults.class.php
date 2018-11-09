@@ -22,6 +22,9 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 use Tuleap\Hudson\TestResultPieChart\TestResultsPieChartDisplayer;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 
 class hudson_Widget_JobTestResults extends HudsonJobWidget
 {
@@ -134,5 +137,26 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         }
 
         return $html;
+    }
+
+    public function getJavascriptDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/hudson/scripts',
+            '/assets/hudson/scripts'
+        );
+
+        return [
+            ['file' => $include_assets->getFileURL('test-results-pie.js')]
+        ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $theme_include_assets = new IncludeAssets(
+            __DIR__ . '/../www/themes/BurningParrot/assets',
+            HUDSON_BASE_URL . '/themes/BurningParrot/assets'
+        );
+        return new CssAssetCollection([new CssAsset($theme_include_assets, 'style')]);
     }
 }

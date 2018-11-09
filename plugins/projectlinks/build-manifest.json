@@ -1,12 +1,6 @@
 {
     "name": "projectlinks",
     "themes": {
-        "default": {
-            "files": [
-                "www/themes/default/css/style.scss"
-            ],
-            "target_dir": "www/themes/default/css"
-        },
         "BurningParrot": {
             "files": [
                 "www/themes/BurningParrot/css/style-blue.scss",
@@ -28,7 +22,8 @@
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss"
             ],
-            "target_dir": "www/themes/BurningParrot/css"
+            "target_dir": "../../src/www/assets/projectlinks/BurningParrot",
+            "is_revisioned": true
         }
     }
 }

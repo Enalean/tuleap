@@ -24,8 +24,10 @@ use Codendi_Request;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\CrossTracker\CrossTrackerReportDao;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 class ProjectCrossTrackerSearch extends Widget
@@ -164,6 +166,15 @@ class ProjectCrossTrackerSearch extends Widget
         return array(
             array('file' => $cross_tracker_include_assets->getFileURL('cross-tracker.js'))
         );
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../../../src/www/assets/crosstracker/BurningParrot',
+            '/assets/crosstracker/BurningParrot'
+        );
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 
     /**

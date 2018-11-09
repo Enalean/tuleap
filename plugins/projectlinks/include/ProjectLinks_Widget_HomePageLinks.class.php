@@ -23,6 +23,10 @@
  *
  */
 
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
+
 require_once 'common/widget/Widget.class.php';
 require_once 'common/include/Toggler.class.php';
 require_once 'ProjectLinksDao.class.php';
@@ -92,7 +96,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         if ($forward === '' && $backward === '') {
             $html .= "<div>" . $GLOBALS['Language']->getText('plugin_plinks', 'no_links_found') . "</div>";
         } else {
-            $html .= "<ul class=\"project_links_widget_linkslist project-link-list project-link-list-content\">\n";
+            $html .= "<ul class=\"project-link-list project-link-list-content\">\n";
             $html .= $forward;
             $html .= $backward;
             $html .= "</ul>\n";
@@ -202,6 +206,13 @@ class ProjectLinks_Widget_HomePageLinks extends Widget {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
     }
-}
 
-?>
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../src/www/assets/projectlinks/BurningParrot',
+            '/assets/projectlinks/BurningParrot'
+        );
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+    }
+}

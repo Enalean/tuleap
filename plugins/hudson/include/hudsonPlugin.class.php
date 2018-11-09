@@ -55,41 +55,11 @@ class hudsonPlugin extends Plugin
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
         $this->addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
         $this->addHook('statistics_collector',          'statistics_collector',       false);
-
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
     }
 
-    public function burning_parrot_get_stylesheets($params)
+    private function canIncludeStylesheets()
     {
-        if ($this->canIncludeStylsheets()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
-    }
-
-    public function burningParrotGetJavascriptFiles(array $params)
-    {
-        if ($this->isInDashboard()) {
-            $include_assets = new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/hudson/scripts',
-                '/assets/hudson/scripts'
-            );
-
-            $params['javascript_files'][] = $include_assets->getFileURL('test-results-pie.js');
-        }
-    }
-    private function isInDashboard()
-    {
-        $current_page = new CurrentPage();
-        return $current_page->isDashboard();
-    }
-
-    private function canIncludeStylsheets()
-    {
-        return strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL . '/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+        return strpos($_SERVER['REQUEST_URI'], HUDSON_BASE_URL . '/') === 0;
     }
 
     public function getPluginInfo() {
@@ -111,7 +81,7 @@ class hudsonPlugin extends Plugin
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the hudson pages.
         // This stops styles inadvertently clashing with the main site.
-        if ($this->canIncludeStylsheets() ||
+        if ($this->canIncludeStylesheets() ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0
         ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';

@@ -30,7 +30,7 @@ use Tuleap\Request\CurrentPage;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/constants.php';
 
-class labelPlugin extends Plugin
+class labelPlugin extends Plugin // phpcs:ignore
 {
     public function __construct($id)
     {
@@ -48,7 +48,6 @@ class labelPlugin extends Plugin
         $this->addHook(Event::REST_PROJECT_RESOURCES);
         $this->addHook(RemoveLabel::NAME);
         $this->addHook(MergeLabels::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
 
         return parent::getHooksAndCallbacks();
@@ -119,32 +118,21 @@ class labelPlugin extends Plugin
     }
 
     /**
-     * @see Event:BURNING_PARROT_GET_STYLESHEETS
-     */
-    public function burningParrotGetStylesheets(array $params)
-    {
-        if ($this->isInDashboard()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
-    }
-
-    /**
      * @see Event::BURNING_PARROT_GET_JAVASCRIPT_FILES
      */
     public function burningParrotGetJavascriptFiles(array $params)
     {
-        if ($this->isInDashboard()) {
+        if ($this->isInProjectDashboard()) {
             $assets = new IncludeAssets(LABEL_BASE_DIR . '/www/assets', LABEL_BASE_URL . '/assets');
 
             $params['javascript_files'][] = $assets->getFileURL('configure-widget.js');
         }
     }
 
-    private function isInDashboard()
+    private function isInProjectDashboard()
     {
         $current_page = new CurrentPage();
 
-        return $current_page->isDashboard();
+        return $current_page->isProjectDashboard();
     }
 }

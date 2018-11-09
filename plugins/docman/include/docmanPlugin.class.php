@@ -126,7 +126,6 @@ class DocmanPlugin extends Plugin
         $this->addHook(Event::PROJECT_ACCESS_CHANGE);
         $this->addHook(Event::SITE_ACCESS_CHANGE);
         $this->addHook(Event::SERVICE_CLASSNAMES);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(NavigationDropdownQuickLinksCollector::NAME);
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
@@ -1140,21 +1139,6 @@ class DocmanPlugin extends Plugin
     private function getUsersUpdater()
     {
         return new UsersUpdater($this->getUsersToNotifyDao());
-    }
-
-    public function burning_parrot_get_stylesheets(array $params)
-    {
-        if ($this->canIncludeStylsheets()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() . '/css/style-' . $variant->getName() . '.css';
-        }
-    }
-
-    private function canIncludeStylsheets()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/plugins/docman/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
     public function collectProjectAdminNavigationPermissionDropdownQuickLinks(NavigationDropdownQuickLinksCollector $quick_links_collector)

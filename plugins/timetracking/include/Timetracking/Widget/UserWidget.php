@@ -21,6 +21,8 @@
 namespace Tuleap\Timetracking\Widget;
 
 use TemplateRendererFactory;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Widget;
 
@@ -79,5 +81,14 @@ class UserWidget extends Widget
         return [
             ['file' => $include_assets->getFileURL('widget-timetracking.js')]
         ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/themes/BurningParrot/assets',
+            TIMETRACKING_BASE_URL . '/themes/BurningParrot/assets'
+        );
+        return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
     }
 }
