@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Admin_Homepage_LogoFinder;
 use Codendi_HTMLPurifier;
 use PFUser;
+use Tuleap\Layout\HomePage\StatisticsCollection;
 use User_LoginPresenter;
 
 class HomePagePresenter
@@ -45,26 +46,29 @@ class HomePagePresenter
     public $is_custom_logo_used;
     public $display_new_account_button;
     public $login_url;
-
     /**
-     * HomePagePresenter constructor.
+     * @var StatisticsCollection
      */
+    public $statistics;
+    public $my_personal_page;
+
     public function __construct(
         $headline,
         PFUser $user,
         $most_secure_url,
         User_LoginPresenter $login,
         $display_new_account_button,
-        $login_url
+        $login_url,
+        StatisticsCollection $statistics_collection
     ) {
-        $this->is_custom_logo_used         = Admin_Homepage_LogoFinder::isCustomLogoUsed();
-        $this->path_custom_logo            = Admin_Homepage_LogoFinder::getCurrentUrl();
-        $this->user                        = $user;
-        $this->user_is_anonymous           = $user->isAnonymous();
-        $this->most_secure_url             = $most_secure_url;
-        $this->login                       = $login;
-        $this->display_new_account_button  = $display_new_account_button;
-        $this->login_url                   = $login_url;
+        $this->is_custom_logo_used        = Admin_Homepage_LogoFinder::isCustomLogoUsed();
+        $this->path_custom_logo           = Admin_Homepage_LogoFinder::getCurrentUrl();
+        $this->user                       = $user;
+        $this->user_is_anonymous          = $user->isAnonymous();
+        $this->most_secure_url            = $most_secure_url;
+        $this->login                      = $login;
+        $this->display_new_account_button = $display_new_account_button;
+        $this->login_url                  = $login_url;
 
         $purifier        = Codendi_HTMLPurifier::instance();
         $welcome_message = $GLOBALS['Language']->getText('homepage', 'welcome_title', \ForgeConfig::get('sys_name'));
@@ -80,5 +84,6 @@ class HomePagePresenter
         $this->forgot_password      = $GLOBALS['Language']->getText('homepage', 'forgot_password');
         $this->not_a_member         = $GLOBALS['Language']->getText('homepage', 'not_a_member');
         $this->my_personal_page     = $GLOBALS['Language']->getText('homepage', 'my_personal_page');
+        $this->statistics           = $statistics_collection;
     }
 }

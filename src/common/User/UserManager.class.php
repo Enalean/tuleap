@@ -133,6 +133,12 @@ class UserManager {
         return $this->getDao()->countAllUsers();
     }
 
+
+    public function countRegisteredUsersBefore($timestamp)
+    {
+        return $this->getDao()->countUserRegisteredBefore($timestamp);
+    }
+
     public function countUsersByStatus($status)
     {
         $dar = $this->getDao()->searchByStatus($status);

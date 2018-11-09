@@ -677,4 +677,15 @@ class ProjectDao extends DataAccessObject {
     {
         return $this->retrieve("SELECT status, count(*) AS project_nb FROM groups GROUP BY status");
     }
+
+    public function countProjectRegisteredBefore($timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT count(*) AS nb FROM groups WHERE register_time >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
 }

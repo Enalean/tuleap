@@ -787,6 +787,17 @@ class UserDao extends DataAccessObject {
         return $row['nb'];
     }
 
+    public function countUserRegisteredBefore($timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT count(*) AS nb FROM user WHERE add_date >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
     public function removeConfirmHash($confirm_hash) {
         $confirm_hash = $this->da->quoteSmart($confirm_hash);
         $sql = "UPDATE user SET confirm_hash = null WHERE confirm_hash=$confirm_hash";

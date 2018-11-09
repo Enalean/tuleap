@@ -917,6 +917,9 @@ msgstr "Pages web de project (Service Site Web)"
 msgid "Project web site"
 msgstr "Site web du projet"
 
+msgid "Projects"
+msgstr "ProjetS"
+
 msgid "Projects created from this template"
 msgstr "Projets créés à partir de ce patron"
 
@@ -1342,6 +1345,9 @@ msgstr "Groupe utilisateur crée, mais impossible de retrouver son Id"
 msgid "User name"
 msgstr "Nom d'utilisateur"
 
+msgid "Users"
+msgstr "Utilisateurs"
+
 msgid "Users group"
 msgstr "Groupe d'utilisateurs"
 
@@ -1612,6 +1618,9 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 
 msgid "back to home page"
 msgstr "Retour à la page d'accueil"
+
+msgid "last month"
+msgstr "le mois dernier"
 
 msgid "my_service"
 msgstr "mon_service"

@@ -849,6 +849,9 @@ msgstr ""
 msgid "Project web site"
 msgstr ""
 
+msgid "Projects"
+msgstr ""
+
 msgid "Projects created from this template"
 msgstr ""
 
@@ -1234,6 +1237,9 @@ msgstr ""
 msgid "User name"
 msgstr ""
 
+msgid "Users"
+msgstr ""
+
 msgid "Users group"
 msgstr ""
 
@@ -1450,6 +1456,9 @@ msgid "[%s] Email change confirmation"
 msgstr ""
 
 msgid "back to home page"
+msgstr ""
+
+msgid "last month"
 msgstr ""
 
 msgid "my_service"
