@@ -28,15 +28,59 @@ class AsynchronousActionsRunner
 {
     const TOPIC = 'tuleap.tracker.artifact';
 
-    public function addListener(WorkerEvent $event)
-    {
-        if ($event->getEventName() === self::TOPIC) {
-            $message = $event->getPayload();
-            $notifier = ActionsRunner::build($event->getLogger());
-            $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($message['artifact_id']);
-            $changeset = $artifact->getChangeset($message['changeset_id']);
+    /**
+     * @var ActionsRunner
+     */
+    private $actions_runner;
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $tracker_artifact_factory;
 
-            $notifier->processAsyncPostCreationActions($changeset);
+    public function __construct(ActionsRunner $actions_runner, Tracker_ArtifactFactory $tracker_artifact_factory)
+    {
+        $this->actions_runner           = $actions_runner;
+        $this->tracker_artifact_factory = $tracker_artifact_factory;
+    }
+
+    public static function addListener(WorkerEvent $event)
+    {
+        if ($event->getEventName() !== self::TOPIC) {
+            return;
         }
+
+        $async_runner = new self(ActionsRunner::build($event->getLogger()), Tracker_ArtifactFactory::instance());
+        $async_runner->process($event);
+    }
+
+    public function process(WorkerEvent $event)
+    {
+        $message = $event->getPayload();
+
+        if (! isset($message['artifact_id'], $message['changeset_id'])) {
+            $event_name = $event->getEventName();
+            $event->getLogger()->warn("The payload for $event_name seems to be malformed, ignoring");
+            $event->getLogger()->debug("Malformed payload for $event_name: " . var_export($event->getPayload(), true));
+            return;
+        }
+
+        $artifact = $this->tracker_artifact_factory->getArtifactById($message['artifact_id']);
+        if ($artifact === null) {
+            $event->getLogger()->info(
+                'Not able to process an event ' . $event->getEventName() . ', the artifact #' . $message['artifact_id'] . ' ' .
+                'can not be found. The artifact might have been deleted.'
+            );
+            return;
+        }
+        $changeset = $artifact->getChangeset($message['changeset_id']);
+        if ($changeset === null) {
+            $event->getLogger()->info(
+                'Not able to process an event ' . $event->getEventName() . ', the changeset #' . $message['changeset_id'] . ' ' .
+                'can not be found.'
+            );
+            return;
+        }
+
+        $this->actions_runner->processAsyncPostCreationActions($changeset);
     }
 }

@@ -36,7 +36,6 @@ use Tuleap\Request\CurrentPage;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDuplicator;
-use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArchiveAndDeleteArtifactTaskBuilder;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletor;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionRemover;
@@ -1546,8 +1545,7 @@ class trackerPlugin extends Plugin {
 
     public function workerEvent(WorkerEvent $event)
     {
-        $async_actions_runner = new AsynchronousActionsRunner();
-        $async_actions_runner->addListener($event);
+        AsynchronousActionsRunner::addListener($event);
 
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), __CLASS__);
 

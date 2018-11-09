@@ -83,7 +83,7 @@ class Tracker_ArtifactFactory {
      *
      * @param int $id the id of the artifact to retrieve
      *
-     * @return Tracker_Artifact the artifact identified by id (null if not found)
+     * @return Tracker_Artifact|null the artifact identified by id (null if not found)
      */
     public function getArtifactById($id) {
         if (!isset($this->artifacts[$id])) {
