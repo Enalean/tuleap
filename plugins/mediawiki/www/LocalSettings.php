@@ -55,6 +55,9 @@ $mw_plugin = $plugin_manager->getPluginByName('mediawiki');
 if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
     die('Mediawiki plugin not available');
 }
+
+define('MW_NO_SESSION', true);
+
 $manager                = $mw_plugin->getMediawikiManager();
 $GLOBALS['mediawiki_dao'] = $manager->getDao();
 $language_manager       = new MediawikiLanguageManager(new MediawikiLanguageDao());
