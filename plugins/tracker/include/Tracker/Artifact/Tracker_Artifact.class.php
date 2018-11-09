@@ -1317,7 +1317,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param int $changeset_id The Id of the changeset to retrieve
      *
-     * @return Tracker_Artifact_Changeset The changeset, or null if not found
+     * @return Tracker_Artifact_Changeset|null The changeset, or null if not found
      */
     public function getChangeset($changeset_id) {
         if (! isset($this->changesets[$changeset_id])) {
