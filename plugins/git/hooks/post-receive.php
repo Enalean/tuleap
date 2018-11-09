@@ -3,7 +3,7 @@
 /**
  * Copyright Enalean (c) 2011-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -30,7 +30,8 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 
-require_once 'pre.php';
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../include/gitPlugin.class.php';
 
 const COUNT_THRESHOLD = 100;
 $exit_status_code     = 0;
