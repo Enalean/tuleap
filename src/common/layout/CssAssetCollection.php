@@ -16,31 +16,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Layout;
 
-class CssAsset
+class CssAssetCollection
 {
-    /** @var IncludeAssets */
-    protected $include_assets;
-    /** @var string */
-    protected $name;
+    /** @var CssAsset[] */
+    private $css_assets = [];
 
-    public function __construct(IncludeAssets $include_assets, $name)
+    public function add(CssAsset $asset)
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
+        if (! isset($this->css_assets[$asset->getPath()])) {
+            $this->css_assets[$asset->getPath()] = $asset;
+        }
     }
 
-    public function getFileURL(ThemeVariation $variant)
+    public function merge(CssAssetCollection $collection)
     {
-        return $this->include_assets->getFileURL($this->name . $variant->getFileColorCondensedSuffix() . '.css');
+        $collection_assets = $collection->getDeduplicatedAssets();
+        foreach ($collection_assets as $asset) {
+            $this->add($asset);
+        }
     }
 
-    public function getPath()
+    /**
+     * @return CssAsset[]
+     */
+    public function getDeduplicatedAssets()
     {
-        return $this->include_assets->getPath($this->name);
+        return array_values($this->css_assets);
     }
 }

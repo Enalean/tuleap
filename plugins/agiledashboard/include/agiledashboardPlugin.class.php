@@ -60,7 +60,6 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\RealTime\NodeJSClient;
-use Tuleap\Request\CurrentPage;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\Artifact\Event\ArtifactsReordered;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
@@ -83,8 +82,8 @@ require_once 'constants.php';
 /**
  * AgileDashboardPlugin
  */
-class AgileDashboardPlugin extends Plugin {
-
+class AgileDashboardPlugin extends Plugin
+{
     const PLUGIN_NAME = 'agiledashboard';
     const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
     const HTTP_CLIENT_UUID = 'HTTP_X_CLIENT_UUID';
@@ -611,7 +610,7 @@ class AgileDashboardPlugin extends Plugin {
         );
 
         $variant = $params['variant'];
-        if ($this->isInDashboard() || $this->isKanbanURL()) {
+        if ($this->isKanbanURL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('kanban-' . $variant->getName() . '.css');
         } else if ($this->isInOverviewTab() || $this->isPlanningV2URL()) {
             $params['stylesheets'][] = $theme_include_assets->getFileURL('scrum-' . $variant->getName() . '.css');
@@ -665,13 +664,6 @@ class AgileDashboardPlugin extends Plugin {
         }
 
         return null;
-    }
-
-    private function isInDashboard()
-    {
-        $current_page = new CurrentPage();
-
-        return $current_page->isDashboard();
     }
 
     private function isAnAgiledashboardRequest() {

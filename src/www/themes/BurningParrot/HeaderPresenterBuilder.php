@@ -20,19 +20,20 @@
 
 namespace Tuleap\Theme\BurningParrot;
 
-use HTTPRequest;
-use PFUser;
 use Event;
 use EventManager;
+use ForgeConfig;
+use HTTPRequest;
+use PFUser;
 use ThemeVariant;
 use ThemeVariantColor;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Layout\ThemeVariation;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
-use ForgeConfig;
 
 class HeaderPresenterBuilder
 {
@@ -63,7 +64,7 @@ class HeaderPresenterBuilder
     /** @var CurrentProjectNavbarInfoPresenter */
     private $current_project_navbar_info_presenter;
 
-    /** @var CssAsset[] */
+    /** @var CssAssetCollection */
     private $css_assets;
 
     public function build(
@@ -82,7 +83,7 @@ class HeaderPresenterBuilder
         array $toolbar,
         array $breadcrumbs,
         $motd,
-        array $css_assets
+        CssAssetCollection $css_assets
     ) {
         $this->navbar_presenter_builder              = $navbar_presenter_builder;
         $this->request                               = $request;
@@ -192,7 +193,7 @@ class HeaderPresenterBuilder
         );
         $stylesheets[] = $core_burning_parrot_css->getFileURL($theme_variation);
 
-        foreach ($this->css_assets as $css_asset) {
+        foreach ($this->css_assets->getDeduplicatedAssets() as $css_asset) {
             $stylesheets[] = $css_asset->getFileURL($theme_variation);
         }
 

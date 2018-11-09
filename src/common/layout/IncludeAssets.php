@@ -46,6 +46,11 @@ class IncludeAssets
         return $this->base_url . '/' . $this->getHashedName($file_name);
     }
 
+    public function getPath($file_name)
+    {
+        return $this->base_url . '/' . $file_name;
+    }
+
     private function getHashedName($file_name)
     {
         if ($this->assets === null) {

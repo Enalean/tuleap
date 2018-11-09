@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,7 @@
 namespace Tuleap\Dashboard\Widget;
 
 use Tuleap\Dashboard\Dashboard;
+use Tuleap\Layout\CssAssetCollection;
 use Widget;
 
 class DashboardWidgetPresenter
@@ -44,6 +45,8 @@ class DashboardWidgetPresenter
     public $javascript_dependencies;
     public $has_custom_title;
     public $purified_custom_title;
+    /** @var CssAssetCollection */
+    public $stylesheet_dependencies;
 
     public function __construct(
         Dashboard $dashboard,
@@ -70,6 +73,7 @@ class DashboardWidgetPresenter
         $this->has_icon       = (bool) $this->icon;
 
         $this->javascript_dependencies = $widget->getJavascriptDependencies();
+        $this->stylesheet_dependencies = $widget->getStylesheetDependencies();
 
         $this->has_actions = $this->has_rss || $can_update_dashboards;
 

@@ -20,7 +20,7 @@
  */
 
 use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\Layout\CssAssetCollection;
 
 /**
 * Widget
@@ -228,6 +228,14 @@ use Tuleap\Dashboard\User\UserDashboardController;
     public function getJavascriptDependencies()
     {
         return array();
+    }
+
+    /**
+     * @return CssAssetCollection
+     */
+    public function getStylesheetDependencies()
+    {
+        return new CssAssetCollection();
     }
 
     public function setDashboardWidgetId($dashboard_widget_id)
