@@ -1,7 +1,7 @@
 #login-openid-or {
     display: block;
     position: relative;
-    height: 100px;
+    height: 50px;
     color: #bbbbbb;
     font-size: 12px;
 
@@ -30,18 +30,10 @@
 
 #login-openid-providers-list {
     > a {
-        display: block;
         width: 50%;
+        height: 58px;
         margin: 0 auto 10px;
-        padding: 18px 5px;
-        font-size: 16px;
-        line-height: normal;
-        box-sizing: border-box;
-
-        > i {
-            margin: 0 3px 0 0;
-            font-size: 18px;
-        }
+        line-height: 58px;
     }
 
     > a:first-child:nth-last-child(1) {

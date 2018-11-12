@@ -547,6 +547,9 @@ msgstr ""
 msgid "Lists the project members."
 msgstr ""
 
+msgid "Login"
+msgstr ""
+
 msgid "Mailing lists (Lists Service)"
 msgstr ""
 

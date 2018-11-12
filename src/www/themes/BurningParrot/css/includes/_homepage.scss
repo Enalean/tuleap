@@ -17,203 +17,150 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-%homepage-section {
-    flex: 1 1 50%;
-}
-
-$homepage-white-color: #ffffff;
-$tlp-theme-homepage-background-color: #f6f6f6;
+$homepage-small-screen-width: 850px;
 
 .homepage-content {
     display: flex;
+    justify-content: center;
     height: 100%;
+    padding: 60px;
+    background-image: linear-gradient(to bottom, $tlp-theme-background-color, $tlp-ui-white 50%);
+
+    @media screen and (max-width: $homepage-small-screen-width) {
+        padding: 40px 20px;
+    }
 }
 
-.homepage-sign-in-section {
-    @extend %homepage-section;
-
+.homepage-welcome-sign-in {
     display: flex;
-    background: $tlp-theme-homepage-background-color;
+    align-items: flex-start;
+    max-width: 1400px;
+
+    @media screen and (max-width: $homepage-small-screen-width) {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
 }
 
-.homepage-create-account-section {
-    @extend %homepage-section;
+.homepage-welcome {
+    flex: 1 1 auto;
+    max-width: 50%;
+    margin: 0 50px 0 0;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    background: $tlp-theme-color;
-    color: $homepage-white-color;
-}
+    @media screen and (max-width: $homepage-small-screen-width) {
+        width: 100%;
+        max-width: none;
+        margin: 0 0 20px;
+        text-align: center;
 
-.homepage-welcome-wrapper {
-    flex: 1 0 auto;
-    width: 100%;
-    padding: 80px 60px 40px;
-}
-
-.homepage-welcome-title {
-    line-height: 35px;
-}
-
-.homepage-headline {
-    width: 100%;
-    margin: 0 0 30px;
-    font-size: 17px;
-    line-height: 30px;
-
-    a {
-        color: $homepage-white-color;
-        text-decoration: underline;
-
-        &:hover {
-            text-decoration: none;
+        > .homepage-welcome-new-account-button {
+            display: none;
         }
     }
 }
 
-.homepage-create-account-button {
-    margin: 0 0 30px;
-    padding: 5px 25px;
-    background: $homepage-white-color;
-    color: $tlp-theme-color;
-}
-
-.homepage-create-account-button-icon {
-    font-size: 18px;
-}
-
-.homepage-screenshots {
-    max-width: 85%;
-    min-height: 1px; // Fix IE11 sorcery
-    margin: auto;
-}
-
-.homepage-sign-in-container {
-    display: flex;
-    flex-direction: column;
-    width: 440px;
-    margin: 0 auto;
-    padding: 50px 20px;
-}
-
-.homepage-logo-container {
-    text-align: center;
-}
-
-.homepage-platform-logo {
+.homepage-welcome-custom-logo {
     width: 250px;
     margin: 0 0 30px;
 }
 
-.homepage-colored-logo {
+.homepage-welcome-standard-logo {
+    margin: 0 0 40px;
+    white-space: nowrap;
+}
+
+.homepage-welcome-standard-logo-tulip {
+    margin: 0 18px 0 0;
     fill: $tlp-theme-color;
 }
 
-%homepage-sign-in-grow {
-    flex: 0 1 auto;
+.homepage-welcome-standard-logo-tuleap {
+    position: relative;
+    top: 8px;
+    fill: $tlp-theme-sidebar-background-color;
 }
 
-.homepage-sign-in {
-    @extend %homepage-sign-in-grow;
-
-    padding: 40px 70px;
-    border-radius: 3px;
-    background: $homepage-white-color;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-
-    .tlp-label {
-        margin: 0 0 5px;
-        color: #9b9b9b;
-        font-size: .8em;
-    }
-
-    .tlp-input {
-        border-color: $tlp-theme-color;
-
-        &::placeholder {
-            color: lighten($tlp-theme-color, 20%);
-        }
-    }
-}
-
-.sign-in-avatar {
-    margin: 0 0 40px;
-    text-align: center;
-}
-
-.sign-in-forgot-password {
-    float: right;
-    color: $tlp-theme-color;
-}
-
-.sign-in-forgot-password,
-.sign-in-register {
-    > a {
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.sign-in-button {
-    height: 50px;
-    padding: 5px 25px;
-}
-
-.sign-in-register {
-    display: block;
-    margin: 60px 0 0;
-    text-align: center;
-}
-
-.homepage-already-signed-in {
-    @extend %homepage-sign-in-grow;
-
-    padding: 40px;
-    border-radius: 3px;
-    background: $homepage-white-color;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
-    text-align: center;
-
-    > .homepage-avatar {
-        margin: 0 0 45px;
-
-        > .avatar > img {
-            width: 75px;
-            height: 75px;
-        }
-    }
-}
-
-.homepage-already-signed-in-welcome {
-    margin: 0 0 40px;
-}
-
-.homepage-already-signed-in-welcome-title {
-    margin: 0 0 10px;
-    color: $tlp-theme-color;
+.homepage-welcome-title {
+    margin: 0 0 30px;
+    color: $tlp-theme-sidebar-background-color;
+    font-size: 30px;
     font-weight: 600;
+    line-height: 38px;
 }
 
-.homepage-user-real-name {
-    display: block;
-    margin: 0 0 5px;
-    color: $tlp-theme-color;
+.homepage-welcome-text {
+    margin: 0 0 30px;
+    color: $tlp-theme-sidebar-background-color;
     font-size: 18px;
+    line-height: 30px;
+
+    > p {
+        margin: 0 0 16px;
+        font-size: 18px;
+        line-height: 30px;
+
+        &:last-child {
+            margin: 0;
+        }
+    }
+}
+
+.homepage-sign-in-wrapper {
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: center;
+}
+
+.homepage-sign-in,
+.homepage-already-signed-in {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    width: 380px;
+    padding: 30px 40px 40px;
+    border: 1px solid $tlp-theme-color;
+    border-radius: 4px;
+    background: $tlp-ui-white;
+    box-shadow: 0 8px 15px 0 transparentize(#000000, .95);
+}
+
+.homepage-sign-in-form {
+    width: 100%;
+
+    > .tlp-form-element > .tlp-input {
+        border-color: $tlp-theme-color;
+    }
+}
+
+.homepage-sign-in-title {
+    margin: 0 0 40px;
+    color: $tlp-theme-color;
+    font-size: 40px;
     font-weight: 400;
-    line-height: 18px;
 }
 
-.homepage-user-login-name {
-    display: block;
-    color: #777777;
-    font-size: 16px;
-    line-height: 16px;
+.homepage-sign-in-button {
+    height: 58px;
+    margin: 20px 0 0;
 }
 
-.homepage-my-personal-page {
-    padding: 5px 25px;
+.homepage-sign-in-register {
+    margin: 30px 0 0;
+}
+
+.homepage-sign-in-forgot-password {
+    text-align: right;
+}
+
+.homepage-already-signed-in > .tlp-avatar-jumbo {
+    margin: 0 0 20px;
+}
+
+.homepage-already-signed-in-title {
+    margin: 0 0 40px;
+    color: $tlp-theme-sidebar-background-color;
+    line-height: 38px;
+    text-align: center;
 }
