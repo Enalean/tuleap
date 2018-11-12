@@ -34,6 +34,7 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
+use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -129,7 +130,8 @@ class DocmanPlugin extends Plugin
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
     }
 
-    public function getHooksAndCallbacks() {
+    public function getHooksAndCallbacks()
+    {
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
             $this->addHook(Statistics_Event::FREQUENCE_STAT_SAMPLE);
@@ -138,6 +140,8 @@ class DocmanPlugin extends Plugin
             $this->addHook(FULLTEXTSEARCH_EVENT_FETCH_ALL_DOCUMENT_SEARCH_TYPES);
             $this->addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
         }
+
+        $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1200,5 +1204,28 @@ class DocmanPlugin extends Plugin
         )->getRank();
 
         $event->addPane($admin_permission_pane, $rank_in_project);
+    }
+
+    /**
+     * @see Event::REST_PROJECT_ADDITIONAL_INFORMATIONS
+     */
+    public function rest_project_additional_informations($params) // phpcs:ignore
+    {
+        /**
+         * @var $project Project
+         */
+        $project = $params['project'];
+        if (! $this->isAllowed($project->getID())) {
+            return;
+        }
+
+        $item_representation_builder = new ItemRepresentationBuilder(new Docman_ItemDao());
+        $item_representation = $item_representation_builder->build($project);
+
+        if (! $item_representation) {
+            return;
+        }
+
+        $params['informations'][$this->getName()]['root_item'] = $item_representation;
     }
 }

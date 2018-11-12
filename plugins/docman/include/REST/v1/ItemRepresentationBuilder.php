@@ -18,7 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
+namespace Tuleap\Docman\REST\v1;
 
-$plugin_manager = PluginManager::instance();
-$plugin_manager->installAndActivate('document');
+use Docman_ItemDao;
+use Project;
+
+class ItemRepresentationBuilder
+{
+    /**
+     * @var ItemDao
+     */
+    private $dao;
+
+    public function __construct(Docman_ItemDao $dao)
+    {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @param Project $project
+     *
+     * @return ItemRepresentation|null
+     */
+    public function build(Project $project)
+    {
+        $result = $this->dao->searchRootIdForGroupId($project->getID());
+
+        if (! $result) {
+            return;
+        }
+
+        return new ItemRepresentation($result);
+    }
+}
