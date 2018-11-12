@@ -87,6 +87,7 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
+use Tuleap\Tracker\Workflow\WorkflowTransitionDisplayController;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -700,10 +701,12 @@ class trackerPlugin extends Plugin {
 
     public function url_verification_instance($params)
     {
+
         $request_uri = $_SERVER['REQUEST_URI'];
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
             strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
-            strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0
+            strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
+            ! preg_match('%^/plugins/tracker/\d+/workflow/%', $request_uri)
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
@@ -1700,6 +1703,13 @@ class trackerPlugin extends Plugin {
                     );
             }
             );
+
+            $r->get('/{tracker_id:\d+}/workflow/transitions', function () {
+                return new WorkflowTransitionDisplayController(
+                    $this->getTrackerFactory(),
+                    new TrackerManager
+                );
+            });
         });
     }
 
