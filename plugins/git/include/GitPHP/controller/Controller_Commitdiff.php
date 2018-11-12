@@ -22,6 +22,10 @@
 namespace Tuleap\Git\GitPHP;
 
 use GitPHP\Commit\CommitPresenter;
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
+use Tuleap\Git\CommitStatus\CommitStatusDAO;
+use Tuleap\Git\CommitStatus\CommitStatusRetriever;
+use UserManager;
 
 class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnoreLine
 {
@@ -149,7 +153,15 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
             (isset($this->params['hashparent']) ? $this->params['hashparent'] : '')
         );
         if ($this->isTuleapBeauGitActivated()) {
-            $commit_presenter = new CommitPresenter($commit, $treediff);
+            $commit_metadata_retriever = new CommitMetadataRetriever(
+                new CommitStatusRetriever(new CommitStatusDAO()),
+                UserManager::instance()
+            );
+            $commit_metadata = $commit_metadata_retriever->getMetadataByRepositoryAndCommits(
+                $this->getTuleapGitRepository(),
+                $commit
+            );
+            $commit_presenter = new CommitPresenter($commit, $commit_metadata[0], $treediff);
             $this->tpl->assign('commit_presenter', $commit_presenter);
         }
         $this->tpl->assign('treediff', $treediff);

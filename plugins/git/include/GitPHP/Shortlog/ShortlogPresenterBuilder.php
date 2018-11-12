@@ -20,51 +20,39 @@
 
 namespace GitPHP\Shortlog;
 
+use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
 use Tuleap\Git\GitPHP\Commit;
-use UserManager;
 
 class ShortlogPresenterBuilder
 {
     /**
-     * @var UserManager
+     * @var CommitMetadataRetriever
      */
-    private $user_manager;
+    private $commit_metadata_retriever;
 
-    public function __construct(UserManager $user_manager)
+    public function __construct(CommitMetadataRetriever $commit_metadata_retriever)
     {
-        $this->user_manager = $user_manager;
+        $this->commit_metadata_retriever = $commit_metadata_retriever;
     }
 
     /**
-     * @param Commit[] $commits
-     *
      * @return ShortlogPresenter
      */
-    public function getShortlogPresenter(array $commits)
+    public function getShortlogPresenter(\GitRepository $repository, Commit ...$commits)
     {
-        $emails = array_reduce(
-            $commits,
-            function (array $emails, Commit $commit) {
-                $emails['authors'][] = $commit->getAuthorEmail();
-                $emails['committers'][] = $commit->getCommitterEmail();
+        $metadata = $this->commit_metadata_retriever->getMetadataByRepositoryAndCommits($repository, ...$commits);
 
-                return $emails;
-            },
-            [
-                'authors' => [],
-                'committers' => []
-            ]
-        );
-        $authors_by_email    = $this->user_manager->getUserCollectionByEmails(array_unique($emails['authors']));
-        $committers_by_email = $this->user_manager->getUserCollectionByEmails(array_unique($emails['committers']));
+        $commit_presenter_iterator = new \MultipleIterator(\MultipleIterator::MIT_NEED_ALL);
+        $commit_presenter_iterator->attachIterator(new \ArrayIterator($commits));
+        $commit_presenter_iterator->attachIterator(new \ArrayIterator($metadata));
 
-        return new ShortlogPresenter(
-            array_map(
-                function (Commit $commit) use ($authors_by_email, $committers_by_email) {
-                    return new ShortlogCommitPresenter($commit, $authors_by_email, $committers_by_email);
-                },
-                $commits
-            )
-        );
+        $commit_presenters = [];
+
+        foreach ($commit_presenter_iterator as list($commit, $metadata)) {
+            $commit_presenter    = new ShortlogCommitPresenter($commit, $metadata);
+            $commit_presenters[] = $commit_presenter;
+        }
+
+        return new ShortlogPresenter($commit_presenters);
     }
 }

@@ -33,22 +33,25 @@ class CommitUserPresenter
     /** @var string */
     public $url;
 
-    public function build($email)
+    private function __construct()
     {
-        $user_manager = \UserManager::instance();
-
-        $this->buildFromTuleapUser($user_manager->getUserByEmail($email));
     }
 
-    public function buildFromTuleapUser(\PFUser $user = null)
+    /**
+     * @return CommitUserPresenter
+     */
+    public static function buildFromTuleapUser(\PFUser $user = null)
     {
-        $user_helper = \UserHelper::instance();
-        $this->is_a_tuleap_user = $user !== null;
-        if ($this->is_a_tuleap_user) {
-            $this->has_avatar   = $user->hasAvatar();
-            $this->avatar_url   = $user->getAvatarUrl();
-            $this->display_name = trim($user_helper->getDisplayNameFromUser($user));
-            $this->url          = $user_helper->getUserUrl($user);
+        $user_presenter                   = new self();
+        $user_presenter->is_a_tuleap_user = $user !== null;
+        if ($user_presenter->is_a_tuleap_user) {
+            $user_helper                  = \UserHelper::instance();
+            $user_presenter->has_avatar   = $user->hasAvatar();
+            $user_presenter->avatar_url   = $user->getAvatarUrl();
+            $user_presenter->display_name = trim($user_helper->getDisplayNameFromUser($user));
+            $user_presenter->url          = $user_helper->getUserUrl($user);
         }
+
+        return $user_presenter;
     }
 }

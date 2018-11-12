@@ -20,6 +20,7 @@
 
 namespace GitPHP\Commit;
 
+use Tuleap\Git\CommitMetadata\CommitMetadata;
 use Tuleap\Git\GitPHP\Commit;
 use Tuleap\Git\GitPHP\FileDiff;
 use Tuleap\Git\GitPHP\TreeDiff;
@@ -52,7 +53,7 @@ class CommitPresenter
     /** @var \Codendi_HTMLPurifier */
     public $purifier;
 
-    public function __construct(Commit $commit, TreeDiff $tree_diff)
+    public function __construct(Commit $commit, CommitMetadata $metadata, TreeDiff $tree_diff)
     {
         $this->commit                      = $commit;
         $this->description                 = $this->commit->getDescription();
@@ -71,11 +72,8 @@ class CommitPresenter
             }
         }
 
-        $this->author = new CommitUserPresenter();
-        $this->author->build($commit->getAuthorEmail());
-
-        $this->committer = new CommitUserPresenter();
-        $this->committer->build($commit->getCommitterEmail());
+        $this->author    = CommitUserPresenter::buildFromTuleapUser($metadata->getAuthor());
+        $this->committer = CommitUserPresenter::buildFromTuleapUser($metadata->getCommitter());
     }
 
     public function getStatusClassname(FileDiff $diff_line)

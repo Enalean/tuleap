@@ -21,8 +21,8 @@
 namespace GitPHP\Shortlog;
 
 use GitPHP\Commit\CommitUserPresenter;
+use Tuleap\Git\CommitMetadata\CommitMetadata;
 use Tuleap\Git\GitPHP\Commit;
-use Tuleap\User\UserEmailCollection;
 
 class ShortlogCommitPresenter
 {
@@ -30,24 +30,26 @@ class ShortlogCommitPresenter
     public $commit;
     /** @var string */
     public $short_id;
-    /** @var CommitUserPresenter */
+    /**
+     * @var CommitUserPresenter
+     */
     public $author;
+    /**
+     * @var CommitUserPresenter
+     */
+    public $committer;
     /** @var string */
     public $commit_date;
 
     public function __construct(
         Commit $commit,
-        UserEmailCollection $authors_by_email,
-        UserEmailCollection $committers_by_email
+        CommitMetadata $commit_metadata
     ) {
         $this->commit   = $commit;
         $this->short_id = substr($commit->GetHash(), 0, 10);
 
-        $this->author = new CommitUserPresenter();
-        $this->author->buildFromTuleapUser($authors_by_email->getUserByEmail($commit->getAuthorEmail()));
-
-        $this->committer = new CommitUserPresenter();
-        $this->committer->buildFromTuleapUser($committers_by_email->getUserByEmail($commit->getCommitterEmail()));
+        $this->author    = CommitUserPresenter::buildFromTuleapUser($commit_metadata->getAuthor());
+        $this->committer = CommitUserPresenter::buildFromTuleapUser($commit_metadata->getCommitter());
 
         $committed_on      = new \DateTimeImmutable('@' . $commit->GetCommitterEpoch());
         $this->commit_date = $committed_on->format($GLOBALS['Language']->getText('system', 'datefmt'));

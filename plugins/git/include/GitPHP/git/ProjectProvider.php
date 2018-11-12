@@ -22,6 +22,7 @@ namespace Tuleap\Git\GitPHP;
 
 class ProjectProvider
 {
+    private $repository;
     private $project;
 
     public function __construct(\GitRepository $repository)
@@ -29,7 +30,8 @@ class ProjectProvider
         $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';
         $project_path = $repository->getFullName() . '.git';
 
-        $this->project = new Project($project_root, $project_path);
+        $this->project     = new Project($project_root, $project_path);
+        $this->repository = $repository;
     }
 
     /**
@@ -38,5 +40,13 @@ class ProjectProvider
     public function GetProject() // @codingStandardsIgnoreLine
     {
         return $this->project;
+    }
+
+    /**
+     * @return \GitRepository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }
