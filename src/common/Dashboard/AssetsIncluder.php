@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,11 @@
 
 namespace Tuleap\Dashboard;
 
+use Tuleap\Dashboard\Widget\DashboardWidgetPresenter;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\Widget\ProjectHeartbeat;
 
-class JavascriptFilesIncluder
+class AssetsIncluder
 {
     /**
      * @var IncludeAssets
@@ -38,26 +39,30 @@ class JavascriptFilesIncluder
     /**
      * @param DashboardPresenter[] $dashboards_presenter
      */
-    public function includeJavascriptFiles(array $dashboards_presenter)
+    public function includeAssets(array $dashboards_presenter)
     {
         $GLOBALS['Response']->includeFooterJavascriptFile($this->include_assets->getFileURL('dashboard.js'));
-        $this->includeJavascriptFilesNeededByWidgets($dashboards_presenter);
+        $this->includeAssetsNeededByWidgets($dashboards_presenter);
     }
 
     /**
      * @param DashboardPresenter[] $dashboards_presenter
      */
-    private function includeJavascriptFilesNeededByWidgets(array $dashboards_presenter)
+    private function includeAssetsNeededByWidgets(array $dashboards_presenter)
     {
         $current_dashboard = $this->getCurrentDashboard($dashboards_presenter);
         if (! $current_dashboard) {
             return;
         }
 
-        $is_unique_dependency_included = array();
+        $is_unique_dependency_included = [];
+        $deduplicated_css_assets = new CssAssetCollection();
         foreach ($current_dashboard->widget_lines as $line) {
             foreach ($line->widget_columns as $column) {
+                /** @var DashboardWidgetPresenter $widget */
                 foreach ($column->widgets as $widget) {
+                    $deduplicated_css_assets->merge($widget->stylesheet_dependencies);
+
                     foreach ($widget->javascript_dependencies as $javascript) {
                         if (isset($javascript['unique-name'])) {
                             if (isset($is_unique_dependency_included[$javascript['unique-name']])) {
@@ -74,6 +79,8 @@ class JavascriptFilesIncluder
                 }
             }
         }
+
+        $GLOBALS['Response']->addCssAssets($deduplicated_css_assets);
     }
 
     /**

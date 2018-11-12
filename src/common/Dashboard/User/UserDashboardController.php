@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All rights reserved
+ * Copyright (c) Enalean, 2017 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use TemplateRendererFactory;
-use Tuleap\Dashboard\JavascriptFilesIncluder;
+use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\NameDashboardAlreadyExistsException;
 use Tuleap\Dashboard\NameDashboardDoesNotExistException;
 use Tuleap\Dashboard\Widget\DashboardWidgetPresenterBuilder;
@@ -77,9 +77,9 @@ class UserDashboardController
      */
     private $widget_minimizor;
     /**
-     * @var JavascriptFilesIncluder
+     * @var AssetsIncluder
      */
-    private $javascript_files_includer;
+    private $assets_includer;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
@@ -91,18 +91,18 @@ class UserDashboardController
         DashboardWidgetPresenterBuilder $widget_presenter_builder,
         WidgetDeletor $widget_deletor,
         WidgetMinimizor $widget_minimizor,
-        JavascriptFilesIncluder $javascript_files_includer
+        AssetsIncluder $assets_includer
     ) {
-        $this->csrf                      = $csrf;
-        $this->retriever                 = $retriever;
-        $this->saver                     = $saver;
-        $this->deletor                   = $deletor;
-        $this->updator                   = $updator;
-        $this->widget_retriever          = $widget_retriever;
-        $this->widget_presenter_builder  = $widget_presenter_builder;
-        $this->widget_deletor            = $widget_deletor;
-        $this->widget_minimizor          = $widget_minimizor;
-        $this->javascript_files_includer = $javascript_files_includer;
+        $this->csrf                     = $csrf;
+        $this->retriever                = $retriever;
+        $this->saver                    = $saver;
+        $this->deletor                  = $deletor;
+        $this->updator                  = $updator;
+        $this->widget_retriever         = $widget_retriever;
+        $this->widget_presenter_builder = $widget_presenter_builder;
+        $this->widget_deletor           = $widget_deletor;
+        $this->widget_minimizor         = $widget_minimizor;
+        $this->assets_includer          = $assets_includer;
     }
 
     /**
@@ -129,6 +129,8 @@ class UserDashboardController
 
         $user_dashboards_presenter = $this->getUserDashboardsPresenter($current_user, $dashboard_id, $user_dashboards);
 
+        $this->assets_includer->includeAssets($user_dashboards_presenter);
+
         $title   = $this->getPageTitle($user_dashboards_presenter, $current_user);
         $purifier = Codendi_HTMLPurifier::instance();
         $GLOBALS['Response']->header(array('title' => $purifier->purify($title)));
@@ -144,8 +146,6 @@ class UserDashboardController
                 $user_dashboards_presenter
             )
         );
-
-        $this->javascript_files_includer->includeJavascriptFiles($user_dashboards_presenter);
         $GLOBALS['Response']->footer(array('without_content' => true));
     }
 

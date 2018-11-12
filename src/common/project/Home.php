@@ -32,7 +32,7 @@ use ForgeConfig;
 use User_ForgeUserGroupPermissionsManager;
 use User_ForgeUserGroupPermissionsDao;
 use Tuleap\Instrument\Collect;
-use Tuleap\Dashboard\JavascriptFilesIncluder;
+use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -106,7 +106,7 @@ class Home implements DispatchableWithRequest
                         new DashboardWidgetPresenterBuilder($widget_factory),
                         new WidgetDeletor($dashboard_widget_dao),
                         new WidgetMinimizor($dashboard_widget_dao),
-                        new JavascriptFilesIncluder(
+                        new AssetsIncluder(
                             new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
                         )
                     ),

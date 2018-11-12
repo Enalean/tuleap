@@ -21,7 +21,7 @@
 
 use Tuleap\Admin\Homepage\NbUsersByStatusBuilder;
 use Tuleap\Admin\Homepage\UserCounterDao;
-use Tuleap\Dashboard\JavascriptFilesIncluder;
+use Tuleap\Dashboard\AssetsIncluder;
 use Tuleap\Dashboard\User\UserDashboardDeletor;
 use Tuleap\Dashboard\User\UserDashboardRouter;
 use Tuleap\Dashboard\User\UserDashboardController;
@@ -72,7 +72,7 @@ $router                     = new UserDashboardRouter(
         new DashboardWidgetPresenterBuilder($widget_factory),
         new WidgetDeletor($dashboard_widget_dao),
         new WidgetMinimizor($dashboard_widget_dao),
-        new JavascriptFilesIncluder(
+        new AssetsIncluder(
             new IncludeAssets(ForgeConfig::get('tuleap_dir').'/src/www/assets', '/assets')
         )
     ),

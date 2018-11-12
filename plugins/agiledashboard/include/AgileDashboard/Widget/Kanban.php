@@ -35,6 +35,9 @@ use TrackerFactory;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportBuilder;
 use Tuleap\AgileDashboard\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\IncludeAssets;
 use Widget;
 
 abstract class Kanban extends Widget
@@ -242,6 +245,18 @@ abstract class Kanban extends Widget
         $provider = new KanbanJavascriptDependenciesProvider();
 
         return $provider->getDependencies();
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $collection = new CssAssetCollection();
+        $theme_include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/themes/BurningParrot/assets',
+            AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
+        );
+
+        $collection->add(new CssAsset($theme_include_assets, 'kanban'));
+        return $collection;
     }
 
     public function hasPreferences($widget_id)
