@@ -222,6 +222,9 @@ msgstr "La valeur du champ ne peux pas être vide"
 msgid "Force notification configuration usage to all users"
 msgstr "Forcer la configuration des notifications à tous les utilisateurs"
 
+msgid "Global Rules"
+msgstr "Règles Globales"
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -313,6 +316,9 @@ msgstr "Me notifier lors de la création d'un nouveau artéfact"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
+
+msgid "Page under construction"
+msgstr "Page en construction"
 
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
@@ -735,6 +741,15 @@ msgstr "Le service tracker est désactivé."
 msgid "Trackers"
 msgstr "Trackers"
 
+msgid "Transitions Rules"
+msgstr "Règles de Transitions"
+
+msgid "Transitions rules configuration"
+msgstr "Configuration des règles de transitions"
+
+msgid "Triggers"
+msgstr "Déclenchements"
+
 msgid "URL"
 msgstr "URL"
 
@@ -792,6 +807,9 @@ msgstr "Le webhook a été mis à jour"
 
 msgid "Webhooks"
 msgstr "Webhooks"
+
+msgid "Workflow"
+msgstr "Workflow"
 
 msgid "You are about to remove the notification. Please confirm your action."
 msgstr ""

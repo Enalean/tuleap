@@ -30,6 +30,9 @@ class Workflow {
     const FUNC_ADMIN_ADD_TRIGGER = 'admin-workflow-add-trigger';
     const FUNC_ADMIN_DELETE_TRIGGER = 'admin-workflow-delete-trigger';
 
+    const BASE_PATH = '/workflow';
+    const TRANSITION_PATH = '/transitions';
+
     public $workflow_id;
     public $tracker_id;
     public $field_id;

@@ -1530,7 +1530,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $breadcrumbs = array(), $title = null) {
         $this->displayAdminItemHeaderWithoutTitle($layout, $item, $breadcrumbs, $title);
 
-        echo '<h1>'. $title .'</h1>';
+        if ($title !== null) {
+            echo '<h1>'. $title .'</h1>';
+        }
     }
 
     private function displayAdminItemHeaderWithoutTitle(
