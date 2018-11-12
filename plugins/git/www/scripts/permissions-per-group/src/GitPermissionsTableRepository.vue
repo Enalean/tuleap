@@ -21,7 +21,7 @@
     <tbody>
         <git-repository-table-simple-permissions
             v-if="! repository.has_fined_grained_permissions && ! is_hidden"
-            v-bind:repositoryPermission="repository"
+            v-bind:repository-permission="repository"
         />
 
         <template v-if="repository.has_fined_grained_permissions && ! is_hidden">
@@ -50,14 +50,14 @@ export default {
         GitRepositoryTableFineGrainedPermissionsRepository,
         GitRepositoryTableFineGrainedPermission
     },
+    props: {
+        repository: Object,
+        filter: String
+    },
     data() {
         return {
             is_hidden: false
         };
-    },
-    props: {
-        repository: Object,
-        filter: String
     },
     watch: {
         filter(new_value) {

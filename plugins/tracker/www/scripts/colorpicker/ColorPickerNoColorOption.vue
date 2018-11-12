@@ -26,7 +26,7 @@
               v-bind:class="{ 'colorpicker-no-color-selected fa fa-check': isSelected }"
         ></span>
         <span class="colorpicker-row-no-color-label"
-            v-translate
+              v-translate
         >No color</span>
     </div>
 </template>

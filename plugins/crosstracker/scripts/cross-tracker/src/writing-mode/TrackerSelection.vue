@@ -28,7 +28,10 @@
                 v-bind:disabled="is_project_select_disabled"
                 v-model="selected_project"
             >
-                <option v-for="project of projects" v-bind:value="project">
+                <option v-for="project of projects"
+                        v-bind:value="project"
+                        v-bind:key="project.id"
+                >
                     {{ project.label }}
                 </option>
             </select>
@@ -48,6 +51,7 @@
                         v-for="tracker of tracker_options"
                         v-bind:value="{ id: tracker.id, label: tracker.label }"
                         v-bind:disabled="tracker.disabled"
+                        v-bind:key="tracker.id"
                     >{{ tracker.label }}</option>
                 </select>
                 <button
@@ -81,13 +85,6 @@ export default {
             is_loader_shown: false
         };
     },
-    watch: {
-        selected_project: function(new_value) {
-            this.selected_tracker = null;
-            this.trackers = [];
-            this.loadTrackers(new_value.id);
-        }
-    },
     computed: {
         please_choose_label() {
             return this.$gettext("Please choose...");
@@ -113,6 +110,16 @@ export default {
                 };
             });
         }
+    },
+    watch: {
+        selected_project: function(new_value) {
+            this.selected_tracker = null;
+            this.trackers = [];
+            this.loadTrackers(new_value.id);
+        }
+    },
+    mounted() {
+        this.loadProjects();
     },
     methods: {
         async loadProjects() {
@@ -151,9 +158,6 @@ export default {
             });
             this.selected_tracker = null;
         }
-    },
-    mounted() {
-        this.loadProjects();
     }
 };
 </script>

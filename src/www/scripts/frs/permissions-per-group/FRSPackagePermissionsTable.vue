@@ -35,12 +35,12 @@ import PackagePermissions from "./FRSPackagePermissionsTablePackage.vue";
 
 export default {
     name: "PackagePermissionsTable",
+    components: {
+        PackagePermissions
+    },
     props: {
         packagePermissions: Array,
         selectedUgroupName: String
-    },
-    components: {
-        PackagePermissions
     }
 };
 </script>

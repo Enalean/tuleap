@@ -31,8 +31,9 @@
                 <span class="breadcrumb-dropdown-item">
                     <a class="breadcrumb-dropdown-link"
                        v-bind:href="document_administration_url"
-                       v-bind:title="document_administration_title">
-                       <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
+                       v-bind:title="document_administration_title"
+                    >
+                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
                     </a>
                 </span>
             </nav>

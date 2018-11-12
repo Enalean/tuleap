@@ -1,25 +1,25 @@
-/*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
- *
- * This file is a part of Tuleap.
- *
- * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Tuleap is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- */
+<!--
+  - Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
 <template>
     <div class="labeled-items-list">
         <div v-if="loading" class="labeled-items-loading"
-            v-bind:class="{ 'error': error !== false }"
+             v-bind:class="{ 'error': error !== false }"
         ></div>
         <div v-if="error !== false" class="tlp-alert-danger labeled-items-error">
             <translate>Please select one or more labels by editing this widget</translate>
@@ -27,13 +27,13 @@
         <div class="empty-pane-text" v-if="empty && ! loading && error === false">
             <translate v-if="are_there_items_user_cannot_see">There are no items you can see</translate>
             <translate v-else
-                v-bind:translate-n="labels_id.length"
-                translate-plural="There isn't any item corresponding to labels"
+                       v-bind:translate-n="labels_id.length"
+                       translate-plural="There isn't any item corresponding to labels"
             >There isn't any item corresponding to label</translate>
         </div>
-        <LabeledItem v-for="item in items"
-                     v-bind:item="item"
-                     v-bind:key="item.html_url"
+        <labeled-item v-for="item in items"
+                      v-bind:item="item"
+                      v-bind:key="item.html_url"
         />
         <div class="labeled-items-list-more" v-if="has_more_items">
             <button class="tlp-button-primary tlp-button-outline" v-on:click="loadMore">

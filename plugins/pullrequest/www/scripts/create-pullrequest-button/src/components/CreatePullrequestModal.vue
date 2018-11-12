@@ -64,7 +64,8 @@
             <button type="submit"
                     class="tlp-button-primary tlp-modal-action"
                     v-on:click="create()"
-                    v-bind:disabled="is_button_disabled">
+                    v-bind:disabled="is_button_disabled"
+            >
                 <i v-bind:class="is_creating_pullrequest_icon_class"></i>
                 <translate>Create the pull request</translate>
             </button>

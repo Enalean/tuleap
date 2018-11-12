@@ -34,7 +34,8 @@
                     <rect class="git-repository-list-empty-rect" width="7.292" height="7.273" x="10.208" y="59.636"/>
                     <g stroke-width="3.024" transform="translate(26 15)">
                         <path stroke-linecap="square"
-                              d="M6.28571429 11.2060041L6.28571429 39.1304348M26.2857143 19.5652174C25.8215873 24.5967868 22.3930159 27.8576564 16 29.3478261 9.93503221 31.2749039 6.88741316 34.5357734 6.85714286 39.1304348"/>
+                              d="M6.28571429 11.2060041L6.28571429 39.1304348M26.2857143 19.5652174C25.8215873 24.5967868 22.3930159 27.8576564 16 29.3478261 9.93503221 31.2749039 6.88741316 34.5357734 6.85714286 39.1304348"
+                        />
                         <ellipse cx="6.286" cy="5.978" rx="4.774" ry="4.466"/>
                         <ellipse cx="25.714" cy="14.674" rx="4.774" ry="4.466"/>
                         <ellipse cx="6.286" cy="44.022" rx="4.774" ry="4.466"/>
@@ -60,9 +61,6 @@ import { getUserIsAdmin } from "../repository-list-presenter.js";
 
 export default {
     name: "NoRepositoryEmptyState",
-    methods: {
-        ...mapActions(["showAddRepositoryModal"])
-    },
     computed: {
         is_admin() {
             return getUserIsAdmin();
@@ -71,6 +69,9 @@ export default {
             return this.isCurrentRepositoryListEmpty && this.isInitialLoadingDoneWithoutError;
         },
         ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"])
+    },
+    methods: {
+        ...mapActions(["showAddRepositoryModal"])
     }
 };
 </script>

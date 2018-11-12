@@ -71,6 +71,9 @@ import { getSVNPermissions } from "./rest-querier.js";
 
 export default {
     name: "SVNPermissions",
+    props: {
+        projectId: String
+    },
     data() {
         return {
             is_loading: false,
@@ -79,8 +82,16 @@ export default {
             error: null
         };
     },
-    props: {
-        projectId: String
+    computed: {
+        displayButtonLoadAll() {
+            return !this.is_loaded && !this.is_loading;
+        },
+        isEmpty() {
+            return this.permissions.length === 0;
+        },
+        hasError() {
+            return this.error !== null;
+        }
     },
     methods: {
         async loadAll() {
@@ -96,17 +107,6 @@ export default {
             } finally {
                 this.is_loading = false;
             }
-        }
-    },
-    computed: {
-        displayButtonLoadAll() {
-            return !this.is_loaded && !this.is_loading;
-        },
-        isEmpty() {
-            return this.permissions.length === 0;
-        },
-        hasError() {
-            return this.error !== null;
         }
     }
 };

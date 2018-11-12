@@ -32,7 +32,8 @@
             {{ get_formatted_aggregated_time(timeData) }}
         </td>
         <td class="tlp-table-cell-actions timetracking-details-link-to-open-modal"
-            v-on:click="show_modal" v-translate>
+            v-on:click="show_modal" v-translate
+        >
             Details
         </td>
         <widget-modal-times
@@ -65,19 +66,19 @@ export default {
     computed: {
         ...mapGetters(["get_formatted_aggregated_time"])
     },
-    methods: {
-        ...mapMutations(["setAddMode"]),
-        show_modal() {
-            this.$store.commit("setCurrentTimes", this.timeData);
-            this.modal_simple_content.toggle();
-        }
-    },
     mounted() {
         const modal = this.$refs.timetracking_modal.$el;
         this.modal_simple_content = createModal(modal);
         this.modal_simple_content.addEventListener("tlp-modal-hidden", () =>
             this.setAddMode(false)
         );
+    },
+    methods: {
+        ...mapMutations(["setAddMode"]),
+        show_modal() {
+            this.$store.commit("setCurrentTimes", this.timeData);
+            this.modal_simple_content.toggle();
+        }
     }
 };
 </script>

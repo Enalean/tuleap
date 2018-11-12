@@ -36,8 +36,7 @@
             v-if="is_loaded"
             v-bind:tracker-permissions="tracker_permissions"
             v-bind:selected-ugroup-name="selectedUgroupName"
-        >
-        </tracker-permissions-table>
+        />
     </section>
 </template>
 <script>

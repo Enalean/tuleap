@@ -48,9 +48,6 @@ import { getUserIsAdmin } from "../repository-list-presenter.js";
 export default {
     name: "ActionBar",
     components: { SelectOwner, ListFilter, DisplayModeSwitcher },
-    methods: {
-        ...mapActions(["showAddRepositoryModal"])
-    },
     computed: {
         show_create_repository_button() {
             return (
@@ -60,6 +57,9 @@ export default {
         },
         ...mapGetters(["isCurrentRepositoryListEmpty", "isInitialLoadingDoneWithoutError"]),
         ...mapState(["is_first_load_done"])
+    },
+    methods: {
+        ...mapActions(["showAddRepositoryModal"])
     }
 };
 </script>

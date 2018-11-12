@@ -29,12 +29,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <i class="tuleap-modal-close close" data-dismiss="modal">×</i>
-                    <move-modal-title />
+                    <move-modal-title/>
                 </div>
                 <div class="modal-body move-artifact-modal-body">
                     <div v-if="is_loading_initial || is_processing_move" class="move-artifact-loader"></div>
                     <div v-if="has_error" class="alert alert-error move-artifact-error">{{ error_message }}</div>
-                    <move-modal-selectors v-show="! is_processing_move" />
+                    <move-modal-selectors v-show="! is_processing_move"/>
                     <dry-run-preview v-if="has_processed_dry_run && ! is_processing_move"/>
                 </div>
                 <div class="modal-footer">

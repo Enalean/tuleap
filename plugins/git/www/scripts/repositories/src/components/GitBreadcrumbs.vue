@@ -21,8 +21,8 @@
     <nav class="breadcrumb">
         <div class="breadcrumb-switchable breadcrumb-item">
             <a class="breadcrumb-link"
-                v-bind:href="repository_list_url"
-                v-bind:title="repositories_title"
+               v-bind:href="repository_list_url"
+               v-bind:title="repositories_title"
             >
                 <i class="breadcrumb-link-icon fa fa-fw tuleap-services-plugin_git"></i>
                 <translate>Git repositories</translate>
@@ -31,15 +31,17 @@
                 <span class="breadcrumb-dropdown-item" v-if="is_admin">
                     <a class="breadcrumb-dropdown-link"
                        v-bind:href="repository_admin_url"
-                       v-bind:title="administration_title">
-                       <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
+                       v-bind:title="administration_title"
+                    >
+                        <i class="fa fa-cog fa-fw"></i> <translate>Administration</translate>
                     </a>
                 </span>
                 <span class="breadcrumb-dropdown-item">
                     <a class="breadcrumb-dropdown-link"
                        v-bind:href="repository_fork_url"
-                       v-bind:title="fork_title">
-                       <i class="fa fa-code-fork fa-fw"></i> <translate>Fork repositories</translate>
+                       v-bind:title="fork_title"
+                    >
+                        <i class="fa fa-code-fork fa-fw"></i> <translate>Fork repositories</translate>
                     </a>
                 </span>
             </nav>

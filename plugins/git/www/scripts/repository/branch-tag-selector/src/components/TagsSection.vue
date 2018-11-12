@@ -64,6 +64,13 @@ export default {
             tags: []
         };
     },
+    watch: {
+        is_displaying_branches(is_displaying_branches) {
+            if (!is_displaying_branches && !this.are_tags_loaded) {
+                this.loadTags();
+            }
+        }
+    },
     methods: {
         async loadTags() {
             try {
@@ -81,13 +88,6 @@ export default {
         },
         url(ref) {
             return this.repository_url + "?" + encodeData({ ...this.url_parameters, hb: ref });
-        }
-    },
-    watch: {
-        is_displaying_branches(is_displaying_branches) {
-            if (!is_displaying_branches && !this.are_tags_loaded) {
-                this.loadTags();
-            }
         }
     }
 };

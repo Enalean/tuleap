@@ -22,7 +22,8 @@
         'tlp-badge-danger tlp-badge-outline': isProjectAdmin,
         'tlp-badge-primary tlp-badge-outline': isStatic,
         'tlp-badge-secondary': isCustom
-    }">
+    }"
+    >
         {{ groupName }}
     </span>
 </template>

@@ -31,13 +31,13 @@
 
         <div class="dropdown-menu" role="menu">
             <color-picker-palette v-if="! is_old_palette_shown"
-                v-on:color-update="setColor"
-                v-bind:current-color="color"
+                                  v-on:color-update="setColor"
+                                  v-bind:current-color="color"
             />
 
 
             <old-color-picker-palette v-if="is_old_palette_shown"
-                v-on:color-update="setColor"
+                                      v-on:color-update="setColor"
             />
 
             <!-- Set transparent when clicked -->
@@ -66,7 +66,7 @@
                type="text"
                size="6"
                autocomplete="off"
-        />
+        >
     </div>
 </template>
 

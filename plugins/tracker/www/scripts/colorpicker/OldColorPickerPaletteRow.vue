@@ -23,6 +23,7 @@
             class="colorpicker-squared-shade"
             v-bind:style="getStyle(shade)"
             v-bind:title="shade"
+            v-bind:key="shade"
             v-on:click="updateColor(shade)"
         ></td>
     </tr>

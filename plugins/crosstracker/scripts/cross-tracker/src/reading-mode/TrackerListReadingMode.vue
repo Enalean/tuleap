@@ -21,7 +21,8 @@
     <div class="cross-tracker-reading-mode-trackers-list">
         <div class="cross-tracker-reading-mode-trackers">
             <div class="cross-tracker-reading-mode-tracker"
-                v-for="{ tracker_label, project_label } of trackers"
+                 v-for="{ id, tracker_label, project_label } of trackers"
+                 v-bind:key="id"
             >
                 <span>{{ tracker_label }}</span>
                 <span class="cross-tracker-reading-mode-tracker-project-name">
@@ -50,6 +51,7 @@ export default {
             const trackers = [...this.readingCrossTrackerReport.getTrackers()];
             return trackers.map(({ tracker, project }) => {
                 return {
+                    id: tracker.id,
                     tracker_label: tracker.label,
                     project_label: project.label
                 };

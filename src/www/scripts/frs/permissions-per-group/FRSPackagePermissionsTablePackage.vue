@@ -53,14 +53,14 @@ import ReleasePermissions from "./FRSPackagePermissionsTablePackageRelease.vue";
 
 export default {
     name: "PackagePermissions",
-    props: {
-        packagePermissions: Array,
-        selectedUgroupName: String
-    },
     components: {
         EmptyState,
         UgroupBadge,
         ReleasePermissions
+    },
+    props: {
+        packagePermissions: Array,
+        selectedUgroupName: String
     },
     computed: {
         has_permissions() {

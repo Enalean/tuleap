@@ -20,8 +20,8 @@
 <template>
     <section class="tlp-pane git-repository-card"
              v-bind:class="{
-                'git-repository-card-two-columns': ! isFolderDisplayMode,
-                'git-repository-in-folder': isFolderDisplayMode && is_in_folder
+                 'git-repository-card-two-columns': ! isFolderDisplayMode,
+                 'git-repository-in-folder': isFolderDisplayMode && is_in_folder
              }"
     >
         <div class="tlp-pane-container">
@@ -31,7 +31,7 @@
                         data-test="repository_name"
                     >
                         <span v-if="is_in_folder && ! isFolderDisplayMode"
-                            class="git-repository-card-path"
+                              class="git-repository-card-path"
                         >
                             {{ folder_path }}
                         </span>
@@ -39,8 +39,8 @@
                     </h2>
                     <div class="git-repository-links-spacer"></div>
                     <pull-request-badge
-                    v-bind:number-pull-request="number_pull_requests"
-                    v-bind:repository-id="repository.id"
+                        v-bind:number-pull-request="number_pull_requests"
+                        v-bind:repository-id="repository.id"
                     />
                     <div class="git-repository-card-last-update">
                         <i class="fa fa-clock-o git-repository-card-last-update-icon"></i>

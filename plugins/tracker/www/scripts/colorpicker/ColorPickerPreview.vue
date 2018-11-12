@@ -19,6 +19,6 @@
 
 <template functional>
     <span v-bind:class="'colorpicker-preview-' + props.color"
-         v-bind:title="props.color"
+          v-bind:title="props.color"
     ></span>
 </template>
