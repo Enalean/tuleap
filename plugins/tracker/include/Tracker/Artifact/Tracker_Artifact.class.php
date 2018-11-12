@@ -671,14 +671,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'show-attachment':
                 if ((int)$request->get('field') && (int)$request->get('attachment')) {
                     $ff = Tracker_FormElementFactory::instance();
-                    //TODO: check that the user can read the field
-                    if ($field = $ff->getFormElementByid($request->get('field'))) {
-                        $method = explode('-', $request->get('func'));
-                        $method = $method[0];
-                        $method .= 'Attachment';
-                        if (method_exists($field, $method)) {
-                            $field->$method($request->get('attachment'));
-                        }
+                    /**
+                     * @var $field Tracker_FormElement_Field_File
+                     */
+                    $field = $ff->getFormElementById($request->get('field'));
+                    if ($field === null || ! $field->userCanRead($current_user)) {
+                        $GLOBALS['Response']->addFeedback(
+                            Feedback::ERROR,
+                            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied')
+                        );
+                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. urlencode($this->getTrackerId()));
+                    }
+                    if ($request->get('func') === 'show-attachment') {
+                        $field->showAttachment($request->get('attachment'));
+                    } elseif ($request->get('func') === 'preview-attachment') {
+                        $field->previewAttachment($request->get('attachment'));
                     }
                 }
                 break;
