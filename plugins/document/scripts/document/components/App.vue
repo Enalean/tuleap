@@ -24,13 +24,13 @@
             <error-message/>
             <document-spinner/>
             <div class="empty-page" v-if="has_loaded_without_error">
-                <empty-docman-svg/>
+                <div class="empty-page-illustration">
+                    <empty-docman-svg/>
+                </div>
                 <p class="empty-page-text">
-                    <translate>There is no document here.</translate>
-                    <br>
-                    <translate>You should start by adding a new one.</translate>
+                    <translate>It's time to add new documents!</translate>
                 </p>
-                <button type="button" class="tlp-button-primary" disabled>
+                <button type="button" class="tlp-button-primary tlp-button-large" disabled>
                     <i class="fa fa-plus tlp-button-icon"></i>
                     <translate>New document</translate>
                 </button>
