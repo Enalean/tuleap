@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Document\REST\v1;
+namespace Tuleap\Docman\REST\v1;
 
 class ItemRepresentation
 {

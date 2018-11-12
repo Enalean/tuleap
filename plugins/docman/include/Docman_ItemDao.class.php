@@ -668,7 +668,8 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function searchRootIdForGroupId($group_id) {
+    public function searchRootIdForGroupId($group_id)
+    {
         $sql = sprintf('SELECT item_id FROM plugin_docman_item WHERE parent_id = 0 '.
             ' AND group_id = %s ',
             $this->da->quoteSmart($group_id)
