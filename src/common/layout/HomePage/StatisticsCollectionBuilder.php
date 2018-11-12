@@ -59,17 +59,17 @@ class StatisticsCollectionBuilder
 
     private function countAllUsers()
     {
-        return $this->user_manager->countAllUsers();
+        return $this->user_manager->countAllAliveUsers();
     }
 
     private function countUsersRegisteredLastMonth($timestamp)
     {
-        return $this->user_manager->countRegisteredUsersBefore($timestamp);
+        return $this->user_manager->countAliveRegisteredUsersBefore($timestamp);
     }
 
     private function countAllProjects()
     {
-        $dar = $this->project_manager->getAllProjectsRows(0, 0);
+        $dar = $this->project_manager->getAllProjectsRows(0, 0, [\Project::STATUS_ACTIVE]);
 
         return $dar['numrows'];
     }

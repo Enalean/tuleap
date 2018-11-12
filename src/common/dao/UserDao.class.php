@@ -787,11 +787,20 @@ class UserDao extends DataAccessObject {
         return $row['nb'];
     }
 
-    public function countUserRegisteredBefore($timestamp)
+    public function countAllAliveUsers()
+    {
+        $sql = "SELECT count(*) AS nb FROM user WHERE status IN ('A', 'R')";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
+    public function countAliveUsersRegisteredBefore($timestamp)
     {
         $timestamp = $this->da->escapeInt($timestamp);
 
-        $sql = "SELECT count(*) AS nb FROM user WHERE add_date >= $timestamp";
+        $sql = "SELECT count(*) AS nb FROM user WHERE add_date >= $timestamp AND status IN ('A', 'R')";
 
         $row = $this->retrieve($sql)->getRow();
 
