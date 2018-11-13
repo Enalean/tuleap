@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #, php-format
 msgid "%s has been created"
@@ -719,6 +719,9 @@ msgid ""
 msgstr ""
 "Les permissions des configurations de tracker et celles des artéfacts ne "
 "sont pas listées"
+
+msgid "Tracker does not exist"
+msgstr "L'outil de suivi n'existe pas."
 
 msgid "Tracker global admininistration"
 msgstr "Administration globale des outils de suivi"

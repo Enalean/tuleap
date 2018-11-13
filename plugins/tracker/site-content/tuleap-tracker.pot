@@ -614,6 +614,9 @@ msgid ""
 "Tracker configuration permission and artifacts permissions are not listed."
 msgstr ""
 
+msgid "Tracker does not exist"
+msgstr ""
+
 msgid "Tracker global admininistration"
 msgstr ""
 
