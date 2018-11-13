@@ -27,7 +27,7 @@ export default {
     computed: {
         ...mapState({
             can_show_spinner: state =>
-                state.error_message !== null && state.is_loading_root_document
+                state.error_message === null && state.is_loading_root_document
         })
     }
 };
