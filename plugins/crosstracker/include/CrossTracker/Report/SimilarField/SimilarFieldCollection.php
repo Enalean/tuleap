@@ -23,26 +23,63 @@ namespace Tuleap\CrossTracker\Report\SimilarField;
 use Tracker_Artifact;
 use Tracker_FormElement_Field;
 
-class SimilarFieldCollection
+class SimilarFieldCollection implements \IteratorAggregate
 {
-    /** @var int[] */
-    private $similar_fields;
-
     /**
-     * @param Tracker_FormElement_Field[] $similar_fields
+     * @var SimilarFieldCandidate[]
      */
-    public function __construct(array $similar_fields)
+    private $similar_candidates;
+    private $similar_fields_sorted_by_name_and_tracker_id;
+
+    public function __construct(SimilarFieldCandidate ...$candidates)
     {
-        $this->similar_fields = $similar_fields;
+        $this->similar_candidates = $this->filterCandidatesWithLessThanTwoTrackers(...$candidates);
     }
 
     /**
-     * @param Tracker_FormElement_Field $field
-     * @param int                       $tracker_id
+     * @return mixed[]
      */
-    public function addField(Tracker_FormElement_Field $field, $tracker_id)
+    private function filterCandidatesWithLessThanTwoTrackers(SimilarFieldCandidate ...$candidates)
     {
-        $this->similar_fields[$field->getName()][$tracker_id] = $field;
+        $count_of_trackers = $this->countTrackersWithSameNameAndSameTypeFields(...$candidates);
+        return array_filter(
+            $candidates,
+            function (SimilarFieldCandidate $field) use ($count_of_trackers) {
+                $count_key = $this->getCountKey($field);
+                return $count_of_trackers[$count_key] > 1;
+            }
+        );
+    }
+
+    /**
+     * @return int[]
+     */
+    private function countTrackersWithSameNameAndSameTypeFields(SimilarFieldCandidate ...$candidates)
+    {
+        return array_reduce(
+            $candidates,
+            function ($accumulator, $row) {
+                $count_key = $this->getCountKey($row);
+                if (! isset($accumulator[$count_key])) {
+                    $accumulator[$count_key] = 1;
+                } else {
+                    $accumulator[$count_key]++;
+                }
+
+                return $accumulator;
+            },
+            []
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getCountKey(SimilarFieldCandidate $candidate)
+    {
+        $field_name = $candidate->getField()->getName();
+        $field_type = $candidate->getType();
+        return $field_type . '/' . $field_name;
     }
 
     /**
@@ -50,7 +87,8 @@ class SimilarFieldCollection
      */
     public function getFieldNames()
     {
-        return array_keys($this->similar_fields);
+        $this->sortSimilarFieldsByNameAndTrackerIDIfNeeded();
+        return array_keys($this->similar_fields_sorted_by_name_and_tracker_id);
     }
 
     /**
@@ -60,9 +98,31 @@ class SimilarFieldCollection
      */
     public function getField(Tracker_Artifact $artifact, $field_name)
     {
-        if (! isset($this->similar_fields[$field_name][$artifact->getTrackerId()])) {
+        $this->sortSimilarFieldsByNameAndTrackerIDIfNeeded();
+        if (! isset($this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$artifact->getTrackerId()])) {
             return null;
         }
-        return $this->similar_fields[$field_name][$artifact->getTrackerId()];
+        return $this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$artifact->getTrackerId()];
+    }
+
+    private function sortSimilarFieldsByNameAndTrackerIDIfNeeded()
+    {
+        if ($this->similar_fields_sorted_by_name_and_tracker_id !== null) {
+            return;
+        }
+        $this->similar_fields_sorted_by_name_and_tracker_id = [];
+        foreach ($this->similar_candidates as $similar_field) {
+            $field      = $similar_field->getField();
+            $field_name = $field->getName();
+            if (! isset($this->similar_fields_sorted_by_name_and_tracker_id[$field_name])) {
+                $this->similar_fields_sorted_by_name_and_tracker_id[$field_name] = [];
+            }
+            $this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$field->getTrackerId()] = $field;
+        }
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->similar_candidates);
     }
 }

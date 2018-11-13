@@ -149,7 +149,7 @@ class CSVExportController implements DispatchableWithRequest
                 $limit,
                 $offset
             );
-            $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report);
+            $similar_fields = $this->similar_fields_matcher->getSimilarFieldsCollection($report, $current_user);
             return $this->csv_representation_factory->buildRepresentations(
                 $collection,
                 $current_user,

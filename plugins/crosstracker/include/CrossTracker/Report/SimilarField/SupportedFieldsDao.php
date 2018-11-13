@@ -29,10 +29,7 @@ class SupportedFieldsDao extends DataAccessObject
     {
         $tracker_ids_statement = EasyStatement::open()->in('tracker_field.tracker_id IN (?*)', $tracker_ids);
 
-        $sql = "SELECT tracker_field.tracker_id,
-                    tracker_field.id AS field_id,
-                    tracker_field.name,
-                    tracker_field.formElement_type AS type
+        $sql = "SELECT tracker_field.*
                 FROM tracker_field
                      JOIN tracker ON (tracker_field.tracker_id = tracker.id)
                      JOIN groups ON (groups.group_id = tracker.group_id)
