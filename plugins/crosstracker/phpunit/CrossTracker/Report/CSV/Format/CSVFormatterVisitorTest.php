@@ -111,4 +111,13 @@ class CSVFormatterVisitorTest extends TestCase
 
         $this->assertEquals(60.1342, $result);
     }
+
+    public function testVisitEmptyValue()
+    {
+        $empty_value = new EmptyValue();
+
+        $result = $empty_value->accept($this->visitor, $this->parameters);
+
+        $this->assertEquals('', $result);
+    }
 }

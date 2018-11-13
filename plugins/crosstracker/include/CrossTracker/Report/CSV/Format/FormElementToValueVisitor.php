@@ -49,10 +49,13 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 {
     /** @var \Tracker_Artifact_ChangesetValue */
     private $changeset_value;
+    /** @var BindToValueVisitor */
+    private $bind_visitor;
 
-    public function __construct(\Tracker_Artifact_ChangesetValue $changeset_value)
+    public function __construct(\Tracker_Artifact_ChangesetValue $changeset_value, BindToValueVisitor $bind_visitor)
     {
         $this->changeset_value = $changeset_value;
+        $this->bind_visitor    = $bind_visitor;
     }
 
     public function visitArtifactLink(Tracker_FormElement_Field_ArtifactLink $field)
@@ -119,7 +122,8 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
     {
-        throw new RuntimeException("Selectbox field is not supported for similar fields matching.");
+        $bind = $field->getBind();
+        return $bind->accept($this->bind_visitor, new BindToValueParameters($field, $this->changeset_value));
     }
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field)

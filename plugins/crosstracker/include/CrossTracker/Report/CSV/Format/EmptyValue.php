@@ -20,28 +20,10 @@
 
 namespace Tuleap\CrossTracker\Report\CSV\Format;
 
-interface FormatterVisitor
+class EmptyValue implements ValueVisitable
 {
-    /**
-     * @return string
-     */
-    public function visitDateValue(DateValue $date_value, FormatterParameters $parameters);
-
-    /**
-     * @return string
-     */
-    public function visitTextValue(TextValue $text_value, FormatterParameters $parameters);
-
-    /**
-     * @return string
-     */
-    public function visitUserValue(UserValue $user_value, FormatterParameters $parameters);
-
-    /**
-     * @return string
-     */
-    public function visitNumericValue(NumericValue $numeric_value, FormatterParameters $parameters);
-
-    /** @return string */
-    public function visitEmptyValue(EmptyValue $empty_value, FormatterParameters $parameters);
+    public function accept(FormatterVisitor $visitor, FormatterParameters $parameters)
+    {
+        return $visitor->visitEmptyValue($this, $parameters);
+    }
 }

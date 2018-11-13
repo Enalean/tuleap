@@ -26,6 +26,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_ChangesetValue;
+use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
@@ -42,6 +43,12 @@ class SimilarFieldsFormatterTest extends TestCase
     private $similar_fields;
     /** @var SimilarFieldsFormatter */
     private $formatter;
+    /** @var Mockery\MockInterface | BindToValueVisitor */
+    private $bind_to_value_visitor;
+    /** @var Mockery\MockInterface | \Tracker_Artifact */
+    private $artifact;
+    /** @var Mockery\MockInterface | \Tracker_Artifact_Changeset */
+    private $last_changeset;
 
     protected function setUp()
     {
@@ -51,21 +58,22 @@ class SimilarFieldsFormatterTest extends TestCase
         $this->parameters     = Mockery::mock(FormatterParameters::class);
 
         $this->csv_formatter_visitor = Mockery::mock(CSVFormatterVisitor::class);
+        $this->bind_to_value_visitor = Mockery::mock(BindToValueVisitor::class);
         $this->formatter             = new SimilarFieldsFormatter(
-            $this->csv_formatter_visitor
+            $this->csv_formatter_visitor,
+            $this->bind_to_value_visitor
+        );
+        $this->artifact              = Mockery::mock(\Tracker_Artifact::class);
+        $this->last_changeset        = Mockery::mock(\Tracker_Artifact_Changeset::class);
+        $this->artifact->shouldReceive(
+            [
+                'getLastChangeset' => $this->last_changeset
+            ]
         );
     }
 
     public function testFormatSimilarFields()
     {
-        $artifact       = Mockery::mock(\Tracker_Artifact::class);
-        $last_changeset = Mockery::mock(\Tracker_Artifact_Changeset::class);
-        $artifact->shouldReceive(
-            [
-                'getLastChangeset' => $last_changeset
-            ]
-        );
-
         $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('accept')->passthru();
 
@@ -88,13 +96,13 @@ class SimilarFieldsFormatterTest extends TestCase
             ]
         );
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$artifact, 'pentarchical'])->andReturn($string_field);
+            ->withArgs([$this->artifact, 'pentarchical'])->andReturn($string_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$artifact, 'semestrial'])->andReturn($text_field);
+            ->withArgs([$this->artifact, 'semestrial'])->andReturn($text_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$artifact, 'overimaginative'])->andReturn($float_field);
+            ->withArgs([$this->artifact, 'overimaginative'])->andReturn($float_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$artifact, 'lithocenosis'])->andReturn($date_field);
+            ->withArgs([$this->artifact, 'lithocenosis'])->andReturn($date_field);
 
         $string_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $string_changeset_value->shouldReceive('getValue')->andReturn('safari');
@@ -108,10 +116,10 @@ class SimilarFieldsFormatterTest extends TestCase
         $date_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Date::class);
         $date_changeset_value->shouldReceive('getTimestamp')->andReturn(1541436176);
 
-        $last_changeset->shouldReceive('getValue')->withArgs([$string_field])->andReturn($string_changeset_value);
-        $last_changeset->shouldReceive('getValue')->withArgs([$text_field])->andReturn($text_changeset_value);
-        $last_changeset->shouldReceive('getValue')->withArgs([$float_field])->andReturn($float_changeset_value);
-        $last_changeset->shouldReceive('getValue')->withArgs([$date_field])->andReturn($date_changeset_value);
+        $this->last_changeset->shouldReceive('getValue')->withArgs([$string_field])->andReturn($string_changeset_value);
+        $this->last_changeset->shouldReceive('getValue')->withArgs([$text_field])->andReturn($text_changeset_value);
+        $this->last_changeset->shouldReceive('getValue')->withArgs([$float_field])->andReturn($float_changeset_value);
+        $this->last_changeset->shouldReceive('getValue')->withArgs([$date_field])->andReturn($date_changeset_value);
 
         $formatted_string_field = '"safari"';
         $formatted_text_field   = '"inappendiculate gas pearly"';
@@ -125,7 +133,7 @@ class SimilarFieldsFormatterTest extends TestCase
         $this->csv_formatter_visitor->shouldReceive('visitNumericValue')->andReturn($formatted_float_field);
         $this->csv_formatter_visitor->shouldReceive('visitDateValue')->andReturn($formatted_date_field);
 
-        $result = $this->formatter->formatSimilarFields($artifact, $this->similar_fields, $this->parameters);
+        $result = $this->formatter->formatSimilarFields($this->artifact, $this->similar_fields, $this->parameters);
 
         $this->assertEquals([
             $formatted_string_field,
@@ -133,5 +141,33 @@ class SimilarFieldsFormatterTest extends TestCase
             $formatted_float_field,
             $formatted_date_field
         ], $result);
+    }
+
+    public function testItReturnsEmptyValueWhenTheFieldIsNotPresent()
+    {
+        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['didactics']);
+        $this->similar_fields->shouldReceive('getField')
+            ->withArgs([$this->artifact, 'didactics'])->andReturn(null);
+
+        $result = $this->formatter->formatSimilarFields($this->artifact, $this->similar_fields, $this->parameters);
+
+        $this->assertEquals([''], $result);
+    }
+
+    public function testItReturnsEmptyValueWhenTheFieldHasNoValue()
+    {
+        $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
+        $float_field->shouldNotReceive('accept');
+
+        $this->last_changeset->shouldReceive('getValue')
+            ->with($float_field)->andReturn(null);
+
+        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['isonomous']);
+        $this->similar_fields->shouldReceive('getField')
+            ->withArgs([$this->artifact, 'isonomous'])->andReturn($float_field);
+
+        $result = $this->formatter->formatSimilarFields($this->artifact, $this->similar_fields, $this->parameters);
+
+        $this->assertEquals([''], $result);
     }
 }

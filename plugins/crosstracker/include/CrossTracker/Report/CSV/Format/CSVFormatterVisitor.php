@@ -20,6 +20,7 @@
 
 namespace Tuleap\CrossTracker\Report\CSV\Format;
 
+use Tuleap\CrossTracker\Report\CSV\CSVRepresentation;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 
 class CSVFormatterVisitor implements FormatterVisitor
@@ -35,7 +36,7 @@ class CSVFormatterVisitor implements FormatterVisitor
     {
         $date = $date_value->getValue();
         if ($date === null) {
-            return '';
+            return CSVRepresentation::CSV_EMPTY_VALUE;
         }
         return $this->date_formatter->formatDateForCSVForUser(
             $parameters->getUser(),
@@ -55,7 +56,7 @@ class CSVFormatterVisitor implements FormatterVisitor
     {
         $user = $user_value->getValue();
         if ($user === null) {
-            return '';
+            return CSVRepresentation::CSV_EMPTY_VALUE;
         }
         return $user->getUserName();
     }
@@ -63,5 +64,10 @@ class CSVFormatterVisitor implements FormatterVisitor
     public function visitNumericValue(NumericValue $numeric_value, FormatterParameters $parameters)
     {
         return $numeric_value->getValue();
+    }
+
+    public function visitEmptyValue(EmptyValue $empty_value, FormatterParameters $parameters)
+    {
+        return CSVRepresentation::CSV_EMPTY_VALUE;
     }
 }
