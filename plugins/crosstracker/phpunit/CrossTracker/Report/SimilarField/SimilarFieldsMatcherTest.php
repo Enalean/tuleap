@@ -38,6 +38,10 @@ class SimilarFieldsMatcherTest extends TestCase
     private $form_element_factory;
     /** @var SimilarFieldsMatcher */
     private $matcher;
+    /**
+     * @var Mockery\MockInterface
+     */
+    private $user;
     /** @var Mockery\MockInterface */
     private $report;
 
@@ -47,92 +51,57 @@ class SimilarFieldsMatcherTest extends TestCase
         $this->similar_fields_dao   = Mockery::mock(SupportedFieldsDao::class);
         $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
         $this->report               = Mockery::mock(CrossTrackerReport::class);
+        $this->user                 = Mockery::mock(\PFUser::class);
         $this->matcher              = new SimilarFieldsMatcher($this->similar_fields_dao, $this->form_element_factory);
     }
 
-    public function testItKeepsFieldsWithTheSameNameAndTypeInAtLeastTwoTrackers()
+    public function testMatchingFieldsAreRetrieved()
     {
-        $this->report->shouldReceive('getTrackerIds')->andReturn([91, 26, 32]);
-        $first_row   = ['tracker_id' => 91, 'field_id' => 712, 'name' => 'alternator', 'type' => 'string'];
-        $second_row  = ['tracker_id' => 36, 'field_id' => 994, 'name' => 'alternator', 'type' => 'string'];
-        $third_row   = ['tracker_id' => 32, 'field_id' => 685, 'name' => 'alternator', 'type' => 'string'];
-        $fourth_row  = ['tracker_id' => 91, 'field_id' => 343, 'name' => 'acroscleriasis', 'type' => 'sb'];
-        $fifth_row   = ['tracker_id' => 32, 'field_id' => 285, 'name' => 'acroscleriasis', 'type' => 'sb'];
+        $this->report->shouldReceive('getTrackerIds')->andReturn([91, 26]);
+        $first_field_row  = ['formElement_type' => 'string'];
+        $second_field_row = ['formElement_type' => 'string'];
         $this->similar_fields_dao->shouldReceive('searchByTrackerIds')
             ->andReturn(
                 [
-                    $first_row,
-                    $second_row,
-                    $third_row,
-                    $fourth_row,
-                    $fifth_row
+                    $first_field_row,
+                    $second_field_row
                 ]
             );
-        $first_field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $first_field->shouldReceive('getName')->andReturn('alternator');
-        $second_field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $second_field->shouldReceive('getName')->andReturn('alternator');
-        $third_field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $third_field->shouldReceive('getName')->andReturn('alternator');
-        $fourth_field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $fourth_field->shouldReceive('getName')->andReturn('acroscleriasis');
-        $fifth_field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $fifth_field->shouldReceive('getName')->andReturn('acroscleriasis');
-        $this->form_element_factory->shouldReceive('getFormElementFieldById')
-            ->withArgs([712])->andReturn($first_field);
-        $this->form_element_factory->shouldReceive('getFormElementFieldById')
-            ->withArgs([994])->andReturn($second_field);
-        $this->form_element_factory->shouldReceive('getFormElementFieldById')
-            ->withArgs([685])->andReturn($third_field);
-        $this->form_element_factory->shouldReceive('getFormElementFieldById')
-            ->withArgs([343])->andReturn($fourth_field);
-        $this->form_element_factory->shouldReceive('getFormElementFieldById')
-            ->withArgs([285])->andReturn($fifth_field);
 
-        $result = $this->matcher->getSimilarFieldsCollection($this->report);
+        $first_field  = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $first_field->shouldReceive('getName')->andReturn('field_name');
+        $first_field->shouldReceive('userCanRead')->andReturn(true);
+        $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $second_field->shouldReceive('getName')->andReturn('field_name');
+        $second_field->shouldReceive('userCanRead')->andReturn(true);
+        $this->form_element_factory->shouldReceive('getCachedInstanceFromRow')
+            ->andReturn($first_field, $second_field);
 
-        $expected = new SimilarFieldCollection(
-            [
-                'alternator'     => [
-                    91 => $first_field,
-                    36 => $second_field,
-                    32 => $third_field
-                ],
-                'acroscleriasis' => [
-                    91 => $fourth_field,
-                    32 => $fifth_field
+        $this->assertCount(2, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
+    }
+
+    public function testMatchingFieldsWithoutEnoughPermissionsAreLeftOut()
+    {
+        $this->report->shouldReceive('getTrackerIds')->andReturn([91, 26]);
+        $first_field_row  = ['formElement_type' => 'string'];
+        $second_field_row = ['formElement_type' => 'string'];
+        $this->similar_fields_dao->shouldReceive('searchByTrackerIds')
+            ->andReturn(
+                [
+                    $first_field_row,
+                    $second_field_row
                 ]
-            ]
-        );
+            );
 
-        $this->assertEquals($expected, $result);
-    }
+        $first_field  = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $first_field->shouldReceive('getName')->andReturn('field_name');
+        $first_field->shouldReceive('userCanRead')->andReturn(true);
+        $second_field = \Mockery::mock(\Tracker_FormElement_Field::class);
+        $second_field->shouldReceive('getName')->andReturn('field_name');
+        $second_field->shouldReceive('userCanRead')->andReturn(false);
+        $this->form_element_factory->shouldReceive('getCachedInstanceFromRow')
+            ->andReturn($first_field, $second_field);
 
-    public function testItFiltersOutFieldsInOnlyOneTracker()
-    {
-        $this->report->shouldReceive('getTrackerIds')->andReturn([87, 85]);
-        $first_row  = ['tracker_id' => 87, 'field_id' => 811, 'name' => 'archegonium', 'type' => 'int'];
-        $second_row = ['tracker_id' => 85, 'field_id' => 398, 'name' => 'Cassiepeia', 'type' => 'sb'];
-        $this->similar_fields_dao->shouldReceive('searchByTrackerIds')->andReturns([$first_row, $second_row]);
-
-        $result = $this->matcher->getSimilarFieldsCollection($this->report);
-
-        $expected = new SimilarFieldCollection([]);
-
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testItFiltersOutFieldsWithTheSameNameButNotTheSameType()
-    {
-        $this->report->shouldReceive('getTrackerIds')->andReturn([89,98]);
-        $first_row = ['tracker_id' => 89, 'field_id' => 994, 'name' => 'floriculturally', 'type' => 'sb'];
-        $second_row = ['tracker_id' => 98, 'field_id' => 811, 'name' => 'floriculturally', 'type' => 'rb'];
-        $this->similar_fields_dao->shouldReceive('searchByTrackerIds')->andReturns([$first_row, $second_row]);
-
-        $result = $this->matcher->getSimilarFieldsCollection($this->report);
-
-        $expected = new SimilarFieldCollection([]);
-
-        $this->assertEquals($expected, $result);
+        $this->assertCount(0, $this->matcher->getSimilarFieldsCollection($this->report, $this->user));
     }
 }

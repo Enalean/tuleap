@@ -39,63 +39,24 @@ class SimilarFieldsMatcher
      * @param CrossTrackerReport $report
      * @return SimilarFieldCollection
      */
-    public function getSimilarFieldsCollection(CrossTrackerReport $report)
+    public function getSimilarFieldsCollection(CrossTrackerReport $report, \PFUser $user)
     {
         $rows = $this->similar_fields_dao->searchByTrackerIds($report->getTrackerIds());
 
-        $filtered_rows = $this->filterRowsWithLessThanTwoTrackers($rows);
+        $similar_field_candidates = [];
+        foreach ($rows as $row) {
+            $field                      = $this->form_element_factory->getCachedInstanceFromRow($row);
+            $similar_field_candidates[] = new SimilarFieldCandidate($row['formElement_type'], $field);
+        }
+        $similar_fields_without_permissions_verification = new SimilarFieldCollection(...$similar_field_candidates);
 
-        $collection = new SimilarFieldCollection([]);
-        foreach ($filtered_rows as $row) {
-            $field = $this->form_element_factory->getFormElementFieldById($row['field_id']);
-            $collection->addField($field, $row['tracker_id']);
+        $similar_field_candidates_with_permissions_verification = [];
+        foreach ($similar_fields_without_permissions_verification as $similar_field_candidate) {
+            if ($similar_field_candidate->getField()->userCanRead($user)) {
+                $similar_field_candidates_with_permissions_verification[] = $similar_field_candidate;
+            }
         }
 
-        return $collection;
-    }
-
-    /**
-     * @param mixed[] $rows
-     * @return mixed[]
-     */
-    private function filterRowsWithLessThanTwoTrackers($rows)
-    {
-        $count_of_trackers = $this->countTrackersWithSameNameAndSameTypeFields($rows);
-        return array_filter(
-            $rows,
-            function ($row) use ($count_of_trackers) {
-                $count_key = $this->getCountKey($row);
-                return $count_of_trackers[$count_key] > 1;
-            }
-        );
-    }
-
-    /**
-     * @param mixed[] $rows
-     * @return int[]
-     */
-    private function countTrackersWithSameNameAndSameTypeFields($rows)
-    {
-        return array_reduce(
-            $rows,
-            function ($accumulator, $row) {
-                $count_key = $this->getCountKey($row);
-                if (! isset($accumulator[$count_key])) {
-                    $accumulator[$count_key] = 1;
-                } else {
-                    $accumulator[$count_key]++;
-                }
-
-                return $accumulator;
-            },
-            []
-        );
-    }
-
-    private function getCountKey($row)
-    {
-        $field_name = $row['name'];
-        $field_type = $row['type'];
-        return $field_type . '/' . $field_name;
+        return new SimilarFieldCollection(...$similar_field_candidates_with_permissions_verification);
     }
 }
