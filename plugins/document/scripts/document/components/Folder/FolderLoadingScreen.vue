@@ -17,18 +17,25 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="document-list-loading" v-if="can_show_spinner"></div>
+    <div class="tlp-card">
+        <skeleton-table v-bind:nb-rows="5" v-bind:nb-cols="3" v-bind:icons="icons">
+            <th class="document-tree-head-name" v-translate>Name</th>
+            <th class="document-tree-head-owner" v-translate>Owner</th>
+            <th class="document-tree-head-updatedate" v-translate>Last update date</th>
+        </skeleton-table>
+    </div>
 </template>
+
 <script>
-import { mapState } from "vuex";
+import SkeletonTable from "skeletons/SkeletonTable.vue";
 
 export default {
-    name: "DocumentSpinner",
+    name: "FolderLoadingScreen",
+    components: { SkeletonTable },
     computed: {
-        ...mapState({
-            can_show_spinner: state =>
-                state.error_message === null && state.is_loading_root_document
-        })
+        icons() {
+            return ["fa-folder", "fa-folder", "fa-file-o", "fa-file-o", "fa-file-o"];
+        }
     }
 };
 </script>

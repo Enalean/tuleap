@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Marie Ange Garnier <marie-ange.garnier@enalean.com>\n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,17 @@ msgstr "Documents"
 msgid "It's time to add new documents!"
 msgstr "Il est temps d'ajouter des documents !"
 
+msgid "Last update date"
+msgstr "Mis à jour"
+
+msgid "Name"
+msgstr "Nom"
+
 msgid "New document"
 msgstr "Nouveau document"
+
+msgid "Owner"
+msgstr "Propriétaire"
 
 msgid "Project documentation"
 msgstr "Documentation du projet"
