@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Administration"
@@ -18,14 +18,11 @@ msgstr "Administration"
 msgid "Documents"
 msgstr "Documents"
 
+msgid "It's time to add new documents!"
+msgstr "Il est temps d'ajouter des documents !"
+
 msgid "New document"
 msgstr "Nouveau document"
 
 msgid "Project documentation"
 msgstr "Documentation du projet"
-
-msgid "There is no document here."
-msgstr "Il n'y a pas de documents ici."
-
-msgid "You should start by adding a new one."
-msgstr "Vous devriez commencer par en ajouter un nouveau."
