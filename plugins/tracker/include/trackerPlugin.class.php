@@ -701,12 +701,11 @@ class trackerPlugin extends Plugin {
 
     public function url_verification_instance($params)
     {
-
         $request_uri = $_SERVER['REQUEST_URI'];
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
             strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
-            ! preg_match('%^/plugins/tracker/\d+/workflow/%', $request_uri)
+            ! preg_match('%^' . preg_quote($this->getPluginPath(), '%') . '/\d+/workflow/%', $request_uri)
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
