@@ -26,7 +26,7 @@ export const loadRootDocumentId = async context => {
 
         context.commit(
             "saveDocumentRootId",
-            project.additional_informations.document.root_item.item_id
+            project.additional_informations.docman.root_item.item_id
         );
     } catch (e) {
         const { error } = await e.response.json();
