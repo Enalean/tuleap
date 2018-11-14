@@ -270,9 +270,6 @@ msgstr ""
 msgid "On all updates?"
 msgstr ""
 
-msgid "Page under construction"
-msgstr ""
-
 msgid "Please provide a valid limit."
 msgstr ""
 
@@ -636,9 +633,6 @@ msgid "Trackers"
 msgstr ""
 
 msgid "Transitions Rules"
-msgstr ""
-
-msgid "Transitions rules configuration"
 msgstr ""
 
 msgid "Triggers"
