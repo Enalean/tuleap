@@ -16,20 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Svn\Logs;
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ .'/../../bootstrap.php';
 
-class ParserCoreAndPluginTest extends \TuleapTestCase
+class ParserCoreAndPluginTest extends TestCase
 {
-    public function itReturnsLogsFromCoreAndPlugin()
+    public function testItReturnsLogsFromCoreAndPlugin()
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__.'/_fixtures/svn.5.log');
-        $this->assertEqual(
+        $this->assertEquals(
             $log_cache->getProjects(),
             array(
                 'scrum-08' => array(
@@ -50,7 +51,7 @@ class ParserCoreAndPluginTest extends \TuleapTestCase
                 )
             )
         );
-        $this->assertEqual(
+        $this->assertEquals(
             $log_cache->getCoreProjects(),
             [
                 'scrum-08' => [
@@ -72,11 +73,11 @@ class ParserCoreAndPluginTest extends \TuleapTestCase
     }
 
 
-    public function itReturnsLastAccessTimeStampForUsers()
+    public function testItReturnsLastAccessTimeStampForUsers()
     {
         $parser    = new Parser();
         $log_cache = $parser->parse(__DIR__.'/_fixtures/svn.5.log');
-        $this->assertEqual(
+        $this->assertEquals(
             $log_cache->getLastAccessTimestamps(),
             array(
                 'vaceletm' => 1490094561,
