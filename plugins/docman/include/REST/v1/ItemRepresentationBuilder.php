@@ -21,7 +21,10 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_ItemDao;
+use Docman_ItemFactory;
 use Project;
+use Tuleap\Document\Items\ItemDao;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder
 {
@@ -29,10 +32,23 @@ class ItemRepresentationBuilder
      * @var ItemDao
      */
     private $dao;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var Docman_ItemFactory
+     */
+    private $docman_item_factory;
 
-    public function __construct(Docman_ItemDao $dao)
-    {
-        $this->dao = $dao;
+    public function __construct(
+        Docman_ItemDao $dao,
+        \UserManager $user_manager,
+        Docman_ItemFactory $docman_item_factory
+    ) {
+        $this->dao                 = $dao;
+        $this->user_manager        = $user_manager;
+        $this->docman_item_factory = $docman_item_factory;
     }
 
     /**
@@ -40,14 +56,31 @@ class ItemRepresentationBuilder
      *
      * @return ItemRepresentation|null
      */
-    public function build(Project $project)
+    public function buildRootId(Project $project)
     {
-        $result = $this->dao->searchRootIdForGroupId($project->getID());
+        $result = $this->dao->searchRootItemForGroupId($project->getID());
 
         if (! $result) {
             return;
         }
 
-        return new ItemRepresentation($result);
+        $item = $this->docman_item_factory->getItemFromRow($result);
+        return $this->buildItemRepresentation(
+            $item
+        );
+    }
+
+    /**
+     * @return ItemRepresentation
+     */
+    public function buildItemRepresentation(\Docman_Item $item)
+    {
+        $owner               = $this->user_manager->getUserById($item->getOwnerId());
+        $user_representation = new MinimalUserRepresentation();
+        $user_representation->build($owner);
+        return new ItemRepresentation(
+            $item,
+            $user_representation
+        );
     }
 }

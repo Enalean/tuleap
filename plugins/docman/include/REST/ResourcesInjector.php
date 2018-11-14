@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright Enalean (c) 2018. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +22,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/DocmanDataBuilder.php';
+namespace Tuleap\Docman\REST;
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use Tuleap\Docman\REST\v1\DocmanItemsResource;
 
-$data_builder = new DocmanDataBuilder();
-$data_builder->setUp();
+class ResourcesInjector
+{
+    const NAME = 'docman_items';
+
+    public function populate(\Luracast\Restler\Restler $restler)
+    {
+        $restler->addAPIClass(
+            DocmanItemsResource::class,
+            self::NAME
+        );
+    }
+}

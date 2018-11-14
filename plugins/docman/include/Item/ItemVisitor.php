@@ -18,10 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/DocmanDataBuilder.php';
+namespace Tuleap\Docman\Item;
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use Docman_Item;
 
-$data_builder = new DocmanDataBuilder();
-$data_builder->setUp();
+interface ItemVisitor
+{
+    public function visitFolder(Docman_Item $item, array $params = []);
+
+    public function visitWiki(Docman_Item $item, array $params = []);
+
+    public function visitLink(Docman_Item $item, array $params = []);
+
+    public function visitFile(Docman_Item $item, array $params = []);
+
+    public function visitEmbeddedFile(Docman_Item $item, array $params = []);
+
+    public function visitEmpty(Docman_Item $item, array $params = []);
+
+    public function visitItem(Docman_Item $item, array $params = []);
+}

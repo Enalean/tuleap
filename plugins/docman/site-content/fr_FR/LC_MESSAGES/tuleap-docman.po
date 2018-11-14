@@ -33,6 +33,15 @@ msgstr "Personnes notifiées"
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Permission denied"
+msgstr "Accès refusé"
+
+msgid "The folder does not exist."
+msgstr "Le dossier n'existe pas."
+
+msgid "The item is not a folder."
+msgstr "L'objet n'est pas un dossier."
+
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 
