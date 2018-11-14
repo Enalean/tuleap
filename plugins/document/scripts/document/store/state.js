@@ -23,7 +23,8 @@ const state = {
     is_loading_root_document: true,
     error_message: null,
     project_name: null,
-    is_user_administrator: false
+    is_user_administrator: false,
+    folder_content: []
 };
 
 export default state;

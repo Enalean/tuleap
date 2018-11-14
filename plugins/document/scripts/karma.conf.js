@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,22 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-tree-head-name {
-    width: 100%;
-}
+const path = require("path");
+const webpack_config = require("./webpack.config.js");
+const karma_configurator = require("../../../tools/utils/scripts/karma-configurator.js");
 
-.document-tree-head-owner,
-.document-tree-head-updatedate {
-    min-width: 200px;
-    white-space: nowrap;
-}
+webpack_config.mode = "development";
 
-.document-folder-badge-avatar {
-    display: flex;
-    align-items: center;
-}
+module.exports = function(config) {
+    const coverage_dir = path.resolve(__dirname, "./coverage");
+    const base_config = karma_configurator.setupBaseKarmaConfig(
+        config,
+        webpack_config,
+        coverage_dir
+    );
 
-.document-folder-badge-avatar-img {
-    flex: 0 0 auto;
-    margin: 0 10px 0 0;
-}
+    Object.assign(base_config, {
+        files: ["document/app.spec.js"],
+        preprocessors: {
+            "document/app.spec.js": ["webpack"]
+        }
+    });
+
+    config.set(base_config);
+};

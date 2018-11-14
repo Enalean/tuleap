@@ -21,7 +21,7 @@
     <div>
         <h1 v-translate>Documents</h1>
         <folder-loading-screen v-if="is_loading"/>
-        <div class="tlp-card" v-if="has_loaded_without_error">
+        <div class="tlp-card" v-if="has_loaded_without_error_and_is_empty">
             <div class="empty-pane">
                 <div class="empty-page-illustration">
                     <empty-folder-svg/>
@@ -33,23 +33,28 @@
                 </button>
             </div>
         </div>
+        <div class="tlp-card" v-if="! is_folder_empty">
+            <folder-content/>
+        </div>
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 import FolderLoadingScreen from "./Folder/FolderLoadingScreen.vue";
 import EmptyFolderSvg from "./Folder/EmptyFolderSvg.vue";
+import FolderContent from "./Folder/FolderContent.vue";
 
 export default {
     name: "FolderView",
-    components: { FolderLoadingScreen, EmptyFolderSvg },
+    components: { FolderLoadingScreen, EmptyFolderSvg, FolderContent },
     computed: {
         ...mapState({
-            has_loaded_without_error: (state, getters) =>
-                !state.is_loading_root_document && !getters.has_error,
+            has_loaded_without_error_and_is_empty: (state, getters) =>
+                !state.is_loading_root_document && !getters.has_error && getters.is_folder_empty,
             is_loading: state => state.is_loading_root_document
-        })
+        }),
+        ...mapGetters(["is_folder_empty"])
     }
 };
 </script>

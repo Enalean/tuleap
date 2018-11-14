@@ -86,6 +86,9 @@ pipeline {
                         stage('Karma Git plugin') {
                             steps { script { actions.runKarmaTests('git', 'plugins/git/www/scripts') } }
                         }
+                        stage('Karma Document plugin') {
+                            steps { script { actions.runKarmaTests('document', 'plugins/document/scripts') } }
+                        }
                     }
                     post { always { junit 'results/karma/test-*-results.xml' } }
                 }

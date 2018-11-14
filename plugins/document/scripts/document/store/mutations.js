@@ -22,6 +22,10 @@ export default {
         state.project_root_document_id = document_id;
     },
 
+    saveFolderContent(state, folder_content) {
+        state.folder_content = folder_content;
+    },
+
     setErrorMessage(state, message) {
         state.error_message = message;
     },

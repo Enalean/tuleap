@@ -33,12 +33,13 @@ const webpack_config = {
     resolve: {
         alias: webpack_configurator.extendAliases(
             webpack_configurator.tlp_fetch_alias,
+            webpack_configurator.tlp_mocks_alias,
             webpack_configurator.skeletons_alias
         )
     },
     module: {
         rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_karma),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader
         ]
@@ -48,5 +49,9 @@ const webpack_config = {
         alias: webpack_configurator.easygettext_loader_alias
     }
 };
+
+if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "watch") {
+    webpack_config.devtool = "cheap-eval-source-map";
+}
 
 module.exports = webpack_config;

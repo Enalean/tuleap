@@ -19,81 +19,79 @@
 
 namespace Tuleap\User\REST;
 
-use \PFUser;
-use \UserHelper;
-use \Tuleap\REST\JsonCast;
+use PFUser;
+use Tuleap\REST\JsonCast;
+use UserHelper;
 
-class MinimalUserRepresentation {
+class MinimalUserRepresentation
+{
 
     const ROUTE = 'users';
-
-    /**
-     * @var UserHelpert
-     */
-    private $user_helper;
-
     /**
      * @var int {@type int}
      */
     public $id;
-
     /**
      * @var string {@type string}
      */
     public $uri;
-
     /**
      * @var string {@type string}
      */
     public $user_url;
-
     /**
      * @var String {@type string}
      */
     public $real_name;
-
     /**
      * @var String {@type string}
      */
     public $display_name;
-
     /**
      * @var String {@type string}
      */
     public $username;
-
     /**
      * @var String {@type string}
      */
     public $ldap_id;
-
     /**
      * @var string {@type string}
      */
     public $avatar_url;
-
     /**
-     * @var bool
+     * @var bool {@type bool}
      */
     public $is_anonymous;
+    /**
+     * @var bool {@type bool}
+     */
+    public $has_avatar;
+    /**
+     * @var UserHelper
+     */
+    private $user_helper;
 
-    public function build(PFUser $user) {
-        $this->user_helper  = UserHelper::instance();
+    public function build(PFUser $user)
+    {
+        $this->user_helper = UserHelper::instance();
 
         $this->id           = ($user->isAnonymous()) ? null : JsonCast::toInt($user->getId());
         $this->uri          = ($user->isAnonymous()) ? null : UserRepresentation::ROUTE . '/' . $this->id;
         $this->user_url     = ($user->isAnonymous()) ? null : $this->user_helper->getUserUrl($user);
-        $this->display_name =  $this->getDisplayName($user);
+        $this->display_name = $this->getDisplayName($user);
         $this->real_name    = ($user->isAnonymous()) ? null : $user->getRealName();
         $this->username     = ($user->isAnonymous()) ? null : $user->getUserName();
         $this->ldap_id      = ($user->isAnonymous()) ? null : $user->getLdapId();
         $this->avatar_url   = $user->getAvatarUrl();
-        $this->is_anonymous = (bool) $user->isAnonymous();
+        $this->is_anonymous = (bool)$user->isAnonymous();
+        $this->has_avatar   = (bool)$user->hasAvatar();
 
         return $this;
     }
 
-    private function getDisplayName(PFUser $user) {
+    private function getDisplayName(PFUser $user)
+    {
         if ($user->isAnonymous()) {
             return $user->getEmail();
         }

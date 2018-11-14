@@ -86,7 +86,8 @@ class TestBase extends RestBase
             "username"     => "rest_api_tester_1",
             "ldap_id"      => "tester1",
             "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
-            "is_anonymous" => false
+            "is_anonymous" => false,
+            "has_avatar"   => false
         );
 
         $this->user_103 = array(
@@ -98,7 +99,8 @@ class TestBase extends RestBase
             "username"     => "rest_api_tester_2",
             "ldap_id"      => "",
             "avatar_url"   => "https://localhost/themes/common/images/avatar_default.png",
-            "is_anonymous" => false
+            "is_anonymous" => false,
+            "has_avatar"   => false
         );
 
         $this->user_group_101 = array(
