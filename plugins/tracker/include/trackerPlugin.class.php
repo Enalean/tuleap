@@ -705,7 +705,7 @@ class trackerPlugin extends Plugin {
         if (strpos($request_uri, $this->getPluginPath()) === 0 &&
             strpos($request_uri, $this->getPluginPath().'/notifications/') !== 0 &&
             strpos($request_uri, $this->getPluginPath().'/webhooks/') !== 0 &&
-            ! preg_match('%^' . preg_quote($this->getPluginPath(), '%') . '/\d+/workflow/%', $request_uri)
+            strpos($request_uri, $this->getPluginPath().'/workflow/') !== 0
         ) {
             $params['url_verification'] = new Tracker_URLVerification();
         }
@@ -1703,7 +1703,7 @@ class trackerPlugin extends Plugin {
             }
             );
 
-            $r->get('/{tracker_id:\d+}/workflow/transitions', function () {
+            $r->get('/workflow/{tracker_id:\d+}/transitions', function () {
                 return new WorkflowTransitionDisplayController(
                     $this->getTrackerFactory(),
                     new TrackerManager
