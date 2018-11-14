@@ -19,25 +19,33 @@
 */
 namespace Tuleap\Tracker\Workflow;
 
-use Tuleap\Request\DispatchableWithBurningParrot;
-use Tuleap\Request\DispatchableWithRequest;
 use HTTPRequest;
-use Tuleap\Layout\BaseLayout;
+use TemplateRendererFactory;
 use TrackerFactory;
 use TrackerManager;
+use Tuleap\Layout\BaseLayout;
+use Tuleap\Request\DispatchableWithBurningParrot;
+use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 
-class WorkflowTransitionDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
+class WorkflowTransitionController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
     private $tracker_factory;
     private $tracker_manager;
 
+    /**
+     * @var WorkflowMenuTabPresenterBuilder
+     */
+    private $presenter_builder;
+
     public function __construct(
         TrackerFactory $tracker_factory,
-        TrackerManager $tracker_manager
+        TrackerManager $tracker_manager,
+        WorkflowMenuTabPresenterBuilder $presenter_builder
     ) {
-        $this->tracker_factory = $tracker_factory;
-        $this->tracker_manager = $tracker_manager;
+        $this->tracker_factory    = $tracker_factory;
+        $this->tracker_manager    = $tracker_manager;
+        $this->presenter_builder  = $presenter_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -54,6 +62,10 @@ class WorkflowTransitionDisplayController implements DispatchableWithRequest, Di
         }
 
         $tracker->displayAdminItemHeader($this->tracker_manager, 'editworkflow');
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/workflow-transitions');
+        $presenter = $this->presenter_builder->build($tracker, WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS);
+        $renderer->renderToPage('workflow-transitions', $presenter);
 
         $tracker->displayFooter($this->tracker_manager);
     }

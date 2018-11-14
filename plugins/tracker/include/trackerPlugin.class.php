@@ -87,7 +87,8 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Workflow\WorkflowTransitionDisplayController;
+use Tuleap\Tracker\Workflow\WorkflowTransitionController;
+use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -1704,9 +1705,10 @@ class trackerPlugin extends Plugin {
             );
 
             $r->get('/workflow/{tracker_id:\d+}/transitions', function () {
-                return new WorkflowTransitionDisplayController(
+                return new WorkflowTransitionController(
                     $this->getTrackerFactory(),
-                    new TrackerManager
+                    new TrackerManager,
+                    new WorkflowMenuTabPresenterBuilder()
                 );
             });
         });

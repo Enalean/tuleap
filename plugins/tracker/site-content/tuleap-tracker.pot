@@ -179,6 +179,9 @@ msgstr ""
 msgid "Force notification configuration usage to all users"
 msgstr ""
 
+msgid "Global Rules"
+msgstr ""
+
 #, php-format
 msgid "Group '%s' couldn't be added."
 msgid_plural "Groups '%s' couldn't be added."
@@ -265,6 +268,9 @@ msgid "Notify me when artifacts are created"
 msgstr ""
 
 msgid "On all updates?"
+msgstr ""
+
+msgid "Page under construction"
 msgstr ""
 
 msgid "Please provide a valid limit."
@@ -629,6 +635,15 @@ msgstr ""
 msgid "Trackers"
 msgstr ""
 
+msgid "Transitions Rules"
+msgstr ""
+
+msgid "Transitions rules configuration"
+msgstr ""
+
+msgid "Triggers"
+msgstr ""
+
 msgid "URL"
 msgstr ""
 
@@ -679,6 +694,9 @@ msgid "Webhook sucessfully updated"
 msgstr ""
 
 msgid "Webhooks"
+msgstr ""
+
+msgid "Workflow"
 msgstr ""
 
 msgid "You are about to remove the notification. Please confirm your action."
