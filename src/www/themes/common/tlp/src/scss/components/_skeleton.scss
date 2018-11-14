@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$tlp-skeleton-color: transparentize($tlp-theme-color, .9);
+$tlp-skeleton-secondary-color: transparentize($tlp-theme-color, .95);
+$tlp-skeleton-animation-duration: 1.2s;
+
+
+.tlp-skeleton-text-icon {
+    margin: 0 5px 0 0;
+}
+
+.tlp-skeleton-icon {
+    color: $tlp-skeleton-color;
+}
+
+.tlp-skeleton-text {
+    display: inline-block;
+    width: 100px;
+    height: 6px;
+    animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
+    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px);
+    background-size: 600px 6px;
+}
+
+@keyframes tlp-skeleton-animation-text {
+    0% {
+        background-position: -100px;
+    }
+
+    40% {
+        background-position: 140px;
+    }
+
+    100% {
+        background-position: 520px;
+    }
+}

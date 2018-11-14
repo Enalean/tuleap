@@ -17,9 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-list-loading {
-    width: 250px;
-    height: 200px;
-    margin: 0 auto;
-    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
+.document-tree-head-name {
+    width: 100%;
+}
+
+.document-tree-head-owner,
+.document-tree-head-updatedate {
+    min-width: 100px;
+    white-space: nowrap;
 }

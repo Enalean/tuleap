@@ -22,33 +22,20 @@
         <document-breadcrumb/>
         <div class="tlp-framed">
             <error-message/>
-            <document-spinner/>
-            <div class="empty-page" v-if="has_loaded_without_error">
-                <div class="empty-page-illustration">
-                    <empty-docman-svg/>
-                </div>
-                <p class="empty-page-text">
-                    <translate>It's time to add new documents!</translate>
-                </p>
-                <button type="button" class="tlp-button-primary tlp-button-large" disabled>
-                    <i class="fa fa-plus tlp-button-icon"></i>
-                    <translate>New document</translate>
-                </button>
-            </div>
+            <folder-view/>
         </div>
     </div>
 </template>
 <script>
 import { mapState } from "vuex";
 
-import ErrorMessage from "./ErrorMessage.vue";
-import DocumentSpinner from "./DocumentSpinner.vue";
 import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import EmptyDocmanSvg from "./EmptyDocmanSvg.vue";
+import ErrorMessage from "./ErrorMessage.vue";
+import FolderView from "./FolderView.vue";
 
 export default {
     name: "App",
-    components: { ErrorMessage, DocumentSpinner, DocumentBreadcrumb, EmptyDocmanSvg },
+    components: { DocumentBreadcrumb, ErrorMessage, FolderView },
     props: {
         projectId: Number,
         projectName: String,

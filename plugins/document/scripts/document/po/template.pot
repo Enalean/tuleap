@@ -14,7 +14,16 @@ msgstr ""
 msgid "It's time to add new documents!"
 msgstr ""
 
+msgid "Last update date"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
 msgid "New document"
+msgstr ""
+
+msgid "Owner"
 msgstr ""
 
 msgid "Project documentation"

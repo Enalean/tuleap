@@ -50,6 +50,10 @@ const angular_artifact_modal_alias = {
     )
 };
 
+const skeletons_alias = {
+    skeletons: path.join(path_to_tuleap_core, "vue-components/skeletons/")
+};
+
 const easygettext_loader_alias = {
     "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js")
 };
@@ -74,6 +78,7 @@ function extendAliases(...aliases) {
 module.exports = {
     extendAliases,
     angular_artifact_modal_aliases,
+    skeletons_alias,
     angular_tlp_alias,
     easygettext_loader_alias,
     tlp_fetch_alias,
