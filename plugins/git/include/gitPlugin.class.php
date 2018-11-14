@@ -34,6 +34,7 @@ use Tuleap\Git\DefaultSettings\DefaultSettingsRouter;
 use Tuleap\Git\DefaultSettings\IndexController;
 use Tuleap\Git\DiskUsage\Collector;
 use Tuleap\Git\DiskUsage\Retriever;
+use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\GerritCanMigrateChecker;
 use Tuleap\Git\GerritServerResourceRestrictor;
 use Tuleap\Git\GitGodObjectWrapper;
@@ -54,6 +55,7 @@ use Tuleap\Git\GitXmlExporter;
 use Tuleap\Git\GlobalParameterDao;
 use Tuleap\Git\History\Dao as HistoryDao;
 use Tuleap\Git\History\GitPhpAccessLogger;
+use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LatestHeartbeatsCollector;
 use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
@@ -139,6 +141,7 @@ use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterParser;
+use Tuleap\User\PasswordVerifier;
 
 require_once 'constants.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -2532,6 +2535,31 @@ class GitPlugin extends Plugin
         return new UserDao();
     }
 
+    /**
+     * @return HTTPAccessControl
+     */
+    private function getHTTPAccessControl(Logger $logger)
+    {
+        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
+        return new HTTPAccessControl(
+            $logger,
+            new \User_LoginManager(
+                \EventManager::instance(),
+                \UserManager::instance(),
+                new PasswordVerifier($password_handler),
+                new \User_PasswordExpirationChecker(),
+                $password_handler
+            ),
+            new ReplicationHTTPUserAuthenticator(
+                $password_handler,
+                $this->getGerritServerFactory(),
+                new HttpUserValidator()
+            ),
+            $this->getPermissionsManager(),
+            $this->getUserDao()
+        );
+    }
+
     public function collectRoutesEvent(\Tuleap\Request\CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup(GIT_SITE_ADMIN_BASE_URL, function (FastRoute\RouteCollector $r) {
@@ -2548,14 +2576,24 @@ class GitPlugin extends Plugin
                     $this->getRepositoryFactory()
                 );
             });
+            $r->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
+                $logger               = new \WrapperLogger($this->getLogger(), 'LFS Batch');
+                $lfs_batch_controller = new \Tuleap\Git\LFS\Batch\LFSBatchController(
+                    $this->getRepositoryFactory(),
+                    $this->getHTTPAccessControl($logger),
+                    $logger
+                );
+                return new \Tuleap\Git\LFS\LFSJSONHTTPDispatchable(
+                    new \Tuleap\Git\LFS\LFSFeatureFlagDispatchable($lfs_batch_controller)
+                );
+            });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', function () {
+                $logger = new \WrapperLogger($this->getLogger(), 'http');
                 return new \Tuleap\Git\HTTP\HTTPController(
-                    $this->getLogger(),
+                    $logger,
                     $this->getProjectManager(),
                     $this->getRepositoryFactory(),
-                    $this->getGerritServerFactory(),
-                    $this->getPermissionsManager(),
-                    $this->getUserDao()
+                    $this->getHTTPAccessControl($logger)
                 );
             });
             $r->get('/{project_name:[A-z0-9-]+}[/]', function() {

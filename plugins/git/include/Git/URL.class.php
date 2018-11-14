@@ -21,7 +21,8 @@
 /**
  * I return project and repository information from the request uri
  */
-class Git_URL {
+class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
+{
 
     /** @var string */
     private $friendly_url_pattern = '%^/plugins/git
@@ -187,8 +188,9 @@ class Git_URL {
         return $this->query_string;
     }
 
-    public function isGitPush() {
-        return preg_match('%.*(/|\?service=)git-receive-pack$%', $this->uri);
+    public function isWrite()
+    {
+        return preg_match('%(/|\?service=)git-receive-pack$%', $this->uri) === 1;
     }
 
     /**
