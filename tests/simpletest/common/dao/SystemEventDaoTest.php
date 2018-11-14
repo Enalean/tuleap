@@ -1,6 +1,6 @@
 <?php
-require_once('common/dao/SystemEventDao.class.php');
-require_once('common/dao/include/DataAccess.class.php');
+
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     
@@ -13,52 +13,59 @@ class SystemEventDao_SearchWithParamTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->da = partial_mock('DataAccess', array('quoteSmart', 'quoteSmartImplode'));
-        stub($this->da)->quoteSmart($this->search_term.SystemEvent::PARAMETER_SEPARATOR . '%')->returns("'" . $this->search_term . "%'");
-        stub($this->da)->quoteSmart('%' . SystemEvent::PARAMETER_SEPARATOR.$this->search_term)->returns("'%" . $this->search_term . "'");
-        stub($this->da)->quoteSmart($this->search_term)->returns($this->search_term);
+        $this->da = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
 
-        stub($this->da)->quoteSmartImplode(', ', $this->event_type)->returns('MY_IMAGINARY_EVENT');
-        stub($this->da)->quoteSmartImplode(', ', $this->status)->returns('ONGOING');
+        $this->da->shouldReceive('quoteSmartImplode')->with(', ', $this->event_type)->andReturns('MY_IMAGINARY_EVENT');
+        $this->da->shouldReceive('quoteSmartImplode')->with(', ', $this->status)->andReturns('ONGOING');
     }
 
-    public function itCreatesCorrectQueryWithSearchTermInFirstPosition() {
-        $this->dao = partial_mock('SystemEventDao', array('retrieve'), array($this->da));
+    public function itCreatesCorrectQueryWithSearchTermInFirstPosition()
+    {
+        $dao = new SystemEventDao($this->da);
 
+        $this->da->shouldReceive('quoteLikeValueSuffix')->with($this->search_term.SystemEvent::PARAMETER_SEPARATOR)->andReturns("'" . $this->search_term . "%'");
         $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE 'abc%'";
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
+            Mockery::spy(LegacyDataAccessResultInterface::class)
+        );
 
-        stub($this->dao)->retrieve($expected_sql)->once();
-
-        $this->dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
+        $dao->searchWithParam('head', $this->search_term, $this->event_type, $this->status);
      }
 
-    public function itCreatesCorrectQueryWithSearchTermInLastPosition() {
-        $this->dao = partial_mock('SystemEventDao', array('retrieve'), array($this->da));
+    public function itCreatesCorrectQueryWithSearchTermInLastPosition()
+    {
+        $dao = new SystemEventDao($this->da);
 
+        $this->da->shouldReceive('quoteLikeValuePrefix')->with(SystemEvent::PARAMETER_SEPARATOR.$this->search_term)->andReturns("'%" . $this->search_term . "'");
         $expected_sql = "SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE '%abc'";
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
+            Mockery::spy(LegacyDataAccessResultInterface::class)
+        );
 
-        stub($this->dao)->retrieve($expected_sql)->once();
-
-        $this->dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
+        $dao->searchWithParam('tail', $this->search_term, $this->event_type, $this->status);
      }
 
-    public function itCreatesCorrectQueryWithExactSearchTerm() {
-        $this->dao = partial_mock('SystemEventDao', array('retrieve'), array($this->da));
+    public function itCreatesCorrectQueryWithExactSearchTerm()
+    {
+        $dao = new SystemEventDao($this->da);
 
+        $this->da->shouldReceive('quoteSmart')->with($this->search_term)->andReturns($this->search_term);
+        $this->da->shouldReceive('escapeLikeValue')->with($this->search_term)->andReturns($this->search_term);
         $expected_sql = 'SELECT  * FROM system_event
                 WHERE type   IN (MY_IMAGINARY_EVENT)
                 AND status IN (ONGOING)
                 AND parameters LIKE abc';
+        $this->da->shouldReceive('query')->with($expected_sql, [])->once()->andReturns(
+            Mockery::spy(LegacyDataAccessResultInterface::class)
+        );
 
-        stub($this->dao)->retrieve($expected_sql)->once();
-
-        $this->dao->searchWithParam('all', $this->search_term, $this->event_type, $this->status);
+        $dao->searchWithParam('all', $this->search_term, $this->event_type, $this->status);
      }
 }
 

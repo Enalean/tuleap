@@ -1,13 +1,9 @@
 <?php
-require_once('common/dao/UserDao.class.php');
-
-require_once('common/dao/include/DataAccess.class.php');
-Mock::generate('DataAccess');
 
 class UserDaoTest extends TuleapTestCase {
 
      function testReplaceStringInList() {
-         $da  = new MockDataAccess($this);
+         $da  = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
          $dao = new UserDao($da);
 
          $this->assertEqual($dao->replaceStringInList('foo', 'foo', 'tutu'), 'tutu');

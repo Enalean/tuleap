@@ -9,7 +9,6 @@ require_once('common/dao/ReferenceDao.class.php');
 Mock::generate('ReferenceDao');
 require_once('common/dao/CrossReferenceDao.class.php');
 Mock::generate('CrossReferenceDao');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 /**

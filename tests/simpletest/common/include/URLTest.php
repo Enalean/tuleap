@@ -20,7 +20,6 @@
  */
 
 require_once('common/include/URL.class.php');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 Mock::generatePartial('URL', 'URLTestVersion', array('getProjectDao','getForumDao','getNewsBytesDao','getArtifactDao', 'getProjectNameRule'));
 

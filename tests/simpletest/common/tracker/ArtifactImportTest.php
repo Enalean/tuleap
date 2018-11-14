@@ -56,7 +56,7 @@ Mock::generate('ArtifactType');
 class ArtifactImportTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
-        $this->da  = mock('DataAccess');
+        $this->da  = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);;
         $this->dar = mock('DataAccessResult');
         stub($this->da)->query()->returns($this->dar);
         CodendiDataAccess::setInstance($this->da);

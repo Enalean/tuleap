@@ -31,7 +31,6 @@ Mock::generate('Tracker_Artifact_ChangesetValue_Text');
 
 Mock::generate('Tracker_FormElement_Field_Value_TextDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 Mock::generate('Tracker_Artifact');
@@ -207,7 +206,7 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
     {
         $field = new Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod();
 
-        $data_access = stub('DataAccess')->quoteLikeValueSurround('tutu')->returns("'%tutu%'");
+        $data_access = stub(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class)->quoteLikeValueSurround('tutu')->returns("'%tutu%'");
         stub($data_access)->quoteLikeValueSurround('toto')->returns("'%toto%'");
         stub($data_access)->quoteSmart('regexp')->returns("'regexp'");
 

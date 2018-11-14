@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualExpression;
 
 use CodendiDataAccess;
+use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -34,7 +35,7 @@ class ForTextTest extends TuleapTestCase
     public function setUp()
     {
         parent::setUp();
-        CodendiDataAccess::setInstance(mock('CodendiDataAccess'));
+        CodendiDataAccess::setInstance(\Mockery::spy(LegacyDataAccessInterface::class));
     }
 
     public function tearDown()

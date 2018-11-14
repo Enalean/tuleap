@@ -261,13 +261,8 @@ class DB
 {
     public static function connect()
     {
-        if (! ForgeConfig::get('fallback_to_deprecated_mysql_api')) {
-            include_once __DIR__ . '/DB/mysql_pdo.php';
-            $obj = new DB_mysql_pdo();
-        } else {
-            include_once __DIR__ . '/DB/mysql.php';
-            $obj = new DB_mysql();
-        }
+        include_once __DIR__ . '/DB/mysql_pdo.php';
+        $obj = new DB_mysql_pdo();
 
         $err = $obj->connect();
         if (DB::isError($err)) {

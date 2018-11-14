@@ -1,8 +1,8 @@
 <?php
-/*
- * Copyright Enalean (c) 2016. All rights reserved.
+/**
+ * Copyright Enalean (c) 2016-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -24,10 +24,9 @@
 
 namespace Tuleap\HudsonGit\Job;
 
-use DataAccessResult;
 use GitRepository;
 
-class Job extends DataAccessResult
+class Job
 {
     private $id;
     private $repository;

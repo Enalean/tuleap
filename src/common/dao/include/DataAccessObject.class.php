@@ -410,8 +410,6 @@ class DataAccessObject {
     }
 
     /**
-     * @deprecated Use DataAccess::quoteLikeValueSurround
-     *
      * @deprecated
      *
      * @return string

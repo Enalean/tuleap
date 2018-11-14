@@ -22,7 +22,6 @@ require_once('common/tracker/ArtifactRuleFactory.class.php');
 
 require_once('common/dao/ArtifactRuleDao.class.php');
 Mock::generate('ArtifactRuleDao');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 class ArtifactRuleFactoryTest extends TuleapTestCase {
 

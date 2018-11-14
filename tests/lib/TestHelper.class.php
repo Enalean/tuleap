@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once __DIR__.'/../../src/common/dao/include/DataAccessResult.class.php';
 
 /**
  * Various tools to assist test in her duty

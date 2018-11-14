@@ -1,21 +1,22 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 class FRSPackageFactoryTest extends TuleapTestCase
@@ -74,11 +75,17 @@ class FRSPackageFactoryTest extends TuleapTestCase
                                );
         $package2 = FRSPackageFactory::getFRSPackageFromArray($packageArray2);
 
-        $dao = \Mockery::mock(FRSPackageDao::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $dao->da = TestHelper::getPartialMock('DataAccess', array('DataAccess'));
-        stub($dao)->retrieve('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1')->returnsDar($packageArray1);
-        stub($dao)->retrieve('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 0  ORDER BY rank DESC LIMIT 1')->returnsDar($packageArray2);
-        stub($dao)->retrieve()->returnsDar([]);
+        $data_access = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
+        $data_access->shouldReceive('query')
+            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1', [])
+            ->andReturns(TestHelper::arrayToDar($packageArray1));
+        $data_access->shouldReceive('query')
+            ->with('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 2  ORDER BY rank DESC LIMIT 1', [])
+            ->andReturns(TestHelper::arrayToDar($packageArray2));
+        $data_access->shouldReceive('escapeInt')->andReturnUsing(function ($value) {
+            return $value;
+        });
+        $dao = new FRSPackageDao($data_access, FRSPackage::STATUS_DELETED);
 
         $PackageFactory = \Mockery::mock(FRSPackageFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $PackageFactory->shouldReceive('_getFRSPackageDao')->andReturns($dao);

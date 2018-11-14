@@ -3,7 +3,6 @@ require_once('common/plugin/PluginFactory.class.php');
 Mock::generatePartial('PluginFactory', 'PluginFactoryTestVersion', array('_getClassNameForPluginName'));
 require_once('common/dao/PluginDao.class.php');
 Mock::generate('PluginDao');
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/plugin/Plugin.class.php');
 Mock::generate('Plugin');

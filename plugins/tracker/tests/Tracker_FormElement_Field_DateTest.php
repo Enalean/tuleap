@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -49,7 +49,6 @@ Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
 Mock::generate('Tracker_FormElement_Field_Value_DateDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 require_once('common/valid/Rule.class.php');    // unit test not really unit...
@@ -686,7 +685,7 @@ class Tracker_FormElement_Field_DateTest_getSQLCompareDate_DAY extends TuleapTes
 
         $this->day_field = new DayFieldTestVersion();
 
-        $data_access = mock('DataAccess');
+        $data_access = mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface::class);
         stub($data_access)->escapeInt(1404511200)->returns(1404511200);
         stub($data_access)->escapeInt(1404684000)->returns(1404684000);
 
