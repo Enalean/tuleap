@@ -24,17 +24,30 @@ tuleap.tracker.artifact = tuleap.tracker.artifact || {};
 (function($) {
     tuleap.tracker.artifact.editionSwitcher = function() {
         var pair_fields_toggled = {};
+        var has_form_been_already_submitted = false;
 
         var init = function() {
             bindClickOnEditableFields();
             bindClickOnAutocomputeInMassChange();
             observeRequiredElements();
+            initDoubleArtifactFormSubmitionGuard();
+
             if ($("#artifact_informations").size() > 0) {
                 bindSubmissionBarToFollowups();
                 disableWarnBeforeUnloadOnSubmitForm();
                 toggleFieldsIfAlreadySubmittedArtifact();
                 toggleEmptyMandatoryFields();
             }
+        };
+
+        var initDoubleArtifactFormSubmitionGuard = function() {
+            $('.artifact-form').submit(function(submit_event) {
+                if (has_form_been_already_submitted) {
+                    return submit_event.preventDefault();
+                }
+
+                has_form_been_already_submitted = true;
+            });
         };
 
         var toggleFieldsIfAlreadySubmittedArtifact = function() {
