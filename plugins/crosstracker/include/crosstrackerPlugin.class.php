@@ -27,6 +27,7 @@ use Tuleap\CrossTracker\Report\CrossTrackerArtifactReportFactory;
 use Tuleap\CrossTracker\Report\CSV\CSVExportController;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
+use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormElementToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
@@ -425,7 +426,7 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         $csv_representation_builder = new CSVRepresentationBuilder(
             $formatter_visitor,
             $user_manager,
-            new SimilarFieldsFormatter($formatter_visitor)
+            new SimilarFieldsFormatter($formatter_visitor, new BindToValueVisitor())
         );
         $representation_factory     = new CSVRepresentationFactory($csv_representation_builder);
 
