@@ -101,6 +101,10 @@
         "permissions-per-group": {
             "scripts": "www/scripts/permissions-per-group/",
             "po": "www/scripts/permissions-per-group/po"
+        },
+        "workflow-transitions": {
+            "scripts": "www/scripts/workflow-transitions/",
+            "po": "www/scripts/workflow-transitions/po"
         }
     }
 }

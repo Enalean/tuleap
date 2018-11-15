@@ -68,6 +68,7 @@ const webpack_config_for_vue = {
     entry: {
         "tracker-report-expert-mode": "./report/index.js",
         "tracker-permissions-per-group": "./permissions-per-group/src/index.js",
+        "tracker-workflow-transitions": "./workflow-transitions/src/index.js",
         MoveArtifactModal: "./artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./TrackerAdminFields.js"
     },

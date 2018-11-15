@@ -317,9 +317,6 @@ msgstr "Me notifier lors de la création d'un nouveau artéfact"
 msgid "On all updates?"
 msgstr "À chaque modification ?"
 
-msgid "Page under construction"
-msgstr "Page en construction"
-
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
 
@@ -743,9 +740,6 @@ msgstr "Trackers"
 
 msgid "Transitions Rules"
 msgstr "Règles de Transitions"
-
-msgid "Transitions rules configuration"
-msgstr "Configuration des règles de transitions"
 
 msgid "Triggers"
 msgstr "Déclenchements"
