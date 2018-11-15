@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,12 +24,12 @@ use GitRepository;
 
 class ClonePresenter
 {
-    /** @var string */
-    private $gerrit_label = "Gerrit";
-    /** @var string */
-    private $ssh_label = "SSH";
-    /** @var string */
-    private $https_label = "HTTPS";
+    public const GERRIT_LABEL = 'Gerrit';
+    public const SSH_LABEL = 'SSH';
+    public const HTTPS_LABEL = 'HTTPS';
+
+    private const IS_SELECTED = true;
+    private const IS_READ_ONLY = true;
 
     /** @var CloneURLPresenter[] */
     public $clone_url_presenters = [];
@@ -38,78 +38,74 @@ class ClonePresenter
     public $ssh_mirrors_presenters = [];
 
     /** @var string */
-    public $selected_url;
+    public $default_url;
     /** @var string */
-    public $selected_url_label;
+    public $default_label;
+    /** @var bool */
+    public $default_url_is_read_only = false;
 
     /** @var bool */
-    public $has_ssh_mirrors;
+    public $has_ssh_mirrors = false;
 
-    public function __construct(CloneURLs $clone_urls, GitRepository $repository)
+    /** @var DefaultCloneURLSelector */
+    private $default_url_selector;
+
+    public function __construct(DefaultCloneURLSelector $default_url_selector)
     {
-        if ($clone_urls->hasGerritUrl()) {
-            $this->selected_url           = $clone_urls->getGerritUrl();
-            $this->selected_url_label     = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->gerrit_label);
+        $this->default_url_selector = $default_url_selector;
+    }
+
+    public function build(CloneURLs $clone_urls, GitRepository $repository, \PFUser $current_user)
+    {
+        try {
+            $selected_clone_url = $this->default_url_selector->select($clone_urls, $current_user);
+
             $this->clone_url_presenters[] = new CloneURLPresenter(
-                $this->selected_url,
-                $this->selected_url_label,
-                true,
-                false
+                $selected_clone_url->getUrl(),
+                $selected_clone_url->getLabel(),
+                self::IS_SELECTED,
+                $current_user->isAnonymous()
+            );
+            $this->default_url            = $selected_clone_url->getUrl();
+            $this->default_label          = $selected_clone_url->getLabel();
+
+            if ($current_user->isAnonymous()) {
+                $this->default_url_is_read_only = true;
+                return;
+            }
+            $this->buildAdditionalCloneURLs($clone_urls, $selected_clone_url, $repository);
+        } catch (NoCloneURLException $e) {
+            $this->default_url   = null;
+            $this->default_label = null;
+        }
+    }
+
+    private function buildAdditionalCloneURLs(
+        CloneURLs $clone_urls,
+        DefaultCloneURL $selected_clone_url,
+        GitRepository $repository
+    ): void {
+        if ($clone_urls->hasSshUrl() && ! $selected_clone_url->hasSameUrl($clone_urls->getSshUrl())) {
+            $this->clone_url_presenters[] = new CloneURLPresenter(
+                $clone_urls->getSshUrl(),
+                self::SSH_LABEL,
+                ! self::IS_SELECTED,
+                $clone_urls->hasGerritUrl()
             );
         }
-        if ($clone_urls->hasSshUrl()) {
-            $ssh_is_selected              = (! $this->selected_url);
-            $this->clone_url_presenters[] = $this->getSSHCloneURLPresenter($clone_urls, $ssh_is_selected);
-        }
-        if ($clone_urls->hasHttpsUrl()) {
-            $https_is_selected            = (! $this->selected_url);
-            $this->clone_url_presenters[] = $this->getHTTPSCloneURLPresenter($clone_urls, $https_is_selected);
+        if ($clone_urls->hasHttpsUrl() && ! $selected_clone_url->hasSameUrl($clone_urls->getHttpsUrl())) {
+            $this->clone_url_presenters[] = new CloneURLPresenter(
+                $clone_urls->getHttpsUrl(),
+                self::HTTPS_LABEL,
+                ! self::IS_SELECTED,
+                $clone_urls->hasGerritUrl()
+            );
         }
         if ($clone_urls->hasMirrorLinks()) {
             $this->ssh_mirrors_presenters = $this->getMirrorLinksCloneURLPresenter($clone_urls, $repository);
         }
 
         $this->has_ssh_mirrors = $clone_urls->hasMirrorLinks();
-    }
-
-    private function getSSHCloneURLPresenter(CloneURLs $clone_urls, $ssh_is_selected)
-    {
-        if ($ssh_is_selected) {
-            $this->selected_url       = $clone_urls->getSshUrl();
-            $this->selected_url_label = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->ssh_label);
-            return new CloneURLPresenter(
-                $this->selected_url,
-                $this->selected_url_label,
-                true,
-                $clone_urls->hasGerritUrl()
-            );
-        }
-        return new CloneURLPresenter(
-            $clone_urls->getSshUrl(),
-            $this->ssh_label,
-            false,
-            $clone_urls->hasGerritUrl()
-        );
-    }
-
-    private function getHTTPSCloneURLPresenter(CloneURLs $clone_urls, $https_is_selected)
-    {
-        if ($https_is_selected) {
-            $this->selected_url       = $clone_urls->getHttpsUrl();
-            $this->selected_url_label = sprintf(dgettext("tuleap-git", "%s (Default)"), $this->https_label);
-            return new CloneURLPresenter(
-                $this->selected_url,
-                $this->selected_url_label,
-                true,
-                $clone_urls->hasGerritUrl()
-            );
-        }
-        return new CloneURLPresenter(
-            $clone_urls->getHttpsUrl(),
-            $this->https_label,
-            false,
-            $clone_urls->hasGerritUrl()
-        );
     }
 
     private function getMirrorLinksCloneURLPresenter(CloneURLs $clone_urls, GitRepository $repository)
@@ -120,8 +116,8 @@ class ClonePresenter
             $presenters[] = new CloneURLPresenter(
                 $repository->getSSHForMirror($mirror),
                 $mirror->name,
-                false,
-                $clone_urls->hasMirrorLinks()
+                ! self::IS_SELECTED,
+                self::IS_READ_ONLY
             );
         }
 
