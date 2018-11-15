@@ -37,7 +37,7 @@ class SupportedFieldsDao extends DataAccessObject
                   AND groups.status = 'A'
                   AND tracker_field.use_it = 1
                   AND $tracker_ids_statement
-                  AND tracker_field.formElement_type IN ('string', 'text', 'int', 'float', 'date', 'sb')";
+                  AND tracker_field.formElement_type IN ('string', 'text', 'int', 'float', 'date', 'sb', 'rb')";
 
         $parameters = $tracker_ids_statement->values();
 

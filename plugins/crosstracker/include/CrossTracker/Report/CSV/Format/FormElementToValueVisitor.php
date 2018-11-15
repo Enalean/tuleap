@@ -107,7 +107,8 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
     {
-        throw new RuntimeException("Radio button field is not supported for similar fields matching.");
+        $bind = $field->getBind();
+        return $bind->accept($this->bind_visitor, new BindToValueParameters($field, $this->changeset_value));
     }
 
     public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
