@@ -141,9 +141,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
 
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue
      */
-    public function getValue($value_id) {
+    public function getValue($value_id)
+    {
         if ($value_id == 100) {
             $v = new Tracker_FormElement_Field_List_Bind_UsersValue(0);
         } else {

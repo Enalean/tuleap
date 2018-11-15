@@ -67,7 +67,7 @@ class BindToValueVisitorTest extends TestCase
         $this->assertEquals(new TextValue('piceworth'), $result);
     }
 
-    public function testItReturnsEmptyValueWhenListHasNoValue()
+    public function testItReturnsEmptyValueWhenListBindStaticHasNoValue()
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn([]);
 
@@ -83,7 +83,7 @@ class BindToValueVisitorTest extends TestCase
     {
         $this->changeset_value->shouldReceive('getValue')->andReturn(
             [
-                \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+                (string)\Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
             ]
         );
 
@@ -110,6 +110,41 @@ class BindToValueVisitorTest extends TestCase
 
     public function testVisitListBindUsers()
     {
+        $this->changeset_value->shouldReceive('getValue')->andReturn([326]);
+
+        $user = Mockery::mock(\PFUser::class);
+        $users_bind_value = Mockery::mock(\Tracker_FormElement_Field_List_Bind_UsersValue::class);
+        $users_bind_value->shouldReceive('getUser')->andReturn($user);
+
+        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
+        $users_bind->shouldReceive('accept')->passthru();
+        $users_bind->shouldReceive('getValue')->with(326)->andReturn($users_bind_value);
+
+        $result = $users_bind->accept($this->visitor, $this->parameters);
+
+        $this->assertEquals(new UserValue($user), $result);
+    }
+
+    public function testItReturnsEmptyValueWhenListBindUsersHasNoValue()
+    {
+        $this->changeset_value->shouldReceive('getValue')->andReturn([]);
+
+        $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
+        $users_bind->shouldReceive('accept')->passthru();
+
+        $result = $users_bind->accept($this->visitor, $this->parameters);
+
+        $this->assertEquals(new EmptyValue(), $result);
+    }
+
+    public function testItReturnsEmptyValueWhenListBindUsersHasNoneValue()
+    {
+        $this->changeset_value->shouldReceive('getValue')->andReturn(
+            [
+                (string)\Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID
+            ]
+        );
+
         $users_bind = Mockery::mock(\Tracker_FormElement_Field_List_Bind_Users::class);
         $users_bind->shouldReceive('accept')->passthru();
 

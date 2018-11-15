@@ -181,10 +181,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
 
     /**
-     * @return array
+     * @param int $value_id
+     * @return Tracker_FormElement_Field_List_Bind_StaticValue
      * @throws Tracker_FormElement_InvalidFieldValueException
      */
-    public function getValue($value_id) {
+    public function getValue($value_id)
+    {
         if (! isset($this->values[$value_id])) {
             throw new Tracker_FormElement_InvalidFieldValueException();
         }
