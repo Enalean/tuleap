@@ -28,11 +28,11 @@
     },
     "gettext-vue": {
         "document": {
-            "scripts": "scripts/document/",
+            "scripts": "scripts/",
             "po": "scripts/document/po"
         }
     },
     "components": [
-        "scripts/document/"
+        "scripts/"
     ]
 }
