@@ -124,12 +124,12 @@ class Git_URL_GitSmartHTTPTest extends TuleapTestCase
 
     public function itDetectsGitPushWhenServiceIsGitReceivePack() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/info/refs?service=git-receive-pack');
-        $this->assertTrue($url->isGitPush());
+        $this->assertTrue($url->isWrite());
     }
 
     public function itDetectsGitPushWhenURIIsGitReceivePack() {
         $url = $this->getUrl('/plugins/git/gpig/device/generic/goldfish/git-receive-pack');
-        $this->assertTrue($url->isGitPush());
+        $this->assertTrue($url->isWrite());
     }
 
     public function itRetrievesTheRepositoryWithExplicityDotGit() {

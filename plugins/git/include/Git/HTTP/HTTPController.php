@@ -75,32 +75,12 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
         \Logger $logger,
         \ProjectManager $project_manager,
         \GitRepositoryFactory $repository_factory,
-        \Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        \PermissionsManager $permissions_manager,
-        UserDao $user_dao
+        HTTPAccessControl $http_access_control
     ) {
         $this->project_manager       = $project_manager;
         $this->repository_factory    = $repository_factory;
         $this->logger                = new \WrapperLogger($logger, 'http');
-
-        $password_handler = \PasswordHandlerFactory::getPasswordHandler();
-        $this->http_access_control = new HTTPAccessControl(
-            $this->logger,
-            new \User_LoginManager(
-                \EventManager::instance(),
-                \UserManager::instance(),
-                new PasswordVerifier($password_handler),
-                new \User_PasswordExpirationChecker(),
-                $password_handler
-            ),
-            new ReplicationHTTPUserAuthenticator(
-                $password_handler,
-                $gerrit_server_factory,
-                new HttpUserValidator()
-            ),
-            $permissions_manager,
-            $user_dao
-        );
+        $this->http_access_control   = $http_access_control;
 
         $this->http_command_factory = new \Git_HTTP_CommandFactory(
             new VersionDetector()

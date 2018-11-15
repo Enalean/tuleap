@@ -53,7 +53,7 @@ class HTTPAccessControlTest extends TestCase
 
         $url_verification = \Mockery::mock(\URLVerification::class);
         $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_url          = \Mockery::mock(\Git_URL::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $url_verification->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -64,7 +64,7 @@ class HTTPAccessControlTest extends TestCase
         $expected_user->shouldReceive('getUnixName');
         $replication_http_user_authenticator->shouldReceive('authenticate')->andReturns($expected_user);
 
-        $authenticated_user = $http_access_control->getUser($url_verification, $git_repository, $git_url);
+        $authenticated_user = $http_access_control->getUser($url_verification, $git_repository, $git_operation);
 
         $this->assertSame($expected_user, $authenticated_user);
     }
@@ -87,7 +87,7 @@ class HTTPAccessControlTest extends TestCase
 
         $url_verification = \Mockery::mock(\URLVerification::class);
         $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_url          = \Mockery::mock(\Git_URL::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $url_verification->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -102,7 +102,7 @@ class HTTPAccessControlTest extends TestCase
         $user_login_manager->shouldReceive('authenticate')->andReturns($expected_user);
         $user_dao->shouldReceive('storeLastAccessDate')->once();
 
-        $authenticated_user = $http_access_control->getUser($url_verification, $git_repository, $git_url);
+        $authenticated_user = $http_access_control->getUser($url_verification, $git_repository, $git_operation);
 
         $this->assertSame($expected_user, $authenticated_user);
     }
@@ -128,7 +128,7 @@ class HTTPAccessControlTest extends TestCase
 
         $url_verification = \Mockery::mock(\URLVerification::class);
         $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_url          = \Mockery::mock(\Git_URL::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $url_verification->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -140,7 +140,7 @@ class HTTPAccessControlTest extends TestCase
         $user_login_manager->shouldReceive('authenticate')->
             andThrows(\Mockery::spy(\User_LoginException::class));
 
-        $http_access_control->getUser($url_verification, $git_repository, $git_url);
+        $http_access_control->getUser($url_verification, $git_repository, $git_operation);
 
         $this->fail('The test should have exited to request a valid basic authentication');
     }
@@ -166,7 +166,7 @@ class HTTPAccessControlTest extends TestCase
 
         $url_verification = \Mockery::mock(\URLVerification::class);
         $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_url          = \Mockery::mock(\Git_URL::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $url_verification->shouldReceive('doesPlatformRequireLogin')->andReturns(true);
@@ -174,7 +174,7 @@ class HTTPAccessControlTest extends TestCase
         $_SERVER['PHP_AUTH_USER'] = '';
         $_SERVER['PHP_AUTH_PW']   = '';
 
-        $http_access_control->getUser($url_verification, $git_repository, $git_url);
+        $http_access_control->getUser($url_verification, $git_repository, $git_operation);
 
         $this->fail('The test should have exited to request a valid basic authentication');
     }
@@ -197,17 +197,17 @@ class HTTPAccessControlTest extends TestCase
 
         $url_verification = \Mockery::mock(\URLVerification::class);
         $git_repository   = \Mockery::mock(\GitRepository::class);
-        $git_url          = \Mockery::mock(\Git_URL::class);
+        $git_operation    = \Mockery::mock(GitHTTPOperation::class);
 
         $logger->shouldReceive('debug');
         $url_verification->shouldReceive('doesPlatformRequireLogin')->andReturns(false);
-        $git_url->shouldReceive('isGitPush')->andReturns(false);
+        $git_operation->shouldReceive('isWrite')->andReturns(false);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('isPublic')->andReturns(true);
         $git_repository->shouldReceive('getProject')->andReturns($project);
         $git_repository->shouldReceive('getId')->andReturns(1);
         $permissions_manager->shouldReceive('getAuthorizedUgroupIds')->andReturns([\ProjectUGroup::ANONYMOUS]);
 
-        $this->assertNull($http_access_control->getUser($url_verification, $git_repository, $git_url));
+        $this->assertNull($http_access_control->getUser($url_verification, $git_repository, $git_operation));
     }
 }

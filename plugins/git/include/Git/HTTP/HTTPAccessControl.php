@@ -70,29 +70,24 @@ class HTTPAccessControl
     }
 
     /**
-     * @return null|false|\PFO_User
+     * @return null|\PFO_User
      */
-    public function getUser(\URLVerification $url_verification, \GitRepository $repository, \Git_URL $url)
+    public function getUser(\URLVerification $url_verification, \GitRepository $repository, GitHTTPOperation $git_operation)
     {
         $user = null;
-        if ($this->needAuthentication($url_verification, $repository, $url)) {
+        if ($this->needAuthentication($url_verification, $repository, $git_operation)) {
             $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
             $user = $this->authenticate($repository);
         }
         return $user;
     }
 
-    private function needAuthentication(\URLVerification $url_verification, \GitRepository $repository, \Git_URL $url)
+    private function needAuthentication(\URLVerification $url_verification, \GitRepository $repository, GitHTTPOperation $git_operation)
     {
         return $url_verification->doesPlatformRequireLogin() ||
-            $this->isGitPush($url) ||
+            $git_operation->isWrite() ||
             ! $this->canBeReadByAnonymous($repository) ||
             $this->isInPrivateProject($repository);
-    }
-
-    private function isGitPush(\Git_URL $url)
-    {
-        return $url->isGitPush();
     }
 
     private function isInPrivateProject(\GitRepository $repository)
@@ -120,7 +115,7 @@ class HTTPAccessControl
 
     /**
      * @param \GitRepository $repository
-     * @return false|\PFO_User
+     * @return \PFO_User
      */
     private function authenticate(\GitRepository $repository)
     {
@@ -157,7 +152,7 @@ class HTTPAccessControl
             $this->basicAuthenticationChallenge();
         }
 
-        return false;
+        throw new \RuntimeException('Requesting basic authentication for a Git HTTP operation have failed');
     }
 
     private function updateLastAccessDateForUser(PFUser $user)
