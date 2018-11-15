@@ -17,13 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 const path = require("path");
-const webpack_configurator = require("../../../../tools/utils/scripts/webpack-configurator.js");
+const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
-const assets_dir_path = path.resolve(__dirname, "../../../../src/www/assets/document/scripts");
+const assets_dir_path = path.resolve(__dirname, "../../../src/www/assets/document/scripts");
 
 const webpack_config = {
     entry: {
-        document: "./index.js"
+        document: "./document/index.js"
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
@@ -45,7 +45,7 @@ const webpack_config = {
     },
     plugins: [webpack_configurator.getManifestPlugin(), webpack_configurator.getVueLoaderPlugin()],
     resolveLoader: {
-        alias: webpack_configurator.extendAliases({}, webpack_configurator.easygettext_loader_alias)
+        alias: webpack_configurator.easygettext_loader_alias
     }
 };
 
