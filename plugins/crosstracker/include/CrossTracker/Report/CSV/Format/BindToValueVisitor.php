@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Report\CSV\Format;
 
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
@@ -32,21 +31,16 @@ class BindToValueVisitor implements BindVisitor
 {
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
-        /** @var BindToValueParameters $bind_to_value_parameters */
-        $bind_to_value_parameters = $parameters;
-
-        $changeset_value = $bind_to_value_parameters->getChangesetValue();
-        $selected_bind_value_ids = $changeset_value->getValue();
+        $selected_bind_value_ids = $this->getSelectedBindValueIds($parameters);
         if (empty($selected_bind_value_ids)) {
             return new EmptyValue();
         }
         $bind_value_id = $selected_bind_value_ids[0];
-        if ($bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
             return new EmptyValue();
         }
 
         try {
-            /** @var Tracker_FormElement_Field_List_Bind_StaticValue $list_value */
             $list_value = $bind->getValue($bind_value_id);
             return new TextValue($list_value->getLabel());
         } catch (\Tracker_FormElement_InvalidFieldValueException $e) {
@@ -56,7 +50,17 @@ class BindToValueVisitor implements BindVisitor
 
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
-        return new EmptyValue();
+        $selected_bind_value_ids = $this->getSelectedBindValueIds($parameters);
+        if (empty($selected_bind_value_ids)) {
+            return new EmptyValue();
+        }
+        $bind_value_id = $selected_bind_value_ids[0];
+        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+            return new EmptyValue();
+        }
+
+        $list_value = $bind->getValue($bind_value_id);
+        return new UserValue($list_value->getUser());
     }
 
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
@@ -67,5 +71,12 @@ class BindToValueVisitor implements BindVisitor
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)
     {
         return new EmptyValue();
+    }
+
+    private function getSelectedBindValueIds(BindToValueParameters $parameters)
+    {
+        $changeset_value         = $parameters->getChangesetValue();
+        $selected_bind_value_ids = $changeset_value->getValue();
+        return $selected_bind_value_ids;
     }
 }
