@@ -102,7 +102,9 @@ class FormElementToValueVisitor implements \Tracker_FormElement_FieldVisitor
 
     public function visitText(Tracker_FormElement_Field_Text $field)
     {
-        return new TextValue($this->changeset_value->getValue());
+        /** @var \Tracker_Artifact_ChangesetValue_Text $text_changeset_value */
+        $text_changeset_value = $this->changeset_value;
+        return new TextValue($text_changeset_value->getContentAsText());
     }
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field)
