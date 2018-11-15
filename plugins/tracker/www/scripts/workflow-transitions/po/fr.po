@@ -13,6 +13,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Change or remove"
+msgstr "Modifier ou supprimer"
+
+msgid "Enable transition rules"
+msgstr "Activer les règles de transition"
+
 msgid "Field"
 msgstr "Champ"
 
@@ -36,3 +42,13 @@ msgstr "Champ sur lequel les transitions sont basées"
 
 msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"
+
+msgid "Use advanced configuration"
+msgstr "Utiliser la configuration avancée"
+
+msgid ""
+"Use advanced configuration if you want to configure each transition "
+"independently."
+msgstr ""
+"Utilisez la configuration avancée si vous voulez configurer chaque "
+"transition indépendamment."

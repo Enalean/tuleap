@@ -17,18 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import state from "./state.js";
-import * as actions from "./actions.js";
-import mutations from "./mutations.js";
-import * as getters from "./getters.js";
+export const workflow_field_label = state => {
+    if (state.current_tracker === null) {
+        return null;
+    }
 
-Vue.use(Vuex);
+    const selected_field = state.current_tracker.fields.find(
+        field => field.field_id === state.current_tracker.workflow.field_id
+    );
+    return selected_field.label;
+};
 
-export default new Vuex.Store({
-    state,
-    actions,
-    mutations,
-    getters
-});
+export const are_transition_rules_enforced = state => {
+    if (!state.current_tracker) {
+        return false;
+    }
+
+    return Boolean(parseInt(state.current_tracker.workflow.is_used, 10));
+};
