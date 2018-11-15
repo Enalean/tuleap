@@ -31,18 +31,12 @@ class BindToValueVisitor implements BindVisitor
 {
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
-        $selected_bind_value_ids = $this->getSelectedBindValueIds($parameters);
-        if (empty($selected_bind_value_ids)) {
-            return new EmptyValue();
-        }
-        $bind_value_id = $selected_bind_value_ids[0];
-        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
-            return new EmptyValue();
-        }
-
         try {
-            $list_value = $bind->getValue($bind_value_id);
+            $bind_value_id = $this->getSelectedBindValueId($parameters);
+            $list_value    = $bind->getValue($bind_value_id);
             return new TextValue($list_value->getLabel());
+        } catch (BindValueIsEmptyException $e) {
+            return new EmptyValue();
         } catch (\Tracker_FormElement_InvalidFieldValueException $e) {
             return new EmptyValue();
         }
@@ -50,22 +44,27 @@ class BindToValueVisitor implements BindVisitor
 
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
-        $selected_bind_value_ids = $this->getSelectedBindValueIds($parameters);
-        if (empty($selected_bind_value_ids)) {
+        try {
+            $bind_value_id = $this->getSelectedBindValueId($parameters);
+            $list_value = $bind->getValue($bind_value_id);
+            if ($list_value === null) {
+                return new EmptyValue();
+            }
+            return new UserValue($list_value->getUser());
+        } catch (BindValueIsEmptyException $e) {
             return new EmptyValue();
         }
-        $bind_value_id = $selected_bind_value_ids[0];
-        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
-            return new EmptyValue();
-        }
-
-        $list_value = $bind->getValue($bind_value_id);
-        return new UserValue($list_value->getUser());
     }
 
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
     {
-        return new EmptyValue();
+        try {
+            $bind_value_id = $this->getSelectedBindValueId($parameters);
+            $list_value = $bind->getValue($bind_value_id);
+            return new TextValue($list_value->getLabel());
+        } catch (BindValueIsEmptyException $e) {
+            return new EmptyValue();
+        }
     }
 
     public function visitListBindNull(Tracker_FormElement_Field_List_Bind_Null $bind, BindParameters $parameters)
@@ -73,10 +72,28 @@ class BindToValueVisitor implements BindVisitor
         return new EmptyValue();
     }
 
-    private function getSelectedBindValueIds(BindToValueParameters $parameters)
+    private function getBindValueIds(BindToValueParameters $parameters)
     {
         $changeset_value         = $parameters->getChangesetValue();
         $selected_bind_value_ids = $changeset_value->getValue();
         return $selected_bind_value_ids;
+    }
+
+    /**
+     * @throws BindValueIsEmptyException
+     * @return int
+     */
+    private function getSelectedBindValueId(BindToValueParameters $parameters)
+    {
+        $selected_bind_value_ids = $this->getBindValueIds($parameters);
+        if (empty($selected_bind_value_ids)) {
+            throw new BindValueIsEmptyException();
+        }
+        $bind_value_id = $selected_bind_value_ids[0];
+        if ((int)$bind_value_id === \Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
+            throw new BindValueIsEmptyException();
+        }
+
+        return $bind_value_id;
     }
 }
