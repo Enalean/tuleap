@@ -15,13 +15,23 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
+ *
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/DocmanDataBuilder.php';
+namespace Tuleap\Docman\rest;
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
+use RestBase;
 
-$data_builder = new DocmanDataBuilder();
-$data_builder->setUp();
+class DocmanBase extends RestBase
+{
+    const PROJECT_NAME = 'docmanproject';
+    protected $project_id;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->project_id = $this->getProjectId(self::PROJECT_NAME);
+    }
+}

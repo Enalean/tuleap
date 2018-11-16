@@ -34,14 +34,15 @@ use Tuleap\Docman\Notifications\UsersRetriever;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
+use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
-use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
+use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
 use Tuleap\Widget\Event\GetPublicAreas;
 
@@ -141,6 +142,7 @@ class DocmanPlugin extends Plugin
             $this->addHook(FULLTEXTSEARCH_EVENT_DOES_DOCMAN_SERVICE_USE_UGROUP);
         }
 
+        $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
 
         return parent::getHooksAndCallbacks();
@@ -1219,13 +1221,24 @@ class DocmanPlugin extends Plugin
             return;
         }
 
-        $item_representation_builder = new ItemRepresentationBuilder(new Docman_ItemDao());
-        $item_representation = $item_representation_builder->build($project);
+        $item_representation_builder = new ItemRepresentationBuilder(
+            new Docman_ItemDao(),
+            $this->getUserManager(),
+            $this->getItemFactory()
+        );
 
+        $item_representation = $item_representation_builder->buildRootId($project);
         if (! $item_representation) {
             return;
         }
 
         $params['informations'][$this->getName()]['root_item'] = $item_representation;
+    }
+
+    /** @see Event::REST_RESOURCES */
+    public function restResources(array $params)
+    {
+        $injector = new ResourcesInjector();
+        $injector->populate($params['restler']);
     }
 }

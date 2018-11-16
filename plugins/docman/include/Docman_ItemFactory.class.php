@@ -21,8 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
+use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
 
 require_once('common/dao/CodendiDataAccess.class.php');
@@ -112,7 +112,11 @@ class Docman_ItemFactory
         return $this->groupId;
     }
 
-    function &getItemFromRow(&$row) {
+    /**
+     * @return Docman_Item|null|void
+     */
+    public function getItemFromRow(&$row)
+    {
         $item = null;
         switch($row['item_type']) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FOLDER:
@@ -298,7 +302,7 @@ class Docman_ItemFactory
     }
 
     /**
-     * @return Docman_Item
+     * @return Docman_Item | null
      */
     public function getItemFromDb($id, $params = array()) {
         $dao = $this->_getItemDao();

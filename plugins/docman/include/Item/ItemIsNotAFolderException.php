@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/../../../../src/vendor/autoload.php';
-require_once __DIR__ . '/DocmanDataBuilder.php';
+namespace Tuleap\Docman\Item;
 
-use Tuleap\Docman\rest\DocmanDataBuilder;
-
-$data_builder = new DocmanDataBuilder();
-$data_builder->setUp();
+class ItemIsNotAFolderException extends \Exception
+{
+}

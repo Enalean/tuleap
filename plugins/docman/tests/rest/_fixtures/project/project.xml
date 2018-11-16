@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="DocmanProject" full-name="DocmanProject" description="e" access="public">
+    <long-description></long-description>
+    <services>
+        <service shortname="summary" enabled="1"/>
+        <service shortname="admin" enabled="1"/>
+        <service shortname="mail" enabled="0"/>
+        <service shortname="docman" enabled="1"/>
+        <service shortname="plugin_svn" enabled="0"/>
+        <service shortname="file" enabled="0"/>
+        <service shortname="plugin_tracker" enabled="0"/>
+        <service shortname="plugin_agiledashboard" enabled="0"/>
+        <service shortname="hudson" enabled="0"/>
+        <service shortname="plugin_git" enabled="0"/>
+    </services>
+    <ugroups>
+        <ugroup name="project_admins" description="Project administrators">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+            </members>
+        </ugroup>
+        <ugroup name="project_members" description="Project members">
+            <members>
+                <member format="username">rest_api_tester_1</member>
+                <member format="username">docman_regular_user</member>
+            </members>
+        </ugroup>
+    </ugroups>
+</project>

@@ -18,38 +18,42 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\Item;
 
-use Tuleap\REST\JsonCast;
-use Tuleap\User\REST\MinimalUserRepresentation;
+use Tuleap\Docman\REST\v1\ItemRepresentation;
 
-class ItemRepresentation
+class PaginatedDocmanItemCollection
 {
     /**
-     * @var int {@type int}
+     * @var int
      */
-    public $item_id;
+    private $size = 0;
 
     /**
-     * @var string {@type string}
+     * @var ItemRepresentation[]
      */
-    public $name;
+    private $paginated_element_collection = [];
 
     /**
-     * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
+     * @param ItemRepresentation[] $paginated_element_collection
+     * @param int                  $size
      */
-    public $owner;
-
-    /**
-     * @var string {@type string}
-     */
-    public $last_update_date;
-
-    public function __construct(\Docman_Item $item, MinimalUserRepresentation $owner)
+    public function __construct(array $paginated_element_collection, $size)
     {
-        $this->item_id          = JsonCast::toInt($item->getId());
-        $this->name             = $item->getTitle();
-        $this->owner            = $owner;
-        $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
+        $this->paginated_element_collection = $paginated_element_collection;
+        $this->size                         = $size;
+    }
+
+    /**
+     * @return ItemRepresentation[]
+     */
+    public function getPaginatedElementCollection()
+    {
+        return $this->paginated_element_collection;
+    }
+
+    public function getTotalSize()
+    {
+        return $this->size;
     }
 }
