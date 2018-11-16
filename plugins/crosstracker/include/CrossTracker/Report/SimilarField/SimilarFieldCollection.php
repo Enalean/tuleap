@@ -32,7 +32,7 @@ class SimilarFieldCollection implements \IteratorAggregate
     /**
      * @var Tracker_FormElement_Field[]
      */
-    private $similar_fields_sorted_by_name_and_tracker_id;
+    private $candidates_sorted_by_identifier_and_tracker_id;
 
     public function __construct(SimilarFieldCandidate ...$candidates)
     {
@@ -48,7 +48,7 @@ class SimilarFieldCollection implements \IteratorAggregate
         return array_filter(
             $candidates,
             function (SimilarFieldCandidate $candidate) use ($count_of_trackers) {
-                return $count_of_trackers[$candidate->getIdentifier()] > 1;
+                return $count_of_trackers[$candidate->getTypeWithBind()] > 1;
             }
         );
     }
@@ -61,7 +61,7 @@ class SimilarFieldCollection implements \IteratorAggregate
         return array_reduce(
             $candidates,
             function ($accumulator, SimilarFieldCandidate $candidate) {
-                $count_key = $candidate->getIdentifier();
+                $count_key = $candidate->getTypeWithBind();
                 if (! isset($accumulator[$count_key])) {
                     $accumulator[$count_key] = 1;
                 } else {
@@ -79,37 +79,56 @@ class SimilarFieldCollection implements \IteratorAggregate
      */
     public function getFieldNames()
     {
-        $this->sortSimilarFieldsByNameAndTrackerIDIfNeeded();
-        return array_keys($this->similar_fields_sorted_by_name_and_tracker_id);
+        $this->sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded();
+
+        $identifier_strings = array_keys($this->candidates_sorted_by_identifier_and_tracker_id);
+        return array_map(function ($identifier_string) {
+            $identifier = SimilarFieldIdentifier::buildFromIdentifierString($identifier_string);
+            return $identifier->getLabel();
+        }, $identifier_strings);
     }
 
     /**
-     * @param Tracker_Artifact $artifact
-     * @param string           $field_name
-     * @return Tracker_FormElement_Field|null
+     * @return SimilarFieldIdentifier[]
      */
-    public function getField(Tracker_Artifact $artifact, $field_name)
+    public function getFieldIdentifiers()
     {
-        $this->sortSimilarFieldsByNameAndTrackerIDIfNeeded();
-        if (! isset($this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$artifact->getTrackerId()])) {
-            return null;
-        }
-        return $this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$artifact->getTrackerId()];
+        $this->sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded();
+
+        $identifier_strings = array_keys($this->candidates_sorted_by_identifier_and_tracker_id);
+        return array_map(function ($identifier_string) {
+            return SimilarFieldIdentifier::buildFromIdentifierString($identifier_string);
+        }, $identifier_strings);
     }
 
-    private function sortSimilarFieldsByNameAndTrackerIDIfNeeded()
+    /**
+     * @return Tracker_FormElement_Field|null
+     */
+    public function getField(Tracker_Artifact $artifact, SimilarFieldIdentifier $identifier)
     {
-        if ($this->similar_fields_sorted_by_name_and_tracker_id !== null) {
+        $this->sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded();
+        $identifier_string = $identifier->getIdentifierWithBindType();
+        if (! isset(
+            $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$artifact->getTrackerId()]
+        )) {
+            return null;
+        }
+        return $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$artifact->getTrackerId()];
+    }
+
+    private function sortSimilarFieldsByIdentifierAndTrackerIDIfNeeded()
+    {
+        if ($this->candidates_sorted_by_identifier_and_tracker_id !== null) {
             return;
         }
-        $this->similar_fields_sorted_by_name_and_tracker_id = [];
+        $this->candidates_sorted_by_identifier_and_tracker_id = [];
         foreach ($this->similar_candidates as $similar_field) {
-            $field      = $similar_field->getField();
-            $field_name = $field->getName();
-            if (! isset($this->similar_fields_sorted_by_name_and_tracker_id[$field_name])) {
-                $this->similar_fields_sorted_by_name_and_tracker_id[$field_name] = [];
+            $field             = $similar_field->getField();
+            $identifier_string = $similar_field->getIdentifierWithBindType();
+            if (! isset($this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string])) {
+                $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string] = [];
             }
-            $this->similar_fields_sorted_by_name_and_tracker_id[$field_name][$field->getTrackerId()] = $field;
+            $this->candidates_sorted_by_identifier_and_tracker_id[$identifier_string][$field->getTrackerId()] = $field;
         }
     }
 

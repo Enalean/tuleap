@@ -43,6 +43,8 @@ class SimilarFieldsMatcherTest extends TestCase
     private $report;
     /** @var SimilarFieldsFilter | Mockery\MockInterface */
     private $similar_fields_filter;
+    /** @var BindNameVisitor | Mockery\MockInterface */
+    private $bind_name_visitor;
 
     protected function setUp()
     {
@@ -55,11 +57,13 @@ class SimilarFieldsMatcherTest extends TestCase
             ->shouldReceive('filterCandidatesUsedInSemantics')->andReturnUsing(function (...$args) {
                 return $args;
             })->getMock();
+        $this->bind_name_visitor = Mockery::mock(BindNameVisitor::class);
 
         $this->matcher                 = new SimilarFieldsMatcher(
             $this->similar_fields_dao,
             $this->form_element_factory,
-            $this->similar_fields_filter
+            $this->similar_fields_filter,
+            $this->bind_name_visitor
         );
     }
 
