@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "98bd3a533bb38ee55eaf4f3d810fdc82",
+    "content-hash": "7621c435caf836d3d8ccc96a337eab83",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1844,6 +1844,47 @@
                 "punycode"
             ],
             "time": "2016-11-16T10:37:54+00:00"
+        },
+        {
+            "name": "verot/class.upload.php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/verot/class.upload.php.git",
+                "reference": "6a4bcb5383634ebf3e802e0eae51af553988c7e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/verot/class.upload.php/zipball/6a4bcb5383634ebf3e802e0eae51af553988c7e8",
+                "reference": "6a4bcb5383634ebf3e802e0eae51af553988c7e8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/class.upload.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Colin Verot",
+                    "email": "colin@verot.net"
+                }
+            ],
+            "description": "This PHP class uploads files and manipulates images very easily.",
+            "homepage": "http://www.verot.net/php_class_upload.htm",
+            "keywords": [
+                "gd",
+                "upload"
+            ],
+            "time": "2018-10-31T20:29:58+00:00"
         },
         {
             "name": "zendframework/zend-loader",
@@ -3851,7 +3892,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "luracast/restler": 20,
-        "mustache/mustache": 20
+        "mustache/mustache": 20,
+        "verot/class.upload.php": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
