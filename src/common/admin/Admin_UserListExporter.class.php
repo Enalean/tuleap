@@ -101,8 +101,7 @@ class Admin_UserListExporter {
         if ((int) $last_access_date_timestamp === 0) {
             return $GLOBALS['Language']->getText('admin_userlist', 'never_logged');
         }
-
-        return date('Y M d H:i', $last_access_date_timestamp);
+        return format_date(util_get_user_preferences_export_datefmt(), $last_access_date_timestamp);
     }
 
     /**
