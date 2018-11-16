@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -291,5 +291,21 @@ class Tracker_Semantic_Description extends Tracker_Semantic {
      */
     public function isUsedInSemantics($field) {
         return $this->getFieldId() == $field->getId();
+    }
+
+    /**
+     * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function setInstance(Tracker_Semantic_Description $description, Tracker $tracker)
+    {
+        self::$_instances[$tracker->getId()] = $description;
+    }
+
+    /**
+     * Allows to clear Semantics for tests. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstances()
+    {
+        self::$_instances = null;
     }
 }

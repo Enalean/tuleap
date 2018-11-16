@@ -40,9 +40,9 @@ class SimilarFieldCandidate
     /**
      * @return string
      */
-    public function getType()
+    public function getIdentifier()
     {
-        return $this->type;
+        return $this->type . '/' . $this->field->getName();
     }
 
     /**
@@ -51,5 +51,13 @@ class SimilarFieldCandidate
     public function getField()
     {
         return $this->field;
+    }
+
+    /**
+     * @return null|\Tracker
+     */
+    public function getTracker()
+    {
+        return $this->field->getTracker();
     }
 }

@@ -29,6 +29,9 @@ class SimilarFieldCollection implements \IteratorAggregate
      * @var SimilarFieldCandidate[]
      */
     private $similar_candidates;
+    /**
+     * @var Tracker_FormElement_Field[]
+     */
     private $similar_fields_sorted_by_name_and_tracker_id;
 
     public function __construct(SimilarFieldCandidate ...$candidates)
@@ -37,16 +40,15 @@ class SimilarFieldCollection implements \IteratorAggregate
     }
 
     /**
-     * @return mixed[]
+     * @return SimilarFieldCandidate[]
      */
     private function filterCandidatesWithLessThanTwoTrackers(SimilarFieldCandidate ...$candidates)
     {
         $count_of_trackers = $this->countTrackersWithSameNameAndSameTypeFields(...$candidates);
         return array_filter(
             $candidates,
-            function (SimilarFieldCandidate $field) use ($count_of_trackers) {
-                $count_key = $this->getCountKey($field);
-                return $count_of_trackers[$count_key] > 1;
+            function (SimilarFieldCandidate $candidate) use ($count_of_trackers) {
+                return $count_of_trackers[$candidate->getIdentifier()] > 1;
             }
         );
     }
@@ -58,8 +60,8 @@ class SimilarFieldCollection implements \IteratorAggregate
     {
         return array_reduce(
             $candidates,
-            function ($accumulator, $row) {
-                $count_key = $this->getCountKey($row);
+            function ($accumulator, SimilarFieldCandidate $candidate) {
+                $count_key = $candidate->getIdentifier();
                 if (! isset($accumulator[$count_key])) {
                     $accumulator[$count_key] = 1;
                 } else {
@@ -70,16 +72,6 @@ class SimilarFieldCollection implements \IteratorAggregate
             },
             []
         );
-    }
-
-    /**
-     * @return string
-     */
-    private function getCountKey(SimilarFieldCandidate $candidate)
-    {
-        $field_name = $candidate->getField()->getName();
-        $field_type = $candidate->getType();
-        return $field_type . '/' . $field_name;
     }
 
     /**
