@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,9 +108,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue
      */
-    public function getValue($value_id) {
+    public function getValue($value_id)
+    {
         $vs = $this->getAllValues();
         $v = null;
         if (isset($vs[$value_id])) {

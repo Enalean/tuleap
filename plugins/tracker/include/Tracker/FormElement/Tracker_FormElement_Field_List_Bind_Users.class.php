@@ -141,7 +141,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue | null
      */
     public function getValue($value_id)
     {
@@ -294,7 +294,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Return the addtionnal value
      *
-     * @return Tracker_FormElement_Field_List_Bind_UsersValue
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue|null
      */
     protected function getAdditionnalValue($value_id) {
         if (!isset($this->additionnal_values[$value_id])) {
