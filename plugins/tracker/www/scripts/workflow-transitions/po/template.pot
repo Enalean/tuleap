@@ -5,10 +5,22 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "Field"
+msgstr ""
+
+msgid ""
+"In order to configure transitions rules on this tracker, your first need to "
+"choose a list field. Once chosen, you will be able to configure transition "
+"using the configuration matrix."
+msgstr ""
+
 msgid "Page under construction"
 msgstr ""
 
 msgid "Tracker cannot be loaded"
+msgstr ""
+
+msgid "Transitions based field"
 msgstr ""
 
 msgid "Transitions rules configuration"

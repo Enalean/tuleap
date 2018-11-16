@@ -13,11 +13,26 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "Field"
+msgstr "Champ"
+
+msgid ""
+"In order to configure transitions rules on this tracker, your first need to "
+"choose a list field. Once chosen, you will be able to configure transition "
+"using the configuration matrix."
+msgstr ""
+"Afin de configurer les règles de transition sur cet outil de suivi, vous "
+"devez d'abord choisir un champ de type liste. Une fois choisi, vous pourrez "
+"configurer les transitions en utilisant la matrice de configuration."
+
 msgid "Page under construction"
 msgstr "Page en construction"
 
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"
+
+msgid "Transitions based field"
+msgstr "Champ sur lequel les transitions sont basées"
 
 msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"
