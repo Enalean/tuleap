@@ -25,7 +25,6 @@ use Workflow;
 
 class WorkflowMenuTabPresenterBuilder
 {
-
     const TAB_RULES                  = 'rules';
     const TAB_TRANSITIONS            = 'transitions';
     const TAB_CROSS_TRACKER_TRIGGERS = 'triggers';
@@ -35,7 +34,7 @@ class WorkflowMenuTabPresenterBuilder
     {
         $tabs_menu = $this->buildTabsMenu($tracker);
         $tabs_menu[$active_tab_name]['is_active'] = true;
-        return new WorkflowMenuTabPresenter(array_values($tabs_menu));
+        return new WorkflowMenuTabPresenter(array_values($tabs_menu), $tracker->getId());
     }
 
     private function buildTabsMenu(Tracker $tracker)

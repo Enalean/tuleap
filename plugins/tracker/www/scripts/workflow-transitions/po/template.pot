@@ -8,5 +8,8 @@ msgstr ""
 msgid "Page under construction"
 msgstr ""
 
+msgid "Tracker cannot be loaded"
+msgstr ""
+
 msgid "Transitions rules configuration"
 msgstr ""
