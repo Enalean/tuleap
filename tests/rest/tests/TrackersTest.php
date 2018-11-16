@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+namespace Tuleap\REST;
 
 use Tuleap\REST\TrackerBase;
 
@@ -25,49 +26,56 @@ use Tuleap\REST\TrackerBase;
  */
 class TrackersTest extends TrackerBase
 {
-    public function testOptionsTrackers() {
+    public function testOptionsTrackers()
+    {
         $response = $this->getResponse($this->client->options('trackers'));
 
         $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptionsTrackersId() {
+    public function testOptionsTrackersId()
+    {
         $response = $this->getResponse($this->client->options($this->getReleaseTrackerUri()));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptionsTrackersIdReports() {
+    public function testOptionsTrackersIdReports()
+    {
         $response = $this->getResponse($this->client->options($this->getReleaseTrackerReportsUri()));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptionsReportsId() {
+    public function testOptionsReportsId()
+    {
         $response = $this->getResponse($this->client->options($this->report_uri));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptionsReportsArtifactsId() {
+    public function testOptionsReportsArtifactsId()
+    {
         $response = $this->getResponse($this->client->options($this->getReportsArtifactsUri()));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testOptionsGetParentArtifacts() {
+    public function testOptionsGetParentArtifacts()
+    {
         $response = $this->getResponse($this->client->options('trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
 
         $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackersId() {
+    public function testGetTrackersId()
+    {
         $tracker_uri = $this->getReleaseTrackerUri();
         $response    = $this->getResponse($this->client->get($tracker_uri));
 
@@ -165,8 +173,10 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackerArtifactsBasicCounterQuery() {
-        $query = json_encode(array(
+    public function testGetTrackerArtifactsBasicCounterQuery()
+    {
+        $query = json_encode(
+            array(
             "Name" => "wwwxxxyyyzzz"
             )
         );
@@ -179,8 +189,10 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
-    public function testGetTrackerArtifactsAdvancedQuery() {
-        $query = json_encode(array(
+    public function testGetTrackerArtifactsAdvancedQuery()
+    {
+        $query = json_encode(
+            array(
             "Name" => array(
                 "operator"=>"contains",
                 "value"=>"lease"
@@ -250,14 +262,16 @@ class TrackersTest extends TrackerBase
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function testGetDeletedTrackerReturnsError() {
+    public function testGetDeletedTrackerReturnsError()
+    {
         $tracker_uri = $this->getDeletedTrackerId();
         $response    = $this->getResponse($this->client->get($tracker_uri));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
-    public function testGetParentArtifacts() {
+    public function testGetParentArtifacts()
+    {
         $response         = $this->getResponse($this->client->get('trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
         $parent_artifacts = $response->json();
 
@@ -270,16 +284,19 @@ class TrackersTest extends TrackerBase
         $this->assertEquals($parent_artifacts[4]['title'], "First epic");
     }
 
-    private function getDeletedTrackerId() {
+    private function getDeletedTrackerId()
+    {
         return "trackers/$this->deleted_tracker_id";
     }
 
-    private function getReleaseTrackerUri() {
+    private function getReleaseTrackerUri()
+    {
         $response_plannings = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'))->json();
         return $response_plannings[0]['milestone_tracker']['uri'];
     }
 
-    private function getReleaseTrackerReportsUri() {
+    private function getReleaseTrackerReportsUri()
+    {
         $response_tracker = $this->getResponse($this->client->get($this->getReleaseTrackerUri()))->json();
 
         foreach ($response_tracker['resources'] as $resource) {
@@ -289,7 +306,8 @@ class TrackersTest extends TrackerBase
         }
     }
 
-    private function getReportsArtifactsUri() {
+    private function getReportsArtifactsUri()
+    {
         $response_report = $this->getResponse($this->client->get($this->report_uri))->json();
 
 
