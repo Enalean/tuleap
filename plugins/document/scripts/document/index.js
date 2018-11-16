@@ -22,7 +22,9 @@ import GetTextPlugin from "vue-gettext";
 
 import french_translations from "./po/fr.po";
 import App from "./components/App.vue";
-
+import TimeAgo from "javascript-time-ago";
+import time_ago_english from "javascript-time-ago/locale/en";
+import time_ago_french from "javascript-time-ago/locale/fr";
 import store from "./store/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,7 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
         silent: true
     });
 
-    Vue.config.language = document.body.dataset.userLocale;
+    let user_locale = document.body.dataset.userLocale;
+    Vue.config.language = user_locale;
+    TimeAgo.locale(time_ago_english);
+    TimeAgo.locale(time_ago_french);
+    user_locale = user_locale.replace(/_/g, "-");
 
     const vue_mount_point = document.getElementById("document-tree-view");
 
@@ -52,7 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
         propsData: {
             projectId: project_id,
             projectName: project_name,
-            userIsAdmin: user_is_admin
+            userIsAdmin: user_is_admin,
+            userLocale: user_locale
         }
     }).$mount(vue_mount_point);
 });
