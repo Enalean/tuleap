@@ -312,7 +312,7 @@ msgid "Notify me on status change"
 msgstr "Me notifier à chaque changement de statut"
 
 msgid "Notify me when artifacts are created"
-msgstr "Me notifier lors de la création d'un nouveau artéfact"
+msgstr "Me notifier lors de la création d'un nouvel artéfact"
 
 msgid "On all updates?"
 msgstr "À chaque modification ?"
