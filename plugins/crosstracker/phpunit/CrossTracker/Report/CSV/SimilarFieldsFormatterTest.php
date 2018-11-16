@@ -108,7 +108,7 @@ class SimilarFieldsFormatterTest extends TestCase
         $string_changeset_value->shouldReceive('getValue')->andReturn('safari');
 
         $text_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
-        $text_changeset_value->shouldReceive('getValue')->andReturn('inappendiculate gas pearly');
+        $text_changeset_value->shouldReceive('getContentAsText')->andReturn('inappendiculate gas pearly');
 
         $float_changeset_value = Mockery::mock(\Tracker_Artifact_ChangesetValue_Float::class);
         $float_changeset_value->shouldReceive('getValue')->andReturn(48.6946);
