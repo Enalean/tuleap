@@ -21,31 +21,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import GettextPlugin from "vue-gettext";
-import french_translations from "../po/fr.po";
-import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
+import { get } from "tlp-fetch";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const vue_mount_point = document.getElementById("tracker-workflow-transitions");
+export { getTracker };
 
-    if (!vue_mount_point) {
-        return;
-    }
-
-    Vue.use(GettextPlugin, {
-        translations: {
-            fr: french_translations.messages
-        },
-        silent: true
-    });
-
-    const locale = document.body.dataset.userLocale;
-    Vue.config.language = locale;
-
-    const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
-    const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
-    new RootComponent({
-        propsData: { trackerId }
-    }).$mount(vue_mount_point);
-});
+async function getTracker(trackerId) {
+    const response = await get(`/api/trackers/${trackerId}`);
+    return response.json();
+}

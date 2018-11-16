@@ -16,5 +16,8 @@ msgstr ""
 msgid "Page under construction"
 msgstr "Page en construction"
 
+msgid "Tracker cannot be loaded"
+msgstr "Le tracker ne peut pas être chargé"
+
 msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"

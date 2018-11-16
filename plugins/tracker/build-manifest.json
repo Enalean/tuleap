@@ -39,7 +39,19 @@
                 "www/themes/BurningParrot/css/style-purple.scss",
                 "www/themes/BurningParrot/css/style-purple-condensed.scss",
                 "www/themes/BurningParrot/css/style-red.scss",
-                "www/themes/BurningParrot/css/style-red-condensed.scss"
+                "www/themes/BurningParrot/css/style-red-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-blue.scss",
+                "www/themes/BurningParrot/css/workflow-blue-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-green.scss",
+                "www/themes/BurningParrot/css/workflow-green-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-grey.scss",
+                "www/themes/BurningParrot/css/workflow-grey-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-orange.scss",
+                "www/themes/BurningParrot/css/workflow-orange-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-purple.scss",
+                "www/themes/BurningParrot/css/workflow-purple-condensed.scss",
+                "www/themes/BurningParrot/css/workflow-red.scss",
+                "www/themes/BurningParrot/css/workflow-red-condensed.scss"
             ],
             "includes": [
                 "../../src/www/themes/common/tlp/src/scss"

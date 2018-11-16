@@ -21,11 +21,12 @@ namespace Tuleap\Tracker\Workflow;
 
 class WorkflowMenuTabPresenter
 {
-
     public $tabs_menu;
+    public $tracker_id;
 
-    public function __construct(array $tabs_menu)
+    public function __construct(array $tabs_menu, $tracker_id)
     {
-        $this->tabs_menu = $tabs_menu;
+        $this->tabs_menu  = $tabs_menu;
+        $this->tracker_id = $tracker_id;
     }
 }
