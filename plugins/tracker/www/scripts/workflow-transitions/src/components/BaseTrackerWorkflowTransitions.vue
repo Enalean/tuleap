@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <div v-if="tracker_loading_failed" v-translate class="tlp-alert-danger">
+        <div v-if="is_current_tracker_load_failed" v-translate class="tlp-alert-danger">
             Tracker cannot be loaded
         </div>
         <section v-else class="tlp-pane">
@@ -27,11 +27,12 @@
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title" v-translate>Transitions rules configuration</h1>
                 </div>
-                <section v-if="is_tracker_available" class="tlp-pane-section">
+                <template v-if="is_tracker_available">
+                    <transitions-matrix-section v-if="is_base_field_configured"/>
+                    <first-configuration-section v-else/>
+                </template>
+                <section class="tlp-pane-section" v-else>
                     <div class="tracker-workflow-loader"></div>
-                </section>
-                <section v-else class="tlp-pane-section empty-page-text">
-                    <span v-translate>Page under construction</span>
                 </section>
             </div>
         </section>
@@ -39,10 +40,16 @@
 </template>
 
 <script>
-import { getTracker } from "../api/rest-querier.js";
+import FirstConfigurationSection from "./FirstConfigurationSection.vue";
+import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
+import { mapState } from "vuex";
 
 export default {
     name: "BaseTrackerWorflowTransitions",
+    components: {
+        FirstConfigurationSection,
+        TransitionsMatrixSection
+    },
 
     props: {
         trackerId: {
@@ -51,35 +58,26 @@ export default {
         }
     },
 
-    data() {
-        return {
-            is_tracker_loading: false,
-            tracker: null,
-            tracker_loading_failed: false
-        };
-    },
-
     computed: {
+        ...mapState([
+            "is_current_tracker_loading",
+            "current_tracker",
+            "is_current_tracker_load_failed"
+        ]),
         is_tracker_available() {
-            return this.is_tracker_loading || this.tracker === null;
+            return !this.is_current_tracker_loading && this.current_tracker;
+        },
+        is_base_field_configured() {
+            return (
+                this.current_tracker &&
+                this.current_tracker.workflow &&
+                Boolean(this.current_tracker.workflow.field_id)
+            );
         }
     },
 
     mounted() {
-        this.loadTracker();
-    },
-
-    methods: {
-        async loadTracker() {
-            try {
-                this.is_tracker_loading = true;
-                this.tracker = await getTracker(this.trackerId);
-            } catch (e) {
-                this.tracker_loading_failed = true;
-            } finally {
-                this.is_tracker_loading = false;
-            }
-        }
+        this.$store.dispatch("loadTracker", this.trackerId);
     }
 };
 </script>
