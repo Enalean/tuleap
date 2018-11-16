@@ -78,7 +78,7 @@ pipeline {
                             steps { script { actions.runKarmaTests('pullrequest', 'plugins/pullrequest/www/scripts') } }
                         }
                         stage('Karma CrossTracker plugin') {
-                            steps { script { actions.runKarmaTests('crosstracker', 'plugins/crosstracker/www/scripts') } }
+                            steps { script { actions.runKarmaTests('crosstracker', 'plugins/crosstracker/scripts') } }
                         }
                         stage('Karma TimeTracking plugin') {
                             steps { script { actions.runKarmaTests('timetracking', 'plugins/timetracking/www/scripts') } }
