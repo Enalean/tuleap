@@ -18,3 +18,5 @@
  */
 
 export const has_error = state => state.error_message !== null;
+
+export const is_folder_empty = state => state.folder_content.length === 0;

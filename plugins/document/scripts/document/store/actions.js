@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProject } from "../api/rest-querier.js";
+import { getProject, getFolderContent } from "../api/rest-querier.js";
 
 export const loadRootDocumentId = async context => {
     try {
@@ -28,6 +28,9 @@ export const loadRootDocumentId = async context => {
             "saveDocumentRootId",
             project.additional_informations.docman.root_item.item_id
         );
+
+        const folder_content = await getFolderContent(context.state.project_root_document_id);
+        context.commit("saveFolderContent", folder_content);
     } catch (e) {
         const { error } = await e.response.json();
         context.commit("setErrorMessage", error.message);

@@ -113,7 +113,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => '',
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'R',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 ),
                 array(
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
@@ -126,7 +127,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 ),
                 array(
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -139,7 +141,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => null,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 ),
                 array(
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_3_NAME],
@@ -152,7 +155,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => null,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 )
             )
         );
@@ -176,7 +180,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 )
             )
         );
@@ -200,7 +205,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 ),
                 array(
                     'id'           => $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME],
@@ -213,7 +219,8 @@ class UserGroupTest extends RestBase {
                     'ldap_id'      => null,
                     'avatar_url'   => 'https://localhost/themes/common/images/avatar_default.png',
                     'status'       => 'A',
-                    'is_anonymous' => false
+                    'is_anonymous' => false,
+                    'has_avatar' => false
                 )
             )
         );

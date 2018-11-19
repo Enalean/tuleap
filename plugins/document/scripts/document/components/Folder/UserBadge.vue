@@ -18,34 +18,19 @@
   -->
 
 <template>
-    <div>
-        <document-breadcrumb/>
-        <div class="tlp-framed">
-            <error-message/>
-            <folder-view/>
+    <div class="document-folder-badge-avatar">
+        <div class="tlp-avatar document-folder-badge-avatar-img">
+            <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
         </div>
+        <a v-bind:href="user.user_url"> {{ user.display_name }}</a>
     </div>
 </template>
-<script>
-import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import ErrorMessage from "./ErrorMessage.vue";
-import FolderView from "./FolderView.vue";
 
+<script>
 export default {
-    name: "App",
-    components: { DocumentBreadcrumb, ErrorMessage, FolderView },
+    name: "UserBadge",
     props: {
-        projectId: Number,
-        projectName: String,
-        userIsAdmin: Boolean
-    },
-    mounted() {
-        this.$store.commit("initDocumentTree", [
-            this.projectId,
-            this.projectName,
-            this.userIsAdmin
-        ]);
-        this.$store.dispatch("loadRootDocumentId");
+        user: Object
     }
 };
 </script>

@@ -17,12 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get } from "tlp";
+import { get, recursiveGet } from "tlp";
 
-export { getProject };
+export { getProject, getFolderContent };
 
 async function getProject(project_id) {
     const response = await get("/api/projects/" + project_id);
 
     return response.json();
+}
+
+function getFolderContent(folder_id) {
+    return recursiveGet("/api/docman_items/" + folder_id + "/docman_items", {
+        params: {
+            limit: 50,
+            offset: 0
+        }
+    });
 }

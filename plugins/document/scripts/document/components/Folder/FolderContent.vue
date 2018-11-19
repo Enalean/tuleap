@@ -18,34 +18,33 @@
   -->
 
 <template>
-    <div>
-        <document-breadcrumb/>
-        <div class="tlp-framed">
-            <error-message/>
-            <folder-view/>
-        </div>
-    </div>
+    <table class="tlp-table">
+        <thead>
+            <tr>
+                <th class="document-tree-head-name" v-translate>Name</th>
+                <th class="document-tree-head-owner" v-translate>Owner</th>
+                <th class="document-tree-head-updatedate" v-translate>Last update date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <folder-content-row v-for="element of folder_content"
+                                v-bind:key="element.item_id"
+                                v-bind:element="element"
+            />
+        </tbody>
+    </table>
 </template>
+
 <script>
-import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import ErrorMessage from "./ErrorMessage.vue";
-import FolderView from "./FolderView.vue";
+import { mapState } from "vuex";
+import FolderContentRow from "./FolderContentRow.vue";
 
 export default {
-    name: "App",
-    components: { DocumentBreadcrumb, ErrorMessage, FolderView },
-    props: {
-        projectId: Number,
-        projectName: String,
-        userIsAdmin: Boolean
-    },
-    mounted() {
-        this.$store.commit("initDocumentTree", [
-            this.projectId,
-            this.projectName,
-            this.userIsAdmin
-        ]);
-        this.$store.dispatch("loadRootDocumentId");
+    name: "FolderContent",
+    components: { FolderContentRow },
+    computed: {
+        ...mapState(["folder_content"])
     }
 };
 </script>
