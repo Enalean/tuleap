@@ -25,6 +25,13 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentation
 {
+    const TYPE_FOLDER   = 'folder';
+    const TYPE_FILE   = 'file';
+    const TYPE_LINK   = 'link';
+    const TYPE_EMBEDDED = 'embedded';
+    const TYPE_WIKI   = 'wiki';
+    const TYPE_EMPTY  = 'empty';
+
     /**
      * @var int {@type int}
      */
@@ -45,11 +52,17 @@ class ItemRepresentation
      */
     public $last_update_date;
 
-    public function __construct(\Docman_Item $item, MinimalUserRepresentation $owner)
+    /**
+     * @var string
+     */
+    public $type;
+
+    public function __construct(\Docman_Item $item, MinimalUserRepresentation $owner, $type)
     {
         $this->item_id          = JsonCast::toInt($item->getId());
         $this->name             = $item->getTitle();
         $this->owner            = $owner;
         $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
+        $this->type             = $type;
     }
 }

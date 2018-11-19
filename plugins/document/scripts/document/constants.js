@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,26 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-tree-head-name {
-    width: 100%;
-}
-
-.document-tree-head-owner,
-.document-tree-head-updatedate {
-    min-width: 200px;
-    white-space: nowrap;
-}
-
-.document-folder-badge-avatar {
-    display: flex;
-    align-items: center;
-}
-
-.document-folder-badge-avatar-img {
-    flex: 0 0 auto;
-    margin: 0 10px 0 0;
-}
-
-.document-error-message {
-    margin: $tlp-spacing $tlp-spacing 0;
-}
+export const ITEM_TYPE_FOLDER = "folder";

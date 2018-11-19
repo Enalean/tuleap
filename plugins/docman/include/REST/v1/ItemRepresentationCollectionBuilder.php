@@ -36,24 +36,24 @@ class ItemRepresentationCollectionBuilder
      */
     private $permission_manager;
     /**
-     * @var ItemRepresentationBuilder
-     */
-    private $item_representation_builder;
-    /**
      * @var \Docman_ItemDao
      */
     private $item_dao;
+    /**
+     * @var ItemRepresentationVisitor
+     */
+    private $item_representation_visitor;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
         \Docman_PermissionsManager $permission_manager,
-        ItemRepresentationBuilder $item_representation_builder,
+        ItemRepresentationVisitor $item_representation_visitor,
         \Docman_ItemDao $item_dao
     ) {
         $this->item_factory                = $item_factory;
         $this->permission_manager          = $permission_manager;
-        $this->item_representation_builder = $item_representation_builder;
         $this->item_dao                    = $item_dao;
+        $this->item_representation_visitor = $item_representation_visitor;
     }
 
     /**
@@ -61,14 +61,14 @@ class ItemRepresentationCollectionBuilder
      */
     public function buildFolderContent(\Docman_Item $item, \PFUser $user, $limit, $offset)
     {
+
         $dar        = $this->item_dao->searchByParentIdWithPagination($item->getId(), $limit, $offset);
         $row_number = $this->item_dao->foundRows();
-
         $children = [];
         foreach ($dar as $row) {
             if ($row && $this->permission_manager->userCanRead($user, $row['item_id'])) {
                 $docman_item = $this->item_factory->getItemFromRow($row);
-                $children[]  = $this->item_representation_builder->buildItemRepresentation($docman_item);
+                $children[]  = $docman_item->accept($this->item_representation_visitor, []);
             }
         }
 

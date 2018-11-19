@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,26 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-.document-tree-head-name {
-    width: 100%;
-}
+import Vue from "vue";
+import VueRouter from "vue-router";
+import RootFolder from "../components/RootFolder.vue";
+import ChildFolder from "../components/ChildFolder.vue";
 
-.document-tree-head-owner,
-.document-tree-head-updatedate {
-    min-width: 200px;
-    white-space: nowrap;
-}
+Vue.use(VueRouter);
 
-.document-folder-badge-avatar {
-    display: flex;
-    align-items: center;
-}
-
-.document-folder-badge-avatar-img {
-    flex: 0 0 auto;
-    margin: 0 10px 0 0;
-}
-
-.document-error-message {
-    margin: $tlp-spacing $tlp-spacing 0;
-}
+export const router = new VueRouter({
+    routes: [
+        {
+            path: "/",
+            component: RootFolder
+        },
+        {
+            path: "/folder/:item_id",
+            name: "folder",
+            component: ChildFolder
+        }
+    ]
+});

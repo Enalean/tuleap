@@ -14,36 +14,30 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
+  -
+  -
   -->
 
 <template>
-    <div>
-        <document-breadcrumb/>
-        <error-message/>
-        <router-view/>
+    <div class="tlp-framed">
+        <folder-view/>
     </div>
 </template>
+
 <script>
-import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import ErrorMessage from "./ErrorMessage.vue";
+import FolderView from "./FolderView.vue";
 
 export default {
-    name: "App",
-    components: { DocumentBreadcrumb, ErrorMessage },
-    props: {
-        projectId: Number,
-        projectName: String,
-        userIsAdmin: Boolean,
-        userLocale: String
+    name: "ChildFolder",
+    components: { FolderView },
+    watch: {
+        $route(to) {
+            this.$store.dispatch("loadFolderContent", [to.params.item_id]);
+        }
     },
-    created() {
-        this.$store.commit("initDocumentTree", [
-            this.projectId,
-            this.projectName,
-            this.userIsAdmin,
-            this.userLocale
-        ]);
+    mounted() {
+        this.$store.dispatch("loadFolderContent", [this.$route.params.item_id]);
     }
 };
 </script>

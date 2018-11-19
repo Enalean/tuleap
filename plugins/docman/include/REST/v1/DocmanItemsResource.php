@@ -76,6 +76,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @return ItemRepresentation[]
      *
      * @status 200
+     * @throws 400
      * @throws 403
      * @throws 404
      *
@@ -107,7 +108,13 @@ class DocmanItemsResource extends AuthenticatedResource
         $item_representation_builder = new ItemRepresentationCollectionBuilder(
             $item_factory,
             $this->getDocmanPermissionManager($project),
-            new ItemRepresentationBuilder($this->item_dao, $this->user_manager, $item_factory),
+            new ItemRepresentationVisitor(
+                new ItemRepresentationBuilder(
+                    $this->item_dao,
+                    $this->user_manager,
+                    $item_factory
+                )
+            ),
             $this->item_dao
         );
 

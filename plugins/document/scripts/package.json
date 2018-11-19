@@ -9,6 +9,7 @@
     "javascript-time-ago": "^1.0.32",
     "vue": "^2.5.17",
     "vue-gettext": "^2.1.0",
+    "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },
   "config": {

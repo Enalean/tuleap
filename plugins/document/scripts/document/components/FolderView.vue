@@ -20,7 +20,7 @@
 <template>
     <div>
         <h1 v-translate>Documents</h1>
-        <folder-loading-screen v-if="is_loading"/>
+        <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-if="has_loaded_without_error_and_is_empty">
             <div class="empty-pane">
                 <div class="empty-page-illustration">
@@ -51,8 +51,8 @@ export default {
     computed: {
         ...mapState({
             has_loaded_without_error_and_is_empty: (state, getters) =>
-                !state.is_loading_root_document && !getters.has_error && getters.is_folder_empty,
-            is_loading: state => state.is_loading_root_document
+                !state.is_loading_folder && !getters.has_error && getters.is_folder_empty,
+            is_loading_folder: state => state.is_loading_folder
         }),
         ...mapGetters(["is_folder_empty"])
     }

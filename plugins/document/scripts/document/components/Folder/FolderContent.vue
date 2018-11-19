@@ -28,9 +28,9 @@
         </thead>
 
         <tbody>
-            <folder-content-row v-for="element of folder_content"
-                                v-bind:key="element.item_id"
-                                v-bind:element="element"
+            <folder-content-row v-for="item of folder_content"
+                                v-bind:key="item.item_id"
+                                v-bind:item="item"
             />
         </tbody>
     </table>

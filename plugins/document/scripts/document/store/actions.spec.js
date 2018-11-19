@@ -92,10 +92,10 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", true);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", true);
             expect(context.commit).toHaveBeenCalledWith("saveDocumentRootId", 3);
             expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", false);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
         });
 
         it("When the root project can not be loaded, an error will be raised", async () => {
@@ -116,9 +116,9 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", true);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", true);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "Forbidden");
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", false);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
         });
 
         it("When the folder content can not be loaded, an error will be raised", async () => {
@@ -157,10 +157,10 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", true);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", true);
             expect(context.commit).toHaveBeenCalledWith("saveDocumentRootId", 3);
             expect(context.commit).toHaveBeenCalledWith("setErrorMessage", "No you cannot");
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingRootDocument", false);
+            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
         });
     });
 });
