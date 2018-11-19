@@ -2581,9 +2581,11 @@ class GitPlugin extends Plugin
                 $logger               = new \WrapperLogger($this->getLogger(), 'LFS Batch');
                 $lfs_batch_controller = new \Tuleap\Git\LFS\Batch\LFSBatchController(
                     $this->getRepositoryFactory(),
-                    $this->getHTTPAccessControl($logger),
-                    \UserManager::instance(),
-                    new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command()),
+                    new \Tuleap\Git\LFS\Batch\LFSBatchAPIHTTPAccessControl(
+                        $this->getHTTPAccessControl($logger),
+                        \UserManager::instance(),
+                        new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
+                    ),
                     $logger
                 );
                 return new \Tuleap\Git\LFS\LFSJSONHTTPDispatchable(
