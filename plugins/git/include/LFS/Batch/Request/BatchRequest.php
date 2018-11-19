@@ -162,4 +162,9 @@ class BatchRequest implements GitHTTPOperation
     {
         return $this->getOperation()->isUpload();
     }
+
+    public function isRead()
+    {
+        return $this->getOperation()->isDownload();
+    }
 }

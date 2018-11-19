@@ -560,6 +560,7 @@ done
 %{__install} plugins/git/etc/sudoers.d/tuleap-plugin-git $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__perl} -pi -e "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__perl} -pi -e "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
+%{__install} -D plugins/git/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
 
 #
 ##codendiadm > gitolite sudo
@@ -567,7 +568,6 @@ done
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 
 ## Plugin PullRequest
-%{__install} -D plugins/pullrequest/etc/sudoers.d/gitolite-access-command $RPM_BUILD_ROOT/etc/sudoers.d/gitolite-access-command
 %{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
 
@@ -928,6 +928,7 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_git
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.timer
 %attr(00644,root,root) %{_unitdir}/tuleap-process-system-events-git.service
 
@@ -936,7 +937,6 @@ fi
 %{APP_DIR}/plugins/pullrequest
 %{APP_DIR}/src/www/assets/pullrequest
 %config(noreplace) /etc/logrotate.d/tuleap_pullrequest
-%attr(00440,root,root) /etc/sudoers.d/gitolite-access-command
 
 %files plugin-ldap
 %defattr(-,root,root,-)

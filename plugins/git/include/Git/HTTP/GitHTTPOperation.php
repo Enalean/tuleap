@@ -26,4 +26,9 @@ interface GitHTTPOperation
      * @return bool
      */
     public function isWrite();
+
+    /**
+     * @return bool
+     */
+    public function isRead();
 }
