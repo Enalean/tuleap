@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\PullRequest\Authorization;
+namespace Tuleap\Git\Permissions;
 
 use GitRepository;
 use PFUser;
 use System_Command;
-use Tuleap\Git\Permissions\FineGrainedRetriever;
 
 class AccessControlVerifier
 {
@@ -48,6 +47,9 @@ class AccessControlVerifier
     public function canWrite(PFUser $user, GitRepository $repository, $reference)
     {
         if ($this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)) {
+            if ($reference === '') {
+                return false;
+            }
             return $this->canWriteAccordingToGitolite($user, $repository, $reference);
         }
 

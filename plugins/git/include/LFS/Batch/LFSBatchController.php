@@ -24,6 +24,7 @@ use HTTPRequest;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Git\LFS\Batch\Request\BatchRequest;
 use Tuleap\Git\LFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -38,6 +39,14 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
      * @var HTTPAccessControl
      */
     private $http_access_control;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
+    /**
+     * @var AccessControlVerifier
+     */
+    private $access_control_verifier;
     /**
      * @var \Logger
      */
@@ -54,11 +63,15 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
     public function __construct(
         \GitRepositoryFactory $repository_factory,
         HTTPAccessControl $http_access_control,
+        \UserManager $user_manager,
+        AccessControlVerifier $access_control_verifier,
         \Logger $logger
     ) {
-        $this->repository_factory  = $repository_factory;
-        $this->http_access_control = $http_access_control;
-        $this->logger              = $logger;
+        $this->repository_factory      = $repository_factory;
+        $this->http_access_control     = $http_access_control;
+        $this->user_manager            = $user_manager;
+        $this->access_control_verifier = $access_control_verifier;
+        $this->logger                  = $logger;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -100,7 +113,25 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             return true;
         }
 
-        throw new \RuntimeException('Authorization is not yet implemented', 501);
+        $user = $this->user_manager->getUserByUserName($pfo_user->getUnixName());
+        if ($user === null) {
+            return false;
+        }
+
+        if ($this->batch_request->isRead()) {
+            return $this->repository->userCanRead($user);
+        }
+
+        if ($this->batch_request->isWrite()) {
+            $reference      = $this->batch_request->getReference();
+            $reference_name = '';
+            if ($reference !== null) {
+                $reference_name = $reference->getName();
+            }
+            return $this->access_control_verifier->canWrite($user, $this->repository, $reference_name);
+        }
+
+        return false;
     }
 
     /**

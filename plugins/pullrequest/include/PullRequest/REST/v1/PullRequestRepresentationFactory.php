@@ -23,7 +23,7 @@ namespace Tuleap\PullRequest\REST\v1;
 use Tuleap\Git\CommitStatus\CommitStatus;
 use Tuleap\Git\CommitStatus\CommitStatusRetriever;
 use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
-use Tuleap\PullRequest\Authorization\AccessControlVerifier;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\PullRequest\GitExec;
 use Tuleap\PullRequest\PullRequest;
 use Tuleap\PullRequest\PullRequestWithGitReference;

@@ -61,6 +61,7 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
+use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -2581,6 +2582,8 @@ class GitPlugin extends Plugin
                 $lfs_batch_controller = new \Tuleap\Git\LFS\Batch\LFSBatchController(
                     $this->getRepositoryFactory(),
                     $this->getHTTPAccessControl($logger),
+                    \UserManager::instance(),
+                    new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command()),
                     $logger
                 );
                 return new \Tuleap\Git\LFS\LFSJSONHTTPDispatchable(

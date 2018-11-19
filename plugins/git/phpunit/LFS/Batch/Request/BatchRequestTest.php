@@ -45,6 +45,7 @@ class BatchRequestTest extends TestCase
 JSON;
         $batch_request = BatchRequest::buildFromJSONString($json);
         $this->assertTrue($batch_request->isWrite());
+        $this->assertFalse($batch_request->isRead());
         $objects = $batch_request->getObjects();
         $this->assertCount(2, $objects);
         $this->assertSame('12345678', $objects[0]->getOID());
@@ -61,6 +62,7 @@ JSON;
         $batch_request = BatchRequest::buildFromJSONString($json);
 
         $this->assertFalse($batch_request->isWrite());
+        $this->assertTrue($batch_request->isRead());
         $this->assertEmpty($batch_request->getObjects());
         $this->assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
         $this->assertNull($batch_request->getReference());
