@@ -23,26 +23,36 @@ namespace Tuleap\CrossTracker\Report\SimilarField;
 class SimilarFieldCandidate
 {
     /**
-     * @var string
+     * @var SimilarFieldIdentifier
      */
-    private $type;
+    private $identifier;
     /**
      * @var \Tracker_FormElement_Field
      */
     private $field;
+    /**
+     * @var SimilarFieldType
+     */
+    private $type;
 
-    public function __construct($type, \Tracker_FormElement_Field $field)
-    {
-        $this->type  = $type;
-        $this->field = $field;
+    const SEPARATOR_CHAR = '/';
+
+    public function __construct(
+        SimilarFieldIdentifier $identifier,
+        SimilarFieldType $type,
+        \Tracker_FormElement_Field $field
+    ) {
+        $this->identifier = $identifier;
+        $this->type       = $type;
+        $this->field      = $field;
     }
 
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getTypeWithBind()
     {
-        return $this->type . '/' . $this->field->getName();
+        return $this->type->getTypeIdentifierString() . self::SEPARATOR_CHAR . $this->field->getName();
     }
 
     /**
@@ -59,5 +69,10 @@ class SimilarFieldCandidate
     public function getTracker()
     {
         return $this->field->getTracker();
+    }
+
+    public function getIdentifierWithBindType()
+    {
+        return $this->identifier->getIdentifierWithBindType();
     }
 }

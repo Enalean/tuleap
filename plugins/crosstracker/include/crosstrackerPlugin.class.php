@@ -63,6 +63,7 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqua
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
+use Tuleap\CrossTracker\Report\SimilarField\BindNameVisitor;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsFilter;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
 use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
@@ -443,7 +444,8 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             new SimilarFieldsMatcher(
                 new SupportedFieldsDao(),
                 $form_element_factory,
-                new SimilarFieldsFilter()
+                new SimilarFieldsFilter(),
+                new BindNameVisitor()
             )
         );
     }

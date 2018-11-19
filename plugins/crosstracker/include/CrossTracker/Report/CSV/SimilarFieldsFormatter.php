@@ -51,12 +51,12 @@ class SimilarFieldsFormatter
         SimilarFieldCollection $similar_fields,
         FormatterParameters $parameters
     ) {
-        $field_names    = $similar_fields->getFieldNames();
-        $last_changeset = $artifact->getLastChangeset();
+        $field_identifiers = $similar_fields->getFieldIdentifiers();
+        $last_changeset    = $artifact->getLastChangeset();
 
         $field_values = [];
-        foreach ($field_names as $field_name) {
-            $field = $similar_fields->getField($artifact, $field_name);
+        foreach ($field_identifiers as $identifier) {
+            $field = $similar_fields->getField($artifact, $identifier);
             if ($field === null) {
                 $field_values[] = CSVRepresentation::CSV_EMPTY_VALUE;
                 continue;

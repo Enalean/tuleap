@@ -30,6 +30,7 @@ use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\FormatterParameters;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldCollection;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldIdentifier;
 
 class SimilarFieldsFormatterTest extends TestCase
 {
@@ -76,33 +77,37 @@ class SimilarFieldsFormatterTest extends TestCase
     {
         $string_field = Mockery::mock(\Tracker_FormElement_Field_String::class);
         $string_field->shouldReceive('accept')->passthru();
+        $string_field_identifier = new SimilarFieldIdentifier('pentarchical', null);
 
         $text_field = Mockery::mock(\Tracker_FormElement_Field_Text::class);
         $text_field->shouldReceive('accept')->passthru();
+        $text_field_identifier = new SimilarFieldIdentifier('semestrial', null);
 
         $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
         $float_field->shouldReceive('accept')->passthru();
+        $float_field_identifier = new SimilarFieldIdentifier('overimaginative', null);
 
         $date_field = Mockery::mock(\Tracker_FormElement_Field_Date::class);
         $date_field->shouldReceive('accept')->passthru();
         $date_field->shouldReceive('isTimeDisplayed')->andReturn(true);
+        $date_field_identifier = new SimilarFieldIdentifier('lithocenosis', null);
 
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(
+        $this->similar_fields->shouldReceive('getFieldIdentifiers')->andReturn(
             [
-                'pentarchical',
-                'semestrial',
-                'overimaginative',
-                'lithocenosis'
+                $string_field_identifier,
+                $text_field_identifier,
+                $float_field_identifier,
+                $date_field_identifier,
             ]
         );
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'pentarchical'])->andReturn($string_field);
+            ->withArgs([$this->artifact, $string_field_identifier])->andReturn($string_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'semestrial'])->andReturn($text_field);
+            ->withArgs([$this->artifact, $text_field_identifier])->andReturn($text_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'overimaginative'])->andReturn($float_field);
+            ->withArgs([$this->artifact, $float_field_identifier])->andReturn($float_field);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'lithocenosis'])->andReturn($date_field);
+            ->withArgs([$this->artifact, $date_field_identifier])->andReturn($date_field);
 
         $string_changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue::class);
         $string_changeset_value->shouldReceive('getValue')->andReturn('safari');
@@ -145,9 +150,10 @@ class SimilarFieldsFormatterTest extends TestCase
 
     public function testItReturnsEmptyValueWhenTheFieldIsNotPresent()
     {
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['didactics']);
+        $field_identifier = new SimilarFieldIdentifier('didactics', 'static');
+        $this->similar_fields->shouldReceive('getFieldIdentifiers')->andReturn([$field_identifier]);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'didactics'])->andReturn(null);
+            ->withArgs([$this->artifact, $field_identifier])->andReturn(null);
 
         $result = $this->formatter->formatSimilarFields($this->artifact, $this->similar_fields, $this->parameters);
 
@@ -158,13 +164,14 @@ class SimilarFieldsFormatterTest extends TestCase
     {
         $float_field = Mockery::mock(\Tracker_FormElement_Field_Float::class);
         $float_field->shouldNotReceive('accept');
+        $float_field_identifier = new SimilarFieldIdentifier('isonomous', null);
 
         $this->last_changeset->shouldReceive('getValue')
             ->with($float_field)->andReturn(null);
 
-        $this->similar_fields->shouldReceive('getFieldNames')->andReturn(['isonomous']);
+        $this->similar_fields->shouldReceive('getFieldIdentifiers')->andReturn([$float_field_identifier]);
         $this->similar_fields->shouldReceive('getField')
-            ->withArgs([$this->artifact, 'isonomous'])->andReturn($float_field);
+            ->withArgs([$this->artifact, $float_field_identifier])->andReturn($float_field);
 
         $result = $this->formatter->formatSimilarFields($this->artifact, $this->similar_fields, $this->parameters);
 

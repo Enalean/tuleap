@@ -21,6 +21,7 @@
 namespace Tuleap\CrossTracker\Report\SimilarField;
 
 use Tuleap\CrossTracker\CrossTrackerReport;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 
 class SimilarFieldsMatcher
 {
@@ -30,15 +31,19 @@ class SimilarFieldsMatcher
     private $form_element_factory;
     /** @var SimilarFieldsFilter */
     private $similar_fields_filter;
+    /** @var BindNameVisitor */
+    private $bind_name_visitor;
 
     public function __construct(
         SupportedFieldsDao $similar_fields_dao,
         \Tracker_FormElementFactory $form_element_factory,
-        SimilarFieldsFilter $similar_fields_filter
+        SimilarFieldsFilter $similar_fields_filter,
+        BindNameVisitor $bind_name_visitor
     ) {
         $this->similar_fields_dao    = $similar_fields_dao;
         $this->form_element_factory  = $form_element_factory;
         $this->similar_fields_filter = $similar_fields_filter;
+        $this->bind_name_visitor     = $bind_name_visitor;
     }
 
     /**
@@ -51,8 +56,8 @@ class SimilarFieldsMatcher
 
         $similar_field_candidates = [];
         foreach ($rows as $row) {
-            $field                      = $this->form_element_factory->getCachedInstanceFromRow($row);
-            $similar_field_candidates[] = new SimilarFieldCandidate($row['formElement_type'], $field);
+            $field      = $this->form_element_factory->getCachedInstanceFromRow($row);
+            $similar_field_candidates[] = $this->buildCandidate($field, $row['formElement_type']);
         }
         $similar_fields_without_permissions_verification = new SimilarFieldCollection(...$similar_field_candidates);
 
@@ -69,7 +74,20 @@ class SimilarFieldsMatcher
             }
         }
 
-
         return new SimilarFieldCollection(...$similar_field_candidates_with_permissions_verification);
+    }
+
+    private function buildCandidate(\Tracker_FormElement_Field $field, $type_shortname)
+    {
+        $bind_name = null;
+        if ($field instanceof \Tracker_FormElement_Field_List) {
+            $bind = $field->getBind();
+            $bind_name = $bind->accept($this->bind_name_visitor, new BindParameters($field));
+        }
+        $type = new SimilarFieldType($type_shortname, $field, $bind_name);
+
+        $identifier = new SimilarFieldIdentifier($field->getName(), $bind_name);
+
+        return new SimilarFieldCandidate($identifier, $type, $field);
     }
 }
