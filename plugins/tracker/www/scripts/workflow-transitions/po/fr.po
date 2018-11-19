@@ -19,11 +19,24 @@ msgstr "(Nouvel artefact)"
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
+msgid "Are you sure to change transitions based field?"
+msgstr ""
+"Êtes-vous sûr de changer le champ sur lequel les transitions sont basées ?"
+
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Change or remove"
 msgstr "Modifier ou supprimer"
 
+msgid "Change or remove field"
+msgstr "Modifier ou supprimer le champ"
+
 msgid "Configure"
 msgstr "Configurer"
+
+msgid "Confirm"
+msgstr "Confirmer"
 
 msgid "Enable transition rules"
 msgstr "Activer les règles de transition"
@@ -42,6 +55,11 @@ msgstr ""
 
 msgid "Save and start configuration"
 msgstr "Sauvegarder et démarrer la configuration"
+
+msgid "This action will delete all transition rules! It is irreversible."
+msgstr ""
+"Cette action supprimera toutes les règles de transitions ! Cela est "
+"irréversible."
 
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"

@@ -26,6 +26,12 @@ export default {
         state.is_operation_failed = true;
         state.operation_failure_message = message;
     },
+    beginOperation(state) {
+        state.is_operation_running = true;
+    },
+    endOperation(state) {
+        state.is_operation_running = false;
+    },
 
     // Current tracker loading
     startCurrentTrackerLoading(state) {
@@ -41,16 +47,6 @@ export default {
         state.current_tracker = tracker;
     },
 
-    // Workflow creation
-    beginOperation(state) {
-        state.is_operation_running = true;
-    },
-    failWorkflowCreation(state) {
-        state.is_workflow_creation_failed = true;
-    },
-    endOperation(state) {
-        state.is_operation_running = false;
-    },
     createWorkflow(state, field_id) {
         state.current_tracker = {
             ...state.current_tracker,

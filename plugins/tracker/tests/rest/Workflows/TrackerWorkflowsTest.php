@@ -93,6 +93,49 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertTrue($has_exception_been_caught);
     }
 
+    public function testPATCHTrackerWorkflowsWhenDeleteAndSetATransitionSameTimeReturnsError()
+    {
+        $field_status_id = $this->getStatusFieldId();
+        $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}, "delete_transitions_rules": true}}';
+        $has_exception_been_caught = false;
+
+        try {
+            $this->getResponseByName(
+                \REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+            );
+        } catch (BadResponseException $e) {
+            $this->assertEquals(
+                400,
+                $e->getResponse()->getStatusCode()
+            );
+
+            $has_exception_been_caught = true;
+        }
+
+        $this->assertTrue($has_exception_been_caught);
+    }
+
+    public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules()
+    {
+        $query = '{"workflow": {"delete_transitions_rules": true}}';
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch(
+                "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
+                null,
+                null
+            )
+        );
+        $result = $response->json();
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertTrue($result['workflow']['field_id'] === 0);
+        $this->assertTrue(empty($result['workflow']['is_used']));
+        $this->assertTrue(sizeof($result['workflow']['transitions']) === 0);
+    }
+
     private function getStatusFieldId()
     {
         $response = $this->getResponseByName(

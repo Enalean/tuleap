@@ -76,7 +76,8 @@ const webpack_config_for_vue = {
     output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     externals: {
         codendi: "codendi",
-        jquery: "jQuery"
+        jquery: "jQuery",
+        tlp: "tlp"
     },
     resolve: {
         alias: webpack_configurator.extendAliases(

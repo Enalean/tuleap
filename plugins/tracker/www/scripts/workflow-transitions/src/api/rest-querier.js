@@ -23,10 +23,10 @@
 
 import { get, patch } from "tlp-fetch";
 
-export { getTracker, createWorkflowTransitions };
+export { getTracker, createWorkflowTransitions, resetWorkflowTransitions };
 
-async function getTracker(trackerId) {
-    const response = await get(`/api/trackers/${trackerId}`);
+async function getTracker(tracker_id) {
+    const response = await get(`/api/trackers/${tracker_id}`);
     return response.json();
 }
 
@@ -39,4 +39,15 @@ async function createWorkflowTransitions(tracker_id, field_id) {
         }
     });
     await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+}
+
+async function resetWorkflowTransitions(tracker_id) {
+    const query = JSON.stringify({
+        workflow: {
+            delete_transitions_rules: true
+        }
+    });
+
+    const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    return response.json();
 }

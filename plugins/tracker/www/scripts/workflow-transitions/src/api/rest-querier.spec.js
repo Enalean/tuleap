@@ -19,22 +19,36 @@
 
 // import { mockFetchError } from "tlp-mocks";
 import { rewire$patch } from "tlp-fetch";
-import { createWorkflowTransitions } from "../api/rest-querier.js";
+import { createWorkflowTransitions, resetWorkflowTransitions } from "../api/rest-querier.js";
 
 describe("Rest queries:", () => {
-    describe("createWorkflowTransitions()", () => {
-        let patch;
+    let patch;
 
+    beforeEach(() => {
+        patch = jasmine.createSpy("patch");
+        patch.and.returnValue(Promise.resolve());
+        rewire$patch(patch);
+    });
+
+    describe("createWorkflowTransitions()", () => {
         beforeEach(() => {
-            patch = jasmine.createSpy("patch");
-            patch.and.returnValue(Promise.resolve());
-            rewire$patch(patch);
             createWorkflowTransitions(1, 9);
         });
 
         it("calls PATCH", () =>
             expect(patch).toHaveBeenCalledWith(
                 "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D"
+            ));
+    });
+
+    describe("resetWorkflowTransitions()", () => {
+        beforeEach(() => {
+            resetWorkflowTransitions(1);
+        });
+
+        it("calls PATCH", () =>
+            expect(patch).toHaveBeenCalledWith(
+                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D"
             ));
     });
 });

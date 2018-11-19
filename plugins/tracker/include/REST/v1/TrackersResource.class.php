@@ -509,13 +509,25 @@ class TrackersResource extends AuthenticatedResource
      * }
      * </pre>
      *
+     * To remove the field transitions are based on (in order to set new field):
+     * <pre>
+     * {
+     *   "workflow": {
+     *     "delete_transitions_rules": true
+     *   }
+     * }
+     * </pre>
+     * (*) This will remove all associated transitions and rules.<br />
+     * <br />
+     * /!\ "set_transitions_rules" and "delete_transitions_rules" cannot be used at the same time.
+     *
      * @url PATCH {id}
      * @access protected
      *
      * @param int    $id    Id of the tracker.
      * @param string $query JSON object of search criteria properties {@from query}
      *
-     * @return int The id of the tracker workflow.
+     * @return Tuleap\Tracker\REST\TrackerRepresentation
      *
      * @throws I18NRestException 500
      * @throws I18NRestException 400
@@ -545,7 +557,11 @@ class TrackersResource extends AuthenticatedResource
         try {
             $workflow_query = $parameterParser->getObject($query, 'workflow');
 
-            return $this->processWorkflowTransitionPatchQuery($workflow_query, $tracker);
+            $this->processWorkflowTransitionPatchQuery($workflow_query, $tracker);
+            $this->getWorkflowFactory()->clearTrackerWorkflowFromCache($tracker);
+
+            $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
+            return $builder->getTrackerRepresentation($user, $tracker);
         } catch (InvalidParameterTypeException $e) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         } catch (MissingMandatoryParameterException $e) {
@@ -564,11 +580,17 @@ class TrackersResource extends AuthenticatedResource
      */
     private function processWorkflowTransitionPatchQuery(array $workflow_query, Tracker $tracker)
     {
-        if (! isset($workflow_query['set_transitions_rules'])) {
+        if (isset($workflow_query['set_transitions_rules']) && isset($workflow_query['delete_transitions_rules'])) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         }
 
-        if (count($workflow_query['set_transitions_rules']) > 0) {
+        if (isset($workflow_query['delete_transitions_rules']) && $workflow_query['delete_transitions_rules'] === true) {
+            return $this->deleteTransitionsRules(
+                $tracker
+            );
+        }
+
+        if (isset($workflow_query['set_transitions_rules']) && count($workflow_query['set_transitions_rules']) > 0) {
             return $this->setTransitionsRules(
                 $workflow_query['set_transitions_rules'],
                 $tracker
@@ -607,7 +629,26 @@ class TrackersResource extends AuthenticatedResource
             throw new I18NRestException(404, dgettext('tuleap-tracker', 'Field not found.'));
         }
 
-        return $this->updateWorkflowTransitionFieldId($tracker, $field);
+        $this->updateWorkflowTransitionFieldId($tracker, $field);
+    }
+
+
+    /**
+     * @throws RestException
+     */
+    private function deleteTransitionsRules(Tracker $tracker)
+    {
+        $tracker_id = $tracker->getId();
+        $workflow_factory = $this->getWorkflowFactory();
+        $workflow_id = $workflow_factory->getWorkflowByTrackerId($tracker_id)->workflow_id;
+
+        if (!$workflow_id) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', "This tracker has no workflow."));
+        }
+
+        if (!$workflow_factory->deleteWorkflow($workflow_id)) {
+            throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be reset."));
+        }
     }
 
     /**
@@ -625,8 +666,6 @@ class TrackersResource extends AuthenticatedResource
         if (! $new_workflow_id) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created."));
         }
-
-        return $new_workflow_id;
     }
 
     /**
