@@ -19,10 +19,10 @@
 
 import { getTracker } from "../api/rest-querier.js";
 
-export async function loadTracker(context, trackerId) {
+export async function loadTracker(context, tracker_id) {
     try {
-        context.commit("startCurrentTrackerLoading", trackerId);
-        const tracker = await getTracker(trackerId);
+        context.commit("startCurrentTrackerLoading", tracker_id);
+        const tracker = await getTracker(tracker_id);
         context.commit("saveCurrentTracker", tracker);
     } catch (e) {
         context.commit("failCurrentTrackerLoading");
