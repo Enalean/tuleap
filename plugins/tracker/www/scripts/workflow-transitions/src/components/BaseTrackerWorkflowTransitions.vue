@@ -28,7 +28,10 @@
                     <h1 class="tlp-pane-title" v-translate>Transitions rules configuration</h1>
                 </div>
                 <template v-if="is_tracker_available">
-                    <transitions-matrix-section v-if="is_base_field_configured"/>
+                    <template v-if="is_base_field_configured">
+                        <transitions-configuration-header-section/>
+                        <transitions-matrix-section/>
+                    </template>
                     <first-configuration-section v-else/>
                 </template>
                 <section class="tlp-pane-section" v-else>
@@ -41,6 +44,7 @@
 
 <script>
 import FirstConfigurationSection from "./FirstConfigurationSection.vue";
+import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import { mapState } from "vuex";
 
@@ -48,6 +52,7 @@ export default {
     name: "BaseTrackerWorflowTransitions",
     components: {
         FirstConfigurationSection,
+        TransitionsConfigurationHeaderSection,
         TransitionsMatrixSection
     },
 

@@ -5,6 +5,12 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "Change or remove"
+msgstr ""
+
+msgid "Enable transition rules"
+msgstr ""
+
 msgid "Field"
 msgstr ""
 
@@ -24,4 +30,12 @@ msgid "Transitions based field"
 msgstr ""
 
 msgid "Transitions rules configuration"
+msgstr ""
+
+msgid "Use advanced configuration"
+msgstr ""
+
+msgid ""
+"Use advanced configuration if you want to configure each transition "
+"independently."
 msgstr ""
