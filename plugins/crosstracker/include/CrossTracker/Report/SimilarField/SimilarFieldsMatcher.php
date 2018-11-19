@@ -28,11 +28,17 @@ class SimilarFieldsMatcher
     private $similar_fields_dao;
     /** @var \Tracker_FormElementFactory */
     private $form_element_factory;
+    /** @var SimilarFieldsFilter */
+    private $similar_fields_filter;
 
-    public function __construct(SupportedFieldsDao $similar_fields_dao, \Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->similar_fields_dao   = $similar_fields_dao;
-        $this->form_element_factory = $form_element_factory;
+    public function __construct(
+        SupportedFieldsDao $similar_fields_dao,
+        \Tracker_FormElementFactory $form_element_factory,
+        SimilarFieldsFilter $similar_fields_filter
+    ) {
+        $this->similar_fields_dao    = $similar_fields_dao;
+        $this->form_element_factory  = $form_element_factory;
+        $this->similar_fields_filter = $similar_fields_filter;
     }
 
     /**
@@ -50,12 +56,19 @@ class SimilarFieldsMatcher
         }
         $similar_fields_without_permissions_verification = new SimilarFieldCollection(...$similar_field_candidates);
 
+        $similar_field_candidates_not_used_in_semantics = new SimilarFieldCollection(
+            ...$this->similar_fields_filter->filterCandidatesUsedInSemantics(
+                ...$similar_fields_without_permissions_verification
+            )
+        );
+
         $similar_field_candidates_with_permissions_verification = [];
-        foreach ($similar_fields_without_permissions_verification as $similar_field_candidate) {
+        foreach ($similar_field_candidates_not_used_in_semantics as $similar_field_candidate) {
             if ($similar_field_candidate->getField()->userCanRead($user)) {
                 $similar_field_candidates_with_permissions_verification[] = $similar_field_candidate;
             }
         }
+
 
         return new SimilarFieldCollection(...$similar_field_candidates_with_permissions_verification);
     }

@@ -29,7 +29,6 @@ use Tuleap\CrossTracker\Report\CSV\CSVRepresentationBuilder;
 use Tuleap\CrossTracker\Report\CSV\CSVRepresentationFactory;
 use Tuleap\CrossTracker\Report\CSV\Format\BindToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\Format\CSVFormatterVisitor;
-use Tuleap\CrossTracker\Report\CSV\Format\FormElementToValueVisitor;
 use Tuleap\CrossTracker\Report\CSV\SimilarFieldsFormatter;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidComparisonCollectorVisitor;
 use Tuleap\CrossTracker\Report\Query\Advanced\InvalidSearchableCollectorVisitor;
@@ -64,8 +63,9 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotEqua
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Comparison\NotIn\NotInComparisonChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
-use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
+use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsFilter;
 use Tuleap\CrossTracker\Report\SimilarField\SimilarFieldsMatcher;
+use Tuleap\CrossTracker\Report\SimilarField\SupportedFieldsDao;
 use Tuleap\CrossTracker\REST\ResourcesInjector;
 use Tuleap\CrossTracker\Widget\ProjectCrossTrackerSearch;
 use Tuleap\Layout\CssAsset;
@@ -440,7 +440,11 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             $report_dao,
             ProjectManager::instance(),
             new CrossTrackerPermissionGate(new URLVerification()),
-            new SimilarFieldsMatcher(new SupportedFieldsDao(), $form_element_factory)
+            new SimilarFieldsMatcher(
+                new SupportedFieldsDao(),
+                $form_element_factory,
+                new SimilarFieldsFilter()
+            )
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -555,5 +555,21 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function isOpenValue($label)
     {
         return in_array($label, $this->getOpenLabels());
+    }
+
+    /**
+     * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function setInstance(Tracker_Semantic_Status $status, Tracker $tracker)
+    {
+        self::$_instances[$tracker->getId()] = $status;
+    }
+
+    /**
+     * Allows to clear Semantics for tests. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstances()
+    {
+        self::$_instances = null;
     }
 }

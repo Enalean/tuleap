@@ -95,7 +95,7 @@ class SimilarFieldCollectionTest extends TestCase
         $field->shouldReceive('getName')->andReturns($name);
         $field->shouldReceive('getTrackerId')->andReturns($tracker_id);
         $candidate = \Mockery::mock(SimilarFieldCandidate::class);
-        $candidate->shouldReceive('getType')->andReturns($type);
+        $candidate->shouldReceive('getIdentifier')->andReturns($type . '/' . $name);
         $candidate->shouldReceive('getField')->andReturns($field);
         return $candidate;
     }

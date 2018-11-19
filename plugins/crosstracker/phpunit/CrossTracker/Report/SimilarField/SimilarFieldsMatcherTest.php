@@ -25,34 +25,42 @@ require_once __DIR__ . '/../../../bootstrap.php';
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tracker_FormElement_Field_String;
 use Tuleap\CrossTracker\CrossTrackerReport;
 
 class SimilarFieldsMatcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /** @var Mockery\MockInterface */
+    /** @var SupportedFieldsDao | Mockery\MockInterface */
     private $similar_fields_dao;
-    /** @var Mockery\MockInterface */
+    /** @var \Tracker_FormElementFactory | Mockery\MockInterface */
     private $form_element_factory;
     /** @var SimilarFieldsMatcher */
     private $matcher;
-    /**
-     * @var Mockery\MockInterface
-     */
+    /** @var \PFUser | Mockery\MockInterface */
     private $user;
-    /** @var Mockery\MockInterface */
+    /** @var CrossTrackerReport | Mockery\MockInterface */
     private $report;
+    /** @var SimilarFieldsFilter | Mockery\MockInterface */
+    private $similar_fields_filter;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->similar_fields_dao   = Mockery::mock(SupportedFieldsDao::class);
-        $this->form_element_factory = Mockery::mock(\Tracker_FormElementFactory::class);
-        $this->report               = Mockery::mock(CrossTrackerReport::class);
-        $this->user                 = Mockery::mock(\PFUser::class);
-        $this->matcher              = new SimilarFieldsMatcher($this->similar_fields_dao, $this->form_element_factory);
+        $this->similar_fields_dao      = Mockery::mock(SupportedFieldsDao::class);
+        $this->form_element_factory    = Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->report                  = Mockery::mock(CrossTrackerReport::class);
+        $this->user                    = Mockery::mock(\PFUser::class);
+        $this->similar_fields_filter   = Mockery::mock(SimilarFieldsFilter::class)
+            ->shouldReceive('filterCandidatesUsedInSemantics')->andReturnUsing(function (...$args) {
+                return $args;
+            })->getMock();
+
+        $this->matcher                 = new SimilarFieldsMatcher(
+            $this->similar_fields_dao,
+            $this->form_element_factory,
+            $this->similar_fields_filter
+        );
     }
 
     public function testMatchingFieldsAreRetrieved()
