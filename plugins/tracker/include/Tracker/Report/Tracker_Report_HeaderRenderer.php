@@ -282,7 +282,7 @@ class Tracker_Report_HeaderRenderer
         $warnings = array();
 
         if (! $is_admin) {
-            return;
+            return $warnings;
         }
 
         $public_reports_exist = false;
