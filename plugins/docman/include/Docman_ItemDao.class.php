@@ -670,16 +670,19 @@ class Docman_ItemDao extends DataAccessObject {
 
     public function searchByParentIdWithPagination($parent_id, $limit, $offset)
     {
-        $sql = sprintf(
-            'SELECT SQL_CALC_FOUND_ROWS * FROM plugin_docman_item WHERE parent_id = %d AND delete_date IS NULL AND (obsolescence_date = 0 OR obsolescence_date > ' . $this->getObsoleteToday() . ') ORDER BY rank LIMIT %d OFFSET %d;',
-            $parent_id,
-            $limit,
-            $offset
-        );
+        $parent_id = $this->da->escapeInt($parent_id);
+        $obsolete  = $this->da->escapeInt($this->getObsoleteToday());
+        $limit     = $this->da->escapeInt($limit);
+        $offset    = $this->da->escapeInt($offset);
+        $sql       = "SELECT SQL_CALC_FOUND_ROWS *, IF (item_type != 1, 0, 1) AS is_folder FROM plugin_docman_item
+                WHERE parent_id = $parent_id
+                  AND delete_date IS NULL
+                  AND (obsolescence_date = 0 OR obsolescence_date > $obsolete)
+                ORDER BY is_folder DESC, title LIMIT $limit OFFSET $offset";
 
         return $this->retrieve($sql);
     }
-    
+
     public function searchRootIdForGroupId($group_id)
     {
         $sql = sprintf('SELECT item_id FROM plugin_docman_item WHERE parent_id = 0 '.

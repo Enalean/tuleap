@@ -51,9 +51,10 @@ class DocmanItemsTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 2);
-        $this->assertEquals($items[0]['name'], 'item C');
+        $this->assertEquals(count($items), 3);
+        $this->assertEquals($items[0]['name'], 'folder');
         $this->assertEquals($items[1]['name'], 'item A');
+        $this->assertEquals($items[2]['name'], 'item C');
     }
 
     public function testOPTIONSId()

@@ -87,11 +87,13 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
         $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
         $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $folder_id = $this->addItem($project, $folder_id, 'folder', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
 
         $this->addPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addPermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
     }
 
     private function addPermissionOnItem(Project $project, $object_id, $ugroup_name)
