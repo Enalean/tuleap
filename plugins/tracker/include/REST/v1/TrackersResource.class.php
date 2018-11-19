@@ -53,8 +53,8 @@ use UserManager;
 /**
  * Wrapper for Tracker related REST methods
  */
-class TrackersResource extends AuthenticatedResource {
-
+class TrackersResource extends AuthenticatedResource
+{
     const MAX_LIMIT            = 1000;
     const DEFAULT_LIMIT        = 100;
     const DEFAULT_OFFSET       = 0;
@@ -86,7 +86,8 @@ class TrackersResource extends AuthenticatedResource {
     /** @var  ReportArtifactFactory */
     private $report_artifact_factory;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->user_manager             = UserManager::instance();
         $this->formelement_factory      = Tracker_FormElementFactory::instance();
         $this->report_factory           = Tracker_ReportFactory::instance();
@@ -102,7 +103,8 @@ class TrackersResource extends AuthenticatedResource {
     /**
      * @url OPTIONS
      */
-    public function options() {
+    public function options()
+    {
         Header::allowOptions();
     }
 
@@ -111,7 +113,8 @@ class TrackersResource extends AuthenticatedResource {
      *
      * @param string $id Id of the tracker
      */
-    public function optionsId($id) {
+    public function optionsId($id)
+    {
         $this->sendAllowHeaderForTracker();
     }
 
@@ -129,7 +132,8 @@ class TrackersResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getId($id) {
+    public function getId($id)
+    {
         $this->checkAccess();
 
         $builder = new Tracker_REST_TrackerRestBuilder($this->formelement_factory);
@@ -151,7 +155,8 @@ class TrackersResource extends AuthenticatedResource {
      *
      * @param string $id Id of the tracker
      */
-    public function optionsReports($id) {
+    public function optionsReports($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -171,7 +176,8 @@ class TrackersResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET) {
+    public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET)
+    {
         $this->checkAccess();
         $this->checkLimitValue($limit);
 
@@ -205,7 +211,8 @@ class TrackersResource extends AuthenticatedResource {
     /**
      * @url OPTIONS {id}/artifacts
      */
-    public function optionsArtifacts($id) {
+    public function optionsArtifacts($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -278,7 +285,7 @@ class TrackersResource extends AuthenticatedResource {
 
         if ($query) {
             $artifacts = $this->getArtifactsMatchingFromCriteria($user, $valid_tracker, $query, $offset, $limit);
-        } else if ($expert_query) {
+        } elseif ($expert_query) {
             $artifacts = $this->getArtifactsMatchingFromExpertQuery($user, $valid_tracker, $expert_query, $offset, $limit);
         } else {
             $reverse_order = (bool) (strtolower($order) === self::ORDER_DESC);
@@ -380,7 +387,8 @@ class TrackersResource extends AuthenticatedResource {
     /**
      * @return Tuleap\Tracker\REST\Artifact\ArtifactRepresentation[]
      */
-    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values) {
+    private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
+    {
         $builder = new Tracker_REST_Artifact_ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->tracker_artifact_factory,
@@ -411,7 +419,8 @@ class TrackersResource extends AuthenticatedResource {
     /**
      * @url OPTIONS {id}/parent_artifacts
      */
-    public function optionsParentArtifacts($id) {
+    public function optionsParentArtifacts($id)
+    {
         Header::allowOptionsGet();
     }
 
@@ -433,7 +442,8 @@ class TrackersResource extends AuthenticatedResource {
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getParentArtifacts($id, $limit  = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET) {
+    public function getParentArtifacts($id, $limit  = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
+    {
         $this->checkAccess();
         $this->checkLimitValue($limit);
 
@@ -467,10 +477,10 @@ class TrackersResource extends AuthenticatedResource {
      * @return Tracker
      * @throws RestException
      */
-    private function getTrackerById(\PFUser $user, $id) {
+    private function getTrackerById(\PFUser $user, $id)
+    {
         $tracker = $this->tracker_factory->getTrackerById($id);
         if ($tracker) {
-
             if ($tracker->isDeleted()) {
                 throw new RestException(404, 'this tracker is deleted');
             }
@@ -484,7 +494,8 @@ class TrackersResource extends AuthenticatedResource {
         throw new RestException(404);
     }
 
-    private function getParentTracker(\PFUser $user, Tracker $tracker) {
+    private function getParentTracker(\PFUser $user, Tracker $tracker)
+    {
         $parent = $tracker->getParent();
 
         if (! $parent) {
@@ -501,14 +512,15 @@ class TrackersResource extends AuthenticatedResource {
         return $parent;
     }
 
-    private function sendAllowHeaderForTracker() {
+    private function sendAllowHeaderForTracker()
+    {
         Header::allowOptionsGet();
     }
 
-    private function checkLimitValue($limit) {
+    private function checkLimitValue($limit)
+    {
         if ($limit > self::MAX_LIMIT) {
             throw new LimitOutOfBoundsException(self::MAX_LIMIT);
         }
     }
 }
-
