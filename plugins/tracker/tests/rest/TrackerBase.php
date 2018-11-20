@@ -32,6 +32,7 @@ class TrackerBase extends RestBase
     const DELETE_PROJECT_NAME                = 'test-delete-artifacts';
     const TRACKER_FIELDS_PROJECT_NAME        = 'test-tracker-fields';
     const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
+    const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
 
     const MOVE_TRACKER_SHORTNAME            = 'ToMoveArtifacts';
     const BASE_TRACKER_SHORTNAME            = 'base';
@@ -39,6 +40,7 @@ class TrackerBase extends RestBase
     const TRACKER_FIELDS_TRACKER_SHORTNAME  = 'tracker_fields_tracker';
     const SIMPLE_01_TRACKER_SHORTNAME       = 'simple_tracker_01';
     const SIMPLE_02_TRACKER_SHORTNAME       = 'simple_tracker_02';
+    const TRACKER_WITH_WORKFLOWS_SHORTNAME  = 'workflows_tracker';
 
     protected $tracker_administrator_project_id;
 
@@ -46,6 +48,7 @@ class TrackerBase extends RestBase
     protected $move_tracker_id;
     protected $base_tracker_id;
     protected $tracker_fields_tracker_id;
+    protected $tracker_workflows_tracker_id;
 
     protected $base_artifact_ids   = [];
     protected $delete_artifact_ids = [];
@@ -58,11 +61,13 @@ class TrackerBase extends RestBase
         $delete_project_id                      = $this->getProjectId(self::DELETE_PROJECT_NAME);
         $tracker_fields_project_id              = $this->getProjectId(self::TRACKER_FIELDS_PROJECT_NAME);
         $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
+        $tracker_workflows_project_id           = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
 
-        $this->move_tracker_id           = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
-        $this->base_tracker_id           = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
-        $this->delete_tracker_id         = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
-        $this->tracker_fields_tracker_id = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
+        $this->move_tracker_id              = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
+        $this->base_tracker_id              = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
+        $this->delete_tracker_id            = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
+        $this->tracker_fields_tracker_id    = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
+        $this->tracker_workflows_tracker_id = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();

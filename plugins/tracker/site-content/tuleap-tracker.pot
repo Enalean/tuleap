@@ -30,6 +30,9 @@ msgstr ""
 msgid "'%s' is not supported for the operator %s."
 msgstr ""
 
+msgid "A workflow already exists on the given tracker."
+msgstr ""
+
 msgid "Actions"
 msgstr ""
 
@@ -54,6 +57,9 @@ msgstr ""
 msgid ""
 "After artifact edition, all the disabled types used will be cleared without "
 "removing the existing link."
+msgstr ""
+
+msgid "An error has occurred, the workflow couldn't be created."
 msgstr ""
 
 msgid ""
@@ -173,6 +179,9 @@ msgstr ""
 msgid "Error during parsing expert query"
 msgstr ""
 
+msgid "Field not found."
+msgstr ""
+
 msgid "Field value cannot be empty"
 msgstr ""
 
@@ -271,6 +280,9 @@ msgid "On all updates?"
 msgstr ""
 
 msgid "Please provide a valid limit."
+msgstr ""
+
+msgid "Please provide a valid query."
 msgstr ""
 
 msgid ""
@@ -607,6 +619,9 @@ msgstr ""
 msgid "This template does not use trackers"
 msgstr ""
 
+msgid "This tracker is deleted"
+msgstr ""
+
 msgid "Time"
 msgstr ""
 
@@ -724,7 +739,13 @@ msgid ""
 "administrator has suspended all notifications."
 msgstr ""
 
+msgid "You cannot access to this tracker"
+msgstr ""
+
 msgid "You don't have permissions to see user groups."
+msgstr ""
+
+msgid "You must be tracker administrator to access this resource."
 msgstr ""
 
 msgid ""

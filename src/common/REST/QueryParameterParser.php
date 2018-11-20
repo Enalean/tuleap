@@ -114,4 +114,24 @@ class QueryParameterParser
 
         return $parameter_content;
     }
+
+    /**
+     * @param string $query
+     * @param string $parameter_name
+     *
+     * @return array
+     * @throws Exceptions\InvalidJsonException
+     * @throws InvalidParameterTypeException
+     * @throws MissingMandatoryParameterException
+     */
+    public function getObject($query, $parameter_name)
+    {
+        $parameter_content = $this->getParameterContent($query, $parameter_name);
+
+        if (! is_array($parameter_content)) {
+            throw new InvalidParameterTypeException("$parameter_name must be an object");
+        }
+
+        return $parameter_content;
+    }
 }

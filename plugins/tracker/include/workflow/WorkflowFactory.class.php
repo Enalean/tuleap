@@ -112,7 +112,7 @@ class WorkflowFactory {
      *
      * @param array $row The data describing the workflow
      *
-     * @return Tracker_Workflow
+     * @return Workflow
      */
     public function getInstanceFromRow($row) {
         $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
@@ -128,6 +128,10 @@ class WorkflowFactory {
         );
     }
 
+    /**
+     * @param int $workflow_id
+     * @return null|Workflow
+     */
     public function getWorkflow($workflow_id) {
         if ($row = $this->getDao()->searchById($workflow_id)->getRow()) {
             return $this->getInstanceFromRow($row);
@@ -151,7 +155,7 @@ class WorkflowFactory {
     /**
      * Create a workflow
      *
-     * @param Tracker $tracker_id The tracker the workflow refers to
+     * @param int $tracker_id The tracker the workflow refers to
      * @param string $field_id the field_id on which the workflow applies
      *
      * @return int the id of the workflow. False if error

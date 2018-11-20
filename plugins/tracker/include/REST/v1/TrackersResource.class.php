@@ -26,6 +26,7 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact_PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Report;
 use Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
@@ -34,13 +35,15 @@ use Tracker_ReportDao;
 use Tracker_ReportFactory;
 use Tracker_REST_Artifact_ArtifactRepresentationBuilder;
 use Tracker_REST_TrackerRestBuilder;
-use Tracker_URLVerification;
 use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
-use Tuleap\REST\ProjectAuthorization;
+use Tuleap\REST\InvalidParameterTypeException;
+use Tuleap\REST\JsonDecoder;
+use Tuleap\REST\MissingMandatoryParameterException;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\QueryParameterParser;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\LimitSizeIsExceededException;
@@ -49,6 +52,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SearchablesDoNotExistException;
 use Tuleap\Tracker\REST\Artifact\ParentArtifactReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use UserManager;
+use WorkflowFactory;
 
 /**
  * Wrapper for Tracker related REST methods
@@ -481,17 +485,170 @@ class TrackersResource extends AuthenticatedResource
     {
         $tracker = $this->tracker_factory->getTrackerById($id);
         if ($tracker) {
-            if ($tracker->isDeleted()) {
-                throw new RestException(404, 'this tracker is deleted');
-            }
-
-            if ($tracker->userCanView($user)) {
-                ProjectAuthorization::userCanAccessProject($user, $tracker->getProject(), new Tracker_URLVerification());
-                return $tracker;
-            }
-            throw new RestException(403);
+            $permissions_checker = new TrackerPermissionsChecker(new \URLVerification());
+            $permissions_checker->checkRead($user, $tracker);
+            return $tracker;
         }
         throw new RestException(404);
+    }
+
+    /**
+     * Partial update of a tracker.
+     *
+     * Only tracker administrators are allowed to patch trackers.
+     *
+     * To set the field transitions are based on:
+     * <pre>
+     * {
+     *   "workflow": {
+     *     "set_transitions_rules": {
+     *       "field_id": 1234
+     *     }
+     *   }
+     * }
+     * </pre>
+     *
+     * @url PATCH {id}
+     * @access protected
+     *
+     * @param int    $id    Id of the tracker.
+     * @param string $query JSON object of search criteria properties {@from query}
+     *
+     * @return int The id of the tracker workflow.
+     *
+     * @throws RestException 400
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function patchWorkflow($id, $query = '')
+    {
+        $this->checkAccess();
+
+        $tracker_id   = $id;
+        $user         = $this->user_manager->getCurrentUser();
+        $tracker      = $this->getTrackerById($user, $tracker_id);
+        $json_decoder = $this->getJsonDecoder();
+
+        $this->sendAllowHeaderForTracker();
+
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($tracker->getProject());
+
+        $permissions_checker = new TrackerPermissionsChecker(new \URLVerification());
+        $permissions_checker->checkRead($user, $tracker);
+        $permissions_checker->checkUpdateWorkflow($user, $tracker);
+
+        $parameterParser = new QueryParameterParser($json_decoder);
+
+        try {
+            $workflow_query = $parameterParser->getObject($query, 'workflow');
+
+            return $this->processWorkflowTransitionPatchQuery($workflow_query, $tracker);
+        } catch (InvalidParameterTypeException $e) {
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
+            );
+        } catch (MissingMandatoryParameterException $e) {
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
+            );
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function processWorkflowTransitionPatchQuery(array $workflow_query, Tracker $tracker)
+    {
+        if (! isset($workflow_query['set_transitions_rules'])) {
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
+            );
+        }
+
+        if (count($workflow_query['set_transitions_rules']) > 0) {
+            return $this->setTransitionsRules(
+                $workflow_query['set_transitions_rules'],
+                $tracker
+            );
+        }
+
+        throw new RestException(
+            400,
+            null,
+            ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
+        );
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function setTransitionsRules(array $new_properties, Tracker $tracker)
+    {
+        $workflow_factory = $this->getWorkflowFactory();
+
+        if ($workflow_factory->getWorkflowByTrackerId($tracker->getId())) {
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'A workflow already exists on the given tracker.')]
+            );
+        }
+
+
+        if (! isset($new_properties['field_id']) || ! is_int($new_properties['field_id'])) {
+            throw new RestException(
+                400,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
+            );
+        }
+
+        $new_field_id = $new_properties['field_id'];
+        $field        = $this->formelement_factory->getFieldById($new_field_id);
+
+        if (! $field) {
+            throw new RestException(
+                404,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', 'Field not found.')]
+            );
+        }
+
+        return $this->updateWorkflowTransitionFieldId($tracker, $field);
+    }
+
+    /**
+     * @throws RestException 500
+     */
+    private function updateWorkflowTransitionFieldId(Tracker $tracker, Tracker_FormElement_Field $new_field)
+    {
+        $workflow_factory = $this->getWorkflowFactory();
+        $new_workflow_id  = $workflow_factory->create($tracker->getId(), $new_field->getId());
+
+        if (! $new_workflow_id) {
+            throw new RestException(
+                500,
+                null,
+                ['i18n_error_message' => dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created.")]
+            );
+        }
+
+        return $new_workflow_id;
+    }
+
+    /**
+     * @return WorkflowFactory
+     */
+    private function getWorkflowFactory()
+    {
+        return WorkflowFactory::instance();
     }
 
     private function getParentTracker(\PFUser $user, Tracker $tracker)
@@ -514,7 +671,7 @@ class TrackersResource extends AuthenticatedResource
 
     private function sendAllowHeaderForTracker()
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPatch();
     }
 
     private function checkLimitValue($limit)
@@ -522,5 +679,10 @@ class TrackersResource extends AuthenticatedResource
         if ($limit > self::MAX_LIMIT) {
             throw new LimitOutOfBoundsException(self::MAX_LIMIT);
         }
+    }
+
+    private function getJsonDecoder()
+    {
+        return new JsonDecoder();
     }
 }
