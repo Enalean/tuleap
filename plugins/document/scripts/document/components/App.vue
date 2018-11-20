@@ -37,13 +37,15 @@ export default {
     props: {
         projectId: Number,
         projectName: String,
-        userIsAdmin: Boolean
+        userIsAdmin: Boolean,
+        userLocale: String
     },
     mounted() {
         this.$store.commit("initDocumentTree", [
             this.projectId,
             this.projectName,
-            this.userIsAdmin
+            this.userIsAdmin,
+            this.userLocale
         ]);
         this.$store.dispatch("loadRootDocumentId");
     }

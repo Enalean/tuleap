@@ -34,9 +34,10 @@ export default {
         state.is_loading_root_document = status;
     },
 
-    initDocumentTree(state, [project_id, name, user_is_admin]) {
+    initDocumentTree(state, [project_id, name, user_is_admin, user_locale]) {
         state.project_id = project_id;
         state.project_name = name;
         state.is_user_administrator = user_is_admin;
+        state.user_locale = user_locale;
     }
 };

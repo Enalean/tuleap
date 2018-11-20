@@ -24,7 +24,8 @@ const state = {
     error_message: null,
     project_name: null,
     is_user_administrator: false,
-    folder_content: []
+    folder_content: [],
+    user_locale: null
 };
 
 export default state;

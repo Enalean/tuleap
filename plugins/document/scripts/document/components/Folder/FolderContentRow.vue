@@ -21,17 +21,28 @@
     <tr>
         <td>{{ element.name }}</td>
         <td><user-badge v-bind:user="element.owner"/></td>
-        <td>{{ element.last_update_date }}</td>
+        <td>{{ formatted_last_update_date }}</td>
     </tr>
 </template>
 
 <script>
+import TimeAgo from "javascript-time-ago";
+import { mapState } from "vuex";
 import UserBadge from "./UserBadge.vue";
+
 export default {
     name: "FolderContentRow",
     components: { UserBadge },
     props: {
         element: Object
+    },
+    computed: {
+        ...mapState(["user_locale"]),
+        formatted_last_update_date() {
+            const date = new Date(this.element.last_update_date);
+            const time_ago = new TimeAgo(this.user_locale);
+            return time_ago.format(date);
+        }
     }
 };
 </script>
