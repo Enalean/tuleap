@@ -1,0 +1,5 @@
+msgid "Git LFS"
+msgstr ""
+
+msgid "Support of large file upload and download in Git"
+msgstr ""

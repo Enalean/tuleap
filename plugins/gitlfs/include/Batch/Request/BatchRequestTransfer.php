@@ -18,41 +18,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\GitLFS\Batch\Request;
 
-class BatchRequestOperation
+class BatchRequestTransfer
 {
-    const UPLOAD_OPERATION   = 'upload';
-    const DOWNLOAD_OPERATION = 'download';
+    const BASIC_TRANSFER_IDENTIFIER = 'basic';
 
     /**
      * @var string
      */
-    private $operation;
+    private $identifier;
 
-    public function __construct($operation)
+    public function __construct($identifier)
     {
-        if ($operation !== self::DOWNLOAD_OPERATION && $operation !== self::UPLOAD_OPERATION) {
-            throw new IncorrectlyFormattedBatchRequestException(
-                'operation should either be ' . self::UPLOAD_OPERATION . ' or ' . self::DOWNLOAD_OPERATION
-            );
+        if (! \is_string($identifier)) {
+            throw new \TypeError('Expected $identifier to be a string, got ' . gettype($identifier));
         }
-        $this->operation = $operation;
+        $this->identifier = $identifier;
     }
 
     /**
-     * @return bool
+     * @return self
      */
-    public function isDownload()
+    public static function buildBasicTransfer()
     {
-        return $this->operation === self::DOWNLOAD_OPERATION;
+        return new self(self::BASIC_TRANSFER_IDENTIFIER);
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isUpload()
+    public function getIdentifier()
     {
-        return $this->operation === self::UPLOAD_OPERATION;
+        return $this->identifier;
     }
 }

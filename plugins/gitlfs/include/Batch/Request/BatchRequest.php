@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\GitLFS\Batch\Request;
 
 use Tuleap\Git\HTTP\GitHTTPOperation;
 

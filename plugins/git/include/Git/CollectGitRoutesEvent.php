@@ -18,38 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\Git;
 
-class BatchRequestTransfer
+use FastRoute\RouteCollector;
+use Tuleap\Event\Dispatchable;
+
+class CollectGitRoutesEvent implements Dispatchable
 {
-    const BASIC_TRANSFER_IDENTIFIER = 'basic';
+    const NAME = 'collectGitRoutesEvent';
 
     /**
-     * @var string
+     * @var RouteCollector
      */
-    private $identifier;
+    private $route_collector;
 
-    public function __construct($identifier)
+    public function __construct(RouteCollector $route_collector)
     {
-        if (! \is_string($identifier)) {
-            throw new \TypeError('Expected $identifier to be a string, got ' . gettype($identifier));
-        }
-        $this->identifier = $identifier;
+        $this->route_collector = $route_collector;
     }
 
     /**
-     * @return self
+     * @return RouteCollector
      */
-    public static function buildBasicTransfer()
+    public function getRouteCollector()
     {
-        return new self(self::BASIC_TRANSFER_IDENTIFIER);
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
+        return $this->route_collector;
     }
 }

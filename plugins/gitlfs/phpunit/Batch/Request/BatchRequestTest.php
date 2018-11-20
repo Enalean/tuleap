@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\GitLFS\Batch\Request;
 
 use PHPUnit\Framework\TestCase;
 
@@ -70,7 +70,7 @@ JSON;
 
     /**
      * @dataProvider providerIncorrectJSONBatchRequest
-     * @expectedException \Tuleap\Git\LFS\Batch\Request\IncorrectlyFormattedBatchRequestException
+     * @expectedException \Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException
      */
     public function testParsingIncorrectBatchRequest($json_string)
     {

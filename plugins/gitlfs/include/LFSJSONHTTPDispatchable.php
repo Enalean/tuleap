@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS;
+namespace Tuleap\GitLFS;
 
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
