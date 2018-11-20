@@ -37,7 +37,7 @@ class Parser
             \s
             -
             \s
-            (?P<username>\S+)
+            (?P<username>.+?)
             \s
             \[(?P<date>.+?)\]
             \s
