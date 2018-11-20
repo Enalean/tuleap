@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch;
+namespace Tuleap\GitLFS\Batch;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Git\HTTP\HTTPAccessControl;
-use Tuleap\Git\LFS\Batch\Request\BatchRequest;
+use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 
 class LFSBatchAPIHTTPAccessControlTest extends TestCase

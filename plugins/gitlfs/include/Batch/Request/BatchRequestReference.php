@@ -18,27 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\GitLFS\Batch\Request;
 
-use PHPUnit\Framework\TestCase;
-
-class BatchRequestOperationTest extends TestCase
+class BatchRequestReference
 {
-    public function testValidOperation()
+    /**
+     * @var string
+     */
+    private $name;
+
+    public function __construct($name)
     {
-        $upload_operation   = new BatchRequestOperation('upload');
-        $this->assertFalse($upload_operation->isDownload());
-        $this->assertTrue($upload_operation->isUpload());
-        $download_operation = new BatchRequestOperation('download');
-        $this->assertTrue($download_operation->isDownload());
-        $this->assertFalse($download_operation->isUpload());
+        if (! \is_string($name)) {
+            throw new \TypeError('Expected $name to be a string, got ' . gettype($name));
+        }
+        $this->name = $name;
     }
 
     /**
-     * @expectedException \Tuleap\Git\LFS\Batch\Request\IncorrectlyFormattedBatchRequestException
+     * @return string
      */
-    public function testUnknownOperationIsRejected()
+    public function getName()
     {
-        new BatchRequestOperation('unknown');
+        return $this->name;
     }
 }

@@ -35,7 +35,7 @@
             <directory suffix=".php">../../plugins/git/include/Git/PermissionsPerGroup</directory>
             <directory suffix=".php">../../plugins/git/include/CommitMetadata/</directory>
             <directory suffix=".php">../../plugins/git/include/GitPHP/git/</directory>
-            <directory suffix=".php">../../plugins/git/include/LFS/</directory>
+            <directory suffix=".php">../../plugins/gitlfs/include/</directory>
             <directory suffix=".php">../../plugins/dynamic_credentials/include/</directory>
             <directory suffix=".php">../../plugins/velocity/include/</directory>
             <directory suffix=".php">../../plugins/create_test_env/include/</directory>

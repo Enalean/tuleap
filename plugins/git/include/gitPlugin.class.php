@@ -2539,7 +2539,7 @@ class GitPlugin extends Plugin
     /**
      * @return HTTPAccessControl
      */
-    private function getHTTPAccessControl(Logger $logger)
+    public function getHTTPAccessControl(Logger $logger)
     {
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new HTTPAccessControl(
@@ -2571,25 +2571,12 @@ class GitPlugin extends Plugin
         });
 
         $event->getRouteCollector()->addGroup(GIT_BASE_URL, function (FastRoute\RouteCollector $r) {
+            EventManager::instance()->processEvent(new \Tuleap\Git\CollectGitRoutesEvent($r));
+
             $r->addRoute(['GET'], '/index.php/{project_id:\d+}/view/{repository_id:\d+}/[{args}]', function () {
                 return new \Tuleap\Git\GitLegacyURLRedirectController(
                     $this->getProjectManager(),
                     $this->getRepositoryFactory()
-                );
-            });
-            $r->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
-                $logger               = new \WrapperLogger($this->getLogger(), 'LFS Batch');
-                $lfs_batch_controller = new \Tuleap\Git\LFS\Batch\LFSBatchController(
-                    $this->getRepositoryFactory(),
-                    new \Tuleap\Git\LFS\Batch\LFSBatchAPIHTTPAccessControl(
-                        $this->getHTTPAccessControl($logger),
-                        \UserManager::instance(),
-                        new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
-                    ),
-                    $logger
-                );
-                return new \Tuleap\Git\LFS\LFSJSONHTTPDispatchable(
-                    new \Tuleap\Git\LFS\LFSFeatureFlagDispatchable($lfs_batch_controller)
                 );
             });
             $r->addRoute(['GET', 'POST'], '/{project_name}/{path:.*\.git|.*}/{smart_http:HEAD|info/refs\??.*|git-upload-pack|git-receive-pack|objects/info[^/]+|objects/[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\.pack|pack/pack-[0-9a-f]{40}\.idx}', function () {

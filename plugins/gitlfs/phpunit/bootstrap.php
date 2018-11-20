@@ -18,8 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
-
-final class IncorrectlyFormattedBatchRequestException extends \RuntimeException
-{
-}
+require_once __DIR__ . '/../include/gitlfsPlugin.class.php';

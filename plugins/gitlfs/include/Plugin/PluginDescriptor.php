@@ -18,28 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch\Request;
+namespace Tuleap\GitLFS\Plugin;
 
-class BatchRequestReference
+class PluginDescriptor extends \PluginDescriptor
 {
-    /**
-     * @var string
-     */
-    private $name;
-
-    public function __construct($name)
+    public function __construct()
     {
-        if (! \is_string($name)) {
-            throw new \TypeError('Expected $name to be a string, got ' . gettype($name));
-        }
-        $this->name = $name;
-    }
+        parent::__construct(
+            dgettext('tuleap-gitlfs', 'Git LFS'),
+            false,
+            dgettext('tuleap-gitlfs', 'Support of large file upload and download in Git')
+        );
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        $this->setVersionFromFile(__DIR__ . '/../../VERSION');
     }
 }

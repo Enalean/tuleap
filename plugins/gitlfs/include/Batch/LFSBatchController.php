@@ -18,17 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Git\LFS\Batch;
+namespace Tuleap\GitLFS\Batch;
 
 use HTTPRequest;
-use Tuleap\Git\LFS\Batch\Request\BatchRequest;
-use Tuleap\Git\LFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
+use Tuleap\GitLFS\Batch\Request\BatchRequest;
+use Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 
 class LFSBatchController implements DispatchableWithRequestNoAuthz
 {
+    /**
+     * @var \gitlfsPlugin
+     */
+    private $plugin;
     /**
      * @var \GitRepositoryFactory
      */
@@ -51,10 +55,12 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
     private $batch_request;
 
     public function __construct(
+        \gitlfsPlugin $plugin,
         \GitRepositoryFactory $repository_factory,
         LFSBatchAPIHTTPAccessControl $batch_api_access_control,
         \Logger $logger
     ) {
+        $this->plugin                   = $plugin;
         $this->repository_factory       = $repository_factory;
         $this->batch_api_access_control = $batch_api_access_control;
         $this->logger                   = $logger;
@@ -80,7 +86,9 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             $variables['project_name'],
             $this->getRepoPathWithFinalDotGit($variables['path'])
         );
-        if ($this->repository === null || ! $this->repository->getProject()->isActive() || ! $this->repository->isCreated()) {
+        $project = $this->repository->getProject();
+        if ($this->repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
+            ! $this->repository->isCreated()) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
