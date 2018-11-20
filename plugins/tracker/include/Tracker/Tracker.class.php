@@ -1445,7 +1445,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $items;
     }
 
-    public function displayAdminHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs)
+    public function displayAdminHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params = array())
     {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -1463,7 +1463,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 );
                 $toolbar = $this->getAdminItems();
             }
-            $this->displayHeader($layout, $title, $breadcrumbs, $toolbar);
+            $this->displayHeader($layout, $title, $breadcrumbs, $toolbar, $params);
         }
     }
     public function displayAdmin(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
@@ -1527,8 +1527,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         return $html;
     }
 
-    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $breadcrumbs = array(), $title = null) {
-        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $breadcrumbs, $title);
+    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $layout, $item, $breadcrumbs = array(), $title = null, array $params = array()) {
+        $this->displayAdminItemHeaderWithoutTitle($layout, $item, $breadcrumbs, $title, $params);
 
         if ($title !== null) {
             echo '<h1>'. $title .'</h1>';
@@ -1539,7 +1539,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         Tracker_IDisplayTrackerLayout $layout,
         $item,
         $breadcrumbs = array(),
-        $title = null
+        $title = null,
+        array $params = array()
     ) {
         $items = $this->getAdminItems();
         $title = $title ? $title : $items[$item]['title'];
@@ -1549,7 +1550,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             ),
             $breadcrumbs
         );
-        $this->displayAdminHeader($layout, $title, $breadcrumbs);
+        $this->displayAdminHeader($layout, $title, $breadcrumbs, $params);
     }
 
     public function getColor() {

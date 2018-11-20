@@ -75,7 +75,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         );
         $layout->addCssAsset(new CssAsset($cssAssets, 'workflow'));
 
-        $tracker->displayAdminItemHeader($this->tracker_manager, 'editworkflow');
+        $tracker->displayAdminItemHeader($this->tracker_manager, 'editworkflow', [], null, ['main_classes' => ['fluid-main']]);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR.'/workflow-transitions');
         $presenter = $this->presenter_builder->build($tracker, WorkflowMenuTabPresenterBuilder::TAB_TRANSITIONS);

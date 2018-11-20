@@ -30,9 +30,16 @@ body {
     flex: 1 1 auto;
 }
 
-main[role=main] {
-    width: 100%;
+main {
+    &[role=main] {
+        width: 100%;
+    }
+
+    &.fluid-main {
+        width: auto;
+    }
 }
+
 
 #feedback {
     margin: 0 0 $tlp-spacing;
