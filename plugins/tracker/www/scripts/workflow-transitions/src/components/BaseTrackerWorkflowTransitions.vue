@@ -22,28 +22,33 @@
         <div v-if="is_current_tracker_load_failed" v-translate class="tlp-alert-danger">
             Tracker cannot be loaded
         </div>
-        <section v-else class="tlp-pane">
-            <div class="tlp-pane-container">
-                <div class="tlp-pane-header">
-                    <h1 class="tlp-pane-title" v-translate>Transitions rules configuration</h1>
-                </div>
-                <template v-if="is_tracker_available">
-                    <template v-if="is_base_field_configured">
-                        <transitions-configuration-header-section/>
-                        <transitions-matrix-section/>
-                    </template>
-                    <first-configuration-section v-else/>
-                </template>
-                <section class="tlp-pane-section" v-else>
-                    <div class="tracker-workflow-loader"></div>
-                </section>
+        <template v-else>
+            <div v-if="is_operation_failed" class="tlp-alert-danger">
+                {{ translated_operation_failure_message }}
             </div>
-        </section>
+            <section class="tlp-pane">
+                <div class="tlp-pane-container">
+                    <div class="tlp-pane-header">
+                        <h1 class="tlp-pane-title" v-translate>Transitions rules configuration</h1>
+                    </div>
+                    <template v-if="is_tracker_available">
+                        <template v-if="is_base_field_configured">
+                            <transitions-configuration-header-section/>
+                            <transitions-matrix-section/>
+                        </template>
+                        <first-configuration-sections v-else/>
+                    </template>
+                    <section class="tlp-pane-section" v-else>
+                        <div class="tracker-workflow-loader"></div>
+                    </section>
+                </div>
+            </section>
+        </template>
     </div>
 </template>
 
 <script>
-import FirstConfigurationSection from "./FirstConfigurationSection.vue";
+import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import { mapState } from "vuex";
@@ -51,7 +56,7 @@ import { mapState } from "vuex";
 export default {
     name: "BaseTrackerWorflowTransitions",
     components: {
-        FirstConfigurationSection,
+        FirstConfigurationSections,
         TransitionsConfigurationHeaderSection,
         TransitionsMatrixSection
     },
@@ -67,7 +72,9 @@ export default {
         ...mapState([
             "is_current_tracker_loading",
             "current_tracker",
-            "is_current_tracker_load_failed"
+            "is_current_tracker_load_failed",
+            "is_operation_failed",
+            "operation_failure_message"
         ]),
         is_tracker_available() {
             return !this.is_current_tracker_loading && this.current_tracker;
@@ -78,6 +85,9 @@ export default {
                 this.current_tracker.workflow &&
                 Boolean(this.current_tracker.workflow.field_id)
             );
+        },
+        translated_operation_failure_message() {
+            return this.operation_failure_message || this.$gettext("An error occurred");
         }
     },
 

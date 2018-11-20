@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getTracker } from "../api/rest-querier.js";
+import { getTracker, createWorkflowTransitions } from "../api/rest-querier.js";
 
 export async function loadTracker(context, tracker_id) {
     try {
@@ -28,5 +28,33 @@ export async function loadTracker(context, tracker_id) {
         context.commit("failCurrentTrackerLoading");
     } finally {
         context.commit("stopCurrentTrackerLoading");
+    }
+}
+
+export async function saveWorkflowTransitionsField(context, field_id) {
+    try {
+        context.commit("beginOperation");
+        const tracker_id = context.state.current_tracker.id;
+        await createWorkflowTransitions(tracker_id, field_id);
+        context.commit("createWorkflow", field_id);
+    } catch (exception) {
+        if (!exception.response) {
+            context.commit("failOperation");
+            return;
+        }
+        let response;
+        try {
+            response = await exception.response.json();
+        } catch (json_exception) {
+            context.commit("failOperation");
+            return;
+        }
+        if (!response.error || !("i18n_error_message" in response.error)) {
+            context.commit("failOperation");
+            return;
+        }
+        context.commit("failOperation", response.error.i18n_error_message);
+    } finally {
+        context.commit("endOperation");
     }
 }

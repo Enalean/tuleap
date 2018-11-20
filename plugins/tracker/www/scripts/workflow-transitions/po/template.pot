@@ -5,6 +5,9 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "An error occurred"
+msgstr ""
+
 msgid "Change or remove"
 msgstr ""
 
@@ -21,6 +24,9 @@ msgid ""
 msgstr ""
 
 msgid "Page under construction"
+msgstr ""
+
+msgid "Save and start configuration"
 msgstr ""
 
 msgid "Tracker cannot be loaded"
