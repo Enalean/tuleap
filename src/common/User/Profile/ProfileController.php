@@ -47,8 +47,8 @@ class ProfileController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $user = UserManager::instance()->getUserByLoginName($variables['name']);
-        if (! $user) {
+        $user = UserManager::instance()->getUserByUserName($variables['name']);
+        if ($user === null) {
             throw new NotFoundException(_("That user does not exist."));
         }
 

@@ -45,12 +45,12 @@ class AvatarController implements DispatchableWithRequest, DispatchableWithReque
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $user = UserManager::instance()->getUserByLoginName($variables['name']);
-        if (! $user) {
+        $user = UserManager::instance()->getUserByUserName($variables['name']);
+        if ($user === null) {
             throw new NotFoundException(_("That user does not exist."));
         }
 
-        if ($user && $user->hasAvatar()) {
+        if ($user->hasAvatar()) {
             $user_avatar_path = $user->getAvatarFilePath();
             if (is_file($user_avatar_path)) {
                 if (isset($variables['hash'])) {
