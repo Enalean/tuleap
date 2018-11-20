@@ -177,7 +177,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
             /** @var Tracker_Artifact_Followup_Item $item */
             if ($previous_item) {
                 $diff_to_previous = $item->diffToPreviousArtifactView($this->user, $previous_item);
-                $classnames  = html_get_alt_row_color($i++) .' tracker_artifact_followup ';
+                $classnames  = 'tracker_artifact_followup ';
                 $classnames .= $item->getFollowUpClassnames($diff_to_previous);
                 $comment_html = '<li id="followup_'. $item->getId() .'" class="'. $classnames .'">';
                 $comment_html .= $item->fetchFollowUp($diff_to_previous);
