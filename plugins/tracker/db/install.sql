@@ -246,8 +246,8 @@ CREATE TABLE tracker_field_list_bind_static_value(
     rank INT(11) NOT NULL,
     is_hidden TINYINT(1) NOT NULL,
     original_value_id INT(11) NOT NULL DEFAULT '0',
-    INDEX field_id_idx(field_id),
-    INDEX idx_original_value_id (original_value_id, id)
+    INDEX idx_original_value_id (original_value_id, id),
+    INDEX idx_bind_value_field_id(field_id, id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 CREATE TABLE IF NOT EXISTS tracker_field_burndown (
@@ -308,7 +308,7 @@ CREATE TABLE tracker_changeset_value(
     field_id INT(11) NOT NULL,
     has_changed TINYINT(1) NOT NULL,
     INDEX value_idx(changeset_id, field_id),
-    INDEX field_idx(field_id)
+    INDEX idx_value_field_id(field_id, id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_value_file;
@@ -358,7 +358,8 @@ CREATE TABLE tracker_changeset_value_openlist(
     bindvalue_id INT(11) NULL,
     openvalue_id INT(11) NULL,
     insertion_order INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    UNIQUE idx(changeset_value_id, bindvalue_id, openvalue_id)
+    UNIQUE idx(changeset_value_id, bindvalue_id, openvalue_id),
+    INDEX idx_bindvalue_id(bindvalue_id, changeset_value_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_changeset_value_artifactlink;
