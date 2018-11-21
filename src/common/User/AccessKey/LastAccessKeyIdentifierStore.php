@@ -20,12 +20,18 @@
 
 namespace Tuleap\User\AccessKey;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 class LastAccessKeyIdentifierStore
 {
     const STORAGE_NAME = 'last_access_key_identifier';
+    /**
+     * @var SplitTokenFormatter
+     */
+    private $split_token_formatter;
     /**
      * @var EncryptionKey
      */
@@ -35,15 +41,19 @@ class LastAccessKeyIdentifierStore
      */
     private $storage;
 
-    public function __construct(EncryptionKey $encryption_key, array &$storage)
+    public function __construct(SplitTokenFormatter $split_token_formatter, EncryptionKey $encryption_key, array &$storage)
     {
-        $this->encryption_key = $encryption_key;
-        $this->storage        =& $storage;
+        $this->split_token_formatter = $split_token_formatter;
+        $this->encryption_key        = $encryption_key;
+        $this->storage               =& $storage;
     }
 
-    public function storeLastGeneratedAccessKeyIdentifier(AccessKey $key)
+    public function storeLastGeneratedAccessKeyIdentifier(SplitToken $key)
     {
-        $this->storage[self::STORAGE_NAME] = SymmetricCrypto::encrypt($key->getIdentifier(), $this->encryption_key);
+        $this->storage[self::STORAGE_NAME] = SymmetricCrypto::encrypt(
+            $this->split_token_formatter->getIdentifier($key),
+            $this->encryption_key
+        );
     }
 
     /**

@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-class InvalidIdentifierFormatException extends AccessKeyException
+final class InvalidIdentifierFormatException extends SplitTokenException
 {
     public function __construct()
     {

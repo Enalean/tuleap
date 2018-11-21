@@ -20,6 +20,10 @@
 
 namespace Tuleap\User\AccessKey;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+
 class AccessKeyCreator
 {
     /**
@@ -31,7 +35,7 @@ class AccessKeyCreator
      */
     private $dao;
     /**
-     * @var AccessKeyVerificationStringHasher
+     * @var SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
@@ -42,7 +46,7 @@ class AccessKeyCreator
     public function __construct(
         LastAccessKeyIdentifierStore $last_access_key_identifier_store,
         AccessKeyDAO $dao,
-        AccessKeyVerificationStringHasher $hasher,
+        SplitTokenVerificationStringHasher $hasher,
         AccessKeyCreationNotifier $notifier
     ) {
         $this->last_access_key_identifier_store = $last_access_key_identifier_store;
@@ -53,16 +57,16 @@ class AccessKeyCreator
 
     public function create(\PFUser $user, $description)
     {
-        $verification_string = AccessKeyVerificationString::generateNewAccessKeyVerificationString();
+        $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_time        = new \DateTimeImmutable();
 
-        $key_id     = $this->dao->create(
+        $key_id = $this->dao->create(
             $user->getId(),
             $this->hasher->computeHash($verification_string),
             $current_time->getTimestamp(),
             $description
         );
-        $access_key = new AccessKey($key_id, $verification_string);
+        $access_key = new SplitToken($key_id, $verification_string);
 
         $this->notifier->notifyCreation($user, $description);
         $this->last_access_key_identifier_store->storeLastGeneratedAccessKeyIdentifier($access_key);

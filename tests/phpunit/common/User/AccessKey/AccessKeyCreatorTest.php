@@ -22,6 +22,7 @@ namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 class AccessKeyCreatorTest extends TestCase
 {
@@ -31,7 +32,7 @@ class AccessKeyCreatorTest extends TestCase
     {
         $store              = \Mockery::mock(LastAccessKeyIdentifierStore::class);
         $dao                = \Mockery::mock(AccessKeyDAO::class);
-        $hasher             = \Mockery::mock(AccessKeyVerificationStringHasher::class);
+        $hasher             = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $notifier            = \Mockery::mock(AccessKeyCreationNotifier::class);
         $access_key_creator = new AccessKeyCreator($store, $dao, $hasher, $notifier);
 

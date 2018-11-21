@@ -20,6 +20,9 @@
 
 namespace Tuleap\User\AccessKey;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+
 class AccessKeyVerifier
 {
     /**
@@ -27,7 +30,7 @@ class AccessKeyVerifier
      */
     private $dao;
     /**
-     * @var AccessKeyVerificationStringHasher
+     * @var SplitTokenVerificationStringHasher
      */
     private $hasher;
     /**
@@ -35,7 +38,7 @@ class AccessKeyVerifier
      */
     private $user_manager;
 
-    public function __construct(AccessKeyDAO $dao, AccessKeyVerificationStringHasher $hasher, \UserManager $user_manager)
+    public function __construct(AccessKeyDAO $dao, SplitTokenVerificationStringHasher $hasher, \UserManager $user_manager)
     {
         $this->dao          = $dao;
         $this->hasher       = $hasher;
@@ -48,7 +51,7 @@ class AccessKeyVerifier
      * @throws InvalidAccessKeyException
      * @throws AccessKeyMatchingUnknownUserException
      */
-    public function getUser(AccessKey $access_key, $ip_address_requesting_verification)
+    public function getUser(SplitToken $access_key, $ip_address_requesting_verification)
     {
         $row = $this->dao->searchAccessKeyVerificationAndTraceabilityDataByID($access_key->getID());
         if ($row === null) {
@@ -74,7 +77,7 @@ class AccessKeyVerifier
         return $user;
     }
 
-    private function updateLastAccessInformationIfNeeded(AccessKey $access_key, $last_usage, $last_ip, $ip_address_requesting_verification)
+    private function updateLastAccessInformationIfNeeded(SplitToken $access_key, $last_usage, $last_ip, $ip_address_requesting_verification)
     {
         $current_time = new \DateTimeImmutable();
         if ($last_usage !== null && $last_ip !== null &&

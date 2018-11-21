@@ -18,26 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-use PHPUnit\Framework\TestCase;
 use Tuleap\Cryptography\ConcealedString;
 
-class AccessKeyVerificationStringTest extends TestCase
+interface SplitTokenIdentifierTranslator
 {
     /**
-     * @expectedException \Tuleap\User\AccessKey\IncorrectSizeVerificationStringException
+     * @throws InvalidIdentifierFormatException
+     * @throws IncorrectSizeVerificationStringException
+     * @return SplitToken
      */
-    public function testIncorrectlySizedVerificationStringAreRejected()
-    {
-        new AccessKeyVerificationString(new ConcealedString('too_short'));
-    }
-
-    public function testGeneratedKeyIsValid()
-    {
-        $generated_access_key = AccessKeyVerificationString::generateNewAccessKeyVerificationString();
-        $access_key           = new AccessKeyVerificationString($generated_access_key->getString());
-
-        $this->assertSame($generated_access_key->getString(), $access_key->getString());
-    }
+    public function getSplitToken(ConcealedString $identifier);
 }

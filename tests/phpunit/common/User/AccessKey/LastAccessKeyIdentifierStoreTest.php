@@ -22,6 +22,8 @@ namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
@@ -30,6 +32,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     private $encryption_key;
+    private $access_key_formatter;
 
     protected function setUp()
     {
@@ -37,17 +40,17 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
         $this->encryption_key->shouldReceive('getRawKeyMaterial')->andReturns(
             str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)
         );
+        $this->access_key_formatter = \Mockery::mock(SplitTokenFormatter::class);
     }
 
     public function testAnAccessKeyIdentifierAndCanBeStoredAndRetrieved()
     {
         $storage               = [];
-        $last_access_key_store = new LastAccessKeyIdentifierStore($this->encryption_key, $storage);
+        $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
 
-        $access_key = \Mockery::mock(AccessKey::class);
-        $access_key->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier_value'));
+        $this->access_key_formatter->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier_value'));
 
-        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key);
+        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier(\Mockery::mock(SplitToken::class));
         $this->assertCount(1, $storage);
         $identifier = $last_access_key_store->getLastGeneratedAccessKeyIdentifier();
         $this->assertSame('identifier_value', $identifier->getString());
@@ -57,12 +60,12 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
     public function testOnlyTheLastAccessKeyIsStored()
     {
         $storage               = [];
-        $last_access_key_store = new LastAccessKeyIdentifierStore($this->encryption_key, $storage);
+        $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
 
-        $access_key1 = \Mockery::mock(AccessKey::class);
-        $access_key1->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier_value1'));
-        $access_key2 = \Mockery::mock(AccessKey::class);
-        $access_key2->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier_value2'));
+        $access_key1 = \Mockery::mock(SplitToken::class);
+        $this->access_key_formatter->shouldReceive('getIdentifier')->with($access_key1)->andReturns(new ConcealedString('identifier_value1'));
+        $access_key2 = \Mockery::mock(SplitToken::class);
+        $this->access_key_formatter->shouldReceive('getIdentifier')->with($access_key2)->andReturns(new ConcealedString('identifier_value2'));
 
         $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key1);
         $this->assertCount(1, $storage);
@@ -76,7 +79,7 @@ class LastAccessKeyIdentifierStoreTest extends TestCase
     public function testNullIsGivenWhenNoAccessKeyIdentifierIsStored()
     {
         $storage               = [];
-        $last_access_key_store = new LastAccessKeyIdentifierStore($this->encryption_key, $storage);
+        $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
 
         $this->assertNull($last_access_key_store->getLastGeneratedAccessKeyIdentifier());
     }

@@ -22,18 +22,23 @@ namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Cryptography\ConcealedString;
 
-class AccessKeyTest extends TestCase
+class AccessKeySerializerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     public function testIdentifierPrefixIsPresent()
     {
-        $access_key_verification_string = \Mockery::mock(AccessKeyVerificationString::class);
+        $access_key_verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $access_key_verification_string->shouldReceive('getString')->andReturns('random_string');
-        $access_key = new AccessKey(1, $access_key_verification_string);
+        $access_key = new SplitToken(1, $access_key_verification_string);
 
-        $identifier = $access_key->getIdentifier();
+        $access_key_serializer = new AccessKeySerializer();
+
+        $identifier = $access_key_serializer->getIdentifier($access_key);
 
         $this->assertStringStartsWith('tlp-k1-', $identifier->getString());
     }
@@ -44,17 +49,20 @@ class AccessKeyTest extends TestCase
         $hex_verification_string      = '7f2c5f68b1c802c21486cf88a7d4209d9685b43b5f1661fb1528759c5387fd13';
         $identifier                   = "tlp-k1-$expected_id.$hex_verification_string";
 
-        $access_key = AccessKey::buildFromIdentifier($identifier);
+        $access_key_serializer = new AccessKeySerializer();
+
+        $access_key = $access_key_serializer->getSplitToken(new ConcealedString($identifier));
 
         $this->assertSame($expected_id, $access_key->getID());
         $this->assertSame($hex_verification_string, bin2hex($access_key->getVerificationString()->getString()));
     }
 
     /**
-     * @expectedException \Tuleap\User\AccessKey\InvalidIdentifierFormatException
+     * @expectedException \Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException
      */
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
     {
-        AccessKey::buildFromIdentifier('incorrect_identifier');
+        $access_key_serializer = new AccessKeySerializer();
+        $access_key_serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
     }
 }

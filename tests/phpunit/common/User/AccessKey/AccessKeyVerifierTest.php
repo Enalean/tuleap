@@ -22,6 +22,9 @@ namespace Tuleap\User\AccessKey;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 class AccessKeyVerifierTest extends TestCase
 {
@@ -55,9 +58,9 @@ class AccessKeyVerifierTest extends TestCase
     protected function setUp()
     {
         $this->dao          = \Mockery::mock(AccessKeyDAO::class);
-        $this->hasher       = \Mockery::mock(AccessKeyVerificationStringHasher::class);
+        $this->hasher       = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $this->user_manager = \Mockery::mock(\UserManager::class);
-        $this->access_key   = \Mockery::mock(AccessKey::class);
+        $this->access_key   = \Mockery::mock(SplitToken::class);
         $this->verifier     = new AccessKeyVerifier($this->dao, $this->hasher, $this->user_manager);
         \ForgeConfig::store();
     }
@@ -77,7 +80,7 @@ class AccessKeyVerifierTest extends TestCase
         $this->dao->shouldReceive('searchAccessKeyVerificationAndTraceabilityDataByID')->andReturns(
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => $last_usage, 'last_ip' => $last_ip]
         );
-        $verification_string = \Mockery::mock(AccessKeyVerificationString::class);
+        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $this->access_key->shouldReceive('getVerificationString')->andReturns($verification_string);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $expected_user = \Mockery::mock(\PFUser::class);
@@ -143,7 +146,7 @@ class AccessKeyVerifierTest extends TestCase
             ['user_id' => 101, 'verifier' => 'invalid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
         );
         $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
+            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(false);
 
         $this->verifier->getUser($this->access_key, self::IP_ADDRESS_REQUESTING_VERIFICATION);
@@ -159,7 +162,7 @@ class AccessKeyVerifierTest extends TestCase
             ['user_id' => 101, 'verifier' => 'valid', 'last_usage' => 1538408328, 'last_ip' => self::IP_ADDRESS_REQUESTING_VERIFICATION]
         );
         $this->access_key->shouldReceive('getVerificationString')
-            ->andReturns(\Mockery::mock(AccessKeyVerificationString::class));
+            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
         $this->hasher->shouldReceive('verifyHash')->andReturns(true);
         $this->user_manager->shouldReceive('getUserById')->andReturns(null);
 

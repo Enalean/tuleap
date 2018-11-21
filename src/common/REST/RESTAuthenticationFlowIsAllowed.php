@@ -22,6 +22,7 @@ namespace Tuleap\REST;
 use \Luracast\Restler\InvalidAuthCredentials;
 
 use Rest_Exception_InvalidTokenException;
+use Tuleap\Authentication\SplitToken\SplitTokenException;
 use Tuleap\User\AccessKey\AccessKeyException;
 use User_LoginException;
 
@@ -50,6 +51,8 @@ class RESTAuthenticationFlowIsAllowed
         } catch (Rest_Exception_InvalidTokenException $exception) {
             throw new InvalidAuthCredentials(401, $exception->getMessage());
         } catch (AccessKeyException $exception) {
+            throw new InvalidAuthCredentials(401, 'Invalid access key');
+        } catch (SplitTokenException $exception) {
             throw new InvalidAuthCredentials(401, 'Invalid access key');
         }
 

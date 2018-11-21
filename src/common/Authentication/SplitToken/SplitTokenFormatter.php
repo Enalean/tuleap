@@ -18,23 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-class AccessKeyVerificationStringHasher
+use Tuleap\Cryptography\ConcealedString;
+
+interface SplitTokenFormatter
 {
     /**
-     * @return string
+     * @return ConcealedString
      */
-    public function computeHash(AccessKeyVerificationString $verification_string)
-    {
-        return hash('sha256', $verification_string->getString());
-    }
-
-    /**
-     * @return bool
-     */
-    public function verifyHash(AccessKeyVerificationString $verification_string, $known_verification_string)
-    {
-        return hash_equals($known_verification_string, $this->computeHash($verification_string));
-    }
+    public function getIdentifier(SplitToken $token);
 }
