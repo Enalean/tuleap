@@ -268,7 +268,7 @@ sub apr_is_user_in_cache {
         return 0;
     }
 
-    my $is_user_in_cache = compare_string_constant_time(hash_user_secret($user_secret, $cfg->{TuleapDbPass}), $user_secret_in_cache);
+    my $is_user_in_cache = verify_user_secret($user_secret, $user_secret_in_cache, $cfg);
     if ($is_user_in_cache) {
         $cfg->{TuleapCacheCredsLifetime}->set($username, time())
     }
@@ -286,7 +286,7 @@ sub apr_add_user_to_cache {
         apr_remove_oldest_cache_entry()
     }
 
-    my $hashed_user_secret = hash_user_secret($user_secret, $cfg->{TuleapDbPass});
+    my $hashed_user_secret = hash_user_secret($user_secret, $cfg);
     $cfg->{TuleapCacheCreds}->set($username, $hashed_user_secret);
     $cfg->{TuleapCacheCredsLifetime}->set($username, time());
     $cfg->{TuleapCacheCredsCount}++;
@@ -374,12 +374,10 @@ sub redis_user_authorization() {
 sub redis_user_authentication() {
     my ($r, $cfg, $redis, $username, $user_secret) = @_;
 
-    my $user_secret_hashed_for_cache = hash_user_secret($user_secret, $cfg->{TuleapDbPass});
-
     my $cache_key                    = "apache_svn_".$username;
     my $user_secret_in_cache         = $redis->get($cache_key);
     if (defined $user_secret_in_cache) {
-        if (compare_string_constant_time($user_secret_hashed_for_cache, $user_secret_in_cache)) {
+        if (verify_user_secret($user_secret, $user_secret_in_cache, $cfg)) {
             return 1;
         }
         $redis->del($cache_key);
@@ -392,6 +390,7 @@ sub redis_user_authentication() {
 
     my $user_authentication_success = 0;
     if (user_authentication($r, $cfg, $dbh, $username, $user_secret, $tuleap_username)) {
+        my $user_secret_hashed_for_cache = hash_user_secret($user_secret, $cfg);
         $redis->setex($cache_key, $cfg->{TuleapCacheLifetime}, $user_secret_hashed_for_cache);
         $user_authentication_success = 1;
     }
@@ -611,12 +610,6 @@ sub is_valid_user_ldap {
     return ! $mesg->code();
 }
 
-sub hash_user_secret {
-    my ($user_secret, $dbauthuser_pw)     = @_;
-
-    return hmac_sha256($user_secret, $dbauthuser_pw);
-}
-
 sub connect_and_bind_ldap {
     my ($cfg) = @_;
 
@@ -659,6 +652,32 @@ sub get_user_dn() {
     }
 
     return;
+}
+
+sub hash_user_secret {
+    my ($user_secret, $cfg) = @_;
+
+    my $pepper = $cfg->{TuleapDbPass};
+    open(my $urandom_handle, '<', '/dev/urandom') or die('/dev/urandom can not be opened');
+    read $urandom_handle, my $salt, 16 or die('Can not read from /dev/urandom');
+    close($urandom_handle);
+
+    return password_hashing_for_cache($user_secret, $salt, $pepper);
+}
+
+sub verify_user_secret {
+    my ($user_secret, $expected_hashed_user_secret, $cfg) = @_;
+
+    my $pepper = $cfg->{TuleapDbPass};
+    my $salt = pack("x0 a16", $expected_hashed_user_secret);
+
+    return compare_string_constant_time($expected_hashed_user_secret, password_hashing_for_cache($user_secret, $salt, $pepper))
+}
+
+sub password_hashing_for_cache {
+    my ($user_secret, $salt, $pepper) = @_;
+
+    return $salt . hmac_sha256(hmac_sha256($user_secret, $salt), $pepper)
 }
 
 sub compare_string_constant_time {
