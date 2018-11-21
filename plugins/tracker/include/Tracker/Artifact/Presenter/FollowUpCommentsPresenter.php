@@ -47,7 +47,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter {
             $diff_to_previous = $followup->diffToPrevious();
             $presenters[] = array(
                 'getId'              => $followup->getId(),
-                'getAvatarIfEnabled' => $followup->getAvatarIfEnabled(),
+                'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),
                 'getTimeAgo'         => $followup->getTimeAgo(),
                 'getFollowupContent' => $followup->getFollowupContent($diff_to_previous)

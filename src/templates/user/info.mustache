@@ -1,13 +1,11 @@
 <div id="account-user-info">
     <div class="first-user-info">
-    {{# has_avatar }}
         <div id="user-avatar">
             {{{ avatar }}}
             <a href="#change-avatar-modal" data-toggle="modal" class="btn btn-small user-avatar-change">
                 {{ change_avatar }}
             </a>
         </div>
-    {{/ has_avatar }}
         <div>
             <h1>
                 {{ real_name }}
@@ -57,6 +55,4 @@
     </table>
 </div>
 
-{{# has_avatar }}
-    {{> change-avatar-modal }}
-{{/ has_avatar }}
+{{> change-avatar-modal }}

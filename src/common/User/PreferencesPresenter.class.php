@@ -152,10 +152,6 @@ class User_PreferencesPresenter {
         return $GLOBALS['Language']->getText('account_options', 'generated_svn_token');
     }
 
-    public function has_avatar() {
-        return ForgeConfig::get('sys_enable_avatars');
-    }
-
     public function avatar() {
         return $this->user->fetchHtmlAvatar();
     }

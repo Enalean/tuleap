@@ -54,12 +54,9 @@ abstract class Tracker_Artifact_Followup_Item {
 
     abstract public function canHoldValue();
 
-    public function getAvatarIfEnabled() {
-        if (ForgeConfig::get('sys_enable_avatars')) {
-            return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';
-        }
-
-        return '';
+    public function getAvatar()
+    {
+        return '<div class="tracker_artifact_followup_avatar">' . $this->getHTMLAvatar() . '</div>';
     }
 
     public function getPermalink() {

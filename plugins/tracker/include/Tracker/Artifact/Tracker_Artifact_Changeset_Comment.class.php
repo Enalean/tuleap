@@ -200,7 +200,7 @@ class Tracker_Artifact_Changeset_Comment {
         }
 
         $user     = UserManager::instance()->getUserById($this->submitted_by);
-        $avatar   = (ForgeConfig::get('sys_enable_avatars')) ? $user->fetchHtmlAvatar() : '';
+        $avatar   = $user->fetchHtmlAvatar();
         $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
 
         $html =

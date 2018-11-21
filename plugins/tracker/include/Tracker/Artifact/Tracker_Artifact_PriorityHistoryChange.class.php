@@ -152,7 +152,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
 
     public function fetchFollowUp($diff_to_previous) {
         $html  = '';
-        $html .= $this->getAvatarIfEnabled();
+        $html .= $this->getAvatar();
 
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
