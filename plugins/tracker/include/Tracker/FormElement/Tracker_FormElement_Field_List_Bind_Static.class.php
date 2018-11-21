@@ -35,6 +35,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     protected $values;
     protected $is_rank_alpha;
 
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_Static_ValueDao
+     */
+    private $value_dao = null;
+
     public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->is_rank_alpha = $is_rank_alpha;
@@ -398,8 +403,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     /**
      * @return Tracker_FormElement_Field_List_Bind_Static_ValueDao
      */
-    public function getValueDao() {
-        return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+    public function getValueDao()
+    {
+        if ($this->value_dao === null) {
+            $this->value_dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+        }
+        return $this->value_dao;
     }
 
     /**

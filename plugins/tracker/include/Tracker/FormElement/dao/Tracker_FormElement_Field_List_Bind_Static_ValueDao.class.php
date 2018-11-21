@@ -246,6 +246,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     $additionnal_unions
                     ";
 
+            $this->cache_canbehidden_values[$field_id] = [];
             foreach ($this->retrieve($sql) as $row) {
                 $this->cache_canbehidden_values[$field_id][$row['id']] = true;
             }
@@ -283,6 +284,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     WHERE tracker_workflow_trigger_rule_trg_field_static_value.value_id = $value_id
                     ";
 
+            $this->cache_canbedeleted_values[$field_id] = [];
             foreach ($this->retrieve($sql) as $row) {
                 $this->cache_canbedeleted_values[$field_id][$row['id']] = true;
             }
