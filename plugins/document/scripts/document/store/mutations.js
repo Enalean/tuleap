@@ -30,8 +30,8 @@ export default {
         state.error_message = message;
     },
 
-    switchLoadingRootDocument(state, status) {
-        state.is_loading_root_document = status;
+    switchLoadingFolder(state, status) {
+        state.is_loading_folder = status;
     },
 
     initDocumentTree(state, [project_id, name, user_is_admin, user_locale]) {

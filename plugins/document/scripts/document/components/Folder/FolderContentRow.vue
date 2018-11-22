@@ -19,8 +19,13 @@
 
 <template>
     <tr>
-        <td>{{ element.name }}</td>
-        <td><user-badge v-bind:user="element.owner"/></td>
+        <td v-if="is_folder">
+            <router-link v-bind:to="{ name: 'folder', params: { item_id: item.item_id }}">
+                {{ item.name }}
+            </router-link>
+        </td>
+        <td v-else> {{ item.name }}</td>
+        <td><user-badge v-bind:user="item.owner"/></td>
         <td>{{ formatted_last_update_date }}</td>
     </tr>
 </template>
@@ -29,19 +34,23 @@
 import TimeAgo from "javascript-time-ago";
 import { mapState } from "vuex";
 import UserBadge from "./UserBadge.vue";
+import { ITEM_TYPE_FOLDER } from "../../constants.js";
 
 export default {
     name: "FolderContentRow",
     components: { UserBadge },
     props: {
-        element: Object
+        item: Object
     },
     computed: {
         ...mapState(["user_locale"]),
         formatted_last_update_date() {
-            const date = new Date(this.element.last_update_date);
+            const date = new Date(this.item.last_update_date);
             const time_ago = new TimeAgo(this.user_locale);
             return time_ago.format(date);
+        },
+        is_folder() {
+            return this.item.type === ITEM_TYPE_FOLDER;
         }
     }
 };

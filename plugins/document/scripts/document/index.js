@@ -26,6 +26,7 @@ import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
 import store from "./store/index.js";
+import { router } from "./router/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     new AppComponent({
         store,
+        router,
         propsData: {
             projectId: project_id,
             projectName: project_name,

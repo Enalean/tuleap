@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="has_error" class="tlp-alert-danger">
+    <div v-if="has_error" class="tlp-alert-danger document-error-message">
         {{ error_message }}
     </div>
 </template>

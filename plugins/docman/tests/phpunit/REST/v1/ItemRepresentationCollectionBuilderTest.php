@@ -31,6 +31,7 @@ use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
+use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
@@ -40,13 +41,17 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
+     * @var ItemRepresentationBuilder
+     */
+    private $item_representation_builder;
+    /**
      * @var \Docman_ItemDao
      */
     private $dao;
     /**
-     * @var ItemRepresentationBuilder
+     * @var ItemRepresentationVisitor
      */
-    private $item_representation_builder;
+    private $item_representation_visitor;
     /**
      * @var Docman_ItemFactory
      */
@@ -71,11 +76,14 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_factory                           = Mockery::mock(Docman_ItemFactory::class);
         $this->permission_manager                     = Mockery::mock(Docman_PermissionsManager::class);
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
+        $this->item_representation_visitor            = new ItemRepresentationVisitor(
+            $this->item_representation_builder
+        );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
             $this->item_factory,
             $this->permission_manager,
-            $this->item_representation_builder,
+            $this->item_representation_visitor,
             $this->dao
         );
     }
@@ -91,19 +99,23 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'item_id'     => 1,
             'title'       => 'folder 1',
             'user_id'     => 101,
-            'update_date' => 1542099693
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         ];
         $dar_item_2        = [
             'item_id'     => 2,
             'title'       => 'item A',
             'user_id'     => 101,
-            'update_date' => 1542099693
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI
+
         ];
         $dar_item_3 = [
             'item_id'     => 3,
             'title'       => 'item B',
             'user_id'     => 101,
-            'update_date' => 1542099693
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE
         ];
         $this->dao->shouldReceive('searchByParentIdWithPagination')->andReturn(
             [
@@ -114,8 +126,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         );
         $this->dao->shouldReceive("foundRows")->andReturn(3);
 
-        $docman_item1 = new Docman_Item($dar_item_1);
-        $docman_item3 = new Docman_Item($dar_item_3);
+        $docman_item1 = new \Docman_Folder($dar_item_1);
+        $docman_item3 = new \Docman_File($dar_item_3);
 
         $this->item_factory->shouldReceive("getItemFromRow")->andReturn($docman_item1, $docman_item3);
 
@@ -125,14 +137,22 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
 
-        $representation1 = new ItemRepresentation($docman_item1, $user_representation);
-        $representation2 = new ItemRepresentation($docman_item3, $user_representation);
+        $representation1 = new ItemRepresentation(
+            $docman_item1,
+            $user_representation,
+            ItemRepresentation::TYPE_FOLDER
+        );
+        $representation2 = new ItemRepresentation(
+            $docman_item3,
+            $user_representation,
+            ItemRepresentation::TYPE_FILE
+        );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item1])
+            ->withArgs([$docman_item1, ItemRepresentation::TYPE_FOLDER])
             ->andReturns($representation1);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item3])
+            ->withArgs([$docman_item3, ItemRepresentation::TYPE_FILE])
             ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildFolderContent($item, $user, 50, 0);
