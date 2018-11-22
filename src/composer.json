@@ -28,6 +28,7 @@
     "embed/embed": "^3.3",
     "ezyang/htmlpurifier": "^4.10",
     "firebase/php-jwt": "^5.0.0",
+    "gumlet/php-image-resize": "^1.9",
     "jimdo/prometheus_client_php": "^0.9.1",
     "michelf/php-markdown": "^1.1",
     "mustache/mustache": "dev-feature/strict-variables",
@@ -41,7 +42,6 @@
     "php-http/message": "^1.6",
     "psr/http-message": "^1.0",
     "symfony/console": "^3.4",
-    "verot/class.upload.php": "dev-master",
     "zendframework/zend-mail": "^2.10"
   },
   "config": {
@@ -50,7 +50,8 @@
       "ext-bcmath": "0",
       "ext-mbstring": "0",
       "ext-curl": "0",
-      "ext-iconv": "0"
+      "ext-iconv": "0",
+      "ext-gd": "0"
     },
     "sort-packages": true
   },

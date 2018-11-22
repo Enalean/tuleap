@@ -287,10 +287,6 @@ $sys_use_trove = 1;
 // (1 to enable, 0 to disable)
 $sys_use_project_registration = 1;
 
-//Enable users avatar?
-// (1 to enable, 0 to disable)
-$sys_enable_avatars = 1;
-
 //User's avatar path
 $sys_avatar_path = $sys_data_dir . "/user/avatar/";
 

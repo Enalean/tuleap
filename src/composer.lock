@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7621c435caf836d3d8ccc96a337eab83",
+    "content-hash": "4df2af4a0e57471317c3ccade761f20c",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -367,6 +367,61 @@
             "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
             "homepage": "https://github.com/firebase/php-jwt",
             "time": "2017-06-27T22:17:23+00:00"
+        },
+        {
+            "name": "gumlet/php-image-resize",
+            "version": "1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gumlet/php-image-resize.git",
+                "reference": "d36a7bcd679445ec8f310fdbecac5d40b0c587de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/gumlet/php-image-resize/zipball/d36a7bcd679445ec8f310fdbecac5d40b0c587de",
+                "reference": "d36a7bcd679445ec8f310fdbecac5d40b0c587de",
+                "shasum": ""
+            },
+            "require": {
+                "ext-fileinfo": "*",
+                "ext-gd": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "apigen/apigen": "^4.1",
+                "ext-exif": "*",
+                "ext-gd": "*",
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^4.8"
+            },
+            "suggest": {
+                "ext-exif": "Auto-rotate jpeg files"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gumlet\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aditya Patadia",
+                    "homepage": "http://aditya.patadia.org/"
+                }
+            ],
+            "description": "PHP class to re-size and scale images",
+            "homepage": "https://github.com/gumlet/php-image-resize",
+            "keywords": [
+                "image",
+                "php",
+                "resize",
+                "scale"
+            ],
+            "time": "2018-07-28T11:04:15+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1844,47 +1899,6 @@
                 "punycode"
             ],
             "time": "2016-11-16T10:37:54+00:00"
-        },
-        {
-            "name": "verot/class.upload.php",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/verot/class.upload.php.git",
-                "reference": "6a4bcb5383634ebf3e802e0eae51af553988c7e8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/verot/class.upload.php/zipball/6a4bcb5383634ebf3e802e0eae51af553988c7e8",
-                "reference": "6a4bcb5383634ebf3e802e0eae51af553988c7e8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=4"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/class.upload.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-2.0-only"
-            ],
-            "authors": [
-                {
-                    "name": "Colin Verot",
-                    "email": "colin@verot.net"
-                }
-            ],
-            "description": "This PHP class uploads files and manipulates images very easily.",
-            "homepage": "http://www.verot.net/php_class_upload.htm",
-            "keywords": [
-                "gd",
-                "upload"
-            ],
-            "time": "2018-10-31T20:29:58+00:00"
         },
         {
             "name": "zendframework/zend-loader",
@@ -3892,8 +3906,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "luracast/restler": 20,
-        "mustache/mustache": 20,
-        "verot/class.upload.php": 20
+        "mustache/mustache": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
@@ -3904,6 +3917,7 @@
         "ext-bcmath": "0",
         "ext-mbstring": "0",
         "ext-curl": "0",
-        "ext-iconv": "0"
+        "ext-iconv": "0",
+        "ext-gd": "0"
     }
 }

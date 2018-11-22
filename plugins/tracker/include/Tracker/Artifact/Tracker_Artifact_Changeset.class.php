@@ -224,7 +224,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
     public function fetchFollowUp($diff_to_previous) {
         $html = '';
 
-        $html .= $this->getAvatarIfEnabled();
+        $html .= $this->getAvatar();
 
         $html .= '<div class="tracker_artifact_followup_header">';
         $html .= $this->getPermalink();
