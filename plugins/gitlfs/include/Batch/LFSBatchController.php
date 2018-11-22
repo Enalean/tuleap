@@ -23,6 +23,8 @@ namespace Tuleap\GitLFS\Batch;
 use HTTPRequest;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
+use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
+use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -42,9 +44,9 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
      */
     private $batch_api_access_control;
     /**
-     * @var \Logger
+     * @var BatchSuccessfulResponseBuilder
      */
-    private $logger;
+    private $batch_successful_response_builder;
     /**
      * @var \GitRepository
      */
@@ -58,24 +60,34 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
         \gitlfsPlugin $plugin,
         \GitRepositoryFactory $repository_factory,
         LFSBatchAPIHTTPAccessControl $batch_api_access_control,
-        \Logger $logger
+        BatchSuccessfulResponseBuilder $batch_successful_response_builder
     ) {
-        $this->plugin                   = $plugin;
-        $this->repository_factory       = $repository_factory;
-        $this->batch_api_access_control = $batch_api_access_control;
-        $this->logger                   = $logger;
+        $this->plugin                            = $plugin;
+        $this->repository_factory                = $repository_factory;
+        $this->batch_api_access_control          = $batch_api_access_control;
+        $this->batch_successful_response_builder = $batch_successful_response_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $this->logger->debug(var_export($this->batch_request, true));
-        http_response_code(501);
-        echo json_encode(['message' => 'Processing of batch request is not yet implemented']);
+        try {
+            $response = $this->batch_successful_response_builder->build(
+                $request->getServerUrl(),
+                $this->batch_request->getOperation(),
+                ...$this->batch_request->getObjects()
+            );
+        } catch (UnknownOperationException $ex) {
+            http_response_code(501);
+            echo json_encode(['message' => $ex->getMessage()]);
+            return;
+        }
+
+        echo json_encode($response);
     }
 
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
     {
-        \Tuleap\Project\ServiceInstrumentation::increment('git');
+        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
         if ($this->repository !== null || $this->batch_request !== null) {
             throw new \RuntimeException(
                 'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'

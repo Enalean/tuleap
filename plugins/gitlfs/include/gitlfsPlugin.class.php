@@ -18,10 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenHeaderSerializer;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
+use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
+use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -51,9 +58,19 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function getHooksAndCallbacks()
     {
+        $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(CollectGitRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
+            $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
+                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController();
+            });
+        });
     }
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
@@ -68,7 +85,9 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     \UserManager::instance(),
                     new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
                 ),
-                $logger
+                new BatchSuccessfulResponseBuilder(
+                    $logger
+                )
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_batch_controller);
         });

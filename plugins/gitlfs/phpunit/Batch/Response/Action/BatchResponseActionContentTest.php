@@ -18,38 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch\Request;
+namespace Tuleap\GitLFS\Batch\Response\Action;
 
-class BatchRequestTransfer
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class BatchResponseActionContentTest extends TestCase
 {
-    const BASIC_TRANSFER_IDENTIFIER = 'basic';
+    use MockeryPHPUnitIntegration;
 
-    /**
-     * @var string
-     */
-    private $identifier;
-
-    public function __construct($identifier)
+    public function testActionContentHasAnAuthenticationHeader()
     {
-        if (! \is_string($identifier)) {
-            throw new \TypeError('Expected $identifier to be a string, got ' . gettype($identifier));
-        }
-        $this->identifier = $identifier;
-    }
+        $action_href = \Mockery::mock(BatchResponseActionHref::class);
+        $action_href->shouldReceive('getHref')->andReturns('https://example.com/action');
+        $action_content = new BatchResponseActionContent(
+            $action_href,
+            10000
+        );
 
-    /**
-     * @return self
-     */
-    public static function buildBasicTransfer()
-    {
-        return new self(self::BASIC_TRANSFER_IDENTIFIER);
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier()
-    {
-        return $this->identifier;
+        $action_content_serialized = json_decode(json_encode($action_content));
+        $this->assertTrue(isset($action_content_serialized->headers->Authorization));
     }
 }

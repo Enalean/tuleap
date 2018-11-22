@@ -21,6 +21,7 @@
 namespace Tuleap\GitLFS\Batch\Request;
 
 use Tuleap\Git\HTTP\GitHTTPOperation;
+use Tuleap\GitLFS\Transfer\Transfer;
 
 class BatchRequest implements GitHTTPOperation
 {
@@ -33,7 +34,7 @@ class BatchRequest implements GitHTTPOperation
      */
     private $objects;
     /**
-     * @var BatchRequestTransfer[]
+     * @var Transfer[]
      */
     private $transfers;
     /**
@@ -52,7 +53,7 @@ class BatchRequest implements GitHTTPOperation
         $this->objects   = $objects;
         $this->transfers = $transfers;
         if (empty($this->transfers)) {
-            $this->transfers = [BatchRequestTransfer::buildBasicTransfer()];
+            $this->transfers = [Transfer::buildBasicTransfer()];
         }
         $this->reference = $reference;
     }
@@ -101,7 +102,7 @@ class BatchRequest implements GitHTTPOperation
             }
             foreach ($parameters->transfers as $transfer_identifier) {
                 try {
-                    $transfers[] = new BatchRequestTransfer($transfer_identifier);
+                    $transfers[] = new Transfer($transfer_identifier);
                 } catch (\TypeError $error) {
                     throw new IncorrectlyFormattedBatchRequestException(
                         'transfer identifier of a batch request object should be a string'
@@ -140,7 +141,7 @@ class BatchRequest implements GitHTTPOperation
     }
 
     /**
-     * @return BatchRequestTransfer[]
+     * @return Transfer[]
      */
     public function getTransfers()
     {
