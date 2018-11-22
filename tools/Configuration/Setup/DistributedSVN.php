@@ -22,6 +22,7 @@
 namespace Tuleap\Configuration\Setup;
 
 use \Tuleap\Configuration;
+use Tuleap\Configuration\Apache\LogrotateDeployer;
 
 class DistributedSVN
 {
@@ -89,7 +90,7 @@ class DistributedSVN
 
         $fpm           = new Configuration\FPM\BackendSVN($this->logger, $vars->getApplicationBaseDir(), $vars->getApplicationUser());
         $nginx         = new Configuration\Nginx\BackendSVN($this->logger, $vars->getApplicationBaseDir(), '/etc/nginx', $vars->getServerName());
-        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), $pidOne);
+        $apache_config = new Configuration\Apache\BackendSVN($this->logger, $vars->getApplicationUser(), $pidOne, new LogrotateDeployer($this->logger));
 
         $fpm->configure();
         $nginx->configure();
