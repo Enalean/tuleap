@@ -23,8 +23,12 @@ namespace Tuleap\Request;
 
 class RequestInstrumentation
 {
-    const METRIC_NAME = 'http_responses_total';
-    const HELP        = 'Total number of HTTP request';
+    const COUNT_NAME = 'http_responses_total';
+    const COUNT_HELP = 'Total number of HTTP request';
+
+    const DURATION_NAME    = 'http_responses_duration';
+    const DURATION_HELP    = 'Duration of http responses in microseconds';
+    const DURATION_BUCKETS = [0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 30];
 
     public static function increment($code)
     {
@@ -55,6 +59,14 @@ class RequestInstrumentation
 
     private static function incrementCodeRouter($code, $router)
     {
-        \Tuleap\Instrument\Prometheus\Prometheus::instance()->increment(self::METRIC_NAME, self::HELP, ['code' => $code, 'router' => $router]);
+        $prom = \Tuleap\Instrument\Prometheus\Prometheus::instance();
+        $prom->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
+        $prom->histogram(
+            self::DURATION_NAME,
+            self::DURATION_HELP,
+            microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'],
+            ['router' => $router],
+            self::DURATION_BUCKETS
+        );
     }
 }
