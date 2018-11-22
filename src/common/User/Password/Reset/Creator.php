@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,10 @@
 
 namespace Tuleap\User\Password\Reset;
 
-use PasswordHandler;
 use PFUser;
-use RandomNumberGenerator;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
 class Creator
 {
@@ -31,40 +32,37 @@ class Creator
      */
     private $dao;
     /**
-     * @var RandomNumberGenerator
+     * @var SplitTokenVerificationStringHasher
      */
-    private $random_number_generator;
-    /**
-     * @var PasswordHandler
-     */
-    private $password_handler;
+    private $hasher;
 
     public function __construct(
         DataAccessObject $dao,
-        RandomNumberGenerator $random_number_generator,
-        PasswordHandler $password_handler
+        SplitTokenVerificationStringHasher $hasher
     ) {
-        $this->dao                     = $dao;
-        $this->random_number_generator = $random_number_generator;
-        $this->password_handler        = $password_handler;
+        $this->dao    = $dao;
+        $this->hasher = $hasher;
     }
 
     /**
-     * @return Token
+     * @return SplitToken
      * @throws \Tuleap\User\Password\Reset\TokenNotCreatedException
      */
     public function create(PFUser $user)
     {
-        $verifier                 = $this->random_number_generator->getNumber();
-        $verifier_password_hashed = $this->password_handler->computeHashPassword($verifier);
-        $current_date             = new \DateTime();
+        $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
+        $current_date        = new \DateTime();
 
-        $token_id = $this->dao->create($user->getId(), $verifier_password_hashed, $current_date->getTimestamp());
+        $token_id = $this->dao->create(
+            $user->getId(),
+            $this->hasher->computeHash($verification_string),
+            $current_date->getTimestamp()
+        );
 
         if ($token_id === false) {
             throw new TokenNotCreatedException();
         }
 
-        return new Token($token_id, $verifier);
+        return new SplitToken($token_id, $verification_string);
     }
 }

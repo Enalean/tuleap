@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,8 @@ namespace Tuleap\User\Password\Reset;
 
 use DateInterval;
 use DateTime;
-use PasswordHandler;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use UserManager;
 
 class Verifier
@@ -34,19 +35,19 @@ class Verifier
      */
     private $dao;
     /**
-     * @var PasswordHandler
+     * @var SplitTokenVerificationStringHasher
      */
-    private $password_handler;
+    private $hasher;
     /**
      * @var UserManager
      */
     private $user_manager;
 
-    public function __construct(DataAccessObject $dao, PasswordHandler $password_handler, UserManager $user_manager)
+    public function __construct(DataAccessObject $dao, SplitTokenVerificationStringHasher $hasher, UserManager $user_manager)
     {
-        $this->dao              = $dao;
-        $this->password_handler = $password_handler;
-        $this->user_manager     = $user_manager;
+        $this->dao          = $dao;
+        $this->hasher       = $hasher;
+        $this->user_manager = $user_manager;
     }
 
     /**
@@ -54,15 +55,15 @@ class Verifier
      * @throws \Tuleap\User\Password\Reset\ExpiredTokenException
      * @throws \Tuleap\User\Password\Reset\InvalidTokenException
      */
-    public function getUser(Token $token)
+    public function getUser(SplitToken $token)
     {
-        $row = $this->dao->getTokenInformationById($token->getId());
+        $row = $this->dao->getTokenInformationById($token->getID());
 
         if ($row === false) {
             throw new InvalidTokenException('Invalid ID');
         }
 
-        $is_token_valid = $this->password_handler->verifyHashPassword($token->getVerifier(), $row['verifier']);
+        $is_token_valid = $this->hasher->verifyHash($token->getVerificationString(), $row['verifier']);
 
         if ($is_token_valid === false) {
             throw new InvalidTokenException('Invalid identifier');
