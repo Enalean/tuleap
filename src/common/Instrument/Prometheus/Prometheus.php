@@ -73,6 +73,43 @@ class Prometheus
         $this->registry->getOrRegisterGauge('tuleap', $name, $help, $label_names)->set($value, $label_values);
     }
 
+    /**
+     * Histograms allow to instrument things that are distributed across a set of known values like duration or size
+     *
+     * Given an histogram set with the following buckets (correspond to microseconds of request duration)
+     * - 0.05
+     * - 0.5
+     * - 1
+     *
+     * I have then 3 requests
+     * - 250ms
+     * - 750ms
+     * - 3s
+     *
+     * I will get the following results in Prometheus
+     * - 0.05: 0  => no requests took less than 50ms
+     * - 0.5: 1   => 1 request took less than 500ms
+     * - 1: 2     => 2 requests took less than 1s
+     * - +Inf: 3  => All requests took less than +Inf
+     * - count: 3 => There were 3 requests
+     * - sum: 4   => The total of all requests took 4s
+     *
+     * +Inf, count and sum are automatically generated.
+     *
+     * Example inspired by @see https://povilasv.me/prometheus-tracking-request-duration/
+     *
+     * @param $name
+     * @param $help
+     * @param $time
+     * @param array $labels
+     * @param array $buckets
+     */
+    public function histogram($name, $help, $time, array $labels = [], array $buckets = [])
+    {
+        list($label_names, $label_values) = $this->getLabelsNamesAndValues($labels);
+        $this->registry->getOrRegisterHistogram('tuleap', $name, $help, $label_names, $buckets)->observe($time, $label_values);
+    }
+
     private function getLabelsNamesAndValues(array $labels)
     {
         $label_names  = [];
