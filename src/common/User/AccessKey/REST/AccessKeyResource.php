@@ -20,6 +20,7 @@
 
 namespace Tuleap\User\AccessKey\REST;
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -27,7 +28,7 @@ use Tuleap\User\AccessKey\AccessKeyCreationNotifier;
 use Tuleap\User\AccessKey\AccessKeyCreator;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyRevoker;
-use Tuleap\User\AccessKey\AccessKeyVerificationStringHasher;
+use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\LastAccessKeyIdentifierStore;
 
 class AccessKeyResource extends AuthenticatedResource
@@ -63,13 +64,14 @@ class AccessKeyResource extends AuthenticatedResource
         $current_user                        = \UserManager::instance()->getCurrentUser();
         $storage_access_key_identifier_store = [];
         $last_access_key_identifier_store    = new LastAccessKeyIdentifierStore(
+            new AccessKeySerializer(),
             (new KeyFactory)->getEncryptionKey(),
             $storage_access_key_identifier_store
         );
         $access_key_creator               = new AccessKeyCreator(
             $last_access_key_identifier_store,
             new AccessKeyDAO(),
-            new AccessKeyVerificationStringHasher(),
+            new SplitTokenVerificationStringHasher(),
             new AccessKeyCreationNotifier(\HTTPRequest::instance()->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 

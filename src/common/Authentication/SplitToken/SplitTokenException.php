@@ -18,14 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-final class IncorrectSizeVerificationStringException extends AccessKeyException
+abstract class SplitTokenException extends \RuntimeException
 {
-    public function __construct($expected_size, $string_size)
-    {
-        parent::__construct(
-            "Expected a verification string of $expected_size bytes, got $string_size bytes"
-        );
-    }
 }

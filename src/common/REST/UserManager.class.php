@@ -19,9 +19,11 @@
 
 namespace Tuleap\REST;
 
-use Tuleap\User\AccessKey\AccessKey;
+use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\AccessKey\AccessKeyDAO;
-use Tuleap\User\AccessKey\AccessKeyVerificationStringHasher;
+use Tuleap\User\AccessKey\AccessKeySerializer;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\PasswordVerifier;
 use User_LoginManager;
@@ -43,6 +45,11 @@ class UserManager {
     private $login_manager;
 
     /**
+     * @var SplitTokenIdentifierTranslator
+     */
+    private $access_key_identifier_unserializer;
+
+    /**
      * @var AccessKeyVerifier
      */
     private $access_key_verifier;
@@ -59,11 +66,13 @@ class UserManager {
     public function __construct(
         \UserManager $user_manager,
         User_LoginManager $login_manager,
+        SplitTokenIdentifierTranslator $access_key_identifier_unserializer,
         AccessKeyVerifier $access_key_verifier
     ) {
-        $this->user_manager        = $user_manager;
-        $this->login_manager       = $login_manager;
-        $this->access_key_verifier = $access_key_verifier;
+        $this->user_manager                       = $user_manager;
+        $this->login_manager                      = $login_manager;
+        $this->access_key_identifier_unserializer = $access_key_identifier_unserializer;
+        $this->access_key_verifier                = $access_key_verifier;
     }
 
     public static function build()
@@ -79,7 +88,8 @@ class UserManager {
                 new User_PasswordExpirationChecker(),
                 $password_handler
             ),
-            new AccessKeyVerifier(new AccessKeyDAO(), new AccessKeyVerificationStringHasher(), $user_manager)
+            new AccessKeySerializer(),
+            new AccessKeyVerifier(new AccessKeyDAO(), new SplitTokenVerificationStringHasher(), $user_manager)
         );
     }
 
@@ -168,7 +178,7 @@ class UserManager {
         }
 
         $access_key_identifier = $_SERVER[self::PHP_HTTP_ACCESS_KEY_HEADER];
-        $access_key            = AccessKey::buildFromIdentifier($access_key_identifier);
+        $access_key            = $this->access_key_identifier_unserializer->getSplitToken(new ConcealedString($access_key_identifier));
 
         $request = \HTTPRequest::instance();
         return $this->access_key_verifier->getUser($access_key, $request->getIPAddress());

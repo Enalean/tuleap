@@ -18,47 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\User\AccessKey;
+namespace Tuleap\Authentication\SplitToken;
 
-use Tuleap\Cryptography\ConcealedString;
-
-class AccessKeyVerificationString
+class SplitToken
 {
-    const VERIFICATION_STRING_LENGTH = 32;
-
     /**
-     * @var ConcealedString
+     * @var int
+     */
+    private $id;
+    /**
+     * @var SplitTokenVerificationString
      */
     private $verification_string;
 
-    public function __construct(ConcealedString $verification_string)
+    public function __construct($id, SplitTokenVerificationString $verification_string)
     {
-        $verification_string_size = strlen($verification_string->getString());
-        if ($verification_string_size !== self::VERIFICATION_STRING_LENGTH) {
-            throw new IncorrectSizeVerificationStringException(
-                self::VERIFICATION_STRING_LENGTH,
-                $verification_string_size
-            );
-        }
+        $this->id                  = $id;
         $this->verification_string = $verification_string;
     }
 
     /**
-     * @return self
+     * @return int
      */
-    public static function generateNewAccessKeyVerificationString()
+    public function getID()
     {
-        return new self(
-            new ConcealedString(
-                \random_bytes(AccessKeyVerificationString::VERIFICATION_STRING_LENGTH)
-            )
-        );
+        return $this->id;
     }
 
     /**
-     * @return ConcealedString
+     * @return SplitTokenVerificationString
      */
-    public function getString()
+    public function getVerificationString()
     {
         return $this->verification_string;
     }

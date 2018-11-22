@@ -21,6 +21,7 @@
 namespace Tuleap\User\AccessKey;
 
 use HTTPRequest;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
@@ -39,11 +40,12 @@ class AccessKeyCreationController implements DispatchableWithRequest
 
         $access_key_creator = new AccessKeyCreator(
             new LastAccessKeyIdentifierStore(
+                new AccessKeySerializer(),
                 (new KeyFactory)->getEncryptionKey(),
                 $_SESSION
             ),
             new AccessKeyDAO(),
-            new AccessKeyVerificationStringHasher(),
+            new SplitTokenVerificationStringHasher(),
             new AccessKeyCreationNotifier($request->getServerUrl(), \Codendi_HTMLPurifier::instance())
         );
 

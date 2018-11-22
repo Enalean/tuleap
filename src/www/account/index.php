@@ -189,6 +189,7 @@ foreach ($access_key_metadata_retriever->getMetadataByUser($user) as $access_key
     $access_key_presenters[] = new AccessKeyMetadataPresenter($access_key_metadata);
 }
 $last_access_key_identifier_store = new LastAccessKeyIdentifierStore(
+    new \Tuleap\User\AccessKey\AccessKeySerializer(),
     (new KeyFactory)->getEncryptionKey(),
     $_SESSION
 );

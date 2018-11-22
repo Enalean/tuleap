@@ -19,6 +19,7 @@
             <file>../../plugins/tracker/include/Tracker/Action/MoveTitleSemanticChecker.php</file>
             <file>../../plugins/tracker/include/Tracker/Action/MoveDescriptionSemanticChecker.php</file>
             <file>../../plugins/tracker/include/Tracker/Action/MoveContributorSemanticChecker.php</file>
+            <directory suffix=".php">../../src/common/Authentication</directory>
             <directory suffix=".php">../../src/common/User</directory>
             <directory suffix=".php">../../src/common/frs/PermissionsPerGroup</directory>
             <directory suffix=".php">../../src/common/Password/</directory>
