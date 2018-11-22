@@ -25,11 +25,26 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Tuleap\Project\ProjectStatusMapper;
+use Tuleap\REST\Event\GetAdditionalCriteria;
 
 class GetProjectsQueryChecker
 {
+    /**
+     * EventManager
+     */
+    private $event_manager;
+
+    /**
+     * @param $event_manager
+     */
+    public function __construct(EventManager $event_manager)
+    {
+        $this->event_manager = $event_manager;
+    }
+
     /**
      * @param array $json_query
      * @param bool  $is_user_a_rest_project_manager
@@ -37,13 +52,7 @@ class GetProjectsQueryChecker
      */
     public function checkQuery(array $json_query, $is_user_a_rest_project_manager)
     {
-        if (! isset($json_query['shortname'])
-            && ! isset($json_query['is_member_of'])
-            && ! isset($json_query['is_tracker_admin'])
-            && ! isset($json_query['with_status'])
-        ) {
-            throw new RestException(400, "You can only search on 'shortname', 'is_member_of': true, 'is_tracker_admin': true or 'with_status'");
-        }
+        $this->checkExternalCriteria($json_query);
 
         if (isset($json_query['is_member_of']) && ! $json_query['is_member_of']) {
             throw new RestException(400, "Searching for projects you are not member of is not supported. Use 'is_member_of': true");
@@ -71,6 +80,35 @@ class GetProjectsQueryChecker
                     "Please provide a valid status: 'active', 'pending', 'suspended', 'deleted'"
                 );
             }
+        }
+    }
+
+    /**
+     * @param array $json_query
+     * @throws RestException
+     */
+    private function checkExternalCriteria(array $json_query)
+    {
+        $is_query_valid      = isset($json_query['shortname']) || isset($json_query['is_member_of']) || isset($json_query['is_tracker_admin']) || isset($json_query['with_status']);
+        $additional_criteria = new GetAdditionalCriteria();
+        $this->event_manager->processEvent($additional_criteria);
+
+        foreach ($additional_criteria->getCriteria() as $criterion => $expected_value) {
+            if (isset($json_query[$criterion])) {
+                $is_query_valid = true;
+            }
+        }
+
+        if (! $is_query_valid) {
+            $possible_criteria = implode(", ", $additional_criteria->getCriteria());
+            if (! empty($possible_criteria)) {
+                $possible_criteria = ", " . $possible_criteria;
+            }
+            throw new RestException(
+                400,
+                "You can only search on 'shortname', 'is_member_of': true, 'is_tracker_admin': true, 'with_status'" . $possible_criteria .
+                ". If the query is valid, your plugin is maybe not installed."
+            );
         }
     }
 }

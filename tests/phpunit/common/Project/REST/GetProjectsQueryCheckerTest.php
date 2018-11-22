@@ -24,9 +24,11 @@
 
 namespace Tuleap\Project\REST;
 
+use EventManager;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\project\REST\v1\GetProjectsQueryChecker;
+use Tuleap\Project\REST\v1\GetProjectsQueryChecker;
+use Tuleap\REST\Event\GetAdditionalCriteria;
 
 class GetProjectsQueryCheckerTest extends TestCase
 {
@@ -37,9 +39,50 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     private $checker;
 
+    /**
+     * EventManager
+     */
+    private $event_manager;
+
     public function setUp()
     {
-        $this->checker = new GetProjectsQueryChecker();
+        $this->event_manager = \Mockery::mock(EventManager::class);
+        $this->checker       = new GetProjectsQueryChecker($this->event_manager);
+    }
+
+    public function testItDoesNotRaiseAnExceptionForCriterionProvidedByPlugin()
+    {
+        $this->event_manager->shouldReceive("processEvent")->with(
+            \Mockery::on(
+                function (GetAdditionalCriteria $event) {
+                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    return true;
+                }
+            )
+        );
+
+        $json_query = ["with_whatever" => true];
+        $this->assertNull($this->checker->checkQuery($json_query, false));
+    }
+
+
+    /**
+     * @expectedException \Luracast\Restler\RestException
+     * @expectedExceptionCode 400
+     */
+    public function testItRaiseAnExceptionForCriterionProvidedByPlugin()
+    {
+        $this->event_manager->shouldReceive("processEvent")->with(
+            \Mockery::on(
+                function (GetAdditionalCriteria $event) {
+                    $event->addCriteria("with_whatever", "'with_whatever': true");
+                    return true;
+                }
+            )
+        );
+
+        $json_query = ["whatever" => true];
+        $this->checker->checkQuery($json_query, false);
     }
 
     /**
@@ -48,6 +91,7 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     public function testItRaiseExeptionWhenNotSupportedQuery()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["whatever" => true];
         $this->checker->checkQuery($json_query, false);
     }
@@ -58,6 +102,7 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     public function testProjectsYouAreNotMemberOfIsNotSupported()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["is_member_of" => false];
         $this->checker->checkQuery($json_query, false);
     }
@@ -68,6 +113,7 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     public function testProjectsYouAreNotAdministratorOfAtLeastOneTrackerIsNotSupported()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["is_tracker_admin" => false];
         $this->checker->checkQuery($json_query, false);
     }
@@ -78,6 +124,7 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     public function testItRaiseExeptionWhenWithStatusAndUserIsNotProjectManager()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["with_status" => true];
         $this->checker->checkQuery($json_query, false);
     }
@@ -88,12 +135,14 @@ class GetProjectsQueryCheckerTest extends TestCase
      */
     public function testItRaiseExeptionWhenWithStatusIsNotValid()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["with_status" => false];
         $this->checker->checkQuery($json_query, true);
     }
 
     public function testItPassesWhenWithStatusIsValid()
     {
+        $this->event_manager->shouldReceive("processEvent");
         $json_query = ["with_status" => "active"];
         $this->assertNull($this->checker->checkQuery($json_query, true));
     }
