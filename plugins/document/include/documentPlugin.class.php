@@ -61,7 +61,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
-            $r->get('/{project_name:[A-z0-9-]+}[/]', function () {
+            $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', function () {
                 return new DocumentTreeController(ProjectManager::instance());
             });
         });
