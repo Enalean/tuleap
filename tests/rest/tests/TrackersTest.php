@@ -38,7 +38,7 @@ class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options($this->getReleaseTrackerUri()));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

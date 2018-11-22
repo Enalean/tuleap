@@ -44,6 +44,9 @@ msgstr "Tracker %s"
 msgid "'%s' is not supported for the operator %s."
 msgstr "'%s' n'est pas supporté pour l'opérateur %s."
 
+msgid "A workflow already exists on the given tracker."
+msgstr "Un workflow est déjà défini pour ce tracker."
+
 msgid "Actions"
 msgstr "Actions"
 
@@ -75,6 +78,9 @@ msgid ""
 msgstr ""
 "Suite à une mise à jour d'artéfact, les types de lien désactivés seront "
 "supprimés sans enlever les liens existants."
+
+msgid "An error has occurred, the workflow couldn't be created."
+msgstr "Une erreur est survenue, le workflow ne peut pas être créé."
 
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
@@ -216,6 +222,9 @@ msgstr "Activer les notifications pour cet outil de suivi"
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
 
+msgid "Field not found."
+msgstr "Champ non trouvé."
+
 msgid "Field value cannot be empty"
 msgstr "La valeur du champ ne peux pas être vide"
 
@@ -319,6 +328,9 @@ msgstr "À chaque modification ?"
 
 msgid "Please provide a valid limit."
 msgstr "Veuillez fournir une limite valide."
+
+msgid "Please provide a valid query."
+msgstr "Veuillez fournir une requête valide."
 
 msgid ""
 "Please reactivate the \"_is_child\" artifact link type to be able to define "
@@ -711,6 +723,9 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
+msgid "This tracker is deleted"
+msgstr "Ce tracker a été supprimé."
+
 msgid "Time"
 msgstr "Date"
 
@@ -852,8 +867,14 @@ msgstr ""
 "Vous ne pouvez pas choisir votre mode de notification pour cet outil de "
 "suivi parce que l'administrateur a suspendu toutes les notifications."
 
+msgid "You cannot access to this tracker"
+msgstr "Vous n'avez pas accès à ce tracker."
+
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de consulter les groupes d'utilisateur."
+
+msgid "You must be tracker administrator to access this resource."
+msgstr "Vous devez être administrateur pour accéder à cette ressource."
 
 msgid ""
 "You must configure a status semantic if you want to use the \"status change "
