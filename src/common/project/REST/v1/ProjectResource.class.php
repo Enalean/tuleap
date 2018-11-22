@@ -31,7 +31,6 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ReferenceManager;
-use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDuplicator;
 use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
@@ -42,6 +41,7 @@ use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
+use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
@@ -63,6 +63,7 @@ use Tuleap\REST\v1\GitRepositoryListRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\v1\OrderRepresentationBase;
+use Tuleap\Project\REST\v1\GetProjectsQueryChecker;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
@@ -338,45 +339,22 @@ class ProjectResource extends AuthenticatedResource {
         return $this->project_manager->getMyAndPublicProjectsForREST($user, $offset, $limit);
     }
 
+    /**
+     * @param string $query
+     * @param PFUser $user
+     * @param int    $offset
+     * @param int    $limit
+     *
+     * @return PaginatedProjects
+     *
+     * @throws RestException
+     * @throws \Tuleap\REST\Exceptions\InvalidJsonException
+     */
     private function getMyAndPublicProjectsFromExactMatch($query, PFUser $user, $offset, $limit)
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (
-            ! isset($json_query['shortname'])
-            && ! isset($json_query['is_member_of'])
-            && ! isset($json_query['is_tracker_admin'])
-            && ! isset($json_query['with_status'])
-        ) {
-            throw new RestException(400, "You can only search on 'shortname', 'is_member_of': true, 'is_tracker_admin': true or 'with_status'");
-        }
-
-        if (isset($json_query['is_member_of']) && ! $json_query['is_member_of']) {
-            throw new RestException(400, "Searching for projects you are not member of is not supported. Use 'is_member_of': true");
-        }
-
-        if (isset($json_query['is_tracker_admin']) && ! $json_query['is_tracker_admin']) {
-            throw new RestException(
-                400,
-                "Searching for projects you are not administrator of at least one tracker is not supported. Use 'is_tracker_admin': true"
-            );
-        }
-
-        if (isset($json_query['with_status'])) {
-            $with_status = $json_query['with_status'];
-            if (! $this->isUserARestProjectManager($user)) {
-                throw new RestException(
-                    403,
-                    "You don't have enough rights to perform a query using 'with_status'"
-                );
-            }
-
-            if ((! $with_status || ! ProjectStatusMapper::isValidProjectStatusLabel($with_status))) {
-                throw new RestException(
-                    400,
-                    "Please provide a valid status: 'active', 'pending', 'suspended', 'deleted'"
-                );
-            }
-        }
+        $checker    = new GetProjectsQueryChecker();
+        $checker->checkQuery($json_query, $this->isUserARestProjectManager($user));
 
         if (isset($json_query['shortname'])) {
             return $this->project_manager->getMyAndPublicProjectsForRESTByShortname(
@@ -390,7 +368,8 @@ class ProjectResource extends AuthenticatedResource {
             $this->event_manager->processEvent($event);
 
             return $event->getPaginatedProjects();
-        } else if (isset($with_status)) {
+        } else if (isset($json_query['with_status'])) {
+            $with_status = $json_query['with_status'];
             return $this->project_manager->getProjectsWithStatusForREST(
                 ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($with_status),
                 $offset,
