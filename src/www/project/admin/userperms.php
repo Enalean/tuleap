@@ -173,7 +173,7 @@ project_admin_header(
         'group'=>$group_id,
         'help' => 'project-admin.html#user-permissions'
     ),
-    \Tuleap\project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
+    \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
 echo '
