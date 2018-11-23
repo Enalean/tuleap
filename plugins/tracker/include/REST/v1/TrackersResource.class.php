@@ -39,6 +39,7 @@ use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\InvalidParameterTypeException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\MissingMandatoryParameterException;
@@ -545,17 +546,9 @@ class TrackersResource extends AuthenticatedResource
 
             return $this->processWorkflowTransitionPatchQuery($workflow_query, $tracker);
         } catch (InvalidParameterTypeException $e) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
-            );
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         } catch (MissingMandatoryParameterException $e) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
-            );
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         }
     }
 
@@ -565,11 +558,7 @@ class TrackersResource extends AuthenticatedResource
     private function processWorkflowTransitionPatchQuery(array $workflow_query, Tracker $tracker)
     {
         if (! isset($workflow_query['set_transitions_rules'])) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
-            );
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         }
 
         if (count($workflow_query['set_transitions_rules']) > 0) {
@@ -579,11 +568,7 @@ class TrackersResource extends AuthenticatedResource
             );
         }
 
-        throw new RestException(
-            400,
-            null,
-            ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
-        );
+        throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
     }
 
     /**
@@ -594,31 +579,19 @@ class TrackersResource extends AuthenticatedResource
         $workflow_factory = $this->getWorkflowFactory();
 
         if ($workflow_factory->getWorkflowByTrackerId($tracker->getId())) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'A workflow already exists on the given tracker.')]
-            );
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'A workflow already exists on the given tracker.'));
         }
 
 
         if (! isset($new_properties['field_id']) || ! is_int($new_properties['field_id'])) {
-            throw new RestException(
-                400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'Please provide a valid query.')]
-            );
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
         }
 
         $new_field_id = $new_properties['field_id'];
         $field        = $this->formelement_factory->getFieldById($new_field_id);
 
         if (! $field) {
-            throw new RestException(
-                404,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', 'Field not found.')]
-            );
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Field not found.'));
         }
 
         return $this->updateWorkflowTransitionFieldId($tracker, $field);
@@ -633,11 +606,7 @@ class TrackersResource extends AuthenticatedResource
         $new_workflow_id  = $workflow_factory->create($tracker->getId(), $new_field->getId());
 
         if (! $new_workflow_id) {
-            throw new RestException(
-                500,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created.")]
-            );
+            throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created."));
         }
 
         return $new_workflow_id;
