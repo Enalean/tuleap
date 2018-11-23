@@ -40,7 +40,7 @@ class GitRepositoryFactory
      *
      * @param int $id         The id of the repository to load
      *
-     * @return GitRepository the repository or null if not found
+     * @return GitRepository|null the repository or null if not found
      */
     public function getRepositoryById($id) {
         if ($id == GitRepositoryGitoliteAdmin::ID) {
