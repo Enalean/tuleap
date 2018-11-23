@@ -31,12 +31,13 @@
             {{ item.name }}
         </td>
         <td><user-badge v-bind:user="item.owner"/></td>
-        <td>{{ formatted_last_update_date }}</td>
+        <td class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
+            {{ formatted_date }}
+        </td>
     </tr>
 </template>
 
 <script>
-import TimeAgo from "javascript-time-ago";
 import { mapState } from "vuex";
 import UserBadge from "./UserBadge.vue";
 import {
@@ -47,6 +48,8 @@ import {
     TYPE_LINK,
     TYPE_WIKI
 } from "../../constants.js";
+import moment from "moment";
+import phptomoment from "phptomoment";
 
 export default {
     name: "FolderContentRow",
@@ -55,11 +58,12 @@ export default {
         item: Object
     },
     computed: {
-        ...mapState(["user_locale"]),
-        formatted_last_update_date() {
-            const date = new Date(this.item.last_update_date);
-            const time_ago = new TimeAgo(this.user_locale);
-            return time_ago.format(date);
+        ...mapState(["date_time_format"]),
+        formatted_date() {
+            return moment(this.item.last_update_date).fromNow();
+        },
+        formatted_full_date() {
+            return moment(this.item.last_update_date).format(phptomoment(this.date_time_format));
         },
         is_folder() {
             return this.item.type === TYPE_FOLDER;

@@ -38,7 +38,7 @@ export default {
         projectId: Number,
         projectName: String,
         userIsAdmin: Boolean,
-        userLocale: String
+        dateTimeFormat: String
     },
     computed: {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
@@ -48,7 +48,7 @@ export default {
             this.projectId,
             this.projectName,
             this.userIsAdmin,
-            this.userLocale
+            this.dateTimeFormat
         ]);
     }
 };

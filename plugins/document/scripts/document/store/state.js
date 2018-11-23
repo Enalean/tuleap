@@ -27,7 +27,7 @@ const state = {
     project_name: null,
     is_user_administrator: false,
     folder_content: [],
-    user_locale: null
+    date_time_format: null
 };
 
 export default state;

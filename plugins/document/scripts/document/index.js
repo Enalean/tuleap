@@ -22,11 +22,10 @@ import GetTextPlugin from "vue-gettext";
 
 import french_translations from "./po/fr.po";
 import App from "./components/App.vue";
-import TimeAgo from "javascript-time-ago";
-import time_ago_english from "javascript-time-ago/locale/en";
-import time_ago_french from "javascript-time-ago/locale/fr";
 import store from "./store/index.js";
 import { createRouter } from "./router/index.js";
+import moment from "moment";
+import "moment-timezone";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -38,8 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let user_locale = document.body.dataset.userLocale;
     Vue.config.language = user_locale;
-    TimeAgo.locale(time_ago_english);
-    TimeAgo.locale(time_ago_french);
     user_locale = user_locale.replace(/_/g, "-");
 
     const vue_mount_point = document.getElementById("document-tree-view");
@@ -51,6 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
     const project_name = vue_mount_point.dataset.projectName;
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
+    const user_timezone = document.body.dataset.userTimezone;
+    const datetime_format = document.body.dataset.dateTimeFormat;
+
+    moment.tz(user_timezone).locale(user_locale);
 
     const AppComponent = Vue.extend(App);
     const router = createRouter(project_name);
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
             projectId: project_id,
             projectName: project_name,
             userIsAdmin: user_is_admin,
-            userLocale: user_locale
+            dateTimeFormat: datetime_format
         }
     }).$mount(vue_mount_point);
 });

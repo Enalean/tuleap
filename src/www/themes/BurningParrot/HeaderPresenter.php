@@ -24,9 +24,9 @@ use Codendi_HTMLPurifier;
 use Feedback;
 use PFUser;
 use ThemeVariantColor;
-use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenter;
 use Tuleap\Layout\SidebarPresenter;
 use Tuleap\Theme\BurningParrot\Navbar\Presenter as NavbarPresenter;
+use Tuleap\TimezoneRetriever;
 
 class HeaderPresenter
 {
@@ -92,6 +92,10 @@ class HeaderPresenter
 
     /** @var int */
     public $user_id;
+    /** @var string */
+    public $user_timezone;
+    /** @var string */
+    public $date_time_format;
 
     public function __construct(
         PFUser $user,
@@ -110,6 +114,8 @@ class HeaderPresenter
         array $breadcrumbs,
         $motd
     ) {
+        $this->date_time_format                      = $GLOBALS['Language']->getText('system', 'datefmt');
+        $this->user_timezone                         = TimezoneRetriever::getUserTimezone($user);
         $this->user_locale                           = $user->getLocale();
         $this->user_id                               = $user->getId();
         $this->title                                 = html_entity_decode($title);
