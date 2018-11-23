@@ -17,4 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const ITEM_TYPE_FOLDER = "folder";
+export const TYPE_FOLDER = "folder";
+export const TYPE_FILE = "file";
+export const TYPE_LINK = "link";
+export const TYPE_EMBEDDED = "embedded";
+export const TYPE_WIKI = "wiki";
+export const TYPE_EMPTY = "empty";

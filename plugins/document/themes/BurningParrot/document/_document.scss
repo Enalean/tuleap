@@ -63,3 +63,26 @@
     color: $tlp-theme-color;
     font-size: 14px;
 }
+
+.document-folder-icon {
+    color: $tlp-swatch-inca-silver;
+}
+
+.document-file-icon {
+    color: $tlp-swatch-inca-silver;
+}
+
+.document-empty-icon {
+    color: $tlp-swatch-chrome-silver;
+}
+
+.document-wiki-icon {
+    position: relative;
+    left: 2px;
+    margin-right: 4px;
+    font-size: 13px;
+}
+
+.document-link-icon {
+    color: $tlp-swatch-flamingo-pink;
+}

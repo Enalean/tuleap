@@ -20,12 +20,16 @@
 <template>
     <tr>
         <td v-if="is_folder">
+            <i class="document-folder-icon-color fa fa-fw fa-folder "></i>
             <router-link v-bind:to="{ name: 'folder', params: { item_id: item.item_id }}" class="document-folder-subitem-link">
                 {{ item.name }}<!--
             --></router-link>
             <i class="fa fa-long-arrow-right document-folder-subitem-link-icon"></i>
         </td>
-        <td v-else>{{ item.name }}</td>
+        <td v-else>
+            <i class="fa fa-fw " v-bind:class="icon_class"></i>
+            {{ item.name }}
+        </td>
         <td><user-badge v-bind:user="item.owner"/></td>
         <td>{{ formatted_last_update_date }}</td>
     </tr>
@@ -35,7 +39,14 @@
 import TimeAgo from "javascript-time-ago";
 import { mapState } from "vuex";
 import UserBadge from "./UserBadge.vue";
-import { ITEM_TYPE_FOLDER } from "../../constants.js";
+import {
+    TYPE_EMBEDDED,
+    TYPE_EMPTY,
+    TYPE_FILE,
+    TYPE_FOLDER,
+    TYPE_LINK,
+    TYPE_WIKI
+} from "../../constants.js";
 
 export default {
     name: "FolderContentRow",
@@ -51,7 +62,23 @@ export default {
             return time_ago.format(date);
         },
         is_folder() {
-            return this.item.type === ITEM_TYPE_FOLDER;
+            return this.item.type === TYPE_FOLDER;
+        },
+        icon_class() {
+            switch (this.item.type) {
+                case TYPE_FOLDER:
+                    return "fa-folder document-folder-icon";
+                case TYPE_EMBEDDED:
+                case TYPE_FILE:
+                    return "fa-file-text-o document-file-icon";
+                case TYPE_WIKI:
+                    return "fa-wikipedia-w document-wiki-icon";
+                case TYPE_LINK:
+                    return "fa-link document-link-icon";
+                case TYPE_EMPTY:
+                default:
+                    return "fa-file-o document-empty-icon";
+            }
         }
     }
 };
