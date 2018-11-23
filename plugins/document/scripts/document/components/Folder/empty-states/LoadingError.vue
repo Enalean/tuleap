@@ -38,14 +38,13 @@
                 >{{ folder_loading_error }}</pre>
             </template>
         </div>
-        <button
-            type="button"
+        <router-link
             class="tlp-button-primary tlp-button-large"
-            v-if="can_go_back_to_parent"
-            disabled
+            v-bind:to="{ name: 'root_folder' }"
+            v-if="can_go_to_root"
         >
             <i class="fa fa-reply tlp-button-icon"></i><translate>Go to parent folder</translate>
-        </button>
+        </router-link>
     </div>
 </template>
 
@@ -63,7 +62,7 @@ export default {
     },
     computed: {
         ...mapState(["folder_loading_error", "has_folder_loading_error"]),
-        can_go_back_to_parent() {
+        can_go_to_root() {
             return this.$route.name !== "root_folder";
         }
     }

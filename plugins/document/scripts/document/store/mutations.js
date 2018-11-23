@@ -17,32 +17,51 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    saveDocumentRootId(state, document_id) {
-        state.project_root_document_id = document_id;
-    },
-
-    saveFolderContent(state, folder_content) {
-        state.folder_content = folder_content;
-    },
-
-    switchFolderPermissionError(state) {
-        state.has_folder_permission_error = true;
-    },
-
-    setFolderLoadingError(state, message) {
-        state.has_folder_loading_error = true;
-        state.folder_loading_error = message;
-    },
-
-    switchLoadingFolder(state, status) {
-        state.is_loading_folder = status;
-    },
-
-    initDocumentTree(state, [project_id, name, user_is_admin, user_locale]) {
-        state.project_id = project_id;
-        state.project_name = name;
-        state.is_user_administrator = user_is_admin;
-        state.user_locale = user_locale;
-    }
+export {
+    beginLoading,
+    initDocumentTree,
+    resetErrors,
+    saveDocumentRootId,
+    saveFolderContent,
+    setFolderLoadingError,
+    stopLoading,
+    switchFolderPermissionError
 };
+
+function saveDocumentRootId(state, document_id) {
+    state.project_root_document_id = document_id;
+}
+
+function saveFolderContent(state, folder_content) {
+    state.folder_content = folder_content;
+}
+
+function initDocumentTree(state, [project_id, name, user_is_admin, user_locale]) {
+    state.project_id = project_id;
+    state.project_name = name;
+    state.is_user_administrator = user_is_admin;
+    state.user_locale = user_locale;
+}
+
+function beginLoading(state) {
+    state.is_loading_folder = true;
+}
+
+function stopLoading(state) {
+    state.is_loading_folder = false;
+}
+
+function resetErrors(state) {
+    state.has_folder_permission_error = false;
+    state.has_folder_loading_error = false;
+    state.folder_loading_error = null;
+}
+
+function switchFolderPermissionError(state) {
+    state.has_folder_permission_error = true;
+}
+
+function setFolderLoadingError(state, message) {
+    state.has_folder_loading_error = true;
+    state.folder_loading_error = message;
+}

@@ -22,11 +22,11 @@
         <permission-error v-if="has_folder_permission_error"/>
         <document-breadcrumb v-if="! has_folder_permission_error"/>
         <loading-error v-if="has_folder_loading_error"/>
-        <router-view v-if="! does_folder_have_any_error"/>
+        <router-view/>
     </div>
 </template>
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState } from "vuex";
 import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/empty-states/PermissionError.vue";
 import LoadingError from "./Folder/empty-states/LoadingError.vue";
@@ -41,8 +41,7 @@ export default {
         userLocale: String
     },
     computed: {
-        ...mapState(["has_folder_permission_error", "has_folder_loading_error"]),
-        ...mapGetters(["does_folder_have_any_error"])
+        ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
     },
     created() {
         this.$store.commit("initDocumentTree", [

@@ -20,17 +20,21 @@
   -->
 
 <template>
-    <div class="tlp-framed">
+    <div class="tlp-framed" v-if="! does_folder_have_any_error">
         <folder-view/>
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import FolderView from "./FolderView.vue";
 
 export default {
     name: "ChildFolder",
     components: { FolderView },
+    computed: {
+        ...mapGetters(["does_folder_have_any_error"])
+    },
     watch: {
         $route(to) {
             this.$store.dispatch("loadFolderContent", [to.params.item_id]);

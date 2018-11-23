@@ -91,10 +91,10 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", true);
+            expect(context.commit).toHaveBeenCalledWith("beginLoading");
             expect(context.commit).toHaveBeenCalledWith("saveDocumentRootId", 3);
             expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
@@ -111,7 +111,7 @@ describe("Store actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("saveDocumentRootId");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
 
         it("When the project can't be found, an error will be raised", async () => {
@@ -129,7 +129,7 @@ describe("Store actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("saveDocumentRootId");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
     });
 
@@ -158,9 +158,9 @@ describe("Store actions", () => {
 
             await loadFolderContent(context);
 
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", true);
+            expect(context.commit).toHaveBeenCalledWith("beginLoading");
             expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
 
         it("When the folder can't be found, another error screen will be shown", async () => {
@@ -178,7 +178,7 @@ describe("Store actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
 
         it("When the user does not have access to the folder, an error will be raised", async () => {
@@ -195,7 +195,7 @@ describe("Store actions", () => {
 
             expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
-            expect(context.commit).toHaveBeenCalledWith("switchLoadingFolder", false);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
     });
 });
