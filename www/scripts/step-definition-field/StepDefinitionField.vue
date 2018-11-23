@@ -22,16 +22,17 @@
         <step-definition-entry
             v-for="(step, index) in steps"
             v-bind:key="step.uuid"
-            v-bind:dynamicRank="index + 1"
+            v-bind:dynamic-rank="index + 1"
             v-bind:step="step"
-            v-bind:fieldId="fieldId"
-            v-bind:deleteStep="deleteStep"
-        ></step-definition-entry>
+            v-bind:field-id="fieldId"
+            v-bind:delete-step="deleteStep"
+        />
         <p v-if="! isThereAtLeastOneStep">
             <input
                 type="hidden"
                 v-bind:name="'artifact[' + fieldId + '][no_steps]'"
-                value="1">
+                value="1"
+            >
             <translate>There isn't any step defined yet. Start by adding one.</translate>
         </p>
         <button
@@ -56,14 +57,14 @@ export default {
         fieldId: Number,
         emptyStep: Object
     },
-    created() {
-        for (const step of this.steps) {
-            step.uuid = uuid();
-        }
-    },
     computed: {
         isThereAtLeastOneStep() {
             return this.steps.length !== 0;
+        }
+    },
+    created() {
+        for (const step of this.steps) {
+            step.uuid = uuid();
         }
     },
     methods: {
