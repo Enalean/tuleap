@@ -72,7 +72,9 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
     {
         try {
             $response = $this->batch_successful_response_builder->build(
+                new \DateTimeImmutable(),
                 $request->getServerUrl(),
+                $this->repository,
                 $this->batch_request->getOperation(),
                 ...$this->batch_request->getObjects()
             );

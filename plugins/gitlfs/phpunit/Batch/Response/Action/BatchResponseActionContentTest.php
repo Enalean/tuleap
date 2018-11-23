@@ -22,6 +22,9 @@ namespace Tuleap\GitLFS\Batch\Response\Action;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\Cryptography\ConcealedString;
 
 class BatchResponseActionContentTest extends TestCase
 {
@@ -31,8 +34,13 @@ class BatchResponseActionContentTest extends TestCase
     {
         $action_href = \Mockery::mock(BatchResponseActionHref::class);
         $action_href->shouldReceive('getHref')->andReturns('https://example.com/action');
+        $authorization_token    = \Mockery::mock(SplitToken::class);
+        $token_header_formatter = \Mockery::mock(SplitTokenFormatter::class);
+        $token_header_formatter->shouldReceive('getIdentifier')->andReturns(new ConcealedString('identifier'));
         $action_content = new BatchResponseActionContent(
             $action_href,
+            $authorization_token,
+            $token_header_formatter,
             10000
         );
 
