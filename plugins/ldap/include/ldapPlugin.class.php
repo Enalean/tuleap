@@ -22,13 +22,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'autoload.php';
-require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/constants.php';
 
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\LDAP\Exception\IdentifierTypeNotFoundException;
 use Tuleap\LDAP\Exception\IdentifierTypeNotRecognizedException;
-use Tuleap\LDAP\GroupSyncNotificationsManager;
 use Tuleap\LDAP\GroupSyncAdminEmailNotificationsManager;
 use Tuleap\LDAP\LdapLogger;
 use Tuleap\LDAP\LinkModalContentPresenter;

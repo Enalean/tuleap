@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/constants.php';
-require_once dirname(__FILE__).'/../include/autoload.php';
+require_once dirname(__FILE__).'/../include/ldapPlugin.class.php';
 
 function aLDAPResultIterator() {
     return new LDAPResultIterator_BuilderForTest();
