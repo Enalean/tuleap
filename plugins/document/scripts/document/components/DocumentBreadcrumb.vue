@@ -48,7 +48,7 @@ export default {
     computed: {
         ...mapState(["project_name", "project_id", "is_user_administrator"]),
         document_tree_url() {
-            return "/plugins/document/" + this.project_name;
+            return "/plugins/document/" + this.project_name + "/";
         },
         document_tree_title() {
             return this.$gettext("Project documentation");

@@ -26,7 +26,7 @@ import TimeAgo from "javascript-time-ago";
 import time_ago_english from "javascript-time-ago/locale/en";
 import time_ago_french from "javascript-time-ago/locale/fr";
 import store from "./store/index.js";
-import { router } from "./router/index.js";
+import { createRouter } from "./router/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(GetTextPlugin, {
@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
 
     const AppComponent = Vue.extend(App);
+    const router = createRouter(project_name);
 
     new AppComponent({
         store,

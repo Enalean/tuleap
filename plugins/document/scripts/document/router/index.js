@@ -24,16 +24,20 @@ import ChildFolder from "../components/ChildFolder.vue";
 
 Vue.use(VueRouter);
 
-export const router = new VueRouter({
-    routes: [
-        {
-            path: "/",
-            component: RootFolder
-        },
-        {
-            path: "/folder/:item_id",
-            name: "folder",
-            component: ChildFolder
-        }
-    ]
-});
+export function createRouter(project_name) {
+    return new VueRouter({
+        mode: "history",
+        base: "/plugins/document/" + project_name + "/",
+        routes: [
+            {
+                path: "/",
+                component: RootFolder
+            },
+            {
+                path: "/folder/:item_id",
+                name: "folder",
+                component: ChildFolder
+            }
+        ]
+    });
+}
