@@ -18,32 +18,23 @@
   -->
 
 <template>
-    <div>
-        <h1 v-translate>Documents</h1>
-        <folder-loading-screen v-if="is_loading_folder"/>
-        <div class="tlp-card" v-else>
-            <empty-folder v-if="is_folder_empty"/>
-            <folder-content v-else/>
+    <div class="empty-pane">
+        <div class="empty-page-illustration">
+            <empty-folder-svg/>
         </div>
+        <p class="empty-page-text" v-translate>It's time to add new documents!</p>
+        <button type="button" class="tlp-button-primary tlp-button-large" disabled>
+            <i class="fa fa-plus tlp-button-icon"></i>
+            <translate>New document</translate>
+        </button>
     </div>
 </template>
-<script>
-import { mapState, mapGetters } from "vuex";
 
-import FolderLoadingScreen from "./Folder/FolderLoadingScreen.vue";
-import FolderContent from "./Folder/FolderContent.vue";
-import EmptyFolder from "./Folder/empty-states/EmptyFolder.vue";
+<script>
+import EmptyFolderSvg from "./EmptyFolderSvg.vue";
 
 export default {
-    name: "FolderView",
-    components: {
-        EmptyFolder,
-        FolderLoadingScreen,
-        FolderContent
-    },
-    computed: {
-        ...mapState(["is_loading_folder"]),
-        ...mapGetters(["is_folder_empty"])
-    }
+    name: "EmptyFolder",
+    components: { EmptyFolderSvg }
 };
 </script>

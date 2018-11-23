@@ -18,18 +18,27 @@
   -->
 
 <template>
-    <div v-if="has_error" class="tlp-alert-danger document-error-message">
-        {{ error_message }}
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <permission-error-svg/>
+        </div>
+        <div class="empty-page-text-with-small-text">
+            <translate>This is a private folder.</translate>
+            <div class="empty-page-small-text" v-translate>
+                You may only access documents you are granted read permission on.
+            </div>
+        </div>
+        <a href="/my/" class="tlp-button-primary tlp-button-large">
+            <i class="fa fa-reply tlp-button-icon"></i><translate>Go to my home page</translate>
+        </a>
     </div>
 </template>
+
 <script>
-import { mapGetters, mapState } from "vuex";
+import PermissionErrorSvg from "./PermissionErrorSvg.vue";
 
 export default {
-    name: "ErrorMessage",
-    computed: {
-        ...mapGetters(["has_error"]),
-        ...mapState(["error_message"])
-    }
+    name: "PermissionError",
+    components: { PermissionErrorSvg }
 };
 </script>

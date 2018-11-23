@@ -26,8 +26,13 @@ export default {
         state.folder_content = folder_content;
     },
 
-    setErrorMessage(state, message) {
-        state.error_message = message;
+    switchFolderPermissionError(state) {
+        state.has_folder_permission_error = true;
+    },
+
+    setFolderLoadingError(state, message) {
+        state.has_folder_loading_error = true;
+        state.folder_loading_error = message;
     },
 
     switchLoadingFolder(state, status) {
