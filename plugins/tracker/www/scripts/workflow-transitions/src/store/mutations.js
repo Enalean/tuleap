@@ -22,6 +22,12 @@ import state from "./state.js";
 const initial_state = { ...state };
 
 export default {
+    failOperation(state, message) {
+        state.is_operation_failed = true;
+        state.operation_failure_message = message;
+    },
+
+    // Current tracker loading
     startCurrentTrackerLoading(state) {
         state.is_current_tracker_loading = true;
     },
@@ -34,6 +40,27 @@ export default {
     saveCurrentTracker(state, tracker) {
         state.current_tracker = tracker;
     },
+
+    // Workflow creation
+    beginOperation(state) {
+        state.is_operation_running = true;
+    },
+    failWorkflowCreation(state) {
+        state.is_workflow_creation_failed = true;
+    },
+    endOperation(state) {
+        state.is_operation_running = false;
+    },
+    createWorkflow(state, field_id) {
+        state.current_tracker = {
+            ...state.current_tracker,
+            workflow: {
+                ...state.current_tracker.workflow,
+                field_id
+            }
+        };
+    },
+
     resetState(state) {
         Object.assign(state, initial_state);
     }

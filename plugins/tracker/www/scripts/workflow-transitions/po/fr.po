@@ -13,6 +13,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+msgid "An error occurred"
+msgstr "Une erreur est survenue"
+
 msgid "Change or remove"
 msgstr "Modifier ou supprimer"
 
@@ -33,6 +36,9 @@ msgstr ""
 
 msgid "Page under construction"
 msgstr "Page en construction"
+
+msgid "Save and start configuration"
+msgstr "Sauvegarder et démarrer la configuration"
 
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"

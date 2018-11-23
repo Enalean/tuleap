@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError } from "tlp-mocks";
-import { loadTracker } from "./actions.js";
-import { rewire$getTracker } from "../api/rest-querier.js";
+import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
+import { loadTracker, saveWorkflowTransitionsField } from "./actions.js";
+import { rewire$getTracker, rewire$createWorkflowTransitions } from "../api/rest-querier.js";
 
 describe("Store actions:", () => {
     let context;
@@ -53,6 +53,75 @@ describe("Store actions:", () => {
             await loadTracker(context);
 
             expect(context.commit).toHaveBeenCalledWith("failCurrentTrackerLoading");
+        });
+    });
+
+    describe("saveWorkflowTransitionsField()", () => {
+        let createWorkflowTransitions;
+
+        beforeEach(() => {
+            context = {
+                ...context,
+                state: {
+                    current_tracker: { id: 1 }
+                }
+            };
+            createWorkflowTransitions = jasmine.createSpy("createWorkflowTransitions");
+            rewire$createWorkflowTransitions(createWorkflowTransitions);
+        });
+
+        describe("when workflow creation is successful", () => {
+            beforeEach(async () => {
+                mockFetchSuccess(createWorkflowTransitions);
+                await saveWorkflowTransitionsField(context, 9);
+            });
+
+            it("begins a new operation", () =>
+                expect(context.commit).toHaveBeenCalledWith("beginOperation"));
+            it("creates workflow", () =>
+                expect(createWorkflowTransitions).toHaveBeenCalledWith(1, 9));
+            it("creates workflow in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("createWorkflow", 9));
+            it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
+        });
+
+        describe("when workflow creation failed", () => {
+            describe("with non internationalized response message", () => {
+                beforeEach(async () => {
+                    const error_json = {
+                        error: {
+                            message: "not internationalized"
+                        }
+                    };
+                    mockFetchError(createWorkflowTransitions, { error_json });
+                    await saveWorkflowTransitionsField(context, 9);
+                });
+
+                it("stores operation failure without any error message", () =>
+                    expect(context.commit).toHaveBeenCalledWith("failOperation"));
+                it("ends operation", () =>
+                    expect(context.commit).toHaveBeenCalledWith("endOperation"));
+            });
+
+            describe("with internationalized response message", () => {
+                beforeEach(async () => {
+                    const error_json = {
+                        error: {
+                            i18n_error_message: "internationalized message"
+                        }
+                    };
+                    mockFetchError(createWorkflowTransitions, { error_json });
+                    await saveWorkflowTransitionsField(context, 9);
+                });
+
+                it("stores failure message", () =>
+                    expect(context.commit).toHaveBeenCalledWith(
+                        "failOperation",
+                        "internationalized message"
+                    ));
+                it("ends operation", () =>
+                    expect(context.commit).toHaveBeenCalledWith("endOperation"));
+            });
         });
     });
 });

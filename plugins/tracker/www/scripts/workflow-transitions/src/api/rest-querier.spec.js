@@ -17,12 +17,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    is_current_tracker_loading: false,
-    current_tracker: null,
-    is_current_tracker_load_failed: false,
-    is_operation_failed: false,
-    operation_failure_message: null,
-    is_operation_running: false,
-    is_workflow_creation_failed: false
-};
+// import { mockFetchError } from "tlp-mocks";
+import { rewire$patch } from "tlp-fetch";
+import { createWorkflowTransitions } from "../api/rest-querier.js";
+
+describe("Rest queries:", () => {
+    describe("createWorkflowTransitions()", () => {
+        let patch;
+
+        beforeEach(() => {
+            patch = jasmine.createSpy("patch");
+            patch.and.returnValue(Promise.resolve());
+            rewire$patch(patch);
+            createWorkflowTransitions(1, 9);
+        });
+
+        it("calls PATCH", () =>
+            expect(patch).toHaveBeenCalledWith(
+                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D"
+            ));
+    });
+});
