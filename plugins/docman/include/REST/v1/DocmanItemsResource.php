@@ -55,9 +55,9 @@ class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}
+     * @url OPTIONS {id}/docman_items
      */
-    public function options($id)
+    public function optionsDocumentItems($id)
     {
         $this->sendAllowHeaders();
     }
