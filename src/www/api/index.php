@@ -34,7 +34,7 @@ use Luracast\Restler\Format\JsonFormat;
 if (! headers_sent()) {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token, X-Client-Uuid');
+    header('Access-Control-Allow-Headers: Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token, X-Client-Uuid, X-Auth-AccessKey');
     header('Access-Control-Expose-Headers: X-PAGINATION-SIZE, X-PAGINATION-LIMIT-MAX, X-PAGINATION-LIMIT');
 }
 
