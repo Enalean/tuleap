@@ -49,6 +49,7 @@ function mockFetchError(spy_function, { status, statusText, error_json } = {}) {
     spy_function.and.returnValue(
         Promise.reject({
             response: {
+                ok: false,
                 status,
                 statusText,
                 json: () => Promise.resolve(error_json)

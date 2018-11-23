@@ -29,9 +29,8 @@ export const loadRootDocumentId = async context => {
             project.additional_informations.docman.root_item.item_id
         );
         await loadFolderContent(context, project.additional_informations.docman.root_item.item_id);
-    } catch (e) {
-        const { error } = await e.response.json();
-        context.commit("setErrorMessage", error.message);
+    } catch (exception) {
+        return handleErrors(context, exception);
     } finally {
         context.commit("switchLoadingFolder", false);
     }
@@ -44,10 +43,32 @@ export const loadFolderContent = async (context, folder_id) => {
 
         const folder_content = await getFolderContent(folder_id);
         context.commit("saveFolderContent", folder_content);
-    } catch (e) {
-        const { error } = await e.response.json();
-        context.commit("setErrorMessage", error.message);
+    } catch (exception) {
+        return handleErrors(context, exception);
     } finally {
         context.commit("switchLoadingFolder", false);
     }
 };
+
+async function handleErrors(context, exception) {
+    const status = exception.response.status;
+    if (status === 403) {
+        context.commit("switchFolderPermissionError");
+        return;
+    }
+
+    const json = await exception.response.json();
+    context.commit("setFolderLoadingError", getErrorMessage(json));
+}
+
+function getErrorMessage(error_json) {
+    if (error_json.hasOwnProperty("error")) {
+        if (error_json.error.hasOwnProperty("i18n_error_message")) {
+            return error_json.error.i18n_error_message;
+        }
+
+        return error_json.error.message;
+    }
+
+    return "";
+}

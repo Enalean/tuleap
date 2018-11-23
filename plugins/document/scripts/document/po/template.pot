@@ -11,6 +11,15 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
+msgid "Go to my home page"
+msgstr ""
+
+msgid "Go to parent folder"
+msgstr ""
+
+msgid "It seems the contents of this folder can't be loaded."
+msgstr ""
+
 msgid "It's time to add new documents!"
 msgstr ""
 
@@ -23,8 +32,20 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
+msgid "Oops, there's an issue."
+msgstr ""
+
 msgid "Owner"
 msgstr ""
 
 msgid "Project documentation"
+msgstr ""
+
+msgid "Show error details"
+msgstr ""
+
+msgid "This is a private folder."
+msgstr ""
+
+msgid "You may only access documents you are granted read permission on."
 msgstr ""

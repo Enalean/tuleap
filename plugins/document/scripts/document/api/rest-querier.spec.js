@@ -17,12 +17,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent } from "./rest-querier.js";
-import { tlp } from "tlp-mocks";
+import { getFolderContent, getProject } from "./rest-querier.js";
+import { tlp, mockFetchSuccess } from "tlp-mocks";
 
 describe("rest-querier", () => {
     afterEach(() => {
+        tlp.get.and.stub();
         tlp.recursiveGet.and.stub();
+    });
+
+    describe("getProject()", () => {
+        it("Given a project_id, then the REST API will be queried with it", async () => {
+            const project = {
+                additional_informations: {
+                    docman: {
+                        root_item: {
+                            item_id: 3,
+                            name: "Project Documentation",
+                            owner: {
+                                id: 101,
+                                display_name: "user (login)"
+                            },
+                            last_update_date: "2018-08-21T17:01:49+02:00"
+                        }
+                    }
+                }
+            };
+            mockFetchSuccess(tlp.get, { return_json: project });
+
+            const result = await getProject(891);
+
+            expect(tlp.get).toHaveBeenCalledWith("/api/projects/891");
+            expect(result).toEqual(project);
+        });
     });
 
     describe("getFolderContent() -", () => {

@@ -31,6 +31,7 @@ export function createRouter(project_name) {
         routes: [
             {
                 path: "/",
+                name: "root_folder",
                 component: RootFolder
             },
             {
