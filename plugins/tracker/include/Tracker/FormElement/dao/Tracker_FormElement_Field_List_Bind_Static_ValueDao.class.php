@@ -260,7 +260,7 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $value_id = $this->da->escapeInt($value_id);
 
         if (! isset($this->cache_canbedeleted_values[$field_id])) {
-            $sql = "SELECT IF (v.original_value_id, v.original_value_id, v.id) AS id
+            $sql = "SELECT DISTINCT IF (v.original_value_id, v.original_value_id, v.id) AS id
                     FROM $this->table_name AS v
                         INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
                         INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
