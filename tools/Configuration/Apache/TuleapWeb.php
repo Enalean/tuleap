@@ -30,11 +30,16 @@ class TuleapWeb
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var LogrotateDeployer
+     */
+    private $logrotate_deployer;
 
-    public function __construct(LoggerInterface $logger, $httpd_conf_path)
+    public function __construct(LoggerInterface $logger, $httpd_conf_path, LogrotateDeployer $logrotate_deployer)
     {
-        $this->logger          = new Wrapper($logger, 'apache');
-        $this->httpd_conf_path = $httpd_conf_path;
+        $this->logger             = new Wrapper($logger, 'apache');
+        $this->httpd_conf_path    = $httpd_conf_path;
+        $this->logrotate_deployer = $logrotate_deployer;
     }
 
     public function configure()
@@ -42,6 +47,7 @@ class TuleapWeb
         $this->logger->info("Start apache configuration");
         $this->updateHttpdConf();
         $this->disableSSLvhost();
+        $this->logrotate_deployer->deployLogrotate();
         $this->logger->info("Configuration done!");
     }
 

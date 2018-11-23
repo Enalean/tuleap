@@ -21,6 +21,7 @@
 
 namespace Tuleap\Configuration\Setup;
 
+use Tuleap\Configuration\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
 use Tuleap\Configuration\FPM;
 use Tuleap\Configuration\Nginx;
@@ -121,7 +122,7 @@ class PHP56Centos6
             );
         }
         if (in_array('apache', $modules)) {
-            $configs[] = new Apache\TuleapWeb($this->logger, '/etc/httpd');
+            $configs[] = new Apache\TuleapWeb($this->logger, '/etc/httpd', new LogrotateDeployer($this->logger));
         }
 
         foreach ($configs as $conf) {
