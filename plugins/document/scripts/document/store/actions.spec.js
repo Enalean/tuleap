@@ -54,7 +54,7 @@ describe("Store actions", () => {
                 additional_informations: {
                     docman: {
                         root_item: {
-                            item_id: 3,
+                            id: 3,
                             name: "Project Documentation",
                             owner: {
                                 id: 101,
@@ -70,7 +70,7 @@ describe("Store actions", () => {
 
             const folder_content = [
                 {
-                    item_id: 1,
+                    id: 1,
                     name: "folder",
                     owner: {
                         id: 101
@@ -78,7 +78,7 @@ describe("Store actions", () => {
                     last_update_date: "2018-10-03T11:16:11+02:00"
                 },
                 {
-                    item_id: 2,
+                    id: 2,
                     name: "item",
                     owner: {
                         id: 101
@@ -137,7 +137,7 @@ describe("Store actions", () => {
         it("loads the folder content and sets loading flag", async () => {
             const folder_content = [
                 {
-                    item_id: 1,
+                    id: 1,
                     name: "folder",
                     owner: {
                         id: 101
@@ -145,7 +145,7 @@ describe("Store actions", () => {
                     last_update_date: "2018-10-03T11:16:11+02:00"
                 },
                 {
-                    item_id: 2,
+                    id: 2,
                     name: "item",
                     owner: {
                         id: 101

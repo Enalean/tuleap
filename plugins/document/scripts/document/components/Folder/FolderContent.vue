@@ -29,7 +29,7 @@
 
         <tbody>
             <folder-content-row v-for="item of folder_content"
-                                v-bind:key="item.item_id"
+                                v-bind:key="item.id"
                                 v-bind:item="item"
             />
         </tbody>

@@ -32,7 +32,7 @@ describe("rest-querier", () => {
                 additional_informations: {
                     docman: {
                         root_item: {
-                            item_id: 3,
+                            id: 3,
                             name: "Project Documentation",
                             owner: {
                                 id: 101,
@@ -56,7 +56,7 @@ describe("rest-querier", () => {
         it("the REST API will be queried and items under folder will be returned", async () => {
             const items = [
                 {
-                    item_id: 1,
+                    id: 1,
                     name: "folder",
                     owner: {
                         id: 101,
@@ -65,7 +65,7 @@ describe("rest-querier", () => {
                     last_update_date: "2018-10-03T11:16:11+02:00"
                 },
                 {
-                    item_id: 2,
+                    id: 2,
                     name: "folder",
                     owner: {
                         id: 101,
