@@ -20,11 +20,12 @@
 <template>
     <tr>
         <td v-if="is_folder">
-            <router-link v-bind:to="{ name: 'folder', params: { item_id: item.item_id }}">
-                {{ item.name }}
-            </router-link>
+            <router-link v-bind:to="{ name: 'folder', params: { item_id: item.item_id }}" class="document-folder-subitem-link">
+                {{ item.name }}<!--
+            --></router-link>
+            <i class="fa fa-long-arrow-right document-folder-subitem-link-icon"></i>
         </td>
-        <td v-else> {{ item.name }}</td>
+        <td v-else>{{ item.name }}</td>
         <td><user-badge v-bind:user="item.owner"/></td>
         <td>{{ formatted_last_update_date }}</td>
     </tr>
