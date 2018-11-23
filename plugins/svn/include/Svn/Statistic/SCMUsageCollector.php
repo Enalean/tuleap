@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -72,14 +72,15 @@ class SCMUsageCollector
         $accesses_by_month['nb_user_write'] []   = $GLOBALS['Language']->getText('plugin_svn_statistics', 'total_number_user_write');
 
         foreach ($global_accesses as $access) {
-            $accesses_by_month['month'][]            = $access['month'] . " " . $access['year'];
-            $accesses_by_month['nb_read'][]          = $access['nb_read'];
-            $accesses_by_month['nb_browse'][]        = $access['nb_browse'];
-            $accesses_by_month['nb_write'][]         = $access['nb_write'];
-            $accesses_by_month['nb_project_read'][]  = 0;
-            $accesses_by_month['nb_user_read'][]     = 0;
-            $accesses_by_month['nb_project_write'][] = 0;
-            $accesses_by_month['nb_user_write'][]    = 0;
+            $month_key                                         = $access['month'] . ' ' . $access['year'];
+            $accesses_by_month['month'][]                      = $access['month'] . " " . $access['year'];
+            $accesses_by_month['nb_read'][]                    = $access['nb_read'];
+            $accesses_by_month['nb_browse'][]                  = $access['nb_browse'];
+            $accesses_by_month['nb_write'][]                   = $access['nb_write'];
+            $accesses_by_month['nb_project_read'][$month_key]  = 0;
+            $accesses_by_month['nb_user_read'][$month_key]     = 0;
+            $accesses_by_month['nb_project_write'][$month_key] = 0;
+            $accesses_by_month['nb_user_write'][$month_key]    = 0;
         }
 
         $project_user_read_accesses = $this->dao->searchUsersAndProjectsCountWithReadOperations(
@@ -88,8 +89,9 @@ class SCMUsageCollector
             $formatter->groupId
         );
         foreach ($project_user_read_accesses as $access) {
-            $accesses_by_month['nb_project_read'][$access['month'] . ' ' . $access['year']] = $access['nb_project'];
-            $accesses_by_month['nb_user_read'][$access['month'] . ' ' . $access['year']]    = $access['nb_user'];
+            $month_key                                        = $access['month'] . ' ' . $access['year'];
+            $accesses_by_month['nb_project_read'][$month_key] = $access['nb_project'];
+            $accesses_by_month['nb_user_read'][$month_key]    = $access['nb_user'];
         }
 
         $project_user_write_accesses = $this->dao->searchUsersAndProjectsCountWithWriteOperations(
@@ -98,8 +100,9 @@ class SCMUsageCollector
             $formatter->groupId
         );
         foreach ($project_user_write_accesses as $access) {
-            $accesses_by_month['nb_project_write'][$access['month'] . ' ' . $access['year']] = $access['nb_project'];
-            $accesses_by_month['nb_user_write'][$access['month'] . ' ' . $access['year']]    = $access['nb_user'];
+            $month_key                                         = $access['month'] . ' ' . $access['year'];
+            $accesses_by_month['nb_project_write'][$month_key] = $access['nb_project'];
+            $accesses_by_month['nb_user_write'][$month_key]    = $access['nb_user'];
         }
 
         foreach ($accesses_by_month as $line) {
