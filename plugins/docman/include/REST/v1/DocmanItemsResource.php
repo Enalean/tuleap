@@ -26,13 +26,11 @@ namespace Tuleap\Docman\REST\v1;
 
 use Docman_ItemDao;
 use Luracast\Restler\RestException;
+use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
-use Tuleap\Request\ForbiddenException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\REST\ProjectAuthorization;
-use Tuleap\REST\ProjectStatusVerificator;
-use URLVerification;
+use Tuleap\REST\I18NRestException;
 use UserManager;
 
 class DocmanItemsResource extends AuthenticatedResource
@@ -47,12 +45,61 @@ class DocmanItemsResource extends AuthenticatedResource
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var DocmanItemsRequestBuilder
+     */
+    private $request_builder;
 
     public function __construct()
     {
-        $this->user_manager = $this->getUserManager();
-        $this->item_dao     = new Docman_ItemDao();
+        $this->user_manager    = UserManager::instance();
+        $this->item_dao        = new Docman_ItemDao();
+        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
     }
+
+    /**
+     * @url OPTIONS {id}
+     */
+    public function optionsId($id)
+    {
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * Get item
+     *
+     * @url    GET {id}
+     *
+     * @access protected
+     *
+     * @param int $id Id of the folder
+     *
+     * @return ItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     */
+    public function getId($id)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaders();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item_factory  = $items_request->getFactory();
+        $item          = $items_request->getItem();
+
+        $representation_visitor = new ItemRepresentationVisitor(
+            new ItemRepresentationBuilder(
+                $this->item_dao,
+                $this->user_manager,
+                $item_factory
+            )
+        );
+
+        return $item->accept($representation_visitor);
+    }
+
 
     /**
      * @url OPTIONS {id}/docman_items
@@ -75,35 +122,22 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @return ItemRepresentation[]
      *
-     * @status 200
      * @throws 400
      * @throws 403
      * @throws 404
-     *
      */
     public function getDocumentItems($id, $limit = self::MAX_LIMIT, $offset = 0)
     {
         $this->checkAccess();
-
         $this->sendAllowHeaders();
-        $item_factory = \Docman_ItemFactory::instance($id);
-        $folder         = $item_factory->getItemFromDb($id);
 
-        if ($folder === null) {
-            throw new RestException(
-                404,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-docman', 'The folder does not exist.')]
-            );
-        }
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $folder        = $items_request->getItem();
+        $this->checkItemCanHaveSubitems($folder);
 
-        $project = $this->getProjectFromItem($folder);
-
-
-        $user = $this->user_manager->getCurrentUser();
-
-        $this->checkProjectAccessibility($project, $user);
-        $this->checkFolderAccessibility($folder, $project, $user);
+        $item_factory  = $items_request->getFactory();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
 
         $item_representation_builder = new ItemRepresentationCollectionBuilder(
             $item_factory,
@@ -128,51 +162,17 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function checkProjectAccessibility(\Project $project, \PFUser $user)
+    private function checkItemCanHaveSubitems(\Docman_Item $item)
     {
-        ProjectAuthorization::userCanAccessProject($user, $project, new URLVerification());
-        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($user, $project);
-    }
-
-    /**
-     * @return UserManager
-     */
-    private function getUserManager()
-    {
-        return UserManager::instance();
-    }
-
-    /**
-     * @throws RestException
-     */
-    private function checkFolderAccessibility(\Docman_Item $item, \Project $project, \PFUser $user)
-    {
-        $visitor = new FolderAccessibilityCheckerVisitor($this->getDocmanPermissionManager($project));
+        $visitor = new ItemCanHaveSubitemsCheckerVisitor();
         try {
-            $item->accept($visitor, ["user" => $user]);
+            $item->accept($visitor, []);
         } catch (ItemIsNotAFolderException $e) {
-            throw new RestException(
+            throw new I18NRestException(
                 400,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-docman', 'The item is not a folder.')]
-            );
-        } catch (ForbiddenException $e) {
-            throw new RestException(
-                403,
-                null,
-                ['i18n_error_message' => dgettext('tuleap-docman', 'Permission denied')]
+                dgettext('tuleap-docman', 'The item is not a folder.')
             );
         }
-    }
-
-    /**
-     * @return \Project
-     */
-    private function getProjectFromItem(\Docman_Item $item)
-    {
-        $project_manager = \ProjectManager::instance();
-        $project         = $project_manager->getProject($item->getGroupId());
-        return $project;
     }
 
     /**

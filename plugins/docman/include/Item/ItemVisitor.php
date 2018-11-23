@@ -20,21 +20,27 @@
 
 namespace Tuleap\Docman\Item;
 
+use Docman_EmbeddedFile;
+use Docman_Empty;
+use Docman_File;
+use Docman_Folder;
 use Docman_Item;
+use Docman_Link;
+use Docman_Wiki;
 
 interface ItemVisitor
 {
-    public function visitFolder(Docman_Item $item, array $params = []);
+    public function visitFolder(Docman_Folder $item, array $params = []);
 
-    public function visitWiki(Docman_Item $item, array $params = []);
+    public function visitWiki(Docman_Wiki $item, array $params = []);
 
-    public function visitLink(Docman_Item $item, array $params = []);
+    public function visitLink(Docman_Link $item, array $params = []);
 
-    public function visitFile(Docman_Item $item, array $params = []);
+    public function visitFile(Docman_File $item, array $params = []);
 
-    public function visitEmbeddedFile(Docman_Item $item, array $params = []);
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []);
 
-    public function visitEmpty(Docman_Item $item, array $params = []);
+    public function visitEmpty(Docman_Empty $item, array $params = []);
 
     public function visitItem(Docman_Item $item, array $params = []);
 }

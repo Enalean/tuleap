@@ -19,13 +19,10 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-msgid "Permission denied"
-msgstr ""
-
-msgid "The folder does not exist."
-msgstr ""
-
 msgid "The item is not a folder."
+msgstr ""
+
+msgid "The resource does not exist."
 msgstr ""
 
 msgid "User, group"
