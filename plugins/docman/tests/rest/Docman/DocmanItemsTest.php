@@ -60,7 +60,7 @@ class DocmanItemsTest extends DocmanBase
     public function testOPTIONSId()
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/1'),
+            $this->client->options('docman_items/1/docman_items'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
