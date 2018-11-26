@@ -23,6 +23,8 @@ namespace Tuleap\GitLFS\Batch\Response;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRequest;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForUploadOperation;
 use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
@@ -76,7 +78,7 @@ class BatchSuccessfulResponseBuilder
                 $repository,
                 $request_object,
                 self::EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC,
-                'upload',
+                new ActionAuthorizationTypeUpload(),
                 new BatchResponseActionHrefUpload($server_url, $request_object)
             );
             $response_objects[]    = new BatchResponseObjectWithActions(
@@ -95,7 +97,7 @@ class BatchSuccessfulResponseBuilder
         \GitRepository $repository,
         BatchRequestObject $request_object,
         $expiration_delay,
-        $action_type,
+        ActionAuthorizationType $action_type,
         BatchResponseActionHref $action_href
     ) {
         $authorization = new ActionAuthorizationRequest(

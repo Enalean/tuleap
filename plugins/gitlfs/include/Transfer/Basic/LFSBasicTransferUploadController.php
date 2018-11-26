@@ -27,6 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationException;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenHeaderSerializer;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -93,7 +94,7 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
                 new \DateTimeImmutable(),
                 $authorization_token,
                 $variables['oid'],
-                'upload'
+                new ActionAuthorizationTypeUpload()
             );
         } catch (ActionAuthorizationException $ex) {
             return false;

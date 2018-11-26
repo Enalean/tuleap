@@ -25,6 +25,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 
 class ActionAuthorizationVerifierTest extends TestCase
 {
@@ -51,6 +53,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $action_type = new ActionAuthorizationTypeUpload();
 
         $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
         $size = 123456;
@@ -60,7 +63,7 @@ class ActionAuthorizationVerifierTest extends TestCase
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
-            'action_type'     => 'upload',
+            'action_type'     => $action_type->getName(),
             'object_oid'      => $oid,
             'object_size'     => $size
         ]);
@@ -68,7 +71,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $expected_repository = \Mockery::mock(\GitRepository::class);
         $this->repository_factory->shouldReceive('getRepositoryById')->with(3)->andReturns($expected_repository);
 
-        $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid, 'upload');
+        $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
 
         $this->assertSame($oid, $authorized_action->getOID());
         $this->assertSame($size, $authorized_action->getSize());
@@ -86,7 +89,7 @@ class ActionAuthorizationVerifierTest extends TestCase
 
         $authorization_token = \Mockery::mock(SplitToken::class);
         $authorization_token->shouldReceive('getID')->andReturns(1);
-        $verifier->getAuthorization($this->current_time, $authorization_token, 'oid', 'upload');
+        $verifier->getAuthorization($this->current_time, $authorization_token, 'oid', new ActionAuthorizationTypeUpload());
     }
 
     /**
@@ -100,6 +103,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $action_type = new ActionAuthorizationTypeUpload();
 
         $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
@@ -108,13 +112,13 @@ class ActionAuthorizationVerifierTest extends TestCase
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
-            'action_type'     => 'upload',
+            'action_type'     => $action_type->getName(),
             'object_oid'      => $oid,
             'object_size'     => 123456
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(false);
 
-        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, 'upload');
+        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
     /**
@@ -129,19 +133,20 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $action_type = new ActionAuthorizationTypeUpload();
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
             'id'              => 1,
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
-            'action_type'     => 'upload',
+            'action_type'     => $action_type->getName(),
             'object_oid'      => 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b',
             'object_size'     => 123456
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
-        $verifier->getAuthorization($current_time, $authorization_token, 'not_requested_oid', 'upload');
+        $verifier->getAuthorization($current_time, $authorization_token, 'not_requested_oid', $action_type);
     }
 
     /**
@@ -155,6 +160,8 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $action_type = \Mockery::mock(ActionAuthorizationType::class);
+        $action_type->shouldReceive('getName')->andReturns('not_requested_action_type');
 
         $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
@@ -169,7 +176,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
-        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, 'not_requested_action_type');
+        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 
     /**
@@ -183,6 +190,7 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getID')->andReturns(1);
         $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $action_type = new ActionAuthorizationTypeUpload();
 
         $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
 
@@ -191,13 +199,13 @@ class ActionAuthorizationVerifierTest extends TestCase
             'verifier'        => 'valid',
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
-            'action_type'     => 'upload',
+            'action_type'     => $action_type->getName(),
             'object_oid'      => $oid,
             'object_size'     => 123456
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $this->repository_factory->shouldReceive('getRepositoryById')->andReturns(null);
 
-        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, 'upload');
+        $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
     }
 }

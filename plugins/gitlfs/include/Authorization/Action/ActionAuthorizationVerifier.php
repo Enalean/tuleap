@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Authorization\Action;
 
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 
 class ActionAuthorizationVerifier
 {
@@ -58,7 +59,7 @@ class ActionAuthorizationVerifier
         \DateTimeImmutable $current_time,
         SplitToken $authorization_token,
         $oid,
-        $action_type
+        ActionAuthorizationType $action_type
     ) {
         $row = $this->dao->searchAuthorizationByIDAndExpiration($authorization_token->getID(), $current_time->getTimestamp());
         if ($row === null) {
@@ -68,7 +69,7 @@ class ActionAuthorizationVerifier
         $is_valid_access_key = $this->hasher->verifyHash($authorization_token->getVerificationString(), $row['verifier']);
         if (! $is_valid_access_key ||
             ! \hash_equals($oid, $row['object_oid']) ||
-            ! \hash_equals($action_type, $row['action_type'])) {
+            ! \hash_equals($action_type->getName(), $row['action_type'])) {
             throw new InvalidActionAuthorizationException();
         }
 

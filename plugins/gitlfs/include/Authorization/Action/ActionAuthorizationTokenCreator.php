@@ -53,7 +53,7 @@ class ActionAuthorizationTokenCreator
             $action_authorization->getGitRepository()->getId(),
             $hashed_verification_string,
             $action_authorization->getExpiration()->getTimestamp(),
-            $action_authorization->getActionType(),
+            $action_authorization->getActionType()->getName(),
             $action_authorization->getObject()->getOID(),
             $action_authorization->getObject()->getSize()
         );
