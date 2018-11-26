@@ -18,30 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch\Response\Action;
+namespace Tuleap\GitLFS\Authorization\Action\Type;
 
-final class BatchResponseActionsForUploadOperation implements BatchResponseActions
+final class ActionAuthorizationTypeVerify implements ActionAuthorizationType
 {
     /**
-     * @var BatchResponseActionContent
+     * @return string
      */
-    private $upload_action;
-    /**
-     * @var BatchResponseActionContent
-     */
-    private $verify_operation;
-
-    public function __construct(BatchResponseActionContent $upload_action, BatchResponseActionContent $verify_operation)
+    public function getName()
     {
-        $this->upload_action    = $upload_action;
-        $this->verify_operation = $verify_operation;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            'upload' => $this->upload_action,
-            'verify' => $this->verify_operation
-        ];
+        return 'verify';
     }
 }

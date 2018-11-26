@@ -75,6 +75,12 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore()
                 );
             });
+            $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
+                return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
+                    $this->getLFSActionUserAccessRequestChecker(),
+                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore()
+                );
+            });
         });
     }
 
