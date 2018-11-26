@@ -22,6 +22,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Project;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 
 class ItemRepresentationCollectionBuilder
@@ -74,5 +75,40 @@ class ItemRepresentationCollectionBuilder
 
         $paginated_children = new PaginatedDocmanItemCollection($children, $row_number);
         return $paginated_children;
+    }
+
+    /**
+     * @return PaginatedDocmanItemCollection
+     * @throws \Tuleap\Request\ForbiddenException
+     */
+    public function buildParents(\Docman_Item $item, \PFUser $user, Project $project, $limit, $offset)
+    {
+        $parents = [];
+
+        $this->buildParentCollection($item, $user, $project, $parents, $limit, $offset);
+
+        return new PaginatedDocmanItemCollection(array_slice($parents, $offset, $limit), count($parents));
+    }
+
+    /**
+     * @throws \Tuleap\Request\ForbiddenException
+     */
+    private function buildParentCollection(\Docman_Item $item, \PFUser $user, Project $project, array &$parents, $limit, $offset)
+    {
+        if (! $this->permission_manager->userCanRead($user, $item->getId())) {
+            throw new \Tuleap\Request\ForbiddenException();
+        }
+
+        if ($item->getParentId() === 0) {
+            return;
+        }
+
+        $parent = $this->item_factory->getItemFromDb($item->getParentId());
+        if (! $parent) {
+            return;
+        }
+
+        $this->buildParentCollection($parent, $user, $project, $parents, $limit, $offset);
+        $parents[] = $parent->accept($this->item_representation_visitor, []);
     }
 }

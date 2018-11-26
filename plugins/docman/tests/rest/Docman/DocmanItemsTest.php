@@ -59,9 +59,11 @@ class DocmanItemsTest extends DocmanBase
         $items    = $response->json();
 
         $this->assertEquals(count($items), 3);
-        $this->assertEquals($items[0]['title'], 'folder');
+        $this->assertEquals($items[0]['title'], 'folder 2');
         $this->assertEquals($items[1]['title'], 'item A');
         $this->assertEquals($items[2]['title'], 'item C');
+
+        return $items[0]['id'];
     }
 
     /**
@@ -104,5 +106,24 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals('Project Documentation', $item['title']);
         $this->assertEquals($root_id, $item['id']);
         $this->assertEquals('folder', $item['type']);
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     */
+    public function testGetAllItemParents($folder_2_id)
+    {
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get('docman_items/' . $folder_2_id . '/docman_items')
+        );
+        $item     = $response->json();
+
+        $project_response = $this->getResponse($this->client->get('docman_items/' . $item[0]['id'] . '/parents'));
+        $json_parents     = $project_response->json();
+        $this->assertEquals(count($json_parents), 3);
+        $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
+        $this->assertEquals($json_parents[1]['title'], 'folder 1');
+        $this->assertEquals($json_parents[2]['title'], 'folder 2');
     }
 }

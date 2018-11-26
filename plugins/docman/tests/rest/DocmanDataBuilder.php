@@ -74,6 +74,20 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         return $this->docman_item_factory->create($item, 1);
     }
 
+    /**
+     * To help understand tests structure, below a representation of folder hierarchy
+     *
+     *                          folder 1
+     *                            +
+     *                            |
+     *  +---------------+---------+--------+---------------------+
+     *  +               +                  +                     +
+     *Item A          Item B             Item C             Folder 2
+     *                                                           +
+     *                                                           |
+     *                                                           +
+     *                                                        Item D
+     */
     private function addContent()
     {
         $project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
@@ -87,13 +101,15 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
         $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $folder_id = $this->addItem($project, $folder_id, 'folder', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_2_id = $this->addItem($project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
+        $item_D_id = $this->addItem($project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
         $this->addPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addPermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
     }
 
     private function addPermissionOnItem(Project $project, $object_id, $ugroup_name)

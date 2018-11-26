@@ -135,22 +135,9 @@ class DocmanItemsResource extends AuthenticatedResource
         $folder        = $items_request->getItem();
         $this->checkItemCanHaveSubitems($folder);
 
-        $item_factory  = $items_request->getFactory();
-        $project       = $items_request->getProject();
-        $user          = $items_request->getUser();
+        $user = $items_request->getUser();
 
-        $item_representation_builder = new ItemRepresentationCollectionBuilder(
-            $item_factory,
-            $this->getDocmanPermissionManager($project),
-            new ItemRepresentationVisitor(
-                new ItemRepresentationBuilder(
-                    $this->item_dao,
-                    $this->user_manager,
-                    $item_factory
-                )
-            ),
-            $this->item_dao
-        );
+        $item_representation_builder = $this->getRepresentationBuilder($items_request);
 
         $items_representation = $item_representation_builder->buildFolderContent($folder, $user, $limit, $offset);
 
@@ -158,6 +145,56 @@ class DocmanItemsResource extends AuthenticatedResource
 
         return $items_representation->getPaginatedElementCollection();
     }
+
+    /**
+     * @url OPTIONS {id}/parents
+     */
+    public function optionsParents($id)
+    {
+        $this->sendAllowHeaders();
+    }
+
+    /**
+     * Get the parents of an item
+     *
+     * Get the parents of an item order by folder hierarchy
+     * Given Folder A > Folder B > Item
+     * Then sorted parents of Item are Folder A > Folder
+     *
+     * @url    GET {id}/parents
+     *
+     * @access protected
+     *
+     * @param int $id Id of the item
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
+     * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
+     *
+     * @return ItemRepresentation[]
+     *
+     * @status 200
+     * @throws 400
+     * @throws 403
+     * @throws 404
+     *
+     */
+    public function getParents($id, $limit = self::MAX_LIMIT, $offset = 0)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaders();
+
+        $items_request = $this->request_builder->buildFromItemId($id);
+        $item          = $items_request->getItem();
+        $project       = $items_request->getProject();
+        $user          = $items_request->getUser();
+
+        $item_representation_builder = $this->getRepresentationBuilder($items_request);
+        $items_representation        = $item_representation_builder->buildParents($item, $user, $project, $limit, $offset);
+
+        Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
+
+        return $items_representation->getPaginatedElementCollection();
+    }
+
 
     /**
      * @throws RestException
@@ -188,5 +225,24 @@ class DocmanItemsResource extends AuthenticatedResource
     private function sendAllowHeaders()
     {
         Header::allowOptionsGet();
+    }
+
+    /**
+     * @return ItemRepresentationCollectionBuilder
+     */
+    private function getRepresentationBuilder(DocmanItemsRequest $items_request)
+    {
+        return new ItemRepresentationCollectionBuilder(
+            $items_request->getFactory(),
+            $this->getDocmanPermissionManager($items_request->getProject()),
+            new ItemRepresentationVisitor(
+                new ItemRepresentationBuilder(
+                    $this->item_dao,
+                    $this->user_manager,
+                    $items_request->getFactory()
+                )
+            ),
+            $this->item_dao
+        );
     }
 }
