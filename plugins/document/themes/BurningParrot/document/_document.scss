@@ -46,3 +46,20 @@
 .document-folder-error-details {
     text-align: left;
 }
+
+.document-folder-subitem-link {
+    &:not(:hover) {
+        color: inherit;
+    }
+
+    &:hover + .document-folder-subitem-link-icon {
+        visibility: visible;
+    }
+}
+
+.document-folder-subitem-link-icon {
+    visibility: hidden;
+    margin: 0 0 0 5px;
+    color: $tlp-theme-color;
+    font-size: 14px;
+}
