@@ -128,4 +128,34 @@ class QueryParameterParserTest extends TestCase
         $result = $this->query_parser->getString('{"identifier": "test"}', 'identifier');
         $this->assertEquals('test', $result);
     }
+
+    /**
+     * @expectedException \Tuleap\REST\MissingMandatoryParameterException
+     */
+    public function testGetObjectWithAnEmptyString()
+    {
+        $this->query_parser->getObject('{"some_other_property": ""}', 'identifier');
+    }
+
+    /**
+     * @expectedException \Tuleap\REST\MissingMandatoryParameterException
+     */
+    public function testGetObjectWithAString()
+    {
+        $this->query_parser->getObject('{"some_other_property": "a"}', 'identifier');
+    }
+
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testGetObjectWithANumber()
+    {
+        $this->query_parser->getObject('{"identifier": 123}', 'identifier');
+    }
+
+    public function testGetObject()
+    {
+        $result = $this->query_parser->getObject('{"identifier": {"key": "value"}}', 'identifier');
+        $this->assertEquals(["key" => "value"], $result);
+    }
 }
