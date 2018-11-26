@@ -20,100 +20,112 @@
 
 namespace Tuleap\REST;
 
-class QueryParameterParserTest extends \TuleapTestCase
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+
+class QueryParameterParserTest extends TestCase
 {
+    use MockeryPHPUnitIntegration;
+
     /** @var QueryParameterParser */
     private $query_parser;
 
-    public function setUp()
+    protected function setUp()
     {
-        parent::setUp();
         $this->query_parser = new QueryParameterParser(
             new JsonDecoder()
         );
     }
 
-    public function itThrowsWhenLabelsIdIsMissing()
+    /**
+     * @expectedException \Tuleap\REST\MissingMandatoryParameterException
+     */
+    public function testMissingParameter()
     {
-        $this->expectException('Tuleap\\REST\\MissingMandatoryParameterException');
-
         $this->query_parser->getArrayOfInt('{"some_other_property": ""}', 'labels_id');
     }
 
-    public function itThrowsWhenLabelsIdIsNotAnArray()
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testArrayOfIntWithAnEmptyString()
     {
-        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
-
         $this->query_parser->getArrayOfInt('{"labels_id": ""}', 'labels_id');
     }
 
-    public function itThrowsWhenLabelsIdIsNotAnArrayOfInt()
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testArrayOfIntWithAnArrayOfStrings()
     {
-        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
-
         $this->query_parser->getArrayOfInt('{"labels_id": ["a", "b"]}', 'labels_id');
     }
 
-    public function itThrowsWhenLabelsIdAreDuplicated()
+    /**
+     * @expectedException \Tuleap\REST\DuplicatedParameterValueException
+     */
+    public function testArrayOfIntWithAnArrayContainingDuplicates()
     {
-        $this->expectException('Tuleap\\REST\\DuplicatedParameterValueException');
-
         $this->query_parser->getArrayOfInt('{"labels_id": [1, 1, 2, 2]}', 'labels_id');
     }
 
-    public function itReturnsAnArrayOfLabelsId()
+    public function testArrayOfIntReturn()
     {
         $result = $this->query_parser->getArrayOfInt('{"labels_id": [21, 74]}', 'labels_id');
 
-        $this->assertEqual(array(21, 74), $result);
+        $this->assertEquals(array(21, 74), $result);
     }
 
-    public function itThrowsWhenTrackerReportIdIsMissing()
+    /**
+     * @expectedException \Tuleap\REST\MissingMandatoryParameterException
+     */
+    public function testGetIntWithAnEmptyString()
     {
-        $this->expectException('Tuleap\\REST\\MissingMandatoryParameterException');
-
         $this->query_parser->getInt('{"some_other_property": ""}', 'tracker_report_id');
     }
 
-    public function itThrowsWhenTrackerReportIdIsNotAnInt()
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testGetIntWithAString()
     {
-        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
-
         $this->query_parser->getInt('{"tracker_report_id": "a"}', 'tracker_report_id');
     }
 
-    public function itReturnsAnIntForTrackerReportId()
+    public function testGetInt()
     {
         $result = $this->query_parser->getInt('{"tracker_report_id": 47}', 'tracker_report_id');
 
-        $this->assertEqual(47, $result);
+        $this->assertEquals(47, $result);
     }
 
-    public function itThrowsWhenStringIsMissing()
+    /**
+     * @expectedException \Tuleap\REST\MissingMandatoryParameterException
+     */
+    public function testGetStringWithAnEmptyString()
     {
-        $this->expectException('Tuleap\\REST\\MissingMandatoryParameterException');
-
         $this->query_parser->getString('{"some_other_property": ""}', 'identifier');
     }
 
-    public function itThrowsWhenStringIsAnArray()
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testGetStringWithAnArray()
     {
-        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
-
         $this->query_parser->getString('{"identifier": ["test"]}', 'identifier');
     }
 
-    public function itThrowsWhenStringIsAnInt()
+    /**
+     * @expectedException \Tuleap\REST\InvalidParameterTypeException
+     */
+    public function testGetStringWithANumber()
     {
-        $this->expectException('Tuleap\\REST\\InvalidParameterTypeException');
-
         $this->query_parser->getString('{"identifier": 123}', 'identifier');
     }
 
-    public function itReturnsAStringForIdentifier()
+    public function testGetString()
     {
         $result = $this->query_parser->getString('{"identifier": "test"}', 'identifier');
-
-        $this->assertEqual('test', $result);
+        $this->assertEquals('test', $result);
     }
 }
