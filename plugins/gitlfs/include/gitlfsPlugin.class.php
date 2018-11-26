@@ -71,13 +71,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
             $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
-                    $this,
-                    new ActionAuthorizationTokenHeaderSerializer(),
-                    new ActionAuthorizationVerifier(
-                        new ActionAuthorizationDAO(),
-                        new SplitTokenVerificationStringHasher(),
-                        new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
-                    )
+                    $this->getLFSActionUserAccessRequestChecker(),
+                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore()
                 );
             });
         });
@@ -115,6 +110,22 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             throw new RuntimeException('Git Plugin can not be found but the Git LFS is enabled');
         }
         return $git_plugin;
+    }
+
+    /**
+     * @return \Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker
+     */
+    private function getLFSActionUserAccessRequestChecker()
+    {
+        return new \Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker(
+            $this,
+            new ActionAuthorizationTokenHeaderSerializer(),
+            new ActionAuthorizationVerifier(
+                new ActionAuthorizationDAO(),
+                new SplitTokenVerificationStringHasher(),
+                new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
+            )
+        );
     }
 
     public function dailyCleanup()

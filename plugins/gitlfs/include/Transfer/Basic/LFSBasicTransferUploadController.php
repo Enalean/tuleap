@@ -21,44 +21,29 @@
 namespace Tuleap\GitLFS\Transfer\Basic;
 
 use HTTPRequest;
-use Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException;
-use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationException;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenHeaderSerializer;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
+use Tuleap\GitLFS\Transfer\AuthorizedActionStore;
+use Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
-use Tuleap\Request\NotFoundException;
 
 class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
 {
     /**
-     * @var \gitlfsPlugin
+     * @var LFSActionUserAccessHTTPRequestChecker
      */
-    private $plugin;
+    private $user_access_request_checker;
     /**
-     * @var ActionAuthorizationTokenHeaderSerializer
+     * @var AuthorizedActionStore
      */
-    private $authorization_token_unserializer;
-    /**
-     * @var ActionAuthorizationVerifier
-     */
-    private $authorization_verifier;
-    /**
-     * @var \Tuleap\GitLFS\Authorization\Action\AuthorizedAction
-     */
-    private $authorized_action;
+    private $authorized_action_store;
 
     public function __construct(
-        \gitlfsPlugin $plugin,
-        ActionAuthorizationTokenHeaderSerializer $authorization_token_unserializer,
-        ActionAuthorizationVerifier $authorization_verifier
+        LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
+        AuthorizedActionStore $authorized_action_store
     ) {
-        $this->plugin                           = $plugin;
-        $this->authorization_token_unserializer = $authorization_token_unserializer;
-        $this->authorization_verifier           = $authorization_verifier;
+        $this->user_access_request_checker = $user_access_request_checker;
+        $this->authorized_action_store     = $authorized_action_store;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -69,44 +54,11 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->authorized_action !== null) {
-            throw new \RuntimeException(
-                'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
-            );
-        }
-        $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
-        if ($authorization_header === false) {
-            return false;
-        }
-
-        try {
-            $authorization_token = $this->authorization_token_unserializer->getSplitToken(
-                new ConcealedString($authorization_header)
-            );
-        } catch (IncorrectSizeVerificationStringException $ex) {
-            return false;
-        } catch (InvalidIdentifierFormatException $ex) {
-            return false;
-        }
-
-        try {
-            $this->authorized_action = $this->authorization_verifier->getAuthorization(
-                new \DateTimeImmutable(),
-                $authorization_token,
-                $variables['oid'],
-                new ActionAuthorizationTypeUpload()
-            );
-        } catch (ActionAuthorizationException $ex) {
-            return false;
-        }
-
-        $repository = $this->authorized_action->getRepository();
-        $project    = $repository->getProject();
-        if ($repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
-            ! $repository->isCreated()) {
-            throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
-        }
-
-        return true;
+        return $this->user_access_request_checker->userCanAccess(
+            $this->authorized_action_store,
+            $request,
+            new ActionAuthorizationTypeUpload(),
+            $variables['oid']
+        );
     }
 }
