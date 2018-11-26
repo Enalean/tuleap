@@ -24,6 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
 
 class ActionAuthorizationTokenCreatorTest extends TestCase
@@ -45,7 +46,8 @@ class ActionAuthorizationTokenCreatorTest extends TestCase
         $authorization_request->shouldReceive('getGitRepository')->andReturns($repository);
         $authorization_request->shouldReceive('getExpiration')
             ->andReturns(new \DateTimeImmutable('2018-11-22'), new \DateTimeZone('UTC'));
-        $authorization_request->shouldReceive('getActionType')->andReturns('action_type');
+        $action_type = new ActionAuthorizationTypeUpload();
+        $authorization_request->shouldReceive('getActionType')->andReturns($action_type);
         $request_object = \Mockery::mock(BatchRequestObject::class);
         $request_object->shouldReceive('getOID')->andReturns('oid');
         $request_object->shouldReceive('getSize')->andReturns(123456);
