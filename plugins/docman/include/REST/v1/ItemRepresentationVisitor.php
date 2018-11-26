@@ -37,35 +37,50 @@ class ItemRepresentationVisitor implements ItemVisitor
 
     public function visitFolder(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_FOLDER);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $item,
+            ItemRepresentation::TYPE_FOLDER
+        );
     }
 
     public function visitWiki(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_WIKI);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $item,
+            ItemRepresentation::TYPE_WIKI
+        );
     }
 
     public function visitLink(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_LINK);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $item,
+            ItemRepresentation::TYPE_LINK
+        );
     }
 
     public function visitFile(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_FILE);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $item,
+            ItemRepresentation::TYPE_FILE
+        );
     }
 
     public function visitEmbeddedFile(Docman_Item $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_EMBEDDED)
+            ItemRepresentation::TYPE_EMBEDDED
         );
     }
 
     public function visitEmpty(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, ItemRepresentation::TYPE_EMPTY);
+        return $this->item_representation_builder->buildItemRepresentation(
+            $item,
+            ItemRepresentation::TYPE_EMPTY
+        );
     }
 
     public function visitItem(Docman_Item $item, array $params = [])

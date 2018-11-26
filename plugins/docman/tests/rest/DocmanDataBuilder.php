@@ -84,10 +84,10 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $folder_id = $this->addItem($project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $this->addPermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $folder_id = $this->addItem($project, $folder_id, 'folder', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $folder_id = $this->addItem($project, $folder_id, 'folder', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
 
         $this->addPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
