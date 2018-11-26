@@ -22,6 +22,9 @@ namespace Tuleap\GitLFS\Batch\Response;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 
@@ -35,23 +38,30 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
 
     protected function setUp()
     {
-        $this->logger = \Mockery::mock(\Logger::class);
+        $this->token_creator   = \Mockery::mock(ActionAuthorizationTokenCreator::class);
+        $this->token_formatter = \Mockery::mock(SplitTokenFormatter::class);
+        $this->logger          = \Mockery::mock(\Logger::class);
     }
 
     public function testResponseIsBuilt()
     {
+        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
         $this->logger->shouldReceive('debug');
 
-        $operation = \Mockery::mock(BatchRequestOperation::class);
+        $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
+        $repository   = \Mockery::mock(\GitRepository::class);
+        $operation    = \Mockery::mock(BatchRequestOperation::class);
         $operation->shouldReceive('isUpload')->andReturns(true);
 
         $request_object = \Mockery::mock(BatchRequestObject::class);
         $request_object->shouldReceive('getOID')->andReturns('oid');
         $request_object->shouldReceive('getSize')->andReturns(123456);
 
-        $builder        = new BatchSuccessfulResponseBuilder($this->logger);
+        $builder        = new BatchSuccessfulResponseBuilder($this->token_creator, $this->token_formatter, $this->logger);
         $batch_response = $builder->build(
+            $current_time,
             'https://example.com',
+            $repository,
             $operation,
             $request_object
         );
@@ -64,13 +74,17 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
      */
     public function testBuildingResponseForAnUnknownResponseIsRejected()
     {
+        $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
+        $repository   = \Mockery::mock(\GitRepository::class);
         $operation    = \Mockery::mock(BatchRequestOperation::class);
         $operation->shouldReceive('isUpload')->andReturns(false);
 
-        $builder = new BatchSuccessfulResponseBuilder($this->logger);
+        $builder = new BatchSuccessfulResponseBuilder($this->token_creator, $this->token_formatter, $this->logger);
 
         $builder->build(
+            $current_time,
             'https://example.com',
+            $repository,
             $operation
         );
     }

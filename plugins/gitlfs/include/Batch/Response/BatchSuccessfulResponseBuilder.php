@@ -20,6 +20,9 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRequest;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForUploadOperation;
 use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
@@ -33,18 +36,32 @@ class BatchSuccessfulResponseBuilder
     const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC = 900;
 
     /**
+     * @var ActionAuthorizationTokenCreator
+     */
+    private $authorization_token_creator;
+    /**
+     * @var SplitTokenFormatter
+     */
+    private $token_header_formatter;
+    /**
      * @var \Logger
      */
     private $logger;
 
     public function __construct(
+        ActionAuthorizationTokenCreator $authorization_token_creator,
+        SplitTokenFormatter $token_header_formatter,
         \Logger $logger
     ) {
-        $this->logger = $logger;
+        $this->authorization_token_creator = $authorization_token_creator;
+        $this->token_header_formatter      = $token_header_formatter;
+        $this->logger                      = $logger;
     }
 
     public function build(
+        \DateTimeImmutable $current_time,
         $server_url,
+        \GitRepository $repository,
         BatchRequestOperation $operation,
         BatchRequestObject ...$request_objects
     ) {
@@ -55,6 +72,11 @@ class BatchSuccessfulResponseBuilder
         $response_objects = [];
         foreach ($request_objects as $request_object) {
             $upload_action_content = $this->buildActionContent(
+                $current_time,
+                $repository,
+                $request_object,
+                self::EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC,
+                'upload',
                 new BatchResponseActionHrefUpload($server_url, $request_object)
             );
             $response_objects[]    = new BatchResponseObjectWithActions(
@@ -68,11 +90,27 @@ class BatchSuccessfulResponseBuilder
         return new BatchSuccessfulResponse(Transfer::buildBasicTransfer(), ...$response_objects);
     }
 
-    private function buildActionContent(BatchResponseActionHref $action_href)
-    {
+    private function buildActionContent(
+        \DateTimeImmutable $current_time,
+        \GitRepository $repository,
+        BatchRequestObject $request_object,
+        $expiration_delay,
+        $action_type,
+        BatchResponseActionHref $action_href
+    ) {
+        $authorization = new ActionAuthorizationRequest(
+            $repository,
+            $request_object,
+            $action_type,
+            $current_time->add(new \DateInterval('PT' . $expiration_delay . 'S'))
+        );
+        $authorization_token = $this->authorization_token_creator->createActionAuthorizationToken($authorization);
+
         return new BatchResponseActionContent(
             $action_href,
-            self::EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC
+            $authorization_token,
+            $this->token_header_formatter,
+            $expiration_delay
         );
     }
 }

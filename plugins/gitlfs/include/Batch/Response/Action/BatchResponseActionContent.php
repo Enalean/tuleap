@@ -20,6 +20,9 @@
 
 namespace Tuleap\GitLFS\Batch\Response\Action;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+
 class BatchResponseActionContent implements \JsonSerializable
 {
     /**
@@ -27,16 +30,28 @@ class BatchResponseActionContent implements \JsonSerializable
      */
     private $href;
     /**
+     * @var SplitToken
+     */
+    private $action_authorization_token;
+    /**
+     * @var SplitTokenFormatter
+     */
+    private $token_header_formatter;
+    /**
      * @var int
      */
     private $expires_in;
 
     public function __construct(
         BatchResponseActionHref $href,
+        SplitToken $action_authorization_token,
+        SplitTokenFormatter $token_header_formatter,
         $expires_in
     ) {
-        $this->href       = $href;
-        $this->expires_in = $expires_in;
+        $this->href                       = $href;
+        $this->action_authorization_token = $action_authorization_token;
+        $this->token_header_formatter     = $token_header_formatter;
+        $this->expires_in                 = $expires_in;
     }
 
     public function jsonSerialize()
@@ -45,7 +60,7 @@ class BatchResponseActionContent implements \JsonSerializable
             'href'        => $this->href->getHref(),
             'expires_in'  => $this->expires_in,
             'headers'     => [
-                'Authorization' => 'FakeAuthOnGoingDev'
+                'Authorization' => (string) $this->token_header_formatter->getIdentifier($this->action_authorization_token)
             ]
         ];
     }

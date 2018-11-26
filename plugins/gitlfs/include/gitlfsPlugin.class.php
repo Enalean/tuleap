@@ -24,6 +24,7 @@ use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
+use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenHeaderSerializer;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
@@ -60,6 +61,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(CollectGitRoutesEvent::NAME);
+        $this->addHook('codendi_daily_start', 'dailyCleanup');
 
         return parent::getHooksAndCallbacks();
     }
@@ -68,7 +70,15 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
             $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
-                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController();
+                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
+                    $this,
+                    new ActionAuthorizationTokenHeaderSerializer(),
+                    new ActionAuthorizationVerifier(
+                        new ActionAuthorizationDAO(),
+                        new SplitTokenVerificationStringHasher(),
+                        new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
+                    )
+                );
             });
         });
     }
@@ -86,6 +96,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
                 ),
                 new BatchSuccessfulResponseBuilder(
+                    new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
+                    new ActionAuthorizationTokenHeaderSerializer(),
                     $logger
                 )
             );
@@ -103,5 +115,11 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             throw new RuntimeException('Git Plugin can not be found but the Git LFS is enabled');
         }
         return $git_plugin;
+    }
+
+    public function dailyCleanup()
+    {
+        $action_authorization_remover = new ActionAuthorizationRemover(new ActionAuthorizationDAO());
+        $action_authorization_remover->deleteExpired(new \DateTimeImmutable());
     }
 }
