@@ -19,13 +19,14 @@
 
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store/index.js";
 import RootFolder from "../components/RootFolder.vue";
 import ChildFolder from "../components/ChildFolder.vue";
 
 Vue.use(VueRouter);
 
 export function createRouter(project_name) {
-    return new VueRouter({
+    const router = new VueRouter({
         mode: "history",
         base: "/plugins/document/" + project_name + "/",
         routes: [
@@ -41,4 +42,11 @@ export function createRouter(project_name) {
             }
         ]
     });
+
+    router.beforeEach((to, from, next) => {
+        store.commit("resetErrors");
+        next();
+    });
+
+    return router;
 }

@@ -21,7 +21,7 @@ import { getProject, getFolderContent } from "../api/rest-querier.js";
 
 export const loadRootDocumentId = async context => {
     try {
-        context.commit("switchLoadingFolder", true);
+        context.commit("beginLoading");
         const project = await getProject(context.state.project_id);
 
         context.commit(
@@ -32,13 +32,13 @@ export const loadRootDocumentId = async context => {
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
-        context.commit("switchLoadingFolder", false);
+        context.commit("stopLoading");
     }
 };
 
 export const loadFolderContent = async (context, folder_id) => {
     try {
-        context.commit("switchLoadingFolder", true);
+        context.commit("beginLoading");
         context.commit("saveFolderContent", []);
 
         const folder_content = await getFolderContent(folder_id);
@@ -46,7 +46,7 @@ export const loadFolderContent = async (context, folder_id) => {
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
-        context.commit("switchLoadingFolder", false);
+        context.commit("stopLoading");
     }
 };
 

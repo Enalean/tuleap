@@ -21,3 +21,4 @@ import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
 import "./store/actions.spec.js";
+import "./store/mutations.spec.js";
