@@ -29,13 +29,20 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class DocmanItemsTest extends DocmanBase
 {
-    public function testGetDocumentItemsForRegularUser()
+
+    public function testGetRootId()
     {
         $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
         $json_projects    = $project_response->json();
 
-        $root_id = $json_projects['additional_informations']['docman']['root_item']['item_id'];
+        return $json_projects['additional_informations']['docman']['root_item']['item_id'];
+    }
 
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetDocumentItemsForRegularUser($root_id)
+    {
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
@@ -57,13 +64,45 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[2]['name'], 'item C');
     }
 
-    public function testOPTIONSId()
+    /**
+     * @depends testGetRootId
+     */
+    public function testOPTIONSDocmanItemsId($root_id)
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/1/docman_items'),
+            $this->client->options('docman_items/'. $root_id .'/docman_items'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testOPTIONSId($root_id)
+    {
+        $response = $this->getResponse(
+            $this->client->options('docman_items/'. $root_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testGetId($root_id)
+    {
+        $response = $this->getResponse(
+            $this->client->get('docman_items/'. $root_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
+        );
+        $item = $response->json();
+
+        $this->assertEquals('Project Documentation', $item['name']);
+        $this->assertEquals($root_id, $item['item_id']);
+        $this->assertEquals('folder', $item['type']);
     }
 }

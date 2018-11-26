@@ -20,52 +20,44 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_EmbeddedFile;
+use Docman_Empty;
+use Docman_File;
+use Docman_Folder;
 use Docman_Item;
-use Docman_PermissionsManager;
+use Docman_Link;
+use Docman_Wiki;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Item\ItemVisitor;
-use Tuleap\Request\ForbiddenException;
 
-class FolderAccessibilityCheckerVisitor implements ItemVisitor
+class ItemCanHaveSubitemsCheckerVisitor implements ItemVisitor
 {
-    /**
-     * @var Docman_PermissionsManager
-     */
-    private $docman_permission_manager;
-
-    public function __construct(Docman_PermissionsManager $docman_permission_manager)
+    public function visitFolder(Docman_Folder $item, array $params = [])
     {
-        $this->docman_permission_manager = $docman_permission_manager;
+        // everything is fine
     }
 
-    public function visitFolder(Docman_Item $item, array $params = [])
-    {
-        if (! $this->docman_permission_manager->userCanAccess($params['user'], $item->getId())) {
-            throw new ForbiddenException();
-        }
-    }
-
-    public function visitWiki(Docman_Item $item, array $params = [])
+    public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
-    public function visitLink(Docman_Item $item, array $params = [])
+    public function visitLink(Docman_Link $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
-    public function visitFile(Docman_Item $item, array $params = [])
+    public function visitFile(Docman_File $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
-    public function visitEmbeddedFile(Docman_Item $item, array $params = [])
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
 
-    public function visitEmpty(Docman_Item $item, array $params = [])
+    public function visitEmpty(Docman_Empty $item, array $params = [])
     {
         throw new ItemIsNotAFolderException();
     }
