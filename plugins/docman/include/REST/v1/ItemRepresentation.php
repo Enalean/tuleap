@@ -35,12 +35,12 @@ class ItemRepresentation
     /**
      * @var int {@type int}
      */
-    public $item_id;
+    public $id;
 
     /**
      * @var string {@type string}
      */
-    public $name;
+    public $title;
 
     /**
      * @var MinimalUserRepresentation {@type MinimalUserRepresentation}
@@ -59,8 +59,8 @@ class ItemRepresentation
 
     public function __construct(\Docman_Item $item, MinimalUserRepresentation $owner, $type)
     {
-        $this->item_id          = JsonCast::toInt($item->getId());
-        $this->name             = $item->getTitle();
+        $this->id               = JsonCast::toInt($item->getId());
+        $this->title            = $item->getTitle();
         $this->owner            = $owner;
         $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
         $this->type             = $type;

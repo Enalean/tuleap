@@ -202,7 +202,7 @@ class ProjectTest extends ProjectBase
 
         $this->assertEquals(
             $this->docman_root_id,
-            $json_projects[0]['additional_informations']['docman']['root_item']['item_id']
+            $json_projects[0]['additional_informations']['docman']['root_item']['id']
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
