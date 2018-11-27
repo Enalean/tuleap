@@ -36,11 +36,11 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function initDocumentTree(state, [project_id, name, user_is_admin, user_locale]) {
+function initDocumentTree(state, [project_id, name, user_is_admin, date_time_format]) {
     state.project_id = project_id;
     state.project_name = name;
     state.is_user_administrator = user_is_admin;
-    state.user_locale = user_locale;
+    state.date_time_format = date_time_format;
 }
 
 function beginLoading(state) {

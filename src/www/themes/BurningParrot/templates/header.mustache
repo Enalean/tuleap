@@ -27,7 +27,12 @@
             {{/ unicode_icons }}
         </style>
     </head>
-    <body class="{{ body_classes }}" data-user-locale="{{ user_locale }}" data-user-id="{{ user_id }}">
+    <body class="{{ body_classes }}"
+          data-user-locale="{{ user_locale }}"
+          data-user-id="{{ user_id }}"
+          data-user-timezone="{{ user_timezone }}"
+          data-date-time-format="{{ date_time_format }}"
+    >
         {{> navbar/navbar }}
         <div id="main-container">
             {{# sidebar }}
