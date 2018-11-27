@@ -32,15 +32,16 @@ class LFSJSONHTTPDispatchableTest extends TestCase
 
     /**
      * @runInSeparateProcess
+     * @dataProvider providerAcceptHeader
      */
-    public function testRequestAcceptingGitLFSResponseAreProcessed()
+    public function testRequestAcceptingGitLFSResponseAreProcessed($accept_header)
     {
         $dispatchable = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
         $dispatchable->shouldReceive('process')->once();
 
         $request = \Mockery::mock(HTTPRequest::class);
         $request->shouldReceive('getFromServer')->with('HTTP_ACCEPT')
-            ->andReturns(LFSJSONHTTPDispatchable::GIT_LFS_MIME_TYPE);
+            ->andReturns($accept_header);
 
         $lfs_json_dispatchable = new LFSJSONHTTPDispatchable($dispatchable);
         $lfs_json_dispatchable->process(
@@ -48,6 +49,14 @@ class LFSJSONHTTPDispatchableTest extends TestCase
             \Mockery::mock(BaseLayout::class),
             []
         );
+    }
+
+    public function providerAcceptHeader()
+    {
+        return [
+            ['application/vnd.git-lfs+json'],
+            ['application/vnd.git-lfs+json; charset=utf-8']
+        ];
     }
 
     /**

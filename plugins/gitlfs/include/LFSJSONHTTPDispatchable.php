@@ -49,7 +49,7 @@ class LFSJSONHTTPDispatchable implements DispatchableWithRequestNoAuthz
 
     private function doesRequestAcceptGitLFSResponse(\HttpRequest $request)
     {
-        return stripos(self::GIT_LFS_MIME_TYPE, trim($request->getFromServer('HTTP_ACCEPT'))) === 0;
+        return stripos(trim($request->getFromServer('HTTP_ACCEPT')), self::GIT_LFS_MIME_TYPE) === 0;
     }
 
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
