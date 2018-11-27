@@ -19,7 +19,7 @@
 
 export {
     beginLoading,
-    initDocumentTree,
+    initApp,
     resetErrors,
     saveDocumentRootId,
     saveFolderContent,
@@ -39,7 +39,7 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function initDocumentTree(state, [project_id, name, user_is_admin, date_time_format]) {
+function initApp(state, [project_id, name, user_is_admin, date_time_format]) {
     state.project_id = project_id;
     state.project_name = name;
     state.is_user_administrator = user_is_admin;
