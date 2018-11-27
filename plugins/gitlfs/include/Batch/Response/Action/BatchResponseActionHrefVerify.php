@@ -20,28 +20,30 @@
 
 namespace Tuleap\GitLFS\Batch\Response\Action;
 
-final class BatchResponseActionsForUploadOperation implements BatchResponseActions
+use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
+
+final class BatchResponseActionHrefVerify implements BatchResponseActionHref
 {
     /**
-     * @var BatchResponseActionContent
+     * @var string
      */
-    private $upload_action;
+    private $server_url;
     /**
-     * @var BatchResponseActionContent
+     * @var BatchRequestObject
      */
-    private $verify_operation;
+    private $object;
 
-    public function __construct(BatchResponseActionContent $upload_action, BatchResponseActionContent $verify_operation)
+    public function __construct($server_url, BatchRequestObject $object)
     {
-        $this->upload_action    = $upload_action;
-        $this->verify_operation = $verify_operation;
+        $this->server_url = $server_url;
+        $this->object     = $object;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return string
+     */
+    public function getHref()
     {
-        return [
-            'upload' => $this->upload_action,
-            'verify' => $this->verify_operation
-        ];
+        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()) . '/verify';
     }
 }

@@ -25,6 +25,8 @@ use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRequest;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeVerify;
+use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefVerify;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForUploadOperation;
 use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
@@ -36,6 +38,7 @@ use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefUpload;
 class BatchSuccessfulResponseBuilder
 {
     const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC = 900;
+    const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC = 6 * 3600;
 
     /**
      * @var ActionAuthorizationTokenCreator
@@ -81,10 +84,18 @@ class BatchSuccessfulResponseBuilder
                 new ActionAuthorizationTypeUpload(),
                 new BatchResponseActionHrefUpload($server_url, $request_object)
             );
+            $verify_action_content = $this->buildActionContent(
+                $current_time,
+                $repository,
+                $request_object,
+                self::EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC,
+                new ActionAuthorizationTypeVerify(),
+                new BatchResponseActionHrefVerify($server_url, $request_object)
+            );
             $response_objects[]    = new BatchResponseObjectWithActions(
                 $request_object->getOID(),
                 $request_object->getSize(),
-                new BatchResponseActionsForUploadOperation($upload_action_content)
+                new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
             );
             $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID());
         }
