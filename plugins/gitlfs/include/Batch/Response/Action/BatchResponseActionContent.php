@@ -57,9 +57,9 @@ class BatchResponseActionContent implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'href'        => $this->href->getHref(),
-            'expires_in'  => $this->expires_in,
-            'headers'     => [
+            'href'       => $this->href->getHref(),
+            'expires_in' => $this->expires_in,
+            'header'     => [
                 'Authorization' => (string) $this->token_header_formatter->getIdentifier($this->action_authorization_token)
             ]
         ];
