@@ -39,7 +39,7 @@ class SCMUsageDao extends DataAccessObject
                 WHERE day BETWEEN DATE_FORMAT($start_date, '%Y%m%d') AND DATE_FORMAT($end_date, '%Y%m%d')
                     $filter_by_project
                 GROUP BY year, month
-                ORDER BY year, month DESC";
+                ORDER BY year, MONTH(day)";
 
         return $this->retrieve($sql);
     }
