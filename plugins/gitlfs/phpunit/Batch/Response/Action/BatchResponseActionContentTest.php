@@ -45,6 +45,6 @@ class BatchResponseActionContentTest extends TestCase
         );
 
         $action_content_serialized = json_decode(json_encode($action_content));
-        $this->assertTrue(isset($action_content_serialized->headers->Authorization));
+        $this->assertTrue(isset($action_content_serialized->header->Authorization));
     }
 }
