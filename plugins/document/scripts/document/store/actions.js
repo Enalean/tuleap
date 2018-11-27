@@ -17,7 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProject, getFolderContent } from "../api/rest-querier.js";
+import { getProject, getFolderContent, getItem } from "../api/rest-querier.js";
+
+export const loadCurrentFolderTitle = async (context, folder_id) => {
+    try {
+        context.commit("beginLoadingFolderTitle");
+        const folder = await getItem(folder_id);
+        context.commit("setCurrentFolderTitle", folder.title);
+    } catch (exception) {
+        return handleErrors(context, exception);
+    } finally {
+        context.commit("stopLoadingFolderTitle");
+    }
+};
 
 export const loadRootDocumentId = async context => {
     try {

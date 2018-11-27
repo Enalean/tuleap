@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <h1 v-translate>Documents</h1>
+        <h1 v-bind:class="title_class">{{ current_folder_title }}</h1>
         <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-else>
             <empty-folder v-if="is_folder_empty"/>
@@ -42,8 +42,13 @@ export default {
         FolderContent
     },
     computed: {
-        ...mapState(["is_loading_folder"]),
-        ...mapGetters(["is_folder_empty"])
+        ...mapState(["is_loading_folder", "current_folder_title", "is_loading_folder_title"]),
+        ...mapGetters(["is_folder_empty"]),
+        title_class() {
+            return this.is_loading_folder_title
+                ? "tlp-skeleton-text document-folder-title-loading"
+                : "";
+        }
     }
 };
 </script>

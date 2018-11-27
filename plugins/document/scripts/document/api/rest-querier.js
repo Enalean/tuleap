@@ -19,10 +19,16 @@
 
 import { get, recursiveGet } from "tlp";
 
-export { getProject, getFolderContent };
+export { getProject, getFolderContent, getItem };
 
 async function getProject(project_id) {
     const response = await get("/api/projects/" + project_id);
+
+    return response.json();
+}
+
+async function getItem(id) {
+    const response = await get("/api/docman_items/" + id);
 
     return response.json();
 }

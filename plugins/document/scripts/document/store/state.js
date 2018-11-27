@@ -27,7 +27,9 @@ const state = {
     project_name: null,
     is_user_administrator: false,
     folder_content: [],
-    date_time_format: null
+    date_time_format: null,
+    current_folder_title: null,
+    is_loading_folder_title: false
 };
 
 export default state;

@@ -18,11 +18,12 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { loadRootDocumentId, loadFolderContent } from "./actions.js";
+import { loadRootDocumentId, loadFolderContent, loadCurrentFolderTitle } from "./actions.js";
 import {
     restore as restoreRestQuerier,
     rewire$getProject,
-    rewire$getFolderContent
+    rewire$getFolderContent,
+    rewire$getItem
 } from "../api/rest-querier.js";
 
 describe("Store actions", () => {
@@ -30,7 +31,7 @@ describe("Store actions", () => {
         restoreRestQuerier();
     });
 
-    let context, getFolderContent, getProject;
+    let context, getFolderContent, getProject, getItem;
 
     beforeEach(() => {
         const project_id = 101;
@@ -46,6 +47,53 @@ describe("Store actions", () => {
 
         getProject = jasmine.createSpy("getProject");
         rewire$getProject(getProject);
+
+        getItem = jasmine.createSpy("getItem");
+        rewire$getItem(getItem);
+    });
+
+    describe("loadCurrentFolderTitle()", () => {
+        it("load folder title and store it", async () => {
+            const item = {
+                id: 3,
+                title: "Project Documentation",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+
+            getItem.and.returnValue(item);
+
+            await loadCurrentFolderTitle(context, 3);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith(
+                "setCurrentFolderTitle",
+                "Project Documentation"
+            );
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+        });
+
+        it("When the folder can't be found, an error will be raised", async () => {
+            const error_message = "Item does not exist.";
+            mockFetchError(getItem, {
+                status: 404,
+                error_json: {
+                    error: {
+                        message: error_message
+                    }
+                }
+            });
+
+            await loadCurrentFolderTitle(context, 3);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
+            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+        });
     });
 
     describe("loadRootDocumentId()", () => {
@@ -55,7 +103,7 @@ describe("Store actions", () => {
                     docman: {
                         root_item: {
                             id: 3,
-                            name: "Project Documentation",
+                            title: "Project Documentation",
                             owner: {
                                 id: 101,
                                 display_name: "user (login)"
@@ -71,7 +119,7 @@ describe("Store actions", () => {
             const folder_content = [
                 {
                     id: 1,
-                    name: "folder",
+                    title: "folder",
                     owner: {
                         id: 101
                     },
@@ -79,7 +127,7 @@ describe("Store actions", () => {
                 },
                 {
                     id: 2,
-                    name: "item",
+                    title: "item",
                     owner: {
                         id: 101
                     },
@@ -138,7 +186,7 @@ describe("Store actions", () => {
             const folder_content = [
                 {
                     id: 1,
-                    name: "folder",
+                    title: "folder",
                     owner: {
                         id: 101
                     },
@@ -146,7 +194,7 @@ describe("Store actions", () => {
                 },
                 {
                     id: 2,
-                    name: "item",
+                    title: "item",
                     owner: {
                         id: 101
                     },

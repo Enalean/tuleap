@@ -17,13 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent, getProject } from "./rest-querier.js";
+import { getFolderContent, getProject, getItem } from "./rest-querier.js";
 import { tlp, mockFetchSuccess } from "tlp-mocks";
 
 describe("rest-querier", () => {
     afterEach(() => {
         tlp.get.and.stub();
         tlp.recursiveGet.and.stub();
+    });
+
+    describe("getItem()", () => {
+        it("Given an item id, then the REST API will be queried with it", async () => {
+            const item = {
+                id: 3,
+                title: "Project Documentation",
+                owner: {
+                    id: 101,
+                    display_name: "user (login)"
+                },
+                last_update_date: "2018-08-21T17:01:49+02:00"
+            };
+            mockFetchSuccess(tlp.get, { return_json: item });
+
+            const result = await getItem(3);
+
+            expect(tlp.get).toHaveBeenCalledWith("/api/docman_items/3");
+            expect(result).toEqual(item);
+        });
     });
 
     describe("getProject()", () => {
@@ -33,7 +53,7 @@ describe("rest-querier", () => {
                     docman: {
                         root_item: {
                             id: 3,
-                            name: "Project Documentation",
+                            title: "Project Documentation",
                             owner: {
                                 id: 101,
                                 display_name: "user (login)"
@@ -57,7 +77,7 @@ describe("rest-querier", () => {
             const items = [
                 {
                     id: 1,
-                    name: "folder",
+                    title: "folder",
                     owner: {
                         id: 101,
                         display_name: "username (userlogin)"
@@ -66,7 +86,7 @@ describe("rest-querier", () => {
                 },
                 {
                     id: 2,
-                    name: "folder",
+                    title: "folder",
                     owner: {
                         id: 101,
                         display_name: "docmanusername (docmanuserlogin)"
