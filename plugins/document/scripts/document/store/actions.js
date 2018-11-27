@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getProject, getFolderContent, getItem } from "../api/rest-querier.js";
+import { getProject, getFolderContent, getItem, getParents } from "../api/rest-querier.js";
 
 export const loadCurrentFolderTitle = async (context, folder_id) => {
     try {
@@ -57,6 +57,26 @@ export const loadFolderContent = async (context, folder_id) => {
         return handleErrors(context, exception);
     } finally {
         context.commit("stopLoading");
+    }
+};
+
+export const loadBreadCrumbs = async (context, folder_id) => {
+    try {
+        context.commit("beginLoadingBreadcrumb");
+
+        context.commit("resetParents");
+
+        let parents = await getParents(folder_id);
+        const current_folder = await getItem(folder_id);
+
+        parents.shift();
+        parents.push(current_folder);
+
+        context.commit("saveParents", parents);
+    } catch (exception) {
+        return handleErrors(context, exception);
+    } finally {
+        context.commit("stopLoadingBreadcrumb");
     }
 };
 

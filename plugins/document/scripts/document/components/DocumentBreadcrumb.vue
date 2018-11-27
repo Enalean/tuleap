@@ -20,13 +20,10 @@
 <template>
     <nav class="breadcrumb">
         <div v-bind:class="get_breadcrumb_class">
-            <a class="breadcrumb-link"
-               v-bind:href="document_tree_url"
-               v-bind:title="document_tree_title"
-            >
+            <router-link v-bind:to="{ name: 'root_folder'}" class="breadcrumb-link" v-bind:title="document_tree_title">
                 <i class="breadcrumb-link-icon fa fa-folder-open"></i>
                 <translate>Documents</translate>
-            </a>
+            </router-link>
             <nav class="breadcrumb-switch-menu" v-if="is_admin">
                 <span class="breadcrumb-dropdown-item">
                     <a class="breadcrumb-dropdown-link"
@@ -38,18 +35,33 @@
                 </span>
             </nav>
         </div>
+        <document-breadcrumb-element v-for="parent in current_folder_parents"
+                                     v-bind:key="parent.id"
+                                     v-bind:item="parent"
+        />
+
+        <span class="breadcrumbs-item" v-if="is_loading_breadcrumb">
+            <a class="breadcrumb-link" href="#">
+                <span class="tlp-skeleton-text"></span>
+            </a>
+        </span>
     </nav>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 export default {
     name: "DocumentBreadcrumb",
+    components: { DocumentBreadcrumbElement },
     computed: {
-        ...mapState(["project_name", "project_id", "is_user_administrator"]),
-        document_tree_url() {
-            return "/plugins/document/" + this.project_name + "/";
-        },
+        ...mapState([
+            "project_name",
+            "project_id",
+            "is_user_administrator",
+            "current_folder_parents",
+            "is_loading_breadcrumb"
+        ]),
         document_tree_title() {
             return this.$gettext("Project documentation");
         },

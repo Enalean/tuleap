@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent, getProject, getItem } from "./rest-querier.js";
+import { getFolderContent, getProject, getItem, getParents } from "./rest-querier.js";
 import { tlp, mockFetchSuccess } from "tlp-mocks";
 
 describe("rest-querier", () => {
@@ -106,6 +106,43 @@ describe("rest-querier", () => {
             });
             expect(tlp.recursiveGet.calls.count()).toEqual(1);
             expect(result).toEqual(items);
+        });
+    });
+
+    describe("getParents() -", () => {
+        it("the REST API will be queried and parents of will be returned", async () => {
+            const parents = [
+                {
+                    item_id: 1,
+                    name: "folder A",
+                    owner: {
+                        id: 101,
+                        display_name: "username (userlogin)"
+                    },
+                    last_update_date: "2018-10-03T11:16:11+02:00"
+                },
+                {
+                    item_id: 2,
+                    name: "folder B",
+                    owner: {
+                        id: 101,
+                        display_name: "docmanusername (docmanuserlogin)"
+                    },
+                    last_update_date: "2018-10-03T11:16:11+02:00"
+                }
+            ];
+            tlp.recursiveGet.and.returnValue(parents);
+
+            const result = await getParents(3);
+
+            expect(tlp.recursiveGet).toHaveBeenCalledWith("/api/docman_items/3/parents", {
+                params: {
+                    limit: 50,
+                    offset: 0
+                }
+            });
+            expect(tlp.recursiveGet.calls.count()).toEqual(2);
+            expect(result).toEqual(parents);
         });
     });
 });

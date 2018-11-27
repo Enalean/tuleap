@@ -28,7 +28,11 @@ export {
     switchFolderPermissionError,
     setCurrentFolderTitle,
     beginLoadingFolderTitle,
-    stopLoadingFolderTitle
+    stopLoadingFolderTitle,
+    saveParents,
+    resetParents,
+    beginLoadingBreadcrumb,
+    stopLoadingBreadcrumb
 };
 
 function saveDocumentRootId(state, document_id) {
@@ -46,12 +50,28 @@ function initApp(state, [project_id, name, user_is_admin, date_time_format]) {
     state.date_time_format = date_time_format;
 }
 
+function saveParents(state, parents) {
+    state.current_folder_parents = parents;
+}
+
+function resetParents(state) {
+    state.current_folder_parents = [];
+}
+
 function beginLoading(state) {
     state.is_loading_folder = true;
 }
 
 function stopLoading(state) {
     state.is_loading_folder = false;
+}
+
+function beginLoadingBreadcrumb(state) {
+    state.is_loading_breadcrumb = true;
+}
+
+function stopLoadingBreadcrumb(state) {
+    state.is_loading_breadcrumb = false;
 }
 
 function resetErrors(state) {
