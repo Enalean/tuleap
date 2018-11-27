@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 class TuleapArtLinksHooks {
 
-    public static function onOutputPageBeforeHTML(OutputPage &$out, &$text ) {
+    public static function onOutputPageBeforeHTML(OutputPage $out, &$text ) {
         global $wgTuleapArtLinksGroupId;
 
         $reference_manager = ReferenceManager::instance();

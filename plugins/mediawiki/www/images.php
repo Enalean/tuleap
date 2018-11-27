@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -26,11 +25,10 @@ if ( preg_match_all('/^\/plugins\/mediawiki\/wiki\/(\d+)\/([^\/][a-zA-Z]+)\/([a-
     $_REQUEST['group_id'] = $_GET['group_id'] = $matches[1][0];
 }
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('mediawiki');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('mediawiki');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->showImage(HTTPRequest::instance());
 } else {
     header('Location: '.get_server_url());
 }
-?>
