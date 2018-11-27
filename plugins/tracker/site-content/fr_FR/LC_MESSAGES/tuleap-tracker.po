@@ -85,6 +85,9 @@ msgstr "Une erreur est survenue, le workflow ne peut pas être créé."
 msgid "An error has occurred, the workflow couldn't be reset."
 msgstr "Une erreur s'est produite, le workflow ne peut être réinitialisé."
 
+msgid "An error has occurred, the workflow couldn't be updated."
+msgstr "Une erreur est survenue, le workflow ne peut pas être modifié."
+
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
@@ -297,6 +300,9 @@ msgstr "Aucun utilisateur ne s'est désabonné."
 
 msgid "No webhooks defined"
 msgstr "Aucun webhook n'est défini"
+
+msgid "No workflow defined on the given tracker."
+msgstr "Aucun workflow défini pour ce tracker."
 
 msgid "Notification successfully deleted."
 msgstr "La notification a été supprimée"

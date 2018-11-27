@@ -26,7 +26,6 @@ use PFUser;
 use Tracker;
 use Tracker_Artifact_PossibleParentsRetriever;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Report;
 use Tracker_Report_InvalidRESTCriterionException as InvalidCriteriaException;
@@ -509,6 +508,17 @@ class TrackersResource extends AuthenticatedResource
      * }
      * </pre>
      *
+     * Enable or disable transition rules:
+     * <pre>
+     * {
+     *   "workflow": {
+     *     "set_transitions_rules": {
+     *       "is_used": true
+     *     }
+     *   }
+     * }
+     * </pre>
+     *
      * To remove the field transitions are based on (in order to set new field):
      * <pre>
      * {
@@ -609,29 +619,24 @@ class TrackersResource extends AuthenticatedResource
      * @throws I18NRestException 400
      * @throws I18NRestException 404
      */
-    private function setTransitionsRules(array $new_properties, Tracker $tracker)
+    private function setTransitionsRules(array $set_transitions_rules_query, Tracker $tracker)
     {
-        $workflow_factory = $this->getWorkflowFactory();
-
-        if ($workflow_factory->getWorkflowByTrackerId($tracker->getId())) {
-            throw new I18NRestException(400, dgettext('tuleap-tracker', 'A workflow already exists on the given tracker.'));
+        if (isset($set_transitions_rules_query['field_id'])) {
+            if (!is_int($set_transitions_rules_query['field_id'])) {
+                throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
+            }
+            $field_id = $set_transitions_rules_query['field_id'];
+            return $this->updateWorkflowTransitionFieldId($tracker, $field_id);
         }
 
-
-        if (! isset($new_properties['field_id']) || ! is_int($new_properties['field_id'])) {
-            throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
+        if (isset($set_transitions_rules_query['is_used'])) {
+            if (!is_bool($set_transitions_rules_query['is_used'])) {
+                throw new I18NRestException(400, dgettext('tuleap-tracker', 'Please provide a valid query.'));
+            }
+            $is_used = $set_transitions_rules_query['is_used'];
+            return $this->updateWorkflowTransitionActivation($tracker, $is_used);
         }
-
-        $new_field_id = $new_properties['field_id'];
-        $field        = $this->formelement_factory->getFieldById($new_field_id);
-
-        if (! $field) {
-            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Field not found.'));
-        }
-
-        $this->updateWorkflowTransitionFieldId($tracker, $field);
     }
-
 
     /**
      * @throws RestException
@@ -648,23 +653,52 @@ class TrackersResource extends AuthenticatedResource
         if (!$workflow_factory->deleteWorkflow($workflow->getId())) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be reset."));
         }
+
     }
 
     /**
-     * @param Tracker $tracker
-     * @param Tracker_FormElement_Field $new_field
-     *
-     * @return int Created workflow id
-     * @throws I18NRestException 500
+     * @return int New workflow id
+     * @throws I18NRestException
      */
-    private function updateWorkflowTransitionFieldId(Tracker $tracker, Tracker_FormElement_Field $new_field)
+    private function updateWorkflowTransitionFieldId(Tracker $tracker, $field_id)
     {
         $workflow_factory = $this->getWorkflowFactory();
-        $new_workflow_id  = $workflow_factory->create($tracker->getId(), $new_field->getId());
+        if ($workflow_factory->getWorkflowByTrackerId($tracker->getId()) != null) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'A workflow already exists on the given tracker.'));
+        }
 
-        if (! $new_workflow_id) {
+        $field = $this->formelement_factory->getFieldById($field_id);
+        if (!$field) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Field not found.'));
+        }
+
+
+        $new_workflow_id = $workflow_factory->create($tracker->getId(), $field->getId());
+        if (!$new_workflow_id) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be created."));
         }
+
+        return $new_workflow_id;
+    }
+
+    /**
+     * @return int Updated workflow id
+     * @throws I18NRestException 500
+     */
+    private function updateWorkflowTransitionActivation(Tracker $tracker, $is_used)
+    {
+        $workflow_factory = $this->getWorkflowFactory();
+        $workflow = $workflow_factory->getWorkflowByTrackerId($tracker->getId());
+        if (!$workflow) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', "No workflow defined on the given tracker."));
+        }
+
+        $workflow_id = $workflow_factory->updateActivation($workflow->getId(), $is_used);
+        if (!$workflow_id) {
+            throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be updated."));
+        }
+
+        return $workflow_id;
     }
 
     /**
