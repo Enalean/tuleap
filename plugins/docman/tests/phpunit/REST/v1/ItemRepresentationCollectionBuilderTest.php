@@ -28,6 +28,7 @@ use Docman_PermissionsManager;
 use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
+use Tuleap\Docman\REST\v1\FilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentation;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
@@ -69,6 +70,11 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
      */
     private $item_representation_collection_builder;
 
+    /**
+     * @var Docman_ItemFactory
+     */
+    private $item_version_factory;
+
     protected function setUp()
     {
         parent::setUp();
@@ -76,8 +82,10 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->item_factory                           = Mockery::mock(Docman_ItemFactory::class);
         $this->permission_manager                     = Mockery::mock(Docman_PermissionsManager::class);
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
+        $this->item_version_factory                   = Mockery::mock(\Docman_VersionFactory::class);
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
-            $this->item_representation_builder
+            $this->item_representation_builder,
+            $this->item_version_factory
         );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
@@ -136,23 +144,52 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->permission_manager->shouldReceive("userCanRead")->withArgs([$user, 3])->andReturns(true);
 
         $user_representation = Mockery::mock(MinimalUserRepresentation::class);
-
-        $representation1 = new ItemRepresentation(
+        $representation1     = new ItemRepresentation();
+        $representation1->build(
             $docman_item1,
             $user_representation,
-            ItemRepresentation::TYPE_FOLDER
+            ItemRepresentation::TYPE_FOLDER,
+            null
         );
-        $representation2 = new ItemRepresentation(
+
+        $version_data_item3   = [
+            'id'        => 1,
+            'authorId'  => 101,
+            'itemId'    => 3,
+            'number'    => null,
+            'label'     => null,
+            'changeLog' => null,
+            'date'      => null,
+            'filename'  => 'item B',
+            'filesize'  => null,
+            'filetype'  => 'application/pdf',
+            'path'      => null,
+            '_content'  => null,
+        ];
+        $docman_version_item3 = new \Docman_Version($version_data_item3);
+        $file_properties      = new FilePropertiesRepresentation();
+        $file_properties->build($docman_version_item3);
+
+        $representation2 = new ItemRepresentation();
+        $representation2->build(
             $docman_item3,
             $user_representation,
-            ItemRepresentation::TYPE_FILE
+            ItemRepresentation::TYPE_FILE,
+            $file_properties
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item1, ItemRepresentation::TYPE_FOLDER])
+            ->withArgs([$docman_item1, ItemRepresentation::TYPE_FOLDER, null])
             ->andReturns($representation1);
+
+        $this->item_version_factory->shouldReceive('getCurrentVersionForItem')
+            ->withArgs([$docman_item3])
+            ->andReturns($docman_version_item3);
+
+        $file_properties = new FilePropertiesRepresentation();
+        $file_properties->build($docman_version_item3);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item3, ItemRepresentation::TYPE_FILE])
+            ->withArgs([$docman_item3, ItemRepresentation::TYPE_FILE, Mockery::any()])
             ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildFolderContent($item, $user, 50, 0);
@@ -203,22 +240,24 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 
         $project         = Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn(101);
-        $representation1 = new ItemRepresentation(
+        $representation1 = new ItemRepresentation();
+        $representation1->build(
             $docman_folder1,
             $user_representation,
             ItemRepresentation::TYPE_FOLDER
         );
-        $representation2 = new ItemRepresentation(
+        $representation2 = new ItemRepresentation();
+        $representation2->build(
             $docman_folder2,
             $user_representation,
             ItemRepresentation::TYPE_FOLDER
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-                                          ->withArgs([$docman_folder1, ItemRepresentation::TYPE_FOLDER])
+                                          ->withArgs([$docman_folder1, ItemRepresentation::TYPE_FOLDER, null])
                                           ->andReturns($representation1);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-                                          ->withArgs([$docman_folder2, ItemRepresentation::TYPE_FOLDER])
+                                          ->withArgs([$docman_folder2, ItemRepresentation::TYPE_FOLDER, null])
                                           ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);

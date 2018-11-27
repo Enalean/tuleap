@@ -94,7 +94,8 @@ class DocmanItemsResource extends AuthenticatedResource
                 $this->item_dao,
                 $this->user_manager,
                 $item_factory
-            )
+            ),
+            new \Docman_VersionFactory()
         );
 
         return $item->accept($representation_visitor);
@@ -129,6 +130,7 @@ class DocmanItemsResource extends AuthenticatedResource
     public function getDocumentItems($id, $limit = self::MAX_LIMIT, $offset = 0)
     {
         $this->checkAccess();
+
         $this->sendAllowHeaders();
 
         $items_request = $this->request_builder->buildFromItemId($id);
@@ -165,7 +167,7 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @access protected
      *
-     * @param int $id Id of the item
+     * @param int $id     Id of the item
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
      *
@@ -194,7 +196,6 @@ class DocmanItemsResource extends AuthenticatedResource
 
         return $items_representation->getPaginatedElementCollection();
     }
-
 
     /**
      * @throws RestException
@@ -240,7 +241,8 @@ class DocmanItemsResource extends AuthenticatedResource
                     $this->item_dao,
                     $this->user_manager,
                     $items_request->getFactory()
-                )
+                ),
+                new \Docman_VersionFactory()
             ),
             $this->item_dao
         );

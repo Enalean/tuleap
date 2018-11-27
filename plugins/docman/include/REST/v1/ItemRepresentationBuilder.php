@@ -67,22 +67,30 @@ class ItemRepresentationBuilder
         $item = $this->docman_item_factory->getItemFromRow($result);
         return $this->buildItemRepresentation(
             $item,
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            null
         );
     }
 
     /**
      * @return ItemRepresentation
      */
-    public function buildItemRepresentation(\Docman_Item $item, $type)
-    {
+    public function buildItemRepresentation(
+        \Docman_Item $item,
+        $type,
+        FilePropertiesRepresentation $file_properties = null
+    ) {
         $owner               = $this->user_manager->getUserById($item->getOwnerId());
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($owner);
-        return new ItemRepresentation(
+
+        $item_representation = new ItemRepresentation();
+        $item_representation->build(
             $item,
             $user_representation,
-            $type
+            $type,
+            $file_properties
         );
+        return $item_representation;
     }
 }

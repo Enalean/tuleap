@@ -36,16 +36,25 @@ class ItemRepresentationVisitor implements ItemVisitor
      */
     private $item_representation_builder;
 
-    public function __construct(ItemRepresentationBuilder $item_representation_builder)
-    {
-        $this->item_representation_builder = $item_representation_builder;
+    /**
+     * @var \Docman_VersionFactory
+     */
+    private $docman_version_factory;
+
+    public function __construct(
+        ItemRepresentationBuilder $item_representation_builder,
+        \Docman_VersionFactory $docman_version_factory
+    ) {
+        $this->item_representation_builder    = $item_representation_builder;
+        $this->docman_version_factory         = $docman_version_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_FOLDER
+            ItemRepresentation::TYPE_FOLDER,
+            null
         );
     }
 
@@ -53,7 +62,8 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_WIKI
+            ItemRepresentation::TYPE_WIKI,
+            null
         );
     }
 
@@ -61,23 +71,32 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_LINK
+            ItemRepresentation::TYPE_LINK,
+            null
         );
     }
 
     public function visitFile(Docman_File $item, array $params = [])
     {
+        $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
+        $file_properties = new FilePropertiesRepresentation();
+        $file_properties->build($item_version);
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_FILE
+            ItemRepresentation::TYPE_FILE,
+            $file_properties
         );
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
+        $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
+        $file_properties = new FilePropertiesRepresentation();
+        $file_properties->build($item_version);
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_EMBEDDED
+            ItemRepresentation::TYPE_EMBEDDED,
+            $file_properties
         );
     }
 
@@ -85,12 +104,13 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
-            ItemRepresentation::TYPE_EMPTY
+            ItemRepresentation::TYPE_EMPTY,
+            null
         );
     }
 
     public function visitItem(Docman_Item $item, array $params = [])
     {
-        return $this->item_representation_builder->buildItemRepresentation($item, null);
+        return $this->item_representation_builder->buildItemRepresentation($item, null, null);
     }
 }

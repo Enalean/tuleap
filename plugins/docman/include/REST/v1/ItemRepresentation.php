@@ -57,12 +57,22 @@ class ItemRepresentation
      */
     public $type;
 
-    public function __construct(\Docman_Item $item, MinimalUserRepresentation $owner, $type)
-    {
+    /**
+     * @var FilePropertiesRepresentation | null
+     */
+    public $file_properties;
+
+    public function build(
+        \Docman_Item $item,
+        MinimalUserRepresentation $owner,
+        $type,
+        FilePropertiesRepresentation $file_properties = null
+    ) {
         $this->id               = JsonCast::toInt($item->getId());
         $this->title            = $item->getTitle();
         $this->owner            = $owner;
         $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
         $this->type             = $type;
+        $this->file_properties  = $file_properties;
     }
 }
