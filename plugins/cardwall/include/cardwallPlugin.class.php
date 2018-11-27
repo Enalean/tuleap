@@ -227,7 +227,13 @@ class cardwallPlugin extends Plugin
     {
         if ($event->getType() === self::RENDERER_TYPE) {
             $attributes = $event->getXml()->attributes();
-            $event->setRowKey('from_xml_field', $event->getFieldFromXMLReference((string) $attributes['field_id']));
+
+            $field_id = (string) $attributes['field_id'];
+            if (! $field_id) {
+                return;
+            }
+
+            $event->setRowKey('from_xml_field', $event->getFieldFromXMLReference($field_id));
         }
     }
 
