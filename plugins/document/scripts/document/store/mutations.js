@@ -25,7 +25,10 @@ export {
     saveFolderContent,
     setFolderLoadingError,
     stopLoading,
-    switchFolderPermissionError
+    switchFolderPermissionError,
+    setCurrentFolderTitle,
+    beginLoadingFolderTitle,
+    stopLoadingFolderTitle
 };
 
 function saveDocumentRootId(state, document_id) {
@@ -64,4 +67,18 @@ function switchFolderPermissionError(state) {
 function setFolderLoadingError(state, message) {
     state.has_folder_loading_error = true;
     state.folder_loading_error = message;
+}
+
+function setCurrentFolderTitle(state, title) {
+    state.current_folder_title = title;
+    state.is_loading_folder_title = false;
+}
+
+function beginLoadingFolderTitle(state) {
+    state.current_folder_title = null;
+    state.is_loading_folder_title = true;
+}
+
+function stopLoadingFolderTitle(state) {
+    state.is_loading_folder_title = false;
 }

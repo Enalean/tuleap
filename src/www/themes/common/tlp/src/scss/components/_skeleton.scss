@@ -33,11 +33,39 @@ $tlp-skeleton-animation-duration: 1.2s;
 .tlp-skeleton-text {
     display: inline-block;
     width: 100px;
-    height: 6px;
+    min-height: 6px;
     animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
-    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px);
+    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px) repeat-x bottom left;
     background-size: 600px 6px;
 }
+
+// scss-lint:disable QualifyingElement
+h1.tlp-skeleton-text {
+    height: 46px;
+    background-size: 600px 8px;
+}
+
+h2.tlp-skeleton-text {
+    height: 30px;
+    background-size: 600px 7px;
+}
+
+h3.tlp-skeleton-text {
+    height: 20px;
+}
+
+h4.tlp-skeleton-text {
+    height: 20px;
+}
+
+h5.tlp-skeleton-text {
+    height: 18px;
+}
+
+h6.tlp-skeleton-text {
+    height: 17px;
+}
+// scss-lint:enable QualifyingElement
 
 @keyframes tlp-skeleton-animation-text {
     0% {

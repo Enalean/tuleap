@@ -37,11 +37,17 @@ export default {
     },
     watch: {
         $route(to) {
-            this.$store.dispatch("loadFolderContent", [to.params.item_id]);
+            this.loadFolder(to.params.item_id);
         }
     },
     mounted() {
-        this.$store.dispatch("loadFolderContent", [this.$route.params.item_id]);
+        this.loadFolder(this.$route.params.item_id);
+    },
+    methods: {
+        loadFolder(id) {
+            this.$store.dispatch("loadCurrentFolderTitle", id);
+            this.$store.dispatch("loadFolderContent", id);
+        }
     }
 };
 </script>

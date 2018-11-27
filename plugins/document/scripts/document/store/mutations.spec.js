@@ -20,6 +20,46 @@
 import * as mutations from "./mutations.js";
 
 describe("Store mutations", () => {
+    describe("setCurrentFolderTitle()", () => {
+        it("stores the title and sets loading to false", () => {
+            const state = {
+                is_loading_folder_title: true,
+                current_folder_title: null
+            };
+
+            mutations.setCurrentFolderTitle(state, "Coin");
+
+            expect(state.current_folder_title).toBe("Coin");
+            expect(state.is_loading_folder_title).toBe(false);
+        });
+    });
+
+    describe("beginLoadingFolderTitle()", () => {
+        it("resets the title and sets loading to true", () => {
+            const state = {
+                is_loading_folder_title: false,
+                current_folder_title: "Project documentation"
+            };
+
+            mutations.beginLoadingFolderTitle(state);
+
+            expect(state.current_folder_title).toBeNull();
+            expect(state.is_loading_folder_title).toBe(true);
+        });
+    });
+
+    describe("stopLoadingFolderTitle()", () => {
+        it("sets loading to false", () => {
+            const state = {
+                is_loading_folder_title: true
+            };
+
+            mutations.stopLoadingFolderTitle(state);
+
+            expect(state.is_loading_folder_title).toBe(false);
+        });
+    });
+
     describe("beginLoading()", () => {
         it("sets loading to true", () => {
             const state = {
