@@ -517,10 +517,11 @@ class TrackersResource extends AuthenticatedResource
      *
      * @return int The id of the tracker workflow.
      *
-     * @throws RestException 400
+     * @throws I18NRestException 500
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
      * @throws RestException 401
      * @throws RestException 403
-     * @throws RestException 404
      */
     public function patchWorkflow($id, $query = '')
     {
@@ -553,7 +554,13 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @throws RestException
+     * @param array $workflow_query
+     * @param Tracker $tracker
+     *
+     * @return int Created workflow id
+     * @throws I18NRestException 500
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
      */
     private function processWorkflowTransitionPatchQuery(array $workflow_query, Tracker $tracker)
     {
@@ -572,7 +579,13 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @throws RestException
+     * @param array $new_properties
+     * @param Tracker $tracker
+     *
+     * @return int Created workflow id
+     * @throws I18NRestException 500
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
      */
     private function setTransitionsRules(array $new_properties, Tracker $tracker)
     {
@@ -598,7 +611,11 @@ class TrackersResource extends AuthenticatedResource
     }
 
     /**
-     * @throws RestException 500
+     * @param Tracker $tracker
+     * @param Tracker_FormElement_Field $new_field
+     *
+     * @return int Created workflow id
+     * @throws I18NRestException 500
      */
     private function updateWorkflowTransitionFieldId(Tracker $tracker, Tracker_FormElement_Field $new_field)
     {
