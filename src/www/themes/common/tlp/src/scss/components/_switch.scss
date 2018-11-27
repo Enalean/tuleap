@@ -26,8 +26,8 @@ $tlp-switch-button-padding: 1px;
 
 
 .tlp-switch-checkbox {
-    position: absolute;
     visibility: hidden;
+    position: absolute;
 }
 
 .tlp-switch-button {
@@ -41,6 +41,7 @@ $tlp-switch-button-padding: 1px;
     user-select: none;
 
     &::before {
+        content: '';
         display: block;
         position: absolute;
         top: $tlp-switch-button-padding;
@@ -50,10 +51,10 @@ $tlp-switch-button-padding: 1px;
         transition: background-color 200ms;
         border-radius: $tlp-switch-height / 2;
         background-color: $tlp-switch-background;
-        content: '';
     }
 
     &::after {
+        content: '\f00c'; // fa-check
         display: block;
         position: absolute;
         top: $tlp-switch-button-padding + 1px;
@@ -69,7 +70,6 @@ $tlp-switch-button-padding: 1px;
         font-weight: 600;
         line-height: $tlp-switch-height - $tlp-switch-button-padding;
         text-align: center;
-        content: '\f00c'; // fa-check
     }
 
 }
