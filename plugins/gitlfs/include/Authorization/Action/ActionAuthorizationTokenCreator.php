@@ -54,7 +54,7 @@ class ActionAuthorizationTokenCreator
             $hashed_verification_string,
             $action_authorization->getExpiration()->getTimestamp(),
             $action_authorization->getActionType()->getName(),
-            $action_authorization->getObject()->getOID(),
+            $action_authorization->getObject()->getOID()->getValue(),
             $action_authorization->getObject()->getSize()
         );
 

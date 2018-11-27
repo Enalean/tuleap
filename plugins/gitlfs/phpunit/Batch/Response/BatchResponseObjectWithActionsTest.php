@@ -23,6 +23,8 @@ namespace Tuleap\GitLFS\Batch\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
+use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectID;
 
 class BatchResponseObjectWithActionsTest extends TestCase
 {
@@ -36,7 +38,13 @@ class BatchResponseObjectWithActionsTest extends TestCase
         $oid  = 'oid';
         $size = 123456;
 
-        $response_object            = new BatchResponseObjectWithActions($oid, $size, $action_content);
+        $lfs_object = \Mockery::mock(LFSObject::class);
+        $lfs_object->shouldReceive('getSize')->andReturns($size);
+        $lfs_object_id = \Mockery::mock(LFSObjectID::class);
+        $lfs_object_id->shouldReceive('getValue')->andReturns($oid);
+        $lfs_object->shouldReceive('getOID')->andReturns($lfs_object_id);
+
+        $response_object            = new BatchResponseObjectWithActions($lfs_object, $action_content);
         $serialized_response_object = json_decode(json_encode($response_object));
 
         $this->assertSame($oid, $serialized_response_object->oid);

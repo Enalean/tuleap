@@ -21,7 +21,7 @@
 namespace Tuleap\GitLFS\Authorization\Action;
 
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
-use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
+use Tuleap\GitLFS\Object\LFSObject;
 
 class ActionAuthorizationRequest
 {
@@ -30,7 +30,7 @@ class ActionAuthorizationRequest
      */
     private $git_repository;
     /**
-     * @var BatchRequestObject
+     * @var LFSObject
      */
     private $object;
     /**
@@ -44,7 +44,7 @@ class ActionAuthorizationRequest
 
     public function __construct(
         \GitRepository $git_repository,
-        BatchRequestObject $object,
+        LFSObject $object,
         ActionAuthorizationType $action_type,
         \DateTimeImmutable $expiration
     ) {
@@ -64,7 +64,7 @@ class ActionAuthorizationRequest
     }
 
     /**
-     * @return BatchRequestObject
+     * @return LFSObject
      */
     public function getObject()
     {

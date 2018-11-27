@@ -20,6 +20,8 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
+use Tuleap\GitLFS\Object\LFSObject;
+
 class AuthorizedAction
 {
     /**
@@ -27,19 +29,14 @@ class AuthorizedAction
      */
     private $repository;
     /**
-     * @var string
+     * @var LFSObject
      */
-    private $oid;
-    /**
-     * @var int
-     */
-    private $size;
+    private $lfs_object;
 
-    public function __construct(\GitRepository $repository, $oid, $size)
+    public function __construct(\GitRepository $repository, LFSObject $lfs_object)
     {
         $this->repository = $repository;
-        $this->oid        = $oid;
-        $this->size       = $size;
+        $this->lfs_object = $lfs_object;
     }
 
     /**
@@ -51,18 +48,10 @@ class AuthorizedAction
     }
 
     /**
-     * @return string
+     * @return LFSObject
      */
-    public function getOID()
+    public function getLFSObject()
     {
-        return $this->oid;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSize()
-    {
-        return $this->size;
+        return $this->lfs_object;
     }
 }

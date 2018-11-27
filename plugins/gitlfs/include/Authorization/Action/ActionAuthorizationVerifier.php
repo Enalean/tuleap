@@ -23,6 +23,8 @@ namespace Tuleap\GitLFS\Authorization\Action;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectID;
 
 class ActionAuthorizationVerifier
 {
@@ -78,6 +80,9 @@ class ActionAuthorizationVerifier
             throw new ActionAuthorizationMatchingUnknownRepositoryException($row['repository_id']);
         }
 
-        return new AuthorizedAction($git_repository, $row['object_oid'], $row['object_size']);
+        return new AuthorizedAction(
+            $git_repository,
+            new LFSObject(new LFSObjectID($row['object_oid']), $row['object_size'])
+        );
     }
 }

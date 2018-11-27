@@ -33,11 +33,11 @@ class BatchRequestTest extends TestCase
   "ref": { "name": "refs/heads/contrib" },
   "objects": [
     {
-      "oid": "12345678",
+      "oid": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
       "size": 123
     },
     {
-      "oid": "98765432",
+      "oid": "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d",
       "size": 456
     }
   ]
@@ -48,9 +48,9 @@ JSON;
         $this->assertFalse($batch_request->isRead());
         $objects = $batch_request->getObjects();
         $this->assertCount(2, $objects);
-        $this->assertSame('12345678', $objects[0]->getOID());
+        $this->assertSame('ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb', $objects[0]->getOID()->getValue());
         $this->assertSame(123, $objects[0]->getSize());
-        $this->assertSame('98765432', $objects[1]->getOID());
+        $this->assertSame('3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d', $objects[1]->getOID()->getValue());
         $this->assertSame(456, $objects[1]->getSize());
         $this->assertSame('basic', $batch_request->getTransfers()[0]->getIdentifier());
         $this->assertSame('refs/heads/contrib', $batch_request->getReference()->getName());
@@ -85,12 +85,13 @@ JSON;
             ['{"objects": []}'],
             ['{"operation": 1, "objects": []}'],
             ['{"operation": "download", "objects": {}}'],
-            ['{"operation": "download", "objects": ["myoid1", "myoid2"]}'],
+            ['{"operation": "download", "objects": ["ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb", "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d"]}'],
             ['{"operation": "download", "objects": {}, "ref": {}}'],
             ['{"operation": "download", "objects": {"size": 123}}'],
             ['{"operation": "download", "objects": [{"size": 123}]}'],
             ['{"operation": "download", "objects": [{"size": "aaaaaaa"}]}'],
-            ['{"operation": "download", "objects": [{"oid": "myoid", "size": -123}]}'],
+            ['{"operation": "download", "objects": [{"oid": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb", "size": -123}]}'],
+            ['{"operation": "download", "objects": [{"oid": "broken_oid", "size": 123}]}'],
             ['{"operation": "download", "objects": [], "transfers": "basic"}'],
             ['{"operation": "download", "objects": [], "transfers": [1]}'],
             ['{"operation": "download", "objects": [], "ref": {"is_branch": false}}'],

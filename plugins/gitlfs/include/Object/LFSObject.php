@@ -18,32 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch\Response\Action;
+namespace Tuleap\GitLFS\Object;
 
-use Tuleap\GitLFS\Object\LFSObject;
-
-final class BatchResponseActionHrefVerify implements BatchResponseActionHref
+class LFSObject
 {
     /**
-     * @var string
+     * @var LFSObjectID
      */
-    private $server_url;
+    private $oid;
     /**
-     * @var LFSObject
+     * @var int
      */
-    private $object;
+    private $size;
 
-    public function __construct($server_url, LFSObject $object)
+    public function __construct(LFSObjectID $oid, $size)
     {
-        $this->server_url = $server_url;
-        $this->object     = $object;
+        $this->oid = $oid;
+        if (! \is_int($size)) {
+            throw new \TypeError('Expected $size to be an int, got ' . gettype($size));
+        }
+        if ($size < 0) {
+            throw new \UnexpectedValueException('The size must be positive');
+        }
+        $this->size = $size;
     }
 
     /**
-     * @return string
+     * @return LFSObjectID
      */
-    public function getHref()
+    public function getOID()
     {
-        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()->getValue()) . '/verify';
+        return $this->oid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize()
+    {
+        return $this->size;
     }
 }

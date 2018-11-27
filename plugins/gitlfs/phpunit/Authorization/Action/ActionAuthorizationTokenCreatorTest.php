@@ -25,7 +25,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
-use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
+use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectID;
 
 class ActionAuthorizationTokenCreatorTest extends TestCase
 {
@@ -48,8 +49,10 @@ class ActionAuthorizationTokenCreatorTest extends TestCase
             ->andReturns(new \DateTimeImmutable('2018-11-22'), new \DateTimeZone('UTC'));
         $action_type = new ActionAuthorizationTypeUpload();
         $authorization_request->shouldReceive('getActionType')->andReturns($action_type);
-        $request_object = \Mockery::mock(BatchRequestObject::class);
-        $request_object->shouldReceive('getOID')->andReturns('oid');
+        $request_object_id = \Mockery::mock(LFSObjectID::class);
+        $request_object_id->shouldReceive('getValue')->andReturns('oid');
+        $request_object = \Mockery::mock(LFSObject::class);
+        $request_object->shouldReceive('getOID')->andReturns($request_object_id);
         $request_object->shouldReceive('getSize')->andReturns(123456);
         $authorization_request->shouldReceive('getObject')->andReturns($request_object);
 
