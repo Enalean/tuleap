@@ -18,7 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-class WorkflowFactory {
+class WorkflowFactory
+{
 
     /** @var TransitionFactory */
     private $transition_factory;
@@ -46,7 +47,8 @@ class WorkflowFactory {
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger
-    ) {
+    )
+    {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
         $this->formelement_factory   = $formelement_factory;
@@ -59,11 +61,13 @@ class WorkflowFactory {
      */
     protected static $_instance;
 
-    public static function setInstance($instance) {
+    public static function setInstance($instance)
+    {
         self::$_instance = $instance;
     }
 
-    public static function clearInstance() {
+    public static function clearInstance()
+    {
         self::$_instance = null;
     }
 
@@ -72,7 +76,8 @@ class WorkflowFactory {
      *
      * @return WorkflowFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
             $logger = new WorkflowBackendLogger(new BackendLogger());
@@ -103,7 +108,8 @@ class WorkflowFactory {
     /**
      * @return Tracker_Workflow_Trigger_RulesManager
      */
-    public function getTriggerRulesManager() {
+    public function getTriggerRulesManager()
+    {
         return $this->trigger_rules_manager;
     }
 
@@ -114,7 +120,8 @@ class WorkflowFactory {
      *
      * @return Workflow
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row)
+    {
         $tracker = $this->tracker_factory->getTrackerById($row['tracker_id']);
 
         return new Workflow(
@@ -132,7 +139,8 @@ class WorkflowFactory {
      * @param int $workflow_id
      * @return null|Workflow
      */
-    public function getWorkflow($workflow_id) {
+    public function getWorkflow($workflow_id)
+    {
         if ($row = $this->getDao()->searchById($workflow_id)->getRow()) {
             return $this->getInstanceFromRow($row);
         }
@@ -143,7 +151,8 @@ class WorkflowFactory {
     /**
      * @return WorkflowWithoutTransition
      */
-    public function getWorkflowWithoutTransition(Tracker $tracker) {
+    public function getWorkflowWithoutTransition(Tracker $tracker)
+    {
         return new WorkflowWithoutTransition(
             $this->getGlobalRulesManager($tracker),
             $this->trigger_rules_manager,
@@ -160,7 +169,8 @@ class WorkflowFactory {
      *
      * @return int the id of the workflow. False if error
      */
-    public function create($tracker_id, $field_id) {
+    public function create($tracker_id, $field_id)
+    {
         return $this->getDao()->create($tracker_id, $field_id);
     }
 
@@ -172,7 +182,8 @@ class WorkflowFactory {
      *
      * @return int the id of the workflow. False if error
      */
-    public function updateActivation($workflow_id, $is_used) {
+    public function updateActivation($workflow_id, $is_used)
+    {
         return $this->getDao()->updateActivation($workflow_id, $is_used);
     }
 
@@ -181,7 +192,8 @@ class WorkflowFactory {
      *
      * @param int $workflow_id the workflow id
      */
-    public function delete($workflow_id) {
+    public function delete($workflow_id)
+    {
         return $this->getDao()->delete($workflow_id);
     }
 
@@ -190,7 +202,8 @@ class WorkflowFactory {
      *
      * @param int $workflow_id the workflow id
      */
-    public function deleteWorkflow($workflow_id) {
+    public function deleteWorkflow($workflow_id)
+    {
         $workflow = $this->getWorkflow($workflow_id);
         if ($this->transition_factory->deleteWorkflow($workflow)) {
             return $this->delete($workflow_id);
@@ -205,8 +218,9 @@ class WorkflowFactory {
      *
      * @return int the id of the transition. False if error
      */
-    public function addTransition($workflow_id, $transition) {
-        $values = explode("_",$transition);
+    public function addTransition($workflow_id, $transition)
+    {
+        $values = explode("_", $transition);
         $from = $values[0];
         $to = $values[1];
         return $this->getTransitionDao()->addTransition($workflow_id, $from, $to);
@@ -220,8 +234,9 @@ class WorkflowFactory {
      *
      * @return int the id of the transition. False if error
      */
-     public function getTransitionId($workflow_id, $transition) {
-        $values = explode("_",$transition);
+    public function getTransitionId($workflow_id, $transition)
+    {
+        $values = explode("_", $transition);
         $from = $values[0];
         $to = $values[1];
         return $this->getTransitionDao()->searchTransitionId($workflow_id, $from, $to);
@@ -234,7 +249,8 @@ class WorkflowFactory {
      *
      * @return int the id of the workflow. False if error
      */
-     public function getWorkflowId($transition_id) {
+    public function getWorkflowId($transition_id)
+    {
         return $this->getTransitionDao()->getWorkflowId($transition_id);
     }
 
@@ -245,15 +261,17 @@ class WorkflowFactory {
      * @param string $from the transition to insert
      * @param string $to the transition to insert
      */
-    public function deleteTransition($workflow_id, $from, $to) {
-        if($from==null) {
+    public function deleteTransition($workflow_id, $from, $to)
+    {
+        if ($from == null) {
             return $this->getTransitionDao()->deleteTransition($workflow_id, null, $to->getId());
-        }else {
+        } else {
             return $this->getTransitionDao()->deleteTransition($workflow_id, $from->getId(), $to->getId());
         }
     }
 
     protected $cache_workflowfield;
+
     /**
      * Get the Workflow object for the tracker $tracker_id
      *
@@ -261,7 +279,8 @@ class WorkflowFactory {
      *
      * @return Workflow the worflow object, or null if there is no workflow
      */
-    public function getWorkflowByTrackerId($tracker_id) {
+    public function getWorkflowByTrackerId($tracker_id)
+    {
         if (!isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
             // only one field per workflow
@@ -279,7 +298,8 @@ class WorkflowFactory {
      *
      * @return bool
      */
-    public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field)
+    {
         return $this->isWorkflowField($field) || $this->transition_factory->isFieldUsedInTransitions($field);
     }
 
@@ -290,7 +310,8 @@ class WorkflowFactory {
      *
      * @return bool
      */
-    public function isWorkflowField(Tracker_FormElement_Field $field) {
+    public function isWorkflowField(Tracker_FormElement_Field $field)
+    {
         $workflow = $this->getWorkflowByTrackerId($field->getTracker()->getId());
         if ($workflow) {
             return $field->getId() == $workflow->getFieldId();
@@ -305,7 +326,8 @@ class WorkflowFactory {
      *
      * @return int the transition_id
      */
-    public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to) {
+    public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to)
+    {
         return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
     }
 
@@ -322,7 +344,8 @@ class WorkflowFactory {
      *
      * @return void
      */
-    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type)
+    {
         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used = $workflow->getIsUsed();
 
@@ -338,20 +361,21 @@ class WorkflowFactory {
     /**
      * Creates a workflow Object
      *
-     * @param SimpleXMLElement $xml         containing the structure of the imported workflow
+     * @param SimpleXMLElement $xml containing the structure of the imported workflow
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the workflow is attached
+     * @param Tracker $tracker to which the workflow is attached
      *
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker, Project $project) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker, Project $project)
+    {
 
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
         $field = $xmlMapping[(string)$xml_field_attributes['REF']];
 
         $transitions = array();
-        foreach($xml->transitions->transition as $t) {
+        foreach ($xml->transitions->transition as $t) {
             $tf = $this->transition_factory;
             $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping, $project);
         }
@@ -375,24 +399,26 @@ class WorkflowFactory {
      * Creates new workflow in the database
      *
      * @param Workflow $workflow The workflow to save
-     * @param Tracker          $tracker  The tracker
+     * @param Tracker $tracker The tracker
      *
      * @return void
      */
-    public function saveObject($workflow, $tracker) {
+    public function saveObject($workflow, $tracker)
+    {
         $workflow->setTracker($tracker);
         $dao = $this->getDao();
 
         $workflow_id = $dao->save($workflow->tracker_id, $workflow->getField()->getId(), $workflow->is_used);
 
         //Save transitions
-        foreach($workflow->getTransitions() as $transition) {
+        foreach ($workflow->getTransitions() as $transition) {
             $tf = $this->transition_factory;
             $tf->saveObject($workflow_id, $transition);
         }
     }
 
-    public function getGlobalRulesManager(Tracker $tracker) {
+    public function getGlobalRulesManager(Tracker $tracker)
+    {
         return new Tracker_RulesManager($tracker, $this->formelement_factory);
     }
 
@@ -401,7 +427,8 @@ class WorkflowFactory {
      *
      * @return Worflow_Dao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Workflow_Dao();
     }
 
@@ -410,8 +437,10 @@ class WorkflowFactory {
      *
      * @return Worflow_TransitionDao
      */
-    protected function getTransitionDao() {
+    protected function getTransitionDao()
+    {
         return new Workflow_TransitionDao();
     }
 }
+
 ?>
