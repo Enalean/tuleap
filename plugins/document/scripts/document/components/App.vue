@@ -44,7 +44,17 @@ export default {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
     },
     created() {
-        this.$store.commit("initDocumentTree", [
+        const base_title = document.title;
+        this.$store.watch(
+            state => state.current_folder_title,
+            title => {
+                if (title) {
+                    document.title = title + " - " + base_title;
+                }
+            }
+        );
+
+        this.$store.commit("initApp", [
             this.projectId,
             this.projectName,
             this.userIsAdmin,
