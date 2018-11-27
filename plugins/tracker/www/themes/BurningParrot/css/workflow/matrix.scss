@@ -1,0 +1,120 @@
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tracker-workflow-transition-table {
+    position: relative;
+    width: auto;
+
+    > thead > tr > th {
+        position: sticky;
+        z-index: 5;
+        top: 45px;
+        height: 50px;
+        padding-bottom: 0;
+        text-align: center;
+        vertical-align: top;
+        white-space: nowrap;
+    }
+}
+
+.tracker-workflow-transition-tbody {
+    position: relative;
+
+    > tr {
+        > .tracker-workflow-transition-row-label {
+            &,
+            &:first-child {
+                position: sticky;
+                z-index: 4;
+                top: 10px;
+                left: 250px;
+                min-width: 100px;
+                padding: 10px;
+                border-right: 2px solid rgba($tlp-theme-color, .2);
+                color: $tlp-theme-color;
+                font-weight: 600;
+                text-align: right;
+                white-space: nowrap;
+            }
+        }
+
+        > .tracker-workflow-transition-row-content {
+            &,
+            &-active {
+                position: relative;
+                width: 100px;
+                min-width: 100px;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 16px;
+                text-align: center;
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.tracker-workflow-transition-row-content {
+    &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 4px;
+        height: 4px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: $tlp-ui-border-dark;
+    }
+
+    &-active::before {
+        content: '⤴';
+        display: block;
+        position: relative;
+        top: auto;
+        left: auto;
+        width: auto;
+        height: auto;
+        transform: none;
+        background: none;
+        color: $tlp-theme-color;
+        text-align: center;
+    }
+
+    &-forbidden::before {
+        content: '\f05e';
+        display: block;
+        color: $tlp-ui-border-dark;
+        font-family: FontAwesome;
+        text-align: center;
+        cursor: not-allowed;
+    }
+}
+
+.tracker-workflow-transition-column-label {
+    display: block;
+}
+
+.tracker-workflow-advanced-transition-button {
+    margin: $tlp-half-spacing 0 0;
+}
+
+.sidebar-collapsed .tracker-workflow-transition-tbody > tr > .tracker-workflow-transition-row-label:first-child {
+    left: 50px;
+}

@@ -5,10 +5,16 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid "(New artifact)"
+msgstr ""
+
 msgid "An error occurred"
 msgstr ""
 
 msgid "Change or remove"
+msgstr ""
+
+msgid "Configure"
 msgstr ""
 
 msgid "Enable transition rules"
@@ -21,9 +27,6 @@ msgid ""
 "In order to configure transitions rules on this tracker, your first need to "
 "choose a list field. Once chosen, you will be able to configure transition "
 "using the configuration matrix."
-msgstr ""
-
-msgid "Page under construction"
 msgstr ""
 
 msgid "Save and start configuration"
