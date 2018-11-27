@@ -36,6 +36,7 @@ AutoReqProv: no
 
 # Php and web related stuff
 Requires: php56-php, php56-php-mysql, php56-php-xml, php56-php-mbstring, php56-php-gd, php56-php-soap, php56-php-pear, php56-php-intl, php56-php-process, php56-php-opcache, php56-php-fpm, php56-php-pecl-redis, rh-mysql57-mysql
+Requires: php72-php, php72-php-mysql, php72-php-xml, php72-php-json, php72-php-mbstring, php72-php-gd, php72-php-soap, php72-php-pear, php72-php-intl, php72-php-process, php72-php-opcache, php72-php-fpm, php72-php-pecl-redis, php72-php-sodium, rh-mysql57-mysql
 
 Requires: highlight, forgeupgrade >= 1.6, ckeditor, nginx, logrotate
 
@@ -99,7 +100,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php56-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, php56-php-pecl-mailparse, php72-php-pecl-mailparse
 Requires: tuleap-core-mailman
 %description plugin-forumml
 ForumML brings to Tuleap a very nice mail archive viewer and the possibility
@@ -142,7 +143,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: php56-php-ldap, perl-LDAP
+Requires: php56-php-ldap, php72-php-ldap, perl-LDAP
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -190,7 +191,7 @@ Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php56-php-pecl-mailparse
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, libxslt, php56-php-pecl-mailparse, php72-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -712,6 +713,7 @@ if [ $1 -eq 1 ]; then
         tuleap.service \
         tuleap-php-fpm.service &>/dev/null || :
     /usr/bin/systemctl mask php56-php-fpm || :
+    /usr/bin/systemctl mask php72-php-fpm || :
 fi
 
 %post core-subversion
@@ -749,6 +751,7 @@ fi
 
 %postun
 /usr/bin/systemctl unmask php56-php-fpm || :
+/usr/bin/systemctl unmask php72-php-fpm || :
 /usr/bin/systemctl daemon-reload &>/dev/null || :
 
 %postun core-subversion
