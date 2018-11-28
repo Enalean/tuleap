@@ -29,7 +29,9 @@ const state = {
     folder_content: [],
     date_time_format: null,
     current_folder_title: null,
-    is_loading_folder_title: false
+    is_loading_folder_title: false,
+    current_folder_parents: [],
+    is_loading_breadcrumb: false
 };
 
 export default state;

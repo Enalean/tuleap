@@ -19,7 +19,7 @@
 
 import { get, recursiveGet } from "tlp";
 
-export { getProject, getFolderContent, getItem };
+export { getProject, getFolderContent, getItem, getParents };
 
 async function getProject(project_id) {
     const response = await get("/api/projects/" + project_id);
@@ -35,6 +35,15 @@ async function getItem(id) {
 
 function getFolderContent(folder_id) {
     return recursiveGet("/api/docman_items/" + folder_id + "/docman_items", {
+        params: {
+            limit: 50,
+            offset: 0
+        }
+    });
+}
+
+function getParents(folder_id) {
+    return recursiveGet("/api/docman_items/" + folder_id + "/parents", {
         params: {
             limit: 50,
             offset: 0
