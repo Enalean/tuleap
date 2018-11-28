@@ -1,0 +1,3 @@
+Defaults:gitolite !requiretty
+Defaults:gitolite !env_reset
+gitolite ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/tuleap/plugins/gitlfs/bin/git-lfs-authenticate.php *

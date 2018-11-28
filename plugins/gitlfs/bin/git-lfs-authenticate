@@ -1,0 +1,3 @@
+#!/bin/bash
+
+exec sudo -u codendiadm -E /usr/share/tuleap/plugins/gitlfs/bin/git-lfs-authenticate.php $@
