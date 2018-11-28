@@ -61,6 +61,17 @@ export const loadFolderContent = async (context, folder_id) => {
 };
 
 export const loadBreadCrumbs = async (context, folder_id) => {
+    const index_of_folder_in_parents = context.state.current_folder_parents.findIndex(
+        parent => parent.id === folder_id
+    );
+    if (index_of_folder_in_parents !== -1) {
+        context.commit(
+            "saveParents",
+            context.state.current_folder_parents.slice(0, index_of_folder_in_parents + 1)
+        );
+        return;
+    }
+
     try {
         context.commit("beginLoadingBreadcrumb");
 

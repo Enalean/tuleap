@@ -38,6 +38,7 @@ export default {
     mounted() {
         this.$store.commit("setCurrentFolderTitle", this.$gettext("Documents"));
         this.$store.dispatch("loadRootDocumentId");
+        this.$store.commit("resetParents");
     }
 };
 </script>
