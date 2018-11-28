@@ -161,4 +161,97 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
 
         $this->assertEquals($expected_representation, $representation);
     }
+
+    public function testItReturnsRepresentationOfParentsItems()
+    {
+        $dar_folder_1    = [
+            'item_id'     => 2,
+            'title'       => 'folder 1',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+            'parent_id'   => 0
+        ];
+        $dar_folder_2    = [
+            'item_id'     => 3,
+            'title'       => 'folder 2',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'parent_id'   => 1
+        ];
+        $dar_item        = [
+            'item_id'     => 4,
+            'title'       => 'item',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'parent_id'   => 2
+        ];
+
+        $docman_folder1     = new \Docman_Folder($dar_folder_1);
+        $docman_folder2     = new \Docman_Folder($dar_folder_2);
+        $item               = new \Docman_File($dar_item);
+
+        $user                = Mockery::mock(PFUser::class);
+        $user_representation = Mockery::mock(MinimalUserRepresentation::class);
+
+        $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
+
+        $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$item->getParentId()])->andReturn($docman_folder2);
+        $this->item_factory->shouldReceive('getItemFromDb')->withArgs([$docman_folder2->getParentId()])->andReturn($docman_folder1);
+
+        $project         = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(101);
+        $representation1 = new ItemRepresentation(
+            $docman_folder1,
+            $user_representation,
+            ItemRepresentation::TYPE_FOLDER
+        );
+        $representation2 = new ItemRepresentation(
+            $docman_folder2,
+            $user_representation,
+            ItemRepresentation::TYPE_FOLDER
+        );
+
+        $this->item_representation_builder->shouldReceive('buildItemRepresentation')
+                                          ->withArgs([$docman_folder1, ItemRepresentation::TYPE_FOLDER])
+                                          ->andReturns($representation1);
+        $this->item_representation_builder->shouldReceive('buildItemRepresentation')
+                                          ->withArgs([$docman_folder2, ItemRepresentation::TYPE_FOLDER])
+                                          ->andReturns($representation2);
+
+        $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
+
+        $expected_representation = new PaginatedDocmanItemCollection([$representation1, $representation2], 2);
+
+        $this->assertEquals($expected_representation, $representation);
+    }
+
+    public function testItReturnsAnEmptyCollectionForRootFolderParents()
+    {
+        $user = Mockery::mock(PFUser::class);
+
+        $dar_item = [
+            'item_id'     => 4,
+            'title'       => 'item',
+            'user_id'     => 101,
+            'update_date' => 1542099693,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'parent_id'   => 0
+        ];
+        $item     = new \Docman_File($dar_item);
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(101);
+
+        $this->permission_manager->shouldReceive('userCanRead')->andReturns(true);
+
+
+        $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
+
+        $expected_representation = new PaginatedDocmanItemCollection([], 0);
+
+        $this->assertEquals($expected_representation, $representation);
+    }
 }
