@@ -51,7 +51,7 @@ autoload-with-userid:
         done;
 
 autoload-docker: ## Generate autoload files
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
 
 autoload-dev:
 	@tools/utils/autoload.sh
@@ -73,7 +73,7 @@ composer-production-autoloaders: ## Dump autoloaders for production
 ## RNG generation
 
 rnc2rng-docker: clean-rng ## Compile rnc file into rng
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --rnc2rng
+	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --rnc2rng
 
 rnc2rng: src/common/xml/resources/project/project.rng \
 	 src/common/xml/resources/users.rng  \
@@ -146,10 +146,10 @@ tests_cypress_dev: ## Start cypress container to launch tests manually
 	@tests/e2e/full/wrap_for_dev_context.sh
 
 tests_rest_setup_56: ## Start REST tests (PHP FPM 5.6) container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-mysql57 bash
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-mysql57 bash
 
 tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 bash
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 bash
 
 phpunit-ci-run:
 	$(PHP) src/vendor/bin/phpunit \
