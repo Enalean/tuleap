@@ -3,25 +3,34 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
+
+msgid "Chart not found."
+msgstr "Graphique non trouv√©."
 
 msgid "No data to display."
-msgstr "Aucune donnÈe ‡ afficher."
+msgstr "Aucune donn√©e √† afficher."
 
 msgid "No start date defined."
-msgstr "Aucune date de dÈbut dÈfinie."
+msgstr "Aucune date de d√©but d√©finie."
 
 msgid "Please choose a smaller period, or increase the scale."
-msgstr "Veuillez choisir une pÈriode plus courte, ou augmenter l'Èchelle."
+msgstr "Veuillez choisir une p√©riode plus courte, ou augmenter l'√©chelle."
+
+msgid "Renderer not found."
+msgstr "Rendu non trouv√©."
+
+msgid "Report not found."
+msgstr "Rapport non trouv√©."
 
 msgid "Start date must be before the end date."
-msgstr "La date de dÈbut doit Ítre avant la date de fin."
+msgstr "La date de d√©but doit √™tre avant la date de fin."
 
 msgid "Unable to render the chart"
 msgstr "Impossible de construire le graphique"

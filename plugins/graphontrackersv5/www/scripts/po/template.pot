@@ -1,0 +1,3 @@
+#, javascript-format
+msgid "An error occurred while loading the chart: %s"
+msgstr ""

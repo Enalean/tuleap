@@ -169,28 +169,18 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
 
         }
 
-        $chart_array = array();
         $html .= '<div class="tracker_report_renderer_graphontrackers_charts">';
 
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $html .= '<div class="widget_report_graph">';
             $html .= $chart->fetchOnReport($this, $current_user, $readonly, $store_in_session);
             $html .= '</div>';
-            $chart_array[$chart->id] = $chart->fetchAsArray();
         }
 
         $html .= '</div>';
 
         if (!$readonly) {
             $html .='</form>';
-        }
-
-        foreach ($chart_array as $graph_id => $data) {
-            $snippet = 'var tuleap = tuleap || {};
-                tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
-                tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
-                tuleap.graphontrackersv5.graphs['. $graph_id .'] = '.json_encode($data).';';
-            $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
         }
 
         return $html;
