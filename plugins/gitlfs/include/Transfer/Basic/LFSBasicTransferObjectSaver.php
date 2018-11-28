@@ -26,6 +26,8 @@ use League\Flysystem\FilesystemInterface;
 use Tuleap\GitLFS\Object\LFSObject;
 use Tuleap\GitLFS\Object\LFSObjectPathAllocator;
 use Tuleap\GitLFS\Object\LFSObjectRetriever;
+use Tuleap\GitLFS\StreamFilter\StreamFilter;
+use Tuleap\GitLFS\StreamFilter\StreamFilterWrapper;
 
 class LFSBasicTransferObjectSaver
 {
@@ -67,12 +69,16 @@ class LFSBasicTransferObjectSaver
             throw new \InvalidArgumentException('$input_resource must be a resource, got ' . gettype($input_resource));
         }
 
+        $sha256_processor_filter = new SHA256ComputeOnReadFilter();
+        $sha256_filter_handle    = StreamFilter::prependFilter($input_resource, $sha256_processor_filter);
+
         $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($lfs_object);
         try {
             $this->writeTemporaryObjectFile($temporary_path, $input_resource);
-            $this->checkTemporaryObjectFileMatchesExpectations($temporary_path, $lfs_object);
+            $this->checkTemporaryObjectFileMatchesExpectations($temporary_path, $lfs_object, $sha256_processor_filter);
             $this->markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, $lfs_object);
         } finally {
+            StreamFilter::removeFilter($sha256_filter_handle);
             $this->tryToCleanUpFile($temporary_path);
         }
     }
@@ -94,21 +100,17 @@ class LFSBasicTransferObjectSaver
         }
     }
 
-    private function checkTemporaryObjectFileMatchesExpectations($path, LFSObject $lfs_object)
-    {
+    private function checkTemporaryObjectFileMatchesExpectations(
+        $path,
+        LFSObject $lfs_object,
+        SHA256ComputeOnReadFilter $sha256_processor
+    ) {
         $temporary_object_file_size = $this->filesystem->getSize($path);
         if ($lfs_object->getSize() !== $temporary_object_file_size) {
             throw new LFSBasicTransferObjectSizeException($lfs_object->getSize(), $temporary_object_file_size);
         }
 
-        $hash_context          = \hash_init('sha256');
-        $temporary_file_stream = $this->filesystem->readStream($path);
-        if (! \is_resource($temporary_file_stream)) {
-            throw new \RuntimeException('Could not open stream for the saved LFS object at ' . $path);
-        }
-        \hash_update_stream($hash_context, $temporary_file_stream);
-        $oid_temporary_upload = \hash_final($hash_context);
-        fclose($temporary_file_stream);
+        $oid_temporary_upload = $sha256_processor->getHashValue();
         if ($oid_temporary_upload !== $lfs_object->getOID()->getValue()) {
             throw new LFSBasicTransferObjectIntegrityException($lfs_object->getOID()->getValue(), $oid_temporary_upload);
         }
