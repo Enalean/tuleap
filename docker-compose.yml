@@ -5,8 +5,8 @@ services:
     build:
       context: tools/docker/reverse-proxy
     volumes:
-    - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-    - reverse-proxy-cert:/etc/pki/tls
+      - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro,cached
+      - reverse-proxy-cert:/etc/pki/tls
     depends_on:
     - web
     - realtime
@@ -14,10 +14,10 @@ services:
   web:
     image: enalean/tuleap-aio-dev:c6-php56-nginx
     volumes:
-    - .:/usr/share/tuleap
-    - ../tuleap-plugins:/usr/share/tuleap-plugins
-    - tuleap-data:/data
-    - realtime-cert:/etc/pki/ca-trust/source/anchors
+      - .:/usr/share/tuleap:cached
+      - ../tuleap-plugins:/usr/share/tuleap-plugins:cached
+      - tuleap-data:/data
+      - realtime-cert:/etc/pki/ca-trust/source/anchors
     env_file:
     - .env
     depends_on:
@@ -30,7 +30,7 @@ services:
       context: tools/docker/realtime
     command: /tuleap/tools/docker/realtime/run.sh
     volumes:
-      - .:/tuleap:ro
+      - .:/tuleap:ro,cached
       - realtime-conf:/etc/tuleap-realtime
       - realtime-cert:/published-certificate
     env_file:
@@ -44,7 +44,7 @@ services:
     env_file:
     - .env
     volumes:
-    - ldap-data:/data
+      - ldap-data:/data
 
   gerrit:
     container_name: tuleap-gerrit
@@ -67,7 +67,7 @@ services:
     env_file:
     - .env
     volumes:
-    - db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql
 
   rabbitmq:
     image: rabbitmq:3.6

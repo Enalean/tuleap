@@ -4,28 +4,9 @@ services:
   web:
     environment:
       - DO_NOT_LAUNCH_FORGEUPGRADE=true
-    volumes:
-      - .:/usr/share/tuleap:cached
-      - ../tuleap-plugins:/usr/share/tuleap-plugins:cached
-      - tuleap-data:/data:delegated
-      - realtime-cert:/etc/pki/ca-trust/source/anchors:cached
     ports:
      - "2222:22"
   reverse-proxy:
     ports:
      - "80:80"
      - "443:443"
-    volumes:
-      - ./tools/docker/reverse-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-      - reverse-proxy-cert:/etc/pki/tls:cached
-  realtime:
-    volumes:
-      - .:/tuleap:ro
-      - realtime-conf:/etc/tuleap-realtime:cached
-      - realtime-cert:/published-certificate:cached
-  ldap:
-    volumes:
-      - ldap-data:/data:delegated
-  db:
-    volumes:
-      - db-data:/var/lib/mysql:delegated
