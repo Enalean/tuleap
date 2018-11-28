@@ -199,11 +199,16 @@ class GraphOnTrackersV5_ChartFactory {
         );
         $chart->createDb($id);
     }
-    
+
     /**
      * retrieve a specific chart by its id
+     * @param GraphOnTrackersV5_Renderer $renderer | null
+     * @param string                     $id
+     * @param bool                       $store_in_session
+     * @return GraphOnTrackersV5_Chart | null
      */
-    public function getChart($renderer, $id, $store_in_session = true) {
+    public function getChart($renderer, $id, $store_in_session = true)
+    {
         $c = null;
         $chart_data = null;
         if ($renderer != null && $store_in_session) {
@@ -234,8 +239,10 @@ class GraphOnTrackersV5_ChartFactory {
     
     /**
      * retrieve a specific chart by its id from db only
+     * @return GraphOnTrackersV5_Chart | null
      */
-    public function getChartFromDb($renderer, $id) {
+    public function getChartFromDb($renderer, $id)
+    {
         //not add in session
         $c = null;
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
