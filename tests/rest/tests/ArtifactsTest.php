@@ -180,46 +180,46 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
         $this->assertEquals(200, $response->getStatusCode());
 
-        $expected_burndown_chart = array(
+        $start_date = new DateTime();
+        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setDate(2016, 11, 17);
+        $start_date->setTime(23, 59, 59);
+
+        $expected_burndown_chart_with_date = [
+            [
+                "date"             => $start_date->format(DATE_ATOM),
+                "remaining_effort" => 55
+            ],
+            [
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 43
+            ],
+            [
+                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                "remaining_effort" => 48
+            ],
+            [
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            ],
+            [
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            ],
+            [
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 37
+            ]
+        ];
+
+        $expected_burndown_chart = [
             55,
             43,
             48,
             37,
             37,
             37
-        );
-
-        $start_date = new DateTime();
-        $start_date->setTimezone(new DateTimeZone('GMT+1'));
-        $start_date->setDate(2016, 11, 17);
-        $start_date->setTime(0, 0, 0);
-
-        $expected_burndown_chart_with_date = array(
-            array(
-                "date"             => $start_date->format(DATE_ATOM),
-                "remaining_effort" => 55
-            ),
-            array(
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 43
-            ),
-            array(
-                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
-                "remaining_effort" => 48
-            ),
-            array(
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
-            ),
-            array(
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
-            ),
-            array(
-                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
-                "remaining_effort" => 37
-            )
-        );
+        ];
 
         $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
         $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart_with_date);
@@ -238,16 +238,39 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
         $this->assertEquals(200, $response->getStatusCode());
 
+        $start_date = new DateTime();
+        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setDate(2016, 11, 17);
+        $start_date->setTime(23, 59, 59);
+
         $expected_burndown_chart = array(
-            32,
-            20,
-            25,
-            20,
-            20,
-            20,
+            array(
+                "date"             => $start_date->format(DATE_ATOM),
+                "remaining_effort" => 32
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                "remaining_effort" => 25
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            )
         );
 
-        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
     }
 
     public function testGETBurndownForAnotherChildrenArtifact()
@@ -263,16 +286,39 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertNull($response->getHeader('Location'), "There is no redirect with a simple GET");
         $this->assertEquals(200, $response->getStatusCode());
 
+        $start_date = new DateTime();
+        $start_date->setTimezone(new DateTimeZone('GMT+1'));
+        $start_date->setDate(2016, 11, 17);
+        $start_date->setTime(23, 59, 59);
+
         $expected_burndown_chart = array(
-            25,
-            20,
-            40,
-            20,
-            20,
-            20,
+            array(
+                "date"             => $start_date->format(DATE_ATOM),
+                "remaining_effort" => 25
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
+                "remaining_effort" => 40
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            ),
+            array(
+                "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
+                "remaining_effort" => 20
+            )
         );
 
-        $this->assertEquals($burndown['values'][6]['value']['points'], $expected_burndown_chart);
+        $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
     }
 
     /**

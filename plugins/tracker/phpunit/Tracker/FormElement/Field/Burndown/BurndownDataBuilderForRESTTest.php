@@ -24,12 +24,13 @@ use Logger;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElement_Field_ComputedDao;
 use Tuleap\REST\JsonCast;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
-class BurndownDataBuilderTest extends TestCase
+class BurndownDataBuilderForRESTTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     /**
@@ -37,10 +38,6 @@ class BurndownDataBuilderTest extends TestCase
      */
     private $original_timezone;
 
-    /**
-     * @var TimezoneRetriever
-     */
-    private $timezone_retriever;
     /**
      * @var \PFUser
      */
@@ -51,15 +48,28 @@ class BurndownDataBuilderTest extends TestCase
     private $artifact;
 
     /**
-     * @var BurndownDataBuilder
+     * @var BurndownDataBuilderForREST
      */
-    private $burndown_data_builder;
+    private $burndown_data_builder_for_d3;
+    /**
+     * @var Tracker_FormElement_Field_ComputedDao
+     */
+    private $computed_cache;
+    /**
+     * @var BurndownCommonDataBuilder
+     */
+    private $common_data_builder;
+    /**
+     * @var int
+     */
+    private $filed_id;
+
 
     protected function setUp()
     {
         parent::setUp();
 
-        $timezone_retriever      = new TimezoneRetriever();
+        $timezone_retriever = new TimezoneRetriever();
         $this->original_timezone = $timezone_retriever::getServerTimezone();
 
         $logger = Mockery::mock(Logger::class);
@@ -72,22 +82,29 @@ class BurndownDataBuilderTest extends TestCase
         $field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($field);
         $field->shouldReceive('getCachedValue')->andReturn(1);
+        $this->filed_id = 10;
+        $field->shouldReceive('getId')->andReturn($this->filed_id);
 
         $cache_checker = Mockery::mock(BurndownCacheGenerationChecker::class);
         $cache_checker->shouldReceive('isBurndownUnderCalculationBasedOnServerTimezone')->andReturn(false);
 
-        $this->burndown_data_builder = new BurndownDataBuilder(
+        $this->computed_cache = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
+        $this->common_data_builder = new BurndownCommonDataBuilder(
             $logger,
             $field_retriever,
             Mockery::mock(ChartConfigurationValueRetriever::class),
-            $cache_checker,
-            new BurndownRemainingEffortAdder($field_retriever)
+            $cache_checker
+        );
+        $this->burndown_data_builder_for_d3 = new BurndownDataBuilderForREST(
+            $logger,
+            new BurndownRemainingEffortAdderForREST($field_retriever, $this->computed_cache),
+            $this->common_data_builder
         );
 
         $this->artifact = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->artifact->shouldReceive('getTracker')->andReturn(Mockery::mock(\Tracker::class));
-        $this->user     = Mockery::mock(\PFUser::class);
+        $this->user = Mockery::mock(\PFUser::class);
         $this->user->shouldReceive("toRow");
         $this->user->shouldReceive("isLoggedIn")->andReturn(true);
 
@@ -109,8 +126,11 @@ class BurndownDataBuilderTest extends TestCase
         $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
 
         $start_date = strtotime('2018-11-01');
-        $duration   = 5;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $duration = 5;
+
+        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $start_date, $duration);
 
         $shifted_start_date = 1541026800;
         $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
@@ -121,9 +141,11 @@ class BurndownDataBuilderTest extends TestCase
         $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
 
         $start_date = strtotime('2018-11-01');
-        $duration   = 5;
+        $duration = 5;
 
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns([]);
+
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $start_date, $duration);
 
         $shifted_start_date = 1541026800;
         $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
@@ -137,8 +159,30 @@ class BurndownDataBuilderTest extends TestCase
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');
 
-        $duration   = 2;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $duration = 2;
+
+        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+            [
+                [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $start_date,
+                    "value"       => 10
+                ], [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $second_day,
+                    "value"       => 10
+                ], [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $third_day,
+                    "value"       => 10
+                ]
+            ]
+        );
+
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $start_date, $duration);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));
@@ -153,8 +197,29 @@ class BurndownDataBuilderTest extends TestCase
         $second_day = strtotime('2018-11-02');
         $third_day = strtotime('2018-11-03');
 
-        $duration   = 2;
-        $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
+        $this->computed_cache->shouldReceive("searchCachedDays")->andReturns(
+            [
+                [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $start_date,
+                    "value"       => 10
+                ], [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $second_day,
+                    "value"       => 10
+                ], [
+                    "artifact_id" => $this->artifact->getId(),
+                    "field_id"    => $this->filed_id,
+                    "timestamp"   => $third_day,
+                    "value"       => 10
+                ]
+            ]
+        );
+
+        $duration = 2;
+        $user_burndown_data = $this->burndown_data_builder_for_d3->build($this->artifact, $this->user, $start_date, $duration);
 
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[0]->date, JsonCast::toDate($start_date));
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[1]->date, JsonCast::toDate($second_day));

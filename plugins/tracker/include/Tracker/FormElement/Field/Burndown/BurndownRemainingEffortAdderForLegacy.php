@@ -28,8 +28,11 @@ use Tracker_Chart_Data_Burndown;
 use Tracker_UserWithReadAllPermission;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 
-class BurndownRemainingEffortAdder
+class BurndownRemainingEffortAdderForLegacy
 {
+    /**
+     * @var ChartConfigurationFieldRetriever
+     */
     private $field_retriever;
 
     public function __construct(
@@ -38,13 +41,14 @@ class BurndownRemainingEffortAdder
         $this->field_retriever = $field_retriever;
     }
 
-    public function addRemainingEffortData(
+    public function addRemainingEffortDataForLegacy(
         Tracker_Chart_Data_Burndown $burndown_data,
         TimePeriodWithoutWeekEnd $time_period,
         Tracker_Artifact $artifact,
         PFUser $user
     ) {
         $field = $this->field_retriever->getBurndownRemainingEffortField($artifact, $user);
+
         if (! $field) {
             return;
         }
@@ -57,12 +61,9 @@ class BurndownRemainingEffortAdder
         }
 
         $offset_days = 0;
+
         while ($offset_days <= $time_period->getDuration()) {
             if ($date >= $now) {
-                $remaining_effort = $field->getComputedValue($user, $artifact, null);
-                $burndown_data->addEffortAt($offset_days, $remaining_effort);
-                $burndown_data->addEffortAtDateTime($this->getMidnightDate($date), $remaining_effort);
-
                 break;
             }
 
@@ -71,6 +72,7 @@ class BurndownRemainingEffortAdder
                 $artifact,
                 $date->getTimestamp()
             );
+
             if ($remaining_effort !== false) {
                 $date_midnight = $date;
                 $date_midnight->setTime(0, 0, 0);

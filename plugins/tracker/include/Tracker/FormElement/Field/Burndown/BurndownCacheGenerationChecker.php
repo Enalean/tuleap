@@ -63,7 +63,7 @@ class BurndownCacheGenerationChecker
      */
     private $event_manager;
     /**
-     * @var BurndownRemainingEffortAdder
+     * @var BurndownRemainingEffortAdderForREST
      */
     private $remaining_effort_adder;
 
@@ -75,7 +75,7 @@ class BurndownCacheGenerationChecker
         ChartConfigurationValueChecker $value_checker,
         Tracker_FormElement_Field_ComputedDao $computed_dao,
         ChartCachedDaysComparator $cached_days_comparator,
-        BurndownRemainingEffortAdder $remaining_effort_adder
+        BurndownRemainingEffortAdderForREST $remaining_effort_adder
     ) {
         $this->logger                 = $logger;
         $this->cache_generator        = $cache_generator;
@@ -115,7 +115,7 @@ class BurndownCacheGenerationChecker
         $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
         $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
 
-        $this->remaining_effort_adder->addRemainingEffortData($server_burndown_data, $time_period, $artifact, $user);
+        $this->remaining_effort_adder->addRemainingEffortDataForREST($server_burndown_data, $artifact, $user);
         if ($this->isCacheCompleteForBurndown($time_period, $artifact, $user) === false
             && $this->isCacheBurndownAlreadyAsked($artifact) === false
         ) {

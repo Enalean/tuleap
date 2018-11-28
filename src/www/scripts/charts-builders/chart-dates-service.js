@@ -29,7 +29,7 @@ function getDaysToDisplay({ opening_days, duration, points_with_date, start_date
 
     do {
         if (opening_days.includes(moment_iterator.isoWeekday())) {
-            dates.push(moment_iterator.format("YYYY-MM-DD"));
+            dates.push(moment_iterator.utc().format("YYYY-MM-DD"));
             i++;
         }
 
@@ -71,7 +71,7 @@ function getDifference(start_date, end_date) {
 function getFormattedDates(dataset) {
     dataset.forEach(data => {
         data.date = moment(data.date, moment.ISO_8601)
-            .endOf("day")
+            .utc()
             .format("YYYY-MM-DD");
     });
 

@@ -45,7 +45,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
      */
     private $cache_generator;
     /**
-     * @var BurndownRemainingEffortAdder
+     * @var BurndownRemainingEffortAdderForREST
      */
     private $remaining_effort_adder;
     /**
@@ -86,7 +86,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $this->value_checker          = Mockery::mock(ChartConfigurationValueChecker::class);
         $this->computed_dao           = Mockery::mock(Tracker_FormElement_Field_ComputedDao::class);
         $this->cached_days_comparator = Mockery::mock(ChartCachedDaysComparator::class);
-        $this->remaining_effort_adder = Mockery::mock(BurndownRemainingEffortAdder::class);
+        $this->remaining_effort_adder = Mockery::mock(BurndownRemainingEffortAdderForREST::class);
         $this->cache_checker          = new BurndownCacheGenerationChecker(
             $logger,
             $this->cache_generator,
@@ -105,7 +105,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
     public function testNoNeedToCalculateCacheWhenUserCantReadRemainingEffortField()
     {
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortData');
+        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
                             ->andReturn(false);
@@ -129,7 +129,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
     public function testNoNeedToCalculateCacheWhenNoStartDateIsDefined()
     {
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortData');
+        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $this->value_checker->shouldReceive('doesUserCanReadRemainingEffort')->withArgs([$this->artifact, $this->user])
                             ->andReturn(true);
@@ -163,7 +163,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
 
         $this->computed_dao->shouldReceive('getCachedDays');
         $this->cached_days_comparator->shouldReceive('isNumberOfCachedDaysExpected')->andReturn(false);
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortData');
+        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
 
         $remaining_effort_field = Mockery::mock(\Tracker_FormElement_Field_Computed::class);
         $remaining_effort_field->shouldReceive('getId')->andReturn(10);
@@ -201,7 +201,7 @@ class BurndownCacheGenerationCheckerTest extends TestCase
         $remaining_effort_field->shouldReceive('getId')->andReturn(10);
         $this->field_retriever->shouldReceive('getBurndownRemainingEffortField')->andReturn($remaining_effort_field);
 
-        $this->remaining_effort_adder->shouldReceive('addRemainingEffortData');
+        $this->remaining_effort_adder->shouldReceive('addRemainingEffortDataForREST');
         $this->event_manager->shouldReceive('areThereMultipleEventsQueuedMatchingFirstParameter')->andReturn(true);
         $this->cache_generator->shouldReceive('forceBurndownCacheGeneration')->never();
 
