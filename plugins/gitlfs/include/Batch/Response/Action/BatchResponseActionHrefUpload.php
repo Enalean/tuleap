@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Batch\Response\Action;
 
-use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
+use Tuleap\GitLFS\Object\LFSObject;
 
 final class BatchResponseActionHrefUpload implements BatchResponseActionHref
 {
@@ -29,11 +29,11 @@ final class BatchResponseActionHrefUpload implements BatchResponseActionHref
      */
     private $server_url;
     /**
-     * @var BatchRequestObject
+     * @var LFSObject
      */
     private $object;
 
-    public function __construct($server_url, BatchRequestObject $object)
+    public function __construct($server_url, LFSObject $object)
     {
         $this->server_url = $server_url;
         $this->object     = $object;
@@ -44,6 +44,6 @@ final class BatchResponseActionHrefUpload implements BatchResponseActionHref
      */
     public function getHref()
     {
-        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID());
+        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()->getValue());
     }
 }

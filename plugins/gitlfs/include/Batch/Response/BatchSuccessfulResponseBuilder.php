@@ -28,8 +28,8 @@ use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeVerify;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefVerify;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForUploadOperation;
+use Tuleap\GitLFS\Object\LFSObject;
 use Tuleap\GitLFS\Transfer\Transfer;
-use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHref;
@@ -68,7 +68,7 @@ class BatchSuccessfulResponseBuilder
         $server_url,
         \GitRepository $repository,
         BatchRequestOperation $operation,
-        BatchRequestObject ...$request_objects
+        LFSObject ...$request_objects
     ) {
         if (! $operation->isUpload()) {
             throw new UnknownOperationException('The requested operation is not known');
@@ -93,11 +93,10 @@ class BatchSuccessfulResponseBuilder
                 new BatchResponseActionHrefVerify($server_url, $request_object)
             );
             $response_objects[]    = new BatchResponseObjectWithActions(
-                $request_object->getOID(),
-                $request_object->getSize(),
+                $request_object,
                 new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
             );
-            $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID());
+            $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID()->getValue());
         }
 
         return new BatchSuccessfulResponse(Transfer::buildBasicTransfer(), ...$response_objects);
@@ -106,7 +105,7 @@ class BatchSuccessfulResponseBuilder
     private function buildActionContent(
         \DateTimeImmutable $current_time,
         \GitRepository $repository,
-        BatchRequestObject $request_object,
+        LFSObject $request_object,
         $expiration_delay,
         ActionAuthorizationType $action_type,
         BatchResponseActionHref $action_href

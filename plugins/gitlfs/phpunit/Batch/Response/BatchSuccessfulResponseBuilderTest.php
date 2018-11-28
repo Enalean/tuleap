@@ -25,8 +25,9 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
-use Tuleap\GitLFS\Batch\Request\BatchRequestObject;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
+use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectID;
 
 class BatchSuccessfulResponseBuilderTest extends TestCase
 {
@@ -53,8 +54,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $operation    = \Mockery::mock(BatchRequestOperation::class);
         $operation->shouldReceive('isUpload')->andReturns(true);
 
-        $request_object = \Mockery::mock(BatchRequestObject::class);
-        $request_object->shouldReceive('getOID')->andReturns('oid');
+        $request_object = \Mockery::mock(LFSObject::class);
+        $request_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
         $request_object->shouldReceive('getSize')->andReturns(123456);
 
         $builder        = new BatchSuccessfulResponseBuilder($this->token_creator, $this->token_formatter, $this->logger);

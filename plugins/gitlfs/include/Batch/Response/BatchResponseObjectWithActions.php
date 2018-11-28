@@ -21,40 +21,30 @@
 namespace Tuleap\GitLFS\Batch\Response;
 
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
+use Tuleap\GitLFS\Object\LFSObject;
 
 class BatchResponseObjectWithActions implements BatchResponseObject
 {
     /**
-     * @var string
+     * @var LFSObject
      */
-    private $oid;
-    /**
-     * @var int
-     */
-    private $size;
+    private $object;
     /**
      * @var BatchResponseActions[]
      */
     private $actions;
 
-    public function __construct($oid, $size, BatchResponseActions $actions)
+    public function __construct(LFSObject $object, BatchResponseActions $actions)
     {
-        if (! \is_string($oid)) {
-            throw new \TypeError('Expected $oid to be a string, got ' . gettype($oid));
-        }
-        $this->oid = $oid;
-        if (! \is_int($size)) {
-            throw new \TypeError('Expected $size to be an int, got ' . gettype($size));
-        }
-        $this->size    = $size;
+        $this->object  = $object;
         $this->actions = $actions;
     }
 
     public function jsonSerialize()
     {
         return [
-            'oid'           => $this->oid,
-            'size'          => $this->size,
+            'oid'           => $this->object->getOID()->getValue(),
+            'size'          => $this->object->getSize(),
             'authenticated' => true,
             'actions'       => $this->actions
         ];

@@ -21,6 +21,8 @@
 namespace Tuleap\GitLFS\Batch\Request;
 
 use Tuleap\Git\HTTP\GitHTTPOperation;
+use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectID;
 use Tuleap\GitLFS\Transfer\Transfer;
 
 class BatchRequest implements GitHTTPOperation
@@ -30,7 +32,7 @@ class BatchRequest implements GitHTTPOperation
      */
     private $operation;
     /**
-     * @var BatchRequestObject[]
+     * @var LFSObject[]
      */
     private $objects;
     /**
@@ -92,7 +94,7 @@ class BatchRequest implements GitHTTPOperation
             if (! \is_object($object_value)) {
                 throw new IncorrectlyFormattedBatchRequestException('Batch request objects are expected to be an object');
             }
-            $objects[] = BatchRequestObject::buildFromObject($object_value);
+            $objects[] = self::buildLFSObjectFromBatchRequest($object_value);
         }
 
         $transfers = [];
@@ -125,6 +127,29 @@ class BatchRequest implements GitHTTPOperation
     }
 
     /**
+     * @throws IncorrectlyFormattedBatchRequestException
+     * @return LFSObject
+     */
+    private static function buildLFSObjectFromBatchRequest(\stdClass $parameters)
+    {
+        if (! isset($parameters->oid, $parameters->size)) {
+            throw new IncorrectlyFormattedBatchRequestException('oid and size should be present in a batch request object');
+        }
+        try {
+            $oid = new LFSObjectID($parameters->oid);
+            return new LFSObject($oid, $parameters->size);
+        } catch (\TypeError $error) {
+            throw new IncorrectlyFormattedBatchRequestException(
+                'Incorrect value for a batch request object. ' . $error->getMessage()
+            );
+        } catch (\UnexpectedValueException $exception) {
+            throw new IncorrectlyFormattedBatchRequestException(
+                'Incorrect value for a batch request object. ' . $exception->getMessage()
+            );
+        }
+    }
+
+    /**
      * @return BatchRequestOperation
      */
     public function getOperation()
@@ -133,7 +158,7 @@ class BatchRequest implements GitHTTPOperation
     }
 
     /**
-     * @return BatchRequestObject[]
+     * @return LFSObject[]
      */
     public function getObjects()
     {

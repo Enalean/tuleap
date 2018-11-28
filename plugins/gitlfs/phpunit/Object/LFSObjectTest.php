@@ -18,32 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch\Response\Action;
+namespace Tuleap\GitLFS\Object;
 
-use Tuleap\GitLFS\Object\LFSObject;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 
-final class BatchResponseActionHrefVerify implements BatchResponseActionHref
+class LFSObjectTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private $server_url;
-    /**
-     * @var LFSObject
-     */
-    private $object;
+    use MockeryPHPUnitIntegration;
 
-    public function __construct($server_url, LFSObject $object)
+    public function testCanConstructValidObject()
     {
-        $this->server_url = $server_url;
-        $this->object     = $object;
+        $oid  = \Mockery::mock(LFSObjectID::class);
+        $size = 123;
+
+        $lfs_object = new LFSObject($oid, $size);
+
+        $this->assertSame($oid, $lfs_object->getOID());
+        $this->assertSame($size, $lfs_object->getSize());
     }
 
     /**
-     * @return string
+     * @expectedException \UnexpectedValueException
      */
-    public function getHref()
+    public function testInvalidSizeIsRejected()
     {
-        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()->getValue()) . '/verify';
+        new LFSObject(\Mockery::mock(LFSObjectID::class), -123);
     }
 }

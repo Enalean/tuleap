@@ -55,8 +55,8 @@ class ActionAuthorizationVerifierTest extends TestCase
         $authorization_token->shouldReceive('getVerificationString')->andReturns($verification_string);
         $action_type = new ActionAuthorizationTypeUpload();
 
-        $oid  = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
-        $size = 123456;
+        $oid_value = 'f1e606a320357367335295bbc741cae6824ee33ce10cc43c9281d08638b73c6b';
+        $size      = 123456;
 
         $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
             'id'              => 1,
@@ -64,17 +64,17 @@ class ActionAuthorizationVerifierTest extends TestCase
             'expiration_date' => PHP_INT_MAX,
             'repository_id'   => 3,
             'action_type'     => $action_type->getName(),
-            'object_oid'      => $oid,
+            'object_oid'      => $oid_value,
             'object_size'     => $size
         ]);
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
         $expected_repository = \Mockery::mock(\GitRepository::class);
         $this->repository_factory->shouldReceive('getRepositoryById')->with(3)->andReturns($expected_repository);
 
-        $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid, $action_type);
+        $authorized_action = $verifier->getAuthorization($this->current_time, $authorization_token, $oid_value, $action_type);
 
-        $this->assertSame($oid, $authorized_action->getOID());
-        $this->assertSame($size, $authorized_action->getSize());
+        $this->assertSame($oid_value, $authorized_action->getLFSObject()->getOID()->getValue());
+        $this->assertSame($size, $authorized_action->getLFSObject()->getSize());
         $this->assertSame($expected_repository, $authorized_action->getRepository());
     }
 
