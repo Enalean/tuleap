@@ -128,16 +128,16 @@ generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests_rest_56: ## Run all REST tests with PHP FPM 5.6
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql57
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql57
 
 tests_rest_72: ## Run all REST tests with PHP FPM 7.2
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql57
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql57
 
 tests_soap_56: ## Run all SOAP tests in PHP 5.6
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
 
 tests_soap_72: ## Run all SOAP tests in PHP 7.2
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
+	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
 
 tests_cypress: ## Run Cypress tests
 	@tests/e2e/full/wrap.sh
