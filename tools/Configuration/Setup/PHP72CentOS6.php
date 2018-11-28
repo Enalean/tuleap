@@ -20,9 +20,11 @@
 
 namespace Tuleap\Configuration\Setup;
 
+use Tuleap\Configuration\Apache\LogrotateDeployer;
 use Tuleap\Configuration\Etc;
 use Tuleap\Configuration\FPM;
 use Tuleap\Configuration\Nginx;
+use Tuleap\Configuration\Apache;
 use Tuleap\Configuration\Logger;
 
 class PHP72CentOS6
@@ -101,6 +103,9 @@ class PHP72CentOS6
                 $variables->getServerName(),
                 $for_development
             );
+        }
+        if (in_array('apache', $modules, true)) {
+            $configs[] = new Apache\TuleapWeb($this->logger, '/etc/httpd', new LogrotateDeployer($this->logger));
         }
 
         foreach ($configs as $conf) {
