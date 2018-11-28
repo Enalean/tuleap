@@ -25,8 +25,9 @@
 
 require_once(dirname(__FILE__).'/../../constants.php');
 
-use Tuleap\Layout\IncludeAssets;
-use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
+use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
+use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactActionButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactCopyButtonPresenterBuilder;
@@ -34,18 +35,23 @@ use Tuleap\Tracker\Artifact\ActionButtons\ArtifactGraphDependenciesButtonPresent
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactIncomingEmailButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactMoveButtonPresenterBuilder;
 use Tuleap\Tracker\Artifact\ActionButtons\ArtifactNotificationActionButtonPresenterBuilder;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfig;
-use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
-use Tuleap\Tracker\Admin\ArtifactsDeletion\UserDeletionRetriever;
 use Tuleap\Tracker\Artifact\ArtifactInstrumentation;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactDeletionLimitRetriever;
 use Tuleap\Tracker\Artifact\ArtifactsDeletion\ArtifactsDeletionDAO;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidationValidator;
 use Tuleap\Tracker\Artifact\PermissionsCache;
+use Tuleap\Tracker\FormElement\BurndownLogger;
+use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
+use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdder;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
@@ -705,8 +711,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'burndown-cache-generate':
                 $ff = Tracker_FormElementFactory::instance();
                 if ($field = $ff->getFormElementByid($request->get('field'))) {
-                    if ( $field->isCacheBurndownAlreadyAsked($this) === false) {
-                        $field->forceBurndownCacheGeneration($this->getId());
+                    if ($this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($this) === false) {
+                        $this->getBurndownCacheGenerator()->forceBurndownCacheGeneration($this->getId());
                     }
                 }
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
@@ -2045,5 +2051,33 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $types[$linked_artifact_id] = Tracker_FormElement_Field_ArtifactLink::NO_NATURE;
         }
         return $types;
+    }
+
+    /**
+     * @return BurndownCacheGenerationChecker
+     */
+    private function getBurndownCacheChecker()
+    {
+        $event_manager   = SystemEventManager::instance();
+        $logger          = new BurndownLogger();
+        $field_retriever = new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $logger);
+        return new BurndownCacheGenerationChecker(
+            $logger,
+            new BurndownCacheGenerator($event_manager),
+            $event_manager,
+            $field_retriever,
+            new ChartConfigurationValueChecker($field_retriever, new ChartConfigurationValueRetriever($field_retriever, $logger)),
+            new Tracker_FormElement_Field_ComputedDao(),
+            new ChartCachedDaysComparator($logger),
+            new BurndownRemainingEffortAdder($field_retriever)
+        );
+    }
+
+    /**
+     * @return BurndownCacheGenerator
+     */
+    private function getBurndownCacheGenerator()
+    {
+        return new BurndownCacheGenerator(SystemEventManager::instance());
     }
 }
