@@ -18,12 +18,7 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import {
-    loadCurrentFolderTitle,
-    loadFolderContent,
-    loadBreadCrumbs,
-    loadRootDocumentId
-} from "./actions.js";
+import { loadFolderContent, loadBreadCrumbs, loadRootDocumentId } from "./actions.js";
 import {
     restore as restoreRestQuerier,
     rewire$getFolderContent,
@@ -60,50 +55,6 @@ describe("Store actions", () => {
 
         getItem = jasmine.createSpy("getItem");
         rewire$getItem(getItem);
-    });
-
-    describe("loadCurrentFolderTitle()", () => {
-        it("load folder title and store it", async () => {
-            const item = {
-                id: 3,
-                title: "Project Documentation",
-                owner: {
-                    id: 101,
-                    display_name: "user (login)"
-                },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            };
-
-            getItem.and.returnValue(item);
-
-            await loadCurrentFolderTitle(context, 3);
-
-            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
-            expect(context.commit).toHaveBeenCalledWith(
-                "setCurrentFolderTitle",
-                "Project Documentation"
-            );
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
-        });
-
-        it("When the folder can't be found, an error will be raised", async () => {
-            const error_message = "Item does not exist.";
-            mockFetchError(getItem, {
-                status: 404,
-                error_json: {
-                    error: {
-                        message: error_message
-                    }
-                }
-            });
-
-            await loadCurrentFolderTitle(context, 3);
-
-            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
-            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
-        });
     });
 
     describe("loadRootDocumentId()", () => {
@@ -262,7 +213,7 @@ describe("Store actions", () => {
             const parents = [
                 {
                     id: 1,
-                    name: "Project documentation",
+                    title: "Project documentation",
                     owner: {
                         id: 101
                     },
@@ -270,7 +221,7 @@ describe("Store actions", () => {
                 },
                 {
                     id: 2,
-                    name: "folder A",
+                    title: "folder A",
                     owner: {
                         id: 101
                     },
@@ -291,7 +242,7 @@ describe("Store actions", () => {
             const expected_parents = [
                 {
                     id: 2,
-                    name: "folder A",
+                    title: "folder A",
                     owner: {
                         id: 101
                     },
@@ -314,8 +265,11 @@ describe("Store actions", () => {
 
             await loadBreadCrumbs(context);
 
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
+            expect(context.commit).toHaveBeenCalledWith("setCurrentFolderTitle", "Current folder");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
         });
 
@@ -323,7 +277,7 @@ describe("Store actions", () => {
             context.state.current_folder_parents = [
                 {
                     id: 2,
-                    name: "folder A",
+                    title: "folder A",
                     owner: {
                         id: 101
                     },
@@ -331,7 +285,7 @@ describe("Store actions", () => {
                 },
                 {
                     id: 3,
-                    name: "folder B",
+                    title: "folder B",
                     owner: {
                         id: 101
                     },
@@ -342,7 +296,7 @@ describe("Store actions", () => {
             const expected_parents = [
                 {
                     id: 2,
-                    name: "folder A",
+                    title: "folder A",
                     owner: {
                         id: 101
                     },
@@ -353,9 +307,13 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context, 2);
 
             expect(getParents).not.toHaveBeenCalled();
+            expect(getItem).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingFolderTitle");
             expect(context.commit).not.toHaveBeenCalledWith("beginLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
+            expect(context.commit).toHaveBeenCalledWith("setCurrentFolderTitle", "folder A");
             expect(context.commit).not.toHaveBeenCalledWith("stopLoadingBreadcrumb");
+            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingFolderTitle");
         });
 
         it("When the parents can't be found, another error screen will be shown", async () => {
@@ -372,8 +330,30 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context);
 
             expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+        });
+
+        it("When the item can't be found, another error screen will be shown", async () => {
+            const error_message = "The folder does not exist.";
+            mockFetchError(getItem, {
+                status: 404,
+                error_json: {
+                    error: {
+                        i18n_error_message: error_message
+                    }
+                }
+            });
+
+            await loadBreadCrumbs(context);
+
+            expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
         });
 
         it("When the user does not have access to the folder, an error will be raised", async () => {
@@ -389,8 +369,10 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context);
 
             expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
         });
     });
 });

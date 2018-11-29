@@ -45,7 +45,6 @@ export default {
     },
     methods: {
         loadFolder(id) {
-            this.$store.dispatch("loadCurrentFolderTitle", id);
             this.$store.dispatch("loadFolderContent", id);
             this.$store.dispatch("loadBreadCrumbs", id);
         }
