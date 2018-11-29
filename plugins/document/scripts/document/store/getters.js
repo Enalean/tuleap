@@ -21,3 +21,11 @@ export const does_folder_have_any_error = state =>
     state.has_folder_permission_error || state.has_folder_loading_error;
 
 export const is_folder_empty = state => state.folder_content.length === 0;
+
+export const current_folder_title = ({ current_folder_parents, root_title }) => {
+    if (current_folder_parents.length === 0) {
+        return root_title;
+    }
+
+    return current_folder_parents[current_folder_parents.length - 1].title;
+};
