@@ -38,6 +38,11 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      */
     private $docman_item_factory;
 
+    /**
+     * @var \Docman_VersionFactory
+     */
+    private $docman_version_factory;
+
     public function setUp()
     {
         echo 'Setup Docman REST Tests configuration' . PHP_EOL;
@@ -71,8 +76,42 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'file_is_embedded'  => ''
         );
 
-        return $this->docman_item_factory->create($item, 1);
+        $item_id = $this->docman_item_factory->create($item, 1);
+
+        switch ($item_type) {
+            case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
+                $file_type = 'text/html';
+                break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
+                $file_type = 'application/pdf';
+                break;
+            default:
+                $file_type = null;
+                break;
+        }
+        $this->addItemVersion($item_id, $title, $file_type);
+        return $item_id;
     }
+
+    private function addItemVersion($item_id, $title, $item_type)
+    {
+        $version         = array(
+            'item_id'   => $item_id,
+            'number'    => 1,
+            'user_id'   => 102,
+            'label'     => '',
+            'changelog' => '',
+            'date'      => time(),
+            'filename'  => $title,
+            'filesize'  => 3,
+            'filetype'  => $item_type,
+            'path'      => ''
+        );
+        $version_factory = new \Docman_VersionFactory();
+        $version_factory->create($version);
+    }
+
+
 
     /**
      * To help understand tests structure, below a representation of folder hierarchy

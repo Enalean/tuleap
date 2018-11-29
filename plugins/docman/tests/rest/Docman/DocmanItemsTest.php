@@ -63,6 +63,10 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[1]['title'], 'item A');
         $this->assertEquals($items[2]['title'], 'item C');
 
+        $this->assertEquals($items[0]['file_properties']['file_type'], null);
+        $this->assertEquals($items[1]['file_properties']['file_type'], null);
+        $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
+
         return $items[0]['id'];
     }
 
