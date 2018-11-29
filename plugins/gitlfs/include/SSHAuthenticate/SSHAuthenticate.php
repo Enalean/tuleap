@@ -21,6 +21,10 @@
 
 namespace Tuleap\GitLFS\SSHAuthenticate;
 
+use Tuleap\GitLFS\Authorization\User\Operation\UnknownUserOperationException;
+use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;
+use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
+
 class SSHAuthenticate
 {
     /**
@@ -36,18 +40,39 @@ class SSHAuthenticate
      */
     private $user_manager;
     /**
+     * @var SSHAuthenticateResponseBuilder
+     */
+    private $response_builder;
+    /**
+     * @var UserOperationFactory
+     */
+    private $user_operation_factory;
+    /**
      * @var \gitlfsPlugin
      */
     private $plugin;
 
-    public function __construct(\ProjectManager $project_manager, \UserManager $user_manager, \GitRepositoryFactory $git_repository_factory, \gitlfsPlugin $plugin = null)
-    {
+    public function __construct(
+        \ProjectManager $project_manager,
+        \UserManager $user_manager,
+        \GitRepositoryFactory $git_repository_factory,
+        SSHAuthenticateResponseBuilder $response_builder,
+        UserOperationFactory $user_operation_factory,
+        \gitlfsPlugin $plugin = null
+    ) {
         $this->project_manager        = $project_manager;
         $this->user_manager           = $user_manager;
         $this->git_repository_factory = $git_repository_factory;
+        $this->response_builder       = $response_builder;
+        $this->user_operation_factory = $user_operation_factory;
         $this->plugin                 = $plugin;
     }
 
+    /**
+     * @param string $username
+     * @param array $argv
+     * @return BatchResponseActionContent
+     */
     public function main($username, array $argv)
     {
         if ($this->plugin === null) {
@@ -58,8 +83,10 @@ class SSHAuthenticate
             throw new InvalidCommandException('git-lfs-authenticate must have 2 args');
         }
 
-        if (! in_array($argv[2], ['download', 'upload'], true)) {
-            throw new InvalidCommandException('git-lfs-authenticate arg 2 must be either `download` or `upload`');
+        try {
+            $user_operation = $this->user_operation_factory->getUserOperationFromName($argv[2]);
+        } catch (UnknownUserOperationException $ex) {
+            throw new InvalidCommandException($ex->getMessage());
         }
 
         $repository_path = explode('/', $argv[1]);
@@ -85,5 +112,7 @@ class SSHAuthenticate
         if (! $repository->userCanRead($user)) {
             throw new InvalidCommandException('git-lfs-authenticate: user cannot access this repository');
         }
+
+        return $this->response_builder->getResponse($repository, $user, $user_operation, new \DateTimeImmutable());
     }
 }

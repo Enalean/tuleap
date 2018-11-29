@@ -938,4 +938,20 @@ class GitRepository implements DVCSRepository
     {
         return basename($this->getName());
     }
+
+    /**
+     * @return string
+     */
+    public function getFullHTTPUrlWithDotGit()
+    {
+        return HTTPRequest::instance()->getServerUrl().$this->getRelativeHTTPUrl().'.git';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativeHTTPUrl()
+    {
+        return GIT_BASE_URL .'/'. $this->getProject()->getUnixName() .'/'. $this->getFullName();
+    }
 }

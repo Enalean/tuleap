@@ -1,2 +1,2 @@
- config hooks.showrev = "t=%s; git show --name-status --pretty='format:URL:    https://localhost/plugins/git/index.php/101/view/5/?a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' $t"
+ config hooks.showrev = "t=%s; git show --name-status --pretty='format:URL:    https://localhost/plugins/git/project1/test_default?a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' $t"
  config hooks.emailprefix = "[KOIN] "

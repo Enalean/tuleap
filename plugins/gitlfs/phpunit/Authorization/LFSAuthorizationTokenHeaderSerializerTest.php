@@ -18,21 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Authorization\Action;
+namespace Tuleap\GitLFS\Authorization;
 
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-class ActionAuthorizationTokenHeaderSerializerTest extends TestCase
+class LFSAuthorizationTokenHeaderSerializerTest extends TestCase
 {
     public function testAuthorizationTokenCanBeSerializedToHeaderAndUnserialized()
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $split_token = new SplitToken(1, $verification_string);
 
-        $serializer = new ActionAuthorizationTokenHeaderSerializer();
+        $serializer = new LFSAuthorizationTokenHeaderSerializer();
 
         $header_identifier        = $serializer->getIdentifier($split_token);
         $split_token_unserialized = $serializer->getSplitToken($header_identifier);
@@ -49,7 +49,7 @@ class ActionAuthorizationTokenHeaderSerializerTest extends TestCase
      */
     public function testBuildingFromAnIncorrectlyFormattedIdentifierIsRejected()
     {
-        $serializer = new ActionAuthorizationTokenHeaderSerializer();
+        $serializer = new LFSAuthorizationTokenHeaderSerializer();
         $serializer->getSplitToken(new ConcealedString('incorrect_identifier'));
     }
 }

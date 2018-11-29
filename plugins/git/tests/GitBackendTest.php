@@ -55,6 +55,7 @@ class GitBackendTest extends TuleapTestCase {
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getId', 1750);
+        $prj->setReturnValue('getUnixName', 'prj');
 
         $repo = new GitRepository();
         $repo->setPath('prj/repo.git');
@@ -63,7 +64,7 @@ class GitBackendTest extends TuleapTestCase {
         $repo->setId(290);
 
         $driver = new MockGitDriver($this);
-        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://localhost/plugins/git/index.php/1750/view/290/?a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
+        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://localhost/plugins/git/prj/repo?a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackendTestVersion($this);
         $backend->setUp($this->url_manager);

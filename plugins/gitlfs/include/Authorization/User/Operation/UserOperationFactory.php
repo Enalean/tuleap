@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Tuleap\GitLFS\Authorization\User\Operation;
+
+class UserOperationFactory
+{
+    /**
+     * @return UserOperation
+     */
+    public function getUserOperationFromName($operation_name)
+    {
+        switch ($operation_name) {
+            case UserOperationDownload::NAME:
+                return new UserOperationDownload();
+            case UserOperationUpload::NAME:
+                return new UserOperationUpload();
+            default:
+                throw new UnknownUserOperationException($operation_name);
+        }
+    }
+}

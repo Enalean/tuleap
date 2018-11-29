@@ -35,11 +35,7 @@ class Git_GitRepositoryUrlManager
      */
     public function getRepositoryBaseUrl(GitRepository $repository)
     {
-        if ($this->git_plugin->areFriendlyUrlsActivated()) {
-            return GIT_BASE_URL .'/'. $repository->getProject()->getUnixName() .'/'. $repository->getFullName();
-        }
-
-        return GIT_BASE_URL . '/index.php/' . $repository->getProjectId() . '/view/' . $repository->getId() . '/';
+        return $repository->getRelativeHTTPUrl();
     }
 
     public function getRepositoryAdminUrl(GitRepository $repository)

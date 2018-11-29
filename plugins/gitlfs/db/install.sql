@@ -21,3 +21,13 @@ CREATE TABLE plugin_gitlfs_object_repository (
   repository_id INT(10) UNSIGNED NOT NULL,
   PRIMARY KEY (object_id, repository_id)
 );
+
+CREATE TABLE plugin_gitlfs_ssh_authorization (
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  verifier VARCHAR(255) NOT NULL,
+  expiration_date INT(11) UNSIGNED NOT NULL,
+  repository_id INT(10) UNSIGNED NOT NULL,
+  operation_name VARCHAR(16) NOT NULL,
+  user_id INT(11) NOT NULL,
+  INDEX idx_expiration_date (expiration_date)
+);
