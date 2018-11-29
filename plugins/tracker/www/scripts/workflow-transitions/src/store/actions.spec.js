@@ -18,8 +18,16 @@
  */
 
 import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
-import { loadTracker, saveWorkflowTransitionsField } from "./actions.js";
-import { rewire$getTracker, rewire$createWorkflowTransitions } from "../api/rest-querier.js";
+import {
+    loadTracker,
+    saveWorkflowTransitionsField,
+    resetWorkflowTransitionsField
+} from "./actions.js";
+import {
+    rewire$getTracker,
+    rewire$createWorkflowTransitions,
+    rewire$resetWorkflowTransitions
+} from "../api/rest-querier.js";
 
 describe("Store actions:", () => {
     let context;
@@ -84,44 +92,32 @@ describe("Store actions:", () => {
                 expect(context.commit).toHaveBeenCalledWith("createWorkflow", 9));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
+    });
 
-        describe("when workflow creation failed", () => {
-            describe("with non internationalized response message", () => {
-                beforeEach(async () => {
-                    const error_json = {
-                        error: {
-                            message: "not internationalized"
-                        }
-                    };
-                    mockFetchError(createWorkflowTransitions, { error_json });
-                    await saveWorkflowTransitionsField(context, 9);
-                });
+    describe("resetWorkflowTransitionsField()", () => {
+        let resetWorkflowTransitions;
 
-                it("stores operation failure without any error message", () =>
-                    expect(context.commit).toHaveBeenCalledWith("failOperation"));
-                it("ends operation", () =>
-                    expect(context.commit).toHaveBeenCalledWith("endOperation"));
+        beforeEach(() => {
+            context = { ...context, state: { current_tracker: { id: 1 } } };
+            resetWorkflowTransitions = jasmine.createSpy("resetWorkflowTransitions");
+            rewire$resetWorkflowTransitions(resetWorkflowTransitions);
+        });
+
+        describe("when reset workflow transitions is successful", () => {
+            const tracker = { id: 12 };
+
+            beforeEach(async () => {
+                resetWorkflowTransitions.and.returnValue(Promise.resolve(tracker));
+                await resetWorkflowTransitionsField(context);
             });
 
-            describe("with internationalized response message", () => {
-                beforeEach(async () => {
-                    const error_json = {
-                        error: {
-                            i18n_error_message: "internationalized message"
-                        }
-                    };
-                    mockFetchError(createWorkflowTransitions, { error_json });
-                    await saveWorkflowTransitionsField(context, 9);
-                });
-
-                it("stores failure message", () =>
-                    expect(context.commit).toHaveBeenCalledWith(
-                        "failOperation",
-                        "internationalized message"
-                    ));
-                it("ends operation", () =>
-                    expect(context.commit).toHaveBeenCalledWith("endOperation"));
-            });
+            it("begins a new operation", () =>
+                expect(context.commit).toHaveBeenCalledWith("beginOperation"));
+            it("reset workflow transitions", () =>
+                expect(resetWorkflowTransitions).toHaveBeenCalledWith(1));
+            it("update tracker in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", tracker));
+            it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
 });

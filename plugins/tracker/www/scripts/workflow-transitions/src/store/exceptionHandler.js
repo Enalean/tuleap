@@ -17,8 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
+export async function getErrorMessage(exception) {
+    let response = await exception.response.json();
 
-import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
-import "./store/exceptionHandler.spec.js";
+    if (response.hasOwnProperty("error")) {
+        if (response.error.hasOwnProperty("i18n_error_message")) {
+            return response.error.i18n_error_message;
+        }
+
+        return response.error.message;
+    }
+
+    return null;
+}

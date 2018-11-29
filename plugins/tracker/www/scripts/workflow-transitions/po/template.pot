@@ -11,10 +11,22 @@ msgstr ""
 msgid "An error occurred"
 msgstr ""
 
+msgid "Are you sure to change transitions based field?"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 msgid "Change or remove"
 msgstr ""
 
+msgid "Change or remove field"
+msgstr ""
+
 msgid "Configure"
+msgstr ""
+
+msgid "Confirm"
 msgstr ""
 
 msgid "Enable transition rules"
@@ -30,6 +42,9 @@ msgid ""
 msgstr ""
 
 msgid "Save and start configuration"
+msgstr ""
+
+msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""
 
 msgid "Tracker cannot be loaded"

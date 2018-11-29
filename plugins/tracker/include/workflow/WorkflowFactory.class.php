@@ -47,8 +47,7 @@ class WorkflowFactory
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
         WorkflowBackendLogger $logger
-    )
-    {
+    ) {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
         $this->formelement_factory   = $formelement_factory;
@@ -292,6 +291,14 @@ class WorkflowFactory
     }
 
     /**
+     * Clear Tracker workflow from $cache_workflowfield
+     */
+    public function clearTrackerWorkflowFromCache(Tracker $tracker)
+    {
+        unset($this->cache_workflowfield[$tracker->getId()]);
+    }
+
+    /**
      * Say if a field is used in its tracker workflow or post actions
      *
      * @param Tracker_FormElement_Field $field The field
@@ -369,7 +376,6 @@ class WorkflowFactory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Tracker $tracker, Project $project)
     {
-
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();
         $field = $xmlMapping[(string)$xml_field_attributes['REF']];
@@ -442,5 +448,3 @@ class WorkflowFactory
         return new Workflow_TransitionDao();
     }
 }
-
-?>

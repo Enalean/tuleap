@@ -62,6 +62,9 @@ msgstr ""
 msgid "An error has occurred, the workflow couldn't be created."
 msgstr ""
 
+msgid "An error has occurred, the workflow couldn't be reset."
+msgstr ""
+
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
@@ -617,6 +620,9 @@ msgid "The value '%s' doesn't exist for the list field '%s'."
 msgstr ""
 
 msgid "This template does not use trackers"
+msgstr ""
+
+msgid "This tracker has no workflow."
 msgstr ""
 
 msgid "This tracker is deleted"

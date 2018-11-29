@@ -34,11 +34,14 @@
                     <span>{{ workflow_field_label }}</span>
                     <button
                         class="tlp-button-danger tlp-button-outline tlp-button-small tracker-workflow-transition-configuration-form-button"
-                        disabled
+                        data-target="modal-confirm-change-field"
+                        v-on:click="showModal()"
                     >
                         <i class="fa fa-refresh tlp-button-icon"></i>
                         <span v-translate>Change or remove</span>
                     </button>
+
+                    <change-field-confirmation-modal ref="modal"/>
                 </div>
             </div>
             <div class="tlp-form-element tracker-workflow-transition-configuration-form-item">
@@ -88,9 +91,21 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
+import { modal as createModal } from "tlp";
+import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 
 export default {
     name: "TransitionsConfigurationHeaderSection",
+
+    components: {
+        ChangeFieldConfirmationModal
+    },
+
+    data() {
+        return {
+            modal: null
+        };
+    },
 
     computed: {
         ...mapState(["current_tracker"]),
@@ -102,6 +117,17 @@ export default {
         },
         field_tooltip() {
             return this.$gettext("Transitions based field");
+        }
+    },
+
+    mounted() {
+        const modal = this.$refs.modal.$el;
+        this.modal = createModal(modal);
+    },
+
+    methods: {
+        showModal() {
+            this.modal.toggle();
         }
     }
 };
