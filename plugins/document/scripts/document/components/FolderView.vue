@@ -42,8 +42,8 @@ export default {
         FolderContent
     },
     computed: {
-        ...mapState(["is_loading_folder", "current_folder_title", "is_loading_folder_title"]),
-        ...mapGetters(["is_folder_empty"]),
+        ...mapState(["is_loading_folder", "is_loading_folder_title"]),
+        ...mapGetters(["is_folder_empty", "current_folder_title"]),
         title_class() {
             return this.is_loading_folder_title
                 ? "tlp-skeleton-text document-folder-title-loading"

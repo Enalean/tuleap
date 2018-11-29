@@ -46,10 +46,12 @@ export default {
     created() {
         const base_title = document.title;
         this.$store.watch(
-            state => state.current_folder_title,
-            title => {
+            (state, getters) => getters.current_folder_title,
+            (title, old_title) => {
                 if (title) {
                     document.title = title + " - " + base_title;
+                } else if (old_title) {
+                    document.title = base_title;
                 }
             }
         );
@@ -58,7 +60,8 @@ export default {
             this.projectId,
             this.projectName,
             this.userIsAdmin,
-            this.dateTimeFormat
+            this.dateTimeFormat,
+            this.$gettext("Documents")
         ]);
     }
 };

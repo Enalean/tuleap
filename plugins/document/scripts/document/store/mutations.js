@@ -26,7 +26,6 @@ export {
     setFolderLoadingError,
     stopLoading,
     switchFolderPermissionError,
-    setCurrentFolderTitle,
     beginLoadingFolderTitle,
     stopLoadingFolderTitle,
     saveParents,
@@ -44,11 +43,12 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function initApp(state, [project_id, name, user_is_admin, date_time_format]) {
+function initApp(state, [project_id, name, user_is_admin, date_time_format, root_title]) {
     state.project_id = project_id;
     state.project_name = name;
     state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;
+    state.root_title = root_title;
 }
 
 function saveParents(state, parents) {
@@ -90,13 +90,7 @@ function setFolderLoadingError(state, message) {
     state.folder_loading_error = message;
 }
 
-function setCurrentFolderTitle(state, title) {
-    state.current_folder_title = title;
-    state.is_loading_folder_title = false;
-}
-
 function beginLoadingFolderTitle(state) {
-    state.current_folder_title = null;
     state.is_loading_folder_title = true;
 }
 

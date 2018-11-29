@@ -36,7 +36,6 @@ export default {
         ...mapGetters(["does_folder_have_any_error"])
     },
     mounted() {
-        this.$store.commit("setCurrentFolderTitle", this.$gettext("Documents"));
         this.$store.dispatch("loadRootDocumentId");
         this.$store.commit("resetParents");
     }

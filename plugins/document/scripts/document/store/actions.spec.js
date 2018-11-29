@@ -268,7 +268,6 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolderTitle", "Current folder");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
         });
@@ -311,7 +310,6 @@ describe("Store actions", () => {
             expect(context.commit).not.toHaveBeenCalledWith("beginLoadingFolderTitle");
             expect(context.commit).not.toHaveBeenCalledWith("beginLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolderTitle", "folder A");
             expect(context.commit).not.toHaveBeenCalledWith("stopLoadingBreadcrumb");
             expect(context.commit).not.toHaveBeenCalledWith("stopLoadingFolderTitle");
         });
@@ -330,7 +328,6 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context);
 
             expect(context.commit).not.toHaveBeenCalledWith("saveParents");
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
@@ -350,7 +347,6 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context);
 
             expect(context.commit).not.toHaveBeenCalledWith("saveParents");
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
@@ -369,7 +365,6 @@ describe("Store actions", () => {
             await loadBreadCrumbs(context);
 
             expect(context.commit).not.toHaveBeenCalledWith("saveParents");
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolderTitle");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");

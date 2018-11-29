@@ -31,7 +31,8 @@ const state = {
     current_folder_title: null,
     is_loading_folder_title: false,
     current_folder_parents: [],
-    is_loading_breadcrumb: false
+    is_loading_breadcrumb: false,
+    root_title: ""
 };
 
 export default state;
