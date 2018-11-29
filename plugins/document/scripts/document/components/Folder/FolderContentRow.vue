@@ -21,9 +21,9 @@
     <tr>
         <td v-if="is_folder">
             <i class="document-folder-icon-color fa fa-fw fa-folder "></i>
-            <router-link v-bind:to="{ name: 'folder', params: { item_id: item.id }}" class="document-folder-subitem-link">
+            <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
                 {{ item.title }}<!--
-            --></router-link>
+            --></a>
             <i class="fa fa-long-arrow-right document-folder-subitem-link-icon"></i>
         </td>
         <td v-else>
@@ -83,6 +83,21 @@ export default {
                 default:
                     return "fa-file-o document-empty-icon";
             }
+        },
+        folder_href() {
+            const { href } = this.$router.resolve({
+                name: "folder",
+                params: { item_id: this.item.id }
+            });
+
+            return href;
+        }
+    },
+    methods: {
+        goToFolder(event) {
+            event.preventDefault();
+            this.$store.commit("appendFolderToBreadcrumbs", this.item);
+            this.$router.push({ name: "folder", params: { item_id: this.item.id } });
         }
     }
 };
