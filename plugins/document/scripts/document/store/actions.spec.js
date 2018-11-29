@@ -18,7 +18,7 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { loadFolderContent, loadBreadCrumbs, loadRootDocumentId } from "./actions.js";
+import { loadFolderContent, loadAscendantHierarchy, loadRootDocumentId } from "./actions.js";
 import {
     restore as restoreRestQuerier,
     rewire$getFolderContent,
@@ -40,7 +40,7 @@ describe("Store actions", () => {
             commit: jasmine.createSpy("commit"),
             state: {
                 project_id,
-                current_folder_parents: []
+                current_folder_ascendant_hierarchy: []
             }
         };
 
@@ -205,7 +205,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("loadBreadCrumbs", () => {
+    describe("loadAscendantHierarchy", () => {
         it("loads the folder parents and sets loading flag", async () => {
             const parents = [
                 {
@@ -260,17 +260,15 @@ describe("Store actions", () => {
 
             getParents.and.returnValue(parents);
 
-            await loadBreadCrumbs(context);
+            await loadAscendantHierarchy(context);
 
-            expect(context.commit).toHaveBeenCalledWith("beginLoadingFolderTitle");
-            expect(context.commit).toHaveBeenCalledWith("beginLoadingBreadcrumb");
-            expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", expected_parents);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
         it("When target folder is in the list of parents, then it does not fetch parents", async () => {
-            context.state.current_folder_parents = [
+            context.state.current_folder_ascendant_hierarchy = [
                 {
                     id: 2,
                     title: "folder A",
@@ -300,15 +298,13 @@ describe("Store actions", () => {
                 }
             ];
 
-            await loadBreadCrumbs(context, 2);
+            await loadAscendantHierarchy(context, 2);
 
             expect(getParents).not.toHaveBeenCalled();
             expect(getItem).not.toHaveBeenCalled();
-            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingFolderTitle");
-            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingBreadcrumb");
-            expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
-            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingBreadcrumb");
-            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingFolderTitle");
+            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", expected_parents);
+            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
         it("When the parents can't be found, another error screen will be shown", async () => {
@@ -322,12 +318,11 @@ describe("Store actions", () => {
                 }
             });
 
-            await loadBreadCrumbs(context);
+            await loadAscendantHierarchy(context);
 
-            expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
         it("When the item can't be found, another error screen will be shown", async () => {
@@ -341,12 +336,11 @@ describe("Store actions", () => {
                 }
             });
 
-            await loadBreadCrumbs(context);
+            await loadAscendantHierarchy(context);
 
-            expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
         it("When the user does not have access to the folder, an error will be raised", async () => {
@@ -359,12 +353,11 @@ describe("Store actions", () => {
                 }
             });
 
-            await loadBreadCrumbs(context);
+            await loadAscendantHierarchy(context);
 
-            expect(context.commit).not.toHaveBeenCalledWith("saveParents");
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
-            expect(context.commit).toHaveBeenCalledWith("stopLoadingFolderTitle");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
     });
 });

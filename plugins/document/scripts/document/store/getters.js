@@ -22,10 +22,12 @@ export const does_folder_have_any_error = state =>
 
 export const is_folder_empty = state => state.folder_content.length === 0;
 
-export const current_folder_title = ({ current_folder_parents, root_title }) => {
-    if (current_folder_parents.length === 0) {
-        return root_title;
+export const current_folder_title = state => {
+    const hierarchy = state.current_folder_ascendant_hierarchy;
+
+    if (hierarchy.length === 0) {
+        return state.root_title;
     }
 
-    return current_folder_parents[current_folder_parents.length - 1].title;
+    return hierarchy[hierarchy.length - 1].title;
 };

@@ -47,23 +47,24 @@ export const loadFolderContent = async (context, folder_id) => {
     }
 };
 
-export const loadBreadCrumbs = async (context, folder_id) => {
-    const index_of_folder_in_parents = context.state.current_folder_parents.findIndex(
-        parent => parent.id === folder_id
+export const loadAscendantHierarchy = async (context, folder_id) => {
+    const index_of_folder_in_hierarchy = context.state.current_folder_ascendant_hierarchy.findIndex(
+        item => item.id === folder_id
     );
-    if (index_of_folder_in_parents !== -1) {
+    if (index_of_folder_in_hierarchy !== -1) {
         context.commit(
-            "saveParents",
-            context.state.current_folder_parents.slice(0, index_of_folder_in_parents + 1)
+            "saveAscendantHierarchy",
+            context.state.current_folder_ascendant_hierarchy.slice(
+                0,
+                index_of_folder_in_hierarchy + 1
+            )
         );
         return;
     }
 
     try {
-        context.commit("beginLoadingFolderTitle");
-        context.commit("beginLoadingBreadcrumb");
-
-        context.commit("resetParents");
+        context.commit("beginLoadingAscendantHierarchy");
+        context.commit("resetAscendantHierarchy");
 
         let parents = await getParents(folder_id);
         const current_folder = await getItem(folder_id);
@@ -71,12 +72,11 @@ export const loadBreadCrumbs = async (context, folder_id) => {
         parents.shift();
         parents.push(current_folder);
 
-        context.commit("saveParents", parents);
+        context.commit("saveAscendantHierarchy", parents);
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
-        context.commit("stopLoadingFolderTitle");
-        context.commit("stopLoadingBreadcrumb");
+        context.commit("stopLoadingAscendantHierarchy");
     }
 };
 

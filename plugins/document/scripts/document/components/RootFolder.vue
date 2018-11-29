@@ -37,7 +37,7 @@ export default {
     },
     mounted() {
         this.$store.dispatch("loadRootDocumentId");
-        this.$store.commit("resetParents");
+        this.$store.commit("resetAscendantHierarchy");
     }
 };
 </script>

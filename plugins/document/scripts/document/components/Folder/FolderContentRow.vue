@@ -96,7 +96,7 @@ export default {
     methods: {
         goToFolder(event) {
             event.preventDefault();
-            this.$store.commit("appendFolderToBreadcrumbs", this.item);
+            this.$store.commit("appendFolderToAscendantHierarchy", this.item);
             this.$router.push({ name: "folder", params: { item_id: this.item.id } });
         }
     }

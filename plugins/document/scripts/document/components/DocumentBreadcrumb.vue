@@ -35,12 +35,12 @@
                 </span>
             </nav>
         </div>
-        <document-breadcrumb-element v-for="parent in current_folder_parents"
+        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy"
                                      v-bind:key="parent.id"
                                      v-bind:item="parent"
         />
 
-        <span class="breadcrumbs-item" v-if="is_loading_breadcrumb">
+        <span class="breadcrumbs-item" v-if="is_loading_ascendant_hierarchy">
             <a class="breadcrumb-link" href="#">
                 <span class="tlp-skeleton-text"></span>
             </a>
@@ -58,8 +58,8 @@ export default {
         ...mapState([
             "project_id",
             "is_user_administrator",
-            "current_folder_parents",
-            "is_loading_breadcrumb"
+            "current_folder_ascendant_hierarchy",
+            "is_loading_ascendant_hierarchy"
         ]),
         document_tree_title() {
             return this.$gettext("Project documentation");
