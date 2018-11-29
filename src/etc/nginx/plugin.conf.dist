@@ -1,6 +1,6 @@
 # See the how and the why here: http://serverfault.com/a/828579/169219
-location ^~ /plugins/%name% {
-    alias /usr/share/tuleap/plugins/%name%/www;
+location ^~ /plugins/%name%/ {
+    alias /usr/share/tuleap/plugins/%name%/www/;
 
     if (!-f $request_filename) {
         rewrite ^ /plugins/%name%/index.php last;
@@ -15,7 +15,7 @@ location ^~ /plugins/%name% {
         fastcgi_param SCRIPT_FILENAME $request_filename;
     }
 
-    location ^~ /plugins/%name%/assets {
+    location ^~ /plugins/%name%/assets/ {
         expires 12h;
     }
 }
