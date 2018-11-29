@@ -24,6 +24,16 @@ class StateStorage
 {
     const AUTHORIZATION_STATE = 'tuleap_oidc_authorization_state';
 
+    /**
+     * @var array
+     */
+    private $storage;
+
+    public function __construct(array &$storage)
+    {
+        $this->storage =& $storage;
+    }
+
     public function saveState(State $state)
     {
         $stored_state = new SessionState(
@@ -31,7 +41,7 @@ class StateStorage
             $state->getReturnTo(),
             $state->getNonce()
         );
-        $_SESSION[self::AUTHORIZATION_STATE] = $stored_state;
+        $this->storage[self::AUTHORIZATION_STATE] = $stored_state->convertToMinimalRepresentation();
     }
 
     /**
@@ -39,14 +49,14 @@ class StateStorage
      */
     public function loadState()
     {
-        if (! isset($_SESSION[self::AUTHORIZATION_STATE])) {
+        if (! isset($this->storage[self::AUTHORIZATION_STATE])) {
             return null;
         }
-        return $_SESSION[self::AUTHORIZATION_STATE];
+        return SessionState::buildFromMinimalRepresentation($this->storage[self::AUTHORIZATION_STATE]);
     }
 
     public function clear()
     {
-        unset($_SESSION[self::AUTHORIZATION_STATE]);
+        unset($this->storage[self::AUTHORIZATION_STATE]);
     }
 }

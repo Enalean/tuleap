@@ -63,4 +63,28 @@ class SessionState {
     {
         return $this->nonce;
     }
+
+    /**
+     * @return \stdClass
+     */
+    public function convertToMinimalRepresentation()
+    {
+        $representation = new \stdClass();
+        $representation->secret_key = $this->secret_key;
+        $representation->return_to  = $this->return_to;
+        $representation->nonce      = $this->nonce;
+        return $representation;
+    }
+
+    public static function buildFromMinimalRepresentation(\stdClass $representation)
+    {
+        if (! isset($representation->secret_key, $representation->return_to, $representation->nonce)) {
+            throw new \InvalidArgumentException('Given $representation is incorrectly formatted');
+        }
+        return new self(
+            $representation->secret_key,
+            $representation->return_to,
+            $representation->nonce
+        );
+    }
 }
