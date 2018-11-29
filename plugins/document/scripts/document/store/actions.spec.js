@@ -44,7 +44,8 @@ describe("Store actions", () => {
         context = {
             commit: jasmine.createSpy("commit"),
             state: {
-                project_id
+                project_id,
+                current_folder_parents: []
             }
         };
 
@@ -316,6 +317,45 @@ describe("Store actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBreadcrumb");
             expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
             expect(context.commit).toHaveBeenCalledWith("stopLoadingBreadcrumb");
+        });
+
+        it("When target folder is in the list of parents, then it does not fetch parents", async () => {
+            context.state.current_folder_parents = [
+                {
+                    id: 2,
+                    name: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                },
+                {
+                    id: 3,
+                    name: "folder B",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            const expected_parents = [
+                {
+                    id: 2,
+                    name: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            await loadBreadCrumbs(context, 2);
+
+            expect(getParents).not.toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingBreadcrumb");
+            expect(context.commit).toHaveBeenCalledWith("saveParents", expected_parents);
+            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingBreadcrumb");
         });
 
         it("When the parents can't be found, another error screen will be shown", async () => {

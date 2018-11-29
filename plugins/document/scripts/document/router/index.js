@@ -44,7 +44,6 @@ export function createRouter(project_name) {
     });
 
     router.beforeEach((to, from, next) => {
-        store.commit("resetParents");
         store.commit("resetErrors");
         next();
     });
