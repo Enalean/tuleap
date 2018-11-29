@@ -21,7 +21,6 @@ export {
     beginLoading,
     initApp,
     resetErrors,
-    saveDocumentRootId,
     saveFolderContent,
     setFolderLoadingError,
     stopLoading,
@@ -35,17 +34,12 @@ export {
     appendFolderToBreadcrumbs
 };
 
-function saveDocumentRootId(state, document_id) {
-    state.project_root_document_id = document_id;
-}
-
 function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function initApp(state, [project_id, name, user_is_admin, date_time_format, root_title]) {
+function initApp(state, [project_id, user_is_admin, date_time_format, root_title]) {
     state.project_id = project_id;
-    state.project_name = name;
     state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;
     state.root_title = root_title;

@@ -101,7 +101,6 @@ describe("Store actions", () => {
             await loadRootDocumentId(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoading");
-            expect(context.commit).toHaveBeenCalledWith("saveDocumentRootId", 3);
             expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
@@ -118,7 +117,6 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).not.toHaveBeenCalledWith("saveDocumentRootId");
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
@@ -136,7 +134,6 @@ describe("Store actions", () => {
 
             await loadRootDocumentId(context);
 
-            expect(context.commit).not.toHaveBeenCalledWith("saveDocumentRootId");
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });

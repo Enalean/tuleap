@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const project_name = vue_mount_point.dataset.projectName;
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
     const user_timezone = document.body.dataset.userTimezone;
-    const datetime_format = document.body.dataset.dateTimeFormat;
+    const date_time_format = document.body.dataset.dateTimeFormat;
 
     moment.tz(user_timezone).locale(user_locale);
 
@@ -60,10 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
         store,
         router,
         propsData: {
-            projectId: project_id,
-            projectName: project_name,
-            userIsAdmin: user_is_admin,
-            dateTimeFormat: datetime_format
+            project_id,
+            user_is_admin,
+            date_time_format
         }
     }).$mount(vue_mount_point);
 });

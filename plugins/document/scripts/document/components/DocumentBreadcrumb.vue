@@ -56,7 +56,6 @@ export default {
     components: { DocumentBreadcrumbElement },
     computed: {
         ...mapState([
-            "project_name",
             "project_id",
             "is_user_administrator",
             "current_folder_parents",
