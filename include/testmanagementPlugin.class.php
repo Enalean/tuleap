@@ -46,8 +46,8 @@ use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
-use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
+use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 
 require_once 'constants.php';
 
@@ -308,8 +308,12 @@ class testmanagementPlugin extends Plugin
     public function trackerUsage(array $params)
     {
         $tracker    = $params['tracker'];
+        $project = $tracker->getProject();
+        if (! $project->usesService($this->getServiceShortname())) {
+            return;
+        }
+
         $tracker_id = $tracker->getId();
-        $project    = $tracker->getProject();
 
         static $config = null;
         if ($config === null) {
