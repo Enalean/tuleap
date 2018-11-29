@@ -50,6 +50,7 @@ import {
 } from "../../constants.js";
 import moment from "moment";
 import phptomoment from "phptomoment";
+import { iconForMimeType } from "../../helpers/icon-for-mime-type";
 
 export default {
     name: "FolderContentRow",
@@ -73,8 +74,9 @@ export default {
                 case TYPE_FOLDER:
                     return "fa-folder document-folder-icon";
                 case TYPE_EMBEDDED:
+                    return "fa-file-text document-text-icon";
                 case TYPE_FILE:
-                    return "fa-file-text-o document-file-icon";
+                    return iconForMimeType(this.item);
                 case TYPE_WIKI:
                     return "fa-wikipedia-w document-wiki-icon";
                 case TYPE_LINK:
