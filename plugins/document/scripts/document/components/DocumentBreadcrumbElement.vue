@@ -26,14 +26,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 export default {
     name: "DocumentBreadcrumbElement",
     props: {
         item: Object
     },
     computed: {
-        ...mapState(["project_name"]),
         document_tree_title() {
             return this.item.title;
         }

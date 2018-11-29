@@ -35,10 +35,9 @@ export default {
     name: "App",
     components: { DocumentBreadcrumb, PermissionError, LoadingError },
     props: {
-        projectId: Number,
-        projectName: String,
-        userIsAdmin: Boolean,
-        dateTimeFormat: String
+        project_id: Number,
+        user_is_admin: Boolean,
+        date_time_format: String
     },
     computed: {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
@@ -57,10 +56,9 @@ export default {
         );
 
         this.$store.commit("initApp", [
-            this.projectId,
-            this.projectName,
-            this.userIsAdmin,
-            this.dateTimeFormat,
+            this.project_id,
+            this.user_is_admin,
+            this.date_time_format,
             this.$gettext("Documents")
         ]);
     }

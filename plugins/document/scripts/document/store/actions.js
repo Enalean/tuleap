@@ -25,7 +25,6 @@ export const loadRootDocumentId = async context => {
         const project = await getProject(context.state.project_id);
         const id = project.additional_informations.docman.root_item.id;
 
-        context.commit("saveDocumentRootId", id);
         await loadFolderContent(context, id);
     } catch (exception) {
         return handleErrors(context, exception);

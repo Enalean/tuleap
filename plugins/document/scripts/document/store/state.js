@@ -18,13 +18,11 @@
  */
 
 const state = {
-    project_root_document_id: null,
     project_id: null,
     is_loading_folder: true,
     has_folder_permission_error: false,
     has_folder_loading_error: false,
     folder_loading_error: null,
-    project_name: null,
     is_user_administrator: false,
     folder_content: [],
     date_time_format: null,
