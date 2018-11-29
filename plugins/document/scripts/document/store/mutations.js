@@ -32,7 +32,8 @@ export {
     saveParents,
     resetParents,
     beginLoadingBreadcrumb,
-    stopLoadingBreadcrumb
+    stopLoadingBreadcrumb,
+    appendFolderToBreadcrumbs
 };
 
 function saveDocumentRootId(state, document_id) {
@@ -101,4 +102,8 @@ function beginLoadingFolderTitle(state) {
 
 function stopLoadingFolderTitle(state) {
     state.is_loading_folder_title = false;
+}
+
+function appendFolderToBreadcrumbs(state, folder) {
+    state.current_folder_parents.push(folder);
 }
