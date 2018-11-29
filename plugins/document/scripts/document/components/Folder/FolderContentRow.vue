@@ -39,7 +39,7 @@
 
 <script>
 import { mapState } from "vuex";
-import UserBadge from "./UserBadge.vue";
+import UserBadge from "../User/UserBadge.vue";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,

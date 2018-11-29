@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <div class="document-folder-badge-avatar">
-        <div class="tlp-avatar document-folder-badge-avatar-img">
+    <div class="document-badge-avatar">
+        <div class="tlp-avatar document-badge-avatar-img">
             <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
         </div>
         <a v-bind:href="user.user_url"> {{ user.display_name }}</a>

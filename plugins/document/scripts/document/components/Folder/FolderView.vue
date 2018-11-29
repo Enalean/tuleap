@@ -30,9 +30,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 
-import FolderLoadingScreen from "./Folder/FolderLoadingScreen.vue";
-import FolderContent from "./Folder/FolderContent.vue";
-import EmptyFolder from "./Folder/empty-states/EmptyFolder.vue";
+import FolderLoadingScreen from "./FolderLoadingScreen.vue";
+import FolderContent from "./FolderContent.vue";
+import EmptyFolder from "./EmptyState/EmptyFolder.vue";
 
 export default {
     name: "FolderView",
