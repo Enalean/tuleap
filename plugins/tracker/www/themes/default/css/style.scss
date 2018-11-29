@@ -1423,6 +1423,11 @@ div.tracker-admin-field-controls {
         display: none;
     }
 
+    .tracker_formelement_artifact_link_editable_on_submit {
+        display: block;
+    }
+
+
     &.in-edition {
         .tracker_formelement_edit {
             display: none;
