@@ -19,18 +19,6 @@
 
 import { getProject, getFolderContent, getItem, getParents } from "../api/rest-querier.js";
 
-export const loadCurrentFolderTitle = async (context, folder_id) => {
-    try {
-        context.commit("beginLoadingFolderTitle");
-        const folder = await getItem(folder_id);
-        context.commit("setCurrentFolderTitle", folder.title);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    } finally {
-        context.commit("stopLoadingFolderTitle");
-    }
-};
-
 export const loadRootDocumentId = async context => {
     try {
         context.commit("beginLoading");
@@ -65,14 +53,17 @@ export const loadBreadCrumbs = async (context, folder_id) => {
         parent => parent.id === folder_id
     );
     if (index_of_folder_in_parents !== -1) {
-        context.commit(
-            "saveParents",
-            context.state.current_folder_parents.slice(0, index_of_folder_in_parents + 1)
+        const hierarchy = context.state.current_folder_parents.slice(
+            0,
+            index_of_folder_in_parents + 1
         );
+        context.commit("saveParents", hierarchy);
+        context.commit("setCurrentFolderTitle", hierarchy[hierarchy.length - 1].title);
         return;
     }
 
     try {
+        context.commit("beginLoadingFolderTitle");
         context.commit("beginLoadingBreadcrumb");
 
         context.commit("resetParents");
@@ -83,10 +74,12 @@ export const loadBreadCrumbs = async (context, folder_id) => {
         parents.shift();
         parents.push(current_folder);
 
+        context.commit("setCurrentFolderTitle", current_folder.title);
         context.commit("saveParents", parents);
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
+        context.commit("stopLoadingFolderTitle");
         context.commit("stopLoadingBreadcrumb");
     }
 };
