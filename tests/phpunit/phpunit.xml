@@ -45,6 +45,7 @@
             <directory suffix=".php">../../plugins/mfa/include/</directory>
             <directory suffix=".php">../../plugins/captcha/include/</directory>
             <directory suffix=".php">../../plugins/tracker/include/Tracker/Artifact/Changeset/</directory>
+            <directory suffix=".php">../../plugins/tracker/include/Tracker/FormElement/Field/Burndown/</directory>
             <directory suffix=".php">../../plugins/cardwall/include/Cardwall</directory>
             <directory suffix=".php">../../plugins/admindelegation/include</directory>
             <directory suffix=".php">../../plugins/bugzilla_reference/include/Bugzilla</directory>

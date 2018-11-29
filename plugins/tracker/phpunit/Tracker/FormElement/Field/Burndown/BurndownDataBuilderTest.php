@@ -129,13 +129,13 @@ class BurndownDataBuilderTest extends TestCase
         $this->assertEquals($user_burndown_data->getTimePeriod()->getStartDate(), $shifted_start_date);
     }
 
-    public function testRemainingEffortAreShiftedAndItsABugUsersLocatedInUTCNegative()
+    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCNegative()
     {
         $this->user->shouldReceive("getTimezone")->andReturn('America/Los_Angeles');
 
-        $start_date = strtotime('2018-11-01T00:00:00-07:00');
-        $second_day = strtotime('2018-11-02T00:00:00-07:00');
-        $third_day = strtotime('2018-11-03T00:00:00-07:00');
+        $start_date = strtotime('2018-11-01');
+        $second_day = strtotime('2018-11-02');
+        $third_day = strtotime('2018-11-03');
 
         $duration   = 2;
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
@@ -145,13 +145,13 @@ class BurndownDataBuilderTest extends TestCase
         $this->assertEquals($user_burndown_data->getRESTRepresentation()->points_with_date[2]->date, JsonCast::toDate($third_day));
     }
 
-    public function testRemainingEffortAreShiftedAndItsABugUsersLocatedInUTCPositive()
+    public function testRemainingEffortAreNotShiftedUsersLocatedInUTCPositive()
     {
         $this->user->shouldReceive("getTimezone")->andReturn('Asia/Tokyo');
 
-        $start_date = strtotime('2018-11-01T00:00:00+09:00');
-        $second_day = strtotime('2018-11-02T00:00:00+09:00');
-        $third_day = strtotime('2018-11-03T00:00:00+09:00');
+        $start_date = strtotime('2018-11-01');
+        $second_day = strtotime('2018-11-02');
+        $third_day = strtotime('2018-11-03');
 
         $duration   = 2;
         $user_burndown_data = $this->burndown_data_builder->build($this->artifact, $this->user, $start_date, $duration);
