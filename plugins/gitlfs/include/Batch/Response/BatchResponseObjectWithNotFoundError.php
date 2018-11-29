@@ -20,33 +20,26 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
 use Tuleap\GitLFS\Object\LFSObject;
 
-final class BatchResponseObjectWithActions implements BatchResponseObject
+final class BatchResponseObjectWithNotFoundError implements BatchResponseObject
 {
     /**
      * @var LFSObject
      */
     private $object;
-    /**
-     * @var BatchResponseActions[]
-     */
-    private $actions;
 
-    public function __construct(LFSObject $object, BatchResponseActions $actions)
+    public function __construct(LFSObject $object)
     {
-        $this->object  = $object;
-        $this->actions = $actions;
+        $this->object = $object;
     }
 
     public function jsonSerialize()
     {
         return [
-            'oid'           => $this->object->getOID()->getValue(),
-            'size'          => $this->object->getSize(),
-            'authenticated' => true,
-            'actions'       => $this->actions
+            'oid'    => $this->object->getOID()->getValue(),
+            'size'   => $this->object->getSize(),
+            'errors' => ['code' => 404, 'message' => 'Object does not exist']
         ];
     }
 }

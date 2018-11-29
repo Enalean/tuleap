@@ -24,21 +24,26 @@ use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRequest;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeDownload;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeVerify;
+use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
+use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefDownload;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefVerify;
+use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForDownloadOperation;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionsForUploadOperation;
 use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\Object\LFSObjectRetriever;
 use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
-use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionContent;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHref;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefUpload;
 
 class BatchSuccessfulResponseBuilder
 {
-    const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC = 900;
-    const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC = 6 * 3600;
+    const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900;
+    const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600;
+    const EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600;
 
     /**
      * @var ActionAuthorizationTokenCreator
@@ -49,6 +54,10 @@ class BatchSuccessfulResponseBuilder
      */
     private $token_header_formatter;
     /**
+     * @var LFSObjectRetriever
+     */
+    private $lfs_object_retriever;
+    /**
      * @var \Logger
      */
     private $logger;
@@ -56,10 +65,12 @@ class BatchSuccessfulResponseBuilder
     public function __construct(
         ActionAuthorizationTokenCreator $authorization_token_creator,
         SplitTokenFormatter $token_header_formatter,
+        LFSObjectRetriever $lfs_object_retriever,
         \Logger $logger
     ) {
         $this->authorization_token_creator = $authorization_token_creator;
         $this->token_header_formatter      = $token_header_formatter;
+        $this->lfs_object_retriever        = $lfs_object_retriever;
         $this->logger                      = $logger;
     }
 
@@ -70,13 +81,43 @@ class BatchSuccessfulResponseBuilder
         BatchRequestOperation $operation,
         LFSObject ...$request_objects
     ) {
-        if (! $operation->isUpload()) {
-            throw new UnknownOperationException('The requested operation is not known');
+        $response_objects = null;
+        if ($operation->isUpload()) {
+            $response_objects = $this->buildUploadResponseObjects(
+                $current_time,
+                $server_url,
+                $repository,
+                ...$request_objects
+            );
+        }
+        if ($operation->isDownload()) {
+            $response_objects = $this->buildDownloadResponseObjects(
+                $current_time,
+                $server_url,
+                $repository,
+                ...$request_objects
+            );
         }
 
+        if ($response_objects !== null) {
+            return new BatchSuccessfulResponse(Transfer::buildBasicTransfer(), ...$response_objects);
+        }
+
+        throw new UnknownOperationException('The requested operation is not known');
+    }
+
+    /**
+     * @return BatchResponseObject[]
+     */
+    private function buildUploadResponseObjects(
+        \DateTimeImmutable $current_time,
+        $server_url,
+        \GitRepository $repository,
+        LFSObject ...$request_objects
+    ) {
         $response_objects = [];
         foreach ($request_objects as $request_object) {
-            $upload_action_content = $this->buildActionContent(
+            $upload_action_content = $this->buildSuccessActionContent(
                 $current_time,
                 $repository,
                 $request_object,
@@ -84,7 +125,7 @@ class BatchSuccessfulResponseBuilder
                 new ActionAuthorizationTypeUpload(),
                 new BatchResponseActionHrefUpload($server_url, $request_object)
             );
-            $verify_action_content = $this->buildActionContent(
+            $verify_action_content = $this->buildSuccessActionContent(
                 $current_time,
                 $repository,
                 $request_object,
@@ -98,11 +139,43 @@ class BatchSuccessfulResponseBuilder
             );
             $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID()->getValue());
         }
-
-        return new BatchSuccessfulResponse(Transfer::buildBasicTransfer(), ...$response_objects);
+        return $response_objects;
     }
 
-    private function buildActionContent(
+    private function buildDownloadResponseObjects(
+        \DateTimeImmutable $current_time,
+        $server_url,
+        \GitRepository $repository,
+        LFSObject ...$request_objects
+    ) {
+        $existing_objects = $this->lfs_object_retriever->getExistingLFSObjectsFromTheSetForRepository(
+            $repository,
+            ...$request_objects
+        );
+        $response_objects = [];
+        foreach ($request_objects as $request_object) {
+            if (in_array($request_object, $existing_objects, true)) {
+                $download_action_content = $this->buildSuccessActionContent(
+                    $current_time,
+                    $repository,
+                    $request_object,
+                    self::EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC,
+                    new ActionAuthorizationTypeDownload(),
+                    new BatchResponseActionHrefDownload($server_url, $request_object)
+                );
+                $response_objects[]    = new BatchResponseObjectWithActions(
+                    $request_object,
+                    new BatchResponseActionsForDownloadOperation($download_action_content)
+                );
+                $this->logger->debug('Ready to accept download query for OID ' . $request_object->getOID()->getValue());
+            } else {
+                $response_objects[] = new BatchResponseObjectWithNotFoundError($request_object);
+            }
+        }
+        return $response_objects;
+    }
+
+    private function buildSuccessActionContent(
         \DateTimeImmutable $current_time,
         \GitRepository $repository,
         LFSObject $request_object,

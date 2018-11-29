@@ -71,6 +71,14 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
+            $r->get('/objects/{oid:[a-fA-F0-9]{64}}', function () {
+                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
+                    $this->getLFSActionUserAccessRequestChecker(),
+                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
+                    $this->getFilesystem(),
+                    new \Tuleap\GitLFS\Object\LFSObjectPathAllocator()
+                );
+            });
             $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
                     $this->getLFSActionUserAccessRequestChecker(),
@@ -113,6 +121,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new BatchSuccessfulResponseBuilder(
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
                     new ActionAuthorizationTokenHeaderSerializer(),
+                    new \Tuleap\GitLFS\Object\LFSObjectRetriever(new \Tuleap\GitLFS\Object\LFSObjectDAO()),
                     $logger
                 )
             );

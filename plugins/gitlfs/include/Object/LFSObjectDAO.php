@@ -25,14 +25,24 @@ use Tuleap\DB\DataAccessObject;
 
 class LFSObjectDAO extends DataAccessObject
 {
-    public function searchByOIDs(array $oids)
+    public function searchByRepositoryIDAndOIDs($repository_id, array $oids)
     {
-        $oids_in_condition = EasyStatement::open()->in('?*', $oids);
-
+        $condition = EasyStatement::open()->with('repository_id = ?', $repository_id)->andIn('object_oid IN (?*)', $oids);
         return $this->getDB()->safeQuery(
-            "SELECT * FROM plugin_gitlfs_object WHERE object_oid IN ($oids_in_condition)",
-            $oids_in_condition->values()
+            "SELECT plugin_gitlfs_object.*
+            FROM plugin_gitlfs_object
+            JOIN plugin_gitlfs_object_repository ON (plugin_gitlfs_object.id = plugin_gitlfs_object_repository.object_id)
+            WHERE $condition",
+            $condition->values()
         );
+    }
+
+    /**
+     * @return null|array
+     */
+    public function searchByOIDValue($oid_value)
+    {
+        return $this->getDB()->row('SELECT * FROM plugin_gitlfs_object WHERE object_oid = ?', $oid_value);
     }
 
     /**
