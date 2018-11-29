@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <h1 v-bind:class="title_class">{{ current_folder_title }}</h1>
+        <h1 v-bind:class="title_class">{{ folder_title }}</h1>
         <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-else>
             <empty-folder v-if="is_folder_empty"/>
@@ -48,6 +48,9 @@ export default {
             return this.is_loading_folder_title
                 ? "tlp-skeleton-text document-folder-title-loading"
                 : "";
+        },
+        folder_title() {
+            return this.is_loading_folder_title ? "" : this.current_folder_title;
         }
     }
 };
