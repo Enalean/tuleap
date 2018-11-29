@@ -27,20 +27,42 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
 class LFSTransferVerifyController implements DispatchableWithRequestNoAuthz
 {
+    /**
+     * @var LFSActionUserAccessHTTPRequestChecker
+     */
     private $user_access_request_checker;
+    /**
+     * @var AuthorizedActionStore
+     */
     private $authorized_action_store;
+    /**
+     * @var LFSTransferVerifier
+     */
+    private $transfer_verifier;
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        AuthorizedActionStore $authorized_action_store
+        AuthorizedActionStore $authorized_action_store,
+        LFSTransferVerifier $transfer_verifier
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->authorized_action_store     = $authorized_action_store;
+        $this->transfer_verifier           = $transfer_verifier;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        http_response_code(501);
+        $authorized_action = $this->authorized_action_store->getAuthorizedAction();
+
+        try {
+            $this->transfer_verifier->verifyAndMarkLFSObjectAsAvailable(
+                $authorized_action->getLFSObject(),
+                $authorized_action->getRepository()
+            );
+        } catch (LFSTransferVerificationException $exception) {
+            http_response_code(400);
+            echo $exception->getMessage();
+        }
     }
 
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)

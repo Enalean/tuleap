@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
@@ -72,13 +74,25 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
                     $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore()
+                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
+                    new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
+                        $this->getFilesystem(),
+                        new \Tuleap\GitLFS\Object\LFSObjectRetriever(new \Tuleap\GitLFS\Object\LFSObjectDAO()),
+                        new \Tuleap\GitLFS\Object\LFSObjectPathAllocator()
+                    )
                 );
             });
             $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
+                $lfs_object_dao = new \Tuleap\GitLFS\Object\LFSObjectDAO();
                 return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
                     $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore()
+                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
+                    new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
+                        $this->getFilesystem(),
+                        new \Tuleap\GitLFS\Object\LFSObjectRetriever($lfs_object_dao),
+                        new \Tuleap\GitLFS\Object\LFSObjectPathAllocator(),
+                        $lfs_object_dao
+                    )
                 );
             });
         });
@@ -132,6 +146,14 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
             )
         );
+    }
+
+    /**
+     * @return League\Flysystem\FilesystemInterface
+     */
+    private function getFilesystem()
+    {
+        return new Filesystem(new Local(ForgeConfig::get('sys_data_dir') . '/git-lfs/'));
     }
 
     public function dailyCleanup()

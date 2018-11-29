@@ -3,5 +3,8 @@
     "psr-4": {
       "Tuleap\\GitLFS\\": "include/"
     }
+  },
+  "require": {
+    "league/flysystem": "^1.0"
   }
 }

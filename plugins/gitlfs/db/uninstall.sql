@@ -1,1 +1,3 @@
 DROP TABLE plugin_gitlfs_authorization_action;
+DROP TABLE plugin_gitlfs_object;
+DROP TABLE plugin_gitlfs_object_repository;

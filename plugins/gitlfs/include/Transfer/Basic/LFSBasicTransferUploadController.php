@@ -37,18 +37,37 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
      * @var AuthorizedActionStore
      */
     private $authorized_action_store;
+    /**
+     * @var LFSBasicTransferObjectSaver
+     */
+    private $basic_object_saver;
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        AuthorizedActionStore $authorized_action_store
+        AuthorizedActionStore $authorized_action_store,
+        LFSBasicTransferObjectSaver $basic_object_saver
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->authorized_action_store     = $authorized_action_store;
+        $this->basic_object_saver          = $basic_object_saver;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        http_response_code(501);
+        $authorized_action = $this->authorized_action_store->getAuthorizedAction();
+
+        $input_resource = fopen('php://input', 'rb');
+        try {
+            $this->basic_object_saver->saveObject(
+                $authorized_action->getLFSObject(),
+                $input_resource
+            );
+        } catch (LFSBasicTransferException $exception) {
+            http_response_code(400);
+            echo $exception->getMessage();
+        } finally {
+            fclose($input_resource);
+        }
     }
 
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
