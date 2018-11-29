@@ -23,7 +23,7 @@ describe("Store getters", () => {
     describe("current_folder_title", () => {
         it("returns the title of the last item in the ascendant hierarchy", () => {
             const title = getters.current_folder_title({
-                current_folder_parents: [
+                current_folder_ascendant_hierarchy: [
                     {
                         id: 2,
                         title: "folder A",
@@ -50,7 +50,7 @@ describe("Store getters", () => {
 
         it("returns the root title if the ascendant hierarchy is empty", () => {
             const title = getters.current_folder_title({
-                current_folder_parents: [],
+                current_folder_ascendant_hierarchy: [],
                 root_title: "Documents"
             });
 

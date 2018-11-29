@@ -20,30 +20,6 @@
 import * as mutations from "./mutations.js";
 
 describe("Store mutations", () => {
-    describe("beginLoadingFolderTitle()", () => {
-        it("sets loading to true", () => {
-            const state = {
-                is_loading_folder_title: false
-            };
-
-            mutations.beginLoadingFolderTitle(state);
-
-            expect(state.is_loading_folder_title).toBe(true);
-        });
-    });
-
-    describe("stopLoadingFolderTitle()", () => {
-        it("sets loading to false", () => {
-            const state = {
-                is_loading_folder_title: true
-            };
-
-            mutations.stopLoadingFolderTitle(state);
-
-            expect(state.is_loading_folder_title).toBe(false);
-        });
-    });
-
     describe("beginLoading()", () => {
         it("sets loading to true", () => {
             const state = {

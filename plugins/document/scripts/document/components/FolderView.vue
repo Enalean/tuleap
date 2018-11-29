@@ -42,15 +42,15 @@ export default {
         FolderContent
     },
     computed: {
-        ...mapState(["is_loading_folder", "is_loading_folder_title"]),
+        ...mapState(["is_loading_folder", "is_loading_ascendant_hierarchy"]),
         ...mapGetters(["is_folder_empty", "current_folder_title"]),
         title_class() {
-            return this.is_loading_folder_title
+            return this.is_loading_ascendant_hierarchy
                 ? "tlp-skeleton-text document-folder-title-loading"
                 : "";
         },
         folder_title() {
-            return this.is_loading_folder_title ? "" : this.current_folder_title;
+            return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
         }
     }
 };

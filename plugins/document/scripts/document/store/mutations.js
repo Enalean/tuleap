@@ -25,13 +25,11 @@ export {
     setFolderLoadingError,
     stopLoading,
     switchFolderPermissionError,
-    beginLoadingFolderTitle,
-    stopLoadingFolderTitle,
-    saveParents,
-    resetParents,
-    beginLoadingBreadcrumb,
-    stopLoadingBreadcrumb,
-    appendFolderToBreadcrumbs
+    saveAscendantHierarchy,
+    resetAscendantHierarchy,
+    beginLoadingAscendantHierarchy,
+    stopLoadingAscendantHierarchy,
+    appendFolderToAscendantHierarchy
 };
 
 function saveFolderContent(state, folder_content) {
@@ -45,12 +43,12 @@ function initApp(state, [project_id, user_is_admin, date_time_format, root_title
     state.root_title = root_title;
 }
 
-function saveParents(state, parents) {
-    state.current_folder_parents = parents;
+function saveAscendantHierarchy(state, hierarchy) {
+    state.current_folder_ascendant_hierarchy = hierarchy;
 }
 
-function resetParents(state) {
-    state.current_folder_parents = [];
+function resetAscendantHierarchy(state) {
+    state.current_folder_ascendant_hierarchy = [];
 }
 
 function beginLoading(state) {
@@ -61,12 +59,12 @@ function stopLoading(state) {
     state.is_loading_folder = false;
 }
 
-function beginLoadingBreadcrumb(state) {
-    state.is_loading_breadcrumb = true;
+function beginLoadingAscendantHierarchy(state) {
+    state.is_loading_ascendant_hierarchy = true;
 }
 
-function stopLoadingBreadcrumb(state) {
-    state.is_loading_breadcrumb = false;
+function stopLoadingAscendantHierarchy(state) {
+    state.is_loading_ascendant_hierarchy = false;
 }
 
 function resetErrors(state) {
@@ -84,14 +82,6 @@ function setFolderLoadingError(state, message) {
     state.folder_loading_error = message;
 }
 
-function beginLoadingFolderTitle(state) {
-    state.is_loading_folder_title = true;
-}
-
-function stopLoadingFolderTitle(state) {
-    state.is_loading_folder_title = false;
-}
-
-function appendFolderToBreadcrumbs(state, folder) {
-    state.current_folder_parents.push(folder);
+function appendFolderToAscendantHierarchy(state, folder) {
+    state.current_folder_ascendant_hierarchy.push(folder);
 }

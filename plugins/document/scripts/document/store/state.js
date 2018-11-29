@@ -27,9 +27,8 @@ const state = {
     folder_content: [],
     date_time_format: null,
     current_folder_title: null,
-    is_loading_folder_title: false,
-    current_folder_parents: [],
-    is_loading_breadcrumb: false,
+    current_folder_ascendant_hierarchy: [],
+    is_loading_ascendant_hierarchy: false,
     root_title: ""
 };
 

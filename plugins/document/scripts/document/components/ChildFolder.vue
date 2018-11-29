@@ -46,7 +46,7 @@ export default {
     methods: {
         loadFolder(id) {
             this.$store.dispatch("loadFolderContent", id);
-            this.$store.dispatch("loadBreadCrumbs", id);
+            this.$store.dispatch("loadAscendantHierarchy", id);
         }
     }
 };
