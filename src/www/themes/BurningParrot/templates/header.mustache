@@ -65,8 +65,7 @@
                     </nav>
                 {{/ has_toolbar }}
 
-                {{# has_feedbacks }}
-                    <div id="feedback" data-test="feedback">
+                    <div id="feedback" data-test="feedback">{{# has_feedbacks }}
                         {{# feedbacks }}
                             <section class="tlp-alert-{{ level }}">
                                 {{# purified_messages }}
@@ -74,5 +73,4 @@
                                 {{/ purified_messages }}
                             </section>
                         {{/ feedbacks }}
-                    </div>
-                {{/ has_feedbacks }}
+                    {{/ has_feedbacks }}</div>
