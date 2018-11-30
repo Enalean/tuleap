@@ -36,6 +36,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
 
 .breadcrumb {
     display: flex;
+    flex-wrap: wrap;
     padding: $tlp-spacing $tlp-spacing 0;
 }
 
