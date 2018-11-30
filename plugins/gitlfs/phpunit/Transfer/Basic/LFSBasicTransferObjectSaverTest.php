@@ -72,8 +72,6 @@ class LFSBasicTransferObjectSaverTest extends TestCase
             }
         );
 
-        $this->filesystem->shouldReceive('getSize')->with($temporary_save_path)->andReturns($input_size);
-
         $this->filesystem->shouldReceive('rename')->with($temporary_save_path, $ready_path)->once()->andReturns(true);
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
@@ -125,8 +123,9 @@ class LFSBasicTransferObjectSaverTest extends TestCase
 
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
+        $corrupted_data = str_repeat('B', $input_size);
         $input_resource = fopen('php://memory', 'rb+');
-        fwrite($input_resource, 'corrupted_input_data');
+        fwrite($input_resource, $corrupted_data);
         rewind($input_resource);
         $expected_oid_value = \hash('sha256', $input_data);
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
@@ -140,21 +139,19 @@ class LFSBasicTransferObjectSaverTest extends TestCase
             }
         );
 
-        $this->filesystem->shouldReceive('getSize')->with($temporary_save_path)->andReturns($input_size);
-        $corrupted_input_resource = fopen('php://memory', 'rb+');
-        fwrite($corrupted_input_resource, 'corrupted_data');
-        rewind($corrupted_input_resource);
-
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
         $object_saver->saveObject($lfs_object, $input_resource);
     }
 
     /**
-     * @expectedException \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSizeException
+     * @dataProvider objectSizeProvider
      */
-    public function testSaveIsRejectedWhenSizeOfSavedFileDoesNotMatchTheExpectation()
-    {
+    public function testSaveIsRejectedWhenSizeOfSavedFileDoesNotMatchTheExpectation(
+        $input_size,
+        $object_size,
+        $excepted_exception
+    ) {
         $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
 
         $ready_path = 'ready-path';
@@ -165,22 +162,35 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
         $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
 
-        $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
         $input_resource = fopen('php://memory', 'rb+');
         fwrite($input_resource, $input_data);
         rewind($input_resource);
         $lfs_object = new LFSObject(
             new LFSObjectID('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'),
-            $input_size
+            $object_size
         );
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturns(true);
-
-        $this->filesystem->shouldReceive('getSize')->with($temporary_save_path)->andReturns(10000000000);
+        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
+            function ($save_path, $input_stream) {
+                $destination_resource = fopen('php://memory', 'wb');
+                stream_copy_to_stream($input_stream, $destination_resource);
+                fclose($destination_resource);
+                return true;
+            }
+        );
 
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
+        $this->expectException($excepted_exception);
         $object_saver->saveObject($lfs_object, $input_resource);
+    }
+
+    public function objectSizeProvider()
+    {
+        return [
+            [1024, 2048, LFSBasicTransferObjectSizeException::class],
+            [1024, 512, LFSBasicTransferObjectOutOfBoundSizeException::class],
+        ];
     }
 }

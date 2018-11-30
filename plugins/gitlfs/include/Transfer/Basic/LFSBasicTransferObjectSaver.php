@@ -27,7 +27,6 @@ use Tuleap\GitLFS\Object\LFSObject;
 use Tuleap\GitLFS\Object\LFSObjectPathAllocator;
 use Tuleap\GitLFS\Object\LFSObjectRetriever;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
-use Tuleap\GitLFS\StreamFilter\StreamFilterWrapper;
 
 class LFSBasicTransferObjectSaver
 {
@@ -71,14 +70,17 @@ class LFSBasicTransferObjectSaver
 
         $sha256_processor_filter = new SHA256ComputeOnReadFilter();
         $sha256_filter_handle    = StreamFilter::prependFilter($input_resource, $sha256_processor_filter);
+        $max_size_blocker_filter = new BlockToMaxSizeOnReadFilter($lfs_object->getSize());
+        $max_size_filter_handle  = StreamFilter::prependFilter($input_resource, $max_size_blocker_filter);
 
         $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($lfs_object);
         try {
-            $this->writeTemporaryObjectFile($temporary_path, $input_resource);
-            $this->checkTemporaryObjectFileMatchesExpectations($temporary_path, $lfs_object, $sha256_processor_filter);
+            $this->writeTemporaryObjectFile($temporary_path, $input_resource, $max_size_blocker_filter);
+            $this->checkTemporaryObjectFileMatchesExpectations($lfs_object, $max_size_blocker_filter, $sha256_processor_filter);
             $this->markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, $lfs_object);
         } finally {
             StreamFilter::removeFilter($sha256_filter_handle);
+            StreamFilter::removeFilter($max_size_filter_handle);
             $this->tryToCleanUpFile($temporary_path);
         }
     }
@@ -92,22 +94,24 @@ class LFSBasicTransferObjectSaver
                 ! $this->filesystem->has($ready_to_be_added_path);
     }
 
-    private function writeTemporaryObjectFile($path, $input_resource)
+    private function writeTemporaryObjectFile($path, $input_resource, BlockToMaxSizeOnReadFilter $max_size_blocker_filter)
     {
         $is_writing_temporary_file_success = $this->filesystem->writeStream($path, $input_resource);
+        if ($max_size_blocker_filter->hasMaximumSizeBeenExceeded()) {
+            throw new LFSBasicTransferObjectOutOfBoundSizeException();
+        }
         if (! $is_writing_temporary_file_success) {
             throw new \RuntimeException('Cannot write LFS object to the path temporary ' . $path);
         }
     }
 
     private function checkTemporaryObjectFileMatchesExpectations(
-        $path,
         LFSObject $lfs_object,
+        BlockToMaxSizeOnReadFilter $max_size_blocker_filter,
         SHA256ComputeOnReadFilter $sha256_processor
     ) {
-        $temporary_object_file_size = $this->filesystem->getSize($path);
-        if ($lfs_object->getSize() !== $temporary_object_file_size) {
-            throw new LFSBasicTransferObjectSizeException($lfs_object->getSize(), $temporary_object_file_size);
+        if ($max_size_blocker_filter->getReadDataSize() !== $lfs_object->getSize()) {
+            throw new LFSBasicTransferObjectSizeException($lfs_object->getSize(), $max_size_blocker_filter->getReadDataSize());
         }
 
         $oid_temporary_upload = $sha256_processor->getHashValue();
