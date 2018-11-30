@@ -198,7 +198,7 @@ class openidconnectclientPlugin extends Plugin {
     private function getFlow(ProviderManager $provider_manager)
     {
         $state_manager     = new StateManager(
-            new StateStorage(),
+            new StateStorage($_SESSION),
             new StateFactory(new RandomNumberGenerator())
         );
         $id_token_verifier = new IDTokenVerifier();
@@ -223,7 +223,7 @@ class openidconnectclientPlugin extends Plugin {
     {
         return new AuthorizationRequestCreator(
             new StateManager(
-                new StateStorage(),
+                new StateStorage($_SESSION),
                 new StateFactory(new RandomNumberGenerator())
             )
         );
