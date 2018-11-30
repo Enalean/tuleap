@@ -1,0 +1,4 @@
+Document plugin
+===============
+
+Adds a new UI for the document manager plugin.
