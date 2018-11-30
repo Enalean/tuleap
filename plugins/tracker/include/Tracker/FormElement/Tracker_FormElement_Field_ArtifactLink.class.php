@@ -23,19 +23,19 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRender;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinksToRenderForPerTrackerTable;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\FieldDataBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ArtifactInNatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\CustomColumn\ValueFormatter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ArtifactInNatureTablePresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkValueSaver;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureSelectorPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureTablePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollection;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 {
@@ -505,6 +505,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $prefill_edited_natures,
         $prefill_parent,
         $read_only,
+        array $additional_classes,
         $from_aid = null,
         $reverse_artifact_links = false
     ) {
@@ -547,9 +548,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         if (! $read_only) {
             $read_only_class = '';
-            $html .= '<section class="tracker_formelement_read_and_edit_edition_section tracker-form-element-artifactlink-section">';
-            $html .= '<div>';
-            $html .= '<div><span class="input-append" style="display:inline;"><input type="text"
+            $classes         = implode(" ", $additional_classes);
+            $html            .= '<section class="tracker_formelement_read_and_edit_edition_section tracker-form-element-artifactlink-section ' . $hp->purify($classes) . '">';
+            $html            .= '<div>';
+            $html            .= '<div><span class="input-append" style="display:inline;"><input type="text"
                              '. $html_name_new .'
                              class="tracker-form-element-artifactlink-new"
                              size="40"
@@ -993,6 +995,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_edited_natures,
             $prefill_parent,
             $read_only,
+            [],
             $from_aid
         );
     }
@@ -1043,6 +1046,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             array(),
             '',
             true,
+            [],
             $from_aid,
             true
         );
@@ -1101,6 +1105,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $prefill_edited_natures,
             $prefill_parent,
             $read_only,
+            [],
             $from_aid
         );
     }
@@ -1150,7 +1155,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             ...$artifact_links
         );
 
-        return $this->fetchHtmlWidget($artifact, $name, $artifact_links_to_render, $prefill_new_values, $prefill_removed_values, $prefill_nature, $prefill_edited_natures, $prefill_parent, $read_only);
+        return $this->fetchHtmlWidget(
+            $artifact,
+            $name,
+            $artifact_links_to_render,
+            $prefill_new_values,
+            $prefill_removed_values,
+            $prefill_nature,
+            $prefill_edited_natures,
+            $prefill_parent,
+            $read_only,
+            ["tracker_formelement_artifact_link_editable_on_submit"]
+        );
     }
 
     /**
