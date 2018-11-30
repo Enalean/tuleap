@@ -18,35 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch\Response;
+namespace Tuleap\GitLFS\Batch\Response\Action;
 
-use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
-use Tuleap\GitLFS\Object\LFSObject;
-
-final class BatchResponseObjectWithActions implements BatchResponseObject
+final class BatchResponseActionsForDownloadOperation implements BatchResponseActions
 {
     /**
-     * @var LFSObject
+     * @var BatchResponseActionContent
      */
-    private $object;
-    /**
-     * @var BatchResponseActions[]
-     */
-    private $actions;
+    private $download_action;
 
-    public function __construct(LFSObject $object, BatchResponseActions $actions)
+    public function __construct(BatchResponseActionContent $download_action)
     {
-        $this->object  = $object;
-        $this->actions = $actions;
+        $this->download_action = $download_action;
     }
 
     public function jsonSerialize()
     {
-        return [
-            'oid'           => $this->object->getOID()->getValue(),
-            'size'          => $this->object->getSize(),
-            'authenticated' => true,
-            'actions'       => $this->actions
-        ];
+        return ['download' => $this->download_action];
     }
 }

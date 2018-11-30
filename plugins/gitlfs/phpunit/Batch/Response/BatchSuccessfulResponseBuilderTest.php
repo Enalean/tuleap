@@ -28,6 +28,7 @@ use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\Object\LFSObject;
 use Tuleap\GitLFS\Object\LFSObjectID;
+use Tuleap\GitLFS\Object\LFSObjectRetriever;
 
 class BatchSuccessfulResponseBuilderTest extends TestCase
 {
@@ -35,16 +36,18 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
 
     private $token_creator;
     private $token_formatter;
+    private $object_retriever;
     private $logger;
 
     protected function setUp()
     {
-        $this->token_creator   = \Mockery::mock(ActionAuthorizationTokenCreator::class);
-        $this->token_formatter = \Mockery::mock(SplitTokenFormatter::class);
-        $this->logger          = \Mockery::mock(\Logger::class);
+        $this->token_creator    = \Mockery::mock(ActionAuthorizationTokenCreator::class);
+        $this->token_formatter  = \Mockery::mock(SplitTokenFormatter::class);
+        $this->object_retriever = \Mockery::mock(LFSObjectRetriever::class);
+        $this->logger           = \Mockery::mock(\Logger::class);
     }
 
-    public function testResponseIsBuilt()
+    public function testResponseForUploadRequestIsBuilt()
     {
         $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
         $this->logger->shouldReceive('debug');
@@ -53,18 +56,62 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $repository   = \Mockery::mock(\GitRepository::class);
         $operation    = \Mockery::mock(BatchRequestOperation::class);
         $operation->shouldReceive('isUpload')->andReturns(true);
+        $operation->shouldReceive('isDownload')->andReturns(false);
 
         $request_object = \Mockery::mock(LFSObject::class);
         $request_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
         $request_object->shouldReceive('getSize')->andReturns(123456);
 
-        $builder        = new BatchSuccessfulResponseBuilder($this->token_creator, $this->token_formatter, $this->logger);
+        $builder        = new BatchSuccessfulResponseBuilder(
+            $this->token_creator,
+            $this->token_formatter,
+            $this->object_retriever,
+            $this->logger
+        );
         $batch_response = $builder->build(
             $current_time,
             'https://example.com',
             $repository,
             $operation,
             $request_object
+        );
+
+        $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
+    }
+
+    public function testResponseForDownloadRequestIsBuilt()
+    {
+        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
+        $this->logger->shouldReceive('debug');
+
+        $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
+        $repository   = \Mockery::mock(\GitRepository::class);
+        $operation    = \Mockery::mock(BatchRequestOperation::class);
+        $operation->shouldReceive('isUpload')->andReturns(false);
+        $operation->shouldReceive('isDownload')->andReturns(true);
+
+        $request_object1 = \Mockery::mock(LFSObject::class);
+        $request_object1->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_object1->shouldReceive('getSize')->andReturns(123456);
+        $request_object2 = \Mockery::mock(LFSObject::class);
+        $request_object2->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_object2->shouldReceive('getSize')->andReturns(654321);
+
+        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_object2]);
+
+        $builder        = new BatchSuccessfulResponseBuilder(
+            $this->token_creator,
+            $this->token_formatter,
+            $this->object_retriever,
+            $this->logger
+        );
+        $batch_response = $builder->build(
+            $current_time,
+            'https://example.com',
+            $repository,
+            $operation,
+            $request_object1,
+            $request_object2
         );
 
         $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
@@ -79,8 +126,14 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $repository   = \Mockery::mock(\GitRepository::class);
         $operation    = \Mockery::mock(BatchRequestOperation::class);
         $operation->shouldReceive('isUpload')->andReturns(false);
+        $operation->shouldReceive('isDownload')->andReturns(false);
 
-        $builder = new BatchSuccessfulResponseBuilder($this->token_creator, $this->token_formatter, $this->logger);
+        $builder = new BatchSuccessfulResponseBuilder(
+            $this->token_creator,
+            $this->token_formatter,
+            $this->object_retriever,
+            $this->logger
+        );
 
         $builder->build(
             $current_time,

@@ -31,10 +31,36 @@ class LFSObjectRetrieverTest extends TestCase
         $this->dao = \Mockery::mock(LFSObjectDAO::class);
     }
 
+    public function testFilteredObjectsAreRetrieved()
+    {
+        $objects = [];
+        for ($i = 1; $i <= 4; $i++) {
+            $oid = \Mockery::mock(LFSObjectID::class);
+            $oid->shouldReceive('getValue')->andReturns("oid$i");
+            $object = \Mockery::mock(LFSObject::class);
+            $object->shouldReceive('getOID')->andReturns($oid);
+            $objects[$i] = $object;
+        }
+
+        $this->dao->shouldReceive('searchByRepositoryIDAndOIDs')->andReturns([
+            ['object_oid' => 'oid2'],
+            ['object_oid' => 'oid4']
+        ]);
+
+        $object_retriever     = new LFSObjectRetriever($this->dao);
+        $repository           = \Mockery::mock(\GitRepository::class);
+        $repository->shouldReceive('getId')->andReturns(123);
+        $existing_objects     = $object_retriever->getExistingLFSObjectsFromTheSetForRepository($repository, ...$objects);
+
+        $this->assertCount(2, $existing_objects);
+        $this->assertContains($objects[2], $existing_objects);
+        $this->assertContains($objects[4], $existing_objects);
+    }
+
     public function testExistenceOfLFSObject()
     {
-        $this->dao->shouldReceive('searchByOIDs')->with(['oid1'])->andReturns([['object_oid' => 'oid1']]);
-        $this->dao->shouldReceive('searchByOIDs')->with(['oid2'])->andReturns([]);
+        $this->dao->shouldReceive('searchByOIDValue')->with('oid1')->andReturns(['object_oid' => 'oid1']);
+        $this->dao->shouldReceive('searchByOIDValue')->with('oid2')->andReturns(null);
 
         $oid1 = \Mockery::mock(LFSObjectID::class);
         $oid1->shouldReceive('getValue')->andReturns('oid1');

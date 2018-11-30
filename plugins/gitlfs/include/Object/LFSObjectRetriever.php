@@ -33,11 +33,33 @@ class LFSObjectRetriever
     }
 
     /**
+     * @return LFSObject[]
+     */
+    public function getExistingLFSObjectsFromTheSetForRepository(\GitRepository $repository, LFSObject ...$lfs_objects)
+    {
+        $objects_by_oid_value = [];
+        foreach ($lfs_objects as $lfs_object) {
+            $objects_by_oid_value[$lfs_object->getOID()->getValue()] = $lfs_object;
+        }
+
+        $existing_lfs_object_rows = $this->dao->searchByRepositoryIDAndOIDs(
+            $repository->getId(),
+            array_keys($objects_by_oid_value)
+        );
+
+        $existing_lfs_objects = [];
+        foreach ($existing_lfs_object_rows as $existing_lfs_object_row) {
+            $existing_lfs_objects[] = $objects_by_oid_value[$existing_lfs_object_row['object_oid']];
+        }
+
+        return $existing_lfs_objects;
+    }
+
+    /**
      * @return bool
      */
     public function doesLFSObjectExists(LFSObject $lfs_object)
     {
-
-        return ! empty($this->dao->searchByOIDs([$lfs_object->getOID()->getValue()]));
+        return $this->dao->searchByOIDValue($lfs_object->getOID()->getValue()) !== null;
     }
 }
