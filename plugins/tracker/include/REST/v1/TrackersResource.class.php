@@ -640,13 +640,12 @@ class TrackersResource extends AuthenticatedResource
     {
         $tracker_id = $tracker->getId();
         $workflow_factory = $this->getWorkflowFactory();
-        $workflow_id = $workflow_factory->getWorkflowByTrackerId($tracker_id)->workflow_id;
-
-        if (!$workflow_id) {
+        $workflow = $workflow_factory->getWorkflowByTrackerId($tracker_id);
+        if (!$workflow) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', "This tracker has no workflow."));
         }
 
-        if (!$workflow_factory->deleteWorkflow($workflow_id)) {
+        if (!$workflow_factory->deleteWorkflow($workflow->getId())) {
             throw new I18NRestException(500, dgettext('tuleap-tracker', "An error has occurred, the workflow couldn't be reset."));
         }
     }

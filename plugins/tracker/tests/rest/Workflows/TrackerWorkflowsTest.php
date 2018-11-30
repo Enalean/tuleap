@@ -136,6 +136,27 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertTrue(sizeof($result['workflow']['transitions']) === 0);
     }
 
+    /**
+     * @depends testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules
+     */
+    public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRulesWhenNotExist()
+    {
+        $query = '{"workflow": {"delete_transitions_rules": true}}';
+        try {
+            $this->getResponseByName(
+                \REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->patch(
+                    "trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query),
+                    null,
+                    null
+                )
+            );
+            $this->fail('Expected exception not raised');
+        } catch (BadResponseException $e) {
+            $this->assertEquals(400, $e->getResponse()->getStatusCode());
+        }
+    }
+
     private function getStatusFieldId()
     {
         $response = $this->getResponseByName(
