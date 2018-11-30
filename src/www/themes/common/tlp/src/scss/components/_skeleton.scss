@@ -35,6 +35,7 @@ $tlp-skeleton-animation-duration: 1.2s;
     width: 100px;
     min-height: 6px;
     animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
+    border-radius: 3px;
     background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px) repeat-x bottom left;
     background-size: 600px 6px;
 }

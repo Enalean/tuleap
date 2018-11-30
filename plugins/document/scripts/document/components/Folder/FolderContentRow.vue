@@ -20,18 +20,17 @@
 <template>
     <tr>
         <td v-if="is_folder">
-            <i class="document-folder-icon-color fa fa-fw fa-folder "></i>
+            <i class="document-folder-icon-color fa fa-fw fa-folder"></i>
             <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
-                {{ item.title }}<!--
-            --></a>
-            <i class="fa fa-long-arrow-right document-folder-subitem-link-icon"></i>
+                {{ item.title }}
+            </a>
         </td>
         <td v-else>
             <i class="fa fa-fw " v-bind:class="icon_class"></i>
             {{ item.title }}
         </td>
-        <td><user-badge v-bind:user="item.owner"/></td>
-        <td class="tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
+        <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
+        <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
             {{ formatted_date }}
         </td>
     </tr>

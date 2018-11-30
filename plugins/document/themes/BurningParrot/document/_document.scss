@@ -17,13 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@import 'icons';
+
 .document-tree-head-name {
     width: 100%;
 }
 
 .document-tree-head-owner,
 .document-tree-head-updatedate {
-    min-width: 200px;
+    white-space: nowrap;
+
+    &.document-tree-head-skeleton {
+        min-width: 150px;
+    }
+}
+
+.document-tree-cell-owner,
+.document-tree-cell-updatedate {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
     white-space: nowrap;
 }
 
@@ -38,13 +50,13 @@
 
 .document-badge-avatar-img {
     flex: 0 0 auto;
-    margin: 0 10px 0 0;
+    margin: 0 5px 0 0;
 }
 
-.document-folder-error-link {
-    margin: $tlp-spacing 0 0;
-    font-size: 20px;
-    line-height: 20px;
+.document-badge-avatar-username {
+    &:not(:hover) {
+        color: $tlp-ui-dimmed;
+    }
 }
 
 .document-folder-error-details {
@@ -55,78 +67,13 @@
     &:not(:hover) {
         color: inherit;
     }
+}
 
-    &:hover + .document-folder-subitem-link-icon {
-        visibility: visible;
+@media screen and (max-width: 1100px) {
+    .document-tree-head-owner,
+    .document-tree-head-updatedate,
+    .document-tree-cell-owner,
+    .document-tree-cell-updatedate {
+        display: none;
     }
-}
-
-.document-folder-subitem-link-icon {
-    visibility: hidden;
-    margin: 0 0 0 5px;
-    color: $tlp-theme-color;
-    font-size: 14px;
-}
-
-.document-folder-icon {
-    color: $tlp-swatch-inca-silver;
-}
-
-.document-file-icon {
-    color: $tlp-swatch-inca-silver;
-}
-
-.document-empty-icon {
-    color: $tlp-swatch-chrome-silver;
-}
-
-.document-wiki-icon {
-    position: relative;
-    left: 2px;
-    margin-right: 4px;
-    font-size: 13px;
-}
-
-.document-link-icon {
-    color: $tlp-swatch-flamingo-pink;
-}
-
-.document-audio-icon {
-    color: $tlp-swatch-lake-placid-blue;
-}
-
-.document-video-icon {
-    color: $tlp-swatch-ocean-turquoise;
-}
-
-.document-image-icon {
-    color: $tlp-swatch-graffiti-yellow;
-}
-
-.document-text-icon {
-    color: $tlp-swatch-inca-silver;
-}
-
-.document-code-icon {
-    color: $tlp-swatch-daphne-blue;
-}
-
-.document-archive-icon {
-    color: $tlp-swatch-plum-crazy;
-}
-
-.document-pdf-icon {
-    color: $tlp-swatch-fiesta-red;
-}
-
-.document-document-icon {
-    color: $tlp-swatch-deep-blue;
-}
-
-.document-presentation-icon {
-    color: $tlp-swatch-clockwork-orange;
-}
-
-.document-spreadsheet-icon {
-    color: $tlp-swatch-sherwood-green;
 }

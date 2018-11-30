@@ -25,7 +25,7 @@
         </thead>
         <tbody>
             <tr v-for="(row, row_index) in rows" v-bind:key="row_index">
-                <td v-for="(cell, cell_index) in row" v-bind:key="cell_index">
+                <td v-for="(cell, cell_index) in row" v-bind:key="cell_index" v-bind:class="getCellClassname(cell_index)">
                     <i class="fa tlp-skeleton-text-icon tlp-skeleton-icon" v-bind:class="cell.icon" v-if="cell.icon"></i>
                     <span class="tlp-skeleton-text" v-bind:style="{width: cell.width}"></span>
                 </td>
@@ -38,16 +38,17 @@
 export default {
     name: "SkeletonTable",
     props: {
-        nbRows: Number,
-        nbCols: Number,
-        icons: Array
+        nb_rows: Number,
+        nb_cols: Number,
+        icons: Array,
+        cell_classes: Array
     },
     computed: {
         rows() {
             const rows = [];
-            for (let i = 0; i < this.nbRows; i++) {
+            for (let i = 0; i < this.nb_rows; i++) {
                 const cols = [];
-                for (let j = 0; j < this.nbCols; j++) {
+                for (let j = 0; j < this.nb_cols; j++) {
                     const width =
                         j === 0 ? this.getRandomPixelWidth() : this.getRandomPercentageWidth();
                     let icon = false;
@@ -71,6 +72,17 @@ export default {
         },
         getRandomPixelWidth() {
             return 200 - this.getRandomInt(5) * 10 + "px";
+        },
+        getCellClassname(cell_index) {
+            if (!this.cell_classes) {
+                return "";
+            }
+
+            if (cell_index >= this.cell_classes.length) {
+                return "";
+            }
+
+            return this.cell_classes[cell_index];
         }
     }
 };
