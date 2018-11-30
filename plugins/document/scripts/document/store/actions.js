@@ -66,8 +66,10 @@ export const loadAscendantHierarchy = async (context, folder_id) => {
         context.commit("beginLoadingAscendantHierarchy");
         context.commit("resetAscendantHierarchy");
 
-        let parents = await getParents(folder_id);
-        const current_folder = await getItem(folder_id);
+        const [parents, current_folder] = await Promise.all([
+            getParents(folder_id),
+            getItem(folder_id)
+        ]);
 
         parents.shift();
         parents.push(current_folder);
