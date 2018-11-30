@@ -27,9 +27,9 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import DocumentBreadcrumb from "./DocumentBreadcrumb.vue";
-import PermissionError from "./Folder/empty-states/PermissionError.vue";
-import LoadingError from "./Folder/empty-states/LoadingError.vue";
+import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
+import PermissionError from "./Folder/EmptyState/PermissionError.vue";
+import LoadingError from "./Folder/EmptyState/LoadingError.vue";
 
 export default {
     name: "App",

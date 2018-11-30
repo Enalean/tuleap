@@ -20,8 +20,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import store from "../store/index.js";
-import RootFolder from "../components/RootFolder.vue";
-import ChildFolder from "../components/ChildFolder.vue";
+import RootFolder from "../components/Folder/RootFolder.vue";
+import ChildFolder from "../components/Folder/ChildFolder.vue";
 
 Vue.use(VueRouter);
 
