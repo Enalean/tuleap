@@ -36,6 +36,9 @@ msgstr "Mis à jour"
 msgid "Name"
 msgstr "Nom"
 
+msgid "Name, description..."
+msgstr "Nom, description..."
+
 msgid "New document"
 msgstr "Nouveau document"
 

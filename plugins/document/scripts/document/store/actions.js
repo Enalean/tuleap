@@ -23,9 +23,11 @@ export const loadRootDocumentId = async context => {
     try {
         context.commit("beginLoading");
         const project = await getProject(context.state.project_id);
-        const id = project.additional_informations.docman.root_item.id;
+        const root_id = project.additional_informations.docman.root_item.id;
 
-        await loadFolderContent(context, id);
+        context.commit("setRootId", root_id);
+
+        await loadFolderContent(context, root_id);
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
