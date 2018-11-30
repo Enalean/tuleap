@@ -19,7 +19,7 @@
 
 <template>
     <section class="tlp-pane-section">
-        <table class="tlp-table tracker-workflow-transition-table">
+        <table v-if="has_field_values" class="tlp-table tracker-workflow-transition-table">
             <thead>
                 <tr>
                     <th></th>
@@ -55,6 +55,15 @@
                 </tr>
             </tbody>
         </table>
+        <div v-else class="empty-page tracker-workflow-transition-matrix-empty-state">
+            <p class="empty-page-text tracker-workflow-transition-matrix-empty-state-field-empty" v-translate>
+                The field on which the transitions are based has no selectable value
+            </p>
+            <a class="tlp-button-primary" v-bind:href="configure_field_url">
+                <i class="fa fa-cog"></i>
+                <span v-translate>Configure it</span>
+            </a>
+        </div>
     </section>
 </template>
 <script>
@@ -71,6 +80,10 @@ export default {
                 field => field.field_id === this.current_tracker.workflow.field_id
             ).values;
 
+            if (all_values === null) {
+                return [];
+            }
+
             return all_values.filter(value => value.is_hidden === false);
         },
 
@@ -82,6 +95,15 @@ export default {
                 },
                 ...this.all_field_values_to
             ];
+        },
+        has_field_values() {
+            return this.all_field_values_to.length > 0;
+        },
+        configure_field_url() {
+            const tracker_id = this.current_tracker.id;
+            const workflow_field_id = this.current_tracker.workflow.field_id;
+
+            return `/plugins/tracker/?tracker=${tracker_id}&func=admin-formElement-update&formElement=${workflow_field_id}`;
         }
     },
 

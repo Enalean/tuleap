@@ -26,6 +26,9 @@ msgstr ""
 msgid "Configure"
 msgstr ""
 
+msgid "Configure it"
+msgstr ""
+
 msgid "Confirm"
 msgstr ""
 
@@ -42,6 +45,9 @@ msgid ""
 msgstr ""
 
 msgid "Save and start configuration"
+msgstr ""
+
+msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
 
 msgid "This action will delete all transition rules! It is irreversible."
