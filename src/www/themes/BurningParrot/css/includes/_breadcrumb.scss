@@ -58,7 +58,7 @@ $switch-menu-item-hover-color: $tlp-theme-color;
         }
     }
 
-    &:hover > .breadcrumb-link {
+    &:not(.breadcrumb-item-disabled):hover > .breadcrumb-link {
         border: 1px solid $step-active-border;
         color: $step-active-color;
 
