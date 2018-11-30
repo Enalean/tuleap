@@ -61,7 +61,7 @@ class Tracker_Report_RendererFactory {
     /**
      * @param int $id the id of the report renderer to retrieve
      * @param Report $report the report of the renderer
-     * @return Tracker_Report_Renderer identified by id (null if not found)
+     * @return Tracker_Report_Renderer | null
      */
     public function getReportRendererById($id, $report, $store_in_session = true) {
         $row = $this->getDao()

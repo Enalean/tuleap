@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,8 @@ use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\GraphOnTrackersV5\Chart\D3CompatibleChartVisitor;
+use Tuleap\GraphOnTrackersV5\Chart\Visitable;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 use Tuleap\Widget\WidgetFactory;
 
@@ -40,8 +42,8 @@ require_once('common/html/HTML_Element_Selectbox_Rank.class.php');
  *
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
-abstract class GraphOnTrackersV5_Chart {
-
+abstract class GraphOnTrackersV5_Chart implements Visitable
+{
     const MARKER_BEGINNING_OUTPUT_FETCH = '💩';
 
     public $id;
@@ -53,6 +55,7 @@ abstract class GraphOnTrackersV5_Chart {
 
     private $engine = null;
 
+    /** @var GraphOnTrackersV5_Renderer */
     public $renderer;
     private $mustache_renderer;
 
@@ -568,9 +571,8 @@ abstract class GraphOnTrackersV5_Chart {
     }
 
     private function isGraphDrawnByD3() {
-        $chart_data = $this->buildChartData();
-
-        return isset($chart_data[$this->id]['type']) && HTTPRequest::instance()->getBrowser()->isCompatibleWithD3();
+        $d3_visitor = new D3CompatibleChartVisitor();
+        return $this->accept($d3_visitor) && HTTPRequest::instance()->getBrowser()->isCompatibleWithD3();
     }
 
     private function fetchContentJPGraph($store_in_session) {
@@ -592,17 +594,6 @@ abstract class GraphOnTrackersV5_Chart {
         $content .= $this->fetchGraphAnchor('');
 
         return $content;
-    }
-
-    /**
-     * Builds the chart data in array
-     *
-     * @return array
-     */
-    private function buildChartData() {
-        return array(
-            $this->id => $this->fetchAsArray()
-        );
     }
 
     private function getAvailableDashboardsForUser(PFUser $user)

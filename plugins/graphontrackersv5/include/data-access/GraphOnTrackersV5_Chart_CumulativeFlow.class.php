@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
  *
  * Originally written by Yoann CELTON, 2013. Jtekt Europe SAS.
  *
@@ -20,6 +20,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+use Tuleap\GraphOnTrackersV5\Chart\Visitor;
+
 require_once('GraphOnTrackersV5_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php');
 require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_CumulativeFlow.class.php');
@@ -29,8 +31,8 @@ require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_
 /**
  * Base class to provide a cumulative flow Chart
  */
-class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
-
+class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart
+{
     const SCALE_DAY = 0;
     const SCALE_WEEK = 1;
     const SCALE_MONTH = 2;
@@ -291,6 +293,8 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         }
     }
 
+    public function accept(Visitor $visitor)
+    {
+        return $visitor->visitCumulativeFlowChart($this);
+    }
 }
-
-?>

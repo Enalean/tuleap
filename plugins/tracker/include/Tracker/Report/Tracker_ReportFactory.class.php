@@ -46,7 +46,7 @@ class Tracker_ReportFactory {
 
     /**
      * @param int $id the id of the report to retrieve
-     * @return Tracker_Report identified by id (null if not found)
+     * @return Tracker_Report | null
      */
     public function getReportById($id, $user_id, $store_in_session = true) {
         $row = $this->getDao()

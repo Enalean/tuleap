@@ -1,9 +1,8 @@
 <?php
-/* 
+/**
+ * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  * Copyright (c) cjt Systemsoftware AG, 2017. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- *
- * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
  *
  * This file is a part of Tuleap.
  *
@@ -14,12 +13,14 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\GraphOnTrackersV5\Chart\Visitor;
 
 require_once('GraphOnTrackersV5_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Chart_GanttDataBuilder.class.php');
@@ -32,8 +33,8 @@ require_once('common/html/HTML_Element_Input_Date.class.php');
 require_once('common/html/HTML_Element_Selectbox_Scale.class.php');
 require_once('GraphOnTrackersV5_Chart_GanttDao.class.php');
 
-class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
-    
+class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
+{
     protected $field_start;
     protected $field_due;
     protected $field_finish;
@@ -366,5 +367,9 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
             }
         }
     }
+
+    public function accept(Visitor $visitor)
+    {
+        return $visitor->visitGantt($this);
+    }
 }
-?>
