@@ -63,13 +63,16 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $expected_oid_value = \hash('sha256', $input_data);
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturns(true);
+        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
+            function ($save_path, $input_stream) {
+                $destination_resource = fopen('php://memory', 'wb');
+                stream_copy_to_stream($input_stream, $destination_resource);
+                fclose($destination_resource);
+                return true;
+            }
+        );
 
         $this->filesystem->shouldReceive('getSize')->with($temporary_save_path)->andReturns($input_size);
-        $duplicate_input_resource = fopen('php://memory', 'rb+');
-        fwrite($duplicate_input_resource, $input_data);
-        rewind($duplicate_input_resource);
-        $this->filesystem->shouldReceive('readStream')->with($temporary_save_path)->andReturns($duplicate_input_resource);
 
         $this->filesystem->shouldReceive('rename')->with($temporary_save_path, $ready_path)->once()->andReturns(true);
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
@@ -123,18 +126,24 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $input_size     = 1024;
         $input_data     = str_repeat('A', $input_size);
         $input_resource = fopen('php://memory', 'rb+');
-        fwrite($input_resource, $input_data);
+        fwrite($input_resource, 'corrupted_input_data');
         rewind($input_resource);
         $expected_oid_value = \hash('sha256', $input_data);
         $lfs_object         = new LFSObject(new LFSObjectID($expected_oid_value), $input_size);
 
-        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturns(true);
+        $this->filesystem->shouldReceive('writeStream')->with($temporary_save_path, \Mockery::any())->andReturnUsing(
+            function ($save_path, $input_stream) {
+                $destination_resource = fopen('php://memory', 'wb');
+                stream_copy_to_stream($input_stream, $destination_resource);
+                fclose($destination_resource);
+                return true;
+            }
+        );
 
         $this->filesystem->shouldReceive('getSize')->with($temporary_save_path)->andReturns($input_size);
         $corrupted_input_resource = fopen('php://memory', 'rb+');
         fwrite($corrupted_input_resource, 'corrupted_data');
         rewind($corrupted_input_resource);
-        $this->filesystem->shouldReceive('readStream')->with($temporary_save_path)->andReturns($corrupted_input_resource);
 
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
