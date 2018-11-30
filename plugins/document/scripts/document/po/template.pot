@@ -38,6 +38,9 @@ msgstr ""
 msgid "Owner"
 msgstr ""
 
+msgid "Parent folders are not displayed to not clutter the interface"
+msgstr ""
+
 msgid "Project documentation"
 msgstr ""
 

@@ -35,12 +35,17 @@
                 </span>
             </nav>
         </div>
-        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy"
+
+        <span class="breadcrumb-item breadcrumb-item-disabled" v-if="is_ellipsis_displayed">
+            <span class="breadcrumb-link" v-bind:title="ellipsis_title">...</span>
+        </span>
+
+        <document-breadcrumb-element v-for="parent in current_folder_ascendant_hierarchy.slice(-max_nb_to_display)"
                                      v-bind:key="parent.id"
                                      v-bind:item="parent"
         />
 
-        <span class="breadcrumbs-item" v-if="is_loading_ascendant_hierarchy">
+        <span class="breadcrumb-item" v-if="is_loading_ascendant_hierarchy">
             <a class="breadcrumb-link" href="#">
                 <span class="tlp-skeleton-text"></span>
             </a>
@@ -54,6 +59,11 @@ import DocumentBreadcrumbElement from "./DocumentBreadcrumbElement.vue";
 export default {
     name: "DocumentBreadcrumb",
     components: { DocumentBreadcrumbElement },
+    data() {
+        return {
+            max_nb_to_display: 5
+        };
+    },
     computed: {
         ...mapState([
             "project_id",
@@ -79,6 +89,16 @@ export default {
             }
 
             return "breadcrumb-item";
+        },
+        is_ellipsis_displayed() {
+            if (this.is_loading_ascendant_hierarchy) {
+                return false;
+            }
+
+            return this.current_folder_ascendant_hierarchy.length > this.max_nb_to_display;
+        },
+        ellipsis_title() {
+            return this.$gettext("Parent folders are not displayed to not clutter the interface");
         }
     }
 };
