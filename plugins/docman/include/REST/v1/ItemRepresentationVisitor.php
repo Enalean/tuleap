@@ -79,8 +79,12 @@ class ItemRepresentationVisitor implements ItemVisitor
     public function visitFile(Docman_File $item, array $params = [])
     {
         $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
-        $file_properties = new FilePropertiesRepresentation();
-        $file_properties->build($item_version);
+        $file_properties = null;
+        if ($item_version) {
+            $file_properties = new FilePropertiesRepresentation();
+            $file_properties->build($item_version);
+        }
+
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_FILE,
@@ -91,8 +95,11 @@ class ItemRepresentationVisitor implements ItemVisitor
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
         $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
-        $file_properties = new FilePropertiesRepresentation();
-        $file_properties->build($item_version);
+        $file_properties = null;
+        if ($item_version) {
+            $file_properties = new FilePropertiesRepresentation();
+            $file_properties->build($item_version);
+        }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_EMBEDDED,

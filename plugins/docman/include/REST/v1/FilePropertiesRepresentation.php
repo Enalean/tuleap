@@ -27,10 +27,12 @@ class FilePropertiesRepresentation
     /**
      * @var string
      */
-    public $file_type;
+    public $file_type = "";
 
     public function build(\Docman_Version $docman_version)
     {
-        $this->file_type = $docman_version->getFiletype();
+        if ($docman_version) {
+            $this->file_type = $docman_version->getFiletype();
+        }
     }
 }
