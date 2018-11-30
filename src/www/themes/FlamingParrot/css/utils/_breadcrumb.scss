@@ -37,6 +37,7 @@ $switch-menu-item-hover-color: $main;
 
 .breadcrumb {
     display: flex;
+    flex-wrap: wrap;
     margin: 0;
     padding: 20px;
     border-radius: 0;
