@@ -28,8 +28,6 @@ use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
-require_once('bootstrap.php');
-
 class PluginsAdministrationViews extends Views {
 
     /** @var PluginManager */
