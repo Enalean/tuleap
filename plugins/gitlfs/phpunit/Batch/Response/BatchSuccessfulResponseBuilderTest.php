@@ -58,9 +58,14 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $operation->shouldReceive('isUpload')->andReturns(true);
         $operation->shouldReceive('isDownload')->andReturns(false);
 
-        $request_object = \Mockery::mock(LFSObject::class);
-        $request_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
-        $request_object->shouldReceive('getSize')->andReturns(123456);
+        $request_new_object = \Mockery::mock(LFSObject::class);
+        $request_new_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_new_object->shouldReceive('getSize')->andReturns(123456);
+        $request_existing_object = \Mockery::mock(LFSObject::class);
+        $request_existing_object->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_existing_object->shouldReceive('getSize')->andReturns(456789);
+
+        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_existing_object]);
 
         $builder        = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
@@ -73,7 +78,8 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             'https://example.com',
             $repository,
             $operation,
-            $request_object
+            $request_new_object,
+            $request_existing_object
         );
 
         $this->assertInstanceOf(BatchSuccessfulResponse::class, $batch_response);
