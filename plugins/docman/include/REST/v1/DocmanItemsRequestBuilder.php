@@ -34,8 +34,8 @@ use ProjectManager;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\UserManager;
 use URLVerification;
-use UserManager;
 
 class DocmanItemsRequestBuilder
 {
