@@ -20,7 +20,9 @@
 <template>
     <section class="tlp-pane-section">
         <div class="tracker-workflow-transition-configuration-header">
-            <div class="tlp-property tracker-workflow-transition-configuration-form-item">
+            <div class="tlp-property tracker-workflow-transition-configuration-form-item"
+                 v-bind:class="{'tracker-workflow-property-disabled': is_operation_running}"
+            >
                 <label class="tlp-label">
                     <span v-translate>Field</span>
                     <span
@@ -36,6 +38,7 @@
                         class="tlp-button-danger tlp-button-outline tlp-button-small tracker-workflow-transition-configuration-form-button"
                         data-target="modal-confirm-change-field"
                         v-on:click="showModal()"
+                        v-bind:disabled="is_operation_running"
                     >
                         <i class="fa fa-refresh tlp-button-icon"></i>
                         <span v-translate>Change or remove</span>
@@ -44,7 +47,9 @@
                     <change-field-confirmation-modal ref="modal"/>
                 </div>
             </div>
-            <div class="tlp-form-element tracker-workflow-transition-configuration-form-item">
+            <div class="tlp-form-element tracker-workflow-transition-configuration-form-item"
+                 v-bind:class="{'tlp-form-element-disabled': is_operation_running}"
+            >
                 <label class="tlp-label" for="workflow-advanced-configuration">
                     <span v-translate>Use advanced configuration</span>
                     <span
@@ -69,19 +74,23 @@
                     ></label>
                 </div>
             </div>
-            <div class="tlp-form-element tracker-workflow-transition-configuration-form-item">
-                <label class="tlp-label" for="workflow-transitions-enabled" v-translate>Enable transition rules</label>
+            <div class="tlp-form-element tracker-workflow-transition-configuration-form-item"
+                 v-bind:class="{'tlp-form-element-disabled': is_operation_running}"
+            >
+                <label class="tlp-label" for="workflow-transitions-enabled" v-translate>
+                    Enable transition rules
+                </label>
                 <div class="tlp-switch">
-                    <input
-                        type="checkbox"
-                        id="workflow-transitions-enabled"
-                        class="tlp-switch-checkbox"
-                        v-model="are_transition_rules_enforced"
-                        disabled
+                    <input type="checkbox"
+                           id="workflow-transitions-enabled"
+                           class="tlp-switch-checkbox"
+                           v-model="transition_rules_enforcement"
+                           v-bind:disabled="is_operation_running"
                     >
                     <label
                         for="workflow-transitions-enabled"
                         class="tlp-switch-button"
+                        v-bind:class="{ 'loading': is_rules_enforcement_running }"
                         aria-hidden=""
                     ></label>
                 </div>
@@ -89,8 +98,9 @@
         </div>
     </section>
 </template>
+
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import ChangeFieldConfirmationModal from "./ChangeFieldConfirmationModal.vue";
 
@@ -108,7 +118,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["current_tracker"]),
+        ...mapState(["current_tracker", "is_operation_running", "is_rules_enforcement_running"]),
         ...mapGetters(["workflow_field_label", "are_transition_rules_enforced"]),
         advanced_configuration_tooltip() {
             return this.$gettext(
@@ -117,6 +127,17 @@ export default {
         },
         field_tooltip() {
             return this.$gettext("Transitions based field");
+        },
+        transition_rules_enforcement: {
+            get() {
+                return this.are_transition_rules_enforced;
+            },
+            set() {
+                this.$store.dispatch(
+                    "switchTransitionRulesEnforcement",
+                    !this.are_transition_rules_enforced
+                );
+            }
         }
     },
 

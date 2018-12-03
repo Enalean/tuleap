@@ -23,7 +23,12 @@
 
 import { get, patch } from "tlp-fetch";
 
-export { getTracker, createWorkflowTransitions, resetWorkflowTransitions };
+export {
+    getTracker,
+    createWorkflowTransitions,
+    updateTransitionRulesEnforcement,
+    resetWorkflowTransitions
+};
 
 async function getTracker(tracker_id) {
     const response = await get(`/api/trackers/${tracker_id}`);
@@ -48,6 +53,18 @@ async function resetWorkflowTransitions(tracker_id) {
         }
     });
 
+    const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    return response.json();
+}
+
+async function updateTransitionRulesEnforcement(tracker_id, are_transition_rules_enforced) {
+    const query = JSON.stringify({
+        workflow: {
+            set_transitions_rules: {
+                is_used: are_transition_rules_enforced
+            }
+        }
+    });
     const response = await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
     return response.json();
 }

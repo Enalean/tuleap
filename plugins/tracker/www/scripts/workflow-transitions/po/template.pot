@@ -56,6 +56,12 @@ msgstr ""
 msgid "Tracker cannot be loaded"
 msgstr ""
 
+msgid "Transition rules are currently applied."
+msgstr ""
+
+msgid "Transition rules don't apply yet."
+msgstr ""
+
 msgid "Transitions based field"
 msgstr ""
 

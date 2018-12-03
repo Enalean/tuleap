@@ -17,18 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// import { mockFetchError } from "tlp-mocks";
-import { rewire$patch } from "tlp-fetch";
-import { createWorkflowTransitions, resetWorkflowTransitions } from "../api/rest-querier.js";
+import { restore, rewire$patch } from "tlp-fetch";
+import {
+    createWorkflowTransitions,
+    resetWorkflowTransitions,
+    updateTransitionRulesEnforcement
+} from "../api/rest-querier.js";
 
 describe("Rest queries:", () => {
     let patch;
+    let json_result = {};
 
     beforeEach(() => {
         patch = jasmine.createSpy("patch");
-        patch.and.returnValue(Promise.resolve());
+        patch.and.returnValue(
+            Promise.resolve({
+                json: () => json_result
+            })
+        );
         rewire$patch(patch);
     });
+
+    afterEach(restore);
 
     describe("createWorkflowTransitions()", () => {
         beforeEach(() => {
@@ -50,5 +60,21 @@ describe("Rest queries:", () => {
             expect(patch).toHaveBeenCalledWith(
                 "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D"
             ));
+    });
+
+    describe("updateTransitionRulesEnforcement()", () => {
+        let returned_value;
+
+        beforeEach(async () => {
+            return (returned_value = await updateTransitionRulesEnforcement(1, true));
+        });
+
+        it("calls PATCH", () =>
+            expect(patch).toHaveBeenCalledWith(
+                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22is_used%22%3Atrue%7D%7D%7D"
+            ));
+        it("returns PATCH response", () => {
+            expect(returned_value).toBe(json_result);
+        });
     });
 });

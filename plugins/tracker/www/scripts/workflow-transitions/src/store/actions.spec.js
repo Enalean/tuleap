@@ -17,25 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchSuccess, mockFetchError } from "tlp-mocks";
+import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
 import {
     loadTracker,
+    resetWorkflowTransitionsField,
     saveWorkflowTransitionsField,
-    resetWorkflowTransitionsField
+    switchTransitionRulesEnforcement
 } from "./actions.js";
 import {
-    rewire$getTracker,
+    restore as restore$RestQuerier,
     rewire$createWorkflowTransitions,
-    rewire$resetWorkflowTransitions
+    rewire$getTracker,
+    rewire$resetWorkflowTransitions,
+    rewire$updateTransitionRulesEnforcement
 } from "../api/rest-querier.js";
+import { restore as restore$ExceptionHandler, rewire$getErrorMessage } from "./exceptionHandler.js";
 
 describe("Store actions:", () => {
     let context;
+    let getErrorMessage;
+
     beforeEach(() => {
         context = {
             commit: jasmine.createSpy("commit"),
             state: {}
         };
+        getErrorMessage = jasmine.createSpy("getErrorMessage");
+        rewire$getErrorMessage(getErrorMessage);
+    });
+
+    afterEach(() => {
+        restore$RestQuerier();
+        restore$ExceptionHandler();
     });
 
     describe("loadTracker()", () => {
@@ -118,6 +131,54 @@ describe("Store actions:", () => {
             it("update tracker in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", tracker));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
+        });
+    });
+
+    describe("switchTransitionRulesEnforcement()", () => {
+        let updateTransitionRulesEnforcement;
+
+        beforeEach(() => {
+            context = {
+                ...context,
+                state: { current_tracker: { id: 1 } }
+            };
+            updateTransitionRulesEnforcement = jasmine.createSpy(
+                "updateTransitionRulesEnforcement"
+            );
+            rewire$updateTransitionRulesEnforcement(updateTransitionRulesEnforcement);
+        });
+
+        describe("when successful", () => {
+            const updated_tracker = { id: 12 };
+
+            beforeEach(async () => {
+                updateTransitionRulesEnforcement.and.returnValue(Promise.resolve(updated_tracker));
+                await switchTransitionRulesEnforcement(context, true);
+            });
+
+            it("begins a transition rules enforcement", () =>
+                expect(context.commit).toHaveBeenCalledWith("beginTransitionRulesEnforcement"));
+            it("switches transition rule enforcement", () =>
+                expect(updateTransitionRulesEnforcement).toHaveBeenCalledWith(1, true));
+            it("update tracker in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", updated_tracker));
+            it("ends transition rules enforcement", () =>
+                expect(context.commit).toHaveBeenCalledWith("endTransitionRulesEnforcement"));
+        });
+
+        describe("when failure", () => {
+            let exception = {};
+
+            beforeEach(async () => {
+                updateTransitionRulesEnforcement.and.returnValue(Promise.reject(exception));
+                getErrorMessage.and.returnValue("error message");
+                await switchTransitionRulesEnforcement(context);
+            });
+
+            it("extracts message from exceptionoperations", () =>
+                expect(getErrorMessage).toHaveBeenCalledWith(exception));
+            it("fails operations with extracted message", () =>
+                expect(context.commit).toHaveBeenCalledWith("failOperation", "error message"));
         });
     });
 });

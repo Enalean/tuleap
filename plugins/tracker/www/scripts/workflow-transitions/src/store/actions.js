@@ -18,9 +18,10 @@
  */
 
 import {
-    getTracker,
     createWorkflowTransitions,
-    resetWorkflowTransitions
+    getTracker,
+    resetWorkflowTransitions,
+    updateTransitionRulesEnforcement
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exceptionHandler.js";
 
@@ -61,5 +62,19 @@ export async function resetWorkflowTransitionsField(context) {
         context.commit("failOperation", error_message);
     } finally {
         context.commit("endOperation");
+    }
+}
+
+export async function switchTransitionRulesEnforcement(context, new_enforcement) {
+    try {
+        context.commit("beginTransitionRulesEnforcement");
+        const tracker_id = context.state.current_tracker.id;
+        const updated_tracker = await updateTransitionRulesEnforcement(tracker_id, new_enforcement);
+        context.commit("saveCurrentTracker", updated_tracker);
+    } catch (exception) {
+        const error_message = await getErrorMessage(exception);
+        context.commit("failOperation", error_message);
+    } finally {
+        context.commit("endTransitionRulesEnforcement");
     }
 }

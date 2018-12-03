@@ -57,6 +57,16 @@ export default {
         };
     },
 
+    // Transition rules enforcement
+    beginTransitionRulesEnforcement() {
+        state.is_operation_running = true;
+        state.is_rules_enforcement_running = true;
+    },
+    endTransitionRulesEnforcement() {
+        state.is_operation_running = false;
+        state.is_rules_enforcement_running = false;
+    },
+
     resetState(state) {
         Object.assign(state, initial_state);
     }
