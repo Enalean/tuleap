@@ -936,7 +936,7 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
 	usermod -a -G gitolite codendiadm
     fi
 fi
-%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
+%{__ln_s} %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /var/lib/gitolite/.gitolite/hooks/common/post-receive
 if [ -f /usr/share/gitolite/hooks/common/post-receive ]; then
 	%{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
 fi
