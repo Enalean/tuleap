@@ -18,25 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Object;
+namespace Tuleap\GitLFS\LFSObject;
 
-use PHPUnit\Framework\TestCase;
-
-class LFSObjectIDTest extends TestCase
+class LFSObjectID
 {
-    public function testCanConstructValidOID()
-    {
-        $oid_value = 'ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb';
-        $oid       = new LFSObjectID($oid_value);
+    /**
+     * @var string
+     */
+    private $value;
 
-        $this->assertSame($oid_value, $oid->getValue());
+    public function __construct($oid_value)
+    {
+        if (! \is_string($oid_value)) {
+            throw new \TypeError('Expected $oid to be a string, got ' . gettype($oid_value));
+        }
+        if (preg_match('/^[a-fA-F0-9]{64}$/', $oid_value) !== 1) {
+            throw new \UnexpectedValueException('OID is invalid');
+        }
+        $this->value = $oid_value;
     }
 
     /**
-     * @expectedException \UnexpectedValueException
+     * @return string
      */
-    public function testInvalidOIDValueIsRejected()
+    public function getValue()
     {
-        new LFSObjectID('invalid_oid');
+        return $this->value;
     }
 }

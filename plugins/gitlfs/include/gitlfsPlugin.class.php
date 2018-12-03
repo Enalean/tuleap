@@ -80,7 +80,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     $this->getLFSActionUserAccessRequestChecker(),
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     $this->getFilesystem(),
-                    new \Tuleap\GitLFS\Object\LFSObjectPathAllocator()
+                    new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
                 );
             });
             $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
@@ -89,20 +89,20 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                         $this->getFilesystem(),
-                        new \Tuleap\GitLFS\Object\LFSObjectRetriever(new \Tuleap\GitLFS\Object\LFSObjectDAO()),
-                        new \Tuleap\GitLFS\Object\LFSObjectPathAllocator()
+                        new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                        new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
                     )
                 );
             });
             $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
-                $lfs_object_dao = new \Tuleap\GitLFS\Object\LFSObjectDAO();
+                $lfs_object_dao = new \Tuleap\GitLFS\LFSObject\LFSObjectDAO();
                 return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
                     $this->getLFSActionUserAccessRequestChecker(),
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
                         $this->getFilesystem(),
-                        new \Tuleap\GitLFS\Object\LFSObjectRetriever($lfs_object_dao),
-                        new \Tuleap\GitLFS\Object\LFSObjectPathAllocator(),
+                        new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever($lfs_object_dao),
+                        new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator(),
                         $lfs_object_dao
                     )
                 );
@@ -134,7 +134,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new BatchSuccessfulResponseBuilder(
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
                     new LFSAuthorizationTokenHeaderSerializer(),
-                    new \Tuleap\GitLFS\Object\LFSObjectRetriever(new \Tuleap\GitLFS\Object\LFSObjectDAO()),
+                    new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                     $logger
                 )
             );

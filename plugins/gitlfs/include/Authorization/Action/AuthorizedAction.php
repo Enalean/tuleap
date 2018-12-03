@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 class AuthorizedAction
 {

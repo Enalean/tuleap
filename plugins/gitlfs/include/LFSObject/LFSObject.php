@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Object;
+namespace Tuleap\GitLFS\LFSObject;
 
 class LFSObject
 {

@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Transfer;
 
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 final class LFSTransferVerificationNotUploadedObjectException extends LFSTransferVerificationException
 {
