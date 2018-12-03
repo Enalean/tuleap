@@ -85,75 +85,6 @@ class Tracker_FormElementTest extends TuleapTestCase {
     }
 }
 
-class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
-
-    private $user;
-    private $form_element;
-
-    public function setUp() {
-        parent::setUp();
-        $to_stub_methods       = array('userCanRead', 'userCanUpdate', 'userCanSubmit');
-        $this->form_element    = partial_mock('Tracker_FormElement_StaticField_Separator', $to_stub_methods);
-
-        $this->user = aUser()->build();
-    }
-
-    public function itExportsReadPermissionsWhenUserHasJustReadPermission() {
-        stub($this->form_element)->userCanRead()->returns(True);
-        stub($this->form_element)->userCanUpdate()->returns(False);
-        stub($this->form_element)->userCanSubmit()->returns(False);
-
-        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
-        $expected_permissions = array('read');
-
-        $this->assertEqual($result, $expected_permissions);
-    }
-
-    public function itExportsNoPermissionsWhenUserHasNone() {
-        stub($this->form_element)->userCanRead()->returns(False);
-        stub($this->form_element)->userCanUpdate()->returns(False);
-        stub($this->form_element)->userCanSubmit()->returns(False);
-
-        $expected_permissions = array();
-        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
-
-        $this->assertEqual($result, $expected_permissions);
-    }
-
-    public function itExportsCanReadAndCanUpdatePermissions() {
-        stub($this->form_element)->userCanRead()->returns(True);
-        stub($this->form_element)->userCanUpdate()->returns(True);
-        stub($this->form_element)->userCanSubmit()->returns(False);
-
-        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
-        $expected_permissions = array('read', 'update');
-
-        $this->assertEqual($result, $expected_permissions);
-    }
-
-    public function itExportsCanReadAndCanSubmitPermissions() {
-        stub($this->form_element)->userCanRead()->returns(True);
-        stub($this->form_element)->userCanUpdate()->returns(False);
-        stub($this->form_element)->userCanSubmit()->returns(True);
-
-        $expected_permissions = array('read', 'submit');
-        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
-
-        $this->assertEqual($result, $expected_permissions);
-    }
-
-    public function itExportsAllPermissions() {
-        stub($this->form_element)->userCanRead()->returns(True);
-        stub($this->form_element)->userCanUpdate()->returns(True);
-        stub($this->form_element)->userCanSubmit()->returns(True);
-
-        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
-        $expected_permissions = array('read', 'update', 'submit');
-
-        $this->assertEqual($result, $expected_permissions);
-    }
-}
-
 class Tracker_FormElementJsonTest extends TuleapTestCase {
 
     private $user;
@@ -179,7 +110,7 @@ class Tracker_FormElementJsonTest extends TuleapTestCase {
 }
 
 class Tracker_FormElement_UserPermissionsTest extends TuleapTestCase {
-    
+
     private $user;
     private $form_element;
     private $workflow_user;

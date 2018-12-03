@@ -285,27 +285,6 @@ class Workflow {
            }
     }
 
-    public function exportToSOAP(PFUser $user) {
-        $user_can_read_workflow_field = ($this->isUsed()) ? $this->getField()->userCanRead($user) : false;
-        $rules = $this->global_rules_manager->exportToSOAP($user_can_read_workflow_field);
-
-        $soap_result = array(
-            'field_id'    => 0,
-            'is_used'     => 0,
-            'rules'       => $rules,
-            'transitions' => array(),
-        );
-
-        if ($this->isUsed() && $this->getField()->userCanRead($user)) {
-            $soap_result['field_id']    = $this->getFieldId();
-            $soap_result['is_used']     = $this->getIsUsed();
-            foreach ($this->getTransitions() as $transition) {
-                $soap_result['transitions'][] = $transition->exportToSOAP();
-            }
-        }
-        return $soap_result;
-    }
-
     /**
      * Execute actions before transition happens (if there is one)
      *

@@ -105,23 +105,6 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
     /**
      * @param PFUser $user
      *
-     * @return string
-     */
-    public function getSoapValue(PFUser $user)
-    {
-        return $this->encapsulateRawSoapValue($this->getValue());
-    }
-
-    protected function encapsulateRawSoapValue($value)
-    {
-        $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
-
-        return array('value' => $value);
-    }
-
-    /**
-     * @param PFUser $user
-     *
      * @return Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation
      */
     public function getRESTValue(PFUser $user)

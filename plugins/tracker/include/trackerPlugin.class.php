@@ -148,7 +148,6 @@ class trackerPlugin extends Plugin {
         $this->addHook(Event::REGISTER_PROJECT_CREATION);
         $this->addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
-        $this->addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
         $this->addHook(Event::IMPORT_XML_PROJECT);
         $this->addHook(Event::IMPORT_XML_IS_PROJECT_VALID);
         $this->addHook(Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT);
@@ -898,17 +897,6 @@ class trackerPlugin extends Plugin {
             'tracker_date_reminder_sent',
             Tracker_FormElement::PROJECT_HISTORY_UPDATE,
             ArtifactDeletor::PROJECT_HISTORY_ARTIFACT_DELETED
-        );
-    }
-
-    public function soap_description($params) {
-        $params['end_points'][] = array(
-            'title'       => 'Tracker',
-            'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
-            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl.php',
-            'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
-            'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
-            'description' => 'Query and modify Trackers.',
         );
     }
 

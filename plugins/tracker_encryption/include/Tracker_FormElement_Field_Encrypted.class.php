@@ -147,7 +147,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $visitor->visitExternalField($this);
     }
 
-    public function getSOAPAvailableValues()
+    public function getRESTAvailableValues()
     {
     }
 

@@ -140,7 +140,7 @@ define('TRACKER_EVENT_SEMANTIC_FROM_XML', 'tracker_event_semantic_from_xml');
  * Parameters:
  * 'semantic' => @var array of semantic name strings
  */
-define('TRACKER_EVENT_SOAP_SEMANTICS', 'tracker_event_soap_semantics');
+define('TRACKER_EVENT_GET_SEMANTICS_NAMES', 'tracker_event_get_semantics_names');
 
 /**
  * Get the various factories that can retrieve semantics

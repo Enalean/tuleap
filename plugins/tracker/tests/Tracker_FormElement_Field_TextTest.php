@@ -192,11 +192,6 @@ class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
         $f->isValid($a, $value_5);
     }
 
-    public function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_TextTestVersion();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     public function testGetFieldData() {
         $f = new Tracker_FormElement_Field_TextTestVersion();
         $this->assertEqual('this is a text value', $f->getFieldData('this is a text value'));

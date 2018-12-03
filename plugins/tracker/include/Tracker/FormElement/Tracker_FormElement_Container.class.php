@@ -21,8 +21,8 @@
 
 
 /**
- * Base class for composite formElements. 
- * 
+ * Base class for composite formElements.
+ *
  * A composite is a component which contain other component.
  * See DesignPattern Composite for more details.
  */
@@ -31,7 +31,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * The formElements of this container
      */
     public $formElements = null;
-    
+
     /**
      * @return array the used formElements contained in this container
      */
@@ -42,7 +42,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         return $this->formElements;
     }
-    
+
     public function getAllFormElements() {
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
     }
@@ -59,7 +59,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function accept(Tracker_FormElement_Visitor $visitor) {
         $visitor->visit($this);
     }
-    
+
     /**
      * Prepare the element to be displayed
      *
@@ -71,63 +71,63 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $field->prepareForDisplay();
         }
     }
-    
+
     public function getRankSelectboxDefinition() {
         $def = parent::getRankSelectboxDefinition();
-        $def['subitems'] = array(); 
+        $def['subitems'] = array();
         foreach($this->getFormElements() as $field) {
             $def['subitems'][] = $field->getRankSelectboxDefinition();
         }
         return $def;
     }
-    
+
     /**
      * Fetch the "add criteria" box
      *
      * @param array $used Current used formElements as criteria.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     public function fetchAddCriteria($used, $prefix = '') {
         return $this->fetchOptgroup('fetchAddCriteria', 'add_criteria_container_', $used, $prefix);
     }
-    
+
     /**
      * Fetch the "add column" box in table renderer
      *
      * @param array $used Current used formElements as column.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     public function fetchAddColumn($used, $prefix = '') {
         return $this->fetchOptgroup('fetchAddColumn', 'add_column_container_', $used, $prefix);
     }
-    
+
     /**
      * Fetch the "add tooltip" box in admin
      *
      * @param array $used Current used fields as column.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     public function fetchAddTooltip($used, $prefix = '') {
         return $this->fetchOptgroup('fetchAddTooltip', 'add_tooltip_container_', $used, $prefix);
     }
-    
+
     /**
      * Internal method used to build optgroups
-     
+
      * @see fetchAddCriteria
      * @see fetchAddColumn
-     * 
+     *
      * @param string $method the method to call recursively on formElements
      * @param string $id_prefix the prefix for the html element id
      * @param array $used Current used formElements as column.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     protected function fetchOptgroup($method, $id_prefix, $used, $prefix) {
@@ -149,7 +149,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         $html .= $optgroups;
         return $html;
     }
-    
+
     /**
      * Transforms FormElement into a SimpleXMLElement
      */
@@ -175,11 +175,11 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $subfield->exportPermissionsToXML($node_perms, $ugroups, $xmlMapping);
         }
     }
-    
+
     /**
      * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracker is ok 
+     *
+     * @return true if Tracker is ok
      */
     public function testImport() {
         if ($this->formElements != null) {
@@ -191,7 +191,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         return true;
     }
-    
+
     /**
      * Fetch the element for the submit new artifact form
      * @param array $submitted_values the values already submitted
@@ -277,7 +277,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected function fetchMailRecursiveArtifact($format, $method, $params = array()) {
         $output = '';
         $content = $this->getContainerContent($method, $params);
-        
+
         if (count($content)) {
             $output .= $this->fetchMailArtifactPrefix($format);
             $output .= $this->fetchMailArtifactContent($format, $content);
@@ -286,7 +286,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         $this->has_been_displayed = true;
         return $output;
     }
-    
+
     protected function getContainerContent($method, $params) {
         $content = array();
         foreach($this->getFormElements() as $formElement) {
@@ -296,12 +296,12 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         return $content;
     }
-    
+
     protected $has_been_displayed = false;
     public function hasBeenDisplayed() {
         return $this->has_been_displayed;
     }
-    
+
     /**
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
@@ -344,7 +344,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $this->getFormElementFactory()->saveObject($tracker, $elem, $this->getId(), $tracker_is_empty, $force_absolute_ranking);
         }
     }
-    
+
     /**
      * Get the FormElement factory
      *
@@ -353,7 +353,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function getFormElementFactory() {
         return Tracker_FormElementFactory::instance();
     }
-    
+
     /**
      * Say if the field is updateable
      *
@@ -362,7 +362,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function isUpdateable() {
         return false;
     }
-    
+
     /**
      * Say if the field is submitable
      *
@@ -371,7 +371,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function isSubmitable() {
         return false;
     }
-    
+
     /**
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
@@ -387,7 +387,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                 'delete_only_empty_fieldset'
             );
         }
-        
+
         return $message;
     }
 
@@ -402,17 +402,17 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
 
 
-    /** 
+    /**
      * return true if user has Read or Update permission on this field
-     * 
+     *
      * @param PFUser $user The user. if not given or null take the current user
      *
      * @return bool
-     */ 
+     */
     public function userCanRead(PFUser $user = null) {
         return true;
     }
-    
+
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
     protected abstract function fetchArtifactReadOnlyPrefix();
@@ -420,7 +420,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected abstract function fetchMailArtifactPrefix($format);
     protected abstract function fetchMailArtifactSuffix($format);
 
-    
+
     protected function fetchMailArtifactContent($format, array $content) {
         if ($format == 'text') {
             return implode(PHP_EOL, $content);
@@ -428,7 +428,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             return $this->fetchArtifactContent($content);
         }
     }
-    
+
     protected function fetchArtifactContent(array $content) {
         return implode('', $content);
     }
@@ -438,25 +438,13 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         return null;
-    }
-
-    /**
-     * Get binding data for Soap
-     *
-     * @return array the binding data
-     */
-    public function getSoapBindingProperties() {
-        return array(
-            'bind_type' => null,
-            'bind_list' => array()
-        );
     }
 
     public function isCollapsed() {

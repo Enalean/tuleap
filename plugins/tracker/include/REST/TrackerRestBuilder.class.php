@@ -202,7 +202,7 @@ class Tracker_REST_TrackerRestBuilder {
             $field_representation->build(
                 $field,
                 $formelement_factory->getType($field),
-                $field->exportCurrentUserPermissionsToSOAP($user)
+                $field->exportCurrentUserPermissionsToREST($user)
             );
 
             return $field_representation;

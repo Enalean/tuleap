@@ -29,9 +29,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
     const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
 
-    const SOAP_PERMISSION_READ   = 'read';
-    const SOAP_PERMISSION_UPDATE = 'update';
-    const SOAP_PERMISSION_SUBMIT = 'submit';
+    const REST_PERMISSION_READ   = 'read';
+    const REST_PERMISSION_UPDATE = 'update';
+    const REST_PERMISSION_SUBMIT = 'submit';
 
     const PROJECT_HISTORY_UPDATE = 'tracker_formelement_update';
 
@@ -1261,20 +1261,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return format_date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (float)$date, '');
     }
 
-    public function exportCurrentUserPermissionsToSOAP(PFUser $user) {
+    public function exportCurrentUserPermissionsToREST(PFUser $user) {
 
         $permissions = array();
 
         if ($this->userCanRead($user)) {
-            $permissions[] = self::SOAP_PERMISSION_READ;
+            $permissions[] = self::REST_PERMISSION_READ;
         }
 
         if ($this->userCanUpdate($user)) {
-            $permissions[] = self::SOAP_PERMISSION_UPDATE;
+            $permissions[] = self::REST_PERMISSION_UPDATE;
         }
 
         if ($this->userCanSubmit($user)) {
-            $permissions[] = self::SOAP_PERMISSION_SUBMIT;
+            $permissions[] = self::REST_PERMISSION_SUBMIT;
         }
         return $permissions;
     }
@@ -1284,10 +1284,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
 
-    public function isCompatibleWithSoap() {
-        return true;
-    }
-
     /**
      * Return underlying content. Should be overwritten in container fields
      */
@@ -1295,12 +1291,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return null;
     }
 
-    public abstract function getSOAPAvailableValues();
+    abstract public function getRESTAvailableValues();
 
-    public function getRESTAvailableValues() {
-        return $this->getSOAPAvailableValues();
+    /**
+     * Get binding data for REST
+     *
+     * @return array the binding data
+     */
+    public function getRESTBindingProperties() {
+        return array(
+            'bind_type' => null,
+            'bind_list' => array()
+        );
     }
 
-    public abstract function getDefaultRESTValue();
+    abstract public function getDefaultRESTValue();
 }
-?>

@@ -22,16 +22,16 @@
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly {
-    
+
     public $default_properties = array();
 
     protected function getDao() {
         return new Tracker_FormElement_Field_DateDao();
     }
-    
+
     /**
      * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties, 
+     * This hooks is here to delete specific properties,
      * or specific values of the field.
      * (The field itself will be deleted later)
      * @return boolean true if success
@@ -39,36 +39,36 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function delete() {
         return true;
     }
-    
+
     public function getCriteriaFrom($criteria) {
         //Last update date is stored in the changeset (the date of the changeset)
         return '';
     }
-    
+
     public function getCriteriaWhere($criteria) {
         //Only filter query if criteria is valuated
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             //Last update date is stored in the changeset (the date of the changeset)
             return $this->getSQLCompareDate(
-                $criteria->is_advanced, 
-                $criteria_value['op'], 
-                $criteria_value['from_date'], 
+                $criteria->is_advanced,
+                $criteria_value['op'],
+                $criteria_value['from_date'],
                 $criteria_value['to_date'],
                 'c.submitted_on'
             );
         }
     }
-    
+
     public function getQuerySelect() {
         //Last update date is stored in the changeset (the date of the changeset)
         return "c.submitted_on AS `". $this->name ."`";
     }
-    
+
     public function getQueryFrom() {
         //Last update date is stored in the changeset (the date of the changeset)
         return '';
     }
-    
+
     /**
      * Get the "group by" statement to retrieve field values
      */
@@ -76,7 +76,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         //Last update date is stored in the changeset (the date of the changeset)
         return 'c.submitted_on';
     }
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
@@ -85,44 +85,44 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function fetchRawValueFromChangeset($changeset) {
         return $this->formatDate($changeset->getSubmittedOn());
     }
-    
+
     protected function getValueDao() {
         return null;
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_description');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('calendar/cal.png');
     }
-    
+
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('calendar/cal--plus.png');
     }
-    
+
     /**
      * Save the value and return the id
-     * 
+     *
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param int                             $changeset_value_id      The id of the changeset_value
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
@@ -131,12 +131,12 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return null;
     }
-    
+
     /**
-     * Keep the value 
-     * 
+     * Keep the value
+     *
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param int                             $changeset_value_id      The id of the changeset_value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
@@ -145,7 +145,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         //The field is ReadOnly
         return null;
     }
-    
+
     /**
      * Get the value of this field
      *
@@ -159,7 +159,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $changeset, $this, $has_changed, $changeset->getSubmittedOn());
         return $changeset_value;
     }
-    
+
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
@@ -167,7 +167,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         //The last update date is never updated
         return false;
     }
-    
+
     /**
      * Fetch the html code to display the field value in artifact
      *
@@ -179,7 +179,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueWithEditionFormIfEditable($artifact, $value);
-    }   
+    }
 
     /**
      * Fetch the html code to display the field value in artifact in read only mode
@@ -212,7 +212,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
-            
+
     /**
      * Fetch data to display the field value in mail
      *
@@ -248,10 +248,10 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         }
         return $output;
      }
-     
+
     /**
      * Fetch the html code to display the field value in tooltip
-     * 
+     *
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Date $value The changeset value for this field
      * @return string
@@ -268,7 +268,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         $html .= $value;
         return $html;
     }
-    
+
      /**
      * Validate a field
      *
@@ -292,15 +292,15 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
-        } 
+        }
         return $is_valid;
     }
-    
+
     /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. May be string or array. 
+     * @param Tracker_Artifact $artifact The artifact
+     * @param mixed            $value    data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -308,7 +308,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         // this field is always valid as it is not filled by users.
         return true;
     }
-    
+
     public function fetchSubmit($submitted_values = array()) {
         // We do not display the field in the artifact submit form
         return '';
@@ -333,7 +333,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     }
 
     public function afterCreate(array $form_element_data, $tracker_is_empty) {
-        
+
     }
 
     /**
@@ -373,10 +373,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     }
 
     public function isTimeDisplayed() {
-        return true;
-    }
-
-    public function isCompatibleWithSoap() {
         return true;
     }
 

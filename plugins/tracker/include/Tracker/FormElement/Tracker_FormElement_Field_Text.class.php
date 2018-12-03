@@ -599,13 +599,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         );
     }
 
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        return array(
-            'format'  => $artifact ? $this->getRightBodyFormat($artifact, $soap_value) : null,
-            'content' => $soap_value->field_value->value,
-        );
-    }
-
     /**
      * Returns the default value for this field, or nullif no default value defined
      *
@@ -619,17 +612,6 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
             'format'  => $default_format,
             'content' => $this->getProperty('default_value'),
         );
-    }
-
-    /**
-     * Get data from CSV value in order to be saved in DB (create/update DB)
-     *
-     * @param string $csv_value
-     *
-     * @return mixed
-     */
-    public function getFieldDataFromCSVValue($csv_value) {
-        return $this->getFieldData($csv_value);
     }
 
     public function isEmpty($value, Tracker_Artifact $artifact) {

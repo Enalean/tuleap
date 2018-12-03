@@ -50,13 +50,11 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 1.1234);
         $this->assertEqual($float->getFloat(), 1.1234);
         $this->assertNotIdentical($float->getFloat(), '1.1234');
-        $this->assertEqual($float->getSoapValue($this->user), array('value' => '1.1234'));
         $this->assertIdentical($float->getValue(), '1.1234');
 
         $long_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 9.54321);
         $this->assertEqual($long_float->getFloat(), 9.54321);
         $this->assertNotIdentical($long_float->getFloat(), '9.54321');
-        $this->assertEqual($long_float->getSoapValue($this->user), array('value' => '9.54321'));
         $this->assertEqual($long_float->getValue(), '9.5432');
 
         $int_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, 42);
@@ -64,7 +62,6 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $this->assertEqual($int_float->getFloat(), 42.000);
         $this->assertIdentical($int_float->getFloat(), 42.000);
         $this->assertNotIdentical($int_float->getFloat(), '42');
-        $this->assertEqual($int_float->getSoapValue($this->user), array('value' => '42'));
         $this->assertEqual($int_float->getValue(), '42.0000');
 
         $string_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, '123.456');
@@ -72,13 +69,10 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $this->assertNotEqual($string_float->getFloat(), 123.457);
         $this->assertEqual($string_float->getFloat(), '123.456');
         $this->assertNotIdentical($string_float->getFloat(), '123.456');
-        $this->assertEqual($string_float->getSoapValue($this->user), array('value' => '123.456'));
         $this->assertEqual($string_float->getValue(), '123.456');
 
         $null_float = new Tracker_Artifact_ChangesetValue_Float(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_float->getFloat());
-        $this->assertEqual($null_float->getSoapValue($this->user), array('value' => ''));
-        $this->assertIdentical($null_float->getSoapValue($this->user), array('value' => ''));
         $this->assertIdentical($null_float->getValue(), '');
     }
 

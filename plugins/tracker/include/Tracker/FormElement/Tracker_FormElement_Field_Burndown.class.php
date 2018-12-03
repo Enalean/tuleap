@@ -705,7 +705,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function getChangesetValue($changeset, $value_id, $has_changed) {
     }
 
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
     }
 
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {

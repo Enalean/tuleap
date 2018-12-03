@@ -128,11 +128,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($field->isValidRegardingRequiredProperty($a, null));
     }
 
-    function testSoapAvailableValues() {
-        $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     function testIsValid_AddsErrorIfARequiredFieldIsAnArrayWithoutNewValues() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('isRequired')->andReturns(true);
@@ -409,7 +404,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 }
 
 class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
         $this->setUpGlobalsMockery();
@@ -428,7 +423,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->modified_artifact    = anArtifact()->withId($this->modified_artifact_id)->withTracker($tracker)->build();
         $this->old_changeset    = null;
         $this->new_changeset_id = 4444;
-        $this->submitted_value  = array('new_values'     => '123, 124', 
+        $this->submitted_value  = array('new_values'     => '123, 124',
                                         'removed_values' => array(345 => array('345'),
                                                                   346 => array('346')));
         $this->submitter        = aUser()->build();
@@ -452,9 +447,9 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
 
         stub($artifact_factory)->getArtifactById(123)->returns($this->artifact_123);
         stub($artifact_factory)->getArtifactById(124)->returns($this->artifact_124);
-        
+
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
-        
+
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_ArtifactLinkDao::class);
@@ -463,7 +458,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
         stub($this->field)->userCanUpdate()->returns(true);
         stub($this->field)->isValid()->returns(true);
-        
+
         stub($this->field)->getProcessChildrenTriggersCommand()->returns(\Mockery::spy(\Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand::class));
     }
 
@@ -472,7 +467,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         Tracker_ArtifactFactory::clearInstance();
         parent::tearDown();
     }
-    
+
     public function itPostponeSavesChangesetInSourceArtifact() {
         expect($this->artifact_123)->linkArtifact()->never();
 
@@ -834,31 +829,6 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
             $this->field->getFieldData('55,66,88', $this->artifact),
             array('new_values' => '88', 'removed_values' => array(77 => array('77')), 'natures' => array())
         );
-    }
-}
-
-class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_ArtifactLink::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
-
-    public function itPassesArtifactToGetFieldData() {
-        $artifact = anArtifact()->build();
-
-        $soap_value = (object) array(
-            'field_name'  => '',
-            'field_label' => '',
-            'field_value' => (object) array(
-                'value' => '55'
-            )
-        );
-
-        $this->field->shouldReceive('getFieldData')->with('55', $artifact)->once()->andReturn('whatever');
-
-        $this->assertEqual($this->field->getFieldDataFromSoapValue($soap_value, $artifact), 'whatever');
     }
 }
 

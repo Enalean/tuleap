@@ -115,10 +115,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $this->criteria_value[$report_id] = $criteria_value;
     }
 
-    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '', $criteria->report->id);
-    }
-
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
@@ -1190,26 +1186,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public abstract function getChangesetValue($changeset, $value_id, $has_changed);
 
     /**
-     * Returns the SOAP value of a field for the given changeset.
-     *
-     * @param PFUser $user
-     * @param Tracker_Artifact_Changeset $changeset
-     *
-     * @return array
-     */
-    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
-        if ($this->userCanRead($user)) {
-            $value = $changeset->getValue($this);
-            return array(
-                'field_name'  => $this->getName(),
-                'field_label' => $this->getLabel(),
-                'field_value' => $value ? $value->getSoapValue($user) : '',
-            );
-        }
-        return null;
-    }
-
-    /**
      * Return REST value of a field for a given changeset
      *
      * @param PFUser                     $user
@@ -1248,12 +1224,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Get the field data for artifact submission
      *
-     * @param string the soap field value
+     * @param string $value
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the value for artifact submision
      */
     public function getFieldData($value) {
-        // for atomic fields, the field data is the soap value (int, float, date, string, text)
+        // for atomic fields, the field data is the value (int, float, date, string, text)
         return $value;
     }
 
@@ -1293,29 +1269,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
 
         return $this->getRestFieldData($value['value']);
-    }
-
-    /**
-     * Get data from SOAP value in order to be saved in DB (create/update DB)
-     *
-     * @param stdClass $soap_value
-     *
-     * @return mixed
-     */
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        return $this->getFieldData($soap_value->field_value->value);
-    }
-
-    /**
-     * Get binding data for Soap
-     *
-     * @return array the binding data
-     */
-    public function getSoapBindingProperties() {
-        return array(
-            'bind_type' => null,
-            'bind_list' => array()
-        );
     }
 
     /**

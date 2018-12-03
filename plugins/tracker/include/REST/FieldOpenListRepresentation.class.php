@@ -107,28 +107,28 @@ class Tracker_REST_FieldOpenListRepresentation {
             $this->values = $field->getRESTAvailableValues();
         }
 
-        $bindings = $field->getSoapBindingProperties();
+        $bindings = $field->getRESTBindingProperties();
         $this->bindings = array(
-            self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::SOAP_TYPE_KEY],
+            self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY],
             self::BIND_LIST => array_map(
                 function ($binding) {
                     return array(
-                        Tracker_REST_FieldRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::SOAP_BINDING_LIST_ID],
-                        Tracker_REST_FieldRepresentation::BIND_LABEL=> $binding[Tracker_FormElement_Field_List_Bind_Users::SOAP_BINDING_LIST_LABEL]
+                        Tracker_REST_FieldRepresentation::BIND_ID   => $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_ID],
+                        Tracker_REST_FieldRepresentation::BIND_LABEL=> $binding[Tracker_FormElement_Field_List_Bind_Users::REST_BINDING_LIST_LABEL]
                     );
                 },
-                $bindings[Tracker_FormElement_Field_List_Bind::SOAP_LIST_KEY]
+                $bindings[Tracker_FormElement_Field_List_Bind::REST_LIST_KEY]
             )
         );
 
         $this->permissions = array_map(
             function ($permission) {
                 switch ($permission) {
-                    case Tracker_FormElement::SOAP_PERMISSION_READ:
+                    case Tracker_FormElement::REST_PERMISSION_READ:
                         return Tracker_REST_FieldRepresentation::PERM_READ;
-                    case Tracker_FormElement::SOAP_PERMISSION_UPDATE:
+                    case Tracker_FormElement::REST_PERMISSION_UPDATE:
                         return Tracker_REST_FieldRepresentation::PERM_UPDATE;
-                    case Tracker_FormElement::SOAP_PERMISSION_SUBMIT:
+                    case Tracker_FormElement::REST_PERMISSION_SUBMIT:
                         return Tracker_REST_FieldRepresentation::PERM_CREATE;
                 }
             },

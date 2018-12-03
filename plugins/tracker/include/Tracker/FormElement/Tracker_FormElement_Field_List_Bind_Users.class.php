@@ -29,8 +29,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
     const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
 
-    const SOAP_BINDING_LIST_ID         = 'ugroup_id';
-    const SOAP_BINDING_LIST_LABEL      = 'name';
+    const REST_BINDING_LIST_ID    = 'ugroup_id';
+    const REST_BINDING_LIST_LABEL = 'name';
 
     /** @var UserManager */
     protected $userManager;
@@ -163,12 +163,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return array | null The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         $ugroups = array();
 
         foreach ($this->value_function as $ugroup) {
@@ -177,20 +177,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         }
 
-        $soap_values = array();
+        $rest_values = array();
         if (! empty($ugroups)) {
             foreach($this->getAllValuesByUGroupList($ugroups) as $value) {
-                $soap_values[] = $this->getSoapBindValue($value);
+                $rest_values[] = $this->getRESTBindValue($value);
             }
         }
-        return $soap_values;
-    }
-
-    private function getSoapBindValue($value) {
-        return array(
-            self::SOAP_ID_KEY    => $value->getId(),
-            self::SOAP_LABEL_KEY => $value->getSoapValue()
-        );
+        return $rest_values;
     }
 
     /**
@@ -198,27 +191,27 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return array, the list of all ugroups with id and name
      */
-    protected function getSoapBindingList() {
+    protected function getRESTBindingList() {
         $ugroups = array();
         foreach($this->value_function as $ugroup) {
             if ($ugroup) {
                 switch ($ugroup) {
                     case 'group_members':
                         $ugroups[] = array(
-                            self::SOAP_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                            self::SOAP_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
+                            self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                            self::REST_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
                         );
                         break;
                     case 'group_admins':
                         $ugroups[] = array(
-                            self::SOAP_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
-                            self::SOAP_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
+                            self::REST_BINDING_LIST_ID    => $GLOBALS['UGROUP_PROJECT_ADMIN'],
+                            self::REST_BINDING_LIST_LABEL => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']))
                         );
                         break;
                     case 'artifact_submitters':
                         $ugroups[] = array(
-                            self::SOAP_BINDING_LIST_ID    => 0,
-                            self::SOAP_BINDING_LIST_LABEL => $ugroup
+                            self::REST_BINDING_LIST_ID    => 0,
+                            self::REST_BINDING_LIST_LABEL => $ugroup
                         );
                         break;
                     default:
@@ -228,8 +221,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                 $user_group = new ProjectUGroup($ugroup_data);
 
                                 $ugroups[] = array(
-                                    self::SOAP_BINDING_LIST_ID    => $matches[1],
-                                    self::SOAP_BINDING_LIST_LABEL => $user_group->getNormalizedName(),
+                                    self::REST_BINDING_LIST_ID    => $matches[1],
+                                    self::REST_BINDING_LIST_LABEL => $user_group->getNormalizedName(),
                                 );
                             }
                         }
@@ -342,22 +335,22 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
+     * @param string  $submitted_value
+     * @param boolean $is_multiple     if the value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
+     * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */
-    public function getFieldData($soap_value, $is_multiple) {
+    public function getFieldData($submitted_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
             $return = array();
-            $soap_values = explode(',', $soap_value);
+            $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
-                if (in_array($value->getUsername(), $soap_values)) {
+                if (in_array($value->getUsername(), $submitted_values)) {
                     $return[] = $id;
                 }
             }
-            if (count($soap_values) == count($return)) {
+            if (count($submitted_values) == count($return)) {
                 return $return;
             } else {
                 // if one value was not found, return null
@@ -365,7 +358,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             }
         } else {
             foreach ($values as $id => $value) {
-                if ($value->getUsername() == $soap_value) {
+                if ($value->getUsername() == $submitted_value) {
                     return $id;
                 }
             }

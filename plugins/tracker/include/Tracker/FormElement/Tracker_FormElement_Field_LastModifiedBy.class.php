@@ -327,9 +327,9 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return int the user id
      */
-    public function getFieldData($soap_value) {
+    public function getFieldData($value) {
         $um = $this->getUserManager();
-        $u = $um->getUserByUserName($soap_value);
+        $u = $um->getUserByUserName($value);
         if ($u) {
             return $u->getId();
         } else {
@@ -347,10 +347,6 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public function getDefaultValue() {
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
-    }
-
-    public function isCompatibleWithSoap() {
-        return false;
     }
 
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {

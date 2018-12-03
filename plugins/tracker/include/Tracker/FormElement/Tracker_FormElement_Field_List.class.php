@@ -314,30 +314,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->criteria_value[$criteria->report->id];
     }
 
-    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $soap_criteria_values   = explode(',', $soap_criteria_value->value);
-        $available_field_values = $this->getAllValues();
-        $values                 = array();
-        $criterias              = array();
-
-        foreach ($available_field_values as $field_value_id => $field_value) {
-            $values[$field_value->getLabel()] = $field_value_id;
-        }
-
-        foreach ($soap_criteria_values as $soap_criteria_value) {
-            // Check if the SOAP string only contains digits
-            if (ctype_digit($soap_criteria_value)) {
-                $criterias[] = $soap_criteria_value;
-            } else {
-                $field_value_id = $values[$soap_criteria_value];
-                if ($field_value_id) {
-                    $criterias[] = $field_value_id;
-                }
-            }
-        }
-        $this->setCriteriaValue($criterias, $criteria->report->id);
-    }
-
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
@@ -1185,24 +1161,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $changeset_value;
     }
 
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-     public function getSoapAvailableValues() {
-         $values = null;
+     public function getRESTBindingProperties() {
          $bind = $this->getBind();
-         if ($bind != null) {
-             $values = $bind->getSoapAvailableValues();
-         }
-         return $values;
-     }
-
-     public function getSoapBindingProperties() {
-         $bind = $this->getBind();
-         return $bind->getSoapBindingProperties();
+         return $bind->getRESTBindingProperties();
      }
 
      public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null) {
@@ -1217,39 +1178,23 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
     }
 
-     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-         if (isset($soap_value->field_value->bind_value)) {
-             if ($this->isMultiple()) {
-                 $values = array();
-                 foreach ($soap_value->field_value->bind_value as $bind_value) {
-                    $values[] = $bind_value->bind_value_id;
-                 }
-                 return $values;
-             } else {
-                 return $soap_value->field_value->bind_value[0]->bind_value_id;
-             }
-         } else {
-             return $this->getFieldData($soap_value->field_value->value);
-         }
-     }
-
     /**
      * Get the field data for artifact submission
      *
-     * @param string the soap field value
+     * @param string the rest field value
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the rest_value for artifact submision
      */
-    public function getFieldData($soap_value) {
-        if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
+    public function getFieldData($value) {
+        if ($value === $GLOBALS['Language']->getText('global','none')) {
             return Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID;
         }
 
         $bind = $this->getBind();
         if ($bind != null) {
-            $soap_value = $bind->getFieldData($soap_value, $this->isMultiple());
-            if ($soap_value != null) {
-                return $soap_value;
+            $value = $bind->getFieldData($value, $this->isMultiple());
+            if ($value != null) {
+                return $value;
             } else {
                 return null;
             }

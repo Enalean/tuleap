@@ -45,16 +45,16 @@ class TrackerRestBuilderTest extends TuleapTestCase {
 
         $field1 = aMockField()->withId(1)->build();
         stub($field1)->userCanRead()->returns(true);
-        stub($field1)->exportCurrentUserPermissionsToSOAP()->returns(array());
-        stub($field1)->getSoapBindingProperties()->returns(aStringField()->build()->getSoapBindingProperties());
+        stub($field1)->exportCurrentUserPermissionsToREST()->returns(array());
+        stub($field1)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
         $field2 = aMockField()->withId(2)->build();
         stub($field2)->userCanRead()->returns(false);
-        stub($field2)->exportCurrentUserPermissionsToSOAP()->returns(array());
-        stub($field2)->getSoapBindingProperties()->returns(aStringField()->build()->getSoapBindingProperties());
+        stub($field2)->exportCurrentUserPermissionsToREST()->returns(array());
+        stub($field2)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
         $field3 = aMockField()->withId(3)->build();
         stub($field3)->userCanRead()->returns(true);
-        stub($field3)->exportCurrentUserPermissionsToSOAP()->returns(array());
-        stub($field3)->getSoapBindingProperties()->returns(aStringField()->build()->getSoapBindingProperties());
+        stub($field3)->exportCurrentUserPermissionsToREST()->returns(array());
+        stub($field3)->getRESTBindingProperties()->returns(aStringField()->build()->getRESTBindingProperties());
 
         stub($this->workflow)->getField()->returns($field2);
         stub($this->tracker)->getWorkflow()->returns($this->workflow);

@@ -224,27 +224,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         return null;
     }
-
-    /**
-     * Return data that can be proceced by createArtifact or updateArtifact based on SOAP request
-     *
-     * @param stdClass         $soap_value
-     * @param Tracker_Artifact $artifact
-     *
-     * @return array
-     */
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        return $this->getFieldData($soap_value->field_value->value, $artifact);
-    }
-
 
     /**
      * @see Tracker_FormElement_Field::getFieldDataFromRESTValue()
@@ -270,9 +257,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * Get the field data (SOAP or CSV) for artifact submission
+     * Get the field data (REST or CSV) for artifact submission
      *
-     * @param string           $string_value The soap field value
+     * @param string           $string_value The rest field value
      * @param Tracker_Artifact $artifact     The artifact the value is to be added/removed
      *
      * @return array

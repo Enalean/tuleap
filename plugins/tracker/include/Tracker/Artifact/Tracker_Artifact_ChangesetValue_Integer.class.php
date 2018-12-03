@@ -42,7 +42,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
         }
         return $this->numeric;
     }
-    
+
     /**
      * Returns the integer value
      *
@@ -51,7 +51,7 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
     public function getNumeric() {
         return $this->getInteger();
     }
-    
+
     /**
      * Returns the value of this changeset value (integer)
      *
@@ -59,17 +59,6 @@ class Tracker_Artifact_ChangesetValue_Integer extends Tracker_Artifact_Changeset
      */
     public function getValue() {
          return $this->getInteger();
-    }
-    
-    /**
-     * Returns the soap value of this changeset value
-     *
-     * @param PFUser $user
-     *
-     * @return string the soap value of this changeset value
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue($this->getInteger());
     }
 
     public function getRESTValue(PFUser $user) {

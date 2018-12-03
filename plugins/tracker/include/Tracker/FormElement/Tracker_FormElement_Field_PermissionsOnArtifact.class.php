@@ -24,6 +24,7 @@ require_once('common/dao/UGroupDao.class.php');
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
+use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {
@@ -724,16 +725,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $changeset_value;
     }
 
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-     public function getSoapAvailableValues() {
-         return null;
-     }
-
     public function getFieldDataFromRESTValue(array $value, Tracker_Artifact $artifact = null)
     {
         if (isset($value['value'][self::GRANTED_GROUPS])) {
@@ -795,12 +786,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      /**
      * Get the field data for artifact submission
      *
-     * @param string the soap field value
+     * @param string $value
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the value for artifact submission
      */
-    public function getFieldData($soap_value) {
-        return $this->getFieldDataFromArray(explode(',', $soap_value));
+    public function getFieldData($value) {
+        return $this->getFieldDataFromArray(explode(',', $value));
     }
 
     private function getFieldDataFromArray(array $values) {
@@ -864,11 +855,11 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
 
     /**
-     * @return Tuleap/Project/REST/UserGroupRepresentation[]
+     * @return PermissionsOnArtifacts
      */
-    public function getRESTAvailableValues() {
-        $representation_class = '\\Tuleap\\Tracker\\REST\\v1\\TrackerFieldsRepresentations\\PermissionsOnArtifacts';
-        $representation       = new $representation_class;
+    public function getRESTAvailableValues()
+    {
+        $representation       = new PermissionsOnArtifacts();
         $project_id           = $this->getTracker()->getGroupId();
         $representation->build($project_id, self::IS_USED_BY_DEFAULT, $this->getAllUserGroups());
 

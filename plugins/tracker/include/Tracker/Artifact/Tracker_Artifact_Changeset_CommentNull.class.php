@@ -33,14 +33,4 @@ class Tracker_Artifact_Changeset_CommentNull extends Tracker_Artifact_Changeset_
             -1
         );
     }
-
-    public function getSoapValue() {
-        return array(
-            'submitted_by' => $this->submitted_by,
-            'submitted_on' => $this->submitted_on,
-            'format'       => $this->bodyFormat,
-            'body'         => $this->body
-        );
-    }
 }
-?>

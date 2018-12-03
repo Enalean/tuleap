@@ -23,12 +23,12 @@
  * Manage values in changeset for date fields
  */
 class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue {
-    
+
     /**
      * @var int
      */
     protected $timestamp;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $timestamp) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->timestamp = $timestamp;
@@ -40,7 +40,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitDate($this);
     }
-    
+
     /**
      * Get timestamp of this changeset value date
      *
@@ -49,7 +49,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function getTimestamp() {
         return $this->timestamp;
     }
-    
+
     /**
      * Get human-readable representation of the date
      *
@@ -58,7 +58,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function getDate() {
         return $this->formatDate($this->timestamp);
     }
-    
+
     /**
      * Format the timestamp in human readable date
      *
@@ -72,17 +72,6 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         } else {
             return $this->field->formatDateForDisplay($timestamp);
         }
-    }
-    
-    /**
-     * Returns the soap value of this changeset value (the timestamp)
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue($this->getTimestamp());
     }
 
     public function getRESTValue(PFUser $user) {
@@ -106,7 +95,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function getValue() {
         return $this->getDate();
     }
-    
+
     /**
      * Returns diff between current date and date in param
      *
@@ -129,7 +118,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
         }
         return false;
     }
-    
+
     /**
      * Returns the "set to" date for field added later
      *

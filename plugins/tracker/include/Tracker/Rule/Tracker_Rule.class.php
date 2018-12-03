@@ -30,10 +30,10 @@ abstract class Tracker_Rule {
     const RULETYPE_MANDATORY    = 3;
     const RULETYPE_VALUE        = 4;
     const RULETYPE_DATE         = 5;
-    
+
     /**
      *
-     * @var int 
+     * @var int
      */
     var $id;
     var $tracker_id;
@@ -45,17 +45,17 @@ abstract class Tracker_Rule {
 
     /** @var Tracker_FormElement_Field */
     protected $target_field_obj;
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function getId() {
         return $this->id;
     }
-    
+
     /**
-     * 
+     *
      * @param int $id
      * @return \Tracker_Rule
      */
@@ -63,7 +63,7 @@ abstract class Tracker_Rule {
         $this->id = (int) $id;
         return $this;
     }
-    
+
     /**
      *
      * @param int $tracker
@@ -81,7 +81,7 @@ abstract class Tracker_Rule {
     public function getTrackerId() {
         return $this->tracker_id;
     }
-    
+
         /**
      *
      * @return int
@@ -102,7 +102,7 @@ abstract class Tracker_Rule {
     }
 
     /**
-     * 
+     *
      * @param Tracker_FormElement_Field $field
      * @return \Tracker_Rule
      */
@@ -121,14 +121,14 @@ abstract class Tracker_Rule {
     }
 
     /**
-     * 
+     *
      * @param Tracker_FormElement_Field $field
      * @return \Tracker_Rule
      */
     public function setTargetField(Tracker_FormElement_Field $field) {
         $this->target_field_obj = $field;
         $this->target_field = $field->getId();
-        
+
         return $this;
     }
 
@@ -167,15 +167,4 @@ abstract class Tracker_Rule {
     public function isUsedInRule($field_id) {
         return $this->source_field == $field_id || $this->target_field == $field_id;
     }
-
-    /** @return mixed */
-    public abstract function exportToSOAP();
-
-    protected function fieldsAreCompatibleWithSoap() {
-       return (
-           $this->source_field_obj->isCompatibleWithSoap()
-           && $this->target_field_obj->isCompatibleWithSoap()
-       );
-    }
 }
-?>

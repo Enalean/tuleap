@@ -39,16 +39,6 @@ class Tracker_Rule_List extends Tracker_Rule {
                 ->setTargetValue($target_value);
     }
 
-    /** @return mixed */
-    public function exportToSOAP() {
-        return array(
-            'source_field_id' => $this->getSourceFieldId(),
-            'source_value_id' => $this->getSourceValue(),
-            'target_field_id' => $this->getTargetFieldId(),
-            'target_value_id' => $this->getTargetValue(),
-        );
-    }
-
     /**
     * Returns if a rule can be applied to a tuple
     *

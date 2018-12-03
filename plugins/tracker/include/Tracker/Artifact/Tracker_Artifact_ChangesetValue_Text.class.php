@@ -71,28 +71,6 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->format;
     }
 
-    /**
-     * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_Text
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue($this->getText());
-    }
-
-    /**
-     * By default, changeset values are returned as string in 'value' field
-     */
-    protected function encapsulateRawSoapValue($value) {
-        $value = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($value);
-
-        return array('value' => $value);
-    }
-
-
     public function getRESTValue(PFUser $user) {
         return $this->getFullRESTValue($user);
     }

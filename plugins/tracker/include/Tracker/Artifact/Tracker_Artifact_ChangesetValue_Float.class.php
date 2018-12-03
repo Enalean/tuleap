@@ -42,7 +42,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
         }
         return $this->numeric;
     }
-    
+
     /**
      * Get the float value
      *
@@ -51,7 +51,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     public function getNumeric() {
         return $this->getFloat();
     }
-    
+
     /**
      * Get the string value for this float
      *
@@ -63,17 +63,6 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
         } else {
             return '';
         }
-    }
-    
-    /**
-     * Get the SOAP value
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for SOAP
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue($this->getFloat());
     }
 
     public function getRESTValue(PFUser $user) {

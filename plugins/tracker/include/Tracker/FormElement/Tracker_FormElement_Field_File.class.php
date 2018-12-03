@@ -22,10 +22,8 @@
 require_once('common/valid/Rule.class.php');
 require_once('common/include/Codendi_HTTPPurifier.class.php');
 
-class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
-    const SOAP_FAKE_FILE = 'soapfakefile';
-    const SOAP_FAULT_INVALID_REQUEST_FORMAT = '3029';
-
+class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
+{
     public function getCriteriaFrom($criteria) {
         //Only filter query if field  is used
         if($this->isUsed()) {
@@ -897,19 +895,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             $method   = 'move_uploaded_file';
             $tmp_name = $file_info['tmp_name'];
 
-            if(isset($file_info['id'])) {
-                $temporary = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $file_info['id']);
-
-                if (!$temporary->exists()) {
-                    $attachment->delete();
-                    return false;
-                }
-
-                $method   = 'rename';
-                $tmp_name = $temporary->getPath();
-
-            } else if ($this->isImportOfArtifact($file_info)) {
-                $method   = 'copy';
+            if ($this->isImportOfArtifact($file_info)) {
+                $method = 'copy';
             }
 
             return $this->moveAttachmentToFinalPlace($attachment, $method, $tmp_name);
@@ -1041,12 +1028,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         return null;
     }
 
@@ -1059,10 +1046,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      */
     public function getFieldDataFromCSVValue($csv_value) {
         return array();
-    }
-
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        return $this->getFieldData($soap_value->field_value);
     }
 
     public function getFieldDataFromRESTValue(array $rest_value, Tracker_Artifact $artifact = null) {
@@ -1110,52 +1093,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             Tracker_FormElementFactory::instance(),
             Tracker_ArtifactFactory::instance()
         );
-    }
-
-    /**
-     * Get the field data for artifact submission
-     *
-     * @param string the soap field value
-     *
-     * @return String the field data corresponding to the soap_value for artifact submision
-     */
-    public function getFieldData($soap_value) {
-        if (!($soap_value instanceof stdClass)) {
-            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid submitted value for file field");
-        }
-        if (!isset($soap_value->file_info) || !is_array($soap_value->file_info)) {
-            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "A File FieldValue must have a 'file_info' array (ArrayOfFieldValueFileInfo)");
-        }
-        $field_data = array();
-        foreach ($soap_value->file_info as $fileinfo) {
-            if (!($fileinfo instanceof stdClass)) {
-                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
-            }
-            if (!(isset($fileinfo->description) && isset($fileinfo->filename) && isset($fileinfo->filetype) && isset($fileinfo->filesize))) {
-                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
-            }
-            if (!(isset($fileinfo->id) && $fileinfo->id)) {
-                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "FieldValueFileInfo must have an id of a temporary file");
-            }
-            if (isset($fileinfo->action) && $fileinfo->action == 'delete') {
-                $field_data['delete'][] = $fileinfo->id;
-            } else {
-                $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
-                if (! $temporary_file->exists($fileinfo->id)) {
-                    throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
-                }
-                $field_data[] = array(
-                    'id'          => $fileinfo->id,
-                    'description' => $fileinfo->description,
-                    'name'        => $fileinfo->filename,
-                    'type'        => $fileinfo->filetype,
-                    'size'        => $fileinfo->filesize,
-                    'error'       => UPLOAD_ERR_OK,
-                    'tmp_name'    => $temporary_file->getPath($fileinfo->id),
-                );
-            }
-        }
-        return $field_data;
     }
 
     protected function getTemporaryFileManagerDao() {

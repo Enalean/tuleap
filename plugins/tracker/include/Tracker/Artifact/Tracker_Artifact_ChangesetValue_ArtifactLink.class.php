@@ -149,17 +149,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         }
     }
 
-    /**
-     * Returns the SOAP value of this changeset value
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue(implode(', ', $this->getArtifactIdsUserCanSee($user)));
-    }
-
     public function getRESTValue(PFUser $user) {
         return $this->getFullRESTValue($user);
     }

@@ -24,7 +24,7 @@ Mock::generate('Tracker_Artifact');
 
 Mock::generatePartial(
     'Tracker_FormElement_Field_List',
-    'Tracker_FormElement_Field_ListTestVersion', 
+    'Tracker_FormElement_Field_ListTestVersion',
     array(
         'getBind',
         'getBindFactory',
@@ -48,8 +48,8 @@ Mock::generatePartial(
 );
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field_List', 
-    'Tracker_FormElement_Field_ListTestVersion_ForImport', 
+    'Tracker_FormElement_Field_List',
+    'Tracker_FormElement_Field_ListTestVersion_ForImport',
     array(
         'getBindFactory',
         'getFactoryLabel',
@@ -106,7 +106,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
         $GLOBALS['Response'] = new MockResponse();
     }
-    
+
     function testGetChangesetValue() {
         $value_dao = new $this->dao_class();
         $dar = new MockDataAccessResult();
@@ -116,14 +116,14 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $dar->setReturnValue('valid', true);
         $dar->setReturnValueAt(3, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $bind->setReturnValue('getBindValues', array_fill(0, 3, new MockTracker_FormElement_Field_List_BindValue()));
-        
+
         $list_field = new $this->field_class();
         $list_field->setReturnReference('getValueDao', $value_dao);
         $list_field->setReturnReference('getBind', $bind);
-        
+
         $changeset_value = $list_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));
@@ -132,22 +132,22 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
             $this->assertIsA($bv, 'Tracker_FormElement_Field_List_BindValue');
         }
     }
-    
+
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new $this->dao_class();
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('valid', false);
         $value_dao->setReturnReference('searchById', $dar);
-        
+
         $list_field = new $this->field_class();
         $list_field->setReturnReference('getValueDao', $value_dao);
-        
+
         $changeset_value = $list_field->getChangesetValue(mock('Tracker_Artifact_Changeset'), 123, false);
         $this->assertIsA($changeset_value, $this->cv_class);
         $this->assertTrue(is_array($changeset_value->getListValues()));
         $this->assertEqual(count($changeset_value->getListValues()), 0);
     }
-    
+
     function testHasChangesNoChanges_reverseorder_MSB() {
         $list_field = new $this->field_class();
         $old_value = array('107', '108');
@@ -212,7 +212,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $cv->setReturnReference('getValue', $old_value);
         $this->assertTrue($list_field->hasChanges(mock('Tracker_Artifact'), $cv, $new_value));
     }
-    
+
     function testIsTransitionExist() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset();
@@ -221,7 +221,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
         $user                 = mock('PFUser');
-        
+
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
         $v1->setReturnValue('getLabel','label1');
@@ -237,16 +237,16 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         stub($bind)->isExistingValue($submitted_value_1)->returns(true);
         stub($bind)->isExistingValue($submitted_value_2)->returns(true);
         stub($bind)->isExistingValue($submitted_value_3)->returns(true);
-        
+
         $artifact->setReturnReference('getLastChangeset', $changeset);
-        
+
         $bind->setReturnReference('getValue', $v1, array($submitted_value_1));
         $bind->setReturnReference('getValue', $v2, array($submitted_value_2));
         $bind->setReturnReference('getValue', $v3, array($submitted_value_3));
-        
+
         // The previous value of the field was v2
         $changeset_value_list->setReturnValue('getListValues', array($v2));
-        
+
         // null -> v1
         // v1 -> v2
         // v2 -> v3
@@ -255,19 +255,19 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $workflow->setReturnValue('isTransitionExist', true, array($v1, $v2));
         $workflow->setReturnValue('isTransitionExist', true, array($v2, $v3));
         $workflow->setReturnValue('isTransitionExist', false);
-        
+
         $field_list = new $this->field_class();
         $field_list->setReturnReference('getBind', $bind);
         $field_list->setReturnValue('fieldHasEnableWorkflow', true);
         $field_list->setReturnReference('getWorkflow', $workflow);
         $field_list->setReturnReference('getTracker', $tracker);
-        $field_list->setReturnValue('permission_is_authorized', true); 
+        $field_list->setReturnValue('permission_is_authorized', true);
         $field_list->setReturnValue('getCurrentUser', $user);
         $field_list->setReturnValue('getTransitionId', 1);
         $field_list->setReturnValue('isNone', false);
         $field_list->setReturnValue('isRequired', false);
         $changeset->setReturnReference('getValue', $changeset_value_list, array($field_list));
-        
+
         // We try to change the field from v2 to v1 => invalid
         $this->assertFalse($field_list->isValid($artifact, $submitted_value_1));
         // We try to change the field from v2 to v2 (no changes) => valid
@@ -277,7 +277,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         // We try to change the field from v2 to none => invalid
         $this->assertFalse($field_list->isValid($artifact, null));
     }
-    
+
     function testTransitionIsValidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
@@ -285,38 +285,38 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
         $user                 = mock('PFUser');
-        
+
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
         $v1->setReturnValue('getLabel','label1');
         $submitted_value_1 = '123'; // $v1
         stub($bind)->isExistingValue($submitted_value_1)->returns(true);
-        
+
         $artifact->setReturnReference('getLastChangeset', $changeset);
-        
+
         $bind->setReturnReference('getValue', $v1, array($submitted_value_1));
-        
+
         // null -> v1
         // other are invalid
         $workflow->setReturnValue('isTransitionExist', true, array(null, $v1));
         $workflow->setReturnValue('isTransitionExist', false);
-        
+
         $field_list = new $this->field_class();
         $field_list->setReturnReference('getBind', $bind);
         $field_list->setReturnValue('fieldHasEnableWorkflow', true);
         $field_list->setReturnReference('getWorkflow', $workflow);
         $field_list->setReturnReference('getTracker', $tracker);
-        $field_list->setReturnValue('permission_is_authorized', true); 
+        $field_list->setReturnValue('permission_is_authorized', true);
         $field_list->setReturnValue('getCurrentUser', $user);
         $field_list->setReturnValue('getTransitionId', 1);
         $field_list->setReturnValue('isNone', false);
         $field_list->setReturnValue('isRequired', false);
         $changeset->setReturnReference('getValue', $changeset_value_list, array($field_list));
-        
+
         // We try to change the field from null to v1 => valid
         $this->assertTrue($field_list->isValid($artifact, $submitted_value_1));
     }
-    
+
     function testTransitionIsInvalidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
@@ -324,7 +324,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
         $user                 = mock('PFUser');
-        
+
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
         $v1->setReturnValue('getLabel','label1');
@@ -339,45 +339,37 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
                 $submitted_value_2 => null
             )
         );
-        
+
         $artifact->setReturnReference('getLastChangeset', $changeset);
-        
+
         $bind->setReturnReference('getValue', $v2, array($submitted_value_2));
-        
+
         // null -> v1
         // v1 -> v2
         // other are invalid
         $workflow->setReturnValue('isTransitionExist', true, array(null, $v1));
         $workflow->setReturnValue('isTransitionExist', true, array($v1, $v2));
         $workflow->setReturnValue('isTransitionExist', false);
-        
+
         $field_list = new $this->field_class();
         $field_list->setReturnReference('getBind', $bind);
         $field_list->setReturnValue('fieldHasEnableWorkflow', true);
         $field_list->setReturnReference('getWorkflow', $workflow);
         $field_list->setReturnReference('getTracker', $tracker);
-        $field_list->setReturnValue('permission_is_authorized', true); 
+        $field_list->setReturnValue('permission_is_authorized', true);
         $field_list->setReturnValue('getCurrentUser', $user);
         $field_list->setReturnValue('getTransitionId', 1);
         $field_list->setReturnValue('isNone', false);
         $field_list->setReturnValue('isRequired', false);
         $changeset->setReturnReference('getValue', $changeset_value_list, array($field_list));
-        
+
         // We try to change the field from null to v2 => invalid
         $this->assertFalse($field_list->isValid($artifact, $submitted_value_2));
     }
-    
-    function testSoapAvailableValues() {
-        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
-        $f = new $this->field_class();
-        $f->setReturnReference('getBind', $bind);
-        $bind->expectOnce('getSoapAvailableValues');
-        $f->getSoapAvailableValues();
-    }
-    
+
     //testing field import
     public function testImportFormElement() {
-        
+
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <formElement type="mon_type" ID="F0" rank="20" required="1">
                 <name>field_name</name>
@@ -387,7 +379,7 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
                 </bind>
             </formElement>'
         );
-        
+
         $mapping = array();
 
         $bind        = mock('Tracker_FormElement_Field_List_Bind_Static');
@@ -409,29 +401,29 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
         $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
         $factory = new MockTracker_FormElement_Field_List_BindFactory();
         $dao     = new MockTracker_FormElement_Field_ListDao();
-        
+
         $f = new $this->field_class();
         $f->setReturnReference('getBindFactory', $factory);
         $f->setReturnReference('getBind', $bind);
         $f->setReturnReference('getListDao', $dao);
         $f->setReturnValue('getId', 66);
-        
+
         $factory->setReturnValue('getType', 'users', array($bind));
-        
+
         $bind->expectOnce('saveObject');
-        
+
         $dao->expect('save', array(66, 'users'));
-        
+
         $f->afterSaveObject($tracker, false, false);
     }
-    
+
     public function testIsValidRequired() {
         $artifact   = new MockTracker_Artifact();
         $bind       = new MockTracker_FormElement_Field_List_Bind_Static();
         $field_list = new $this->field_class();
         $field_list->setReturnReference('getBind', $bind);
         $field_list->setReturnValue('isRequired', true);
-        
+
         $value1 = '';
         $value2 = null;
         $value3 = '100';
@@ -445,12 +437,12 @@ class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
 
             )
         );
-        
+
         $field_list->setReturnValue('isNone', true, array($value1));
         $field_list->setReturnValue('isNone', true, array($value2));
         $field_list->setReturnValue('isNone', true, array($value3));
         $field_list->setReturnValue('isNone', false, array($value4));
-        
+
         $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value1));
         $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value2));
         $this->assertFalse($field_list->isValidRegardingRequiredProperty($artifact, $value3));
@@ -556,7 +548,7 @@ class Tracker_FormElement_Field_ListsetCriteriaValueFromRESTTest extends TuleapT
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '106',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
         );
-        
+
         $set = $this->list->setCriteriaValueFromREST($criteria, $rest_criteria_value);
         $this->assertFalse($set);
 

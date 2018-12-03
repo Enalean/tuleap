@@ -495,34 +495,6 @@ class Tracker_FormElementFactory {
     }
 
     /**
-     * Returns FormElements used by a tracker, except those already in SOAP Basic Info
-     *
-     * @param Tracker $tracker
-     *
-     * @return Tracker_FormElement_Field[]
-     */
-    public function getUsedFieldsForSoap(Tracker $tracker) {
-        $element_already_in_soap_basic_info = array(
-            'aid',
-            'lud',
-            'subby',
-            'subon',
-            'cross',
-        );
-        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
-
-        $fields = $this->getUsedFormElementsByType($tracker, $field_types);
-
-        foreach ($fields as $key => $field) {
-            if (! $field->isCompatibleWithSoap()) {
-                unset($fields[$key]);
-            }
-        }
-
-        return $fields;
-    }
-
-    /**
      * Augment fields_data with fields which have a default value defined
      *
      * @param Tracker $tracker

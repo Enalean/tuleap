@@ -23,13 +23,13 @@
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */
 abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field {
-    
+
     protected function buildMatchExpression($field_name, $criteria_value) {
         $expr = '';
         $matches = array();
         // If it is sourrounded by /.../ then assume a regexp
         if (preg_match('#(!?)/(.*)/#', $criteria_value, $matches)) {
-            
+
             //if it has a ! at the beginning then assume negation
             // !/toto/ => will search all content that doesn't contain the word 'toto'
             $not = '';
@@ -40,13 +40,13 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         }
         return $expr;
     }
-    
+
     protected function quote($string)
     {
         return $this->getCriteriaDao()->getDa()->quoteSmart($string);
     }
-    
-    public function fetchCriteriaValue($criteria) {        
+
+    public function fetchCriteriaValue($criteria) {
         $html = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -55,11 +55,11 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         $html .= '" />';
         return $html;
     }
-    
+
     public function fetchAdvancedCriteriaValue($criteria) {
         return null;
-    }    
-    
+    }
+
     /**
      * Get the "group by" statement to retrieve field values
      */
@@ -68,7 +68,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         $R2 = 'R2_'. $this->id;
         return "$R2.value";
     }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -77,7 +77,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     public function fetchRawValue($value) {
         return $value;
     }
-    
+
     /**
      * Fetch the value in a specific changeset
      * @param Tracker_Artifact_Changeset $changeset
@@ -92,12 +92,12 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         }
         return $value;
     }
-    
+
     /**
      * Save the value and return the id
-     * 
+     *
      * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param int                             $changeset_value_id      The id of the changeset_value
      * @param mixed                           $value                   The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
@@ -106,16 +106,14 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         return $this->getValueDao()->create($changeset_value_id, $value);
     }
-    
+
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-     public function getSoapAvailableValues() {
+     public function getRESTAvailableValues() {
          return null;
      }
-     
 }
-?>

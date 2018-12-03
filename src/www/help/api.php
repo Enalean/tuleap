@@ -45,8 +45,6 @@ EOT
     )
 );
 
-EventManager::instance()->processEvent(Event::SOAP_DESCRIPTION, array('end_points' => &$presenter['end_points']));
-
 $GLOBALS['HTML']->header(array('title' => 'API', 'main_classes' => array('tlp-framed')));
 $renderer->renderToPage('api', $presenter);
 $GLOBALS['HTML']->footer(array());

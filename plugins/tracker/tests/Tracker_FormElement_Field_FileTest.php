@@ -49,7 +49,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
         if(!is_dir($this->thumbnails_dir)) {
             mkdir($this->thumbnails_dir);
         }
- 
+
         $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
 
@@ -73,7 +73,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
 
         parent::tearDown();
     }
-    
+
 }
 
 class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
@@ -91,22 +91,22 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
 
         $tracker_file_info_factory = \Mockery::spy(\Tracker_FileInfoFactory::class);
         stub($tracker_file_info_factory)->getById()->returns(\Mockery::spy(\Tracker_FileInfo::class));
-        
+
         $file_field = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $file_field->shouldReceive('getValueDao')->andReturns($value_dao);
         $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturns($tracker_file_info_factory);
-        
+
         $changeset_value = $file_field->getChangesetValue(\Mockery::spy(\Tracker_Artifact_Changeset::class), 123, false);
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 3);
     }
-    
+
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = \Mockery::spy(\Tracker_FormElement_Field_Value_FileDao::class);
         $dar = Mockery::spy(DataAccessResult::class);
         $dar->shouldReceive('getRow')->andReturn(false);
         $value_dao->shouldReceive('searchById')->andReturn($dar);
-        
+
         $file_field = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $file_field->shouldReceive('getValueDao')->andReturn($value_dao);
         $file_field->shouldReceive('getTrackerFileInfoFactory')->andReturn(Mockery::spy(Tracker_FileInfoFactory::class));
@@ -115,36 +115,31 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $this->assertIsA($changeset_value, 'Tracker_Artifact_ChangesetValue_File');
         $this->assertEqual(count($changeset_value->getFiles()), 0);
     }
-    
-    function testSoapAvailableValues() {
-        $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
 
     function test_augmentDataFromRequest_null() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(null);
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertIdentical($fields_data[66], array());
     }
-    
+
     function test_augmentDataFromRequest_emptyarray() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array());
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertIdentical($fields_data[66], array());
     }
-    
+
     function test_augmentDataFromRequest_one_file_belonging_to_field() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -170,7 +165,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
@@ -184,7 +179,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
     }
-    
+
     function test_augmentDataFromRequest_two_files_belonging_to_field() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -214,7 +209,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
@@ -234,7 +229,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
     }
-    
+
     function test_augmentDataFromRequest_two_files_belonging_to_field_and_one_file_not() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -276,7 +271,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
@@ -297,7 +292,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         ));
         $this->assertFalse(isset($fields_data[111]));
     }
-    
+
     function test_augmentDataFromRequest_one_file_does_not_belong_to_field() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -323,14 +318,14 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123'
         );
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertIdentical($fields_data[66], array());
     }
-    
+
     function test_augmentDataFromRequest_dont_override_description() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $f->shouldReceive('getSubmittedInfoFromFILES')->andReturns(array(
@@ -356,7 +351,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
             ),
         ));
         $f->shouldReceive('getId')->andReturns(66);
-        
+
         $fields_data = array(
             '102' => '123',
             '66'  => array(
@@ -381,17 +376,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
-    
+
     function test_isValid_two_not_filled() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -412,17 +407,17 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $required_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
         $this->assertFalse($required_file->isValidRegardingRequiredProperty($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValidRegardingRequiredProperty($artifact, $value));
     }
-    
+
     function test_isValid_only_description_filled() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -435,16 +430,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
-    
+
     function test_isValid_description_filled_but_error_with_file_upload() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -457,16 +452,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
-    
+
     function test_isValid_description_filled_and_file_ok() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -479,11 +474,11 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
@@ -528,16 +523,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  456,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
-    
+
     function test_isValid_one_file_ok_among_two() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -558,16 +553,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertFalse($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertFalse($not_required_file->isValid($artifact, $value));
     }
-    
+
     function test_isValid_one_file_ok_and_one_empty() {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
         $value = array(
@@ -588,16 +583,16 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
                 'size'        =>  0,
             )
         );
-        
+
         $required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $required_file->shouldReceive('isRequired')->andReturns(true);
         $this->assertTrue($required_file->isValid($artifact, $value));
-        
+
         $not_required_file = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $not_required_file->shouldReceive('isRequired')->andReturns(false);
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
-    
+
     function testGetRootPath() {
         ForgeConfig::set('sys_data_dir', dirname(__FILE__) .'/data');
         $f = \Mockery::mock(\Tracker_FormElement_Field_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -675,381 +670,6 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
         $formelement_field_file->shouldReceive('isPreviousChangesetEmpty')->andReturns(true);
 
         $this->assertTrue($formelement_field_file->isEmpty($submitted_value, $artifact));
-    }
-}
-
-
-abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_FormElement_Field_File_BaseTest {
-    /** @var PFUser */
-    protected $current_user;
-    protected $tmp_dir;
-
-    public function setUp() {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->tmp_dir = '/var/tmp'.'/_fixtures/tmp';
-        ForgeConfig::set('codendi_cache_dir', $this->tmp_dir);
-        if (! is_dir($this->tmp_dir)) {
-            mkdir($this->tmp_dir);
-        }
-        
-        $this->current_user = aUser()->withId(123)->build();
-        $user_manager = mockery_stub(\UserManager::class)->getCurrentUser()->returns($this->current_user);
-        UserManager::setInstance($user_manager);
-    }
-
-    public function tearDown() {
-        $this->recurseDeleteInDir($this->tmp_dir);
-        rmdir($this->tmp_dir);
-        clearstatcache();
-        UserManager::clearInstance();
-        parent::tearDown();
-    }
-}
-
-class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_FormElement_Field_File {
-    public function __construct($id) {
-        $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
-        parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
-    }
-    public function createAttachment(Tracker_FileInfo $attachment, $file_info) {
-        return parent::createAttachment($attachment, $file_info);
-    }
-}
-
-class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
-    /** @var Tracker_FormElement_Field_File_FileSystemPersistanceTest */
-    private $field;
-
-    private $storage_dir;
-
-    public function setUp() {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->storage_dir = $this->fixture_dir.'/storage';
-        if(!is_dir($this->storage_dir)) {
-            mkdir($this->storage_dir);
-        }
-
-        ForgeConfig::set('sys_data_dir', $this->storage_dir);
-        $this->field_id = 987;
-        $this->field    = \Mockery::mock(
-            \Tracker_FormElement_Field_File_FileSystemPersistanceTest::class,
-            [$this->field_id]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        stub($this->field)->getTemporaryFileManagerDao()->returns(\Mockery::spy(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class));
-        stub($this->field)->getFileInfoFactory()->returns(\Mockery::spy(\Tracker_FileInfoFactory::class));
-
-        $this->attachment_id = 654;
-        $this->attachment = \Mockery::mock(
-            \Tracker_FileInfo::class,
-            [$this->attachment_id, $this->field, null, null, null, null, null]
-        )
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-
-        stub($this->attachment)->save()->returns(true);
-    }
-
-    public function tearDown() {
-        $this->recurseDeleteInDir($this->storage_dir);
-        rmdir($this->storage_dir);
-        parent::tearDown();
-    }
-
-    public function itCreatesAFileWhenItComesFromAsSoapRequest() {
-        $file_id        = 'coucou123';
-        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
-        $temp_file_path = $temp_file->getPath();
-
-        $file_info = array(
-            'tmp_name' => $temp_file_path,
-            'id'       => $file_id,
-        );
-
-        touch($temp_file_path);
-
-        expect($this->attachment)->delete()->never();
-        expect($this->attachment)->postUploadActions()->once();
-
-        $this->assertTrue($this->field->createAttachment($this->attachment, $file_info));
-        $this->assertTrue(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
-        $this->assertFalse(file_exists($temp_file_path));
-    }
-
-    public function itDoesntAcceptToMoveAFileThatIsNotAValidSoapTemporaryFile() {
-        $file_id       = 'coucou123';
-        $file_tmp_path = '/etc/passwd';
-        $file_info     = array(
-            'tmp_name' => $file_tmp_path,
-            'id'  => $file_id,
-        );
-
-        expect($this->attachment)->delete()->once();
-
-        $this->assertFalse($this->field->createAttachment($this->attachment, $file_info));
-        $this->assertFalse(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
-    }
-}
-
-
-
-class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
-    /** @var Tracker_FormElement_Field_File */
-    private $field;
-
-    public function setUp() {
-        parent::setUp();
-        $this->setUpGlobalsMockery();
-        $this->field = \Mockery::mock(\Tracker_FormElement_Field_File_FileSystemPersistanceTest::class)->makePartial()->shouldAllowMockingProtectedMethods();
-
-        stub($this->field)->getTemporaryFileManagerDao()->returns(\Mockery::spy(\Tracker_Artifact_Attachment_TemporaryFileManagerDao::class));
-        stub($this->field)->getFileInfoFactory()->returns(\Mockery::spy(\Tracker_FileInfoFactory::class));
-    }
-
-    private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype, $action = null) {
-        $soap_file = new stdClass();
-        $soap_file->id           = $id;
-        $soap_file->submitted_by = 0;
-        $soap_file->description  = $description;
-        $soap_file->filename     = $filename;
-        $soap_file->filesize     = $filesize;
-        $soap_file->filetype     = $filetype;
-        if ($action) {
-            $soap_file->action = $action;
-        }
-        return $soap_file;
-    }
-
-    private function createFakeSoapFieldValue() {
-        $field_value = new stdClass();
-        $field_value->file_info = func_get_args();
-        return $field_value;
-    }
-
-    public function itRaisesAnErrorWhenThereIsNoData() {
-        $this->expectException();
-        $this->field->getFieldData(null);
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitAnArray() {
-        $this->expectException();
-        $this->field->getFieldData(array());
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitAnStringValue() {
-        $this->expectException();
-        $this->field->getFieldData('bla');
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitStdClassWithValue() {
-        $this->expectException();
-        $field_value = new stdClass();
-        $field_value->value = 'bla';
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArray() {
-        $this->expectException();
-        $field_value = new stdClass();
-        $field_value->file_info = 'bla';
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArrayOfFileValue() {
-        $this->expectException();
-        $field_value = $this->createFakeSoapFieldValue('bla');
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itRaisesAnErrorWhenTryToSubmitFileInfoHasNotTheRequiredFields() {
-        $this->expectException();
-        $field_value = $this->createFakeSoapFieldValue(new stdClass());
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itRaisesAnErrorWhenNoFileGiven() {
-        $this->expectException();
-
-        $description = "Purchase Order";
-        $filename    = 'my_file.ods';
-        $filesize    = 1234;
-        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
-
-        $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest(null, $description, $filename, $filesize, $filetype)
-        );
-
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itRaisesAnErrorWhenFileDoesNotExist() {
-        $this->expectException();
-
-        $description = "Purchase Order";
-        $filename    = 'my_file.ods';
-        $filesize    = 1234;
-        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
-
-        $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest(123, $description, $filename, $filesize, $filetype)
-        );
-
-        $this->field->getFieldData($field_value);
-    }
-
-    public function itDoesNothingWhenArrayIsEmpty() {
-        $field_value = $this->createFakeSoapFieldValue();
-        $this->assertEqual(array(), $this->field->getFieldData($field_value));
-    }
-
-    public function itConvertsOneFile() {
-        $description = "Purchase Order";
-        $filename    = 'my_file.ods';
-        $filesize    = 1234;
-        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
-        $file_id     = 'coucou123';
-
-        $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($file_id, $description, $filename, $filesize, $filetype)
-        );
-
-        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
-        $temp_file_path = $temp_file->getPath();
-        touch($temp_file_path);
-
-        $field = aFileField()->build();
-
-        $this->assertEqual(
-            $field->getFieldData($field_value),
-            array(
-                array(
-                    'id'          =>  $file_id,
-                    'description' =>  $description,
-                    'name'        =>  $filename,
-                    'type'        =>  $filetype,
-                    'tmp_name'    =>  $temp_file_path,
-                    'error'       =>  UPLOAD_ERR_OK,
-                    'size'        =>  $filesize,
-                )
-           )
-        );
-    }
-
-    public function itConvertsTwoFiles() {
-        $description1 = "Purchase Order";
-        $filename1    = 'my_file.ods';
-        $filesize1    = 1234;
-        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
-        $file_id1     = 'sdfsdfaz';
-        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
-        $temp_file_path1 = $temp_file1->getPath();
-        touch($temp_file_path1);
-
-        $description2 = "Capture d'écran";
-        $filename2    = 'stuff.png';
-        $filesize2    = 5698;
-        $filetype2    = 'image/png';
-        $file_id2     = 'sdfsdfaz';
-        $temp_file2      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id2);
-        $temp_file_path2 = $temp_file2->getPath();
-        touch($temp_file_path2);
-
-        $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
-            $this->createFakeSoapFileRequest($file_id2, $description2, $filename2, $filesize2, $filetype2)
-        );
-
-        $this->assertEqual(
-            $this->field->getFieldData($field_value),
-            array(
-                array(
-                    'id'          =>  $file_id1,
-                    'description' =>  $description1,
-                    'name'        =>  $filename1,
-                    'type'        =>  $filetype1,
-                    'tmp_name'    =>  $temp_file_path1,
-                    'error'       =>  UPLOAD_ERR_OK,
-                    'size'        =>  $filesize1,
-                ),
-                array(
-                    'id'          =>  $file_id2,
-                    'description' =>  $description2,
-                    'name'        =>  $filename2,
-                    'type'        =>  $filetype2,
-                    'tmp_name'    =>  $temp_file_path2,
-                    'error'       =>  UPLOAD_ERR_OK,
-                    'size'        =>  $filesize2,
-                )
-           )
-        );
-    }
-
-    public function itConvertsForDeletionOfOneFile() {
-        $file_id = 678;
-
-        $soap_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($file_id, '', '', '', '', 'delete')
-        );
-        $this->assertEqual(
-            $this->field->getFieldData($soap_value),
-            array(
-                'delete' => array($file_id)
-            )
-        );
-    }
-
-    public function itConvertsForDeletionOfTwoFiles() {
-        $file_id1 = 678;
-        $file_id2 = 12;
-
-        $soap_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($file_id1, '', '', '', '', 'delete'),
-            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
-        );
-        $this->assertEqual(
-            $this->field->getFieldData($soap_value),
-            array(
-                'delete' => array($file_id1, $file_id2)
-            )
-        );
-    }
-
-    public function itCreatesAndDeleteInTheSameTime() {
-        $description1 = "Purchase Order";
-        $filename1    = 'my_file.ods';
-        $filesize1    = 1234;
-        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
-        $file_id1     = 'sdfsdfaz';
-        $temp_file1      =  new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
-        $temp_file_path1 = $temp_file1->getPath();
-        touch($temp_file_path1);
-
-        $file_id2 = 12;
-
-        $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
-            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
-        );
-
-        $this->assertEqual(
-            $this->field->getFieldData($field_value),
-            array(
-                'delete' => array($file_id2),
-                array(
-                    'id'          =>  $file_id1,
-                    'description' =>  $description1,
-                    'name'        =>  $filename1,
-                    'type'        =>  $filetype1,
-                    'tmp_name'    =>  $temp_file_path1,
-                    'error'       =>  UPLOAD_ERR_OK,
-                    'size'        =>  $filesize1,
-                ),
-           )
-        );
     }
 }
 

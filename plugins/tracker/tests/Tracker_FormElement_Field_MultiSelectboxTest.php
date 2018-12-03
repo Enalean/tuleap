@@ -20,47 +20,6 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_MultiSelectbox_getFieldDataFromSoapValue extends TuleapTestCase {
-    private $field;
-    private $bind;
-    
-    public function setUp() {
-        parent::setUp();
-        $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
-        $this->field = aMultiSelectBoxField()->withBind($this->bind)->build();
-    }
-
-
-    public function itFallsBackToValueStringProcessing() {
-        $soap_value = (object) array(
-            'field_name'  => '',
-            'field_label' => '',
-            'field_value' => (object) array(
-                'value' => 'Bravo,Zoulou'
-            )
-        );
-
-        expect($this->bind)->getFieldData('Bravo,Zoulou', true)->once();
-        stub($this->bind)->getFieldData()->returns(array(1586, 2894));
-
-        $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
-    }
-    
-    public function itExtractsDataFromBindValue() {
-        $soap_value = (object) array(
-            'field_name'  => '',
-            'field_label' => '',
-            'field_value' => (object) array(
-                'bind_value' => array(
-                    (object) array('bind_value_id' => 1586, 'bind_value_label' => ''),
-                    (object) array('bind_value_id' => 2894, 'bind_value_label' => '')
-                )
-            )
-        );
-        $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
-    }
-}
-
 class Tracker_FormElement_Field_MultiSelectbox_RESTTests extends TuleapTestCase {
 
     public function itThrowsAnExceptionWhenReturningValueIndexedByFieldName() {

@@ -46,34 +46,6 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         Spotter::clearInstance();
     }
 
-    public function testGetSoapAvailableValues() {
-        $field = new MockTracker_FormElement_Field_List();
-        $field->setReturnValue('getId', 123);
-
-        $user1 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
-        stub($user1)->getSoapValue()->returns('user1');
-        stub($user1)->getId()->returns(10);
-        $user2 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
-        stub($user2)->getSoapValue()->returns('user2');
-        stub($user2)->getId()->returns(20);
-        
-        $value_function = ',project_members,project_admins';
-        $default_values = $decorators = '';
-
-        $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValuesByUGroupList', 'getSoapBindValue'), array($field, $value_function, $default_values, $decorators));
-        stub($users)->getAllValuesByUGroupList()->returns(array(10 => $user1, 20 => $user2));
-        
-        $soap_values = array(
-            array('bind_value_id' => 10,
-                  'bind_value_label' => 'user1',
-            ),
-            array('bind_value_id' => 20,
-                  'bind_value_label' => 'user2',
-            ),
-        );
-        $this->assertEqual($users->getSoapAvailableValues(), $soap_values);
-    }
-    
     function testGetFieldData() {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
         $bv1->setReturnValue('getUsername', 'john.smith');
@@ -85,7 +57,7 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $f->setReturnReference('getAllValues', $values);
         $this->assertEqual('108', $f->getFieldData('john.smith', false));
     }
-    
+
     function testGetFieldDataMultiple() {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
         $bv1->setReturnValue('getUsername', 'john.smith');
@@ -102,17 +74,17 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $res = array(108,113);
         $this->assertEqual($res, $f->getFieldData('john.smith,tom.brown', true));
     }
-    
+
     public function testGetRecipients() {
         //$recipients = array();
         //foreach ($changeset_value->getBindValues() as $user_value) {
         //    $recipients[] = $user_value->getUser()->getUserName();
         //}
         //return $recipients;
-        
+
         //$user1 = mock('PFUser'); $user1->setReturnValue('getUserName', 'u1');
         //$user2 = mock('PFUser'); $user2->setReturnValue('getUserName', 'u2');
-        
+
         $changeset_value = new MockTracker_Artifact_ChangesetValue_List();
         $changeset_value->setReturnValue(
             'getListValues',
@@ -125,16 +97,16 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         //$u2->setReturnReference('getUser', $user2);
         $u1->setReturnValue('getUsername', 'u1');
         $u2->setReturnValue('getUsername', 'u2');
-        
+
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
         $value_function = 'project_members';
         $default_values = $decorators = '';
-        
+
         $users = new Tracker_FormElement_Field_List_Bind_Users($field, $value_function, $default_values, $decorators);
         $this->assertEqual($users->getRecipients($changeset_value), array('u1', 'u2'));
     }
-    
+
     public function testFormatChangesetValueNoneValue() {
         $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();
         $field2 = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();

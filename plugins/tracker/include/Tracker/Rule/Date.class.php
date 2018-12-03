@@ -43,19 +43,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
         self::COMPARATOR_NOT_EQUALS,
     );
 
-    /** @return mixed */
-    public function exportToSOAP() {
-        if (! $this->fieldsAreCompatibleWithSoap()) {
-            return;
-        }
-
-        return array(
-            'source_field_id' => $this->getSourceFieldId(),
-            'target_field_id' => $this->getTargetFieldId(),
-            'comparator'      => $this->getComparator(),
-        );
-    }
-
     /**
      *
      * @var string
@@ -83,11 +70,11 @@ class Tracker_Rule_Date extends Tracker_Rule {
     public function getComparator() {
         return $this->comparator;
     }
-    
+
     /**
-     * 
-     * Checks that two given values satisfy the rule 
-     * 
+     *
+     * Checks that two given values satisfy the rule
+     *
      * @param string $source_value
      * @param string $target_value
      * @return boolean
@@ -102,7 +89,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
         $source_date = $this->getTimestamp($source_value, $date_only);
         $target_date = $this->getTimestamp($target_value, $date_only);
-        
+
         switch ($this->getComparator()) {
             case self::COMPARATOR_EQUALS :
                 return $source_date == $target_date;
