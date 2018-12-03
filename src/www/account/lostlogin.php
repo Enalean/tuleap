@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -25,15 +25,18 @@ require_once('pre.php');
 
 $request = HTTPRequest::instance();
 
-$confirm_hash = $request->get('confirm_hash');
+$confirm_hash = new \Tuleap\Cryptography\ConcealedString(
+        $request->get('confirm_hash') === false ? '' : $request->get('confirm_hash')
+);
 
-$reset_token_dao      = new Tuleap\User\Password\Reset\DataAccessObject();
-$password_handler     = PasswordHandlerFactory::getPasswordHandler();
-$user_manager         = UserManager::instance();
-$reset_token_verifier = new \Tuleap\User\Password\Reset\Verifier($reset_token_dao, $password_handler, $user_manager);
+$reset_token_dao          = new Tuleap\User\Password\Reset\DataAccessObject();
+$hasher                   = new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher();
+$user_manager             = UserManager::instance();
+$reset_token_verifier     = new \Tuleap\User\Password\Reset\Verifier($reset_token_dao, $hasher, $user_manager);
+$reset_token_unserializer = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
 
 try {
-    $token = \Tuleap\User\Password\Reset\Token::constructFromIdentifier($confirm_hash);
+    $token = $reset_token_unserializer->getSplitToken($confirm_hash);
     $user  = $reset_token_verifier->getUser($token);
 } catch (ExpiredTokenException $ex) {
     $GLOBALS['Response']->addFeedback(
@@ -63,7 +66,7 @@ if ($request->isPost()
     session_redirect("/");
 }
 
-$purifier =& Codendi_HTMLPurifier::instance();
+$purifier = Codendi_HTMLPurifier::instance();
 
 $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 ?>

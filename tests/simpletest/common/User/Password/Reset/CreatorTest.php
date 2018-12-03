@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,39 +20,37 @@
 
 namespace Tuleap\User\Password\Reset;
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+
 class CreatorTest extends \TuleapTestCase
 {
     public function itCreatesToken()
     {
-        $random_number_generator = mock('RandomNumberGenerator');
-        stub($random_number_generator)->getNumber()->returns('random');
-
-        $password_handler = mock('PasswordHandler');
-        stub($password_handler)->computeHashPassword()->returns('random_password_hashed');
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
 
         $user = mock('PFUser');
         stub($user)->getId()->returns(101);
 
         $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
-        stub($dao)->create(101, 'random_password_hashed', '*')->returns(22);
+        stub($dao)->create(101, 'random_hashed', '*')->returns(22);
 
-        $token_creator = new Creator($dao, $random_number_generator, $password_handler);
+        $token_creator = new Creator($dao, $hasher);
 
         $token = $token_creator->create($user);
-        $this->assertEqual(22, $token->getId());
-        $this->assertEqual('random', $token->getVerifier());
+        $this->assertEqual(22, $token->getID());
     }
 
     public function itThrowsExceptionWhenTokenCanNotBeCreated()
     {
-        $random_number_generator = mock('RandomNumberGenerator');
-        $password_handler        = mock('PasswordHandler');
-        $user                    = mock('PFUser');
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
+        $user = mock('PFUser');
 
         $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
         stub($dao)->create()->returns(false);
 
-        $token_creator = new Creator($dao, $random_number_generator, $password_handler);
+        $token_creator = new Creator($dao, $hasher);
 
         $this->expectException('Tuleap\\User\\Password\\Reset\\TokenNotCreatedException');
         $token_creator->create($user);

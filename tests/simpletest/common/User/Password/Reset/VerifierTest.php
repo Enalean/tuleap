@@ -20,6 +20,10 @@
 
 namespace Tuleap\User\Password\Reset;
 
+use Tuleap\Authentication\SplitToken\SplitToken;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+
 class VerifierTest extends \TuleapTestCase
 {
     public function itGetsUserAssociatedWithToken()
@@ -34,16 +38,19 @@ class VerifierTest extends \TuleapTestCase
             )
         );
 
-        $password_handler = mock('PasswordHandler');
-        stub($password_handler)->verifyHashPassword()->returns(true);
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('verifyHash')->andReturns(true);
 
         $user         = mock('PFUser');
         $user_manager = mock('UserManager');
         stub($user_manager)->getUserById(101)->returns($user);
 
-        $token = mock('Tuleap\\User\\Password\\Reset\\Token');
+        $token = \Mockery::mock(SplitToken::class);
+        $token->shouldReceive('getID')->andReturns(1);
+        $token->shouldReceive('getVerificationString')
+            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
 
-        $token_verifier = new Verifier($dao, $password_handler, $user_manager);
+        $token_verifier = new Verifier($dao, $hasher, $user_manager);
 
         $this->assertEqual($user, $token_verifier->getUser($token));
     }
@@ -53,14 +60,15 @@ class VerifierTest extends \TuleapTestCase
         $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
         stub($dao)->getTokenInformationById()->returns(false);
 
-        $password_handler = mock('PasswordHandler');
-        stub($password_handler)->verifyHashPassword()->returns(true);
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('verifyHash')->andReturns(true);
 
         $user_manager = mock('UserManager');
 
-        $token = mock('Tuleap\\User\\Password\\Reset\\Token');
+        $token = \Mockery::mock(SplitToken::class);
+        $token->shouldReceive('getID')->andReturns(1);
 
-        $token_verifier = new Verifier($dao, $password_handler, $user_manager);
+        $token_verifier = new Verifier($dao, $hasher, $user_manager);
 
         $this->expectException('Tuleap\\User\\Password\\Reset\\InvalidTokenException');
         $token_verifier->getUser($token);
@@ -71,14 +79,17 @@ class VerifierTest extends \TuleapTestCase
         $dao = mock('Tuleap\\User\\Password\\Reset\\DataAccessObject');
         stub($dao)->getTokenInformationById()->returns(array('verifier' => 'token_verification_part_password_hashed'));
 
-        $password_handler = mock('PasswordHandler');
-        stub($password_handler)->verifyHashPassword()->returns(false);
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('verifyHash')->andReturns(false);
 
         $user_manager = mock('UserManager');
 
-        $token = mock('Tuleap\\User\\Password\\Reset\\Token');
+        $token = \Mockery::mock(SplitToken::class);
+        $token->shouldReceive('getID')->andReturns(1);
+        $token->shouldReceive('getVerificationString')
+            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
 
-        $token_verifier = new Verifier($dao, $password_handler, $user_manager);
+        $token_verifier = new Verifier($dao, $hasher, $user_manager);
 
         $this->expectException('Tuleap\\User\\Password\\Reset\\InvalidTokenException');
         $token_verifier->getUser($token);
@@ -98,16 +109,19 @@ class VerifierTest extends \TuleapTestCase
             )
         );
 
-        $password_handler = mock('PasswordHandler');
-        stub($password_handler)->verifyHashPassword()->returns(true);
+        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
+        $hasher->shouldReceive('verifyHash')->andReturns(true);
 
         $user         = mock('PFUser');
         $user_manager = mock('UserManager');
         stub($user_manager)->getUserById(101)->returns($user);
 
-        $token = mock('Tuleap\\User\\Password\\Reset\\Token');
+        $token = \Mockery::mock(SplitToken::class);
+        $token->shouldReceive('getID')->andReturns(1);
+        $token->shouldReceive('getVerificationString')
+            ->andReturns(\Mockery::mock(SplitTokenVerificationString::class));
 
-        $token_verifier = new Verifier($dao, $password_handler, $user_manager);
+        $token_verifier = new Verifier($dao, $hasher, $user_manager);
 
         $this->expectException('Tuleap\\User\\Password\\Reset\\ExpiredTokenException');
         $token_verifier->getUser($token);

@@ -26,9 +26,10 @@ if ($user === null) {
 }
 
 $reset_token_dao         = new Tuleap\User\Password\Reset\DataAccessObject();
-$random_number_generator = new RandomNumberGenerator();
-$password_handler        = PasswordHandlerFactory::getPasswordHandler();
-$reset_token_creator     = new \Tuleap\User\Password\Reset\Creator($reset_token_dao, $random_number_generator, $password_handler);
+$reset_token_creator     = new \Tuleap\User\Password\Reset\Creator(
+    $reset_token_dao,
+    new Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()
+);
 try {
     $reset_token = $reset_token_creator->create($user);
 } catch (TokenNotCreatedException $ex) {
@@ -39,9 +40,12 @@ try {
     $GLOBALS['Response']->redirect('/account/lostpw.php');
 }
 
+$reset_token_formatter = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
+$identifier            = $reset_token_formatter->getIdentifier($reset_token);
+
 $message = stripcslashes($Language->getText('account_lostpw-confirm', 'mail_body',
 	      array($GLOBALS['sys_name'],
-                $request->getServerUrl(). '/account/lostlogin.php?confirm_hash=' . urlencode($reset_token->getIdentifier()))));
+                $request->getServerUrl(). '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))));
 
 $mail = new Codendi_Mail();
 $mail->setTo($user->getEmail(), true);
