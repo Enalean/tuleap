@@ -22,14 +22,17 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\BurndownCacheIsCurrentlyCalculatedException;
 use Tuleap\Tracker\FormElement\BurndownFieldPresenter;
+use Tuleap\Tracker\FormElement\BurndownLogger;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
+use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
-use Tuleap\Tracker\FormElement\BurndownLogger;
-use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\SystemEvent\SystemEvent_BURNDOWN_GENERATE;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilder;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdder;
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
@@ -202,7 +205,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $html = "";
         if ($user->isAdmin($artifact->getTracker()->getGroupId())
-            && $this->isCacheBurndownAlreadyAsked($artifact) === false
+            && $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false
             && $this->getBurndownConfigurationValueChecker()->areBurndownFieldsCorrectlySet($artifact, $user)
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
@@ -383,219 +386,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function getBurndownData(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
     {
-        $logger = $this->getLogger();
-        $logger->info("Start calculating burndown " . $artifact->getId());
-
-        $capacity = null;
-        if ($this->getBurdownConfigurationFieldRetriever()->doesCapacityFieldExist($artifact->getTracker())) {
-            $capacity = $this->getBurndownConfigurationValueRetriever()->getCapacity($artifact, $user);
-        }
-
-        $user_timezone   = date_default_timezone_get();
-        $server_timezone = TimezoneRetriever::getServerTimezone();
-        date_default_timezone_set($server_timezone);
-
-        $logger->debug("Capacity: " . $capacity);
-        $logger->debug("Original start date: " . $start_date);
-        $logger->debug("Duration: " . $duration);
-        $logger->debug("User Timezone: " . $user_timezone);
-        $logger->debug("Server timezone: " . $server_timezone);
-
-        $is_burndown_under_calculation = $this->isBurndownCompleteBasedOnServerTimezone(
-            $artifact,
-            $user,
-            $start_date,
-            $duration,
-            $capacity
-        );
-
-        $logger->info("End calculating burndown " . $artifact->getId());
-        date_default_timezone_set($user_timezone);
-
-        return $this->addBurndownRemainingEffortDotsBasedOnUserTimezone(
-            $artifact,
-            $user,
-            $start_date,
-            $duration,
-            $capacity,
-            $is_burndown_under_calculation
-        );
+        $builder = $this->getBurndownDataBuilder();
+        return $builder->build($artifact, $user, $start_date, $duration);
     }
 
-    private function addBurndownRemainingEffortDotsBasedOnUserTimezone(
-        Tracker_Artifact $artifact,
-        PFUser $user,
-        $start_date,
-        $duration,
-        $capacity,
-        $is_burndown_under_calculation
-    ) {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
-        }
-
-        $start = new  DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
-
-        $user_time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
-        $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
-
-        if ($is_burndown_under_calculation === false) {
-            $this->addRemainingEffortData(
-                $user_burndown_data, $user_time_period, $artifact, $user
-            );
-        }
-
-        $user_burndown_data->setIsBeingCalculated($is_burndown_under_calculation);
-
-        return $user_burndown_data;
-    }
-
-    private function isBurndownCompleteBasedOnServerTimezone(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration, $capacity)
-    {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
-        }
-
-        $start = new  DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
-
-        $logger = $this->getLogger();
-        $logger->debug("Start date after updating timezone: " . $start->getTimestamp());
-
-        $time_period          = new TimePeriodWithoutWeekEnd($start->getTimestamp(), $duration);
-        $server_burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
-
-        $this->addRemainingEffortData($server_burndown_data, $time_period, $artifact, $user);
-        if ($this->isCacheCompleteForBurndown($time_period, $artifact, $user) === false
-            && $this->isCacheBurndownAlreadyAsked($artifact) === false
-        ) {
-            $this->forceBurndownCacheGeneration($artifact->getId());
-            $server_burndown_data->setIsBeingCalculated(true);
-        } else if ($this->isCacheBurndownAlreadyAsked($artifact)) {
-            $server_burndown_data->setIsBeingCalculated(true);
-        }
-
-        return $server_burndown_data->isBeingCalculated();
-    }
-
-    public function forceBurndownCacheGeneration($artifact_id)
-    {
-        $this->getSystemEventManager()->createEvent(
-            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME,
-            $artifact_id,
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_APP
-        );
-    }
-
-    public function isCacheBurndownAlreadyAsked(Tracker_Artifact $artifact)
-    {
-        return $this->getSystemEventManager()->areThereMultipleEventsQueuedMatchingFirstParameter(
-            'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME, $artifact->getId()
-        );
-    }
 
     private function getSystemEventManager()
     {
         return SystemEventManager::instance();
-    }
-
-    private function isCacheCompleteForBurndown(
-        TimePeriodWithoutWeekEnd $time_period,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ) {
-        if ($this->getBurndownConfigurationValueChecker()->doesUserCanReadRemainingEffort($artifact, $user)
-            && $this->getBurndownConfigurationValueChecker()->hasStartDate($artifact, $user)) {
-            $cached_days = $this->getComputedDao()->getCachedDays(
-                $artifact->getId(),
-                $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user)->getId()
-            );
-
-            return $this->getCachedDaysComparator()->isNumberOfCachedDaysExpected($time_period, $cached_days['cached_days']);
-        }
-
-        return true;
-    }
-
-    private function addRemainingEffortData(
-        Tracker_Chart_Data_Burndown $burndown_data,
-        TimePeriodWithoutWeekEnd $time_period,
-        Tracker_Artifact $artifact,
-        PFUser $user
-    ) {
-        $field = $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $user);
-        if (! $field) {
-            return;
-        }
-
-        $date = $this->getFirstDayDate($time_period);
-        $now  = new DateTime();
-
-        if ($time_period->getStartDate() > $now->getTimestamp()) {
-            return;
-        }
-
-        $offset_days = 0;
-        while($offset_days <= $time_period->getDuration()) {
-            if ($date >= $now) {
-                $remaining_effort = $field->getComputedValue($user, $artifact, null);
-                $burndown_data->addEffortAt($offset_days, $remaining_effort);
-                $burndown_data->addEffortAtDateTime($this->getMidnightDate($date), $remaining_effort);
-
-                break;
-            }
-
-            $remaining_effort = $field->getCachedValue(
-                new Tracker_UserWithReadAllPermission($user), $artifact, $date->getTimestamp()
-            );
-            if ($remaining_effort !== false) {
-                $date_midnight = $date;
-                $date_midnight->setTime(0, 0, 0);
-
-                $burndown_data->addEffortAt($offset_days, $remaining_effort);
-                $burndown_data->addEffortAtDateTime($this->getMidnightDate($date), $remaining_effort);
-                $offset_days++;
-            }
-
-            $date = $this->setTomorrow($date);
-        }
-    }
-
-    /**
-     * @return DateTime
-     */
-    private function getFirstDayDate(TimePeriodWithoutWeekEnd $time_period)
-    {
-        $date = new DateTime();
-        $date->setTimestamp($time_period->getStartDate());
-        $date->setTime(23, 59, 59);
-
-        return $date;
-    }
-
-    /**
-     * @return DateTime
-     */
-    private function getMidnightDate(DateTime $date)
-    {
-        $date->setTime(0, 0, 0);
-
-        return $date;
-    }
-
-    /**
-     * @return DateTime
-     */
-    private function setTomorrow(DateTime $date)
-    {
-        $date->modify('+1 day');
-        $date->setTime(23, 59, 59);
-
-        return $date;
     }
 
     /**
@@ -827,11 +625,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         try {
             if (
                 $previous_changeset !== null &&
-                $this->isCacheBurndownAlreadyAsked($artifact) === false &&
+                $this->getBurndownCacheChecker()->isCacheBurndownAlreadyAsked($artifact) === false &&
                 $this->getBurdownConfigurationFieldRetriever()->getBurndownRemainingEffortField($artifact, $submitter)
             ) {
                 if ($this->getBurndownConfigurationValueChecker()->hasConfigurationChange($artifact, $submitter, $new_changeset) === true ) {
-                    $this->forceBurndownCacheGeneration($artifact->getId());
+                    $this->getBurndownCacheGenerator()->forceBurndownCacheGeneration($artifact->getId());
                 }
             }
         } catch (Tracker_FormElement_Chart_Field_Exception $e) {
@@ -909,5 +707,50 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
 
         return $renderer->renderToString('burndown-field', $burndown_presenter);
+    }
+
+    private function getBurndownDataBuilder()
+    {
+        return new BurndownDataBuilder(
+            $this->getLogger(),
+            $this->getBurdownConfigurationFieldRetriever(),
+            $this->getBurndownConfigurationValueRetriever(),
+            $this->getBurndownCacheChecker(),
+            $this->getRemainingEffortAdder(),
+            new TimezoneRetriever()
+        );
+    }
+
+    /**
+     * @return BurndownCacheGenerationChecker
+     */
+    private function getBurndownCacheChecker()
+    {
+        return new BurndownCacheGenerationChecker(
+            $this->getLogger(),
+            $this->getBurndownCacheGenerator(),
+            $this->getSystemEventManager(),
+            $this->getBurdownConfigurationFieldRetriever(),
+            $this->getBurndownConfigurationValueChecker(),
+            $this->getComputedDao(),
+            $this->getCachedDaysComparator(),
+            $this->getRemainingEffortAdder()
+        );
+    }
+
+    /**
+     * @return BurndownCacheGenerator
+     */
+    private function getBurndownCacheGenerator()
+    {
+        return new BurndownCacheGenerator($this->getSystemEventManager());
+    }
+
+    /**
+     * @return BurndownRemainingEffortAdder
+     */
+    private function getRemainingEffortAdder()
+    {
+        return new BurndownRemainingEffortAdder($this->getBurdownConfigurationFieldRetriever());
     }
 }
