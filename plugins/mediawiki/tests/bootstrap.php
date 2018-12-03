@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2014. All rights reserved.
+ * Copyright Enalean (c) 2014-2018. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,10 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__) . '/../include/autoload.php');
+require_once __DIR__ . '/../include/mediawikiPlugin.class.php';
 
-foreach (glob(dirname(__FILE__).'/builders/*.php') as $file) {
+foreach (glob(__DIR__ .'/builders/*.php') as $file) {
     require_once $file;
 }
-
-?>

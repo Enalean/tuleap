@@ -50,9 +50,8 @@ use Tuleap\MediaWiki\XMLMediaWikiExporter;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 
-require_once 'common/plugin/Plugin.class.php';
-require_once 'constants.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class MediaWikiPlugin extends Plugin {
 
