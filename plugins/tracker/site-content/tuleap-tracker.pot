@@ -65,6 +65,9 @@ msgstr ""
 msgid "An error has occurred, the workflow couldn't be reset."
 msgstr ""
 
+msgid "An error has occurred, the workflow couldn't be updated."
+msgstr ""
+
 msgid ""
 "Archive deleted items plugin is enabled. Each deleted artifact will be "
 "archived in the folder defined in the plugin configuration."
@@ -251,6 +254,9 @@ msgid "No users have unsubscribed."
 msgstr ""
 
 msgid "No webhooks defined"
+msgstr ""
+
+msgid "No workflow defined on the given tracker."
 msgstr ""
 
 msgid "Notification successfully deleted."

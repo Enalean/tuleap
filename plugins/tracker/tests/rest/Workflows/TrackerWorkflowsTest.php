@@ -116,6 +116,40 @@ class TrackerWorkflowsTest extends TrackerBase
         $this->assertTrue($has_exception_been_caught);
     }
 
+    /**
+     * @depends testPATCHTrackerWorkflowsCreatesANewWorklowAndReturnsTheNewWorkflowRepresentation
+     */
+    public function testPATCHTrackerWorkflowsIsUsed()
+    {
+        $query = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+        );
+        $result = $response->json();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("1", $result['workflow']['is_used']);
+    }
+
+    /**
+     * @depends testPATCHTrackerWorkflowsIsUsed
+     */
+    public function testPATCHTrackerWorkflowsIsNotUsed()
+    {
+        $query = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
+        $response = $this->getResponseByName(
+            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->patch("trackers/" . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query), null, null)
+        );
+        $result = $response->json();
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals("0", $result['workflow']['is_used']);
+    }
+
+    /**
+     * @depends testPATCHTrackerWorkflowsIsUsed
+     * @depends testPATCHTrackerWorkflowsIsNotUsed
+     */
     public function testPATCHTrackerWorkflowsDeleteAWorkflowTransitionRules()
     {
         $query = '{"workflow": {"delete_transitions_rules": true}}';
