@@ -33,6 +33,7 @@ class RequestInstrumentation
     public static function increment($code)
     {
         self::incrementCodeRouter($code, 'fastroute');
+        self::updateRequestDurationHistogram('fastroute');
     }
 
     public static function incrementLegacy()
@@ -46,6 +47,7 @@ class RequestInstrumentation
             $code = -1;
         }
         self::incrementCodeRouter($code, 'rest');
+        self::updateRequestDurationHistogram('rest');
     }
 
     /**
@@ -61,6 +63,11 @@ class RequestInstrumentation
     {
         $prom = \Tuleap\Instrument\Prometheus\Prometheus::instance();
         $prom->increment(self::COUNT_NAME, self::COUNT_HELP, ['code' => $code, 'router' => $router]);
+    }
+
+    private static function updateRequestDurationHistogram($router)
+    {
+        $prom = \Tuleap\Instrument\Prometheus\Prometheus::instance();
         $prom->histogram(
             self::DURATION_NAME,
             self::DURATION_HELP,
