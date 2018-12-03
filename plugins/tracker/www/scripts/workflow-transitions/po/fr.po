@@ -35,6 +35,9 @@ msgstr "Modifier ou supprimer le champ"
 msgid "Configure"
 msgstr "Configurer"
 
+msgid "Configure it"
+msgstr "Configurez le"
+
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -55,6 +58,11 @@ msgstr ""
 
 msgid "Save and start configuration"
 msgstr "Sauvegarder et démarrer la configuration"
+
+msgid "The field on which the transitions are based has no selectable value"
+msgstr ""
+"Le champ sur lequel sont basées les transitions ne contient aucune "
+"valeur"
 
 msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""

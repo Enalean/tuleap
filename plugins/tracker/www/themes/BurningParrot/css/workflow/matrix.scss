@@ -118,3 +118,11 @@
 .sidebar-collapsed .tracker-workflow-transition-tbody > tr > .tracker-workflow-transition-row-label:first-child {
     left: 50px;
 }
+
+.tracker-workflow-transition-matrix-empty-state {
+    margin: $tlp-spacing;
+}
+
+.tracker-workflow-transition-matrix-empty-state-field-empty {
+    margin: 0 0 $tlp-double-spacing;
+}
