@@ -139,3 +139,12 @@ form[name=edit_chart_form] label {
     border-radius: 50%;
     opacity: .8;
 }
+
+.graphontrackersv5-chart-spinner {
+    min-height: 100px;
+    background: url('/themes/common/images/tuleap-spinner.gif') no-repeat center center;
+}
+
+.tlp-alert-danger.graphontrackersv5-chart-error {
+    margin: 20px 0;
+}

@@ -190,10 +190,17 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $html;
     }
 
-    private function fetchGraphAnchor($content) {
+    private function fetchGraphAnchor($content)
+    {
+        $not_d3_flag = $this->isGraphDrawnByD3() ? 'false' : 'true';
+        $renderer_id = $this->renderer->getId();
+        $report_id   = $this->renderer->report->getId();
         return '<div class="tracker_report_renderer_graphontrackers_graph plugin_graphontrackersv5_chart"
-                     data-graph-id="'.$this->getId().'">'. $content .'
-                </div>';
+                     data-graph-id="' . $this->getId() . '"
+                     data-renderer-id="' . $renderer_id . '"
+                     data-report-id="' . $report_id . '"
+                     data-does-not-use-d3="' . $not_d3_flag . '"
+                >' . $content . '</div>';
     }
 
     private function fetchAdditionnalButton()
@@ -555,7 +562,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $store_in_session = false;
 
         if ($this->isGraphDrawnByD3()) {
-            $content .= $this->fetchContentD3Graph($this->fetchAsArray());
+            $content .= $this->fetchContentD3Graph();
         } else {
             $content .= $this->fetchContentJPGraph($store_in_session);
         }
@@ -582,14 +589,8 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $content;
     }
 
-    private function fetchContentD3Graph(array $chart_data)
+    private function fetchContentD3Graph()
     {
-        $snippet = 'var tuleap = tuleap || {};
-            tuleap.graphontrackersv5 = tuleap.graphontrackersv5 || {};
-            tuleap.graphontrackersv5.graphs = tuleap.graphontrackersv5.graphs || {};
-            tuleap.graphontrackersv5.graphs[' . $this->getId() . '] = ' . json_encode($chart_data) . ';';
-        $GLOBALS['HTML']->includeFooterJavascriptSnippet($snippet);
-
         $content = $this->fetchAdditionnalButton();
         $content .= $this->fetchGraphAnchor('');
 

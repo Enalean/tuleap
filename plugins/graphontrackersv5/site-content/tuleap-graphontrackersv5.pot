@@ -1,3 +1,6 @@
+msgid "Chart not found."
+msgstr ""
+
 msgid "No data to display."
 msgstr ""
 
@@ -5,6 +8,12 @@ msgid "No start date defined."
 msgstr ""
 
 msgid "Please choose a smaller period, or increase the scale."
+msgstr ""
+
+msgid "Renderer not found."
+msgstr ""
+
+msgid "Report not found."
 msgstr ""
 
 msgid "Start date must be before the end date."

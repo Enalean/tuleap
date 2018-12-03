@@ -17,14 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { bar } from "./graphs-bar.js";
-import { groupedbar } from "./graphs-groupedbar.js";
-import { pie } from "./graphs-pie.js";
-import { cumulativeflow } from "./graph-cumulative-flow.js";
+import Gettext from "node-gettext";
+import french_translations from "../po/fr.po";
 
-export default {
-    bar,
-    groupedbar,
-    pie,
-    cumulativeflow
-};
+const gettext_provider = new Gettext();
+gettext_provider.addTranslations("fr_FR", "graphontrackersv5", french_translations);
+gettext_provider.setTextDomain("graphontrackersv5");
+
+export { gettext_provider };

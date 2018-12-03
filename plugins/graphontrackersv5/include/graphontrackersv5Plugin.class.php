@@ -1,9 +1,8 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  * Originally written by Mahmoud MAALEJ, 2006. STMicroelectronics.
- *
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,17 +20,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Dashboard\Project\ProjectDashboardController;
-use Tuleap\Dashboard\User\UserDashboardController;
+use Tuleap\GraphOnTrackersV5\Async\ChartDataController;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/constants.php';
 require_once __DIR__ .  '/../vendor/autoload.php';
 
-class GraphOnTrackersV5Plugin extends Plugin {
-
+class GraphOnTrackersV5Plugin extends Plugin
+{
     const RENDERER_TYPE = 'plugin_graphontrackersv5';
 
     var $report_id;
@@ -78,6 +77,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
 
             $this->addHook('javascript_file');
             $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
+            $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         }
         $this->allowedForProject = array();
     }
@@ -351,5 +351,18 @@ class GraphOnTrackersV5Plugin extends Plugin {
             '/assets/graphontrackersv5/scripts'
         );
         return $include_assets;
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        $event->getRouteCollector()->get(
+            "/plugins/graphontrackersv5/report/{report_id:\d+}/renderer/{renderer_id:-?\d+}/chart/{chart_id:-?\d+}",
+            function () {
+            return new ChartDataController(
+                Tracker_ReportFactory::instance(),
+                Tracker_Report_RendererFactory::instance(),
+                GraphOnTrackersV5_ChartFactory::instance()
+            );
+        });
     }
 }

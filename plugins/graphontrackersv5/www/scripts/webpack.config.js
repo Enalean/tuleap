@@ -32,9 +32,14 @@ module.exports = {
     },
     context: path.resolve(__dirname),
     output: webpack_configurator.configureOutput(assets_dir_path),
-    externals: { tuleap: "tuleap" },
+    resolve: {
+        alias: webpack_configurator.extendAliases({}, webpack_configurator.tlp_fetch_alias)
+    },
     module: {
-        rules: [webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11)]
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_po_files
+        ]
     },
     plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
 };

@@ -19,5 +19,11 @@
     },
     "components": [
         "www/scripts"
-    ]
+    ],
+    "gettext-js": {
+        "graphontrackersv5": {
+            "src": "www/scripts/src",
+            "po" : "www/scripts/po"
+        }
+    }
 }

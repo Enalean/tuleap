@@ -17,19 +17,86 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import tuleap from "tuleap";
-import graphs from "./graphs.js";
+import { sprintf } from "sprintf-js";
+import { getChartData } from "./rest-querier.js";
+import { gettext_provider } from "./gettext_provider.js";
+import { bar } from "./graphs-bar.js";
+import { groupedbar } from "./graphs-groupedbar.js";
+import { pie } from "./graphs-pie.js";
+import { cumulativeflow } from "./graph-cumulative-flow.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (!tuleap.hasOwnProperty("graphontrackersv5") || !tuleap.graphontrackersv5.graphs) {
+    const locale = document.body.dataset.userLocale;
+    gettext_provider.setLocale(locale);
+
+    const graphs = document.querySelectorAll(".plugin_graphontrackersv5_chart");
+    for (const graph of graphs) {
+        buildGraph(graph);
+    }
+});
+
+const TYPE_BAR = "bar";
+const TYPE_GROUPED_BAR = "groupedbar";
+const TYPE_PIE = "pie";
+const TYPE_CUMULATIVE_FLOW_CHART = "cumulativeflow";
+
+async function buildGraph(graph_node) {
+    const { graphId, rendererId, reportId, doesNotUseD3 } = graph_node.dataset;
+
+    if (doesNotUseD3 === "true") {
         return;
     }
 
-    Object.getOwnPropertyNames(tuleap.graphontrackersv5.graphs).forEach(id => {
-        const graph = tuleap.graphontrackersv5.graphs[id];
+    const spinner_node = showSpinner(graph_node);
+    try {
+        const graph_data = await getChartData(reportId, rendererId, graphId);
+        graphFactory(graphId, graph_data);
+    } catch (e) {
+        showError(graph_node, e.message);
+    } finally {
+        graph_node.removeChild(spinner_node);
+    }
+}
 
-        if (graphs[graph.type] !== undefined) {
-            graphs[graph.type](id, graph);
-        }
-    });
-});
+function graphFactory(graph_id, graph_data) {
+    const { type } = graph_data;
+
+    if (type === TYPE_BAR) {
+        bar(graph_id, graph_data);
+        return;
+    }
+    if (type === TYPE_GROUPED_BAR) {
+        groupedbar(graph_id, graph_data);
+        return;
+    }
+    if (type === TYPE_PIE) {
+        pie(graph_id, graph_data);
+        return;
+    }
+    if (type === TYPE_CUMULATIVE_FLOW_CHART) {
+        cumulativeflow(graph_id, graph_data);
+    }
+}
+
+function showError(graph_node, error) {
+    const error_message = sprintf(
+        gettext_provider.gettext("An error occurred while loading the chart: %s"),
+        error
+    );
+    const error_node = document.createElement("div");
+    error_node.classList.add(
+        "alert",
+        "alert-error",
+        "tlp-alert-danger",
+        "graphontrackersv5-chart-error"
+    );
+    error_node.insertAdjacentText("beforeend", error_message);
+    graph_node.appendChild(error_node);
+}
+
+function showSpinner(graph_node) {
+    const spinner_node = document.createElement("div");
+    spinner_node.classList.add("graphontrackersv5-chart-spinner");
+    graph_node.appendChild(spinner_node);
+    return spinner_node;
+}
