@@ -164,6 +164,7 @@ class Tracker_REST_TrackerRestBuilder {
     private function getWorkflowTransitionRepresentation(Transition $transition) {
         $workflow_representation = new WorkflowTransitionRepresentation();
         $workflow_representation->build(
+            $transition->getId(),
             $transition->getIdFrom(),
             $transition->getIdTo()
         );

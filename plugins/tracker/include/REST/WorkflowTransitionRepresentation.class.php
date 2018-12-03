@@ -27,6 +27,11 @@ class WorkflowTransitionRepresentation {
     /**
      * @var int
      */
+    public $id;
+
+    /**
+     * @var int
+     */
     public $from_id;
 
     /**
@@ -34,7 +39,9 @@ class WorkflowTransitionRepresentation {
      */
     public $to_id;
 
-    public function build($from_id, $to_id) {
+    public function build($id, $from_id, $to_id)
+    {
+        $this->id = JsonCast::toInt($id);
         $this->from_id = JsonCast::toInt($from_id);
         $this->to_id   = JsonCast::toInt($to_id);
     }
