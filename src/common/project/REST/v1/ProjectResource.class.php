@@ -353,7 +353,7 @@ class ProjectResource extends AuthenticatedResource {
     private function getMyAndPublicProjectsFromExactMatch($query, PFUser $user, $offset, $limit)
     {
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        $checker    = new GetProjectsQueryChecker();
+        $checker    = new GetProjectsQueryChecker($this->event_manager);
         $checker->checkQuery($json_query, $this->isUserARestProjectManager($user));
 
         if (isset($json_query['shortname'])) {

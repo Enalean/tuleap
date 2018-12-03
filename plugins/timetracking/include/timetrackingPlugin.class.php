@@ -64,6 +64,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\UserTimeRetriever::NAME);
+        $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);
@@ -241,6 +242,11 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             $user_time_retriever->getLimit(),
             $user_time_retriever->getOffset()
         ));
+    }
+
+    public function getAdditionalCriteria(\Tuleap\REST\Event\GetAdditionalCriteria $get_projects)
+    {
+        $get_projects->addCriteria("with_time_tracking", "'with_time_tracking': true");
     }
 
     public function project_admin_ugroup_deletion(array $params) // @codingStandardsIgnoreLine
