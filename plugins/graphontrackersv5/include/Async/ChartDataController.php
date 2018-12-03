@@ -52,6 +52,7 @@ class ChartDataController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        session_write_close();
         $report_id   = $variables['report_id'];
         $renderer_id = $variables['renderer_id'];
         $chart_id    = $variables['chart_id'];
