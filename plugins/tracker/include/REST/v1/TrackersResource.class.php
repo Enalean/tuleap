@@ -557,10 +557,7 @@ class TrackersResource extends AuthenticatedResource
         $this->sendAllowHeaderForTracker();
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($tracker->getProject());
-
-        $permissions_checker = new TrackerPermissionsChecker(new \URLVerification());
-        $permissions_checker->checkRead($user, $tracker);
-        $permissions_checker->checkUpdateWorkflow($user, $tracker);
+        (new TrackerPermissionsChecker(new \URLVerification()))->checkUpdateWorkflow($user, $tracker);
 
         $parameterParser = new QueryParameterParser($json_decoder);
 
