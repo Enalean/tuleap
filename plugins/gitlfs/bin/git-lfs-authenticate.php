@@ -26,21 +26,36 @@
 // sed -i -e "/# These are the commands enabled by default/a 'git-lfs-authenticate'," /var/lib/gitolite/.gitolite.rc
 // install -o root -g root -m 0440 /usr/share/tuleap/plugins/gitlfs/etc/sudoers.d/tuleap_gitlfs_authenticate /etc/sudoers.d/tuleap_gitlfs_authenticate
 
+use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory;
+use Tuleap\GitLFS\Authorization\User\UserAuthorizationDAO;
+use Tuleap\GitLFS\Authorization\User\UserTokenCreator;
+use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticate;
+use Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticateResponseBuilder;
+
 require_once __DIR__.'/../../../src/www/include/pre.php';
 require_once __DIR__.'/../include/gitlfsPlugin.class.php';
 
 try {
     $project_manager = ProjectManager::instance();
-    $ssh_auth = new \Tuleap\GitLFS\SSHAuthenticate\SSHAuthenticate(
+    $ssh_auth = new SSHAuthenticate(
         $project_manager,
         UserManager::instance(),
         new GitRepositoryFactory(
             new GitDao(),
             $project_manager
         ),
+        new SSHAuthenticateResponseBuilder(
+            new UserTokenCreator(
+                new SplitTokenVerificationStringHasher(),
+                new UserAuthorizationDAO()
+            )
+        ),
+        new UserOperationFactory(),
         PluginManager::instance()->getAvailablePluginByName('gitlfs')
     );
-    $ssh_auth->main($_SERVER['GL_USER'], $argv);
+    $response = $ssh_auth->main($_SERVER['GL_USER'], $argv);
+    echo \json_encode($response, JSON_FORCE_OBJECT);
 } catch (\Tuleap\GitLFS\SSHAuthenticate\InvalidCommandException $exception) {
     fwrite(STDERR, $exception->getMessage().PHP_EOL);
     exit(1);

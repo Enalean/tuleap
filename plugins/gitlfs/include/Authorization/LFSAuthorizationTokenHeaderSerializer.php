@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Authorization\Action;
+namespace Tuleap\GitLFS\Authorization;
 
 use Tuleap\Authentication\SplitToken\IncorrectSizeVerificationStringException;
 use Tuleap\Authentication\SplitToken\InvalidIdentifierFormatException;
@@ -28,7 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
 
-final class ActionAuthorizationTokenHeaderSerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
+final class LFSAuthorizationTokenHeaderSerializer implements SplitTokenFormatter, SplitTokenIdentifierTranslator
 {
     /**
      * @return ConcealedString

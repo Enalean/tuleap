@@ -28,8 +28,12 @@ use Tuleap\Git\Permissions\FineGrainedRetriever;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenHeaderSerializer;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
+use Tuleap\GitLFS\Authorization\LFSAuthorizationTokenHeaderSerializer;
+use Tuleap\GitLFS\Authorization\User\UserAuthorizationDAO;
+use Tuleap\GitLFS\Authorization\User\UserAuthorizationRemover;
+use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
+use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -110,17 +114,26 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
             $logger               = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Batch');
+            $user_manager         = UserManager::instance();
             $lfs_batch_controller = new \Tuleap\GitLFS\Batch\LFSBatchController(
                 $this,
                 $this->getGitPlugin()->getRepositoryFactory(),
                 new \Tuleap\GitLFS\Batch\LFSBatchAPIHTTPAccessControl(
+                    new LSFBatchAPIHTTPAuthorization(
+                        new UserTokenVerifier(
+                            new UserAuthorizationDAO(),
+                            new SplitTokenVerificationStringHasher(),
+                            $user_manager
+                        ),
+                        new LFSAuthorizationTokenHeaderSerializer()
+                    ),
                     $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    \UserManager::instance(),
+                    $user_manager,
                     new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
                 ),
                 new BatchSuccessfulResponseBuilder(
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
-                    new ActionAuthorizationTokenHeaderSerializer(),
+                    new LFSAuthorizationTokenHeaderSerializer(),
                     new \Tuleap\GitLFS\Object\LFSObjectRetriever(new \Tuleap\GitLFS\Object\LFSObjectDAO()),
                     $logger
                 )
@@ -148,7 +161,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         return new \Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker(
             $this,
-            new ActionAuthorizationTokenHeaderSerializer(),
+            new LFSAuthorizationTokenHeaderSerializer(),
             new ActionAuthorizationVerifier(
                 new ActionAuthorizationDAO(),
                 new SplitTokenVerificationStringHasher(),
@@ -167,7 +180,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function dailyCleanup()
     {
+        $current_time                 = new \DateTimeImmutable();
         $action_authorization_remover = new ActionAuthorizationRemover(new ActionAuthorizationDAO());
-        $action_authorization_remover->deleteExpired(new \DateTimeImmutable());
+        $action_authorization_remover->deleteExpired($current_time);
+        $user_authorization_remover = new UserAuthorizationRemover(new UserAuthorizationDAO());
+        $user_authorization_remover->deleteExpired($current_time);
     }
 }

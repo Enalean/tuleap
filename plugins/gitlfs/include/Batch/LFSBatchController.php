@@ -25,6 +25,7 @@ use Tuleap\GitLFS\Batch\Request\BatchRequest;
 use Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
+use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
@@ -116,7 +117,12 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException($exception->getMessage(), 400);
         }
 
-        return $this->batch_api_access_control->canAccess($url_verification, $this->repository, $this->batch_request);
+        return $this->batch_api_access_control->canAccess(
+            $request,
+            $url_verification,
+            $this->repository,
+            $this->batch_request
+        );
     }
 
     /**
