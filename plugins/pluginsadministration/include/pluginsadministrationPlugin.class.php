@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -19,7 +19,8 @@
  */
 use Tuleap\BurningParrotCompatiblePageEvent;
 
-require_once('common/plugin/Plugin.class.php');
+require_once __DIR__ . '/constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 class PluginsAdministrationPlugin extends Plugin
 {
@@ -78,4 +79,3 @@ class PluginsAdministrationPlugin extends Plugin
         $controler->process();
     }
 }
-?>
