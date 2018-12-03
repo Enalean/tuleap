@@ -71,6 +71,8 @@ class LFSTransferVerifierTest extends TestCase
         $available_path = 'available-path';
         $this->path_allocator->shouldReceive('getPathForAvailableObject')->andReturns($available_path);
 
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
+        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(true);
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
 
         $this->dao->shouldReceive('wrapAtomicOperations')
@@ -102,6 +104,8 @@ class LFSTransferVerifierTest extends TestCase
         $ready_path = 'ready-path';
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
 
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
+        $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(true);
         $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(true);
 
         $lfs_object = $lfs_object = new LFSObject(
@@ -115,5 +119,24 @@ class LFSTransferVerifierTest extends TestCase
         $this->filesystem->shouldReceive('delete')->with($ready_path)->andReturns(true)->once();
 
         $verifier->verifyAndMarkLFSObjectAsAvailable($lfs_object, $repository);
+    }
+
+    public function testObjectAlreadyAvailableForRepositoryIsRemovedFromItsTemporaryPath()
+    {
+        $verifier = new LFSTransferVerifier(
+            $this->filesystem,
+            $this->lfs_object_retriever,
+            $this->path_allocator,
+            $this->dao
+        );
+
+        $ready_path = 'ready-path';
+        $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns($ready_path);
+
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
+
+        $this->filesystem->shouldReceive('delete')->with($ready_path)->andReturns(true)->once();
+
+        $verifier->verifyAndMarkLFSObjectAsAvailable(\Mockery::mock(LFSObject::class), \Mockery::mock(\GitRepository::class));
     }
 }

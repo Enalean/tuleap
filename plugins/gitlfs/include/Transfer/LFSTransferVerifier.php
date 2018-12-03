@@ -60,8 +60,22 @@ class LFSTransferVerifier
 
     public function verifyAndMarkLFSObjectAsAvailable(LFSObject $lfs_object, \GitRepository $repository)
     {
-        $object_path_ready_to_be_available = $this->path_allocator->getPathForReadyToBeAvailableObject($lfs_object);
-        if ($this->lfs_object_retriever->doesLFSObjectExists($lfs_object)) {
+        $object_path_ready_to_be_available = $this->path_allocator->getPathForReadyToBeAvailableObject(
+            $repository,
+            $lfs_object
+        );
+
+        if ($this->lfs_object_retriever->doesLFSObjectExistsForRepository($repository, $lfs_object)) {
+            try {
+                $this->filesystem->delete($object_path_ready_to_be_available);
+            } catch (FileNotFoundException $exception) {
+            }
+            return;
+        }
+
+        if ($this->filesystem->has($object_path_ready_to_be_available) &&
+            $this->lfs_object_retriever->doesLFSObjectExists($lfs_object)
+        ) {
             $this->lfs_object_dao->saveObjectReferenceByOIDValue(
                 $lfs_object->getOID()->getValue(),
                 $repository->getId()
@@ -78,7 +92,7 @@ class LFSTransferVerifier
             $dao->saveObjectReference($object_id, $repository->getId());
             try {
                 $is_rename_success = $this->filesystem->rename(
-                    $this->path_allocator->getPathForReadyToBeAvailableObject($lfs_object),
+                    $this->path_allocator->getPathForReadyToBeAvailableObject($repository, $lfs_object),
                     $this->path_allocator->getPathForAvailableObject($lfs_object)
                 );
                 if (! $is_rename_success) {

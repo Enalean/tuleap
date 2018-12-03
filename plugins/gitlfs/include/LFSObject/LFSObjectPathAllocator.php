@@ -25,17 +25,17 @@ class LFSObjectPathAllocator
     /**
      * @return string
      */
-    public function getPathForSaveInProgressObject(LFSObject $lfs_object)
+    public function getPathForSaveInProgressObject(\GitRepository $repository, LFSObject $lfs_object)
     {
-        return 'ongoing-save/' . $lfs_object->getOID()->getValue() . '/' . \bin2hex(\random_bytes(32));
+        return 'ongoing-save/' . $lfs_object->getOID()->getValue() . '/' . $repository->getId() . '/' . \bin2hex(\random_bytes(32));
     }
 
     /**
      * @return string
      */
-    public function getPathForReadyToBeAvailableObject(LFSObject $lfs_object)
+    public function getPathForReadyToBeAvailableObject(\GitRepository $repository, LFSObject $lfs_object)
     {
-        return 'ready/' . $lfs_object->getOID()->getValue();
+        return 'ready/' . $lfs_object->getOID()->getValue() . '/' . $repository->getId();
     }
 
     /**

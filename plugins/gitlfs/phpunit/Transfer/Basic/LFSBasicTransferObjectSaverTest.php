@@ -52,7 +52,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $temporary_save_path = 'upload-path';
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
 
         $input_size     = 1024;
@@ -75,7 +75,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->filesystem->shouldReceive('rename')->with($temporary_save_path, $ready_path)->once()->andReturns(true);
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
-        $object_saver->saveObject($lfs_object, $input_resource);
+        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     public function testAlreadySavedObjectIsSkipped()
@@ -83,11 +83,15 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
 
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(true);
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(true);
 
         $this->filesystem->shouldReceive('rename')->never();
 
-        $object_saver->saveObject(\Mockery::mock(LFSObject::class), fopen('php://memory', 'rb+'));
+        $object_saver->saveObject(
+            \Mockery::mock(\GitRepository::class),
+            \Mockery::mock(LFSObject::class),
+            fopen('php://memory', 'rb+')
+        );
     }
 
     /**
@@ -98,11 +102,15 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $object_saver = new LFSBasicTransferObjectSaver($this->filesystem, $this->lfs_object_retriever, $this->path_allocator);
 
         $this->path_allocator->shouldReceive('getPathForReadyToBeAvailableObject')->andReturns('path');
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->andReturns(false);
 
         $broken_input_resource = false;
-        $object_saver->saveObject(\Mockery::mock(LFSObject::class), $broken_input_resource);
+        $object_saver->saveObject(
+            \Mockery::mock(\GitRepository::class),
+            \Mockery::mock(LFSObject::class),
+            $broken_input_resource
+        );
     }
 
 
@@ -118,7 +126,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $temporary_save_path = 'upload-path';
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
 
         $input_size     = 1024;
@@ -141,7 +149,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
 
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
-        $object_saver->saveObject($lfs_object, $input_resource);
+        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     /**
@@ -159,7 +167,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $temporary_save_path = 'upload-path';
         $this->path_allocator->shouldReceive('getPathForSaveInProgressObject')->andReturns($temporary_save_path);
 
-        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExists')->andReturns(false);
+        $this->lfs_object_retriever->shouldReceive('doesLFSObjectExistsForRepository')->andReturns(false);
         $this->filesystem->shouldReceive('has')->with($ready_path)->andReturns(false);
 
         $input_data     = str_repeat('A', $input_size);
@@ -183,7 +191,7 @@ class LFSBasicTransferObjectSaverTest extends TestCase
         $this->filesystem->shouldReceive('delete')->with($temporary_save_path)->once();
 
         $this->expectException($excepted_exception);
-        $object_saver->saveObject($lfs_object, $input_resource);
+        $object_saver->saveObject(\Mockery::mock(\GitRepository::class), $lfs_object, $input_resource);
     }
 
     public function objectSizeProvider()
