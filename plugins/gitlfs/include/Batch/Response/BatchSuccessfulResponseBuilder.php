@@ -115,29 +115,37 @@ class BatchSuccessfulResponseBuilder
         \GitRepository $repository,
         LFSObject ...$request_objects
     ) {
+        $existing_objects = $this->lfs_object_retriever->getExistingLFSObjectsFromTheSetForRepository(
+            $repository,
+            ...$request_objects
+        );
         $response_objects = [];
         foreach ($request_objects as $request_object) {
-            $upload_action_content = $this->buildSuccessActionContent(
-                $current_time,
-                $repository,
-                $request_object,
-                self::EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC,
-                new ActionAuthorizationTypeUpload(),
-                new BatchResponseActionHrefUpload($server_url, $request_object)
-            );
-            $verify_action_content = $this->buildSuccessActionContent(
-                $current_time,
-                $repository,
-                $request_object,
-                self::EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC,
-                new ActionAuthorizationTypeVerify(),
-                new BatchResponseActionHrefVerify($server_url, $request_object)
-            );
-            $response_objects[]    = new BatchResponseObjectWithActions(
-                $request_object,
-                new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
-            );
-            $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID()->getValue());
+            if (! in_array($request_object, $existing_objects, true)) {
+                $upload_action_content = $this->buildSuccessActionContent(
+                    $current_time,
+                    $repository,
+                    $request_object,
+                    self::EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC,
+                    new ActionAuthorizationTypeUpload(),
+                    new BatchResponseActionHrefUpload($server_url, $request_object)
+                );
+                $verify_action_content = $this->buildSuccessActionContent(
+                    $current_time,
+                    $repository,
+                    $request_object,
+                    self::EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC,
+                    new ActionAuthorizationTypeVerify(),
+                    new BatchResponseActionHrefVerify($server_url, $request_object)
+                );
+                $response_objects[]    = new BatchResponseObjectWithActions(
+                    $request_object,
+                    new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
+                );
+                $this->logger->debug('Ready to accept upload query for OID ' . $request_object->getOID()->getValue());
+            } else {
+                $response_objects[] = new BatchResponseObjectWithoutAction($request_object);
+            }
         }
         return $response_objects;
     }
