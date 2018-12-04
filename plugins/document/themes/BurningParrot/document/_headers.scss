@@ -1,4 +1,4 @@
-/*!
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -42,4 +42,21 @@
 
 .document-header-filter-container {
     position: relative;
+}
+
+.document-advanced-link {
+    position: absolute;
+    top: 50%;
+    right: $tlp-spacing;
+    max-width: 60px;
+    overflow: hidden;
+    transform: translateY(-50%);
+    font-size: 12px;
+    line-height: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.document-search-box {
+    padding: 0 80px 0 33px;
 }
