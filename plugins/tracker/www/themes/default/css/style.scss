@@ -4,6 +4,7 @@
 @import 'includes/field-bound-colors';
 @import "includes/columns-colors";
 @import "includes/move-artifact";
+@import "includes/artifact-link-field";
 
 /* {{{ New trackers */
 button[name=tracker_query_submit] {
@@ -88,55 +89,6 @@ div.tracker-cant-delete {
 /* Hack to make "Add criteria" button appears on the same line than search */
 #tracker_report_add_criteria_dropdown {
     top: -21px;
-}
-
-.tracker-form-element-artifactlink-section-loading-spinner {
-    margin: 0 5px 0 0;
-}
-
-.tracker-form-element-artifactlink-tab-spinner {
-    margin: 0 0 0 5px;
-}
-
-.tracker-form-element-artifactlink-renderer-async {
-    height: 100px;
-    background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
-
-    &.loaded {
-        height: auto;
-        background: none;
-    }
-}
-
-.tracker-form-element-artifactlink-add {
-    margin-left: 20px;
-}
-
-.tracker-form-element-artifactlink-list {
-    padding-top: 0;
-    margin-bottom: 0;
-}
-
-.tracker-form-element-artifactlink-list-nav {
-    > li:not(.tracker-form-element-artifactlink-list-nav-label) + .tracker-form-element-artifactlink-list-nav-label {
-        margin-left: 30px;
-    }
-}
-
-body .nav-tabs > li.tracker-form-element-artifactlink-list-nav-label,
-body .nav-tabs > li.tracker-form-element-artifactlink-list-nav-label:hover {
-    padding: 10px 20px 10px 0;
-    border: 2px solid transparent;
-    box-shadow: none;
-    color: #747474;
-}
-
-h5.artifack_link_subtitle {
-    color: #606060;
-}
-
-.tracker-form-element-artifactlink-list > div {
-    padding-top: 0;
 }
 
 .tracker-artifact-nav {
@@ -391,17 +343,9 @@ select.tracker-report-expert-allowed-fields {
     margin-top: 0;
 }
 
-.tracker-form-element-artifactlink-selector {
-    vertical-align: middle;
-}
 
 .tracker_aggregate_function_add_panel {
     position: relative;
-}
-
-.tracker-form-element-artifactlink-gototracker {
-    font-size: 0.8em;
-    text-align: right;
 }
 
 #tracker-link-artifact-manual-way > .boxtitle,
@@ -1235,12 +1179,6 @@ td.tracker_report_table_unlink > img {
     top: -2px;
 }
 
-ul.tracker-form-element-artifactlink-list {
-    list-style-type: none;
-    padding-left: 0.5em;
-    margin-top: 0;
-}
-
 ul.tracker-form-element-checkbox {
     list-style-type: none;
     padding-left: 0.5em;
@@ -1362,12 +1300,6 @@ div.tracker-admin-field-controls {
     .artifact-link-value, .artifact-link-value-reverse {
         h5 {
             margin: 0 0 10px 0;
-        }
-
-        .tracker-form-element-artifactlink-trackerpanel h3 {
-            line-height: 1.1em;
-            font-size: 1em;
-            font-weight: normal;
         }
     }
 
