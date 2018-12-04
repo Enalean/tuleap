@@ -58,6 +58,14 @@ class LFSObjectRetriever
     /**
      * @return bool
      */
+    public function doesLFSObjectExistsForRepository(\GitRepository $repository, LFSObject $lfs_object)
+    {
+        return count($this->getExistingLFSObjectsFromTheSetForRepository($repository, $lfs_object)) === 1;
+    }
+
+    /**
+     * @return bool
+     */
     public function doesLFSObjectExists(LFSObject $lfs_object)
     {
         return $this->dao->searchByOIDValue($lfs_object->getOID()->getValue()) !== null;

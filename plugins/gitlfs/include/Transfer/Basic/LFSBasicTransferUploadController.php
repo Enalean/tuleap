@@ -59,6 +59,7 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
         $input_resource = fopen('php://input', 'rb');
         try {
             $this->basic_object_saver->saveObject(
+                $authorized_action->getRepository(),
                 $authorized_action->getLFSObject(),
                 $input_resource
             );

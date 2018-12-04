@@ -56,11 +56,11 @@ class LFSBasicTransferObjectSaver
     /**
      * @throws LFSBasicTransferException
      */
-    public function saveObject(LFSObject $lfs_object, $input_resource)
+    public function saveObject(\GitRepository $repository, LFSObject $lfs_object, $input_resource)
     {
-        $ready_to_be_added_path = $this->path_allocator->getPathForReadyToBeAvailableObject($lfs_object);
+        $ready_to_be_added_path = $this->path_allocator->getPathForReadyToBeAvailableObject($repository, $lfs_object);
 
-        if (! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $lfs_object)) {
+        if (! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $repository, $lfs_object)) {
             return;
         }
 
@@ -73,11 +73,11 @@ class LFSBasicTransferObjectSaver
         $max_size_blocker_filter = new BlockToMaxSizeOnReadFilter($lfs_object->getSize());
         $max_size_filter_handle  = StreamFilter::prependFilter($input_resource, $max_size_blocker_filter);
 
-        $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($lfs_object);
+        $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($repository, $lfs_object);
         try {
             $this->writeTemporaryObjectFile($temporary_path, $input_resource, $max_size_blocker_filter);
             $this->checkTemporaryObjectFileMatchesExpectations($lfs_object, $max_size_blocker_filter, $sha256_processor_filter);
-            $this->markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, $lfs_object);
+            $this->markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, $repository, $lfs_object);
         } finally {
             StreamFilter::removeFilter($sha256_filter_handle);
             StreamFilter::removeFilter($max_size_filter_handle);
@@ -88,9 +88,9 @@ class LFSBasicTransferObjectSaver
     /**
      * @return bool
      */
-    private function doesObjectNeedsToBeSaved($ready_to_be_added_path, LFSObject $lfs_object)
+    private function doesObjectNeedsToBeSaved($ready_to_be_added_path, \GitRepository $repository, LFSObject $lfs_object)
     {
-        return ! $this->lfs_object_retriever->doesLFSObjectExists($lfs_object) &&
+        return ! $this->lfs_object_retriever->doesLFSObjectExistsForRepository($repository, $lfs_object) &&
                 ! $this->filesystem->has($ready_to_be_added_path);
     }
 
@@ -120,10 +120,14 @@ class LFSBasicTransferObjectSaver
         }
     }
 
-    private function markAsReadyToBeAvailable($temporary_path, $ready_to_be_added_path, LFSObject $lfs_object)
-    {
+    private function markAsReadyToBeAvailable(
+        $temporary_path,
+        $ready_to_be_added_path,
+        \GitRepository $repository,
+        LFSObject $lfs_object
+    ) {
         try {
-            $is_marking_object_as_ready_success = ! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $lfs_object) ||
+            $is_marking_object_as_ready_success = ! $this->doesObjectNeedsToBeSaved($ready_to_be_added_path, $repository, $lfs_object) ||
                 $this->filesystem->rename($temporary_path, $ready_to_be_added_path);
         } catch (FileExistsException $ex) {
             return;

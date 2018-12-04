@@ -57,6 +57,29 @@ class LFSObjectRetrieverTest extends TestCase
         $this->assertContains($objects[4], $existing_objects);
     }
 
+    public function testExistenceOfLFSObjectInRepository()
+    {
+        $this->dao->shouldReceive('searchByRepositoryIDAndOIDs')->with(101, ['oid1'])->andReturns([['object_oid' => 'oid1']]);
+        $this->dao->shouldReceive('searchByRepositoryIDAndOIDs')->with(101, ['oid2'])->andReturns([]);
+
+        $repository = \Mockery::mock(\GitRepository::class);
+        $repository->shouldReceive('getId')->andReturns(101);
+
+        $oid1 = \Mockery::mock(LFSObjectID::class);
+        $oid1->shouldReceive('getValue')->andReturns('oid1');
+        $object1 = \Mockery::mock(LFSObject::class);
+        $object1->shouldReceive('getOID')->andReturns($oid1);
+        $oid2 = \Mockery::mock(LFSObjectID::class);
+        $oid2->shouldReceive('getValue')->andReturns('oid2');
+        $object2 = \Mockery::mock(LFSObject::class);
+        $object2->shouldReceive('getOID')->andReturns($oid2);
+
+        $object_retriever = new LFSObjectRetriever($this->dao);
+
+        $this->assertTrue($object_retriever->doesLFSObjectExistsForRepository($repository, $object1));
+        $this->assertFalse($object_retriever->doesLFSObjectExistsForRepository($repository, $object2));
+    }
+
     public function testExistenceOfLFSObject()
     {
         $this->dao->shouldReceive('searchByOIDValue')->with('oid1')->andReturns(['object_oid' => 'oid1']);
