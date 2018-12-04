@@ -43,10 +43,18 @@ main {
 
 #feedback {
     margin: 0 0 $tlp-spacing;
+
+    &:empty {
+        margin: 0;
+    }
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
     margin: $tlp-spacing $tlp-spacing 0;
+
+    &:empty {
+        margin: 0;
+    }
 }
 
 %empty-container {

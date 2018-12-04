@@ -78,6 +78,9 @@ msgstr "Champ sur lequel les transitions sont basées"
 msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"
 
+msgid "Transitions rules was deleted. Workflow is reset."
+msgstr "Les règles de transitions ont été supprimées. Le workflow est réinitialisé."
+
 msgid "Use advanced configuration"
 msgstr "Utiliser la configuration avancée"
 

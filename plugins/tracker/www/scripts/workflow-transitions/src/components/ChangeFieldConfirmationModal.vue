@@ -24,12 +24,12 @@
         aria-labelledby="modal-confirm-change-field-label"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="modal-confirm-change-field-label" v-translate>
-                Change or remove field
-            </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
-                &times;
-            </div>
+            <h1
+                class="tlp-modal-title"
+                id="modal-confirm-change-field-label"
+                v-translate
+            >Change or remove field</h1>
+            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
         </div>
         <div class="tlp-modal-body">
             <p>
@@ -44,9 +44,7 @@
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 v-translate
-            >
-                Cancel
-            </button>
+            >Cancel</button>
             <button
                 type="button"
                 class="tlp-button-danger tlp-modal-action"
@@ -54,10 +52,7 @@
                 v-bind:disabled="is_operation_running"
                 data-dismiss="modal"
             >
-                <i
-                    v-if="is_operation_running"
-                    class="tlp-button-icon fa fa-spinner fa-spin"
-                ></i>
+                <i v-if="is_operation_running" class="tlp-button-icon fa fa-spinner fa-spin"></i>
                 <span v-translate>Confirm</span>
             </button>
         </div>
@@ -76,7 +71,18 @@ export default {
 
     methods: {
         confirm() {
-            this.$store.dispatch("resetWorkflowTransitionsField", this.current_tracker.id);
+            this.$store
+                .dispatch("resetWorkflowTransitionsField", this.current_tracker.id)
+                .then(() => {
+                    const feedback_box = document.getElementById("feedback");
+                    const feedback_section_content = document.createElement("section");
+                    feedback_section_content.classList.add("tlp-alert-info");
+                    feedback_section_content.insertAdjacentText(
+                        "afterbegin",
+                        this.$gettext("Transitions rules was deleted. Workflow is reset.")
+                    );
+                    feedback_box.appendChild(feedback_section_content);
+                });
         }
     }
 };

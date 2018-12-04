@@ -20,15 +20,14 @@
 <template>
     <form v-on:submit.prevent="saveWorkflowTransitionsField()">
         <section class="tlp-pane-section">
-            <p v-translate>In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.</p>
+            <p
+                v-translate
+            >In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.</p>
 
             <div class="tlp-form-element">
                 <label for="workflow-field" class="tlp-label">
                     <span v-translate>Field</span>
-                    <span
-                        class="tlp-tooltip tlp-tooltip-top"
-                        v-bind:data-tlp-tooltip="field_tooltip"
-                    >
+                    <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="field_tooltip">
                         <i class="fa fa-question-circle"></i>
                     </span>
                     <i class="fa fa-asterisk"></i>
@@ -41,23 +40,17 @@
                     required
                     v-bind:disabled="is_operation_running"
                 >
-                    <option value="" disabled></option>
+                    <option value disabled></option>
                     <option
                         v-for="field in all_fields"
                         v-bind:key="field.id"
                         v-bind:value="field"
-                    >
-                        {{ field.label }}
-                    </option>
+                    >{{ field.label }}</option>
                 </select>
             </div>
         </section>
         <section class="tlp-pane-section tlp-pane-section-submit">
-            <button
-                class="tlp-button-primary"
-                type="submit"
-                v-bind:disabled="is_operation_running"
-            >
+            <button class="tlp-button-primary" type="submit" v-bind:disabled="is_operation_running">
                 <i
                     class="tlp-button-icon fa"
                     v-bind:class="{
@@ -97,7 +90,14 @@ export default {
 
     methods: {
         saveWorkflowTransitionsField() {
-            this.$store.dispatch("saveWorkflowTransitionsField", this.selected_field.id);
+            this.$store
+                .dispatch("saveWorkflowTransitionsField", this.selected_field.id)
+                .then(() => {
+                    const feedback_box = document.getElementById("feedback");
+                    while (feedback_box.firstChild) {
+                        feedback_box.removeChild(feedback_box.firstChild);
+                    }
+                });
         }
     }
 };
