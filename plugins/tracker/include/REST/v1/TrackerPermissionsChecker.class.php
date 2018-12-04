@@ -75,6 +75,8 @@ class TrackerPermissionsChecker
      */
     public function checkUpdateWorkflow(PFUser $user, Tracker $tracker)
     {
+        $this->checkRead($user, $tracker);
+
         if (! $tracker->userIsAdmin($user)) {
             throw new RestException(
                 403,
