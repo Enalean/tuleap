@@ -79,6 +79,15 @@ class LFSObjectDAO extends DataAccessObject
         $this->getDB()->run($sql, $repository_id, $oid_value);
     }
 
+    public function duplicateObjectReferences($to_repository_id, $from_repository_id)
+    {
+        $sql = 'INSERT IGNORE INTO plugin_gitlfs_object_repository(object_id, repository_id)
+                SELECT plugin_gitlfs_object_repository.object_id, ?
+                FROM plugin_gitlfs_object_repository
+                WHERE plugin_gitlfs_object_repository.repository_id = ?';
+        $this->getDB()->run($sql, $to_repository_id, $from_repository_id);
+    }
+
     public function deleteUnusableReferences()
     {
         $this->getDB()->run("

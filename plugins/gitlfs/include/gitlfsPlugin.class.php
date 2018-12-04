@@ -25,6 +25,7 @@ use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Git\PostInitGitRepositoryWithDataEvent;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
@@ -67,6 +68,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(CollectGitRoutesEvent::NAME);
+        $this->addHook(\Tuleap\Git\PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted');
 
@@ -177,6 +179,18 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     private function getFilesystem()
     {
         return new Filesystem(new Local(ForgeConfig::get('sys_data_dir') . '/git-lfs/'));
+    }
+
+    public function postInitGitRepositoryWithDataEvent(PostInitGitRepositoryWithDataEvent $event)
+    {
+        $parent_repository = $event->getRepository()->getParent();
+        if ($parent_repository === null) {
+            return;
+        }
+        (new \Tuleap\GitLFS\LFSObject\LFSObjectDAO())->duplicateObjectReferences(
+            $event->getRepository()->getId(),
+            $parent_repository->getId()
+        );
     }
 
     public function dailyCleanup()
