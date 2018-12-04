@@ -103,6 +103,7 @@ class CSVExportController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        session_write_close();
         $current_user = $request->getCurrentUser();
 
         $report_id = $variables['report_id'];
