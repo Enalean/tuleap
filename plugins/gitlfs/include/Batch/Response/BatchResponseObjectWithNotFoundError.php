@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Batch\Response;
 
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 final class BatchResponseObjectWithNotFoundError implements BatchResponseObject
 {

@@ -25,8 +25,8 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectID;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectID;
 
 class ActionAuthorizationTokenCreatorTest extends TestCase
 {

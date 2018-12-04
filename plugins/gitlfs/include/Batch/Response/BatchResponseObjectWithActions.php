@@ -21,7 +21,7 @@
 namespace Tuleap\GitLFS\Batch\Response;
 
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 final class BatchResponseObjectWithActions implements BatchResponseObject
 {

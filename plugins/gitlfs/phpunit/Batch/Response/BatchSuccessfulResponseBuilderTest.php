@@ -26,9 +26,9 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectID;
-use Tuleap\GitLFS\Object\LFSObjectRetriever;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectID;
+use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 
 class BatchSuccessfulResponseBuilderTest extends TestCase
 {

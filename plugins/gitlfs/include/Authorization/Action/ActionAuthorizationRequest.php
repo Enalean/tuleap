@@ -21,7 +21,7 @@
 namespace Tuleap\GitLFS\Authorization\Action;
 
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 class ActionAuthorizationRequest
 {

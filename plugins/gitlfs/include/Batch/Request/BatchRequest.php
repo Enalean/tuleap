@@ -21,8 +21,8 @@
 namespace Tuleap\GitLFS\Batch\Request;
 
 use Tuleap\Git\HTTP\GitHTTPOperation;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectID;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\Transfer\Transfer;
 
 class BatchRequest implements GitHTTPOperation

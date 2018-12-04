@@ -20,7 +20,7 @@
 
 namespace Tuleap\GitLFS\Batch\Response\Action;
 
-use Tuleap\GitLFS\Object\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObject;
 
 final class BatchResponseActionHrefUpload implements BatchResponseActionHref
 {

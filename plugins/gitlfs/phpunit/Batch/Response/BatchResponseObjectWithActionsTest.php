@@ -23,8 +23,8 @@ namespace Tuleap\GitLFS\Batch\Response;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActions;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectID;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectID;
 
 class BatchResponseObjectWithActionsTest extends TestCase
 {

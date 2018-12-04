@@ -23,9 +23,9 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectPathAllocator;
-use Tuleap\GitLFS\Object\LFSObjectRetriever;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
+use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
 
 class LFSBasicTransferObjectSaver

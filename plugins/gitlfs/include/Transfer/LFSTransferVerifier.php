@@ -22,10 +22,10 @@ namespace Tuleap\GitLFS\Transfer;
 
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectDAO;
-use Tuleap\GitLFS\Object\LFSObjectPathAllocator;
-use Tuleap\GitLFS\Object\LFSObjectRetriever;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
+use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
+use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 
 class LFSTransferVerifier
 {

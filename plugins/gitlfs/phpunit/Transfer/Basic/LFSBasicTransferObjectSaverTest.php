@@ -23,10 +23,10 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 use League\Flysystem\FilesystemInterface;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GitLFS\Object\LFSObject;
-use Tuleap\GitLFS\Object\LFSObjectID;
-use Tuleap\GitLFS\Object\LFSObjectPathAllocator;
-use Tuleap\GitLFS\Object\LFSObjectRetriever;
+use Tuleap\GitLFS\LFSObject\LFSObject;
+use Tuleap\GitLFS\LFSObject\LFSObjectID;
+use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
+use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 
 class LFSBasicTransferObjectSaverTest extends TestCase
 {
