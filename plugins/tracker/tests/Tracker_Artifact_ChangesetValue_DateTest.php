@@ -52,13 +52,11 @@ class Tracker_Artifact_ChangesetValue_DateTest extends TuleapTestCase {
         $this->assertEqual($date->getTimestamp(), 1221221467);
         $this->assertEqual($date->getDate(), "2008-09-12");
 
-        $this->assertEqual($date->getSoapValue($this->user), array('value' => 1221221467));
         $this->assertEqual($date->getValue(), "2008-09-12");
-        
+
         $null_date = new Tracker_Artifact_ChangesetValue_Date(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_date->getTimestamp());
         $this->assertEqual($null_date->getDate(), '');
-        $this->assertEqual($null_date->getSoapValue($this->user), array('value' => ''));
     }
 }
 

@@ -517,20 +517,6 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         return $this->getFieldId() == $field->getId();
     }
 
-    /**
-     * Export the semantic to SOAP format
-     * @return array the SOAPification of the semantic
-     */
-    public function exportToSOAP(PFUser $user) {
-        $SOAP_array = parent::exportToSoap($user);
-        if ($SOAP_array['field_name']) {
-            $SOAP_array['values'] = $this->getOpenValues();
-        } else {
-            $SOAP_array['values'] = array();
-        }
-        return $SOAP_array;
-    }
-
     public function exportToREST(PFUser $user) {
         $field = $this->getFieldUserCanRead($user);
         if ($field) {

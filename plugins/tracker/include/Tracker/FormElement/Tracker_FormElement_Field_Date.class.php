@@ -47,24 +47,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         ),
     );
 
-    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        if (isset($soap_criteria_value->dateAdvanced)) {
-            $criteria_date = $soap_criteria_value->dateAdvanced;
-            $criteria->setIsAdvanced(true);
-        } elseif (isset($soap_criteria_value->date)) {
-            $criteria_date = $soap_criteria_value->date;
-        } else {
-            return;
-        }
-
-        $criteria_value = array(
-            'op'        => !empty($criteria_date->op)        ? $criteria_date->op        : null,
-            'from_date' => !empty($criteria_date->from_date) ? $criteria_date->from_date : null,
-            'to_date'   => $criteria_date->to_date,
-        );
-        $this->setCriteriaValue($criteria_value, $criteria->report->id);
-    }
-
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
@@ -827,12 +809,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         return null;
     }
 
@@ -949,25 +931,25 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     /**
      * Get the field data for artifact submission
      *
-     * @param string the soap field value
+     * @param string $value
      *
-     * @return String the field data corresponding to the soap_value for artifact submision, or null if date format is wrong
+     * @return String the field data corresponding to the value for artifact submision, or null if date format is wrong
      */
-    public function getFieldData($soap_value) {
-        if (strpos($soap_value, '/') !== false) {
+    public function getFieldData($value) {
+        if (strpos($value, '/') !== false) {
             // Assume the format is either dd/mm/YYYY or mm/dd/YYYY depending on the user preferences.
-            return $this->getFieldDataForCSVPreview($soap_value);
-        } elseif (strpos($soap_value, '-') !== false) {
+            return $this->getFieldDataForCSVPreview($value);
+        } elseif (strpos($value, '-') !== false) {
             // Assume the format is YYYY-mm-dd
-            $date_array = explode('-', $soap_value);
+            $date_array = explode('-', $value);
             if (count($date_array) == 3 && checkdate($date_array[1], $date_array[2], $date_array[0]) && $this->_nbDigits($date_array[0])) {
-                return $soap_value;
+                return $value;
             } else {
                 return null;
             }
-        } elseif(intval($soap_value) == $soap_value) {
+        } elseif(intval($value) == $value) {
             // Assume it's a timestamp
-            return $this->getFormatter()->formatDate((int) $soap_value);
+            return $this->getFormatter()->formatDate((int) $value);
         }
         return null;
     }
@@ -1056,17 +1038,5 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
 
         return new Tracker_FormElement_DateFormatter($this);
-    }
-
-    public function isCompatibleWithSoap() {
-        return (! $this->isTimeDisplayed());
-    }
-
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        if ($this->isTimeDisplayed()) {
-            throw new Exception('DEPRECATION ERROR: Date Fields with time are not compatible with SOAP methods. Please change the field property or use REST.');
-        }
-
-        return parent::getFieldDataFromSoapValue($soap_value, $artifact);
     }
 }

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * Manage values in changeset for fields
  * @abstract
@@ -34,17 +34,17 @@ abstract class Tracker_Artifact_ChangesetValue
      * @var Tracker_Artifact_Changeset
      */
     protected $changeset;
-    
+
     /**
      * @var Tracker_FormElement_Field
      */
     protected $field;
-    
+
     /**
      * @var boolean
      */
     protected $has_changed;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed) {
         $this->id          = $id;
         $this->field       = $field;
@@ -69,7 +69,7 @@ abstract class Tracker_Artifact_ChangesetValue
     public function getField() {
         return $this->field;
     }
-    
+
     /**
      * Returns true if the changeset value has changed, false otherwise
      *
@@ -78,7 +78,7 @@ abstract class Tracker_Artifact_ChangesetValue
     public function hasChanged() {
         return $this->has_changed;
     }
-    
+
     /**
      * Returns a diff between current changeset value and changeset value in param
      *
@@ -121,15 +121,6 @@ abstract class Tracker_Artifact_ChangesetValue
     public function modalDiff($changeset_value, $format = 'html', PFUser $user = null) {
         return $this->diff($changeset_value, $format, $user);
     }
-    
-    /**
-     * Returns the SOAP value of this changeset value
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public abstract function getSoapValue(PFUser $user);
 
     /**
      * Return the REST value of this changeset value
@@ -176,13 +167,6 @@ abstract class Tracker_Artifact_ChangesetValue
     public function getChangeset()
     {
         return $this->changeset;
-    }
-
-    /**
-     * By default, changeset values are returned as string in 'value' field
-     */
-    protected function encapsulateRawSoapValue($value) {
-        return array('value' => (string)$value);
     }
 
     protected function getRESTRepresentation($value) {

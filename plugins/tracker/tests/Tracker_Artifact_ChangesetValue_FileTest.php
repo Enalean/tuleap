@@ -36,37 +36,6 @@ class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
         stub($this->artifact)->getLastChangeset()->returns($this->changeset);
     }
 
-    public function testFiles() {
-        $attachment_id = 12;
-        $description   = 'struff';
-        $submitted_by  = 112;
-        $filename = 'MyScreenshot.png';
-        $filesize = 69874;
-        $filetype = 'image/png';
-
-        $field = new MockTracker_FormElement_Field_File();
-        $info  = new Tracker_FileInfo($attachment_id, $field, $submitted_by, $description, $filename, $filesize, $filetype);
-        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
-        $this->assertEqual(count($value_file), 1);
-        $this->assertEqual($value_file[0], $info);
-        $this->assertEqual(
-            $value_file->getSoapValue($this->user),
-            array(
-                'file_info' => array(
-                    array(
-                        'id' => $attachment_id,
-                        'description' => $description,
-                        'submitted_by' => $submitted_by,
-                        'filename' => $filename,
-                        'filesize' => $filesize,
-                        'filetype' => $filetype,
-                        'action'   => '',
-                    )
-                )
-            )
-        );
-    }
-
     public function testNoDiff() {
         $info   = new MockTracker_FileInfo();
         $info->setReturnValue('getFilename', 'Screenshot.png');
@@ -117,60 +86,4 @@ class Tracker_Artifact_ChangesetValue_FileTest extends TuleapTestCase {
         $this->assertEqual($file_1->diff($file_2, 'text'), 'Screenshot2.png removed'. PHP_EOL .'Screenshot3.png, Screenshot4.png added');
         $this->assertEqual($file_2->diff($file_1, 'text'), 'Screenshot3.png, Screenshot4.png removed'. PHP_EOL .'Screenshot2.png added');
     }
-
-    public function testSoapValue_with_lot_of_files() {
-        $description   = 'struff';
-        $submitted_by  = 112;
-        $filesize = 69874;
-        $filetype = 'image/png';
-
-        $attachment1_id = 12;
-        $filename1 = 'Screenshot1.png';
-        $attachment2_id = 13;
-        $filename2 = 'Screenshot2.png';
-        $attachment3_id = 14;
-        $filename3 = 'Screenshot3.png';
-
-        $field = new MockTracker_FormElement_Field_File();
-        $info1  = new Tracker_FileInfo($attachment1_id, $field, $submitted_by, $description, $filename1, $filesize, $filetype);
-        $info2  = new Tracker_FileInfo($attachment2_id, $field, $submitted_by, $description, $filename2, $filesize, $filetype);
-        $info3  = new Tracker_FileInfo($attachment3_id, $field, $submitted_by, $description, $filename3, $filesize, $filetype);
-
-        $value_file = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info2, $info3));
-        $this->assertEqual(
-            $value_file->getSoapValue($this->user),
-            array(
-                'file_info' => array(
-                    array(
-                        'id' => $attachment1_id,
-                        'description' => $description,
-                        'submitted_by' => $submitted_by,
-                        'filename' => $filename1,
-                        'filesize' => $filesize,
-                        'filetype' => $filetype,
-                        'action'   => '',
-                    ),
-                    array(
-                        'id' => $attachment2_id,
-                        'description' => $description,
-                        'submitted_by' => $submitted_by,
-                        'filename' => $filename2,
-                        'filesize' => $filesize,
-                        'filetype' => $filetype,
-                        'action'   => '',
-                    ),
-                    array(
-                        'id' => $attachment3_id,
-                        'description' => $description,
-                        'submitted_by' => $submitted_by,
-                        'filename' => $filename3,
-                        'filesize' => $filesize,
-                        'filetype' => $filetype,
-                        'action'   => '',
-                    )
-                )
-            )
-        );
-    }
-
 }

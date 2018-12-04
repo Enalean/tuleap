@@ -122,7 +122,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $json;
     }
 
-    public function getSoapValue() {
+    public function getAPIValue() {
         return $this->getUsername();
     }
 

@@ -35,7 +35,7 @@ class FieldValueRepresentation {
     public $label;
 
     public function build(array $value) {
-        $this->id    = JsonCast::toInt($value[Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY]);
-        $this->label = $value[Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY];
+        $this->id    = JsonCast::toInt($value[Tracker_FormElement_Field_List_Bind::REST_ID_KEY]);
+        $this->label = $value[Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY];
     }
 }

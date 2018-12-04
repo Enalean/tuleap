@@ -99,7 +99,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
             /*
              * Post actions were run by validateNewChangeset but they modified a
-             * different set of $fields_data in the case of massChange or soap requests;
+             * different set of $fields_data in the case of massChange;
              * we run them again for the current $fields_data
              */
             $artifact->getWorkflow()->before($fields_data, $submitter, $artifact);

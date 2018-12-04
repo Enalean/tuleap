@@ -772,23 +772,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         throw new Tracker_FormElement_InvalidFieldValueException('OpenList fields values must be passed as an array of labels (string) in \'bind_value_ids\'');
     }
 
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        if (isset($soap_value->field_value->bind_value)) {
-            return $this->joinFieldDataFromArray(
-                array_map(
-                    array($this, 'getSOAPBindValueLabel'),
-                    $soap_value->field_value->bind_value
-                )
-            );
-        } else {
-            return $this->getFieldData($soap_value->field_value->value);
-        }
-    }
-
-    private function getSOAPBindValueLabel(stdClass $field_bind_value) {
-        return $this->getFieldDataFromStringValue($field_bind_value->bind_value_label);
-    }
-
     private function joinFieldDataFromArray(array $field_data) {
         return implode(',', array_filter($field_data));
     }
@@ -796,9 +779,9 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     /**
      * Get the field data for artifact submission
      *
-     * @param string the soap field value
+     * @param string $value
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the value for artifact submision
      */
     public function getFieldData($csv_values) {
         if (trim($csv_values) != '') {

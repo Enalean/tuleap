@@ -177,31 +177,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
     }
 }
 
-class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
-
-    public function testGetSoapAvailableValues() {
-        $values = array(
-            1 => $this->project_members_ugroup_value,
-            2 => $this->customers_ugroup_value,
-        );
-
-        $bind = $this->buildBindUgroups($values);
-
-        $this->assertEqual(count($bind->getSoapAvailableValues()), 2);
-        $soap_values = array(
-            array(
-                'bind_value_id'    => 4545,
-                'bind_value_label' => 'ugroup_project_members_name_key',
-            ),
-            array(
-                'bind_value_id'    => 687,
-                'bind_value_label' => 'Customers',
-            )
-        );
-        $this->assertEqual($bind->getSoapAvailableValues(), $soap_values);
-    }
-}
-
 class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
 
     public function setUp() {

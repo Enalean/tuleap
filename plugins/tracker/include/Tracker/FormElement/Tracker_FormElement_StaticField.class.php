@@ -213,24 +213,12 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     }
 
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
         return null;
-    }
-
-    /**
-     * Get binding data for Soap
-     *
-     * @return array the binding data
-     */
-    public function getSoapBindingProperties() {
-        return array(
-            'bind_type' => null,
-            'bind_list' => array()
-        );
     }
 
     public function isCollapsed() {

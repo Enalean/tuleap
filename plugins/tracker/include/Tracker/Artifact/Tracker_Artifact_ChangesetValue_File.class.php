@@ -23,12 +23,12 @@
  * Manage values in changeset for files fields
  */
 class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator {
-    
+
     /**
      * @var array of Tracker_FileInfo
      */
     protected $files;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $files) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->files = $files;
@@ -40,7 +40,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitFile($this);
     }
-    
+
     /**
      * spl\Countable
      *
@@ -49,7 +49,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function count() {
         return count($this->files);
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function offsetGet($offset) {
         return $this->files[$offset];
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -72,7 +72,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function offsetSet($offset, $value) {
         $this->files[$offset] = $value;
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -83,7 +83,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function offsetExists($offset) {
         return isset($this->files[$offset]);
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -94,7 +94,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function offsetUnset($offset) {
         unset($this->files[$offset]);
     }
-    
+
     /**
      * spl\Iterator
      *
@@ -102,28 +102,28 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * @var integer
      */
     protected $index;
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return Tracker_FileInfo the current one
      */
     public function current() {
         return $this->files[$this->index];
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return int the current index
      */
     public function key() {
         return $this->index;
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * Jump to the next Tracker_FileInfo
      *
      * @return void
@@ -131,27 +131,27 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     public function next() {
         $this->index++;
     }
-    
+
     /**
      * spl\Iterator
      *
      * Reset the pointer to the start of the collection
-     * 
+     *
      * @return Tracker_FileInfo the current one
      */
     public function rewind() {
         $this->index = 0;
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return boolean true if the current pointer is valid
      */
     public function valid() {
         return isset($this->files[$this->index]);
     }
-    
+
     /**
      * Get the files infos
      *
@@ -159,22 +159,6 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      */
     public function getFiles() {
         return $this->files;
-    }
-    
-    /**
-     * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_File
-     *
-     * @param PFUser $user
-     *
-     * @return Array The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        $soap_array = array();
-        foreach ($this->getFiles() as $file_info) {
-            $soap_array[] = $file_info->getSoapValue();
-        }
-        return array('file_info' => $soap_array);
     }
 
     public function getRESTValue(PFUser $user) {
@@ -250,7 +234,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
         }
         return false;
     }
-    
+
      /**
      * Returns the "set to" for field added later
      *

@@ -162,11 +162,6 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, null));
     }
 
-    function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     function testGetFieldData() {
         $f = new Tracker_FormElement_Field_DateTestVersion();
         $this->assertEqual('2010-04-30', $f->getFieldData('2010-04-30'));

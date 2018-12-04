@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once('bootstrap.php');
 
 Mock::generate('Tracker_Artifact');
@@ -31,60 +31,60 @@ Mock::generate('Tracker_Artifact_Changeset');
 
 Mock::generatePartial(
     'Tracker_FormElement_Field',
-    'Tracker_FormElement_FieldTestVersion', 
+    'Tracker_FormElement_FieldTestVersion',
     array(
-        'fetchCriteriaValue', 
-        'fetchChangesetValue', 
+        'fetchCriteriaValue',
+        'fetchChangesetValue',
         'fetchRawValue',
-        'getCriteriaFrom', 
-        'getCriteriaWhere', 
+        'getCriteriaFrom',
+        'getCriteriaWhere',
         'getCriteriaDao',
-        'fetchArtifactValue', 
-        'fetchArtifactValueReadOnly', 
-        'fetchSubmitValue', 
+        'fetchArtifactValue',
+        'fetchArtifactValueReadOnly',
+        'fetchSubmitValue',
         'fetchTooltipValue',
-        'getValueDao', 
-        'fetchFollowUp', 
+        'getValueDao',
+        'fetchFollowUp',
         'fetchRawValueFromChangeset',
-        'saveValue', 
-        'fetchAdminFormElement', 
+        'saveValue',
+        'fetchAdminFormElement',
         'getFactoryLabel',
-        'getFactoryDescription', 
-        'getFactoryIconUseIt', 
+        'getFactoryDescription',
+        'getFactoryIconUseIt',
         'getFactoryIconCreate',
         'getChangesetValue',
         'isRequired',
         'validate',
         'getLabel',
         'getName',
-        'getSoapAvailableValues',
+        'getRESTAvailableValues',
         'fetchSubmitValueMasschange',
         'accept'
     )
 );
 
 Mock::generatePartial(
-    'Tracker_FormElement_Field', 
-    'Tracker_FormElement_FieldTestVersion2', 
+    'Tracker_FormElement_Field',
+    'Tracker_FormElement_FieldTestVersion2',
     array(
-        'fetchCriteriaValue', 
-        'fetchChangesetValue', 
+        'fetchCriteriaValue',
+        'fetchChangesetValue',
         'fetchRawValue',
-        'getCriteriaFrom', 
-        'getCriteriaWhere', 
+        'getCriteriaFrom',
+        'getCriteriaWhere',
         'getCriteriaDao',
-        'fetchArtifactValue', 
-        'fetchArtifactValueReadOnly', 
-        'fetchSubmitValue', 
+        'fetchArtifactValue',
+        'fetchArtifactValueReadOnly',
+        'fetchSubmitValue',
         'fetchTooltipValue',
-        'getValueDao', 
-        'fetchFollowUp', 
+        'getValueDao',
+        'fetchFollowUp',
         'fetchRawValueFromChangeset',
-        'saveValue', 
-        'fetchAdminFormElement', 
+        'saveValue',
+        'fetchAdminFormElement',
         'getFactoryLabel',
-        'getFactoryDescription', 
-        'getFactoryIconUseIt', 
+        'getFactoryDescription',
+        'getFactoryIconUseIt',
         'getFactoryIconCreate',
         'getChangesetValue',
         'isRequired',
@@ -92,7 +92,7 @@ Mock::generatePartial(
         'getLabel',
         'getName',
         'getId',
-        'getSoapAvailableValues',
+        'getRESTAvailableValues',
         'isValid',
         'userCanUpdate',
         'setHasErrors',
@@ -119,25 +119,25 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
         parent::setUp();
         $this->response = new MockResponse();
         $this->language = new MockBaseLanguage();
-        
+
         $GLOBALS['Response'] = $this->response;
         $GLOBALS['Language'] = $this->language;
     }
-    
+
     public function tearDown()
     {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
         parent::tearDown();
     }
-    
+
     function testValidateField() {
         // 0 => Field has value in last changeset
         // 1 => Field submitted in the request
         // 2 => User can update
         // 3 => Field is required
         //
-        // 4 => Is valid? => 
+        // 4 => Is valid? =>
         //      '-' => no need to check
         //      'R' => Error due to required
         //      'P' => Error due to perms
@@ -168,18 +168,18 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
             array(1, 1, 1, 0, 'V', 1,   1),
             array(1, 1, 1, 1, 'V', 1,   1),
         );
-        
+
         $artifact_update = new MockTracker_Artifact();
         $changeset_value = new MockTracker_Artifact_ChangesetValue();
-        
+
         foreach ($matrix as $case) {
             $this->setUp();
-            
+
             $field = new Tracker_FormElement_FieldTestVersion2();
             $field->setReturnValue('getId', 101);
             $field->setReturnValue('getLabel', 'Summary');
             $field->setReturnValue('getName', 'summary');
-            
+
             if ($case[0]) {
                 $last_changeset_value = $changeset_value;
             } else {
@@ -234,14 +234,14 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
             default:
                 break;
             }
-            
+
             $result = $field->validateFieldWithPermissionsAndRequiredStatus($artifact_update, $submitted_value, $last_changeset_value);
             $this->assertEqual($result, $is_valid);
             $this->tearDown();
             unset($field);
         }
     }
-    
+
     function testIsValid_not_required() {
         $this->response->expectNever('addFeedback', array('error', 'Status is required'));
         $artifact = new MockTracker_Artifact();
@@ -250,16 +250,16 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
         $field->setReturnValue('isRequired', false);
         $field->setReturnValue('validate', true, array('*', ''));
         $field->setReturnValue('validate', false, array('*', '123'));
-        
+
         $this->assertFalse($field->hasErrors());
-        
+
         $this->assertTrue($field->isValid($artifact, ''));
         $this->assertFalse($field->hasErrors());
-        
+
         $this->assertFalse($field->isValid($artifact, '123'));
         $this->assertTrue($field->hasErrors());
     }
-    
+
     function testIsValid_required() {
 
         $artifact = new MockTracker_Artifact();
@@ -270,96 +270,20 @@ class Tracker_FormElement_FieldTest extends TuleapTestCase {
         $field->expectCallCount('isRequired', 2);
         $field->setReturnValue('validate', true);
         $field->expectOnce('validate');
-        
+
         $this->language->expect('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
-        $this->response->expectCallCount('addFeedback', 2);        
-        
+        $this->response->expectCallCount('addFeedback', 2);
+
         $this->assertFalse($field->hasErrors());
-        
+
         $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, ''));
         $this->assertTrue($field->hasErrors());
-        
+
         $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, null));
         $this->assertTrue($field->hasErrors());
-        
+
         $this->assertTrue($field->isValid($artifact, '123'));
         $this->assertFalse($field->hasErrors());
-    }
-}
-
-class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-
-        $field_abstract_methods = array(
-            'fetchCriteriaValue',
-            'fetchChangesetValue',
-            'fetchRawValue',
-            'getCriteriaFrom',
-            'getCriteriaWhere',
-            'getCriteriaDao',
-            'fetchArtifactValue',
-            'fetchArtifactValueReadOnly',
-            'fetchSubmitValue',
-            'fetchTooltipValue',
-            'getValueDao',
-            'fetchFollowUp',
-            'fetchRawValueFromChangeset',
-            'saveValue',
-            'fetchAdminFormElement',
-            'getFactoryLabel',
-            'getFactoryDescription',
-            'getFactoryIconUseIt',
-            'getFactoryIconCreate',
-            'getChangesetValue',
-            'isRequired',
-            'validate',
-            'getSoapAvailableValues',
-            'fetchSubmitValueMasschange',
-            // Methods we want to mock
-            'userCanRead',
-            'accept'
-        );
-
-        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
-        $name = 'foo';
-        $label = 'Foo Bar';
-        $this->field = partial_mock('Tracker_FormElement_Field', $field_abstract_methods, array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
-
-        $this->user = aUser()->build();
-
-        $this->changesetvalue = mock('Tracker_Artifact_ChangesetValue');
-        $this->last_changeset  = mock('Tracker_Artifact_Changeset');
-        stub($this->last_changeset)->getValue($this->field)->returns($this->changesetvalue);
-    }
-
-    public function itReturnsNullIfUserCannotAccessField() {
-        expect($this->field)->userCanRead($this->user)->once();
-        stub($this->field)->userCanRead()->returns(false);
-        $this->assertIdentical($this->field->getSoapValue($this->user, $this->last_changeset), null);
-    }
-
-    public function itReturnsTheSoapFieldValue() {
-        stub($this->changesetvalue)->getSoapValue()->returns(array('value' => 'bla'));
-        stub($this->field)->userCanRead()->returns(true);
-        $this->assertIdentical(
-            $this->field->getSoapValue($this->user, $this->last_changeset),
-            array(
-                'field_name'  => 'foo',
-                'field_label' => 'Foo Bar',
-                'field_value' => array('value' => 'bla')
-            )
-        );
-    }
-
-    public function itReturnsTheJsonFieldValue() {
-        stub($this->changesetvalue)->getJsonValue()->returns('bla');
-        stub($this->field)->userCanRead()->returns(true);
-        $this->assertIdentical(
-            $this->field->getJsonValue($this->user, $this->last_changeset),
-            'bla'
-        );
     }
 }
 
@@ -389,7 +313,7 @@ class Tracker_FormElement_Field_RESTValueTest extends TuleapTestCase {
             'getChangesetValue',
             'isRequired',
             'validate',
-            'getSoapAvailableValues',
+            'getRESTAvailableValues',
             'fetchSubmitValueMasschange',
             // Methods we want to mock
             'userCanRead',

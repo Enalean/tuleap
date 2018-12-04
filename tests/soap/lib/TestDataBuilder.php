@@ -21,12 +21,7 @@
 
 class SOAP_TestDataBuilder extends TestDataBuilder
 {
-
-    const TV3_SERVICE_ID      = 15;
-    const TV3_TASK_REPORT_ID  = 102;
-
     const PROJECT_PRIVATE_MEMBER_ID = 101;
-    const PROJECT_PLUGIN_TRACKER_ID = 102;
 
     public function generateUsers()
     {

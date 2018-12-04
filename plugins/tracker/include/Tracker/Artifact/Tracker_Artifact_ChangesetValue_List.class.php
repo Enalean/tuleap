@@ -23,12 +23,12 @@
  * Manage values in changeset for string fields
  */
 class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator {
-    
+
     /**
      * @var array (of ListValue) the list of list values
      */
     protected $list_values;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, array $list_values) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->list_values = $list_values;
@@ -40,7 +40,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitList($this);
     }
-    
+
     /**
      * spl\Countable
      *
@@ -49,7 +49,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function count() {
         return count($this->list_values);
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -60,7 +60,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function offsetGet($offset) {
         return $this->list_values[$offset];
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -72,7 +72,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function offsetSet($offset, $value) {
         $this->list_values[$offset] = $value;
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -83,7 +83,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function offsetExists($offset) {
         return isset($this->list_values[$offset]);
     }
-    
+
     /**
      * spl\ArrayAccess
      *
@@ -94,7 +94,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function offsetUnset($offset) {
         unset($this->files[$offset]);
     }
-    
+
     /**
      * spl\Iterator
      *
@@ -102,28 +102,28 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @var integer
      */
     protected $index;
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return Tracker_FileInfo the current one
      */
     public function current() {
         return $this->list_values[$this->index];
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return int the current index
      */
     public function key() {
         return $this->index;
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * Jump to the next Tracker_FileInfo
      *
      * @return void
@@ -131,27 +131,27 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function next() {
         $this->index++;
     }
-    
+
     /**
      * spl\Iterator
      *
      * Reset the pointer to the start of the collection
-     * 
+     *
      * @return Tracker_FileInfo the current one
      */
     public function rewind() {
         $this->index = 0;
     }
-    
+
     /**
      * spl\Iterator
-     * 
+     *
      * @return boolean true if the current pointer is valid
      */
     public function valid() {
         return isset($this->list_values[$this->index]);
     }
-    
+
     /**
      * Get the list values
      *
@@ -160,7 +160,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function getListValues() {
         return $this->list_values;
     }
-    
+
     /**
      * Get the value (an array of int)
      *
@@ -191,25 +191,6 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
             }
         }
         return $returned_values;
-    }
-
-    /**
-     * Return a string that will be use in SOAP API
-     * as the value of this ChangesetValue_List 
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        return array('bind_value' => array_map(array($this, 'getSoapBindValue'), $this->getListValues()));
-    }
-
-    private function getSoapBindValue($value) {
-        return array(
-            'bind_value_id'    => $value->getId(),
-            'bind_value_label' => $value->getSoapValue()
-        );
     }
 
     public function getRESTValue(PFUser $user) {

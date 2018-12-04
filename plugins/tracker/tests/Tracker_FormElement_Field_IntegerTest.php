@@ -116,11 +116,6 @@ class Tracker_FormElement_Field_IntegerTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, null));
     }
 
-    function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_IntegerTestVersion();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     function testGetFieldData() {
         $f = new Tracker_FormElement_Field_IntegerTestVersion();
         $this->assertEqual('42', $f->getFieldData('42'));

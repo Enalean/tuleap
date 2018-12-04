@@ -30,10 +30,10 @@ class Tracker_ReportFactory {
      * Hold an instance of the class
      */
     protected static $_instance;
-    
+
     /**
      * The singleton method
-     * 
+     *
      * @return Tracker_ReportFactory
      */
     public static function instance() {
@@ -58,7 +58,7 @@ class Tracker_ReportFactory {
         }
         return $r;
     }
-    
+
     /**
      * @param int $tracker_id the id of the tracker
      * @param int $user_id the user who are searching for reports. He cannot access to other user's reports
@@ -83,7 +83,7 @@ class Tracker_ReportFactory {
         }
         return $report;
     }
-    
+
     /**
      * @param int $tracker_id the id of the tracker
      * @param Tracker_Report
@@ -95,7 +95,7 @@ class Tracker_ReportFactory {
         }
         return $default_report;
     }
-    
+
     /**
      * @param int $user_id the user who are searching for reports. He cannot access to other user's reports
      * @param array of reports
@@ -106,22 +106,6 @@ class Tracker_ReportFactory {
             $reports[$row['id']] = $this->getInstanceFromRow($row);
         }
         return $reports;
-    }
-    
-    /**
-     * Return the list of Report the user can run on a Tracker in SOAP format.
-     *
-     * @param Tracker $tracker The Tracker to pick report from
-     * @param PFUser    $user    The user who does the request
-     *
-     * @return Array of soap report
-     */
-    public function exportToSoap(Tracker $tracker, PFUser $user) {
-        $soap_tracker_reports = array();
-        foreach ($this->getReportsByTrackerId($tracker->getId(), $user->getId()) as $report) {
-            $soap_tracker_reports[] = $report->exportToSoap();
-        }
-        return $soap_tracker_reports;
     }
 
     /**
@@ -179,7 +163,7 @@ class Tracker_ReportFactory {
         }
         return $report;
     }
-    
+
     public function duplicateReportSkeleton($from_report, $to_tracker_id, $current_user_id) {
         $report = null;
         //duplicate report info
@@ -188,9 +172,9 @@ class Tracker_ReportFactory {
         }
         return $report;
     }
-    
-    
-    
+
+
+
     protected $dao;
     /**
      * @return Tracker_ReportDao
@@ -201,21 +185,21 @@ class Tracker_ReportFactory {
         }
         return $this->dao;
     }
-    
+
     /**
      * @return Tracker_Report_CriteriaFactory
      */
     protected function getCriteriaFactory() {
         return Tracker_Report_CriteriaFactory::instance();
     }
-    
+
     /**
      * @return Tracker_Report_RendererFactory
      */
     protected function getRendererFactory() {
         return Tracker_Report_RendererFactory::instance();
     }
-    
+
     /**
      * @param array the row identifing a report
      * @return Tracker_Report
@@ -240,18 +224,18 @@ class Tracker_ReportFactory {
             $r->registerInSession();
             $this->initializeReportFromSession($r);
         }
-        
+
         return $r;
     }
-    
+
     /**
      * Creates a Tracker_Report Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported report
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param int              $group_id    the Id of the project
-     * 
-     * @return Tracker_Report Object 
+     *
+     * @return Tracker_Report Object
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $group_id) {
         $att = $xml->attributes();
@@ -286,20 +270,20 @@ class Tracker_ReportFactory {
         $report->renderers = array();
         foreach ($xml->renderers->renderer as $renderer) {
             $rend = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
-            $report->renderers[] = $rend; 
+            $report->renderers[] = $rend;
         }
         return $report;
     }
-    
+
     /**
      * Create new default report in the DataBase
-     * 
+     *
      * @param int trackerId of the created tracker
      * @param Object report
-     * 
+     *
      * @return id of the newly created Report
      */
-    public function saveObject($trackerId, $report) { 
+    public function saveObject($trackerId, $report) {
         $reportId = $this->getDao()->create(
             $report->name,
             $report->description,
@@ -331,7 +315,7 @@ class Tracker_ReportFactory {
         }
         return $reportDB->id;
     }
-    
+
     /**
      * Delete a report
      *

@@ -28,10 +28,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     Tracker_IProvideJsonFormatOfMyself,
     BindVisitable
 {
-    const SOAP_ID_KEY    = 'bind_value_id';
-    const SOAP_LABEL_KEY = 'bind_value_label';
-    const SOAP_TYPE_KEY  = 'bind_type';
-    const SOAP_LIST_KEY  = 'bind_list';
+    const REST_ID_KEY    = 'bind_value_id';
+    const REST_LABEL_KEY = 'bind_value_label';
+    const REST_TYPE_KEY  = 'bind_type';
+    const REST_LIST_KEY  = 'bind_list';
 
     const NONE_VALUE = 100;
 
@@ -73,8 +73,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         foreach ($bind_values as $value) {
             $representation = new $class_with_right_namespace;
             $representation->build(array(
-                Tracker_FormElement_Field_List_Bind::SOAP_ID_KEY    => $value->getId(),
-                Tracker_FormElement_Field_List_Bind::SOAP_LABEL_KEY => $value->getSoapValue()
+                Tracker_FormElement_Field_List_Bind::REST_ID_KEY    => $value->getId(),
+                Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY => $value->getAPIValue()
             ));
             $rest_array[] = $representation;
 
@@ -125,33 +125,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return $values;
     }
 
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
-        foreach($this->getAllValues() as $value) {
-            $soap_values[] = $this->getSoapBindValue($value);
-        }
-        return $soap_values;
-    }
-
-    private function getSoapBindValue($value) {
-        return array(
-            self::SOAP_ID_KEY    => $value->getId(),
-            self::SOAP_LABEL_KEY => $value->getSoapValue()
-        );
-    }
-
-    public function getSoapBindingProperties() {
+    public function getRESTBindingProperties() {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
         $bind_type = $bind_factory->getType($this);
         return array(
-            self::SOAP_TYPE_KEY => $bind_type,
-            self::SOAP_LIST_KEY => $this->getSoapBindingList()
+            self::REST_TYPE_KEY => $bind_type,
+            self::REST_LIST_KEY => $this->getRESTBindingList()
         );
     }
 
@@ -159,17 +138,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      *
      * @return array
      */
-    protected abstract function getSoapBindingList();
+    protected abstract function getRESTBindingList();
 
     /**
      * Get the field data for artifact submission
      *
-     * @param string $soap_value  of soap field value
-     * @param bool   $is_multiple if the soap value is multiple or not
+     * @param string $submitted_value
+     * @param bool   $is_multiple     if the value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the value for artifact submision
      */
-    public abstract function getFieldData($soap_value, $is_multiple);
+    public abstract function getFieldData($submitted_value, $is_multiple);
     /**
      * @return array
      * @throws Tracker_FormElement_InvalidFieldValueException
@@ -685,8 +664,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         $class_with_right_namespace = '\\Tuleap\\Tracker\\REST\\FieldValueRepresentation';
         $representation = new $class_with_right_namespace;
         $values = array(
-            self::SOAP_ID_KEY    => $value->getId(),
-            self::SOAP_LABEL_KEY => $value->getSoapValue()
+            self::REST_ID_KEY    => $value->getId(),
+            self::REST_LABEL_KEY => $value->getAPIValue()
         );
         $representation->build($values);
         return $representation;

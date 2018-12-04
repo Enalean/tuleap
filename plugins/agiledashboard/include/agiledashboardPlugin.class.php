@@ -118,7 +118,7 @@ class AgileDashboardPlugin extends Plugin
             $this->addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
-            $this->addHook(TRACKER_EVENT_SOAP_SEMANTICS, 'tracker_event_soap_semantics');
+            $this->addHook(TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
             $this->addHook(TRACKER_EVENT_GET_SEMANTIC_FACTORIES);
             $this->addHook('plugin_statistics_service_usage');
             $this->addHook(TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
@@ -828,9 +828,9 @@ class AgileDashboardPlugin extends Plugin
     /**
      * Augment $params['semantics'] with names of AgileDashboard semantics
      *
-     * @see TRACKER_EVENT_SOAP_SEMANTICS
+     * @see TRACKER_EVENT_GET_SEMANTICS_NAMES
      */
-    public function tracker_event_soap_semantics(&$params) {
+    public function tracker_event_get_semantics_names(&$params) {
         $params['semantics'][] = AgileDashBoard_Semantic_InitialEffort::NAME;
     }
 

@@ -52,24 +52,19 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
 
         $this->assertEqual($integer->getInteger(), 42);
         $this->assertNotIdentical($integer->getInteger(), '42');
-        $this->assertEqual($integer->getSoapValue($this->user), array('value' => '42'));
-        $this->assertIdentical($integer->getSoapValue($this->user), array('value' => '42'));
         $this->assertIdentical($integer->getValue(), 42);
-        
+
         $string_int = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, '55');
         $this->assertEqual($string_int->getInteger(), 55);
         $this->assertEqual($string_int->getInteger(), '55');
         $this->assertNotIdentical($string_int->getInteger(), '55');
-        $this->assertIdentical($string_int->getSoapValue($this->user), array('value' => '55'));
         $this->assertIdentical($string_int->getValue(), 55);
-        
+
         $null_int = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, null);
         $this->assertNull($null_int->getInteger());
-        $this->assertEqual($null_int->getSoapValue($this->user), array('value' => ''));
-        $this->assertIdentical($null_int->getSoapValue($this->user), array('value' => ''));
         $this->assertNull($null_int->getValue());
     }
-    
+
     public function testNoDiff() {
         $this->field = mock('Tracker_FormElement_Field_Integer');
         $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 54);
@@ -77,7 +72,7 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
         $this->assertFalse($int_1->diff($int_2));
         $this->assertFalse($int_2->diff($int_1));
     }
-    
+
     public function testDiff() {
         $this->field = mock('Tracker_FormElement_Field_Integer');
         $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $this->changeset, $this->field, false, 66);

@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         );
     }
 
-    protected function getSoapBindingList() {
+    protected function getRESTBindingList() {
         // returns empty array as static are already listed in 'values'
         return array();
     }
@@ -153,22 +153,22 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     /**
      * Get the field data for artifact submission
      *
-     * @param string $soap_value  the soap field values
-     * @param bool   $is_multiple if the soap value is multiple or not
+     * @param string $submitted_value the field value
+     * @param bool   $is_multiple     if the value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the value for artifact submision
      */
-    public function getFieldData($soap_value, $is_multiple) {
+    public function getFieldData($submitted_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
             $return = array();
-            $soap_values = explode(",", $soap_value);
+            $submitted_values = explode(",", $submitted_value);
             foreach ($values as $id => $value) {
-                if (in_array($value->getLabel(), $soap_values)) {
+                if (in_array($value->getLabel(), $submitted_values)) {
                     $return[] = $id;
                 }
             }
-            if (count($soap_values) == count($return)) {
+            if (count($submitted_values) == count($return)) {
                 return $return;
             } else {
                 // if one value was not found, return null
@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             }
         } else {
             foreach ($values as $id => $value) {
-                if ($value->getLabel() == $soap_value) {
+                if ($value->getLabel() == $submitted_value) {
                     return $id;
                 }
             }

@@ -33,21 +33,21 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      */
      public function getAllValues() { return array(); }
     /**
-     * Get available values of this field for SOAP usage
+     * Get available values of this field for REST usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public function getSoapAvailableValues() { return array(); }
+    public function getRESTAvailableValues() { return array(); }
     /**
      * Get the field data for artifact submission
      *
-     * @param string $soap_value  of soap field value
-     * @param bool   $is_multiple if the soap value is multiple or not
+     * @param string $submitted_value
+     * @param bool   $is_multiple     if the value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the alue for artifact submision
      */
-    public function getFieldData($soap_value, $is_multiple) { return array(); }
+    public function getFieldData($submitted_value, $is_multiple) { return array(); }
     /**
      * @return array
      */
@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
 
     public function getQuerySelectAggregate($functions) { return array(); }
 
-    protected function getSoapBindingList() { return array(); }
+    protected function getRESTBindingList() { return array(); }
 
     public function getNumericValues(Tracker_Artifact_ChangesetValue $changeset_value) { return array(); }
 

@@ -18,17 +18,17 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 require_once 'common/include/URLVerification.class.php';
 
 class Tracker_URLVerification extends URLVerification {
-    
+
     function getUrl() {
         return new Tracker_URL();
     }
 
     /**
-     * Always permit requests for localhost, or for api or soap scripts and for system tracker templates
+     * Always permit requests for localhost, or for api and for system tracker templates
      *
      * @param Array $server
      *

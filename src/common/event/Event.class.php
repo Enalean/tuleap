@@ -436,21 +436,6 @@ class Event {
     const UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE = 'ugroup_manager_update_ugroup_binding_remove';
 
     /**
-     * Display information about SOAP end points
-     *
-     * Parameters:
-     *    None
-     * Expected results
-     *    'end_points' => array of array(
-     *        'title'       => '',
-     *        'wsdl'        => '',
-     *        'wsdl_viewer' => '',
-     *        'description' => '',
-     *    );
-     */
-    const SOAP_DESCRIPTION = 'soap_description';
-
-    /**
      * Get ldap login for a given user
      *
      * Parameters:

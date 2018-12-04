@@ -415,7 +415,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $this->assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
 
     }
-    
+
     function testExportToXmlCallsRuleListFactoryExport() {
         $xml_data = <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
@@ -426,25 +426,25 @@ XML;
         $tracker              = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');
         $manager              = new Tracker_RulesManager($tracker, $form_element_factory);
-        
+
         stub($tracker)->getId()->returns(45);
-        
+
         $date_factory = mock('Tracker_Rule_Date_Factory');
         stub($date_factory)->exportToXml($sax_object, $xmlMapping, 45)->once();
-        
+
         $list_factory = mock('Tracker_Rule_List_Factory');
-        
+
         stub($list_factory)->exportToXml($sax_object, $xmlMapping, $form_element_factory, 45)->once();
-        
+
         $manager->setRuleDateFactory($date_factory);
         $manager->setRuleListFactory($list_factory);
-        
+
         $manager->exportToXml($sax_object, $xmlMapping);
     }
 }
 
 class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
-    
+
     public function testValidateReturnsFalseWhenTheDateDataIsInvalid() {
 
         $value_field_list = array(
@@ -483,8 +483,8 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',
                 array($tracker_rule_date, $tracker_rule_date2));
-        
-        
+
+
         $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
 
 
@@ -878,107 +878,3 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $this->assertFalse($this->rules_manager->isUsedInFieldDependency($this->a_field_not_used_in_rules));
     }
 }
-
-class Tracker_RulesManager_exportToSOAPTest extends TuleapTestCase {
-
-    private $tracker_id = 123;
-    private $dates;
-    private $lists;
-    private $expected_dates = array(
-        array('source_field_id' => 1, 'target_field_id' => 2, 'comparator' => '<'),
-        array('source_field_id' => 3, 'target_field_id' => 4, 'comparator' => '='),
-    );
-    private $expected_lists = array(
-        array('source_field_id' => 15, 'source_value_id' => 16, 'target_field_id' => 17, 'target_value_id' => 18),
-        array('source_field_id' => 25, 'source_value_id' => 26, 'target_field_id' => 27, 'target_value_id' => 28),
-    );
-
-    public function setUp() {
-        parent::setUp();
-        $tracker = stub('Tracker')->getId()->returns($this->tracker_id);
-        $this->rules_manager = partial_mock(
-            'Tracker_RulesManager',
-            array('getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'),
-            array($tracker, mock('Tracker_FormElementFactory'))
-        );
-
-        $date_rule1 = new Tracker_Rule_Date();
-        $date_rule2 = new Tracker_Rule_Date();
-
-        $date_field_1 = mock('Tracker_FormElement_Field_Date');
-        stub($date_field_1)->getId()->returns(1);
-        stub($date_field_1)->isCompatibleWithSoap()->returns(true);
-
-        $date_field_2 = mock('Tracker_FormElement_Field_Date');
-        stub($date_field_2)->getId()->returns(2);
-        stub($date_field_2)->isCompatibleWithSoap()->returns(true);
-
-        $date_field_3 = mock('Tracker_FormElement_Field_Date');
-        stub($date_field_3)->getId()->returns(3);
-        stub($date_field_3)->isCompatibleWithSoap()->returns(true);
-
-        $date_field_4 = mock('Tracker_FormElement_Field_Date');
-        stub($date_field_4)->getId()->returns(4);
-        stub($date_field_4)->isCompatibleWithSoap()->returns(true);
-
-        $date_rule1->setSourceFieldId(1)
-            ->setTargetFieldId(2)
-            ->setSourceField($date_field_1)
-            ->setTargetField($date_field_2)
-            ->setComparator('<');
-
-        $date_rule2->setSourceFieldId(3)
-            ->setTargetFieldId(4)
-            ->setSourceField($date_field_3)
-            ->setTargetField($date_field_4)
-            ->setComparator('=');
-
-        $this->dates = array($date_rule1, $date_rule2);
-
-        $this->lists = array(
-            new Tracker_Rule_List(1, $this->tracker_id, 15, 16, 17, 18),
-            new Tracker_Rule_List(2, $this->tracker_id, 25, 26, 27, 28),
-        );
-    }
-
-    public function itExportsEmptyArraysIfNoRules() {
-        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns(array());
-        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns(array());
-        $result = $this->rules_manager->exportToSOAP(true);
-        $this->assertArrayEmpty($result['dates']);
-        $this->assertArrayEmpty($result['lists']);
-    }
-
-    public function itExportsEmptyArraysIfNoAccessToWorkflowField() {
-        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
-        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
-        $result = $this->rules_manager->exportToSOAP(false);
-        $this->assertArrayEmpty($result['dates']);
-        $this->assertArrayEmpty($result['lists']);
-    }
-
-    public function itExportsDates() {
-        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns(array());
-        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
-        $result = $this->rules_manager->exportToSOAP(true);
-        $this->assertEqual($result['dates'], $this->expected_dates);
-        $this->assertArrayEmpty($result['lists']);
-    }
-
-    public function itExportsLists() {
-        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
-        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns(array());
-        $result = $this->rules_manager->exportToSOAP(true);
-        $this->assertArrayEmpty($result['dates']);
-        $this->assertEqual($result['lists'], $this->expected_lists);
-    }
-
-    public function itExportsAll() {
-        stub($this->rules_manager)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($this->lists);
-        stub($this->rules_manager)->getAllDateRulesByTrackerId($this->tracker_id)->returns($this->dates);
-        $result = $this->rules_manager->exportToSOAP(true);
-        $this->assertEqual($result['dates'], $this->expected_dates);
-        $this->assertEqual($result['lists'], $this->expected_lists);
-    }
-}
-?>

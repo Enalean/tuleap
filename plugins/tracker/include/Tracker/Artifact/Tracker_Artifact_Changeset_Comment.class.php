@@ -265,23 +265,6 @@ class Tracker_Artifact_Changeset_Comment {
         return $comment_format;
     }
 
-    public function exportToSOAP(array &$soap) {
-        if ($this->body) {
-            $body = Encoding_SupportedXmlCharEncoding::getXMLCompatibleString($this->body);
-            $soap['body'] = $body;
-            return $soap;
-        }
-    }
-
-    public function getSoapValue() {
-        return array(
-            'submitted_by' => $this->submitted_by,
-            'submitted_on' => $this->submitted_on,
-            'format'       => $this->bodyFormat,
-            'body'         => $this->body
-        );
-    }
-
     private function fetchFormattedMailComment() {
         $formatted_comment = '';
         if (!empty($this->body)) {

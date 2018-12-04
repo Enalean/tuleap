@@ -299,7 +299,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return $field_representation;
     }
 
-    public function getSoapAvailableValues()
+    public function getRESTAvailableValues()
     {
     }
 

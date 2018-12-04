@@ -43,7 +43,7 @@ class FieldListBindUGroupValueRepresentation {
 
     public function build(Tracker_FormElement_Field_List_Value $value, UserGroupRepresentation $ugroup_representation) {
         $this->id               = JsonCast::toInt($value->getId());
-        $this->label            = $value->getSoapValue();
+        $this->label            = $value->getAPIValue();
         $this->ugroup_reference = $ugroup_representation;
     }
 }

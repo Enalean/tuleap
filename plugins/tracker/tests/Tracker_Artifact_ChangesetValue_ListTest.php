@@ -52,12 +52,11 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
 
     public function testLists() {
         $bind_value = mock('Tracker_FormElement_Field_List_BindValue');
-        $bind_value->setReturnValue('getSoapValue', 'Reopen');
+        $bind_value->setReturnValue('getAPIValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
         $value_list = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
-        $this->assertEqual($value_list->getSoapValue($this->user), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
         $this->assertEqual($value_list->getValue(), array(106));
     }
 
@@ -159,41 +158,5 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, array($bind_value_1, $bind_value_2));
         $this->assertPattern('/Sandra, Manon removed/', $list_1->diff($list_2));
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
-    }
-
-    public function testSoapValue() {
-        $bv_1 = mock('Tracker_FormElement_Field_List_BindValue');
-        $bv_1->setReturnValue('getSoapValue', 'Jenny');
-        $bv_2 = mock('Tracker_FormElement_Field_List_BindValue');
-        $bv_2->setReturnValue('getSoapValue', 'Bob');
-        $bv_3 = mock('Tracker_FormElement_Field_List_BindValue');
-        $bv_3->setReturnValue('getSoapValue', 'Rob');
-        $bv_4 = mock('Tracker_FormElement_Field_List_BindValue');
-        $bv_4->setReturnValue('getSoapValue', 'Anne');
-
-        $value_list = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, array($bv_1, $bv_2, $bv_3, $bv_4));
-        $this->assertEqual(
-            $value_list->getSoapValue($this->user),
-            array('bind_value' =>
-                array(
-                    array(
-                        'bind_value_id'    => '',
-                        'bind_value_label' => "Jenny",
-                    ),
-                    array(
-                        'bind_value_id'    => '',
-                        'bind_value_label' => "Bob",
-                    ),
-                    array(
-                        'bind_value_id'    => '',
-                        'bind_value_label' => "Rob",
-                    ),
-                    array(
-                        'bind_value_id'    => '',
-                        'bind_value_label' => "Anne",
-                    ),
-                )
-            )
-        );
     }
 }

@@ -151,37 +151,23 @@ class Tracker_SemanticManager
     }
 
     public function exportToREST(PFUser $user) {
-        return array_filter(
-            $this->exportTo($user, 'exportToREST')
-        );
-    }
-
-    /**
-     * Export the semantic to SOAP format
-     * @return array the SOAPification of the semantic
-     */
-    public function exportToSOAP(PFUser $user) {
-        return $this->exportTo($user, 'exportToSOAP');
-    }
-
-    private function exportTo(PFUser $user, $method) {
+        $results        = [];
         $semantic_order = $this->getSemanticOrder();
         $semantics      = $this->getSemantics();
-        $soap_result    = array();
 
         foreach ($semantic_order as $semantic_key) {
             if (isset($semantics[$semantic_key])){
-                $soap_result[$semantic_key] = $semantics[$semantic_key]->$method($user);
+                $results[$semantic_key] = $semantics[$semantic_key]->exportToREST($user);
             }
         }
 
-        return $soap_result;
+        return array_filter($results);
     }
 
     protected function getSemanticOrder() {
         $order = array('title', 'description', 'status', 'contributor');
         EventManager::instance()->processEvent(
-            TRACKER_EVENT_SOAP_SEMANTICS,
+            TRACKER_EVENT_GET_SEMANTICS_NAMES,
             array(
                 'semantics' => &$order
             )

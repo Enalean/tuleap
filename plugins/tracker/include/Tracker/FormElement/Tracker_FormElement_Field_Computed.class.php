@@ -477,21 +477,6 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
     }
 
-    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
-    {
-        if ($this->userCanRead($user)) {
-            $artifact     = $changeset->getArtifact();
-            $manual_value = $this->getComputedValueWithNoLabel($artifact, $user, false);
-
-            return array(
-                'field_name'  => $this->getName(),
-                'field_label' => $this->getLabel(),
-                'field_value' => array('value' => (string) $manual_value)
-            );
-        }
-        return null;
-    }
-
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
         return $this->getFullRESTValue($user, $changeset);
     }
@@ -930,7 +915,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         return  (float) $previous_changeset_value->getNumeric() !== (float) $new_value;
     }
 
-    public function getSoapAvailableValues() {
+    public function getRESTAvailableValues() {
     }
 
     public function testImport() {

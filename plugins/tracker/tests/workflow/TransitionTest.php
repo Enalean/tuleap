@@ -138,28 +138,10 @@ class Transition_AfterTest extends Transition_baseTest {
 
         $post_action_1->expectOnce('after');
         $post_action_2->expectOnce('after');
-        
+
         $changeset = mock('Tracker_Artifact_Changeset');
 
         $transition->after($changeset);
-    }
-}
-
-class Transition_exportToSOAPTest extends Transition_baseTest {
-
-    public function itExportsTheFromAndToAttributes() {
-        $transition = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
-        $this->assertEqual($transition->exportToSOAP(), array('from_id' => 123, 'to_id' => 456));
-    }
-
-    public function itExportsEmptyStringWhenFromIsNull() {
-        $transition = new Transition($this->id, $this->workflow_id, null, $this->to);
-        $this->assertEqual($transition->exportToSOAP(), array('from_id' => '', 'to_id' => 456));
-    }
-
-    public function itExportsEmptyStringWhenToIsNull() {
-        $transition = new Transition($this->id, $this->workflow_id, $this->from, null);
-        $this->assertEqual($transition->exportToSOAP(), array('from_id' => 123, 'to_id' => ''));
     }
 }
 

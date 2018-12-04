@@ -23,13 +23,13 @@
  * Manage values in changeset for date fields
  */
 class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Artifact_ChangesetValue {
-    
+
     /**
      * @var array
      */
     protected $perms;
     protected $used;
-    
+
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed, $used, $perms) {
         parent::__construct($id, $changeset, $field, $has_changed);
         $this->perms = $perms;
@@ -42,7 +42,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor) {
         return $visitor->visitPermissionsOnArtifact($this);
     }
-    
+
     /**
      * Get the permissions
      *
@@ -64,26 +64,14 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
 
         return $ugroup_names;
     }
-    
+
     /**
-     * Return the value of used 
+     * Return the value of used
      *
      * @return bool true if the permissions are used
      */
     public function getUsed() {
         return $this->used;
-    }
-    
-    
-    /**
-     * Returns the soap value of this changeset value (the timestamp)
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user) {
-        return $this->encapsulateRawSoapValue(implode(",", $this->getPerms()));
     }
 
     public function getRESTValue(PFUser $user) {
@@ -134,7 +122,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function getValue() {
         return '';
     }
-    
+
     /**
      * Returns diff between current perms and perms in param
      *
@@ -148,7 +136,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         if ($previous !== $next) {
             $removed_elements = array_diff($previous, $next);
             $removed_arr = array();
-            foreach ($removed_elements as $removed_element) {                
+            foreach ($removed_elements as $removed_element) {
                 $removed_arr[] = $this->getUgroupLabel($removed_element);
             }
             $removed = $this->format(implode(', ', $removed_arr), $format);
@@ -175,11 +163,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
                     $changes .= $added .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact','added');
                 }
             }
-            
+
         }
         return $changes;
     }
-    
+
     public function nodiff($format = 'html') {
         $next = $this->getPerms();
         $added_arr = array();
@@ -197,7 +185,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         }
         return Codendi_HTMLPurifier::instance()->purify($value);
     }
-    
+
     protected function getDao() {
         return new UGroupDao(CodendiDataAccess::instance());
     }

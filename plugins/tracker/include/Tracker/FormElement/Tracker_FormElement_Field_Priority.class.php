@@ -299,19 +299,6 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
         );
     }
 
-    public function getSoapValue(PFUser $user = null, Tracker_Artifact_Changeset $changeset = null)
-    {
-        return null;
-    }
-
-    public function isCompatibleWithSoap() {
-        return false;
-    }
-
-    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
-        throw new Exception('DEPRECATION ERROR: Priority field is not compatible with SOAP methods. If you need it, please use REST.');
-    }
-
     /**
      * Validate a field
      *

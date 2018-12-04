@@ -24,7 +24,7 @@ require_once('bootstrap.php');
 Mock::generatePartial('Tracker_Artifact_ChangesetValue_Text', 'Tracker_Artifact_ChangesetValue_TextTestVersion', array('getCodendi_HTMLPurifier'));
 
 class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
-    
+
     private $field;
     private $user;
 
@@ -52,17 +52,16 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
         $field = aTextField()->withTracker(aTracker()->withProject(mock('Project'))->build())->build();
         $text  = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $field, false, 'Problems during installation', 'text');
         $this->assertEqual($text->getText(), 'Problems during installation');
-        $this->assertEqual($text->getSoapValue($this->user), array('value' => 'Problems during installation'));
         $this->assertEqual($text->getValue(), 'Problems during installation');
     }
-    
+
     public function testNoDiff() {
         $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during installation', 'text');
         $this->assertFalse($text_1->diff($text_2));
         $this->assertFalse($text_2->diff($text_1));
     }
-    
+
     public function testDiff() {
         $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during <ins> installation', 'text');
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'FullTextSearch does not work on Wiki pages', 'text');

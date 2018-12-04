@@ -54,23 +54,6 @@ class Tracker_FileInfo {
     }
 
     /**
-     * Soap version of the object
-     *
-     * @return Array
-     */
-    public function getSoapValue() {
-        return array(
-            'id'           => $this->id,
-            'submitted_by' => $this->submitted_by,
-            'description'  => $this->description,
-            'filename'     => $this->filename,
-            'filesize'     => $this->filesize,
-            'filetype'     => $this->filetype,
-            'action'       => '',
-        );
-    }
-
-    /**
      * @return Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      */
     public function getRESTValue() {

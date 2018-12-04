@@ -172,22 +172,22 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
+     * @param string  $submitted_value the field value (username(s))
+     * @param boolean $is_multiple     if the value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
+     * @return mixed the field data corresponding to the value for artifact submision (user_id)
      */
-    public function getFieldData($soap_value, $is_multiple) {
+    public function getFieldData($submitted_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
             $return = array();
-            $soap_values = explode(',', $soap_value);
+            $submitted_values = explode(',', $submitted_value);
             foreach ($values as $id => $value) {
-                if (in_array($value->getUGroupName(), $soap_values)) {
+                if (in_array($value->getUGroupName(), $submitted_values)) {
                     $return[] = $id;
                 }
             }
-            if (count($soap_values) == count($return)) {
+            if (count($submitted_values) == count($return)) {
                 return $return;
             } else {
                 // if one value was not found, return null
@@ -195,7 +195,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             }
         } else {
             foreach ($values as $id => $value) {
-                if ($value->getUGroupName() == $soap_value) {
+                if ($value->getUGroupName() == $submitted_value) {
                     return $id;
                 }
             }
@@ -621,7 +621,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         // Nothing to do: user value ids stay the same accross projects.
     }
 
-    protected function getSoapBindingList() {
+    protected function getRESTBindingList() {
         // returns empty array as ugroups are already listed in 'values'
         return array();
     }

@@ -23,25 +23,25 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     /**
      *
-     * @var int 
+     * @var int
      */
     protected $id;
-    
+
     /**
      *
-     * @var bool 
+     * @var bool
      */
     protected $is_hidden = false;
-    
+
     public function __construct($id, $is_hidden = false) {
         $this->id        = $id;
         $this->is_hidden = $is_hidden;
     }
-    
+
     public function getId() {
         return $this->id;
     }
-    
+
     public function setId($id) {
         $this->id = $id;
         return $this;
@@ -81,29 +81,25 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     }
 
     public abstract function getJsonId();
-    
+
     public abstract function __toString();
-    
+
     public abstract function getLabel();
-    
+
     public function fetchFormatted() {
         return $this->getLabel();
     }
-    
+
     public function fetchFormattedForCSV() {
         return $this->getLabel();
     }
-    
+
     public function isHidden() {
         return $this->is_hidden;
     }
 
-    public function getSoapValue() {
-        return $this->getLabel();
-    }
-
     public function getAPIValue() {
-        return $this->getSoapValue();
+        return $this->getLabel();
     }
 
     public function getJsonValue() {

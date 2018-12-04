@@ -189,7 +189,7 @@ class Transition {
 
     /**
      * Execute actions after transition happenstype
-     * 
+     *
      * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
@@ -360,17 +360,6 @@ class Transition {
         return false;
     }
 
-    /**
-     * Creates   the soap format of the transition
-     * @return array the soap format of the transition
-     */
-    public function exportToSOAP() {
-        return array(
-            'from_id' => $this->getIdFrom(),
-            'to_id'   => $this->getIdTo(),
-        );
-    }
-
     public function getIdFrom() {
         $from = $this->getFieldValueFrom();
         if ($from) {
@@ -387,4 +376,3 @@ class Transition {
         return '';
     }
 }
-?>

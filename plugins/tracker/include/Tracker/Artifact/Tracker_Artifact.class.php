@@ -1359,25 +1359,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $previous;
     }
 
-    public function exportCommentsToSOAP() {
-        $soap_comments = array();
-        foreach ($this->getChangesets() as $changeset) {
-            $changeset_comment = $changeset->exportCommentToSOAP();
-            if ($changeset_comment) {
-                $soap_comments[] = $changeset_comment;
-            }
-        }
-        return $soap_comments;
-    }
-
-    public function exportHistoryToSOAP(PFUser $user) {
-        $soap_comments = array();
-        foreach ($this->getChangesets() as $changeset) {
-            $soap_comments[] = $changeset->getSoapValue($user);
-        }
-        return $soap_comments;
-    }
-
     /**
      * Get the Id of this artifact
      *
@@ -1919,53 +1900,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     protected function getCrossReferenceFactory() {
         return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-    }
-
-    /**
-     * Get the cross references from/to this artifact.
-     *
-     * Note: the direction of cross references is not returned
-     *
-     * @return array of references info to be sent in soap format: array('ref' => ..., 'url' => ...)
-     */
-    public function getCrossReferencesSOAPValues() {
-         $soap_value = array();
-         $cross_reference_factory = $this->getCrossReferenceFactory();
-         $cross_reference_factory->fetchDatas();
-
-         $cross_references = $cross_reference_factory->getFormattedCrossReferences();
-         foreach ($cross_references as $array_of_references_by_direction) {
-             foreach ($array_of_references_by_direction as $reference) {
-                $soap_value[] = array(
-                    'ref' => $reference['ref'],
-                    'url' => $reference['url'],
-                );
-             }
-         }
-         return $soap_value;
-    }
-
-    public function getSoapValue(PFUser $user) {
-        $soap_artifact = array();
-        if ($this->userCanView($user)) {
-            $last_changeset = $this->getLastChangeset();
-
-            $soap_artifact['artifact_id']      = $this->getId();
-            $soap_artifact['tracker_id']       = $this->getTrackerId();
-            $soap_artifact['submitted_by']     = $this->getSubmittedBy();
-            $soap_artifact['submitted_on']     = $this->getSubmittedOn();
-            $soap_artifact['cross_references'] = $this->getCrossReferencesSOAPValues();
-            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
-
-            $soap_artifact['value'] = array();
-            foreach ($this->getFormElementFactory()->getUsedFieldsForSoap($this->getTracker()) as $field) {
-                $value = $field->getSoapValue($user, $last_changeset);
-                if ($value !== null) {
-                    $soap_artifact['value'][] = $value;
-                }
-            }
-        }
-        return $soap_artifact;
     }
 
     /**

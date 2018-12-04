@@ -144,14 +144,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($list_1->diff($list_2));
         $this->assertFalse($list_2->diff($list_1));
     }
-
-    public function testSoapValue() {
-        $value_list = $this->getChangesetValueArtifactLink(
-            array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999),
-            array()
-        );
-        $this->assertEqual($value_list->getSoapValue($this->user), array('value' => "123, 321, 999"));
-    }
 }
 
 class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends TuleapTestCase {

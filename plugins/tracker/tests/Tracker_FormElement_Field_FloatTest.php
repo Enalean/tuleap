@@ -100,11 +100,6 @@ class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
         $this->assertTrue($f->isValid($a, null));
     }
 
-    function testSoapAvailableValues() {
-        $f = new Tracker_FormElement_Field_FloatTestVersion();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     function testGetFieldData() {
         $f = new Tracker_FormElement_Field_FloatTestVersion();
         $this->assertEqual('3.14159', $f->getFieldData('3.14159'));

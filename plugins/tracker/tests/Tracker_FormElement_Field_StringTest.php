@@ -134,11 +134,6 @@ class Tracker_FormElement_Field_StringTest extends TuleapTestCase
         $this->assertFalse($string->isValid($artifact, 'Tuleap'));
     }
 
-    function testSoapAvailableValues() {
-        $f = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->assertNull($f->getSoapAvailableValues());
-    }
-
     function testGetFieldData() {
         $f = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertEqual('this is a string value', $f->getFieldData('this is a string value'));

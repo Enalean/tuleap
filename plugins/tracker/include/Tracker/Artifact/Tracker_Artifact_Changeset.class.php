@@ -772,40 +772,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         return $this->id;
     }
 
-    public function exportCommentToSOAP() {
-        $comment = $this->getComment();
-        if ($comment) {
-            $soap = $this->getSoapMetadata();
-            return $comment->exportToSOAP($soap);
-        }
-    }
-
-    private function getSoapMetadata() {
-        $soap = array(
-            'submitted_by' => $this->getSubmittedBy(),
-            'email'        => $this->getEmailForUndefinedSubmitter(),
-            'submitted_on' => $this->getSubmittedOn(),
-        );
-        return $soap;
-    }
-
-    public function getSoapValue(PFUser $user) {
-        $soap    = $this->getSoapMetadata();
-        $comment = $this->getComment();
-        if (! $comment) {
-            $comment = new Tracker_Artifact_Changeset_CommentNull($this);
-        }
-        $soap['last_comment'] = $comment->getSoapValue();
-        $factory = $this->getFormElementFactory();
-        foreach ($this->getValueDao()->searchById($this->id) as $row) {
-            $field = $factory->getFieldById($row['field_id']);
-            if ($field && $field->isCompatibleWithSoap()) {
-                $soap['fields'][] = $field->getSoapValue($user, $this);
-            }
-        }
-        return $soap;
-    }
-
     public function getRESTValue(PFUser $user, $fields) {
         $comment = $this->getComment();
         if (! $comment) {
@@ -871,12 +837,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item {
         }
 
         return array_filter($values);
-    }
-
-    private function getEmailForUndefinedSubmitter() {
-        if (! $this->getSubmittedBy()) {
-            return $this->getEmail();
-        }
     }
 
     /**
