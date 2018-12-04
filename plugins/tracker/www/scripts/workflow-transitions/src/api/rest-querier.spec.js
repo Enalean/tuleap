@@ -17,64 +17,117 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { restore, rewire$patch } from "tlp-fetch";
+import { restore, rewire$patch, rewire$post } from "tlp-fetch";
 import {
+    createTransition,
     createWorkflowTransitions,
     resetWorkflowTransitions,
     updateTransitionRulesEnforcement
 } from "../api/rest-querier.js";
 
 describe("Rest queries:", () => {
-    let patch;
-    let json_result = {};
-
-    beforeEach(() => {
-        patch = jasmine.createSpy("patch");
-        patch.and.returnValue(
-            Promise.resolve({
-                json: () => json_result
-            })
-        );
-        rewire$patch(patch);
-    });
-
     afterEach(restore);
 
-    describe("createWorkflowTransitions()", () => {
+    describe("for PATCH actions:", () => {
+        let patch;
+        let json_result = {};
+
         beforeEach(() => {
-            createWorkflowTransitions(1, 9);
+            patch = jasmine.createSpy("patch");
+            patch.and.returnValue(
+                Promise.resolve({
+                    json: () => json_result
+                })
+            );
+            rewire$patch(patch);
         });
 
-        it("calls PATCH", () =>
-            expect(patch).toHaveBeenCalledWith(
-                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D"
-            ));
+        describe("createWorkflowTransitions()", () => {
+            beforeEach(() => {
+                createWorkflowTransitions(1, 9);
+            });
+
+            it("calls api tracker", () =>
+                expect(patch).toHaveBeenCalledWith(
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22field_id%22%3A9%7D%7D%7D"
+                ));
+        });
+
+        describe("resetWorkflowTransitions()", () => {
+            beforeEach(() => {
+                resetWorkflowTransitions(1);
+            });
+
+            it("calls api tracker", () =>
+                expect(patch).toHaveBeenCalledWith(
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D"
+                ));
+        });
+
+        describe("updateTransitionRulesEnforcement()", () => {
+            let returned_value;
+
+            beforeEach(async () => {
+                return (returned_value = await updateTransitionRulesEnforcement(1, true));
+            });
+
+            it("calls PATCH", () =>
+                expect(patch).toHaveBeenCalledWith(
+                    "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22is_used%22%3Atrue%7D%7D%7D"
+                ));
+            it("returns PATCH response", () => {
+                expect(returned_value).toBe(json_result);
+            });
+        });
     });
 
-    describe("resetWorkflowTransitions()", () => {
+    describe("for POST actions", () => {
+        let post;
+        const new_transition = {
+            id: 4,
+            from_id: 2,
+            to_id: 3
+        };
+        const headers = {
+            "content-type": "application/json"
+        };
+
         beforeEach(() => {
-            resetWorkflowTransitions(1);
+            post = jasmine.createSpy("post");
+            post.and.returnValue(
+                Promise.resolve({
+                    json: () => new_transition
+                })
+            );
+            rewire$post(post);
         });
 
-        it("calls PATCH", () =>
-            expect(patch).toHaveBeenCalledWith(
-                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22delete_transitions_rules%22%3Atrue%7D%7D"
-            ));
-    });
+        describe("createTransition()", () => {
+            let response;
+            beforeEach(async () => {
+                response = await createTransition(1, 2, 3);
+            });
 
-    describe("updateTransitionRulesEnforcement()", () => {
-        let returned_value;
+            it("calls api tracker_workflow_transitions", () => {
+                expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
+                    headers,
+                    body: '{"tracker_id":1,"from_id":2,"to_id":3}'
+                });
+            });
+            it("returns created transition", () => expect(response).toEqual(new_transition));
 
-        beforeEach(async () => {
-            return (returned_value = await updateTransitionRulesEnforcement(1, true));
-        });
+            describe("when transition source is new artifact", () => {
+                beforeEach(async () => {
+                    response = await createTransition(1, null, 3);
+                });
 
-        it("calls PATCH", () =>
-            expect(patch).toHaveBeenCalledWith(
-                "/api/trackers/1?query=%7B%22workflow%22%3A%7B%22set_transitions_rules%22%3A%7B%22is_used%22%3Atrue%7D%7D%7D"
-            ));
-        it("returns PATCH response", () => {
-            expect(returned_value).toBe(json_result);
+                it("send 0 as from_id", () => {
+                    expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
+                        headers,
+                        body: '{"tracker_id":1,"from_id":0,"to_id":3}'
+                    });
+                });
+            });
         });
     });
 });

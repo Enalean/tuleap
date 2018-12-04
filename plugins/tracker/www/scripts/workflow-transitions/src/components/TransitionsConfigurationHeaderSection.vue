@@ -118,7 +118,7 @@ export default {
     },
 
     computed: {
-        ...mapState(["current_tracker", "is_operation_running", "is_rules_enforcement_running"]),
+        ...mapState(["is_operation_running", "is_rules_enforcement_running"]),
         ...mapGetters(["workflow_field_label", "are_transition_rules_enforced"]),
         advanced_configuration_tooltip() {
             return this.$gettext(

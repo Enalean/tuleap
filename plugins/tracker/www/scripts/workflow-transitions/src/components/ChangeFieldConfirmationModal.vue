@@ -60,19 +60,20 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "ChangeFieldConfirmationModal",
 
     computed: {
-        ...mapState(["current_tracker", "is_operation_running"])
+        ...mapState(["is_operation_running"]),
+        ...mapGetters(["current_tracker_id"])
     },
 
     methods: {
         confirm() {
             this.$store
-                .dispatch("resetWorkflowTransitionsField", this.current_tracker.id)
+                .dispatch("resetWorkflowTransitionsField", this.current_tracker_id)
                 .then(() => {
                     const feedback_box = document.getElementById("feedback");
                     const feedback_section_content = document.createElement("section");

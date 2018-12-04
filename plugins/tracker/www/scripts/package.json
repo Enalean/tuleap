@@ -31,6 +31,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.27",
     "angular-mocks": "^1.7.4",
     "gulp": "^3.9.1",
     "gulp-angular-gettext": "^2.2.0"

@@ -19,6 +19,7 @@
 
 import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
 import {
+    saveNewTransition,
     loadTracker,
     resetWorkflowTransitionsField,
     saveWorkflowTransitionsField,
@@ -26,6 +27,7 @@ import {
 } from "./actions.js";
 import {
     restore as restore$RestQuerier,
+    rewire$createTransition,
     rewire$createWorkflowTransitions,
     rewire$getTracker,
     rewire$resetWorkflowTransitions,
@@ -83,9 +85,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                state: {
-                    current_tracker: { id: 1 }
-                }
+                getters: { current_tracker_id: 1 }
             };
             createWorkflowTransitions = jasmine.createSpy("createWorkflowTransitions");
             rewire$createWorkflowTransitions(createWorkflowTransitions);
@@ -111,7 +111,10 @@ describe("Store actions:", () => {
         let resetWorkflowTransitions;
 
         beforeEach(() => {
-            context = { ...context, state: { current_tracker: { id: 1 } } };
+            context = {
+                ...context,
+                getters: { current_tracker_id: 1 }
+            };
             resetWorkflowTransitions = jasmine.createSpy("resetWorkflowTransitions");
             rewire$resetWorkflowTransitions(resetWorkflowTransitions);
         });
@@ -140,7 +143,7 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                state: { current_tracker: { id: 1 } }
+                getters: { current_tracker_id: 1 }
             };
             updateTransitionRulesEnforcement = jasmine.createSpy(
                 "updateTransitionRulesEnforcement"
@@ -179,6 +182,41 @@ describe("Store actions:", () => {
                 expect(getErrorMessage).toHaveBeenCalledWith(exception));
             it("fails operations with extracted message", () =>
                 expect(context.commit).toHaveBeenCalledWith("failOperation", "error message"));
+        });
+    });
+
+    describe("saveNewTransition()", () => {
+        let createTransition;
+
+        beforeEach(() => {
+            context = {
+                ...context,
+                state: { current_tracker: { workflow: { transitions: [{ id: 1 }] } } },
+                getters: { current_tracker_id: 1 }
+            };
+            createTransition = jasmine.createSpy("createTransition");
+            rewire$createTransition(createTransition);
+        });
+
+        describe("when transition creation is successful", () => {
+            beforeEach(async () => {
+                createTransition.and.returnValue(Promise.resolve({ id: 2 }));
+                await saveNewTransition(context, {
+                    from_id: 3,
+                    to_id: 9
+                });
+            });
+
+            it("begins a new operation", () =>
+                expect(context.commit).toHaveBeenCalledWith("beginOperation"));
+            it("creates transition", () => expect(createTransition).toHaveBeenCalledWith(1, 3, 9));
+            it("add new transition in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("addTransition", {
+                    id: 2,
+                    from_id: 3,
+                    to_id: 9
+                }));
+            it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
 });

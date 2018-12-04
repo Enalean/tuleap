@@ -28,6 +28,8 @@ export default {
     },
     beginOperation(state) {
         state.is_operation_running = true;
+        state.is_operation_failed = false;
+        state.operation_failure_message = null;
     },
     endOperation(state) {
         state.is_operation_running = false;
@@ -65,6 +67,16 @@ export default {
     endTransitionRulesEnforcement() {
         state.is_operation_running = false;
         state.is_rules_enforcement_running = false;
+    },
+
+    addTransition(state, transition) {
+        state.current_tracker = {
+            ...state.current_tracker,
+            workflow: {
+                ...state.current_tracker.workflow,
+                transitions: [...state.current_tracker.workflow.transitions, transition]
+            }
+        };
     },
 
     resetState(state) {
