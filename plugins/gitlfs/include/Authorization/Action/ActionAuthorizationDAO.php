@@ -20,6 +20,7 @@
 
 namespace Tuleap\GitLFS\Authorization\Action;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class ActionAuthorizationDAO extends DataAccessObject
@@ -39,6 +40,17 @@ class ActionAuthorizationDAO extends DataAccessObject
                 'object_oid'      => $oid,
                 'object_size'     => $size
             ]
+        );
+    }
+
+    public function searchExistingOIDsForAuthorizedActionByExpirationAndOIDs($current_time, array $oids)
+    {
+        $condition = EasyStatement::open()->with('expiration_date >= ?', $current_time)->andIn('object_oid IN (?*)', $oids);
+        return $this->getDB()->column(
+            "SELECT DISTINCT object_oid
+            FROM plugin_gitlfs_authorization_action
+            WHERE $condition",
+            $condition->values()
         );
     }
 

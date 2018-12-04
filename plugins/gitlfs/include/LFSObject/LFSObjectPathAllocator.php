@@ -25,9 +25,26 @@ class LFSObjectPathAllocator
     /**
      * @return string
      */
+    public function getBasePathForSaveInProgressObject()
+    {
+        return 'ongoing-save/';
+    }
+
+    /**
+     * @return string
+     */
     public function getPathForSaveInProgressObject(\GitRepository $repository, LFSObject $lfs_object)
     {
-        return 'ongoing-save/' . $lfs_object->getOID()->getValue() . '/' . $repository->getId() . '/' . \bin2hex(\random_bytes(32));
+        return $this->getBasePathForSaveInProgressObject() .
+            $lfs_object->getOID()->getValue() . '/' . $repository->getId() . '/' . \bin2hex(\random_bytes(32));
+    }
+
+    /**
+     * @return string
+     */
+    public function getBasePathForReadyToBeAvailableObject()
+    {
+        return 'ready/';
     }
 
     /**
@@ -35,7 +52,8 @@ class LFSObjectPathAllocator
      */
     public function getPathForReadyToBeAvailableObject(\GitRepository $repository, LFSObject $lfs_object)
     {
-        return 'ready/' . $lfs_object->getOID()->getValue() . '/' . $repository->getId();
+        return $this->getBasePathForReadyToBeAvailableObject() .
+            $lfs_object->getOID()->getValue() . '/' . $repository->getId();
     }
 
     /**

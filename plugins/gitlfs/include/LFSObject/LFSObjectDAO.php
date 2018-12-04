@@ -78,4 +78,33 @@ class LFSObjectDAO extends DataAccessObject
                 WHERE plugin_gitlfs_object.object_oid = ?';
         $this->getDB()->run($sql, $repository_id, $oid_value);
     }
+
+    public function deleteUnusableReferences()
+    {
+        $this->getDB()->run("
+            DELETE plugin_gitlfs_object_repository.*
+            FROM plugin_gitlfs_object_repository
+            LEFT JOIN plugin_git ON (plugin_git.repository_id = plugin_gitlfs_object_repository.repository_id)
+            LEFT JOIN `groups` ON (`groups`.group_id = plugin_git.project_id)
+            WHERE `groups`.status = 'D' OR plugin_git.repository_id IS NULL OR `groups`.group_id IS NULL;
+        ");
+    }
+
+    /**
+     * @return array
+     */
+    public function searchUnusedObjects()
+    {
+        return $this->getDB()->run('
+            SELECT plugin_gitlfs_object.*
+            FROM plugin_gitlfs_object
+            LEFT JOIN plugin_gitlfs_object_repository ON (plugin_gitlfs_object_repository.object_id = plugin_gitlfs_object.id)
+            WHERE plugin_gitlfs_object_repository.object_id IS NULL
+        ');
+    }
+
+    public function deleteObjectByID($id)
+    {
+        $this->getDB()->delete('plugin_gitlfs_object', ['id' => $id]);
+    }
 }

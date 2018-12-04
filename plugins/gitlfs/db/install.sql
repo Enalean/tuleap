@@ -6,7 +6,8 @@ CREATE TABLE plugin_gitlfs_authorization_action (
   action_type VARCHAR(16) NOT NULL,
   object_oid CHAR(64) NOT NULL,
   object_size INT(11) UNSIGNED NOT NULL,
-  INDEX idx_expiration_date (expiration_date)
+  INDEX idx_expiration_date (expiration_date),
+  INDEX idx_object_id (object_oid)
 );
 
 CREATE TABLE plugin_gitlfs_object (
