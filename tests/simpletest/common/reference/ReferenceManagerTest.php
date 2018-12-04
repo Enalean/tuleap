@@ -130,6 +130,37 @@ class ReferenceManagerTest extends TuleapTestCase {
         $this->assertEqual($matches[0]['key'], 'wiki');
         $this->assertEqual($matches[0]['project_name'], 'project:');
         $this->assertEqual($matches[0]['value'], 'page/subpage&amp;toto&tutu');
+
+        $matches = $this->rm->_extractAllMatches('Merge &#039;ref #12784&#039; into stable/master');
+        $this->assertCount($matches, 1);
+        $this->assertEqual($matches[0]['key'], 'ref');
+        $this->assertEqual($matches[0]['value'], '12784');
+
+        $matches = $this->rm->_extractAllMatches('Merge &#039;ref #12784&#039; for doc #123');
+        $this->assertCount($matches, 2);
+        $this->assertEqual($matches[0]['key'], 'ref');
+        $this->assertEqual($matches[0]['value'], '12784');
+        $this->assertEqual($matches[1]['key'], 'doc');
+        $this->assertEqual($matches[1]['value'], '123');
+
+        $matches = $this->rm->_extractAllMatches('Merge &#x27;ref #12784&#x27; for doc #123');
+        $this->assertCount($matches, 2);
+        $this->assertEqual($matches[0]['key'], 'ref');
+        $this->assertEqual($matches[0]['value'], '12784');
+        $this->assertEqual($matches[1]['key'], 'doc');
+        $this->assertEqual($matches[1]['value'], '123');
+
+        $matches = $this->rm->_extractAllMatches('Merge &quot;ref #12784&quot; for doc #123');
+        $this->assertCount($matches, 2);
+        $this->assertEqual($matches[0]['key'], 'ref');
+        $this->assertEqual($matches[0]['value'], '12784');
+        $this->assertEqual($matches[1]['key'], 'doc');
+        $this->assertEqual($matches[1]['value'], '123');
+
+        $matches = $this->rm->_extractAllMatches('See ref #12784.');
+        $this->assertCount($matches, 1);
+        $this->assertEqual($matches[0]['key'], 'ref');
+        $this->assertEqual($matches[0]['value'], '12784');
     }
 
     function test_updateProjectReferenceShortName() {
@@ -179,6 +210,43 @@ class ReferenceManagerTest extends TuleapTestCase {
             $post_encoding = mb_detect_encoding($decoded, 'UTF-8,ISO-8859-15');
             $this->assertEqual($post_encoding, 'ISO-8859-15');
         }
+    }
+
+    public function itInsertsLinkForReferences()
+    {
+        $reference_dao                = \Mockery::mock(ReferenceDao::class);
+        $data_access_result_reference = \Mockery::mock(\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface::class);
+        $data_access_result_reference->shouldReceive('getRow')->andReturns(
+            [
+                'id' => 1,
+                'keyword' => 'myref',
+                'description' => 'description',
+                'link' => '/link=$1',
+                'scope' => 'P',
+                'service_short_name' => '',
+                'nature' => 'other',
+                'is_active' => true,
+                'group_id' => 102
+            ],
+            false
+        );
+        $reference_dao->shouldReceive('searchActiveByGroupID')->andReturns($data_access_result_reference);
+        $reference_dao->shouldReceive('getSystemReferenceNatureByKeyword')->andReturnFalse();
+        $this->rm->setReturnValue('_getReferenceDao', $reference_dao);
+
+        $html = 'myref #123';
+        $this->rm->insertReferences($html, 102);
+        $this->assertEqual(
+            $html,
+            '<a href="http:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>'
+        );
+
+        $html = 'Text &#x27;myref #123&#x27; end text';
+        $this->rm->insertReferences($html, 102);
+        $this->assertEqual(
+            $html,
+            'Text &#x27;<a href="http:///goto?key=myref&val=123&group_id=102" title="description" class="cross-reference">myref #123</a>&#x27; end text'
+        );
     }
 
     public function itInsertsLinkForMentionAtTheBeginningOfTheString() {
