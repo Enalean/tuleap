@@ -73,17 +73,6 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
     }
 
     /**
-     * Returns the SOAP value of this changeset value
-     *
-     * @param PFUser $user
-     *
-     * @return string The value of this artifact changeset value for Soap API
-     */
-    public function getSoapValue(PFUser $user)
-    {
-    }
-
-    /**
      * Return the REST value of this changeset value
      *
      * @param PFUser $user

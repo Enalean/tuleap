@@ -93,7 +93,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '<textarea></textarea>';
     }
 
-    public function getSOAPAvailableValues()
+    public function getRESTAvailableValues()
     {
         return null;
     }
@@ -104,11 +104,6 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     }
 
     public function canBeUsedAsReportColumn()
-    {
-        return false;
-    }
-
-    public function isCompatibleWithSoap()
     {
         return false;
     }

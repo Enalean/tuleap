@@ -93,7 +93,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return '<ol><li><span>First step definition</span> <span class="label">passed</span></li></ol>';
     }
 
-    public function getSOAPAvailableValues()
+    public function getRESTAvailableValues()
     {
         return null;
     }
