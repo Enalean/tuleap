@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <h1 v-bind:class="title_class">{{ folder_title }}</h1>
+        <folder-header v-bind:folder_id="folder_id"/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-else>
             <empty-folder v-if="is_folder_empty"/>
@@ -30,6 +30,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 
+import FolderHeader from "./FolderHeader.vue";
 import FolderLoadingScreen from "./FolderLoadingScreen.vue";
 import FolderContent from "./FolderContent.vue";
 import EmptyFolder from "./EmptyState/EmptyFolder.vue";
@@ -37,21 +38,17 @@ import EmptyFolder from "./EmptyState/EmptyFolder.vue";
 export default {
     name: "FolderView",
     components: {
+        FolderHeader,
         EmptyFolder,
         FolderLoadingScreen,
         FolderContent
     },
+    props: {
+        folder_id: Number
+    },
     computed: {
-        ...mapState(["is_loading_folder", "is_loading_ascendant_hierarchy"]),
-        ...mapGetters(["is_folder_empty", "current_folder_title"]),
-        title_class() {
-            return this.is_loading_ascendant_hierarchy
-                ? "tlp-skeleton-text document-folder-title-loading"
-                : "";
-        },
-        folder_title() {
-            return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
-        }
+        ...mapState(["is_loading_folder"]),
+        ...mapGetters(["is_folder_empty"])
     }
 };
 </script>

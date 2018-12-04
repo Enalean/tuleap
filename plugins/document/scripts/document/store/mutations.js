@@ -29,7 +29,8 @@ export {
     resetAscendantHierarchy,
     beginLoadingAscendantHierarchy,
     stopLoadingAscendantHierarchy,
-    appendFolderToAscendantHierarchy
+    appendFolderToAscendantHierarchy,
+    setRootId
 };
 
 function saveFolderContent(state, folder_content) {
@@ -84,4 +85,8 @@ function setFolderLoadingError(state, message) {
 
 function appendFolderToAscendantHierarchy(state, folder) {
     state.current_folder_ascendant_hierarchy.push(folder);
+}
+
+function setRootId(state, root_id) {
+    state.root_id = root_id;
 }

@@ -29,6 +29,9 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
+msgid "Name, description..."
+msgstr ""
+
 msgid "New document"
 msgstr ""
 

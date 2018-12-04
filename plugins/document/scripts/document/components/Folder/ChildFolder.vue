@@ -21,7 +21,7 @@
 
 <template>
     <div class="tlp-framed" v-if="! does_folder_have_any_error">
-        <folder-view/>
+        <folder-view v-bind:folder_id="folder_id"/>
     </div>
 </template>
 
@@ -33,7 +33,10 @@ export default {
     name: "ChildFolder",
     components: { FolderView },
     computed: {
-        ...mapGetters(["does_folder_have_any_error"])
+        ...mapGetters(["does_folder_have_any_error"]),
+        folder_id() {
+            return this.$route.params.item_id;
+        }
     },
     watch: {
         $route(to) {
