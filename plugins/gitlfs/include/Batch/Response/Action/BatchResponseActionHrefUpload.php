@@ -44,6 +44,6 @@ final class BatchResponseActionHrefUpload implements BatchResponseActionHref
      */
     public function getHref()
     {
-        return $this->server_url . '/git-lfs/objects/' . urlencode($this->object->getOID()->getValue());
+        return $this->server_url . '/uploads/git-lfs/objects/' . urlencode($this->object->getOID()->getValue());
     }
 }

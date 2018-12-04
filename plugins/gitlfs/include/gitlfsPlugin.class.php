@@ -74,6 +74,17 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
+        $event->getRouteCollector()->put('/uploads/git-lfs/objects/{oid:[a-fA-F0-9]{64}}', function () {
+            return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
+                $this->getLFSActionUserAccessRequestChecker(),
+                new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
+                new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
+                    $this->getFilesystem(),
+                    new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                    new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
+                )
+            );
+        });
         $event->getRouteCollector()->addGroup('/git-lfs', function (FastRoute\RouteCollector $r) {
             $r->get('/objects/{oid:[a-fA-F0-9]{64}}', function () {
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
@@ -81,17 +92,6 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     $this->getFilesystem(),
                     new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
-                );
-            });
-            $r->put('/objects/{oid:[a-fA-F0-9]{64}}', function () {
-                return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
-                    $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
-                    new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
-                        $this->getFilesystem(),
-                        new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
-                        new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
-                    )
                 );
             });
             $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
