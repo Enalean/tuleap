@@ -1,5 +1,6 @@
 import { element } from "angular";
 import { map } from "lodash";
+import { escaper } from "../../../../../../../../src/www/scripts/tuleap/escaper.js";
 
 export default EditKanbanCtrl;
 
@@ -37,18 +38,38 @@ function EditKanbanCtrl(
     self.adding_column = false;
     self.deleting_column = false;
     self.new_column_label = "";
+
+    const sanitized_kanban_label = escaper.html(self.kanban.tracker.label);
+
     const tracker_link = `<a class="edit-kanban-title-tracker-link" href="/plugins/tracker/?tracker=${
         self.kanban.tracker.id
-    }">${self.kanban.tracker.label}</a>`;
+    }">${sanitized_kanban_label}</a>`;
+
     self.title_tracker_link = gettextCatalog.getString("Based on the {{ trackerLink }} tracker.", {
         trackerLink: tracker_link
     });
-    self.info_tracker_link =
+
+    const info_tracker_link =
         "<a href='/plugins/tracker/?tracker=" +
         self.kanban.tracker.id +
         "'>" +
-        self.kanban.tracker.label +
+        sanitized_kanban_label +
         "</a>";
+
+    self.column_config_info = gettextCatalog.getString(
+        "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
+        {
+            trackerLink: info_tracker_link
+        }
+    );
+
+    self.column_config_cannot_manage_info = gettextCatalog.getString(
+        "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.",
+        {
+            trackerLink: info_tracker_link
+        }
+    );
+
     self.old_kanban_label = self.kanban.label;
     self.select2_options = {
         placeholder: gettextCatalog.getString("Select tracker reports"),

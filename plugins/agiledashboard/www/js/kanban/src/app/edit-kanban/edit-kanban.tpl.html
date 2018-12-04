@@ -35,19 +35,13 @@
         <h2 class="tlp-modal-subtitle edit-modal-section-header"><i class="fa fa-fw fa-columns"></i> <span translate>Columns configuration</span></h2>
         <div class="edit-kanban-column-configuration">
             <p class="tlp-alert-warning edit-modal-text"
-                ng-if="! edit_modal.columnsCanBeManaged()"
-                translate
-                translate-params-tracker-link="edit_modal.info_tracker_link"
-            >
-                You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
-            </p>
+               ng-if="! edit_modal.columnsCanBeManaged()"
+               ng-bind-html="edit_modal.column_config_cannot_manage_info"
+            ></p>
             <p class="tlp-text-info"
                 ng-if="edit_modal.columnsCanBeManaged()"
-                translate
-                translate-params-tracker-link="edit_modal.info_tracker_link"
-            >
-                More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker.
-            </p>
+                ng-bind-html="edit_modal.column_config_info"
+            ></p>
             <div class="edit-kanban-column-list">
                 <div data-nodrag="true" class="edit-kanban-backlog-column">
                     <i class="fa fa-fw fa-inbox"></i> <span translate>Backlog</span>

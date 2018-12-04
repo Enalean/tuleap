@@ -150,7 +150,7 @@ msgstr ""
 msgid "MM/DD"
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 
@@ -246,7 +246,7 @@ msgstr ""
 msgid "You are disconnected from real time. Please reload your page."
 msgstr ""
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "You can't manage columns of the tracker configuration. More information about columns are available in the field administration used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 

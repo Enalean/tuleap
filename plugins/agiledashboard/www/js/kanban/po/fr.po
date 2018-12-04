@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.2\n"
 
 #: src/app/kanban-filtered-updated-alert/kanban-filtered-updated-alert.tpl.html
 msgid ""
@@ -44,9 +44,9 @@ msgstr "Archive"
 msgid "Backlog"
 msgstr "Backlog"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid "Based on the {{ trackerLink }} tracker."
-msgstr "Basé sur l’outil de suivi {{ trackerLink }}."
+msgstr "Basé sur l’outil de suivi {{ tracker_link }}."
 
 #: src/app/edit-kanban/edit-kanban.tpl.html src/app/error-modal/error.tpl.html
 msgid "Cancel"
@@ -165,14 +165,14 @@ msgstr "Dernière année"
 msgid "MM/DD"
 msgstr "DD/MM"
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid ""
 "More information about columns are available in the field administration "
 "used by the semantic status in the {{ trackerLink }} tracker."
 msgstr ""
 "Plus d’informations concernant les colonnes sont disponibles dans "
 "l’administration du champ utilisé par la sémantique de statut dans l’outil "
-"de suivi {{ trackerLink }}."
+"de suivi {{ tracker_link }}."
 
 #: src/app/kanban-item/kanban-item.tpl.html
 msgid "Move to bottom"
@@ -279,7 +279,7 @@ msgstr "Rapports de l'outil de suivi"
 msgid "You are disconnected from real time. Please reload your page."
 msgstr "Vous êtes déconnecté du temps réel. Rechargez votre page."
 
-#: src/app/edit-kanban/edit-kanban.tpl.html
+#: src/app/edit-kanban/edit-kanban-controller.js
 msgid ""
 "You can't manage columns of the tracker configuration. More information "
 "about columns are available in the field administration used by the semantic "
@@ -287,7 +287,7 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas gérer les colonnes. Plus d’informations concernant les "
 "colonnes sont disponibles dans l’administration du champ utilisé par la "
-"sémantique de statut dans l’outil de suivi {{ trackerLink }}."
+"sémantique de statut dans l’outil de suivi {{ tracker_link }}."
 
 #: src/app/kanban.tpl.html
 msgid "You have reached the work in progress limit for this column!"
