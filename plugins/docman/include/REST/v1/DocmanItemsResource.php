@@ -31,7 +31,7 @@ use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use UserManager;
+use Tuleap\REST\UserManager;
 
 class DocmanItemsResource extends AuthenticatedResource
 {
@@ -44,7 +44,7 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * @var UserManager
      */
-    private $user_manager;
+    private $rest_user_manager;
     /**
      * @var DocmanItemsRequestBuilder
      */
@@ -52,9 +52,9 @@ class DocmanItemsResource extends AuthenticatedResource
 
     public function __construct()
     {
-        $this->user_manager    = UserManager::instance();
-        $this->item_dao        = new Docman_ItemDao();
-        $this->request_builder = new DocmanItemsRequestBuilder($this->user_manager, ProjectManager::instance());
+        $this->rest_user_manager = UserManager::build();
+        $this->item_dao          = new Docman_ItemDao();
+        $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
     }
 
     /**
@@ -70,8 +70,6 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @url    GET {id}
      *
-     * @access protected
-     *
      * @param int $id Id of the folder
      *
      * @return ItemRepresentation
@@ -86,17 +84,9 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->sendAllowHeaders();
 
         $items_request = $this->request_builder->buildFromItemId($id);
-        $item_factory  = $items_request->getFactory();
         $item          = $items_request->getItem();
 
-        $representation_visitor = new ItemRepresentationVisitor(
-            new ItemRepresentationBuilder(
-                $this->item_dao,
-                $this->user_manager,
-                $item_factory
-            ),
-            new \Docman_VersionFactory()
-        );
+        $representation_visitor = $this->getItemRepresentationVisitor($items_request);
 
         return $item->accept($representation_visitor);
     }
@@ -114,8 +104,6 @@ class DocmanItemsResource extends AuthenticatedResource
      * Get the content of a folder
      *
      * @url    GET {id}/docman_items
-     *
-     * @access protected
      *
      * @param int $id     Id of the folder
      * @param int $offset Position of the first element to display {@from path}{@min 0}
@@ -164,8 +152,6 @@ class DocmanItemsResource extends AuthenticatedResource
      * Then sorted parents of Item are Folder A > Folder
      *
      * @url    GET {id}/parents
-     *
-     * @access protected
      *
      * @param int $id     Id of the item
      * @param int $offset Position of the first element to display {@from path}{@min 0}
@@ -236,15 +222,24 @@ class DocmanItemsResource extends AuthenticatedResource
         return new ItemRepresentationCollectionBuilder(
             $items_request->getFactory(),
             $this->getDocmanPermissionManager($items_request->getProject()),
-            new ItemRepresentationVisitor(
-                new ItemRepresentationBuilder(
-                    $this->item_dao,
-                    $this->user_manager,
-                    $items_request->getFactory()
-                ),
-                new \Docman_VersionFactory()
-            ),
+            $this->getItemRepresentationVisitor($items_request),
             $this->item_dao
+        );
+    }
+
+    /**
+     *
+     * @return ItemRepresentationVisitor
+     */
+    private function getItemRepresentationVisitor(DocmanItemsRequest $items_request)
+    {
+        return new ItemRepresentationVisitor(
+            new ItemRepresentationBuilder(
+                $this->item_dao,
+                \UserManager::instance(),
+                $items_request->getFactory()
+            ),
+            new \Docman_VersionFactory()
         );
     }
 }

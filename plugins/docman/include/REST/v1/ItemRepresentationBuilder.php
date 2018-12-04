@@ -23,13 +23,12 @@ namespace Tuleap\Docman\REST\v1;
 use Docman_ItemDao;
 use Docman_ItemFactory;
 use Project;
-use Tuleap\Document\Items\ItemDao;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 class ItemRepresentationBuilder
 {
     /**
-     * @var ItemDao
+     * @var Docman_ItemDao
      */
     private $dao;
     /**
