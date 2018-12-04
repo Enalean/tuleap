@@ -153,6 +153,8 @@
             # allow simple line-oriented macros
             # 'macros',
 
+        # Git LFS
+            'git-lfs-authenticate',
     ],
 
 );
