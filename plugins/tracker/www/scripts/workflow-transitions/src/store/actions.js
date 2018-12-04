@@ -22,7 +22,8 @@ import {
     createWorkflowTransitions as restCreateWorkflowTransitions,
     getTracker,
     resetWorkflowTransitions as restResetWorkflowTransitions,
-    updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement
+    updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement,
+    deleteTransition as restDeleteTransition
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exceptionHandler.js";
 
@@ -97,6 +98,19 @@ export async function createTransition(context, transition) {
             ...transition
         };
         context.commit("addTransition", new_transition);
+    } catch (exception) {
+        const error_message = await getErrorMessage(exception);
+        context.commit("failOperation", error_message);
+    } finally {
+        context.commit("endOperation");
+    }
+}
+
+export async function deleteTransition(context, transition) {
+    try {
+        context.commit("beginOperation");
+        await restDeleteTransition(transition.id);
+        context.commit("deleteTransition", transition);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
         context.commit("failOperation", error_message);

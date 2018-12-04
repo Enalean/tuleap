@@ -38,8 +38,10 @@
         ></div>
         <template v-else-if="transition">
             <div
-                class="tracker-workflow-transition-mark tracker-workflow-transition-action-disabled"
-                data-test-type="transition-mark"
+                class="tracker-workflow-transition-mark"
+                v-bind:class="{ 'tracker-workflow-transition-action-disabled': is_another_operation_running }"
+                data-test-action="delete-transition"
+                v-on:click="is_another_operation_running || deleteTransition()"
             >
                 ⤴
             </div>
@@ -100,6 +102,15 @@ export default {
                     to_id: this.to.id
                 };
                 await this.$store.dispatch("createTransition", new_transition);
+            } finally {
+                this.is_operation_running = false;
+            }
+        },
+
+        async deleteTransition() {
+            this.is_operation_running = true;
+            try {
+                await this.$store.dispatch("deleteTransition", this.transition);
             } finally {
                 this.is_operation_running = false;
             }

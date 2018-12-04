@@ -15,13 +15,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import "tlp-mocks";
+let transition_id_offset = 0;
 
-import "./api/rest-querier.spec.js";
-import "./components/TransitionMatrixContent.spec.js";
-
-import "./store/actions.spec.js";
-import "./store/exceptionHandler.spec.js";
-import "./store/mutations.spec.js";
+export function createATransition(attributes) {
+    return {
+        id: transition_id_offset++,
+        from_id: 1,
+        to_id: 2,
+        ...attributes
+    };
+}

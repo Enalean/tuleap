@@ -24,6 +24,7 @@ import {
     resetWorkflowTransitions,
     updateTransitionRulesEnforcement
 } from "../api/rest-querier.js";
+import { createATransition } from "../support/factories.js";
 
 describe("Rest queries:", () => {
     afterEach(restore);
@@ -83,11 +84,7 @@ describe("Rest queries:", () => {
 
     describe("for POST actions", () => {
         let post;
-        const new_transition = {
-            id: 4,
-            from_id: 2,
-            to_id: 3
-        };
+        const new_transition = createATransition();
         const headers = {
             "content-type": "application/json"
         };

@@ -21,14 +21,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, patch, post } from "tlp-fetch";
+import { del, get, patch, post } from "tlp-fetch";
 
 export {
     getTracker,
     createWorkflowTransitions,
     updateTransitionRulesEnforcement,
     resetWorkflowTransitions,
-    createTransition
+    createTransition,
+    deleteTransition
 };
 
 async function getTracker(tracker_id) {
@@ -76,4 +77,8 @@ async function createTransition(tracker_id, from_id, to_id) {
 
     const response = await post("/api/tracker_workflow_transitions", { headers, body });
     return response.json();
+}
+
+async function deleteTransition(transition_id) {
+    await del(`/api/tracker_workflow_transitions/${transition_id}`);
 }
