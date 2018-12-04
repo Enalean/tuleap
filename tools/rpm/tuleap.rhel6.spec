@@ -205,6 +205,15 @@ Integration of git distributed software configuration management tool together
 with Tuleap.
 This package is integrated with gitolite v3 (new version)
 
+%package plugin-gitlfs
+Summary: Support of large file upload and download in Git
+Version: @@PLUGIN_GITLFS_VERSION@@
+Release: @@VERSION@@_@@RELEASE@@%{?dist}
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git-gitolite3, sudo
+Group: Development/Tools
+%description plugin-gitlfs
+%{summary}.
+
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
 Version: @@PLUGIN_PULLREQUEST_VERSION@@
@@ -526,7 +535,6 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/prometheus_metrics
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tuleap_synchro
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/project_ownership
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/gitlfs
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/document
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/crosstracker
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
@@ -658,6 +666,11 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 #codendiadm > gitolite sudo
 %{__install} plugins/git/etc/sudoers.d/gitolite $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
 %{__perl} -pi -e "s~%libbin_dir%~%{APP_LIBBIN_DIR}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite
+
+# Plugin gitlfs
+%{__install} plugins/gitlfs/etc/sudoers.d/tuleap_gitlfs_authenticate $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitlfs_authenticate
+%{__install} -m 755 -d $RPM_BUILD_ROOT/usr/share/gitolite3/commands/
+%{__ln_s} %{APP_DIR}/plugins/gitlfs/bin/git-lfs-authenticate $RPM_BUILD_ROOT/usr/share/gitolite3/commands/git-lfs-authenticate
 
 # Plugin PullRequest
 %{__install} plugins/pullrequest/etc/logrotate.syslog.dist $RPM_BUILD_ROOT/etc/logrotate.d/tuleap_pullrequest
@@ -1183,6 +1196,12 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
+
+%files plugin-gitlfs
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/gitlfs
+%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitlfs_authenticate
+/usr/share/gitolite3/commands/git-lfs-authenticate
 
 %files plugin-pullrequest
 %defattr(-,root,root,-)
