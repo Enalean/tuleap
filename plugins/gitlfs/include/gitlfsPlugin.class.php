@@ -68,6 +68,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(CollectGitRoutesEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
+        $this->addHook('project_is_deleted');
 
         return parent::getHooksAndCallbacks();
     }
@@ -180,8 +181,30 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function dailyCleanup()
     {
-        $current_time                 = new \DateTimeImmutable();
-        $action_authorization_remover = new ActionAuthorizationRemover(new ActionAuthorizationDAO());
+        $this->cleanUnusedResources();
+    }
+
+    public function project_is_deleted($params) // phpcs:ignore
+    {
+        $this->cleanUnusedResources();
+    }
+
+    private function cleanUnusedResources()
+    {
+        $current_time       = new \DateTimeImmutable();
+        $filesystem         = $this->getFilesystem();
+        $path_allocator     = new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator();
+        $lfs_object_remover = new \Tuleap\GitLFS\LFSObject\LFSObjectRemover(
+            new \Tuleap\GitLFS\LFSObject\LFSObjectDAO(),
+            $filesystem,
+            $path_allocator
+        );
+        $lfs_object_remover->removeDanglingObjects();
+        $action_authorization_remover = new ActionAuthorizationRemover(
+            new ActionAuthorizationDAO(),
+            $filesystem,
+            $path_allocator
+        );
         $action_authorization_remover->deleteExpired($current_time);
         $user_authorization_remover = new UserAuthorizationRemover(new UserAuthorizationDAO());
         $user_authorization_remover->deleteExpired($current_time);
