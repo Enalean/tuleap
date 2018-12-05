@@ -1284,4 +1284,24 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function countArtifactsRegisteredBefore($timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+
+        $sql = "SELECT count(*) AS nb FROM tracker_artifact WHERE submitted_on >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
+    public function countArtifacts()
+    {
+        $sql = "SELECT count(*) AS nb FROM tracker_artifact";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
 }

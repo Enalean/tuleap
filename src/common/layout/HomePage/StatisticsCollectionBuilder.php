@@ -21,6 +21,7 @@
 namespace Tuleap\layout\HomePage;
 
 use DateTime;
+use EventManager;
 use ForgeConfig;
 use UserManager;
 
@@ -34,11 +35,16 @@ class StatisticsCollectionBuilder
      * @var UserManager
      */
     private $user_manager;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
-    public function __construct(\ProjectManager $project_manager, UserManager $user_manager)
+    public function __construct(\ProjectManager $project_manager, UserManager $user_manager, EventManager $event_manager)
     {
         $this->project_manager = $project_manager;
-        $this->user_manager = $user_manager;
+        $this->user_manager    = $user_manager;
+        $this->event_manager   = $event_manager;
     }
 
     public function build()
@@ -52,6 +58,9 @@ class StatisticsCollectionBuilder
 
             $collection->addStatistic(_('Projects'), $this->countAllProjects(), $this->countProjectRegisteredLastMonth($timestamp));
             $collection->addStatistic(_('Users'), $this->countAllUsers(), $this->countUsersRegisteredLastMonth($timestamp));
+
+            $event = new StatisticsCollectionCollector($collection, $timestamp);
+            $this->event_manager->processEvent($event);
         }
 
         return $collection;
