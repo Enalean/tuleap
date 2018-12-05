@@ -24,6 +24,7 @@ use Tuleap\BotMattermost\Controller\AdminController;
 use Tuleap\BurningParrotCompatiblePageEvent;
 
 require_once 'constants.php';
+require_once 'autoload.php';
 
 class BotMattermostPlugin extends Plugin
 {
