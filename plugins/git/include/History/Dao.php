@@ -51,7 +51,7 @@ class Dao extends DataAccessObject
 
         $filter->with("day BETWEEN DATE_FORMAT(?, '%Y%m%d') AND DATE_FORMAT(?, '%Y%m%d')", $start_date, $end_date);
         if (! empty($project_id)) {
-            $filter->andWith('AND project_id = ?', $project_id);
+            $filter->andWith('project_id = ?', $project_id);
         }
 
         $sql = "SELECT DATE_FORMAT(day, '%M') AS month,
