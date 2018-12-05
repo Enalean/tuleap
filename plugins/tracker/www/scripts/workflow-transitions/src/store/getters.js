@@ -30,7 +30,7 @@ export const workflow_field_label = state => {
 
 export const are_transition_rules_enforced = state => {
     if (!state.current_tracker) {
-        return false;
+        return null;
     }
 
     return Boolean(parseInt(state.current_tracker.workflow.is_used, 10));

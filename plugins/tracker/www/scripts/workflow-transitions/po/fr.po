@@ -72,6 +72,12 @@ msgstr ""
 msgid "Tracker cannot be loaded"
 msgstr "Le tracker ne peut pas être chargé"
 
+msgid "Transition rules are currently applied."
+msgstr "Les règles de transitions sont actives."
+
+msgid "Transition rules don't apply yet."
+msgstr "Les règles de transitions ne sont pas encore appliquées."
+
 msgid "Transitions based field"
 msgstr "Champ sur lequel les transitions sont basées"
 

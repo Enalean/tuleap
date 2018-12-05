@@ -19,6 +19,21 @@
 
 <template>
     <div>
+        <div v-if="are_transition_rules_enforced === true"
+             key="enforcement_enabled"
+             v-translate
+             class="tlp-alert-success"
+        >
+            Transition rules are currently applied.
+        </div>
+        <div v-if="are_transition_rules_enforced === false"
+             key="enforcement_disabled"
+             v-translate
+             class="tlp-alert-warning"
+        >
+            Transition rules don't apply yet.
+        </div>
+
         <div v-if="is_current_tracker_load_failed" v-translate class="tlp-alert-danger">
             Tracker cannot be loaded
         </div>
@@ -51,7 +66,7 @@
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "BaseTrackerWorflowTransitions",
@@ -76,6 +91,7 @@ export default {
             "is_operation_failed",
             "operation_failure_message"
         ]),
+        ...mapGetters(["are_transition_rules_enforced"]),
         is_tracker_available() {
             return !this.is_current_tracker_loading && this.current_tracker;
         },

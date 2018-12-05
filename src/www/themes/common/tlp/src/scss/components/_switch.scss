@@ -23,7 +23,14 @@ $tlp-switch-background: #cbcbcb;
 $tlp-switch-button-background: #ffffff;
 $tlp-switch-button-width: 38px;
 $tlp-switch-button-padding: 1px;
+$tlp-switch-button-slider-margin: 1px;
+$tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-padding + $tlp-switch-button-slider-margin);
 
+@keyframes tlp-switch-loading-spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 .tlp-switch-checkbox {
     visibility: hidden;
@@ -57,11 +64,11 @@ $tlp-switch-button-padding: 1px;
         content: '\f00c'; // fa-check
         display: block;
         position: absolute;
-        top: $tlp-switch-button-padding + 1px;
-        bottom: $tlp-switch-button-padding + 1px;
-        left: $tlp-switch-button-padding + 1px;
+        top: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
+        bottom: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
+        left: $tlp-switch-button-padding + $tlp-switch-button-slider-margin;
         width: $tlp-switch-button-width;
-        transition: left 200ms, color 200ms;
+        transition: left 200ms, color 200ms, width 200ms;
         border-radius: ($tlp-switch-height - (2 * $tlp-switch-button-padding)) / 2;
         background-color: $tlp-switch-button-background;
         color: #ffffff;
@@ -72,9 +79,23 @@ $tlp-switch-button-padding: 1px;
         text-align: center;
     }
 
+    &.loading {
+        &::before {
+            background: $tlp-switch-background;
+        }
+
+        &::after {
+            content: '\f110'; // fa-spinner
+            left: ($tlp-switch-width - $tlp-switch-button-spinner-size) / 2;
+            width: $tlp-switch-button-spinner-size;
+            height: $tlp-switch-button-spinner-size;
+            animation: tlp-switch-loading-spin 2s infinite linear;
+            color: $tlp-ui-dimmed;
+        }
+    }
 }
 
-.tlp-switch-checkbox:checked + .tlp-switch-button {
+.tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
     &::before {
         background-color: $tlp-ui-success;
     }

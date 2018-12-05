@@ -24,5 +24,6 @@ export default {
     is_operation_failed: false,
     operation_failure_message: null,
     is_operation_running: false,
+    is_rules_enforcement_running: false,
     is_workflow_creation_failed: false
 };
