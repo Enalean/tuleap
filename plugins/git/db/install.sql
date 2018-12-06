@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `remote_server_migration_status` ENUM("QUEUE", "DONE", "ERROR") NULL,
   `ci_token` TEXT NULL,
   PRIMARY KEY  (`repository_id`),
-  KEY `project_id` (`project_id`)
+  INDEX idx_project_repository(project_id, repository_id)
 );
 
 CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
@@ -69,7 +69,9 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `operation_type` varchar(64) NULL,
   `refname_type` varchar(64) NULL,
    INDEX `idx_repository_user`(`repository_id`, `user_id`),
-   INDEX `idx_push_date`(`push_date`));
+   INDEX `idx_push_date`(`push_date`),
+   INDEX idx_repository_date(repository_id, push_date)
+);
 
 CREATE TABLE IF NOT EXISTS `plugin_git_ci` (
 `job_id` INT(11) UNSIGNED NOT NULL,
