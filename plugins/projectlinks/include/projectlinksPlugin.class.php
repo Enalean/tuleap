@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet & Dave Kibble, 2007
@@ -25,7 +25,7 @@ use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\Admin\Navigation\NavigationItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 
-require_once('common/plugin/Plugin.class.php');
+require_once __DIR__ . '/../vendor/autoload.php';
 
 //=============================================================================
 class ProjectLinksPlugin extends Plugin {
