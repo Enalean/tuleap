@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,6 +40,8 @@ use Tuleap\Cron\EventCronJobEveryMinute;
 
 require_once 'autoload.php';
 require_once 'constants.php';
+require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.class.php';
+require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.class.php';
 
 class botmattermost_agiledashboardPlugin extends Plugin
 {
