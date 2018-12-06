@@ -32,6 +32,7 @@ use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\QueryParameterException;
 use Tuleap\REST\QueryParameterParser;
 use Tuleap\REST\UserManager as RestUserManager;
+use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
@@ -91,7 +92,9 @@ class UserResource extends AuthenticatedResource
             new TimetrackingUgroupRetriever(
                 new TimetrackingUgroupDao()
             )
-            ))
+            )),
+            new AdminDao(),
+            \ProjectManager::instance()
         );
 
         $paginated_times = $time_retriever->getPaginatedTimesForUserInTimePeriodByArtifact(

@@ -21,7 +21,10 @@
 namespace Tuleap\Timetracking\Time;
 
 use PFUser;
+use Project;
+use ProjectManager;
 use Tracker_Artifact;
+use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 
 class TimeRetriever
@@ -35,10 +38,22 @@ class TimeRetriever
      */
     private $permissions_retriever;
 
-    public function __construct(TimeDao $dao, PermissionsRetriever $permissions_retriever)
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var AdminDao
+     */
+    private $admin_dao;
+
+    public function __construct(TimeDao $dao, PermissionsRetriever $permissions_retriever, AdminDao $admin_dao, ProjectManager $project_manager)
     {
         $this->dao                   = $dao;
+        $this->admin_dao             = $admin_dao;
         $this->permissions_retriever = $permissions_retriever;
+        $this->project_manager       = $project_manager;
     }
 
     /**
@@ -61,6 +76,20 @@ class TimeRetriever
         return $times;
     }
 
+    /**
+     * @return Project[]
+     */
+    public function getProjectsWithTimetracking(PFUser $user, $limit, $offset)
+    {
+        $projects        = [];
+        foreach ($this->admin_dao->getProjectstWithEnabledTimetracking($limit, $offset) as $project_id) {
+            if ($user->isMember($project_id["group_id"])) {
+                $projects[] = $this->project_manager->getProject($project_id["group_id"]);
+            }
+        }
+
+        return $projects;
+    }
 
     /**
      * @return PaginatedTimes

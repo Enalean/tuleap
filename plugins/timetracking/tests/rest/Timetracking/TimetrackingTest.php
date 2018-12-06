@@ -299,6 +299,39 @@ class TimetrackingTest extends TimetrackingBase
         $this->getResponse($this->client->post('timetracking', null, $query), TimetrackingDataBuilder::USER_TESTER_NAME);
     }
 
+    public function testGetProjects()
+    {
+        $query = urlencode(
+            json_encode([
+                "with_time_tracking" => true
+            ])
+        );
+
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("projects?query=$query")
+        );
+        $projects = $response->json();
+        $this->assertTrue(count($projects) === 1);
+        $this->assertEquals($projects[0]["label"], "Timetracking");
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetProjectsRaiseException()
+    {
+        $query = urlencode(
+            json_encode([
+                "with_time_tracking" => false
+            ])
+        );
+
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $this->getResponse($this->client->get("projects?query=$query"));
+    }
+
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */

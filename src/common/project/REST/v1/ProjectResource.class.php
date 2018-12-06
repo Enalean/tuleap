@@ -63,10 +63,10 @@ use Tuleap\REST\v1\GitRepositoryListRepresentation;
 use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\MilestoneRepresentationBase;
 use Tuleap\REST\v1\OrderRepresentationBase;
-use Tuleap\Project\REST\v1\GetProjectsQueryChecker;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\Service\ServiceCreator;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
+use Tuleap\widget\Event\GetProjectsWithCriteria;
 use Tuleap\Widget\WidgetFactory;
 use UGroupBinding;
 use UGroupDao;
@@ -260,6 +260,9 @@ class ProjectResource extends AuthenticatedResource {
      *   <li>a property "with_status" to search projects the current user is member of with a specific status.
      *     Example: <pre>{"with_status": "deleted"}</pre>
      *   </li>
+     *   <li>a property "with_time_tracking" to search projects with enabled timetracking.
+     *     Example: <pre>{"with_time_tracking": true}</pre>
+     *   </li>
      * </ul>
      * </p>
      *
@@ -375,12 +378,17 @@ class ProjectResource extends AuthenticatedResource {
                 $offset,
                 $limit
             );
-        } else {
+        } else if (isset($json_query['is_member_of'])) {
             return $this->project_manager->getMyProjectsForREST(
                 $user,
                 $offset,
                 $limit
             );
+        } else {
+            $get_projects = new GetProjectsWithCriteria($json_query, $limit, $offset);
+            $this->event_manager->processEvent($get_projects);
+
+            return $get_projects->getProjectsWithCriteria();
         }
     }
 
