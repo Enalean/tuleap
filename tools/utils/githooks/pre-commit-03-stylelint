@@ -1,20 +1,12 @@
 #!/bin/bash
-# scss-lint pre-commit hook for git
-readonly COMMIT_INTRODUCING_SCSS_LINT='52932af06d42759ce16f98d2bc363a3afd0a8b37'
+# stylelint pre-commit hook for git
+readonly COMMIT_INTRODUCING_STYLELINT='19f2a12f2eb8d5925637352727df7d51892b06f3'
 readonly TMP_STAGING_DIR=$(mktemp -d)
 
 cleanup_temporary_directory() {
     rm -rf "${TMP_STAGING_DIR}"
 }
 trap cleanup_temporary_directory EXIT
-
-check_scss_lint_presence() {
-    hash scss-lint 2>/dev/null || {
-        echo "scss-lint not found or executable"
-        echo "See https://github.com/brigade/scss-lint for scss-lint setup instructions"
-        exit 1
-    };
-}
 
 get_list_of_files() {
     git diff --cached --name-only --diff-filter=ACMRTUXB | grep \.scss$
@@ -46,7 +38,7 @@ is_file_more_recent_than_scss_coding_rule() {
     then
         echo 1
     else
-        git merge-base --is-ancestor "${initial_file_commit}" ${COMMIT_INTRODUCING_SCSS_LINT}
+        git merge-base --is-ancestor "${initial_file_commit}" ${COMMIT_INTRODUCING_STYLELINT}
         echo $?
     fi
 }
@@ -66,21 +58,26 @@ get_list_of_mandatory_scss_files() {
 }
 
 main() {
-    check_scss_lint_presence
-
     local files_list
     files_list=$(get_list_of_files)
     local files_scss_mandatory
     files_scss_mandatory=$(get_list_of_mandatory_scss_files "${files_list}")
-    echo ${files_scss_mandatory}
     if [[ -n ${files_scss_mandatory} ]]
     then
-        local scss_lint_output
-        scss_lint_output=$(scss-lint ${files_scss_mandatory})
+        local stylelint_output
+        stylelint_output=$(npm run stylelint --silent -- ${files_scss_mandatory})
         local status=$?
         if [ ${status} -ne 0 ]
         then
-            echo "$scss_lint_output" | less
+            echo "$stylelint_output" | less
+            local formatted_files=$(tr '\n' ' ' <<< $files_list)
+            local error_message="
+You can run the following command to let stylelint fix a part of the errors for you:
+
+npm run stylelint --silent -- --fix $formatted_files
+
+"
+            printf "$error_message"
         fi
 
         cleanup_temporary_directory

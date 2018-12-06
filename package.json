@@ -28,7 +28,6 @@
     "gulp-concat": "^2.6.0",
     "gulp-rev": "^7.1.2",
     "gulp-sass": "^4.0.1",
-    "gulp-scss-lint": "^0.4.0",
     "http-server": "^0.11.1",
     "jasmine-core": "^3.2.1",
     "jasmine-fixture": "^2.0.0",
@@ -49,6 +48,9 @@
     "raw-loader": "^0.5.1",
     "read-pkg": "2.0.0",
     "run-sequence": "^2.2.1",
+    "stylelint": "^9.9.0",
+    "stylelint-config-property-sort-order-smacss": "^4.0.1",
+    "stylelint-config-sass-guidelines": "^5.3.0",
     "vue-eslint-parser": "^3.2.2",
     "vue-loader": "^15.4.2",
     "webpack": "^4.20.2",
@@ -63,8 +65,8 @@
     "eslint": "eslint --config .eslintrc.js --no-eslintrc --report-unused-disable-directives",
     "js": "gulp js",
     "sass": "gulp sass",
-    "scss-lint": "gulp scss-lint",
     "watch": "gulp watch",
-    "prettier": "prettier --config .prettierrc --ignore-path .eslintignore"
+    "prettier": "prettier --config .prettierrc --ignore-path .eslintignore",
+    "stylelint": "stylelint --config .stylelintrc.js --syntax scss --ignore-path .stylelintignore"
   }
 }

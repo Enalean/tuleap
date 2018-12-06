@@ -1,5 +1,23 @@
+/*
+ * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 var gulp = require("gulp");
-var scss_lint = require("gulp-scss-lint");
 var sass = require("gulp-sass");
 var rev = require("gulp-rev");
 var path = require("path");
@@ -87,25 +105,6 @@ function cleanAndBuildSass(sass_task_name, base_dir, scss_hash, dependent_tasks)
     });
 }
 
-function lintSass(lint_sass_task_name, base_dir, scss_hash) {
-    gulp.task(lint_sass_task_name, function(callback) {
-        Object.keys(scss_hash.themes).forEach(function(theme) {
-            return pump(
-                gulp.src(scss_hash.themes[theme].files, { cwd: base_dir }),
-                scss_lint({
-                    config: ".scss-lint.yml"
-                }),
-                function(err) {
-                    if (err) {
-                        callback(err);
-                    }
-                }
-            );
-        });
-    });
-}
-
 module.exports = {
-    lintSass: lintSass,
     cleanAndBuildSass: cleanAndBuildSass
 };

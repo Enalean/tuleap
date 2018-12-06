@@ -1,0 +1,7 @@
+**/assets/*
+**/dist/*
+**/coverage/*
+**/node_modules/*
+**/vendor/*
+src/www/themes/common/tlp/src/fonts/font-awesome-4.7.0/
+src/www/scripts/select2/select2.scss
