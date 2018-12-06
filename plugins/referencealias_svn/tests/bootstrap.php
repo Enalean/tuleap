@@ -19,5 +19,4 @@
  */
 
 require_once __DIR__ . '/../../svn/include/svnPlugin.class.php';
-require_once __DIR__ . '/../include/autoload.php';
-require_once __DIR__ .'/../include/constants.php';
+require_once __DIR__ . '/../include/referencealias_svnPlugin.class.php';

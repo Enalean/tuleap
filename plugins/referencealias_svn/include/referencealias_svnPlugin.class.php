@@ -19,7 +19,7 @@
  */
 
 require_once __DIR__.'/../../svn/include/svnPlugin.class.php';
-require_once 'autoload.php';
+require_once __DIR__. '/../vendor/autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasSVN\Dao;
@@ -32,7 +32,7 @@ use Tuleap\SVN\Dao as SVNPluginDao;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;
 use Tuleap\SVN\SvnLogger;
-use Tuleap\SVN\XMLImporterException;
+use Tuleap\SVN\XMLRepositoryImporter;
 
 class referencealias_svnPlugin extends Plugin //phpcs:ignore
 {
