@@ -76,7 +76,6 @@ class GraphOnTrackersV5Plugin extends Plugin
             $this->addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
 
             $this->addHook('javascript_file');
-            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
         }
         $this->allowedForProject = array();
@@ -262,23 +261,18 @@ class GraphOnTrackersV5Plugin extends Plugin
 
     public function cssFile()
     {
-        if ($this->canIncludeStylsheets()) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
+        if ($this->canIncludeStylesheets()) {
+            $include_assets = new IncludeAssets(
+                __DIR__ . '/../www/themes/default/assets',
+                GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+            );
+            echo '<link rel="stylesheet" type="text/css" href="' . $include_assets->getFileURL('style.css') . '" />';
         }
     }
 
-    public function burning_parrot_get_stylesheets(array $params)
+    private function canIncludeStylesheets()
     {
-        if ($this->canIncludeStylsheets()) {
-            $params['stylesheets'][] = $this->getThemePath().'/css/style.css';
-        }
-    }
-
-    private function canIncludeStylsheets()
-    {
-        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
+        return strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL . '/') === 0;
     }
 
     function graphontrackersv5_load_chart_factories($params) {

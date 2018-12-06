@@ -335,7 +335,6 @@ class trackerPlugin extends Plugin {
 
         if ($include_tracker_css_file ||
             strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            $this->isInDashboard() ||
             $this->isInTrackerGlobalAdmin()
         ) {
             $theme_include_assets    = new IncludeAssets(
@@ -351,7 +350,7 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/admin-nature.js"></script>'.PHP_EOL;
         }
-        if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
+        if ($this->currentRequestIsForPlugin()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
     }

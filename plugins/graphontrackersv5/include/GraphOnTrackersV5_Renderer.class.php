@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
 
@@ -129,7 +130,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         if ($in_dashboard) {
             $html .= $this->fetchAdditionalButton($this->report->getTracker());
         }
-        $this->includeJavascriptDependencies();
         $html .= $this->fetchCharts($user, $in_dashboard, $readonly, $store_in_session);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
@@ -386,13 +386,24 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         return 'fa fa-bar-chart-o';
     }
 
-    private function includeJavascriptDependencies()
+    public function getJavascriptDependencies()
     {
         $include_assets = new IncludeAssets(
             __DIR__ . '/../../../src/www/assets/graphontrackersv5/scripts',
             '/assets/graphontrackersv5/scripts'
         );
-        /** @var \Tuleap\Layout\BaseLayout */
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('graphontrackersv5.js'));
+        return [
+            ['file' => $include_assets->getFileURL('graphontrackersv5.js')]
+        ];
+    }
+
+    /** @return \Tuleap\Layout\CssAssetCollection */
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../www/themes/default/assets',
+            GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+        );
+        return new \Tuleap\Layout\CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'style')]);
     }
 }

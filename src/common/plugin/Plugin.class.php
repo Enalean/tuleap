@@ -379,11 +379,6 @@ class Plugin implements PFO_Plugin {
         return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0;
     }
 
-    protected function currentRequestIsForDashboards() {
-        return strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
-               strpos($_SERVER['REQUEST_URI'], '/my') === 0;
-    }
-
     protected function removeOrphanWidgets(array $names)
     {
         $dao = new \Tuleap\Dashboard\Widget\DashboardWidgetDao(

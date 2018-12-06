@@ -5,16 +5,8 @@
             "files": [
                 "www/themes/default/css/style.scss"
             ],
-            "target_dir": "www/themes/default/css"
-        },
-        "FlamingParrot": {
-            "files": [
-                "www/themes/FlamingParrot/css/style.scss"
-            ],
-            "includes": [
-                "../../src/www/themes/FlamingParrot/css/utils"
-            ],
-            "target_dir": "www/themes/FlamingParrot/css"
+            "target_dir": "www/themes/default/assets",
+            "is_revisioned": true
         }
     },
     "components": [

@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\Layout\CssAssetCollection;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 
 require_once('data-access/GraphOnTrackersV5_ChartFactory.class.php');
@@ -211,5 +213,14 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         return [
             ['file' => $include_assets->getFileURL('graphontrackersv5.js')]
         ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $include_assets = new IncludeAssets(
+            __DIR__ . '/../www/themes/default/assets',
+            GRAPH_ON_TRACKERS_V5_URL . '/themes/default/assets'
+        );
+        return new CssAssetCollection([new CssAssetWithoutVariantDeclinaisons($include_assets, 'style')]);
     }
 }
