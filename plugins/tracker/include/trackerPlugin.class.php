@@ -22,6 +22,7 @@ use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
@@ -87,8 +88,8 @@ use Tuleap\Tracker\Webhook\Actions\WebhookEditController;
 use Tuleap\Tracker\Webhook\Actions\WebhookURLValidator;
 use Tuleap\Tracker\Webhook\WebhookDao;
 use Tuleap\Tracker\Webhook\WebhookFactory;
-use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
+use Tuleap\Tracker\Workflow\WorkflowTransitionController;
 use Tuleap\User\History\HistoryRetriever;
 use Tuleap\User\User_ForgeUserGroupPermissionsFactory;
 use Tuleap\Widget\Event\GetPublicAreas;
@@ -219,6 +220,7 @@ class trackerPlugin extends Plugin {
 
         $this->addHook(GlyphLocationsCollector::NAME);
         $this->addHook(HeartbeatsEntryCollection::NAME);
+        $this->addHook(StatisticsCollectionCollector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1027,7 +1029,7 @@ class trackerPlugin extends Plugin {
     }
     public function plugin_statistics_service_usage($params) {
 
-        $dao             = new Tracker_ArtifactDao();
+        $dao = $this->getArtifactDao();
 
         $start_date      = strtotime($params['start_date']);
         $end_date        = strtotime($params['end_date']);
@@ -1513,7 +1515,7 @@ class trackerPlugin extends Plugin {
     public function collect_heartbeats_entries(HeartbeatsEntryCollection $collection)
     {
         $collector = new LatestHeartbeatsCollector(
-            new Tracker_ArtifactDao(),
+            $this->getArtifactDao(),
             $this->getArtifactFactory(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             $this->getUserManager(),
@@ -1758,5 +1760,22 @@ class trackerPlugin extends Plugin {
 
         $paginated_projects = new PaginatedProjects($project_with_tracker_administration, $total_size);
         $event->setPaginatedProjects($paginated_projects);
+    }
+
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
+    {
+        $collector->addStatistics(
+            dgettext('tuleap-tracker', 'Artifacts'),
+            $this->getArtifactDao()->countArtifacts(),
+            $this->getArtifactDao()->countArtifactsRegisteredBefore($collector->getTimestamp())
+        );
+    }
+
+    /**
+     * @return Tracker_ArtifactDao
+     */
+    private function getArtifactDao()
+    {
+        return new Tracker_ArtifactDao();
     }
 }

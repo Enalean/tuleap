@@ -546,7 +546,8 @@ CREATE TABLE tracker_artifact(
   INDEX idx_tracker_id (tracker_id),
   INDEX idx_my (submitted_by, tracker_id, last_changeset_id),
   INDEX idx_id_changeset_id(id, last_changeset_id),
-  INDEX idx_changeset_tracker(last_changeset_id, tracker_id)
+  INDEX idx_changeset_tracker(last_changeset_id, tracker_id),
+  INDEX idx_submitted_on(submitted_on)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS plugin_tracker_artifact_pending_removal;

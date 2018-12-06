@@ -124,6 +124,9 @@ msgid "Artifact was moved from '%s' tracker in '%s' project."
 msgstr ""
 "Cet artéfact a été déplacé depuis l'outil de suivi '%s' du projet '%s'."
 
+msgid "Artifacts"
+msgstr "Artéfacts"
+
 msgid "Artifacts deletion"
 msgstr "Suppression d'artéfacts"
 

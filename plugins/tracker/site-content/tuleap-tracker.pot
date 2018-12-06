@@ -97,6 +97,9 @@ msgstr ""
 msgid "Artifact was moved from '%s' tracker in '%s' project."
 msgstr ""
 
+msgid "Artifacts"
+msgstr ""
+
 msgid "Artifacts deletion"
 msgstr ""
 
