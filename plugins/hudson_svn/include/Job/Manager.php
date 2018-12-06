@@ -20,8 +20,8 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
-use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVN\Repository\RepositoryManager;
 use Valid_UInt;
 use Project;
 use SVNPathsUpdater;
@@ -34,7 +34,7 @@ class Manager {
     private $path_updater;
 
     /**
-     * @var Tuleap\Svn\Repository\RepositoryManager
+     * @var Tuleap\SVN\Repository\RepositoryManager
      */
     private $repository_manager;
 

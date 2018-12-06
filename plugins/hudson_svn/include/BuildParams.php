@@ -20,8 +20,8 @@
 
 namespace Tuleap\HudsonSvn;
 
-use Tuleap\Svn\Commit\CommitInfo;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Commit\CommitInfo;
+use Tuleap\SVN\Repository\Repository;
 
 class BuildParams
 {

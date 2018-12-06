@@ -20,11 +20,11 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\AccessControl\AccessFileHistory;
-use Tuleap\Svn\Admin\ImmutableTag;
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Repository\HookConfig;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\AccessControl\AccessFileHistory;
+use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\Repository\HookConfig;
+use Tuleap\SVN\Repository\Repository;
 
 class FullRepositoryRepresentation extends RepositoryRepresentation
 {

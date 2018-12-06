@@ -21,12 +21,12 @@
 namespace Tuleap\SVN\REST\v1;
 
 use PFUser;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Repository\HookConfigRetriever;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\SvnPermissionManager;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Repository\HookConfigRetriever;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\SvnPermissionManager;
 
 class RepositoryRepresentationBuilder
 {

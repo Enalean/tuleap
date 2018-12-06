@@ -20,15 +20,15 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\ImmutableTag;
-use Tuleap\Svn\Admin\ImmutableTagCreator;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Repository\HookConfigUpdator;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\Settings;
+use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Admin\ImmutableTagCreator;
+use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Repository\HookConfigUpdator;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\Settings;
 
 class RepositoryResourceUpdater
 {

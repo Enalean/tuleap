@@ -1,0 +1,11 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\SVN\\": ["include/", "include/SVN/"]
+    },
+    "classmap": ["include/"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

@@ -20,10 +20,10 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\SVN\Repository\Repository;
 
 class NotificationUpdateChecker
 {

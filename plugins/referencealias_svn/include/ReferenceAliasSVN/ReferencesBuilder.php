@@ -20,9 +20,9 @@
 
 namespace Tuleap\ReferenceAliasSVN;
 
-use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\ReferenceAliasSVN\ReferencesImporter;
-use Tuleap\Svn\Reference\Reference;
+use Tuleap\SVN\Reference\Reference;
 use ReferenceInstance;
 use ProjectManager;
 use Project_NotFoundException;
@@ -31,7 +31,7 @@ class ReferencesBuilder
 {
 
     /**
-     * @var Tuleap\Svn\Repository\RepositoryManager
+     * @var Tuleap\SVN\Repository\RepositoryManager
      */
     private $repository_manager;
 

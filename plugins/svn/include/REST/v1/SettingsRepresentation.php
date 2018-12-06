@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\AccessControl\AccessFileHistory;
+use Tuleap\SVN\AccessControl\AccessFileHistory;
 
 class SettingsRepresentation implements SettingsRepresentationInterface
 {

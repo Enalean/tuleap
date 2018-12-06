@@ -21,10 +21,10 @@
 namespace Tuleap\SVN\REST\v1;
 
 use ProjectUGroup;
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\SVN\Repository\Repository;
 use TuleapTestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -69,8 +69,8 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->mail_notification_manager       = mock('Tuleap\Svn\Admin\MailNotificationManager');
-        $this->emails_to_be_notified_retriever = mock('Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever');
+        $this->mail_notification_manager       = mock('Tuleap\SVN\Admin\MailNotificationManager');
+        $this->emails_to_be_notified_retriever = mock('Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever');
 
         $this->notification_update_checker = new NotificationUpdateChecker(
             $this->mail_notification_manager,
@@ -85,7 +85,7 @@ class NotificationUpdateCheckerTest extends TuleapTestCase
         $this->user_group_project_member = mock('ProjectUGroup');
         stub($this->user_group_project_member)->getId()->returns(ProjectUGroup::PROJECT_MEMBERS);
 
-        $this->repository = mock('Tuleap\Svn\Repository\Repository');
+        $this->repository = mock('Tuleap\SVN\Repository\Repository');
         stub($this->repository)->getProject()->returns(aMockProject()->withId(101)->build());
     }
 

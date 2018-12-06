@@ -20,8 +20,8 @@
 
 namespace Tuleap\HudsonSvn;
 
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\Repository;
 use Tuleap\HudsonSvn\Job\Dao;
 use Tuleap\HudsonSvn\Job\Factory;
 use TemplateRenderer;

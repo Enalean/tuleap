@@ -32,14 +32,14 @@ use Tuleap\HudsonSvn\Job\Manager;
 use Tuleap\HudsonSvn\Job\Factory;
 use Tuleap\HudsonSvn\Job\Launcher;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Hooks\PostCommit;
-use Tuleap\Svn\Dao as SvnDao;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\SvnAdmin;
+use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Repository\Destructor;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Hooks\PostCommit;
+use Tuleap\SVN\Dao as SvnDao;
+use Tuleap\SVN\SvnLogger;
+use Tuleap\SVN\SvnAdmin;
 
 class hudson_svnPlugin extends Plugin {
 

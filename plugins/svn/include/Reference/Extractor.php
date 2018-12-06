@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,13 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Svn\Reference;
+namespace Tuleap\SVN\Reference;
 
 use Project;
 use SvnPlugin;
-use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RuleName;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\RuleName;
 
 class Extractor
 {
@@ -35,7 +35,8 @@ class Extractor
      */
     private $repository_manager;
 
-    public function __construct(RepositoryManager $repository_manager) {
+    public function __construct(RepositoryManager $repository_manager)
+    {
         $this->repository_manager = $repository_manager;
     }
 
@@ -62,7 +63,8 @@ class Extractor
         return new Reference($project, $repository, $keyword, $revision_id);
     }
 
-    private function getRegExp() {
+    private function getRegExp()
+    {
         return '#^(' . RuleName::PATTERN_REPOSITORY_NAME . ')/([0-9]+)$#';
     }
 }
