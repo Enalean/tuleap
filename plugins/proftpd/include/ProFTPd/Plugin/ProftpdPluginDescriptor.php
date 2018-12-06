@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ProftpdPluginInfo extends PluginFileInfo {
+namespace Tuleap\ProFTPd\Plugin;
 
-    function __construct($plugin) {
-        parent::__construct($plugin, 'config');
-        $this->setPluginDescriptor(new ProftpdPluginDescriptor());
+use PluginDescriptor;
+
+class ProftpdPluginDescriptor extends PluginDescriptor
+{
+
+    public function __construct()
+    {
+        parent::__construct(
+            dgettext('tuleap-proftpd', 'Proftpd'),
+            false,
+            dgettext('tuleap-proftpd', 'Control and interfact with Proftpd as FTP server')
+        );
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
-
 }

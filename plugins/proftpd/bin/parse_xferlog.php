@@ -19,7 +19,7 @@
  */
 
 require_once 'pre.php';
-require_once __DIR__.'/../include/autoload.php';
+require_once __DIR__.'/../include/proftpdPlugin.class.php';
 
 $plugin_manager = PluginManager::instance();
 $plugin = $plugin_manager->getPluginByName('proftpd');
