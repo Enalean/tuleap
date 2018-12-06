@@ -84,6 +84,9 @@ msgstr "Exécution d'étapes"
 msgid "TestManagement config is not fully set up,"
 msgstr "La configuration de TestManagement est incomplète,"
 
+msgid "Tests executions"
+msgstr "Exécution de tests"
+
 msgid ""
 "The tracker is using a field \"Step definition\" that is only available in "
 "the context of Test Management. However this service is not enabled in the "

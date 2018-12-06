@@ -22,6 +22,7 @@ use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\XML\Export\ArchiveInterface;
@@ -100,6 +101,7 @@ class testmanagementPlugin extends Plugin
             $this->addHook(DisplayAdminFormElementsWarningsEvent::NAME);
             $this->addHook(TRACKER_EVENT_EXPORT_FULL_XML);
             $this->addHook(TRACKER_USAGE);
+            $this->addHook(StatisticsCollectionCollector::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -688,5 +690,15 @@ class testmanagementPlugin extends Plugin
         );
 
         return ! empty($used_step_definition_fields);
+    }
+
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
+    {
+        $dao = new Dao();
+        $collector->addStatistics(
+            dgettext('tuleap-testmanagement', 'Tests executions'),
+            $dao->countTestsExecutionsArtifacts(),
+            $dao->countTestExecutionsArtifactsRegisteredBefore($collector->getTimestamp())
+        );
     }
 }

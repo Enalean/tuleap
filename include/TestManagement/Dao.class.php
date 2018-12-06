@@ -32,6 +32,33 @@ class Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+
+    public function countTestsExecutionsArtifacts()
+    {
+        $sql = "SELECT count(*) AS nb
+                FROM plugin_testmanagement
+                INNER JOIN tracker_artifact
+                    ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
+    public function countTestExecutionsArtifactsRegisteredBefore($timestamp)
+    {
+        $timestamp = $this->da->escapeInt($timestamp);
+        $sql       = "SELECT count(*) AS nb
+                FROM plugin_testmanagement
+                INNER JOIN tracker_artifact
+                    ON plugin_testmanagement.test_execution_tracker_id = tracker_artifact.tracker_id
+                WHERE submitted_on >= $timestamp";
+
+        $row = $this->retrieve($sql)->getRow();
+
+        return $row['nb'];
+    }
+
     public function saveProjectConfig(
         $project_id,
         $campaign_tracker_id,
