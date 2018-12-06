@@ -786,4 +786,25 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->run($sql, $repository_id, $user_id);
     }
+
+    public function countRepositories()
+    {
+        $sql = "SELECT count(*) as nb
+                FROM plugin_git";
+
+        $res = $this->getDB()->single($sql);
+
+        return $res;
+    }
+
+    public function countRepositoriesRegisteredBefore($timestamp)
+    {
+        $sql = "SELECT count(*)
+                FROM plugin_git
+                WHERE UNIX_TIMESTAMP(repository_creation_date) > ?";
+
+        $res = $this->getDB()->single($sql, [$timestamp]);
+
+        return $res;
+    }
 }

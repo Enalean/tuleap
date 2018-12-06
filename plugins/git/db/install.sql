@@ -38,7 +38,8 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `remote_server_migration_status` ENUM("QUEUE", "DONE", "ERROR") NULL,
   `ci_token` TEXT NULL,
   PRIMARY KEY  (`repository_id`),
-  INDEX idx_project_repository(project_id, repository_id)
+  INDEX idx_project_repository(project_id, repository_id),
+  INDEX idx_repository_creation_date(repository_creation_date)
 );
 
 CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
