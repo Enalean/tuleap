@@ -235,7 +235,7 @@ use Tuleap\Layout\CssAssetCollection;
      */
     public function getStylesheetDependencies()
     {
-        return new CssAssetCollection();
+        return new CssAssetCollection([]);
     }
 
     public function setDashboardWidgetId($dashboard_widget_id)

@@ -99,7 +99,7 @@ abstract class BaseLayout extends Response
 
         $this->include_asset = new IncludeAssets(ForgeConfig::get('codendi_dir').'/src/www/assets', '/assets');
         $this->uri_sanitizer = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
-        $this->css_assets    = new CssAssetCollection();
+        $this->css_assets    = new CssAssetCollection([]);
     }
 
     abstract public function header(array $params);
@@ -110,12 +110,12 @@ abstract class BaseLayout extends Response
 
     public function addCssAsset(CssAsset $asset)
     {
-        $this->css_assets->add($asset);
+        $this->css_assets = $this->css_assets->merge(new CssAssetCollection([$asset]));
     }
 
-    public function addCssAssets(CssAssetCollection $collection)
+    public function addCssAssetCollection(CssAssetCollection $collection)
     {
-        $this->css_assets->merge($collection);
+        $this->css_assets = $this->css_assets->merge($collection);
     }
 
     /**

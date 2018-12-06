@@ -25,19 +25,30 @@ class CssAssetCollection
     /** @var CssAsset[] */
     private $css_assets = [];
 
-    public function add(CssAsset $asset)
+    /**
+     * @param CssAsset[] $css_assets
+     */
+    public function __construct(array $css_assets)
+    {
+        foreach ($css_assets as $asset) {
+            $this->addWithoutDuplicate($asset);
+        }
+    }
+
+    private function addWithoutDuplicate(CssAsset $asset)
     {
         if (! isset($this->css_assets[$asset->getPath()])) {
             $this->css_assets[$asset->getPath()] = $asset;
         }
     }
 
+    /**
+     * @return CssAssetCollection
+     */
     public function merge(CssAssetCollection $collection)
     {
-        $collection_assets = $collection->getDeduplicatedAssets();
-        foreach ($collection_assets as $asset) {
-            $this->add($asset);
-        }
+        $all_assets = array_merge($this->css_assets, $collection->getDeduplicatedAssets());
+        return new CssAssetCollection($all_assets);
     }
 
     /**

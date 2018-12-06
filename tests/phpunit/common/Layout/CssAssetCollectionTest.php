@@ -36,8 +36,6 @@ class CssAssetCollectionTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-
-        $this->collection = new CssAssetCollection();
     }
 
     public function testGetDeduplicatedAssets()
@@ -49,12 +47,10 @@ class CssAssetCollectionTest extends TestCase
         $asset_three = Mockery::mock(CssAsset::class);
         $asset_three->shouldReceive('getPath')->andReturns('assets/tuleap.css');
 
-        $this->collection->add($asset_one);
-        $this->collection->add($asset_two);
-        $this->collection->add($asset_three);
+        $collection = new CssAssetCollection([$asset_one, $asset_two, $asset_three]);
 
         $expected = [$asset_one, $asset_two];
-        $this->assertEquals($expected, $this->collection->getDeduplicatedAssets());
+        $this->assertEquals($expected, $collection->getDeduplicatedAssets());
     }
 
     public function testMerge()
@@ -68,16 +64,12 @@ class CssAssetCollectionTest extends TestCase
         $asset_four = Mockery::mock(CssAsset::class);
         $asset_four->shouldReceive('getPath')->andReturns('assets/widget/widget.css');
 
-        $this->collection->add($asset_one);
-        $this->collection->add($asset_two);
+        $collection       = new CssAssetCollection([$asset_one, $asset_two]);
+        $other_collection = new CssAssetCollection([$asset_three, $asset_four]);
 
-        $other_collection = new CssAssetCollection();
-        $other_collection->add($asset_three);
-        $other_collection->add($asset_four);
-
-        $this->collection->merge($other_collection);
+        $merged_collection = $collection->merge($other_collection);
 
         $expected = [$asset_one, $asset_two, $asset_four];
-        $this->assertEquals($expected, $this->collection->getDeduplicatedAssets());
+        $this->assertEquals($expected, $merged_collection->getDeduplicatedAssets());
     }
 }

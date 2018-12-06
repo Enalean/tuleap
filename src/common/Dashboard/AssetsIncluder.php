@@ -56,12 +56,12 @@ class AssetsIncluder
         }
 
         $is_unique_dependency_included = [];
-        $deduplicated_css_assets = new CssAssetCollection();
+        $deduplicated_css_assets = new CssAssetCollection([]);
         foreach ($current_dashboard->widget_lines as $line) {
             foreach ($line->widget_columns as $column) {
                 /** @var DashboardWidgetPresenter $widget */
                 foreach ($column->widgets as $widget) {
-                    $deduplicated_css_assets->merge($widget->stylesheet_dependencies);
+                    $deduplicated_css_assets = $deduplicated_css_assets->merge($widget->stylesheet_dependencies);
 
                     foreach ($widget->javascript_dependencies as $javascript) {
                         if (isset($javascript['unique-name'])) {
@@ -71,8 +71,10 @@ class AssetsIncluder
                             $is_unique_dependency_included[$javascript['unique-name']] = true;
                         }
                         if (isset($javascript['snippet'])) {
+                            /** @var \Tuleap\Layout\BaseLayout */
                             $GLOBALS['Response']->includeFooterJavascriptSnippet($javascript['snippet']);
                         } else {
+                            /** @var \Tuleap\Layout\BaseLayout */
                             $GLOBALS['Response']->includeFooterJavascriptFile($javascript['file']);
                         }
                     }
@@ -80,7 +82,8 @@ class AssetsIncluder
             }
         }
 
-        $GLOBALS['Response']->addCssAssets($deduplicated_css_assets);
+        /** @var \Tuleap\Layout\BaseLayout */
+        $GLOBALS['Response']->addCssAssetCollection($deduplicated_css_assets);
     }
 
     /**

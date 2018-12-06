@@ -74,7 +74,7 @@ class AssetsIncluderTest extends TestCase
     public function testItDoesNotIncludeDependenciesIfThereIsNoDashboard()
     {
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldNotReceive('addCssAssets');
+        $GLOBALS['Response']->shouldNotReceive('addCssAssetCollection');
 
         $this->includer->includeAssets([]);
     }
@@ -86,7 +86,7 @@ class AssetsIncluderTest extends TestCase
         $empty_dashboard->widget_lines = [];
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldReceive('addCssAssets')->once();
+        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$empty_dashboard]);
     }
@@ -96,7 +96,7 @@ class AssetsIncluderTest extends TestCase
         $dashboard = $this->getDashboardWithWidgets(['widget_without_dependencies']);
 
         $this->expectDependenciesScriptsWillNOTBeIncluded();
-        $GLOBALS['Response']->shouldReceive('addCssAssets')->once();
+        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$dashboard]);
     }
@@ -114,7 +114,7 @@ class AssetsIncluderTest extends TestCase
         $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_one')->ordered()->once();
         $GLOBALS['Response']->shouldReceive('includeFooterJavascriptFile')->with('dependency_four')->ordered()->once();
 
-        $GLOBALS['Response']->shouldReceive('addCssAssets')->once();
+        $GLOBALS['Response']->shouldReceive('addCssAssetCollection')->once();
 
         $this->includer->includeAssets([$dashboard]);
     }
