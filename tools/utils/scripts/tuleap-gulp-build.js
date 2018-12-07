@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 const gulp = require("gulp");
 const merge = require("merge2");
 const map = require("lodash.map");
@@ -57,7 +76,6 @@ function concat_core_js(files_hash, target_dir) {
 function declare_plugin_tasks(asset_dir) {
     const javascript_tasks = [];
     const sass_tasks = [];
-    const scss_lint_tasks = [];
     const all_plugins_tasks = [];
     const components_tasks = [];
 
@@ -113,9 +131,6 @@ function declare_plugin_tasks(asset_dir) {
         }
 
         if ("themes" in plugin) {
-            sass_builder.lintSass("scss-lint-" + name, base_dir, plugin);
-            scss_lint_tasks.push("scss-lint-" + name);
-
             var sass_task_name = "sass-" + name;
             sass_builder.cleanAndBuildSass(sass_task_name, base_dir, plugin);
 
@@ -132,7 +147,6 @@ function declare_plugin_tasks(asset_dir) {
     gulp.task("components-plugins", components_tasks);
     gulp.task("js-plugins", javascript_tasks);
     gulp.task("sass-plugins", sass_tasks);
-    gulp.task("scss-lint-plugins", scss_lint_tasks);
     gulp.task("plugins", callback => {
         const unique_plugins_task = all_plugins_tasks.filter(
             (value, index, array) => array.indexOf(value) === index

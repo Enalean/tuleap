@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 var pkg = require("./package.json");
 var gulp = require("gulp");
 var sass = require("gulp-sass");
-var scsslint = require("gulp-scss-lint");
 var rename = require("gulp-rename");
 var header = require("gulp-header");
 var runSequence = require("run-sequence");
@@ -71,44 +70,14 @@ gulp.task("watch", ["assets", "sass:watch"]);
 gulp.task("sass:prod", ["sass:compress"]);
 
 gulp.task("sass:watch", ["sass:compress", "sass:doc"], function() {
-    gulp.watch("./doc/css/**/*.scss", ["sass:dev-doc"]);
-    gulp.watch("./src/scss/**/*.scss", ["sass:dev"]);
-});
-
-gulp.task("sass:lint", function() {
-    return gulp
-        .src("./src/scss/**/*.scss")
-        .pipe(
-            scsslint({
-                config: ".scss-lint.yml"
-            })
-        )
-        .pipe(scsslint.failReporter("E"));
+    gulp.watch("./doc/css/**/*.scss", ["sass:doc"]);
+    gulp.watch("./src/scss/**/*.scss", ["sass:compress"]);
 });
 
 var color_tasks = declareSassCompressTasks();
 
 gulp.task("sass:compress", function(cb) {
     return runSequence(color_tasks, cb);
-});
-
-gulp.task("sass:dev", ["sass:lint"], function(cb) {
-    return runSequence("sass:compress", cb);
-});
-
-gulp.task("sass:lint-doc", function() {
-    return gulp
-        .src("./doc/css/*.scss")
-        .pipe(
-            scsslint({
-                config: ".scss-lint.yml"
-            })
-        )
-        .pipe(scsslint.failReporter("E"));
-});
-
-gulp.task("sass:dev-doc", ["sass:lint-doc"], function(cb) {
-    return runSequence("sass:doc", cb);
 });
 
 gulp.task("sass:doc", function() {
