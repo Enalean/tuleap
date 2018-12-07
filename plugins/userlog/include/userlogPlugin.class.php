@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * Originally written by Manuel VACELET, 2007.
  *
@@ -30,6 +30,7 @@ use Tuleap\Userlog\UserLogExporter;
 use Tuleap\Userlog\UserLogRouter;
 
 require_once 'constants.php';
+require_once __DIR__. '/../vendor/autoload.php';
 
 class userlogPlugin extends Plugin implements \Tuleap\Request\DispatchableWithRequest
 {
