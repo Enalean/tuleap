@@ -71,24 +71,36 @@ class Cardwall_OnTop_Config_ColumnFactory {
         Tracker_FormElement_Field_List $field,
         array $filter
     ) {
-
-        if (count($filter) === 0) {
-            $field_values = $field->getVisibleValuesPlusNoneIfAny();
-        } else {
-            foreach ($filter as $value_id) {
-                if ($field->isNone($value_id)) {
-                    $field_values[] = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
-                } else {
-                    $field_values[] = $field->getBind()->getValue($value_id);
-                }
-            }
-        }
-
         $decorators = $field->getDecorators();
-        foreach ($field_values as $value) {
+        foreach ($this->getFieldBindValues($field, $filter) as $value) {
             $header_color = $this->getColumnHeaderColor($value, $decorators);
             $columns[]    = new Cardwall_Column($value->getId(), $value->getLabel(), $header_color);
         }
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind[]
+     */
+    private function getFieldBindValues(
+        Tracker_FormElement_Field_List $field,
+        array $filter
+    ) {
+        if (count($filter) === 0) {
+            return  $field->getVisibleValuesPlusNoneIfAny();
+        }
+
+        $field_values = array();
+
+        foreach ($filter as $value_id) {
+            if ($field->isNone($value_id)) {
+                $field_values[] = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
+            } else {
+                try {
+                    $field_values[] = $field->getBind()->getValue($value_id);
+                } catch (Tracker_FormElement_InvalidFieldValueException $exception) {}
+            }
+        }
+        return $field_values;
     }
 
     /**
