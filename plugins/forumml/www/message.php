@@ -209,7 +209,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed(null)) {
 						' AND m.id_list = %d'.
 						' AND m.id_parent = 0'.
 						' AND m.id_message = mh.id_message'.
-						' AND mh.value LIKE "%s"',
+						' AND mh.value LIKE %s',
 						FORUMML_SUBJECT,
 						$dao->da->escapeInt($list_id),
 						$dao->da->quoteLikeValueSurround($request->get('search'))
