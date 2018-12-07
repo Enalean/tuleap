@@ -277,7 +277,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         if ($lytebox_id === null) {
             $lytebox_id = $this->getId();
         }
-        if (count($values)) {
+        if ($values !== null && count($values) > 0) {
             $hp = Codendi_HTMLPurifier::instance();
             $uh = UserHelper::instance();
             $added = array();
@@ -331,7 +331,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $html .= implode('', $added);
         }
 
-        if ($read_only && ! count($values)) {
+        if ($read_only && ($values === null || count($values) === 0)) {
             $html .= $this->getNoValueLabel();
         }
 
