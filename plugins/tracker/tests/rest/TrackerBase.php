@@ -25,6 +25,7 @@
 namespace Tuleap\Tracker\Tests\REST;
 
 use RestBase;
+use REST_TestDataBuilder;
 
 class TrackerBase extends RestBase
 {
@@ -34,13 +35,14 @@ class TrackerBase extends RestBase
     const TRACKER_ADMINISTRATOR_PROJECT_NAME = 'test-tracker-project-filter';
     const TRACKER_WORKFLOWS_PROJECT_NAME     = 'test-tracker-workflows';
 
-    const MOVE_TRACKER_SHORTNAME            = 'ToMoveArtifacts';
-    const BASE_TRACKER_SHORTNAME            = 'base';
-    const DELETE_TRACKER_SHORTNAME          = 'diasabled_delete_artifacts_testing_2';
-    const TRACKER_FIELDS_TRACKER_SHORTNAME  = 'tracker_fields_tracker';
-    const SIMPLE_01_TRACKER_SHORTNAME       = 'simple_tracker_01';
-    const SIMPLE_02_TRACKER_SHORTNAME       = 'simple_tracker_02';
-    const TRACKER_WITH_WORKFLOWS_SHORTNAME  = 'workflows_tracker';
+    const MOVE_TRACKER_SHORTNAME                      = 'ToMoveArtifacts';
+    const BASE_TRACKER_SHORTNAME                      = 'base';
+    const DELETE_TRACKER_SHORTNAME                    = 'diasabled_delete_artifacts_testing_2';
+    const TRACKER_FIELDS_TRACKER_SHORTNAME            = 'tracker_fields_tracker';
+    const SIMPLE_01_TRACKER_SHORTNAME                 = 'simple_tracker_01';
+    const SIMPLE_02_TRACKER_SHORTNAME                 = 'simple_tracker_02';
+    const TRACKER_WITH_WORKFLOWS_SHORTNAME            = 'workflows_tracker';
+    const TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME = 'workflows_tracker_transitions';
 
     protected $tracker_administrator_project_id;
 
@@ -63,11 +65,12 @@ class TrackerBase extends RestBase
         $this->tracker_administrator_project_id = $this->getProjectId(self::TRACKER_ADMINISTRATOR_PROJECT_NAME);
         $tracker_workflows_project_id           = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
 
-        $this->move_tracker_id              = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
-        $this->base_tracker_id              = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
-        $this->delete_tracker_id            = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
-        $this->tracker_fields_tracker_id    = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
-        $this->tracker_workflows_tracker_id = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
+        $this->move_tracker_id                         = $this->tracker_ids[$move_project_id][self::MOVE_TRACKER_SHORTNAME];
+        $this->base_tracker_id                         = $this->tracker_ids[$move_project_id][self::BASE_TRACKER_SHORTNAME];
+        $this->delete_tracker_id                       = $this->tracker_ids[$delete_project_id][self::DELETE_TRACKER_SHORTNAME];
+        $this->tracker_fields_tracker_id               = $this->tracker_ids[$tracker_fields_project_id][self::TRACKER_FIELDS_TRACKER_SHORTNAME];
+        $this->tracker_workflows_tracker_id            = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WITH_WORKFLOWS_SHORTNAME];
+        $this->tracker_workflow_transitions_tracker_id = $this->tracker_ids[$tracker_workflows_project_id][self::TRACKER_WORKFLOW_WITH_TRANSITIONS_SHORTNAME];
 
         $this->getBaseArtifactIds();
         $this->getDeleteArtifactIds();
@@ -87,5 +90,57 @@ class TrackerBase extends RestBase
             $this->delete_tracker_id,
             $this->delete_artifact_ids
         );
+    }
+
+    /**
+     * Returns all transitions combinations:
+     * - current transitions (already used)
+     * - available transitions to create (not used yet)
+     *
+     * @param $tracker_id
+     *
+     * @return array
+     */
+    protected function getAllTransitionCombinations($tracker_id)
+    {
+        $tracker = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->setup_client->get("trackers/$tracker_id")
+        )->json();
+
+        $tracker_workflow_field_key = array_search(
+            $tracker["workflow"]["field_id"],
+            array_column(
+                $tracker["fields"],
+                "field_id"
+            )
+        );
+        $all_field_values_ids = array_column($tracker["fields"][$tracker_workflow_field_key]["values"], "id");
+
+        $all_transitions = [
+            "transitions" => [],
+            "missing_transitions" => []
+        ];
+
+        foreach ($tracker["workflow"]["transitions"] as $transition) {
+            $all_transitions["transitions"][] = [
+                "from_id" => $transition["from_id"],
+                "to_id" => $transition["to_id"]
+            ];
+        }
+
+        foreach (array_merge([null], $all_field_values_ids) as $from_id) {
+            foreach ($all_field_values_ids as $to_id) {
+                if ($from_id !== $to_id
+                    && !in_array(["from_id" => $from_id, "to_id" => $to_id], $all_transitions["transitions"])) {
+                    $all_transitions["missing_transitions"][] = [
+                        "from_id" => $from_id,
+                        "to_id" => $to_id
+                    ];
+                }
+            }
+        };
+
+        return $all_transitions;
     }
 }

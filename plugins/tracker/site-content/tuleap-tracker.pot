@@ -167,6 +167,9 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
+msgid "Destination id does not exist."
+msgstr ""
+
 msgid "Edit"
 msgstr ""
 
@@ -325,6 +328,9 @@ msgid ""
 msgstr ""
 
 msgid "Something went wrong."
+msgstr ""
+
+msgid "Source id does not exist."
 msgstr ""
 
 msgid "Status change notifications"
@@ -597,6 +603,9 @@ msgid ""
 "sort a report, the sort has been ignored. Please choose another column."
 msgstr ""
 
+msgid "The same value cannot be source and destination at the same time."
+msgstr ""
+
 msgid "The submitted URL is not valid."
 msgstr ""
 
@@ -631,10 +640,16 @@ msgstr ""
 msgid "This template does not use trackers"
 msgstr ""
 
+msgid "This tracker does not exist."
+msgstr ""
+
 msgid "This tracker has no workflow."
 msgstr ""
 
 msgid "This tracker is deleted"
+msgstr ""
+
+msgid "This transition already exists."
 msgstr ""
 
 msgid "Time"
