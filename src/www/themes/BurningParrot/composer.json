@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Theme\\BurningParrot\\": ["."]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

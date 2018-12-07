@@ -39,6 +39,8 @@ use User_LoginPresenterBuilder;
 use UserManager;
 use Widget_Static;
 
+require_once __DIR__ . '/vendor/autoload.php';
+
 class BurningParrotTheme extends BaseLayout
 {
     /**

@@ -35,6 +35,7 @@ nbproject
 !src/www/themes/common/css/animate.min.css
 !src/www/themes/BurningParrot/vendor/**/*.css
 src/vendor/
+src/www/themes/*/vendor/
 plugins/*/vendor/
 tools/Configuration/vendor/
 /.idea/

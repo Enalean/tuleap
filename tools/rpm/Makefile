@@ -114,7 +114,7 @@ node:
 composer:
 	echo "Processing $(BASE_DIR)/src/"
 	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/src/
-	find $(BASE_DIR)/plugins/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+	find $(BASE_DIR)/plugins/ $(BASE_DIR)/src/www/themes/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
 		-exec echo "Processing {}" \; -execdir composer install --classmap-authoritative --no-dev --no-interaction --no-scripts \;
 	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/tools/Configuration/
 
