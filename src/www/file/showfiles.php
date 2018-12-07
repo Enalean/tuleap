@@ -88,7 +88,7 @@ foreach ($res as $package) {
         if ($request->existAndNonEmpty('release_id')) {
             if($request->valid(new Valid_UInt('release_id'))) {
         	    $release_id = $request->get('release_id');
-                $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
+                $row3 = $frsrf->getFRSReleaseFromDb($release_id);
             }
         }
         if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
