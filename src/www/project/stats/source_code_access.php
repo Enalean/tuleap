@@ -36,7 +36,7 @@ $who_whitelist = new Valid_WhiteList('who', array('nonmembers', 'members', 'allu
 $who_whitelist->required();
 $who  = $request->getValidated('who', $who_whitelist, 'allusers');
 
-$unsigned_int_validator = new Valid_UInt();
+$unsigned_int_validator = new Valid_UInt('span');
 $unsigned_int_validator->required();
 $span = $request->getValidated('span', $unsigned_int_validator, 14);
 
