@@ -1,0 +1,8 @@
+{
+  "autoload": {
+    "classmap": ["include/"]
+  },
+  "config": {
+    "sort-packages": true
+  }
+}

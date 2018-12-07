@@ -23,7 +23,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'autoload.php';
+require_once __DIR__. '/../vendor/autoload.php';
 
 class tracker_date_reminderPlugin extends Plugin {
 
