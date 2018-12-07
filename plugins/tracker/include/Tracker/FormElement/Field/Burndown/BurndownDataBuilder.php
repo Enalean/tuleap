@@ -95,10 +95,7 @@ class BurndownDataBuilder
             $capacity
         );
 
-        $this->logger->info("End calculating burndown " . $artifact->getId());
-        date_default_timezone_set($user_timezone);
-
-        return $this->addBurndownRemainingEffortDotsBasedOnUserTimezone(
+        $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezone(
             $artifact,
             $user,
             $start_date,
@@ -106,9 +103,16 @@ class BurndownDataBuilder
             $capacity,
             $is_burndown_under_calculation
         );
+
+        $this->logger->info("End calculating burndown " . $artifact->getId());
+
+
+        date_default_timezone_set($user_timezone);
+
+        return $efforts;
     }
 
-    private function addBurndownRemainingEffortDotsBasedOnUserTimezone(
+    private function addBurndownRemainingEffortDotsBasedOnServerTimezone(
         Tracker_Artifact $artifact,
         PFUser $user,
         $start_date,
