@@ -53,13 +53,14 @@ function buildCollectionCallback(displayCallback) {
     };
 }
 
-function getForkedRepositoryList(project_id, owner_id, displayCallback) {
+function getForkedRepositoryList(project_id, owner_id, order_by, displayCallback) {
     return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
             query: JSON.stringify({
                 scope: "individual",
                 owner_id: Number.parseInt(owner_id, 10)
             }),
+            order_by,
             limit: 50,
             offset: 0
         },
@@ -67,12 +68,13 @@ function getForkedRepositoryList(project_id, owner_id, displayCallback) {
     });
 }
 
-function getRepositoryList(project_id, displayCallback) {
+function getRepositoryList(project_id, order_by, displayCallback) {
     return recursiveGet("/api/projects/" + project_id + "/git", {
         params: {
             query: JSON.stringify({
                 scope: "project"
             }),
+            order_by,
             limit: 50,
             offset: 0
         },

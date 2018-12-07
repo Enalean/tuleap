@@ -58,12 +58,19 @@ export const changeRepositories = (context, new_owner_id) => {
         return;
     }
 
+    const order_by = context.getters.isFolderDisplayMode ? "path" : "push_date";
     if (new_owner_id === PROJECT_KEY) {
-        const getProjectRepositories = callback => getRepositoryList(getProjectId(), callback);
+        const getProjectRepositories = callback =>
+            getRepositoryList(getProjectId(), order_by, callback);
         getAsyncRepositoryList(context.commit, getProjectRepositories);
     } else {
         const getForkedRepositories = callback =>
-            getForkedRepositoryList(getProjectId(), context.state.selected_owner_id, callback);
+            getForkedRepositoryList(
+                getProjectId(),
+                context.state.selected_owner_id,
+                order_by,
+                callback
+            );
         getAsyncRepositoryList(context.commit, getForkedRepositories);
     }
 };

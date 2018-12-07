@@ -72,13 +72,22 @@ class ProjectResource
      * @param int $offset
      * @param string $fields
      * @param string $query
+     * @param string $order_by
      * @param int $total_number_repositories
      *
      * @return \Generator
      * @throws RestException
      */
-    public function getGit(Project $project, PFUser $user, $limit, $offset, $fields, $query, &$total_number_repositories)
-    {
+    public function getGit(
+        Project $project,
+        PFUser $user,
+        $limit,
+        $offset,
+        $fields,
+        $query,
+        $order_by,
+        &$total_number_repositories
+    ) {
         try {
             $scope    = $this->getScopeFromQueryParameter($query);
             $owner_id = $this->getOwnerIdFromQueryParameter($query);
@@ -93,6 +102,7 @@ class ProjectResource
             $user,
             $scope,
             $owner_id,
+            $order_by,
             $limit,
             $offset,
             $total_number_repositories

@@ -169,7 +169,8 @@ describe("Store actions", () => {
             const context = {
                 commit: jasmine.createSpy("commit"),
                 getters: {
-                    areRepositoriesAlreadyLoadedForCurrentOwner: false
+                    areRepositoriesAlreadyLoadedForCurrentOwner: false,
+                    isFolderDisplayMode: false
                 }
             };
 
@@ -180,6 +181,7 @@ describe("Store actions", () => {
 
             expect(getRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
+                "push_date",
                 jasmine.any(Function)
             );
             expect(getForkedRepositoryList).not.toHaveBeenCalled();
@@ -190,7 +192,8 @@ describe("Store actions", () => {
             const context = {
                 commit: jasmine.createSpy("commit"),
                 getters: {
-                    areRepositoriesAlreadyLoadedForCurrentOwner: false
+                    areRepositoriesAlreadyLoadedForCurrentOwner: false,
+                    isFolderDisplayMode: false
                 },
                 state: {
                     selected_owner_id
@@ -208,6 +211,7 @@ describe("Store actions", () => {
             expect(getForkedRepositoryList).toHaveBeenCalledWith(
                 current_project_id,
                 selected_owner_id,
+                "push_date",
                 jasmine.any(Function)
             );
         });

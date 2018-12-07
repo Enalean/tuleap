@@ -116,6 +116,7 @@ class GitRepositoryFactory
      * @param PFuser $user
      * @param string $scope
      * @param int $owner_id
+     * @param string $order_by
      * @param int $limit
      * @param int $offset
      * @param int $total_number_repositories
@@ -126,6 +127,7 @@ class GitRepositoryFactory
         PFuser $user,
         $scope,
         $owner_id,
+        $order_by,
         $limit,
         $offset,
         &$total_number_repositories
@@ -135,6 +137,7 @@ class GitRepositoryFactory
             $project->getID(),
             $scope,
             $owner_id,
+            $order_by,
             $limit,
             $offset
         );

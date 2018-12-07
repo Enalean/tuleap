@@ -38,13 +38,14 @@ describe("API querier", () => {
             }
             const project_id = 27;
 
-            getRepositoryList(project_id, displayCallback);
+            getRepositoryList(project_id, "push_date", displayCallback);
 
             expect(tlp.recursiveGet).toHaveBeenCalledWith(
                 "/api/projects/27/git",
                 jasmine.objectContaining({
                     params: {
                         query: '{"scope":"project"}',
+                        order_by: "push_date",
                         limit: 50,
                         offset: 0
                     }
@@ -66,12 +67,17 @@ describe("API querier", () => {
             const project_id = 5;
             const owner_id = "477";
 
-            getForkedRepositoryList(project_id, owner_id, displayCallback);
+            getForkedRepositoryList(project_id, owner_id, "push_date", displayCallback);
 
             expect(tlp.recursiveGet).toHaveBeenCalledWith(
                 "/api/projects/5/git",
                 jasmine.objectContaining({
-                    params: { query: '{"scope":"individual","owner_id":477}', limit: 50, offset: 0 }
+                    params: {
+                        query: '{"scope":"individual","owner_id":477}',
+                        order_by: "push_date",
+                        limit: 50,
+                        offset: 0
+                    }
                 })
             );
         });

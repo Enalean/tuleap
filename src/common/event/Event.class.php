@@ -1002,6 +1002,7 @@ class Event {
      *     'offset'          => int
      *     'fields'          => String
      *     'query'           => String
+     *     'order_by'        => String push_date|path
      *     'total_git_repo'  => int
      */
     const REST_PROJECT_GET_GIT = 'rest_project_get_git';
