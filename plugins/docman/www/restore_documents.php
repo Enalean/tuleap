@@ -19,12 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/plugin/PluginManager.class.php');
-require_once(dirname(__FILE__).'/../include/Docman_VersionFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Docman_ItemFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
+require_once __DIR__ . '/../../../src/www/include/pre.php';
+require_once __DIR__ . '/../include/docmanPlugin.class.php';
 
 $request = HTTPRequest::instance();
 $pm      = PluginManager::instance();
