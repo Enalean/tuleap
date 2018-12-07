@@ -61,7 +61,6 @@ use Tuleap\Git\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Git\Notifications\UgroupsToNotifyDao;
 use Tuleap\Git\Notifications\UgroupToNotifyUpdater;
 use Tuleap\Git\Notifications\UsersToNotifyDao;
-use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionReplicator;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -123,6 +122,7 @@ use Tuleap\Git\XmlUgroupRetriever;
 use Tuleap\GitBundle;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
+use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Mail\MailFilter;
@@ -296,6 +296,7 @@ class GitPlugin extends Plugin
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
+        $this->addHook(StatisticsCollectionCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -1856,6 +1857,7 @@ class GitPlugin extends Plugin
 
     /**
      * @protected for testing purpose
+     * @return GitDao
      */
     protected function getGitDao() {
         return new GitDao();
@@ -2732,6 +2734,15 @@ class GitPlugin extends Plugin
                     new \User_ForgeUserGroupPermissionsDao()
                 )
             )
+        );
+    }
+
+    public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
+    {
+        $collector->addStatistics(
+            dgettext('tuleap-git', 'Git repositories'),
+            $this->getGitDao()->countRepositories(),
+            $this->getGitDao()->countRepositoriesRegisteredBefore($collector->getTimestamp())
         );
     }
 }
