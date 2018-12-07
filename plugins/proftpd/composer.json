@@ -1,0 +1,8 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ProFTPd\\": ["include/", "include/ProFTPd/"]
+    },
+    "classmap": ["include/"]
+  }
+}

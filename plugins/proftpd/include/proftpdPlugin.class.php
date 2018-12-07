@@ -19,12 +19,14 @@
  */
 use Tuleap\ProFTPd\Admin\PermissionsManager as ProftpdPermissionsManager;
 use Tuleap\ProFTPd\PermissionsPerGroup\ProftpdPermissionsPerGroupPresenterBuilder;
+use Tuleap\ProFTPd\Plugin\ProftpdPluginInfo;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 
 require_once 'constants.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 class proftpdPlugin extends Plugin {
     const SERVICE_SHORTNAME = 'plugin_proftpd';
