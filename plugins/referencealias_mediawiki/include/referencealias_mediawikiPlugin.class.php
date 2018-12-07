@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,14 +19,14 @@
  */
 
 require_once __DIR__.'/../../mediawiki/include/mediawikiPlugin.class.php';
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasMediawiki\ReferencesBuilder;
 use Tuleap\ReferenceAliasMediawiki\CompatibilityDao;
 use Tuleap\ReferenceAliasMediawiki\ReferencesImporter;
 
-class referencealias_mediawikiPlugin extends Plugin
+class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
 {
 
     public function __construct($id)
@@ -60,7 +60,7 @@ class referencealias_mediawikiPlugin extends Plugin
         return $this->pluginInfo;
     }
 
-    public function import_compat_ref_xml($params)
+    public function import_compat_ref_xml($params) //phpcs:ignore
     {
         $targeted_service_name = $params['service_name'];
 
@@ -74,14 +74,14 @@ class referencealias_mediawikiPlugin extends Plugin
         }
     }
 
-    public function get_plugins_extra_references($params)
+    public function get_plugins_extra_references($params) //phpcs:ignore
     {
         foreach ($this->getReferencesBuilder()->getExtraReferenceSpecs() as $refspec) {
             $params['refs'][] = $refspec;
         }
     }
 
-    public function get_reference($params)
+    public function get_reference($params) //phpcs:ignore
     {
         $reference = $this->getReferencesBuilder()->getReference($params['project'], $params['keyword'], $params['value']);
         if (! empty($reference)) {

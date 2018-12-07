@@ -1,0 +1,10 @@
+{
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\ReferenceAliasMediawiki\\": [
+        "include/",
+        "include/ReferenceAliasMediawiki/"
+      ]
+    }
+  }
+}
