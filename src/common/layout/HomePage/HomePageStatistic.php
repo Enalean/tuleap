@@ -66,6 +66,9 @@ class HomePageStatistic
         return $this->last_month_growth;
     }
 
+    /**
+     * @return bool
+     */
     public function hasGrowth()
     {
         return $this->last_month_growth > 0;

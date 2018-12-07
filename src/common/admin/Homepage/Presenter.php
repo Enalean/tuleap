@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,17 +59,21 @@ class Admin_Homepage_Presenter
     public $standard_title;
     public $customize_title;
     public $label_language;
+    /** @var bool */
+    public $display_statistics_on_home_page;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $use_standard_homepage,
+        $display_statistics_on_home_page,
         array $headlines
     ) {
-        $this->title                 = $title;
-        $this->headlines             = $headlines;
-        $this->csrf_token            = $csrf;
-        $this->use_standard_homepage = $use_standard_homepage;
+        $this->title                           = $title;
+        $this->headlines                       = $headlines;
+        $this->csrf_token                      = $csrf;
+        $this->use_standard_homepage           = $use_standard_homepage;
+        $this->display_statistics_on_home_page = $display_statistics_on_home_page;
 
         $this->path_logo       = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();

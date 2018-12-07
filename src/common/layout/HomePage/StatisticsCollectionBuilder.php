@@ -20,9 +20,9 @@
 
 namespace Tuleap\layout\HomePage;
 
+use Admin_Homepage_Dao;
 use DateTime;
 use EventManager;
-use ForgeConfig;
 use UserManager;
 
 class StatisticsCollectionBuilder
@@ -39,22 +39,29 @@ class StatisticsCollectionBuilder
      * @var EventManager
      */
     private $event_manager;
+    /**
+     * @var Admin_Homepage_Dao
+     */
+    private $dao;
 
-    public function __construct(\ProjectManager $project_manager, UserManager $user_manager, EventManager $event_manager)
-    {
+    public function __construct(
+        \ProjectManager $project_manager,
+        UserManager $user_manager,
+        EventManager $event_manager,
+        Admin_Homepage_Dao $dao
+    ) {
         $this->project_manager = $project_manager;
         $this->user_manager    = $user_manager;
         $this->event_manager   = $event_manager;
+        $this->dao             = $dao;
     }
 
     public function build()
     {
         $collection = new StatisticsCollection();
 
-        if (ForgeConfig::get('should_display_statistics')) {
-            $date = new DateTime();
-            $date->modify('-1 month');
-            $timestamp = $date->getTimestamp();
+        if ($this->dao->areStatisticsDisplayedOnHomePage()) {
+            $timestamp = (new \DateTimeImmutable('-1 month'))->getTimestamp();
 
             $collection->addStatistic(_('Projects'), $this->countAllProjects(), $this->countProjectRegisteredLastMonth($timestamp));
             $collection->addStatistic(_('Users'), $this->countAllUsers(), $this->countUsersRegisteredLastMonth($timestamp));

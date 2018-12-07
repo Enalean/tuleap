@@ -22,6 +22,7 @@
         var selector = $("#admin-headline-select-language");
 
         bindSwitchStandardHomepage();
+        bindSwitchStatisticsOnHomePage();
         initCKEditor();
         selector.change(switchHeadline);
 
@@ -55,6 +56,12 @@
 
         function bindSwitchStandardHomepage() {
             $("#use_standard_homepage").on("change", function() {
+                $("#admin-homepage").submit();
+            });
+        }
+
+        function bindSwitchStatisticsOnHomePage() {
+            $("#use_statistics_homepage").on("change", function() {
                 $("#admin-homepage").submit();
             });
         }

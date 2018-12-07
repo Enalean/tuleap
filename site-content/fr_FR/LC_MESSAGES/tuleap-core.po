@@ -385,6 +385,9 @@ msgstr "Densité d'affichage :"
 msgid "Display in iframe"
 msgstr "Afficher dans une iframe"
 
+msgid "Display platform statistics on home page."
+msgstr "Afficher les statistiques de la plateforme sur la page d'accueil."
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 
@@ -813,6 +816,9 @@ msgstr "Clés personnelles d'accès à l'API"
 
 msgid "Platform administration"
 msgstr "Administration de la plateforme"
+
+msgid "Platform statistics"
+msgstr "Statistiques de la plateforme"
 
 msgid "Please accept term of service"
 msgstr "Merci d'accepter les conditions d'utilisation"
