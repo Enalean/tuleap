@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,14 +19,14 @@
  */
 
 require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
-require_once 'autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 require_once 'constants.php';
 
 use Tuleap\ReferenceAliasTracker\Dao;
 use Tuleap\ReferenceAliasTracker\ReferencesImporter;
 use Tuleap\ReferenceAliasTracker\OriginalReferencesBuilder;
 
-class referencealias_trackerPlugin extends Plugin
+class referencealias_trackerPlugin extends Plugin //phpcs:ignore
 {
 
     /**
