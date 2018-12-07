@@ -15,6 +15,9 @@ msgstr ""
 msgid "Administration"
 msgstr "Administration"
 
+msgid "Advanced"
+msgstr "Avancé"
+
 msgid "Documents"
 msgstr "Documents"
 

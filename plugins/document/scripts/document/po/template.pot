@@ -8,6 +8,9 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
+msgid "Advanced"
+msgstr ""
+
 msgid "Documents"
 msgstr ""
 
