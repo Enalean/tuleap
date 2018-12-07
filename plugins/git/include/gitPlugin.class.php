@@ -326,7 +326,7 @@ class GitPlugin extends Plugin
             $this->getLogger(),
             new System_Command(),
             new GitBundle(new System_Command(), $this->getLogger()),
-            new Git_LogDao(),
+            $this->getGitLogDao(),
             $user_manager,
             new UserXMLExporter(
                 $user_manager,
@@ -883,7 +883,7 @@ class GitPlugin extends Plugin
         $row            = $params['project_row'];
         $disk_usage_dao = $params['DiskUsageManager']->_getDao();
         $retriever      = new Retriever($disk_usage_dao);
-        $collector      = new Collector($params['DiskUsageManager'], new Git_LogDao(), $retriever);
+        $collector      = new Collector($params['DiskUsageManager'], $this->getGitLogDao(), $retriever);
         $project        = $params['project'];
 
         $disk_usage_dao->addGroup(
@@ -2134,7 +2134,7 @@ class GitPlugin extends Plugin
         return new $class(
             $this->getGitPermissionsManager(),
             $this->getGerritServerFactory(),
-            new Git_LogDao(),
+            $this->getGitLogDao(),
             EventManager::instance(),
             $this->getGitRepositoryUrlManager()
         );
@@ -2411,7 +2411,7 @@ class GitPlugin extends Plugin
     {
         $collector = new LatestHeartbeatsCollector(
             $this->getRepositoryFactory(),
-            new Git_LogDao(),
+            $this->getGitLogDao(),
             $this->getGitRepositoryUrlManager(),
             new \Tuleap\Glyph\GlyphFinder(EventManager::instance()),
             UserManager::instance(),
@@ -2740,9 +2740,17 @@ class GitPlugin extends Plugin
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector)
     {
         $collector->addStatistics(
-            dgettext('tuleap-git', 'Git repositories'),
-            $this->getGitDao()->countRepositories(),
-            $this->getGitDao()->countRepositoriesRegisteredBefore($collector->getTimestamp())
+            dgettext('tuleap-git', 'Git push'),
+            $this->getGitLogDao()->countGitPush(),
+            $this->getGitLogDao()->countGitPushAfter($collector->getTimestamp())
         );
+    }
+
+    /**
+     * @return Git_LogDao
+     */
+    private function getGitLogDao()
+    {
+        return new Git_LogDao();
     }
 }

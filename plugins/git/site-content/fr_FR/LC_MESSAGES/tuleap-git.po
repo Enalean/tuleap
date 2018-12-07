@@ -103,6 +103,9 @@ msgstr "Git"
 msgid "Git Administrators"
 msgstr "Administrateurs Git"
 
+msgid "Git push"
+msgstr "Push Git"
+
 msgid "Git repositories"
 msgstr "Dépôts Git"
 

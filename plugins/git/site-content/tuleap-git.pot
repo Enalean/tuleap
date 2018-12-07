@@ -86,6 +86,9 @@ msgstr ""
 msgid "Git Administrators"
 msgstr ""
 
+msgid "Git push"
+msgstr ""
+
 msgid "Git repositories"
 msgstr ""
 
