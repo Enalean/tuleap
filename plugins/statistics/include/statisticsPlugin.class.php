@@ -34,10 +34,11 @@ use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
 use Tuleap\CVS\DiskUsage\Collector as CVSCollector;
 use Tuleap\CVS\DiskUsage\FullHistoryDao;
 
-require_once 'autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
-class StatisticsPlugin extends Plugin {
+class StatisticsPlugin extends Plugin
+{
 
     public function __construct($id)
     {
