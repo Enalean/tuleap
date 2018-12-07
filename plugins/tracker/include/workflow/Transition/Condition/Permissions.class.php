@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
@@ -18,7 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
+use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
+
+class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition
+{ //phpcs:ignore
 
     /** @var string */
     public $identifier = 'perms';
@@ -60,7 +64,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         $child = $root->addChild('condition');
         $child->addAttribute('type', $this->identifier);
 
-        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
+        $transition_ugroups = $this->getAuthorizedUGroups();
         $grand_child = $child->addChild('permissions');
         foreach ($transition_ugroups as $transition_ugroup) {
             $ugroup_keyname = $this->getExportableUGroupKeyname($transition_ugroup['ugroup_id']);
@@ -121,11 +125,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     }
 
     public function isUserAllowedToSeeTransition(PFUser $user, $project_id) {
-        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups(
-            $this->transition->getId(),
-            self::PERMISSION_TRANSITION
-        );
-
+        $transition_ugroups = $this->getAuthorizedUGroups();
         foreach($transition_ugroups as $ugroup) {
             if ($user->isMemberOfUGroup($ugroup['ugroup_id'], $project_id)) {
                 return true;
@@ -133,5 +133,33 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
 
         return false;
+    }
+
+    /**
+     * @return DataAccessResult
+     */
+    private function getAuthorizedUGroups()
+    {
+        return $this->permission_manager->getAuthorizedUgroups(
+            $this->transition->getId(),
+            self::PERMISSION_TRANSITION
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getAuthorizedUGroupsAsArray()
+    {
+        $ugroups = [];
+        foreach ($this->getAuthorizedUGroups() as $ugroup) {
+            $ugroups[] = $ugroup;
+        }
+        return $ugroups;
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitPermissions($this);
     }
 }

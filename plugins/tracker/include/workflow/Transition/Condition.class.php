@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
+
 /**
  * Condition on a transition
  */
@@ -65,6 +67,8 @@ abstract class Workflow_Transition_Condition {
     public function getTransition() {
         return $this->transition;
     }
+
+    public abstract function accept(Visitor $visitor);
 }
 
 ?>

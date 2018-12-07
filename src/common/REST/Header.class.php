@@ -19,9 +19,9 @@
 
 namespace Tuleap\REST;
 
-use ForgeConfig;
 use DateTime;
 use DateTimeZone;
+use ForgeConfig;
 
 class Header {
     const GET     = 'GET';
@@ -157,6 +157,10 @@ class Header {
         self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::DELETE));
     }
 
+    public static function allowOptionsGetPostDelete()
+    {
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::POST, self::DELETE]);
+    }
 
     public static function allowOptionsPatch() {
         self::sendAllowHeaders(array(self::OPTIONS, self::PATCH));

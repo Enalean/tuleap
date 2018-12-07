@@ -243,4 +243,22 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             $this->assertEquals(404, $e->getResponse()->getStatusCode());
         }
     }
+
+    public function testGETTrackerWorkflowTransitionsReturnsTheTransitionRepresentation()
+    {
+        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
+        $transition = $transition_combinations["transitions"][0];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('tracker_workflow_transitions/' . $transition['id'])
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_content = $response->json();
+        $this->assertEquals($transition['id'], $response_content['id']);
+        $this->assertEquals($transition['from_id'] ?: 0, $response_content['from_id']);
+        $this->assertEquals($transition['to_id'], $response_content['to_id']);
+    }
 }

@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+use Luracast\Restler\RestException;
 use PFUser;
 use Tracker;
 use Transition;
@@ -63,6 +64,23 @@ class TransitionsPermissionsChecker
      * @throws OrphanTransitionException
      */
     public function checkDelete(PFUser $user, Transition $transition)
+    {
+        $workflow = $transition->getWorkflow();
+        if ($workflow === null) {
+            throw new OrphanTransitionException($transition);
+        }
+        $this->permissions_checker->checkUpdateWorkflow($user, $workflow->getTracker());
+    }
+
+    /**
+     * Checks if given user has permissions to read given transition.
+     *
+     * @param PFUser $user
+     * @param Transition $transition
+     * @throws OrphanTransitionException
+     * @throws RestException 403
+     */
+    public function checkRead(PFUser $user, $transition)
     {
         $workflow = $transition->getWorkflow();
         if ($workflow === null) {

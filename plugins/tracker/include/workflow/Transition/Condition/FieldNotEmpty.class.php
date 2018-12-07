@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012 - 2016. All Rights Reserved.
  *
@@ -18,8 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
-class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition {
+class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition
+{ //phpcs:ignore
 
     /** @var string */
     public $identifier = 'notempty';
@@ -103,7 +106,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $this->fields[] = $field;
     }
 
-    private function getFieldIds()
+    public function getFieldIds()
     {
         $ids = array();
         foreach ($this->fields as $field) {
@@ -166,5 +169,10 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
             }
         }
         return $value;
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitFieldNotEmpty($this);
     }
 }

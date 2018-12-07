@@ -91,4 +91,17 @@ class JsonCast
 
         return $value;
     }
+
+    /**
+     * @return array|null Given array where all values are casted to int.
+     */
+    public static function toArrayOfInts(array $values = null)
+    {
+        if ($values === null) {
+            return null;
+        }
+        return array_map(function ($value) {
+            return self::toInt($value);
+        }, $values);
+    }
 }
