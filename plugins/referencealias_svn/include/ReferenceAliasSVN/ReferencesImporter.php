@@ -23,7 +23,7 @@ namespace Tuleap\ReferenceAliasSVN;
 use Logger;
 use Project;
 use SimpleXMLElement;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Repository\Repository;
 use Tuleap\Project\XML\Import\ImportConfig;
 
 class ReferencesImporter

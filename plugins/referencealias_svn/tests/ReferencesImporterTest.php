@@ -31,7 +31,7 @@ class ReferencesImporterTest extends \TuleapTestCase
         $this->dao        = mock('Tuleap\ReferenceAliasSVN\Dao');
         $this->logger     = mock('Logger');
         $this->importer   = new ReferencesImporter($this->dao, $this->logger);
-        $this->repository = stub('Tuleap\\Svn\\Repository\\Repository')->getId()->returns(123);
+        $this->repository = stub('Tuleap\\SVN\\Repository\\Repository')->getId()->returns(123);
     }
 
     public function testItShouldAddSVNLinks()

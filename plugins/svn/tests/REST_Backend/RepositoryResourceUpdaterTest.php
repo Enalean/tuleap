@@ -20,17 +20,17 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\AccessControl\AccessFileHistory;
-use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\ImmutableTag;
-use Tuleap\Svn\Admin\ImmutableTagCreator;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Repository\HookConfig;
-use Tuleap\Svn\Repository\HookConfigUpdator;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\Settings;
+use Tuleap\SVN\AccessControl\AccessFileHistory;
+use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Admin\ImmutableTag;
+use Tuleap\SVN\Admin\ImmutableTagCreator;
+use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Repository\HookConfig;
+use Tuleap\SVN\Repository\HookConfigUpdator;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\Settings;
 use TuleapTestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -74,12 +74,12 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
     {
         parent::setUp();
 
-        $this->hook_config_updater       = mock('Tuleap\Svn\Repository\HookConfigUpdator');
-        $this->immutable_tag_creator     = mock('Tuleap\Svn\Admin\ImmutableTagCreator');
-        $this->access_file_creator       = mock('Tuleap\Svn\AccessControl\AccessFileHistoryCreator');
-        $this->access_file_factory       = mock('Tuleap\Svn\AccessControl\AccessFileHistoryFactory');
-        $this->immutable_tag_factory     = mock('Tuleap\Svn\Admin\ImmutableTagFactory');
-        $this->mail_notification_manager = mock('Tuleap\Svn\Admin\MailNotificationManager');
+        $this->hook_config_updater       = mock('Tuleap\SVN\Repository\HookConfigUpdator');
+        $this->immutable_tag_creator     = mock('Tuleap\SVN\Admin\ImmutableTagCreator');
+        $this->access_file_creator       = mock('Tuleap\SVN\AccessControl\AccessFileHistoryCreator');
+        $this->access_file_factory       = mock('Tuleap\SVN\AccessControl\AccessFileHistoryFactory');
+        $this->immutable_tag_factory     = mock('Tuleap\SVN\Admin\ImmutableTagFactory');
+        $this->mail_notification_manager = mock('Tuleap\SVN\Admin\MailNotificationManager');
         $notification_updater_checker    = mock('Tuleap\SVN\REST\v1\NotificationUpdateChecker');
 
         $this->updater = new RepositoryResourceUpdater(
@@ -92,7 +92,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             $notification_updater_checker
         );
 
-        $this->repository = mock('Tuleap\Svn\Repository\Repository');
+        $this->repository = mock('Tuleap\SVN\Repository\Repository');
         stub($this->repository)->getProject()->returns(aMockProject()->withId(101)->build());
     }
 
@@ -123,7 +123,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
-        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\SVN\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();
@@ -160,7 +160,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
-        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\SVN\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();
@@ -197,7 +197,7 @@ class RepositoryResourceUpdaterTest extends TuleapTestCase
             time()
         );
 
-        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\Svn\Admin\ImmutableTag'));
+        stub($this->immutable_tag_factory)->getByRepositoryId()->returns(mock('Tuleap\SVN\Admin\ImmutableTag'));
         stub($this->access_file_factory)->getCurrentVersion($this->repository)->returns($current_access_file);
 
         expect($this->hook_config_updater)->updateHookConfig()->once();

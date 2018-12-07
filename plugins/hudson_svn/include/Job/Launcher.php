@@ -21,8 +21,8 @@
 namespace Tuleap\HudsonSvn\Job;
 
 use Tuleap\HudsonSvn\BuildParams;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Commit\CommitInfo;
 use Jenkins_Client;
 use Jenkins_ClientUnableToLaunchBuildException;
 use Logger;

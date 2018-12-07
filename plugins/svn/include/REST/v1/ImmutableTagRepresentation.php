@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Svn\Admin\ImmutableTag;
+use Tuleap\SVN\Admin\ImmutableTag;
 
 class ImmutableTagRepresentation
 {

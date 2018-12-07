@@ -20,7 +20,7 @@
 
 namespace Tuleap\HudsonSvn\Job;
 
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Repository\Repository;
 
 class Factory {
 

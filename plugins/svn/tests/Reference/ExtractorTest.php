@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,10 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Svn\Reference;
+namespace Tuleap\SVN\Reference;
 
-use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVN\Repository\RepositoryManager;
 use TuleapTestCase;
 
 require_once __DIR__ .'/../bootstrap.php';
@@ -48,7 +48,7 @@ class ExtractorTest extends TuleapTestCase {
         parent::setUp();
 
         $this->project            = stub('Project')->getID()->returns(101);
-        $this->repository_manager = mock('Tuleap\Svn\Repository\RepositoryManager');
+        $this->repository_manager = mock('Tuleap\SVN\Repository\RepositoryManager');
         $this->extractor          = new Extractor($this->repository_manager);
     }
 
@@ -85,7 +85,7 @@ class ExtractorTest extends TuleapTestCase {
     public function itBuildsASubversionPluginReference() {
         $keyword    = 'svn';
         $value      = 'repo01/1';
-        $repository = stub('Tuleap\Svn\Repository\Repository')->getFullName()->returns('project01/repo01');
+        $repository = stub('Tuleap\SVN\Repository\Repository')->getFullName()->returns('project01/repo01');
 
         stub($this->project)->usesService('plugin_svn')->returns(true);
         stub($this->repository_manager)
@@ -96,7 +96,7 @@ class ExtractorTest extends TuleapTestCase {
 
         $this->assertIsA(
             $reference,
-            'Tuleap\Svn\Reference\Reference'
+            'Tuleap\SVN\Reference\Reference'
         );
 
         $this->assertEqual($reference->getGroupId(), 101);

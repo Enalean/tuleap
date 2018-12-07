@@ -21,10 +21,10 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\Project\REST\UserGroupRepresentation;
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
-use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
-use Tuleap\Svn\Notifications\UsersToNotifyDao;
+use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
+use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
+use Tuleap\SVN\Notifications\UsersToNotifyDao;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UGroupManager;
 use UserManager;

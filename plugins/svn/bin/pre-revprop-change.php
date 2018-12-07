@@ -26,17 +26,17 @@
 require_once 'pre.php';
 require_once __DIR__.'/../include/svnPlugin.class.php';
 
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Dao;
-use Tuleap\Svn\Hooks\PreRevpropChange;
-use Tuleap\Svn\Repository\HookConfigRetriever;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\SvnAdmin;
-use Tuleap\Svn\SvnLogger;
+use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Repository\Destructor;
+use Tuleap\SVN\Dao;
+use Tuleap\SVN\Hooks\PreRevpropChange;
+use Tuleap\SVN\Repository\HookConfigRetriever;
+use Tuleap\SVN\Repository\HookConfigSanitizer;
+use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnLogger;
 
 try {
     $repository         = $argv[1];

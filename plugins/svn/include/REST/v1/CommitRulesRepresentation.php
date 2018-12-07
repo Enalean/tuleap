@@ -21,7 +21,7 @@
 namespace Tuleap\SVN\REST\v1;
 
 use Tuleap\REST\JsonCast;
-use Tuleap\Svn\Repository\HookConfig;
+use Tuleap\SVN\Repository\HookConfig;
 
 class CommitRulesRepresentation
 {

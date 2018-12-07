@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean SAS, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean SAS, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,16 +25,16 @@ require_once 'constants.php';
 use Tuleap\ReferenceAliasSVN\Dao;
 use Tuleap\ReferenceAliasSVN\ReferencesBuilder;
 use Tuleap\ReferenceAliasSVN\ReferencesImporter;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Dao as SVNPluginDao;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\SvnAdmin;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\XMLRepositoryImporter;
+use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Repository\Destructor;
+use Tuleap\SVN\Dao as SVNPluginDao;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnLogger;
+use Tuleap\SVN\XMLImporterException;
 
-class referencealias_svnPlugin extends Plugin
+class referencealias_svnPlugin extends Plugin //phpcs:ignore
 {
     public function __construct($id)
     {
@@ -65,7 +65,7 @@ class referencealias_svnPlugin extends Plugin
     }
 
     /** @see Event::IMPORT_COMPAT_REF_XML */
-    public function import_compat_ref_xml($params)
+    public function import_compat_ref_xml($params) //phpcs:ignore
     {
         if ($params['service_name'] === XMLRepositoryImporter::SERVICE_NAME) {
             $repository = $params['created_refs']['repository'];
@@ -77,7 +77,7 @@ class referencealias_svnPlugin extends Plugin
     }
 
     /** @see Event::GET_REFERENCE */
-    public function get_reference($params)
+    public function get_reference($params) //phpcs:ignore
     {
         $reference = $this->getReferencesBuilder()->getReference($params['keyword'], $params['value']);
 
@@ -87,7 +87,7 @@ class referencealias_svnPlugin extends Plugin
     }
 
     /** @see Event::GET_PLUGINS_EXTRA_REFERENCES */
-    public function get_plugins_extra_references($params)
+    public function get_plugins_extra_references($params) //phpcs:ignore
     {
         foreach ($this->getReferencesBuilder()->getExtraReferenceSpecs() as $refspec) {
             $params['refs'][] = $refspec;

@@ -33,43 +33,43 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryCreator;
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\AccessControl\CannotCreateAccessFileHistoryException;
-use Tuleap\Svn\Admin\CannotCreateMailHeaderException;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Admin\ImmutableTagCreator;
-use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Admin\MailNotification;
-use Tuleap\Svn\Admin\MailNotificationDao;
-use Tuleap\Svn\Admin\MailNotificationManager;
-use Tuleap\Svn\Dao;
-use Tuleap\Svn\EventRepository\SystemEvent_SVN_DELETE_REPOSITORY;
-use Tuleap\Svn\Notifications\EmailsToBeNotifiedRetriever;
-use Tuleap\Svn\Notifications\NotificationsEmailsBuilder;
-use Tuleap\Svn\Notifications\UgroupsToNotifyDao;
-use Tuleap\Svn\Notifications\UsersToNotifyDao;
-use Tuleap\Svn\Repository\Exception\CannotCreateRepositoryException;
-use Tuleap\Svn\Repository\Exception\CannotFindRepositoryException;
-use Tuleap\Svn\Repository\Exception\RepositoryNameIsInvalidException;
-use Tuleap\Svn\Repository\Exception\UserIsNotSVNAdministratorException;
-use Tuleap\Svn\Repository\HookConfigChecker;
-use Tuleap\Svn\Repository\HookConfigRetriever;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
-use Tuleap\Svn\Repository\HookConfigUpdator;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\ProjectHistoryFormatter;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Repository\RepositoryCreator;
-use Tuleap\Svn\Repository\RepositoryDeleter;
-use Tuleap\Svn\Repository\RepositoryManager;
-use Tuleap\Svn\Repository\RepositoryRegexpBuilder;
-use Tuleap\Svn\Repository\Settings;
-use Tuleap\Svn\SvnAdmin;
-use Tuleap\Svn\SvnLogger;
-use Tuleap\Svn\SvnPermissionManager;
+use Tuleap\SVN\AccessControl\AccessFileHistoryCreator;
+use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\AccessControl\CannotCreateAccessFileHistoryException;
+use Tuleap\SVN\Admin\CannotCreateMailHeaderException;
+use Tuleap\SVN\Repository\Destructor;
+use Tuleap\SVN\Admin\ImmutableTagCreator;
+use Tuleap\SVN\Admin\ImmutableTagDao;
+use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Admin\MailNotification;
+use Tuleap\SVN\Admin\MailNotificationDao;
+use Tuleap\SVN\Admin\MailNotificationManager;
+use Tuleap\SVN\Dao;
+use Tuleap\SVN\Events\SystemEvent_SVN_DELETE_REPOSITORY;
+use Tuleap\SVN\Notifications\EmailsToBeNotifiedRetriever;
+use Tuleap\SVN\Notifications\NotificationsEmailsBuilder;
+use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
+use Tuleap\SVN\Notifications\UsersToNotifyDao;
+use Tuleap\SVN\Repository\Exception\CannotCreateRepositoryException;
+use Tuleap\SVN\Repository\Exception\CannotFindRepositoryException;
+use Tuleap\SVN\Repository\Exception\RepositoryNameIsInvalidException;
+use Tuleap\SVN\Repository\Exception\UserIsNotSVNAdministratorException;
+use Tuleap\SVN\Repository\HookConfigChecker;
+use Tuleap\SVN\Repository\HookConfigRetriever;
+use Tuleap\SVN\Repository\HookConfigSanitizer;
+use Tuleap\SVN\Repository\HookConfigUpdator;
+use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\ProjectHistoryFormatter;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Repository\RepositoryCreator;
+use Tuleap\SVN\Repository\RepositoryDeleter;
+use Tuleap\SVN\Repository\RepositoryManager;
+use Tuleap\SVN\Repository\RepositoryRegexpBuilder;
+use Tuleap\SVN\Repository\Settings;
+use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnLogger;
+use Tuleap\SVN\SvnPermissionManager;
 use UGroupManager;
 
 class RepositoryResource extends AuthenticatedResource
@@ -544,7 +544,7 @@ class RepositoryResource extends AuthenticatedResource
     private function isDeletionAlreadyQueued(Repository $repository)
     {
         return SystemEventManager::instance()->areThereMultipleEventsQueuedMatchingFirstParameter(
-            'Tuleap\\Svn\\EventRepository\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME,
+            'Tuleap\\SVN\\Events\\'.SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             $repository->getProject()->getID() . SystemEvent::PARAMETER_SEPARATOR . $repository->getId()
         );
     }

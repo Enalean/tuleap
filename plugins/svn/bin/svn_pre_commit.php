@@ -25,23 +25,23 @@
 require_once 'pre.php';
 require_once __DIR__.'/../include/svnPlugin.class.php';
 
-use Tuleap\Svn\AccessControl\AccessFileHistoryDao;
-use Tuleap\Svn\AccessControl\AccessFileHistoryFactory;
-use Tuleap\Svn\Admin\Destructor;
-use Tuleap\Svn\Admin\ImmutableTagDao;
-use Tuleap\Svn\Admin\ImmutableTagFactory;
-use Tuleap\Svn\Commit\CommitInfo;
-use Tuleap\Svn\Commit\CommitInfoEnhancer;
-use Tuleap\Svn\Commit\Svnlook;
-use Tuleap\Svn\Dao;
-use Tuleap\Svn\Hooks\PreCommit;
-use Tuleap\Svn\Repository\HookConfigRetriever;
-use Tuleap\Svn\Repository\HookConfigSanitizer;
-use Tuleap\Svn\Repository\HookDao;
-use Tuleap\Svn\Repository\RepositoryManager;
+use Tuleap\SVN\AccessControl\AccessFileHistoryDao;
+use Tuleap\SVN\AccessControl\AccessFileHistoryFactory;
+use Tuleap\SVN\Repository\Destructor;
+use Tuleap\SVN\Admin\ImmutableTagDao;
+use Tuleap\SVN\Admin\ImmutableTagFactory;
+use Tuleap\SVN\Commit\CommitInfo;
+use Tuleap\SVN\Commit\CommitInfoEnhancer;
+use Tuleap\SVN\Commit\Svnlook;
+use Tuleap\SVN\Dao;
+use Tuleap\SVN\Hooks\PreCommit;
+use Tuleap\SVN\Repository\HookConfigRetriever;
+use Tuleap\SVN\Repository\HookConfigSanitizer;
+use Tuleap\SVN\Repository\HookDao;
+use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\Svn\SHA1CollisionDetector;
-use Tuleap\Svn\SvnAdmin;
-use Tuleap\Svn\SvnLogger;
+use Tuleap\SVN\SvnAdmin;
+use Tuleap\SVN\SvnLogger;
 
 try {
     $repository_path = $argv[1];

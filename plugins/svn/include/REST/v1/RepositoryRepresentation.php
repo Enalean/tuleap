@@ -23,7 +23,7 @@ namespace Tuleap\SVN\REST\v1;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\SvnRepositoryRepresentationBase;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Repository\Repository;
 
 class RepositoryRepresentation extends SvnRepositoryRepresentationBase
 {

@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Svn\EventRepository;
+namespace Tuleap\SVN\Events;
 
 use Mockery;
-use Tuleap\Svn\Repository\Repository;
+use Tuleap\SVN\Repository\Repository;
 use Tuleap\Svn\SVNRepositoryCreationException;
 use Tuleap\Svn\SVNRepositoryLayoutInitializationException;
 
@@ -34,8 +34,8 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
     {
         $this->user_manager                = Mockery::spy(\UserManager::class);
         $this->backend_svn                 = Mockery::spy(\BackendSVN::class);
-        $this->access_file_history_creator = Mockery::spy(\Tuleap\Svn\AccessControl\AccessFileHistoryCreator::class);
-        $this->repository_manager          = Mockery::spy(\Tuleap\Svn\Repository\RepositoryManager::class);
+        $this->access_file_history_creator = Mockery::spy(\Tuleap\SVN\AccessControl\AccessFileHistoryCreator::class);
+        $this->repository_manager          = Mockery::spy(\Tuleap\SVN\Repository\RepositoryManager::class);
     }
 
 
@@ -91,7 +91,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
 
     public function itMarksTheEventAsDoneWhenTheRepositoryIsSuccessfullyCreated()
     {
-        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)
+        $system_event = Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -106,7 +106,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
             $this->user_manager,
             $this->backend_svn,
             Mockery::spy(\BackendSystem::class),
-            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
+            Mockery::spy(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->shouldReceive('done')->once();
@@ -117,7 +117,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
 
     public function itGeneratesAnErrorIfTheRepositoryCanNotBeCreated()
     {
-        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)
+        $system_event = Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
@@ -130,7 +130,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
             $this->user_manager,
             $this->backend_svn,
             Mockery::spy(\BackendSystem::class),
-            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
+            Mockery::spy(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->shouldReceive('error')->once();
@@ -142,7 +142,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
 
     public function itGeneratesAWarningIfTheDirectoryLayoutCanNotBeCreated()
     {
-        $system_event = Mockery::mock(\Tuleap\Svn\EventRepository\SystemEvent_SVN_CREATE_REPOSITORY::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $system_event = Mockery::mock(SystemEvent_SVN_CREATE_REPOSITORY::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $this->user_manager->shouldReceive('getUserById')->andReturn(Mockery::spy(\PFUser::class));
         $this->backend_svn->shouldReceive('createRepositorySVN')->andThrow(new SVNRepositoryLayoutInitializationException());
@@ -153,7 +153,7 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends \TuleapTestCase // @codingSt
             $this->user_manager,
             $this->backend_svn,
             Mockery::spy(\BackendSystem::class),
-            Mockery::spy(\Tuleap\Svn\Migration\RepositoryCopier::class)
+            Mockery::spy(\Tuleap\SVN\Migration\RepositoryCopier::class)
         );
 
         $system_event->shouldReceive('warning')->once();

@@ -22,8 +22,8 @@ namespace Tuleap\HudsonSvn\Job;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Svn\Repository\Repository;
-use Tuleap\Svn\Commit\CommitInfo;
+use Tuleap\SVN\Repository\Repository;
+use Tuleap\SVN\Commit\CommitInfo;
 
 require_once __DIR__ . '/../bootstrap.php';
 
