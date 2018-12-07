@@ -249,14 +249,11 @@ abstract class Kanban extends Widget
 
     public function getStylesheetDependencies()
     {
-        $collection = new CssAssetCollection();
-        $theme_include_assets = new IncludeAssets(
+        $include_assets = new IncludeAssets(
             __DIR__ . '/../../../www/themes/BurningParrot/assets',
             AGILEDASHBOARD_BASE_URL . '/themes/BurningParrot/assets'
         );
-
-        $collection->add(new CssAsset($theme_include_assets, 'kanban'));
-        return $collection;
+        return new CssAssetCollection([new CssAsset($include_assets, 'kanban')]);
     }
 
     public function hasPreferences($widget_id)
