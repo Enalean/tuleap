@@ -143,6 +143,10 @@
     overflow-y: auto;
 }
 
+.git-repository-branch-tag-selector-filter {
+    margin: $tlp-half-spacing $tlp-spacing;
+}
+
 .git-repository-branch-tag-selector-empty {
     margin: $tlp-spacing;
     color: transparentize($tlp-theme-color, .7);
