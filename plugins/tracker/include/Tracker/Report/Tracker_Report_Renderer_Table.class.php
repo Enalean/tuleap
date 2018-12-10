@@ -1724,7 +1724,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     }
                                 }
                                 //Add new sort
-                                $this->report_session->set("{$this->id}.sort.{$sort_by}", array ('is_desc' => 0, 'rank' => count($this->report_session->get("{$this->id}.sort")) ));
+                                $sort = $this->report_session->get("{$this->id}.sort");
+                                $rank = 0;
+                                if ($sort !== null) {
+                                    $rank = count($sort);
+                                }
+                                $this->report_session->set("{$this->id}.sort.{$sort_by}", array ('is_desc' => 0, 'rank' => $rank));
                                 $this->report_session->setHasChanged();
                             }
                         }
