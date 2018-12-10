@@ -75,6 +75,9 @@ export default {
                         limit: 50
                     }
                 });
+                this.branches.sort((branch_a, branch_b) =>
+                    branch_a.name.localeCompare(branch_b.name)
+                );
             } catch (e) {
                 this.has_error_while_loading_branches = true;
             } finally {
