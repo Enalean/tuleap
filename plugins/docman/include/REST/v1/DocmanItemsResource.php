@@ -69,6 +69,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * Get item
      *
      * @url    GET {id}
+     * @access hybrid
      *
      * @param int $id Id of the folder
      *
@@ -104,6 +105,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * Get the content of a folder
      *
      * @url    GET {id}/docman_items
+     * @access hybrid
      *
      * @param int $id     Id of the folder
      * @param int $offset Position of the first element to display {@from path}{@min 0}
@@ -152,6 +154,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * Then sorted parents of Item are Folder A > Folder
      *
      * @url    GET {id}/parents
+     * @access hybrid
      *
      * @param int $id     Id of the item
      * @param int $offset Position of the first element to display {@from path}{@min 0}
