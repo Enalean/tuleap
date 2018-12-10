@@ -821,7 +821,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                     }
                     $html .= '<div class="tracker_homepage_info">';
                     $html .= '<a class="link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'">';
-                    $html .= '<i class="fa fa-circle tracker_color_info '. $tracker->getColor() .'"></i>';
+                    $html .= '<i class="fa fa-circle tracker_color_info '. $hp->purify($tracker->getColor()) .'"></i>';
                     $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
                     $html .= '</a>';
 
