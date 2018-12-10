@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2018. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -15,24 +15,42 @@
   -
   - You should have received a copy of the GNU General Public License
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -
   -->
 
 <template>
-    <div class="empty-pane">
-        <div class="empty-page-illustration">
-            <empty-folder-svg/>
-        </div>
-        <p class="empty-page-text" v-translate>It's time to add new documents!</p>
-        <new-item-button/>
+    <div>
+        <button
+            type="button"
+            class="tlp-button-primary"
+            v-on:click="showNewDocumentModal()"
+        >
+            <i class="fa fa-plus tlp-button-icon"></i>
+            <translate>New document</translate>
+        </button>
+        <new-item-modal ref="modal"/>
     </div>
 </template>
 
 <script>
-import EmptyFolderSvg from "./EmptyFolderSvg.vue";
-import NewItemButton from "../NewItem/NewItemButton.vue";
+import NewItemModal from "./NewItemModal.vue";
+import { modal as createModal } from "tlp";
 
 export default {
     name: "EmptyFolder",
-    components: { EmptyFolderSvg, NewItemButton }
+    components: { NewItemModal },
+    data() {
+        return {
+            modal: null
+        };
+    },
+    mounted() {
+        this.modal = createModal(this.$refs.modal.$el);
+    },
+    methods: {
+        showNewDocumentModal() {
+            this.modal.show();
+        }
+    }
 };
 </script>

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Administration"
@@ -18,8 +18,20 @@ msgstr "Administration"
 msgid "Advanced"
 msgstr "Avancé"
 
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Create document"
+msgstr "Créer le document"
+
+msgid "Description"
+msgstr "Description"
+
 msgid "Documents"
 msgstr "Documents"
+
+msgid "Empty"
+msgstr "Vide"
 
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
@@ -35,6 +47,12 @@ msgstr "Il est temps d'ajouter des documents !"
 
 msgid "Last update date"
 msgstr "Mis à jour"
+
+msgid "My document"
+msgstr "Mon document"
+
+msgid "My useful document description"
+msgstr "Ma description de document"
 
 msgid "Name"
 msgstr "Nom"
@@ -63,6 +81,9 @@ msgstr "Voir les détails de l'erreur"
 
 msgid "This is a private folder."
 msgstr "Ce dossier est privé."
+
+msgid "Title"
+msgstr "Titre"
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

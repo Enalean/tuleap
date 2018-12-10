@@ -11,7 +11,19 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
+msgid "Create document"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
 msgid "Documents"
+msgstr ""
+
+msgid "Empty"
 msgstr ""
 
 msgid "Go to my home page"
@@ -27,6 +39,12 @@ msgid "It's time to add new documents!"
 msgstr ""
 
 msgid "Last update date"
+msgstr ""
+
+msgid "My document"
+msgstr ""
+
+msgid "My useful document description"
 msgstr ""
 
 msgid "Name"
@@ -54,6 +72,9 @@ msgid "Show error details"
 msgstr ""
 
 msgid "This is a private folder."
+msgstr ""
+
+msgid "Title"
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
