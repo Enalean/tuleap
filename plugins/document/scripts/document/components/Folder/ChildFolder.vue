@@ -35,7 +35,7 @@ export default {
     computed: {
         ...mapGetters(["does_folder_have_any_error"]),
         folder_id() {
-            return this.$route.params.item_id;
+            return parseInt(this.$route.params.item_id, 10);
         }
     },
     watch: {
