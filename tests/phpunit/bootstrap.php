@@ -20,7 +20,7 @@
  */
 
 require_once __DIR__.'/../../src/vendor/autoload.php';
-require_once __DIR__.'/../../src/www/themes/BurningParrot/autoload.php';
+require_once __DIR__.'/../../src/www/themes/BurningParrot/BurningParrotTheme.php';
 require_once __DIR__.'/../../src/common/constants.php';
 
 $basedir      = dirname(dirname(__DIR__));

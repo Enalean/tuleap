@@ -81,14 +81,14 @@ class ThemeManager
 
     private function instantiateTheme(PFUser $current_user, $name, $path, $webroot)
     {
-        if (preg_match('`'. preg_quote(self::$LEGACY_EXTENSION) .'$`', $path)) {
+        if (preg_match('`'. preg_quote(self::$LEGACY_EXTENSION, '`') .'$`', $path)) {
             $klass = $name . '_Theme';
             include_once $path;
             return new $klass($webroot);
         }
 
         $klass = "Tuleap\\Theme\\{$name}\\{$name}Theme";
-        include_once dirname($path) . '/autoload.php';
+        include_once dirname($path) . "/{$name}Theme.php";
         return new $klass($webroot, $current_user);
     }
 

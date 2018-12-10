@@ -32,10 +32,6 @@ doc: ## Build CLI documentation
 	$(MAKE) -C documentation all
 
 autoload:
-	@for path in `ls src/www/themes | egrep -v "^Tuleap|^common|^FlamingParrot|^local"`; do \
-	     echo "Generate theme $$path"; \
-	     (cd "src/www/themes/$$path/"; phpab -q --compat -o autoload.php .) \
-        done;
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
 		echo "Generate plugin $$path"; \
@@ -60,7 +56,7 @@ autoload-dev:
 composer:  ## Install PHP dependencies with Composer
 	@echo "Processing src/composer.json"
 	@composer install --working-dir=src/
-	@find plugins/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
+	@find plugins/ src/www/themes/ tests/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
 		-exec echo "Processing {}" \; -execdir composer install \;
 	@echo "Processing tools/Configuration/composer.json"
 	@composer install --working-dir=tools/Configuration/
