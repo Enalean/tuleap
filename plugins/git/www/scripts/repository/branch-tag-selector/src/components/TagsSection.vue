@@ -20,7 +20,10 @@
 <template>
     <section class="git-repository-branch-tag-selector-refs" v-if="! is_displaying_branches">
         <div class="git-repository-branch-tag-selector-is-loading" v-if="is_loading_tags"></div>
-        <a v-for="tag in tags"
+        <div class="git-repository-branch-tag-selector-filter" v-if="! is_loading_tags && tags.length">
+            <refs-filter v-model="filter_text" v-bind:placeholder="placeholder"/>
+        </div>
+        <a v-for="tag in filtered_tags"
            v-bind:key="tag.commit.id"
            v-bind:href="url(tag.name)"
            class="tlp-dropdown-menu-item"
@@ -30,24 +33,32 @@
             {{ tag.name }}
         </a>
         <div class="tlp-dropdown-menu-item" v-if="has_error_while_loading_tags">
-            <div class="tlp-alert-danger" translate>
+            <div class="tlp-alert-danger" v-translate>
                 An error occurred while loading tags
             </div>
         </div>
         <div class="git-repository-branch-tag-selector-empty"
              v-if="are_tags_loaded && ! tags.length && !has_error_while_loading_tags"
-             translate
+             v-translate
         >
             There isn't any tags defined yet
+        </div>
+        <div class="git-repository-branch-tag-selector-empty"
+             v-if="are_tags_loaded && tags.length && ! filtered_tags.length"
+             v-translate
+        >
+            There isn't any matching tags
         </div>
     </section>
 </template>
 <script>
 import { recursiveGet } from "tlp";
 import encodeData from "../helpers/encode-data.js";
+import RefsFilter from "./RefsFilter.vue";
 
 export default {
     name: "TagsSection",
+    components: { RefsFilter },
     props: {
         repository_id: Number,
         repository_url: String,
@@ -61,8 +72,20 @@ export default {
             is_loading_tags: true,
             are_tags_loaded: false,
             has_error_while_loading_tags: false,
-            tags: []
+            tags: [],
+            filter_text: ""
         };
+    },
+    computed: {
+        filtered_tags() {
+            return this.tags.filter(tag => tag.name.toLowerCase().indexOf(this.filter) !== -1);
+        },
+        filter() {
+            return this.filter_text.toLowerCase();
+        },
+        placeholder() {
+            return this.$gettext("Tag name");
+        }
     },
     watch: {
         is_displaying_branches(is_displaying_branches) {

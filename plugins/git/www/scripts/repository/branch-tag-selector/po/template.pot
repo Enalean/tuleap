@@ -11,13 +11,25 @@ msgstr ""
 msgid "An error occurred while loading tags"
 msgstr ""
 
+msgid "Branch name"
+msgstr ""
+
 msgid "Branches"
+msgstr ""
+
+msgid "Tag name"
 msgstr ""
 
 msgid "Tags"
 msgstr ""
 
 msgid "There isn't any branches defined yet"
+msgstr ""
+
+msgid "There isn't any matching branches"
+msgstr ""
+
+msgid "There isn't any matching tags"
 msgstr ""
 
 msgid "There isn't any tags defined yet"

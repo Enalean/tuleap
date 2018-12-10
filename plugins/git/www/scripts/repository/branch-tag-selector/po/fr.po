@@ -18,14 +18,26 @@ msgstr "Une erreur est survenue lors du chargement des branches"
 msgid "An error occurred while loading tags"
 msgstr "Une erreur est survenue lors du chargement des étiquettes"
 
+msgid "Branch name"
+msgstr "Nom de branche"
+
 msgid "Branches"
 msgstr "Branches"
+
+msgid "Tag name"
+msgstr "Nom d'étiquette"
 
 msgid "Tags"
 msgstr "Étiquettes"
 
 msgid "There isn't any branches defined yet"
 msgstr "Il n'y a pas de branche"
+
+msgid "There isn't any matching branches"
+msgstr "Il n'y a pas de branche correspondante"
+
+msgid "There isn't any matching tags"
+msgstr "Il n'y a pas d'étiquette correspondante"
 
 msgid "There isn't any tags defined yet"
 msgstr "Il n'y a pas d'étiquette"

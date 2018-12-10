@@ -165,6 +165,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     white-space: nowrap;
     cursor: pointer;
 
+    &:focus,
     &:hover {
         background: $tlp-ui-border-light;
         text-decoration: none;
