@@ -19,11 +19,18 @@
 
 $homepage-small-screen-width: 850px;
 
+/* stylelint-disable */
+body.homepage {
+    background: $tlp-ui-white;
+}
+/* stylelint-enable */
+
 .homepage-content {
     display: flex;
-    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
     height: 100%;
-    padding: 60px;
     background-image: linear-gradient(to bottom, $tlp-theme-background-color, $tlp-ui-white 50%);
 
     @media screen and (max-width: $homepage-small-screen-width) {
@@ -33,8 +40,12 @@ $homepage-small-screen-width: 850px;
 
 .homepage-welcome-sign-in {
     display: flex;
+    position: relative;
+    z-index: 3;
     align-items: flex-start;
+    width: 100%;
     max-width: 1400px;
+    padding: 60px;
 
     @media screen and (max-width: $homepage-small-screen-width) {
         flex-direction: column;
@@ -46,7 +57,7 @@ $homepage-small-screen-width: 850px;
 .homepage-welcome {
     flex: 1 1 auto;
     max-width: 50%;
-    margin: 0 50px 0 0;
+    margin: 0 50px 220px 0;
 
     @media screen and (max-width: $homepage-small-screen-width) {
         width: 100%;
@@ -163,4 +174,50 @@ $homepage-small-screen-width: 850px;
     color: $tlp-theme-sidebar-background-color;
     line-height: 38px;
     text-align: center;
+}
+
+.homepage-background {
+    position: absolute;
+    z-index: 2;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 733px;
+    overflow: hidden;
+}
+
+.homepage-background-illustration {
+    position: absolute;
+}
+
+.homepage-background-illustration-background {
+    fill: $tlp-theme-sidebar-background-color;
+}
+
+.homepage-background-stroke {
+    stroke: $tlp-theme-color;
+}
+
+.homepage-background-dark-circle {
+    stroke: $tlp-theme-color;
+    fill: $tlp-theme-sidebar-background-color;
+}
+
+.homepage-background-light-circle {
+    stroke: $tlp-theme-color;
+    fill: $tlp-ui-white;
+}
+
+.homepage-bottom {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    width: 100%;
+}
+
+.homepage > footer {
+    position: relative;
+    z-index: 3;
+    background: none;
+    background-image: linear-gradient(to bottom, $tlp-theme-sidebar-background-color, darken($tlp-theme-sidebar-background-color, 5%));
 }
