@@ -23,6 +23,7 @@
     <div class="document-header">
         <h1 v-bind:class="title_class" class="document-header-title">{{ folder_title }}</h1>
         <div class="document-header-actions">
+            <new-item-button v-if="!is_folder_empty"/>
             <div class="document-header-spacer"></div>
             <search-box v-if="folder_id" v-bind:folder_id="folder_id"/>
         </div>
@@ -32,17 +33,18 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import SearchBox from "./SearchBox.vue";
+import NewItemButton from "./NewItem/NewItemButton.vue";
 
 export default {
     name: "FolderHeader",
-    components: { SearchBox },
+    components: { SearchBox, NewItemButton },
     props: {
         folder_id: Number
     },
 
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy"]),
-        ...mapGetters(["current_folder_title"]),
+        ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
                 ? "tlp-skeleton-text document-folder-title-loading"

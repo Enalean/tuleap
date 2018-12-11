@@ -1,0 +1,97 @@
+/*!
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+.document-new-item-modal-body {
+    padding: 0;
+}
+
+.document-new-item-type-selector {
+    display: flex;
+    justify-content: center;
+    padding: $tlp-spacing;
+    border-bottom: 1px solid $tlp-ui-border-normal;
+    background: $tlp-theme-background-color;
+}
+
+.document-new-item-type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 96px;
+    margin: $tlp-half-spacing;
+    padding: $tlp-spacing $tlp-half-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-radius: 3px;
+    background: $tlp-ui-white;
+    color: $tlp-ui-dimmed;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.document-new-item-type-icon {
+    margin-bottom: $tlp-spacing;
+    font-size: 30px;
+}
+
+.document-new-item-type-label {
+    font-size: 14px;
+}
+
+.document-new-item-type.document-new-item-type-checked {
+    position: relative;
+    border: 1px solid $tlp-theme-color;
+
+    > .document-new-item-type-label {
+        color: $tlp-theme-color;
+    }
+
+    &::before {
+        content: '';
+        position: absolute;
+        bottom: -30px;
+        width: 0;
+        height: 0;
+        border-width: 0 10px 13px;
+        border-style: solid;
+        border-color: transparent transparent $tlp-ui-border-normal transparent;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -32px;
+        width: 0;
+        height: 0;
+        border-width: 0 10px 13px;
+        border-style: solid;
+        border-color: transparent transparent $tlp-ui-white transparent;
+    }
+}
+
+
+.document-new-item-metadata {
+    padding: $tlp-spacing;
+}
