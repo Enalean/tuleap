@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -153,9 +153,10 @@ class LatestHeartbeatsCollector
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $title = '
+        $tlp_badget_color = $purifier->purify('tlp-badge-' . $artifact->getTracker()->getNormalizedColor());
+        $title            = '
             <a class="direct-link-to-artifact" href="'. $artifact->getUri() .'">
-                <span class="tlp-badge-outline tlp-badge-'. $artifact->getTracker()->getNormalizedColor() .'">
+                <span class="tlp-badge-outline '. $tlp_badget_color .'">
                 '. $artifact->getXRef() .'
                 </span>
                 '. $purifier->purify($artifact->getTitle()) .'</a>';

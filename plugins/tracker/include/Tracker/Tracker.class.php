@@ -2066,9 +2066,16 @@ EOS;
         $cannot_configure_instantiate_for_new_projects = false;
         $params = array('cannot_configure_instantiate_for_new_projects' => &$cannot_configure_instantiate_for_new_projects, 'tracker'=>$this);
         EventManager::instance()->processEvent(TRACKER_EVENT_GENERAL_SETTINGS, $params);
-        $this->name                         = trim($request->getValidated('name', 'string', ''));
-        $this->description                  = trim($request->getValidated('description', 'text', ''));
-        $this->color                        = trim($request->getValidated('tracker_color', 'string', ''));
+        $this->name        = trim($request->getValidated('name', 'string', ''));
+        $this->description = trim($request->getValidated('description', 'text', ''));
+        $this->color       = '';
+        $available_colors  = new Tracker_ColorPresenterCollection($this);
+        foreach ($available_colors as $color_value) {
+            if ($request->get('tracker_color') === $color_value['color']) {
+                $this->color = $color_value['color'];
+                break;
+            }
+        }
         $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->enable_emailgateway          = $request->getValidated('enable_emailgateway') ? 1 : 0;
