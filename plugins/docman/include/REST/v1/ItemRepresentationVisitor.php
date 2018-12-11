@@ -41,12 +41,19 @@ class ItemRepresentationVisitor implements ItemVisitor
      */
     private $docman_version_factory;
 
+    /**
+     * @var \Docman_LinkVersionFactory
+     */
+    private $docman_link_version_factory;
+
     public function __construct(
         ItemRepresentationBuilder $item_representation_builder,
-        \Docman_VersionFactory $docman_version_factory
+        \Docman_VersionFactory $docman_version_factory,
+        \Docman_LinkVersionFactory $docman_link_version_factory
     ) {
-        $this->item_representation_builder    = $item_representation_builder;
-        $this->docman_version_factory         = $docman_version_factory;
+        $this->item_representation_builder = $item_representation_builder;
+        $this->docman_version_factory      = $docman_version_factory;
+        $this->docman_link_version_factory = $docman_link_version_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
@@ -54,6 +61,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_FOLDER,
+            null,
             null
         );
     }
@@ -63,16 +71,24 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_WIKI,
+            null,
             null
         );
     }
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
+        $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
+        $link_properties     = null;
+        if ($latest_link_version) {
+            $link_properties = new LinkPropertiesRepresentation();
+            $link_properties->build($latest_link_version);
+        }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_LINK,
-            null
+            null,
+            $link_properties
         );
     }
 
@@ -88,7 +104,8 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_FILE,
-            $file_properties
+            $file_properties,
+            null
         );
     }
 
@@ -103,7 +120,8 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_EMBEDDED,
-            $file_properties
+            $file_properties,
+            null
         );
     }
 
@@ -112,6 +130,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             ItemRepresentation::TYPE_EMPTY,
+            null,
             null
         );
     }

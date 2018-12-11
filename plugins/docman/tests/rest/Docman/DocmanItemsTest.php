@@ -58,14 +58,20 @@ class DocmanItemsTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 3);
+        $this->assertEquals(count($items), 4);
         $this->assertEquals($items[0]['title'], 'folder 2');
         $this->assertEquals($items[1]['title'], 'item A');
         $this->assertEquals($items[2]['title'], 'item C');
+        $this->assertEquals($items[3]['title'], 'item E');
 
-        $this->assertEquals($items[0]['file_properties']['file_type'], null);
-        $this->assertEquals($items[1]['file_properties']['file_type'], null);
+        $this->assertEquals($items[0]['link_properties'], null);
+        $this->assertEquals($items[0]['file_properties'], null);
+        $this->assertEquals($items[1]['file_properties'], null);
+        $this->assertEquals($items[1]['link_properties'], null);
         $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
+        $this->assertEquals($items[2]['link_properties'], null);
+        $this->assertEquals($items[3]['file_properties'], null);
+        $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
 
         return $items[0]['id'];
     }
