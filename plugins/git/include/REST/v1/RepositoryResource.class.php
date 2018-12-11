@@ -65,6 +65,8 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GitPHP\Head;
 use Tuleap\Git\GitPHP\ProjectProvider;
+use Tuleap\Git\GitPHP\RepositoryAccessException;
+use Tuleap\Git\GitPHP\RepositoryNotExistingException;
 use Tuleap\Git\GitPHP\Tag;
 use Tuleap\Git\Permissions\DefaultFineGrainedPermissionFactory;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -730,11 +732,10 @@ class RepositoryResource extends AuthenticatedResource
         Header::allowOptionsGet();
 
         $this->checkAccess();
-        $user                        = $this->getCurrentUser();
-        $repository                  = $this->getRepository($user, $id);
         $file_representation_factory = new GitFileRepresentationFactory();
         try {
-            $result = $file_representation_factory->getGitFileRepresentation(
+            $repository = $this->getGitPHPProject($id);
+            $result     = $file_representation_factory->getGitFileRepresentation(
                 $path_to_file,
                 $ref,
                 $repository
@@ -745,6 +746,8 @@ class RepositoryResource extends AuthenticatedResource
             throw new RestException(404, $exception->getMessage());
         } catch (GitRepoRefNotFoundException $exception) {
             throw new RestException(404, $exception->getMessage());
+        } catch (RepositoryNotExistingException $exception) {
+            throw new RestException(404, "Reference $ref does not exist");
         }
     }
 
@@ -784,7 +787,13 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository = $this->getRepositoryForCurrentUser($id);
 
-        $project = $this->getGitPHPProject($id);
+        try {
+            $project = $this->getGitPHPProject($id);
+        } catch (RepositoryNotExistingException $ex) {
+            $this->sendAllowHeaders();
+            Header::sendPaginationHeaders($limit, $offset, 0, self::MAX_LIMIT);
+            return [];
+        }
 
         /** @var Head[] $branches_refs */
         $branches_refs        = $project->GetHeads();
@@ -859,7 +868,13 @@ class RepositoryResource extends AuthenticatedResource
 
         $repository = $this->getRepositoryForCurrentUser($id);
 
-        $project = $this->getGitPHPProject($id);
+        try {
+            $project = $this->getGitPHPProject($id);
+        } catch (RepositoryNotExistingException $ex) {
+            $this->sendAllowHeaders();
+            Header::sendPaginationHeaders($limit, $offset, 0, self::MAX_LIMIT);
+            return [];
+        }
 
         /** @var Tag[] $tags_refs */
         $tags_refs        = $project->GetTags();
@@ -900,6 +915,8 @@ class RepositoryResource extends AuthenticatedResource
 
     /**
      * @return \Tuleap\Git\GitPHP\Project
+     * @throws RepositoryNotExistingException
+     * @throws RepositoryAccessException
      * @throws RestException
      */
     private function getGitPHPProject($repository_id)

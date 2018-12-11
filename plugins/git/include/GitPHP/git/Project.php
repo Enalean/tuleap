@@ -319,21 +319,21 @@ class Project
         $fullPath = realpath($path);
 
         if (!is_dir($fullPath)) {
-            throw new \Exception(sprintf(dgettext("gitphp", '%1$s is not a directory'), $project));
+            throw new RepositoryNotExistingException(sprintf(dgettext("gitphp", '%1$s is not a directory'), $project));
         }
 
         if (!is_file($fullPath . '/HEAD')) {
-            throw new \Exception(sprintf(dgettext("gitphp", '%1$s is not a git repository'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is not a git repository'), $project));
         }
 
         if (preg_match('/(^|\/)\.{0,2}(\/|$)/', $project)) {
-            throw new \Exception(sprintf(dgettext("gitphp", '%1$s is attempting directory traversal'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is attempting directory traversal'), $project));
         }
 
         $pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
         if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
-            throw new \Exception(sprintf(dgettext("gitphp", '%1$s is outside of the projectroot'), $project));
+            throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is outside of the projectroot'), $project));
         }
 
         $this->project = $project;

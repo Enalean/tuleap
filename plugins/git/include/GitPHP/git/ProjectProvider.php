@@ -25,6 +25,10 @@ class ProjectProvider
     private $repository;
     private $project;
 
+    /**
+     * @throws RepositoryAccessException
+     * @throws RepositoryNotExistingException
+     */
     public function __construct(\GitRepository $repository)
     {
         $project_root = $repository->getGitRootPath() . $repository->getProject()->getUnixName() . '/';

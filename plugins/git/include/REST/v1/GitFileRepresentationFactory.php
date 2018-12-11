@@ -23,6 +23,7 @@ namespace Tuleap\Git\REST\v1;
 
 use Tuleap\Git\Exceptions\GitRepoRefNotFoundException;
 use Tuleap\Git\GitPHP\Pack;
+use Tuleap\Git\GitPHP\Project;
 use Tuleap\Git\GitPHP\ProjectProvider;
 
 class GitFileRepresentationFactory
@@ -34,22 +35,20 @@ class GitFileRepresentationFactory
      * @throws \GitRepositoryException
      * @throw GitRepoRefNotFoundException
      */
-    public function getGitFileRepresentation($path_to_file, $ref, \GitRepository $git_repository)
+    public function getGitFileRepresentation($path_to_file, $ref, Project $git_repository)
     {
         $name     = basename($path_to_file);
-        $provider = new ProjectProvider($git_repository);
-        $project  = $provider->GetProject();
-        $commit   = $project->GetCommit($ref);
+        $commit   = $git_repository->GetCommit($ref);
         if ($commit === null) {
             throw new \GitRepositoryException(sprintf('Commit for the reference \'%s\' not found', $ref));
         }
         $hash            = $commit->PathToHash($path_to_file);
-        $data            = $project->GetObject($hash, $type_int);
+        $data            = $git_repository->GetObject($hash, $type_int);
         $encoded_content = base64_encode($data);
         if (Pack::OBJ_BLOB !== $type_int) {
             throw new \GitRepositoryException(sprintf('\'%s\' is not a file', $name));
         }
-        $file = $project->GetBlob($hash);
+        $file = $git_repository->GetBlob($hash);
         $size = $file->GetSize();
 
         $git_file = new GitFileContentRepresentation();
