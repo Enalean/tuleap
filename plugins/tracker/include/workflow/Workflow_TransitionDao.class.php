@@ -141,5 +141,4 @@ class Workflow_TransitionDao extends DataAccessObject
                 WHERE transition_id=$transition_id";
         return $this->retrieve($sql);
     }
-
 }

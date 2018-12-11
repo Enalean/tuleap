@@ -70,7 +70,6 @@ class TransitionsResource extends AuthenticatedResource
      * @return WorkflowTransitionPOSTRepresentation {@type WorkflowTransitionPOSTRepresentation}
      *
      * @throws 400 I18NRestException
-     * @throws 404 I18NRestException
      * @throws \Luracast\Restler\RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
@@ -93,7 +92,7 @@ class TransitionsResource extends AuthenticatedResource
         $this->getPermissionsChecker()->checkCreate($current_user, $tracker);
 
         $workflow = $this->getWorkflowByTrackerId($tracker_id);
-        list($validated_from_id, $validated_to_id) = $this->validateParams($workflow, $from_id, $to_id);
+        list($validated_from_id, $validated_to_id) = $this->validatePostParams($workflow, $from_id, $to_id);
 
         $transition = $this->getTransitionFactory()->createAndSaveTransition($workflow, $validated_from_id, $validated_to_id);
 
@@ -101,6 +100,52 @@ class TransitionsResource extends AuthenticatedResource
         $transition_representation->build($transition);
 
         return $transition_representation;
+    }
+
+    /**
+     * Delete a transition from a workflow
+     *
+     * @url    DELETE {id}
+     * @status 200
+     *
+     * @access protected
+     *
+     * @param  int $id Transition id
+     *
+     * @throws 400 I18NRestException
+     * @throws 401 RestException
+     * @throws 403 I18NRestException
+     * @throws 404 I18NRestException
+     * @throws \Luracast\Restler\RestException
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws \Tuleap\Tracker\Workflow\TransitionDeletionException
+     * @throws OrphanTransitionException
+     */
+    public function deleteTransition($id)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaderForTransition();
+
+        $transition = $this->getTransitionFactory()->getTransition($id);
+        if (!$transition) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
+        }
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $this->getPermissionsChecker()->checkDelete($current_user, $transition);
+
+        $workflow = $transition->getWorkflow();
+        if ($workflow === null) {
+            throw new OrphanTransitionException($transition);
+        }
+        $project = $workflow->getTracker()->getProject();
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
+        $this->getTransitionFactory()->delete($transition);
     }
 
     /**
@@ -118,7 +163,7 @@ class TransitionsResource extends AuthenticatedResource
      * @throws 400 I18NRestException
      * @throws 404 I18NRestException
      */
-    private function validateParams($workflow, $param_from_id, $param_to_id)
+    private function validatePostParams($workflow, $param_from_id, $param_to_id)
     {
         if ($param_from_id === $param_to_id) {
             throw new I18NRestException(400, dgettext('tuleap-tracker', 'The same value cannot be source and destination at the same time.'));
@@ -145,7 +190,7 @@ class TransitionsResource extends AuthenticatedResource
 
     private function sendAllowHeaderForTransition()
     {
-        Header::allowOptionsPost();
+        Header::allowOptionsPostDelete();
     }
 
     /**

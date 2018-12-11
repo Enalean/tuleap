@@ -677,6 +677,13 @@ msgstr ""
 msgid "Trackers"
 msgstr ""
 
+msgid "Transition not found."
+msgstr ""
+
+#, php-format
+msgid "Transition with id '%d' has no workflow"
+msgstr ""
+
 msgid "Transitions Rules"
 msgstr ""
 
