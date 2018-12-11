@@ -53,6 +53,11 @@ class ItemRepresentation
     public $last_update_date;
 
     /**
+     * @var bool {@type bool}
+     */
+    public $user_can_write;
+
+    /**
      * @var string
      */
     public $type;
@@ -70,6 +75,7 @@ class ItemRepresentation
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
+        $user_can_write,
         $type,
         FilePropertiesRepresentation $file_properties = null,
         LinkPropertiesRepresentation $link_properties = null
@@ -78,6 +84,7 @@ class ItemRepresentation
         $this->title            = $item->getTitle();
         $this->owner            = $owner;
         $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
+        $this->user_can_write   = $user_can_write;
         $this->type             = $type;
         $this->file_properties  = $file_properties;
         $this->link_properties  = $link_properties;

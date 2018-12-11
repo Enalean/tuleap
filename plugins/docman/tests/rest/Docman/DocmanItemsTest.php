@@ -51,6 +51,7 @@ class DocmanItemsTest extends DocmanBase
 
         $this->assertEquals(count($folder), 1);
         $folder_id = $folder[0]['id'];
+        $this->assertEquals($folder[0]['user_can_write'], true);
 
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
@@ -64,13 +65,19 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[2]['title'], 'item C');
         $this->assertEquals($items[3]['title'], 'item E');
 
-        $this->assertEquals($items[0]['link_properties'], null);
+        $this->assertEquals($items[0]['user_can_write'], false);
+        $this->assertEquals($items[1]['user_can_write'], false);
+        $this->assertEquals($items[2]['user_can_write'], false);
+        $this->assertEquals($items[3]['user_can_write'], false);
+
         $this->assertEquals($items[0]['file_properties'], null);
         $this->assertEquals($items[1]['file_properties'], null);
-        $this->assertEquals($items[1]['link_properties'], null);
         $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
-        $this->assertEquals($items[2]['link_properties'], null);
         $this->assertEquals($items[3]['file_properties'], null);
+
+        $this->assertEquals($items[0]['link_properties'], null);
+        $this->assertEquals($items[1]['link_properties'], null);
+        $this->assertEquals($items[2]['link_properties'], null);
         $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
 
         return $items[0]['id'];

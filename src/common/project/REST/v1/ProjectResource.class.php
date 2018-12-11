@@ -232,7 +232,7 @@ class ProjectResource extends AuthenticatedResource {
             throw new RestException(400, $exception->getMessage());
         }
 
-        $project_representation = $this->getProjectRepresentation($project);
+        $project_representation = $this->getProjectRepresentation($project, $user);
 
         return $project_representation;
     }
@@ -308,14 +308,14 @@ class ProjectResource extends AuthenticatedResource {
             $paginated_projects = $this->getMyAndPublicProjects($user, $offset, $limit);
         }
 
-        return $this->sendProjectRepresentations($paginated_projects, $limit, $offset);
+        return $this->sendProjectRepresentations($paginated_projects, $limit, $offset, $user);
     }
 
-    private function sendProjectRepresentations(PaginatedProjects $paginated_projects, $limit, $offset)
+    private function sendProjectRepresentations(PaginatedProjects $paginated_projects, $limit, $offset, PFUser $current_user)
     {
         $project_representations = array();
         foreach($paginated_projects->getProjects() as $project) {
-            $project_representations[] = $this->getProjectRepresentation($project);
+            $project_representations[] = $this->getProjectRepresentation($project, $current_user);
         }
 
         $this->sendAllowHeadersForProject();
@@ -417,11 +417,12 @@ class ProjectResource extends AuthenticatedResource {
 
         if ($this->isUserDelegatedRestProjectManager($user)) {
             return $this->getProjectRepresentation(
-                $this->getProjectForRestProjectManager($id)
+                $this->getProjectForRestProjectManager($id),
+                $user
             );
         }
 
-        return $this->getProjectRepresentation($this->getProjectForUser($id));
+        return $this->getProjectRepresentation($this->getProjectForUser($id), $user);
     }
 
     /**
@@ -481,9 +482,11 @@ class ProjectResource extends AuthenticatedResource {
      * Get a ProjectRepresentation
      *
      * @param Project $project
+     * @param PFUser  $current_user
+     *
      * @return ProjectRepresentation
      */
-    private function getProjectRepresentation(Project $project) {
+    private function getProjectRepresentation(Project $project, PFUser $current_user) {
         $resources = array();
         $this->event_manager->processEvent(
             Event::REST_PROJECT_RESOURCES,
@@ -502,6 +505,7 @@ class ProjectResource extends AuthenticatedResource {
             Event::REST_PROJECT_ADDITIONAL_INFORMATIONS,
             array(
                 'project' => $project,
+                'current_user' => $current_user,
                 'informations' => &$informations
             )
         );

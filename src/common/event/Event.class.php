@@ -693,8 +693,9 @@ class Event {
      * Register REST Additional informations for project
      *
      * Parameters:
-     *  'project'     => Project
-     *  'informations => array
+     *  'project'      => Project
+     *  'current_user' => PFUser
+     *  'informations  => array
      */
     const REST_PROJECT_ADDITIONAL_INFORMATIONS = 'rest_project_additional_informations';
 

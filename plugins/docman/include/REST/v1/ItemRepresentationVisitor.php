@@ -60,6 +60,7 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_FOLDER,
             null,
             null
@@ -70,6 +71,7 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_WIKI,
             null,
             null
@@ -86,6 +88,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_LINK,
             null,
             $link_properties
@@ -103,6 +106,7 @@ class ItemRepresentationVisitor implements ItemVisitor
 
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_FILE,
             $file_properties,
             null
@@ -119,6 +123,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_EMBEDDED,
             $file_properties,
             null
@@ -129,6 +134,7 @@ class ItemRepresentationVisitor implements ItemVisitor
     {
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
+            $params['current_user'],
             ItemRepresentation::TYPE_EMPTY,
             null,
             null
