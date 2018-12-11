@@ -138,6 +138,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
                     new LFSAuthorizationTokenHeaderSerializer(),
                     new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                    new \Tuleap\GitLFS\Admin\AdminDao(),
                     $logger
                 )
             );

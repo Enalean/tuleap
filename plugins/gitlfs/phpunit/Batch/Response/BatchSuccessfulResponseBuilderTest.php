@@ -24,6 +24,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\GitLFS\Admin\AdminDao;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\LFSObject\LFSObject;
@@ -37,6 +38,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
     private $token_creator;
     private $token_formatter;
     private $object_retriever;
+    private $admin_dao;
     private $logger;
 
     protected function setUp()
@@ -44,6 +46,7 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $this->token_creator    = \Mockery::mock(ActionAuthorizationTokenCreator::class);
         $this->token_formatter  = \Mockery::mock(SplitTokenFormatter::class);
         $this->object_retriever = \Mockery::mock(LFSObjectRetriever::class);
+        $this->admin_dao        = \Mockery::mock(AdminDao::class);
         $this->logger           = \Mockery::mock(\Logger::class);
     }
 
@@ -66,11 +69,13 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $request_existing_object->shouldReceive('getSize')->andReturns(456789);
 
         $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_existing_object]);
+        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
 
         $builder        = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
             $this->token_formatter,
             $this->object_retriever,
+            $this->admin_dao,
             $this->logger
         );
         $batch_response = $builder->build(
@@ -104,11 +109,13 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $request_object2->shouldReceive('getSize')->andReturns(654321);
 
         $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([$request_object2]);
+        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
 
         $builder        = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
             $this->token_formatter,
             $this->object_retriever,
+            $this->admin_dao,
             $this->logger
         );
         $batch_response = $builder->build(
@@ -134,10 +141,13 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
         $operation->shouldReceive('isUpload')->andReturns(false);
         $operation->shouldReceive('isDownload')->andReturns(false);
 
+        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(536870912);
+
         $builder = new BatchSuccessfulResponseBuilder(
             $this->token_creator,
             $this->token_formatter,
             $this->object_retriever,
+            $this->admin_dao,
             $this->logger
         );
 
@@ -146,6 +156,48 @@ class BatchSuccessfulResponseBuilderTest extends TestCase
             'https://example.com',
             $repository,
             $operation
+        );
+    }
+
+    /**
+     * @expectedException \Tuleap\GitLFS\Batch\Response\MaxFileSizeException
+     */
+    public function testBuildingResponseWithAFileWithASizeBiggerThanMaxSizeIsRejected()
+    {
+        $this->token_creator->shouldReceive('createActionAuthorizationToken')->andReturns(\Mockery::mock(SplitToken::class));
+        $this->logger->shouldReceive('debug');
+
+        $current_time = new \DateTimeImmutable('2018-11-22', new \DateTimeZone('UTC'));
+        $repository   = \Mockery::mock(\GitRepository::class);
+        $operation    = \Mockery::mock(BatchRequestOperation::class);
+        $operation->shouldReceive('isUpload')->andReturns(true);
+        $operation->shouldReceive('isDownload')->andReturns(false);
+
+        $request_object1 = \Mockery::mock(LFSObject::class);
+        $request_object1->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_object1->shouldReceive('getSize')->andReturns(1);
+        $request_object2 = \Mockery::mock(LFSObject::class);
+        $request_object2->shouldReceive('getOID')->andReturns(\Mockery::spy(LFSObjectID::class));
+        $request_object2->shouldReceive('getSize')->andReturns(654321);
+
+        $this->object_retriever->shouldReceive('getExistingLFSObjectsFromTheSetForRepository')->andReturns([]);
+        $this->admin_dao->shouldReceive('getFileMaxSize')->andReturns(1);
+
+        $builder = new BatchSuccessfulResponseBuilder(
+            $this->token_creator,
+            $this->token_formatter,
+            $this->object_retriever,
+            $this->admin_dao,
+            $this->logger
+        );
+
+        $builder->build(
+            $current_time,
+            'https://example.com',
+            $repository,
+            $operation,
+            $request_object1,
+            $request_object2
         );
     }
 }
