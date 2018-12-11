@@ -25,7 +25,7 @@
         <div class="document-header-actions">
             <new-item-button v-if="!is_folder_empty"/>
             <div class="document-header-spacer"></div>
-            <search-box v-if="folder_id" v-bind:folder_id="folder_id"/>
+            <search-box v-if="is_loaded_with_content" v-bind:folder_id="folder_id"/>
         </div>
     </div>
 </template>
@@ -52,6 +52,9 @@ export default {
         },
         folder_title() {
             return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
+        },
+        is_loaded_with_content() {
+            return !this.is_folder_empty;
         }
     }
 };
