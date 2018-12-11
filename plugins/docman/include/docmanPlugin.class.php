@@ -44,6 +44,7 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRetriever;
+use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\Widget\Event\GetPublicAreas;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -144,6 +145,8 @@ class DocmanPlugin extends Plugin
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_ADDITIONAL_INFORMATIONS);
+
+        $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -1240,5 +1243,14 @@ class DocmanPlugin extends Plugin
     {
         $injector = new ResourcesInjector();
         $injector->populate($params['restler']);
+    }
+
+    public function collectRoutesEvent(CollectRoutesEvent $event)
+    {
+        if (ForgeConfig::get('enable_tus_test_endpoint')) {
+            $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file', function () {
+                return new \Tuleap\Docman\Upload\FileUploadController('/tmp');
+            });
+        }
     }
 }
