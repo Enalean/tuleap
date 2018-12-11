@@ -24,7 +24,7 @@
         <h1 v-bind:class="title_class" class="document-header-title">{{ folder_title }}</h1>
         <div class="document-header-actions">
             <div class="document-header-spacer"></div>
-            <search-box v-if="folder_id" v-bind:folder_id="folder_id"/>
+            <search-box v-if="is_loaded_with_content" v-bind:folder_id="folder_id"/>
         </div>
     </div>
 </template>
@@ -42,7 +42,7 @@ export default {
 
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy"]),
-        ...mapGetters(["current_folder_title"]),
+        ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
                 ? "tlp-skeleton-text document-folder-title-loading"
@@ -50,6 +50,9 @@ export default {
         },
         folder_title() {
             return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
+        },
+        is_loaded_with_content() {
+            return !this.is_folder_empty;
         }
     }
 };
