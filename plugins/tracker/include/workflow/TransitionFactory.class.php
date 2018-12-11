@@ -21,7 +21,8 @@
 
 require_once('common/permission/PermissionsManager.class.php');
 
-class TransitionFactory {
+class TransitionFactory
+{
 
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
@@ -31,7 +32,8 @@ class TransitionFactory {
      *
      * @param Workflow_Transition_ConditionFactory $condition_factory
      */
-    public function __construct(Workflow_Transition_ConditionFactory $condition_factory) {
+    public function __construct(Workflow_Transition_ConditionFactory $condition_factory)
+    {
         $this->condition_factory = $condition_factory;
     }
 
@@ -45,7 +47,8 @@ class TransitionFactory {
      *
      * @return TransitionFactory
      */
-    public static function instance() {
+    public static function instance()
+    {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
             self::$_instance = new $c(Workflow_Transition_ConditionFactory::build());
@@ -61,33 +64,52 @@ class TransitionFactory {
      *
      * @return Transition
      */
-    public function getInstanceFromRow($row, Workflow $workflow = null) {
+    public function getInstanceFromRow($row, Workflow $workflow = null)
+    {
         if (!$workflow) {
             $workflow = WorkflowFactory::instance()->getWorkflow($row['workflow_id']);
         }
 
-        $field_values = $workflow->getAllFieldValues();
-        $from         = null;
-        $to           = null;
-        if (isset($field_values[$row['from_id']])) {
-            $from = $field_values[$row['from_id']];
-        }
-        if (isset($field_values[$row['to_id']])) {
-            $to = $field_values[$row['to_id']];
-        }
+        $transition = $this->buildTransition($row['from_id'], $row['to_id'], $workflow, $row['transition_id']);
 
-        $transition = new Transition($row['transition_id'],
-                                     $row['workflow_id'],
-                                     $from,
-                                     $to);
         $this->getPostActionFactory()->loadPostActions($transition);
         return $transition;
     }
 
     /**
+     * @param int       $transition_id
+     * @param int       $from_id
+     * @param int       $to_id
+     * @param Workflow  $workflow
+     *
+     * @return Transition
+     */
+    private function buildTransition($from_id, $to_id, $workflow, $transition_id = null)
+    {
+        $field_values = $workflow->getAllFieldValues();
+        $from         = null;
+        $to           = null;
+        if (isset($field_values[$from_id])) {
+            $from = $field_values[$from_id];
+        }
+        if (isset($field_values[$to_id])) {
+            $to = $field_values[$to_id];
+        }
+
+        return new Transition(
+            $transition_id,
+            $workflow->getId(),
+            $from,
+            $to
+        );
+
+    }
+
+    /**
      * @return Transition_PostActionFactory
      */
-    public function getPostActionFactory() {
+    public function getPostActionFactory()
+    {
         return new Transition_PostActionFactory();
     }
 
@@ -98,7 +120,8 @@ class TransitionFactory {
     *
     * @return Transition|null
     */
-    public function getTransition($transition_id) {
+    public function getTransition($transition_id)
+    {
         $dao = $this->getDao();
         if ($row = $dao->searchById($transition_id)->getRow()) {
             return $this->getInstanceFromRow($row);
@@ -115,11 +138,11 @@ class TransitionFactory {
         $dao = $this->getDao();
         if ($from != null) {
             $from = $from->getId();
-        } else if ($from === null) {
+        } elseif ($from === null) {
             $from = 0;
         }
 
-        if (! isset($this->cache_transition_id[$tracker_id]) ) {
+        if (! isset($this->cache_transition_id[$tracker_id])) {
             foreach ($dao->searchByTrackerId($tracker_id) as $row) {
                 $row_from = (int) $row['from_id'];
                 $row_to   = (int) $row['to_id'];
@@ -142,7 +165,8 @@ class TransitionFactory {
      *
      * @return bool
      */
-    public function isFieldUsedInTransitions(Tracker_FormElement_Field $field) {
+    public function isFieldUsedInTransitions(Tracker_FormElement_Field $field)
+    {
         return $this->getPostActionFactory()->isFieldUsedInPostActions($field)
             || $this->condition_factory->isFieldUsedInConditions($field);
     }
@@ -152,7 +176,8 @@ class TransitionFactory {
      *
      * @return Workflow_TransitionDao
      */
-    protected function getDao() {
+    protected function getDao()
+    {
         return new Workflow_TransitionDao();
     }
 
@@ -164,8 +189,8 @@ class TransitionFactory {
      *
      * @return Transition The transition object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, Project $project) {
-
+    public function getInstanceFromXML($xml, &$xmlMapping, Project $project)
+    {
         $from = null;
         if ((string)$xml->from_id['REF'] != 'null') {
             $from = $xmlMapping[(string)$xml->from_id['REF']];
@@ -192,14 +217,15 @@ class TransitionFactory {
      *
      * @return boolean
      */
-    public function deleteWorkflow($workflow) {
+    public function deleteWorkflow($workflow)
+    {
         $transitions = $this->getTransitions($workflow);
         $workflow_id = $workflow->getId();
 
         $this->getDao()->startTransaction();
 
         //Delete permissions
-        foreach($transitions as $transition) {
+        foreach ($transitions as $transition) {
             $transition_id = $transition->getTransitionId();
 
             permission_clear_all(
@@ -208,7 +234,6 @@ class TransitionFactory {
                 $transition_id,
                 false
             );
-
         }
         $result = $this->getDao()->deleteWorkflowTransitions($workflow_id);
         if ($result === false) {
@@ -226,9 +251,10 @@ class TransitionFactory {
      *
      * @return Array of Transition
      */
-    public function getTransitions(Workflow $workflow){
+    public function getTransitions(Workflow $workflow)
+    {
         $transitions = array();
-        foreach($this->getDao()->searchByWorkflow($workflow->getId()) as $row) {
+        foreach ($this->getDao()->searchByWorkflow($workflow->getId()) as $row) {
             $transitions[] = $this->getInstanceFromRow($row, $workflow);
         }
         return $transitions;
@@ -242,11 +268,11 @@ class TransitionFactory {
      *
      * @return void
      */
-    public function saveObject($workflow_id, $transition) {
-
+    public function saveObject($workflow_id, $transition)
+    {
         $dao = $this->getDao();
 
-        if($transition->getFieldValueFrom() == null) {
+        if ($transition->getFieldValueFrom() == null) {
             $from_id=null;
         } else {
             $from_id = $transition->getFieldValueFrom()->getId();
@@ -266,38 +292,57 @@ class TransitionFactory {
         $transition->getConditions()->saveObject();
     }
 
-   /**
-    * Adds permissions in the database
-    *
-    * @param Array $ugroups the list of ugroups
-    * @param Transition          $transition  The transition
-    *
-    * @return boolean
-    */
-    public function addPermissions($ugroups, $transition) {
+    /**
+     * Generate transition object and save it in database.
+     *
+     * @param Workflow  $workflow
+     * @param int       $validated_from_id
+     * @param int       $validated_to_id
+     *
+     * @return Transition
+     */
+    public function createAndSaveTransition($workflow, $validated_from_id, $validated_to_id)
+    {
+        $new_transition = $this->buildTransition($validated_from_id, $validated_to_id, $workflow, null);
+        $this->saveObject($workflow->getId(), $new_transition);
+
+        return $new_transition;
+    }
+
+    /**
+     * Adds permissions in the database
+     *
+     * @param Array $ugroups the list of ugroups
+     * @param Transition          $transition  The transition
+     *
+     * @return boolean
+     */
+    public function addPermissions($ugroups, $transition)
+    {
         $pm = PermissionsManager::instance();
         $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
         foreach ($ugroups as $ugroup) {
-            if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
+            if (!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
                 return false;
             }
         }
         return true;
     }
 
-   /**
-    * Duplicate the transitions
-    *
-    * @param Array $values array of old and new values of the field
-    * @param int   $workflow_id the workflow id
-    * @param Array $transitions the transitions to duplicate
-    * @param Array $field_mapping the field mapping
-    * @param Array $ugroup_mapping the ugroup mapping
-    * @param bool  $duplicate_static_perms true if duplicate static perms, false otherwise
-    *
-    * @return void
-    */
-    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type) {
+    /**
+     * Duplicate the transitions
+     *
+     * @param Array $values array of old and new values of the field
+     * @param int   $workflow_id the workflow id
+     * @param Array $transitions the transitions to duplicate
+     * @param Array $field_mapping the field mapping
+     * @param Array $ugroup_mapping the ugroup mapping
+     * @param bool  $duplicate_static_perms true if duplicate static perms, false otherwise
+     *
+     * @return void
+     */
+    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type)
+    {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
@@ -312,7 +357,6 @@ class TransitionFactory {
                     $from = $transition->getFieldValueFrom()->getId();
                     $to   = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value=>$id_value) {
-
                         if ($value == $from) {
                             $from_id = $id_value;
                         }
@@ -334,17 +378,17 @@ class TransitionFactory {
         }
     }
 
-   /**
-    * Add a transition in db
-    *
-    * @param int $workflow_id the old transition id
-    * @param int $from_id the new transition id
-    * @param int $to_id the ugroup mapping
-    *
-    * @return void
-    */
-    public function addTransition($workflow_id, $from_id, $to_id) {
+    /**
+     * Add a transition in db
+     *
+     * @param int $workflow_id the old transition id
+     * @param int $from_id the new transition id
+     * @param int $to_id the ugroup mapping
+     *
+     * @return void
+     */
+    public function addTransition($workflow_id, $from_id, $to_id)
+    {
         return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
     }
 }
-?>

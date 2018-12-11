@@ -208,6 +208,9 @@ msgstr "Notifications par défaut"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid "Destination id does not exist."
+msgstr "L'id destination n'existe pas."
+
 msgid "Edit"
 msgstr "Éditer"
 
@@ -377,6 +380,9 @@ msgstr ""
 
 msgid "Something went wrong."
 msgstr "Quelque chose s'est mal passé."
+
+msgid "Source id does not exist."
+msgstr "L'id source n'existe pas."
 
 msgid "Status change notifications"
 msgstr "Notifications lors de la mise à jour du statut"
@@ -699,6 +705,11 @@ msgstr ""
 "Le rapport a été trié sur cette colonne. Cette colonne ne permet cependant "
 "pas le tri. Le tri a donc été ignoré. Veuillez choisir une autre colonne."
 
+msgid "The same value cannot be source and destination at the same time."
+msgstr ""
+"La même valeur ne peut pas être à la fois source et destination en même "
+"temps."
+
 msgid "The submitted URL is not valid."
 msgstr "L'URL soumise n'est pas valide."
 
@@ -735,11 +746,17 @@ msgstr "La valeur '%s' n’existe pas pour le champ liste ‘%s’."
 msgid "This template does not use trackers"
 msgstr "Ce patron n'utilise pas les trackers"
 
+msgid "This tracker does not exist."
+msgstr "Cet outil de suivi n'existe pas."
+
 msgid "This tracker has no workflow."
-msgstr "Ce tracker n'a pas de workflow."
+msgstr "Cet outil de suivi n'a pas de workflow."
 
 msgid "This tracker is deleted"
 msgstr "Ce tracker a été supprimé."
+
+msgid "This transition already exists."
+msgstr "Cette transition existe déjà."
 
 msgid "Time"
 msgstr "Date"
