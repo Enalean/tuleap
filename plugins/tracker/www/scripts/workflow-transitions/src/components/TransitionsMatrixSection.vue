@@ -24,34 +24,26 @@
                 <tr>
                     <th></th>
                     <th
-                        v-for="field_to in all_field_values_to"
-                        v-bind:key="field_to.id"
+                        v-for="to in all_target_values"
+                        v-bind:key="to.id"
                     >
-                        <span class="tracker-workflow-transition-column-label">{{ field_to.label }}</span>
+                        <span class="tracker-workflow-transition-column-label">{{ to.label }}</span>
                     </th>
                 </tr>
             </thead>
             <tbody class="tracker-workflow-transition-tbody">
                 <tr
-                    v-for="field_from in all_field_values_from"
-                    v-bind:key="field_from.id"
+                    v-for="from in all_source_values"
+                    v-bind:key="from.id"
                 >
-                    <td class="tracker-workflow-transition-row-label">{{ field_from.label }}</td>
-
-                    <td
-                        v-for="field_to in all_field_values_to"
-                        v-bind:key="field_to.id"
-                        v-bind:class="transitionCellClass(field_from.id, field_to.id)"
-                    >
-                        <button
-                            class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
-                            v-if="isThereATransition(field_from.id, field_to.id)"
-                            v-translate
-                            disabled
-                        >
-                            Configure
-                        </button>
-                    </td>
+                    <td class="tracker-workflow-transition-row-label">{{ from.label }}</td>
+                    <transition-matrix-content
+                        v-for="to in all_target_values"
+                        v-bind:key="to.id"
+                        v-bind:from="from"
+                        v-bind:to="to"
+                        v-bind:transition="findTransition(from, to)"
+                    />
                 </tr>
             </tbody>
         </table>
@@ -68,36 +60,39 @@
 </template>
 <script>
 import { mapState } from "vuex";
+import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 
 export default {
     name: "TransitionsMatrixSection",
 
+    components: { TransitionMatrixContent },
+
     computed: {
         ...mapState(["current_tracker"]),
 
-        all_field_values_to() {
-            const all_values = this.current_tracker.fields.find(
+        all_target_values() {
+            const all_target_values = this.current_tracker.fields.find(
                 field => field.field_id === this.current_tracker.workflow.field_id
             ).values;
 
-            if (all_values === null) {
+            if (all_target_values === null) {
                 return [];
             }
 
-            return all_values.filter(value => value.is_hidden === false);
+            return all_target_values.filter(value => value.is_hidden === false);
         },
 
-        all_field_values_from() {
+        all_source_values() {
             return [
                 {
                     label: this.$gettext("(New artifact)"),
                     id: null
                 },
-                ...this.all_field_values_to
+                ...this.all_target_values
             ];
         },
         has_field_values() {
-            return this.all_field_values_to.length > 0;
+            return this.all_target_values.length > 0;
         },
         configure_field_url() {
             const tracker_id = this.current_tracker.id;
@@ -108,24 +103,10 @@ export default {
     },
 
     methods: {
-        isThereATransition(from_id, to_id) {
-            return this.current_tracker.workflow.transitions.some(transition => {
-                return transition.from_id === from_id && transition.to_id === to_id;
-            });
-        },
-
-        transitionCellClass(from_id, to_id) {
-            const class_name = "tracker-workflow-transition-row-content";
-
-            if (from_id === to_id) {
-                return `${class_name}-forbidden`;
-            }
-
-            if (this.isThereATransition(from_id, to_id)) {
-                return `${class_name}-active`;
-            }
-
-            return class_name;
+        findTransition(from, to) {
+            return this.current_tracker.workflow.transitions.find(
+                transition => transition.from_id === from.id && transition.to_id === to.id
+            );
         }
     }
 };

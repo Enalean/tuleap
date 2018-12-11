@@ -55,23 +55,19 @@
         }
 
         > .tracker-workflow-transition-row-content {
-            &,
-            &-active {
-                position: relative;
-                width: 100px;
-                min-width: 100px;
-                font-size: 20px;
-                font-weight: 600;
-                line-height: 16px;
-                text-align: center;
-                cursor: pointer;
-            }
+            position: relative;
+            width: 100px;
+            min-width: 100px;
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 16px;
+            text-align: center;
         }
     }
 }
 
 .tracker-workflow-transition-row-content {
-    &::before {
+    &-empty::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -83,28 +79,22 @@
         background: $tlp-ui-border-dark;
     }
 
-    &-active::before {
-        content: '⤴';
-        display: block;
-        position: relative;
-        top: auto;
-        left: auto;
-        width: auto;
-        height: auto;
-        transform: none;
-        background: none;
-        color: $tlp-theme-color;
-        text-align: center;
-    }
-
     &-forbidden::before {
         content: '\f05e';
         display: block;
         color: $tlp-ui-border-dark;
         font-family: FontAwesome;
+        font-size: 16px;
+        font-weight: normal;
         text-align: center;
         cursor: not-allowed;
     }
+}
+
+.tracker-workflow-transition-row-content-active::before {
+    content: '⤴';
+    display: block;
+    color: $tlp-theme-color;
 }
 
 .tracker-workflow-transition-column-label {
