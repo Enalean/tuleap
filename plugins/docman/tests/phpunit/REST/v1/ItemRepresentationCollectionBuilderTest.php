@@ -75,6 +75,11 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
      */
     private $item_version_factory;
 
+    /**
+     * @var \Docman_LinkVersionFactory
+     */
+    private $link_version_factory;
+
     protected function setUp()
     {
         parent::setUp();
@@ -83,9 +88,11 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $this->permission_manager                     = Mockery::mock(Docman_PermissionsManager::class);
         $this->item_representation_builder            = Mockery::mock(ItemRepresentationBuilder::class);
         $this->item_version_factory                   = Mockery::mock(\Docman_VersionFactory::class);
+        $this->link_version_factory                   = Mockery::mock(\Docman_LinkVersionFactory::class);
         $this->item_representation_visitor            = new ItemRepresentationVisitor(
             $this->item_representation_builder,
-            $this->item_version_factory
+            $this->item_version_factory,
+            $this->link_version_factory
         );
         $this->dao                                    = Mockery::mock(\Docman_ItemDao::class);
         $this->item_representation_collection_builder = new ItemRepresentationCollectionBuilder(
@@ -110,7 +117,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         ];
-        $dar_item_2        = [
+        $dar_item_2 = [
             'item_id'     => 2,
             'title'       => 'item A',
             'user_id'     => 101,
@@ -125,6 +132,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'update_date' => 1542099693,
             'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FILE
         ];
+
         $this->dao->shouldReceive('searchByParentIdWithPagination')->andReturn(
             [
                 $dar_item_1,

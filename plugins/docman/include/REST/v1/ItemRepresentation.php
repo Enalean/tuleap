@@ -62,11 +62,17 @@ class ItemRepresentation
      */
     public $file_properties;
 
+    /**
+     * @var LinkPropertiesRepresentation | null
+     */
+    public $link_properties;
+
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
         $type,
-        FilePropertiesRepresentation $file_properties = null
+        FilePropertiesRepresentation $file_properties = null,
+        LinkPropertiesRepresentation $link_properties = null
     ) {
         $this->id               = JsonCast::toInt($item->getId());
         $this->title            = $item->getTitle();
@@ -74,5 +80,6 @@ class ItemRepresentation
         $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
         $this->type             = $type;
         $this->file_properties  = $file_properties;
+        $this->link_properties  = $link_properties;
     }
 }

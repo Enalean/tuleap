@@ -77,7 +77,8 @@ class ItemRepresentationBuilder
     public function buildItemRepresentation(
         \Docman_Item $item,
         $type,
-        FilePropertiesRepresentation $file_properties = null
+        FilePropertiesRepresentation $file_properties = null,
+        LinkPropertiesRepresentation $link_properties = null
     ) {
         $owner               = $this->user_manager->getUserById($item->getOwnerId());
         $user_representation = new MinimalUserRepresentation();
@@ -88,7 +89,8 @@ class ItemRepresentationBuilder
             $item,
             $user_representation,
             $type,
-            $file_properties
+            $file_properties,
+            $link_properties
         );
         return $item_representation;
     }

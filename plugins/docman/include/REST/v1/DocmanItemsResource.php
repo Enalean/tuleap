@@ -242,7 +242,8 @@ class DocmanItemsResource extends AuthenticatedResource
                 \UserManager::instance(),
                 $items_request->getFactory()
             ),
-            new \Docman_VersionFactory()
+            new \Docman_VersionFactory(),
+            new \Docman_LinkVersionFactory()
         );
     }
 }

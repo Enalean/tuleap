@@ -57,7 +57,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $plugin_manager->installAndActivate('docman');
     }
 
-    private function addItem(Project $project, $docman_root_id, $title, $item_type)
+    private function addItem(Project $project, $docman_root_id, $title, $item_type, $link_url = '')
     {
         $item = array(
             'parent_id'         => $docman_root_id,
@@ -71,7 +71,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'obsolescence_date' => 0,
             'rank'              => 1,
             'item_type'         => $item_type,
-            'link_url'          => '',
+            'link_url'          => $link_url,
             'wiki_page'         => '',
             'file_is_embedded'  => ''
         );
@@ -81,15 +81,20 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         switch ($item_type) {
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                 $file_type = 'text/html';
+                $this->addItemVersion($item_id, $title, $file_type);
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                 $file_type = 'application/pdf';
+                $this->addItemVersion($item_id, $title, $file_type);
+                break;
+            case PLUGIN_DOCMAN_ITEM_TYPE_LINK:
+                $this->addLinkVersion($item_id);
                 break;
             default:
                 $file_type = null;
                 break;
         }
-        $this->addItemVersion($item_id, $title, $file_type);
+
         return $item_id;
     }
 
@@ -111,6 +116,14 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $version_factory->create($version);
     }
 
+    private function addLinkVersion($item_id)
+    {
+        $docman_factory = new Docman_ItemFactory();
+        $docman_link    = $docman_factory->getItemFromDb($item_id);
+        $docman_link->setUrl('https://my.example.test');
+        $version_link_factory = new \Docman_LinkVersionFactory();
+        $version_link_factory->create($docman_link, 'changset1', 'test rest Change', time());
+    }
 
 
     /**
@@ -119,9 +132,9 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                          folder 1
      *                            +
      *                            |
-     *  +---------------+---------+--------+---------------------+
-     *  +               +                  +                     +
-     *Item A          Item B             Item C             Folder 2
+     *  +---------------+---------+--------+---------------------+---------------------+
+     *  +               +                  +                     +                     +
+     *Item A          Item B             Item C             Folder 2                 Item E
      *                                                           +
      *                                                           |
      *                                                           +
@@ -144,11 +157,20 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
         $item_D_id = $this->addItem($project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
+        $item_E_id = $this->addItem(
+            $project,
+            $folder_id,
+            'item E',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            "https://example.test"
+        );
+
         $this->addPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
     }
 
     private function addPermissionOnItem(Project $project, $object_id, $ugroup_name)

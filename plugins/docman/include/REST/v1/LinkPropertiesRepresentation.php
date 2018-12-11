@@ -22,15 +22,15 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-class FilePropertiesRepresentation
+class LinkPropertiesRepresentation
 {
     /**
      * @var string
      */
-    public $file_type;
+    public $link_url;
 
-    public function build(\Docman_Version $docman_version)
+    public function build(\Docman_LinkVersion $docman_link)
     {
-        $this->file_type = $docman_version->getFiletype();
+        $this->link_url = $docman_link->getLink();
     }
 }
