@@ -23,7 +23,6 @@ namespace Tuleap\User\Account;
 
 use CSRFSynchronizerToken;
 use Feedback;
-use Gumlet\ImageResize;
 use Gumlet\ImageResizeException;
 use HTTPRequest;
 use Tuleap\Layout\BaseLayout;
@@ -33,16 +32,19 @@ use Tuleap\Request\NotFoundException;
 
 class ChangeAvatarController implements DispatchableWithRequest
 {
-    const AVATAR_MAX_SIZE = 100;
-
     /**
      * @var \UserManager
      */
     private $user_manager;
+    /**
+     * @var UserAvatarSaver
+     */
+    private $user_avatar_saver;
 
-    public function __construct(\UserManager $user_manager)
+    public function __construct(\UserManager $user_manager, UserAvatarSaver $user_avatar_saver)
     {
-        $this->user_manager = $user_manager;
+        $this->user_manager      = $user_manager;
+        $this->user_avatar_saver = $user_avatar_saver;
     }
 
     /**
@@ -76,31 +78,13 @@ class ChangeAvatarController implements DispatchableWithRequest
             if ($_FILES['avatar']['error']) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    _('An error occured with your upload. Please try again or choose another image.')
+                    _('An error occurred with your upload. Please try again or choose another image.')
                 );
                 $layout->redirect('/account');
             }
             try {
-                $image = new ImageResize($_FILES['avatar']['tmp_name']);
-                $image->quality_truecolor = false;
-                $image->crop(self::AVATAR_MAX_SIZE, self::AVATAR_MAX_SIZE);
-                // Replace transparent background by white color to avoid strange rendering in Tuleap.
-                $image->addFilter(function ($imageDesc) {
-                    $x = imagesx($imageDesc);
-                    $y = imagesy($imageDesc);
-                    $dst_im = imagecreatetruecolor($x, $y);
-                    $background_color = imagecolorallocate($dst_im, 255, 255, 255);
-                    imagefilledrectangle($dst_im, 0, 0, $x, $y, $background_color);
+                $this->user_avatar_saver->saveAvatar($user, $_FILES['avatar']['tmp_name']);
 
-                    imagecopy($dst_im, $imageDesc, 0, 0, 0, 0, $x, $y);
-
-                    imagecopy($imageDesc, $dst_im, 0, 0, 0, 0, $x, $y);
-
-                    imagedestroy($dst_im);
-                });
-                $image->save($user->getAvatarFilePath(), IMAGETYPE_PNG, 9, 0640);
-                $user->setHasAvatar();
-                $this->user_manager->updateDb($user);
                 $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('account_change_avatar', 'success'));
             } catch (ImageResizeException $exception) {
                 $layout->addFeedback(Feedback::ERROR, $exception->getMessage());

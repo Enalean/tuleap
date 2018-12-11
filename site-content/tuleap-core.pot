@@ -118,10 +118,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"An error occured with your upload. Please try again or choose another image."
-msgstr ""
-
-msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
 msgstr ""
 
@@ -147,6 +143,10 @@ msgid "An error occurred while trying to remove the label."
 msgstr ""
 
 msgid "An error occurred while trying to update permissions delegations."
+msgstr ""
+
+msgid ""
+"An error occurred with your upload. Please try again or choose another image."
 msgstr ""
 
 msgid "And more..."

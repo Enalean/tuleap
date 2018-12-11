@@ -49,6 +49,7 @@ use Tuleap\Trove\TroveCatListController;
 use Tuleap\User\AccessKey\AccessKeyCreationController;
 use Tuleap\User\AccessKey\AccessKeyRevocationController;
 use Tuleap\User\Account\ChangeAvatarController;
+use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
@@ -137,7 +138,8 @@ class RouteCollector
             });
         });
         $r->post('/account/avatar', function () {
-            return new ChangeAvatarController(\UserManager::instance());
+            $user_manager = \UserManager::instance();
+            return new ChangeAvatarController($user_manager, new UserAvatarSaver($user_manager));
         });
 
         $r->addRoute(['GET'], '/users/{name}[/]', function () {
