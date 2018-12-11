@@ -29,7 +29,9 @@ const state = {
     current_folder: null,
     current_folder_ascendant_hierarchy: [],
     is_loading_ascendant_hierarchy: false,
-    root_title: ""
+    root_title: "",
+    folded_items_ids: [],
+    folded_by_map: {}
 };
 
 export default state;

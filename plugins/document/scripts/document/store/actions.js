@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getItem, getProject } from "../api/rest-querier.js";
+import { getItem, getProject, getFolderContent } from "../api/rest-querier.js";
 import { handleErrors } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -35,6 +35,16 @@ export const loadRootFolder = async context => {
         return handleErrors(context, exception);
     } finally {
         context.commit("stopLoading");
+    }
+};
+
+export const getSubfolderContent = async (context, folder_id) => {
+    try {
+        const sub_items = await getFolderContent(folder_id);
+
+        context.commit("appendSubFolderContent", [folder_id, sub_items]);
+    } catch (exception) {
+        return handleErrors(context, exception);
     }
 };
 
