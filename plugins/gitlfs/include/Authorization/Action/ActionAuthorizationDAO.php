@@ -22,6 +22,7 @@ namespace Tuleap\GitLFS\Authorization\Action;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
 
 class ActionAuthorizationDAO extends DataAccessObject
 {
@@ -63,6 +64,24 @@ class ActionAuthorizationDAO extends DataAccessObject
             'SELECT * FROM plugin_gitlfs_authorization_action WHERE id = ? AND expiration_date >= ?',
             $id,
             $current_time
+        );
+    }
+
+    /**
+     * @return array|null
+     */
+    public function searchAuthorizationTypeByRepositoriesIdsAndExpiration(ActionAuthorizationType $action, array $repositories_ids, \DateTimeImmutable $current_time)
+    {
+        $condition = EasyStatement::open()
+            ->with('action_type = ?', $action->getName())
+            ->andWith('expiration_date >= ?', $current_time->getTimestamp())
+            ->andIn('repository_id IN (?*)', $repositories_ids);
+
+        return $this->getDB()->safeQuery(
+            "SELECT *
+            FROM plugin_gitlfs_authorization_action
+            WHERE $condition",
+            $condition->values()
         );
     }
 
