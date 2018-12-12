@@ -39,15 +39,21 @@ class ItemRepresentationBuilder
      * @var Docman_ItemFactory
      */
     private $docman_item_factory;
+    /**
+     * @var \Docman_PermissionsManager
+     */
+    private $permissions_manager;
 
     public function __construct(
         Docman_ItemDao $dao,
         \UserManager $user_manager,
-        Docman_ItemFactory $docman_item_factory
+        Docman_ItemFactory $docman_item_factory,
+        \Docman_PermissionsManager $permissions_manager
     ) {
         $this->dao                 = $dao;
         $this->user_manager        = $user_manager;
         $this->docman_item_factory = $docman_item_factory;
+        $this->permissions_manager = $permissions_manager;
     }
 
     /**
@@ -55,7 +61,7 @@ class ItemRepresentationBuilder
      *
      * @return ItemRepresentation|null
      */
-    public function buildRootId(Project $project)
+    public function buildRootId(Project $project, \PFUser $current_user)
     {
         $result = $this->dao->searchRootItemForGroupId($project->getID());
 
@@ -64,8 +70,13 @@ class ItemRepresentationBuilder
         }
 
         $item = $this->docman_item_factory->getItemFromRow($result);
+        if (! $item) {
+            return;
+        }
+
         return $this->buildItemRepresentation(
             $item,
+            $current_user,
             PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             null
         );
@@ -76,6 +87,7 @@ class ItemRepresentationBuilder
      */
     public function buildItemRepresentation(
         \Docman_Item $item,
+        \PFUser $current_user,
         $type,
         FilePropertiesRepresentation $file_properties = null,
         LinkPropertiesRepresentation $link_properties = null
@@ -84,14 +96,18 @@ class ItemRepresentationBuilder
         $user_representation = new MinimalUserRepresentation();
         $user_representation->build($owner);
 
+        $user_can_write = $this->permissions_manager->userCanWrite($current_user, $item->getId());
+
         $item_representation = new ItemRepresentation();
         $item_representation->build(
             $item,
             $user_representation,
+            $user_can_write,
             $type,
             $file_properties,
             $link_properties
         );
+
         return $item_representation;
     }
 }

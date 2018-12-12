@@ -89,7 +89,7 @@ class DocmanItemsResource extends AuthenticatedResource
 
         $representation_visitor = $this->getItemRepresentationVisitor($items_request);
 
-        return $item->accept($representation_visitor);
+        return $item->accept($representation_visitor, ['current_user' => $items_request->getUser()]);
     }
 
 
@@ -240,7 +240,8 @@ class DocmanItemsResource extends AuthenticatedResource
             new ItemRepresentationBuilder(
                 $this->item_dao,
                 \UserManager::instance(),
-                $items_request->getFactory()
+                $items_request->getFactory(),
+                \Docman_PermissionsManager::instance($items_request->getProject()->getID())
             ),
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory()

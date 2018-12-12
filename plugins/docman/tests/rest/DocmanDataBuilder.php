@@ -148,7 +148,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $docman_root               = $this->docman_item_factory->getRoot($project->getID());
 
         $folder_id = $this->addItem($project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $this->addPermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addWritePermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
         $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
         $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
@@ -165,19 +165,30 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             "https://example.test"
         );
 
-        $this->addPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
-        $this->addPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
-        $this->addPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
+        $this->addReadPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
     }
 
-    private function addPermissionOnItem(Project $project, $object_id, $ugroup_name)
+    private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
     {
         permission_add_ugroup(
             $project->getID(),
             'PLUGIN_DOCMAN_READ',
+            $object_id,
+            $ugroup_name,
+            true
+        );
+    }
+
+    private function addWritePermissionOnItem(Project $project, $object_id, $ugroup_name)
+    {
+        permission_add_ugroup(
+            $project->getID(),
+            'PLUGIN_DOCMAN_WRITE',
             $object_id,
             $ugroup_name,
             true

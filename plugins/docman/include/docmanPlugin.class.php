@@ -1216,6 +1216,8 @@ class DocmanPlugin extends Plugin
      */
     public function rest_project_additional_informations($params) // phpcs:ignore
     {
+        /** @var PFUser $current_user */
+        $current_user = $params['current_user'];
         /**
          * @var $project Project
          */
@@ -1227,10 +1229,11 @@ class DocmanPlugin extends Plugin
         $item_representation_builder = new ItemRepresentationBuilder(
             new Docman_ItemDao(),
             $this->getUserManager(),
-            $this->getItemFactory()
+            $this->getItemFactory(),
+            Docman_PermissionsManager::instance($project->getID())
         );
 
-        $item_representation = $item_representation_builder->buildRootId($project);
+        $item_representation = $item_representation_builder->buildRootId($project, $current_user);
         if (! $item_representation) {
             return;
         }
