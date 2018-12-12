@@ -1249,7 +1249,11 @@ class DocmanPlugin extends Plugin
     {
         if (ForgeConfig::get('enable_tus_test_endpoint')) {
             $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file', function () {
-                return new \Tuleap\Docman\Upload\FileUploadController('/tmp');
+                return new \Tuleap\Docman\Upload\FileUploadController(
+                    '/tmp',
+                    \Tuleap\REST\UserManager::build(),
+                    new \Tuleap\REST\BasicAuthentication()
+                );
             });
         }
     }

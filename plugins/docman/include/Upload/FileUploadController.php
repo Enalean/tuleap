@@ -25,19 +25,34 @@ use HTTPRequest;
 use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\UserManager;
 
-class FileUploadController implements DispatchableWithRequest
+class FileUploadController implements DispatchableWithRequestNoAuthz
 {
     const ONE_MB_FILE = 1048576;
     /**
      * @var string
      */
     private $root_path_storage;
+    /**
+     * @var UserManager
+     */
+    private $rest_user_manager;
+    /**
+     * @var BasicAuthentication
+     */
+    private $basic_rest_authentication;
 
-    public function __construct($root_path_storage)
-    {
-        $this->root_path_storage = $root_path_storage;
+    public function __construct(
+        $root_path_storage,
+        UserManager $rest_user_manager,
+        BasicAuthentication $basic_rest_authentication
+    ) {
+        $this->root_path_storage         = $root_path_storage;
+        $this->rest_user_manager         = $rest_user_manager;
+        $this->basic_rest_authentication = $basic_rest_authentication;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -62,5 +77,13 @@ class FileUploadController implements DispatchableWithRequest
             }
         }
         echo $response->getBody();
+    }
+
+    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
+    {
+        $this->basic_rest_authentication->__isAllowed();
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        return ! $current_user->isAnonymous();
     }
 }
