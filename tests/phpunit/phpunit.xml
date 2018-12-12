@@ -57,6 +57,7 @@
             <directory suffix=".php">../../plugins/label/include</directory>
             <directory suffix=".php">../../plugins/project_ownership/include</directory>
             <directory suffix=".php">../../plugins/referencealias_core/include/ReferenceAliasCore/</directory>
+            <directory suffix=".php">../../plugins/docman/include/Tus/</directory>
         </whitelist>
     </filter>
     <testsuites>
