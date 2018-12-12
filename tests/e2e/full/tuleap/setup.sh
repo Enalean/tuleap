@@ -112,14 +112,14 @@ seed_data() {
 
 setup_lhs
 setup_tuleap
-/usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
+/usr/share/tuleap/tools/utils/php72/run.php --modules=nginx,fpm
 setup_database
 seed_data
 
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php config-set sys_project_approval 0
 /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/tuleap.php set-user-password admin welcome0
 
-service php56-php-fpm start
+service php72-php-fpm start
 service nginx start
 
 exec tail -f /var/log/nginx/error.log

@@ -13,7 +13,7 @@ mkdir -p /data/lib
 mkdir -p /data/etc/logrotate.d
 mkdir -p /data/etc/ssl/certs/
 mkdir -p /data/etc/pki/tls/private/
-mkdir -p /data/etc/opt/remi/php56
+mkdir -p /data/etc/opt/remi/php72
 mkdir -p /data/root && chmod 700 /data/root
 
 pushd . > /dev/null
@@ -78,7 +78,7 @@ fi
 service httpd stop
 service crond stop
 service nginx stop
-service php56-php-fpm stop
+service php72-php-fpm stop
 
 ### Move all generated files to persistant storage ###
 
@@ -93,7 +93,7 @@ mv /etc/logrotate.d/httpd     /data/etc/logrotate.d
 mv /etc/my.cnf                /data/etc
 mv /etc/crontab               /data/etc
 mv /etc/nginx                 /data/etc
-mv /etc/opt/remi/php56/php-fpm.d /data/etc/opt/remi/php56/
+mv /etc/opt/remi/php72/php-fpm.d /data/etc/opt/remi/php72/
 mv /etc/ssh/ssh_host_*        /data/etc/ssh
 
 # Data
