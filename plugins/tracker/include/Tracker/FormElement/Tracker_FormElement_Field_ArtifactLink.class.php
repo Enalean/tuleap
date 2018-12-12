@@ -54,6 +54,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      *   'current_user'           => input PFUser
      *   'read_only'              => input boolean
      *   'reverse_artifact_links' => input boolean
+     *   'additional_classes'     => input String[]
      */
     const PREPEND_ARTIFACTLINK_INFORMATION = 'prepend_artifactlink_information';
 
@@ -518,7 +519,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 'artifact'               => $artifact,
                 'current_user'           => $current_user,
                 'read_only'              => $read_only,
-                'reverse_artifact_links' => $reverse_artifact_links
+                'reverse_artifact_links' => $reverse_artifact_links,
+                'additional_classes'     => $additional_classes
             )
         );
 

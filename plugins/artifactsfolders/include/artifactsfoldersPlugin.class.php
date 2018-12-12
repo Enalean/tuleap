@@ -43,7 +43,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once 'constants.php';
 
-class ArtifactsFoldersPlugin extends Plugin
+class ArtifactsFoldersPlugin extends Plugin // phpcs:ignore
 {
     public function __construct($id)
     {
@@ -102,20 +102,20 @@ class ArtifactsFoldersPlugin extends Plugin
         }
     }
 
-    public function javascript_footer($params)
+    public function javascript_footer($params) // phpcs:ignore
     {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
             echo '</script>' . $this->getMinifiedAssetHTML() . '<script>';
         }
     }
 
-    public function event_get_artifactlink_natures($params)
+    public function event_get_artifactlink_natures($params)// phpcs:ignore
     {
         $params['natures'][] = new NatureInFolderPresenter();
     }
 
     /** @see Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION */
-    public function tracker_artifact_editrenderer_add_view_in_collection(array $params)
+    public function tracker_artifact_editrenderer_add_view_in_collection(array $params) // phpcs:ignore
     {
         $user       = $params['user'];
         $request    = $params['request'];
@@ -167,7 +167,7 @@ class ArtifactsFoldersPlugin extends Plugin
     }
 
     /** @see TrackerXmlImport::ADD_PROPERTY_TO_TRACKER */
-    public function add_property_to_tracker(array $params)
+    public function add_property_to_tracker(array $params) // phpcs:ignore
     {
         $xml_element = $params['xml_element'];
         $is_folder   = isset($xml_element['is_folder']) ? PHPCast::toBoolean($xml_element['is_folder']) : false;
@@ -228,12 +228,12 @@ class ArtifactsFoldersPlugin extends Plugin
         );
     }
 
-    public function hide_artifact($params)
+    public function hide_artifact($params) // phpcs:ignore
     {
         $params['hide_artifact'] = $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER;
     }
 
-    public function event_get_nature_presenter($params)
+    public function event_get_nature_presenter($params) // phpcs:ignore
     {
         if ($params['shortname'] === NatureInFolderPresenter::NATURE_IN_FOLDER) {
             $params['presenter'] = new NatureInFolderPresenter();
@@ -255,12 +255,12 @@ class ArtifactsFoldersPlugin extends Plugin
         $router->route($request);
     }
 
-    public function tracker_add_system_natures($params)
+    public function tracker_add_system_natures($params) // phpcs:ignore
     {
         $params['natures'][] = NatureInFolderPresenter::NATURE_IN_FOLDER;
     }
 
-    public function tracker_is_nature_valid($params)
+    public function tracker_is_nature_valid($params) // phpcs:ignore
     {
         if ($this->getDao()->isTrackerConfiguredToContainFolders($params['tracker_id']) === false
             && $params['nature'] === NatureInFolderPresenter::NATURE_IN_FOLDER
@@ -271,7 +271,7 @@ class ArtifactsFoldersPlugin extends Plugin
     }
 
     /** @see Tracker_FormElement_Field_ArtifactLink::PREPEND_ARTIFACTLINK_INFORMATION */
-    public function prepend_artifactlink_information($params)
+    public function prepend_artifactlink_information($params) // phpcs:ignore
     {
         $prepender = new ArtifactLinkInformationPrepender(
             $this->getHierarchyOfFolderBuilder(),
@@ -286,12 +286,13 @@ class ArtifactsFoldersPlugin extends Plugin
             $params['artifact'],
             $params['current_user'],
             $params['reverse_artifact_links'],
-            $params['read_only']
+            $params['read_only'],
+            $params['additional_classes']
         );
     }
 
     /** @see Tracker_FormELement_Field_ArtifactLink::GET_POST_SAVE_NEW_CHANGESET_QUEUE */
-    public function get_post_save_new_changeset_queue(array $params)
+    public function get_post_save_new_changeset_queue(array $params) // phpcs:ignore
     {
         $params['queue']->add(
             new PostSaveNewChangesetCommand($params['field'], HTTPRequest::instance(), $this->getDao())
@@ -299,10 +300,10 @@ class ArtifactsFoldersPlugin extends Plugin
     }
 
     /** @see Tracker_FormELement_Field_ArtifactLink::AFTER_AUGMENT_DATA_FROM_REQUEST */
-    public function after_augment_data_from_request(array $params)
+    public function after_augment_data_from_request(array $params) // phpcs:ignore
     {
         $request = HTTPRequest::instance();
-        if (! $this->checkRequestConcernsArtifactFoldersWithSetParameters($request  )) {
+        if (! $this->checkRequestConcernsArtifactFoldersWithSetParameters($request)) {
             return;
         }
 
@@ -339,7 +340,7 @@ class ArtifactsFoldersPlugin extends Plugin
     }
 
     /** @see Tracker_Artifact::DISPLAY_COPY_OF_ARTIFACT */
-    public function display_copy_of_artifact($params)
+    public function display_copy_of_artifact($params) // phpcs:ignore
     {
         $folder_hierarchy = $this->getHierarchyOfFolderBuilder()->getHierarchyOfFolderForArtifact(
             $params['artifact']
@@ -365,7 +366,7 @@ class ArtifactsFoldersPlugin extends Plugin
         );
     }
 
-    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event)
+    public function tracker_get_editable_type_in_project(GetEditableTypesInProject $event) // phpcs:ignore
     {
         $project = $event->getProject();
 
@@ -374,7 +375,7 @@ class ArtifactsFoldersPlugin extends Plugin
         }
     }
 
-    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event)
+    public function tracker_artifact_link_can_be_unused(ArtifactLinkTypeCanBeUnused $event) // phpcs:ignore
     {
         $type = $event->getType();
 
@@ -383,7 +384,7 @@ class ArtifactsFoldersPlugin extends Plugin
         }
     }
 
-    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event)
+    public function tracker_xml_import_artifact_link_can_be_disabled(XMLImportArtifactLinkTypeCanBeDisabled $event) // phpcs:ignore
     {
         if ($event->getTypeName() !== NatureInFolderPresenter::NATURE_IN_FOLDER) {
             return;
