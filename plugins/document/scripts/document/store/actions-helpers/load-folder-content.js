@@ -17,11 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
+import { getFolderContent } from "../../api/rest-querier.js";
+import { handleErrors } from "./handle-errors.js";
 
-import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
-import "./store/actions-helpers/load-ascendant-hierarchy.spec.js";
-import "./store/actions-helpers/load-folder-content.spec.js";
-import "./store/getters.spec.js";
-import "./store/mutations.spec.js";
+export async function loadFolderContent(context, folder_id, loading_current_folder_promise) {
+    try {
+        context.commit("beginLoading");
+        context.commit("saveFolderContent", []);
+
+        const [folder_content] = await Promise.all([
+            getFolderContent(folder_id),
+            loading_current_folder_promise
+        ]);
+
+        context.commit("saveFolderContent", folder_content);
+    } catch (exception) {
+        return handleErrors(context, exception);
+    } finally {
+        context.commit("stopLoading");
+    }
+}

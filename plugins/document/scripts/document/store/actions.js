@@ -17,17 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent, getItem, getParents, getProject } from "../api/rest-querier.js";
+import { getItem, getProject } from "../api/rest-querier.js";
+import { handleErrors } from "./actions-helpers/handle-errors.js";
+import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
+import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 
-export const loadRootDocumentId = async context => {
+export const loadRootFolder = async context => {
     try {
         context.commit("beginLoading");
         const project = await getProject(context.state.project_id);
-        const root_id = project.additional_informations.docman.root_item.id;
+        const root = project.additional_informations.docman.root_item;
 
-        context.commit("setRootId", root_id);
+        context.commit("setCurrentFolder", root);
 
-        await loadFolderContent(context, root_id);
+        return await loadFolderContent(context, root.id, Promise.resolve(root));
     } catch (exception) {
         return handleErrors(context, exception);
     } finally {
@@ -35,25 +38,33 @@ export const loadRootDocumentId = async context => {
     }
 };
 
-export const loadFolderContent = async (context, folder_id) => {
-    try {
-        context.commit("beginLoading");
-        context.commit("saveFolderContent", []);
+export const loadFolder = (context, folder_id) => {
+    const { is_folder_found_in_hierarchy, current_folder } = getCurrentFolder();
+    const loading_current_folder_promise = getLoadingCurrentFolderPromise(current_folder);
 
-        const folder_content = await getFolderContent(folder_id);
-        context.commit("saveFolderContent", folder_content);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    } finally {
-        context.commit("stopLoading");
+    const promises = [loadFolderContent(context, folder_id, loading_current_folder_promise)];
+    if (!is_folder_found_in_hierarchy) {
+        promises.push(loadAscendantHierarchy(context, folder_id, loading_current_folder_promise));
     }
-};
 
-export const loadAscendantHierarchy = async (context, folder_id) => {
-    const index_of_folder_in_hierarchy = context.state.current_folder_ascendant_hierarchy.findIndex(
-        item => item.id === folder_id
-    );
-    if (index_of_folder_in_hierarchy !== -1) {
+    return Promise.all(promises);
+
+    function getCurrentFolder() {
+        const index_of_folder_in_hierarchy = context.state.current_folder_ascendant_hierarchy.findIndex(
+            item => item.id === folder_id
+        );
+        const is_folder_found_in_hierarchy = index_of_folder_in_hierarchy !== -1;
+        const current_folder = is_folder_found_in_hierarchy
+            ? switchToFolderWeFoundInHierarchy(index_of_folder_in_hierarchy)
+            : context.state.current_folder;
+
+        return {
+            is_folder_found_in_hierarchy,
+            current_folder
+        };
+    }
+
+    function switchToFolderWeFoundInHierarchy(index_of_folder_in_hierarchy) {
         context.commit(
             "saveAscendantHierarchy",
             context.state.current_folder_ascendant_hierarchy.slice(
@@ -61,48 +72,35 @@ export const loadAscendantHierarchy = async (context, folder_id) => {
                 index_of_folder_in_hierarchy + 1
             )
         );
-        return;
-    }
 
-    try {
-        context.commit("beginLoadingAscendantHierarchy");
-        context.commit("resetAscendantHierarchy");
+        const folder_in_store = context.state.current_folder;
+        if (
+            folder_in_store !==
+            context.state.current_folder_ascendant_hierarchy[index_of_folder_in_hierarchy]
+        ) {
+            const found_folder =
+                context.state.current_folder_ascendant_hierarchy[index_of_folder_in_hierarchy];
+            context.commit("setCurrentFolder", found_folder);
 
-        const [parents, current_folder] = await Promise.all([
-            getParents(folder_id),
-            getItem(folder_id)
-        ]);
-
-        parents.shift();
-        parents.push(current_folder);
-
-        context.commit("saveAscendantHierarchy", parents);
-    } catch (exception) {
-        return handleErrors(context, exception);
-    } finally {
-        context.commit("stopLoadingAscendantHierarchy");
-    }
-};
-
-async function handleErrors(context, exception) {
-    const status = exception.response.status;
-    if (status === 403) {
-        context.commit("switchFolderPermissionError");
-        return;
-    }
-
-    const json = await exception.response.json();
-    context.commit("setFolderLoadingError", getErrorMessage(json));
-}
-
-function getErrorMessage(error_json) {
-    if (error_json.hasOwnProperty("error")) {
-        if (error_json.error.hasOwnProperty("i18n_error_message")) {
-            return error_json.error.i18n_error_message;
+            return found_folder;
         }
 
-        return error_json.error.message;
+        return folder_in_store;
     }
 
-    return "";
-}
+    function getLoadingCurrentFolderPromise(current_folder) {
+        if (shouldWeRemotelyLoadTheFolder(current_folder, folder_id)) {
+            return getItem(folder_id).then(folder => {
+                context.commit("setCurrentFolder", folder);
+
+                return folder;
+            });
+        }
+
+        return Promise.resolve(context.state.current_folder);
+    }
+
+    function shouldWeRemotelyLoadTheFolder(current_folder) {
+        return !current_folder || current_folder.id !== folder_id;
+    }
+};
