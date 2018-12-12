@@ -84,9 +84,9 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $send_notification,
         $comment_format
     ) {
-        $this->changeset_dao->startTransaction();
-
         $comment = trim($comment);
+
+        $this->changeset_dao->startTransaction();
 
         $email = null;
         if ($submitter->isAnonymous()) {
@@ -95,6 +95,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
 
         try {
             $this->validateNewChangeset($artifact, $fields_data, $comment, $submitter, $email);
+
             $previous_changeset = $artifact->getLastChangeset();
 
             /*
@@ -149,8 +150,12 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                 $collection->linkToArtifact($artifact, $submitter);
                 return null;
             } else {
+                $this->changeset_dao->rollBack();
                 throw $exception;
             }
+        } catch (Tracker_Exception $exception) {
+            $this->changeset_dao->rollBack();
+            throw $exception;
         }
 
         try {
