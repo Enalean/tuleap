@@ -141,12 +141,9 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if [ ! -f "${git_home}/.gitolite/hooks/common/post-receive" ]; then
-        ${install} --group=${git_group} \
-                   --owner=${git_user} \
-                   --mode=755 \
-                   ${tuleap_src_plugins}/git/hooks/post-receive-gitolite \
-                   ${git_home}/.gitolite/hooks/common/post-receive
+    if [ ! -L "${git_home}/.gitolite/hooks/common/post-receive" ]; then
+        ${ln} -s "${tuleap_src_plugins}/git/hooks/post-receive-gitolite" \
+            "${git_home}/.gitolite/hooks/common/post-receive"
         plugin_git_configured="true"
     fi
 
