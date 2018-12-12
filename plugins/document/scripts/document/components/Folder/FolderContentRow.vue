@@ -19,16 +19,10 @@
 
 <template>
     <tr>
-        <td v-if="is_folder">
-            <i class="document-folder-icon-color fa fa-fw fa-folder"></i>
-            <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
-                {{ item.title }}
-            </a>
-        </td>
-        <td v-else>
-            <i class="fa fa-fw " v-bind:class="icon_class"></i>
-            {{ item.title }}
-        </td>
+        <folder-cell-title v-bind:item="item" v-if="is_folder"/>
+        <link-cell-title v-bind:item="item" v-else-if="is_link"/>
+        <document-cell-title v-bind:item="item" v-else/>
+
         <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
         <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
             {{ formatted_date }}
@@ -39,21 +33,16 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
-import {
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI
-} from "../../constants.js";
+import { TYPE_FOLDER, TYPE_LINK } from "../../constants.js";
+import FolderCellTitle from "./ItemTitle/FolderCellTitle.vue";
+import DocumentCellTitle from "./ItemTitle/DocumentCellTitle.vue";
+import LinkCellTitle from "./ItemTitle/LinkCellTitle.vue";
 import moment from "moment";
 import phptomoment from "phptomoment";
-import { iconForMimeType } from "../../helpers/icon-for-mime-type";
 
 export default {
     name: "FolderContentRow",
-    components: { UserBadge },
+    components: { UserBadge, FolderCellTitle, DocumentCellTitle, LinkCellTitle },
     props: {
         item: Object
     },
@@ -68,30 +57,8 @@ export default {
         is_folder() {
             return this.item.type === TYPE_FOLDER;
         },
-        icon_class() {
-            switch (this.item.type) {
-                case TYPE_FOLDER:
-                    return "fa-folder document-folder-icon";
-                case TYPE_EMBEDDED:
-                    return "fa-file-text document-text-icon";
-                case TYPE_FILE:
-                    return iconForMimeType(this.item);
-                case TYPE_WIKI:
-                    return "fa-wikipedia-w document-wiki-icon";
-                case TYPE_LINK:
-                    return "fa-link document-link-icon";
-                case TYPE_EMPTY:
-                default:
-                    return "fa-file-o document-empty-icon";
-            }
-        },
-        folder_href() {
-            const { href } = this.$router.resolve({
-                name: "folder",
-                params: { item_id: this.item.id }
-            });
-
-            return href;
+        is_link() {
+            return this.item.type === TYPE_LINK;
         }
     },
     methods: {
