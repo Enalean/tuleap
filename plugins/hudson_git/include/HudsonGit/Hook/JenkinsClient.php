@@ -62,6 +62,9 @@ class JenkinsClient
     {
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
 
+        if (mb_substr($server_url, -1) === '/') {
+            $server_url = mb_substr($server_url, 0, -1);
+        }
         $push_url = $server_url . self::$NOTIFY_URL . '?url=' . urlencode($repository_url);
 
         $options  = array(

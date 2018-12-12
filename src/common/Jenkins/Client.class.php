@@ -94,7 +94,11 @@ class Jenkins_Client {
         }
     }
 
-    private function getBuildUrl($job_url) {
+    private function getBuildUrl($job_url)
+    {
+        if (mb_substr($job_url, -1) === '/') {
+            $job_url = mb_substr($job_url, 0, -1);
+        }
         $params = http_build_query($this->getTokenUrlParameter());
         if (preg_match(self::BUILD_WITH_PARAMETERS_REGEXP, $job_url)) {
             $separator = '&';
