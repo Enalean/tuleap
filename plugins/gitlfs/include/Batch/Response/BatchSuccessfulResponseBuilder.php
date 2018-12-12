@@ -21,6 +21,7 @@
 namespace Tuleap\GitLFS\Batch\Response;
 
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
+use Tuleap\GitLFS\Admin\AdminDao;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationRequest;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationTokenCreator;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
@@ -62,16 +63,23 @@ class BatchSuccessfulResponseBuilder
      */
     private $logger;
 
+    /**
+     * @var AdminDao
+     */
+    private $admin_dao;
+
     public function __construct(
         ActionAuthorizationTokenCreator $authorization_token_creator,
         SplitTokenFormatter $token_header_formatter,
         LFSObjectRetriever $lfs_object_retriever,
+        AdminDao $admin_dao,
         \Logger $logger
     ) {
         $this->authorization_token_creator = $authorization_token_creator;
         $this->token_header_formatter      = $token_header_formatter;
         $this->lfs_object_retriever        = $lfs_object_retriever;
         $this->logger                      = $logger;
+        $this->admin_dao                   = $admin_dao;
     }
 
     public function build(
@@ -119,9 +127,14 @@ class BatchSuccessfulResponseBuilder
             $repository,
             ...$request_objects
         );
+
+        $max_file_size = $this->admin_dao->getFileMaxSize();
+
         $response_objects = [];
         foreach ($request_objects as $request_object) {
             if (! in_array($request_object, $existing_objects, true)) {
+                $this->checkFileMaxSize($request_object, $max_file_size);
+
                 $upload_action_content = $this->buildSuccessActionContent(
                     $current_time,
                     $repository,
@@ -148,6 +161,20 @@ class BatchSuccessfulResponseBuilder
             }
         }
         return $response_objects;
+    }
+
+    /**
+     * @throws MaxFileSizeException
+     */
+    private function checkFileMaxSize(LFSObject $request_object, $max_file_size)
+    {
+        if ($request_object->getSize() > $max_file_size) {
+            $max_file_size_in_mega_bytes = ($max_file_size / 1024) / 1024;
+            throw new MaxFileSizeException(
+                "The file size is over $max_file_size_in_mega_bytes Mb. Aborting",
+                429
+            );
+        }
     }
 
     private function buildDownloadResponseObjects(
