@@ -113,7 +113,8 @@ const groupRepositoriesByPath = repositories => {
     return recursivelySortAlphabetically(grouped);
 };
 
-const sortByLabelAlphabetically = items => items.sort((a, b) => a.label.localeCompare(b.label));
+const sortByLabelAlphabetically = items =>
+    items.sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
 
 const recursivelySortAlphabetically = folder => {
     let folders = [];

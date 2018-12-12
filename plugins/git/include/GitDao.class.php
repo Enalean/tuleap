@@ -51,7 +51,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     const REMOTE_SERVER_DELETE_DATE      = 'remote_project_deleted_date';
     const REMOTE_SERVER_MIGRATION_STATUS = 'remote_server_migration_status';
 
-    const NOT_DELETED_DATE             = '0000-00-00 00:00:00';
+    const NOT_DELETED_DATE = '0000-00-00 00:00:00';
+    const ORDER_BY_PATH    = 'path';
 
     public function exists($id) {
         if ( empty($id) ) {
@@ -704,7 +705,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         return true;
     }
 
-    public function getPaginatedOpenRepositories($project_id, $scope, $owner_id, $limit, $offset)
+    public function getPaginatedOpenRepositories($project_id, $scope, $owner_id, $order_by, $limit, $offset)
     {
         $additional_where_statement = EasyStatement::open();
 
@@ -719,6 +720,16 @@ class GitDao extends \Tuleap\DB\DataAccessObject
             $additional_where_statement->andWith('repository_creation_user_id = ?', $owner_id);
         }
 
+        $limit_parameters = [$limit, $offset];
+        $limit_statement  = "LIMIT ? OFFSET ?";
+        $order            = "plugin_git_log.push_date DESC";
+        if ($order_by === self::ORDER_BY_PATH) {
+            $order            = "git.repository_name ASC";
+            $limit_parameters = [];
+            $limit_statement  = "";
+        }
+        $query_parameters = array_merge($additional_where_statement->values(), $limit_parameters);
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS git.*,
                   IF(plugin_git_log.push_date, MAX(plugin_git_log.push_date), UNIX_TIMESTAMP(git.repository_creation_date)) as push_date
                 FROM plugin_git AS git
@@ -726,9 +737,8 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 WHERE
                   $additional_where_statement
                 GROUP BY git.repository_id
-                ORDER BY plugin_git_log.push_date DESC
-                LIMIT ?
-                OFFSET ?";
+                ORDER BY $order
+                $limit_statement";
 
         // The repository creation date is a DATETIME value so before converting to a timestamp we need to
         // put MySQL in the same timezone than the one PHP used to create the date
@@ -742,7 +752,14 @@ class GitDao extends \Tuleap\DB\DataAccessObject
             // timezone than the session of PHP-FPM that has registered the value 'repository_creation_date'
         }
         try {
-            return $this->getDB()->safeQuery($sql, array_merge($additional_where_statement->values(), [$limit, $offset]));
+            $results = $this->getDB()->safeQuery($sql, $query_parameters);
+
+            if ($order_by === self::ORDER_BY_PATH) {
+                $sorter = new \Tuleap\Git\RepositoryList\DaoByRepositoryPathSorter();
+                return array_slice($sorter->sort($results), $offset, $limit);
+            }
+
+            return $results;
         } finally {
             $this->getDB()->run('SET time_zone = ?', $current_mysql_timezone);
         }

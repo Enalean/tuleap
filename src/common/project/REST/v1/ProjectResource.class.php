@@ -1262,6 +1262,7 @@ class ProjectResource extends AuthenticatedResource {
      * @param int    $offset Position of the first element to display {@from path}
      * @param string $fields Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
      * @param string $query  Filter repositories {@from path}
+     * @param string $order_by {@from path}{@choice push_date,path}
      *
      * @return GitRepositoryListRepresentation
      *
@@ -1272,7 +1273,8 @@ class ProjectResource extends AuthenticatedResource {
         $limit = 10,
         $offset = 0,
         $fields = GitRepositoryRepresentationBase::FIELDS_BASIC,
-        $query = ''
+        $query = '',
+        $order_by = 'push_date'
     ) {
         $this->checkAccess();
 
@@ -1290,6 +1292,7 @@ class ProjectResource extends AuthenticatedResource {
                 'offset'         => $offset,
                 'fields'         => $fields,
                 'query'          => $query,
+                'order_by'       => $order_by,
                 'total_git_repo' => &$total_git_repositories
             )
         );

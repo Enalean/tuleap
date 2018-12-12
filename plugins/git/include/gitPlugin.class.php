@@ -2156,6 +2156,7 @@ class GitPlugin extends Plugin
             $params['offset'],
             $params['fields'],
             $params['query'],
+            $params['order_by'],
             $params['total_git_repo']
         );
     }
