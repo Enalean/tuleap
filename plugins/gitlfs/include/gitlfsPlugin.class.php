@@ -119,6 +119,11 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new AdminPageRenderer()
             );
         });
+        $event->getRouteCollector()->post('/plugins/git-lfs/config', function () {
+            return new \Tuleap\GitLFS\Admin\IndexPostController(
+                new \Tuleap\GitLFS\Admin\AdminDao()
+            );
+        });
     }
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
