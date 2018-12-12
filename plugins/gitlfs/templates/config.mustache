@@ -1,0 +1,41 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-gitlfs | Git LFS{{/ dgettext }}</h1>
+
+    <nav class="tlp-tabs">
+        <a class="tlp-tab tlp-tab-active" href="#">{{# dgettext }}tuleap-gitlfs | Max file size{{/ dgettext }}</a>
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <form class="tlp-pane" method="post">
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">{{# dgettext }}tuleap-gitlfs | Max file size configuration{{/ dgettext }}</h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="git-lfs-config-file-max-size">{{# dgettext }}tuleap-gitlfs | Max file size (in MiB){{/ dgettext }}</label>
+                        <div class="tlp-form-element tlp-form-element-prepend">
+                            <input type="number"
+                                   min="1"
+                                   id="git-lfs-config-file-max-size"
+                                   class="tlp-input"
+                                   name="max_file_size"
+                                   size="20"
+                                   placeholder="512"
+                                   value="{{ max_file_size }}"
+                            >
+                        </div>
+                        <section class="tlp-pane-section-submit">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+                            <button type="submit" class="tlp-button-primary" disabled>
+                                {{# dgettext }}tuleap-gitlfs | Save{{/ dgettext }}
+                            </button>
+                        </section>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</div>
