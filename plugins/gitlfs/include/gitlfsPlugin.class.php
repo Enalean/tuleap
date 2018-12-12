@@ -20,6 +20,7 @@
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
@@ -71,6 +72,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook(\Tuleap\Git\PostInitGitRepositoryWithDataEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted');
+        $this->addHook('site_admin_option_hook');
 
         return parent::getHooksAndCallbacks();
     }
@@ -110,6 +112,12 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     )
                 );
             });
+        });
+        $event->getRouteCollector()->get('/plugins/git-lfs/config', function () {
+            return new \Tuleap\GitLFS\Admin\IndexController(
+                new \Tuleap\GitLFS\Admin\AdminDao(),
+                new AdminPageRenderer()
+            );
         });
     }
 
@@ -223,5 +231,13 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $action_authorization_remover->deleteExpired($current_time);
         $user_authorization_remover = new UserAuthorizationRemover(new UserAuthorizationDAO());
         $user_authorization_remover->deleteExpired($current_time);
+    }
+
+    public function site_admin_option_hook($params) //phpcs:ignore
+    {
+        $params['plugins'][] = array(
+            'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
+            'href'  => '/plugins/git-lfs/config'
+        );
     }
 }

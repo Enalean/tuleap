@@ -1,5 +1,20 @@
 msgid "Git LFS"
 msgstr ""
 
+msgid "Max file size"
+msgstr ""
+
+msgid "Max file size (in MiB)"
+msgstr ""
+
+msgid "Max file size configuration"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
 msgid "Support of large file upload and download in Git"
+msgstr ""
+
+msgid "You should be site administrator to access this page"
 msgstr ""

@@ -169,7 +169,7 @@ class BatchSuccessfulResponseBuilder
     private function checkFileMaxSize(LFSObject $request_object, $max_file_size)
     {
         if ($request_object->getSize() > $max_file_size) {
-            $max_file_size_in_mega_bytes = ($max_file_size / 1024) / 1024;
+            $max_file_size_in_mega_bytes = round(($max_file_size / 1024) / 1024);
             throw new MaxFileSizeException(
                 "The file size is over $max_file_size_in_mega_bytes Mb. Aborting",
                 429
