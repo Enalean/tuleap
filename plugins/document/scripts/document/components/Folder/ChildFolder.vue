@@ -21,36 +21,30 @@
 
 <template>
     <div class="tlp-framed" v-if="! does_folder_have_any_error">
-        <folder-view v-bind:folder_id="folder_id"/>
+        <folder-view/>
     </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import FolderView from "./FolderView.vue";
 
 export default {
     name: "ChildFolder",
     components: { FolderView },
     computed: {
-        ...mapGetters(["does_folder_have_any_error"]),
-        folder_id() {
-            return parseInt(this.$route.params.item_id, 10);
-        }
+        ...mapGetters(["does_folder_have_any_error"])
     },
     watch: {
         $route(to) {
-            this.loadFolder(to.params.item_id);
+            this.loadFolder(parseInt(to.params.item_id, 10));
         }
     },
     mounted() {
-        this.loadFolder(this.$route.params.item_id);
+        this.loadFolder(parseInt(this.$route.params.item_id, 10));
     },
     methods: {
-        loadFolder(id) {
-            this.$store.dispatch("loadFolderContent", id);
-            this.$store.dispatch("loadAscendantHierarchy", id);
-        }
+        ...mapActions(["loadFolder"])
     }
 };
 </script>

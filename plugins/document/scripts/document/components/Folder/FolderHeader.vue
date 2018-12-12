@@ -23,9 +23,9 @@
     <div class="document-header">
         <h1 v-bind:class="title_class" class="document-header-title">{{ folder_title }}</h1>
         <div class="document-header-actions">
-            <new-item-button v-if="!is_folder_empty"/>
+            <new-item-button v-if="can_display_new_document_button"/>
             <div class="document-header-spacer"></div>
-            <search-box v-if="is_loaded_with_content" v-bind:folder_id="folder_id"/>
+            <search-box v-if="can_display_search_box"/>
         </div>
     </div>
 </template>
@@ -38,12 +38,8 @@ import NewItemButton from "./NewItem/NewItemButton.vue";
 export default {
     name: "FolderHeader",
     components: { SearchBox, NewItemButton },
-    props: {
-        folder_id: Number
-    },
-
     computed: {
-        ...mapState(["is_loading_ascendant_hierarchy"]),
+        ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
         ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
@@ -53,8 +49,11 @@ export default {
         folder_title() {
             return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
         },
-        is_loaded_with_content() {
-            return !this.is_folder_empty;
+        can_display_search_box() {
+            return this.current_folder && !this.is_folder_empty;
+        },
+        can_display_new_document_button() {
+            return this.current_folder && this.current_folder.user_can_write;
         }
     }
 };

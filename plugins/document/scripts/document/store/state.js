@@ -26,11 +26,10 @@ const state = {
     is_user_administrator: false,
     folder_content: [],
     date_time_format: null,
-    current_folder_title: null,
+    current_folder: null,
     current_folder_ascendant_hierarchy: [],
     is_loading_ascendant_hierarchy: false,
-    root_title: "",
-    root_id: null
+    root_title: ""
 };
 
 export default state;
