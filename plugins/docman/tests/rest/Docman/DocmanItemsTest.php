@@ -33,7 +33,7 @@ class DocmanItemsTest extends DocmanBase
     public function testGetRootId()
     {
         $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
-        $json_projects    = $project_response->json();
+        $json_projects = $project_response->json();
 
         return $json_projects['additional_informations']['docman']['root_item']['id'];
     }
@@ -47,7 +47,7 @@ class DocmanItemsTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get('docman_items/' . $root_id . '/docman_items')
         );
-        $folder   = $response->json();
+        $folder = $response->json();
 
         $this->assertEquals(count($folder), 1);
         $folder_id = $folder[0]['id'];
@@ -57,7 +57,7 @@ class DocmanItemsTest extends DocmanBase
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
             $this->client->get('docman_items/' . $folder_id . '/docman_items')
         );
-        $items    = $response->json();
+        $items = $response->json();
 
         $this->assertEquals(count($items), 5);
 
@@ -99,7 +99,7 @@ class DocmanItemsTest extends DocmanBase
             file_get_contents(dirname(__DIR__) . '/_fixtures/docmanFile/embeddedFile')
         );
 
-        return $items[0]['id'];
+        return $items;
     }
 
     /**
@@ -108,11 +108,11 @@ class DocmanItemsTest extends DocmanBase
     public function testOPTIONSDocmanItemsId($root_id)
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/'. $root_id .'/docman_items'),
+            $this->client->options('docman_items/' . $root_id . '/docman_items'),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
-        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     /**
@@ -121,7 +121,7 @@ class DocmanItemsTest extends DocmanBase
     public function testOPTIONSId($root_id)
     {
         $response = $this->getResponse(
-            $this->client->options('docman_items/'. $root_id),
+            $this->client->options('docman_items/' . $root_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
 
@@ -134,7 +134,7 @@ class DocmanItemsTest extends DocmanBase
     public function testGetId($root_id)
     {
         $response = $this->getResponse(
-            $this->client->get('docman_items/'. $root_id),
+            $this->client->get('docman_items/' . $root_id),
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
         $item = $response->json();
@@ -147,19 +147,77 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetDocumentItemsForRegularUser
      */
-    public function testGetAllItemParents($folder_2_id)
+    public function testGetAllItemParents(array $items)
     {
+        $folder_2 = $this->findItemByTitle($items, 'folder 2');
+
         $response = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->get('docman_items/' . $folder_2_id . '/docman_items')
+            $this->client->get('docman_items/' . $folder_2['id'] . '/docman_items')
         );
-        $item     = $response->json();
+        $item = $response->json();
 
         $project_response = $this->getResponse($this->client->get('docman_items/' . $item[0]['id'] . '/parents'));
-        $json_parents     = $project_response->json();
+        $json_parents = $project_response->json();
         $this->assertEquals(count($json_parents), 3);
         $this->assertEquals($json_parents[0]['title'], 'Project Documentation');
         $this->assertEquals($json_parents[1]['title'], 'folder 1');
         $this->assertEquals($json_parents[2]['title'], 'folder 2');
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testPost($root_id)
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query = json_encode([
+            'title' => 'Custom title',
+            'description' => 'A description',
+            'parent_id' => $root_id,
+            'item_type' => 'empty'
+        ]);
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetDocumentItemsForRegularUser
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 403
+     */
+    public function testPostReturns403WhenPermissionDenied(array $stored_items)
+    {
+        $folder_3 = $this->findItemByTitle($stored_items, 'folder 3');
+
+        $query = json_encode([
+            'title' => 'A title',
+            'description' => 'A description',
+            'parent_id' => $folder_3['id'],
+            '$item_type' => 'empty'
+        ]);
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', null, $query)
+        );
+    }
+
+    /**
+     * Find first item in given array of items which has given title.
+     * @return array|null Found item. null otherwise.
+     */
+    private function findItemByTitle(array $items, $title)
+    {
+        $index = array_search($title, array_column($items, 'title'));
+        if ($index === false) {
+            return null;
+        }
+        return $items[$index];
     }
 }
