@@ -6,6 +6,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "An error occured while updating max file size."
+msgstr "Une erreur est survenue lors de la mise à jour de la taille maximale des fichiers."
+
 msgid "Git LFS"
 msgstr "Git LFS"
 
@@ -13,10 +16,13 @@ msgid "Max file size"
 msgstr "Taille maximale des fichiers"
 
 msgid "Max file size (in MiB)"
-msgstr "Taille maximale des fichiers (en Mo)"
+msgstr "Taille maximale des fichiers (en Mio)"
 
 msgid "Max file size configuration"
 msgstr "Configuration de la taille maximale des fichiers"
+
+msgid "Max file size updated."
+msgstr "Taille maximale des fichiers mise à jour."
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -25,4 +31,4 @@ msgid "Support of large file upload and download in Git"
 msgstr "Supporte l'envoi et la réception de fichiers volumineux dans Git"
 
 msgid "You should be site administrator to access this page"
-msgstr "Vous devez être administrateur site pour accèder à cette page"
+msgstr "Vous devez être administrateur site pour accéder à cette page"

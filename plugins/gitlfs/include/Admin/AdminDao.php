@@ -28,4 +28,13 @@ class AdminDao extends DataAccessObject
     {
         return $this->getDB()->single('SELECT size FROM plugin_gitlfs_file_max_size');
     }
+
+    public function updateFileMaxSize($current_max_file_size, $new_max_file_value)
+    {
+        return $this->getDB()->update(
+            'plugin_gitlfs_file_max_size',
+            ['size' => $new_max_file_value],
+            ['size' => $current_max_file_size]
+        );
+    }
 }

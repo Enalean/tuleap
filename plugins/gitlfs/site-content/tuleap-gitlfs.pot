@@ -1,3 +1,6 @@
+msgid "An error occured while updating max file size."
+msgstr ""
+
 msgid "Git LFS"
 msgstr ""
 
@@ -8,6 +11,9 @@ msgid "Max file size (in MiB)"
 msgstr ""
 
 msgid "Max file size configuration"
+msgstr ""
+
+msgid "Max file size updated."
 msgstr ""
 
 msgid "Save"
