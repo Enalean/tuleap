@@ -19,14 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-class Workflow_TransitionDao extends DataAccessObject {
-    public function __construct($da = null) {
+class Workflow_TransitionDao extends DataAccessObject
+{
+    public function __construct($da = null)
+    {
         parent::__construct($da);
         $this->table_name = 'tracker_workflow_transition';
     }
 
-    public function addTransition($workflow_id, $from, $to) {
+    public function addTransition($workflow_id, $from, $to)
+    {
         $workflow_id = $this->da->escapeInt($workflow_id);
         $to   = $this->da->escapeInt($to);
         $from   = $this->da->escapeInt($from);
@@ -90,14 +92,16 @@ class Workflow_TransitionDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function searchByWorkflow($workflow_id) {
+    public function searchByWorkflow($workflow_id)
+    {
         $workflow_id = $this->da->escapeInt($workflow_id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE workflow_id=$workflow_id";
         return $this->retrieve($sql);
     }
 
-    public function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id)
+    {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
         $sql = "SELECT T.*
@@ -110,7 +114,8 @@ class Workflow_TransitionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function searchTransitionId($workflow_id, $from, $to) {
+    public function searchTransitionId($workflow_id, $from, $to)
+    {
         $workflow_id = $this->da->escapeInt($workflow_id);
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
@@ -121,15 +126,16 @@ class Workflow_TransitionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-
-    public function getWorkflowId($transition_id) {
+    public function getWorkflowId($transition_id)
+    {
         $transition_id = $this->da->escapeInt($transition_id);
         $sql = "SELECT workflow_id FROM $this->table_name
                 WHERE transition_id=$transition_id";
         return $this->retrieve($sql);
     }
 
-    public function searchById($transition_id) {
+    public function searchById($transition_id)
+    {
         $transition_id = $this->da->escapeInt($transition_id);
         $sql = "SELECT * FROM $this->table_name
                 WHERE transition_id=$transition_id";
