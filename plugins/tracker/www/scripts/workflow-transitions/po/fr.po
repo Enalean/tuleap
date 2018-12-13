@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Thi Mai Vy <thimai@sogilis.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
@@ -32,11 +32,23 @@ msgstr "Modifier ou supprimer"
 msgid "Change or remove field"
 msgstr "Modifier ou supprimer le champ"
 
+msgid "Choose a field"
+msgstr "Choisissez un champ"
+
+msgid "Comment must not be empty"
+msgstr "Le commentaire doit être rempli"
+
+msgid "Conditions of the transition"
+msgstr "Conditions de la transition"
+
 msgid "Configure"
 msgstr "Configurer"
 
 msgid "Configure it"
 msgstr "Configurez le"
+
+msgid "Configure transition"
+msgstr "Configurer la transition"
 
 msgid "Confirm"
 msgstr "Confirmer"
@@ -46,6 +58,12 @@ msgstr "Activer les règles de transition"
 
 msgid "Field"
 msgstr "Champ"
+
+msgid "Field(s) that must not be empty"
+msgstr "Champ(s) qui doivent être rempli(s)"
+
+msgid "Groups that may make the transition"
+msgstr "Groupes autorisés à effectuer la transition"
 
 msgid ""
 "In order to configure transitions rules on this tracker, your first need to "
@@ -59,10 +77,12 @@ msgstr ""
 msgid "Save and start configuration"
 msgstr "Sauvegarder et démarrer la configuration"
 
+msgid "Save configuration"
+msgstr "Sauvegarder la configuration"
+
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
-"Le champ sur lequel sont basées les transitions ne contient aucune "
-"valeur"
+"Le champ sur lequel sont basées les transitions ne contient aucune valeur"
 
 msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""
@@ -85,7 +105,8 @@ msgid "Transitions rules configuration"
 msgstr "Configuration des règles de transitions"
 
 msgid "Transitions rules was deleted. Workflow is reset."
-msgstr "Les règles de transitions ont été supprimées. Le workflow est réinitialisé."
+msgstr ""
+"Les règles de transitions ont été supprimées. Le workflow est réinitialisé."
 
 msgid "Use advanced configuration"
 msgstr "Utiliser la configuration avancée"

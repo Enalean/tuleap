@@ -29,7 +29,8 @@ export {
     updateTransitionRulesEnforcement,
     resetWorkflowTransitions,
     createTransition,
-    deleteTransition
+    deleteTransition,
+    getUserGroups
 };
 
 async function getTracker(tracker_id) {
@@ -37,7 +38,7 @@ async function getTracker(tracker_id) {
     return response.json();
 }
 
-async function createWorkflowTransitions(tracker_id, field_id) {
+function createWorkflowTransitions(tracker_id, field_id) {
     const query = JSON.stringify({
         workflow: {
             set_transitions_rules: {
@@ -45,7 +46,7 @@ async function createWorkflowTransitions(tracker_id, field_id) {
             }
         }
     });
-    await patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
+    return patch(`/api/trackers/${tracker_id}?query=${encodeURIComponent(query)}`);
 }
 
 async function resetWorkflowTransitions(tracker_id) {
@@ -79,6 +80,11 @@ async function createTransition(tracker_id, from_id, to_id) {
     return response.json();
 }
 
-async function deleteTransition(transition_id) {
-    await del(`/api/tracker_workflow_transitions/${transition_id}`);
+function deleteTransition(transition_id) {
+    return del(`/api/tracker_workflow_transitions/${transition_id}`);
+}
+
+async function getUserGroups(project_id) {
+    const response = await get(`/api/projects/${project_id}/user_groups`);
+    return response.json();
 }

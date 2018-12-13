@@ -17,17 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { restore, rewire$patch, rewire$post } from "tlp-fetch";
+import { restore, rewire$get, rewire$patch, rewire$post } from "tlp-fetch";
+import { mockFetchSuccess } from "tlp-mocks";
 import {
     createTransition,
     createWorkflowTransitions,
     resetWorkflowTransitions,
-    updateTransitionRulesEnforcement
+    updateTransitionRulesEnforcement,
+    getUserGroups
 } from "../api/rest-querier.js";
 import { createATransition } from "../support/factories.js";
 
 describe("Rest queries:", () => {
     afterEach(restore);
+
+    describe("for GET actions:", () => {
+        let get;
+        let return_json;
+        let result;
+
+        beforeEach(() => {
+            get = jasmine.createSpy("get");
+            mockFetchSuccess(get, { return_json });
+            rewire$get(get);
+        });
+
+        describe("getUserGroups()", () => {
+            beforeEach(async () => {
+                result = await getUserGroups(266);
+            });
+
+            it("calls project API", () =>
+                expect(get).toHaveBeenCalledWith("/api/projects/266/user_groups"));
+            it("returns the user groups", () => expect(result).toEqual(return_json));
+        });
+    });
 
     describe("for PATCH actions:", () => {
         let patch;

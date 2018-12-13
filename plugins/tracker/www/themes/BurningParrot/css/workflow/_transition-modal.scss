@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
-
-import "./api/rest-querier.spec.js";
-import "./components/TransitionMatrixContent.spec.js";
-import "./store/actions.spec.js";
-import "./store/exceptionHandler.spec.js";
-import "./store/mutations.spec.js";
-import "./store/transition-modal/transition-actions.spec.js";
-import "./store/transition-modal/transition-mutations.spec.js";
+.tracker-workflow-transition-modal-actions-section {
+    background-color: $tlp-theme-background-color;
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .7), transparent 100%);
+}

@@ -23,10 +23,22 @@ msgstr ""
 msgid "Change or remove field"
 msgstr ""
 
+msgid "Choose a field"
+msgstr ""
+
+msgid "Comment must not be empty"
+msgstr ""
+
+msgid "Conditions of the transition"
+msgstr ""
+
 msgid "Configure"
 msgstr ""
 
 msgid "Configure it"
+msgstr ""
+
+msgid "Configure transition"
 msgstr ""
 
 msgid "Confirm"
@@ -38,6 +50,12 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
+msgid "Field(s) that must not be empty"
+msgstr ""
+
+msgid "Groups that may make the transition"
+msgstr ""
+
 msgid ""
 "In order to configure transitions rules on this tracker, your first need to "
 "choose a list field. Once chosen, you will be able to configure transition "
@@ -45,6 +63,9 @@ msgid ""
 msgstr ""
 
 msgid "Save and start configuration"
+msgstr ""
+
+msgid "Save configuration"
 msgstr ""
 
 msgid "The field on which the transitions are based has no selectable value"

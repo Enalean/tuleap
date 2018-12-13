@@ -17,12 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
+import * as actions from "./transition-actions.js";
+import * as mutations from "./transition-mutations.js";
 
-import "./api/rest-querier.spec.js";
-import "./components/TransitionMatrixContent.spec.js";
-import "./store/actions.spec.js";
-import "./store/exceptionHandler.spec.js";
-import "./store/mutations.spec.js";
-import "./store/transition-modal/transition-actions.spec.js";
-import "./store/transition-modal/transition-mutations.spec.js";
+const is_transition_from_new_artifact = state =>
+    state.current_transition !== null ? state.current_transition.from_id === null : false;
+
+export default {
+    namespaced: true,
+    state: {
+        current_transition: null,
+        is_loading_modal: false,
+        is_modal_shown: false,
+        is_modal_operation_failed: false,
+        modal_operation_failure_message: null,
+        user_groups: null
+    },
+    getters: {
+        is_transition_from_new_artifact
+    },
+    mutations,
+    actions
+};
