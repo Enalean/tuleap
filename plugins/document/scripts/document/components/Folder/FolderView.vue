@@ -19,7 +19,7 @@
 
 <template>
     <div>
-        <folder-header/>
+        <folder-header v-bind:folder_id="folder_id"/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-else>
             <empty-folder v-if="is_folder_empty"/>
@@ -42,6 +42,9 @@ export default {
         EmptyFolder,
         FolderLoadingScreen,
         FolderContent
+    },
+    props: {
+        folder_id: Number
     },
     computed: {
         ...mapState(["is_loading_folder"]),

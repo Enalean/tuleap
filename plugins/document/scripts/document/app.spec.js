@@ -21,7 +21,5 @@ import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
 import "./store/actions.spec.js";
-import "./store/actions-helpers/load-ascendant-hierarchy.spec.js";
-import "./store/actions-helpers/load-folder-content.spec.js";
 import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
