@@ -39,11 +39,12 @@ use Tuleap\GitLFS\Transfer\Transfer;
 use Tuleap\GitLFS\Batch\Request\BatchRequestOperation;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHref;
 use Tuleap\GitLFS\Batch\Response\Action\BatchResponseActionHrefUpload;
+use Tuleap\Project\Quota\ProjectQuotaChecker;
 
 class BatchSuccessfulResponseBuilder
 {
-    const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC   = 900;
-    const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC   = 6 * 3600;
+    const EXPIRATION_DELAY_UPLOAD_ACTION_IN_SEC = 900;
+    const EXPIRATION_DELAY_VERIFY_ACTION_IN_SEC = 6 * 3600;
     const EXPIRATION_DELAY_DOWNLOAD_ACTION_IN_SEC = 3600;
 
     /**
@@ -68,11 +69,17 @@ class BatchSuccessfulResponseBuilder
      */
     private $admin_dao;
 
+    /**
+     * @var ProjectQuotaChecker
+     */
+    private $project_quota_checker;
+
     public function __construct(
         ActionAuthorizationTokenCreator $authorization_token_creator,
         SplitTokenFormatter $token_header_formatter,
         LFSObjectRetriever $lfs_object_retriever,
         AdminDao $admin_dao,
+        ProjectQuotaChecker $project_quota_checker,
         \Logger $logger
     ) {
         $this->authorization_token_creator = $authorization_token_creator;
@@ -80,6 +87,7 @@ class BatchSuccessfulResponseBuilder
         $this->lfs_object_retriever        = $lfs_object_retriever;
         $this->logger                      = $logger;
         $this->admin_dao                   = $admin_dao;
+        $this->project_quota_checker       = $project_quota_checker;
     }
 
     public function build(
@@ -128,11 +136,13 @@ class BatchSuccessfulResponseBuilder
             ...$request_objects
         );
 
+        $this->checkProjectQuota($repository->getProject(), ...$request_objects);
+
         $max_file_size = $this->admin_dao->getFileMaxSize();
 
         $response_objects = [];
         foreach ($request_objects as $request_object) {
-            if (! in_array($request_object, $existing_objects, true)) {
+            if (!in_array($request_object, $existing_objects, true)) {
                 $this->checkFileMaxSize($request_object, $max_file_size);
 
                 $upload_action_content = $this->buildSuccessActionContent(
@@ -151,7 +161,7 @@ class BatchSuccessfulResponseBuilder
                     new ActionAuthorizationTypeVerify(),
                     new BatchResponseActionHrefVerify($server_url, $request_object)
                 );
-                $response_objects[]    = new BatchResponseObjectWithActions(
+                $response_objects[] = new BatchResponseObjectWithActions(
                     $request_object,
                     new BatchResponseActionsForUploadOperation($upload_action_content, $verify_action_content)
                 );
@@ -161,6 +171,22 @@ class BatchSuccessfulResponseBuilder
             }
         }
         return $response_objects;
+    }
+
+    private function checkProjectQuota(\Project $project, LFSObject... $request_objects)
+    {
+        $wanted_size = 0;
+
+        foreach ($request_objects as $request_object) {
+            $wanted_size += $request_object->getSize();
+        }
+
+        if (! $this->project_quota_checker->hasEnoughSpaceForProject($project, $wanted_size)) {
+            throw new ProjectQuotaExceededException(
+                "Quota for project " . $project->getID() . " is exceeded",
+                507
+            );
+        }
     }
 
     /**
