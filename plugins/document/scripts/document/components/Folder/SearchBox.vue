@@ -35,16 +35,13 @@ import { mapState } from "vuex";
 
 export default {
     name: "SearchBox",
-    props: {
-        folder_id: Number
-    },
     data() {
         return {
             search_query: ""
         };
     },
     computed: {
-        ...mapState(["project_id"]),
+        ...mapState(["project_id", "current_folder"]),
         placeholder_text() {
             return this.$gettext("Name, description...");
         },
@@ -53,7 +50,7 @@ export default {
                 "/plugins/docman/?group_id=" +
                 encodeURIComponent(this.project_id) +
                 "&id=" +
-                encodeURIComponent(this.folder_id) +
+                encodeURIComponent(this.current_folder.id) +
                 "&action=search&global_txt=" +
                 encodeURIComponent(this.search_query) +
                 "&sort_update_date=0&add_filter=--&save_report=--&filtersubmit=Apply"
@@ -69,7 +66,7 @@ export default {
                 "/plugins/docman/?group_id=" +
                 encodeURIComponent(this.project_id) +
                 "&id=" +
-                encodeURIComponent(this.folder_id) +
+                encodeURIComponent(this.current_folder.id) +
                 "&action=search&global_txt=" +
                 encodeURIComponent(this.search_query) +
                 "&global_filtersubmit=Apply";

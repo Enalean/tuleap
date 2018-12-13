@@ -17,11 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "tlp-mocks";
+export async function handleErrors(context, exception) {
+    const status = exception.response.status;
+    if (status === 403) {
+        context.commit("switchFolderPermissionError");
+        return;
+    }
 
-import "./api/rest-querier.spec.js";
-import "./store/actions.spec.js";
-import "./store/actions-helpers/load-ascendant-hierarchy.spec.js";
-import "./store/actions-helpers/load-folder-content.spec.js";
-import "./store/getters.spec.js";
-import "./store/mutations.spec.js";
+    const json = await exception.response.json();
+    context.commit("setFolderLoadingError", getErrorMessage(json));
+}
+
+function getErrorMessage(error_json) {
+    if (error_json.hasOwnProperty("error")) {
+        if (error_json.error.hasOwnProperty("i18n_error_message")) {
+            return error_json.error.i18n_error_message;
+        }
+
+        return error_json.error.message;
+    }
+
+    return "";
+}
