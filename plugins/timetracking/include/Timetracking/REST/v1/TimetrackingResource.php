@@ -31,6 +31,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
+use Tuleap\REST\v1\ArtifactTimeRepresentation;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
@@ -39,6 +40,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingBadDateFormatException;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
+use Tuleap\Timetracking\REST\v1\Exception\InvalidArgumentException;
 use Tuleap\Timetracking\Time\TimeChecker;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimeRetriever;
@@ -89,6 +91,40 @@ class TimetrackingResource extends AuthenticatedResource
     public function options()
     {
         $this->sendAllowHeaders();
+    }
+
+    /**
+     * Retrieve time recorded on something
+     *
+     * As of today it only works on one artifact so the query should looks like <code>{ "artifact_id": 123 }</code>
+     *
+     * @url GET
+     * @access protected
+     *
+     * @param string $query A query
+     * @return array {@type ArtifactTimeRepresentation}
+     *
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 400
+     */
+    protected function getTrackedTimeOnArtifact($query)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaders();
+        try {
+            $current_user = $this->rest_user_manager->getCurrentUser();
+            $retriever = ArtifactTimeRetriever::build();
+            return $retriever->getArtifactTime($current_user, $query);
+        } catch (\User_StatusInvalidException $exception) {
+            throw new RestException(401);
+        } catch (\Rest_Exception_InvalidTokenException $exception) {
+            throw new RestException(401);
+        } catch (\User_PasswordExpiredException $exception) {
+            throw new RestException(401);
+        } catch (InvalidArgumentException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
     }
 
     /**
