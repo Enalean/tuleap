@@ -36,6 +36,9 @@ use Tuleap\Docman\Notifications\UsersUpdater;
 use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder;
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
+use Tuleap\Docman\Tus\TusServer;
+use Tuleap\Docman\Upload\DocumentToUploadProvider;
+use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
@@ -1253,7 +1256,9 @@ class DocmanPlugin extends Plugin
         if (ForgeConfig::get('enable_tus_test_endpoint')) {
             $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file', function () {
                 return new \Tuleap\Docman\Upload\FileUploadController(
-                    '/tmp',
+                    new TusServer(MessageFactoryBuilder::build(), new DocumentToUploadProvider('/tmp')),
+                    new \Tuleap\Docman\Tus\TusCORSMiddleware(),
+                    new \Tuleap\REST\TuleapRESTCORSMiddleware(),
                     \Tuleap\REST\UserManager::build(),
                     new \Tuleap\REST\BasicAuthentication()
                 );

@@ -32,10 +32,16 @@ use Luracast\Restler\Defaults;
 use Luracast\Restler\Format\JsonFormat;
 
 if (! headers_sent()) {
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Allow-Headers: Accept, Accept-Charset, Authorization, Content-Type, Origin, X-Auth-UserId, X-Auth-Token, X-Client-Uuid, X-Auth-AccessKey');
-    header('Access-Control-Expose-Headers: X-PAGINATION-SIZE, X-PAGINATION-LIMIT-MAX, X-PAGINATION-LIMIT');
+    $message_factory = \Tuleap\Http\MessageFactoryBuilder::build();
+    $request_handler = new \Tuleap\Http\Server\AlwaysSuccessfulRequestHandler($message_factory);
+    $cors_middleware = new \Tuleap\REST\TuleapRESTCORSMiddleware();
+    $minimal_request = new \Tuleap\Http\Server\NullServerRequest();
+    $response        = $cors_middleware->process($minimal_request, $request_handler);
+    foreach ($response->getHeaders() as $header => $values) {
+        foreach ($values as $value) {
+            header("$header: $value", false);
+        }
+    }
 }
 
 

@@ -21,8 +21,9 @@
 namespace Tuleap\Docman\Tus;
 
 use Http\Message\ResponseFactory;
+use Tuleap\Http\Server\RequestHandlerInterface;
 
-final class TusServer
+final class TusServer implements RequestHandlerInterface
 {
     const TUS_VERSION = '1.0.0';
 
@@ -30,17 +31,23 @@ final class TusServer
      * @var ResponseFactory
      */
     private $response_factory;
+    /**
+     * @var TusFileProvider
+     */
+    private $file_provider;
 
-    public function __construct(ResponseFactory $response_factory)
+    public function __construct(ResponseFactory $response_factory, TusFileProvider $file_provider)
     {
         $this->response_factory = $response_factory;
+        $this->file_provider = $file_provider;
     }
 
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function serve(\Psr\Http\Message\RequestInterface $request, TusFile $file)
+    public function handle(\Psr\Http\Message\ServerRequestInterface $request)
     {
+        $response = null;
         try {
             switch ($request->getMethod()) {
                 case 'OPTIONS':
@@ -48,11 +55,17 @@ final class TusServer
                     break;
                 case 'HEAD':
                     $this->checkProtocolVersionIsSupported($request);
-                    $response = $this->processHead($file);
+                    $file = $this->file_provider->getFile($request);
+                    if ($file !== null) {
+                        $response = $this->processHead($file);
+                    }
                     break;
                 case 'PATCH':
                     $this->checkProtocolVersionIsSupported($request);
-                    $response = $this->processPatch($request, $file);
+                    $file = $this->file_provider->getFile($request);
+                    if ($file !== null) {
+                        $response = $this->processPatch($request, $file);
+                    }
                     break;
                 default:
                     return $this->response_factory->createResponse(405);
@@ -69,6 +82,10 @@ final class TusServer
                 $exception->getMessage(),
                 ['Tus-Resumable' => self::TUS_VERSION]
             );
+        }
+
+        if ($response === null) {
+            $response = $this->response_factory->createResponse(404);
         }
 
         if ($request->getMethod() === 'OPTIONS') {
