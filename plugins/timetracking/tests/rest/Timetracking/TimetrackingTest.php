@@ -286,6 +286,23 @@ class TimetrackingTest extends TimetrackingBase
     }
 
     /**
+     * @depends testAddTimeSuccess
+     */
+    public function testGetTimeOnArtifact()
+    {
+        $query = urlencode(json_encode([
+            "artifact_id" => $this->timetracking_artifact_ids[1]["id"],
+        ], JSON_FORCE_OBJECT));
+        $response = $this->getResponse($this->client->get('/api/v1/timetracking?query='.$query), TimetrackingDataBuilder::USER_TESTER_NAME);
+        $this->assertEquals($response->getStatusCode(), 200);
+        $payload = $response->json();
+        $this->assertTrue(count($payload) >= 2);
+        $this->assertEquals(600, $payload[0]['minutes']);
+        $this->assertEquals(671, $payload[1]['minutes']);
+        $this->assertEquals('etape', $payload[1]['step']);
+    }
+
+    /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function testAddTimeReturnBadTimeFormatExceptionWrongSeparator()
