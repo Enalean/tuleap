@@ -76,6 +76,15 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
             throw new NotFoundException(dgettext('tuleap-document', "Project not found"));
         }
 
+        if (! $project->usesService(\docmanPlugin::SERVICE_SHORTNAME)) {
+            throw new NotFoundException(
+                sprintf(
+                    dgettext("tuleap-document", "Documents service is not activated in project %s"),
+                    $project->getUnconvertedPublicName()
+                )
+            );
+        }
+
         return $project;
     }
 
