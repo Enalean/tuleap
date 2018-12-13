@@ -23,7 +23,10 @@
     <div class="document-header">
         <h1 v-bind:class="title_class" class="document-header-title">{{ folder_title }}</h1>
         <div class="document-header-actions">
-            <new-item-button v-if="can_display_new_document_button"/>
+            <template v-if="can_display_new_document_button">
+                <new-item-button class="tlp-button-primary"/>
+                <new-item-modal/>
+            </template>
             <div class="document-header-spacer"></div>
             <search-box v-if="can_display_search_box"/>
         </div>
@@ -34,10 +37,11 @@
 import { mapGetters, mapState } from "vuex";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
+import NewItemModal from "./NewItem/NewItemModal.vue";
 
 export default {
     name: "FolderHeader",
-    components: { SearchBox, NewItemButton },
+    components: { SearchBox, NewItemButton, NewItemModal },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
         ...mapGetters(["current_folder_title", "is_folder_empty"]),

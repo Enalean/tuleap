@@ -19,37 +19,20 @@
   -->
 
 <template>
-    <div>
-        <button
-            type="button"
-            class="tlp-button-primary"
-            v-on:click="showNewDocumentModal()"
-        >
-            <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>New document</translate>
-        </button>
-        <new-item-modal ref="modal"/>
-    </div>
+    <button
+        type="button"
+        v-on:click="showNewDocumentModal()"
+    >
+        <i class="fa fa-plus tlp-button-icon"></i>
+        <translate>New document</translate>
+    </button>
 </template>
 
 <script>
-import NewItemModal from "./NewItemModal.vue";
-import { modal as createModal } from "tlp";
-
 export default {
-    name: "EmptyFolder",
-    components: { NewItemModal },
-    data() {
-        return {
-            modal: null
-        };
-    },
-    mounted() {
-        this.modal = createModal(this.$refs.modal.$el);
-    },
     methods: {
         showNewDocumentModal() {
-            this.modal.show();
+            document.dispatchEvent(new CustomEvent("show-new-document-modal"));
         }
     }
 };

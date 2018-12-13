@@ -23,7 +23,7 @@
             <empty-folder-for-writers-svg/>
         </div>
         <p class="empty-page-text" v-translate>It's time to add new documents!</p>
-        <new-item-button/>
+        <new-item-button class="tlp-button-primary tlp-button-large"/>
     </div>
 </template>
 
