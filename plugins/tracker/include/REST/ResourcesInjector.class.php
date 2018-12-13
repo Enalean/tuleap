@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 use Tuleap\Tracker\REST\ReportRepresentation;
+use Tuleap\Tracker\REST\TrackerRepresentation;
 
 /**
   * Inject resource into restler
@@ -35,7 +35,7 @@ class Tracker_REST_ResourcesInjector
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ArtifactTemporaryFilesResource', 'artifact_temporary_files');
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\ReportsResource', ReportRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackerFieldsResource', "tracker_fields");
-        $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\TrackerWorkflowTransitionsResource', "tracker_workflow_transitions");
+        $restler->addAPIClass('\\Tuleap\\Tracker\\REST\\v1\\Workflow\\TransitionsResource', "tracker_workflow_transitions");
     }
 
     public function declareProjectPlanningResource(array &$resources, Project $project)

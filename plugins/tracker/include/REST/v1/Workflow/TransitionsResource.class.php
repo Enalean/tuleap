@@ -16,23 +16,24 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\Tracker\REST\v1;
+namespace Tuleap\Tracker\REST\v1\Workflow;
 
-use Tracker;
-use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
-use Workflow;
+use TrackerFactory;
+use TransitionFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use Tuleap\REST\UserManager;
-use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\I18NRestException;
-use TrackerFactory;
+use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\UserManager;
+use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Workflow;
 use WorkflowFactory;
-use TransitionFactory;
 
-class TrackerWorkflowTransitionsResource extends AuthenticatedResource
+class TransitionsResource extends AuthenticatedResource
 {
 
     /** @var UserManager */
@@ -81,16 +82,17 @@ class TrackerWorkflowTransitionsResource extends AuthenticatedResource
     protected function postTransition($tracker_id, $from_id, $to_id)
     {
         $this->checkAccess();
-
-        $user       = $this->user_manager->getCurrentUser();
-        $tracker    = $this->getTrackerById($user, $tracker_id);
-
         $this->sendAllowHeaderForTransition();
 
+        $current_user = $this->user_manager->getCurrentUser();
+        $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
+        if ($tracker === null) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'This tracker does not exist.'));
+        }
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($tracker->getProject());
+        $this->getPermissionsChecker()->checkCreate($current_user, $tracker);
 
         $workflow = $this->getWorkflowByTrackerId($tracker_id);
-
         list($validated_from_id, $validated_to_id) = $this->validateParams($workflow, $from_id, $to_id);
 
         $transition = $this->getTransitionFactory()->createAndSaveTransition($workflow, $validated_from_id, $validated_to_id);
@@ -147,29 +149,6 @@ class TrackerWorkflowTransitionsResource extends AuthenticatedResource
     }
 
     /**
-     * Checks if tracker exists and if user has permissions to read and update before to return object
-     *
-     * @param \PFUser $user
-     * @param int     $id
-     *
-     * @return Tracker
-     *
-     * @throws 404 I18NRestException
-     * @throws \Luracast\Restler\RestException
-     */
-    private function getTrackerById(\PFUser $user, $id)
-    {
-        $tracker = $this->getTrackerFactory()->getTrackerById($id);
-        if ($tracker) {
-            $permissions_checker = new TrackerPermissionsChecker(new \URLVerification());
-            $permissions_checker->checkUpdateWorkflow($user, $tracker);
-            return $tracker;
-        }
-
-        throw new I18NRestException(404, dgettext('tuleap-tracker', 'This tracker does not exist.'));
-    }
-
-    /**
      * Checks if workflow exists for the tracker before return object
      *
      * @param int $tracker_id
@@ -211,5 +190,13 @@ class TrackerWorkflowTransitionsResource extends AuthenticatedResource
     private function getTrackerFactory()
     {
         return TrackerFactory::instance();
+    }
+
+    /**
+     * @return TransitionsPermissionsChecker
+     */
+    private function getPermissionsChecker()
+    {
+        return new TransitionsPermissionsChecker(new TrackerPermissionsChecker(new \URLVerification()));
     }
 }
