@@ -38,12 +38,17 @@ use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 
 require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class gitlfsPlugin extends \Plugin // phpcs:ignore
 {
+    const SERVICE_SHORTNAME = "tuleap-gitlfs";
+
+    const SERVICE_LABEL = "Git LFS";
+
     public function __construct($id)
     {
         parent::__construct($id);
@@ -73,6 +78,9 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted');
         $this->addHook('site_admin_option_hook');
+        $this->addHook('plugin_statistics_disk_usage_collect_project');
+        $this->addHook('plugin_statistics_disk_usage_service_label');
+        $this->addHook('plugin_statistics_color');
 
         return parent::getHooksAndCallbacks();
     }
@@ -212,9 +220,37 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->cleanUnusedResources();
     }
 
+    public function plugin_statistics_disk_usage_service_label($params) // phpcs:ignore
+    {
+        $params['services'][self::SERVICE_SHORTNAME] = self::SERVICE_LABEL;
+    }
+
+    public function plugin_statistics_disk_usage_collect_project($params) // phpcs:ignore
+    {
+        $this->getStatisticsCollector($params['DiskUsageManager'])
+            ->proceedToDiskUsageCollection($params);
+    }
+
+    public function plugin_statistics_color($params) // phpcs:ignore
+    {
+        if ($params['service'] == self::SERVICE_SHORTNAME) {
+            $params['color'] = 'chartreuse4';
+        }
+    }
+
     public function project_is_deleted($params) // phpcs:ignore
     {
         $this->cleanUnusedResources();
+    }
+
+    private function getStatisticsCollector(Statistics_DiskUsageManager $disk_usage_manager)
+    {
+        return new \Tuleap\GitLFS\Statistics\Collector(
+            $disk_usage_manager->_getDao(),
+            new ActionAuthorizationDAO(),
+            new LFSObjectDAO(),
+            new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
+        );
     }
 
     private function cleanUnusedResources()
