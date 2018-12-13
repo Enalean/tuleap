@@ -29,5 +29,5 @@ export const current_folder_title = state => {
         return state.root_title;
     }
 
-    return hierarchy[hierarchy.length - 1].title;
+    return hierarchy[hierarchy.length - 1] ? hierarchy[hierarchy.length - 1].title : "";
 };
