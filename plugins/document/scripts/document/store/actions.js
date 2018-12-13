@@ -23,10 +23,11 @@ import {
     getFolderContent,
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForFolderInProject
+    deleteUserPreferenciesForFolderInProject,
+    addNewDocument
 } from "../api/rest-querier.js";
 
-import { handleErrors } from "./actions-helpers/handle-errors.js";
+import { handleErrors, handleErrorsForModal } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 
@@ -53,6 +54,16 @@ export const getSubfolderContent = async (context, folder_id) => {
         context.commit("appendSubFolderContent", [folder_id, sub_items]);
     } catch (exception) {
         return handleErrors(context, exception);
+    }
+};
+
+export const createNewDocument = async (context, [title, description, item_type, parent]) => {
+    try {
+        await addNewDocument(title, description, item_type, parent.id);
+
+        return loadFolderContent(context, parent.id, Promise.resolve(parent));
+    } catch (exception) {
+        return handleErrorsForModal(context, exception);
     }
 };
 

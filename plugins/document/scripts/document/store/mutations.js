@@ -32,7 +32,9 @@ export {
     beginLoadingAscendantHierarchy,
     stopLoadingAscendantHierarchy,
     appendFolderToAscendantHierarchy,
-    setCurrentFolder
+    setCurrentFolder,
+    setModalError,
+    resetModalError
 };
 
 function saveFolderContent(state, folder_content) {
@@ -168,4 +170,14 @@ function getFolderUnfoldedDescendants(state, folder_id) {
     });
 
     return children.concat(unfolded_descendants);
+}
+
+function setModalError(state, error_message) {
+    state.has_modal_error = true;
+    state.modal_error = error_message;
+}
+
+function resetModalError(state) {
+    state.has_modal_error = false;
+    state.modal_error = null;
 }

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, recursiveGet, patch, del } from "tlp";
+import { get, recursiveGet, patch, del, post } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
 
 export {
@@ -27,7 +27,8 @@ export {
     getParents,
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForFolderInProject
+    deleteUserPreferenciesForFolderInProject,
+    addNewDocument
 };
 
 async function getProject(project_id) {
@@ -40,6 +41,21 @@ async function getItem(id) {
     const response = await get("/api/docman_items/" + id);
 
     return response.json();
+}
+
+async function addNewDocument(title, description, item_type, parent_id) {
+    const headers = {
+        "content-type": "application/json"
+    };
+
+    const body = JSON.stringify({
+        title,
+        description,
+        item_type,
+        parent_id
+    });
+
+    await post("/api/docman_items", { headers, body });
 }
 
 function getFolderContent(folder_id) {

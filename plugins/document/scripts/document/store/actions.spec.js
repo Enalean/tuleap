@@ -17,14 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mockFetchError } from "tlp-mocks";
-import { loadRootFolder, loadFolder, setUserPreferenciesForFolder } from "./actions.js";
+import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import {
+    loadRootFolder,
+    loadFolder,
+    setUserPreferenciesForFolder,
+    createNewDocument
+} from "./actions.js";
 import {
     restore as restoreRestQuerier,
     rewire$getItem,
     rewire$getProject,
     rewire$deleteUserPreferenciesForFolderInProject,
-    rewire$patchUserPreferenciesForFolderInProject
+    rewire$patchUserPreferenciesForFolderInProject,
+    rewire$addNewDocument
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -48,7 +54,8 @@ describe("Store actions", () => {
         loadFolderContent,
         loadAscendantHierarchy,
         deleteUserPreferenciesForFolderInProject,
-        patchUserPreferenciesForFolderInProject;
+        patchUserPreferenciesForFolderInProject,
+        addNewDocument;
 
     beforeEach(() => {
         const project_id = 101;
@@ -71,6 +78,9 @@ describe("Store actions", () => {
 
         loadAscendantHierarchy = jasmine.createSpy("loadAscendantHierarchy");
         rewire$loadAscendantHierarchy(loadAscendantHierarchy);
+
+        addNewDocument = jasmine.createSpy("addNewDocument");
+        rewire$addNewDocument(addNewDocument);
 
         deleteUserPreferenciesForFolderInProject = jasmine.createSpy(
             "deleteUserPreferenciesForFolderInProject"
@@ -357,6 +367,31 @@ describe("Store actions", () => {
 
             expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
             expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
+        });
+    });
+    describe("createNewDocument", () => {
+        it("Creates new document and reload folder content", async () => {
+            mockFetchSuccess(tlp.post, {});
+
+            await createNewDocument(context, ["title", "", "empty", 2]);
+
+            expect(loadFolderContent).toHaveBeenCalled();
+            expect(context.commit).not.toHaveBeenCalledWith("setModalError");
+        });
+
+        it("Stores error when document creation fail", async () => {
+            const error_message = "`title` is required.";
+            mockFetchError(addNewDocument, {
+                status: 400,
+                error_json: {
+                    error: {
+                        message: error_message
+                    }
+                }
+            });
+            await createNewDocument(context, ["", "", "empty", 2]);
+
+            expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
         });
     });
 });

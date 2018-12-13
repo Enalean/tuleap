@@ -32,7 +32,9 @@ const state = {
     is_loading_ascendant_hierarchy: false,
     root_title: "",
     folded_items_ids: [],
-    folded_by_map: {}
+    folded_by_map: {},
+    has_modal_error: false,
+    modal_error: null
 };
 
 export default state;
