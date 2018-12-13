@@ -188,4 +188,26 @@ class Git_LogDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->run($sql, $project_id, $nb_max);
     }
+
+
+    public function countGitPush()
+    {
+        $sql = "SELECT count(*) as nb
+                FROM plugin_git_log";
+
+        $res = $this->getDB()->single($sql);
+
+        return $res;
+    }
+
+    public function countGitPushAfter($timestamp)
+    {
+        $sql = "SELECT count(*)
+                FROM plugin_git_log
+                WHERE push_date > ?";
+
+        $res = $this->getDB()->single($sql, [$timestamp]);
+
+        return $res;
+    }
 }
