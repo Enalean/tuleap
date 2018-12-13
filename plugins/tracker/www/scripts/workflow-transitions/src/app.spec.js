@@ -20,5 +20,7 @@
 import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
+import "./components/TransitionMatrixContent.spec.js";
+
 import "./store/actions.spec.js";
 import "./store/exceptionHandler.spec.js";

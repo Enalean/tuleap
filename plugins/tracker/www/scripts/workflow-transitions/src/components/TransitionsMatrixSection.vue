@@ -23,19 +23,13 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th
-                        v-for="to in all_target_values"
-                        v-bind:key="to.id"
-                    >
-                        <span class="tracker-workflow-transition-column-label">{{ to.label }}</span>
+                    <th v-for="to in all_target_values" v-bind:key="to.id">
+                        {{ to.label }}
                     </th>
                 </tr>
             </thead>
             <tbody class="tracker-workflow-transition-tbody">
-                <tr
-                    v-for="from in all_source_values"
-                    v-bind:key="from.id"
-                >
+                <tr v-for="from in all_source_values" v-bind:key="from.id">
                     <td class="tracker-workflow-transition-row-label">{{ from.label }}</td>
                     <transition-matrix-content
                         v-for="to in all_target_values"
@@ -48,9 +42,10 @@
             </tbody>
         </table>
         <div v-else class="empty-page tracker-workflow-transition-matrix-empty-state">
-            <p class="empty-page-text tracker-workflow-transition-matrix-empty-state-field-empty" v-translate>
-                The field on which the transitions are based has no selectable value
-            </p>
+            <p
+                class="empty-page-text tracker-workflow-transition-matrix-empty-state-field-empty"
+                v-translate
+            >The field on which the transitions are based has no selectable value</p>
             <a class="tlp-button-primary" v-bind:href="configure_field_url">
                 <i class="fa fa-cog"></i>
                 <span v-translate>Configure it</span>

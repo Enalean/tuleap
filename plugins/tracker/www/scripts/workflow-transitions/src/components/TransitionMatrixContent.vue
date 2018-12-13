@@ -18,27 +18,44 @@
   -->
 
 <template>
-    <td
-        class="tracker-workflow-transition-row-content"
-        v-bind:class="{
-            'tracker-workflow-transition-row-content-forbidden': !is_allowed,
-            'tracker-workflow-transition-row-content-empty': is_empty
-        }"
-    >
-        <template v-if="transition">
-            <div class="tracker-workflow-transition-row-content-active"></div>
+    <td class="tracker-workflow-transition-cell">
+        <i
+            v-if="!is_allowed"
+            class="fa fa-ban tracker-workflow-transition-cell-forbidden"
+            data-test-type="forbidden-transition"
+        ></i>
+        <i
+            v-else-if="is_operation_running"
+            class="fa fa-spinner fa-spin tracker-workflow-transition-spinner"
+            data-test-type="spinner"
+        ></i>
+        <div
+            v-else-if="is_empty"
+            class="tracker-workflow-transition-cell-empty"
+            v-bind:class="{ 'tracker-workflow-transition-action-disabled': is_another_operation_running }"
+            v-on:click="is_another_operation_running || createTransition()"
+            data-test-action="create-transition"
+        ></div>
+        <template v-else-if="transition">
+            <div
+                class="tracker-workflow-transition-mark tracker-workflow-transition-action-disabled"
+                data-test-type="transition-mark"
+            >
+                ⤴
+            </div>
             <button
                 class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
+                data-test-action="configure-transition"
                 v-translate
                 disabled
-            >
-                Configure
-            </button>
+            >Configure</button>
         </template>
     </td>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     name: "TransitionMatrixContent",
 
@@ -56,12 +73,36 @@ export default {
         }
     },
 
+    data() {
+        return {
+            is_operation_running: false
+        };
+    },
+
     computed: {
+        ...mapState({
+            is_another_operation_running: "is_operation_running"
+        }),
         is_allowed() {
             return this.from.id !== this.to.id;
         },
         is_empty() {
             return this.is_allowed && !this.transition;
+        }
+    },
+
+    methods: {
+        async createTransition() {
+            this.is_operation_running = true;
+            try {
+                const new_transition = {
+                    from_id: this.from.id,
+                    to_id: this.to.id
+                };
+                await this.$store.dispatch("saveNewTransition", new_transition);
+            } finally {
+                this.is_operation_running = false;
+            }
         }
     }
 };

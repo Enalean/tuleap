@@ -18,6 +18,7 @@
  */
 
 import {
+    createTransition,
     createWorkflowTransitions,
     getTracker,
     resetWorkflowTransitions,
@@ -40,7 +41,7 @@ export async function loadTracker(context, tracker_id) {
 export async function saveWorkflowTransitionsField(context, field_id) {
     try {
         context.commit("beginOperation");
-        const tracker_id = context.state.current_tracker.id;
+        const tracker_id = context.getters.current_tracker_id;
         await createWorkflowTransitions(tracker_id, field_id);
         context.commit("createWorkflow", field_id);
     } catch (exception) {
@@ -54,7 +55,7 @@ export async function saveWorkflowTransitionsField(context, field_id) {
 export async function resetWorkflowTransitionsField(context) {
     try {
         context.commit("beginOperation");
-        const tracker_id = context.state.current_tracker.id;
+        const tracker_id = context.getters.current_tracker_id;
         const new_tracker = await resetWorkflowTransitions(tracker_id);
         context.commit("saveCurrentTracker", new_tracker);
     } catch (exception) {
@@ -68,7 +69,7 @@ export async function resetWorkflowTransitionsField(context) {
 export async function switchTransitionRulesEnforcement(context, new_enforcement) {
     try {
         context.commit("beginTransitionRulesEnforcement");
-        const tracker_id = context.state.current_tracker.id;
+        const tracker_id = context.getters.current_tracker_id;
         const updated_tracker = await updateTransitionRulesEnforcement(tracker_id, new_enforcement);
         context.commit("saveCurrentTracker", updated_tracker);
     } catch (exception) {
@@ -76,5 +77,23 @@ export async function switchTransitionRulesEnforcement(context, new_enforcement)
         context.commit("failOperation", error_message);
     } finally {
         context.commit("endTransitionRulesEnforcement");
+    }
+}
+
+export async function saveNewTransition(context, transition) {
+    try {
+        context.commit("beginOperation");
+        const tracker_id = context.getters.current_tracker_id;
+        const response = await createTransition(tracker_id, transition.from_id, transition.to_id);
+        const new_transition = {
+            id: response.id,
+            ...transition
+        };
+        context.commit("addTransition", new_transition);
+    } catch (exception) {
+        const error_message = await getErrorMessage(exception);
+        context.commit("failOperation", error_message);
+    } finally {
+        context.commit("endOperation");
     }
 }

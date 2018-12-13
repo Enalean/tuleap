@@ -17,6 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+.tracker-workflow-transition-spinner {
+    color: $tlp-ui-dimmed;
+}
+
 .tracker-workflow-transition-table {
     position: relative;
     width: auto;
@@ -54,7 +58,7 @@
             }
         }
 
-        > .tracker-workflow-transition-row-content {
+        > .tracker-workflow-transition-cell {
             position: relative;
             width: 100px;
             min-width: 100px;
@@ -66,8 +70,33 @@
     }
 }
 
-.tracker-workflow-transition-row-content {
-    &-empty::before {
+@mixin tracker-workflow-transition-cell-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.tracker-workflow-transition-cell-forbidden {
+    @include tracker-workflow-transition-cell-content;
+
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    transform: translate(-50%, -50%);
+    color: $tlp-ui-border-dark;
+    font-size: 16px;
+    cursor: not-allowed;
+}
+
+.tracker-workflow-transition-cell-empty {
+    @include tracker-workflow-transition-cell-content;
+
+    cursor: pointer;
+
+    &::before {
         content: '';
         position: absolute;
         top: 50%;
@@ -78,27 +107,14 @@
         border-radius: 50%;
         background: $tlp-ui-border-dark;
     }
-
-    &-forbidden::before {
-        content: '\f05e';
-        display: block;
-        color: $tlp-ui-border-dark;
-        font-family: FontAwesome;
-        font-size: 16px;
-        font-weight: normal;
-        text-align: center;
-        cursor: not-allowed;
-    }
 }
 
-.tracker-workflow-transition-row-content-active::before {
-    content: '⤴';
-    display: block;
+.tracker-workflow-transition-mark {
     color: $tlp-theme-color;
 }
 
-.tracker-workflow-transition-column-label {
-    display: block;
+.tracker-workflow-transition-action-disabled {
+    cursor: not-allowed;
 }
 
 .tracker-workflow-advanced-transition-button {
