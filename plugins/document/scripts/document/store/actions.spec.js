@@ -18,29 +18,21 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { loadRootFolder, loadFolder } from "./actions.js";
+import { loadFolderContent, loadAscendantHierarchy, loadRootDocumentId } from "./actions.js";
 import {
     restore as restoreRestQuerier,
+    rewire$getFolderContent,
     rewire$getItem,
+    rewire$getParents,
     rewire$getProject
 } from "../api/rest-querier.js";
-import {
-    restore as restoreLoadFolderContent,
-    rewire$loadFolderContent
-} from "./actions-helpers/load-folder-content.js";
-import {
-    restore as restoreLoadAscendantHierarchy,
-    rewire$loadAscendantHierarchy
-} from "./actions-helpers/load-ascendant-hierarchy.js";
 
 describe("Store actions", () => {
     afterEach(() => {
         restoreRestQuerier();
-        restoreLoadFolderContent();
-        restoreLoadAscendantHierarchy();
     });
 
-    let context, getProject, getItem, loadFolderContent, loadAscendantHierarchy;
+    let context, getFolderContent, getProject, getItem, getParents;
 
     beforeEach(() => {
         const project_id = 101;
@@ -52,50 +44,65 @@ describe("Store actions", () => {
             }
         };
 
+        getFolderContent = jasmine.createSpy("getFolderContent");
+        rewire$getFolderContent(getFolderContent);
+
+        getParents = jasmine.createSpy("getParents");
+        rewire$getParents(getParents);
+
         getProject = jasmine.createSpy("getProject");
         rewire$getProject(getProject);
 
         getItem = jasmine.createSpy("getItem");
         rewire$getItem(getItem);
-
-        loadFolderContent = jasmine.createSpy("loadFolderContent");
-        rewire$loadFolderContent(loadFolderContent);
-
-        loadAscendantHierarchy = jasmine.createSpy("loadAscendantHierarchy");
-        rewire$loadAscendantHierarchy(loadAscendantHierarchy);
     });
 
-    describe("loadRootFolder()", () => {
+    describe("loadRootDocumentId()", () => {
         it("load document root and then load its own content", async () => {
-            const root_item = {
-                id: 3,
-                title: "Project Documentation",
-                owner: {
-                    id: 101,
-                    display_name: "user (login)"
-                },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            };
-
             const project = {
                 additional_informations: {
                     docman: {
-                        root_item
+                        root_item: {
+                            id: 3,
+                            title: "Project Documentation",
+                            owner: {
+                                id: 101,
+                                display_name: "user (login)"
+                            },
+                            last_update_date: "2018-08-21T17:01:49+02:00"
+                        }
                     }
                 }
             };
 
             getProject.and.returnValue(project);
 
-            await loadRootFolder(context);
+            const folder_content = [
+                {
+                    id: 1,
+                    title: "folder",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-10-03T11:16:11+02:00"
+                },
+                {
+                    id: 2,
+                    title: "item",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            getFolderContent.and.returnValue(folder_content);
+
+            await loadRootDocumentId(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoading");
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", root_item);
+            expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
-            expect(loadFolderContent).toHaveBeenCalled();
-            await expectAsync(loadFolderContent.calls.mostRecent().args[2]).toBeResolvedTo(
-                root_item
-            );
         });
 
         it("When the user does not have access to the project, an error will be raised", async () => {
@@ -108,7 +115,7 @@ describe("Store actions", () => {
                 }
             });
 
-            await loadRootFolder(context);
+            await loadRootDocumentId(context);
 
             expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
@@ -125,18 +132,103 @@ describe("Store actions", () => {
                 }
             });
 
-            await loadRootFolder(context);
+            await loadRootDocumentId(context);
 
             expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
         });
     });
 
-    describe("loadFolder", () => {
-        it("loads ascendant hierarchy and content for stored current folder", async () => {
-            const current_folder = {
+    describe("loadFolderContent", () => {
+        it("loads the folder content and sets loading flag", async () => {
+            const folder_content = [
+                {
+                    id: 1,
+                    title: "folder",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-10-03T11:16:11+02:00"
+                },
+                {
+                    id: 2,
+                    title: "item",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            getFolderContent.and.returnValue(folder_content);
+
+            await loadFolderContent(context);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoading");
+            expect(context.commit).toHaveBeenCalledWith("saveFolderContent", folder_content);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
+        });
+
+        it("When the folder can't be found, another error screen will be shown", async () => {
+            const error_message = "The folder does not exist.";
+            mockFetchError(getFolderContent, {
+                status: 404,
+                error_json: {
+                    error: {
+                        i18n_error_message: error_message
+                    }
+                }
+            });
+
+            await loadFolderContent(context);
+
+            expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
+            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
+        });
+
+        it("When the user does not have access to the folder, an error will be raised", async () => {
+            mockFetchError(getFolderContent, {
+                status: 403,
+                error_json: {
+                    error: {
+                        i18n_error_message: "No you cannot"
+                    }
+                }
+            });
+
+            await loadFolderContent(context);
+
+            expect(context.commit).not.toHaveBeenCalledWith("saveFolderContent");
+            expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
+            expect(context.commit).toHaveBeenCalledWith("stopLoading");
+        });
+    });
+
+    describe("loadAscendantHierarchy", () => {
+        it("loads the folder parents and sets loading flag", async () => {
+            const parents = [
+                {
+                    id: 1,
+                    title: "Project documentation",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-10-03T11:16:11+02:00"
+                },
+                {
+                    id: 2,
+                    title: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            const item = {
                 id: 3,
-                title: "Project Documentation",
+                title: "Current folder",
                 owner: {
                     id: 101,
                     display_name: "user (login)"
@@ -144,167 +236,128 @@ describe("Store actions", () => {
                 last_update_date: "2018-08-21T17:01:49+02:00"
             };
 
-            context.state.current_folder = current_folder;
+            const expected_parents = [
+                {
+                    id: 2,
+                    title: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                },
+                {
+                    id: 3,
+                    title: "Current folder",
+                    owner: {
+                        id: 101,
+                        display_name: "user (login)"
+                    },
+                    last_update_date: "2018-08-21T17:01:49+02:00"
+                }
+            ];
 
-            await loadFolder(context, 3);
+            getItem.and.returnValue(item);
 
+            getParents.and.returnValue(parents);
+
+            await loadAscendantHierarchy(context);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", expected_parents);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
+        });
+
+        it("When target folder is in the list of parents, then it does not fetch parents", async () => {
+            context.state.current_folder_ascendant_hierarchy = [
+                {
+                    id: 2,
+                    title: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                },
+                {
+                    id: 3,
+                    title: "folder B",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            const expected_parents = [
+                {
+                    id: 2,
+                    title: "folder A",
+                    owner: {
+                        id: 101
+                    },
+                    last_update_date: "2018-08-07T16:42:49+02:00"
+                }
+            ];
+
+            await loadAscendantHierarchy(context, 2);
+
+            expect(getParents).not.toHaveBeenCalled();
             expect(getItem).not.toHaveBeenCalled();
-            expect(loadFolderContent).toHaveBeenCalled();
-            expect(loadAscendantHierarchy).toHaveBeenCalled();
-            await expectAsync(loadFolderContent.calls.mostRecent().args[2]).toBeResolvedTo(
-                current_folder
-            );
-            await expectAsync(loadAscendantHierarchy.calls.mostRecent().args[2]).toBeResolvedTo(
-                current_folder
-            );
+            expect(context.commit).not.toHaveBeenCalledWith("beginLoadingAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", expected_parents);
+            expect(context.commit).not.toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
-        it("gets item if there isn't any current folder in the store", async () => {
-            const folder_to_fetch = {
-                id: 3,
-                title: "Project Documentation",
-                owner: {
-                    id: 101,
-                    display_name: "user (login)"
-                },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            };
+        it("When the parents can't be found, another error screen will be shown", async () => {
+            const error_message = "The folder does not exist.";
+            mockFetchError(getParents, {
+                status: 404,
+                error_json: {
+                    error: {
+                        i18n_error_message: error_message
+                    }
+                }
+            });
 
-            getItem.and.returnValue(Promise.resolve(folder_to_fetch));
+            await loadAscendantHierarchy(context);
 
-            await loadFolder(context, 3);
-
-            expect(getItem).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", folder_to_fetch);
-            expect(loadFolderContent).toHaveBeenCalled();
-            expect(loadAscendantHierarchy).toHaveBeenCalled();
-            await expectAsync(loadFolderContent.calls.mostRecent().args[2]).toBeResolvedTo(
-                folder_to_fetch
-            );
-            await expectAsync(loadAscendantHierarchy.calls.mostRecent().args[2]).toBeResolvedTo(
-                folder_to_fetch
-            );
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
-        it("gets item if there isn't any current folder in the store", async () => {
-            context.state.current_folder = {
-                id: 1,
-                title: "Project Documentation",
-                owner: {
-                    id: 101,
-                    display_name: "user (login)"
-                },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            };
+        it("When the item can't be found, another error screen will be shown", async () => {
+            const error_message = "The folder does not exist.";
+            mockFetchError(getItem, {
+                status: 404,
+                error_json: {
+                    error: {
+                        i18n_error_message: error_message
+                    }
+                }
+            });
 
-            const folder_to_fetch = {
-                id: 3,
-                title: "Project Documentation",
-                owner: {
-                    id: 101,
-                    display_name: "user (login)"
-                },
-                last_update_date: "2018-08-21T17:01:49+02:00"
-            };
+            await loadAscendantHierarchy(context);
 
-            getItem.and.returnValue(Promise.resolve(folder_to_fetch));
-
-            await loadFolder(context, 3);
-
-            expect(getItem).toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", folder_to_fetch);
-            expect(loadFolderContent).toHaveBeenCalled();
-            expect(loadAscendantHierarchy).toHaveBeenCalled();
-            await expectAsync(loadFolderContent.calls.mostRecent().args[2]).toBeResolvedTo(
-                folder_to_fetch
-            );
-            await expectAsync(loadAscendantHierarchy.calls.mostRecent().args[2]).toBeResolvedTo(
-                folder_to_fetch
-            );
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("setFolderLoadingError", error_message);
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
 
-        it("does not load ascendant hierarchy if folder is already inside the current one", async () => {
-            const folder_a = {
-                id: 2,
-                title: "folder A",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
-            const folder_b = {
-                id: 3,
-                title: "folder B",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
+        it("When the user does not have access to the folder, an error will be raised", async () => {
+            mockFetchError(getParents, {
+                status: 403,
+                error_json: {
+                    error: {
+                        i18n_error_message: "No you cannot"
+                    }
+                }
+            });
 
-            context.state.current_folder_ascendant_hierarchy = [folder_a, folder_b];
-            context.state.current_folder = folder_a;
+            await loadAscendantHierarchy(context);
 
-            await loadFolder(context, 2);
-
-            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", [folder_a]);
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolder");
-        });
-
-        it("overrides the stored current folder with the one found in ascendant hierarchy", async () => {
-            const folder_a = {
-                id: 2,
-                title: "folder A",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
-            const folder_b = {
-                id: 3,
-                title: "folder B",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
-
-            context.state.current_folder_ascendant_hierarchy = [folder_a, folder_b];
-            context.state.current_folder = folder_b;
-
-            await loadFolder(context, 2);
-
-            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", [folder_a]);
-            expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", folder_a);
-        });
-
-        it("does not override the stored current folder with the one found in ascendant hierarchy if they are the same", async () => {
-            const folder_a = {
-                id: 2,
-                title: "folder A",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
-            const folder_b = {
-                id: 3,
-                title: "folder B",
-                owner: {
-                    id: 101
-                },
-                last_update_date: "2018-08-07T16:42:49+02:00"
-            };
-
-            context.state.current_folder_ascendant_hierarchy = [folder_a, folder_b];
-            context.state.current_folder = folder_a;
-
-            await loadFolder(context, 2);
-
-            expect(loadAscendantHierarchy).not.toHaveBeenCalled();
-            expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", [folder_a]);
-            expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolder", folder_a);
+            expect(context.commit).not.toHaveBeenCalledWith("saveAscendantHierarchy");
+            expect(context.commit).toHaveBeenCalledWith("switchFolderPermissionError");
+            expect(context.commit).toHaveBeenCalledWith("stopLoadingAscendantHierarchy");
         });
     });
 });
