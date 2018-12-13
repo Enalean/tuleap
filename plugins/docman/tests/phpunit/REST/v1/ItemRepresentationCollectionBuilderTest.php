@@ -156,6 +156,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation1->build(
             $docman_item1,
             $user_representation,
+            true,
             ItemRepresentation::TYPE_FOLDER,
             null
         );
@@ -182,22 +183,23 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation2->build(
             $docman_item3,
             $user_representation,
+            true,
             ItemRepresentation::TYPE_FILE,
             $file_properties
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item1, ItemRepresentation::TYPE_FOLDER, null])
+            ->withArgs([$docman_item1, $user, ItemRepresentation::TYPE_FOLDER, null, null])
             ->andReturns($representation1);
 
         $this->item_version_factory->shouldReceive('getCurrentVersionForItem')
             ->withArgs([$docman_item3])
             ->andReturns($docman_version_item3);
 
-        $file_properties = new FilePropertiesRepresentation();
-        $file_properties->build($docman_version_item3);
+        $file_properties2 = new FilePropertiesRepresentation();
+        $file_properties2->build($docman_version_item3);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item3, ItemRepresentation::TYPE_FILE, Mockery::any()])
+            ->withArgs([$docman_item3, $user, ItemRepresentation::TYPE_FILE, Mockery::any(), null])
             ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildFolderContent($item, $user, 50, 0);
@@ -252,20 +254,22 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
         $representation1->build(
             $docman_folder1,
             $user_representation,
+            true,
             ItemRepresentation::TYPE_FOLDER
         );
         $representation2 = new ItemRepresentation();
         $representation2->build(
             $docman_folder2,
             $user_representation,
+            true,
             ItemRepresentation::TYPE_FOLDER
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-                                          ->withArgs([$docman_folder1, ItemRepresentation::TYPE_FOLDER, null])
+            ->withArgs([$docman_folder1, $user, ItemRepresentation::TYPE_FOLDER, null, null])
                                           ->andReturns($representation1);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-                                          ->withArgs([$docman_folder2, ItemRepresentation::TYPE_FOLDER, null])
+            ->withArgs([$docman_folder2, $user, ItemRepresentation::TYPE_FOLDER, null, null])
                                           ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);
