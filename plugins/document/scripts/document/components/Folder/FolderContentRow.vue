@@ -21,6 +21,7 @@
     <tr>
         <folder-cell-title v-bind:item="item" v-if="is_folder"/>
         <link-cell-title v-bind:item="item" v-else-if="is_link"/>
+        <file-cell-title v-bind:item="item" v-else-if="is_file"/>
         <document-cell-title v-bind:item="item" v-else/>
 
         <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
@@ -33,16 +34,17 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
-import { TYPE_FOLDER, TYPE_LINK } from "../../constants.js";
+import { TYPE_FOLDER, TYPE_LINK, TYPE_FILE } from "../../constants.js";
 import FolderCellTitle from "./ItemTitle/FolderCellTitle.vue";
 import DocumentCellTitle from "./ItemTitle/DocumentCellTitle.vue";
 import LinkCellTitle from "./ItemTitle/LinkCellTitle.vue";
+import FileCellTitle from "./ItemTitle/FileCellTitle.vue";
 import moment from "moment";
 import phptomoment from "phptomoment";
 
 export default {
     name: "FolderContentRow",
-    components: { UserBadge, FolderCellTitle, DocumentCellTitle, LinkCellTitle },
+    components: { UserBadge, FolderCellTitle, DocumentCellTitle, LinkCellTitle, FileCellTitle },
     props: {
         item: Object
     },
@@ -59,6 +61,9 @@ export default {
         },
         is_link() {
             return this.item.type === TYPE_LINK;
+        },
+        is_file() {
+            return this.item.type === TYPE_FILE;
         }
     },
     methods: {

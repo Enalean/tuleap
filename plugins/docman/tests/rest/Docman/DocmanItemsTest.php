@@ -73,6 +73,10 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[0]['file_properties'], null);
         $this->assertEquals($items[1]['file_properties'], null);
         $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
+        $this->assertEquals(
+            $items[2]['file_properties']['html_url'],
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[2]['id'])
+        );
         $this->assertEquals($items[3]['file_properties'], null);
 
         $this->assertEquals($items[0]['link_properties'], null);
