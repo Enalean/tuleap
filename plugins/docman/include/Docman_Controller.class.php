@@ -19,15 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\Notifications\UsersToNotifyDao;
-use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
-use Tuleap\Docman\Notifications\UgroupsUpdater;
-use Tuleap\Docman\Notifications\UGroupsRetriever;
-use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
-use Tuleap\Docman\Notifications\UsersUpdater;
-use Tuleap\Docman\Notifications\UsersRetriever;
-use Tuleap\Mail\MailFilter;
-use Tuleap\Mail\MailLogger;
+use Tuleap\Docman\Log\LogEventAdder;
+use Tuleap\Docman\Notifications\NotificationBuilders;
+use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -51,6 +45,22 @@ class Docman_Controller extends Controler {
      * @var Docman_NotificationsManager
      */
     public $notificationsManager;
+    /**
+     * @var Docman_NotificationsManager_Add
+     */
+    public $notificationsManager_Add;
+    /**
+     * @var Docman_NotificationsManager_Delete
+     */
+    public $notificationsManager_Delete;
+    /**
+     * @var Docman_NotificationsManager_Move
+     */
+    public $notificationsManager_Move;
+    /**
+     * @var Docman_NotificationsManager_Subscribers
+     */
+    public $notificationsManager_Subscribers;
 
     public function __construct($plugin, $pluginPath, $themePath, $request)
     {
@@ -69,102 +79,26 @@ class Docman_Controller extends Controler {
 
         $event_manager = $this->_getEventManager();
 
-        // Events that will call the Docman Logger
-        $logEvents = array (
-                         'plugin_docman_event_add',
-                         'plugin_docman_event_edit',
-                         'plugin_docman_event_move',
-                         'plugin_docman_event_del',
-                         'plugin_docman_event_del_version',
-                         'plugin_docman_event_access',
-                         'plugin_docman_event_new_version',
-                         'plugin_docman_event_restore',
-                         'plugin_docman_event_restore_version',
-                         'plugin_docman_event_metadata_update',
-                         'plugin_docman_event_set_version_author',
-                         'plugin_docman_event_set_version_date',
-                         'plugin_docman_event_lock_add',
-                         'plugin_docman_event_lock_del',
-                         'plugin_docman_event_perms_change',
-                     );
+        $this->logger    = new Docman_Log();
+        $log_event_adder = new LogEventAdder($event_manager, $this->logger);
+        $log_event_adder->addLogEventManagement();
 
-        $this->logger  = new Docman_Log();
-        foreach ($logEvents as $event) {
-            $event_manager->addListener($event, $this->logger, 'log', true);
-        }
+        $notifications_builders = new NotificationBuilders($this->feedback, $this->getProject(), $this->getDefaultUrl());
+        $this->notificationsManager = $notifications_builders->buildNotificationManager();
+        $this->notificationsManager_Add  = $notifications_builders->buildNotificationManagerAdd();
+        $this->notificationsManager_Delete = $notifications_builders->buildNotificationManagerDelete();
+        $this->notificationsManager_Move = $notifications_builders->buildNotificationManagerMove();
+        $this->notificationsManager_Subscribers = $notifications_builders->buildNotificationManagerSubsribers();
 
-        // Other events
-        $this->notificationsManager = new Docman_NotificationsManager(
-            $this->getProject(),
-            get_server_url().$this->getDefaultUrl(),
-            $this->feedback,
-            $this->getMailBuilder(),
-            $this->getUsersToNotifyDao(),
-            $this->getUsersRetriever(),
-            $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever(),
-            $this->getUserUpdater(),
-            $this->getUGroupUpdater()
+        $notification_event_adder = new NotificationEventAdder(
+            $event_manager,
+            $this->notificationsManager,
+            $this->notificationsManager_Add,
+            $this->notificationsManager_Delete,
+            $this->notificationsManager_Move,
+            $this->notificationsManager_Subscribers
         );
-        $event_manager->addListener('plugin_docman_event_edit',            $this->notificationsManager, 'somethingHappen', true);
-        $event_manager->addListener('plugin_docman_event_new_version',     $this->notificationsManager, 'somethingHappen', true);
-        $event_manager->addListener('plugin_docman_event_metadata_update', $this->notificationsManager, 'somethingHappen', true);
-        $event_manager->addListener('send_notifications',    $this->notificationsManager, 'sendNotifications', true);
-        $this->notificationsManager_Add = new Docman_NotificationsManager_Add(
-            $this->getProject(),
-            get_server_url().$this->getDefaultUrl(),
-            $this->feedback,
-            $this->getMailBuilder(),
-            $this->getUsersToNotifyDao(),
-            $this->getUsersRetriever(),
-            $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever(),
-            $this->getUserUpdater(),
-            $this->getUGroupUpdater()
-        );
-        $event_manager->addListener('plugin_docman_event_add', $this->notificationsManager_Add, 'somethingHappen', true);
-        $event_manager->addListener('send_notifications',    $this->notificationsManager_Add, 'sendNotifications', true);
-        $this->notificationsManager_Delete = new Docman_NotificationsManager_Delete(
-            $this->getProject(),
-            get_server_url().$this->getDefaultUrl(),
-            $this->feedback,
-            $this->getMailBuilder(),
-            $this->getUsersToNotifyDao(),
-            $this->getUsersRetriever(),
-            $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever(),
-            $this->getUserUpdater(),
-            $this->getUGroupUpdater()
-        );
-        $event_manager->addListener('plugin_docman_event_del', $this->notificationsManager_Delete, 'somethingHappen', true);
-        $event_manager->addListener('send_notifications',    $this->notificationsManager_Delete, 'sendNotifications', true);
-        $this->notificationsManager_Move = new Docman_NotificationsManager_Move(
-            $this->getProject(),
-            get_server_url().$this->getDefaultUrl(),
-            $this->feedback,
-            $this->getMailBuilder(),
-            $this->getUsersToNotifyDao(),
-            $this->getUsersRetriever(),
-            $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever(),
-            $this->getUserUpdater(),
-            $this->getUGroupUpdater()
-        );
-        $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true);
-        $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true);
-        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers(
-            $this->getProject(),
-            get_server_url().$this->getDefaultUrl(),
-            $this->feedback,
-            $this->getMailBuilder(),
-            $this->getUsersToNotifyDao(),
-            $this->getUsersRetriever(),
-            $this->getUGroupsRetriever(),
-            $this->getNotifiedPeopleRetriever(),
-            $this->getUserUpdater(),
-            $this->getUGroupUpdater()
-        );
-        $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true);
+        $notification_event_adder->addNotificationManagement();
     }
 
     /**
@@ -1818,84 +1752,9 @@ class Docman_Controller extends Controler {
         return ProjectManager::instance()->getProject($this->getGroupId());
     }
 
-    private function getMailBuilder()
-    {
-        return new MailBuilder(
-            TemplateRendererFactory::build(),
-            new MailFilter(UserManager::instance(), new URLVerification(), new MailLogger())
-        );
-    }
-
     public function userCannotDelete(PFUser $user, Docman_Item $item)
     {
         return ! $this->_getPermissionsManager()->userCanDelete($user, $item);
-    }
-
-    /**
-     * @return UsersToNotifyDao
-     */
-    private function getUsersToNotifyDao()
-    {
-        return new UsersToNotifyDao();
-    }
-
-    /**
-     * @return UgroupsToNotifyDao
-     */
-    private function getUgroupsToNotifyDao()
-    {
-        return new UgroupsToNotifyDao();
-    }
-
-    /**
-     * @return UsersRetriever
-     */
-    private function getUsersRetriever()
-    {
-        return new UsersRetriever(
-            $this->getUsersToNotifyDao(),
-            new Docman_ItemFactory()
-        );
-    }
-
-    /**
-     * @return UGroupsRetriever
-     */
-    private function getUGroupsRetriever()
-    {
-        return new UGroupsRetriever($this->getUgroupsToNotifyDao(), $this->getItemFactory());
-    }
-
-    /**
-     * @return UGroupManager
-     */
-    private function getUGroupManager()
-    {
-        return new UGroupManager(
-            new UGroupDao(),
-            new EventManager(),
-            new UGroupUserDao()
-        );
-    }
-
-    private function getNotifiedPeopleRetriever()
-    {
-        return new NotifiedPeopleRetriever(
-            $this->getUsersToNotifyDao(),
-            $this->getUgroupsToNotifyDao(),
-            $this->getItemFactory(),
-            $this->getUGroupManager()
-        );
-    }
-
-    private function getUGroupUpdater()
-    {
-        return new UgroupsUpdater($this->getUgroupsToNotifyDao());
-    }
-
-    private function getUserUpdater()
-    {
-        return new UsersUpdater($this->getUsersToNotifyDao());
     }
 
     /**
