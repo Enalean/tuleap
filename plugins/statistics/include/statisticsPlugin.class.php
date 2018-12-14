@@ -23,11 +23,12 @@
  */
 
 use Tuleap\BurningParrotCompatiblePageEvent;
-use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Project\Admin\Navigation\NavigationDropdownItemPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenter;
 use Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder;
 use Tuleap\Project\Admin\ProjectDetailsPresenter;
+use Tuleap\Project\Quota\ProjectQuotaInformation;
+use Tuleap\Project\Quota\ProjectQuotaRequester;
 use Tuleap\SVN\DiskUsage\Collector as SVNCollector;
 use Tuleap\SVN\DiskUsage\Retriever as SVNRetriever;
 use Tuleap\CVS\DiskUsage\Retriever as CVSRetriever;
@@ -66,6 +67,8 @@ class StatisticsPlugin extends Plugin
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(NavigationPresenter::NAME);
+
+        $this->addHook(ProjectQuotaRequester::NAME);
 
         bindTextDomain('tuleap-statistics', STATISTICS_BASE_DIR . '/../site-content');
     }
@@ -341,5 +344,20 @@ class StatisticsPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $params['javascript_files'][] = $this->getPluginPath() . '/js/admin.js';
         }
+    }
+
+    public function getProjectQuota(ProjectQuotaRequester $project_quota_requester)
+    {
+        $project_quota_manager = new ProjectQuotaManager();
+        $disk_usage_manager    = $this->getDiskUsageManager();
+        $project               = $project_quota_requester->getProject();
+
+        $project_quota_requester->setProjectQuotaInformation(
+            new ProjectQuotaInformation(
+                $project,
+                $project_quota_manager->getProjectAuthorizedQuota($project->getID()),
+                $disk_usage_manager->returnTotalProjectSize($project->getID())
+            )
+        );
     }
 }

@@ -37,6 +37,7 @@ use Tuleap\GitLFS\Authorization\User\UserAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
+use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 
@@ -160,6 +161,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new LFSAuthorizationTokenHeaderSerializer(),
                     new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                     new \Tuleap\GitLFS\Admin\AdminDao(),
+                    new ProjectQuotaChecker(EventManager::instance()),
                     $logger
                 )
             );

@@ -75,14 +75,14 @@ class ProjectQuotaManager {
      *
      * @param Integer $group_id The ID of the project we are looking for its quota
      *
-     * @return String
+     * @return int
      */
-    private function getProjectAuthorizedQuota($group_id) {
+    public function getProjectAuthorizedQuota($group_id) {
         $quota = $this->getProjectCustomQuota($group_id);
         if (empty($quota)) {
             $quota = $this->getDefaultQuota();
         }
-        return $quota;
+        return $this->convertQuotaToGiB($quota);
     }
 
     /**
@@ -139,9 +139,8 @@ class ProjectQuotaManager {
         $all_groups         = $this->fetchProjects();
         $exceeding_projects = array();
         foreach ($all_groups as $key => $group) {
-            $quota        = $this->getProjectAuthorizedQuota($group['group_id']);
             $current_size = $this->diskUsageManager->returnTotalProjectSize($group['group_id']);
-            $allowed_size = $this->convertQuotaToGiB($quota);
+            $allowed_size = $this->getProjectAuthorizedQuota($group['group_id']);
             if ($this->isProjectOverQuota($current_size, $allowed_size)) {
                 $project                  = $this->pm->getProject($group['group_id']);
                 $exceeding_projects[$key] = $this->getProjectOverQuotaRow($project, $current_size, $allowed_size);
