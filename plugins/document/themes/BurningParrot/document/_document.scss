@@ -60,6 +60,19 @@
     }
 }
 
+.document-folder-toggle {
+    color: $tlp-ui-dimmed;
+    cursor: pointer;
+
+    &:hover {
+        color: #222222;
+    }
+}
+
+.document-tree-item-hidden {
+    display: none;
+}
+
 .document-folder-error-link {
     margin: $tlp-spacing 0 0;
     font-size: 20px;

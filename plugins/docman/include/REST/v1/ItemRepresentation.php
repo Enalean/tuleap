@@ -77,6 +77,11 @@ class ItemRepresentation
      */
     public $link_properties;
 
+    /**
+    * @var int {@type int}
+    */
+    public $parent_id;
+
     public function build(
         \Docman_Item $item,
         MinimalUserRepresentation $owner,
@@ -95,5 +100,10 @@ class ItemRepresentation
         $this->file_properties          = $file_properties;
         $this->embedded_file_properties = $embedded_file_properties;
         $this->link_properties          = $link_properties;
+
+
+        $parent_id = JsonCast::toInt($item->getParentId());
+
+        $this->parent_id = ($parent_id) ? $parent_id : 0;
     }
 }

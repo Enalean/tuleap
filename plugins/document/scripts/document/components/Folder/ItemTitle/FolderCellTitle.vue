@@ -21,7 +21,17 @@
 
 <template>
     <td>
-        <i class="document-folder-icon-color fa fa-fw fa-folder"></i>
+        <i class="document-folder-icon-color fa fa-fw document-folder-toggle"
+           v-bind:class="{ 'fa-caret-down': !is_closed, 'fa-caret-right': is_closed }"
+           v-on:click="toggle"
+        ></i>
+        <i class="document-folder-icon-color fa fa-fw"
+           v-bind:class="{
+               'fa-folder': is_closed,
+               'fa-folder-open': is_folder_open,
+               'fa-spinner fa-spin': is_loading
+           }"
+        ></i>
         <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
             {{ item.title }}
         </a>
@@ -29,12 +39,22 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
     name: "FolderCellTitle",
     props: {
         item: Object
     },
+    data() {
+        return {
+            is_closed: true,
+            is_loading: false,
+            have_children_been_loaded: false
+        };
+    },
     computed: {
+        ...mapState(["folder_content"]),
         folder_href() {
             const { href } = this.$router.resolve({
                 name: "folder",
@@ -42,6 +62,12 @@ export default {
             });
 
             return href;
+        },
+        is_folder_open() {
+            return !this.is_loading && !this.is_closed;
+        },
+        is_folded() {
+            return this.folded_items_ids.includes(this.item.id);
         }
     },
     methods: {
@@ -49,6 +75,28 @@ export default {
             event.preventDefault();
             this.$store.commit("appendFolderToAscendantHierarchy", this.item);
             this.$router.push({ name: "folder", params: { item_id: this.item.id } });
+        },
+        async loadChildren() {
+            this.is_loading = true;
+
+            await this.$store.dispatch("getSubfolderContent", this.item.id);
+
+            this.is_loading = false;
+            this.have_children_been_loaded = true;
+        },
+        toggle() {
+            if (this.is_closed) {
+                if (!this.have_children_been_loaded) {
+                    this.loadChildren();
+                }
+
+                this.is_closed = false;
+
+                this.$store.commit("unfoldFolderContent", this.item.id);
+            } else {
+                this.$store.commit("foldFolderContent", this.item.id);
+                this.is_closed = true;
+            }
         }
     }
 };

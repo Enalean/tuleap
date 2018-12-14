@@ -21,7 +21,8 @@
 
 <template>
     <td>
-        <i class="fa fa-fw " v-bind:class="icon_class"></i>
+        <i class="fa fa-fw"></i>
+        <i class="fa fa-fw" v-bind:class="icon_class"></i>
         {{ item.title }}
     </td>
 </template>

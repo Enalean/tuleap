@@ -21,6 +21,7 @@
 
 <template>
     <td>
+        <i class="fa fa-fw"></i>
         <i class="fa fa-fw " v-bind:class="icon_class"></i>
         <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
             {{ item.title }}
