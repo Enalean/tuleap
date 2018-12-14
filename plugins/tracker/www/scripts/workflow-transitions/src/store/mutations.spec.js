@@ -29,6 +29,49 @@ describe("Store mutations:", () => {
         state = { ...initial_state };
     });
 
+    describe("addTransition", () => {
+        const { addTransition } = mutations;
+        const transition_to_add = createATransition();
+        const another_transition = createATransition();
+
+        beforeEach(() => {
+            state.current_tracker = {
+                workflow: {
+                    transitions: [another_transition]
+                }
+            };
+            addTransition(state, transition_to_add);
+        });
+        it("adds given transition to current tracker", () => {
+            expect(state.current_tracker.workflow.transitions).toContain(transition_to_add);
+        });
+        it("does not remove previous transition", () => {
+            expect(state.current_tracker.workflow.transitions).toContain(another_transition);
+        });
+
+        describe("when no current tracker", () => {
+            beforeEach(() => {
+                state.current_tracker = null;
+                addTransition(state, transition_to_add);
+            });
+
+            it("does nothing", () => {
+                expect(state.current_tracker).toBeNull();
+            });
+        });
+
+        describe("when current tracker has no transition", () => {
+            beforeEach(() => {
+                state.current_tracker = { workflow: {} };
+                addTransition(state, transition_to_add);
+            });
+
+            it("adds given transition to current tracker", () => {
+                expect(state.current_tracker.workflow.transitions).toContain(transition_to_add);
+            });
+        });
+    });
+
     describe("deleteTransition()", () => {
         const { deleteTransition } = mutations;
         let transition_to_delete;
@@ -60,6 +103,46 @@ describe("Store mutations:", () => {
 
             it("does nothing", () => {
                 expect(state.current_tracker).toBeNull();
+            });
+        });
+    });
+
+    describe("createWorkflow()", () => {
+        const { createWorkflow } = mutations;
+
+        beforeEach(() => {
+            state.current_tracker = {
+                workflow: {
+                    field_id: 1
+                }
+            };
+            createWorkflow(state, 2);
+        });
+
+        it("updates workflow field id", () => {
+            expect(state.current_tracker.workflow.field_id).toBe(2);
+        });
+
+        describe("when no current tracker", () => {
+            beforeEach(() => {
+                state.current_tracker = null;
+                createWorkflow(state, 2);
+            });
+
+            it("does nothing", () => {
+                expect(state.current_tracker).toBeNull();
+            });
+        });
+
+        describe("when no workflow", () => {
+            beforeEach(() => {
+                state.current_tracker = {};
+                createWorkflow(state, 2);
+            });
+
+            it("creates workflow with given field id", () => {
+                expect(state.current_tracker.workflow).toEqual(jasmine.any(Object));
+                expect(state.current_tracker.workflow.field_id).toBe(2);
             });
         });
     });

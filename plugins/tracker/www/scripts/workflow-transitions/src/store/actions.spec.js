@@ -196,7 +196,6 @@ describe("Store actions:", () => {
         beforeEach(() => {
             context = {
                 ...context,
-                state: { current_tracker: { workflow: { transitions: [{ id: 1 }] } } },
                 getters: { current_tracker_id: 1 }
             };
             restCreateTransition = jasmine.createSpy("createTransition");

@@ -51,13 +51,16 @@ export default {
 
     // Transition operations
     addTransition(state, transition) {
-        state.current_tracker = {
-            ...state.current_tracker,
-            workflow: {
-                ...state.current_tracker.workflow,
-                transitions: [...state.current_tracker.workflow.transitions, transition]
-            }
-        };
+        if (!state.current_tracker || !state.current_tracker.workflow) {
+            return;
+        }
+        if (!state.current_tracker.workflow.transitions) {
+            state.current_tracker.workflow.transitions = [];
+        }
+        state.current_tracker.workflow.transitions = [
+            ...state.current_tracker.workflow.transitions,
+            transition
+        ];
     },
     deleteTransition(state, transition_to_delete) {
         if (
@@ -73,13 +76,14 @@ export default {
     },
 
     createWorkflow(state, field_id) {
-        state.current_tracker = {
-            ...state.current_tracker,
-            workflow: {
-                ...state.current_tracker.workflow,
-                field_id
-            }
-        };
+        if (!state.current_tracker) {
+            return;
+        }
+        if (!state.current_tracker.workflow) {
+            state.current_tracker.workflow = {};
+        }
+
+        state.current_tracker.workflow.field_id = field_id;
     },
 
     // Transition rules enforcement
