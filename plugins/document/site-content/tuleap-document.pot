@@ -4,6 +4,10 @@ msgstr ""
 msgid "Document manager"
 msgstr ""
 
+#, php-format
+msgid "Documents service is not activated in project %s"
+msgstr ""
+
 msgid "Project not found"
 msgstr ""
 
