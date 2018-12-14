@@ -35,7 +35,7 @@ describe("TransitionMatrixContent", () => {
             is_operation_running: false
         };
         store_actions = {
-            saveNewTransition: jasmine.createSpy("saveNewTransition")
+            createTransition: jasmine.createSpy("createTransition")
         };
         const store = new Vuex.Store({
             state: store_state,
@@ -106,19 +106,19 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("does nothing", () => {
-                        expect(store_actions.saveNewTransition).not.toHaveBeenCalled();
+                        expect(store_actions.createTransition).not.toHaveBeenCalled();
                     });
                 });
             });
 
             describe("when user clicks to create transition", () => {
-                let saveNewTransitionResolve;
+                let resolveCreateTransition;
 
                 beforeEach(() => {
-                    store_actions.saveNewTransition.and.callFake(
+                    store_actions.createTransition.and.callFake(
                         () =>
                             new Promise(resolve => {
-                                saveNewTransitionResolve = resolve;
+                                resolveCreateTransition = resolve;
                             })
                     );
                     wrapper.find(create_transition_selector).trigger("click");
@@ -128,8 +128,8 @@ describe("TransitionMatrixContent", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
                 it("saves a new transition", () => {
-                    expect(store_actions.saveNewTransition).toHaveBeenCalled();
-                    expect(store_actions.saveNewTransition.calls.mostRecent().args[1]).toEqual(
+                    expect(store_actions.createTransition).toHaveBeenCalled();
+                    expect(store_actions.createTransition.calls.mostRecent().args[1]).toEqual(
                         jasmine.objectContaining({
                             from_id: 1,
                             to_id: 2
@@ -139,7 +139,7 @@ describe("TransitionMatrixContent", () => {
 
                 describe("and new transition successfully saved", () => {
                     beforeEach(async () => {
-                        saveNewTransitionResolve();
+                        resolveCreateTransition();
                         await wrapper.vm.$nextTick();
                     });
 

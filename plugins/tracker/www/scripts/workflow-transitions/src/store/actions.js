@@ -18,11 +18,11 @@
  */
 
 import {
-    createTransition,
-    createWorkflowTransitions,
+    createTransition as restCreateTransition,
+    createWorkflowTransitions as restCreateWorkflowTransitions,
     getTracker,
-    resetWorkflowTransitions,
-    updateTransitionRulesEnforcement
+    resetWorkflowTransitions as restResetWorkflowTransitions,
+    updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement
 } from "../api/rest-querier.js";
 import { getErrorMessage } from "./exceptionHandler.js";
 
@@ -38,11 +38,11 @@ export async function loadTracker(context, tracker_id) {
     }
 }
 
-export async function saveWorkflowTransitionsField(context, field_id) {
+export async function createWorkflowTransitions(context, field_id) {
     try {
         context.commit("beginOperation");
         const tracker_id = context.getters.current_tracker_id;
-        await createWorkflowTransitions(tracker_id, field_id);
+        await restCreateWorkflowTransitions(tracker_id, field_id);
         context.commit("createWorkflow", field_id);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
@@ -52,11 +52,11 @@ export async function saveWorkflowTransitionsField(context, field_id) {
     }
 }
 
-export async function resetWorkflowTransitionsField(context) {
+export async function resetWorkflowTransitions(context) {
     try {
         context.commit("beginOperation");
         const tracker_id = context.getters.current_tracker_id;
-        const new_tracker = await resetWorkflowTransitions(tracker_id);
+        const new_tracker = await restResetWorkflowTransitions(tracker_id);
         context.commit("saveCurrentTracker", new_tracker);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
@@ -66,11 +66,14 @@ export async function resetWorkflowTransitionsField(context) {
     }
 }
 
-export async function switchTransitionRulesEnforcement(context, new_enforcement) {
+export async function updateTransitionRulesEnforcement(context, new_enforcement) {
     try {
         context.commit("beginTransitionRulesEnforcement");
         const tracker_id = context.getters.current_tracker_id;
-        const updated_tracker = await updateTransitionRulesEnforcement(tracker_id, new_enforcement);
+        const updated_tracker = await restUpdateTransitionRulesEnforcement(
+            tracker_id,
+            new_enforcement
+        );
         context.commit("saveCurrentTracker", updated_tracker);
     } catch (exception) {
         const error_message = await getErrorMessage(exception);
@@ -80,11 +83,15 @@ export async function switchTransitionRulesEnforcement(context, new_enforcement)
     }
 }
 
-export async function saveNewTransition(context, transition) {
+export async function createTransition(context, transition) {
     try {
         context.commit("beginOperation");
         const tracker_id = context.getters.current_tracker_id;
-        const response = await createTransition(tracker_id, transition.from_id, transition.to_id);
+        const response = await restCreateTransition(
+            tracker_id,
+            transition.from_id,
+            transition.to_id
+        );
         const new_transition = {
             id: response.id,
             ...transition

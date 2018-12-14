@@ -19,11 +19,11 @@
 
 import { mockFetchError, mockFetchSuccess } from "tlp-mocks";
 import {
-    saveNewTransition,
+    createTransition,
     loadTracker,
-    resetWorkflowTransitionsField,
-    saveWorkflowTransitionsField,
-    switchTransitionRulesEnforcement
+    resetWorkflowTransitions,
+    createWorkflowTransitions,
+    updateTransitionRulesEnforcement
 } from "./actions.js";
 import {
     restore as restore$RestQuerier,
@@ -79,90 +79,92 @@ describe("Store actions:", () => {
         });
     });
 
-    describe("saveWorkflowTransitionsField()", () => {
-        let createWorkflowTransitions;
+    describe("createWorkflowTransitions()", () => {
+        let restCreateWorkflowTransitions;
 
         beforeEach(() => {
             context = {
                 ...context,
                 getters: { current_tracker_id: 1 }
             };
-            createWorkflowTransitions = jasmine.createSpy("createWorkflowTransitions");
-            rewire$createWorkflowTransitions(createWorkflowTransitions);
+            restCreateWorkflowTransitions = jasmine.createSpy("createWorkflowTransitions");
+            rewire$createWorkflowTransitions(restCreateWorkflowTransitions);
         });
 
         describe("when workflow creation is successful", () => {
             beforeEach(async () => {
-                mockFetchSuccess(createWorkflowTransitions);
-                await saveWorkflowTransitionsField(context, 9);
+                mockFetchSuccess(restCreateWorkflowTransitions);
+                await createWorkflowTransitions(context, 9);
             });
 
             it("begins a new operation", () =>
                 expect(context.commit).toHaveBeenCalledWith("beginOperation"));
             it("creates workflow", () =>
-                expect(createWorkflowTransitions).toHaveBeenCalledWith(1, 9));
+                expect(restCreateWorkflowTransitions).toHaveBeenCalledWith(1, 9));
             it("creates workflow in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("createWorkflow", 9));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
 
-    describe("resetWorkflowTransitionsField()", () => {
-        let resetWorkflowTransitions;
+    describe("resetWorkflowTransitions()", () => {
+        let restResetWorkflowTransitions;
 
         beforeEach(() => {
             context = {
                 ...context,
                 getters: { current_tracker_id: 1 }
             };
-            resetWorkflowTransitions = jasmine.createSpy("resetWorkflowTransitions");
-            rewire$resetWorkflowTransitions(resetWorkflowTransitions);
+            restResetWorkflowTransitions = jasmine.createSpy("resetWorkflowTransitions");
+            rewire$resetWorkflowTransitions(restResetWorkflowTransitions);
         });
 
         describe("when reset workflow transitions is successful", () => {
             const tracker = { id: 12 };
 
             beforeEach(async () => {
-                resetWorkflowTransitions.and.returnValue(Promise.resolve(tracker));
-                await resetWorkflowTransitionsField(context);
+                restResetWorkflowTransitions.and.returnValue(Promise.resolve(tracker));
+                await resetWorkflowTransitions(context);
             });
 
             it("begins a new operation", () =>
                 expect(context.commit).toHaveBeenCalledWith("beginOperation"));
             it("reset workflow transitions", () =>
-                expect(resetWorkflowTransitions).toHaveBeenCalledWith(1));
+                expect(restResetWorkflowTransitions).toHaveBeenCalledWith(1));
             it("update tracker in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", tracker));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
         });
     });
 
-    describe("switchTransitionRulesEnforcement()", () => {
-        let updateTransitionRulesEnforcement;
+    describe("updateTransitionRulesEnforcement()", () => {
+        let restUpdateTransitionRulesEnforcement;
 
         beforeEach(() => {
             context = {
                 ...context,
                 getters: { current_tracker_id: 1 }
             };
-            updateTransitionRulesEnforcement = jasmine.createSpy(
+            restUpdateTransitionRulesEnforcement = jasmine.createSpy(
                 "updateTransitionRulesEnforcement"
             );
-            rewire$updateTransitionRulesEnforcement(updateTransitionRulesEnforcement);
+            rewire$updateTransitionRulesEnforcement(restUpdateTransitionRulesEnforcement);
         });
 
         describe("when successful", () => {
             const updated_tracker = { id: 12 };
 
             beforeEach(async () => {
-                updateTransitionRulesEnforcement.and.returnValue(Promise.resolve(updated_tracker));
-                await switchTransitionRulesEnforcement(context, true);
+                restUpdateTransitionRulesEnforcement.and.returnValue(
+                    Promise.resolve(updated_tracker)
+                );
+                await updateTransitionRulesEnforcement(context, true);
             });
 
             it("begins a transition rules enforcement", () =>
                 expect(context.commit).toHaveBeenCalledWith("beginTransitionRulesEnforcement"));
             it("switches transition rule enforcement", () =>
-                expect(updateTransitionRulesEnforcement).toHaveBeenCalledWith(1, true));
+                expect(restUpdateTransitionRulesEnforcement).toHaveBeenCalledWith(1, true));
             it("update tracker in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("saveCurrentTracker", updated_tracker));
             it("ends transition rules enforcement", () =>
@@ -173,9 +175,9 @@ describe("Store actions:", () => {
             let exception = {};
 
             beforeEach(async () => {
-                updateTransitionRulesEnforcement.and.returnValue(Promise.reject(exception));
+                restUpdateTransitionRulesEnforcement.and.returnValue(Promise.reject(exception));
                 getErrorMessage.and.returnValue("error message");
-                await switchTransitionRulesEnforcement(context);
+                await updateTransitionRulesEnforcement(context);
             });
 
             it("extracts message from exceptionoperations", () =>
@@ -185,8 +187,8 @@ describe("Store actions:", () => {
         });
     });
 
-    describe("saveNewTransition()", () => {
-        let createTransition;
+    describe("createTransition()", () => {
+        let restCreateTransition;
 
         beforeEach(() => {
             context = {
@@ -194,14 +196,14 @@ describe("Store actions:", () => {
                 state: { current_tracker: { workflow: { transitions: [{ id: 1 }] } } },
                 getters: { current_tracker_id: 1 }
             };
-            createTransition = jasmine.createSpy("createTransition");
-            rewire$createTransition(createTransition);
+            restCreateTransition = jasmine.createSpy("createTransition");
+            rewire$createTransition(restCreateTransition);
         });
 
         describe("when transition creation is successful", () => {
             beforeEach(async () => {
-                createTransition.and.returnValue(Promise.resolve({ id: 2 }));
-                await saveNewTransition(context, {
+                restCreateTransition.and.returnValue(Promise.resolve({ id: 2 }));
+                await createTransition(context, {
                     from_id: 3,
                     to_id: 9
                 });
@@ -209,7 +211,8 @@ describe("Store actions:", () => {
 
             it("begins a new operation", () =>
                 expect(context.commit).toHaveBeenCalledWith("beginOperation"));
-            it("creates transition", () => expect(createTransition).toHaveBeenCalledWith(1, 3, 9));
+            it("creates transition", () =>
+                expect(restCreateTransition).toHaveBeenCalledWith(1, 3, 9));
             it("add new transition in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("addTransition", {
                     id: 2,

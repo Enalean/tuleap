@@ -99,7 +99,7 @@ export default {
                     from_id: this.from.id,
                     to_id: this.to.id
                 };
-                await this.$store.dispatch("saveNewTransition", new_transition);
+                await this.$store.dispatch("createTransition", new_transition);
             } finally {
                 this.is_operation_running = false;
             }
