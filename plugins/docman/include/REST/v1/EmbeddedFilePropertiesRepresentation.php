@@ -29,8 +29,14 @@ class EmbeddedFilePropertiesRepresentation
      */
     public $file_type;
 
-    public function build(\Docman_Version $docman_version)
+    /**
+     * @var string
+     */
+    public $content;
+
+    public function build(\Docman_Version $docman_version, $content)
     {
         $this->file_type = $docman_version->getFiletype();
+        $this->content   = $content;
     }
 }

@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Codendi_HTMLPurifier;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -123,7 +124,8 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_embedded_properties = null;
         if ($item_version) {
             $file_embedded_properties = new EmbeddedFilePropertiesRepresentation();
-            $file_embedded_properties->build($item_version);
+            $content                  = file_get_contents($item_version->getPath());
+            $file_embedded_properties->build($item_version, $content);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
