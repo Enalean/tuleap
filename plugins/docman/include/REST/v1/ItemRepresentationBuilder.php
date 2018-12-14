@@ -90,6 +90,7 @@ class ItemRepresentationBuilder
         \PFUser $current_user,
         $type,
         FilePropertiesRepresentation $file_properties = null,
+        EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         LinkPropertiesRepresentation $link_properties = null
     ) {
         $owner               = $this->user_manager->getUserById($item->getOwnerId());
@@ -105,6 +106,7 @@ class ItemRepresentationBuilder
             $user_can_write,
             $type,
             $file_properties,
+            $embedded_file_properties,
             $link_properties
         );
 

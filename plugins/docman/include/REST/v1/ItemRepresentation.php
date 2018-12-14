@@ -68,6 +68,11 @@ class ItemRepresentation
     public $file_properties;
 
     /**
+     * @var EmbeddedFilePropertiesRepresentation
+     */
+    public $embedded_file_properties;
+
+    /**
      * @var LinkPropertiesRepresentation | null
      */
     public $link_properties;
@@ -78,15 +83,17 @@ class ItemRepresentation
         $user_can_write,
         $type,
         FilePropertiesRepresentation $file_properties = null,
+        EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         LinkPropertiesRepresentation $link_properties = null
     ) {
-        $this->id               = JsonCast::toInt($item->getId());
-        $this->title            = $item->getTitle();
-        $this->owner            = $owner;
-        $this->last_update_date = JsonCast::toDate($item->getUpdateDate());
-        $this->user_can_write   = $user_can_write;
-        $this->type             = $type;
-        $this->file_properties  = $file_properties;
-        $this->link_properties  = $link_properties;
+        $this->id                       = JsonCast::toInt($item->getId());
+        $this->title                    = $item->getTitle();
+        $this->owner                    = $owner;
+        $this->last_update_date         = JsonCast::toDate($item->getUpdateDate());
+        $this->user_can_write           = $user_can_write;
+        $this->type                     = $type;
+        $this->file_properties          = $file_properties;
+        $this->embedded_file_properties = $embedded_file_properties;
+        $this->link_properties          = $link_properties;
     }
 }

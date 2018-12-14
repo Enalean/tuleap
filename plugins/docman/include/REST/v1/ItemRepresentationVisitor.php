@@ -63,6 +63,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $params['current_user'],
             ItemRepresentation::TYPE_FOLDER,
             null,
+            null,
             null
         );
     }
@@ -73,6 +74,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_WIKI,
+            null,
             null,
             null
         );
@@ -91,6 +93,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $params['current_user'],
             ItemRepresentation::TYPE_LINK,
             null,
+            null,
             $link_properties
         );
     }
@@ -101,31 +104,33 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_properties = null;
         if ($item_version) {
             $file_properties = new FilePropertiesRepresentation();
-            $file_properties->build($item_version);
+            $download_url    = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item_version->getItemId());
+            $file_properties->build($item_version, $download_url);
         }
-
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_FILE,
             $file_properties,
+            null,
             null
         );
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
-        $item_version    = $this->docman_version_factory->getCurrentVersionForItem($item);
-        $file_properties = null;
+        $item_version             = $this->docman_version_factory->getCurrentVersionForItem($item);
+        $file_embedded_properties = null;
         if ($item_version) {
-            $file_properties = new FilePropertiesRepresentation();
-            $file_properties->build($item_version);
+            $file_embedded_properties = new EmbeddedFilePropertiesRepresentation();
+            $file_embedded_properties->build($item_version);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_EMBEDDED,
-            $file_properties,
+            null,
+            $file_embedded_properties,
             null
         );
     }
@@ -136,6 +141,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_EMPTY,
+            null,
             null,
             null
         );

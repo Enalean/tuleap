@@ -22,29 +22,23 @@
 <template>
     <td>
         <i class="fa fa-fw " v-bind:class="icon_class"></i>
-        {{ item.title }}
+        <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
+            {{ item.title }}
+        </a>
     </td>
 </template>
 
 <script>
-import { TYPE_EMBEDDED, TYPE_EMPTY, TYPE_WIKI } from "../../../constants.js";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 
 export default {
-    name: "DocumentCellTitle",
+    name: "FileCellTitle",
     props: {
         item: Object
     },
     computed: {
         icon_class() {
-            switch (this.item.type) {
-                case TYPE_EMBEDDED:
-                    return "fa-file-text document-text-icon";
-                case TYPE_WIKI:
-                    return "fa-wikipedia-w document-wiki-icon";
-                case TYPE_EMPTY:
-                default:
-                    return "fa-file-o document-empty-icon";
-            }
+            return iconForMimeType(this.item);
         }
     }
 };
