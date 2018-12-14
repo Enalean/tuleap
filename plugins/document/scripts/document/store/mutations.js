@@ -122,7 +122,31 @@ function setFolderLoadingError(state, message) {
 }
 
 function appendFolderToAscendantHierarchy(state, folder) {
-    state.current_folder_ascendant_hierarchy.push(folder);
+    const parent_index_in_hierarchy = state.current_folder_ascendant_hierarchy.findIndex(
+        item => item.id === folder.parent_id
+    );
+
+    if (parent_index_in_hierarchy !== -1) {
+        state.current_folder_ascendant_hierarchy.push(folder);
+        return;
+    }
+
+    const folder_index = state.folder_content.findIndex(item => item.id === folder.id);
+    const ascendants = state.folder_content.slice(0, folder_index);
+
+    let next_parent_id = folder.parent_id;
+
+    const direct_ascendants = ascendants.reduceRight((accumulator, item) => {
+        if (item.id === next_parent_id) {
+            accumulator.push(item);
+
+            next_parent_id = item.parent_id;
+        }
+
+        return accumulator;
+    }, []);
+
+    state.current_folder_ascendant_hierarchy.push(...direct_ascendants.reverse(), folder);
 }
 
 function setCurrentFolder(state, folder) {
