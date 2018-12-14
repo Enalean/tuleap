@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Administration"
@@ -79,6 +79,9 @@ msgstr "Documentation du projet"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
+msgid "This folder is empty"
+msgstr "Ce dossier est vide"
+
 msgid "This is a private folder."
 msgstr "Ce dossier est privé."
 
@@ -89,3 +92,6 @@ msgid "You may only access documents you are granted read permission on."
 msgstr ""
 "Vous pouvez seulement accéder aux documents pour lesquels vous avez la "
 "permission de lecture."
+
+msgid "or you don't have permissions to see its items"
+msgstr "ou alors vous n'avez pas le droit de voir ses éléments"

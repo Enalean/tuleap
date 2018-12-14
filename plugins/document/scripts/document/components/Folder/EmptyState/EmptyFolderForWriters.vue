@@ -20,23 +20,19 @@
 <template>
     <div class="empty-pane">
         <div class="empty-page-illustration">
-            <empty-folder-svg/>
+            <empty-folder-for-writers-svg/>
         </div>
         <p class="empty-page-text" v-translate>It's time to add new documents!</p>
-        <new-item-button v-if="current_folder.user_can_write"/>
+        <new-item-button/>
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
-import EmptyFolderSvg from "./EmptyFolderSvg.vue";
+import EmptyFolderForWritersSvg from "./EmptyFolderForWritersSvg.vue";
 import NewItemButton from "../NewItem/NewItemButton.vue";
 
 export default {
-    name: "EmptyFolder",
-    components: { EmptyFolderSvg, NewItemButton },
-    computed: {
-        ...mapState(["current_folder"])
-    }
+    name: "EmptyFolderForWriters",
+    components: { EmptyFolderForWritersSvg, NewItemButton }
 };
 </script>

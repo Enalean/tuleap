@@ -154,9 +154,3 @@
         </g>
     </svg>
 </template>
-
-<script>
-export default {
-    name: "EmptyDocmanSvg"
-};
-</script>

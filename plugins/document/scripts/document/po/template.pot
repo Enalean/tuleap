@@ -71,6 +71,9 @@ msgstr ""
 msgid "Show error details"
 msgstr ""
 
+msgid "This folder is empty"
+msgstr ""
+
 msgid "This is a private folder."
 msgstr ""
 
@@ -78,4 +81,7 @@ msgid "Title"
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
+msgstr ""
+
+msgid "or you don't have permissions to see its items"
 msgstr ""

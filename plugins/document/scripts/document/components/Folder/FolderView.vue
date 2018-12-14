@@ -22,7 +22,8 @@
         <folder-header/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <div class="tlp-card" v-else>
-            <empty-folder v-if="is_folder_empty"/>
+            <empty-folder-for-writers v-if="is_folder_empty && current_folder.user_can_write"/>
+            <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
             <folder-content v-else/>
         </div>
     </div>
@@ -33,18 +34,20 @@ import { mapState, mapGetters } from "vuex";
 import FolderHeader from "./FolderHeader.vue";
 import FolderLoadingScreen from "./FolderLoadingScreen.vue";
 import FolderContent from "./FolderContent.vue";
-import EmptyFolder from "./EmptyState/EmptyFolder.vue";
+import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
+import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 
 export default {
     name: "FolderView",
     components: {
         FolderHeader,
-        EmptyFolder,
+        EmptyFolderForWriters,
+        EmptyFolderForReaders,
         FolderLoadingScreen,
         FolderContent
     },
     computed: {
-        ...mapState(["is_loading_folder"]),
+        ...mapState(["is_loading_folder", "current_folder"]),
         ...mapGetters(["is_folder_empty"])
     }
 };
