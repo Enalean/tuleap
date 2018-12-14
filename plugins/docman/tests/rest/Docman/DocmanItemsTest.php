@@ -59,16 +59,19 @@ class DocmanItemsTest extends DocmanBase
         );
         $items    = $response->json();
 
-        $this->assertEquals(count($items), 4);
+        $this->assertEquals(count($items), 5);
+
         $this->assertEquals($items[0]['title'], 'folder 2');
         $this->assertEquals($items[1]['title'], 'item A');
         $this->assertEquals($items[2]['title'], 'item C');
         $this->assertEquals($items[3]['title'], 'item E');
+        $this->assertEquals($items[4]['title'], 'item F');
 
         $this->assertEquals($items[0]['user_can_write'], false);
         $this->assertEquals($items[1]['user_can_write'], false);
         $this->assertEquals($items[2]['user_can_write'], false);
         $this->assertEquals($items[3]['user_can_write'], false);
+        $this->assertEquals($items[4]['user_can_write'], false);
 
         $this->assertEquals($items[0]['file_properties'], null);
         $this->assertEquals($items[1]['file_properties'], null);
@@ -78,11 +81,23 @@ class DocmanItemsTest extends DocmanBase
             '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[2]['id'])
         );
         $this->assertEquals($items[3]['file_properties'], null);
+        $this->assertEquals($items[4]['file_properties'], null);
 
         $this->assertEquals($items[0]['link_properties'], null);
         $this->assertEquals($items[1]['link_properties'], null);
         $this->assertEquals($items[2]['link_properties'], null);
         $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
+        $this->assertEquals($items[4]['link_properties'], null);
+
+        $this->assertEquals($items[0]['embedded_file_properties'], null);
+        $this->assertEquals($items[1]['embedded_file_properties'], null);
+        $this->assertEquals($items[2]['embedded_file_properties'], null);
+        $this->assertEquals($items[3]['embedded_file_properties'], null);
+        $this->assertEquals($items[4]['embedded_file_properties']['file_type'], 'text/html');
+        $this->assertEquals(
+            $items[4]['embedded_file_properties']['content'],
+            file_get_contents(dirname(__DIR__) . '/_fixtures/docmanFile/embeddedFile')
+        );
 
         return $items[0]['id'];
     }

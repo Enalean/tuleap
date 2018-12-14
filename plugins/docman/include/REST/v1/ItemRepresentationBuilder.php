@@ -77,8 +77,7 @@ class ItemRepresentationBuilder
         return $this->buildItemRepresentation(
             $item,
             $current_user,
-            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
-            null
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
         );
     }
 

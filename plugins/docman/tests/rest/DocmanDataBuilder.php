@@ -57,7 +57,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $plugin_manager->installAndActivate('docman');
     }
 
-    private function addItem(Project $project, $docman_root_id, $title, $item_type, $link_url = '')
+    private function addItem(Project $project, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '')
     {
         $item = array(
             'parent_id'         => $docman_root_id,
@@ -81,7 +81,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         switch ($item_type) {
             case PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE:
                 $file_type = 'text/html';
-                $this->addItemVersion($item_id, $title, $file_type);
+                $this->addItemVersion($item_id, $title, $file_type, $file_path);
                 break;
             case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
                 $file_type = 'application/pdf';
@@ -98,7 +98,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         return $item_id;
     }
 
-    private function addItemVersion($item_id, $title, $item_type)
+    private function addItemVersion($item_id, $title, $item_type, $file_path = '')
     {
         $version         = array(
             'item_id'   => $item_id,
@@ -110,7 +110,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'filename'  => $title,
             'filesize'  => 3,
             'filetype'  => $item_type,
-            'path'      => ''
+            'path'      => $file_path
         );
         $version_factory = new \Docman_VersionFactory();
         $version_factory->create($version);
@@ -132,9 +132,9 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                          folder 1
      *                            +
      *                            |
-     *  +---------------+---------+--------+---------------------+---------------------+
-     *  +               +                  +                     +                     +
-     *Item A          Item B             Item C             Folder 2                 Item E
+     *  +---------------+---------+--------+---------------------+---------------------+--------------------+
+     *  +               +                  +                     +                     +                    +
+     *Item A          Item B             Item C             Folder 2                 Item E               Item F
      *                                                           +
      *                                                           |
      *                                                           +
@@ -165,12 +165,23 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             "https://example.test"
         );
 
+        $item_F_path = dirname(__FILE__) . '/_fixtures/docmanFile/embeddedFile';
+        $item_F_id   = $item_B_id = $this->addItem(
+            $project,
+            $folder_id,
+            'item F',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+            '',
+            $item_F_path
+        );
+
         $this->addReadPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);
         $this->addReadPermissionOnItem($project, $item_C_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $folder_2_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $item_F_id, \ProjectUGroup::PROJECT_MEMBERS);
     }
 
     private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
