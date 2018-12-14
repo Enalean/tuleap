@@ -20,7 +20,7 @@
  *
  */
 
-namespace Tuleap\Docman\REST;
+namespace Tuleap\Docman\REST\v1;
 
 use Docman_Item;
 use Docman_ItemFactory;
@@ -28,19 +28,12 @@ use Docman_PermissionsManager;
 use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
-use Tuleap\Docman\REST\v1\FilePropertiesRepresentation;
-use Tuleap\Docman\REST\v1\ItemRepresentation;
-use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
-use Tuleap\Docman\REST\v1\ItemRepresentationCollectionBuilder;
-use Tuleap\Docman\REST\v1\ItemRepresentationVisitor;
 use Tuleap\User\REST\MinimalUserRepresentation;
 use UserManager;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**
      * @var ItemRepresentationBuilder
      */

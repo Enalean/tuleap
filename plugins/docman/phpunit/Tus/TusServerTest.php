@@ -20,8 +20,6 @@
 
 namespace Tuleap\Docman\Tus;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Http\Message\MessageFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
