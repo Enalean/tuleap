@@ -151,7 +151,7 @@ class PlanningResource extends AuthenticatedResource {
         }
         $milestones_representations = array_slice($all_milestones, $offset, $limit);
         $this->sendAllowHeadersForMilestones();
-        $this->sendPaginationHeaders($limit, $offset, count($milestones_representations));
+        $this->sendPaginationHeaders($limit, $offset, count($all_milestones));
         return $milestones_representations;
     }
 

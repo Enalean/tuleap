@@ -60,6 +60,20 @@ class PlanningTest extends RestBase {
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
+    /**
+     * @depends testReleasePlanningHasNoMilestone
+     */
+    public function testPlanningMilestonesArePaginatedCorrectly()
+    {
+        $response = $this->getResponse($this->client->get($this->getMilestonesUri() . '?limit=0'));
+
+        $pagination_size  = (int) (string) $response->getHeader('X-PAGINATION-SIZE');
+        $pagination_limit = (int) (string) $response->getHeader('X-PAGINATION-LIMIT');
+
+        $this->assertEquals(0, $pagination_limit);
+        $this->assertGreaterThanOrEqual(1, $pagination_size);
+    }
+
     private function getMilestonesUri() {
         $response_plannings = $this->getResponse($this->client->get('projects/'.$this->project_private_member_id.'/plannings'))->json();
         return $response_plannings[0]['milestones_uri'];
