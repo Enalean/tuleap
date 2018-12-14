@@ -97,7 +97,7 @@ class Collector
         $date_time = new \DateTimeImmutable();
         $size      = 0;
 
-        $authorizations = $this->action_authorization_dao->searchAuthorizationTypeByRepositoriesIdsAndExpiration(
+        $authorizations = $this->action_authorization_dao->searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration(
             new ActionAuthorizationTypeVerify(),
             $repositories_ids,
             $date_time

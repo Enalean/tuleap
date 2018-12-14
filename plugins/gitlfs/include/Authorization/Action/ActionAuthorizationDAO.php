@@ -70,16 +70,19 @@ class ActionAuthorizationDAO extends DataAccessObject
     /**
      * @return array|null
      */
-    public function searchAuthorizationTypeByRepositoriesIdsAndExpiration(ActionAuthorizationType $action, array $repositories_ids, \DateTimeImmutable $current_time)
+    public function searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration(ActionAuthorizationType $action, array $repositories_ids, \DateTimeImmutable $current_time)
     {
         $condition = EasyStatement::open()
-            ->with('action_type = ?', $action->getName())
+            ->with('plugin_gitlfs_object.object_oid IS NULL')
+            ->andWith('action_type = ?', $action->getName())
             ->andWith('expiration_date >= ?', $current_time->getTimestamp())
             ->andIn('repository_id IN (?*)', $repositories_ids);
 
         return $this->getDB()->safeQuery(
-            "SELECT *
+            "SELECT plugin_gitlfs_authorization_action.*
             FROM plugin_gitlfs_authorization_action
+            LEFT JOIN plugin_gitlfs_object
+              ON plugin_gitlfs_authorization_action.object_oid = plugin_gitlfs_object.object_oid
             WHERE $condition",
             $condition->values()
         );
