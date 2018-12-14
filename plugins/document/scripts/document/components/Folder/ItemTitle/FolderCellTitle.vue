@@ -70,6 +70,13 @@ export default {
             return this.folded_items_ids.includes(this.item.id);
         }
     },
+    async mounted() {
+        const user_preferences = await this.$store.dispatch("getFolderShouldBeOpen", this.item.id);
+
+        if (user_preferences.value !== false) {
+            this.open();
+        }
+    },
     methods: {
         goToFolder(event) {
             event.preventDefault();
@@ -84,19 +91,24 @@ export default {
             this.is_loading = false;
             this.have_children_been_loaded = true;
         },
+        open() {
+            if (!this.have_children_been_loaded) {
+                this.loadChildren();
+            }
+
+            this.is_closed = false;
+
+            this.$store.commit("unfoldFolderContent", this.item.id);
+        },
         toggle() {
             if (this.is_closed) {
-                if (!this.have_children_been_loaded) {
-                    this.loadChildren();
-                }
-
-                this.is_closed = false;
-
-                this.$store.commit("unfoldFolderContent", this.item.id);
+                this.open();
             } else {
                 this.$store.commit("foldFolderContent", this.item.id);
                 this.is_closed = true;
             }
+
+            this.$store.dispatch("setUserPreferenciesForFolder", [this.item.id, this.is_closed]);
         }
     }
 };

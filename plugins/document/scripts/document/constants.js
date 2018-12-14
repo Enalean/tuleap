@@ -23,3 +23,4 @@ export const TYPE_LINK = "link";
 export const TYPE_EMBEDDED = "embedded";
 export const TYPE_WIKI = "wiki";
 export const TYPE_EMPTY = "empty";
+export const DOCMAN_FOLDER_EXPANDED_VALUE = 2;

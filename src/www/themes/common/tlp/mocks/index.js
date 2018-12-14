@@ -22,6 +22,7 @@ const tlp = jasmine.createSpyObj("tlp", [
     "patch",
     "put",
     "post",
+    "del",
     "recursiveGet",
     "options",
     "datePicker",

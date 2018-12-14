@@ -35,6 +35,7 @@ export default {
     name: "App",
     components: { DocumentBreadcrumb, PermissionError, LoadingError },
     props: {
+        user_id: Number,
         project_id: Number,
         user_is_admin: Boolean,
         date_time_format: String
@@ -56,6 +57,7 @@ export default {
         );
 
         this.$store.commit("initApp", [
+            this.user_id,
             this.project_id,
             this.user_is_admin,
             this.date_time_format,

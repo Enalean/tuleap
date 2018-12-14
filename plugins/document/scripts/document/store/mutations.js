@@ -75,7 +75,8 @@ function unfoldFolderContent(state, folder_id) {
     delete state.folded_by_map[folder_id];
 }
 
-function initApp(state, [project_id, user_is_admin, date_time_format, root_title]) {
+function initApp(state, [user_id, project_id, user_is_admin, date_time_format, root_title]) {
+    state.user_id = user_id;
     state.project_id = project_id;
     state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;

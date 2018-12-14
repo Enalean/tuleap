@@ -18,11 +18,13 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { loadRootFolder, loadFolder } from "./actions.js";
+import { loadRootFolder, loadFolder, setUserPreferenciesForFolder } from "./actions.js";
 import {
     restore as restoreRestQuerier,
     rewire$getItem,
-    rewire$getProject
+    rewire$getProject,
+    rewire$deleteUserPreferenciesForFolderInProject,
+    rewire$patchUserPreferenciesForFolderInProject
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -40,7 +42,13 @@ describe("Store actions", () => {
         restoreLoadAscendantHierarchy();
     });
 
-    let context, getProject, getItem, loadFolderContent, loadAscendantHierarchy;
+    let context,
+        getProject,
+        getItem,
+        loadFolderContent,
+        loadAscendantHierarchy,
+        deleteUserPreferenciesForFolderInProject,
+        patchUserPreferenciesForFolderInProject;
 
     beforeEach(() => {
         const project_id = 101;
@@ -63,6 +71,16 @@ describe("Store actions", () => {
 
         loadAscendantHierarchy = jasmine.createSpy("loadAscendantHierarchy");
         rewire$loadAscendantHierarchy(loadAscendantHierarchy);
+
+        deleteUserPreferenciesForFolderInProject = jasmine.createSpy(
+            "deleteUserPreferenciesForFolderInProject"
+        );
+        rewire$deleteUserPreferenciesForFolderInProject(deleteUserPreferenciesForFolderInProject);
+
+        patchUserPreferenciesForFolderInProject = jasmine.createSpy(
+            "patchUserPreferenciesForFolderInProject"
+        );
+        rewire$patchUserPreferenciesForFolderInProject(patchUserPreferenciesForFolderInProject);
     });
 
     describe("loadRootFolder()", () => {
@@ -305,6 +323,40 @@ describe("Store actions", () => {
             expect(loadAscendantHierarchy).not.toHaveBeenCalled();
             expect(context.commit).toHaveBeenCalledWith("saveAscendantHierarchy", [folder_a]);
             expect(context.commit).not.toHaveBeenCalledWith("setCurrentFolder", folder_a);
+        });
+    });
+
+    describe("setUserPreferenciesForFolder", () => {
+        it("sets the user preference for the state of a given folder if its new state is 'open' (expanded)", async () => {
+            const folder_id = 30;
+            const should_be_closed = false;
+            const context = {
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                }
+            };
+
+            await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
+
+            expect(patchUserPreferenciesForFolderInProject).toHaveBeenCalled();
+            expect(deleteUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
+        });
+
+        it("deletes the user preference for the state of a given folder if its new state is 'closed' (collapsed)", async () => {
+            const folder_id = 30;
+            const should_be_closed = true;
+            const context = {
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                }
+            };
+
+            await setUserPreferenciesForFolder(context, [folder_id, should_be_closed]);
+
+            expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
+            expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
         });
     });
 });
