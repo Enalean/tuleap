@@ -164,4 +164,37 @@ describe("Store mutations", () => {
             expect(state.folded_by_map).toEqual({});
         });
     });
+
+    describe("appendFolderToAscendantHierarchy", () => {
+        it("get all the ids of the direct ascendants", () => {
+            const target_folder = { id: 43, parent_id: 41 };
+            const state = {
+                current_folder_ascendant_hierarchy: [],
+                folder_content: [
+                    { id: 30, parent_id: 0 },
+                    { id: 32, parent_id: 30 },
+                    { id: 34, parent_id: 32 },
+                    { id: 36, parent_id: 34 },
+                    { id: 37, parent_id: 34 },
+                    { id: 35, parent_id: 32 },
+                    { id: 38, parent_id: 35 },
+                    { id: 39, parent_id: 35 },
+                    { id: 33, parent_id: 30 },
+                    { id: 40, parent_id: 33 },
+                    { id: 41, parent_id: 33 },
+                    target_folder,
+                    { id: 42, parent_id: 33 },
+                    { id: 31, parent_id: 0 }
+                ]
+            };
+
+            mutations.appendFolderToAscendantHierarchy(state, target_folder);
+            expect(state.current_folder_ascendant_hierarchy).toEqual([
+                { id: 30, parent_id: 0 },
+                { id: 33, parent_id: 30 },
+                { id: 41, parent_id: 33 },
+                target_folder
+            ]);
+        });
+    });
 });
