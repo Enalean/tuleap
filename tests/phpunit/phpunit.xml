@@ -12,6 +12,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../../src/common/</directory>
             <directory suffix=".php">../../src/core/</directory>
+            <directory suffix=".php">../../src/tuleap-cfg/</directory>
             <directory suffix=".php">../../plugins/*/include/</directory>
             <directory suffix=".php">../../tests/lib/</directory>
             <exclude>
@@ -42,6 +43,7 @@
                 <file>../../plugins/webdav/include/WebDAVTree.class.php</file>
                 <file>../../plugins/webdav/include/exception/WebDAVExceptionServerError.class.php</file>
                 <file>../../tests/lib/TuleapDbTestCase.class.php</file>
+                <file>../../src/tuleap-cfg/tuleap-cfg.php</file>
             </exclude>
         </whitelist>
     </filter>

@@ -112,11 +112,7 @@ node:
 	     npm run build
 
 composer:
-	echo "Processing $(BASE_DIR)/src/"
-	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/src/
-	find $(BASE_DIR)/plugins/ $(BASE_DIR)/src/www/themes/ -mindepth 2 -maxdepth 2 -type f -name 'composer.json' \
-		-exec echo "Processing {}" \; -execdir composer install --classmap-authoritative --no-dev --no-interaction --no-scripts \;
-	composer install --classmap-authoritative --no-dev --no-interaction --no-scripts --working-dir=$(BASE_DIR)/tools/Configuration/
+	$(MAKE) -C $(BASE_DIR) composer MODE=Prod
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz: rpmprep node composer mo
 	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)

@@ -136,7 +136,7 @@ if [ ${tuleap_installed:-false} = "false" ] || \
 fi
 
 if [ ${configure:-false} = "true" ]; then
-    _configureApache
+    tuleap-cfg configure apache
     _configureMailman
     _checkInstalledPlugins
     _checkPluginsConfiguration
