@@ -49,6 +49,29 @@ export default {
         state.current_tracker = tracker;
     },
 
+    // Transition operations
+    addTransition(state, transition) {
+        state.current_tracker = {
+            ...state.current_tracker,
+            workflow: {
+                ...state.current_tracker.workflow,
+                transitions: [...state.current_tracker.workflow.transitions, transition]
+            }
+        };
+    },
+    deleteTransition(state, transition_to_delete) {
+        if (
+            !state.current_tracker ||
+            !state.current_tracker.workflow ||
+            !state.current_tracker.workflow.transitions
+        ) {
+            return;
+        }
+        state.current_tracker.workflow.transitions = state.current_tracker.workflow.transitions.filter(
+            transition => transition !== transition_to_delete
+        );
+    },
+
     createWorkflow(state, field_id) {
         state.current_tracker = {
             ...state.current_tracker,
@@ -67,16 +90,6 @@ export default {
     endTransitionRulesEnforcement() {
         state.is_operation_running = false;
         state.is_rules_enforcement_running = false;
-    },
-
-    addTransition(state, transition) {
-        state.current_tracker = {
-            ...state.current_tracker,
-            workflow: {
-                ...state.current_tracker.workflow,
-                transitions: [...state.current_tracker.workflow.transitions, transition]
-            }
-        };
     },
 
     resetState(state) {

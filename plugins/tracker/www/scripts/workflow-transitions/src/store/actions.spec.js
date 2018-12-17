@@ -23,7 +23,8 @@ import {
     loadTracker,
     resetWorkflowTransitions,
     createWorkflowTransitions,
-    updateTransitionRulesEnforcement
+    updateTransitionRulesEnforcement,
+    deleteTransition
 } from "./actions.js";
 import {
     restore as restore$RestQuerier,
@@ -31,9 +32,11 @@ import {
     rewire$createWorkflowTransitions,
     rewire$getTracker,
     rewire$resetWorkflowTransitions,
-    rewire$updateTransitionRulesEnforcement
+    rewire$updateTransitionRulesEnforcement,
+    rewire$deleteTransition
 } from "../api/rest-querier.js";
 import { restore as restore$ExceptionHandler, rewire$getErrorMessage } from "./exceptionHandler.js";
+import { createATransition } from "../support/factories.js";
 
 describe("Store actions:", () => {
     let context;
@@ -220,6 +223,62 @@ describe("Store actions:", () => {
                     to_id: 9
                 }));
             it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
+        });
+    });
+
+    describe("deleteTransition()", () => {
+        let restDeleteTransition;
+        let resolveRestCall;
+        let rejectRestCall;
+        let deleteTransitionPromise;
+        const transition = createATransition({ id: 1 });
+
+        beforeEach(() => {
+            restDeleteTransition = jasmine.createSpy("deleteTransition");
+            rewire$deleteTransition(restDeleteTransition);
+            restDeleteTransition.and.returnValue(
+                new Promise((resolve, reject) => {
+                    resolveRestCall = resolve;
+                    rejectRestCall = reject;
+                })
+            );
+
+            deleteTransitionPromise = deleteTransition(context, transition);
+        });
+
+        it("begins a new operation", () =>
+            expect(context.commit).toHaveBeenCalledWith("beginOperation"));
+        it("creates transition", () => expect(restDeleteTransition).toHaveBeenCalledWith(1));
+
+        describe("when REST call is successful", () => {
+            beforeEach(() => {
+                resolveRestCall();
+                return deleteTransitionPromise;
+            });
+
+            it("add new transition in store", () =>
+                expect(context.commit).toHaveBeenCalledWith("deleteTransition", transition));
+            it("ends operation", () => expect(context.commit).toHaveBeenCalledWith("endOperation"));
+        });
+
+        describe("when REST call fail", () => {
+            let exception = {};
+
+            beforeEach(() => {
+                getErrorMessage.and.returnValue("error message");
+                rejectRestCall(exception);
+                return deleteTransitionPromise;
+            });
+
+            it("does not add new transition in store", () =>
+                expect(context.commit).not.toHaveBeenCalledWith(
+                    "deleteTransition",
+                    jasmine.anything()
+                ));
+            it("extracts message from exception", () =>
+                expect(getErrorMessage).toHaveBeenCalledWith(exception));
+            it("fails operation", () =>
+                expect(context.commit).toHaveBeenCalledWith("failOperation", "error message"));
         });
     });
 });

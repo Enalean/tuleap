@@ -19,11 +19,17 @@
  */
 
 import Vuex from "vuex";
+import GettextPlugin from "vue-gettext";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
+import { createATransition } from "../support/factories.js";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
+localVue.use(GettextPlugin, {
+    translations: {},
+    silent: true
+});
 
 describe("TransitionMatrixContent", () => {
     let store_state;
@@ -35,7 +41,8 @@ describe("TransitionMatrixContent", () => {
             is_operation_running: false
         };
         store_actions = {
-            createTransition: jasmine.createSpy("createTransition")
+            createTransition: jasmine.createSpy("createTransition"),
+            deleteTransition: jasmine.createSpy("deleteTransition")
         };
         const store = new Vuex.Store({
             state: store_state,
@@ -53,9 +60,9 @@ describe("TransitionMatrixContent", () => {
     });
 
     const create_transition_selector = '[data-test-action="create-transition"]';
+    const delete_transition_selector = '[data-test-action="delete-transition"]';
     const forbidden_selector = '[data-test-type="forbidden-transition"]';
     const spinner_selector = '[data-test-type="spinner"]';
-    const transition_mark_selector = '[data-test-type="transition-mark"]';
     const transition_configuration_selector = '[data-test-action="configure-transition"]';
 
     describe("when from equals to", () => {
@@ -127,7 +134,7 @@ describe("TransitionMatrixContent", () => {
                 it("shows a spinner", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
-                it("saves a new transition", () => {
+                it("creates transition", () => {
                     expect(store_actions.createTransition).toHaveBeenCalled();
                     expect(store_actions.createTransition.calls.mostRecent().args[1]).toEqual(
                         jasmine.objectContaining({
@@ -151,13 +158,72 @@ describe("TransitionMatrixContent", () => {
         });
 
         describe("with a transition", () => {
+            const transition = createATransition();
+
             beforeEach(() => {
-                wrapper.setProps({ transition: {} });
+                wrapper.setProps({ transition });
             });
 
             it("shows transition", () => {
-                expect(wrapper.contains(transition_mark_selector)).toBeTruthy();
+                expect(wrapper.contains(delete_transition_selector)).toBeTruthy();
                 expect(wrapper.contains(transition_configuration_selector)).toBeTruthy();
+            });
+
+            describe("during another operation running", () => {
+                beforeEach(() => {
+                    store_state.is_operation_running = true;
+                });
+
+                it("transition deletion is disabled", () => {
+                    expect(wrapper.find(delete_transition_selector).classes()).toContain(
+                        "tracker-workflow-transition-action-disabled"
+                    );
+                });
+
+                describe("when user clicks to delete transition", () => {
+                    beforeEach(() => {
+                        wrapper.find(delete_transition_selector).trigger("click");
+                    });
+
+                    it("does nothing", () => {
+                        expect(store_actions.deleteTransition).not.toHaveBeenCalled();
+                    });
+                });
+            });
+
+            describe("when user clicks to delete transition", () => {
+                let deleteTransitionResolve;
+
+                beforeEach(() => {
+                    store_actions.deleteTransition.and.callFake(
+                        () =>
+                            new Promise(resolve => {
+                                deleteTransitionResolve = resolve;
+                            })
+                    );
+                    wrapper.find(delete_transition_selector).trigger("click");
+                });
+
+                it("shows a spinner", () => {
+                    expect(wrapper.contains(spinner_selector)).toBeTruthy();
+                });
+                it("deletes the transition", () => {
+                    expect(store_actions.deleteTransition).toHaveBeenCalled();
+                    expect(store_actions.deleteTransition.calls.mostRecent().args[1]).toEqual(
+                        transition
+                    );
+                });
+
+                describe("and transition successfully deleted", () => {
+                    beforeEach(async () => {
+                        deleteTransitionResolve();
+                        await wrapper.vm.$nextTick();
+                    });
+
+                    it("hides spinner", () => {
+                        expect(wrapper.contains(spinner_selector)).toBeFalsy();
+                    });
+                });
             });
         });
     });
