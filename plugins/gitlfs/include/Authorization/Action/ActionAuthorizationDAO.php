@@ -46,6 +46,9 @@ class ActionAuthorizationDAO extends DataAccessObject
 
     public function searchExistingOIDsForAuthorizedActionByExpirationAndOIDs($current_time, array $oids)
     {
+        if (empty($oids)) {
+            return [];
+        }
         $condition = EasyStatement::open()->with('expiration_date >= ?', $current_time)->andIn('object_oid IN (?*)', $oids);
         return $this->getDB()->column(
             "SELECT DISTINCT object_oid
@@ -72,6 +75,7 @@ class ActionAuthorizationDAO extends DataAccessObject
      */
     public function searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration(ActionAuthorizationType $action, array $repositories_ids, \DateTimeImmutable $current_time)
     {
+
         $condition = EasyStatement::open()
             ->with('plugin_gitlfs_object.object_oid IS NULL')
             ->andWith('action_type = ?', $action->getName())
