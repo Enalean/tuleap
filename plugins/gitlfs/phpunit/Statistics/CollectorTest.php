@@ -92,7 +92,7 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
         $this->git_repository_factory->shouldReceive("getAllRepositoriesOfProject")->andReturn(array($git_repository));
 
         $authorization = ["object_size" => 30];
-        $this->action_authorization_dao->shouldReceive("searchAuthorizationTypeByRepositoriesIdsAndExpiration")->andReturn(array($authorization));
+        $this->action_authorization_dao->shouldReceive("searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration")->andReturn(array($authorization));
 
         $object = ["object_size" => 70];
         $this->lfs_object_dao->shouldReceive("searchObjectsByRepositoryIds")->andReturn(array($object));
