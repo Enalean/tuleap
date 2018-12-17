@@ -41,25 +41,25 @@ class BackendSVN
 
     public function configure()
     {
-        if (file_exists('/etc/opt/remi/php56/php-fpm.d/www.conf.orig')) {
-            $this->logger->warn('/etc/opt/remi/php56/php-fpm.d/www.conf.orig already exists, skip FPM conf');
+        if (file_exists('/etc/opt/remi/php72/php-fpm.d/www.conf.orig')) {
+            $this->logger->warn('/etc/opt/remi/php72/php-fpm.d/www.conf.orig already exists, skip FPM conf');
             return;
         }
 
-        if (file_exists('/etc/opt/remi/php56/php-fpm.d/www.conf') &&
-                filesize('/etc/opt/remi/php56/php-fpm.d/www.conf') !== 0) {
+        if (file_exists('/etc/opt/remi/php72/php-fpm.d/www.conf') &&
+                filesize('/etc/opt/remi/php72/php-fpm.d/www.conf') !== 0) {
             $this->logger->info('Backup original FPM file');
-            rename('/etc/opt/remi/php56/php-fpm.d/www.conf', '/etc/opt/remi/php56/php-fpm.d/www.conf.orig');
-            touch('/etc/opt/remi/php56/php-fpm.d/www.conf');
+            rename('/etc/opt/remi/php72/php-fpm.d/www.conf', '/etc/opt/remi/php72/php-fpm.d/www.conf.orig');
+            touch('/etc/opt/remi/php72/php-fpm.d/www.conf');
         }
-        if (file_exists('/etc/opt/remi/php56/php-fpm.d/tuleap.conf')) {
+        if (file_exists('/etc/opt/remi/php72/php-fpm.d/tuleap.conf')) {
             $this->logger->info('Remove pre-existing tuleap.conf file');
-            unlink('/etc/opt/remi/php56/php-fpm.d/tuleap.conf');
+            unlink('/etc/opt/remi/php72/php-fpm.d/tuleap.conf');
         }
         $this->logger->info('Deploy new tuleap.conf');
         $this->replacePlaceHolderInto(
             $this->tuleap_base_dir.'/src/etc/fpm56/tuleap.conf',
-            '/etc/opt/remi/php56/php-fpm.d/tuleap.conf',
+            '/etc/opt/remi/php72/php-fpm.d/tuleap.conf',
             array(
                 '%application_user%'
             ),

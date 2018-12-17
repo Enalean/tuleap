@@ -2,7 +2,7 @@ version: "2"
 
 services:
   reverse-proxy-distlp:
-    image: enalean/tuleap-reverseproxy:distlp-1.2
+    image: enalean/tuleap-reverseproxy:distlp-1.3
     command: /tuleap/tools/distlp/reverse-proxy/run.sh
     volumes:
       - .:/tuleap
@@ -12,9 +12,9 @@ services:
       - backend-svn
 
   backend-web:
-    image: enalean/tuleap-aio-dev:c6-php56-nginx-v1.12
+    image: enalean/tuleap-aio-dev:c6-php72-nginx-v1.0
     environment:
-      RUN_COMMAND: "/opt/remi/php56/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php"
+      RUN_COMMAND: "/opt/remi/php72/root/usr/bin/php /usr/share/tuleap/tools/distlp/backend-web/run.php"
     volumes:
       - .:/usr/share/tuleap
       - ../tuleap-plugins:/usr/share/tuleap-plugins
@@ -27,7 +27,7 @@ services:
       - rabbitmq
 
   backend-svn:
-    image: enalean/tuleap-dev:1.8
+    image: enalean/tuleap-dev:1.9
     command: /usr/share/tuleap/tools/distlp/backend-svn/backend-svn.sh
     volumes:
       - .:/usr/share/tuleap

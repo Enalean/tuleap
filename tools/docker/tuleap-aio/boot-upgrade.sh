@@ -10,12 +10,12 @@ set -e
 
 # Switch to php 5.6 + nginx
 if [ ! -f "/etc/nginx/conf.d/tuleap.conf" ]; then
-    /usr/share/tuleap/tools/utils/php56/run.php
+    /usr/share/tuleap/tools/utils/php72/run.php
 
     mv /etc/nginx /data/etc
     ln -s /data/etc/nginx /etc/nginx
 
-    mkdir -p /data/etc/opt/remi/php56/
-    mv /etc/opt/remi/php56/php-fpm.d/ /data/etc/opt/remi/php56/
-    ln -s /data/etc/opt/remi/php56/php-fpm.d /etc/opt/remi/php56/php-fpm.d
+    mkdir -p /data/etc/opt/remi/php72/
+    mv /etc/opt/remi/php72/php-fpm.d/ /data/etc/opt/remi/php72/
+    ln -s /data/etc/opt/remi/php72/php-fpm.d /etc/opt/remi/php72/php-fpm.d
 fi

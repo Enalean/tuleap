@@ -27,7 +27,7 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 $logger = new Tuleap\Configuration\Logger\Console();
 
-$fpm      = Tuleap\Configuration\FPM\TuleapWeb::buildForPHP56($logger, 'codendiadm', true);
+$fpm      = Tuleap\Configuration\FPM\TuleapWeb::buildForPHP72($logger, 'codendiadm', true);
 $nginx    = new \Tuleap\Configuration\Nginx\BackendWeb($logger, '/usr/share/tuleap', '/etc/nginx', 'reverse-proxy');
 $rabbitmq = new Tuleap\Configuration\RabbitMQ\BackendWeb('codendiadm');
 

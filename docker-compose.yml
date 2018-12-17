@@ -12,7 +12,7 @@ services:
     - realtime
 
   web:
-    image: enalean/tuleap-aio-dev:c6-php56-nginx
+    image: enalean/tuleap-aio-dev:c6-php72-nginx
     volumes:
       - .:/usr/share/tuleap:cached
       - ../tuleap-plugins:/usr/share/tuleap-plugins:cached
