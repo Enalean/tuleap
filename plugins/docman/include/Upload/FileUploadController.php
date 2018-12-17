@@ -22,20 +22,20 @@ namespace Tuleap\Docman\Upload;
 
 use GuzzleHttp\Psr7\ServerRequest;
 use HTTPRequest;
+use Tuleap\Docman\Tus\TusCORSMiddleware;
 use Tuleap\Docman\Tus\TusServer;
-use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\REST\BasicAuthentication;
+use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
 
 class FileUploadController implements DispatchableWithRequestNoAuthz
 {
-    const ONE_MB_FILE = 1048576;
     /**
-     * @var string
+     * @var TusServer
      */
-    private $root_path_storage;
+    private $tus_server;
     /**
      * @var UserManager
      */
@@ -44,31 +44,35 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
      * @var BasicAuthentication
      */
     private $basic_rest_authentication;
+    /**
+     * @var TusCORSMiddleware
+     */
+    private $tus_cors_middleware;
+    /**
+     * @var TuleapRESTCORSMiddleware
+     */
+    private $rest_cors_middleware;
 
     public function __construct(
-        $root_path_storage,
+        TusServer $tus_server,
+        TusCORSMiddleware $tus_cors_middleware,
+        TuleapRESTCORSMiddleware $rest_cors_middleware,
         UserManager $rest_user_manager,
         BasicAuthentication $basic_rest_authentication
     ) {
-        $this->root_path_storage         = $root_path_storage;
+        $this->tus_server                = $tus_server;
+        $this->tus_cors_middleware       = $tus_cors_middleware;
+        $this->rest_cors_middleware      = $rest_cors_middleware;
         $this->rest_user_manager         = $rest_user_manager;
         $this->basic_rest_authentication = $basic_rest_authentication;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $test_file = $this->root_path_storage . '/test_upload';
-        if (! file_exists($test_file)) {
-            touch($test_file);
-        }
-        $handle = fopen($test_file, 'ab');
+        $server_request = ServerRequest::fromGlobals();
 
-        $document = new DocumentToUpload($handle, self::ONE_MB_FILE, filesize($test_file));
-
-        $tus_server = new TusServer(MessageFactoryBuilder::build());
-        $response   = $tus_server->serve(ServerRequest::fromGlobals(), $document);
-
-        fclose($handle);
+        $dispatcher = new FileUploadDispatcher($this->tus_server, $this->tus_cors_middleware, $this->rest_cors_middleware);
+        $response   = $dispatcher->handle($server_request);
 
         http_response_code($response->getStatusCode());
         foreach ($response->getHeaders() as $header => $values) {
