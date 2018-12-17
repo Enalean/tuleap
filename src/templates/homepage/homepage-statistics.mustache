@@ -1,20 +1,20 @@
 {{# statistics }}
     {{# hasStatistics }}
-        <div>
-            {{# getStatistics }}
-                <div class="tlp-card">
-                    <div>
-                        {{# hasGrowth }}
-                            {{ getLastMonthGrowth }}
-                            {{# gettext }}last month{{/ gettext }}
-                        {{/ hasGrowth }}
-                    </div>
-
-                    <p>
-                        {{ getTotal }} {{ getLabel }}
-                    </p>
+        {{# getStatistics }}
+            <div class="homepage-statistic">
+                <div class="homepage-statistic-main">
+                    <span class="homepage-statistic-total">{{ getTotal }}</span>
+                    <span class="homepage-statistic-label">{{ getLabel }}</span>
                 </div>
-            {{/ getStatistics }}
-        </div>
+                {{# hasGrowth }}
+                    <div class="homepage-statistic-growth">
+                        <span class="homepage-statistic-growth-plus">+</span>
+                        <span class="homepage-statistic-growth-value">{{ getLastMonthGrowth }}</span>
+                        <span class="homepage-statistic-growth-label">{{# gettext }}last<br>month{{/ gettext }}</span>
+                    </div>
+                    <img src="/themes/BurningParrot/images/homepage/growth.svg" class="homepage-statistic-growth-background">
+                {{/ hasGrowth }}
+            </div>
+        {{/ getStatistics }}
     {{/ hasStatistics }}
 {{/ statistics }}

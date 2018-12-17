@@ -20,8 +20,8 @@
 $homepage-small-screen-width: 850px;
 
 /* stylelint-disable */
-body.homepage {
-    background: $tlp-ui-white;
+body.homepage > #main-container {
+    background: $tlp-theme-sidebar-background-color;
 }
 /* stylelint-enable */
 
@@ -30,7 +30,6 @@ body.homepage {
     position: relative;
     flex-direction: column;
     align-items: center;
-    height: 100%;
     background-image: linear-gradient(to bottom, $tlp-theme-background-color, $tlp-ui-white 50%);
 
     @media screen and (max-width: $homepage-small-screen-width) {
@@ -121,6 +120,7 @@ body.homepage {
     display: flex;
     flex: 1 1 auto;
     justify-content: center;
+    margin: 0 0 60px;
 }
 
 .homepage-sign-in,
@@ -208,12 +208,94 @@ body.homepage {
     fill: $tlp-ui-white;
 }
 
-.homepage-bottom {
+.homepage-statistics {
+    display: flex;
     position: relative;
-    z-index: 1;
+    z-index: 3;
     flex: 1 1 auto;
+    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
+    margin: -100px 0 60px;
 }
+
+.homepage-statistic {
+    display: flex;
+    position: relative;
+    align-items: flex-start;
+    justify-content: center;
+    min-width: 150px;
+    margin: 10px;
+    padding: 30px;
+    border: 1px solid $tlp-theme-color;
+    border-radius: 3px;
+    background: $tlp-theme-sidebar-background-color;
+    color: $tlp-ui-white;
+}
+
+.homepage-statistic-main {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    flex-direction: column;
+}
+
+.homepage-statistic-total {
+    margin: 0 0 10px;
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 40px;
+}
+
+.homepage-statistic-label {
+    opacity: .6;
+    color: $tlp-ui-border-dark;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.homepage-statistic-growth {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    align-items: center;
+    margin: 0 0 0 20px;
+    color: $tlp-ui-success;
+}
+
+.homepage-statistic-growth-plus {
+    margin: 0 2px 0 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.homepage-statistic-growth-value {
+    position: relative;
+    top: -2px;
+    margin: 0 5px 0 0;
+    font-size: 28px;
+}
+
+.homepage-statistic-growth-label {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.homepage-statistic-growth-background {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    opacity: .05;
+
+    @supports (mix-blend-mode: overlay) {
+        mix-blend-mode: overlay;
+        opacity: .3;
+    }
+}
+
 
 .homepage > footer {
     position: relative;
