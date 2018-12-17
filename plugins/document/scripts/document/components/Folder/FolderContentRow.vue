@@ -19,11 +19,7 @@
 
 <template>
     <tr v-bind:class="{ 'document-tree-item-hidden': is_folded }">
-        <folder-cell-title v-bind:item="item" v-if="is_folder" v-bind:style="item_indentation"/>
-        <link-cell-title v-bind:item="item" v-else-if="is_link" v-bind:style="item_indentation"/>
-        <file-cell-title v-bind:item="item" v-else-if="is_file" v-bind:style="item_indentation"/>
-        <document-cell-title v-bind:item="item" v-else v-bind:style="item_indentation"/>
-
+        <component v-bind:is="cell_title_component_name" v-bind:item="item" v-bind:style="item_indentation"/>
         <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
         <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
             {{ formatted_date }}
@@ -35,16 +31,12 @@
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
 import { TYPE_FOLDER, TYPE_LINK, TYPE_FILE } from "../../constants.js";
-import FolderCellTitle from "./ItemTitle/FolderCellTitle.vue";
-import DocumentCellTitle from "./ItemTitle/DocumentCellTitle.vue";
-import LinkCellTitle from "./ItemTitle/LinkCellTitle.vue";
-import FileCellTitle from "./ItemTitle/FileCellTitle.vue";
 import moment from "moment";
 import phptomoment from "phptomoment";
 
 export default {
     name: "FolderContentRow",
-    components: { UserBadge, FolderCellTitle, DocumentCellTitle, LinkCellTitle, FileCellTitle },
+    components: { UserBadge },
     props: {
         item: Object
     },
@@ -56,15 +48,6 @@ export default {
         formatted_full_date() {
             return moment(this.item.last_update_date).format(phptomoment(this.date_time_format));
         },
-        is_folder() {
-            return this.item.type === TYPE_FOLDER;
-        },
-        is_link() {
-            return this.item.type === TYPE_LINK;
-        },
-        is_file() {
-            return this.item.type === TYPE_FILE;
-        },
         is_folded() {
             return this.folded_items_ids.includes(this.item.id);
         },
@@ -74,6 +57,21 @@ export default {
             return {
                 "padding-left": `${indentation_size}px`
             };
+        },
+        cell_title_component_name() {
+            let name = "Document";
+            switch (this.item.type) {
+                case TYPE_FOLDER:
+                case TYPE_LINK:
+                case TYPE_FILE:
+                    name = this.item.type;
+                    name = name.charAt(0).toUpperCase() + name.slice(1);
+                    break;
+                default:
+                    break;
+            }
+            return () =>
+                import(/* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`);
         }
     },
     methods: {
