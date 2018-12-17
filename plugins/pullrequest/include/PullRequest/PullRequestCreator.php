@@ -26,6 +26,7 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
+use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\PullRequest\GitReference\GitPullRequestReferenceCreator;
 
 class PullRequestCreator
@@ -84,7 +85,7 @@ class PullRequestCreator
         }
 
         if ($repository_src->getId() != $repository_dest->getId() && $repository_src->getParentId() != $repository_dest->getId()) {
-            throw new \Exception('Pull requests can only target the same repository or its parent.');
+            throw new PullRequestTargetException();
         }
 
         if ($repository_dest->isMigratedToGerrit()) {

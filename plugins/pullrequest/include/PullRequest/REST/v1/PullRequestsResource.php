@@ -67,6 +67,7 @@ use Tuleap\PullRequest\Exception\PullRequestCannotBeCreatedException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeMerged;
 use Tuleap\PullRequest\Exception\PullRequestNotFoundException;
 use Tuleap\PullRequest\Exception\PullRequestRepositoryMigratedOnGerritException;
+use Tuleap\PullRequest\Exception\PullRequestTargetException;
 use Tuleap\PullRequest\Exception\UnknownBranchNameException;
 use Tuleap\PullRequest\Exception\UnknownReferenceException;
 use Tuleap\PullRequest\Exception\UserCannotReadGitRepositoryException;
@@ -817,7 +818,7 @@ class PullRequestsResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         } catch (PullRequestAnonymousUserException $exception) {
             throw new RestException(400, $exception->getMessage());
-        } catch (\Exception $exception) {
+        } catch (PullRequestTargetException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
 
