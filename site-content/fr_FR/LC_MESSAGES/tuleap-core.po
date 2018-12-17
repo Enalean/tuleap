@@ -1622,8 +1622,8 @@ msgstr "[%s] Confirmation de changement d'e-mail"
 msgid "back to home page"
 msgstr "Retour à la page d'accueil"
 
-msgid "last month"
-msgstr "le mois dernier"
+msgid "last<br>month"
+msgstr "le mois<br>dernier"
 
 msgid "my_service"
 msgstr "mon_service"

@@ -1461,7 +1461,7 @@ msgstr ""
 msgid "back to home page"
 msgstr ""
 
-msgid "last month"
+msgid "last<br>month"
 msgstr ""
 
 msgid "my_service"
