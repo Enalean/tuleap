@@ -785,6 +785,13 @@ msgstr "Le service tracker est désactivé."
 msgid "Trackers"
 msgstr "Trackers"
 
+msgid "Transition not found."
+msgstr "Transition non trouvée."
+
+#, php-format
+msgid "Transition with id '%d' has no workflow"
+msgstr "La transition avec l'id '%d' n'est rattachée à aucun workflow"
+
 msgid "Transitions Rules"
 msgstr "Règles de Transitions"
 

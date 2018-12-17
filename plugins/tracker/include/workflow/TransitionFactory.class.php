@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\TransitionDeletionException;
+
 require_once('common/permission/PermissionsManager.class.php');
 
 class TransitionFactory
@@ -102,7 +104,6 @@ class TransitionFactory
             $from,
             $to
         );
-
     }
 
     /**
@@ -390,5 +391,25 @@ class TransitionFactory
     public function addTransition($workflow_id, $from_id, $to_id)
     {
         return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
+    }
+
+    /**
+     * @param Transition $transition
+     *
+     * @throws TransitionDeletionException
+     */
+    public function delete(Transition $transition)
+    {
+        try {
+            if (!$this->getDao()->deleteTransition(
+                $transition->getWorkflow()->getId(),
+                $transition->getIdFrom(),
+                $transition->getIdTo())
+            ) {
+                throw new TransitionDeletionException();
+            }
+        } catch (DataAccessQueryException $exception) {
+            throw new TransitionDeletionException($exception);
+        }
     }
 }

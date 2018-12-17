@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
 use Guzzle\Http\Exception\BadResponseException;
-use Tuleap\Tracker\Tests\REST\TrackerBase;
 use REST_TestDataBuilder;
+use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -118,7 +118,6 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
             "to_id" => 0
         ));
 
-
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
             $this->client->post(
@@ -211,5 +210,37 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
 
         $this->fail('An exception was expected');
         $this->assertEquals($response->getStatusCode(), 400);
+    }
+
+    public function testDELETETrackerWorkflowTransitions()
+    {
+        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
+        $used_transition         = $transition_combinations["transitions"][0];
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->delete(
+                'tracker_workflow_transitions/' . $used_transition['id'],
+                null
+            )
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testDELETETrackerWorkflowTransitionsReturns404WhenTransitionDoesNotExist()
+    {
+        try {
+            $this->getResponseByName(
+                REST_TestDataBuilder::TEST_USER_1_NAME,
+                $this->client->delete(
+                    'tracker_workflow_transitions/0',
+                    null
+                )
+            );
+            $this->fail('Expected exception not raised');
+        } catch (BadResponseException $e) {
+            $this->assertEquals(404, $e->getResponse()->getStatusCode());
+        }
     }
 }

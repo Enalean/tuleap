@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use PFUser;
 use Tracker;
+use Transition;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 
 /**
@@ -51,5 +52,22 @@ class TransitionsPermissionsChecker
     public function checkCreate(PFUser $user, Tracker $tracker)
     {
         $this->permissions_checker->checkUpdateWorkflow($user, $tracker);
+    }
+
+    /**
+     * Checks if given user has permissions to delete given transition.
+     *
+     * @param PFUser $user
+     * @param Transition $transition
+     * @throws \Luracast\Restler\RestException
+     * @throws OrphanTransitionException
+     */
+    public function checkDelete(PFUser $user, Transition $transition)
+    {
+        $workflow = $transition->getWorkflow();
+        if ($workflow === null) {
+            throw new OrphanTransitionException($transition);
+        }
+        $this->permissions_checker->checkUpdateWorkflow($user, $workflow->getTracker());
     }
 }

@@ -124,6 +124,7 @@ class TrackerBase extends RestBase
 
         foreach ($tracker["workflow"]["transitions"] as $transition) {
             $all_transitions["transitions"][] = [
+                "id" => $transition["id"],
                 "from_id" => $transition["from_id"],
                 "to_id" => $transition["to_id"]
             ];
@@ -131,8 +132,13 @@ class TrackerBase extends RestBase
 
         foreach (array_merge([null], $all_field_values_ids) as $from_id) {
             foreach ($all_field_values_ids as $to_id) {
-                if ($from_id !== $to_id
-                    && !in_array(["from_id" => $from_id, "to_id" => $to_id], $all_transitions["transitions"])) {
+                $is_not_used_transition = empty(
+                    array_filter($all_transitions["transitions"], function ($transition) use ($from_id, $to_id) {
+                        return ($transition['from_id'] === $from_id && $transition['to_id'] === $to_id);
+                    })
+                );
+
+                if ($from_id !== $to_id && $is_not_used_transition) {
                     $all_transitions["missing_transitions"][] = [
                         "from_id" => $from_id,
                         "to_id" => $to_id
