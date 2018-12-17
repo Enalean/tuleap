@@ -20,127 +20,43 @@
 
 namespace Tuleap\GitLFS\Statistics;
 
-use Project;
-use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
-use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeVerify;
-use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
-
 class Collector
 {
     /**
      * @var \Statistics_DiskUsageDao
      */
     private $disk_usage_dao;
-
     /**
-     * @var ActionAuthorizationDAO
+     * @var LFSStatisticsDAO
      */
-    private $action_authorization_dao;
-
-    /**
-     * @var LFSObjectDAO
-     */
-    private $lfs_object_dao;
-
-    /**
-     * @var \GitRepositoryFactory
-     */
-    private $git_repository_factory;
+    private $statistics_dao;
 
     public function __construct(
         \Statistics_DiskUsageDao $disk_usage_dao,
-        ActionAuthorizationDAO $action_authorization_dao,
-        LFSObjectDAO $lfs_object_dao,
-        \GitRepositoryFactory $git_repository_factory
+        LFSStatisticsDAO $lfs_statistics_dao
     ) {
-        $this->disk_usage_dao           = $disk_usage_dao;
-        $this->action_authorization_dao = $action_authorization_dao;
-        $this->lfs_object_dao           = $lfs_object_dao;
-        $this->git_repository_factory   = $git_repository_factory;
+        $this->disk_usage_dao = $disk_usage_dao;
+        $this->statistics_dao = $lfs_statistics_dao;
     }
 
-    public function proceedToDiskUsageCollection(array $params)
+    public function proceedToDiskUsageCollection(array &$params, \DateTimeImmutable $current_time)
     {
         $start = microtime(true);
-        $row   = $params['project_row'];
+
+        $project = $params['project'];
 
         $this->disk_usage_dao->addGroup(
-            $row['group_id'],
+            $project->getID(),
             \gitlfsPlugin::SERVICE_SHORTNAME,
-            $this->getDiskUsageForProject($params['project']),
-            $_SERVER['REQUEST_TIME']
+            $this->statistics_dao->getOccupiedSizeByProjectIDAndExpiration($project->getID(), $current_time->getTimestamp()),
+            $current_time->getTimestamp()
         );
 
         $end = microtime(true);
         $this->registerCollectionTime($params, $end - $start);
     }
 
-    /**
-     * @return int
-     */
-    private function getDiskUsageForProject(Project $project)
-    {
-        $repositories_ids = $this->getRepositoriesIdsForProject($project);
-
-        if (count($repositories_ids) === 0) {
-            return 0;
-        }
-
-        return $this->getAuthorizationsDiskUsage($repositories_ids) + $this->getObjectsDiskUsage($repositories_ids);
-    }
-
-    /**
-     * @return int
-     */
-    private function getAuthorizationsDiskUsage(array $repositories_ids)
-    {
-        $date_time = new \DateTimeImmutable();
-        $size      = 0;
-
-        $authorizations = $this->action_authorization_dao->searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration(
-            new ActionAuthorizationTypeVerify(),
-            $repositories_ids,
-            $date_time
-        );
-
-        foreach ($authorizations as $authorization) {
-            $size += (int) $authorization['object_size'];
-        }
-
-        return $size;
-    }
-
-    /**
-     * return int
-     */
-    private function getObjectsDiskUsage(array $repositories_ids)
-    {
-        $objects = $this->lfs_object_dao->searchObjectsByRepositoryIds($repositories_ids);
-        $size    = 0;
-
-        foreach ($objects as $object) {
-            $size += (int) $object['object_size'];
-        }
-
-        return $size;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRepositoriesIdsForProject(Project $project)
-    {
-        $repositories     = $this->git_repository_factory->getAllRepositoriesOfProject($project);
-        $repositories_ids = [];
-
-        foreach ($repositories as $repository) {
-            $repositories_ids[] = $repository->getId();
-        }
-
-        return $repositories_ids;
-    }
-
-    private function registerCollectionTime($params, $time)
+    private function registerCollectionTime(array &$params, $time)
     {
         if (!isset($params['time_to_collect'][\gitlfsPlugin::SERVICE_SHORTNAME])) {
             $params['time_to_collect'][\gitlfsPlugin::SERVICE_SHORTNAME] = 0;

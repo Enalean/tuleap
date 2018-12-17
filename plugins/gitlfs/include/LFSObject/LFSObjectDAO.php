@@ -119,16 +119,4 @@ class LFSObjectDAO extends DataAccessObject
     {
         $this->getDB()->delete('plugin_gitlfs_object', ['id' => $id]);
     }
-
-    public function searchObjectsByRepositoryIds(array $repositories_ids)
-    {
-        $condition = EasyStatement::open()->in('repository_id IN (?*)', $repositories_ids);
-        return $this->getDB()->safeQuery(
-            "SELECT plugin_gitlfs_object.*
-            FROM plugin_gitlfs_object
-            JOIN plugin_gitlfs_object_repository ON (plugin_gitlfs_object.id = plugin_gitlfs_object_repository.object_id)
-            WHERE $condition",
-            $condition->values()
-        );
-    }
 }

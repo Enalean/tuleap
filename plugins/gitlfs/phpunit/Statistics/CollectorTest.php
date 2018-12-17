@@ -28,85 +28,23 @@ class CollectorTest extends \PHPUnit_Framework_TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    /**
-     * @var Collector
-     */
-    private $collector;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $disk_usage_dao;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $action_authorization_dao;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $lfs_object_dao;
-
-    /**
-     * @var Mockery\MockInterface
-     */
-    private $git_repository_factory;
-
-    public function setUp()
+    public function testSizeOccupiedByProjectAndCollectionTimeAreRetrieved()
     {
-        $this->disk_usage_dao           = Mockery::mock(\Statistics_DiskUsageDao::class);
-        $this->action_authorization_dao = Mockery::mock(ActionAuthorizationDAO::class);
-        $this->lfs_object_dao           = Mockery::mock(LFSObjectDAO::class);
-        $this->git_repository_factory   = Mockery::mock(\GitRepositoryFactory::class);
+        $disk_usage_dao = Mockery::mock(\Statistics_DiskUsageDao::class);
+        $statistics_dao = Mockery::mock(LFSStatisticsDAO::class);
 
-        $this->collector = new Collector(
-            $this->disk_usage_dao,
-            $this->action_authorization_dao,
-            $this->lfs_object_dao,
-            $this->git_repository_factory
-        );
-    }
+        $collector = new Collector($disk_usage_dao, $statistics_dao);
 
-    public function testItShouldReturn0IfProjectHasNoRepositories()
-    {
-        $this->git_repository_factory->shouldReceive("getAllRepositoriesOfProject")->andReturn(array());
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturns(102);
+        $params       = ['project' => $project, 'time_to_collect' => []];
+        $current_time = new \DateTimeImmutable('17-12-2018');
+        $statistics_dao->shouldReceive('getOccupiedSizeByProjectIDAndExpiration')->andReturns(123456);
 
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive("getId")->andReturn(100);
+        $disk_usage_dao->shouldReceive('addGroup')->once();
 
-        $params  = [
-            "project_row" => ["group_id" => 100],
-            "project" => $project
-        ];
+        $collector->proceedToDiskUsageCollection($params, $current_time);
 
-        $this->disk_usage_dao->shouldReceive("addGroup")->withArgs([100, \gitlfsPlugin::SERVICE_SHORTNAME, 0, Mockery::any()]);
-
-        $this->collector->proceedToDiskUsageCollection($params);
-    }
-
-    public function testItShouldAddBothAuthorizationsAndObjectsSizes()
-    {
-        $git_repository = Mockery::mock(\GitRepository::class);
-        $git_repository->shouldReceive("getId")->andReturn(1);
-        $this->git_repository_factory->shouldReceive("getAllRepositoriesOfProject")->andReturn(array($git_repository));
-
-        $authorization = ["object_size" => 30];
-        $this->action_authorization_dao->shouldReceive("searchAuthorizationTypeWithoutObjectByRepositoriesIdsAndExpiration")->andReturn(array($authorization));
-
-        $object = ["object_size" => 70];
-        $this->lfs_object_dao->shouldReceive("searchObjectsByRepositoryIds")->andReturn(array($object));
-
-        $project = Mockery::mock(\Project::class);
-        $project->shouldReceive("getId")->andReturn(100);
-
-        $params  = [
-            "project_row" => ["group_id" => 100],
-            "project"     => $project
-        ];
-
-        $this->disk_usage_dao->shouldReceive("addGroup")->withArgs([100, \gitlfsPlugin::SERVICE_SHORTNAME, 100, Mockery::any()]);
-
-        $this->collector->proceedToDiskUsageCollection($params);
+        $this->assertCount(1, $params['time_to_collect']);
     }
 }

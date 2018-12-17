@@ -230,7 +230,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     public function plugin_statistics_disk_usage_collect_project($params) // phpcs:ignore
     {
         $this->getStatisticsCollector($params['DiskUsageManager'])
-            ->proceedToDiskUsageCollection($params);
+            ->proceedToDiskUsageCollection($params, new DateTimeImmutable());
     }
 
     public function plugin_statistics_color($params) // phpcs:ignore
@@ -240,19 +240,17 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         }
     }
 
-    public function project_is_deleted($params) // phpcs:ignore
-    {
-        $this->cleanUnusedResources();
-    }
-
     private function getStatisticsCollector(Statistics_DiskUsageManager $disk_usage_manager)
     {
         return new \Tuleap\GitLFS\Statistics\Collector(
             $disk_usage_manager->_getDao(),
-            new ActionAuthorizationDAO(),
-            new LFSObjectDAO(),
-            new GitRepositoryFactory(new GitDao(), ProjectManager::instance())
+            new \Tuleap\GitLFS\Statistics\LFSStatisticsDAO()
         );
+    }
+
+    public function project_is_deleted($params) // phpcs:ignore
+    {
+        $this->cleanUnusedResources();
     }
 
     private function cleanUnusedResources()
