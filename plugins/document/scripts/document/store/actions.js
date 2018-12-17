@@ -17,7 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getItem, getProject, getFolderContent } from "../api/rest-querier.js";
+import {
+    getItem,
+    getProject,
+    getFolderContent,
+    getUserPreferencesForFolderInProject,
+    patchUserPreferenciesForFolderInProject,
+    deleteUserPreferenciesForFolderInProject
+} from "../api/rest-querier.js";
+
 import { handleErrors } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
@@ -112,5 +120,45 @@ export const loadFolder = (context, folder_id) => {
 
     function shouldWeRemotelyLoadTheFolder(current_folder) {
         return !current_folder || current_folder.id !== folder_id;
+    }
+};
+
+export const getFolderShouldBeOpen = (context, folder_id) => {
+    if (context.state.user_id === 0) {
+        return { value: false };
+    }
+
+    try {
+        return getUserPreferencesForFolderInProject(
+            context.state.user_id,
+            context.state.project_id,
+            folder_id
+        );
+    } catch (exception) {
+        return handleErrors(context, exception);
+    }
+};
+
+export const setUserPreferenciesForFolder = (context, [folder_id, should_be_closed]) => {
+    if (context.state.user_id === 0) {
+        return;
+    }
+
+    try {
+        if (should_be_closed) {
+            return deleteUserPreferenciesForFolderInProject(
+                context.state.user_id,
+                context.state.project_id,
+                folder_id
+            );
+        }
+
+        return patchUserPreferenciesForFolderInProject(
+            context.state.user_id,
+            context.state.project_id,
+            folder_id
+        );
+    } catch (exception) {
+        return handleErrors(context, exception);
     }
 };

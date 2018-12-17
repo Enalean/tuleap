@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
     const user_timezone = document.body.dataset.userTimezone;
     const date_time_format = document.body.dataset.dateTimeFormat;
+    const user_id = Number.parseInt(document.body.dataset.userId, 10);
 
     moment.tz(user_timezone).locale(user_locale);
 
@@ -60,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         store,
         router,
         propsData: {
+            user_id,
             project_id,
             user_is_admin,
             date_time_format

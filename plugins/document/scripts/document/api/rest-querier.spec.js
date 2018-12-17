@@ -17,13 +17,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getFolderContent, getProject, getItem, getParents } from "./rest-querier.js";
+import {
+    getFolderContent,
+    getProject,
+    getItem,
+    getParents,
+    getUserPreferencesForFolderInProject,
+    patchUserPreferenciesForFolderInProject,
+    deleteUserPreferenciesForFolderInProject
+} from "./rest-querier.js";
+
 import { tlp, mockFetchSuccess } from "tlp-mocks";
+import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants";
 
 describe("rest-querier", () => {
     afterEach(() => {
         tlp.get.and.stub();
         tlp.recursiveGet.and.stub();
+        tlp.patch.and.stub();
+        tlp.del.and.stub();
     });
 
     describe("getItem()", () => {
@@ -143,6 +155,61 @@ describe("rest-querier", () => {
             });
             expect(tlp.recursiveGet.calls.count()).toEqual(2);
             expect(result).toEqual(parents);
+        });
+    });
+
+    describe("User preferences", () => {
+        const user_id = 102;
+        const project_id = 110;
+        const folder_id = 30;
+        const preference_key = "plugin_docman_hide_110_30";
+        const headers = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        describe("getUserPreferencesForFolderInProject() -", () => {
+            it("should retrieve the current user's preferencies for a given folder", async () => {
+                mockFetchSuccess(tlp.get, {
+                    return_json: {
+                        key: preference_key,
+                        value: false
+                    }
+                });
+
+                await getUserPreferencesForFolderInProject(user_id, project_id, folder_id);
+
+                expect(tlp.get).toHaveBeenCalledWith("/api/users/102/preferences", {
+                    params: {
+                        key: preference_key
+                    }
+                });
+            });
+        });
+
+        describe("patchUserPreferenciesForFolderInProject() -", () => {
+            it("should set the current user's preferencies for a given folder on 'expanded'", async () => {
+                await patchUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
+
+                expect(tlp.patch).toHaveBeenCalledWith("/api/users/102/preferences", {
+                    ...headers,
+                    body: JSON.stringify({
+                        key: preference_key,
+                        value: DOCMAN_FOLDER_EXPANDED_VALUE
+                    })
+                });
+            });
+        });
+
+        describe("deleteUserPreferenciesForFolderInProject() -", () => {
+            it("should delete the current user's preferencies for a given folder (e.g collapsed)", async () => {
+                await deleteUserPreferenciesForFolderInProject(user_id, project_id, folder_id);
+
+                expect(tlp.del).toHaveBeenCalledWith(
+                    "/api/users/102/preferences?key=plugin_docman_hide_110_30"
+                );
+            });
         });
     });
 });

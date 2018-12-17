@@ -18,6 +18,7 @@
  */
 
 const state = {
+    user_id: null,
     project_id: null,
     is_loading_folder: true,
     has_folder_permission_error: false,
