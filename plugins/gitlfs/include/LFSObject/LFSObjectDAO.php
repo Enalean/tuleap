@@ -27,6 +27,9 @@ class LFSObjectDAO extends DataAccessObject
 {
     public function searchByRepositoryIDAndOIDs($repository_id, array $oids)
     {
+        if (empty($oids)) {
+            return [];
+        }
         $condition = EasyStatement::open()->with('repository_id = ?', $repository_id)->andIn('object_oid IN (?*)', $oids);
         return $this->getDB()->safeQuery(
             "SELECT plugin_gitlfs_object.*
