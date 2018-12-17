@@ -20,13 +20,14 @@ const path = require("path");
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(__dirname, "../../../src/www/assets/document/scripts");
+const assets_public_path = "/assets/document/scripts/";
 
 const webpack_config = {
     entry: {
         document: "./document/index.js"
     },
     context: path.resolve(__dirname),
-    output: webpack_configurator.configureOutput(assets_dir_path),
+    output: webpack_configurator.configureOutput(assets_dir_path, assets_public_path),
     externals: {
         tlp: "tlp"
     },
