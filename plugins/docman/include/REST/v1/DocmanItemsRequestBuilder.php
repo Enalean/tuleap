@@ -59,7 +59,14 @@ class DocmanItemsRequestBuilder
      *
      * @return DocmanItemsRequest
      *
+     * @throws I18NRestException
      * @throws RestException
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
      */
     public function buildFromItemId($id)
     {
@@ -69,7 +76,10 @@ class DocmanItemsRequestBuilder
         if ($item === null) {
             throw new I18NRestException(
                 404,
-                dgettext('tuleap-docman', 'The resource does not exist.')
+                sprintf(
+                    dgettext('tuleap-docman', 'The resource %d does not exist.'),
+                    $id
+                )
             );
         }
 

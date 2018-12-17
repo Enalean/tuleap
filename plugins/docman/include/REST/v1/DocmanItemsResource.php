@@ -24,14 +24,21 @@
 
 namespace Tuleap\Docman\REST\v1;
 
+use Docman_Item;
 use Docman_ItemDao;
-use Luracast\Restler\RestException;
+use Docman_ItemFactory;
+use Docman_Log;
+use EventManager;
+use Project;
 use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
+use Tuleap\Docman\Log\LogEventAdder;
+use Tuleap\Docman\Notifications\NotificationBuilders;
+use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
-use Tuleap\REST\UserManager;
+use Tuleap\REST\UserManager as RestUserManager;
 
 class DocmanItemsResource extends AuthenticatedResource
 {
@@ -42,7 +49,7 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     private $item_dao;
     /**
-     * @var UserManager
+     * @var RestUserManager
      */
     private $rest_user_manager;
     /**
@@ -50,11 +57,17 @@ class DocmanItemsResource extends AuthenticatedResource
      */
     private $request_builder;
 
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
     public function __construct()
     {
-        $this->rest_user_manager = UserManager::build();
+        $this->rest_user_manager = RestUserManager::build();
         $this->item_dao          = new Docman_ItemDao();
         $this->request_builder   = new DocmanItemsRequestBuilder($this->rest_user_manager, ProjectManager::instance());
+        $this->event_manager = EventManager::instance();
     }
 
     /**
@@ -92,13 +105,55 @@ class DocmanItemsResource extends AuthenticatedResource
         return $item->accept($representation_visitor, ['current_user' => $items_request->getUser()]);
     }
 
-
     /**
-     * @url OPTIONS {id}/docman_items
+     * Create new item
+     *
+     * Warning: only empty items are created.
+     *
+     * @url    POST
+     * @status 201
+     *
+     * @param string $title       Item title {@from body} {@required true}
+     * @param string $description Item description {@from body} {@required false}
+     * @param int    $parent_id   Item parent id {@from body} {@required true}
+     * @param string $item_type   Item type {@choice empty} {@from body} {@required true}
+     *
+     * @access hybrid
+     *
+     * @return ItemRepresentation
+     *
+     * @throws 400
+     * @throws 403
+     * @throws 404
      */
-    public function optionsDocumentItems($id)
+    public function post($title, $description, $parent_id, $item_type)
     {
-        $this->sendAllowHeaders();
+        $this->checkAccess();
+        $this->sendAllowHeadersWithPost();
+
+        $current_user = $this->rest_user_manager->getCurrentUser();
+
+        $item_request = $this->request_builder->buildFromItemId($parent_id);
+        $parent       = $item_request->getItem();
+        $this->checkItemCanHaveSubitems($parent);
+        $project = $item_request->getProject();
+        $this->checkUserCanWriteFolder($current_user, $project, $parent_id);
+
+        $item_type_id = $this->convertItemTypeToId($item_type);
+
+        $this->addLogEvents();
+        $this->addNotificationEvents($project);
+
+        (new DocmanItemCreator(
+            $this->getPermissionManager(),
+            $this->event_manager,
+            $this->getItemFactory($project->getID())
+        ))->create($parent, $item_request->getUser(), $project, $title, $description, $item_type_id);
+    }
+
+    private function getItemFactory($group_id = null)
+    {
+        return new Docman_ItemFactory($group_id);
     }
 
     /**
@@ -108,8 +163,8 @@ class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the folder
-     * @param int $offset Position of the first element to display {@from path}{@min 0}
      * @param int $limit  Number of elements displayed {@from path}{@min 0}{@max 50}
+     * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return ItemRepresentation[]
      *
@@ -121,7 +176,7 @@ class DocmanItemsResource extends AuthenticatedResource
     {
         $this->checkAccess();
 
-        $this->sendAllowHeaders();
+        $this->sendAllowHeadersWithPost();
 
         $items_request = $this->request_builder->buildFromItemId($id);
         $folder        = $items_request->getItem();
@@ -136,6 +191,14 @@ class DocmanItemsResource extends AuthenticatedResource
         Header::sendPaginationHeaders($limit, $offset, $items_representation->getTotalSize(), self::MAX_LIMIT);
 
         return $items_representation->getPaginatedElementCollection();
+    }
+
+    /**
+     * @url OPTIONS {id}/docman_items
+     */
+    public function optionsDocumentItems($id)
+    {
+        $this->sendAllowHeadersWithPost();
     }
 
     /**
@@ -187,7 +250,7 @@ class DocmanItemsResource extends AuthenticatedResource
     }
 
     /**
-     * @throws RestException
+     * @throws I18NRestException
      */
     private function checkItemCanHaveSubitems(\Docman_Item $item)
     {
@@ -197,7 +260,10 @@ class DocmanItemsResource extends AuthenticatedResource
         } catch (ItemIsNotAFolderException $e) {
             throw new I18NRestException(
                 400,
-                dgettext('tuleap-docman', 'The item is not a folder.')
+                sprintf(
+                    dgettext('tuleap-docman', 'The item %d is not a folder.'),
+                    $item->getId()
+                )
             );
         }
     }
@@ -210,6 +276,11 @@ class DocmanItemsResource extends AuthenticatedResource
     private function getDocmanPermissionManager(\Project $project)
     {
         return \Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    private function sendAllowHeadersWithPost()
+    {
+        Header::allowOptionsGetPost();
     }
 
     private function sendAllowHeaders()
@@ -237,14 +308,84 @@ class DocmanItemsResource extends AuthenticatedResource
     private function getItemRepresentationVisitor(DocmanItemsRequest $items_request)
     {
         return new ItemRepresentationVisitor(
-            new ItemRepresentationBuilder(
-                $this->item_dao,
-                \UserManager::instance(),
-                $items_request->getFactory(),
-                \Docman_PermissionsManager::instance($items_request->getProject()->getID())
-            ),
+            $this->getItemRepresentationBuilder($items_request->getItem(), $items_request->getProject()),
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory()
         );
+    }
+
+    /**
+     * @param string $item_type Item type.
+     * @return int Item type Id.
+     */
+    private function convertItemTypeToId($item_type)
+    {
+        if ($item_type === ItemRepresentation::TYPE_EMPTY) {
+            return PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
+        }
+    }
+
+    private function getPermissionManager()
+    {
+        return \PermissionsManager::instance();
+    }
+
+    private function getItemRepresentationBuilder(Docman_Item $item, Project $project)
+    {
+        $item_representation_builder = new ItemRepresentationBuilder(
+            $this->item_dao,
+            \UserManager::instance(),
+            Docman_ItemFactory::instance($item->getGroupId()),
+            $this->getDocmanPermissionManager($project)
+        );
+        return $item_representation_builder;
+    }
+
+    /**
+     * @throws I18NRestException
+     */
+    private function checkUserCanWriteFolder(\PFUser $current_user, Project $project, $folder_id)
+    {
+        $docman_permissions_manager = $this->getDocmanPermissionManager($project);
+        if (!$docman_permissions_manager->userCanWrite($current_user, $folder_id)) {
+            throw new I18NRestException(
+                403,
+                sprintf(
+                    dgettext('tuleap-docman', "You are not allowed to write on folder with id '%d'"),
+                    $folder_id
+                )
+            );
+        }
+    }
+
+    private function addNotificationEvents(Project $project)
+    {
+        $feedback                         = new NullResponseFeedbackWrapper();
+        $notifications_builders           = new NotificationBuilders($feedback, $project, null);
+        $notification_manager             = $notifications_builders->buildNotificationManager();
+        $notification_manager_add         = $notifications_builders->buildNotificationManagerAdd();
+        $notification_manager_delete      = $notifications_builders->buildNotificationManagerDelete();
+        $notification_manager_move        = $notifications_builders->buildNotificationManagerMove();
+        $notification_manager_subscribers = $notifications_builders->buildNotificationManagerSubsribers();
+
+        $adder = new NotificationEventAdder(
+            $this->event_manager,
+            $notification_manager,
+            $notification_manager_add,
+            $notification_manager_delete,
+            $notification_manager_move,
+            $notification_manager_subscribers
+        );
+
+
+        $adder->addNotificationManagement();
+    }
+
+    private function addLogEvents()
+    {
+        $logger = new Docman_Log();
+        $adder =  new LogEventAdder($this->event_manager, $logger);
+
+        $adder->addLogEventManagement();
     }
 }

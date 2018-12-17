@@ -21,7 +21,7 @@
 
 class EventManager
 {
-    private $listeners = array();
+    private $listeners = [];
 
     /**
      * Holds an instance of the class

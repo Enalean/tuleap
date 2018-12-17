@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.2\n"
 
 msgid "Document manager"
 msgstr "Gestionnaire de documents"
@@ -33,17 +33,23 @@ msgstr "Personnes notifiées"
 msgid "Permission"
 msgstr "Permission"
 
-msgid "The item is not a folder."
-msgstr "L'objet n'est pas un dossier."
+#, php-format
+msgid "The item %d is not a folder."
+msgstr "L'objet %d n'est pas un dossier."
 
-msgid "The resource does not exist."
-msgstr "La ressource n'existe pas."
+#, php-format
+msgid "The resource %d does not exist."
+msgstr "La ressource %d n'existe pas."
 
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 
 msgid "Validate"
 msgstr "Valider"
+
+#, php-format
+msgid "You are not allowed to write on folder with id '%d'"
+msgstr "Vous n'êtes pas autorisés à écrire dans le dossier ayant pour id '%d'"
 
 msgid "{{ user_group_name }} has no global permission"
 msgstr "{{ user_group_name }} n'a pas de permissions globales"

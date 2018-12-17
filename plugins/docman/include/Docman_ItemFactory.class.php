@@ -21,6 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException;
 use Tuleap\Docman\Notifications\UgroupsToNotifyDao;
 use Tuleap\Docman\Notifications\UsersToNotifyDao;
 use Tuleap\PHPWiki\WikiPage;
@@ -816,6 +817,36 @@ class Docman_ItemFactory
         }
 
         return $id;
+    }
+
+    /**
+     * @return Docman_Item
+     * @throws CannotInstantiateItemWeHaveJustCreatedInDBException
+     */
+    public function createWithoutOrdering($title, $description, $parent_id, $status_id, $user_id, $item_type_id)
+    {
+        $row = [
+            'title'       => $title,
+            'description' => $description,
+            'parent_id'   => $parent_id,
+            'group_id'    => $this->groupId,
+            'create_date' => time(),
+            'update_date' => time(),
+            'user_id'     => $user_id,
+            'status'      => $status_id,
+            'item_type'   => $item_type_id
+
+        ];
+        $id  = $this->create($row, null);
+
+        $row['item_id'] = $id;
+        $item = $this->getItemFromRow($row);
+
+        if (! $item) {
+            throw new CannotInstantiateItemWeHaveJustCreatedInDBException();
+        }
+
+        return $item;
     }
 
     /**

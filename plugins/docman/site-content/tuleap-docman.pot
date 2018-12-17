@@ -19,16 +19,22 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
-msgid "The item is not a folder."
+#, php-format
+msgid "The item %d is not a folder."
 msgstr ""
 
-msgid "The resource does not exist."
+#, php-format
+msgid "The resource %d does not exist."
 msgstr ""
 
 msgid "User, group"
 msgstr ""
 
 msgid "Validate"
+msgstr ""
+
+#, php-format
+msgid "You are not allowed to write on folder with id '%d'"
 msgstr ""
 
 msgid "{{ user_group_name }} has no global permission"

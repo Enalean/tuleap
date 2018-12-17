@@ -38,11 +38,6 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      */
     private $docman_item_factory;
 
-    /**
-     * @var \Docman_VersionFactory
-     */
-    private $docman_version_factory;
-
     public function setUp()
     {
         echo 'Setup Docman REST Tests configuration' . PHP_EOL;
@@ -132,9 +127,9 @@ class DocmanDataBuilder extends REST_TestDataBuilder
      *                          folder 1
      *                            +
      *                            |
-     *  +---------------+---------+--------+---------------------+---------------------+--------------------+
-     *  +               +                  +                     +                     +                    +
-     *Item A          Item B             Item C             Folder 2                 Item E               Item F
+     *  +---------------+---------+--------+---------------------+---------------------+--------------------+------------+
+     *  +               +                  +                     +                     +                    +            +
+     *Item A          Item B             Item C             Folder 2                 Item E               Item F      Folder 3
      *                                                           +
      *                                                           |
      *                                                           +
@@ -154,6 +149,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
         $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
         $folder_2_id = $this->addItem($project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_3_id = $this->addItem($project, $folder_id, 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
         $item_D_id = $this->addItem($project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
@@ -182,6 +178,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->addReadPermissionOnItem($project, $item_D_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_E_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_F_id, \ProjectUGroup::PROJECT_MEMBERS);
+        $this->addReadPermissionOnItem($project, $folder_3_id, \ProjectUGroup::PROJECT_ADMIN);
     }
 
     private function addReadPermissionOnItem(Project $project, $object_id, $ugroup_name)
