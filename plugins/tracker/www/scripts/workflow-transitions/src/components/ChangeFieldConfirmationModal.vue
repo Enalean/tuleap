@@ -71,19 +71,16 @@ export default {
     },
 
     methods: {
-        confirm() {
-            this.$store
-                .dispatch("resetWorkflowTransitionsField", this.current_tracker_id)
-                .then(() => {
-                    const feedback_box = document.getElementById("feedback");
-                    const feedback_section_content = document.createElement("section");
-                    feedback_section_content.classList.add("tlp-alert-info");
-                    feedback_section_content.insertAdjacentText(
-                        "afterbegin",
-                        this.$gettext("Transitions rules was deleted. Workflow is reset.")
-                    );
-                    feedback_box.appendChild(feedback_section_content);
-                });
+        async confirm() {
+            await this.$store.dispatch("resetWorkflowTransitions", this.current_tracker_id);
+            const feedback_box = document.getElementById("feedback");
+            const feedback_section_content = document.createElement("section");
+            feedback_section_content.classList.add("tlp-alert-info");
+            feedback_section_content.insertAdjacentText(
+                "afterbegin",
+                this.$gettext("Transitions rules was deleted. Workflow is reset.")
+            );
+            feedback_box.appendChild(feedback_section_content);
         }
     }
 };

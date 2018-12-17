@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <form v-on:submit.prevent="saveWorkflowTransitionsField()">
+    <form v-on:submit.prevent="createWorkflowTransitions()">
         <section class="tlp-pane-section">
             <p
                 v-translate
@@ -89,15 +89,13 @@ export default {
     },
 
     methods: {
-        saveWorkflowTransitionsField() {
-            this.$store
-                .dispatch("saveWorkflowTransitionsField", this.selected_field.id)
-                .then(() => {
-                    const feedback_box = document.getElementById("feedback");
-                    while (feedback_box.firstChild) {
-                        feedback_box.removeChild(feedback_box.firstChild);
-                    }
-                });
+        createWorkflowTransitions() {
+            this.$store.dispatch("createWorkflowTransitions", this.selected_field.id).then(() => {
+                const feedback_box = document.getElementById("feedback");
+                while (feedback_box.firstChild) {
+                    feedback_box.removeChild(feedback_box.firstChild);
+                }
+            });
         }
     }
 };
