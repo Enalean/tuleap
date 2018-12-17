@@ -36,22 +36,18 @@ class TusServerTest extends TestCase
      */
     private $message_factory;
     private $file_provider;
-
-    public function __construct($name = null, array $data = [], $dataName = '')
-    {
-        parent::__construct($name, $data, $dataName);
-        $this->message_factory = MessageFactoryBuilder::build();
-    }
+    private $event_dispatcher;
 
     protected function setUp()
     {
-        $this->message_factory = MessageFactoryBuilder::build();
-        $this->file_provider   = \Mockery::mock(TusFileProvider::class);
+        $this->message_factory  = MessageFactoryBuilder::build();
+        $this->file_provider    = \Mockery::mock(TusFileProvider::class);
+        $this->event_dispatcher = \Mockery::mock(TusEventDispatcher::class);
     }
 
     public function testInformationAboutTheServerCanBeGathered()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
@@ -66,7 +62,7 @@ class TusServerTest extends TestCase
 
     public function testInformationAboutTheFileBeingUploadedCanBeGathered()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('HEAD');
@@ -91,7 +87,7 @@ class TusServerTest extends TestCase
      */
     public function testFileCanBeUploaded($upload_offset, $body_content, $content_type)
     {
-        $server        = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $upload_request = \Mockery::mock(ServerRequestInterface::class);
         $upload_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -112,6 +108,8 @@ class TusServerTest extends TestCase
         $destination_resource = fopen('php://memory', 'rb+');
         $file->shouldReceive('getStream')->andReturns($destination_resource);
         $this->file_provider->shouldReceive('getFile')->andReturns($file);
+
+        $this->event_dispatcher->shouldReceive('dispatch')->with(TusEvent::UPLOAD_COMPLETED, \Mockery::any())->once();
 
         $response = $server->handle($upload_request);
 
@@ -135,7 +133,7 @@ class TusServerTest extends TestCase
 
     public function testRequestWithANonSupportedVersionOfTheProtocolIsRejected()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $this->file_provider->shouldReceive('getFile')->andReturns(\Mockery::mock(TusFile::class));
 
@@ -150,7 +148,7 @@ class TusServerTest extends TestCase
 
     public function testAnUploadRequestWithAnIncorrectOffsetIsRejected()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -170,7 +168,7 @@ class TusServerTest extends TestCase
 
     public function testAnUploadRequestWithoutTheOffsetIsRejected()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -188,7 +186,7 @@ class TusServerTest extends TestCase
     public function testAnUploadRequestWithAnIncorrectContentTypeIsRejected()
     {
         $file_provider = \Mockery::mock(TusFileProvider::class);
-        $server = new TusServer($this->message_factory, $file_provider);
+        $server = new TusServer($this->message_factory, $file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -204,7 +202,7 @@ class TusServerTest extends TestCase
 
     public function testAnErrorIsGivenWhenTheFileCanNotBeSaved()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
@@ -234,7 +232,7 @@ class TusServerTest extends TestCase
 
     public function testANotFoundErrorIsGivenWhenTheFileCanNotBeProvided()
     {
-        $server = new TusServer($this->message_factory, $this->file_provider);
+        $server = new TusServer($this->message_factory, $this->file_provider, $this->event_dispatcher);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
         $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');

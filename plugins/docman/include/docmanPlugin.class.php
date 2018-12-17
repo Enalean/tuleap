@@ -1256,7 +1256,13 @@ class DocmanPlugin extends Plugin
         if (ForgeConfig::get('enable_tus_test_endpoint')) {
             $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file', function () {
                 return new \Tuleap\Docman\Upload\FileUploadController(
-                    new TusServer(MessageFactoryBuilder::build(), new DocumentToUploadProvider('/tmp')),
+                    new TusServer(
+                        MessageFactoryBuilder::build(),
+                        new DocumentToUploadProvider('/tmp'),
+                        new \Tuleap\Docman\Tus\GenericTusEventDispatcher(
+                            new \Tuleap\Docman\Upload\DocumentUploaded(new BackendLogger())
+                        )
+                    ),
                     new \Tuleap\Docman\Tus\TusCORSMiddleware(),
                     new \Tuleap\REST\TuleapRESTCORSMiddleware(),
                     \Tuleap\REST\UserManager::build(),
