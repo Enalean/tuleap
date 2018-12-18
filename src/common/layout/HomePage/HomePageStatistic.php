@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Layout\HomePage;
+namespace Tuleap\layout\HomePage;
 
 class HomePageStatistic
 {
