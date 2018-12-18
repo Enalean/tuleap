@@ -34,7 +34,12 @@
             Transition rules don't apply yet.
         </div>
 
-        <div v-if="is_current_tracker_load_failed" v-translate class="tlp-alert-danger">
+        <div
+            v-if="is_current_tracker_load_failed"
+            class="tlp-alert-danger"
+            data-test-type="tracker-load-error-message"
+            v-translate
+        >
             Tracker cannot be loaded
         </div>
         <template v-else>
@@ -54,7 +59,10 @@
                         <first-configuration-sections v-else/>
                     </template>
                     <section class="tlp-pane-section" v-else>
-                        <div class="tracker-workflow-loader"></div>
+                        <div
+                            class="tracker-workflow-loader"
+                            data-test-type="tracker-load-spinner"
+                        ></div>
                     </section>
                 </div>
             </section>
@@ -93,12 +101,12 @@ export default {
         ]),
         ...mapGetters(["are_transition_rules_enforced"]),
         is_tracker_available() {
-            return !this.is_current_tracker_loading && this.current_tracker;
+            return !this.is_current_tracker_loading && Boolean(this.current_tracker);
         },
         is_base_field_configured() {
             return (
-                this.current_tracker &&
-                this.current_tracker.workflow &&
+                Boolean(this.current_tracker) &&
+                Boolean(this.current_tracker.workflow) &&
                 Boolean(this.current_tracker.workflow.field_id)
             );
         },

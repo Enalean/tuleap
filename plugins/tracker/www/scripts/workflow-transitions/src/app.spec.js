@@ -20,8 +20,11 @@
 import "tlp-mocks";
 
 import "./api/rest-querier.spec.js";
+import "./components/BaseTrackerWorkflowTransitions.spec.js";
+import "./components/FirstConfigurationSections.spec.js";
 import "./components/TransitionMatrixContent.spec.js";
 
 import "./store/actions.spec.js";
 import "./store/exceptionHandler.spec.js";
+import "./store/getters.spec.js";
 import "./store/mutations.spec.js";
