@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,16 +23,12 @@ namespace Tuleap\Git\HTTP;
 
 use HTTPRequest;
 use Project;
-use Tuleap\Git\Gerrit\ReplicationHTTPUserAuthenticator;
 use Tuleap\Git\Gitolite\VersionDetector;
-use Tuleap\Git\RemoteServer\Gerrit\HttpUserValidator;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\User\PasswordVerifier;
-use UserDao;
 
 class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWithProject
 {
@@ -106,17 +102,7 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
         return $project;
     }
 
-    /**
-     * @param \URLVerification $url_verification
-     * @param HTTPRequest $request
-     * @param array $variables
-
-     * @throws NotFoundException
-     * @throws ForbiddenException
-
-     * @return bool
-     */
-    public function userCanAccess(\URLVerification $url_verification, HTTPRequest $request, array $variables)
+    private function checkUserCanAccess(array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('git');
 
@@ -139,12 +125,10 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
             $_SERVER['REQUEST_URI']
         );
 
-        $this->user = $this->http_access_control->getUser($url_verification, $this->repository, $this->url);
+        $this->user = $this->http_access_control->getUser($this->repository, $this->url);
         if ($this->user === false) {
             throw new ForbiddenException(dgettext('tuleap-git', 'User cannot access repository'));
         }
-
-        return true;
     }
 
     /**
@@ -158,6 +142,8 @@ class HTTPController implements DispatchableWithRequestNoAuthz, DispatchableWith
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        $this->checkUserCanAccess($variables);
+
         $http_wrapper = new \Git_HTTP_Wrapper($this->logger);
         $http_wrapper->stream($this->http_command_factory->getCommandForUser($this->url, $this->user));
     }

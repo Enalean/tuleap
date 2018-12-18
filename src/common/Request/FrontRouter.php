@@ -89,13 +89,8 @@ class FrontRouter
                         }
                         $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
 
-                        $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
                         if ($handler instanceof DispatchableWithRequestNoAuthz) {
-                            if ($handler->userCanAccess($url_verification, $request, $route_info[2])) {
-                                $handler->process($request, $layout, $route_info[2]);
-                            } else {
-                                throw new ForbiddenException();
-                            }
+                            $handler->process($request, $layout, $route_info[2]);
                         } else {
                             $project = null;
                             if ($handler instanceof DispatchableWithProject) {
@@ -104,6 +99,7 @@ class FrontRouter
                                     throw new \RuntimeException('DispatchableWithProject::getProject must return a project, null received');
                                 }
                             }
+                            $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
                             $url_verification->assertValidUrl($_SERVER, $request, $project);
 
                             if ($handler instanceof DispatchableWithRequest) {

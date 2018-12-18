@@ -1,6 +1,6 @@
 <?php
 /**
-  * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+  * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
   *
   * This file is a part of Tuleap.
   *
@@ -18,14 +18,41 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-class ForgeAccess {
-    const SUPER_PUBLIC_PROJECTS = 'super_public_projects';
+declare(strict_types=1);
 
-    const ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
-    const ANONYMOUS_CAN_SEE_CONTACT       = 'anonymous_can_see_contact';
+class ForgeAccess
+{
+    public const SUPER_PUBLIC_PROJECTS = 'super_public_projects';
 
-    const CONFIG     = 'access_mode';
-    const ANONYMOUS  = 'anonymous';
-    const REGULAR    = 'regular';
-    const RESTRICTED = 'restricted';
+    public const ANONYMOUS_CAN_SEE_SITE_HOMEPAGE = 'anonymous_can_see_site_homepage';
+    public const ANONYMOUS_CAN_SEE_CONTACT       = 'anonymous_can_see_contact';
+
+    public const CONFIG     = 'access_mode';
+    public const ANONYMOUS  = 'anonymous';
+    public const REGULAR    = 'regular';
+    public const RESTRICTED = 'restricted';
+
+    /**
+     * @var PermissionsOverrider_PermissionsOverriderManager
+     */
+    private $permissions_overrider_manager;
+
+    public function __construct(PermissionsOverrider_PermissionsOverriderManager $permissions_overrider_manager)
+    {
+        $this->permissions_overrider_manager = $permissions_overrider_manager;
+    }
+
+    public function doesPlatformRequireLogin() : bool
+    {
+        if (ForgeConfig::areAnonymousAllowed() && ! $this->permissions_overrider_manager->doesOverriderForceUsageOfAnonymous()) {
+            return false;
+        }
+
+        $anonymous_user = new PFUser(['user_id' => 0]);
+        if ($this->permissions_overrider_manager->doesOverriderAllowUserToAccessPlatform($anonymous_user)) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -38,12 +38,4 @@ namespace Tuleap\Request;
  */
 interface DispatchableWithRequestNoAuthz extends DispatchableWithRequest
 {
-    /**
-     * @param \URLVerification $url_verification
-     * @param \HTTPRequest $request
-     * @param array $variables
-     *
-     * @return boolean Whether access is granted or not
-     */
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables);
 }

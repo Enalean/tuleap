@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,9 +27,9 @@ use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
-use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class LFSBatchController implements DispatchableWithRequestNoAuthz
@@ -51,20 +51,6 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
      */
     private $batch_successful_response_builder;
     /**
-     * @var \GitRepository
-     */
-    private $repository;
-    /**
-     * @var BatchRequest
-     */
-    private $batch_request;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
-
-    /**
      * @var UserRetriever
      */
     private $user_retriever;
@@ -85,39 +71,14 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        try {
-            $response = $this->batch_successful_response_builder->build(
-                new \DateTimeImmutable(),
-                $request->getServerUrl(),
-                $this->repository,
-                $this->batch_request->getOperation(),
-                ...$this->batch_request->getObjects()
-            );
-        } catch (UnknownOperationException $ex) {
-            http_response_code(501);
-            echo json_encode(['message' => $ex->getMessage()]);
-            return;
-        }
-
-        echo json_encode($response);
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->batch_request !== null || $this->user !== null) {
-            throw new \RuntimeException(
-                'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
-            );
-        }
 
-        $this->repository = $this->repository_factory->getByProjectNameAndPath(
+        $repository = $this->repository_factory->getByProjectNameAndPath(
             $variables['project_name'],
             $variables['path']
         );
-        $project = $this->repository->getProject();
-        if ($this->repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
-            ! $this->repository->isCreated()) {
+        if ($repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
@@ -126,17 +87,37 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException('Can not read the body of the request');
         }
         try {
-            $this->batch_request = BatchRequest::buildFromJSONString($json_string);
+            $batch_request = BatchRequest::buildFromJSONString($json_string);
         } catch (IncorrectlyFormattedBatchRequestException $exception) {
             throw new \RuntimeException($exception->getMessage(), 400);
         }
 
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->batch_request);
+        $user = $this->user_retriever->retrieveUser($request, $repository, $batch_request);
 
-        return $this->api_access_control->canAccess(
-            $this->repository,
-            $this->batch_request,
-            $this->user
+        $user_can_access = $this->api_access_control->canAccess(
+            $repository,
+            $batch_request,
+            $user
         );
+        if (! $user_can_access) {
+            throw new ForbiddenException();
+        }
+
+
+        try {
+            $response = $this->batch_successful_response_builder->build(
+                new \DateTimeImmutable(),
+                $request->getServerUrl(),
+                $repository,
+                $batch_request->getOperation(),
+                ...$batch_request->getObjects()
+            );
+        } catch (UnknownOperationException $ex) {
+            http_response_code(501);
+            echo json_encode(['message' => $ex->getMessage()]);
+            return;
+        }
+
+        echo json_encode($response);
     }
 }

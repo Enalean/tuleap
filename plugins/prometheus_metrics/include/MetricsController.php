@@ -54,6 +54,8 @@ class MetricsController implements DispatchableWithRequestNoAuthz
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        $this->checkUserCanAccess();
+
         header('Content-type: ' . RenderTextFormat::MIME_TYPE);
 
         echo $this->getTuleapMetrics();
@@ -93,14 +95,7 @@ class MetricsController implements DispatchableWithRequestNoAuthz
         }
     }
 
-    /**
-     * @param \URLVerification $url_verification
-     * @param \HTTPRequest $request
-     * @param array $variables
-     *
-     * @return boolean Whether access is granted or not
-     */
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
+    private function checkUserCanAccess()
     {
         if (! isset($_SERVER['PHP_AUTH_USER']) ||
             $_SERVER['PHP_AUTH_USER'] == '' ||
@@ -111,7 +106,7 @@ class MetricsController implements DispatchableWithRequestNoAuthz
         }
 
         if ($_SERVER['PHP_AUTH_USER'] === 'metrics' && hash_equals($_SERVER['PHP_AUTH_PW'], $this->getSecret())) {
-            return true;
+            return;
         }
         $this->basicAuthenticationChallenge();
     }

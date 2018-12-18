@@ -91,11 +91,10 @@ class FrontRouterTest extends TestCase
         $this->router->route($this->request, $this->layout);
     }
 
-    public function testItDispatchRequestWithoutAuthzWhenUserCanAccess()
+    public function testItDispatchRequestWithoutAuthz()
     {
         $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
 
-        $handler->shouldReceive('userCanAccess')->once()->andReturn(true);
         $handler->shouldReceive('process')->once();
 
         $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn(Mockery::mock(\URLVerification::class));
@@ -106,30 +105,6 @@ class FrontRouterTest extends TestCase
             });
             return true;
         }));
-
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_SERVER['REQUEST_URI']    = '/stuff';
-
-        $this->router->route($this->request, $this->layout);
-    }
-
-    public function testItDispatchRequestWithoutAuthzWhenUserCannotAccess()
-    {
-        $handler = \Mockery::mock(DispatchableWithRequestNoAuthz::class);
-
-        $handler->shouldReceive('userCanAccess')->once()->andReturn(false);
-        $handler->shouldReceive('process')->never();
-
-        $this->url_verification_factory->shouldReceive('getURLVerification')->andReturn(Mockery::mock(\URLVerification::class));
-
-        $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler) {
-            $r->get('/stuff', function () use ($handler) {
-                return $handler;
-            });
-            return true;
-        }));
-
-        $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 403, Mockery::any(), Mockery::any());
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';

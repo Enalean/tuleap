@@ -66,20 +66,21 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
             $this->authorization_verifier
         );
 
-        $store = \Mockery::mock(AuthorizedActionStore::class);
-        $store->shouldReceive('keepAuthorizedAction')->once();
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('valid_auth');
 
-        $this->assertTrue($access_checker->userCanAccess(
-            $store,
+        $authorized_action = $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
             'oid'
-        ));
+        );
+        $this->assertInstanceOf(AuthorizedAction::class, $authorized_action);
     }
 
+    /**
+     * @expectedException \Tuleap\Request\ForbiddenException
+     */
     public function testRequestWithoutAuthorizationIsDenied()
     {
         $access_checker = new LFSActionUserAccessHTTPRequestChecker(
@@ -92,14 +93,16 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns(false);
 
-        $this->assertFalse($access_checker->userCanAccess(
-            \Mockery::mock(AuthorizedActionStore::class),
+        $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
             'oid'
-        ));
+        );
     }
 
+    /**
+     * @expectedException \Tuleap\Request\ForbiddenException
+     */
     public function testRequestWithAnIncorrectlyFormattedAuthorizationIsDenied()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
@@ -115,14 +118,16 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('incorrectly_formatted_header');
 
-        $this->assertFalse($access_checker->userCanAccess(
-            \Mockery::mock(AuthorizedActionStore::class),
+        $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
             'oid'
-        ));
+        );
     }
 
+    /**
+     * @expectedException \Tuleap\Request\ForbiddenException
+     */
     public function testRequestWithAnInvalidAuthorizationIsDenied()
     {
         $this->authorization_token_unserializer->shouldReceive('getSplitToken')
@@ -140,12 +145,11 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
         $request->shouldReceive('getFromServer')->with('HTTP_AUTHORIZATION')
             ->andReturns('invalid_authorization');
 
-        $this->assertFalse($access_checker->userCanAccess(
-            \Mockery::mock(AuthorizedActionStore::class),
+        $access_checker->userCanAccess(
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
             'oid'
-        ));
+        );
     }
 
     /**
@@ -170,7 +174,6 @@ class LFSActionUserAccessHTTPRequestCheckerTest extends TestCase
             ->andReturns('valid_auth');
 
         $access_checker->userCanAccess(
-            \Mockery::mock(AuthorizedActionStore::class),
             $request,
             \Mockery::mock(ActionAuthorizationType::class),
             'oid'
