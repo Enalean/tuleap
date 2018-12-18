@@ -78,6 +78,11 @@ class ItemRepresentation
     public $link_properties;
 
     /**
+     * @var WikiPropertiesRepresentation | null
+     */
+    public $wiki_properties;
+
+    /**
     * @var int {@type int}
     */
     public $parent_id;
@@ -89,7 +94,8 @@ class ItemRepresentation
         $type,
         FilePropertiesRepresentation $file_properties = null,
         EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
-        LinkPropertiesRepresentation $link_properties = null
+        LinkPropertiesRepresentation $link_properties = null,
+        WikiPropertiesRepresentation $wiki_properties = null
     ) {
         $this->id                       = JsonCast::toInt($item->getId());
         $this->title                    = $item->getTitle();
@@ -100,6 +106,7 @@ class ItemRepresentation
         $this->file_properties          = $file_properties;
         $this->embedded_file_properties = $embedded_file_properties;
         $this->link_properties          = $link_properties;
+        $this->wiki_properties          = $wiki_properties;
 
 
         $parent_id = JsonCast::toInt($item->getParentId());

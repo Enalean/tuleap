@@ -71,13 +71,20 @@ class ItemRepresentationVisitor implements ItemVisitor
 
     public function visitWiki(Docman_Wiki $item, array $params = [])
     {
+        $wiki_representation = null;
+        if ($item->getPagename() !== null) {
+            $wiki_representation = new WikiPropertiesRepresentation();
+            $wiki_html_url       = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item->getId());
+            $wiki_representation->build($item, $wiki_html_url);
+        }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_WIKI,
             null,
             null,
-            null
+            null,
+            $wiki_representation
         );
     }
 
@@ -95,7 +102,8 @@ class ItemRepresentationVisitor implements ItemVisitor
             ItemRepresentation::TYPE_LINK,
             null,
             null,
-            $link_properties
+            $link_properties,
+            null
         );
     }
 
@@ -113,6 +121,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $params['current_user'],
             ItemRepresentation::TYPE_FILE,
             $file_properties,
+            null,
             null,
             null
         );
@@ -133,6 +142,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             ItemRepresentation::TYPE_EMBEDDED,
             null,
             $file_embedded_properties,
+            null,
             null
         );
     }
@@ -143,6 +153,7 @@ class ItemRepresentationVisitor implements ItemVisitor
             $item,
             $params['current_user'],
             ItemRepresentation::TYPE_EMPTY,
+            null,
             null,
             null,
             null

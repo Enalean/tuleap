@@ -90,7 +90,8 @@ class ItemRepresentationBuilder
         $type,
         FilePropertiesRepresentation $file_properties = null,
         EmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
-        LinkPropertiesRepresentation $link_properties = null
+        LinkPropertiesRepresentation $link_properties = null,
+        WikiPropertiesRepresentation $wiki_properties = null
     ) {
         $owner               = $this->user_manager->getUserById($item->getOwnerId());
         $user_representation = new MinimalUserRepresentation();
@@ -106,7 +107,8 @@ class ItemRepresentationBuilder
             $type,
             $file_properties,
             $embedded_file_properties,
-            $link_properties
+            $link_properties,
+            $wiki_properties
         );
 
         return $item_representation;

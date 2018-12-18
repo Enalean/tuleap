@@ -199,7 +199,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($docman_version_item3->getItemId())
         );
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item3, $user, ItemRepresentation::TYPE_FILE, Mockery::any(), null, null])
+            ->withArgs([$docman_item3, $user, ItemRepresentation::TYPE_FILE, Mockery::any(), null, null, null])
             ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildFolderContent($item, $user, 50, 0);
