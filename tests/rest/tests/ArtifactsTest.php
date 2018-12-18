@@ -69,56 +69,56 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
 
     public function testComputedFieldsCalculation()
     {
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_one_artifact_ids[1],
             10,
             25,
             20,
             33
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_two_artifact_ids[1],
             null,
             25,
             15,
             33
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_two_artifact_ids[2],
             null,
             null,
             5,
             null
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[1],
             null,
             null,
             5,
             11
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[2],
             10,
             10,
             5,
             22
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_three_artifact_ids[3],
             null,
             null,
             5,
             null
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_four_artifact_ids[1],
             null,
             15,
             5,
             null
         );
-        $this->testComputedFieldValueForArtifactId(
+        $this->checkComputedFieldValueForArtifactId(
             $this->level_four_artifact_ids[2],
             null,
             10,
@@ -127,12 +127,12 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         );
     }
 
-    public function testComputedFieldValueForArtifactId(
-        $artifact_id = null,
-        $capacity_slow_compute_value = null,
-        $capacity_fast_compute_value = null,
-        $remaining_effort_value = null,
-        $total_effort_value = null
+    private function checkComputedFieldValueForArtifactId(
+        $artifact_id,
+        $capacity_slow_compute_value,
+        $capacity_fast_compute_value,
+        $remaining_effort_value,
+        $total_effort_value
     ) {
         if ($artifact_id !== null) {
             $response = $this->getResponse($this->client->get("artifacts/$artifact_id"));
@@ -381,12 +381,14 @@ class ArtifactsTest extends ArtifactBase  // @codingStandardsIgnoreLine
         $this->assertCount(count($existing_artifact_ids), $artifacts['collection']);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testGetTooManyArtifacts()
     {
         $too_many_artifacts_id = array_fill(0, 10000, 1);
         $query                 = json_encode(array('id' => $too_many_artifacts_id));
 
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
         $this->assertEquals($response->getStatusCode(), 403);
     }

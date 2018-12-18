@@ -33,8 +33,10 @@ class DocmanItemsTest extends DocmanBase
     public function testGetRootId()
     {
         $project_response = $this->getResponse($this->client->get('projects/' . $this->project_id));
-        $json_projects = $project_response->json();
 
+        $this->assertSame(200, $project_response->getStatusCode());
+
+        $json_projects = $project_response->json();
         return $json_projects['additional_informations']['docman']['root_item']['id'];
     }
 

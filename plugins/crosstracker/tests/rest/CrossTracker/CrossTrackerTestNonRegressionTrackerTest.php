@@ -24,17 +24,21 @@ use RestBase;
 
 class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 {
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testItThrowsAnExceptionWhenReportIsNotFound()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse($this->client->get('cross_tracker_reports/100'));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testItThrowsAnExceptionWhenMoreThan10Trackers()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $params   = array(
             "trackers_id" => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
         );
@@ -43,9 +47,11 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testItThrowsAnExceptionWhenATrackerIsNotFoundOnePlatform()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $params   = array(
             "trackers_id" => array(1001)
         );
@@ -54,9 +60,11 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 404);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testItThrowsAnExceptionWhenTrackerIsDuplicateInList()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $params   = array(
             "trackers_id" => array($this->epic_tracker_id, $this->epic_tracker_id)
         );
@@ -65,9 +73,11 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testItDoesNotAddTrackersUserCantView()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $params   = array(
             "trackers_id" => array($this->epic_tracker_id, $this->kanban_tracker_id)
         );
@@ -76,6 +86,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArray()
     {
         $query = json_encode(
@@ -84,7 +97,6 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
             )
         );
 
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse(
             $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
@@ -92,6 +104,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArrayOfInt()
     {
         $query = json_encode(
@@ -100,7 +115,6 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
             )
         );
 
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse(
             $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
@@ -108,13 +122,15 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotSent()
     {
         $query = json_encode(
             array("toto")
         );
 
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponse(
             $this->client->get('cross_tracker_reports/1/content?limit=50&offset=0&query=' . urlencode($query))
         );
@@ -122,17 +138,21 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testYouCantAccessPersonalReportOfAnOtherUser()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/2'));
 
         $this->assertEquals($response->getStatusCode(), 403);
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     */
     public function testYouCantAccessProjectReportOfProjectYouCantSee()
     {
-        $this->setExpectedException('Guzzle\Http\Exception\ClientErrorResponseException');
         $response = $this->getResponseForNonProjectMember($this->client->get('cross_tracker_reports/3'));
 
         $this->assertEquals($response->getStatusCode(), 403);
