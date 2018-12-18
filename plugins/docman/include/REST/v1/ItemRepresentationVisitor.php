@@ -20,7 +20,6 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-use Codendi_HTMLPurifier;
 use Docman_EmbeddedFile;
 use Docman_Empty;
 use Docman_File;
@@ -86,8 +85,9 @@ class ItemRepresentationVisitor implements ItemVisitor
         $latest_link_version = $this->docman_link_version_factory->getLatestVersion($item);
         $link_properties     = null;
         if ($latest_link_version) {
+            $docman_link     = $this->buildDocmanUrl($item->getGroupId(), $latest_link_version->getItemId());
             $link_properties = new LinkPropertiesRepresentation();
-            $link_properties->build($latest_link_version);
+            $link_properties->build($latest_link_version, $docman_link);
         }
         return $this->item_representation_builder->buildItemRepresentation(
             $item,
@@ -105,7 +105,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $file_properties = null;
         if ($item_version) {
             $file_properties = new FilePropertiesRepresentation();
-            $download_url    = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item_version->getItemId());
+            $download_url    = $this->buildDocmanUrl($item->getGroupId(), $item_version->getItemId());
             $file_properties->build($item_version, $download_url);
         }
         return $this->item_representation_builder->buildItemRepresentation(
@@ -152,5 +152,10 @@ class ItemRepresentationVisitor implements ItemVisitor
     public function visitItem(Docman_Item $item, array $params = [])
     {
         return $this->item_representation_builder->buildItemRepresentation($item, null, null);
+    }
+
+    private function buildDocmanUrl($projectId, $itemId)
+    {
+        return '/plugins/docman/?group_id=' . urlencode($projectId) . '&action=show&id=' . urlencode($itemId);
     }
 }

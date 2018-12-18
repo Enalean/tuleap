@@ -37,7 +37,7 @@ export default {
     },
     computed: {
         document_link_url() {
-            return this.item.link_properties.link_url;
+            return this.item.link_properties.html_url;
         }
     }
 };

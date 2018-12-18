@@ -29,8 +29,14 @@ class LinkPropertiesRepresentation
      */
     public $link_url;
 
-    public function build(\Docman_LinkVersion $docman_link)
+    /**
+     * @var string
+     */
+    public $html_url;
+
+    public function build(\Docman_LinkVersion $docman_link, $html_url)
     {
         $this->link_url = $docman_link->getLink();
+        $this->html_url = $html_url;
     }
 }
