@@ -18,7 +18,7 @@
  */
 
 const path = require("path");
-const webpack_config = require("../webpack.config.js")[2];
+const webpack_config = require("../webpack.config.js")[0];
 const karma_configurator = require("../../../../../tools/utils/scripts/karma-configurator.js");
 
 webpack_config.mode = "development";
@@ -34,9 +34,9 @@ module.exports = function(config) {
     );
 
     Object.assign(base_config, {
-        files: ["src/app.spec.js"],
+        files: [karma_configurator.jasmine_promise_matchers_path, "src/index.spec.js"],
         preprocessors: {
-            "src/app.spec.js": ["webpack"]
+            "src/index.spec.js": ["webpack"]
         }
     });
 

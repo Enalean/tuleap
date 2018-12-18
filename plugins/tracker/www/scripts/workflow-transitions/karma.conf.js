@@ -25,14 +25,16 @@ webpack_config.mode = "development";
 
 module.exports = function(config) {
     const coverage_dir = path.resolve(__dirname, "../coverage");
+    const coverage_folder_name = path.basename(__dirname);
     const base_config = karma_configurator.setupBaseKarmaConfig(
         config,
         webpack_config,
-        coverage_dir
+        coverage_dir,
+        coverage_folder_name
     );
 
     Object.assign(base_config, {
-        files: [karma_configurator.jasmine_promise_matchers_path, "src/app.spec.js"],
+        files: ["src/app.spec.js"],
         preprocessors: {
             "src/app.spec.js": ["webpack"]
         }
