@@ -35,11 +35,19 @@ final class TusServer implements RequestHandlerInterface
      * @var TusFileProvider
      */
     private $file_provider;
+    /**
+     * @var TusEventDispatcher
+     */
+    private $event_dispatcher;
 
-    public function __construct(ResponseFactory $response_factory, TusFileProvider $file_provider)
-    {
+    public function __construct(
+        ResponseFactory $response_factory,
+        TusFileProvider $file_provider,
+        TusEventDispatcher $event_dispatcher
+    ) {
         $this->response_factory = $response_factory;
-        $this->file_provider = $file_provider;
+        $this->file_provider    = $file_provider;
+        $this->event_dispatcher = $event_dispatcher;
     }
 
     /**
@@ -117,7 +125,7 @@ final class TusServer implements RequestHandlerInterface
     /**
      * @return \Psr\Http\Message\ResponseInterface
      */
-    private function processPatch(\Psr\Http\Message\RequestInterface $request, TusFile $file)
+    private function processPatch(\Psr\Http\Message\ServerRequestInterface $request, TusFile $file)
     {
         $content_type_header         = $request->getHeaderLine('Content-Type');
         $found_expected_content_type = false;
@@ -145,6 +153,7 @@ final class TusServer implements RequestHandlerInterface
             throw new CannotWriteFileException();
         }
 
+        $this->event_dispatcher->dispatch(TusEvent::UPLOAD_COMPLETED, $request);
         return $this->response_factory->createResponse(204)
             ->withHeader('Upload-Offset', $file->getOffset() + $copied_size);
     }
