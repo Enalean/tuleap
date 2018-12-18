@@ -30,7 +30,7 @@
 <script>
 import { mapState } from "vuex";
 import UserBadge from "../User/UserBadge.vue";
-import { TYPE_FOLDER, TYPE_LINK, TYPE_FILE } from "../../constants.js";
+import { TYPE_FOLDER, TYPE_LINK, TYPE_FILE, TYPE_WIKI } from "../../constants.js";
 import moment from "moment";
 import phptomoment from "phptomoment";
 
@@ -64,6 +64,7 @@ export default {
                 case TYPE_FOLDER:
                 case TYPE_LINK:
                 case TYPE_FILE:
+                case TYPE_WIKI:
                     name = this.item.type;
                     name = name.charAt(0).toUpperCase() + name.slice(1);
                     break;

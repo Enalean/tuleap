@@ -22,28 +22,22 @@
 <template>
     <td>
         <i class="fa fa-fw"></i>
-        <i class="fa fa-fw" v-bind:class="icon_class"></i>
-        {{ item.title }}
+        <i class="fa fa-fw fa-wikipedia-w document-wiki-icon"></i>
+        <a v-bind:href="wiki_html_url" class="document-folder-subitem-link">
+            {{ item.title }}
+        </a>
     </td>
 </template>
 
 <script>
-import { TYPE_EMBEDDED, TYPE_EMPTY } from "../../../constants.js";
-
 export default {
-    name: "DocumentCellTitle",
+    name: "WikiCellTitle",
     props: {
         item: Object
     },
     computed: {
-        icon_class() {
-            switch (this.item.type) {
-                case TYPE_EMBEDDED:
-                    return "fa-file-text document-text-icon";
-                case TYPE_EMPTY:
-                default:
-                    return "fa-file-o document-empty-icon";
-            }
+        wiki_html_url() {
+            return this.item.wiki_properties.html_url;
         }
     }
 };
