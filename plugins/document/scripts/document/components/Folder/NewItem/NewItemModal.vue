@@ -98,9 +98,9 @@
 </template>
 
 <script>
-export default {
-    name: "NewDocumentModal",
+import { modal as createModal } from "tlp";
 
+export default {
     computed: {
         title_placeholder() {
             return this.$gettext("My document");
@@ -108,6 +108,16 @@ export default {
         describe_placeholder() {
             return this.$gettext("My useful document description");
         }
+    },
+    mounted() {
+        const modal = createModal(this.$el);
+        const show = () => {
+            modal.show();
+        };
+        document.addEventListener("show-new-document-modal", show);
+        this.$once("hook:beforeDestroy", () => {
+            document.removeEventListener("show-new-document-modal", show);
+        });
     }
 };
 </script>
