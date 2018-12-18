@@ -29,12 +29,15 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_Log;
 use EventManager;
+use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
+use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -120,11 +123,10 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @access hybrid
      *
-     * @return ItemRepresentation
-     *
      * @throws 400
      * @throws 403
      * @throws 404
+     * @throws 409
      */
     public function post($title, $description, $parent_id, $item_type)
     {
@@ -138,6 +140,11 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
         $this->checkUserCanWriteFolder($current_user, $project, $parent_id);
+
+        $document_ongoing_upload_retriever = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
+        if ($document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing($parent, $title, new \DateTimeImmutable())) {
+            throw new RestException(409, 'A document is already being uploaded for this item');
+        }
 
         $item_type_id = $this->convertItemTypeToId($item_type);
 

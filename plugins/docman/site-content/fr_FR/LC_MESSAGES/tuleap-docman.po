@@ -41,6 +41,9 @@ msgstr "L'objet %d n'est pas un dossier."
 msgid "The resource %d does not exist."
 msgstr "La ressource %d n'existe pas."
 
+msgid "There is already a document being uploaded for this item"
+msgstr "Il y a déjà un document en cours de téléversement pour cet élément"
+
 msgid "User, group"
 msgstr "Utilisateur, groupe"
 
