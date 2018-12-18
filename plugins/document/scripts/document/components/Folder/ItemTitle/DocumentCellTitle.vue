@@ -21,7 +21,7 @@
 
 <template>
     <td>
-        <i class="fa fa-fw"></i>
+        <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw" v-bind:class="icon_class"></i>
         {{ item.title }}
     </td>
@@ -29,9 +29,11 @@
 
 <script>
 import { TYPE_EMBEDDED, TYPE_EMPTY } from "../../../constants.js";
+import FakeCaret from "./FakeCaret.vue";
 
 export default {
     name: "DocumentCellTitle",
+    components: { FakeCaret },
     props: {
         item: Object
     },

@@ -18,29 +18,31 @@
   -
   -
   -->
-
 <template>
-    <td>
-        <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw fa-link document-link-icon"></i>
-        <a v-bind:href="document_link_url" class="document-folder-subitem-link">
-            {{ item.title }}
-        </a>
-    </td>
+    <i class="fa fa-fw" v-if="can_be_displayed"></i>
 </template>
-
 <script>
-import FakeCaret from "./FakeCaret.vue";
+import { mapState } from "vuex";
+import { TYPE_FOLDER } from "../../../constants";
 
 export default {
-    name: "LinkCellTitle",
-    components: { FakeCaret },
     props: {
         item: Object
     },
     computed: {
-        document_link_url() {
-            return this.item.link_properties.html_url;
+        ...mapState(["current_folder", "folder_content"]),
+        is_item_in_current_folder() {
+            return this.item.parent_id === this.current_folder.id;
+        },
+        is_item_sibling_of_a_folder() {
+            return Boolean(
+                this.folder_content.find(
+                    item => item.parent_id === this.current_folder.id && item.type === TYPE_FOLDER
+                )
+            );
+        },
+        can_be_displayed() {
+            return !this.is_item_in_current_folder || this.is_item_sibling_of_a_folder;
         }
     }
 };

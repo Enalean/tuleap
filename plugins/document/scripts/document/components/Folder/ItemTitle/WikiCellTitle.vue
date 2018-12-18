@@ -21,7 +21,7 @@
 
 <template>
     <td>
-        <i class="fa fa-fw"></i>
+        <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw fa-wikipedia-w document-wiki-icon"></i>
         <a v-bind:href="wiki_html_url" class="document-folder-subitem-link">
             {{ item.title }}
@@ -30,8 +30,11 @@
 </template>
 
 <script>
+import FakeCaret from "./FakeCaret.vue";
+
 export default {
     name: "WikiCellTitle",
+    components: { FakeCaret },
     props: {
         item: Object
     },
