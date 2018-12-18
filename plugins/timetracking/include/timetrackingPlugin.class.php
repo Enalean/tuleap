@@ -66,7 +66,7 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
         $this->addHook(\Tuleap\Widget\Event\UserTimeRetriever::NAME);
         $this->addHook(\Tuleap\REST\Event\GetAdditionalCriteria::NAME);
-        $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
+        $this->addHook(\Tuleap\widget\Event\GetProjectsWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);

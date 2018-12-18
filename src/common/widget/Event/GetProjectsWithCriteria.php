@@ -22,7 +22,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Widget\Event;
+namespace Tuleap\widget\Event;
 
 use Project;
 use Tuleap\Project\PaginatedProjects;
