@@ -74,6 +74,8 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; form-action 'none';");
         header('X-DNS-Prefetch-Control: off');
 
+        ob_end_flush();
+
         fpassthru($this->filesystem->readStream($object_path));
     }
 
