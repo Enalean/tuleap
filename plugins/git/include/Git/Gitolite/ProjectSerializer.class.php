@@ -20,6 +20,8 @@
 
 class Git_Gitolite_ProjectSerializer {
 
+    const OBJECT_SIZE_LIMIT = 52428800;
+
     /**
      * @var Git_GitRepositoryUrlManager
      */
@@ -124,6 +126,7 @@ class Git_Gitolite_ProjectSerializer {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->permissions_serializer->getForRepository($repository);
+        $repo_config .= $this->fetchObjectSizeLimit();
 
         return $repo_config. PHP_EOL;
     }
@@ -150,5 +153,13 @@ class Git_Gitolite_ProjectSerializer {
             $conf .= PHP_EOL;
         }
         return $conf;
+    }
+
+    /**
+     * @return string
+     */
+    private function fetchObjectSizeLimit()
+    {
+        return " - VREF/MAX_NEWBIN_SIZE/" . self::OBJECT_SIZE_LIMIT ." = @all" . PHP_EOL;
     }
 }
