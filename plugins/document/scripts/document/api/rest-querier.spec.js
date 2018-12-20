@@ -18,6 +18,7 @@
  */
 
 import {
+    addNewDocument,
     getFolderContent,
     getProject,
     getItem,
@@ -209,6 +210,24 @@ describe("rest-querier", () => {
                 expect(tlp.del).toHaveBeenCalledWith(
                     "/api/users/102/preferences?key=plugin_docman_hide_110_30"
                 );
+            });
+        });
+    });
+
+    describe("addNewDocument()", () => {
+        it("Given data are valid, then a new item will be added in docman", async () => {
+            const item = JSON.stringify({
+                title: "my empty document",
+                description: "",
+                item_type: "empty",
+                parent_id: 2
+            });
+
+            await addNewDocument("my empty document", "", "empty", 2);
+
+            expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
+                headers: jasmine.objectContaining({ "content-type": "application/json" }),
+                body: item
             });
         });
     });

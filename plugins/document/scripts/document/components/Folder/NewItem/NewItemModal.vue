@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog" aria-labelledby="document-new-item-modal">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-item-modal" v-on:submit="addDocument">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-new-item-modal">
                 <i class="fa fa-plus tlp-modal-title-icon"></i>
@@ -30,6 +30,8 @@
             </div>
         </div>
         <div class="tlp-modal-body document-new-item-modal-body">
+
+            <new-item-modal-error v-if="has_modal_error"/>
 
             <div class="document-new-item-type-selector">
                 <div class="document-new-item-type document-new-item-type-checked">
@@ -54,6 +56,7 @@
                         name="title"
                         v-bind:placeholder="title_placeholder"
                         required
+                        v-model="item_title"
                     >
                 </div>
 
@@ -71,8 +74,8 @@
                         id="document-new-item-description"
                         name="description"
                         v-bind:placeholder="describe_placeholder"
-                    >
-                    </textarea>
+                        v-model="item_description"
+                    ></textarea>
                 </div>
             </div>
 
@@ -87,21 +90,36 @@
                 Cancel
             </button>
             <button
-                type="button"
+                type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                disabled
             >
-                <i class="fa fa-plus"></i> <translate>Create document</translate>
+                <i class="fa fa-plus tlp-button-icon"
+                   v-bind:class="{'fa-spin fa-spinner': is_loading}"
+                ></i>
+                <translate>Create document</translate>
             </button>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
+import { TYPE_EMPTY } from "../../../constants.js";
+import NewItemModalError from "./NewItemModalError.vue";
 
 export default {
+    components: { NewItemModalError },
+    data() {
+        return {
+            item_title: "",
+            item_description: "",
+            is_loading: false,
+            modal: null
+        };
+    },
     computed: {
+        ...mapState(["current_folder", "has_modal_error"]),
         title_placeholder() {
             return this.$gettext("My document");
         },
@@ -110,14 +128,31 @@ export default {
         }
     },
     mounted() {
-        const modal = createModal(this.$el);
+        this.modal = createModal(this.$el);
         const show = () => {
-            modal.show();
+            this.modal.show();
         };
         document.addEventListener("show-new-document-modal", show);
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener("show-new-document-modal", show);
         });
+    },
+    methods: {
+        async addDocument(event) {
+            event.preventDefault();
+            this.is_loading = true;
+
+            await this.$store.dispatch("createNewDocument", [
+                this.item_title,
+                this.item_description,
+                TYPE_EMPTY,
+                this.current_folder
+            ]);
+            this.is_loading = false;
+            if (this.has_modal_error === false) {
+                this.modal.hide();
+            }
+        }
     }
 };
 </script>
