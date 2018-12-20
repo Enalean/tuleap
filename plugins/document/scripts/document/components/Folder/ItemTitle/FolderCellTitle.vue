@@ -20,12 +20,12 @@
   -->
 
 <template>
-    <td>
-        <i class="document-folder-icon-color fa fa-fw document-folder-toggle"
+    <div>
+        <i class="document-folder-icon-color fa fa-fw document-folder-toggle document-folder-content-icon"
            v-bind:class="{ 'fa-caret-down': !is_closed, 'fa-caret-right': is_closed }"
            v-on:click="toggle"
         ></i>
-        <i class="document-folder-icon-color fa fa-fw"
+        <i class="document-folder-icon-color fa fa-fw document-folder-content-icon"
            v-bind:class="{
                'fa-folder': is_closed,
                'fa-folder-open': is_folder_open,
@@ -35,7 +35,7 @@
         <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
             {{ item.title }}
         </a>
-    </td>
+    </div>
 </template>
 
 <script>

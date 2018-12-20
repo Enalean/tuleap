@@ -20,11 +20,11 @@
   -->
 
 <template>
-    <td>
+    <div>
         <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw" v-bind:class="icon_class"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         {{ item.title }}
-    </td>
+    </div>
 </template>
 
 <script>

@@ -60,6 +60,15 @@
     }
 }
 
+.document-folder-content-title {
+    display: flex;
+}
+
+.document-folder-content-icon {
+    flex: 0 0 auto;
+    margin: 0 5px 0 0;
+}
+
 .document-folder-toggle {
     color: $tlp-ui-dimmed;
     cursor: pointer;
