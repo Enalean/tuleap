@@ -20,13 +20,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 const karma_config = require("./karma-common-config.js");
 
-function setupBaseKarmaConfig(config, webpack_config, coverage_path) {
+function setupBaseKarmaConfig(config, webpack_config, coverage_path, coverage_folder_name = "") {
     return Object.assign(
         karma_config.getBaseConfig(config),
         configureWebpackConfig(webpack_config),
-        configureKarmaServer(coverage_path)
+        configureKarmaServer(coverage_path, coverage_folder_name)
     );
 }
 
@@ -58,25 +59,30 @@ function configureKarmaForWatchMode() {
     };
 }
 
-function configureKarmaCoverage(coverage_directory) {
+function configureKarmaCoverage(coverage_directory, coverage_folder_name) {
     return {
         singleRun: true,
         reporters: ["dots", "coverage"],
         coverageReporter: {
             dir: coverage_directory,
+            subdir: coverage_folder_name,
             reporters: [{ type: "html" }]
         }
     };
 }
 
-function configureKarmaServer(coverage_directory) {
+function configureKarmaServer(coverage_directory, coverage_folder_name) {
     if (process.env.NODE_ENV === "test") {
         return configureKarmaForSingleTest();
-    } else if (process.env.NODE_ENV === "watch") {
+    }
+
+    if (process.env.NODE_ENV === "watch") {
         process.env.BABEL_ENV = "test";
         return configureKarmaForWatchMode();
-    } else if (process.env.NODE_ENV === "coverage") {
-        return configureKarmaCoverage(coverage_directory);
+    }
+
+    if (process.env.NODE_ENV === "coverage") {
+        return configureKarmaCoverage(coverage_directory, coverage_folder_name);
     }
 }
 
