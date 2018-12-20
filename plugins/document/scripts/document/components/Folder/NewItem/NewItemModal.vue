@@ -29,6 +29,7 @@
                 <property-title v-model="item.title"/>
                 <property-description v-model="item.description"/>
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
+                <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
             </div>
 
         </div>
@@ -44,6 +45,7 @@ import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/fee
 import PropertyTitle from "./Property/PropertyTitle.vue";
 import PropertyDescription from "./Property/PropertyDescription.vue";
 import LinkProperties from "./Property/LinkProperties.vue";
+import WikiProperties from "./Property/WikiProperties.vue";
 import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "./ModalHeader.vue";
 import ModalFooter from "./ModalFooter.vue";
@@ -55,6 +57,7 @@ export default {
         ModalFooter,
         ModalHeader,
         LinkProperties,
+        WikiProperties,
         TypeSelector,
         PropertyTitle,
         PropertyDescription,
@@ -68,6 +71,9 @@ export default {
                 type: TYPE_EMPTY,
                 link_properties: {
                     link_url: ""
+                },
+                wiki_properties: {
+                    page_name: ""
                 }
             },
             item: {},

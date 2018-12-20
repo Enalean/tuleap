@@ -56,6 +56,9 @@ msgstr ""
 msgid "My useful document description"
 msgstr ""
 
+msgid "My wiki page"
+msgstr ""
+
 msgid "Name"
 msgstr ""
 
@@ -90,6 +93,9 @@ msgid "Title"
 msgstr ""
 
 msgid "URL"
+msgstr ""
+
+msgid "Wiki page"
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
