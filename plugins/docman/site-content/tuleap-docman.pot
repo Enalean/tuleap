@@ -27,6 +27,9 @@ msgstr ""
 msgid "The resource %d does not exist."
 msgstr ""
 
+msgid "There is already a document being uploaded for this item"
+msgstr ""
+
 msgid "User, group"
 msgstr ""
 

@@ -22,6 +22,8 @@
 use Tuleap\Docman\Log\LogEventAdder;
 use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
+use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
+use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
@@ -1284,6 +1286,22 @@ class Docman_Controller extends Controler {
                                     $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news_details'));
                                     $valid = false;
                                 }
+                            }
+                        }
+
+                        if ($valid && $new_item !== null) {
+                            $document_retriever         = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
+                            $is_document_being_uploaded = $document_retriever->isThereAlreadyAnUploadOngoing(
+                                $parent,
+                                $new_item->getTitle(),
+                                new DateTimeImmutable()
+                            );
+                            if ($is_document_being_uploaded) {
+                                $valid = false;
+                                $this->feedback->log(
+                                    Feedback::ERROR,
+                                    dgettext('tuleap-docman', 'There is already a document being uploaded for this item')
+                                );
                             }
                         }
 
