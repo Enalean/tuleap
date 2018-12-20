@@ -19,9 +19,11 @@
  *
  */
 
+import { ICON_EMPTY } from "../constants.js";
+
 function iconForMimeType(item) {
     if (!item.file_properties) {
-        return "fa-file-o document-empty-icon";
+        return ICON_EMPTY;
     }
     const mime_type_lower = item.file_properties.file_type.toLowerCase();
     const parts = mime_type_lower.split("/");
@@ -110,7 +112,7 @@ function iconForMimeType(item) {
             }
             break;
         default:
-            icon = "fa-file-o document-empty-icon";
+            icon = ICON_EMPTY;
     }
     return icon;
 }

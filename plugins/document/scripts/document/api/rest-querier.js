@@ -43,15 +43,13 @@ async function getItem(id) {
     return response.json();
 }
 
-async function addNewDocument(title, description, item_type, parent_id) {
+async function addNewDocument(item, parent_id) {
     const headers = {
         "content-type": "application/json"
     };
 
     const body = JSON.stringify({
-        title,
-        description,
-        item_type,
+        ...item,
         parent_id
     });
 

@@ -20,52 +20,19 @@
 
 <template>
     <form class="tlp-modal" role="dialog" aria-labelledby="document-new-item-modal" v-on:submit="addDocument">
-        <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="document-new-item-modal">
-                <i class="fa fa-plus tlp-modal-title-icon"></i>
-                <translate>New document</translate>
-            </h1>
-            <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">
-                &times;
-            </div>
-        </div>
+        <modal-header/>
+        <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-
-            <new-item-modal-error v-if="has_modal_error"/>
-
-            <div class="document-new-item-type-selector">
-                <div class="document-new-item-type document-new-item-type-checked">
-                    <i class="document-new-item-type-icon fa fa-file-o"></i>
-                    <translate class="document-new-item-type-label">Empty</translate>
-                </div>
-            </div>
+            <type-selector v-model="item.type"/>
 
             <div class="document-new-item-properties">
                 <property-title v-model="item.title"/>
                 <property-description v-model="item.description"/>
+                <link-properties v-model="item.link_properties" v-bind:item="item"/>
             </div>
 
         </div>
-        <div class="tlp-modal-footer">
-            <button
-                type="button"
-                class="tlp-button-primary tlp-button-outline tlp-modal-action"
-                data-dismiss="modal"
-                v-translate
-            >
-                Cancel
-            </button>
-            <button
-                type="submit"
-                class="tlp-button-primary tlp-modal-action"
-                v-bind:disabled="is_loading"
-            >
-                <i class="fa fa-plus tlp-button-icon"
-                   v-bind:class="{'fa-spin fa-spinner': is_loading}"
-                ></i>
-                <translate>Create document</translate>
-            </button>
-        </div>
+        <modal-footer v-bind:is_loading="is_loading"/>
     </form>
 </template>
 
@@ -73,19 +40,35 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { TYPE_EMPTY } from "../../../constants.js";
-import NewItemModalError from "./NewItemModalError.vue";
 import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
 import PropertyTitle from "./Property/PropertyTitle.vue";
 import PropertyDescription from "./Property/PropertyDescription.vue";
+import LinkProperties from "./Property/LinkProperties.vue";
+import TypeSelector from "./TypeSelector.vue";
+import ModalHeader from "./ModalHeader.vue";
+import ModalFooter from "./ModalFooter.vue";
+import ModalFeedback from "./ModalFeedback.vue";
 
 export default {
-    components: { PropertyTitle, PropertyDescription, NewItemModalError },
+    name: "NewItemModal",
+    components: {
+        ModalFooter,
+        ModalHeader,
+        LinkProperties,
+        TypeSelector,
+        PropertyTitle,
+        PropertyDescription,
+        ModalFeedback
+    },
     data() {
         return {
             default_item: {
                 title: "",
                 description: "",
-                type: TYPE_EMPTY
+                type: TYPE_EMPTY,
+                link_properties: {
+                    link_url: ""
+                }
             },
             item: {},
             is_displayed: false,
@@ -98,30 +81,30 @@ export default {
     },
     mounted() {
         this.modal = createModal(this.$el);
-        const show = () => {
+        this.registerEvents();
+    },
+    methods: {
+        registerEvents() {
+            document.addEventListener("show-new-document-modal", this.show);
+            this.$once("hook:beforeDestroy", () => {
+                document.removeEventListener("show-new-document-modal", this.show);
+            });
+            this.modal.addEventListener("tlp-modal-hidden", this.reset);
+        },
+        show() {
             this.item = { ...this.default_item };
             this.is_displayed = true;
             this.modal.show();
-        };
-        document.addEventListener("show-new-document-modal", show);
-        this.$once("hook:beforeDestroy", () => {
-            document.removeEventListener("show-new-document-modal", show);
-        });
-        this.modal.addEventListener("tlp-modal-hidden", () => {
+        },
+        reset() {
+            this.$store.commit("resetModalError");
             this.is_displayed = false;
-        });
-    },
-    methods: {
+        },
         async addDocument(event) {
             event.preventDefault();
             this.is_loading = true;
 
-            await this.$store.dispatch("createNewDocument", [
-                this.item.title,
-                this.item.description,
-                this.item.type,
-                this.current_folder
-            ]);
+            await this.$store.dispatch("createNewDocument", [this.item, this.current_folder]);
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();

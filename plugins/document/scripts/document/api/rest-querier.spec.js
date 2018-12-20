@@ -219,12 +219,12 @@ describe("rest-querier", () => {
             const item = JSON.stringify({
                 title: "my empty document",
                 description: "",
-                item_type: "empty",
+                type: "empty",
                 parent_id: 2
             });
             mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
 
-            await addNewDocument("my empty document", "", "empty", 2);
+            await addNewDocument({ title: "my empty document", description: "", type: "empty" }, 2);
 
             expect(tlp.post).toHaveBeenCalledWith("/api/docman_items", {
                 headers: jasmine.objectContaining({ "content-type": "application/json" }),

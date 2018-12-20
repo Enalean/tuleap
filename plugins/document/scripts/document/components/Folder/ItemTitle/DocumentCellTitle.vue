@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { TYPE_EMBEDDED, TYPE_EMPTY } from "../../../constants.js";
+import { TYPE_EMBEDDED, TYPE_EMPTY, ICON_EMBEDDED, ICON_EMPTY } from "../../../constants.js";
 import FakeCaret from "./FakeCaret.vue";
 
 export default {
@@ -41,10 +41,10 @@ export default {
         icon_class() {
             switch (this.item.type) {
                 case TYPE_EMBEDDED:
-                    return "fa-file-text document-text-icon";
+                    return ICON_EMBEDDED;
                 case TYPE_EMPTY:
                 default:
-                    return "fa-file-o document-empty-icon";
+                    return ICON_EMPTY;
             }
         }
     }
