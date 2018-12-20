@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2014. All rights reserved
  *
@@ -18,8 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+namespace Tuleap\News;
+
+use ForgeConfig;
+use HTTPRequest;
+use ProjectManager;
+use TemplateRendererFactory;
+
 require_once('www/forum/forum_utils.php');
 require_once('www/project/admin/ugroup_utils.php');
+
 class ChooseNewsItemController {
 
     /**
@@ -34,7 +42,7 @@ class ChooseNewsItemController {
 
     public function __construct() {
         $this->request     = HTTPRequest::instance();
-        $this->data_mapper = new NewsItemForWidgetDataMapper(new NewsItemForWidgetDao());
+        $this->data_mapper = new NewsItemForWidgetDataMapper(new NewsDao());
     }
 
     public function process() {
@@ -65,7 +73,7 @@ class ChooseNewsItemController {
     private function checkAccess() {
         try {
             $project = $this->getProjectFromRequest();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('include_html','g_not_exist'));
         }
 
