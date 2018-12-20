@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,7 +45,7 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         $this->max_size = $max_size;
     }
 
-    public function process($data_chunk)
+    public function process($data_chunk) : string
     {
         if ($this->maximum_size_exceeded) {
             throw new ReadTooMuchDataException($this->max_size);
@@ -60,15 +60,19 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
         return $cut_data_chunk;
     }
 
-    public function getFilteredChainIdentifier()
+    public function getFilteredChainIdentifier() : int
     {
         return STREAM_FILTER_READ;
+    }
+
+    public function filterDetachedEvent() : void
+    {
     }
 
     /**
      * @return bool
      */
-    public function hasMaximumSizeBeenExceeded()
+    public function hasMaximumSizeBeenExceeded() : bool
     {
         return $this->maximum_size_exceeded;
     }
@@ -76,7 +80,7 @@ final class BlockToMaxSizeOnReadFilter implements FilterInterface
     /**
      * @return int
      */
-    public function getReadDataSize()
+    public function getReadDataSize() : int
     {
         return $this->read_data_size;
     }

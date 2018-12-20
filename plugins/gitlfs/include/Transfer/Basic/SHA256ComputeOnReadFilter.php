@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,24 +34,22 @@ final class SHA256ComputeOnReadFilter implements FilterInterface
         $this->hash_context = \hash_init('sha256');
     }
 
-    /**
-     * @return string
-     */
-    public function process($data_chunk)
+    public function process($data_chunk) : string
     {
         \hash_update($this->hash_context, $data_chunk);
         return $data_chunk;
     }
 
-    public function getFilteredChainIdentifier()
+    public function getFilteredChainIdentifier() : int
     {
         return STREAM_FILTER_READ;
     }
 
-    /**
-     * @return string
-     */
-    public function getHashValue()
+    public function filterDetachedEvent() : void
+    {
+    }
+
+    public function getHashValue() : string
     {
         return \hash_final(\hash_copy($this->hash_context));
     }

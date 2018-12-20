@@ -29,6 +29,7 @@ use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\GitLFS\Lock\Request\LockCreateRequest;
 use Tuleap\GitLFS\Lock\LockCreator;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
@@ -71,6 +72,14 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
      */
     private $user_retriever;
 
+    /**
+     * @var \PFUser
+     */
+    private $user;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
     public function __construct(
         \gitlfsPlugin $plugin,
@@ -79,7 +88,8 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         LockResponseBuilder $lock_response_builder,
         LockCreator $lock_creator,
         LockRetriever $lock_retriever,
-        UserRetriever $user_retriever
+        UserRetriever $user_retriever,
+        Prometheus $prometheus
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;
@@ -88,6 +98,7 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         $this->lock_creator          = $lock_creator;
         $this->lock_retriever        = $lock_retriever;
         $this->user_retriever        = $user_retriever;
+        $this->prometheus            = $prometheus;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -151,6 +162,7 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
             new DateTimeImmutable()
         );
 
+        $this->prometheus->increment('gitlfs_created_locks_total', 'Total number of created Git LFS locks');
         $response = $this->lock_response_builder->buildSuccessfulLockCreation($lock);
 
         echo json_encode($response);

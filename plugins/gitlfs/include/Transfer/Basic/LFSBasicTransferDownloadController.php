@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,7 +24,10 @@ use HTTPRequest;
 use League\Flysystem\FilesystemInterface;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeDownload;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
+use Tuleap\GitLFS\StreamFilter\StreamFilter;
+use Tuleap\GitLFS\Transfer\BytesAmountHandledLFSObjectInstrumentationFilter;
 use Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 
@@ -42,15 +45,21 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
      * @var LFSObjectPathAllocator
      */
     private $path_allocator;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
         FilesystemInterface $filesystem,
-        LFSObjectPathAllocator $path_allocator
+        LFSObjectPathAllocator $path_allocator,
+        Prometheus $prometheus
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
         $this->filesystem                  = $filesystem;
         $this->path_allocator              = $path_allocator;
+        $this->prometheus                  = $prometheus;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -71,8 +80,17 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         header("Content-Security-Policy: default-src 'none'; frame-ancestors 'none'; form-action 'none';");
         header('X-DNS-Prefetch-Control: off');
 
-        ob_end_flush();
+        $object_resource = $this->filesystem->readStream($object_path);
 
-        fpassthru($this->filesystem->readStream($object_path));
+        $transmitted_bytes_instrumentation_filter = BytesAmountHandledLFSObjectInstrumentationFilter::buildTransmittedBytesFilter(
+            $this->prometheus,
+            'basic'
+        );
+        $output_resource                          = fopen('php://output', 'ab');
+        $received_bytes_filter_handle             = StreamFilter::prependFilter($object_resource, $transmitted_bytes_instrumentation_filter);
+
+        stream_copy_to_stream($object_resource, $output_resource);
+
+        StreamFilter::removeFilter($received_bytes_filter_handle);
     }
 }

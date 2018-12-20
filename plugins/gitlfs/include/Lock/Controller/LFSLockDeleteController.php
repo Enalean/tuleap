@@ -29,6 +29,7 @@ use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Request\LockDeleteRequest;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\ForbiddenException;
@@ -71,6 +72,10 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
      */
     private $user_retriever;
 
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
     public function __construct(
         \gitlfsPlugin $plugin,
         \GitRepositoryFactory $repository_factory,
@@ -78,7 +83,8 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
         LockResponseBuilder $lock_response_builder,
         LockDestructor $lock_destructor,
         LockRetriever $lock_retriever,
-        UserRetriever $user_retriever
+        UserRetriever $user_retriever,
+        Prometheus $prometheus
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;
@@ -87,6 +93,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
         $this->lock_destructor       = $lock_destructor;
         $this->lock_retriever        = $lock_retriever;
         $this->user_retriever        = $user_retriever;
+        $this->prometheus            = $prometheus;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -165,6 +172,7 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
             return;
         }
 
+        $this->prometheus->increment('gitlfs_deleted_locks_total', 'Total number of deleted Git LFS locks');
         $response = $this->lock_response_builder->buildSuccessfulLockDestruction($lock);
 
         echo json_encode($response);

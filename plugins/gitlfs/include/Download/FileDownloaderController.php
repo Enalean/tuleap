@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,9 @@ use HTTPRequest;
 use League\Flysystem\FilesystemInterface;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
+use Tuleap\GitLFS\StreamFilter\StreamFilter;
+use Tuleap\GitLFS\Transfer\BytesAmountHandledLFSObjectInstrumentationFilter;
+use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
@@ -52,17 +55,23 @@ class FileDownloaderController implements DispatchableWithRequest
      * @var FilesystemInterface
      */
     private $filesystem;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
         LFSObjectRetriever $lfs_object_retriever,
         LFSObjectPathAllocator $path_allocator,
-        FilesystemInterface $filesystem
+        FilesystemInterface $filesystem,
+        Prometheus $prometheus
     ) {
         $this->git_repository_factory = $git_repository_factory;
         $this->lfs_object_retriever   = $lfs_object_retriever;
         $this->path_allocator         = $path_allocator;
         $this->filesystem             = $filesystem;
+        $this->prometheus             = $prometheus;
     }
 
     /**
@@ -113,8 +122,17 @@ class FileDownloaderController implements DispatchableWithRequest
 
         ob_end_flush();
 
-        fpassthru($this->filesystem->readStream($this->path_allocator->getPathForAvailableObject($lfs_object)));
+        $object_resource = $this->filesystem->readStream($this->path_allocator->getPathForAvailableObject($lfs_object));
 
-        return;
+        $transmitted_bytes_instrumentation_filter = BytesAmountHandledLFSObjectInstrumentationFilter::buildTransmittedBytesFilter(
+            $this->prometheus,
+            'webui'
+        );
+        $output_resource                          = fopen('php://output', 'ab');
+        $transmitted_bytes_filter_handle          = StreamFilter::prependFilter($object_resource, $transmitted_bytes_instrumentation_filter);
+
+        stream_copy_to_stream($object_resource, $output_resource);
+
+        StreamFilter::removeFilter($transmitted_bytes_filter_handle);
     }
 }

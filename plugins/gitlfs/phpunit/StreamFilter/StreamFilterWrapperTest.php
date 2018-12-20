@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,10 +27,39 @@ class StreamFilterWrapperTest extends TestCase
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testIncorrectFilterIsRejected()
+    public function testIncorrectFilterIsRejected() : void
     {
         $filter_wrapper = new StreamFilterWrapper();
         $filter_wrapper->params = 'invalid_filter';
         $filter_wrapper->onCreate();
+    }
+
+    public function testTheCorrectAmountOfWrittenDataIsCounted() : void
+    {
+        $filter = new class implements FilterInterface {
+            public function process($data_chunk) : string
+            {
+                return $data_chunk;
+            }
+
+            public function getFilteredChainIdentifier() : int
+            {
+                return STREAM_FILTER_WRITE;
+            }
+
+            public function filterDetachedEvent() : void
+            {
+            }
+        };
+
+        $destination_resource = fopen('php://memory', 'wb');
+        StreamFilter::prependFilter($destination_resource, $filter);
+
+        $content           = 'Test data';
+        $written_data_size = fwrite($destination_resource, $content);
+
+        $this->assertSame(strlen($content), $written_data_size);
+
+        fclose($destination_resource);
     }
 }

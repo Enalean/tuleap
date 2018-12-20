@@ -57,8 +57,19 @@ class Prometheus
      */
     public function increment($name, $help, array $labels = [])
     {
+        $this->incrementBy($name, $help, 1, $labels);
+    }
+
+    /**
+     * @param string $name
+     * @param string $help
+     * @param int $count
+     * @param array $labels
+     */
+    public function incrementBy($name, $help, $count, array $labels = [])
+    {
         list($label_names, $label_values) = $this->getLabelsNamesAndValues($labels);
-        $this->registry->getOrRegisterCounter('tuleap', $name, $help, $label_names)->inc($label_values);
+        $this->registry->getOrRegisterCounter('tuleap', $name, $help, $label_names)->incBy($count, $label_values);
     }
 
     /**

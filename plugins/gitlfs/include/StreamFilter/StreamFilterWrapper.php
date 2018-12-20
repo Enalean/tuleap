@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -46,9 +46,14 @@ final class StreamFilterWrapper extends \php_user_filter
             } catch (\Exception $ex) {
                 return PSFS_ERR_FATAL;
             }
-            $consumed += $bucket->datalen-1;
+            $consumed += $bucket->datalen;
             \stream_bucket_append($out, $bucket);
         }
         return PSFS_PASS_ON;
+    }
+
+    public function onClose() : void
+    {
+        $this->user_filter->filterDetachedEvent();
     }
 }

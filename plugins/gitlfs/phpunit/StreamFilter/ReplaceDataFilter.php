@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,7 @@ final class ReplaceDataFilter implements FilterInterface
     /**
      * @return string
      */
-    public function process($data_chunk)
+    public function process($data_chunk) : string
     {
         if ($this->has_already_written_expected_data) {
             return '';
@@ -47,11 +47,12 @@ final class ReplaceDataFilter implements FilterInterface
         return $this->replacement_data;
     }
 
-    /**
-     * @return int
-     */
-    public function getFilteredChainIdentifier()
+    public function getFilteredChainIdentifier() : int
     {
         return STREAM_FILTER_READ;
+    }
+
+    public function filterDetachedEvent() : void
+    {
     }
 }

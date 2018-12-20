@@ -27,6 +27,8 @@ use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
 use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\GitLFS\StreamFilter\StreamFilter;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\GitLFS\Transfer\BytesAmountHandledLFSObjectInstrumentationFilter;
 
 class LFSBasicTransferObjectSaver
 {
@@ -42,15 +44,21 @@ class LFSBasicTransferObjectSaver
      * @var LFSObjectPathAllocator
      */
     private $path_allocator;
+    /**
+     * @var Prometheus
+     */
+    private $prometheus;
 
     public function __construct(
         FilesystemInterface $filesystem,
         LFSObjectRetriever $lfs_object_retriever,
-        LFSObjectPathAllocator $path_allocator
+        LFSObjectPathAllocator $path_allocator,
+        Prometheus $prometheus
     ) {
         $this->filesystem           = $filesystem;
         $this->lfs_object_retriever = $lfs_object_retriever;
         $this->path_allocator       = $path_allocator;
+        $this->prometheus           = $prometheus;
     }
 
     /**
@@ -68,10 +76,12 @@ class LFSBasicTransferObjectSaver
             throw new \InvalidArgumentException('$input_resource must be a resource, got ' . gettype($input_resource));
         }
 
-        $sha256_processor_filter = new SHA256ComputeOnReadFilter();
-        $sha256_filter_handle    = StreamFilter::prependFilter($input_resource, $sha256_processor_filter);
-        $max_size_blocker_filter = new BlockToMaxSizeOnReadFilter($lfs_object->getSize());
-        $max_size_filter_handle  = StreamFilter::prependFilter($input_resource, $max_size_blocker_filter);
+        $sha256_processor_filter               = new SHA256ComputeOnReadFilter();
+        $sha256_filter_handle                  = StreamFilter::prependFilter($input_resource, $sha256_processor_filter);
+        $max_size_blocker_filter               = new BlockToMaxSizeOnReadFilter($lfs_object->getSize());
+        $max_size_filter_handle                = StreamFilter::prependFilter($input_resource, $max_size_blocker_filter);
+        $received_bytes_instrumentation_filter = BytesAmountHandledLFSObjectInstrumentationFilter::buildReceivedBytesFilter($this->prometheus);
+        $received_bytes_filter_handle          = StreamFilter::prependFilter($input_resource, $received_bytes_instrumentation_filter);
 
         $temporary_path = $this->path_allocator->getPathForSaveInProgressObject($repository, $lfs_object);
         try {
@@ -81,6 +91,7 @@ class LFSBasicTransferObjectSaver
         } finally {
             StreamFilter::removeFilter($sha256_filter_handle);
             StreamFilter::removeFilter($max_size_filter_handle);
+            StreamFilter::removeFilter($received_bytes_filter_handle);
             $this->tryToCleanUpFile($temporary_path);
         }
     }
