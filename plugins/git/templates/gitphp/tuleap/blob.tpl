@@ -29,10 +29,20 @@
                     <img src="data:{$mime};base64,{$data}" />
                 </div>
             {elseif $is_binaryfile}
-                <div class="empty-pane git-repository-blob-binary-empty-pane">
+                <div class="empty-pane git-repository-blob-empty-pane">
                     {include file='tuleap/blob-binary-file-svg.tpl'}
                     <div class="empty-page-text-with-small-text">
                         {t domain="gitphp"}This file is a binary file.{/t}
+                        <div class="empty-page-small-text">
+                            {t domain="gitphp"}It can't be previewed in Tuleap yet.{/t}
+                        </div>
+                    </div>
+                </div>
+            {elseif $is_file_in_sepcial_format}
+                <div class="empty-pane git-repository-blob-empty-pane">
+                    {include file='tuleap/blob-binary-lfs-file-svg.tpl'}
+                    <div class="empty-page-text-with-small-text">
+                        {t domain="gitphp"}This file is handled by Git LFS.{/t}
                         <div class="empty-page-small-text">
                             {t domain="gitphp"}It can't be previewed in Tuleap yet.{/t}
                         </div>

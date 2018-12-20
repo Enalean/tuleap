@@ -324,6 +324,9 @@ msgstr "La ressource demandée n'existe pas."
 msgid "This file is a binary file."
 msgstr "Ce fichier est un fichier binaire."
 
+msgid "This file is handled by Git LFS."
+msgstr "Ce fichier est un fichier géré par Git LFS."
+
 msgid "Tree"
 msgstr "Arborescence"
 

@@ -238,6 +238,9 @@ msgstr ""
 msgid "This file is a binary file."
 msgstr ""
 
+msgid "This file is handled by Git LFS."
+msgstr ""
+
 msgid "Tree"
 msgstr ""
 

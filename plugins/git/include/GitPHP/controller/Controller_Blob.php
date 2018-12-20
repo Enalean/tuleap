@@ -21,8 +21,10 @@
 
 namespace Tuleap\Git\GitPHP;
 
+use EventManager;
 use GeSHi;
 use Tuleap\Git\Repository\View\LanguageDetectorForPrismJS;
+use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Layout\IncludeAssets;
 
 /**
@@ -204,6 +206,14 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $commit->GetTree());
 
         if (Config::GetInstance()->GetValue('filemimetype', true)) {
+            $event = new DisplayFileContentInGitView($blob);
+            EventManager::instance()->processEvent($event);
+
+            if ($event->isFileInSpecialFormat()) {
+                $this->tpl->assign('is_file_in_sepcial_format', true);
+                return;
+            }
+
             $mime = $blob->FileMime();
             if ($mime) {
                 $mimetype = strtok($mime, '/');

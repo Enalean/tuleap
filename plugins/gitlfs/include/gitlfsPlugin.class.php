@@ -37,9 +37,9 @@ use Tuleap\GitLFS\Authorization\User\UserAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
+use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\Request\CollectRoutesEvent;
-use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 
 require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -82,6 +82,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_disk_usage_collect_project');
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
+        $this->addHook(DisplayFileContentInGitView::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -280,5 +281,14 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
             'href'  => '/plugins/git-lfs/config'
         );
+    }
+
+    public function displayFileContentInGitView(DisplayFileContentInGitView $event)
+    {
+        $detector = new \Tuleap\GitLFS\Detector\Detector();
+
+        if ($detector->isFileALFSFile($event->getBlob()->GetData())) {
+            $event->setFileIsInSpecialFormat();
+        }
     }
 }
