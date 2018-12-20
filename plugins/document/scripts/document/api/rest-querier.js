@@ -55,7 +55,9 @@ async function addNewDocument(title, description, item_type, parent_id) {
         parent_id
     });
 
-    await post("/api/docman_items", { headers, body });
+    const response = await post("/api/docman_items", { headers, body });
+
+    return response.json();
 }
 
 function getFolderContent(folder_id) {

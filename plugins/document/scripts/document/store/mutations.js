@@ -21,6 +21,7 @@ export {
     initApp,
     resetErrors,
     saveFolderContent,
+    addJustCreatedItemToFolderContent,
     appendSubFolderContent,
     foldFolderContent,
     unfoldFolderContent,
@@ -39,6 +40,14 @@ export {
 
 function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
+}
+
+function addJustCreatedItemToFolderContent(state, item) {
+    const parent = state.folder_content.find(parent => parent.id === item.parent_id);
+
+    item.level = parent ? parent.level + 1 : 0;
+
+    state.folder_content.push(item);
 }
 
 function appendSubFolderContent(state, [folder_id, sub_items]) {

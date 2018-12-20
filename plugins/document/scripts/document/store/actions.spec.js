@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { tlp, mockFetchError, mockFetchSuccess } from "tlp-mocks";
+import { mockFetchError } from "tlp-mocks";
 import {
     loadRootFolder,
     loadFolder,
@@ -369,13 +369,19 @@ describe("Store actions", () => {
             expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
         });
     });
+
     describe("createNewDocument", () => {
         it("Creates new document and reload folder content", async () => {
-            mockFetchSuccess(tlp.post, {});
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            const item = { id: 66, title: "whatever" };
+            getItem.and.returnValue(Promise.resolve(item));
 
             await createNewDocument(context, ["title", "", "empty", 2]);
 
-            expect(loadFolderContent).toHaveBeenCalled();
+            expect(getItem).toHaveBeenCalledWith(66);
+            expect(context.commit).toHaveBeenCalledWith("addJustCreatedItemToFolderContent", item);
             expect(context.commit).not.toHaveBeenCalledWith("setModalError");
         });
 
@@ -391,6 +397,10 @@ describe("Store actions", () => {
             });
             await createNewDocument(context, ["", "", "empty", 2]);
 
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "addJustCreatedItemToFolderContent",
+                jasmine.any(Object)
+            );
             expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
         });
     });

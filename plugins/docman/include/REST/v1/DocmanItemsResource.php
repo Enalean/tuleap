@@ -123,6 +123,8 @@ class DocmanItemsResource extends AuthenticatedResource
      *
      * @access hybrid
      *
+     * @return CreatedItemRepresentation
+     *
      * @throws 400
      * @throws 403
      * @throws 404
@@ -151,11 +153,16 @@ class DocmanItemsResource extends AuthenticatedResource
         $this->addLogEvents();
         $this->addNotificationEvents($project);
 
-        (new DocmanItemCreator(
+        $item = (new DocmanItemCreator(
             $this->getPermissionManager(),
             $this->event_manager,
             $this->getItemFactory($project->getID())
         ))->create($parent, $item_request->getUser(), $project, $title, $description, $item_type_id);
+
+        $representation = new CreatedItemRepresentation();
+        $representation->build($item->getId());
+
+        return $representation;
     }
 
     private function getItemFactory($group_id = null)
