@@ -17,27 +17,35 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
- class NewsItem {
+
+namespace Tuleap\News;
+
+class NewsItem
+{
     const NEWS_DELETED = 4;
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     private $data;
 
-    public function __construct(array $data) {
-        $this->data    = $data;
+    public function __construct(array $data)
+    {
+        $this->data = $data;
     }
 
-    public function isDisplayed() {
-        return (bool) ( $this->data['is_approved'] < self::NEWS_DELETED);
+    public function isDisplayed()
+    {
+        return (bool)($this->data['is_approved'] < self::NEWS_DELETED);
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->data['id'];
     }
 
-    public function getSummary() {
+    public function getSummary()
+    {
         return $this->data['summary'];
     }
 }

@@ -20,7 +20,7 @@
 namespace Tuleap\News\Admin;
 
 use DataAccessObject;
-use NewsItem;
+use Tuleap\News\NewsItem;
 
 class AdminNewsDao extends DataAccessObject
 {

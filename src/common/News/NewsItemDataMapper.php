@@ -17,21 +17,28 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
- class NewsItemForWidgetDataMapper {
 
+namespace Tuleap\News;
+
+use Project;
+
+class NewsItemForWidgetDataMapper
+{
     /**
-    * @var NewsItemForWidgetDao $dao
-    */
+     * @var NewsDao $dao
+     */
     private $dao;
 
-    public function __construct(NewsItemForWidgetDao $dao) {
+    public function __construct(NewsDao $dao)
+    {
         $this->dao = $dao;
     }
 
     /**
      * @return NewsItem[]
      */
-    public function fetchAll(Project $project) {
+    public function fetchAll(Project $project)
+    {
         $rows = $this->dao->fetchAll($project->getID());
 
         $items = array();
@@ -42,7 +49,8 @@
         return $items;;
     }
 
-    public function updatePromotedItems(Project $project, $promoted_ids) {
-        $this->dao->updatePromotedItems((array) $promoted_ids, $project->getID());
+    public function updatePromotedItems(Project $project, $promoted_ids)
+    {
+        $this->dao->updatePromotedItems((array)$promoted_ids, $project->getID());
     }
 }
