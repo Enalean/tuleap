@@ -21,7 +21,7 @@
 
 <template>
     <td>
-        <i class="fa fa-fw"></i>
+        <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw " v-bind:class="icon_class"></i>
         <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
             {{ item.title }}
@@ -31,9 +31,11 @@
 
 <script>
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import FakeCaret from "./FakeCaret.vue";
 
 export default {
     name: "FileCellTitle",
+    components: { FakeCaret },
     props: {
         item: Object
     },
