@@ -18,20 +18,28 @@
  */
 
 import { getErrorMessage } from "../exceptionHandler.js";
-import { getUserGroups } from "../../api/rest-querier.js";
+import { getTransition, getUserGroups } from "../../api/rest-querier.js";
 
-export { showTransitionConfigurationModal, loadUserGroupsIfNotCached };
+export { showTransitionConfigurationModal, loadTransition, loadUserGroupsIfNotCached };
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
-    commit("showModal", transition);
+    commit("showModal");
     try {
-        await dispatch("loadUserGroupsIfNotCached");
+        await Promise.all([
+            dispatch("loadTransition", transition.id),
+            dispatch("loadUserGroupsIfNotCached")
+        ]);
     } catch (error) {
         const error_message = await getErrorMessage(error);
         commit("failModalOperation", error_message);
     } finally {
         commit("endLoadingModal");
     }
+}
+
+async function loadTransition({ commit }, transition_id) {
+    const transition = await getTransition(transition_id);
+    commit("saveCurrentTransition", transition);
 }
 
 async function loadUserGroupsIfNotCached({ state, commit, rootGetters }) {

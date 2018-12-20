@@ -24,6 +24,7 @@ import {
     createWorkflowTransitions,
     resetWorkflowTransitions,
     updateTransitionRulesEnforcement,
+    getTransition,
     getUserGroups
 } from "../api/rest-querier.js";
 import { create } from "../support/factories.js";
@@ -40,6 +41,15 @@ describe("Rest queries:", () => {
             get = jasmine.createSpy("get");
             mockFetchSuccess(get, { return_json });
             rewire$get(get);
+        });
+
+        describe("getTransition()", () => {
+            beforeEach(() => {
+                getTransition(266);
+            });
+
+            it("calls transition API", () =>
+                expect(get).toHaveBeenCalledWith("/api/tracker_workflow_transitions/266"));
         });
 
         describe("getUserGroups()", () => {

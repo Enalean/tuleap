@@ -67,7 +67,10 @@ const factories = {
         default: {
             id: identity,
             from_id: 1,
-            to_id: 2
+            to_id: 2,
+            authorized_user_group_ids: [],
+            not_empty_field_ids: [],
+            is_comment_required: false
         }
     },
     user_group: {
