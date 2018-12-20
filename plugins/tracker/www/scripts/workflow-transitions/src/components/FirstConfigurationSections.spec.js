@@ -22,6 +22,7 @@ import Vuex from "vuex";
 import GettextPlugin from "vue-gettext";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
+import { createList } from "../support/factories.js";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -38,10 +39,7 @@ describe("FirstConfigurationSections", () => {
     beforeEach(() => {
         store_state = {
             current_tracker: {
-                fields: [
-                    { field_id: 1, label: "First field" },
-                    { field_id: 2, label: "Second field" }
-                ]
+                fields: createList("field", 2)
             }
         };
         store_actions = {

@@ -26,7 +26,7 @@ import {
     updateTransitionRulesEnforcement,
     getUserGroups
 } from "../api/rest-querier.js";
-import { createATransition } from "../support/factories.js";
+import { create } from "../support/factories.js";
 
 describe("Rest queries:", () => {
     afterEach(restore);
@@ -108,7 +108,7 @@ describe("Rest queries:", () => {
 
     describe("for POST actions", () => {
         let post;
-        const new_transition = createATransition();
+        const new_transition = create("transition");
         const headers = {
             "content-type": "application/json"
         };
