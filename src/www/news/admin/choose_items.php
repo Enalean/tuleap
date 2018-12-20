@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2014. All rights reserved
+ * Copyright (c) Enalean, 2014-2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once('pre.php');
+
+use Tuleap\News\ChooseNewsItemController;
+
+require_once __DIR__ . '/../../include/pre.php';
 
 $controller = new ChooseNewsItemController();
 $controller->process();
