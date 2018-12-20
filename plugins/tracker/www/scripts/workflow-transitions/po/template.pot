@@ -8,6 +8,12 @@ msgstr ""
 msgid "(New artifact)"
 msgstr ""
 
+msgid "Actions automatically performed"
+msgstr ""
+
+msgid "Add action"
+msgstr ""
+
 msgid "An error occurred"
 msgstr ""
 
@@ -62,10 +68,16 @@ msgid ""
 "using the configuration matrix."
 msgstr ""
 
+msgid "No action is currently defined."
+msgstr ""
+
 msgid "Save and start configuration"
 msgstr ""
 
 msgid "Save configuration"
+msgstr ""
+
+msgid "Start by adding one."
 msgstr ""
 
 msgid "The field on which the transitions are based has no selectable value"
