@@ -42,7 +42,9 @@ class StatisticsCollectionCollector implements Dispatchable
 
     public function addStatistics($label, $total, $last_month_growth)
     {
-        $this->collection->addStatistic($label, $total, $last_month_growth);
+        if ($total > 0) {
+            $this->collection->addStatistic($label, $total, $last_month_growth);
+        }
     }
 
     /**
