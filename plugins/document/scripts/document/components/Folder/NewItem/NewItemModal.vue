@@ -107,6 +107,7 @@ import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { TYPE_EMPTY } from "../../../constants.js";
 import NewItemModalError from "./NewItemModalError.vue";
+import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
 
 export default {
     components: { NewItemModalError },
@@ -151,6 +152,7 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
+                selfClosingInfo(this.$gettext("Document has been successfully created."));
             }
         }
     }

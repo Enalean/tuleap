@@ -63,7 +63,7 @@ export const createNewDocument = async (context, [title, description, item_type,
 
         const item = await getItem(item_reference.id);
 
-        return context.commit("addJustCreatedItemToFolderContent", item);
+        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", item));
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
