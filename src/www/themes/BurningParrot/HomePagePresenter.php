@@ -23,6 +23,7 @@ namespace Tuleap\Theme\BurningParrot;
 use Admin_Homepage_LogoFinder;
 use Codendi_HTMLPurifier;
 use PFUser;
+use Tuleap\layout\HomePage\NewsCollection;
 use Tuleap\Layout\HomePage\StatisticsCollection;
 use User_LoginPresenter;
 
@@ -46,11 +47,14 @@ class HomePagePresenter
     public $is_custom_logo_used;
     public $display_new_account_button;
     public $login_url;
-    /**
-     * @var StatisticsCollection
-     */
-    public $statistics;
+
     public $my_personal_page;
+
+    public $has_statistics;
+    public $statistics;
+
+    public $has_news;
+    public $news;
 
     public function __construct(
         $headline,
@@ -59,7 +63,8 @@ class HomePagePresenter
         User_LoginPresenter $login,
         $display_new_account_button,
         $login_url,
-        StatisticsCollection $statistics_collection
+        StatisticsCollection $statistics_collection,
+        NewsCollection $news_collection
     ) {
         $this->is_custom_logo_used        = Admin_Homepage_LogoFinder::isCustomLogoUsed();
         $this->path_custom_logo           = Admin_Homepage_LogoFinder::getCurrentUrl();
@@ -84,6 +89,9 @@ class HomePagePresenter
         $this->forgot_password      = $GLOBALS['Language']->getText('homepage', 'forgot_password');
         $this->not_a_member         = $GLOBALS['Language']->getText('homepage', 'not_a_member');
         $this->my_personal_page     = $GLOBALS['Language']->getText('homepage', 'my_personal_page');
-        $this->statistics           = $statistics_collection;
+        $this->has_statistics       = $statistics_collection->hasStatistics();
+        $this->statistics           = $statistics_collection->getStatistics();
+        $this->has_news             = $news_collection->hasNews();
+        $this->news                 = $news_collection->getNews();
     }
 }

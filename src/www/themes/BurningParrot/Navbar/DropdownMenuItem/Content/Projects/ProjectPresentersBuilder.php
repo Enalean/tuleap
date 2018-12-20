@@ -61,7 +61,6 @@ class ProjectPresentersBuilder
     {
         $project_id         = $project->getID();
         $project_name       = util_unconvert_htmlspecialchars($project->getPublicName());
-        $project_uri        = '/projects/' . $project->getUnixName();
         $project_config_uri = '/project/admin/?group_id=' . $project_id;
         $is_private         = $this->getProjectIsPrivate($project);
         $user_administers   = $this->current_user->isAdmin($project_id);
@@ -69,7 +68,7 @@ class ProjectPresentersBuilder
 
         return new ProjectPresenter(
             $project_name,
-            $project_uri,
+            $project->getUrl(),
             $project_config_uri,
             $is_private,
             $user_administers,

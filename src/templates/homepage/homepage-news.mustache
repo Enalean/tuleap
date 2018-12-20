@@ -1,0 +1,26 @@
+{{# has_news }}
+<div class="homepage-news-container">
+    <h2 class="homepage-news-container-title">{{# gettext }}News{{/ gettext }}</h2>
+
+    {{# news }}
+    <div class="homepage-news">
+        <h3 class="homepage-news-title">{{ summary }}</h3>
+        <div class="homepage-news-info">
+            <a class="homepage-news-info-user homepage-news-info-link" href="{{ author_url }}">
+                <div class="tlp-avatar-mini">
+                    <img src="{{ author_avatar_url }}" alt="{{ author_name }} avatar">
+                </div>
+                <span>{{ author_name }}</span>
+            </a>
+            <span class="homepage-news-info-time-ago">
+                <i class="fa fa-clock-o"></i>{{ time_ago }}
+            </span>
+            <a class="homepage-news-info-project" href="{{ project_url }}">
+                <i class="fa fa-archive"></i>{{ project_name }}
+            </a>
+        </div>
+        <p class="homepage-news-content">{{{ details }}}</p>
+    </div>
+    {{/ news }}
+</div>
+{{/ has_news }}

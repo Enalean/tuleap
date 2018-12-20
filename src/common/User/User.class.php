@@ -552,6 +552,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     // Getter
     //
 
+    public function getPublicProfileUrl()
+    {
+        return '/users/'.urlencode($this->getUnixName());
+    }
+
     /**
      * @return int the ID of the user
      */

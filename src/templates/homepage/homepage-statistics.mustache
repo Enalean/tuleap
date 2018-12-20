@@ -1,20 +1,21 @@
-{{# statistics }}
-    {{# hasStatistics }}
-        {{# getStatistics }}
-            <div class="homepage-statistic">
-                <div class="homepage-statistic-main">
-                    <span class="homepage-statistic-total">{{ getTotal }}</span>
-                    <span class="homepage-statistic-label">{{ getLabel }}</span>
-                </div>
-                {{# hasGrowth }}
-                    <div class="homepage-statistic-growth">
-                        <span class="homepage-statistic-growth-plus">+</span>
-                        <span class="homepage-statistic-growth-value">{{ getLastMonthGrowth }}</span>
-                        <span class="homepage-statistic-growth-label">{{# gettext }}last<br>month{{/ gettext }}</span>
-                    </div>
-                    <img src="/themes/BurningParrot/images/homepage/growth.svg" class="homepage-statistic-growth-background">
-                {{/ hasGrowth }}
+{{# has_statistics }}
+<div class="homepage-statistics">
+    {{# statistics }}
+        <div class="homepage-statistic">
+            <div class="homepage-statistic-main">
+                <span class="homepage-statistic-total">{{ getTotal }}</span>
+                <span class="homepage-statistic-label">{{ getLabel }}</span>
             </div>
-        {{/ getStatistics }}
-    {{/ hasStatistics }}
-{{/ statistics }}
+            {{# hasGrowth }}
+                <div class="homepage-statistic-growth">
+                    <span class="homepage-statistic-growth-plus">+</span>
+                    <span class="homepage-statistic-growth-value">{{ getLastMonthGrowth }}</span>
+                    <span class="homepage-statistic-growth-label">{{# gettext }}last<br>month{{/ gettext }}</span>
+                </div>
+                <img src="/themes/BurningParrot/images/homepage/growth.svg" class="homepage-statistic-growth-background">
+            {{/ hasGrowth }}
+        </div>
+    {{/ statistics }}
+</div>
+{{/ has_statistics }}
+
