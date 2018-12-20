@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ $tlp-modal-transition: 100ms ease-out;
 .tlp-modal {
     display: none;
     position: fixed;
+    z-index: 100050;
     top: 0;
     right: 0;
     left: 0;
@@ -36,11 +37,10 @@ $tlp-modal-transition: 100ms ease-out;
         transform $tlp-modal-transition,
         box-shadow $tlp-modal-transition;
     border: 0;
+    opacity: 0;
+    box-shadow: 0;
     text-align: left;
     white-space: normal;
-    box-shadow: 0;
-    opacity: 0;
-    z-index: 100050;
 
     &.tlp-modal-display {
         display: flex;
@@ -48,8 +48,8 @@ $tlp-modal-transition: 100ms ease-out;
 
     &.tlp-modal-shown {
         transform: translateY(0);
-        box-shadow: $tlp-modal-shadow;
         opacity: 1;
+        box-shadow: $tlp-modal-shadow;
     }
 }
 
@@ -126,12 +126,18 @@ $tlp-modal-transition: 100ms ease-out;
     font-weight: 600;
 }
 
+.tlp-modal-feedback {
+    padding: $tlp-modal-padding;
+    border-bottom: 1px solid $tlp-ui-border-light;
+    background: $tlp-ui-white;
+}
+
 .tlp-modal-body {
     height: 100%;
     max-height: 70vh;
     padding: $tlp-modal-padding;
-    background: $tlp-ui-white;
     overflow-y: auto;
+    background: $tlp-ui-white;
 }
 
 .tlp-modal-footer {
@@ -140,8 +146,8 @@ $tlp-modal-transition: 100ms ease-out;
     min-height: 2 * $tlp-modal-padding + $tlp-button-normal-height;
     padding: $tlp-modal-padding;
     border-top: 1px solid $tlp-ui-border-light;
-    border-bottom-left-radius: $tlp-modal-radius;
     border-bottom-right-radius: $tlp-modal-radius;
+    border-bottom-left-radius: $tlp-modal-radius;
     background: $tlp-ui-white;
 
     &.tlp-modal-footer-large {
@@ -178,14 +184,14 @@ $tlp-modal-transition: 100ms ease-out;
 
 #tlp-modal-backdrop {
     position: fixed;
+    z-index: 100001;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
     transition: opacity $tlp-modal-transition;
-    background: $tlp-ui-black;
     opacity: 0;
-    z-index: 100001;
+    background: $tlp-ui-black;
 
     &.tlp-modal-backdrop-shown {
         opacity: .5;

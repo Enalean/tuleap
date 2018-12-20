@@ -23,6 +23,7 @@ import state from "./state.js";
 import * as actions from "./actions.js";
 import mutations from "./mutations.js";
 import * as getters from "./getters.js";
+import transitionModal from "./transition-modal/module.js";
 
 Vue.use(Vuex);
 
@@ -30,5 +31,8 @@ export default new Vuex.Store({
     state,
     actions,
     mutations,
-    getters
+    getters,
+    modules: {
+        transitionModal
+    }
 });

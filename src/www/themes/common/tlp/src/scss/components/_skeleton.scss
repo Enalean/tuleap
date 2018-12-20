@@ -31,16 +31,10 @@ $tlp-skeleton-animation-duration: 1.2s;
 }
 
 .tlp-skeleton-text {
-    display: inline-block;
-    width: 100px;
-    min-height: 6px;
-    animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
-    border-radius: 3px;
-    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px) repeat-x bottom left;
-    background-size: 600px 6px;
+    @extend %tlp-skeleton-text;
 }
 
-// scss-lint:disable QualifyingElement
+/* stylelint-disable selector-no-qualifying-type */
 h1.tlp-skeleton-text {
     height: 46px;
     background-size: 600px 8px;
@@ -66,7 +60,31 @@ h5.tlp-skeleton-text {
 h6.tlp-skeleton-text {
     height: 17px;
 }
-// scss-lint:enable QualifyingElement
+/* stylelint-enable */
+
+.tlp-skeleton-label {
+    @extend %tlp-skeleton-text;
+    height: 14px;
+}
+
+.tlp-skeleton-select {
+    @extend %tlp-skeleton-animation;
+    background-size: 600px 50px;
+}
+
+%tlp-skeleton-animation {
+    animation: tlp-skeleton-animation-text $tlp-skeleton-animation-duration infinite linear;
+    background: linear-gradient(90deg, $tlp-skeleton-color 0, $tlp-skeleton-secondary-color 40px, $tlp-skeleton-color 80px) repeat-x bottom left;
+}
+
+%tlp-skeleton-text {
+    @extend %tlp-skeleton-animation;
+    display: inline-block;
+    width: 100px;
+    min-height: 6px;
+    border-radius: 3px;
+    background-size: 600px 6px;
+}
 
 @keyframes tlp-skeleton-animation-text {
     0% {

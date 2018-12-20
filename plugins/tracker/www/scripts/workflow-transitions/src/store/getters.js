@@ -42,3 +42,7 @@ export const current_tracker_id = state => {
     }
     return state.current_tracker.id;
 };
+
+export const current_project_id = state => {
+    return state.current_tracker !== null ? state.current_tracker.project.id : null;
+};

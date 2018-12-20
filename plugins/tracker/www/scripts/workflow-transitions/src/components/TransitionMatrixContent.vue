@@ -47,9 +47,10 @@
             </div>
             <button
                 class="tlp-button-primary tlp-button-mini tracker-workflow-advanced-transition-button"
+                type="button"
+                v-on:click="openModal()"
                 data-test-action="configure-transition"
                 v-translate
-                disabled
             >Configure</button>
         </template>
     </td>
@@ -114,6 +115,13 @@ export default {
             } finally {
                 this.is_operation_running = false;
             }
+        },
+
+        openModal() {
+            this.$store.dispatch(
+                "transitionModal/showTransitionConfigurationModal",
+                this.transition
+            );
         }
     }
 };

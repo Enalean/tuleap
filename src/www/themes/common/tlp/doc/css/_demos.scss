@@ -87,6 +87,11 @@
                 border-bottom: 0;
             }
 
+            > .tlp-modal-feedback {
+                border: 1px solid transparent;
+                border-top: 0;
+            }
+
             > .tlp-modal-footer {
                 border-right: 1px solid transparent;
                 border-bottom: 1px solid transparent;

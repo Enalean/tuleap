@@ -66,6 +66,7 @@
                     </section>
                 </div>
             </section>
+            <transition-modal/>
         </template>
     </div>
 </template>
@@ -74,11 +75,13 @@
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
+import TransitionModal from "./TransitionModal/TransitionModal.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "BaseTrackerWorflowTransitions",
     components: {
+        TransitionModal,
         FirstConfigurationSections,
         TransitionsConfigurationHeaderSection,
         TransitionsMatrixSection

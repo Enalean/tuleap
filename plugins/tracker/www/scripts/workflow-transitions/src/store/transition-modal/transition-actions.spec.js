@@ -1,0 +1,111 @@
+/*
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { mockFetchError } from "tlp-mocks";
+import { rewire$getUserGroups, restore } from "../../api/rest-querier.js";
+import {
+    showTransitionConfigurationModal,
+    loadUserGroupsIfNotCached
+} from "./transition-actions.js";
+
+describe("Transition modal actions", () => {
+    let getUserGroups, context;
+
+    beforeEach(() => {
+        getUserGroups = jasmine.createSpy("getUserGroups");
+        rewire$getUserGroups(getUserGroups);
+    });
+
+    afterEach(restore);
+
+    describe("showTransitionConfigurationModal()", () => {
+        let transition;
+        beforeEach(() => {
+            context = {
+                commit: jasmine.createSpy("commit"),
+                dispatch: jasmine.createSpy("dispatch")
+            };
+            transition = { from_id: 161, to_id: 519 };
+        });
+
+        it("will first show the modal, load the cached user groups and clear the loading flag", async () => {
+            await showTransitionConfigurationModal(context, transition);
+
+            expect(context.commit).toHaveBeenCalledWith("showModal", transition);
+            expect(context.dispatch).toHaveBeenCalledWith("loadUserGroupsIfNotCached");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
+        });
+
+        it("When there's a REST error, it will set a flag for the modal to show the error", async () => {
+            mockFetchError(context.dispatch, {
+                error_json: {
+                    error: {
+                        i18n_error_message: "You are not allowed to see that"
+                    }
+                }
+            });
+
+            await showTransitionConfigurationModal(context, transition);
+
+            expect(context.commit).toHaveBeenCalledWith("showModal", transition);
+            expect(context.commit).toHaveBeenCalledWith(
+                "failModalOperation",
+                "You are not allowed to see that"
+            );
+            expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
+        });
+    });
+
+    describe("loadUserGroupsIfNotCached()", () => {
+        let user_groups;
+
+        beforeEach(() => {
+            context = {
+                state: {
+                    user_groups: null
+                },
+                commit: jasmine.createSpy("commit"),
+                rootGetters: {
+                    current_project_id: 205
+                }
+            };
+            user_groups = [
+                { id: "103", label: "tubicolar" },
+                { id: "205_3", label: "Project members" }
+            ];
+        });
+
+        it("When the user groups were already in the state, it won't do anything", async () => {
+            context.state.user_groups = user_groups;
+
+            await loadUserGroupsIfNotCached(context);
+
+            expect(getUserGroups).not.toHaveBeenCalled();
+        });
+
+        it("will query the API and set the user groups in the state", async () => {
+            getUserGroups.and.returnValue(user_groups);
+
+            await loadUserGroupsIfNotCached(context);
+
+            expect(getUserGroups).toHaveBeenCalledWith(205);
+            expect(context.commit).toHaveBeenCalledWith("initUserGroups", user_groups);
+        });
+    });
+});

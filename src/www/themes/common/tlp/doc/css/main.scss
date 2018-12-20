@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -124,9 +124,14 @@ $nav-margin: 30px;
     }
 
     #example-modals-structure .tlp-modal {
-
         > .tlp-modal-body {
             border-right-color: $tlp-ui-border-normal;
+            border-left-color: $tlp-ui-border-normal;
+        }
+
+        > .tlp-modal-feedback {
+            border-right-color: $tlp-ui-border-normal;
+            border-bottom-color: $tlp-ui-border-normal;
             border-left-color: $tlp-ui-border-normal;
         }
 
