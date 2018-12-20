@@ -20,13 +20,13 @@
   -->
 
 <template>
-    <td>
+    <div>
         <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw " v-bind:class="icon_class"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
             {{ item.title }}
         </a>
-    </td>
+    </div>
 </template>
 
 <script>

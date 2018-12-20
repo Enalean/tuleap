@@ -19,7 +19,14 @@
 
 <template>
     <tr v-bind:class="{ 'document-tree-item-hidden': is_folded }">
-        <component v-bind:is="cell_title_component_name" v-bind:item="item" v-bind:style="item_indentation"/>
+        <td>
+            <component
+                v-bind:is="cell_title_component_name"
+                v-bind:item="item"
+                v-bind:style="item_indentation"
+                class="document-folder-content-title"
+            />
+        </td>
         <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
         <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
             {{ formatted_date }}
