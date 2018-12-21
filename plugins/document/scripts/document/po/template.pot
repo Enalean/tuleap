@@ -20,6 +20,9 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+msgid "Document has been successfully created."
+msgstr ""
+
 msgid "Documents"
 msgstr ""
 
