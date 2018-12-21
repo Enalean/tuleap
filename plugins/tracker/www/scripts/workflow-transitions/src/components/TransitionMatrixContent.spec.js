@@ -22,7 +22,7 @@ import Vuex from "vuex";
 import GettextPlugin from "vue-gettext";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
-import { createATransition } from "../support/factories.js";
+import { create } from "../support/factories.js";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -52,8 +52,8 @@ describe("TransitionMatrixContent", () => {
             store,
             localVue,
             propsData: {
-                from: { id: 1, label: "first value" },
-                to: { id: 1, label: "second value" },
+                from: create("field_value"),
+                to: create("field_value"),
                 transition: null
             }
         });
@@ -67,7 +67,7 @@ describe("TransitionMatrixContent", () => {
 
     describe("when from equals to", () => {
         beforeEach(() => {
-            const from = { id: 1, label: "first value" };
+            const from = create("field_value");
             wrapper.setProps({ from, to: from });
         });
 
@@ -82,8 +82,8 @@ describe("TransitionMatrixContent", () => {
     describe("when from and to differs", () => {
         beforeEach(() => {
             wrapper.setProps({
-                from: { id: 1, label: "first value" },
-                to: { id: 2, label: "second value" }
+                from: create("field_value", { id: 1, label: "first value" }),
+                to: create("field_value", { id: 2, label: "second value" })
             });
         });
 
@@ -158,7 +158,7 @@ describe("TransitionMatrixContent", () => {
         });
 
         describe("with a transition", () => {
-            const transition = createATransition();
+            const transition = create("transition");
 
             beforeEach(() => {
                 wrapper.setProps({ transition });

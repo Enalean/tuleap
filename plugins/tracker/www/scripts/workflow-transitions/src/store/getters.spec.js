@@ -24,6 +24,7 @@ import {
     current_tracker_id
 } from "./getters.js";
 import initial_state from "./state.js";
+import { create } from "../support/factories.js";
 
 describe("Store getters:", () => {
     let state;
@@ -34,14 +35,8 @@ describe("Store getters:", () => {
         beforeEach(() => {
             state.current_tracker = {
                 fields: [
-                    {
-                        field_id: 1,
-                        label: "Another field label"
-                    },
-                    {
-                        field_id: 2,
-                        label: "Workflow field label"
-                    }
+                    create("field", { field_id: 1 }),
+                    create("field", { field_id: 2, label: "Workflow field label" })
                 ],
                 workflow: {
                     field_id: 2
@@ -63,12 +58,10 @@ describe("Store getters:", () => {
     });
 
     describe("are_transition_rules_enforced", () => {
-        describe("when tracker workflow is_used = 0", () => {
+        describe("when tracker workflow is inactive", () => {
             beforeEach(() => {
                 state.current_tracker = {
-                    workflow: {
-                        is_used: 0
-                    }
+                    workflow: create("workflow", "inactive")
                 };
             });
             it("returns false", () => {
@@ -76,12 +69,10 @@ describe("Store getters:", () => {
             });
         });
 
-        describe("when tracker workflow is_used = 1", () => {
+        describe("when tracker workflow is active", () => {
             beforeEach(() => {
                 state.current_tracker = {
-                    workflow: {
-                        is_used: 1
-                    }
+                    workflow: create("workflow", "active")
                 };
             });
             it("returns false", () => {
@@ -98,7 +89,7 @@ describe("Store getters:", () => {
     });
 
     describe("current_tracker_id", () => {
-        beforeEach(() => (state.current_tracker = { id: 1 }));
+        beforeEach(() => (state.current_tracker = create("tracker", { id: 1 })));
 
         it("returns current tracker id", () => {
             expect(current_tracker_id(state)).toBe(1);

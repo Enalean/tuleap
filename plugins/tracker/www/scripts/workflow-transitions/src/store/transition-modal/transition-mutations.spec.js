@@ -18,6 +18,7 @@
  */
 
 import * as mutations from "./transition-mutations.js";
+import { create } from "../../support/factories.js";
 
 describe("Transition mutations", () => {
     let state;
@@ -32,7 +33,7 @@ describe("Transition mutations", () => {
                 current_transition: null
             };
 
-            transition = { from_id: 897, to_id: 890 };
+            transition = create("transition");
 
             mutations.showModal(state, transition);
         });

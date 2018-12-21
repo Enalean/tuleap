@@ -36,7 +36,7 @@ import {
     rewire$deleteTransition
 } from "../api/rest-querier.js";
 import { restore as restore$ExceptionHandler, rewire$getErrorMessage } from "./exceptionHandler.js";
-import { createATransition } from "../support/factories.js";
+import { create } from "../support/factories.js";
 
 describe("Store actions:", () => {
     let context;
@@ -64,7 +64,7 @@ describe("Store actions:", () => {
         });
 
         it("fetches tracker asynchronously and store it as current tracker", async () => {
-            const tracker = { id: 12 };
+            const tracker = create("tracker");
             getTracker.and.returnValue(Promise.resolve(tracker));
 
             await loadTracker(context);
@@ -123,7 +123,7 @@ describe("Store actions:", () => {
         });
 
         describe("when reset workflow transitions is successful", () => {
-            const tracker = { id: 12 };
+            const tracker = create("tracker");
 
             beforeEach(async () => {
                 restResetWorkflowTransitions.and.returnValue(Promise.resolve(tracker));
@@ -155,7 +155,7 @@ describe("Store actions:", () => {
         });
 
         describe("when successful", () => {
-            const updated_tracker = { id: 12 };
+            const updated_tracker = create("tracker");
 
             beforeEach(async () => {
                 restUpdateTransitionRulesEnforcement.and.returnValue(
@@ -203,8 +203,10 @@ describe("Store actions:", () => {
         });
 
         describe("when transition creation is successful", () => {
+            const created_transition = { id: 1 };
+
             beforeEach(async () => {
-                restCreateTransition.and.returnValue(Promise.resolve({ id: 2 }));
+                restCreateTransition.and.returnValue(Promise.resolve(created_transition));
                 await createTransition(context, {
                     from_id: 3,
                     to_id: 9
@@ -215,9 +217,9 @@ describe("Store actions:", () => {
                 expect(context.commit).toHaveBeenCalledWith("beginOperation"));
             it("creates transition", () =>
                 expect(restCreateTransition).toHaveBeenCalledWith(1, 3, 9));
-            it("add new transition in store", () =>
+            it("adds new transition in store", () =>
                 expect(context.commit).toHaveBeenCalledWith("addTransition", {
-                    id: 2,
+                    id: 1,
                     from_id: 3,
                     to_id: 9
                 }));
@@ -230,7 +232,7 @@ describe("Store actions:", () => {
         let resolveRestCall;
         let rejectRestCall;
         let deleteTransitionPromise;
-        const transition = createATransition({ id: 1 });
+        const transition = create("transition", { id: 1 });
 
         beforeEach(() => {
             restDeleteTransition = jasmine.createSpy("deleteTransition");

@@ -27,6 +27,7 @@ import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import initial_state from "../store/state.js";
+import { create } from "../support/factories.js";
 
 const localVue = createLocalVue();
 localVue.use(Vuex);
@@ -106,7 +107,11 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
         describe("when base field not configured", () => {
             beforeEach(() => {
-                Vue.set(store_state.current_tracker, "workflow", {});
+                Vue.set(
+                    store_state.current_tracker,
+                    "workflow",
+                    create("workflow", "field_not_defined")
+                );
             });
             it("shows first configuration", () => {
                 expect(wrapper.contains(FirstConfigurationSections)).toBeTruthy();
@@ -115,7 +120,11 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
         describe("when base field configured", () => {
             beforeEach(() => {
-                Vue.set(store_state.current_tracker, "workflow", { field_id: 1 });
+                Vue.set(
+                    store_state.current_tracker,
+                    "workflow",
+                    create("workflow", "field_defined")
+                );
             });
             it("shows configuration header and matrix", () => {
                 expect(wrapper.contains(TransitionsConfigurationHeaderSection)).toBeTruthy();

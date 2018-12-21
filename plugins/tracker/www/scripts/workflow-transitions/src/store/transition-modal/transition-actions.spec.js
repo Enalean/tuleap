@@ -23,6 +23,7 @@ import {
     showTransitionConfigurationModal,
     loadUserGroupsIfNotCached
 } from "./transition-actions.js";
+import { create, createList } from "../../support/factories.js";
 
 describe("Transition modal actions", () => {
     let getUserGroups, context;
@@ -41,7 +42,7 @@ describe("Transition modal actions", () => {
                 commit: jasmine.createSpy("commit"),
                 dispatch: jasmine.createSpy("dispatch")
             };
-            transition = { from_id: 161, to_id: 519 };
+            transition = create("transition");
         });
 
         it("will first show the modal, load the cached user groups and clear the loading flag", async () => {
@@ -85,10 +86,7 @@ describe("Transition modal actions", () => {
                     current_project_id: 205
                 }
             };
-            user_groups = [
-                { id: "103", label: "tubicolar" },
-                { id: "205_3", label: "Project members" }
-            ];
+            user_groups = createList("user_group", 2);
         });
 
         it("When the user groups were already in the state, it won't do anything", async () => {
