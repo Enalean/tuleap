@@ -29,7 +29,7 @@
                 &times;
             </div>
         </div>
-        <div class="tlp-modal-body document-new-item-modal-body">
+        <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
 
             <new-item-modal-error v-if="has_modal_error"/>
 
@@ -40,43 +40,9 @@
                 </div>
             </div>
 
-            <div class="document-new-item-metadata">
-                <div class="tlp-form-element">
-                    <label
-                        class="tlp-label"
-                        for="document-new-item-title"
-                    >
-                        <translate>Title</translate>
-                        <i class="fa fa-asterisk"></i>
-                    </label>
-                    <input
-                        type="text"
-                        class="tlp-input"
-                        id="document-new-item-title"
-                        name="title"
-                        v-bind:placeholder="title_placeholder"
-                        required
-                        v-model="item_title"
-                    >
-                </div>
-
-                <div class="tlp-form-element">
-                    <label
-                        class="tlp-label"
-                        for="document-new-item-description"
-                        v-translate
-                    >
-                        Description
-                    </label>
-                    <textarea
-                        type="text"
-                        class="tlp-textarea"
-                        id="document-new-item-description"
-                        name="description"
-                        v-bind:placeholder="describe_placeholder"
-                        v-model="item_description"
-                    ></textarea>
-                </div>
+            <div class="document-new-item-properties">
+                <property-title v-model="item.title"/>
+                <property-description v-model="item.description"/>
             </div>
 
         </div>
@@ -92,6 +58,7 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_loading"
             >
                 <i class="fa fa-plus tlp-button-icon"
                    v-bind:class="{'fa-spin fa-spinner': is_loading}"
@@ -108,34 +75,40 @@ import { modal as createModal } from "tlp";
 import { TYPE_EMPTY } from "../../../constants.js";
 import NewItemModalError from "./NewItemModalError.vue";
 import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
+import PropertyTitle from "./Property/PropertyTitle.vue";
+import PropertyDescription from "./Property/PropertyDescription.vue";
 
 export default {
-    components: { NewItemModalError },
+    components: { PropertyTitle, PropertyDescription, NewItemModalError },
     data() {
         return {
-            item_title: "",
-            item_description: "",
+            default_item: {
+                title: "",
+                description: "",
+                type: TYPE_EMPTY
+            },
+            item: {},
+            is_displayed: false,
             is_loading: false,
             modal: null
         };
     },
     computed: {
-        ...mapState(["current_folder", "has_modal_error"]),
-        title_placeholder() {
-            return this.$gettext("My document");
-        },
-        describe_placeholder() {
-            return this.$gettext("My useful document description");
-        }
+        ...mapState(["current_folder", "has_modal_error"])
     },
     mounted() {
         this.modal = createModal(this.$el);
         const show = () => {
+            this.item = { ...this.default_item };
+            this.is_displayed = true;
             this.modal.show();
         };
         document.addEventListener("show-new-document-modal", show);
         this.$once("hook:beforeDestroy", () => {
             document.removeEventListener("show-new-document-modal", show);
+        });
+        this.modal.addEventListener("tlp-modal-hidden", () => {
+            this.is_displayed = false;
         });
     },
     methods: {
@@ -144,9 +117,9 @@ export default {
             this.is_loading = true;
 
             await this.$store.dispatch("createNewDocument", [
-                this.item_title,
-                this.item_description,
-                TYPE_EMPTY,
+                this.item.title,
+                this.item.description,
+                this.item.type,
                 this.current_folder
             ]);
             this.is_loading = false;
