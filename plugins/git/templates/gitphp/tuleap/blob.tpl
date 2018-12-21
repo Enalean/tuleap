@@ -28,6 +28,16 @@
                 <div class="git-repository-blob-image">
                     <img src="data:{$mime};base64,{$data}" />
                 </div>
+            {elseif $is_binaryfile}
+                <div class="empty-pane git-repository-blob-binary-empty-pane">
+                    {include file='tuleap/blob-binary-file-svg.tpl'}
+                    <div class="empty-page-text-with-small-text">
+                        {t domain="gitphp"}This file is a binary file.{/t}
+                        <div class="empty-page-small-text">
+                            {t domain="gitphp"}It can't be previewed in Tuleap yet.{/t}
+                        </div>
+                    </div>
+                </div>
             {else}
                 {* Just plain display *}
                 <div id="git-repository-blob-file">

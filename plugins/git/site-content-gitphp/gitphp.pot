@@ -154,6 +154,9 @@ msgstr ""
 msgid "Invalid search type"
 msgstr ""
 
+msgid "It can't be previewed in Tuleap yet."
+msgstr ""
+
 msgid "List"
 msgstr ""
 
@@ -230,6 +233,9 @@ msgid "Terms"
 msgstr ""
 
 msgid "The requested resource cannot be found."
+msgstr ""
+
+msgid "This file is a binary file."
 msgstr ""
 
 msgid "Tree"

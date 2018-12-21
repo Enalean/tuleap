@@ -212,6 +212,9 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
                     $this->tpl->assign('mime', $mime);
                     $this->tpl->assign('data', base64_encode($blob->GetData()));
                     return;
+                } elseif ($mimetype !== 'image' && $mimetype !== "text") {
+                    $this->tpl->assign('is_binaryfile', true);
+                    return;
                 }
             }
         }
