@@ -222,6 +222,7 @@ describe("rest-querier", () => {
                 item_type: "empty",
                 parent_id: 2
             });
+            mockFetchSuccess(tlp.post, { return_json: { id: 66, uri: "path/to/66" } });
 
             await addNewDocument("my empty document", "", "empty", 2);
 

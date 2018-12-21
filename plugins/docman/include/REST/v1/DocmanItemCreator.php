@@ -52,6 +52,9 @@ class DocmanItemCreator
         $this->item_factory             = $item_factory;
     }
 
+    /**
+     * @return Docman_Item
+     */
     public function create(
         Docman_Item $parent_item,
         PFUser $user,
@@ -73,6 +76,8 @@ class DocmanItemCreator
 
         $this->inheritPermissionsFromParent($item);
         $this->triggerPostCreationEvents($item, $user, $parent_item, $project);
+
+        return $item;
     }
 
     private function inheritPermissionsFromParent(Docman_Item $item)
