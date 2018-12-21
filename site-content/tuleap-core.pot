@@ -343,6 +343,9 @@ msgstr ""
 msgid "Display in iframe"
 msgstr ""
 
+msgid "Display platform statistics on home page."
+msgstr ""
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr ""
 
@@ -750,6 +753,9 @@ msgid "Personal API access keys"
 msgstr ""
 
 msgid "Platform administration"
+msgstr ""
+
+msgid "Platform statistics"
 msgstr ""
 
 msgid "Please accept term of service"

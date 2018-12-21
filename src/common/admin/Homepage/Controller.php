@@ -74,6 +74,7 @@ class Admin_Homepage_Controller {
             $this->csrf,
             $title,
             $this->dao->isStandardHomepageUsed(),
+            $this->dao->areStatisticsDisplayedOnHomePage(),
             $headlines
         );
 
@@ -90,6 +91,12 @@ class Admin_Homepage_Controller {
 
         if ($this->request->get('use_standard_homepage')) {
             $this->dao->useStandardHomepage();
+        }
+
+        if ($this->request->get('use_statistics_homepage')) {
+            $this->dao->toggleStatisticsOnHomePage(true);
+        } else {
+            $this->dao->toggleStatisticsOnHomePage(false);
         }
 
         $headlines = $this->request->get('headlines');

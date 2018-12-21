@@ -254,7 +254,12 @@ class BurningParrotTheme extends BaseLayout
 
         $display_new_account_button = ($current_user->isAnonymous() && $display_new_account_button);
 
-        $statistics_collection_builder = new StatisticsCollectionBuilder($this->project_manager, $this->user_manager, $this->event_manager);
+        $statistics_collection_builder = new StatisticsCollectionBuilder(
+            $this->project_manager,
+            $this->user_manager,
+            $this->event_manager,
+            $homepage_dao
+        );
         $statistics_collection = $statistics_collection_builder->build();
 
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';

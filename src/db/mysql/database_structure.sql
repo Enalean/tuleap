@@ -1616,7 +1616,8 @@ CREATE TABLE tour_usage_statistics (
 
 DROP TABLE IF EXISTS homepage;
 CREATE TABLE homepage (
-    use_standard_homepage TINYINT(1) NOT NULL PRIMARY KEY
+    use_standard_homepage TINYINT(1) NOT NULL PRIMARY KEY,
+    display_platform_statistics TINYINT(1) NOT NULL
 );
 
 DROP TABLE IF EXISTS homepage_headline;
