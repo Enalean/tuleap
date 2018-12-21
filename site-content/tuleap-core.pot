@@ -346,6 +346,9 @@ msgstr ""
 msgid "Display platform statistics on home page."
 msgstr ""
 
+msgid "Display site news on home page."
+msgstr ""
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr ""
 
@@ -966,6 +969,9 @@ msgstr ""
 msgid "Site homepage"
 msgstr ""
 
+msgid "Site news"
+msgstr ""
+
 msgid "Start by choosing a widget"
 msgstr ""
 
@@ -1438,6 +1444,12 @@ msgstr ""
 msgid ""
 "You should remove user from news administrators before being able to remove "
 "him from writers."
+msgstr ""
+
+msgid ""
+"You still have <code>$sys_display_homepage_news</code> variable defined in "
+"local.inc. It's now stored in DB, you should remove it from the file to "
+"avoid confusion."
 msgstr ""
 
 msgid ""

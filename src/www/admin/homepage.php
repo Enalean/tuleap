@@ -28,7 +28,8 @@ $controller = new Admin_Homepage_Controller(
     new Admin_Homepage_Dao(),
     $request,
     $GLOBALS['Response'],
-    new AdminPageRenderer()
+    new AdminPageRenderer(),
+    new ConfigDao()
 );
 $router = new Admin_Homepage_Router($controller, $request);
 $router->route();

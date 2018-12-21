@@ -65,24 +65,7 @@ class Admin_Homepage_Dao extends DataAccessObject {
     public function useStandardHomepage() {
         $this->resetUsageOfStandardHomepage();
 
-        $sql = "REPLACE INTO homepage (use_standard_homepage, display_platform_statistics) VALUES (1, 1)";
-
-        return $this->update($sql);
-    }
-
-    public function areStatisticsDisplayedOnHomePage()
-    {
-        $sql = "SELECT * FROM homepage";
-
-        $row = $this->retrieve($sql)->getRow();
-
-        return (bool)$row['display_platform_statistics'];
-    }
-
-    public function toggleStatisticsOnHomePage($display_statistics)
-    {
-        $display_statistics = $this->da->escapeInt($display_statistics);
-        $sql = "UPDATE homepage SET display_platform_statistics = $display_statistics";
+        $sql = "REPLACE INTO homepage (use_standard_homepage) VALUES (1)";
 
         return $this->update($sql);
     }

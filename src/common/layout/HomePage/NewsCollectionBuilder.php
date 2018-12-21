@@ -26,6 +26,7 @@ use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
 {
+    const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
     /**
      * @var NewsDao
      */
@@ -54,7 +55,7 @@ class NewsCollectionBuilder
     public function build()
     {
         $all_news = [];
-        if (ForgeConfig::get('sys_display_homepage_news')) {
+        if (ForgeConfig::get(self::CONFIG_DISPLAY_NEWS)) {
             foreach ($this->dao->getNewsForSiteHomePage() as $news) {
                 $all_news []= new HomePageNews(
                     $this->purifier,

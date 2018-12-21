@@ -23,6 +23,7 @@
 
         bindSwitchStandardHomepage();
         bindSwitchStatisticsOnHomePage();
+        bindSwitchNewsOnHomePage();
         initCKEditor();
         selector.change(switchHeadline);
 
@@ -62,6 +63,11 @@
 
         function bindSwitchStatisticsOnHomePage() {
             $("#use_statistics_homepage").on("change", function() {
+                $("#admin-homepage").submit();
+            });
+        }
+        function bindSwitchNewsOnHomePage() {
+            $("#use_news_homepage").on("change", function() {
                 $("#admin-homepage").submit();
             });
         }
