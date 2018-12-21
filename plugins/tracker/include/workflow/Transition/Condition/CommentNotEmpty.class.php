@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2016. All Rights Reserved.
  *
@@ -18,8 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
-class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_Condition
+class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_Condition //phpcs:ignore
 {
     /** @var bool */
     private $is_comment_required;
@@ -38,6 +40,14 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
         parent::__construct($transition);
         $this->dao                 = $dao;
         $this->is_comment_required = $is_comment_required;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCommentRequired()
+    {
+        return $this->is_comment_required;
     }
 
     /**
@@ -108,5 +118,10 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
         }
 
         return true;
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitCommentNotEmpty($this);
     }
 }

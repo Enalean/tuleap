@@ -190,7 +190,55 @@ class TransitionsResource extends AuthenticatedResource
 
     private function sendAllowHeaderForTransition()
     {
-        Header::allowOptionsPostDelete();
+        Header::allowOptionsGetPostDelete();
+    }
+
+    /**
+     * Get a transition
+     *
+     * REST route to get a transition
+     *
+     * @url GET {id}
+     * @status 200
+     *
+     * @access protected
+     *
+     * @param int $id Id of transition
+     *
+     * @return TransitionRepresentation
+     *
+     * @throws 401 I18NRestException
+     * @throws 403 I18NRestException
+     * @throws 404 I18NRestException
+     * @throws \Luracast\Restler\RestException
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusDeletedException
+     * @throws \User_StatusInvalidException
+     * @throws \User_StatusPendingException
+     * @throws \User_StatusSuspendedException
+     * @throws OrphanTransitionException
+     */
+    protected function getTransition($id)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaderForTransition();
+
+        $transition = $this->getTransitionFactory()->getTransition($id);
+        if ($transition === null) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
+        }
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $this->getPermissionsChecker()->checkRead($current_user, $transition);
+        $workflow = $transition->getWorkflow();
+        if ($workflow === null) {
+            throw new OrphanTransitionException($transition);
+        }
+        $project = $workflow->getTracker()->getProject();
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
+
+        return (new TransitionRepresentationBuilder($transition))->build();
     }
 
     /**
