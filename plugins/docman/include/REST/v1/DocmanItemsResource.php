@@ -29,7 +29,6 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_Log;
 use EventManager;
-use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
@@ -112,13 +111,21 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * Create new item
      *
-     * Warning: only empty and file items can be created.
+     * <pre>
+     * /!\ Docman REST routes are under construction and subject to changes /!\
+     * </pre>
+     *
+     * Warning: only empty, wiki and file items can be created.
      *
      * When creating a new file, you will get an URL where the file needs
      * to be uploaded using the
      * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
      * to validate the item creation. You will need to use the same authentication mechanism you used
      * to call this endpoint.
+     *
+     * If you want to create an empty item, all keys xxx_properties must be null
+     *
+     * @param DocmanItemPOSTRepresentation $docman_item_post_representation
      *
      * @url    POST
      * @status 201
@@ -149,11 +156,10 @@ class DocmanItemsResource extends AuthenticatedResource
         $document_on_going_upload_dao = new DocumentOngoingUploadDAO();
 
         $docman_item_creator = new DocmanItemCreator(
-            $this->getPermissionManager(),
-            $this->event_manager,
             $this->getItemFactory($project->getID()),
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
-            new DocumentToUploadCreator($document_on_going_upload_dao)
+            new DocumentToUploadCreator($document_on_going_upload_dao),
+            new AfterItemCreationVisitor($this->getPermissionManager(), $this->event_manager)
         );
 
         return $docman_item_creator->create(

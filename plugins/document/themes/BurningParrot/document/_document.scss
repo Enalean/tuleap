@@ -67,6 +67,14 @@
 .document-folder-content-icon {
     flex: 0 0 auto;
     margin: 0 5px 0 0;
+
+    &.document-wiki-icon {
+        position: relative;
+        left: 2px;
+        top: 5px;
+        margin: 0 9px 0 0;
+        font-size: 13px;
+    }
 }
 
 .document-folder-toggle {

@@ -105,6 +105,7 @@ export default {
         reset() {
             this.$store.commit("resetModalError");
             this.is_displayed = false;
+            this.is_loading = false;
         },
         async addDocument(event) {
             event.preventDefault();

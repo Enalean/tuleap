@@ -823,8 +823,15 @@ class Docman_ItemFactory
      * @return Docman_Item
      * @throws CannotInstantiateItemWeHaveJustCreatedInDBException
      */
-    public function createWithoutOrdering($title, $description, $parent_id, $status_id, $user_id, $item_type_id)
-    {
+    public function createWithoutOrdering(
+        $title,
+        $description,
+        $parent_id,
+        $status_id,
+        $user_id,
+        $item_type_id,
+        $wiki_page
+    ) {
         $row = [
             'title'       => $title,
             'description' => $description,
@@ -834,7 +841,8 @@ class Docman_ItemFactory
             'update_date' => time(),
             'user_id'     => $user_id,
             'status'      => $status_id,
-            'item_type'   => $item_type_id
+            'item_type'   => $item_type_id,
+            'wiki_page'   => $wiki_page
 
         ];
         $id  = $this->create($row, null);
