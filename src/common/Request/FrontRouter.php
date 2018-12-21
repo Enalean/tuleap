@@ -52,19 +52,25 @@ class FrontRouter
      * @var ThemeManager
      */
     private $theme_manager;
+    /**
+     * @var \PluginManager
+     */
+    private $plugin_manager;
 
     public function __construct(
         RouteCollector $route_collector,
         URLVerificationFactory $url_verification_factory,
         Logger $logger,
         ErrorRendering $error_rendering,
-        ThemeManager $theme_manager
+        ThemeManager $theme_manager,
+        \PluginManager $plugin_manager
     ) {
         $this->route_collector          = $route_collector;
         $this->url_verification_factory = $url_verification_factory;
         $this->logger                   = $logger;
         $this->error_rendering          = $error_rendering;
         $this->theme_manager            = $theme_manager;
+        $this->plugin_manager           = $plugin_manager;
     }
 
     public function route(HTTPRequest $request)
@@ -81,35 +87,11 @@ class FrontRouter
                 case FastRoute\Dispatcher::FOUND:
                     if (is_callable($route_info[1])) {
                         $handler = $route_info[1]();
-
-                        if ($handler instanceof DispatchableWithBurningParrot) {
-                            $layout = $this->getBurningParrotTheme($request);
-                        } else {
-                            $layout = $this->theme_manager->getTheme($request->getCurrentUser());
-                        }
-                        $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
-
-                        if ($handler instanceof DispatchableWithRequestNoAuthz) {
-                            $handler->process($request, $layout, $route_info[2]);
-                        } else {
-                            $project = null;
-                            if ($handler instanceof DispatchableWithProject) {
-                                $project = $handler->getProject($request, $route_info[2]);
-                                if (! $project instanceof \Project) {
-                                    throw new \RuntimeException('DispatchableWithProject::getProject must return a project, null received');
-                                }
-                            }
-                            $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
-                            $url_verification->assertValidUrl($_SERVER, $request, $project);
-
-                            if ($handler instanceof DispatchableWithRequest) {
-                                $handler->process($request, $layout, $route_info[2]);
-                            } else {
-                                throw new \RuntimeException('No valid handler associated to route');
-                            }
-                        }
+                        $this->routeHandler($request, $handler, $route_info);
                     } else {
-                        throw new \RuntimeException('No valid handler associated to route');
+                        if (is_array($route_info[1]) && isset($route_info[1]['plugin']) && isset($route_info[1]['handler'])) {
+                            $this->routeHandler($request, $this->getPluginHandler($route_info[1]['plugin'], $route_info[1]['handler']), $route_info);
+                        }
                     }
                     break;
             }
@@ -176,5 +158,48 @@ class FrontRouter
         return FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) {
             $this->route_collector->collect($r);
         });
+    }
+
+    /**
+     * @param HTTPRequest $request
+     * @param             $handler
+     * @param array       $route_info
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
+    private function routeHandler(HTTPRequest $request, DispatchableWithRequest $handler, array $route_info)
+    {
+        if ($handler instanceof DispatchableWithBurningParrot) {
+            $layout = $this->getBurningParrotTheme($request);
+        } else {
+            $layout = $this->theme_manager->getTheme($request->getCurrentUser());
+        }
+        $GLOBALS['HTML'] = $GLOBALS['Response'] = $layout;
+
+        if ($handler instanceof DispatchableWithRequestNoAuthz) {
+            $handler->process($request, $layout, $route_info[2]);
+        } else {
+            $project = null;
+            if ($handler instanceof DispatchableWithProject) {
+                $project = $handler->getProject($request, $route_info[2]);
+                if (! $project instanceof \Project) {
+                    throw new \RuntimeException('DispatchableWithProject::getProject must return a project, null received');
+                }
+            }
+            $url_verification = $this->url_verification_factory->getURLVerification($_SERVER);
+            $url_verification->assertValidUrl($_SERVER, $request, $project);
+
+            if ($handler instanceof DispatchableWithRequest) {
+                $handler->process($request, $layout, $route_info[2]);
+            } else {
+                throw new \RuntimeException('No valid handler associated to route');
+            }
+        }
+    }
+
+    private function getPluginHandler(string $plugin, string $handler)
+    {
+        $plugin = $this->plugin_manager->getPluginByName($plugin);
+        return $plugin->$handler();
     }
 }

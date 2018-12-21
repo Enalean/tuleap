@@ -140,8 +140,8 @@ class GitRoutingTest extends TestCase
 
     private function runTestOnURL($method, $uri, $expected_dispatch_status, $expected_dispatch_handler)
     {
-        $dispatcher = \FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route_collector) {
-            $git_plugin = Mockery::mock(GitPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $git_plugin = Mockery::mock(GitPlugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $dispatcher = \FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $route_collector) use ($git_plugin) {
             $git_plugin->shouldReceive(
                 [
                     'getRepositoryFactory'      => \Mockery::mock(GitRepositoryFactory::class),
@@ -161,7 +161,8 @@ class GitRoutingTest extends TestCase
                     'getIncludeAssets'                => \Mockery::mock(IncludeAssets::class),
                     'getHeaderRenderer'               => Mockery::mock(HeaderRenderer::class),
                     'getThemeManager'                 => Mockery::mock(\ThemeManager::class),
-                    'getGitRepositoryHeaderDisplayer' => Mockery::mock(GitRepositoryHeaderDisplayer::class)
+                    'getGitRepositoryHeaderDisplayer' => Mockery::mock(GitRepositoryHeaderDisplayer::class),
+                    'getName'                         => 'git',
                 ]
             );
 
@@ -173,6 +174,8 @@ class GitRoutingTest extends TestCase
         $route_info = $dispatcher->dispatch($method, $uri);
 
         $this->assertEquals($expected_dispatch_status, $route_info[0]);
-        $this->assertInstanceOf($expected_dispatch_handler, $route_info[1]());
+        $handler_name = $route_info[1]['handler'];
+        $controller = $git_plugin->$handler_name();
+        $this->assertInstanceOf($expected_dispatch_handler, $controller);
     }
 }
