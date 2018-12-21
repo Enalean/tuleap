@@ -21,11 +21,9 @@
     <div>
         <folder-header/>
         <folder-loading-screen v-if="is_loading_folder"/>
-        <div class="tlp-card" v-else>
-            <empty-folder-for-writers v-if="is_folder_empty && current_folder.user_can_write"/>
-            <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
-            <folder-content v-else/>
-        </div>
+        <empty-folder-for-writers v-else-if="is_folder_empty && current_folder.user_can_write"/>
+        <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
+        <folder-content v-else/>
     </div>
 </template>
 <script>

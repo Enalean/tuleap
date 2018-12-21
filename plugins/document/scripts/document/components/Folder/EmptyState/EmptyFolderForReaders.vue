@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="empty-pane">
+    <div class="empty-page">
         <div class="empty-page-illustration">
             <empty-folder-for-readers-svg/>
         </div>
