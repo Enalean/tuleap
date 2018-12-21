@@ -29,7 +29,7 @@
             {t domain="gitphp"}Download{/t}
         </a>
         {if $blob->GetPath()}
-            {if $datatag}
+            {if $datatag || $is_binaryfile || $is_file_in_special_format}
                 <a href="{$SCRIPT_NAME}?a=history&amp;hb={$commit->GetHash()|urlencode}&amp;h={$commit->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}"
                    class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-history-datatag"
                 >

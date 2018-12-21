@@ -210,7 +210,7 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
             EventManager::instance()->processEvent($event);
 
             if ($event->isFileInSpecialFormat()) {
-                $this->tpl->assign('is_file_in_sepcial_format', true);
+                $this->tpl->assign('is_file_in_special_format', true);
                 return;
             }
 
