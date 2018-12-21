@@ -354,47 +354,39 @@ class Docman_ItemDao extends DataAccessObject {
         if (!isset($row['update_date']) || $row['update_date'] == '') {
             $row['update_date'] = time();
         }
-        
+
+        $item_id = $this->updateAndGetLastId('INSERT INTO plugin_docman_item_id VALUES (NULL)');
+        if ($item_id === false) {
+            return false;
+        }
+        $row['item_id'] = $item_id;
+
         $arg    = array();
         $values = array();
-        $cols   = array('parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
+        $cols   = array('item_id', 'parent_id', 'group_id', 'title', 'description', 'create_date', 'update_date', 'user_id', 'status', 'obsolescence_date', 'rank', 'item_type', 'link_url', 'wiki_page', 'file_is_embedded');
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
                 $values[] = $this->da->quoteSmart($value);
             }
         }
-        if (count($arg)) {
-            $sql = 'INSERT INTO plugin_docman_item '
-                .'('.implode(', ', $arg).')'
-                .' VALUES ('.implode(', ', $values).')';
-            return $this->_createAndReturnId($sql, $updateParent);
-        } else {
+        if (count($arg) === 0) {
             return false;
         }
+        $sql = 'INSERT INTO plugin_docman_item '
+            .'('.implode(', ', $arg).')'
+            .' VALUES ('.implode(', ', $values).')';
+
+        $inserted = $this->update($sql);
+        if (! $inserted) {
+            return false;
+        }
+        if ($updateParent) {
+            $this->_updateUpdateDateOfParent($item_id);
+        }
+        return $item_id;
     }
 
-    /**
-     * Creates an item by calling the given SQL request, and returns the new ID
-     *  
-     * @param $sql          SQL request
-     * @param $updateParent Determines if the parent folder "update date" must be updated
-     */
-    function _createAndReturnId($sql, $updateParent) {
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-                if ($inserted && $updateParent) {
-                    $this->_updateUpdateDateOfParent($row['id']);
-                }
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
-    }
     /**
      * Update a row in the table plugin_docman_item 
      *

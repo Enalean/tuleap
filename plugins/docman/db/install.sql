@@ -1,6 +1,11 @@
+DROP TABLE IF EXISTS plugin_docman_item_id;
+CREATE TABLE plugin_docman_item_id (
+  id INT(11) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS plugin_docman_item;
 CREATE TABLE plugin_docman_item (
-  item_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  item_id INT(11) UNSIGNED NOT NULL,
   parent_id INT(11) UNSIGNED NULL,
   group_id INT(11) UNSIGNED NULL,
   title TEXT NULL,
@@ -404,7 +409,7 @@ CREATE TABLE plugin_docman_notification_ugroups (
 
 DROP TABLE IF EXISTS plugin_docman_new_document_upload;
 CREATE TABLE plugin_docman_new_document_upload (
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    item_id INT(11) UNSIGNED PRIMARY KEY REFERENCES plugin_docman_item_id(id),
     expiration_date INT(11) UNSIGNED NOT NULL,
     parent_id INT(11) UNSIGNED NOT NULL,
     title TEXT NULL,
@@ -414,7 +419,7 @@ CREATE TABLE plugin_docman_new_document_upload (
     filesize INT(11) UNSIGNED NULL,
     INDEX idx_parentid (parent_id),
     INDEX idx_expiration_date (expiration_date)
-);
+) ENGINE=InnoDB;
 
 -- Enable service for project 1 and 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ( 100 , 'plugin_docman:service_lbl_key' , 'plugin_docman:service_desc_key' , 'docman', '/plugins/docman/?group_id=$group_id', 1 , 0 , 'system',  95 );
@@ -517,7 +522,9 @@ INSERT INTO permissions_values VALUES ('PLUGIN_DOCMAN_ADMIN', 4, 1);
 INSERT INTO plugin_docman_metadata_love(value_id, name, description, rank, status) VALUES (100, 'love_special_none_name_key', 'love_special_none_desc_key', 0, 'P');
 
 -- Instanciate docman in default template project
-INSERT INTO plugin_docman_item (parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded) VALUES (0, 100, 'roottitle_lbl_key', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
+INSERT INTO plugin_docman_item_id VALUES (NULL);
+INSERT INTO plugin_docman_item (item_id, parent_id, group_id, title, description, create_date, update_date, delete_date, user_id, status, obsolescence_date, rank, item_type, link_url, wiki_page, file_is_embedded)
+VALUES (LAST_INSERT_ID(), 0, 100, 'roottitle_lbl_key', '', UNIX_TIMESTAMP(NOW()), UNIX_TIMESTAMP(NOW()), NULL, 101, 0, 0, 0, 1, NULL, NULL, NULL);
 
 INSERT INTO  plugin_docman_project_settings (group_id, view, use_obsolescence_date, use_status)
 VALUES (100, 'Tree', 0, 0);
