@@ -157,13 +157,18 @@ class Group {
 		return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
 	}
 
-        public function getUnixNameLowerCase() {
-            return strtolower($this->getUnixNameMixedCase());
-        }
+    public function getUnixNameLowerCase() {
+        return strtolower($this->getUnixNameMixedCase());
+    }
 
-        public function getUnixNameMixedCase() {
-            return $this->data_array['unix_group_name'];
-        }
+    public function getUnixNameMixedCase() {
+        return $this->data_array['unix_group_name'];
+    }
+
+    public function getUrl()
+    {
+        return '/projects/'.urlencode($this->getUnixNameMixedCase());
+    }
 
     /** @deprecated */
     public function getPublicName() {

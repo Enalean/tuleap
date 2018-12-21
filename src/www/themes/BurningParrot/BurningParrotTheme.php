@@ -30,9 +30,11 @@ use ProjectManager;
 use TemplateRendererFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbPresenterBuilder;
+use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SidebarPresenter;
+use Tuleap\News\NewsDao;
 use Tuleap\Theme\BurningParrot\Navbar\PresenterBuilder as NavbarPresenterBuilder;
 use URLRedirect;
 use User_LoginPresenterBuilder;
@@ -262,6 +264,9 @@ class BurningParrotTheme extends BaseLayout
         );
         $statistics_collection = $statistics_collection_builder->build();
 
+        $news_collection_builder = new NewsCollectionBuilder(new NewsDao(), $this->project_manager, $this->user_manager, \Codendi_HTMLPurifier::instance());
+        $news_collection = $news_collection_builder->build();
+
         $templates_dir = ForgeConfig::get('codendi_dir') . '/src/templates/homepage/';
         $renderer      = TemplateRendererFactory::build()->getRenderer($templates_dir);
         $presenter     = new HomePagePresenter(
@@ -271,7 +276,8 @@ class BurningParrotTheme extends BaseLayout
             $login_presenter,
             $display_new_account_button,
             $login_url,
-            $statistics_collection
+            $statistics_collection,
+            $news_collection
         );
         $renderer->renderToPage('homepage', $presenter);
     }

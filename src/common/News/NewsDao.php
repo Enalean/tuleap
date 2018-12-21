@@ -54,4 +54,28 @@ class NewsDao extends \Tuleap\DB\DataAccessObject
 
         return $this->getDB()->safeQuery($sql, array_merge($promoted_ids_condition->values(), [$project_id]));
     }
+
+    public function getNewsForSiteHomePage()
+    {
+        $statement = EasyStatement::open()->in('?*', [\Project::ACCESS_PUBLIC, \Project::ACCESS_PUBLIC_UNRESTRICTED]);
+
+        $sql = "SELECT
+                    groups.group_id,
+                    groups.group_name,
+                    groups.unix_group_name,
+                    news_bytes.submitted_by,
+                    news_bytes.forum_id,
+                    news_bytes.summary,
+                    news_bytes.date,
+                    news_bytes.details
+            FROM news_bytes
+                INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
+            WHERE news_bytes.is_approved = 1
+                AND groups.status = 'A'
+                AND groups.access IN ($statement)
+            GROUP BY news_bytes.forum_id
+            ORDER BY date DESC LIMIT 3";
+
+        return $this->getDB()->safeQuery($sql, $statement->values());
+    }
 }

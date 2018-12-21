@@ -208,15 +208,33 @@ body.homepage > #main-container {
     fill: $tlp-ui-white;
 }
 
-.homepage-statistics {
+.homepage-bottom-content {
     display: flex;
     position: relative;
     z-index: 3;
     flex: 1 1 auto;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1400px;
+    margin: -100px auto 60px;
+    padding: 60px;
+
+    @media screen and (max-width: $homepage-small-screen-width) {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.homepage-statistics {
+    display: flex;
+    flex: 1 0 50%;
     flex-wrap: wrap;
     justify-content: center;
-    width: 100%;
-    margin: -100px 0 60px;
+    margin: 0 60px 0 0;
+
+    @media screen and (max-width: $homepage-small-screen-width) {
+        margin: 0 0 60px;
+    }
 }
 
 .homepage-statistic {
@@ -296,6 +314,64 @@ body.homepage > #main-container {
     }
 }
 
+.homepage-news-container-title {
+    margin: 0 0 40px;
+    color: lighten($tlp-theme-color, 3%);
+    font-size: 42px;
+}
+
+.homepage-news {
+    margin: 0 0 40px;
+}
+
+.homepage-news-title {
+    margin: 0 0 7px;
+    color: $tlp-ui-white;
+    font-size: 24px;
+    line-height: 32px;
+    text-transform: none;
+}
+
+.homepage-news-info {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-half-spacing;
+    color: $tlp-ui-border-dark;
+    font-size: 13px;
+
+    > .homepage-news-info-user {
+        display: flex;
+        align-items: center;
+        margin: 0 10px 0 0;
+        color: $tlp-ui-border-dark;
+
+        > .tlp-avatar-mini {
+            flex: 0 0 auto;
+            margin: 0 5px 0 0;
+        }
+    }
+
+    > .homepage-news-info-time-ago {
+        margin: 0 10px 0 0;
+
+        > .fa-clock-o {
+            margin: 0 5px 0 0;
+        }
+    }
+
+    > .homepage-news-info-project {
+        color: $tlp-ui-border-dark;
+
+        > .fa-archive {
+            margin: 0 5px 0 0;
+        }
+    }
+}
+
+.homepage-news-content {
+    color: transparentize($tlp-ui-white, .25);
+    line-height: 28px;
+}
 
 .homepage > footer {
     position: relative;
