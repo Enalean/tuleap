@@ -26,6 +26,9 @@ namespace Tuleap\Timetracking\REST\v1;
 
 use Luracast\Restler\RestException;
 use Project;
+use Tracker_FormElementFactory;
+use Tracker_REST_TrackerRestBuilder;
+use TrackerFactory;
 use Tuleap\REST\UserManager as RestUserManager;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupDao;
@@ -36,44 +39,97 @@ use Tuleap\Timetracking\Time\TimeRetriever;
 
 class ProjectResource
 {
+    const TIMETRACKING_CRITERION = 'with_time_tracking';
+
     /** @var \Tuleap\REST\UserManager */
     private $rest_user_manager;
 
+    /**
+     * @var TimeRetriever
+     */
+    private $time_retriever;
+
+    /**
+     * @var TimetrackingOverviewRepresentationsBuilder
+     */
+    private $timetracking_overview_builder;
+
     public function __construct()
     {
-        $this->rest_user_manager = RestUserManager::build();
+        $this->rest_user_manager             = RestUserManager::build();
+        $this->permissions_retriever         = new PermissionsRetriever(
+            new TimetrackingUgroupRetriever(
+                new TimetrackingUgroupDao()
+            )
+        );
+        $this->time_retriever                = new TimeRetriever(
+            new TimeDao(),
+            $this->permissions_retriever,
+            new AdminDao(),
+            \ProjectManager::instance()
+        );
+        $this->timetracking_overview_builder = new TimetrackingOverviewRepresentationsBuilder(
+            new AdminDao(),
+            $this->permissions_retriever,
+            TrackerFactory::instance(),
+            new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance())
+        );
     }
 
     /**
-     * @param       $limit
-     * @param       $offset
-     * @param array $query
+     * @param  int   $limit
+     * @param  int   $offset
+     * @param  array $query
+     *
      * @return Project[]
+     *
      * @throws RestException
      * @throws \Rest_Exception_InvalidTokenException
      * @throws \User_PasswordExpiredException
-     * @throws \User_StatusDeletedException
      * @throws \User_StatusInvalidException
-     * @throws \User_StatusPendingException
-     * @throws \User_StatusSuspendedException
      */
     public function getProjects($limit, $offset, array $query)
     {
         $this->checkQuery($query);
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $time_retriever = new TimeRetriever(
-            new TimeDao(),
-            new PermissionsRetriever(
-                new TimetrackingUgroupRetriever(
-                    new TimetrackingUgroupDao()
-                )
-            ),
-            new AdminDao(),
-            \ProjectManager::instance()
-        );
+        return $this->time_retriever->getProjectsWithTimetracking($current_user, $limit, $offset);
+    }
 
-        return $time_retriever->getProjectsWithTimetracking($current_user, $limit, $offset);
+    /**
+     * @param array   $query
+     * @param String  $representation
+     * @param Project $project
+     * @param int     $limit
+     * @param int     $offset
+     *
+     * @return array
+     *
+     * @throws RestException
+     * @throws 400
+     * @throws \Rest_Exception_InvalidTokenException
+     * @throws \User_PasswordExpiredException
+     * @throws \User_StatusInvalidException
+     */
+    public function getTrackers($query, $representation, Project $project, $limit, $offset)
+    {
+        $this->checkQuery($query);
+        $current_user = $this->rest_user_manager->getCurrentUser();
+        if ($representation === "minimal") {
+            return $this->timetracking_overview_builder->getTrackersMinimalRepresentationsWithTimetracking(
+                $current_user,
+                $project,
+                $limit,
+                $offset
+            );
+        }
+
+        return $this->timetracking_overview_builder->getTrackersFullRepresentationsWithTimetracking(
+            $current_user,
+            $project,
+            $limit,
+            $offset
+        );
     }
 
     /**
@@ -81,7 +137,7 @@ class ProjectResource
      */
     private function checkQuery(array $query)
     {
-        if ($query['with_time_tracking'] === false) {
+        if ($query[self::TIMETRACKING_CRITERION] === false) {
             throw new RestException(
                 400,
                 "Searching projects where timetracking is not enabled is not supported. Use 'with_timetracking': true"

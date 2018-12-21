@@ -20,15 +20,17 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use \TrackerFactory;
-use \Tracker_REST_TrackerRestBuilder;
-use \Tracker_FormElementFactory;
-use \PFUser;
-use \Project;
-use \Luracast\Restler\RestException;
-use \Tuleap\REST\Header;
+use EventManager;
+use Luracast\Restler\RestException;
+use PFUser;
+use Project;
+use Tracker_FormElementFactory;
+use Tracker_REST_TrackerRestBuilder;
+use TrackerFactory;
+use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Widget\Event\GetTrackersWithCriteria;
 
 /**
  * Wrapper for tracker related REST methods
@@ -49,60 +51,41 @@ class ProjectTrackersResource
             throw new RestException(406, 'Maximum value for limit exceeded');
         }
 
-        $builder                 = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
-        $all_trackers            = TrackerFactory::instance()->getTrackersByGroupIdUserCanView($project->getId(), $user);
-        $trackers                = array_slice($all_trackers, $offset, $limit);
-        $tracker_representations = array();
+        $json_decoder                                = new JsonDecoder();
+        $json_query                                  = $json_decoder->decodeAsAnArray('query', $query);
+        $filter_on_tracker_administration_permission = $this->mustFilterOnTrackerAdministration($json_decoder, $query);
 
-        $filter_on_tracker_administration_permission = $this->mustFilterOnTrackerAdministration($query);
+        if (empty($json_query) || isset($json_query["is_tracker_admin"])) {
+            return $this->getTrackerRepresentations(
+                $user,
+                $project,
+                $representation,
+                $limit,
+                $offset,
+                $filter_on_tracker_administration_permission
+            );
 
-        foreach($trackers as $tracker) {
-            if ($filter_on_tracker_administration_permission && ! $tracker->userIsAdmin($user)) {
-                continue;
-            }
-
-            if ($representation === self::MINIMAL_REPRESENTATION) {
-                $tracker_minimal_representation = new MinimalTrackerRepresentation();
-                $tracker_minimal_representation->build($tracker);
-                $tracker_representations[] = $tracker_minimal_representation;
-            } else {
-                $tracker_representations[] = $builder->getTrackerRepresentation($user, $tracker);
-            }
         }
 
-        $this->sendAllowHeaders();
-        $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
-
-        return $tracker_representations;
+        return $this->getTrackersWithCriteria($project, $representation, $limit, $offset, $json_query);
     }
 
     /**
      * @return bool
      * @throws RestException
      */
-    private function mustFilterOnTrackerAdministration($query)
+    private function mustFilterOnTrackerAdministration(JsonDecoder $json_decoder, $query)
     {
         if ($query === '') {
             return false;
         }
 
-        $json_decoder = new JsonDecoder();
-
-        if ($query && ! $json_decoder->looksLikeJson($query)) {
+        if (!$json_decoder->looksLikeJson($query)) {
             throw new RestException(400, 'Query must be in Json');
         }
-
-        $json_query = $json_decoder->decodeAsAnArray('query', $query);
-        if (! isset($json_query['is_tracker_admin'])) {
-            throw new RestException(400, 'You can only filter on "is_tracker_admin"');
-        }
-
-        if (isset($json_query['is_tracker_admin']) && ! $json_query['is_tracker_admin']) {
-            throw new RestException(
-                400,
-                "Filtering for trackers you are not administrator is not supported. Use 'is_tracker_admin': true"
-            );
-        }
+        $event_manager = EventManager::instance();
+        $checker       = new GetTrackersQueryChecker($event_manager);
+        $checker->checkQuery($json_decoder->decodeAsAnArray('query', $query));
 
         return true;
     }
@@ -124,5 +107,70 @@ class ProjectTrackersResource
 
     private function sendAllowHeaders() {
         Header::allowOptionsGet();
+    }
+
+    /**
+     * @param Project $project
+     * @param         $limit
+     * @param         $offset
+     * @param         $json_query
+     * @return MinimalTrackerRepresentation[]
+     * @throws RestException
+     */
+    private function getTrackersWithCriteria(Project $project, $representation, $limit, $offset, $json_query)
+    {
+        $event_manager = EventManager::instance();
+        $get_projects  = new GetTrackersWithCriteria($json_query, $limit, $offset, $project, $representation);
+        $event_manager->processEvent($get_projects);
+        $all_trackers = $get_projects->getTrackersWithCriteria();
+
+        $this->sendAllowHeaders();
+        $this->sendPaginationHeaders($limit, $offset, $get_projects->getTotalTrackers());
+
+        return $all_trackers;
+    }
+
+    /**
+     * @param PFUser  $user
+     * @param Project $project
+     * @param String  $representation
+     * @param int     $limit
+     * @param int     $offset
+     * @param         $filter_on_tracker_administration_permission
+     * @return array
+     */
+    private function getTrackerRepresentations(
+        PFUser $user,
+        Project $project,
+        $representation,
+        $limit,
+        $offset,
+        $filter_on_tracker_administration_permission
+    ) {
+        $all_trackers            = TrackerFactory::instance()->getTrackersByGroupIdUserCanView(
+            $project->getId(),
+            $user
+        );
+        $trackers                = array_slice($all_trackers, $offset, $limit);
+        $builder                 = new Tracker_REST_TrackerRestBuilder(Tracker_FormElementFactory::instance());
+        $tracker_representations = [];
+
+        foreach ($trackers as $tracker) {
+            if ($filter_on_tracker_administration_permission && ! $tracker->userIsAdmin($user)) {
+                continue;
+            }
+            if ($representation === self::MINIMAL_REPRESENTATION) {
+                $tracker_minimal_representation = new MinimalTrackerRepresentation();
+                $tracker_minimal_representation->build($tracker);
+                $tracker_representations[] = $tracker_minimal_representation;
+            } else {
+                $tracker_representations[] = $builder->getTrackerRepresentation($user, $tracker);
+            }
+        }
+
+        $this->sendAllowHeaders();
+        $this->sendPaginationHeaders($limit, $offset, count($all_trackers));
+
+        return $tracker_representations;
     }
 }

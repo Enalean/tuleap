@@ -334,6 +334,24 @@ class TimetrackingTest extends TimetrackingBase
         $this->assertEquals($projects[0]["label"], "Timetracking");
     }
 
+    public function testGetTrackers()
+    {
+        $query = urlencode(
+            json_encode([
+                'with_time_tracking' => true
+            ])
+        );
+
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get('projects/' . $this->timetracking_project_id . '/trackers?query=' . $query)
+        );
+        $trackers =  $response->json();
+        $this->assertTrue(count($trackers) === 1);
+        $this->assertEquals($trackers[0]["id"], $this->tracker_timetracking);
+    }
+
     /**
      * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -347,6 +365,21 @@ class TimetrackingTest extends TimetrackingBase
 
         $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
         $this->getResponse($this->client->get("projects?query=$query"));
+    }
+
+    /**
+     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function testGetTrackersRaiseException()
+    {
+        $query = urlencode(
+            json_encode([
+                "with_time_tracking" => false
+            ])
+        );
+
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $this->getResponse($this->client->get("projects/".$this->timetracking_project_id."/trackers?query=$query"));
     }
 
     /**
