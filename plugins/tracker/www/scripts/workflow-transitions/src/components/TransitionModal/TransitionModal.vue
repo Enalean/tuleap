@@ -28,8 +28,9 @@
             <div class="tlp-modal-close" data-dismiss="modal" aria-label="Close">&times;</div>
         </div>
         <modal-error-feedback/>
-        <div class="tlp-modal-body">
+        <div class="tlp-modal-body tlp-modal-body-with-sections">
             <pre-conditions-section/>
+            <post-actions-section/>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -50,6 +51,7 @@
 
 <script>
 import PreConditionsSection from "./PreConditionsSection.vue";
+import PostActionsSection from "./PostActionsSection.vue";
 import ModalErrorFeedback from "./ModalErrorFeedback.vue";
 import { modal as createModal } from "tlp";
 import { mapMutations } from "vuex";
@@ -58,7 +60,8 @@ export default {
     name: "TransitionModal",
     components: {
         ModalErrorFeedback,
-        PreConditionsSection
+        PreConditionsSection,
+        PostActionsSection
     },
     mounted() {
         const modal = createModal(this.$el);

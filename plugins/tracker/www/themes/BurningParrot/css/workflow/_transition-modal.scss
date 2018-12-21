@@ -21,3 +21,24 @@
     background-color: $tlp-theme-background-color;
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, .7), transparent 100%);
 }
+
+.tracker-workflow-transition-modal-action-card {
+    padding: 0;
+}
+
+.tracker-workflow-transition-modal-action-type {
+    display: flex;
+    align-items: center;
+    padding: $tlp-spacing $tlp-spacing 0;
+}
+
+.tracker-workflow-transition-modal-action-details {
+    padding: $tlp-spacing;
+    border-top: 1px solid $tlp-ui-border-light;
+}
+
+.tracker-workflow-transition-modal-action-remove {
+    margin: 0 0 0 $tlp-spacing;
+    color: $tlp-ui-danger;
+    font-size: 16px;
+}

@@ -16,6 +16,12 @@ msgstr ""
 msgid "(New artifact)"
 msgstr "(Nouvel artefact)"
 
+msgid "Actions automatically performed"
+msgstr "Actions exécutées automatiquement"
+
+msgid "Add action"
+msgstr "Ajouter une action"
+
 msgid "An error occurred"
 msgstr "Une erreur est survenue"
 
@@ -74,11 +80,17 @@ msgstr ""
 "devez d'abord choisir un champ de type liste. Une fois choisi, vous pourrez "
 "configurer les transitions en utilisant la matrice de configuration."
 
+msgid "No action is currently defined."
+msgstr "Aucune action n'est encore définie."
+
 msgid "Save and start configuration"
 msgstr "Sauvegarder et démarrer la configuration"
 
 msgid "Save configuration"
 msgstr "Sauvegarder la configuration"
+
+msgid "Start by adding one."
+msgstr "Commencez par en ajouter une."
 
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""

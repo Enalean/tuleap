@@ -30,3 +30,11 @@
 .tracker-workflow-property-disabled {
     opacity: .5;
 }
+
+.tracker-workflow-transition-modal-empty-action {
+    margin: $tlp-spacing 0;
+    color: transparentize($tlp-theme-color, .7);
+    font-size: 20px;
+    line-height: 26px;
+    text-align: center;
+}

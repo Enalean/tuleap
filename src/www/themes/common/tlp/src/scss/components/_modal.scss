@@ -140,6 +140,23 @@ $tlp-modal-transition: 100ms ease-out;
     background: $tlp-ui-white;
 }
 
+.tlp-modal-body-with-sections {
+    display: flex;
+    padding: 0;
+    overflow-y: unset;
+}
+
+.tlp-modal-body-section {
+    flex: 0 1 50%;
+    padding: $tlp-modal-padding;
+    overflow-y: auto;
+    border-right: 1px solid $tlp-ui-border-light;
+
+    &:last-child {
+        border-right: 0;
+    }
+}
+
 .tlp-modal-footer {
     display: flex;
     justify-content: flex-end;
