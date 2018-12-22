@@ -40,6 +40,10 @@
     white-space: nowrap;
 }
 
+.tlp-table > tbody > tr.document-tree-item-created > td {
+    background: transparentize($tlp-ui-success, .9);
+}
+
 .document-folder-title-loading {
     width: 300px;
 }
