@@ -190,7 +190,7 @@ Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-#Requires: php-sabredav = 1.4.4
+Requires: php-sabredav = 1.4.4
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -540,10 +540,10 @@ done
 # Sudoers directory
 %{__install} -d $RPM_BUILD_ROOT/etc/sudoers.d
 
-#
+
 ## plugin webdav
-#%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
-#
+%{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
+
 ## plugin forumml
 %{__install} -d $RPM_BUILD_ROOT/%{_localstatedir}/run/forumml
 %{__install} plugins/forumml/etc/sudoers.d/tuleap_plugin_forumml $RPM_BUILD_ROOT%{_sysconfdir}/sudoers.d/tuleap_plugin_forumml
@@ -987,7 +987,7 @@ fi
 %files plugin-webdav
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/webdav
-#%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
 
 %files plugin-svn
 %defattr(-,root,root,-)
