@@ -24,26 +24,64 @@ use Tuleap\Docman\Tus\TusFileProvider;
 
 final class DocumentToUploadProvider implements TusFileProvider
 {
-    const ONE_MB_FILE = 1048576;
-
     /**
-     * @var string
+     * @var DocumentUploadPathAllocator
      */
-    private $root_path_storage;
+    private $path_allocator;
+    /**
+     * @var DocumentOngoingUploadDAO
+     */
+    private $dao;
+    /**
+     * @var \Docman_ItemFactory
+     */
+    private $item_factory;
 
-    public function __construct($root_path_storage)
-    {
-        $this->root_path_storage = $root_path_storage;
+    public function __construct(
+        DocumentUploadPathAllocator $path_allocator,
+        DocumentOngoingUploadDAO $dao,
+        \Docman_ItemFactory $item_factory
+    ) {
+        $this->path_allocator = $path_allocator;
+        $this->dao            = $dao;
+        $this->item_factory   = $item_factory;
     }
 
     public function getFile(\Psr\Http\Message\ServerRequestInterface $request)
     {
-        $test_file = $this->root_path_storage . '/test_upload';
-        if (! file_exists($test_file)) {
-            touch($test_file);
-        }
-        $handle = fopen($test_file, 'ab');
+        $item_id = $request->getAttribute('item_id');
+        $user_id = $request->getAttribute('user_id');
 
-        return new DocumentToUpload($handle, self::ONE_MB_FILE, filesize($test_file));
+        if ($item_id === null || $user_id === null) {
+            return null;
+        }
+
+        $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
+            $item_id,
+            $user_id,
+            (new \DateTimeImmutable)->getTimestamp()
+        );
+        if (empty($document_row)) {
+            return null;
+        }
+        $existing_item = $this->item_factory->getItemFromDb($item_id);
+        if ($existing_item !== null) {
+            return new DocumentAlreadyUploaded($document_row['filesize']);
+        }
+
+        $allocated_path           = $this->path_allocator->getPathForItemBeingUploaded($item_id);
+        $allocated_path_directory = dirname($allocated_path);
+
+        if (! \is_dir($allocated_path_directory) &&
+            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)) {
+            return null;
+        }
+
+        if (! file_exists($allocated_path)) {
+            touch($allocated_path);
+        }
+        $handle = fopen($allocated_path, 'ab');
+
+        return new DocumentToUpload($handle, $document_row['filesize'], filesize($allocated_path));
     }
 }

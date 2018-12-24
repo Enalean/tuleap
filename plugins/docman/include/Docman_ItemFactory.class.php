@@ -1080,9 +1080,12 @@ class Docman_ItemFactory
         return $dao->createFromRow($root->toRow());
     }
 
-    function rawCreate($item) {
-        $dao = $this->_getItemDao();
-        return $dao->createFromRow($item->toRow());
+    function rawCreate($item)
+    {
+        $dao            = $this->_getItemDao();
+        $row            = $item->toRow();
+        $row['item_id'] = null;
+        return $dao->createFromRow($row);
     }
 
     /**
