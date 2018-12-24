@@ -151,8 +151,8 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
      *
      * @return Boolean
      */
-    public function httpPOSTHandler($method) {
-
+    public function httpPOSTHandler($method, $uri)
+    {
         if ($method!='POST') {
             return true;
         }
