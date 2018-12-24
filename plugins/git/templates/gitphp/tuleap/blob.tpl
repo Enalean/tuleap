@@ -38,7 +38,7 @@
                         </div>
                     </div>
                 </div>
-            {elseif $is_file_in_sepcial_format}
+            {elseif $is_file_in_special_format}
                 <div class="empty-pane git-repository-blob-empty-pane">
                     {include file='tuleap/blob-binary-lfs-file-svg.tpl'}
                     <div class="empty-page-text-with-small-text">
