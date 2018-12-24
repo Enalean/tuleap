@@ -29,6 +29,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\layout\HomePage\NewsCollectionBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 
 class ConfigSetCommand extends Command
 {
@@ -45,6 +47,8 @@ class ConfigSetCommand extends Command
         ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
         Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
         Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
+        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
+        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
     ];
     /**
      * @var ConfigDao

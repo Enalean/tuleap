@@ -19,6 +19,8 @@
   */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\layout\HomePage\NewsCollectionBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
 
 class Admin_Homepage_Controller {
 
@@ -47,19 +49,25 @@ class Admin_Homepage_Controller {
      * @var AdminPageRenderer
      */
     private $admin_page_renderer;
+    /**
+     * @var ConfigDao
+     */
+    private $config_dao;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         Admin_Homepage_Dao $dao,
         Codendi_Request $request,
         Response $response,
-        AdminPageRenderer $admin_page_renderer
+        AdminPageRenderer $admin_page_renderer,
+        ConfigDao $config_dao
     ) {
         $this->csrf                = $csrf;
         $this->dao                 = $dao;
         $this->request             = $request;
         $this->response            = $response;
         $this->admin_page_renderer = $admin_page_renderer;
+        $this->config_dao          = $config_dao;
     }
 
     public function index()
@@ -74,7 +82,8 @@ class Admin_Homepage_Controller {
             $this->csrf,
             $title,
             $this->dao->isStandardHomepageUsed(),
-            $this->dao->areStatisticsDisplayedOnHomePage(),
+            ForgeConfig::get(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS),
+            ForgeConfig::get(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS),
             $headlines
         );
 
@@ -94,9 +103,15 @@ class Admin_Homepage_Controller {
         }
 
         if ($this->request->get('use_statistics_homepage')) {
-            $this->dao->toggleStatisticsOnHomePage(true);
+            $this->config_dao->save(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, 1);
         } else {
-            $this->dao->toggleStatisticsOnHomePage(false);
+            $this->config_dao->save(StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS, 0);
+        }
+
+        if ($this->request->get('use_news_homepage')) {
+            $this->config_dao->save(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, 1);
+        } else {
+            $this->config_dao->save(NewsCollectionBuilder::CONFIG_DISPLAY_NEWS, 0);
         }
 
         $headlines = $this->request->get('headlines');

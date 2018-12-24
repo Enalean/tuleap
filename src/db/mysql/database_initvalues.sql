@@ -589,7 +589,7 @@ INSERT INTO forum_group_list (group_id,forum_name,is_public,description) VALUES 
 
 INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ERROR');
 
-INSERT INTO homepage (use_standard_homepage, display_platform_statistics) VALUES (1, 1);
+INSERT INTO homepage (use_standard_homepage) VALUES (1);
 
 INSERT INTO homepage_headline (language_id, headline) VALUES
 ('en_US', 'Tuleap helps teams to deliver awesome applications, better, faster, and easier.
@@ -599,6 +599,8 @@ Venez planifier, suivre, développer & collaborer sur vos projets logiciels.');
 
 INSERT INTO forgeconfig (name, value) VALUES ('access_mode', 'anonymous');
 INSERT INTO forgeconfig (name, value) VALUES ('sys_project_approval', '1');
+INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_statistics', '1');
+INSERT INTO forgeconfig (name, value) VALUES ('display_homepage_news', '1');
 
 INSERT INTO password_configuration (breached_password_enabled) VALUES (1);
 

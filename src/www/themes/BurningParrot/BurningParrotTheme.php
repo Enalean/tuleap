@@ -259,8 +259,7 @@ class BurningParrotTheme extends BaseLayout
         $statistics_collection_builder = new StatisticsCollectionBuilder(
             $this->project_manager,
             $this->user_manager,
-            $this->event_manager,
-            $homepage_dao
+            $this->event_manager
         );
         $statistics_collection = $statistics_collection_builder->build();
 

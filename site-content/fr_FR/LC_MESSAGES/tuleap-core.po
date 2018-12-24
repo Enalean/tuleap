@@ -388,6 +388,9 @@ msgstr "Afficher dans une iframe"
 msgid "Display platform statistics on home page."
 msgstr "Afficher les statistiques de la plateforme sur la page d'accueil."
 
+msgid "Display site news on home page."
+msgstr "Afficher les news du site sur la page d'accueil."
+
 msgid "Displays the 30 last updated or created items in the project."
 msgstr "Affiche les 30 derniers éléments modifiés ou créés dans le projet."
 
@@ -1034,6 +1037,9 @@ msgstr "Barre de service (projet)"
 msgid "Site homepage"
 msgstr "Page d'accueil"
 
+msgid "Site news"
+msgstr "News du site"
+
 msgid "Start by choosing a widget"
 msgstr "Commencez par choisir un widget"
 
@@ -1598,6 +1604,15 @@ msgid ""
 msgstr ""
 "Vous devez supprimer l'utilisateur des administrateurs d'annonces avant de "
 "pouvoir l'enlever des rédacteurs"
+
+msgid ""
+"You still have <code>$sys_display_homepage_news</code> variable defined in "
+"local.inc. It's now stored in DB, you should remove it from the file to "
+"avoid confusion."
+msgstr ""
+"La variable <code>$sys_display_homepage_news</code> est toujours définie "
+"dans local.inc. La valeur est désormais stockée en base de données, vous "
+"devriez supprimer l'entrée dans local.inc pour éviter la confusion."
 
 msgid ""
 "You still have <code>$sys_project_approval</code> variable defined in local."

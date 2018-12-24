@@ -61,12 +61,17 @@ class Admin_Homepage_Presenter
     public $label_language;
     /** @var bool */
     public $display_statistics_on_home_page;
+    /** @var bool */
+    public $display_news_on_home_page;
+    /** @var bool */
+    public $warn_local_inc;
 
     public function __construct(
         CSRFSynchronizerToken $csrf,
         $title,
         $use_standard_homepage,
         $display_statistics_on_home_page,
+        $display_news_on_home_page,
         array $headlines
     ) {
         $this->title                           = $title;
@@ -74,9 +79,11 @@ class Admin_Homepage_Presenter
         $this->csrf_token                      = $csrf;
         $this->use_standard_homepage           = $use_standard_homepage;
         $this->display_statistics_on_home_page = $display_statistics_on_home_page;
+        $this->display_news_on_home_page       = $display_news_on_home_page;
 
         $this->path_logo       = Admin_Homepage_LogoFinder::getCurrentUrl();
         $this->use_custom_logo = Admin_Homepage_LogoFinder::isCustomLogoUsed();
+        $this->warn_local_inc  = ForgeConfig::get('sys_display_homepage_news', -1) === -1 ? false : true;
 
         $this->save                        = $GLOBALS['Language']->getText('admin_main', 'save_conf');
         $this->logo                        = $GLOBALS['Language']->getText('admin_main', 'homepage_logo');
