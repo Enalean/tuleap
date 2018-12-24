@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS plugin_docman_notifications;
 DROP TABLE IF EXISTS plugin_docman_notification_ugroups;
 DROP TABLE IF EXISTS plugin_docman_version_deleted;
 DROP TABLE IF EXISTS plugin_docman_new_document_upload;
+DROP TABLE IF EXISTS plugin_docman_item_id;
 
 DELETE FROM service WHERE short_name='docman';
 
@@ -24,5 +25,3 @@ DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_DOCMAN_%';
 DELETE FROM user_preferences WHERE preference_name LIKE 'plugin_docman%';
 
 DROP TABLE IF EXISTS plugin_docman_widget_embedded;
-
-DELETE FROM layouts_contents WHERE name LIKE 'plugin_docman%' OR name = 'mydocman';
