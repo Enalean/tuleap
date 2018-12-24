@@ -59,6 +59,7 @@ class AdminDao extends DataAccessObject
                         ON tracker.id = plugin_timetracking_enabled_trackers.tracker_id
                  INNER JOIN groups AS groups
                         ON groups.group_id = tracker.group_id
+                WHERE groups.status = "A"
                 ORDER BY groups.group_name
                 LIMIT ?
                 OFFSET ?';
