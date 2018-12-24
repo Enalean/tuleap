@@ -310,3 +310,7 @@ CREATE TABLE IF NOT EXISTS plugin_git_commit_status (
   date INT(11) NOT NULL,
   INDEX idx_repository_commit(repository_id, commit_reference)
 );
+
+CREATE TABLE IF NOT EXISTS plugin_git_big_object_authorized_project (
+  project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY
+);

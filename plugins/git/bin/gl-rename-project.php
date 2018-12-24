@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,7 +39,17 @@ $driver      = new Git_GitoliteDriver(
     $url_manager,
     new GitDao(),
     new Git_Mirror_MirrorDao(),
-    PluginManager::instance()->getPluginByName('git')
+    PluginManager::instance()->getPluginByName('git'),
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
+        new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
+        ProjectManager::instance()
+    )
 );
 if ($driver->renameProject($argv[1], $argv[2])) {
     echo "Rename done!\n";

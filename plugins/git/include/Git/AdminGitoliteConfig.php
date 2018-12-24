@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,15 @@
  */
 
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
+use Tuleap\Layout\IncludeAssets;
 
 class Git_AdminGitoliteConfig {
 
-    const ACTION_UPDATE_CONFIG              = 'update_config';
-    const ACTION_MIGRATE_SSH_KEY_MANAGEMENT = 'migrate_to_tuleap_ssh_keys_management';
+    const ACTION_UPDATE_CONFIG                      = 'update_config';
+    const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
+    const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = "update-big-objects-allowed-projects";
 
     /**
      * @var Git_SystemEventManager
@@ -49,18 +52,32 @@ class Git_AdminGitoliteConfig {
      */
     private $management_detector;
 
+    /**
+     * @var BigObjectAuthorizationManager
+     */
+    private $big_object_authorization_manager;
+
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
         Git_SystemEventManager $system_event_manager,
         AdminPageRenderer $admin_page_renderer,
-        ManagementDetector $management_detector
+        ManagementDetector $management_detector,
+        BigObjectAuthorizationManager $big_object_authorization_manager,
+        IncludeAssets $include_assets
     ) {
-        $this->csrf                 = $csrf;
-        $this->project_manager      = $project_manager;
-        $this->system_event_manager = $system_event_manager;
-        $this->admin_page_renderer  = $admin_page_renderer;
-        $this->management_detector  = $management_detector;
+        $this->csrf                             = $csrf;
+        $this->project_manager                  = $project_manager;
+        $this->system_event_manager             = $system_event_manager;
+        $this->admin_page_renderer              = $admin_page_renderer;
+        $this->management_detector              = $management_detector;
+        $this->big_object_authorization_manager = $big_object_authorization_manager;
+        $this->include_assets                   = $include_assets;
     }
 
     public function process(Codendi_Request $request) {
@@ -78,6 +95,10 @@ class Git_AdminGitoliteConfig {
             case self::ACTION_MIGRATE_SSH_KEY_MANAGEMENT:
                 $this->csrf->check();
                 $this->migrateToTuleapSSHKeyManagement();
+                break;
+            case self::ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS:
+                $this->csrf->check();
+                $this->updateBigObjectAllowedProjects($request);
                 break;
             default:
                 $GLOBALS['Response']->addFeedback(
@@ -128,16 +149,70 @@ class Git_AdminGitoliteConfig {
         );
     }
 
+    private function updateBigObjectAllowedProjects(Codendi_Request $request)
+    {
+        if ($request->get('revoke-project')) {
+            $this->revokeProjects($request);
+        }
+
+        if  ($request->get('allow-project')) {
+            $this->allowProject($request);
+        }
+    }
+
+    private function revokeProjects(Codendi_Request $request)
+    {
+        $project_ids = $request->get('project-ids-to-revoke');
+
+        if (empty($project_ids))
+        {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-git', 'No project selected')
+            );
+
+            return;
+        }
+
+        $this->big_object_authorization_manager->revokeProjectAuthorization($project_ids);
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-git', 'Project(s) successfully removed')
+        );
+    }
+
+    private function allowProject(Codendi_Request $request)
+    {
+        $project = $this->getProject($request->get('project-to-allow'));
+
+        if (! $project) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-git', 'Project does not exist')
+            );
+            return;
+        }
+
+        $this->big_object_authorization_manager->authorizeProject($project);
+
+        $GLOBALS['Response']->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-git', 'Project successfully added')
+        );
+    }
+
     public function display(Codendi_Request $request) {
         $title    = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $template_path = dirname(GIT_BASE_DIR).'/templates';
 
-        $GLOBALS['HTML']->includeFooterJavascriptFile(GIT_BASE_URL . '/scripts/admin-gitolite.js');
+        $GLOBALS['HTML']->includeFooterJavascriptFile($this->include_assets->getFileURL('admin-gitolite.js'));
 
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
             $this->csrf,
-            $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap()
+            $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap(),
+            $this->big_object_authorization_manager->getAuthorizedProjects()
         );
 
         $this->admin_page_renderer->renderANoFramedPresenter(

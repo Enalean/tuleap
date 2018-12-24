@@ -1,6 +1,9 @@
 <?php
+
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
+
 /**
- * Copyright (c) Enalean, 2015 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2018. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -40,15 +43,23 @@ class Git_Gitolite_ProjectSerializer {
     /** @var Logger */
     private $logger;
 
+    /**
+     * @var BigObjectAuthorizationManager
+     */
+    private $big_object_authorization_manager;
+
     public function __construct(
             Logger $logger,
             GitRepositoryFactory $repository_factory,
             Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer,
-            Git_GitRepositoryUrlManager $url_manager) {
-        $this->logger = $logger;
-        $this->repository_factory = $repository_factory;
-        $this->permissions_serializer = $permissions_serializer;
-        $this->url_manager = $url_manager;
+            Git_GitRepositoryUrlManager $url_manager,
+            BigObjectAuthorizationManager $big_object_authorization_manager
+    ) {
+        $this->logger                           = $logger;
+        $this->repository_factory               = $repository_factory;
+        $this->permissions_serializer           = $permissions_serializer;
+        $this->url_manager                      = $url_manager;
+        $this->big_object_authorization_manager = $big_object_authorization_manager;
     }
 
     /**
@@ -126,7 +137,7 @@ class Git_Gitolite_ProjectSerializer {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->permissions_serializer->getForRepository($repository);
-        $repo_config .= $this->fetchObjectSizeLimit();
+        $repo_config .= $this->fetchObjectSizeLimit($project);
 
         return $repo_config. PHP_EOL;
     }
@@ -156,10 +167,32 @@ class Git_Gitolite_ProjectSerializer {
     }
 
     /**
+     * @param Project $project
      * @return string
      */
-    private function fetchObjectSizeLimit()
+    private function fetchObjectSizeLimit(Project $project)
     {
+        if ($this->bigObjectsAreAuthorizedForProject($project)) {
+            return "";
+        }
+
         return " - VREF/MAX_NEWBIN_SIZE/" . self::OBJECT_SIZE_LIMIT ." = @all" . PHP_EOL;
+    }
+
+    /**
+     * @param Project $project
+     * @return bool
+     */
+    private function bigObjectsAreAuthorizedForProject(Project $project)
+    {
+        $authorized_projects = $this->big_object_authorization_manager->getAuthorizedProjects();
+
+        foreach ($authorized_projects as $authorized_project) {
+            if ($authorized_project->getID() === $project->getID()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

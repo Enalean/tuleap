@@ -26,6 +26,7 @@ DROP TABLE IF EXISTS plugin_git_default_fine_grained_regexp_enabled;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers_allowed_projects;
 DROP TABLE IF EXISTS plugin_git_global_parameters;
+DROP TABLE IF EXISTS plugin_git_big_object_authorized_project;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

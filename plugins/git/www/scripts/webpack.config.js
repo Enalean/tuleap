@@ -21,6 +21,7 @@ const webpack_configurator = require("../../../../tools/utils/scripts/webpack-co
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
 const assets_public_path = "/plugins/git/assets/";
+const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const path_to_badge = path.resolve(
     __dirname,
@@ -60,4 +61,22 @@ const webpack_config_for_vue = {
     }
 };
 
-module.exports = webpack_config_for_vue;
+const webpack_config_for_burning_parrot = {
+    entry: {
+        "admin-gitolite": "./admin-gitolite.js"
+    },
+    context: path.resolve(__dirname),
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    externals: {
+        tlp: "tlp"
+    },
+    module: {
+        rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            webpack_configurator.rule_po_files
+        ]
+    },
+    plugins: [manifest_plugin, webpack_configurator.getMomentLocalePlugin()]
+};
+
+module.exports = [webpack_config_for_vue, webpack_config_for_burning_parrot];

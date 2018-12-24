@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,26 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-const path = require("path");
-const webpack_config = require("./webpack.config.js")[0];
-const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
 
-webpack_config.mode = "development";
+class b201812241457_add_table_big_object_authorized_project extends ForgeUpgrade_Bucket // @codingStandardsIgnoreLine
+{
+    public function description()
+    {
+        return 'Create plugin_git_commit_status table';
+    }
 
-module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, "./coverage");
-    const base_config = karma_configurator.setupBaseKarmaConfig(
-        config,
-        webpack_config,
-        coverage_dir
-    );
+    public function preUp()
+    {
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
+    }
 
-    Object.assign(base_config, {
-        files: ["repositories/src/app.spec.js"],
-        preprocessors: {
-            "repositories/src/app.spec.js": ["webpack"]
-        }
-    });
-
-    config.set(base_config);
-};
+    public function up()
+    {
+        $this->db->createTable(
+            'plugin_git_big_object_authorized_project',
+            'CREATE TABLE IF NOT EXISTS plugin_git_big_object_authorized_project (
+              project_id INT(11) UNSIGNED NOT NULL PRIMARY KEY
+            );'
+        );
+    }
+}
