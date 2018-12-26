@@ -35,4 +35,26 @@ class DocumentOngoingUploadDAO extends DataAccessObject
 
         return $this->getDB()->run($sql, $parent_id, $title, $current_time);
     }
+
+    public function searchDocumentOngoingUploadByItemID($item_id)
+    {
+        return $this->getDB()->row(
+            'SELECT plugin_docman_new_document_upload.*, `groups`.group_id
+             FROM plugin_docman_new_document_upload
+             JOIN plugin_docman_item ON (plugin_docman_item.item_id = plugin_docman_new_document_upload.parent_id)
+             JOIN `groups` ON (`groups`.group_id = plugin_docman_item.group_id)
+             WHERE plugin_docman_new_document_upload.item_id = ?',
+            $item_id
+        );
+    }
+
+    public function searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate($item_id, $user_id, $current_time)
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_docman_new_document_upload WHERE item_id = ? AND user_id = ? AND expiration_date > ?',
+            $item_id,
+            $user_id,
+            $current_time
+        );
+    }
 }

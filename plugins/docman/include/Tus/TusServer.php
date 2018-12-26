@@ -148,10 +148,12 @@ final class TusServer implements RequestHandlerInterface
         }
 
         $max_size_to_copy = $file->getLength() - $file->getOffset();
-        $copied_size      = stream_copy_to_stream($request->getBody()->detach(), $file->getStream(), $max_size_to_copy);
+        $file_stream      = $file->getStream();
+        $copied_size      = stream_copy_to_stream($request->getBody()->detach(), $file_stream, $max_size_to_copy);
         if ($copied_size === false) {
             throw new CannotWriteFileException();
         }
+        \fflush($file_stream);
 
         $this->event_dispatcher->dispatch(TusEvent::UPLOAD_COMPLETED, $request);
         return $this->response_factory->createResponse(204)

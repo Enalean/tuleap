@@ -1254,13 +1254,31 @@ class DocmanPlugin extends Plugin
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         if (ForgeConfig::get('enable_tus_test_endpoint')) {
-            $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file', function () {
+            $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file/{item_id:\d+}', function () {
+                $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\DocumentOngoingUploadDAO();
+                $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
+                $path_allocator              = new \Tuleap\Docman\Upload\DocumentUploadPathAllocator();
                 return new \Tuleap\Docman\Upload\FileUploadController(
                     new TusServer(
                         MessageFactoryBuilder::build(),
-                        new DocumentToUploadProvider('/tmp'),
+                        new DocumentToUploadProvider(
+                            $path_allocator,
+                            $document_ongoing_upload_dao,
+                            $this->getItemFactory()
+                        ),
                         new \Tuleap\Docman\Tus\GenericTusEventDispatcher(
-                            new \Tuleap\Docman\Upload\DocumentUploaded(new BackendLogger())
+                            new \Tuleap\Docman\Upload\DocumentUploaded(
+                                new BackendLogger(),
+                                $path_allocator,
+                                $this->getItemFactory(),
+                                new Docman_VersionFactory(),
+                                PermissionsManager::instance(),
+                                EventManager::instance(),
+                                $document_ongoing_upload_dao,
+                                new Docman_FileStorage($root_path),
+                                new Docman_MIMETypeDetector(),
+                                UserManager::instance()
+                            )
                         )
                     ),
                     new \Tuleap\Docman\Tus\TusCORSMiddleware(),
