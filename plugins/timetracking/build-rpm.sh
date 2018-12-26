@@ -12,7 +12,12 @@ if [ ! -d "$WORKSPACE" ]; then
     exit 1
 fi
 
-DOCKERIMAGE=build-plugin-timetracking
+if [[ -z "$OS" ]]; then
+    echo "*** ERROR: OS is missing"
+    exit 1
+fi
 
-docker build -t "$DOCKERIMAGE" rpm
+DOCKERIMAGE=build-plugin-timetracking-"$OS"
+
+docker build --build-arg OS="$OS" -t "$DOCKERIMAGE" rpm
 docker run --rm -e "RELEASE=$RELEASE" -v "$TULEAP_PATH":/tuleap:ro -v "$WORKSPACE":/output -e UID="$(id -u)" -e GID="$(id -g)" "$DOCKERIMAGE"

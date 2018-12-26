@@ -13,7 +13,7 @@ RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
 all:
-	$(MAKE) DIST=.el6 rpm
+	$(MAKE) DIST=$(shell rpm --eval '.el%{centos_ver}') rpm
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
 	@echo "Results: $^"
