@@ -39,6 +39,7 @@ use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
+use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../git/include/gitPlugin.class.php';
@@ -83,6 +84,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
+        $this->addHook(PullRequestDiffRepresentationBuild::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -289,6 +291,17 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
         if ($detector->isFileALFSFile($event->getBlob()->GetData())) {
             $event->setFileIsInSpecialFormat();
+        }
+    }
+
+    public function pullRequestDiffRepresentationBuild(PullRequestDiffRepresentationBuild $event)
+    {
+        $file_content = $event->getObjectSrc() === null ? $event->getObjectDest() : $event->getObjectSrc();
+
+        $detector = new \Tuleap\GitLFS\Detector\Detector();
+
+        if ($detector->isFileALFSFile($file_content)) {
+            $event->setSpecialFormat('git-lfs');
         }
     }
 }

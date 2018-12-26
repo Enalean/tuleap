@@ -33,6 +33,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
     Object.assign(self, {
         is_loading: true,
         is_binary_file: false,
+        special_format: "",
         diff: null,
         file_path: $state.params.file_path,
         pull_request_id: SharedPropertiesService.getPullRequest().id,
@@ -46,6 +47,7 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
             .then(diff => {
                 self.diff = diff;
                 self.is_binary_file = diff.charset === "binary";
+                self.special_format = diff.special_format;
                 initComments(diff.inline_comments);
             })
             .finally(() => {
@@ -54,10 +56,20 @@ function controller($state, SharedPropertiesService, FileDiffRestService) {
     }
 
     function shouldShowUnifiedDiff() {
-        return !self.is_loading && !self.is_binary_file && isUnifiedMode();
+        return (
+            !self.is_loading &&
+            !self.is_binary_file &&
+            self.special_format === "" &&
+            isUnifiedMode()
+        );
     }
 
     function shouldShowSideBySideDiff() {
-        return !self.is_loading && !self.is_binary_file && isSideBySideMode();
+        return (
+            !self.is_loading &&
+            !self.is_binary_file &&
+            self.special_format === "" &&
+            isSideBySideMode()
+        );
     }
 }

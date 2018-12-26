@@ -19,8 +19,12 @@
 
 <div ng-if="$ctrl.is_loading" class="pull-request-file-diff-loading"></div>
 
-<div ng-if="$ctrl.is_binary_file" class="pull-request-file-diff-binary-file">
+<div ng-if="$ctrl.is_binary_file" class="pull-request-file-diff-not-displayable-file">
     <i class="fa fa-file-o"></i><br>{{:: 'Binary file' | translate }}
+</div>
+
+<div ng-if="$ctrl.special_format === 'git-lfs'" class="pull-request-file-diff-not-displayable-file">
+    <i class="fa fa-file-o"></i><br>{{:: 'Git LFS file' | translate }}
 </div>
 
 <file-unidiff ng-if="$ctrl.shouldShowUnifiedDiff()"

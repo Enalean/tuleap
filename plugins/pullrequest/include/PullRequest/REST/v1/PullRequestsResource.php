@@ -60,6 +60,7 @@ use Tuleap\PullRequest\Comment\Comment;
 use Tuleap\PullRequest\Comment\Dao as CommentDao;
 use Tuleap\PullRequest\Comment\Factory as CommentFactory;
 use Tuleap\PullRequest\Dao as PullRequestDao;
+use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\PullRequest\Exception\PullRequestAlreadyExistsException;
 use Tuleap\PullRequest\Exception\PullRequestAnonymousUserException;
 use Tuleap\PullRequest\Exception\PullRequestCannotBeAbandoned;
@@ -651,7 +652,12 @@ class PullRequestsResource extends AuthenticatedResource
             list($mime_type, $charset) = MimeDetector::getMimeInfo($path, $object_dest, $object_src);
         }
 
-        if ($charset === "binary") {
+        $event = new PullRequestDiffRepresentationBuild($object_dest, $object_src);
+        $this->event_manager->processEvent($event);
+
+        $special_format = $event->getSpecialFormat();
+
+        if ($charset === "binary" || $special_format !== '') {
             $diff = new FileUniDiff();
             $inline_comments = array();
         } else {
@@ -672,7 +678,7 @@ class PullRequestsResource extends AuthenticatedResource
             $inline_comments       = $inline_comment_builder->getForFile($pull_request, $path, $git_repository_source->getProjectId());
         }
 
-        return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments, $mime_type, $charset);
+        return PullRequestFileUniDiffRepresentation::build($diff, $inline_comments, $mime_type, $charset, $special_format);
     }
 
     /**
