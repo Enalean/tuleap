@@ -296,12 +296,13 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function pullRequestDiffRepresentationBuild(PullRequestDiffRepresentationBuild $event)
     {
-        $file_content = $event->getObjectSrc() === null ? $event->getObjectDest() : $event->getObjectSrc();
-
         $detector = new \Tuleap\GitLFS\Detector\Detector();
 
-        if ($detector->isFileALFSFile($file_content)) {
+        if (($event->getObjectSrc() !== null && $detector->isFileALFSFile($event->getObjectSrc())) ||
+            $detector->isFileALFSFile($event->getObjectDest())
+        ) {
             $event->setSpecialFormat('git-lfs');
+            return;
         }
     }
 }
