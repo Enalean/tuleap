@@ -14,37 +14,27 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -
   -->
 
 <template>
-    <div>
-        <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
-        <a v-bind:href="wiki_html_url" class="document-folder-subitem-link">
-            {{ item.title }}
-        </a>
+    <div class="tlp-modal-header">
+        <h1 class="tlp-modal-title" id="document-new-item-modal">
+            <i class="fa fa-plus tlp-modal-title-icon"></i>
+            <translate>New document</translate>
+        </h1>
+        <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
+            &times;
+        </div>
     </div>
 </template>
-
 <script>
-import FakeCaret from "./FakeCaret.vue";
-import { ICON_WIKI } from "../../../constants.js";
-
 export default {
-    name: "WikiCellTitle",
-    components: { FakeCaret },
-    props: {
-        item: Object
-    },
+    name: "ModalHeader",
     computed: {
-        wiki_html_url() {
-            return this.item.wiki_properties.html_url;
-        },
-        icon() {
-            return ICON_WIKI;
+        close() {
+            return this.$gettext("Close");
         }
     }
 };

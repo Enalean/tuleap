@@ -20,18 +20,20 @@
   -->
 
 <template>
-    <div class="tlp-alert-danger document-new-item-modal-error">
-        {{ modal_error }}
-    </div>
+    <section class="tlp-modal-feedback" v-if="has_modal_error">
+        <div class="tlp-alert-danger">
+            {{ modal_error }}
+        </div>
+    </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 
 export default {
-    name: "NewItemModalError",
+    name: "ModalFeedback",
     computed: {
-        ...mapState(["modal_error"])
+        ...mapState(["modal_error", "has_modal_error"])
     }
 };
 </script>

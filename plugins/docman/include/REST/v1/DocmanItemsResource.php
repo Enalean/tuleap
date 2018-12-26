@@ -119,7 +119,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @param string $title       Item title {@from body} {@required true}
      * @param string $description Item description {@from body} {@required false}
      * @param int    $parent_id   Item parent id {@from body} {@required true}
-     * @param string $item_type   Item type {@choice empty} {@from body} {@required true}
+     * @param string $type        Item type {@choice empty} {@from body} {@required true}
      *
      * @access hybrid
      *
@@ -130,7 +130,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @throws 404
      * @throws 409
      */
-    public function post($title, $description, $parent_id, $item_type)
+    public function post($title, $description, $parent_id, $type)
     {
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
@@ -148,7 +148,7 @@ class DocmanItemsResource extends AuthenticatedResource
             throw new RestException(409, 'A document is already being uploaded for this item');
         }
 
-        $item_type_id = $this->convertItemTypeToId($item_type);
+        $item_type_id = $this->convertItemTypeToId($type);
 
         $this->addLogEvents();
         $this->addNotificationEvents($project);

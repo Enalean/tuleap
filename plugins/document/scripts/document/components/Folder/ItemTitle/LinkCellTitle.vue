@@ -22,7 +22,7 @@
 <template>
     <div>
         <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw fa-link document-link-icon document-folder-content-icon"></i>
+        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon"></i>
         <a v-bind:href="document_link_url" class="document-folder-subitem-link">
             {{ item.title }}
         </a>
@@ -31,6 +31,7 @@
 
 <script>
 import FakeCaret from "./FakeCaret.vue";
+import { ICON_LINK } from "../../../constants.js";
 
 export default {
     name: "LinkCellTitle",
@@ -41,6 +42,9 @@ export default {
     computed: {
         document_link_url() {
             return this.item.link_properties.html_url;
+        },
+        icon() {
+            return ICON_LINK;
         }
     }
 };

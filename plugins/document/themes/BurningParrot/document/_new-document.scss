@@ -41,6 +41,7 @@
     border-radius: 3px;
     background: $tlp-ui-white;
     color: $tlp-ui-dimmed;
+    cursor: pointer;
 
     &:first-child {
         margin-left: 0;
@@ -94,8 +95,4 @@
 
 .document-new-item-properties {
     padding: $tlp-spacing;
-}
-
-.document-new-item-modal-error {
-    margin: $tlp-spacing;
 }

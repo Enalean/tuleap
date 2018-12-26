@@ -21,6 +21,9 @@ msgstr "Avancé"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Close"
+msgstr "Fermer"
+
 msgid "Create document"
 msgstr "Créer le document"
 
@@ -50,6 +53,9 @@ msgstr "Il est temps d'ajouter des documents !"
 
 msgid "Last update date"
 msgstr "Mis à jour"
+
+msgid "Link"
+msgstr "Lien"
 
 msgid "My document"
 msgstr "Mon document"
@@ -90,6 +96,9 @@ msgstr "Ce dossier est privé."
 
 msgid "Title"
 msgstr "Titre"
+
+msgid "URL"
+msgstr "URL"
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

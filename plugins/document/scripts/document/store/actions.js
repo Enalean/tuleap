@@ -57,13 +57,13 @@ export const getSubfolderContent = async (context, folder_id) => {
     }
 };
 
-export const createNewDocument = async (context, [title, description, item_type, parent]) => {
+export const createNewDocument = async (context, [item, parent]) => {
     try {
-        const item_reference = await addNewDocument(title, description, item_type, parent.id);
+        const item_reference = await addNewDocument(item, parent.id);
 
-        const item = await getItem(item_reference.id);
+        const created_item = await getItem(item_reference.id);
 
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", item));
+        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }

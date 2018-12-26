@@ -203,7 +203,7 @@ class DocmanItemsTest extends DocmanBase
             'title' => 'Custom title',
             'description' => 'A description',
             'parent_id' => $root_id,
-            'item_type' => 'empty'
+            'type' => 'empty'
         ]);
 
         $response = $this->getResponseByName(
@@ -227,7 +227,7 @@ class DocmanItemsTest extends DocmanBase
             'title' => 'A title',
             'description' => 'A description',
             'parent_id' => $folder_3['id'],
-            '$item_type' => 'empty'
+            'type' => 'empty'
         ]);
 
         $this->getResponseByName(

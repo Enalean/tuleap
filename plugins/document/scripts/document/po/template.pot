@@ -14,6 +14,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Create document"
 msgstr ""
 
@@ -42,6 +45,9 @@ msgid "It's time to add new documents!"
 msgstr ""
 
 msgid "Last update date"
+msgstr ""
+
+msgid "Link"
 msgstr ""
 
 msgid "My document"
@@ -81,6 +87,9 @@ msgid "This is a private folder."
 msgstr ""
 
 msgid "Title"
+msgstr ""
+
+msgid "URL"
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
