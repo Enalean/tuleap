@@ -37,7 +37,7 @@ final class TuleapRESTCORSMiddleware implements MiddlewareInterface
         $response = $response->withHeader('Access-Control-Allow-Credentials', 'true');
         $response = $response->withAddedHeader(
             'Access-Control-Allow-Headers',
-            ['Authorization', 'Origin', 'X-Auth-UserId', 'X-Auth-Token', 'X-Client-Uuid', 'X-Auth-AccessKey']
+            ['Authorization', 'Content-Type', 'Origin', 'X-Auth-UserId', 'X-Auth-Token', 'X-Client-Uuid', 'X-Auth-AccessKey']
         );
         $response = $response->withAddedHeader(
             'Access-Control-Expose-Headers',
