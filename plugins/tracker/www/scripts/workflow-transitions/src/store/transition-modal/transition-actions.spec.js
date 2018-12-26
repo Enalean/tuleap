@@ -18,9 +18,10 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { rewire$getUserGroups, restore } from "../../api/rest-querier.js";
+import { rewire$getUserGroups, rewire$getTransition, restore } from "../../api/rest-querier.js";
 import {
     showTransitionConfigurationModal,
+    loadTransition,
     loadUserGroupsIfNotCached
 } from "./transition-actions.js";
 import { create, createList } from "../../support/factories.js";
@@ -42,13 +43,14 @@ describe("Transition modal actions", () => {
                 commit: jasmine.createSpy("commit"),
                 dispatch: jasmine.createSpy("dispatch")
             };
-            transition = create("transition");
+            transition = create("transition", { id: 1 });
         });
 
-        it("will first show the modal, load the cached user groups and clear the loading flag", async () => {
+        it("will first show the modal, load the transition, load the cached user groups and clear the loading flag", async () => {
             await showTransitionConfigurationModal(context, transition);
 
-            expect(context.commit).toHaveBeenCalledWith("showModal", transition);
+            expect(context.commit).toHaveBeenCalledWith("showModal");
+            expect(context.dispatch).toHaveBeenCalledWith("loadTransition", 1);
             expect(context.dispatch).toHaveBeenCalledWith("loadUserGroupsIfNotCached");
             expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
         });
@@ -64,12 +66,32 @@ describe("Transition modal actions", () => {
 
             await showTransitionConfigurationModal(context, transition);
 
-            expect(context.commit).toHaveBeenCalledWith("showModal", transition);
+            expect(context.commit).toHaveBeenCalledWith("showModal");
             expect(context.commit).toHaveBeenCalledWith(
                 "failModalOperation",
                 "You are not allowed to see that"
             );
             expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
+        });
+    });
+
+    describe("loadTransition()", () => {
+        const transition = create("transition");
+
+        beforeEach(async () => {
+            const getTransition = jasmine.createSpy("getTransition");
+            rewire$getTransition(getTransition);
+            getTransition.and.returnValue(transition);
+
+            context = {
+                commit: jasmine.createSpy("commit")
+            };
+
+            await loadTransition(context, 1);
+        });
+
+        it("saves transition returned by the API", () => {
+            expect(context.commit).toHaveBeenCalledWith("saveCurrentTransition", transition);
         });
     });
 

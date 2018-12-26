@@ -29,6 +29,7 @@ export {
     updateTransitionRulesEnforcement,
     resetWorkflowTransitions,
     createTransition,
+    getTransition,
     deleteTransition,
     getUserGroups
 };
@@ -77,6 +78,11 @@ async function createTransition(tracker_id, from_id, to_id) {
     const body = JSON.stringify({ tracker_id, from_id: from_id || 0, to_id });
 
     const response = await post("/api/tracker_workflow_transitions", { headers, body });
+    return response.json();
+}
+
+async function getTransition(transition_id) {
+    const response = await get(`/api/tracker_workflow_transitions/${transition_id}`);
     return response.json();
 }
 
