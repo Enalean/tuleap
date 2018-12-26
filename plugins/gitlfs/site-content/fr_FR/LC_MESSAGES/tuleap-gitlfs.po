@@ -7,7 +7,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "An error occured while updating max file size."
-msgstr "Une erreur est survenue lors de la mise à jour de la taille maximale des fichiers."
+msgstr ""
+"Une erreur est survenue lors de la mise à jour de la taille maximale des "
+"fichiers."
 
 msgid "Git LFS"
 msgstr "Git LFS"
@@ -29,6 +31,12 @@ msgstr "Enregistrer"
 
 msgid "Support of large file upload and download in Git"
 msgstr "Supporte l'envoi et la réception de fichiers volumineux dans Git"
+
+msgid "The configuration could not be updated through the Web UI."
+msgstr "La configuration ne peut être mise à jour via l'interface."
+
+msgid "The configuration page is not available."
+msgstr "La page de configuration n'est pas disponible."
 
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"

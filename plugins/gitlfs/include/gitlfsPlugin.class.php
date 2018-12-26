@@ -22,6 +22,7 @@ use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\Git\CollectGitRoutesEvent;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
@@ -50,6 +51,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     const SERVICE_SHORTNAME = "tuleap-gitlfs";
 
     const SERVICE_LABEL = "Git LFS";
+
+    const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
 
     public function __construct($id)
     {
@@ -85,6 +88,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
         $this->addHook(PullRequestDiffRepresentationBuild::NAME);
+        $this->addHook(GetWhitelistedKeys::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -279,10 +283,13 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function site_admin_option_hook($params) //phpcs:ignore
     {
-        $params['plugins'][] = array(
-            'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
-            'href'  => '/plugins/git-lfs/config'
-        );
+        $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
+        if ($config_should_be_displayed) {
+            $params['plugins'][] = array(
+                'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
+                'href'  => '/plugins/git-lfs/config'
+            );
+        }
     }
 
     public function displayFileContentInGitView(DisplayFileContentInGitView $event)
@@ -303,5 +310,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         if ($detector->isFileALFSFile($file_content)) {
             $event->setSpecialFormat('git-lfs');
         }
+    }
+
+    public function getWhitelistedKeys(GetWhitelistedKeys $event)
+    {
+        $event->addPluginsKeys(self::DISPLAY_CONFIG_KEY);
     }
 }

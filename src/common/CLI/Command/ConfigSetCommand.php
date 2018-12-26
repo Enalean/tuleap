@@ -22,43 +22,33 @@
 namespace Tuleap\CLI\Command;
 
 use ConfigDao;
+use EventManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
-use Tuleap\Instrument\Prometheus\Prometheus;
-use Tuleap\layout\HomePage\NewsCollectionBuilder;
-use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\CLI\Events\GetWhitelistedKeys;
 
 class ConfigSetCommand extends Command
 {
     const NAME = 'config-set';
-    /**
-     * @var ConfigDao
-     */
-    private $white_listed_keys = [
-        \ProjectManager::CONFIG_PROJECT_APPROVAL => true,
-        \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER => true,
-        \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION => true,
-        \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
-        \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
-        ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
-        Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
-        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
-        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
-        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
-    ];
+
     /**
      * @var ConfigDao
      */
     private $config_dao;
 
-    public function __construct(ConfigDao $config_dao)
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(ConfigDao $config_dao, EventManager $event_manager)
     {
         parent::__construct(self::NAME);
-        $this->config_dao = $config_dao;
+        $this->config_dao    = $config_dao;
+        $this->event_manager = $event_manager;
     }
 
     protected function configure()
@@ -72,8 +62,13 @@ class ConfigSetCommand extends Command
     {
         $key = $input->getArgument('key');
 
-        if (! $this->keyIsWhitelisted($key)) {
-            throw new InvalidArgumentException(self::NAME." only supports a subset of keys:\n* ".implode("\n* ", array_keys($this->white_listed_keys)));
+        $event = new GetWhitelistedKeys();
+        $this->event_manager->processEvent($event);
+
+        $white_listed_keys = $event->getWhiteListedKeys();
+
+        if (! $this->keyIsWhitelisted($white_listed_keys, $key)) {
+            throw new InvalidArgumentException(self::NAME." only supports a subset of keys:\n* ".implode("\n* ", array_keys($white_listed_keys)));
         }
 
         $value = $input->getArgument('value');
@@ -81,8 +76,11 @@ class ConfigSetCommand extends Command
         $this->config_dao->save($key, $value);
     }
 
-    private function keyIsWhitelisted($key)
+    /**
+     * @return bool
+     */
+    private function keyIsWhitelisted(array $white_listed_keys, $key)
     {
-        return isset($this->white_listed_keys[$key]);
+        return isset($white_listed_keys[$key]);
     }
 }

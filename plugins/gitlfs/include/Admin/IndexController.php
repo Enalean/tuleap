@@ -65,6 +65,16 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
             return;
         }
 
+        $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
+        if (! $config_should_be_displayed) {
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-gitlfs', 'The configuration page is not available.')
+            );
+            $layout->redirect('/');
+            return;
+        }
+
         $csrf_token            = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
         $current_max_file_size = $this->admin_dao->getFileMaxSize();
 

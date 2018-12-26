@@ -58,6 +58,16 @@ class IndexPostController implements DispatchableWithRequest
             return;
         }
 
+        $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
+        if (! $config_should_be_displayed) {
+            $layout->addFeedback(
+                \Feedback::ERROR,
+                dgettext('tuleap-gitlfs', 'The configuration could not be updated through the Web UI.')
+            );
+            $layout->redirect('/');
+            return;
+        }
+
         $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
         $csrf_token->check();
 
