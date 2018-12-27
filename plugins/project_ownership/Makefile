@@ -13,7 +13,7 @@ RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
 all:
-	$(MAKE) DIST=$(DIST) rpm
+	$(MAKE) DIST=$(shell rpm --eval '.el%{centos_ver}') rpm
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
 	@echo "Results: $^"
@@ -58,5 +58,5 @@ docker-run:
 	cp -Rf /tuleap/plugins/project_ownership/ /build/src/plugins/
 	cp -Rf /tuleap/src/www/assets/project_ownership/ /build/src/plugins/project_ownership/assets
 	chown -R build /build/src
-	su --login --command "make -C /build/src/plugins/project_ownership all DIST=$(DIST) TULEAP_VERSION=$(shell LANG=C cat /tuleap/VERSION) RELEASE=$(RELEASE)" build
+	su --login --command "make -C /build/src/plugins/project_ownership all TULEAP_VERSION=$(shell LANG=C cat /tuleap/VERSION) RELEASE=$(RELEASE)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
