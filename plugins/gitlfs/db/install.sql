@@ -33,9 +33,5 @@ CREATE TABLE plugin_gitlfs_ssh_authorization (
   INDEX idx_expiration_date (expiration_date)
 );
 
-CREATE TABLE plugin_gitlfs_file_max_size (
-  size INT(11) UNSIGNED NOT NULL PRIMARY KEY
-);
-
 # 536870912 bytes = 512 Mb
-INSERT INTO plugin_gitlfs_file_max_size (size) VALUES (536870912);
+INSERT INTO forgeconfig (name, value) VALUES ('git_lfs_max_file_size', 536870912);

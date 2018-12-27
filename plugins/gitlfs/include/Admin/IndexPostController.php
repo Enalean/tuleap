@@ -71,10 +71,9 @@ class IndexPostController implements DispatchableWithRequest
         $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
         $csrf_token->check();
 
-        $current_max_file_size = $this->admin_dao->getFileMaxSize();
-        $new_max_file_value    = (int) $request->getValidated('max_file_size', 'uint', 1) * 1024 * 1024;
+        $new_max_file_value = (int) $request->getValidated('max_file_size', 'uint', 1) * 1024 * 1024;
 
-        if ($this->admin_dao->updateFileMaxSize($current_max_file_size, $new_max_file_value)) {
+        if ($this->admin_dao->updateFileMaxSize($new_max_file_value)) {
             $layout->addFeedback(
                 Feedback::INFO,
                 dgettext('tuleap-gitlfs', 'Max file size updated.')

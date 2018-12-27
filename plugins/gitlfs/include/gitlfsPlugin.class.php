@@ -58,6 +58,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     const SERVICE_LABEL = "Git LFS";
 
     const DISPLAY_CONFIG_KEY = 'git_lfs_display_config';
+    const MAX_FILE_SIZE_KEY  = 'git_lfs_max_file_size';
 
     public function __construct($id)
     {
