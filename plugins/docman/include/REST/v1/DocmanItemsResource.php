@@ -116,11 +116,6 @@ class DocmanItemsResource extends AuthenticatedResource
      * @url    POST
      * @status 201
      *
-     * @param string $title       Item title {@from body} {@required true}
-     * @param string $description Item description {@from body} {@required false}
-     * @param int    $parent_id   Item parent id {@from body} {@required true}
-     * @param string $type        Item type {@choice empty} {@from body} {@required true}
-     *
      * @access hybrid
      *
      * @return CreatedItemRepresentation
@@ -130,25 +125,29 @@ class DocmanItemsResource extends AuthenticatedResource
      * @throws 404
      * @throws 409
      */
-    public function post($title, $description, $parent_id, $type)
+    public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
 
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        $item_request = $this->request_builder->buildFromItemId($parent_id);
+        $item_request = $this->request_builder->buildFromItemId($docman_item_post_representation->parent_id);
         $parent       = $item_request->getItem();
         $this->checkItemCanHaveSubitems($parent);
         $project = $item_request->getProject();
-        $this->checkUserCanWriteFolder($current_user, $project, $parent_id);
+        $this->checkUserCanWriteFolder($current_user, $project, $docman_item_post_representation->parent_id);
 
         $document_ongoing_upload_retriever = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
-        if ($document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing($parent, $title, new \DateTimeImmutable())) {
+        if ($document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
+            $parent,
+            $docman_item_post_representation->title,
+            new \DateTimeImmutable()
+        )) {
             throw new RestException(409, 'A document is already being uploaded for this item');
         }
 
-        $item_type_id = $this->convertItemTypeToId($type);
+        $item_type_id = $this->convertItemTypeToId($docman_item_post_representation->type);
 
         $this->addLogEvents();
         $this->addNotificationEvents($project);
@@ -157,7 +156,14 @@ class DocmanItemsResource extends AuthenticatedResource
             $this->getPermissionManager(),
             $this->event_manager,
             $this->getItemFactory($project->getID())
-        ))->create($parent, $item_request->getUser(), $project, $title, $description, $item_type_id);
+        ))->create(
+            $parent,
+            $item_request->getUser(),
+            $project,
+            $docman_item_post_representation->title,
+            $docman_item_post_representation->description,
+            $item_type_id
+        );
 
         $representation = new CreatedItemRepresentation();
         $representation->build($item->getId());
