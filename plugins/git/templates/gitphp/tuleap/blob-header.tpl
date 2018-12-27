@@ -22,7 +22,11 @@
     {include file='tuleap/blob-header-title.tpl'}
 
     <div class="git-repository-blob-header-actions">
-        <a href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
+        <a {if $special_download_url !== ''}
+               href="{$SCRIPT_NAME}/{$special_download_url|urlencode}"
+           {else}
+               href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
+           {/if}
            class="tlp-button-primary tlp-button-outline tlp-button-small git-repository-blob-header-plain"
            title="{t domain="gitphp"}Download file{/t}"
         >

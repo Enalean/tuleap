@@ -56,6 +56,20 @@ class LFSObjectRetriever
     }
 
     /**
+     * @return LFSObject|null
+     */
+    public function getLFSObjectForRepository(\GitRepository $repository, $lfs_oid)
+    {
+        $row = $this->dao->searchByRepositoryIDAndOIDs($repository->getId(), [$lfs_oid]);
+
+        if (isset($row[0])) {
+            return new LFSObject(new LFSObjectID($row[0]['object_oid']), $row[0]['object_size']);
+        }
+
+        return null;
+    }
+
+    /**
      * @return bool
      */
     public function doesLFSObjectExistsForRepository(\GitRepository $repository, LFSObject $lfs_object)

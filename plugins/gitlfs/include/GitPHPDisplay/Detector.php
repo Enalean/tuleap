@@ -18,14 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Detector;
+namespace Tuleap\GitLFS\GitPHPDisplay;
 
 class Detector
 {
+    const LFS_CONTENT_REGEXP         = "/^version\s.*\noid\ssha256:(?P<oidsha256>[A-Fa-f0-9]{64})\nsize\s[0-9]+\n$/";
+    const LFS_CONTENT_REGEXP_OID_KEY = "oidsha256";
+
     public function isFileALFSFile($file_content)
     {
-        $regexp = "/^version\s.*\noid\ssha256:[A-Fa-f0-9]{64}\nsize\s[0-9]+\n$/";
-
-        return (boolean) preg_match($regexp, $file_content);
+        return (boolean) preg_match(self::LFS_CONTENT_REGEXP, $file_content);
     }
 }

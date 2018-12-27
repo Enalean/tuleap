@@ -20,6 +20,7 @@
 
 namespace Tuleap\Git\GitPHP\Events;
 
+use GitRepository;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Git\GitPHP\Blob;
 
@@ -32,11 +33,25 @@ class DisplayFileContentInGitView implements Dispatchable
      */
     private $blob;
 
+    /**
+     * @var false
+     */
     private $is_file_in_special_format = false;
 
-    public function __construct(Blob $blob)
+    /**
+     * @var string
+     */
+    private $special_download_url = '';
+
+    /**
+     * @var GitRepository
+     */
+    private $repository;
+
+    public function __construct(GitRepository $repository, Blob $blob)
     {
-        $this->blob = $blob;
+        $this->blob       = $blob;
+        $this->repository = $repository;
     }
 
     /**
@@ -58,5 +73,29 @@ class DisplayFileContentInGitView implements Dispatchable
     public function isFileInSpecialFormat()
     {
         return $this->is_file_in_special_format;
+    }
+
+    /**
+     * @param string $special_download_url
+     */
+    public function setSpecialDownloadUrl($special_download_url)
+    {
+        $this->special_download_url = $special_download_url;
+    }
+
+    /**
+     * @return GitRepository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSpecialDownloadUrl()
+    {
+        return $this->special_download_url;
     }
 }
