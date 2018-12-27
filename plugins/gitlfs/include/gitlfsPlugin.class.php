@@ -39,6 +39,11 @@ use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
+use Tuleap\GitLFS\Download\FileDownloaderController;
+use Tuleap\GitLFS\GitPHPDisplay\Detector;
+use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
+use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
+use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
 use Tuleap\Project\Quota\ProjectQuotaChecker;
 use Tuleap\PullRequest\Events\PullRequestDiffRepresentationBuild;
 use Tuleap\Request\CollectRoutesEvent;
@@ -101,8 +106,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                 new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                     $this->getFilesystem(),
-                    new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
-                    new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
+                    new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                    new LFSObjectPathAllocator()
                 )
             );
         });
@@ -112,7 +117,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     $this->getLFSActionUserAccessRequestChecker(),
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     $this->getFilesystem(),
-                    new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator()
+                    new LFSObjectPathAllocator()
                 );
             });
             $r->post('/objects/{oid:[a-fA-F0-9]{64}}/verify', function () {
@@ -122,8 +127,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
                         $this->getFilesystem(),
-                        new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever($lfs_object_dao),
-                        new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator(),
+                        new LFSObjectRetriever($lfs_object_dao),
+                        new LFSObjectPathAllocator(),
                         $lfs_object_dao
                     )
                 );
@@ -138,6 +143,19 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $event->getRouteCollector()->post('/plugins/git-lfs/config', function () {
             return new \Tuleap\GitLFS\Admin\IndexPostController(
                 new \Tuleap\GitLFS\Admin\AdminDao()
+            );
+        });
+        $event->getRouteCollector()->get('/plugins/git-lfs/{repo_id:[0-9]+}/objects/{oid:[a-fA-F0-9]{64}}', function () {
+            return new FileDownloaderController(
+                new GitRepositoryFactory(
+                    new GitDao(),
+                    ProjectManager::instance()
+                ),
+                new LFSObjectRetriever(
+                    new LFSObjectDAO()
+                ),
+                new LFSObjectPathAllocator(),
+                $this->getFilesystem()
             );
         });
     }
@@ -166,7 +184,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 new BatchSuccessfulResponseBuilder(
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
                     new LFSAuthorizationTokenHeaderSerializer(),
-                    new \Tuleap\GitLFS\LFSObject\LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
+                    new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
                     new \Tuleap\GitLFS\Admin\AdminDao(),
                     new ProjectQuotaChecker(EventManager::instance()),
                     $logger
@@ -264,7 +282,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $current_time       = new \DateTimeImmutable();
         $filesystem         = $this->getFilesystem();
-        $path_allocator     = new \Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator();
+        $path_allocator     = new LFSObjectPathAllocator();
         $lfs_object_remover = new \Tuleap\GitLFS\LFSObject\LFSObjectRemover(
             new \Tuleap\GitLFS\LFSObject\LFSObjectDAO(),
             $filesystem,
@@ -294,16 +312,24 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function displayFileContentInGitView(DisplayFileContentInGitView $event)
     {
-        $detector = new \Tuleap\GitLFS\Detector\Detector();
+        $detector = new Detector();
 
         if ($detector->isFileALFSFile($event->getBlob()->GetData())) {
             $event->setFileIsInSpecialFormat();
+
+            $download_url_builder = new \Tuleap\GitLFS\GitPHPDisplay\DownloadURLBuilder();
+
+            $event->setSpecialDownloadUrl($download_url_builder->buildDownloadURL(
+                $event->getRepository(),
+                UserManager::instance()->getCurrentUser(),
+                $event->getBlob()->GetData()
+            ));
         }
     }
 
     public function pullRequestDiffRepresentationBuild(PullRequestDiffRepresentationBuild $event)
     {
-        $detector = new \Tuleap\GitLFS\Detector\Detector();
+        $detector = new Detector();
 
         if (($event->getObjectSrc() !== null && $detector->isFileALFSFile($event->getObjectSrc())) ||
             $detector->isFileALFSFile($event->getObjectDest())

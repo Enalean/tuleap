@@ -206,11 +206,12 @@ class Controller_Blob extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('tree', $commit->GetTree());
 
         if (Config::GetInstance()->GetValue('filemimetype', true)) {
-            $event = new DisplayFileContentInGitView($blob);
+            $event = new DisplayFileContentInGitView($this->getTuleapGitRepository(), $blob);
             EventManager::instance()->processEvent($event);
 
             if ($event->isFileInSpecialFormat()) {
                 $this->tpl->assign('is_file_in_special_format', true);
+                $this->tpl->assign('special_download_url', $event->getSpecialDownloadUrl());
                 return;
             }
 

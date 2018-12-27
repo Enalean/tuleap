@@ -28,5 +28,11 @@ msgstr ""
 msgid "The configuration page is not available."
 msgstr ""
 
+msgid "The provided LFS object does not exist."
+msgstr ""
+
+msgid "You are not allowed to access this Git repository."
+msgstr ""
+
 msgid "You should be site administrator to access this page"
 msgstr ""

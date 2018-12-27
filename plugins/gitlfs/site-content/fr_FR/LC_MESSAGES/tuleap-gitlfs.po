@@ -38,5 +38,11 @@ msgstr "La configuration ne peut être mise à jour via l'interface."
 msgid "The configuration page is not available."
 msgstr "La page de configuration n'est pas disponible."
 
+msgid "The provided LFS object does not exist."
+msgstr "L'objet LFS demandé n'existe pas."
+
+msgid "You are not allowed to access this Git repository."
+msgstr "Vous n'êtes pas autorisé à accéder à ce dépôt Git."
+
 msgid "You should be site administrator to access this page"
 msgstr "Vous devez être administrateur site pour accéder à cette page"
