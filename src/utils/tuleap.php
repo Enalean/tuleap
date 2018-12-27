@@ -39,7 +39,8 @@ $application->add(
 );
 $application->add(
     new ConfigSetCommand(
-        new ConfigDao()
+        new ConfigDao(),
+        EventManager::instance()
     )
 );
 $application->add(

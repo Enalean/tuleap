@@ -1,0 +1,62 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Tuleap\CLI\Events;
+
+use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
+use Tuleap\Event\Dispatchable;
+use Tuleap\Instrument\Prometheus\Prometheus;
+use Tuleap\layout\HomePage\NewsCollectionBuilder;
+use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+
+class GetWhitelistedKeys implements Dispatchable
+{
+    const NAME = 'getWhitelistedKeys';
+
+    /**
+     * @var array
+     */
+    private $white_listed_keys = [
+        \ProjectManager::CONFIG_PROJECT_APPROVAL => true,
+        \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION_PER_USER => true,
+        \ProjectManager::CONFIG_NB_PROJECTS_WAITING_FOR_VALIDATION => true,
+        \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
+        \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
+        ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
+        Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
+        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
+        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
+        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
+    ];
+
+    public function addPluginsKeys($key_name)
+    {
+        $this->white_listed_keys[$key_name] = true;
+    }
+
+    /**
+     * @return array
+     */
+    public function getWhiteListedKeys()
+    {
+        return $this->white_listed_keys;
+    }
+}

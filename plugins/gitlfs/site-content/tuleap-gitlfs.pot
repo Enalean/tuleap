@@ -22,5 +22,11 @@ msgstr ""
 msgid "Support of large file upload and download in Git"
 msgstr ""
 
+msgid "The configuration could not be updated through the Web UI."
+msgstr ""
+
+msgid "The configuration page is not available."
+msgstr ""
+
 msgid "You should be site administrator to access this page"
 msgstr ""
