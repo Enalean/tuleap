@@ -196,14 +196,14 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPost($root_id)
+    public function testPostEmptyDocument($root_id)
     {
         $headers = ['Content-Type' => 'application/json'];
         $query = json_encode([
-            'title' => 'Custom title',
+            'title'       => 'Custom title',
             'description' => 'A description',
-            'parent_id' => $root_id,
-            'type' => 'empty'
+            'parent_id'   => $root_id,
+            'type'        => 'empty'
         ]);
 
         $response = $this->getResponseByName(
@@ -215,8 +215,60 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostFileDocument(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode([
+            'title'           => 'File1',
+            'parent_id'       => $root_id,
+            'type'            => 'file',
+            'file_properties' => ['file_name' => 'file1', 'file_size' => 123]
+        ]);
+
+        $response1 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertNotEmpty($response1->json()['file_properties']['upload_href']);
+
+        $response2 = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+        $this->assertEquals(201, $response1->getStatusCode());
+        $this->assertSame(
+            $response1->json()['file_properties']['upload_href'],
+            $response2->json()['file_properties']['upload_href']
+        );
+    }
+
+    /**
+     * @depends testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 400
+     */
+    public function testPostFileDocumentIsRejectedIfFileIsTooBig(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode([
+            'title'           => 'File1',
+            'parent_id'       => $root_id,
+            'type'            => 'file',
+            'file_properties' => ['file_name' => 'file1', 'file_size' => 999999999999]
+        ]);
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+    }
+
+    /**
      * @depends testGetDocumentItemsForRegularUser
-     * @expectedException Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      * @expectExceptionCode 403
      */
     public function testPostReturns403WhenPermissionDenied(array $stored_items)

@@ -59,6 +59,7 @@
             <directory suffix=".php">../../plugins/referencealias_core/include/ReferenceAliasCore/</directory>
             <directory suffix=".php">../../plugins/docman/include/Tus/</directory>
             <directory suffix=".php">../../plugins/docman/include/Upload/</directory>
+            <directory suffix=".php">../../plugins/docman/include/REST/</directory>
         </whitelist>
     </filter>
     <testsuites>

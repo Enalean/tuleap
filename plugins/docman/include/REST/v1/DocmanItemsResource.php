@@ -38,6 +38,7 @@ use Tuleap\Docman\Notifications\NotificationBuilders;
 use Tuleap\Docman\Notifications\NotificationEventAdder;
 use Tuleap\Docman\Upload\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\DocumentToUploadCreator;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -111,12 +112,16 @@ class DocmanItemsResource extends AuthenticatedResource
     /**
      * Create new item
      *
-     * Warning: only empty items are created.
+     * Warning: only empty and file items can be created.
+     *
+     * When creating a new file, you will get an URL where the file needs
+     * to be uploaded using the
+     * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
+     * to validate the item creation. You will need to use the same authentication mechanism you used
+     * to call this endpoint.
      *
      * @url    POST
      * @status 201
-     *
-     * @access hybrid
      *
      * @return CreatedItemRepresentation
      *
@@ -125,7 +130,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @throws 404
      * @throws 409
      */
-    public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
+    protected function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
@@ -138,37 +143,26 @@ class DocmanItemsResource extends AuthenticatedResource
         $project = $item_request->getProject();
         $this->checkUserCanWriteFolder($current_user, $project, $docman_item_post_representation->parent_id);
 
-        $document_ongoing_upload_retriever = new DocumentOngoingUploadRetriever(new DocumentOngoingUploadDAO());
-        if ($document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
-            $parent,
-            $docman_item_post_representation->title,
-            new \DateTimeImmutable()
-        )) {
-            throw new RestException(409, 'A document is already being uploaded for this item');
-        }
-
-        $item_type_id = $this->convertItemTypeToId($docman_item_post_representation->type);
-
         $this->addLogEvents();
         $this->addNotificationEvents($project);
 
-        $item = (new DocmanItemCreator(
+        $document_on_going_upload_dao = new DocumentOngoingUploadDAO();
+
+        $docman_item_creator = new DocmanItemCreator(
             $this->getPermissionManager(),
             $this->event_manager,
-            $this->getItemFactory($project->getID())
-        ))->create(
-            $parent,
-            $item_request->getUser(),
-            $project,
-            $docman_item_post_representation->title,
-            $docman_item_post_representation->description,
-            $item_type_id
+            $this->getItemFactory($project->getID()),
+            new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
+            new DocumentToUploadCreator($document_on_going_upload_dao)
         );
 
-        $representation = new CreatedItemRepresentation();
-        $representation->build($item->getId());
-
-        return $representation;
+        return $docman_item_creator->create(
+            $parent,
+            $current_user,
+            $project,
+            $docman_item_post_representation,
+            new \DateTimeImmutable()
+        );
     }
 
     private function getItemFactory($group_id = null)
@@ -332,17 +326,6 @@ class DocmanItemsResource extends AuthenticatedResource
             new \Docman_VersionFactory(),
             new \Docman_LinkVersionFactory()
         );
-    }
-
-    /**
-     * @param string $item_type Item type.
-     * @return int Item type Id.
-     */
-    private function convertItemTypeToId($item_type)
-    {
-        if ($item_type === ItemRepresentation::TYPE_EMPTY) {
-            return PLUGIN_DOCMAN_ITEM_TYPE_EMPTY;
-        }
     }
 
     private function getPermissionManager()

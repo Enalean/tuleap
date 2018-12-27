@@ -20,27 +20,17 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-final class DocmanItemPOSTRepresentation
+final class CreatedItemFilePropertiesRepresentation
 {
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string URL to upload the file using the tus resumable upload protocol
+     *
+     * @see https://tus.io/protocols/resumable-upload.html
      */
-    public $title;
-    /**
-     * @var string Item description {@from body} {@required false}
-     */
-    public $description = '';
-    /**
-     * @var int Item parent id {@from body} {@required true}
-     */
-    public $parent_id;
-    /**
-     * @var string Item type {@choice empty,file} {@from body} {@required true}
-     */
-    public $type;
+    public $upload_href;
 
-    /**
-     * @var FilePropertiesPOSTRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTRepresentation}
-     */
-    public $file_properties;
+    public function build($upload_href)
+    {
+        $this->upload_href = $upload_href;
+    }
 }

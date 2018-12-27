@@ -20,62 +20,28 @@
 
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFile;
-
-final class DocumentToUpload implements TusFile
+final class DocumentToUpload
 {
-    /**
-     * @var resource
-     */
-    private $handle;
-    /**
-     * @var int
-     */
-    private $length;
-    /**
-     * @var int
-     */
-    private $offset;
+    private $item_id;
 
-    public function __construct($handle, $length, $offset)
+    public function __construct($item_id)
     {
-        if (! \is_resource($handle)) {
-            throw new \InvalidArgumentException(
-                'Expected a resource to the document, got ' . gettype($handle)
-            );
-        }
-        $this->handle = $handle;
-        if ($length < 0) {
-            throw new \UnexpectedValueException('The length must be positive');
-        }
-        $this->length = $length;
-        if ($offset < 0) {
-            throw new \UnexpectedValueException('The offset must be positive');
-        }
-        $this->offset = $offset;
+        $this->item_id = $item_id;
     }
 
     /**
      * @return int
      */
-    public function getLength()
+    public function getItemId()
     {
-        return $this->length;
+        return $this->item_id;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getOffset()
+    public function getUploadHref()
     {
-        return $this->offset;
-    }
-
-    /**
-     * @return \resource
-     */
-    public function getStream()
-    {
-        return $this->handle;
+        return '/uploads/docman/file/' . urlencode($this->item_id);
     }
 }
