@@ -174,7 +174,8 @@ class GitXmlImporterTest extends TuleapTestCase {
             null,
             null,
             mock('Git_Mirror_MirrorDataMapper'),
-            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager')
+            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager'),
+            mock('Tuleap\Git\Gitolite\VersionDetector')
         );
         $this->user_finder = mock(XMLImportHelper::class);
 

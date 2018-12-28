@@ -120,7 +120,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             null,
             null,
             $this->mirror_data_mapper,
-            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager')
+            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager'),
+            mock('Tuleap\Git\Gitolite\VersionDetector')
         );
     }
 

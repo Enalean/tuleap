@@ -22,6 +22,7 @@ use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
+use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -97,6 +98,11 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
      */
     private $include_assets;
 
+    /**
+     * @var VersionDetector
+     */
+    private $version_detector;
+
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken                $csrf,
@@ -113,7 +119,8 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         Restrictor                           $gerrit_restrictor,
         ManagementDetector                   $management_detector,
         BigObjectAuthorizationManager        $big_object_authorization_manager,
-        IncludeAssets                        $include_assets
+        IncludeAssets                        $include_assets,
+        VersionDetector                      $version_detector
     ) {
         $this->gerrit_server_factory            = $gerrit_server_factory;
         $this->csrf                             = $csrf;
@@ -131,6 +138,7 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->management_detector              = $management_detector;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->include_assets                   = $include_assets;
+        $this->version_detector                 = $version_detector;
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables) {
@@ -174,7 +182,8 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->admin_page_renderer,
                 $this->management_detector,
                 $this->big_object_authorization_manager,
-                $this->include_assets
+                $this->include_assets,
+                $this->version_detector
             );
         } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
             return new Git_AdminMirrorController(

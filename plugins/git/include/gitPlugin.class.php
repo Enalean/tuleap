@@ -817,7 +817,8 @@ class GitPlugin extends Plugin
             ),
             $this->getManagementDetector(),
             $this->getBigObjectAuthorizationManager(),
-            $this->getIncludeAssets()
+            $this->getIncludeAssets(),
+            new VersionDetector()
         );
     }
 
@@ -1194,7 +1195,8 @@ class GitPlugin extends Plugin
             null,
             $this->getProjectManager(),
             $this->getMirrorDataMapper(),
-            $this->getBigObjectAuthorizationManager()
+            $this->getBigObjectAuthorizationManager(),
+            new VersionDetector()
         );
     }
 
