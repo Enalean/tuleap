@@ -91,7 +91,6 @@ class URLVerification {
      */
     function isScriptAllowedForAnonymous($server) {
         // Defaults
-        $allowedAnonymous['/current_css.php']            = true;
         $allowedAnonymous['/account/login.php']          = true;
         $allowedAnonymous['/account/register.php']       = true;
         $allowedAnonymous['/account/change_pw.php']      = true;

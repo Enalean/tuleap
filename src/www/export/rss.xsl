@@ -7,7 +7,6 @@
    <head>
         <title><xsl:value-of select="title" /></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <link rel='stylesheet' href='/current_css.php' type='text/css'/>
    </head>
    <body>
        <h1><a href="{link}"><xsl:value-of select="title" /></a></h1>
