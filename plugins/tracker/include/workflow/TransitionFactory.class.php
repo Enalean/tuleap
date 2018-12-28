@@ -313,17 +313,17 @@ class TransitionFactory
     /**
      * Adds permissions in the database
      *
-     * @param Array $ugroups the list of ugroups
-     * @param Transition          $transition  The transition
+     * @param array $ugroups_ids the list of ugroups ids
+     * @param int $transition_id  The transition id
      *
      * @return boolean
      */
-    public function addPermissions($ugroups, $transition)
+    public function addPermissions(array $ugroups_ids, $transition_id)
     {
         $pm = PermissionsManager::instance();
         $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-        foreach ($ugroups as $ugroup) {
-            if (!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
+        foreach ($ugroups_ids as $ugroup_id) {
+            if (!$pm->addPermission($permission_type, (int)$transition_id, $ugroup_id)) {
                 return false;
             }
         }

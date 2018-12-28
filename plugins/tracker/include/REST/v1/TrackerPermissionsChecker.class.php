@@ -72,6 +72,7 @@ class TrackerPermissionsChecker
 
     /**
      * @throws RestException 403
+     * @throws RestException 404
      */
     public function checkUpdateWorkflow(PFUser $user, Tracker $tracker)
     {
