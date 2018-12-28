@@ -9,7 +9,7 @@ run_testsuite() {
     if [ -x $PHP ]; then
         PHPUNIT="$PHP $PHPUNIT"
     fi
-    $PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --log-junit /output/rest_tests.xml
+    $PHPUNIT --configuration /usr/share/tuleap/tests/rest/phpunit.xml --log-junit /output/rest_tests.xml $1
 }
 
-run_testsuite
+run_testsuite $1
