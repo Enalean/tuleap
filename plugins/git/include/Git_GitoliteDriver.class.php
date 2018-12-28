@@ -114,7 +114,8 @@ class Git_GitoliteDriver {
         Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
         ProjectManager $project_manager = null,
         Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
-        BigObjectAuthorizationManager $big_object_authorization_manager
+        BigObjectAuthorizationManager $big_object_authorization_manager,
+        VersionDetector $version_detector
     ) {
         $this->git_dao = $git_dao;
         $this->logger                   = $logger;
@@ -168,7 +169,8 @@ class Git_GitoliteDriver {
             $this->repository_factory,
             $this->permissions_serializer,
             $this->url_manager,
-            $big_object_authorization_manager
+            $big_object_authorization_manager,
+            $version_detector
         );
 
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(

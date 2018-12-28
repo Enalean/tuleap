@@ -298,7 +298,8 @@ class RepositoryResource extends AuthenticatedResource
                     new BigObjectAuthorizationManager(
                         new BigObjectAuthorizationDao(),
                         ProjectManager::instance()
-                    )
+                    ),
+                    new VersionDetector()
                 ),
                 new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
                 new GitBackendLogger()

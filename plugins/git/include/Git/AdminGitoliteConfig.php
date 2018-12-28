@@ -22,6 +22,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
+use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\IncludeAssets;
 
 class Git_AdminGitoliteConfig {
@@ -62,6 +63,11 @@ class Git_AdminGitoliteConfig {
      */
     private $include_assets;
 
+    /**
+     * @var VersionDetector
+     */
+    private $version_detector;
+
     public function __construct(
         CSRFSynchronizerToken $csrf,
         ProjectManager $project_manager,
@@ -69,7 +75,8 @@ class Git_AdminGitoliteConfig {
         AdminPageRenderer $admin_page_renderer,
         ManagementDetector $management_detector,
         BigObjectAuthorizationManager $big_object_authorization_manager,
-        IncludeAssets $include_assets
+        IncludeAssets $include_assets,
+        VersionDetector $version_detector
     ) {
         $this->csrf                             = $csrf;
         $this->project_manager                  = $project_manager;
@@ -78,6 +85,7 @@ class Git_AdminGitoliteConfig {
         $this->management_detector              = $management_detector;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->include_assets                   = $include_assets;
+        $this->version_detector                 = $version_detector;
     }
 
     public function process(Codendi_Request $request) {
@@ -214,7 +222,8 @@ class Git_AdminGitoliteConfig {
             $title,
             $this->csrf,
             $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap(),
-            $this->big_object_authorization_manager->getAuthorizedProjects()
+            $this->big_object_authorization_manager->getAuthorizedProjects(),
+            $this->version_detector->isGitolite3()
         );
 
         $this->admin_page_renderer->renderANoFramedPresenter(

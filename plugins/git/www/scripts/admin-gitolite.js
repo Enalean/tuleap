@@ -37,23 +37,27 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const bindToggleRevokeSelectedButton = () => {
-        document
-            .querySelectorAll('#allowed-projects-list input[type="checkbox"]')
-            .forEach(selectbox => {
-                selectbox.addEventListener("click", () => {
-                    if (
-                        document.querySelectorAll(
-                            '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked'
-                        ).length > 0
-                    ) {
-                        document.getElementById("revoke-project").removeAttribute("disabled");
-                    } else {
-                        document
-                            .getElementById("revoke-project")
-                            .setAttribute("disabled", "disabled");
-                    }
-                });
+        const selectboxes = document.querySelectorAll(
+            '#allowed-projects-list input[type="checkbox"]'
+        );
+
+        if (!selectboxes) {
+            return;
+        }
+
+        selectboxes.forEach(selectbox => {
+            selectbox.addEventListener("click", () => {
+                if (
+                    document.querySelectorAll(
+                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked'
+                    ).length > 0
+                ) {
+                    document.getElementById("revoke-project").removeAttribute("disabled");
+                } else {
+                    document.getElementById("revoke-project").setAttribute("disabled", "disabled");
+                }
             });
+        });
     };
 
     const bindSelectAllCheckbox = () => {
@@ -61,6 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const project_selectboxes = document.querySelectorAll(
             '#allowed-projects-list input[type="checkbox"]:not(#check-all)'
         );
+
+        if (!check_all_selectbox || !project_selectboxes) {
+            return;
+        }
 
         check_all_selectbox.addEventListener("click", () => {
             if (check_all_selectbox.checked) {
