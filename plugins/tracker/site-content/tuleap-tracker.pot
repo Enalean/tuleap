@@ -135,6 +135,14 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#, php-format
+msgid "Cannot update permissions of transition with id '%d'"
+msgstr ""
+
+#, php-format
+msgid "Cannot update transition with id '%d'"
+msgstr ""
+
 msgid "Check permissions?"
 msgstr ""
 
@@ -628,6 +636,9 @@ msgid ""
 msgstr ""
 
 msgid "The tracker hierarchy cannot be defined."
+msgstr ""
+
+msgid "The transition has not been updated."
 msgstr ""
 
 msgid "The unsubscribe list has been successfully updated."

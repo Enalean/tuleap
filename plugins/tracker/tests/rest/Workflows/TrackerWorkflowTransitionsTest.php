@@ -261,4 +261,40 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals($transition['from_id'] ?: 0, $response_content['from_id']);
         $this->assertEquals($transition['to_id'], $response_content['to_id']);
     }
+
+    public function testPATCHTrackerWorkflowTransitionsThenGETReturnsUpdatedTransition()
+    {
+        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
+        $transition = $transition_combinations["transitions"][0];
+
+        $tracker_workflows_project_id = $this->getProjectId(self::TRACKER_WORKFLOWS_PROJECT_NAME);
+        $a_user_group_id = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
+
+        $params = json_encode([
+            "authorized_user_group_ids" => [$a_user_group_id],
+            "not_empty_field_ids" => [],
+            "is_comment_required" => true
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch(
+                'tracker_workflow_transitions/' . $transition['id'],
+                null,
+                $params
+            )
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('tracker_workflow_transitions/' . $transition['id'])
+        );
+        $this->assertEquals($response->getStatusCode(), 200);
+
+        $response_content = $response->json();
+        $this->assertEquals([$a_user_group_id], $response_content['authorized_user_group_ids']);
+        $this->assertEquals([], $response_content['not_empty_field_ids']);
+        $this->assertEquals(true, $response_content['is_comment_required']);
+    }
 }

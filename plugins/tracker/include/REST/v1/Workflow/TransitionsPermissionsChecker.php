@@ -81,4 +81,16 @@ class TransitionsPermissionsChecker
     {
         $this->permissions_checker->checkUpdateWorkflow($user, $transition->getWorkflow()->getTracker());
     }
+
+    /**
+     * Checks if given user has permissions to update given transition.
+     *
+     * @throws OrphanTransitionException
+     * @throws RestException 403
+     * @throws RestException 404
+     */
+    public function checkUpdate(PFUser $user, Transition $transition)
+    {
+        $this->permissions_checker->checkUpdateWorkflow($user, $transition->getWorkflow()->getTracker());
+    }
 }

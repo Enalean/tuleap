@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+use Luracast\Restler\RestException;
 use TrackerFactory;
 use TransitionFactory;
 use Tuleap\REST\AuthenticatedResource;
@@ -31,7 +32,10 @@ use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
+use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
+use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
 use Workflow;
+use Workflow_TransitionDao;
 use WorkflowFactory;
 
 class TransitionsResource extends AuthenticatedResource
@@ -146,6 +150,53 @@ class TransitionsResource extends AuthenticatedResource
     }
 
     /**
+     * Patch a transition from a workflow
+     *
+     * @url PATCH {id}
+     *
+     * @status 200
+     *
+     * @access protected
+     *
+     * @param int $id Transition id
+     * @param WorkflowTransitionPATCHRepresentation $transition_conditions The new transition representation
+     *
+     * @throws I18NRestException 400
+     * @throws I18NRestException 404
+     * @throws RestException 401
+     * @throws RestException 403
+     * @throws RestException 404
+     * @throws OrphanTransitionException
+     */
+    public function patchTransition($id, $transition_conditions)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaderForTransition();
+
+        $transition = $this->getTransitionFactory()->getTransition($id);
+        if (!$transition) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
+        }
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $this->getPermissionsChecker()->checkUpdate($current_user, $transition);
+
+        $project = $transition->getWorkflow()->getTracker()->getProject();
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
+
+        try {
+            $this->getTransitionUpdater()->update(
+                $transition,
+                $transition_conditions->getAuthorizedUserGroupIds(),
+                $transition_conditions->not_empty_field_ids,
+                $transition_conditions->is_comment_required
+            );
+        } catch (TransitionUpdateException $exception) {
+            throw new I18NRestException(400, dgettext('tuleap-tracker', 'The transition has not been updated.'));
+        }
+    }
+
+    /**
      * Checks params from_id and to_id.
      * <br />Destination id must exists for the field selected in rules.
      * <br />Source id must exists for the field selected in rules.
@@ -187,7 +238,7 @@ class TransitionsResource extends AuthenticatedResource
 
     private function sendAllowHeaderForTransition()
     {
-        Header::allowOptionsGetPostDelete();
+        Header::allowOptionsGetPostPatchDelete();
     }
 
     /**
@@ -284,5 +335,21 @@ class TransitionsResource extends AuthenticatedResource
     private function getPermissionsChecker()
     {
         return new TransitionsPermissionsChecker(new TrackerPermissionsChecker(new \URLVerification()));
+    }
+
+    /**
+     * @return Workflow_TransitionDao
+     */
+    private function getTransitionDao()
+    {
+        return new Workflow_TransitionDao();
+    }
+
+    /**
+     * @return TransitionUpdater
+     */
+    private function getTransitionUpdater()
+    {
+        return new TransitionUpdater($this->getTransitionFactory(), $this->getTransitionDao());
     }
 }
