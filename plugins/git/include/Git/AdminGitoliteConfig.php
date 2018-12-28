@@ -175,6 +175,7 @@ class Git_AdminGitoliteConfig {
         }
 
         $this->big_object_authorization_manager->revokeProjectAuthorization($project_ids);
+        $this->system_event_manager->queueProjectsConfigurationUpdate($project_ids);
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
@@ -195,6 +196,7 @@ class Git_AdminGitoliteConfig {
         }
 
         $this->big_object_authorization_manager->authorizeProject($project);
+        $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
