@@ -49,7 +49,6 @@ function run_install($part = '') {
     // setup default settings
     if (!$already and !defined("_PHPWIKI_INSTALL_RUNNING")) {
     	define("_PHPWIKI_INSTALL_RUNNING", true);
-        include(dirname(__FILE__)."/../configurator.php");
     }
     $already = 1;
 }
