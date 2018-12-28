@@ -77,13 +77,9 @@ class Workflow_Transition_ConditionFactory {
         return $collection;
     }
 
-    private function getTransition($transition_id) {
-        $transition_factory = TransitionFactory::instance();
-        return $transition_factory->getTransition($transition_id);
-    }
-
     /**
      * Deletes all exiting conditions then saves the new condition.
+     * @throws CannotCreateTransitionException
      */
     public function addCondition(Transition $transition, $list_field_id, $is_comment_required)
     {
