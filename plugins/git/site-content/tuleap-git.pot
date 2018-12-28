@@ -31,6 +31,12 @@ msgid ""
 "and contact site administration."
 msgstr ""
 
+msgid "Authorize"
+msgstr ""
+
+msgid "Authorized projects list"
+msgstr ""
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr ""
@@ -68,6 +74,9 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
+msgid "Filter using project's id or name"
+msgstr ""
+
 msgid "Fork"
 msgstr ""
 
@@ -101,10 +110,19 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
+msgid "Id"
+msgstr ""
+
 msgid "It seems that you already forked this repository:"
 msgstr ""
 
+msgid "Name"
+msgstr ""
+
 msgid "No notifications set"
+msgstr ""
+
+msgid "No project selected"
 msgstr ""
 
 msgid "Notified people"
@@ -118,16 +136,38 @@ msgstr ""
 msgid "Permission"
 msgstr ""
 
+msgid "Project does not exist"
+msgstr ""
+
 msgid "Project is not active"
 msgstr ""
 
+msgid "Project name"
+msgstr ""
+
 msgid "Project not found."
+msgstr ""
+
+msgid "Project successfully added"
+msgstr ""
+
+msgid "Project(s) successfully removed"
+msgstr ""
+
+msgid "Projects authorized to go over object's size limit"
 msgstr ""
 
 msgid "Read-only"
 msgstr ""
 
 msgid "Repository does not exist"
+msgstr ""
+
+msgid "Revoke authorization"
+msgstr ""
+
+msgid ""
+"Right now, there are no projects authorized to go over object's size limit"
 msgstr ""
 
 msgid "Select a branch or tag"
@@ -139,6 +179,9 @@ msgstr ""
 msgid ""
 "The management of this Git repository has been delegated to the Gerrit "
 "platform: %s"
+msgstr ""
+
+msgid "There are no projects matching the filter"
 msgstr ""
 
 msgid ""

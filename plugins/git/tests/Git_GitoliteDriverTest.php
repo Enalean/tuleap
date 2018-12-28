@@ -66,7 +66,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->logger,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
-            $this->url_manager
+            $this->url_manager,
+            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager')
         );
 
         $this->gitolite_conf_writer = new Git_Gitolite_GitoliteConfWriter(
@@ -91,7 +92,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
-            $this->mirror_data_mapper
+            $this->mirror_data_mapper,
+            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager')
         );
 
         $this->another_git_exec = mock('Git_Exec');
@@ -109,7 +111,8 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->another_gitolite_permissions_serializer,
             $this->gitolite_conf_writer,
             $this->project_manager,
-            $this->mirror_data_mapper
+            $this->mirror_data_mapper,
+            mock('Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager')
         );
     }
 

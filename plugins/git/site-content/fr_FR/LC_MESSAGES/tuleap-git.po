@@ -48,6 +48,12 @@ msgstr ""
 "<strong>N'utilisez pas le dépôt gerrit</strong>, consultez <a href=\"%s\">le "
 "rapport d'erreur</a> et contactez l'administration de la plateforme."
 
+msgid "Authorize"
+msgstr "Autoriser"
+
+msgid "Authorized projects list"
+msgstr "Liste des projets autorisés"
+
 #, php-format
 msgid "Cannot add user \"%s\""
 msgstr "Impossible d'ajouter l'utilisateur \"%s\""
@@ -85,6 +91,9 @@ msgstr "Copier dans le presse papier"
 msgid "Files"
 msgstr "Fichiers"
 
+msgid "Filter using project's id or name"
+msgstr "Filtrer avec l'id ou le nom du projet"
+
 msgid "Fork"
 msgstr "Fork"
 
@@ -118,11 +127,20 @@ msgstr "Permissions globales"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
+msgid "Id"
+msgstr "Id"
+
 msgid "It seems that you already forked this repository:"
 msgstr "Il semblerait que vous avez déjà forké ce dépôt :"
 
+msgid "Name"
+msgstr "Nom"
+
 msgid "No notifications set"
 msgstr "Aucune notification n'a été définie"
+
+msgid "No project selected"
+msgstr "Pas de projet sélectionné"
 
 msgid "Notified people"
 msgstr "Personnes notifiées"
@@ -137,17 +155,39 @@ msgstr ""
 msgid "Permission"
 msgstr "Permission"
 
+msgid "Project does not exist"
+msgstr "Le projet n'existe pas"
+
 msgid "Project is not active"
 msgstr "Le projet n'est pas actif"
 
+msgid "Project name"
+msgstr "Nom du projet"
+
 msgid "Project not found."
 msgstr "Le projet n'a pas été trouvé."
+
+msgid "Project successfully added"
+msgstr "Projet ajouté avec succès"
+
+msgid "Project(s) successfully removed"
+msgstr "Projet retiré avec succès"
+
+msgid "Projects authorized to go over object's size limit"
+msgstr "Projets autorisés à dépasser la taille maximale des objets"
 
 msgid "Read-only"
 msgstr "Lecture seule"
 
 msgid "Repository does not exist"
 msgstr "Le dépôt n'existe pas"
+
+msgid "Revoke authorization"
+msgstr "Révoquer l'autorisation"
+
+msgid ""
+"Right now, there are no projects authorized to go over object's size limit"
+msgstr "Aucun projet n'est autorisé à dépasser la limite pour l'instant"
 
 msgid "Select a branch or tag"
 msgstr "Sélectionnez une branche ou une étiquette"
@@ -159,6 +199,9 @@ msgid ""
 "The management of this Git repository has been delegated to the Gerrit "
 "platform: %s"
 msgstr "La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit : %s"
+
+msgid "There are no projects matching the filter"
+msgstr "Aucun projet ne correspond au filtre"
 
 msgid ""
 "This repository is in queue for migration to gerrit. Please check back here "

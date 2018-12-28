@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Git\AdminGerritBuilder;
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
@@ -86,6 +87,16 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
      */
     private $management_detector;
 
+    /**
+     * @var BigObjectAuthorizationManager
+     */
+    private $big_object_authorization_manager;
+
+    /**
+     * @var IncludeAssets
+     */
+    private $include_assets;
+
     public function __construct(
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         CSRFSynchronizerToken                $csrf,
@@ -100,22 +111,26 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         RegexpFineGrainedDisabler            $regexp_disabler,
         GerritServerResourceRestrictor       $gerrit_ressource_restrictor,
         Restrictor                           $gerrit_restrictor,
-        ManagementDetector                   $management_detector
+        ManagementDetector                   $management_detector,
+        BigObjectAuthorizationManager        $big_object_authorization_manager,
+        IncludeAssets                        $include_assets
     ) {
-        $this->gerrit_server_factory          = $gerrit_server_factory;
-        $this->csrf                           = $csrf;
-        $this->git_mirror_mapper              = $git_mirror_factory;
-        $this->git_mirror_resource_restrictor = $git_mirror_resource_restrictor;
-        $this->project_manager                = $project_manager;
-        $this->git_mirror_manifest_manager    = $git_mirror_manifest_manager;
-        $this->git_system_event_manager       = $git_system_event_manager;
-        $this->regexp_retriever               = $regexp_retriever;
-        $this->regexp_enabler                 = $regexp_enabler;
-        $this->admin_page_renderer            = $admin_page_renderer;
-        $this->regexp_disabler                = $regexp_disabler;
-        $this->gerrit_ressource_restrictor    = $gerrit_ressource_restrictor;
-        $this->gerrit_restrictor              = $gerrit_restrictor;
-        $this->management_detector            = $management_detector;
+        $this->gerrit_server_factory            = $gerrit_server_factory;
+        $this->csrf                             = $csrf;
+        $this->git_mirror_mapper                = $git_mirror_factory;
+        $this->git_mirror_resource_restrictor   = $git_mirror_resource_restrictor;
+        $this->project_manager                  = $project_manager;
+        $this->git_mirror_manifest_manager      = $git_mirror_manifest_manager;
+        $this->git_system_event_manager         = $git_system_event_manager;
+        $this->regexp_retriever                 = $regexp_retriever;
+        $this->regexp_enabler                   = $regexp_enabler;
+        $this->admin_page_renderer              = $admin_page_renderer;
+        $this->regexp_disabler                  = $regexp_disabler;
+        $this->gerrit_ressource_restrictor      = $gerrit_ressource_restrictor;
+        $this->gerrit_restrictor                = $gerrit_restrictor;
+        $this->management_detector              = $management_detector;
+        $this->big_object_authorization_manager = $big_object_authorization_manager;
+        $this->include_assets                   = $include_assets;
     }
 
     public function process(HTTPRequest $request, \Tuleap\Layout\BaseLayout $layout, array $variables) {
@@ -157,7 +172,9 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->project_manager,
                 $this->git_system_event_manager,
                 $this->admin_page_renderer,
-                $this->management_detector
+                $this->management_detector,
+                $this->big_object_authorization_manager,
+                $this->include_assets
             );
         } elseif ($request->get('pane') === 'mirrors_admin' || $request->get('view') === 'mirrors_restriction'){
             return new Git_AdminMirrorController(

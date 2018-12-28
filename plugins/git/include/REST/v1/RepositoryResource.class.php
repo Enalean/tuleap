@@ -47,6 +47,8 @@ use PluginFactory;
 use ProjectHistoryDao;
 use ProjectManager;
 use SystemEventManager;
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao;
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\CIToken\Dao as CITokenDao;
 use Tuleap\Git\CIToken\Manager as CITokenManager;
 use Tuleap\Git\CommitMetadata\CommitMetadataRetriever;
@@ -286,7 +288,17 @@ class RepositoryResource extends AuthenticatedResource
                     $url_manager,
                     $git_dao,
                     new \Git_Mirror_MirrorDao(),
-                    $git_plugin
+                    $git_plugin,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    new BigObjectAuthorizationManager(
+                        new BigObjectAuthorizationDao(),
+                        ProjectManager::instance()
+                    )
                 ),
                 new GitoliteAccessURLGenerator($git_plugin->getPluginInfo()),
                 new GitBackendLogger()

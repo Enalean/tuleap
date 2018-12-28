@@ -815,7 +815,9 @@ class GitPlugin extends Plugin
                 $gerrit_ressource_restrictor,
                 $project_manager
             ),
-            $this->getManagementDetector()
+            $this->getManagementDetector(),
+            $this->getBigObjectAuthorizationManager(),
+            $this->getIncludeAssets()
         );
     }
 
@@ -1191,7 +1193,8 @@ class GitPlugin extends Plugin
             null,
             null,
             $this->getProjectManager(),
-            $this->getMirrorDataMapper()
+            $this->getMirrorDataMapper(),
+            $this->getBigObjectAuthorizationManager()
         );
     }
 
@@ -2753,5 +2756,13 @@ class GitPlugin extends Plugin
     private function getGitLogDao()
     {
         return new Git_LogDao();
+    }
+
+    private function getBigObjectAuthorizationManager()
+    {
+        return  new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
+            new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
+            $this->getProjectManager()
+        );
     }
 }

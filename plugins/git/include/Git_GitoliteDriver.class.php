@@ -21,6 +21,7 @@
 
 require_once 'PathJoinUtil.php';
 
+use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\Gitolite\VersionDetector;
 
 /**
@@ -112,7 +113,8 @@ class Git_GitoliteDriver {
         Git_Gitolite_ConfigPermissionsSerializer $permissions_serializer = null,
         Git_Gitolite_GitoliteConfWriter $gitolite_conf_writer = null,
         ProjectManager $project_manager = null,
-        Git_Mirror_MirrorDataMapper $mirror_data_mapper = null
+        Git_Mirror_MirrorDataMapper $mirror_data_mapper = null,
+        BigObjectAuthorizationManager $big_object_authorization_manager
     ) {
         $this->git_dao = $git_dao;
         $this->logger                   = $logger;
@@ -165,7 +167,8 @@ class Git_GitoliteDriver {
             $this->logger,
             $this->repository_factory,
             $this->permissions_serializer,
-            $this->url_manager
+            $this->url_manager,
+            $big_object_authorization_manager
         );
 
         $this->gitolite_conf_writer = $gitolite_conf_writer ? $gitolite_conf_writer : new Git_Gitolite_GitoliteConfWriter(

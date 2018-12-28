@@ -15,7 +15,7 @@
                 </div>
                 <div class="tlp-form-element">
                     <label class="tlp-label" for="gitolite-project-selector">Project</label>
-                    <select class="tlp-select"
+                    <select class="tlp-select gitolite-project-selector"
                             id="gitolite-project-selector"
                             name="gitolite_config_project"
                             data-placeholder="Project name"></select>
@@ -29,3 +29,82 @@
         </div>
     </section>
 </form>
+
+<section class="tlp-pane">
+    <div class="tlp-pane-container">
+        <div class="tlp-pane-header">
+            <h1 class="tlp-pane-title">
+                <i class="fa fa-archive tlp-pane-title-icon"></i> {{ authorized_projects_section_title }}
+            </h1>
+        </div>
+        <section class="tlp-pane-section">
+            <h2 class="tlp-pane-subtitle resource-restrictor-subtitle"> {{ authorized_projects_list_title }}</h2>
+            <form id="projects-allowed-form" action="{{ update_allowed_projects_action }}" method="POST">
+                <div class="tlp-table-actions" id="allowed-projects-list-actions">
+                    {{# csrf_token }}
+                        {{> csrf_token_input }}
+                    {{/ csrf_token }}
+
+                    <div id="project-to-allow-autocompleter" class="tlp-form-element-append tlp-table-actions-element">
+                        <select class="tlp-select gitolite-project-selector" id="project-to-allow" name="project-to-allow" style="width: 100%" data-placeholder="{{ project_name_placeholder }}"></select>
+                        <button type="submit" name="allow-project" class="tlp-append tlp-button-primary" value="1">
+                            <i class="fa fa-check-circle tlp-button-icon"></i> {{ allowed_projects_list_allow_project }}
+                        </button>
+                    </div>
+                    <button type="submit" name="revoke-project" id="revoke-project" class="tlp-button-danger tlp-table-actions-element" value="1" disabled>
+                        <i class="fa fa-minus-circle tlp-button-icon"></i> {{ allowed_projects_list_revoke_projects }}
+                    </button>
+                    <div class="tlp-table-actions-spacer"></div>
+                    <div class="tlp-form-element {{# there_are_no_projects }}tlp-form-element-disabled{{/ there_are_no_projects }}">
+                        <input type="search"
+                               id="filter-projects"
+                               data-target-table-id="allowed-projects-list"
+                               autocomplete="off"
+                               class="tlp-search"
+                               size="28"
+                               placeholder="{{ allowed_projects_list_filter_placeholder }}"
+                               {{# there_are_no_projects }}disabled{{/ there_are_no_projects }}
+                        >
+                    </div>
+                </div>
+
+                <table id="allowed-projects-list" class="tlp-table">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="check-all">
+                        </th>
+                        <th class="tlp-table-cell-numeric">{{ allowed_projects_list_id }}</th>
+                        <th class="resource-restrictor-cell-project-name">{{ allowed_projects_list_name }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{# there_are_no_projects }}
+                        <tr>
+                            <td colspan="3" class="tlp-table-cell-empty">{{ allowed_projects_list_empty }}</td>
+                        </tr>
+                    {{/ there_are_no_projects }}
+                    {{^ there_are_no_projects }}
+                        <tr class="tlp-table-empty-filter">
+                            <td colspan="3" class="tlp-table-cell-empty">{{ allowed_projects_filter_empty }}</td>
+                        </tr>
+                        {{# allowed_projects }}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="project-ids-to-revoke[]" value="{{ getId }}">
+                                </td>
+                                <td class="tlp-table-cell-numeric tlp-table-cell-filterable">
+                                    {{ getId }}
+                                </td>
+                                <td class="resource-restrictor-cell-project-name tlp-table-cell-filterable">
+                                    <a href="{{ getUrl }}">{{ getUnconvertedPublicName }}</a>
+                                </td>
+                            </tr>
+                        {{/ allowed_projects }}
+                    {{/ there_are_no_projects }}
+                    </tbody>
+                </table>
+            </form>
+        </section>
+    </div>
+</section>

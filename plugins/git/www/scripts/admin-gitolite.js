@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,78 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-tuleap.autocomplete_projects_for_select2(document.getElementById("gitolite-project-selector"), {
-    include_private_projects: 1
+import { filterInlineTable } from "tlp";
+
+document.addEventListener("DOMContentLoaded", () => {
+    const bindProjectSelectors = () => {
+        const project_selectors = document.querySelectorAll(".gitolite-project-selector");
+        [].forEach.call(project_selectors, function(project_selector) {
+            tuleap.autocomplete_projects_for_select2(project_selector, {
+                include_private_projects: true
+            });
+        });
+    };
+
+    const bindFilter = () => {
+        const filter = document.getElementById("filter-projects");
+        if (filter) {
+            filterInlineTable(filter);
+        }
+    };
+
+    const bindToggleRevokeSelectedButton = () => {
+        document
+            .querySelectorAll('#allowed-projects-list input[type="checkbox"]')
+            .forEach(selectbox => {
+                selectbox.addEventListener("click", () => {
+                    if (
+                        document.querySelectorAll(
+                            '#allowed-projects-list input[type="checkbox"]:not(#check-all):checked'
+                        ).length > 0
+                    ) {
+                        document.getElementById("revoke-project").removeAttribute("disabled");
+                    } else {
+                        document
+                            .getElementById("revoke-project")
+                            .setAttribute("disabled", "disabled");
+                    }
+                });
+            });
+    };
+
+    const bindSelectAllCheckbox = () => {
+        const check_all_selectbox = document.getElementById("check-all");
+        const project_selectboxes = document.querySelectorAll(
+            '#allowed-projects-list input[type="checkbox"]:not(#check-all)'
+        );
+
+        check_all_selectbox.addEventListener("click", () => {
+            if (check_all_selectbox.checked) {
+                project_selectboxes.forEach(selectbox => {
+                    selectbox.checked = true;
+                });
+            } else {
+                project_selectboxes.forEach(selectbox => {
+                    selectbox.checked = false;
+                });
+            }
+        });
+
+        project_selectboxes.forEach(selectbox => {
+            selectbox.addEventListener("click", () => {
+                if (
+                    document.querySelectorAll(
+                        '#allowed-projects-list input[type="checkbox"]:not(#check-all):not(:checked)'
+                    ).length > 0
+                ) {
+                    check_all_selectbox.checked = false;
+                }
+            });
+        });
+    };
+
+    bindSelectAllCheckbox();
+    bindToggleRevokeSelectedButton();
+    bindProjectSelectors();
+    bindFilter();
 });
