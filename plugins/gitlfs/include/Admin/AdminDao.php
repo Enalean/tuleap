@@ -26,15 +26,15 @@ class AdminDao extends DataAccessObject
 {
     public function getFileMaxSize()
     {
-        return $this->getDB()->single('SELECT size FROM plugin_gitlfs_file_max_size');
+        return $this->getDB()->single('SELECT value FROM forgeconfig WHERE name = ?', [\gitlfsPlugin::MAX_FILE_SIZE_KEY]);
     }
 
-    public function updateFileMaxSize($current_max_file_size, $new_max_file_value)
+    public function updateFileMaxSize($new_max_file_value)
     {
         return $this->getDB()->update(
-            'plugin_gitlfs_file_max_size',
-            ['size' => $new_max_file_value],
-            ['size' => $current_max_file_size]
+            'forgeconfig',
+            ['value' => $new_max_file_value],
+            ['name' => \gitlfsPlugin::MAX_FILE_SIZE_KEY]
         );
     }
 }
