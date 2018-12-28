@@ -239,8 +239,7 @@ extends WikiPluginCached
         natcasesort($list);
         reset($list);
         return sprintf(_("Total %d plugins: "), count($list))
-            . implode(', ', array_map(create_function('$f',
-                                                      'return substr($f,0,-4);'),
+            . implode(', ', array_map(function($f) {return substr($f,0,-4);},
                                       $list));
     }
     function supported_languages () {
@@ -286,16 +285,16 @@ extends WikiPluginCached
         $this->_dbi = $dbi;
         $args['seperator'] = ' ';
         $availableargs = // name => callback + 0 args
-            array ('appname' => create_function('',"return 'PhpWiki';"),
-                   'version' => create_function('',"return sprintf('%s', PHPWIKI_VERSION);"),
-                   'LANG'    => create_function('','return $GLOBALS["LANG"];'),
-                   'LC_ALL'  => create_function('','return setlocale(LC_ALL, 0);'),
-                   'current_language' => create_function('','return $GLOBALS["LANG"];'),
-                   'system_language' => create_function('','return DEFAULT_LANGUAGE;'),
-                   'current_theme' => create_function('','return $GLOBALS["Theme"]->_name;'),
-                   'system_theme'  => create_function('','return THEME;'),
+            array ('appname' => function() {return 'PhpWiki';},
+                   'version' => function() {return PHPWIKI_VERSION;},
+                   'LANG'    => function() {return $GLOBALS['LANG'];},
+                   'LC_ALL'  => function() {return setlocale(LC_ALL, 0);},
+                   'current_language' => function() {return $GLOBALS['LANG'];},
+                   'system_language' => function() {return DEFAULT_LANGUAGE;},
+                   'current_theme' => function() {return $GLOBALS['Theme']->_name;},
+                   'system_theme'  => function() {return THEME;},
                    // more here or as method.
-                   '' => create_function('',"return 'dummy';")
+                   '' => function() {return 'dummy';}
                    );
         // split the argument string by any number of commas or space
         // characters, which include " ", \r, \t, \n and \f
@@ -378,10 +377,9 @@ function gensym($prefix = "_gensym") {
 function stddev(&$hits, $total = false) {
     $n = count($hits);
     if (!$total) $total = array_reduce($hits, 'rsum');
-    $GLOBALS['mean'] = $total / $n;
-    $r = array_map(create_function('$i', 'global $mean; return ($i-$mean)*($i-$mean);'),
+    $mean = $total / $n;
+    $r = array_map(function ($i) use ($mean) {return ($i-$mean)*($i-$mean);},
                    $hits);
-    unset($GLOBALS['mean']);
     return (float)sqrt(mean($r, $total) * ($n / (float)($n -1)));
 }
 

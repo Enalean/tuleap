@@ -304,7 +304,12 @@ class PluginsAdministrationViews extends Views {
 
     private function getInstalledPluginsPresenter()
     {
-        usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
+        usort(
+            $this->_plugins,
+            function ($a, $b) {
+                return strcasecmp($a['name'] , $b['name']);
+            }
+        );
 
         $i       = 0;
         $plugins = array();
