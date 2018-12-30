@@ -1,7 +1,0 @@
-#!/bin/bash
-# Just a small script that eases command line running of tests
-# 
-# Usage tests/bin/unit_test <part of test file name>
-set -x
-test_pattern=$1
-find tests/ plugins/ -wholename *$test_pattern*Test.php -exec php tests/bin/simpletest {} \;
