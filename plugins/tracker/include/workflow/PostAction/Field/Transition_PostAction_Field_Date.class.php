@@ -21,7 +21,8 @@
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
+class Transition_PostAction_Field_Date extends Transition_PostAction_Field
+{//phpcs:ignore
     
     /**
      * @const Clear the date.
@@ -66,7 +67,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
     /**
      * Get the value type of the post action
      *
-     * @return string
+     * @return integer
      */
     public function getValueType() {
         return $this->value_type;
