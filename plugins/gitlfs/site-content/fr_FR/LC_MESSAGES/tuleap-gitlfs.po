@@ -6,11 +6,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-msgid "An error occured while updating max file size."
-msgstr ""
-"Une erreur est survenue lors de la mise à jour de la taille maximale des "
-"fichiers."
-
 msgid "Git LFS"
 msgstr "Git LFS"
 

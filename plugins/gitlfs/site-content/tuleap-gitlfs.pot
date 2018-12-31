@@ -1,6 +1,3 @@
-msgid "An error occured while updating max file size."
-msgstr ""
-
 msgid "Git LFS"
 msgstr ""
 

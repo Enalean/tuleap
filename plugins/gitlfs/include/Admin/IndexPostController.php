@@ -73,17 +73,11 @@ class IndexPostController implements DispatchableWithRequest
 
         $new_max_file_value = (int) $request->getValidated('max_file_size', 'uint', 1) * 1024 * 1024;
 
-        if ($this->admin_dao->updateFileMaxSize($new_max_file_value)) {
-            $layout->addFeedback(
-                Feedback::INFO,
-                dgettext('tuleap-gitlfs', 'Max file size updated.')
-            );
-        } else {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-gitlfs', 'An error occured while updating max file size.')
-            );
-        }
+        $this->admin_dao->updateFileMaxSize($new_max_file_value);
+        $layout->addFeedback(
+            Feedback::INFO,
+            dgettext('tuleap-gitlfs', 'Max file size updated.')
+        );
 
         $layout->redirect('/plugins/git-lfs/config');
     }

@@ -31,7 +31,7 @@ class AdminDao extends DataAccessObject
 
     public function updateFileMaxSize($new_max_file_value)
     {
-        return $this->getDB()->update(
+        $this->getDB()->update(
             'forgeconfig',
             ['value' => $new_max_file_value],
             ['name' => \gitlfsPlugin::MAX_FILE_SIZE_KEY]
