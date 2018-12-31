@@ -22,10 +22,11 @@
 /**
  * Base class for numeric field post actions. 
  */
-abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field {
+abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field
+{//phpcs:ignore
     
     /**
-     * @var Integer the value
+     * @var int|float the value
      */
     protected $value;
     
@@ -35,7 +36,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      * @param Transition                   $transition The transition the post action belongs to
      * @param Integer                      $id         Id of the post action
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
-     * @param Integer                      $value      The value to set
+     * @param int|float $value The value to set
      */
     public function __construct(Transition $transition, $id, $field, $value) {
         parent::__construct($transition, $id, $field);
@@ -52,7 +53,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
     }
     
     /**
-     * @return The value set on the field by the post action.
+     * @return int|float The value set on the field by the post action.
      */
     public function getValue() {
         return $this->value;
