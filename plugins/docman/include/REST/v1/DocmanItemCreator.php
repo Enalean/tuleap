@@ -22,8 +22,14 @@
 namespace Tuleap\Docman\REST\v1;
 
 use Docman_Item;
+use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Tuleap\Docman\Upload\DocumentToUploadCreationConflictException;
+use Tuleap\Docman\Upload\DocumentToUploadCreationFileMismatchException;
+use Tuleap\Docman\Upload\DocumentToUploadCreator;
+use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
+use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
 
 class DocmanItemCreator
 {
@@ -31,53 +37,134 @@ class DocmanItemCreator
      * @var \PermissionsManager
      */
     private $permission_manager;
-
     /**
      * @var \EventManager
      */
     private $event_manager;
-
     /**
      * @var \Docman_ItemFactory
      */
     private $item_factory;
+    /**
+     * @var DocumentOngoingUploadRetriever
+     */
+    private $document_ongoing_upload_retriever;
+    /**
+     * @var DocumentToUploadCreator
+     */
+    private $document_to_upload_creator;
 
     public function __construct(
         \PermissionsManager $permission_manager,
         \EventManager $event_manager,
-        \Docman_ItemFactory $item_factory
+        \Docman_ItemFactory $item_factory,
+        DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
+        DocumentToUploadCreator $document_to_upload_creator
     ) {
-        $this->permission_manager       = $permission_manager;
-        $this->event_manager            = $event_manager;
-        $this->item_factory             = $item_factory;
+        $this->permission_manager                = $permission_manager;
+        $this->event_manager                     = $event_manager;
+        $this->item_factory                      = $item_factory;
+        $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
+        $this->document_to_upload_creator        = $document_to_upload_creator;
     }
 
     /**
-     * @return Docman_Item
+     * @return CreatedItemRepresentation
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     * @throws RestException
      */
     public function create(
         Docman_Item $parent_item,
         PFUser $user,
         Project $project,
-        $title,
-        $description,
-        $item_type_id
+        DocmanItemPOSTRepresentation $docman_item_post_representation,
+        \DateTimeImmutable $current_time
     ) {
-        $status_none_id = 100;
+        $this->checkDocumentIsNotBeingUploaded(
+            $parent_item,
+            $docman_item_post_representation->type,
+            $docman_item_post_representation->title,
+            $current_time
+        );
 
+        switch ($docman_item_post_representation->type) {
+            case ItemRepresentation::TYPE_EMPTY:
+                return $this->createEmptyDocument(
+                    $parent_item,
+                    $user,
+                    $project,
+                    $docman_item_post_representation->title,
+                    $docman_item_post_representation->description
+                );
+            case ItemRepresentation::TYPE_FILE:
+                if ($docman_item_post_representation->file_properties === null) {
+                    throw new RestException(
+                        400,
+                        'Providing file properties is mandatory when creating a new file'
+                    );
+                }
+                return $this->createFileDocument(
+                    $parent_item,
+                    $user,
+                    $docman_item_post_representation->title,
+                    $docman_item_post_representation->description,
+                    $current_time,
+                    $docman_item_post_representation->file_properties
+                );
+            default:
+                throw new \DomainException('Unknown document type: ' . $docman_item_post_representation->type);
+        }
+    }
+
+    /**
+     * @throws RestException
+     */
+    private function checkDocumentIsNotBeingUploaded(
+        Docman_Item $parent_item,
+        $document_type,
+        $title,
+        \DateTimeImmutable $current_time
+    ) {
+        if ($document_type === ItemRepresentation::TYPE_FILE) {
+            return;
+        }
+
+        $is_document_being_uploaded = $this->document_ongoing_upload_retriever->isThereAlreadyAnUploadOngoing(
+            $parent_item,
+            $title,
+            $current_time
+        );
+        if ($is_document_being_uploaded) {
+            throw new RestException(409, 'A document is already being uploaded for this item');
+        }
+    }
+
+    /**
+     * @throws \Tuleap\Docman\CannotInstantiateItemWeHaveJustCreatedInDBException
+     */
+    private function createEmptyDocument(
+        Docman_Item $parent_item,
+        PFUser $user,
+        Project $project,
+        $title,
+        $description
+    ) {
         $item = $this->item_factory->createWithoutOrdering(
             $title,
             $description,
             $parent_item->getId(),
-            $status_none_id,
+            PLUGIN_DOCMAN_ITEM_STATUS_NONE,
             $user->getId(),
-            $item_type_id
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
         );
 
         $this->inheritPermissionsFromParent($item);
         $this->triggerPostCreationEvents($item, $user, $parent_item, $project);
 
-        return $item;
+        $representation = new CreatedItemRepresentation();
+        $representation->build($item->getId());
+
+        return $representation;
     }
 
     private function inheritPermissionsFromParent(Docman_Item $item)
@@ -101,5 +188,43 @@ class DocmanItemCreator
         $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_EMPTY, $params);
         $this->event_manager->processEvent('plugin_docman_event_add', $params);
         $this->event_manager->processEvent('send_notifications', []);
+    }
+
+    /**
+     *
+     * @throws RestException
+     */
+    private function createFileDocument(
+        Docman_Item $parent_item,
+        PFUser $user,
+        $title,
+        $description,
+        \DateTimeImmutable $current_time,
+        FilePropertiesPOSTRepresentation $file_properties
+    ) {
+        try {
+            $document_to_upload = $this->document_to_upload_creator->create(
+                $parent_item,
+                $user,
+                $current_time,
+                $title,
+                $description,
+                $file_properties->file_name,
+                $file_properties->file_size
+            );
+        } catch (DocumentToUploadCreationConflictException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (DocumentToUploadCreationFileMismatchException $exception) {
+            throw new RestException(409, $exception->getMessage());
+        } catch (DocumentToUploadMaxSizeExceededException $exception) {
+            throw new RestException(400, $exception->getMessage());
+        }
+
+        $file_properties_representation = new CreatedItemFilePropertiesRepresentation();
+        $file_properties_representation->build($document_to_upload->getUploadHref());
+        $representation = new CreatedItemRepresentation();
+        $representation->build($document_to_upload->getItemId(), $file_properties_representation);
+
+        return $representation;
     }
 }

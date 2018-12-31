@@ -26,7 +26,7 @@ use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DocumentToUploadProviderTest extends TestCase
+class DocumentBeingUploadedProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -51,7 +51,7 @@ class DocumentToUploadProviderTest extends TestCase
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentToUploadProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
+        $file_provider = new DocumentBeingUploadedProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456
@@ -73,7 +73,7 @@ class DocumentToUploadProviderTest extends TestCase
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentToUploadProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
+        $file_provider = new DocumentBeingUploadedProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456
@@ -92,7 +92,7 @@ class DocumentToUploadProviderTest extends TestCase
 
     public function testDocumentCannotBeFoundIfRequestAttributesAreMissing()
     {
-        $file_provider = new DocumentToUploadProvider(
+        $file_provider = new DocumentBeingUploadedProvider(
             new DocumentUploadPathAllocator(),
             \Mockery::mock(DocumentOngoingUploadDAO::class),
             \Mockery::mock(\Docman_ItemFactory::class)
@@ -108,7 +108,7 @@ class DocumentToUploadProviderTest extends TestCase
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentToUploadProvider(
+        $file_provider = new DocumentBeingUploadedProvider(
             new DocumentUploadPathAllocator(),
             $dao,
             $item_factory

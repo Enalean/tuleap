@@ -57,4 +57,33 @@ class DocumentOngoingUploadDAO extends DataAccessObject
             $current_time
         );
     }
+
+    /**
+     * @return int
+     */
+    public function saveDocumentOngoingUpload(
+        $expiration_date,
+        $parent_id,
+        $title,
+        $description,
+        $user_id,
+        $filename,
+        $filesize
+    ) {
+        $item_id = (int) $this->getDB()->insertReturnId('plugin_docman_item_id', []);
+        $this->getDB()->insert(
+            'plugin_docman_new_document_upload',
+            [
+                'item_id'         => $item_id,
+                'expiration_date' => $expiration_date,
+                'parent_id'       => $parent_id,
+                'title'           => $title,
+                'description'     => $description,
+                'user_id'         => $user_id,
+                'filename'        => $filename,
+                'filesize'        => $filesize
+            ]
+        );
+        return $item_id;
+    }
 }

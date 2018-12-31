@@ -22,7 +22,7 @@ namespace Tuleap\Docman\Upload;
 
 use Tuleap\Docman\Tus\TusFileProvider;
 
-final class DocumentToUploadProvider implements TusFileProvider
+final class DocumentBeingUploadedProvider implements TusFileProvider
 {
     /**
      * @var DocumentUploadPathAllocator
@@ -82,6 +82,6 @@ final class DocumentToUploadProvider implements TusFileProvider
         }
         $handle = fopen($allocated_path, 'ab');
 
-        return new DocumentToUpload($handle, $document_row['filesize'], filesize($allocated_path));
+        return new DocumentBeingUploaded($handle, $document_row['filesize'], filesize($allocated_path));
     }
 }

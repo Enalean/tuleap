@@ -18,29 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Docman\REST\v1;
+namespace Tuleap\Docman\Upload;
 
-final class DocmanItemPOSTRepresentation
+final class DocumentToUploadMaxSizeExceededException extends DocumentToUploadCreationException
 {
-    /**
-     * @var string Item title {@from body} {@required true}
-     */
-    public $title;
-    /**
-     * @var string Item description {@from body} {@required false}
-     */
-    public $description = '';
-    /**
-     * @var int Item parent id {@from body} {@required true}
-     */
-    public $parent_id;
-    /**
-     * @var string Item type {@choice empty,file} {@from body} {@required true}
-     */
-    public $type;
-
-    /**
-     * @var FilePropertiesPOSTRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTRepresentation}
-     */
-    public $file_properties;
+    public function __construct($requested_size)
+    {
+        parent::__construct(
+            'The maximum allowed size for a file is ' . formatByteToMb(\ForgeConfig::get(\ForgeConfig::get('sys_max_size_upload'))) . ', ' .
+            'you requested the creation of a file of ' . formatByteToMb($requested_size)
+        );
+    }
 }

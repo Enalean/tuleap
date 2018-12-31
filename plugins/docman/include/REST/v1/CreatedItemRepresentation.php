@@ -36,11 +36,17 @@ final class CreatedItemRepresentation
     public $uri;
 
     /**
+     * @var CreatedItemFilePropertiesRepresentation {@type \Tuleap\Docman\REST\v1\CreatedItemFilePropertiesRepresentation} {@required false}
+     */
+    public $file_properties;
+
+    /**
      * @param int $item_id The id of the item.
      */
-    public function build($item_id)
+    public function build($item_id, CreatedItemFilePropertiesRepresentation $file_properties = null)
     {
-        $this->id  = JsonCast::toInt($item_id);
-        $this->uri = ResourcesInjector::NAME . "/" . $item_id;
+        $this->id              = JsonCast::toInt($item_id);
+        $this->uri             = ResourcesInjector::NAME . '/' . $item_id;
+        $this->file_properties = $file_properties;
     }
 }

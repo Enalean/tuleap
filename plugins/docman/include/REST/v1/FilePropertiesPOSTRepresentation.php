@@ -20,27 +20,14 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-final class DocmanItemPOSTRepresentation
+final class FilePropertiesPOSTRepresentation
 {
     /**
-     * @var string Item title {@from body} {@required true}
+     * @var string Name of the file {@from body} {@required true}
      */
-    public $title;
+    public $file_name;
     /**
-     * @var string Item description {@from body} {@required false}
+     * @var int Size of the file {@from body} {@required true} {@min 1}
      */
-    public $description = '';
-    /**
-     * @var int Item parent id {@from body} {@required true}
-     */
-    public $parent_id;
-    /**
-     * @var string Item type {@choice empty,file} {@from body} {@required true}
-     */
-    public $type;
-
-    /**
-     * @var FilePropertiesPOSTRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTRepresentation}
-     */
-    public $file_properties;
+    public $file_size;
 }
