@@ -93,8 +93,11 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $this->addHook('plugin_statistics_disk_usage_service_label');
         $this->addHook('plugin_statistics_color');
         $this->addHook(DisplayFileContentInGitView::NAME);
-        $this->addHook(PullRequestDiffRepresentationBuild::NAME);
         $this->addHook(GetWhitelistedKeys::NAME);
+        if (file_exists(__DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php')) {
+            require_once __DIR__ . '/../../pullrequest/include/pullrequestPlugin.class.php';
+            $this->addHook(PullRequestDiffRepresentationBuild::NAME);
+        }
 
         return parent::getHooksAndCallbacks();
     }
