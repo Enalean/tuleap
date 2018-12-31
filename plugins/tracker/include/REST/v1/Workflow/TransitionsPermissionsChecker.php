@@ -26,6 +26,7 @@ use PFUser;
 use Tracker;
 use Transition;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 /**
  * Check permissions for a given user to manipulate transitions.
@@ -65,11 +66,7 @@ class TransitionsPermissionsChecker
      */
     public function checkDelete(PFUser $user, Transition $transition)
     {
-        $workflow = $transition->getWorkflow();
-        if ($workflow === null) {
-            throw new OrphanTransitionException($transition);
-        }
-        $this->permissions_checker->checkUpdateWorkflow($user, $workflow->getTracker());
+        $this->permissions_checker->checkUpdateWorkflow($user, $transition->getWorkflow()->getTracker());
     }
 
     /**
@@ -82,10 +79,6 @@ class TransitionsPermissionsChecker
      */
     public function checkRead(PFUser $user, $transition)
     {
-        $workflow = $transition->getWorkflow();
-        if ($workflow === null) {
-            throw new OrphanTransitionException($transition);
-        }
-        $this->permissions_checker->checkUpdateWorkflow($user, $workflow->getTracker());
+        $this->permissions_checker->checkUpdateWorkflow($user, $transition->getWorkflow()->getTracker());
     }
 }

@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\Tracker\REST\v1\Workflow;
+namespace Tuleap\Tracker\Workflow\Transition;
 
 use Exception;
 use Transition;

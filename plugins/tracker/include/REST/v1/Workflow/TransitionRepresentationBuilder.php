@@ -25,6 +25,7 @@ use Transition;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_FieldNotEmpty;
 use Workflow_Transition_Condition_Permissions;
@@ -110,10 +111,6 @@ class TransitionRepresentationBuilder implements Visitor
      */
     private function getProjectId()
     {
-        $workflow = $this->transition->getWorkflow();
-        if ($workflow === null) {
-            throw new OrphanTransitionException($this->transition);
-        }
-        return $workflow->getTracker()->getProject()->getID();
+        return $this->transition->getWorkflow()->getTracker()->getProject()->getID();
     }
 }
