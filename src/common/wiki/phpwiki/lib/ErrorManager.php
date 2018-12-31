@@ -255,32 +255,20 @@ class ErrorManager
         // Handle it ourself.
         if ($error->isFatal()) {
             echo "<html><body><div style=\"font-weight:bold; color:red\">Fatal Error:</div>\n";
-            if (defined('DEBUG') and (DEBUG & _DEBUG_TRACE)) {
-                echo "error_reporting=",error_reporting(),"\n<br>";
-                if (function_exists("debug_backtrace")) // >= 4.3.0
-                    $error->printSimpleTrace(debug_backtrace());
-            }
             $this->_die($error);
         }
         else if (($error->errno & error_reporting()) != 0) {
-            if  (($error->errno & $this->_postpone_mask) != 0) {
-                //echo "postponed errors: ";
-                if (defined('DEBUG') and (DEBUG & _DEBUG_TRACE)) {
-                    echo "error_reporting=",error_reporting(),"\n";
-                    if (function_exists("debug_backtrace")) // >= 4.3.0
-                        $error->printSimpleTrace(debug_backtrace());
-                    $error->printXML();
-                }
-            } else {
+            if  (($error->errno & $this->_postpone_mask) == 0) {
                 if ((function_exists('isa') and isa($error, 'PhpErrorOnce'))
                     or (!function_exists('isa') and
-                    (
-                     // stdlib independent isa()
-                     (strtolower(get_class($error)) == 'phperroronce')
-                     or (is_subclass_of($error, 'PhpErrorOnce'))))) {
+                        (
+                            // stdlib independent isa()
+                            (strtolower(get_class($error)) == 'phperroronce')
+                            or (is_subclass_of($error, 'PhpErrorOnce'))))) {
                     $error->removeDoublettes($this->_postponed_errors);
-                    if ( $error->_count < 2 )
+                    if ($error->_count < 2) {
                         $this->_postponed_errors[] = $error;
+                    }
                 } else {
                     $this->_postponed_errors[] = $error;
                 }

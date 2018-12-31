@@ -698,6 +698,9 @@ class PEAR_Error
     function __construct($message = 'unknown error', $code = null,
                         $mode = null, $options = null, $userinfo = null)
     {
+        if (function_exists("debug_backtrace")) {
+            $this->backtrace = debug_backtrace();
+        }
         if ($mode === null) {
             $mode = PEAR_ERROR_RETURN;
         }
@@ -705,9 +708,6 @@ class PEAR_Error
         $this->code      = $code;
         $this->mode      = $mode;
         $this->userinfo  = $userinfo;
-        if (function_exists("debug_backtrace")) {
-            $this->backtrace = debug_backtrace();
-        }
         if ($mode & PEAR_ERROR_CALLBACK) {
             $this->level = E_USER_NOTICE;
             $this->callback = $options;
