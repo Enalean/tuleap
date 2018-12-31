@@ -379,6 +379,8 @@ class DocmanPlugin extends Plugin
         $controler->notifyFuturObsoleteDocuments();
         $reminder = new Docman_ApprovalTableReminder();
         $reminder->remindApprovers();
+
+        $this->cleanUnusedResources();
     }
 
     function process() {
@@ -855,6 +857,8 @@ class DocmanPlugin extends Plugin
         require_once('Docman_VersionFactory.class.php');
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->purgeDeletedVersions($params['time']);
+
+        $this->cleanUnusedResources();
     }
 
     /**
@@ -872,6 +876,7 @@ class DocmanPlugin extends Plugin
                 $docmanItemFactory = new Docman_ItemFactory();
                 $docmanItemFactory->deleteProjectTree($groupId);
             }
+            $this->cleanUnusedResources();
         }
 
     /**
@@ -1288,5 +1293,14 @@ class DocmanPlugin extends Plugin
                 );
             });
         }
+    }
+
+    private function cleanUnusedResources()
+    {
+        $cleaner = new \Tuleap\Docman\Upload\DocumentUploadCleaner(
+            new \Tuleap\Docman\Upload\DocumentUploadPathAllocator(),
+            new \Tuleap\Docman\Upload\DocumentOngoingUploadDAO()
+        );
+        $cleaner->deleteDanglingDocumentToUpload(new \DateTimeImmutable());
     }
 }

@@ -37,4 +37,26 @@ final class DocumentUploadPathAllocator
     {
         return $this->getBasePath() . $item_id;
     }
+
+    /**
+     * @return array<string,string>
+     */
+    public function getCurrentlyUsedAllocatedPathsPerExpectedItemIDs()
+    {
+        $base_path = $this->getBasePath();
+        if (! is_dir($base_path)) {
+            return [];
+        }
+
+        $paths = [];
+
+        $directory_iterator = new \DirectoryIterator($base_path);
+        foreach ($directory_iterator as $file_info) {
+            if ($file_info->isFile()) {
+                $paths[$file_info->getFilename()] = $file_info->getPathname();
+            }
+        }
+
+        return $paths;
+    }
 }

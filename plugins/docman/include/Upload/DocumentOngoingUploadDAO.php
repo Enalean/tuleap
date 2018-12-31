@@ -59,6 +59,14 @@ class DocumentOngoingUploadDAO extends DataAccessObject
     }
 
     /**
+     * @return array
+     */
+    public function searchDocumentOngoingUploadItemIDs()
+    {
+        return $this->getDB()->column('SELECT item_id FROM plugin_docman_new_document_upload');
+    }
+
+    /**
      * @return int
      */
     public function saveDocumentOngoingUpload(
@@ -85,5 +93,18 @@ class DocumentOngoingUploadDAO extends DataAccessObject
             ]
         );
         return $item_id;
+    }
+
+    public function deleteUnusableDocuments($current_time)
+    {
+        $this->getDB()->run(
+            'DELETE plugin_docman_new_document_upload, plugin_docman_item_id
+             FROM plugin_docman_new_document_upload
+             JOIN plugin_docman_item_id ON (plugin_docman_item_id.id = plugin_docman_new_document_upload.item_id)
+             LEFT JOIN plugin_docman_item ON (plugin_docman_item.item_id = plugin_docman_new_document_upload.parent_id)
+             LEFT JOIN `groups` ON (`groups`.group_id = plugin_docman_item.group_id)
+             WHERE ? >= plugin_docman_new_document_upload.expiration_date OR `groups`.status = "D" OR `groups`.group_id IS NULL',
+            $current_time
+        );
     }
 }
