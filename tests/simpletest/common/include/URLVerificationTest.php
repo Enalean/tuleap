@@ -84,7 +84,6 @@ class URLVerificationTest extends URLVerificationBaseTest {
         $urlVerification->setReturnValue('getEventManager', $em);
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/current_css.php', 'SCRIPT_NAME' => '/current_css.php')));
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/login.php', 'SCRIPT_NAME' => '/account/login.php')));
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/register.php', 'SCRIPT_NAME' => '/account/register.php')));
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/account/change_pw.php', 'SCRIPT_NAME' => '/account/change_pw.php')));
