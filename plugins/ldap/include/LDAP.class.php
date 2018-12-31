@@ -649,7 +649,7 @@ class LDAP {
      */
     private function _initErrorHandler() {
         if ($this->errorsTrapped) {
-            set_error_handler(create_function('',''));
+            set_error_handler(function ($errno, $errstr) {});
         }
     }
 
