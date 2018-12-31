@@ -8,6 +8,8 @@
 // Copyright (c) Asial Corporation. All rights reserved.
 //========================================================================
 
+// phpcs:ignoreFile
+
 require_once 'jpgraph_rgb.inc.php';
 require_once 'jpgraph_ttf.inc.php';
 require_once 'imageSmoothArc.php';
@@ -222,14 +224,14 @@ class Image {
 
     static function GetWidth($aImg=null) {
         if( $aImg === null ) {
-            $aImg = $this->img;
+            throw new \InvalidArgumentException('$aImg can not be null');
         }
         return imagesx($aImg);
     }
 
     static function GetHeight($aImg=null) {
         if( $aImg === null ) {
-            $aImg = $this->img;
+            throw new \InvalidArgumentException('$aImg can not be null');
         }
         return imagesy($aImg);
     }

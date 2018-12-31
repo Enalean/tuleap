@@ -65,18 +65,6 @@ include_once (dirname(__FILE__)."/FileFinder.php");
 
 function IniConfig($file) {
 
-    // First-time installer detection here...
-    // Similar to SetupWiki()
-    if (!file_exists($file)) {
-        // We need to DATA_PATH for configurator, or pass the posted values 
-        // somewhow to the script
-        include_once(dirname(__FILE__)."/install.php");
-        run_install("_part1");
-        if (!defined("_PHPWIKI_INSTALL_RUNNING"))
-            trigger_error("Datasource file '$file' does not exist", E_USER_ERROR);
-        exit();
-    }
-
     // List of all valid config options to be define()d which take "values" (not
     // booleans). Needs to be categorised, and generally made a lot tidier. 
     $_IC_VALID_VALUE = array
@@ -410,10 +398,7 @@ function fixup_static_configs($file) {
 
     if (!defined('THEME'))
         define('THEME', 'default');
-        
-    /*$configurator_link = HTML(HTML::br(), "=>", 
-                              HTML::a(array('href'=>DATA_PATH."/configurator.php"),
-    								  _("Configurator")));*/
+
     // check whether the crypt() function is needed and present
     if (defined('ENCRYPTED_PASSWD') && !function_exists('crypt')) {
         $error = sprintf("Encrypted passwords cannot be used: %s.",
