@@ -5,14 +5,12 @@ VERSION=$(shell LANG=C cat VERSION)
 ifeq ($(RELEASE),)
 	RELEASE=1
 endif
-DIST=
 BASE_DIR=$(shell pwd)
 RPMBUILD=rpmbuild --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
 
 NAME_VERSION=$(PKG_NAME)-$(VERSION)
 
-all:
-	$(MAKE) DIST=.el6 rpm
+all: rpm
 
 rpm: $(RPM_TMP)/RPMS/noarch/$(NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm
 	@echo "Results: $^"
@@ -53,5 +51,5 @@ $(RPM_TMP):
 docker-run:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	useradd -d /build -m build
-	su --login --command "make -C /tuleap/plugins/botmattermost_agiledashboard all RELEASE=$(RELEASE)" build
+	su --login --command "make -C /tuleap/plugins/botmattermost_agiledashboard all RELEASE=$(RELEASE) DIST=.$(DIST)" build
 	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/*.rpm /output
