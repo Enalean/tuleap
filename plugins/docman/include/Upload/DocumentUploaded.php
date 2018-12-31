@@ -111,6 +111,7 @@ final class DocumentUploaded implements TusEventSubscriber
         $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
         $this->createDocument($uploaded_document_path, $item_id);
         \unlink($uploaded_document_path);
+        $this->document_ongoing_upload_dao->deleteByItemID($item_id);
     }
 
     private function createDocument($uploaded_document_path, $item_id)
