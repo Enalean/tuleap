@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,20 +18,29 @@
  */
 
 import { mockFetchError } from "tlp-mocks";
-import { rewire$getUserGroups, rewire$getTransition, restore } from "../../api/rest-querier.js";
+import {
+    rewire$getUserGroups,
+    rewire$getTransition,
+    rewire$getPostActions,
+    restore
+} from "../../api/rest-querier.js";
 import {
     showTransitionConfigurationModal,
     loadTransition,
-    loadUserGroupsIfNotCached
+    loadUserGroupsIfNotCached,
+    loadPostActions
 } from "./transition-actions.js";
 import { create, createList } from "../../support/factories.js";
 
 describe("Transition modal actions", () => {
-    let getUserGroups, context;
+    let getUserGroups, getPostActions, context;
 
     beforeEach(() => {
         getUserGroups = jasmine.createSpy("getUserGroups");
         rewire$getUserGroups(getUserGroups);
+
+        getPostActions = jasmine.createSpy("getPostActions");
+        rewire$getPostActions(getPostActions);
     });
 
     afterEach(restore);
@@ -46,12 +55,13 @@ describe("Transition modal actions", () => {
             transition = create("transition", { id: 1 });
         });
 
-        it("will first show the modal, load the transition, load the cached user groups and clear the loading flag", async () => {
+        it("will first show the modal, load the transition, load the cached user groups, load the actions and clear the loading flag", async () => {
             await showTransitionConfigurationModal(context, transition);
 
             expect(context.commit).toHaveBeenCalledWith("showModal");
             expect(context.dispatch).toHaveBeenCalledWith("loadTransition", 1);
             expect(context.dispatch).toHaveBeenCalledWith("loadUserGroupsIfNotCached");
+            expect(context.dispatch).toHaveBeenCalledWith("loadPostActions", 1);
             expect(context.commit).toHaveBeenCalledWith("endLoadingModal");
         });
 
@@ -119,13 +129,26 @@ describe("Transition modal actions", () => {
             expect(getUserGroups).not.toHaveBeenCalled();
         });
 
-        it("will query the API and set the user groups in the state", async () => {
+        it("sets the user groups returned by the API in the state", async () => {
             getUserGroups.and.returnValue(user_groups);
 
             await loadUserGroupsIfNotCached(context);
 
             expect(getUserGroups).toHaveBeenCalledWith(205);
             expect(context.commit).toHaveBeenCalledWith("initUserGroups", user_groups);
+        });
+    });
+
+    describe("loadPostActions()", () => {
+        let actions = createList("post_action", 2);
+
+        beforeEach(async () => {
+            getPostActions.and.returnValue(actions);
+            await loadPostActions(context);
+        });
+
+        it("will query the API and set the user groups in the state", () => {
+            expect(context.commit).toHaveBeenCalledWith("savePostActions", actions);
         });
     });
 });

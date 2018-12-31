@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,8 @@ export default {
         is_modal_shown: false,
         is_modal_operation_failed: false,
         modal_operation_failure_message: null,
-        user_groups: null
+        user_groups: null,
+        actions: null
     },
     getters: {
         is_transition_from_new_artifact

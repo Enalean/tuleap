@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,18 @@
  */
 
 import { getErrorMessage } from "../exception-handler.js";
-import { getTransition, getUserGroups, patchTransition } from "../../api/rest-querier.js";
+import {
+    getTransition,
+    getUserGroups,
+    patchTransition,
+    getPostActions
+} from "../../api/rest-querier.js";
 
 export {
     showTransitionConfigurationModal,
     loadTransition,
     loadUserGroupsIfNotCached,
+    loadPostActions,
     saveTransitionRules
 };
 
@@ -32,7 +38,8 @@ async function showTransitionConfigurationModal({ dispatch, commit }, transition
     try {
         await Promise.all([
             dispatch("loadTransition", transition.id),
-            dispatch("loadUserGroupsIfNotCached")
+            dispatch("loadUserGroupsIfNotCached"),
+            dispatch("loadPostActions", transition.id)
         ]);
     } catch (error) {
         const error_message = await getErrorMessage(error);
@@ -54,6 +61,11 @@ async function loadUserGroupsIfNotCached({ state, commit, rootGetters }) {
 
     const user_groups = await getUserGroups(rootGetters.current_project_id);
     commit("initUserGroups", user_groups);
+}
+
+async function loadPostActions({ commit }, transition_id) {
+    const actions = await getPostActions(transition_id);
+    commit("savePostActions", actions);
 }
 
 async function saveTransitionRules({ commit, state }) {
