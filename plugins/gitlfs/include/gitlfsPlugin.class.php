@@ -346,5 +346,6 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     public function getWhitelistedKeys(GetWhitelistedKeys $event)
     {
         $event->addPluginsKeys(self::DISPLAY_CONFIG_KEY);
+        $event->addPluginsKeys(self::MAX_FILE_SIZE_KEY);
     }
 }
