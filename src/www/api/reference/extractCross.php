@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright Enalean (c) 2017-2019. All rights reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * 
@@ -32,6 +33,7 @@ http://codendi.example.com/goto?key=art&val=6841&group_id=109
 
 */
 
+// phpcs:ignorefile
 
 require_once('pre.php');
 require_once('common/include/HTTPRequest.class.php');
@@ -71,13 +73,13 @@ $text=trim($request->get('text'));
 $source_id=trim($request->get('rev_id'));
 $source_type=trim($request->get('type'));
 
-$reference_manager =& ReferenceManager::instance();
+$reference_manager = ReferenceManager::instance();
 $reference_manager->extractCrossRef($text,$source_id,$source_type,$group_id,$user_id);    
 
 $refs=$reference_manager->extractReferences($text,$group_id);
 if (isset($refs)) {
     foreach ($refs as $ref_instance) {
-        $ref =& $ref_instance->getReference();
+        $ref = $ref_instance->getReference();
         print $ref->getDescription()."\n";
         print $ref_instance->getMatch()."\n";
         print $ref_instance->getFullGotoLink()."\n\n";
@@ -85,5 +87,3 @@ if (isset($refs)) {
     }
  }
 exit;
-
-?>
