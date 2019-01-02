@@ -19,18 +19,11 @@
  */
 
 import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import PreConditionsSection from "./PreConditionsSection.vue";
 import initial_global_state from "../../store/state.js";
 import { state as initial_transition_modal_state } from "../../store/transition-modal/module.js";
-
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true
-});
+import localVue from "../../support/local-vue.js";
 
 describe("PreConditionsSection", () => {
     let global_store_state;

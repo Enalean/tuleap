@@ -19,17 +19,10 @@
  */
 
 import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import { createList } from "../support/factories.js";
-
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true
-});
+import localVue from "../support/local-vue.js";
 
 describe("FirstConfigurationSections", () => {
     let store_state;
