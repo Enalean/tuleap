@@ -20,21 +20,14 @@
 
 import Vue from "vue";
 import Vuex from "vuex";
-import GettextPlugin from "vue-gettext";
-import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import initial_state from "../store/state.js";
 import { create } from "../support/factories.js";
-
-const localVue = createLocalVue();
-localVue.use(Vuex);
-localVue.use(GettextPlugin, {
-    translations: {},
-    silent: true
-});
+import localVue from "../support/local-vue.js";
 
 describe("BaseTrackerWorkflowTransitions", () => {
     let store_state;
