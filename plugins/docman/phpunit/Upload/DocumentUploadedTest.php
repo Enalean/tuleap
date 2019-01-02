@@ -111,6 +111,7 @@ class DocumentUploadedTest extends TestCase
         touch($created_docman_file);
         $this->file_storage->shouldReceive('copy')->once()->andReturns($created_docman_file);
         $this->version_factory->shouldReceive('create')->once()->andReturns(true);
+        $this->version_factory->shouldReceive('getSpecificVersion')->andReturns(\Mockery::mock(\Docman_Version::class));
         $this->event_manager->shouldReceive('processEvent');
         $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
         $this->logger->shouldReceive('debug');

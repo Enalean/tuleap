@@ -206,6 +206,10 @@ final class DocumentUploaded implements TusEventSubscriber
         if ($item === null) {
             throw new \LogicException('Document manager item should have been created');
         }
+        $item_version = $this->version_factory->getSpecificVersion($item, 1);
+        if ($item_version === null) {
+            throw new \LogicException('Version #1 of item #' . $item->getId() . ' should have been created');
+        }
 
         $user = $this->user_manager->getUserById($item->getOwnerId());
 
@@ -224,7 +228,7 @@ final class DocumentUploaded implements TusEventSubscriber
             [
                 'group_id' => $item->getGroupId(),
                 'item'     => $item,
-                'version'  => 1,
+                'version'  => $item_version,
                 'user'     => $user
             ]
         );
