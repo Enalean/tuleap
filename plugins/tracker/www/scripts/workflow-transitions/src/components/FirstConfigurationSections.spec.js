@@ -18,32 +18,25 @@
  *
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import { createList } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
+import store_options from "../store/index.js";
+import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
 
 describe("FirstConfigurationSections", () => {
-    let store_state;
-    let store_actions;
+    let store_wrapper;
     let wrapper;
 
     beforeEach(() => {
-        store_state = {
+        store_wrapper = createStoreWrapper(store_options, {
             current_tracker: {
                 fields: createList("field", 2)
             }
-        };
-        store_actions = {
-            loadTracker: jasmine.createSpy("loadTracker")
-        };
-        const store = new Vuex.Store({
-            state: store_state,
-            actions: store_actions
         });
         wrapper = shallowMount(FirstConfigurationSections, {
-            store,
+            store: store_wrapper.store,
             localVue,
             propsData: { trackerId: 1 }
         });
@@ -51,7 +44,7 @@ describe("FirstConfigurationSections", () => {
 
     describe("all_fields", () => {
         beforeEach(() => {
-            store_state.current_tracker.fields = [
+            store_wrapper.state.current_tracker.fields = [
                 {
                     field_id: 1,
                     label: "First field",

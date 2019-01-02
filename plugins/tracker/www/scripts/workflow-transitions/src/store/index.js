@@ -17,17 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
 import state from "./state.js";
 import * as actions from "./actions.js";
 import mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import transitionModal from "./transition-modal/module.js";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default {
     state,
     actions,
     mutations,
@@ -35,4 +31,4 @@ export default new Vuex.Store({
     modules: {
         transitionModal
     }
-});
+};

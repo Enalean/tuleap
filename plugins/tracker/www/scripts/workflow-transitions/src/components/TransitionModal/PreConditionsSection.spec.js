@@ -18,46 +18,24 @@
  *
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import PreConditionsSection from "./PreConditionsSection.vue";
-import initial_global_state from "../../store/state.js";
-import { state as initial_transition_modal_state } from "../../store/transition-modal/module.js";
 import localVue from "../../support/local-vue.js";
+import store_options from "../../store/index.js";
+import { createStoreWrapper } from "../../support/store-wrapper.spec-helper.js";
 
 describe("PreConditionsSection", () => {
-    let global_store_state;
-    let transition_modal_state;
+    let store_wrapper;
     let wrapper;
 
     beforeEach(() => {
-        global_store_state = {
-            ...initial_global_state,
-            current_tracker: null
-        };
-        transition_modal_state = {
-            ...initial_transition_modal_state,
-            current_transition: null,
-            user_groups: null,
-            is_loading_modal: null
-        };
+        store_wrapper = createStoreWrapper(store_options, { current_tracker: null });
+        store_wrapper.modules.transitionModal.state.current_transition = null;
+        store_wrapper.modules.transitionModal.state.user_groups = null;
+        store_wrapper.modules.transitionModal.state.is_loading_modal = null;
 
-        const global_store = new Vuex.Store({
-            state: global_store_state,
-            modules: {
-                transitionModal: {
-                    namespaced: true,
-                    state: transition_modal_state,
-                    getters: {
-                        is_transition_from_new_artifact: jasmine.createSpy(
-                            "is_transition_from_new_artifact"
-                        )
-                    }
-                }
-            }
-        });
         wrapper = shallowMount(PreConditionsSection, {
-            store: global_store,
+            store: store_wrapper.store,
             localVue
         });
     });
@@ -65,7 +43,7 @@ describe("PreConditionsSection", () => {
     describe("writable_fields", () => {
         describe("when no current tracker", () => {
             beforeEach(() => {
-                global_store_state.current_tracker = null;
+                store_wrapper.state.current_tracker = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.writable_fields).toEqual([]);
@@ -77,7 +55,7 @@ describe("PreConditionsSection", () => {
             const invalid_field = { type: "burndown" };
 
             beforeEach(() => {
-                global_store_state.current_tracker = {
+                store_wrapper.state.current_tracker = {
                     fields: [invalid_field, valid_field]
                 };
             });
@@ -93,7 +71,7 @@ describe("PreConditionsSection", () => {
     describe("authorized_user_group_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                transition_modal_state.current_transition = null;
+                store_wrapper.modules.transitionModal.state.current_transition = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.authorized_user_group_ids).toEqual([]);
@@ -103,7 +81,9 @@ describe("PreConditionsSection", () => {
         describe("with a current transition", () => {
             const authorized_user_group_ids = ["1", "2"];
             beforeEach(() => {
-                transition_modal_state.current_transition = { authorized_user_group_ids };
+                store_wrapper.modules.transitionModal.state.current_transition = {
+                    authorized_user_group_ids
+                };
             });
             it("returns transition authorized group ids", () => {
                 expect(wrapper.vm.authorized_user_group_ids).toBe(authorized_user_group_ids);
@@ -114,7 +94,7 @@ describe("PreConditionsSection", () => {
     describe("not_empty_field_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                transition_modal_state.current_transition = null;
+                store_wrapper.modules.transitionModal.state.current_transition = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.not_empty_field_ids).toEqual([]);
@@ -124,7 +104,9 @@ describe("PreConditionsSection", () => {
         describe("with a current transition", () => {
             const not_empty_field_ids = [1, 2];
             beforeEach(() => {
-                transition_modal_state.current_transition = { not_empty_field_ids };
+                store_wrapper.modules.transitionModal.state.current_transition = {
+                    not_empty_field_ids
+                };
             });
             it("returns transition empty field ids", () => {
                 expect(wrapper.vm.not_empty_field_ids).toBe(not_empty_field_ids);
@@ -135,7 +117,7 @@ describe("PreConditionsSection", () => {
     describe("transition_comment_not_empty", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                transition_modal_state.current_transition = null;
+                store_wrapper.modules.transitionModal.state.current_transition = null;
             });
             it("returns false", () => {
                 expect(wrapper.vm.transition_comment_not_empty).toBeFalsy();
@@ -144,7 +126,9 @@ describe("PreConditionsSection", () => {
 
         describe("when current transition requires comment", () => {
             beforeEach(() => {
-                transition_modal_state.current_transition = { is_comment_required: true };
+                store_wrapper.modules.transitionModal.state.current_transition = {
+                    is_comment_required: true
+                };
             });
             it("returns true", () => {
                 expect(wrapper.vm.transition_comment_not_empty).toBeTruthy();
