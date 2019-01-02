@@ -107,4 +107,9 @@ class DocumentOngoingUploadDAO extends DataAccessObject
             $current_time
         );
     }
+
+    public function deleteByItemID($item_id)
+    {
+        $this->getDB()->delete('plugin_docman_new_document_upload', ['item_id' => $item_id]);
+    }
 }

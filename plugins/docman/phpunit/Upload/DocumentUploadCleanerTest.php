@@ -48,7 +48,7 @@ class DocumentUploadCleanerTest extends TestCase
 
         $existing_item_id = 10;
         $existing_item_being_uploaded_path = $path_allocator->getPathForItemBeingUploaded($existing_item_id);
-        mkdir($existing_item_being_uploaded_path, 0777, true);
+        mkdir(dirname($existing_item_being_uploaded_path), 0777, true);
         touch($existing_item_being_uploaded_path);
         $dao->shouldReceive('searchDocumentOngoingUploadItemIDs')->andReturns([$existing_item_id]);
         $non_existing_item_path = $path_allocator->getPathForItemBeingUploaded(999999);
