@@ -86,7 +86,7 @@ let instance_index = 0;
 const evaluateAttributesAsFunction = instance =>
     Object.keys(instance).reduce((evaluatedInstance, key) => {
         const attribute_or_function = instance[key];
-        if (attribute_or_function && typeof attribute_or_function == "function") {
+        if (attribute_or_function && typeof attribute_or_function === "function") {
             evaluatedInstance[key] = attribute_or_function(instance_index++);
         } else {
             evaluatedInstance[key] = attribute_or_function;
