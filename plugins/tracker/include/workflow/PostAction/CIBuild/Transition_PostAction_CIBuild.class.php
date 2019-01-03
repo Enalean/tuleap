@@ -19,10 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Workflow\PostAction\Visitor;
+
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once 'common/Jenkins/Client.class.php';
 
-class Transition_PostAction_CIBuild extends Transition_PostAction {
+class Transition_PostAction_CIBuild extends Transition_PostAction
+{ //phpcs:ignore
 
     const SHORT_NAME                          = 'ci_build';
     const XML_TAG_NAME                        = 'postaction_ci_build';
@@ -184,6 +187,11 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     public function bypassPermissions(Tracker_FormElement_Field $field) {
         return $this->bypass_permissions;
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitCIBuild($this);
     }
 }
 

@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\Visitor;
+
 /**
  * Set the date of a field
  */
@@ -228,6 +230,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitDateField($this);
     }
 }
 ?>

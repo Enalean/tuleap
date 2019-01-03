@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -296,5 +296,17 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $this->assertEquals([$a_user_group_id], $response_content['authorized_user_group_ids']);
         $this->assertEquals([], $response_content['not_empty_field_ids']);
         $this->assertEquals(true, $response_content['is_comment_required']);
+    }
+
+    public function testGETTrackerWorkflowTransitionActions()
+    {
+        $transition_combinations = $this->getAllTransitionCombinations($this->tracker_workflow_transitions_tracker_id);
+        $transition = $transition_combinations["transitions"][0];
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('tracker_workflow_transitions/' . $transition['id'] . '/actions')
+        );
+
+        $this->assertEquals($response->getStatusCode(), 200);
     }
 }

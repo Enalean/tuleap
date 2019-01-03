@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\Visitor;
+
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric {
+class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric
+{//phpcs:ignore
 
     const XML_TAG_NAME = 'postaction_field_int';
     const SHORT_NAME   = 'field_int';
@@ -130,6 +133,11 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      */
     protected function getDao() {
         return new Transition_PostAction_Field_IntDao();
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitIntField($this);
     }
 }
 ?>

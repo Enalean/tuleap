@@ -28,6 +28,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\ProjectStatusVerificator;
+use Tuleap\REST\RESTLogger;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
@@ -236,11 +237,6 @@ class TransitionsResource extends AuthenticatedResource
         return [$from_id, $to_id];
     }
 
-    private function sendAllowHeaderForTransition()
-    {
-        Header::allowOptionsGetPostPatchDelete();
-    }
-
     /**
      * Get a transition
      *
@@ -286,6 +282,49 @@ class TransitionsResource extends AuthenticatedResource
     }
 
     /**
+     * Get all post actions of a transition
+     *
+     * REST route to get all post actions of a transition
+     *
+     * @url GET {id}/actions
+     * @status 200
+     *
+     * @access protected
+     *
+     * @param int $id Id of transition
+     *
+     * @return array
+     *
+     * @throws 401 I18NRestException
+     * @throws 403 I18NRestException
+     * @throws 404 I18NRestException
+     * @throws OrphanTransitionException
+     * @throws \Luracast\Restler\RestException
+     */
+    protected function getPostActions($id)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaderForPostActions();
+
+        $transition = $this->getTransitionFactory()->getTransition($id);
+        if ($transition === null) {
+            throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
+        }
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $this->getPermissionsChecker()->checkRead($current_user, $transition);
+        try {
+            $project = $transition->getWorkflow()->getTracker()->getProject();
+        } catch (OrphanTransitionException $exception) {
+            $this->getRESTLogger()->error('Cannot return transition post actions', $exception);
+            throw new RestException(520);
+        }
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
+
+        return (new PostActionsRepresentationBuilder($transition->getAllPostActions()))->build();
+    }
+
+    /**
      * Checks if workflow exists for the tracker before return object
      *
      * @param int $tracker_id
@@ -303,6 +342,16 @@ class TransitionsResource extends AuthenticatedResource
         }
 
         return $workflow;
+    }
+
+    private function sendAllowHeaderForTransition()
+    {
+        Header::allowOptionsGetPostPatchDelete();
+    }
+
+    private function sendAllowHeaderForPostActions()
+    {
+        Header::allowOptionsGet();
     }
 
     /**
@@ -351,5 +400,13 @@ class TransitionsResource extends AuthenticatedResource
     private function getTransitionUpdater()
     {
         return new TransitionUpdater($this->getTransitionFactory(), $this->getTransitionDao());
+    }
+
+    /**
+     * @return RESTLogger
+     */
+    private function getRESTLogger()
+    {
+        return new RESTLogger();
     }
 }

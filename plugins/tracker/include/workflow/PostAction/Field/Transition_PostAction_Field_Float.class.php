@@ -17,11 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\PostAction\Visitor;
+
 include_once 'common/valid/ValidFactory.class.php';
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric {
+class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric
+{//phpcs:ignore
 
     const XML_TAG_NAME = 'postaction_field_float';
     const SHORT_NAME   = 'field_float';
@@ -130,6 +134,11 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      */
     protected function getDao() {
         return new Transition_PostAction_Field_FloatDao();
+    }
+
+    public function accept(Visitor $visitor)
+    {
+        $visitor->visitFloatField($this);
     }
 }
 ?>
