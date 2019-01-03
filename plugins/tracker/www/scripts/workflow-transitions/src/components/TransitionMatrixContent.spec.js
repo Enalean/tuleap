@@ -18,31 +18,22 @@
  *
  */
 
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 import { create } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
+import store_options from "../store/index.js";
+import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
 
 describe("TransitionMatrixContent", () => {
-    let store_state;
-    let store_actions;
+    let store_wrapper;
     let wrapper;
 
     beforeEach(() => {
-        store_state = {
-            is_operation_running: false
-        };
-        store_actions = {
-            createTransition: jasmine.createSpy("createTransition"),
-            deleteTransition: jasmine.createSpy("deleteTransition")
-        };
-        const store = new Vuex.Store({
-            state: store_state,
-            actions: store_actions
-        });
+        store_wrapper = createStoreWrapper(store_options, { is_operation_running: false });
+
         wrapper = shallowMount(TransitionMatrixContent, {
-            store,
+            store: store_wrapper.store,
             localVue,
             propsData: {
                 from: create("field_value"),
@@ -91,7 +82,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("during another operation running", () => {
                 beforeEach(() => {
-                    store_state.is_operation_running = true;
+                    store_wrapper.state.is_operation_running = true;
                 });
 
                 it("transition creation is disabled", () => {
@@ -106,7 +97,7 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("does nothing", () => {
-                        expect(store_actions.createTransition).not.toHaveBeenCalled();
+                        expect(store_wrapper.actions.createTransition).not.toHaveBeenCalled();
                     });
                 });
             });
@@ -115,7 +106,7 @@ describe("TransitionMatrixContent", () => {
                 let resolveCreateTransition;
 
                 beforeEach(() => {
-                    store_actions.createTransition.and.callFake(
+                    store_wrapper.actions.createTransition.and.callFake(
                         () =>
                             new Promise(resolve => {
                                 resolveCreateTransition = resolve;
@@ -128,8 +119,10 @@ describe("TransitionMatrixContent", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
                 it("creates transition", () => {
-                    expect(store_actions.createTransition).toHaveBeenCalled();
-                    expect(store_actions.createTransition.calls.mostRecent().args[1]).toEqual(
+                    expect(store_wrapper.actions.createTransition).toHaveBeenCalled();
+                    expect(
+                        store_wrapper.actions.createTransition.calls.mostRecent().args[1]
+                    ).toEqual(
                         jasmine.objectContaining({
                             from_id: 1,
                             to_id: 2
@@ -164,7 +157,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("during another operation running", () => {
                 beforeEach(() => {
-                    store_state.is_operation_running = true;
+                    store_wrapper.state.is_operation_running = true;
                 });
 
                 it("transition deletion is disabled", () => {
@@ -179,7 +172,7 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("does nothing", () => {
-                        expect(store_actions.deleteTransition).not.toHaveBeenCalled();
+                        expect(store_wrapper.actions.deleteTransition).not.toHaveBeenCalled();
                     });
                 });
             });
@@ -188,7 +181,7 @@ describe("TransitionMatrixContent", () => {
                 let deleteTransitionResolve;
 
                 beforeEach(() => {
-                    store_actions.deleteTransition.and.callFake(
+                    store_wrapper.actions.deleteTransition.and.callFake(
                         () =>
                             new Promise(resolve => {
                                 deleteTransitionResolve = resolve;
@@ -201,10 +194,10 @@ describe("TransitionMatrixContent", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
                 it("deletes the transition", () => {
-                    expect(store_actions.deleteTransition).toHaveBeenCalled();
-                    expect(store_actions.deleteTransition.calls.mostRecent().args[1]).toEqual(
-                        transition
-                    );
+                    expect(store_wrapper.actions.deleteTransition).toHaveBeenCalled();
+                    expect(
+                        store_wrapper.actions.deleteTransition.calls.mostRecent().args[1]
+                    ).toEqual(transition);
                 });
 
                 describe("and transition successfully deleted", () => {

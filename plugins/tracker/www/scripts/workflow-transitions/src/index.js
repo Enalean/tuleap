@@ -22,7 +22,8 @@
  */
 
 import Vue from "vue";
-import store from "./store";
+import Vuex from "vuex";
+import store_options from "./store";
 import GettextPlugin from "vue-gettext";
 import french_translations from "../po/fr.po";
 import BaseTrackerWorkflowTransitions from "./components/BaseTrackerWorkflowTransitions.vue";
@@ -34,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    Vue.use(Vuex);
     Vue.use(GettextPlugin, {
         translations: {
             fr: french_translations.messages
@@ -47,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const RootComponent = Vue.extend(BaseTrackerWorkflowTransitions);
     const trackerId = Number.parseInt(vue_mount_point.dataset.trackerId, 10);
     new RootComponent({
-        store,
+        store: new Vuex.Store(store_options),
         propsData: { trackerId }
     }).$mount(vue_mount_point);
 });

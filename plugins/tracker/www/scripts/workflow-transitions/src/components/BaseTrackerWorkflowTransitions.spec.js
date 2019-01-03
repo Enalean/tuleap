@@ -25,32 +25,19 @@ import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
-import initial_state from "../store/state.js";
+import store_options from "../store/index.js";
+import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
 import { create } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
 
 describe("BaseTrackerWorkflowTransitions", () => {
-    let store_state;
-    let store_actions;
+    let store_wrapper;
     let wrapper;
 
     beforeEach(() => {
-        store_state = {
-            ...initial_state,
-            is_operation_running: false
-        };
-        store_actions = {
-            loadTracker: jasmine.createSpy("loadTracker")
-        };
-        const store = new Vuex.Store({
-            state: store_state,
-            actions: store_actions,
-            getters: {
-                are_transition_rules_enforced: jasmine.createSpy("are_transition_rules_enforced")
-            }
-        });
+        store_wrapper = createStoreWrapper(store_options, { is_operation_running: false });
         wrapper = shallowMount(BaseTrackerWorkflowTransitions, {
-            store,
+            store: store_wrapper.store,
             localVue,
             propsData: { trackerId: 1 }
         });
@@ -61,7 +48,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     describe("when tracker load failed", () => {
         beforeEach(() => {
-            store_state.is_current_tracker_load_failed = true;
+            store_wrapper.state.is_current_tracker_load_failed = true;
         });
 
         it("shows tracker load error message", () => {
@@ -76,8 +63,8 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     describe("when tracker loading", () => {
         beforeEach(() => {
-            store_state.is_current_tracker_load_failed = false;
-            store_state.is_current_tracker_loading = true;
+            store_wrapper.state.is_current_tracker_load_failed = false;
+            store_wrapper.state.is_current_tracker_loading = true;
         });
 
         it("shows tracker load spinner", () => {
@@ -92,16 +79,16 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     describe("when tracker loaded", () => {
         beforeEach(() => {
-            store_state.is_current_tracker_load_failed = false;
-            store_state.is_current_tracker_loading = false;
-            store_state.current_tracker = {};
-            Vue.set(store_state, "current_tracker", {});
+            store_wrapper.state.is_current_tracker_load_failed = false;
+            store_wrapper.state.is_current_tracker_loading = false;
+            store_wrapper.state.current_tracker = {};
+            Vue.set(store_wrapper.state, "current_tracker", {});
         });
 
         describe("when base field not configured", () => {
             beforeEach(() => {
                 Vue.set(
-                    store_state.current_tracker,
+                    store_wrapper.state.current_tracker,
                     "workflow",
                     create("workflow", "field_not_defined")
                 );
@@ -114,7 +101,7 @@ describe("BaseTrackerWorkflowTransitions", () => {
         describe("when base field configured", () => {
             beforeEach(() => {
                 Vue.set(
-                    store_state.current_tracker,
+                    store_wrapper.state.current_tracker,
                     "workflow",
                     create("workflow", "field_defined")
                 );
