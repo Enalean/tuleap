@@ -35,7 +35,10 @@ import {
     rewire$updateTransitionRulesEnforcement,
     rewire$deleteTransition
 } from "../api/rest-querier.js";
-import { restore as restore$ExceptionHandler, rewire$getErrorMessage } from "./exceptionHandler.js";
+import {
+    restore as restore$ExceptionHandler,
+    rewire$getErrorMessage
+} from "./exception-handler.js";
 import { create } from "../support/factories.js";
 
 describe("Store actions:", () => {

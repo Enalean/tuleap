@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getErrorMessage } from "../exceptionHandler.js";
+import { getErrorMessage } from "../exception-handler.js";
 import { getTransition, getUserGroups } from "../../api/rest-querier.js";
 
 export { showTransitionConfigurationModal, loadTransition, loadUserGroupsIfNotCached };

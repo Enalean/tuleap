@@ -25,7 +25,7 @@ import {
     updateTransitionRulesEnforcement as restUpdateTransitionRulesEnforcement,
     deleteTransition as restDeleteTransition
 } from "../api/rest-querier.js";
-import { getErrorMessage } from "./exceptionHandler.js";
+import { getErrorMessage } from "./exception-handler.js";
 
 export async function loadTracker(context, tracker_id) {
     try {
