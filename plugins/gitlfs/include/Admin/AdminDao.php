@@ -24,9 +24,15 @@ use Tuleap\DB\DataAccessObject;
 
 class AdminDao extends DataAccessObject
 {
+    /**
+     * @return int
+     */
     public function getFileMaxSize()
     {
-        return $this->getDB()->single('SELECT value FROM forgeconfig WHERE name = ?', [\gitlfsPlugin::MAX_FILE_SIZE_KEY]);
+        return $this->getDB()->single(
+            'SELECT CAST(value AS UNSIGNED INTEGER) FROM forgeconfig WHERE name = ?',
+            [\gitlfsPlugin::MAX_FILE_SIZE_KEY]
+        );
     }
 
     public function updateFileMaxSize($new_max_file_value)
