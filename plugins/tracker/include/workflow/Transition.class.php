@@ -1,22 +1,27 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
+
 class Transition {
     public $transition_id;
     public $workflow_id;
@@ -154,10 +159,14 @@ class Transition {
      * Get parent workflow
      *
      * @return Workflow
+     * @throws OrphanTransitionException if this transition has no workflow
      */
     public function getWorkflow() {
         if (!$this->workflow) {
             $this->workflow = WorkflowFactory::instance()->getWorkflow($this->workflow_id);
+        }
+        if ($this->workflow === null) {
+            throw new OrphanTransitionException($this);
         }
         return $this->workflow;
     }

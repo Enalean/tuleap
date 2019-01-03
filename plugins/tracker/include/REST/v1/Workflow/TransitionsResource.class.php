@@ -30,6 +30,7 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Workflow;
 use WorkflowFactory;
 
@@ -139,11 +140,7 @@ class TransitionsResource extends AuthenticatedResource
         $current_user = $this->user_manager->getCurrentUser();
         $this->getPermissionsChecker()->checkDelete($current_user, $transition);
 
-        $workflow = $transition->getWorkflow();
-        if ($workflow === null) {
-            throw new OrphanTransitionException($transition);
-        }
-        $project = $workflow->getTracker()->getProject();
+        $project = $transition->getWorkflow()->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
         $this->getTransitionFactory()->delete($transition);
     }
@@ -231,11 +228,7 @@ class TransitionsResource extends AuthenticatedResource
 
         $current_user = $this->user_manager->getCurrentUser();
         $this->getPermissionsChecker()->checkRead($current_user, $transition);
-        $workflow = $transition->getWorkflow();
-        if ($workflow === null) {
-            throw new OrphanTransitionException($transition);
-        }
-        $project = $workflow->getTracker()->getProject();
+        $project = $transition->getWorkflow()->getTracker()->getProject();
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
 
         return (new TransitionRepresentationBuilder($transition))->build();
