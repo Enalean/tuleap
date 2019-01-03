@@ -20,10 +20,12 @@
 
 namespace Tuleap\Timetracking\Widget;
 
+use Codendi_Request;
 use TemplateRendererFactory;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Widget;
 
 class TimeTrackingOverview extends Widget
@@ -80,5 +82,22 @@ class TimeTrackingOverview extends Widget
             TIMETRACKING_BASE_URL . '/themes/BurningParrot/assets'
         );
         return new CssAssetCollection([new CssAsset($include_assets, 'style')]);
+    }
+
+    public function create(Codendi_Request $request)
+    {
+        $content_id = $this->getDao()->create();
+
+        return $content_id;
+    }
+
+    public function destroy($content_id)
+    {
+        $this->getDao()->delete($content_id);
+    }
+
+    private function getDao()
+    {
+        return new TimetrackingReportDao();
     }
 }
