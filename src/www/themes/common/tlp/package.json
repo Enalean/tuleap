@@ -14,19 +14,14 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "concurrently": "^3.4.0",
-    "del": "^2.2.2",
-    "gulp": "^3.9.1",
     "gulp-header": "^1.8.9",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^4.0.1",
-    "run-sequence": "^1.2.2"
+    "gulp-rename": "^1.2.2"
   },
   "config": {
     "bin": "../../../../../node_modules/.bin"
   },
   "scripts": {
-    "build": "NODE_ENV=production gulp build && $npm_package_config_bin/webpack --mode=production",
-    "watch": "NODE_ENV=watch concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' 'gulp watch'"
+    "build": "NODE_ENV=production $npm_package_config_bin/gulp build && $npm_package_config_bin/webpack --mode=production",
+    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --watch --mode=development' '$npm_package_config_bin/gulp watch'"
   }
 }
