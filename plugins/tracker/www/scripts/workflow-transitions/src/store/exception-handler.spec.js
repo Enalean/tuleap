@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getErrorMessage } from "./exceptionHandler.js";
+import { getErrorMessage } from "./exception-handler.js";
 
 describe("Store fail actions:", () => {
     describe("getErrorMessage()", () => {
