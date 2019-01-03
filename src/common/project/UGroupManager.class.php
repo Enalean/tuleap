@@ -79,6 +79,11 @@ class UGroupManager {
      */
     public function getUGroupWithMembers(Project $project, $ugroup_id) {
         $ugroup = $this->getUGroup($project, $ugroup_id);
+
+        if (! $ugroup) {
+            return null;
+        }
+
         $ugroup->getMembers();
 
         return $ugroup;

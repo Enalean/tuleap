@@ -630,6 +630,13 @@ function ugroup_delete($group_id, $ugroup_id) {
     $ugroup_manager = new UGroupManager();
     $ugroup         = $ugroup_manager->getUGroupWithMembers($project, $ugroup_id);
 
+    if (! $ugroup) {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            dgettext('tuleap-core', 'User group does not exist')
+        );
+    }
+
     $sql = "DELETE FROM ugroup WHERE group_id=".db_ei($group_id)." AND ugroup_id=".db_ei($ugroup_id);
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {

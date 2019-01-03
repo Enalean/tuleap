@@ -1249,6 +1249,9 @@ msgstr ""
 msgid "User group created but cannot get Id."
 msgstr ""
 
+msgid "User group does not exist"
+msgstr ""
+
 msgid "User name"
 msgstr ""
 
