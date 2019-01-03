@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,9 +25,8 @@
  *
  * @return string 'X-JSON: ...'
  */
-function json_header($content) {
+
+function json_header($content)
+{
     return 'X-JSON: '. json_encode($content);
 }
-
-
-?>
