@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -478,49 +478,11 @@ class FRSFile {
      *
      * WARNING : this function does not check permissions, nor does it log the download
      *
-     * @return boolean true if the user has permissions to download the file, false otherwise
      */
     public function download()
     {
-        $file_location = $this->getFileLocation();
-        $file_size     = $this->getFileSize();
-
-        if (ob_get_level()) {
-            ob_end_clean();
-        }
-
-        // Make sure this URL is not cached anywhere otherwise download
-        // would be wrong
-        header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');
-        header('Pragma: private');
-        header('Cache-control: private, must-revalidate');
-
-        header("Content-Type: application/octet-stream");
-        header('Content-Disposition: attachment; filename="'. basename($this->getFileName()) .'"');
-        if ($file_size > 0){
-            header("Content-Length:  $file_size");
-        }
-        header("Content-Transfer-Encoding: binary\n");
-
-        //reset time limit for big files
-        set_time_limit(0);
-
-        // Now transfer the file to the client
-        flush();
-        $file = fopen($file_location, "r");
-        while (! feof($file)) {
-            $content = fread($file, 30*1024);
-
-            if (! $content) {
-                return false;
-            }
-
-            print $content;
-            flush();
-        }
-        fclose($file);
-
-        return true;
+        $binary_file_response = new \Tuleap\Http\BinaryFileResponse($this->getFileLocation(), basename($this->getFileName()));
+        $binary_file_response->send();
     }
 
     /**

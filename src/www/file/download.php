@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -60,8 +60,4 @@ list(,$group_id, $file_id) = explode('/', $request->getFromServer('PATH_INFO'));
 
 
   // Start download
-  if (! $file->download()) {
-      exit_error($Language->getText('global','error'), $Language->getText('file_download','file_not_available'));
-  }
-
-?>
+  $file->download();
