@@ -20,7 +20,7 @@
 
 namespace Tuleap\Docman\REST\v1;
 
-final class DocmanItemPOSTRepresentation
+class DocmanItemPOSTRepresentation
 {
     /**
      * @var string Item title {@from body} {@required true}
@@ -35,12 +35,15 @@ final class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice empty,file} {@from body} {@required true}
+     * @var string Item type {@choice empty,wiki,file} {@from body} {@required true}
      */
     public $type;
-
     /**
      * @var FilePropertiesPOSTRepresentation File properties must be set when creating a new file {@from body} {@required false} {@type \Tuleap\Docman\REST\v1\FilePropertiesPOSTRepresentation}
      */
-    public $file_properties;
+    public $file_properties = null;
+    /**
+     * @var WikiPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\WikiPropertiesPOSTRepresentation} {@from body} {@required false}
+     */
+    public $wiki_properties = null;
 }

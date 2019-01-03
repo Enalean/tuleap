@@ -30,6 +30,7 @@ class DocmanItemCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private $creator_visitor;
     private $permissions_manager;
     private $event_manager;
     private $item_factory;
@@ -38,8 +39,10 @@ class DocmanItemCreatorTest extends TestCase
 
     public function setUp()
     {
-        $this->permissions_manager               = \Mockery::mock(\PermissionsManager::class);
-        $this->event_manager                     = \Mockery::mock(\EventManager::class);
+        $this->permissions_manager = \Mockery::mock(\PermissionsManager::class);
+        $this->event_manager       = \Mockery::mock(\EventManager::class);
+        $this->creator_visitor     = new AfterItemCreationVisitor($this->permissions_manager, $this->event_manager);
+
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
@@ -48,11 +51,10 @@ class DocmanItemCreatorTest extends TestCase
     public function testEmptyDocumentCanBeCreated()
     {
         $item_creator = new DocmanItemCreator(
-            $this->permissions_manager,
-            $this->event_manager,
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
-            $this->document_to_upload_creator
+            $this->document_to_upload_creator,
+            $this->creator_visitor
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -71,11 +73,66 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('getID')->andReturns(102);
         $this->event_manager->shouldReceive('processEvent');
 
-        $created_item = \Mockery::mock(\Docman_Item::class);
+        $created_item = \Mockery::mock(\Docman_Empty::class);
         $created_item->shouldReceive('getId')->andReturns(12);
         $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
 
-        $this->item_factory->shouldReceive('createWithoutOrdering')->once()->andReturns($created_item);
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null)
+            ->once()
+            ->andReturns($created_item);
+        $this->permissions_manager->shouldReceive('clonePermissions')->once();
+
+        $created_item_representation = $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+        $this->assertNull($created_item_representation->file_properties);
+    }
+
+    public function testWikiDocumentCanBeCreated()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                  = new DocmanItemPOSTRepresentation();
+        $post_representation->type            = ItemRepresentation::TYPE_WIKI;
+        $post_representation->title           = 'Title';
+        $post_representation->parent_id       = 11;
+        $post_representation->wiki_properties = json_decode(json_encode(["page_name" => "Monchichi"]));
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi")
+            ->once()
+            ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
         $created_item_representation = $item_creator->create(
@@ -93,11 +150,10 @@ class DocmanItemCreatorTest extends TestCase
     public function testFileDocumentCanBeCreated()
     {
         $item_creator = new DocmanItemCreator(
-            $this->permissions_manager,
-            $this->event_manager,
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
-            $this->document_to_upload_creator
+            $this->document_to_upload_creator,
+            $this->creator_visitor
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -135,11 +191,10 @@ class DocmanItemCreatorTest extends TestCase
     public function testDocumentCreationWhenAFileIsBeingUploadedForItIsRejected()
     {
         $item_creator = new DocmanItemCreator(
-            $this->permissions_manager,
-            $this->event_manager,
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
-            $this->document_to_upload_creator
+            $this->document_to_upload_creator,
+            $this->creator_visitor
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);

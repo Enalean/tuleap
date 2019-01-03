@@ -16,37 +16,12 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 namespace Tuleap\Docman\REST\v1;
 
-use Tuleap\Docman\REST\ResourcesInjector;
-use Tuleap\REST\JsonCast;
-
-final class CreatedItemRepresentation
+class CannotCreateThisItemTypeException extends \Exception
 {
-    /**
-     * @var int
-     */
-    public $id;
 
-    /**
-     * @var string
-     */
-    public $uri;
-
-    /**
-     * @var CreatedItemFilePropertiesRepresentation {@type \Tuleap\Docman\REST\v1\CreatedItemFilePropertiesRepresentation} {@required false}
-     */
-    public $file_properties;
-
-    /**
-     * @param int $item_id The id of the item.
-     */
-    public function build($item_id, CreatedItemFilePropertiesRepresentation $file_properties = null)
-    {
-        $this->id              = JsonCast::toInt($item_id);
-        $this->uri             = ResourcesInjector::NAME . '/' . $item_id;
-        $this->file_properties = $file_properties;
-    }
 }

@@ -77,6 +77,16 @@ define('PLUGIN_DOCMAN_EVENT_COPY', 'plugin_docman_event_copy');
 define('PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION', 'plugin_docman_event_new_linkVersion');
 
 /**
+ * Event raised when a new Docman wiki item is created
+ *
+ * Parameters:
+ *      'item'      => Docman_Item
+ *      'group_id'  => integer
+ *      'wiki_page' => string
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_PHPWIKI_PAGE', 'plugin_docman_event_new_wikipage');
+
+/**
  * Event raised when docman need to get a phpwiki page
  *
  * Parameters:

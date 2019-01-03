@@ -267,6 +267,56 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostWikiDocument($root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query = json_encode(
+            [
+                'title'           => 'How to become a Tuleap',
+                'description'     => 'A description',
+                'parent_id'       => $root_id,
+                'type'            => 'wiki',
+                'wiki_properties' => $wiki_properties
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 400
+     */
+    public function testPostReturns400IfTypeAndPropertiesDoesNotMatch($root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];
+        $query = json_encode(
+            [
+                'title'           => 'How to fail item creation',
+                'description'     => 'A description',
+                'parent_id'       => $root_id,
+                'type'            => 'empty',
+                'wiki_properties' => $wiki_properties
+            ]
+        );
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+    }
+
+    /**
      * @depends testGetDocumentItemsForRegularUser
      * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
      * @expectExceptionCode 403

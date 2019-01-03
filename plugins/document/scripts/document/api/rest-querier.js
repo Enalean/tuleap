@@ -19,6 +19,7 @@
 
 import { get, recursiveGet, patch, del, post } from "tlp";
 import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
+import { TYPE_LINK, TYPE_WIKI } from "../constants";
 
 export {
     getProject,
@@ -48,14 +49,33 @@ async function addNewDocument(item, parent_id) {
         "content-type": "application/json"
     };
 
-    const body = JSON.stringify({
+    const json_body = {
         ...item,
         parent_id
-    });
+    };
+    cleanUpBody(json_body);
+    const body = JSON.stringify(json_body);
 
     const response = await post("/api/docman_items", { headers, body });
 
     return response.json();
+
+    function cleanUpBody(item) {
+        const properties_to_remove = { wiki_properties: 1, link_properties: 1 };
+        const properties_to_keep_by_type = {};
+        properties_to_keep_by_type[TYPE_LINK] = "link_properties";
+        properties_to_keep_by_type[TYPE_WIKI] = "wiki_properties";
+
+        if (properties_to_keep_by_type.hasOwnProperty(item.type)) {
+            delete properties_to_remove[properties_to_keep_by_type[item.type]];
+        }
+
+        Object.keys(properties_to_remove).forEach(property => {
+            if (item.hasOwnProperty(property)) {
+                delete item[property];
+            }
+        });
+    }
 }
 
 function getFolderContent(folder_id) {
