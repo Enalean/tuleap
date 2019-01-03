@@ -39,12 +39,14 @@
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 v-translate
+                v-bind:disabled="is_modal_save_running"
             >Cancel</button>
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_modal_save_running"
             >
-                <i class="tlp-button-icon fa fa-fw fa-spin fa-spinner" v-if="is_saving"></i>
+                <i class="tlp-button-icon fa fa-fw fa-spin fa-spinner" v-if="is_modal_save_running"></i>
                 <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
                 <span v-translate>Save configuration</span>
             </button>
@@ -57,7 +59,7 @@ import PreConditionsSection from "./PreConditionsSection.vue";
 import PostActionsSection from "./PostActionsSection.vue";
 import ModalErrorFeedback from "./ModalErrorFeedback.vue";
 import { modal as createModal } from "tlp";
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
     name: "TransitionModal",
@@ -65,11 +67,6 @@ export default {
         ModalErrorFeedback,
         PreConditionsSection,
         PostActionsSection
-    },
-    data() {
-        return {
-            is_saving: false
-        };
     },
     mounted() {
         const modal = createModal(this.$el);
@@ -87,15 +84,13 @@ export default {
             }
         );
     },
+    computed: {
+        ...mapState("transitionModal", ["is_modal_save_running"])
+    },
     methods: {
         ...mapMutations("transitionModal", ["clearModalShown", "saveTransitionRules"]),
-        async saveTransition() {
-            this.is_saving = true;
-            try {
-                await this.$store.dispatch("transitionModal/saveTransitionRules");
-            } finally {
-                this.is_saving = false;
-            }
+        saveTransition() {
+            this.$store.dispatch("transitionModal/saveTransitionRules");
         }
     }
 };

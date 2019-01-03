@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { restore, rewire$get, rewire$patch, rewire$post } from "tlp-fetch";
+import { restore, rewire$get, rewire$put, rewire$patch, rewire$post } from "tlp-fetch";
 import { mockFetchSuccess } from "tlp-mocks";
 import {
     createTransition,
@@ -27,7 +27,8 @@ import {
     getTransition,
     getUserGroups,
     patchTransition,
-    getPostActions
+    getPostActions,
+    putPostActions
 } from "../api/rest-querier.js";
 import { create } from "../support/factories.js";
 
@@ -78,6 +79,34 @@ describe("Rest queries:", () => {
             it("calls project API", () =>
                 expect(get).toHaveBeenCalledWith("/api/tracker_workflow_transitions/266/actions"));
             it("returns the post actions", () => expect(result).toEqual(return_json));
+        });
+    });
+
+    describe("for PUT actions:", () => {
+        let put;
+        let json_result = {};
+
+        beforeEach(() => {
+            put = jasmine.createSpy("put");
+            put.and.returnValue(
+                Promise.resolve({
+                    json: () => json_result
+                })
+            );
+            rewire$put(put);
+        });
+        describe("putPostActions()", () => {
+            const actions = [{ id: 1 }, { id: 2 }];
+
+            beforeEach(async () => {
+                await putPostActions(9, actions);
+            });
+
+            it("calls PUT actions", () =>
+                expect(put).toHaveBeenCalledWith("/api/tracker_workflow_transitions/9/actions", {
+                    headers: json_headers,
+                    body: '{"post_actions":[{"id":1},{"id":2}]}'
+                }));
         });
     });
 
@@ -134,7 +163,7 @@ describe("Rest queries:", () => {
         });
 
         describe("patchTransition()", () => {
-            const params = {
+            const transition_params = {
                 id: 1,
                 authorized_user_group_ids: ["1", "2"],
                 not_empty_field_ids: [3],
@@ -142,10 +171,10 @@ describe("Rest queries:", () => {
             };
 
             beforeEach(async () => {
-                await patchTransition(params);
+                await patchTransition(transition_params);
             });
 
-            it("calls PATCH", () =>
+            it("calls PATCH transition", () =>
                 expect(patch).toHaveBeenCalledWith("/api/tracker_workflow_transitions/1", {
                     headers: json_headers,
                     body:
@@ -155,7 +184,7 @@ describe("Rest queries:", () => {
             describe("when no authorized_user_group_ids provided", () => {
                 beforeEach(async () => {
                     await patchTransition({
-                        ...params,
+                        ...transition_params,
                         authorized_user_group_ids: null
                     });
                 });
@@ -171,7 +200,7 @@ describe("Rest queries:", () => {
             describe("when no not_empty_field_ids provided", () => {
                 beforeEach(async () => {
                     await patchTransition({
-                        ...params,
+                        ...transition_params,
                         not_empty_field_ids: null
                     });
                 });

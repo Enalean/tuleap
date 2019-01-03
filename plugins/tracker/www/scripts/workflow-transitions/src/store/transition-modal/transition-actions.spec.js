@@ -22,13 +22,16 @@ import {
     rewire$getUserGroups,
     rewire$getTransition,
     rewire$getPostActions,
+    rewire$patchTransition,
+    rewire$putPostActions,
     restore
 } from "../../api/rest-querier.js";
 import {
     showTransitionConfigurationModal,
     loadTransition,
     loadUserGroupsIfNotCached,
-    loadPostActions
+    loadPostActions,
+    saveTransitionRules
 } from "./transition-actions.js";
 import { create, createList } from "../../support/factories.js";
 
@@ -41,6 +44,12 @@ describe("Transition modal actions", () => {
 
         getPostActions = jasmine.createSpy("getPostActions");
         rewire$getPostActions(getPostActions);
+
+        context = {
+            state: {},
+            commit: jasmine.createSpy("commit"),
+            dispatch: jasmine.createSpy("dispatch")
+        };
     });
 
     afterEach(restore);
@@ -48,10 +57,6 @@ describe("Transition modal actions", () => {
     describe("showTransitionConfigurationModal()", () => {
         let transition;
         beforeEach(() => {
-            context = {
-                commit: jasmine.createSpy("commit"),
-                dispatch: jasmine.createSpy("dispatch")
-            };
             transition = create("transition", { id: 1 });
         });
 
@@ -93,10 +98,6 @@ describe("Transition modal actions", () => {
             rewire$getTransition(getTransition);
             getTransition.and.returnValue(transition);
 
-            context = {
-                commit: jasmine.createSpy("commit")
-            };
-
             await loadTransition(context, 1);
         });
 
@@ -110,10 +111,10 @@ describe("Transition modal actions", () => {
 
         beforeEach(() => {
             context = {
+                ...context,
                 state: {
                     user_groups: null
                 },
-                commit: jasmine.createSpy("commit"),
                 rootGetters: {
                     current_project_id: 205
                 }
@@ -140,15 +141,47 @@ describe("Transition modal actions", () => {
     });
 
     describe("loadPostActions()", () => {
-        let actions = createList("post_action", 2);
+        let post_actions = createList("post_action", 2);
 
         beforeEach(async () => {
-            getPostActions.and.returnValue(actions);
+            getPostActions.and.returnValue(post_actions);
             await loadPostActions(context);
         });
 
         it("will query the API and set the user groups in the state", () => {
-            expect(context.commit).toHaveBeenCalledWith("savePostActions", actions);
+            expect(context.commit).toHaveBeenCalledWith("savePostActions", post_actions);
+        });
+    });
+
+    describe("saveTransitionRules()", () => {
+        let patchTransition, putPostActions;
+        const current_transition = create("transition", { id: 9 });
+        const post_actions = createList("post_action", 2, "presented");
+
+        beforeEach(async () => {
+            patchTransition = jasmine.createSpy("patchTransition");
+            rewire$patchTransition(patchTransition);
+
+            putPostActions = jasmine.createSpy("putPostActions");
+            rewire$putPostActions(putPostActions);
+
+            context = {
+                ...context,
+                state: {
+                    current_transition: current_transition
+                },
+                getters: {
+                    post_actions
+                }
+            };
+            await saveTransitionRules(context);
+        });
+
+        it("patches transition", () => {
+            expect(patchTransition).toHaveBeenCalledWith(current_transition);
+        });
+        it("patches actions", () => {
+            expect(putPostActions).toHaveBeenCalledWith(9, post_actions);
         });
     });
 });

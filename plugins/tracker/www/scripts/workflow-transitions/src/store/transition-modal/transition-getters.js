@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,25 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import * as actions from "./transition-actions.js";
-import * as mutations from "./transition-mutations.js";
-import * as getters from "./transition-getters.js";
+export { is_transition_from_new_artifact, post_actions };
 
-export default {
-    namespaced: true,
-    state: {
-        current_transition: null,
-        is_loading_modal: false,
-        is_modal_shown: false,
-        is_modal_save_running: false,
-        is_modal_operation_failed: false,
-        modal_operation_failure_message: null,
-        user_groups: null,
-        post_actions_by_unique_id: null
-    },
-    getters,
-    mutations,
-    actions
-};
+function is_transition_from_new_artifact(state) {
+    return state.current_transition !== null ? state.current_transition.from_id === null : false;
+}
+
+function post_actions(state) {
+    if (!state.post_actions_by_unique_id) {
+        return null;
+    }
+    return Object.keys(state.post_actions_by_unique_id).map(
+        unique_id => state.post_actions_by_unique_id[unique_id]
+    );
+}

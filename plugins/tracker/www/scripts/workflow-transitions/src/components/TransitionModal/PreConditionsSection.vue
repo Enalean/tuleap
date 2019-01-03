@@ -34,7 +34,7 @@
                     id="workflow-configuration-permission"
                     class="tlp-select"
                     multiple
-                    v-bind:disabled="is_loading_modal"
+                    v-bind:disabled="is_operation_running"
                     v-model="authorized_user_group_ids"
             >
                 <option
@@ -62,6 +62,7 @@
                 ref="not_empty_fields_select"
                 v-bind:configuration="{width: '100%', placeholder: not_empty_field_select_placeholder}"
                 v-model="not_empty_field_ids"
+                v-bind:disabled="is_modal_save_running"
             >
                 <option
                     v-for="field in writable_fields"
@@ -88,6 +89,7 @@
                     type="checkbox"
                     name="transition-comment-not-empty"
                     v-model="transition_comment_not_empty"
+                    v-bind:disabled="is_modal_save_running"
                 >
                 <translate>Comment must not be empty</translate>
             </label>
@@ -115,7 +117,12 @@ export default {
         };
     },
     computed: {
-        ...mapState("transitionModal", ["current_transition", "user_groups", "is_loading_modal"]),
+        ...mapState("transitionModal", [
+            "current_transition",
+            "user_groups",
+            "is_loading_modal",
+            "is_modal_save_running"
+        ]),
         ...mapState({
             writable_fields: state => {
                 if (state.current_tracker === null) {
@@ -159,6 +166,9 @@ export default {
             set(value) {
                 this.$store.commit("transitionModal/updateIsCommentRequired", value);
             }
+        },
+        is_operation_running() {
+            return this.is_loading_modal || this.is_modal_save_running;
         }
     }
 };

@@ -24,10 +24,13 @@ export {
     initUserGroups,
     endLoadingModal,
     failModalOperation,
+    beginModalSave,
+    endModalSave,
     updateIsCommentRequired,
     updateNotEmptyFieldIds,
     updateAuthorizedUserGroupIds,
-    savePostActions
+    savePostActions,
+    updatePostAction
 };
 
 function showModal(state) {
@@ -55,6 +58,12 @@ function failModalOperation(state, message) {
     state.is_modal_operation_failed = true;
     state.modal_operation_failure_message = message;
 }
+function beginModalSave(state) {
+    state.is_modal_save_running = true;
+}
+function endModalSave(state) {
+    state.is_modal_save_running = false;
+}
 
 function updateIsCommentRequired(state, is_comment_required) {
     if (!state.current_transition) {
@@ -76,5 +85,27 @@ function updateAuthorizedUserGroupIds(state, authorized_user_group_ids) {
 }
 
 function savePostActions(state, actions) {
-    state.actions = actions;
+    const post_actions = {};
+    actions.forEach(post_action => {
+        const presented_post_action = presentPostAction(post_action);
+        post_actions[presented_post_action.unique_id] = presented_post_action;
+    });
+    state.post_actions_by_unique_id = post_actions;
+}
+
+function presentPostAction(post_action) {
+    let unique_id;
+    if (post_action.type === "set_field_value") {
+        unique_id = `${post_action.type}_${post_action.field_type}_${post_action.id}`;
+    } else {
+        unique_id = `${post_action.type}_${post_action.id}`;
+    }
+
+    return { ...post_action, unique_id };
+}
+
+function updatePostAction(state, new_action) {
+    const post_actions = { ...state.post_actions_by_unique_id };
+    post_actions[new_action.unique_id] = new_action;
+    state.post_actions_by_unique_id = post_actions;
 }

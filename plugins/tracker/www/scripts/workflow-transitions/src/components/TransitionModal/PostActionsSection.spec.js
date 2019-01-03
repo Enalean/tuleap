@@ -21,7 +21,7 @@
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../support/local-vue.js";
 import PostActionsSection from "./PostActionsSection.vue";
-import { create, createList } from "../../support/factories.js";
+import { createList } from "../../support/factories.js";
 import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 
 describe("PostActionsSection", () => {
@@ -32,9 +32,11 @@ describe("PostActionsSection", () => {
         const store_options = {
             state: {
                 transitionModal: {
-                    is_loading_modal: false,
-                    actions: createList("post_action", 2)
+                    is_loading_modal: false
                 }
+            },
+            getters: {
+                "transitionModal/post_actions": createList("post_action", 2, "presented")
             }
         };
         store = createStoreMock(store_options);
@@ -64,7 +66,7 @@ describe("PostActionsSection", () => {
         beforeEach(() => (store.state.transitionModal.is_loading_modal = false));
 
         describe("when no action", () => {
-            beforeEach(() => (store.state.transitionModal.actions = []));
+            beforeEach(() => (store.getters["transitionModal/post_actions"] = []));
 
             it("shows only empty message", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();
@@ -73,7 +75,12 @@ describe("PostActionsSection", () => {
             });
         });
         describe("when some actions", () => {
-            beforeEach(() => (store.state.transitionModal.actions = createList("post_action", 2)));
+            beforeEach(() =>
+                (store.getters["transitionModal/post_actions"] = createList(
+                    "post_action",
+                    2,
+                    "presented"
+                )));
 
             it("shows only actions", () => {
                 expect(wrapper.contains(skeleton_selector)).toBeFalsy();
@@ -83,24 +90,6 @@ describe("PostActionsSection", () => {
             it("shows as many action as stored", () => {
                 expect(wrapper.findAll(action_selector).length).toBe(2);
             });
-        });
-    });
-
-    describe("#getActionId", () => {
-        it("returns run job action identifier from id and type", () => {
-            const action = create("post_action", {
-                id: 3,
-                type: "run_job"
-            });
-            expect(wrapper.vm.getActionId(action)).toBe("run_job_3");
-        });
-        it("returns run set field action identifier from id, type and field type", () => {
-            const action = create("post_action", {
-                id: 3,
-                type: "set_field_value",
-                field_type: "date"
-            });
-            expect(wrapper.vm.getActionId(action)).toBe("set_field_value_date_3");
         });
     });
 });
