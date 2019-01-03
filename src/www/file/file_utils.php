@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -1282,7 +1282,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             if (count($http_files_processor_type_list) > 0 || count($ftp_files_processor_type_list) > 0) {
                 //see if this release belongs to this project
                 $res1 = $release_factory->getFRSReleaseFromDb($release_id, $group_id);
-                if (!$res1 || count($res1) < 1) {
+                if ($res1 === null) {
                     //release not found for this project
                     $error[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'rel_not_yours');
                 } else {

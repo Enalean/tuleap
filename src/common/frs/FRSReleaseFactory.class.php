@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean 2017 - 2019. All rights reserved
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -77,7 +77,7 @@ class FRSReleaseFactory {
 	 * @param $package_id
 	 * @param $extraFlags
          *
-         * @return FRSRelease
+         * @return FRSRelease|null
 	 */
 	function  getFRSReleaseFromDb($release_id, $group_id=null, $package_id=null, $extraFlags = 0) {
 		$_id = (int) $release_id;
@@ -95,11 +95,11 @@ class FRSReleaseFactory {
 		
 
 		if ($dar->isError()) {
-			return;
+			return null;
 		}
 
 		if (!$dar->valid()) {
-			return;
+			return null;
 		}
 
 		$data_array = $dar->current();
