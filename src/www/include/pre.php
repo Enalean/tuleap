@@ -23,8 +23,8 @@ use Tuleap\BurningParrotCompatiblePageDetector;
 use Tuleap\Request\CurrentPage;
 use Tuleap\TimezoneRetriever;
 
-if (PHP_VERSION_ID < 50600) {
-    die('Tuleap must be run on a PHP 5.6 (or greater) engine.');
+if (PHP_VERSION_ID < 70200) {
+    die('Tuleap must be run on a PHP 7.2 (or greater) engine.');
 }
 
 require_once __DIR__ . '/../../common/constants.php';

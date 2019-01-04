@@ -52,21 +52,6 @@ class TuleapWeb
         $this->previous_php_configuration_folders = $previous_php_configuration_folders;
     }
 
-    public static function buildForPHP56(
-        LoggerInterface $logger,
-        $application_user,
-        $development
-    ) {
-        return new self(
-            $logger,
-            $application_user,
-            $development,
-            '/etc/opt/remi/php56',
-            '/usr/share/tuleap/src/etc/fpm56',
-            ['/etc/opt/rh/rh-php56']
-        );
-    }
-
     public static function buildForPHP72(
         LoggerInterface $logger,
         $application_user,

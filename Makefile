@@ -28,9 +28,6 @@ help:
 # Utilities
 #
 
-doc: ## Build CLI documentation
-	$(MAKE) -C documentation all
-
 autoload:
 	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
 		test -f "plugins/$$path/composer.json" && continue; \
@@ -123,14 +120,8 @@ generate-po: ## Generate translatable strings
 generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
-tests_rest_56: ## Run all REST tests with PHP FPM 5.6
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php56-mysql57
-
 tests_rest_72: ## Run all REST tests with PHP FPM 7.2
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-rest:c6-php72-mysql57
-
-tests_soap_56: ## Run all SOAP tests in PHP 5.6
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:3
 
 tests_soap_72: ## Run all SOAP tests in PHP 7.2
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:ro,cached --mount type=tmpfs,destination=/tmp enalean/tuleap-test-soap:4
@@ -140,9 +131,6 @@ tests_cypress: ## Run Cypress tests
 
 tests_cypress_dev: ## Start cypress container to launch tests manually
 	@tests/e2e/full/wrap_for_dev_context.sh
-
-tests_rest_setup_56: ## Start REST tests (PHP FPM 5.6) container to launch tests manually
-	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php56-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php56 bash"
 
 tests_rest_setup_72: ## Start REST tests (PHP FPM 7.2) container to launch tests manually
 	$(DOCKER) run -ti --rm -v $(CURDIR):/usr/share/tuleap:cached --mount type=tmpfs,destination=/tmp -w /usr/share/tuleap enalean/tuleap-test-rest:c6-php72-mysql57 /bin/bash -c "/usr/share/tuleap/tests/rest/bin/run.sh setup && scl enable php72 bash"
@@ -159,16 +147,9 @@ run-as-owner:
 	useradd -u $$USER_ID -g $$GROUP_ID runner
 	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
 
-phpunit-ci-56:
-	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-56:/tmp/results --entrypoint /bin/bash enalean/tuleap-test-phpunit:c6-php56 -c "make -C /tuleap run-as-owner TARGET=phpunit-ci-run PHP=/opt/remi/php56/root/usr/bin/php"
-
 phpunit-ci-72:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-72
 	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
-
-phpunit-docker-56:
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php56 scl enable php56 "make -C /tuleap phpunit"
 
 phpunit-docker-72:
 	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit"
@@ -191,19 +172,6 @@ simpletest-72: ## Run SimpleTest with PHP 7.2
 
 simpletest-72-file: ## Run SimpleTest with PHP 7.2 on a given file or directory with FILE variable
 	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run $(FILE)
-
-simpletest-56-ci:
-	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-56
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest/php-56:/output:rw --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run  \
-	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration \
-
-simpletest-56: ## Run SimpleTest with PHP 5.6 tests in CLI
-	@docker run --rm -v $(CURDIR):/tuleap:ro --entrypoint "" enalean/tuleap-simpletest:c6-php56 /opt/remi/php56/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
-	/tuleap/tests/simpletest \
-	/tuleap/plugins/ \
-	/tuleap/tests/integration \
 
 bash-web: ## Give a bash on web container
 	@docker exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" -ti `docker-compose ps -q web` bash
@@ -253,12 +221,7 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-php56: ## Start Tuleap web with php56 & nginx
-	@echo "Start Tuleap in PHP 5.6"
-	@$(DOCKER_COMPOSE) -f docker-compose-php72.yml up --build -d reverse-proxy
-	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
-
-start-php72-centos7: ## Start Tuleap web with php56 & nginx on CentOS7
+start-php72-centos7: ## Start Tuleap web with php72 & nginx on CentOS7
 	@echo "Start Tuleap in PHP 7.2 on CentOS 7"
 	@$(DOCKER_COMPOSE) -f docker-compose-centos7.yml up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"

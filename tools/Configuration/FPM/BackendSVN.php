@@ -58,7 +58,7 @@ class BackendSVN
         }
         $this->logger->info('Deploy new tuleap.conf');
         $this->replacePlaceHolderInto(
-            $this->tuleap_base_dir.'/src/etc/fpm56/tuleap.conf',
+            $this->tuleap_base_dir.'/src/etc/fpm72/tuleap.conf',
             '/etc/opt/remi/php72/php-fpm.d/tuleap.conf',
             array(
                 '%application_user%'

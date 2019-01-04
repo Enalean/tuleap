@@ -3,7 +3,8 @@
 set -x
 
 if [ -z "$PHP_VERSION" ]; then
-    export PHP_VERSION="56"
+    echo 'PHP_VERSION environment variable must be specified' 1>&2
+    exit 1
 fi
 
 setup_runner_account() {

@@ -6,12 +6,14 @@ if [ -z "$MYSQL_DAEMON" ]; then
     MYSQL_DAEMON=mysqld
 fi
 
-if [ -z "$FPM_DAEMON" ] || [ "$FPM_DAEMON" = "rh-php56-php-fpm" ] ; then
-    FPM_DAEMON='php56-php-fpm'
+if [ -z "$FPM_DAEMON" ]; then
+    echo 'FPM_DAEMON environment variable must be specified' 1>&2
+    exit 1
 fi
 
 if [ -z "$PHP_CLI" ]; then
-    PHP_CLI='/opt/remi/php56/root/usr/bin/php'
+    echo 'PHP_CLI environment variable must be specified' 1>&2
+    exit 1
 fi
 
 setup_tuleap() {
@@ -150,9 +152,6 @@ setup_tuleap
 if [ "$FPM_DAEMON" == 'php72-php-fpm' ]; then
     echo "Deploy PHP FPM 7.2"
     "$PHP_CLI" /usr/share/tuleap/tools/utils/php72/run.php --modules=nginx,fpm
-else
-    echo "Deploy PHP FPM 5.6"
-    "$PHP_CLI" /usr/share/tuleap/tools/utils/php56/run.php --modules=nginx,fpm
 fi
 service "$FPM_DAEMON" start
 service nginx start

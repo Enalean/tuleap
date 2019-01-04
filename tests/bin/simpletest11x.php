@@ -24,9 +24,7 @@ require_once __DIR__.'/../../src/common/constants.php';
 require_once __DIR__.'/SimpleTest11x/TuleapTestCase.php';
 require_once __DIR__.'/SimpleTest11x/TuleapColorTextReporter.php';
 require_once __DIR__.'/SimpleTest11x/TuleapJunitXMLReporter.php';
-require_once __DIR__.'/SimpleTest11x/FindCompatibleTests.php';
 require_once __DIR__.'/SimpleTest11x/RunTestSuite.php';
-require_once __DIR__.'/SimpleTest11x/CompareXMLResults.php';
 
 // Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
 ini_set('max_execution_time', '0');
@@ -56,19 +54,9 @@ $command = $cli_args[0];
 array_shift($cli_args);
 
 switch ($command) {
-    case 'collect':
-        $exec = new FindCompatibleTests();
-        $exec->main();
-        break;
-
     case 'run':
         $exec = new RunTestSuite($cli_args, $options);
         $exec->main();
-        break;
-
-    case 'compare-results':
-        $exec = new CompareXMLResults();
-        $exec->main($cli_args);
         break;
 
     default:
