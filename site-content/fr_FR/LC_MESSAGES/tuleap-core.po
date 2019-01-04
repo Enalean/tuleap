@@ -1652,6 +1652,17 @@ msgstr "le mois<br>dernier"
 msgid "my_service"
 msgstr "mon_service"
 
+#, php-format
+msgid "parameter \"query\" syntax error: \"%s\" property not found"
+msgstr ""
+"erreur de syntaxe avec le paramètre \"query\": la propriété \"%s\" est "
+"introuvable"
+
+#, php-format
+msgid "parameter \"query\", property \"%s\" invalid type: boolean expected"
+msgstr ""
+"type invalide de la propriété \"%s\", paramètre \"query\": booléen attendu"
+
 msgid "permissions"
 msgstr "permissions"
 

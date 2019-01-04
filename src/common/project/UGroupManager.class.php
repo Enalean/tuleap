@@ -21,9 +21,9 @@
 
 use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
 use Tuleap\Project\UserPermissionsDao;
-use Tuleap\User\UserGroup\NameTranslator;
 use Tuleap\Project\UserRemover;
 use Tuleap\Project\UserRemoverDao;
+use Tuleap\User\UserGroup\NameTranslator;
 
 require_once('www/include/account.php');
 
@@ -128,6 +128,7 @@ class UGroupManager {
     }
 
     /**
+     * @see self::getUGroupsWithSystemUserGroups() returns same groups, except system user groups and Nobody.
      *
      * @param Project $project
      * @param array $excluded_ugroups_id
@@ -142,6 +143,36 @@ class UGroupManager {
             $ugroups[] = $this->instanciateGroupForProject($project, $row);
         }
         return $ugroups;
+    }
+
+    /**
+     * Find all available user groups of a given project, except Nobody group.
+     * System user groups are excluded if restricted by platform configuration.
+     * @see self::getUgroups() returns all groups.
+     *
+     * @return ProjectUGroup[]
+     */
+    public function getAvailableUGroups(Project $project)
+    {
+        $user_groups = $this->getUGroups($project);
+
+        return array_filter($user_groups, function (ProjectUGroup $ugroup) use ($project) {
+
+            if ($ugroup->getId() == ProjectUgroup::ANONYMOUS) {
+                return ForgeConfig::areAnonymousAllowed() && $project->isPublic();
+            }
+            if ($ugroup->getId() == ProjectUgroup::AUTHENTICATED) {
+                return ForgeConfig::areRestrictedUsersAllowed() && $project->allowsRestricted();
+            }
+            if ($ugroup->getId() == ProjectUgroup::REGISTERED) {
+                return $project->isPublic();
+            }
+            if ($ugroup->getId() == ProjectUgroup::NONE) {
+                return false;
+            }
+
+            return true;
+        });
     }
 
     /**

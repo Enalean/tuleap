@@ -55,6 +55,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
 use Tuleap\REST\Event\ProjectOptionsSvn;
 use Tuleap\REST\Header;
+use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -86,6 +87,9 @@ use WikiDao;
 class ProjectResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
+
+    /** Query parameter used to filter returned user groups */
+    const WITH_SYSTEM_USER_GROUPS = 'with_system_user_groups';
 
     /** @var LabelsCurlyCoatedRetriever */
     private $labels_retriever;
@@ -1107,26 +1111,60 @@ class ProjectResource extends AuthenticatedResource {
     /**
      * Get user_groups
      *
-     * Get the user_groups of a given project
+     * Get the user_groups of a given project.
+     * <br/>
+     * <strong>query</strong> is optional with json format:
+     * <pre>{"with_system_user_groups": true}</pre>
+     * With "system_user_groups = true", system user groups may be returned (if allowed by platform).
+     * Otherwise, these groupes are excluded.
      *
      * @url GET {id}/user_groups
      *
      * @param int $id Id of the project
+     * @param string $query JSON object of filtering options {@from path} {@required false}
      *
      * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
+     * @throws I18NRestException 400
      */
-    protected function getUserGroups($id) {
+    protected function getUserGroups($id, $query = '')
+    {
         $project = $this->getProjectForUser($id);
         $this->userCanSeeUserGroups($id);
 
-        $excluded_ugroups_ids = array(
-            ProjectUGroup::NONE,
-            ProjectUGroup::ANONYMOUS,
-            ProjectUGroup::REGISTERED,
-            ProjectUGroup::AUTHENTICATED
-        );
-
-        $ugroups     = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+        if ($query === '') {
+            $excluded_ugroups_ids = [
+                ProjectUGroup::NONE,
+                ProjectUGroup::ANONYMOUS,
+                ProjectUGroup::REGISTERED,
+                ProjectUGroup::AUTHENTICATED
+            ];
+            $ugroups = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+        } else {
+            $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
+            if (isset($json_query[self::WITH_SYSTEM_USER_GROUPS])) {
+                if ($json_query[self::WITH_SYSTEM_USER_GROUPS] === true) {
+                    $ugroups = $this->ugroup_manager->getAvailableUGroups($project);
+                } elseif ($json_query[self::WITH_SYSTEM_USER_GROUPS] === false) {
+                    $excluded_ugroups_ids = [
+                        ProjectUGroup::NONE,
+                        ProjectUGroup::ANONYMOUS,
+                        ProjectUGroup::REGISTERED,
+                        ProjectUGroup::AUTHENTICATED
+                    ];
+                    $ugroups = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
+                } else {
+                    throw new I18NRestException(400, sprintf(
+                        dgettext('tuleap-core', 'parameter "query", property "%s" invalid type: boolean expected'),
+                        self::WITH_SYSTEM_USER_GROUPS
+                    ));
+                }
+            } else {
+                throw new I18NRestException(400, sprintf(
+                    dgettext('tuleap-core', 'parameter "query" syntax error: "%s" property not found'),
+                    self::WITH_SYSTEM_USER_GROUPS
+                ));
+        }
+        }
         $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 
         $this->sendAllowHeadersForUserGroups();

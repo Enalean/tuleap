@@ -21,8 +21,10 @@
 
 use Guzzle\Http\Client;
 use PHPUnit\Framework\TestCase;
-use Test\Rest\RequestWrapper;
 use Test\Rest\Cache;
+use Test\Rest\RequestWrapper;
+
+require_once __DIR__ . '/../../lib/bootstrap_phpunit_custom_assert.php';
 
 class RestBase extends TestCase // phpcs:ignore
 {

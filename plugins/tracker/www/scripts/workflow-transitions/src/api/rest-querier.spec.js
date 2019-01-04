@@ -63,7 +63,9 @@ describe("Rest queries:", () => {
             });
 
             it("calls project API", () =>
-                expect(get).toHaveBeenCalledWith("/api/projects/266/user_groups"));
+                expect(get).toHaveBeenCalledWith(
+                    "/api/projects/266/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
+                ));
             it("returns the user groups", () => expect(result).toEqual(return_json));
         });
     });

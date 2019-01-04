@@ -96,7 +96,10 @@ function deleteTransition(transition_id) {
 }
 
 async function getUserGroups(project_id) {
-    const response = await get(`/api/projects/${project_id}/user_groups`);
+    const query = JSON.stringify({ with_system_user_groups: true });
+    const response = await get(
+        `/api/projects/${project_id}/user_groups?query=${encodeURIComponent(query)}`
+    );
     return response.json();
 }
 
