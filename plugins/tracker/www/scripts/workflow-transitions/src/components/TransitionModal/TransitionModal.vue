@@ -22,6 +22,7 @@
         class="tlp-modal tlp-modal-medium-sized"
         role="dialog"
         aria-labelledby="configure-modal-title"
+        v-on:submit.prevent="saveTransition"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="configure-modal-title" v-translate>Configure transition</h1>
@@ -42,9 +43,10 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                disabled
-                v-translate
-            >Save configuration</button>
+            >
+                <i class="tlp-button-icon fa fa-spin fa-spinner" v-if="is_saving"></i>
+                <span v-translate>Save configuration</span>
+            </button>
         </div>
     </form>
 </template>
@@ -63,6 +65,11 @@ export default {
         PreConditionsSection,
         PostActionsSection
     },
+    data() {
+        return {
+            is_saving: false
+        };
+    },
     mounted() {
         const modal = createModal(this.$el);
         modal.addEventListener("tlp-modal-hidden", () => {
@@ -73,12 +80,22 @@ export default {
             new_value => {
                 if (new_value === true) {
                     modal.show();
+                } else {
+                    modal.hide();
                 }
             }
         );
     },
     methods: {
-        ...mapMutations("transitionModal", ["clearModalShown"])
+        ...mapMutations("transitionModal", ["clearModalShown", "saveTransitionRules"]),
+        async saveTransition() {
+            this.is_saving = true;
+            try {
+                await this.$store.dispatch("transitionModal/saveTransitionRules");
+            } finally {
+                this.is_saving = false;
+            }
+        }
     }
 };
 </script>

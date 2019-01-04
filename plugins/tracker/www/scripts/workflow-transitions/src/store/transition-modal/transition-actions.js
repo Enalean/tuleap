@@ -18,9 +18,14 @@
  */
 
 import { getErrorMessage } from "../exception-handler.js";
-import { getTransition, getUserGroups } from "../../api/rest-querier.js";
+import { getTransition, getUserGroups, patchTransition } from "../../api/rest-querier.js";
 
-export { showTransitionConfigurationModal, loadTransition, loadUserGroupsIfNotCached };
+export {
+    showTransitionConfigurationModal,
+    loadTransition,
+    loadUserGroupsIfNotCached,
+    saveTransitionRules
+};
 
 async function showTransitionConfigurationModal({ dispatch, commit }, transition) {
     commit("showModal");
@@ -49,4 +54,14 @@ async function loadUserGroupsIfNotCached({ state, commit, rootGetters }) {
 
     const user_groups = await getUserGroups(rootGetters.current_project_id);
     commit("initUserGroups", user_groups);
+}
+
+async function saveTransitionRules({ commit, state }) {
+    try {
+        await patchTransition(state.current_transition);
+        commit("clearModalShown");
+    } catch (error) {
+        const error_message = await getErrorMessage(error);
+        commit("failModalOperation", error_message);
+    }
 }

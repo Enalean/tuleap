@@ -25,11 +25,16 @@ import {
     resetWorkflowTransitions,
     updateTransitionRulesEnforcement,
     getTransition,
-    getUserGroups
+    getUserGroups,
+    patchTransition
 } from "../api/rest-querier.js";
 import { create } from "../support/factories.js";
 
 describe("Rest queries:", () => {
+    const json_headers = {
+        "content-type": "application/json"
+    };
+
     afterEach(restore);
 
     describe("for GET actions:", () => {
@@ -114,14 +119,63 @@ describe("Rest queries:", () => {
                 expect(returned_value).toBe(json_result);
             });
         });
+
+        describe("patchTransition()", () => {
+            const params = {
+                id: 1,
+                authorized_user_group_ids: ["1", "2"],
+                not_empty_field_ids: [3],
+                is_comment_required: true
+            };
+
+            beforeEach(async () => {
+                await patchTransition(params);
+            });
+
+            it("calls PATCH", () =>
+                expect(patch).toHaveBeenCalledWith("/api/tracker_workflow_transitions/1", {
+                    headers: json_headers,
+                    body:
+                        '{"authorized_user_group_ids":["1","2"],"not_empty_field_ids":[3],"is_comment_required":true}'
+                }));
+
+            describe("when no authorized_user_group_ids provided", () => {
+                beforeEach(async () => {
+                    await patchTransition({
+                        ...params,
+                        authorized_user_group_ids: null
+                    });
+                });
+                it("calls PATCH with empty authorized user groups", () =>
+                    expect(patch).toHaveBeenCalledWith(
+                        jasmine.anything(),
+                        jasmine.objectContaining({
+                            body: jasmine.stringMatching(/"authorized_user_group_ids":\[\]/)
+                        })
+                    ));
+            });
+
+            describe("when no not_empty_field_ids provided", () => {
+                beforeEach(async () => {
+                    await patchTransition({
+                        ...params,
+                        not_empty_field_ids: null
+                    });
+                });
+                it("calls PATCH with empty field ids", () =>
+                    expect(patch).toHaveBeenCalledWith(
+                        jasmine.anything(),
+                        jasmine.objectContaining({
+                            body: jasmine.stringMatching(/"not_empty_field_ids":\[\]/)
+                        })
+                    ));
+            });
+        });
     });
 
     describe("for POST actions", () => {
         let post;
         const new_transition = create("transition");
-        const headers = {
-            "content-type": "application/json"
-        };
 
         beforeEach(() => {
             post = jasmine.createSpy("post");
@@ -141,7 +195,7 @@ describe("Rest queries:", () => {
 
             it("calls api tracker_workflow_transitions", () => {
                 expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
-                    headers,
+                    headers: json_headers,
                     body: '{"tracker_id":1,"from_id":2,"to_id":3}'
                 });
             });
@@ -154,7 +208,7 @@ describe("Rest queries:", () => {
 
                 it("send 0 as from_id", () => {
                     expect(post).toHaveBeenCalledWith("/api/tracker_workflow_transitions", {
-                        headers,
+                        headers: json_headers,
                         body: '{"tracker_id":1,"from_id":0,"to_id":3}'
                     });
                 });

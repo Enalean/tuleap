@@ -31,8 +31,11 @@ export {
     createTransition,
     getTransition,
     deleteTransition,
-    getUserGroups
+    getUserGroups,
+    patchTransition
 };
+
+const JSON_HEADERS = { "content-type": "application/json" };
 
 async function getTracker(tracker_id) {
     const response = await get(`/api/trackers/${tracker_id}`);
@@ -74,10 +77,12 @@ async function updateTransitionRulesEnforcement(tracker_id, are_transition_rules
 }
 
 async function createTransition(tracker_id, from_id, to_id) {
-    const headers = { "content-type": "application/json" };
     const body = JSON.stringify({ tracker_id, from_id: from_id || 0, to_id });
 
-    const response = await post("/api/tracker_workflow_transitions", { headers, body });
+    const response = await post("/api/tracker_workflow_transitions", {
+        headers: JSON_HEADERS,
+        body
+    });
     return response.json();
 }
 
@@ -93,4 +98,28 @@ function deleteTransition(transition_id) {
 async function getUserGroups(project_id) {
     const response = await get(`/api/projects/${project_id}/user_groups`);
     return response.json();
+}
+
+function patchTransition({
+    id,
+    authorized_user_group_ids,
+    not_empty_field_ids,
+    is_comment_required
+}) {
+    if (!authorized_user_group_ids) {
+        authorized_user_group_ids = [];
+    }
+
+    if (!not_empty_field_ids) {
+        not_empty_field_ids = [];
+    }
+
+    return patch(`/api/tracker_workflow_transitions/${id}`, {
+        headers: JSON_HEADERS,
+        body: JSON.stringify({
+            authorized_user_group_ids,
+            not_empty_field_ids,
+            is_comment_required
+        })
+    });
 }
