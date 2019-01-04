@@ -22,7 +22,7 @@ use Mockery\MockInterface;
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
-class Tracker_SharedFormElementFactoryTest extends PHPUnit_Framework_TestCase // @codingStandardsIgnoreLine
+class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

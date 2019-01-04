@@ -20,7 +20,7 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class ParserTest extends PHPUnit_Framework_TestCase {
+class ParserTest extends \PHPUnit\Framework\TestCase {
 
     public function testItExtractAnEntryFromALine() {
         $line = "Tue Jan 14 05:05:49 2014 0 ::ffff:192.168.1.66 295 /.message a _ o a anon@localhost ftp 0 * c";

@@ -21,7 +21,7 @@
 
 require_once dirname(__FILE__).'/../../bootstrap.php';
 
-class ACLUpdaterTest extends PHPUnit_Framework_TestCase {
+class ACLUpdaterTest extends PHPUnit\Framework\TestCase {
 
     private $backend;
 

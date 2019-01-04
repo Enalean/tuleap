@@ -20,7 +20,9 @@
 
 namespace Tuleap\Git\RepositoryList;
 
-class DaoByRepositoryPathSorterTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class DaoByRepositoryPathSorterTest extends TestCase
 {
     public function testSort()
     {

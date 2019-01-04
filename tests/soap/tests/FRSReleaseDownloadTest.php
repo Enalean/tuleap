@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -70,6 +70,8 @@ class FRSReleaseDownloadTest extends SOAPBase
             false
         );
 
+        $this->assertTrue($package_id > 0);
+
         return $package_id;
     }
 
@@ -88,6 +90,8 @@ class FRSReleaseDownloadTest extends SOAPBase
             1,
             time()
         );
+
+        $this->assertTrue($release_id > 0);
 
         return $release_id;
     }
@@ -110,6 +114,8 @@ class FRSReleaseDownloadTest extends SOAPBase
             md5($this->content),
             ''
         );
+
+        $this->assertTrue($file_id > 0);
 
         return $file_id;
     }

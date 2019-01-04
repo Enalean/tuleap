@@ -22,7 +22,7 @@ use Tuleap\Tracker\FormElement\TransitionListValidator;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-class TransitionListValidatorTest extends PHPUnit_Framework_TestCase  // phpcs:ignore
+class TransitionListValidatorTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     /**

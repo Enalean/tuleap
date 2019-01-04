@@ -21,7 +21,6 @@
 namespace Tuleap\Velocity;
 
 use Mockery;
-use PHPUnit_Framework_TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -33,7 +32,7 @@ use Tuleap\Velocity\Semantic\SemanticVelocity;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
-class VelocityComputationCheckerTest extends PHPUnit_Framework_TestCase
+class VelocityComputationCheckerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

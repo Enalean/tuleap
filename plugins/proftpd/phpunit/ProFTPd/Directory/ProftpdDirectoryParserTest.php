@@ -22,7 +22,7 @@ namespace Tuleap\ProFTPd\Directory;
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class DirectoryParserTest extends \PHPUnit_Framework_TestCase {
+class DirectoryParserTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp() {
         parent::setUp();
