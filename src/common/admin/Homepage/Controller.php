@@ -21,6 +21,7 @@
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Layout\IncludeAssets;
 
 class Admin_Homepage_Controller {
 
@@ -72,7 +73,9 @@ class Admin_Homepage_Controller {
 
     public function index()
     {
-        $this->response->includeFooterJavascriptFile("/scripts/ckeditor-4.3.2/ckeditor.js");
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
+        $this->response->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
         $this->response->includeFooterJavascriptFile('/scripts/tuleap/admin-homepage.js');
 

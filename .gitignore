@@ -21,9 +21,6 @@ nbproject
 !src/common/wiki/phpwiki/*.css
 !src/www/codendi.css
 !src/www/guidelines/_css/*.min.css
-!src/www/scripts/ckeditor-for-ie7/*.css
-!src/www/scripts/ckeditor-for-ie7/skins/moono/*css
-!src/www/scripts/tiny_mce/*.css
 !src/www/scripts/bootstrap/bootstrap-select/*.css
 !src/www/scripts/bootstrap/bootstrap-tour/*.css
 !src/www/scripts/bootstrap/bootstrap-datetimepicker/css/*.css

@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard;
 
+use ForgeConfig;
 use Tuleap\Layout\IncludeAssets;
 
 class KanbanJavascriptDependenciesProvider implements JavascriptDependenciesProvider
@@ -30,12 +31,12 @@ class KanbanJavascriptDependenciesProvider implements JavascriptDependenciesProv
             __DIR__. '/../../../../src/www/assets/agiledashboard/scripts',
             '/assets/agiledashboard/scripts/'
         );
-        $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
 
         return array(
             array('file' => $kanban_include_assets->getFileURL('angular.js'), 'unique-name' => 'angular'),
-            array('snippet' => 'window.CKEDITOR_BASEPATH = "' . $ckeditor_path . '";'),
-            array('file' => $ckeditor_path . 'ckeditor.js'),
+            array('file' => $include_assets->getFileURL('ckeditor.js')),
             array('file' => $kanban_include_assets->getFileURL('kanban.js')),
         );
     }

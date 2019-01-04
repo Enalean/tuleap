@@ -1,10 +1,64 @@
+/*
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+const loadJsonFile = require("load-json-file");
+const WebpackAssetsManifest = require("webpack-assets-manifest");
 const path = require("path");
 const polyfills_for_fetch = require("../../../tools/utils/scripts/ie11-polyfill-names.js")
     .polyfills_for_fetch;
 const webpack_configurator = require("../../../tools/utils/scripts/webpack-configurator.js");
 
 const assets_dir_path = path.resolve(__dirname, "../assets");
-const manifest_plugin = webpack_configurator.getManifestPlugin();
+const manifest_plugin = new WebpackAssetsManifest({
+    output: "manifest.json",
+    merge: true,
+    writeToDisk: true,
+    customize(entry) {
+        if (entry.key !== "ckeditor.js") {
+            return entry;
+        }
+
+        return {
+            key: entry.key,
+            value: `ckeditor-${ckeditor_version}/ckeditor.js`
+        };
+    }
+});
+
+const pkg = loadJsonFile.sync(path.resolve(__dirname, "package-lock.json"));
+const ckeditor_version = pkg.dependencies.ckeditor.version;
+const webpack_config_for_ckeditor = {
+    entry: {
+        ckeditor: "./node_modules/ckeditor/ckeditor.js"
+    },
+    output: webpack_configurator.configureOutput(assets_dir_path),
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getCopyPlugin([
+            {
+                from: path.resolve(__dirname, "node_modules/ckeditor"),
+                to: path.resolve(__dirname, `../assets/ckeditor-${ckeditor_version}/`),
+                toType: "dir"
+            }
+        ])
+    ]
+};
 
 const webpack_config_for_dashboards = {
     entry: {
@@ -115,6 +169,7 @@ const webpack_config_for_vue_components = {
 };
 
 module.exports = [
+    webpack_config_for_ckeditor,
     webpack_config_for_dashboards,
     webpack_config_for_flaming_parrot_code,
     webpack_config_for_burning_parrot_code,

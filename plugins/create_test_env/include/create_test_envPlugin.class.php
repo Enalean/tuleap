@@ -344,7 +344,10 @@ class create_test_envPlugin extends Plugin
         }
 
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/create_test_env/call-me-back') === 0) {
-            $params['javascript_files'][] = '/scripts/ckeditor-4.3.2/ckeditor.js';
+            $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+            $include_assets = new IncludeAssets($assets_path, '/assets');
+
+            $params['javascript_files'][] = $include_assets->getFileURL('ckeditor.js');
             $params['javascript_files'][] = '/scripts/tuleap/tuleap-ckeditor-toolbar.js';
             $params['javascript_files'][] = $assets->getFileURL('call-me-back-admin.js');
         }

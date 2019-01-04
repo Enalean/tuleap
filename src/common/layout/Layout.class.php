@@ -23,6 +23,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Layout\IncludeAssets;
+
 /**
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -399,10 +401,10 @@ abstract class Layout extends Tuleap\Layout\BaseLayout
         } else {
             $this->includeSubsetOfCombined();
         }
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
 
-        $ckeditor_path = '/scripts/ckeditor-4.3.2/';
-        echo '<script type="text/javascript">window.CKEDITOR_BASEPATH = "'. $ckeditor_path .'";</script>
-              <script type="text/javascript" src="'. $ckeditor_path .'/ckeditor.js"></script>'."\n";
+        echo $include_assets->getHTMLSnippet("ckeditor.js");
 
         //Javascript i18n
         echo '<script type="text/javascript">'."\n";

@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use ForgeConfig;
 use Tuleap\AgileDashboard\JavascriptDependenciesProvider;
 use Tuleap\Layout\IncludeAssets;
 
@@ -31,11 +32,11 @@ class PlanningJavascriptDependenciesProvider implements JavascriptDependenciesPr
             AGILEDASHBOARD_BASE_DIR . '/../www/js/planning-v2/dist',
             AGILEDASHBOARD_BASE_URL . '/js/planning-v2/dist'
         );
-        $ckeditor_path = '/scripts/ckeditor-4.3.2/';
+        $assets_path    = ForgeConfig::get('tuleap_dir') . '/src/www/assets';
+        $include_assets = new IncludeAssets($assets_path, '/assets');
 
         return array(
-            array('snippet' => 'window.CKEDITOR_BASEPATH = "' . $ckeditor_path . '";'),
-            array('file' => $ckeditor_path . 'ckeditor.js'),
+            array('file' => $include_assets->getFileURL('ckeditor.js')),
             array('file' => $planning_v2_include_assets->getFileURL('planning-v2.js')),
         );
     }
