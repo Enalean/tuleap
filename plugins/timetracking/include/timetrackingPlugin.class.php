@@ -69,7 +69,6 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->addHook(\Tuleap\Widget\Event\GetProjectsWithCriteria::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetTrackersWithCriteria::NAME);
         $this->addHook('fill_project_history_sub_events');
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(Event::REST_RESOURCES);
 
         if (defined('TRACKER_BASE_URL')) {
@@ -329,26 +328,6 @@ class timetrackingPlugin extends Plugin // @codingStandardsIgnoreLine
             'timetracking_disabled',
             'timetracking_permissions_updated'
         );
-    }
-
-    public function burningParrotGetStylesheets(array $params)
-    {
-        if ($this->isInDashboard()) {
-            $theme_include_assets = new IncludeAssets(
-                $this->getFilesystemPath() . '/www/themes/BurningParrot/assets',
-                $this->getThemePath() . '/assets'
-            );
-
-            $variant                 = $params['variant'];
-            $params['stylesheets'][] = $theme_include_assets->getFileURL('style-' . $variant->getName() . '.css');
-        }
-    }
-
-    private function isInDashboard()
-    {
-        $current_page = new CurrentPage();
-
-        return $current_page->isDashboard();
     }
 
     /** @see Event::REST_RESOURCES */

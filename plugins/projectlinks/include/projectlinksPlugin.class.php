@@ -46,10 +46,8 @@ class ProjectLinksPlugin extends Plugin {
         $this->addHook(Event::REGISTER_PROJECT_CREATION,
             'registerProjectCreation', false);
 
-        $this->addHook('cssfile',         'cssfile',         false);
         $this->addHook(\Tuleap\Widget\Event\GetWidget::NAME);
         $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
-        $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
         $this->addHook(NavigationPresenter::NAME);
     }
 
@@ -978,13 +976,6 @@ class ProjectLinksPlugin extends Plugin {
         );
     }
 
-    function cssfile($params) {
-        // Only show the stylesheet if we're in project home page
-        if (strpos($_SERVER['REQUEST_URI'], '/projects') === 0) {
-            echo '    <link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
-        }
-    }
-
     public function widgetInstance(\Tuleap\Widget\Event\GetWidget $get_widget_event) {
         if ($get_widget_event->getName() === 'projectlinkshomepage') {
             include_once 'ProjectLinks_Widget_HomePageLinks.class.php';
@@ -1010,20 +1001,6 @@ class ProjectLinksPlugin extends Plugin {
     function getProjectLinksDao() {
         include_once 'ProjectLinksDao.class.php';
         return new ProjectLinksDao(CodendiDataAccess::instance());
-    }
-
-    public function burning_parrot_get_stylesheets($params)
-    {
-        if ($this->canIncludeStylsheets()) {
-            $variant = $params['variant'];
-            $params['stylesheets'][] = $this->getThemePath() .'/css/style-'. $variant->getName() .'.css';
-        }
-    }
-
-    private function canIncludeStylsheets()
-    {
-        return strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0;
     }
 
     public function collectProjectAdminNavigationItems(NavigationPresenter $presenter)

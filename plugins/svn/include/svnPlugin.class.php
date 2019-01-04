@@ -518,7 +518,7 @@ class SvnPlugin extends Plugin
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/scripts/svn.js"></script>';
         }
-        if ($this->currentRequestIsForPlugin() || $this->currentRequestIsForDashboards()) {
+        if ($this->currentRequestIsForPlugin()) {
             echo $this->getMinifiedAssetHTML().PHP_EOL;
         }
         $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');

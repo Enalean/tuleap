@@ -26,6 +26,8 @@ use DataAccessException;
 use Feedback;
 use HTTPRequest;
 use Project;
+use Tuleap\Layout\CssAsset;
+use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Label\LabelDao;
 use Widget;
@@ -245,13 +247,27 @@ class ProjectLabeledItems extends Widget
     public function getJavascriptDependencies()
     {
         $labeled_items_include_assets = new IncludeAssets(
-            LABEL_BASE_DIR . '/www/assets',
+            __DIR__ . '/../../../www/assets',
             LABEL_BASE_URL . '/assets'
         );
 
-        return array(
-            array('file' => $labeled_items_include_assets->getFileURL('widget-project-labeled-items.js'))
+        return [
+            [
+                'file' => $labeled_items_include_assets->getFileURL('widget-project-labeled-items.js'),
+
+            ], [
+                'file' => $labeled_items_include_assets->getFileURL('configure-widget.js')
+            ]
+        ];
+    }
+
+    public function getStylesheetDependencies()
+    {
+        $theme_include_assets = new IncludeAssets(
+            __DIR__ . '/../../../www/themes/BurningParrot/assets',
+            LABEL_BASE_URL . '/themes/BurningParrot/assets'
         );
+        return new CssAssetCollection([new CssAsset($theme_include_assets, 'style')]);
     }
 
     /**

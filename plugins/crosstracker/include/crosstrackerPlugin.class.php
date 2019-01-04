@@ -108,7 +108,6 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
             $this->addHook(\Tuleap\Widget\Event\GetUserWidgetList::NAME);
             $this->addHook(\Tuleap\Widget\Event\GetProjectWidgetList::NAME);
             $this->addHook(Event::REST_RESOURCES);
-            $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
             $this->addHook(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
             $this->addHook(CollectRoutesEvent::NAME);
         }
@@ -172,27 +171,6 @@ class crosstrackerPlugin extends Plugin // phpcs:ignore
         foreach ($dao->searchTrackersIdUsedByCrossTrackerByProjectId($params['project_id']) as $row) {
             $params['tracker_ids_list'][] = $row['id'];
         }
-    }
-
-    /** @see \Event::BURNING_PARROT_GET_STYLESHEETS */
-    public function burningParrotGetStylesheets(array $params)
-    {
-        $current_page = new CurrentPage();
-        $current_user = HTTPRequest::instance()->getCurrentUser();
-
-        if (! $current_page->isDashboard()) {
-            return;
-        }
-
-        $css_assets              = new CssAsset(
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/crosstracker/BurningParrot',
-                '/assets/crosstracker/BurningParrot'
-            ),
-            'style'
-        );
-        $theme_variation         = new ThemeVariation($params['variant'], $current_user);
-        $params['stylesheets'][] = $css_assets->getFileURL($theme_variation);
     }
 
     public function collectRoutesEvent(CollectRoutesEvent $event)

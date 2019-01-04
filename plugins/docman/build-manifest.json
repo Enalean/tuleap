@@ -28,7 +28,8 @@
             "watched_includes": [
                 "www/themes/BurningParrot/css/**/_*.scss"
             ],
-            "target_dir": "www/themes/BurningParrot/css"
+            "target_dir": "www/themes/BurningParrot/assets",
+            "is_revisioned": true
         }
     },
     "javascript": [
