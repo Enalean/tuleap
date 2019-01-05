@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,10 @@ require_once 'database.php';
 
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
+
+    /**
+     * @var mysqli
+     */
     protected $mysqli;
 
     protected static $db_initialized = false;

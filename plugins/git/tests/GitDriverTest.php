@@ -1,16 +1,16 @@
 <?php
-/*
+/**
  * Copyright (c) STMicroelectronics, 2011. All Rights Reserved.
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -223,7 +223,7 @@ class GitDriverTest extends TuleapTestCase {
         $driver = new GitDriver();
         $driver->activateHook('blah', $this->getTmpDir());
 
-        $this->assertTrue(is_executable($this->getTmpDir().'/hooks/blah'));
+        $this->assertEqual(substr(sprintf('%o', fileperms($this->getTmpDir().'/hooks/blah')), -4), '0755');
     }
 
     public function testSetConfigSimple() {

@@ -159,13 +159,13 @@ phpunit:
 
 simpletest-72-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-72
-	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-simpletest/php-72:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -v $(WORKSPACE)/results/ut-simpletest/php-72:/output:rw -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php --log-junit=/output/results.xml run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
 
 simpletest-72: ## Run SimpleTest with PHP 7.2
-	@docker run --rm -v $(CURDIR):/tuleap:ro -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
+	@docker run --rm -v $(CURDIR):/tuleap:ro,cached --mount type=tmpfs,destination=/tmp -u $(id -u):$(id -g) enalean/tuleap-simpletest:c6-php72 /opt/remi/php72/root/usr/bin/php /tuleap/tests/bin/simpletest11x.php run \
 	/tuleap/tests/simpletest \
 	/tuleap/plugins/ \
 	/tuleap/tests/integration
