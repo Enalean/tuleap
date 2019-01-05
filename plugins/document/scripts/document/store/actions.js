@@ -62,6 +62,10 @@ export const createNewDocument = async (context, [item, parent]) => {
         const item_reference = await addNewDocument(item, parent.id);
 
         const created_item = await getItem(item_reference.id);
+        created_item.created = true;
+        setTimeout(() => {
+            context.commit("removeCreatedPropertyOnItem", created_item);
+        }, 5000);
 
         return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
     } catch (exception) {

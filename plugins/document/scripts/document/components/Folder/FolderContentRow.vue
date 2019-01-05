@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <tr v-bind:class="{ 'document-tree-item-hidden': is_folded }">
+    <tr v-bind:class="{ 'document-tree-item-hidden': is_folded, 'document-tree-item-created': item.created }">
         <td>
             <component
                 v-bind:is="cell_title_component_name"

@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import Vue from "vue";
+
 export {
     beginLoading,
     initApp,
@@ -35,7 +37,8 @@ export {
     appendFolderToAscendantHierarchy,
     setCurrentFolder,
     setModalError,
-    resetModalError
+    resetModalError,
+    removeCreatedPropertyOnItem
 };
 
 function saveFolderContent(state, folder_content) {
@@ -189,4 +192,8 @@ function setModalError(state, error_message) {
 function resetModalError(state) {
     state.has_modal_error = false;
     state.modal_error = null;
+}
+
+function removeCreatedPropertyOnItem(state, item) {
+    Vue.delete(item, "created");
 }
