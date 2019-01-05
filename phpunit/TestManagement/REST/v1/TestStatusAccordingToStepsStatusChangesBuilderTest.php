@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
-class TestStatusAccordingToStepsStatusChangesBuilderTest extends \PHPUnit_Framework_TestCase
+class TestStatusAccordingToStepsStatusChangesBuilderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var TestStatusAccordingToStepsStatusChangesBuilder
