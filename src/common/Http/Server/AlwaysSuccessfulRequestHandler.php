@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,9 @@
 namespace Tuleap\Http\Server;
 
 use Http\Message\ResponseFactory;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class AlwaysSuccessfulRequestHandler implements RequestHandlerInterface
 {
@@ -35,7 +37,7 @@ final class AlwaysSuccessfulRequestHandler implements RequestHandlerInterface
         $this->response_factory = $response_factory;
     }
 
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         return $this->response_factory->createResponse();
     }

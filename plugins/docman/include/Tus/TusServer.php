@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@
 namespace Tuleap\Docman\Tus;
 
 use Http\Message\ResponseFactory;
-use Tuleap\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class TusServer implements RequestHandlerInterface
 {
@@ -50,10 +51,7 @@ final class TusServer implements RequestHandlerInterface
         $this->event_dispatcher = $event_dispatcher;
     }
 
-    /**
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function handle(\Psr\Http\Message\ServerRequestInterface $request)
+    public function handle(\Psr\Http\Message\ServerRequestInterface $request) : ResponseInterface
     {
         $response = null;
         try {

@@ -39,6 +39,8 @@
     "php-http/guzzle6-adapter": "^1.1",
     "php-http/message": "^1.6",
     "psr/http-message": "^1.0",
+    "psr/http-server-handler": "^1.0",
+    "psr/http-server-middleware": "^1.0",
     "symfony/console": "^3.4",
     "zendframework/zend-mail": "^2.10"
   },
