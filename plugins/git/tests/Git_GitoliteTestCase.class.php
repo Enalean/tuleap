@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2011-2019. All Rights Reserved.
  *
@@ -23,7 +22,6 @@ require_once 'bootstrap.php';
 
 Mock::generate('Project');
 Mock::generate('PFUser');
-Mock::generate('GitDao');
 Mock::generate('PermissionsManager');
 Mock::generate('DataAccessResult');
 Mock::generate('Git_PostReceiveMailManager');
@@ -112,8 +110,8 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
             $this->logger,
             $this->git_system_event_manager,
             $this->url_manager,
-            mock('GitDao'),
-            mock('Git_Mirror_MirrorDao'),
+            \Mockery::spy(GitDao::class),
+            \Mockery::spy(Git_Mirror_MirrorDao::class),
             \Mockery::mock(GitPlugin::class),
             $this->gitExec,
             $this->repository_factory,

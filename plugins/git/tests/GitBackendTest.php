@@ -27,7 +27,6 @@ Mock::generatePartial('GitBackend', 'GitBackend4SetUp', array('getDao', 'getDriv
 
 Mock::generate('GitDriver');
 Mock::generate('GitRepository');
-Mock::generate('GitDao');
 Mock::generate('Project');
 Mock::generate('SystemEventManager');
 

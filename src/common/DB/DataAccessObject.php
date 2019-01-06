@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -61,20 +61,10 @@ class DataAccessObject
      */
     public function wrapAtomicOperations(callable $atomic_operations)
     {
-        $does_transaction_needs_to_be_started = $this->getDB()->inTransaction() === false;
-        if ($does_transaction_needs_to_be_started) {
-            $this->getDB()->beginTransaction();
-        }
-        try {
-            $atomic_operations($this);
-            if ($does_transaction_needs_to_be_started) {
-                $this->getDB()->commit();
+        $this->getDB()->tryFlatTransaction(
+            function () use ($atomic_operations) : void {
+                $atomic_operations($this);
             }
-        } catch (\Exception $e) {
-            if ($does_transaction_needs_to_be_started) {
-                $this->getDB()->rollBack();
-            }
-            throw $e;
-        }
+        );
     }
 }
