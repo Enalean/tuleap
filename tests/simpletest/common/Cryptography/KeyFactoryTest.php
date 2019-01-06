@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography;
+
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
 
 class KeyFactoryTest extends \TuleapTestCase
 {
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
         \ForgeConfig::store();
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         \ForgeConfig::restore();
         parent::tearDown();
     }
 
-    public function itGetsEncryptionKey()
+    public function itGetsEncryptionKey() : void
     {
         $temporary_dir       = $this->getTmpDir();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
@@ -50,12 +54,12 @@ class KeyFactoryTest extends \TuleapTestCase
 
         $key_from_file = $key_factory->getEncryptionKey();
 
-        $this->assertIsA($key_generated, 'Tuleap\\Cryptography\\Symmetric\\EncryptionKey');
-        $this->assertIsA($key_from_file, 'Tuleap\\Cryptography\\Symmetric\\EncryptionKey');
+        $this->assertIsA($key_generated, EncryptionKey::class);
+        $this->assertIsA($key_from_file, EncryptionKey::class);
         $this->assertEqual($key_generated->getRawKeyMaterial(), $key_from_file->getRawKeyMaterial());
     }
 
-    public function itGetsEncryptionKeyFromFile()
+    public function itGetsEncryptionKeyFromFile() : void
     {
         $temporary_dir       = $this->getTmpDir();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';
@@ -69,11 +73,11 @@ class KeyFactoryTest extends \TuleapTestCase
         $key_factory = new KeyFactory();
         $key         = $key_factory->getEncryptionKey();
 
-        $this->assertIsA($key, 'Tuleap\\Cryptography\\Symmetric\\EncryptionKey');
+        $this->assertIsA($key, EncryptionKey::class);
         $this->assertEqual($key->getRawKeyMaterial(), $raw_key_material);
     }
 
-    public function itGeneratesDifferentEncryptionKeysEachTimeAGenerationIsNeeded()
+    public function itGeneratesDifferentEncryptionKeysEachTimeAGenerationIsNeeded() : void
     {
         $temporary_dir       = $this->getTmpDir();
         $encryption_key_file = $temporary_dir . '/conf/encryption_secret.key';

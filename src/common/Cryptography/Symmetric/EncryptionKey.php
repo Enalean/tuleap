@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography\Symmetric;
 
 use Tuleap\Cryptography\ConcealedString;
@@ -28,7 +30,7 @@ class EncryptionKey extends Key
 {
     public function __construct(ConcealedString $key_data)
     {
-        if (\mb_strlen($key_data, '8bit') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
+        if (\mb_strlen($key_data->getString(), '8bit') !== SODIUM_CRYPTO_SECRETBOX_KEYBYTES) {
             throw new InvalidKeyException('Encryption key must be SODIUM_CRYPTO_SECRETBOX_KEYBYTES long');
         }
         parent::__construct($key_data);

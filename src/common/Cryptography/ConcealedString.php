@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography;
 
 class ConcealedString
@@ -27,32 +29,23 @@ class ConcealedString
      */
     private $value;
 
-    public function __construct($value)
+    public function __construct(string $value)
     {
-        if (! is_string($value)) {
-            throw new \TypeError('Expected $value to be a string, got ' . gettype($value));
-        }
         $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getString()
+    public function getString() : string
     {
         return $this->value;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString() : string
     {
         return $this->value;
     }
 
-    public function __debugInfo()
+    public function __debugInfo() : array
     {
-        return array('value' => '** protected value, invoke getString instead of trying to dump it **');
+        return ['value' => '** protected value, invoke getString instead of trying to dump it **'];
     }
 }

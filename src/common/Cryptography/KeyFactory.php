@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography;
 
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
@@ -26,10 +28,9 @@ use Tuleap\Cryptography\Symmetric\EncryptionKey;
 class KeyFactory
 {
     /**
-     * @return EncryptionKey
      * @throws CannotPerformIOOperationException
      */
-    public function getEncryptionKey()
+    public function getEncryptionKey() : EncryptionKey
     {
         $encryption_key_file_path = \ForgeConfig::get('sys_custom_dir') . '/conf/encryption_secret.key';
         if (! \file_exists($encryption_key_file_path)) {
@@ -48,22 +49,15 @@ class KeyFactory
         );
     }
 
-    /**
-     * @return EncryptionKey
-     */
-    private function generateEncryptionKey()
+    private function generateEncryptionKey() : EncryptionKey
     {
         return new EncryptionKey(
             new ConcealedString(\random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
         );
     }
 
-    private function saveKeyFile(Key $key, $file_path)
+    private function saveKeyFile(Key $key, string $file_path)
     {
-        if (! is_string($file_path)) {
-            throw new \TypeError('Expected $file_path to be a string, got ' . gettype($file_path));
-        }
-
         $is_success = \touch($file_path);
         if (! $is_success) {
             throw new CannotPerformIOOperationException("Cannot create the key file $file_path");

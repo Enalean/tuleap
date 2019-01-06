@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,19 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography\Asymmetric;
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Exception\InvalidSignatureException;
 
 class AsymmetricCryptoTest extends \TuleapTestCase
 {
-    public function itCannotBeInstantiated()
+    public function itCannotBeInstantiated() : void
     {
         $this->expectException('RuntimeException');
         new AsymmetricCrypto();
     }
 
-    public function itCanVerifyASignedMessage()
+    public function itCanVerifyASignedMessage() : void
     {
         $key_pair   = \sodium_crypto_sign_keypair();
         $secret_key = new SignatureSecretKey(new ConcealedString(\sodium_crypto_sign_secretkey($key_pair)));
@@ -43,7 +46,7 @@ class AsymmetricCryptoTest extends \TuleapTestCase
         $this->assertTrue($is_signature_valid);
     }
 
-    public function itDoesNotVerifyAnInvalidSignedMessage()
+    public function itDoesNotVerifyAnInvalidSignedMessage() : void
     {
         $secret_key1 = new SignatureSecretKey(
             new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SIGN_SECRETKEYBYTES))
@@ -59,53 +62,14 @@ class AsymmetricCryptoTest extends \TuleapTestCase
         $this->assertFalse($is_signature_valid);
     }
 
-    public function itRejectsInvalidSignature()
+    public function itRejectsInvalidSignature() : void
     {
-        $public_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignaturePublicKey');
+        $public_key = \Mockery::mock(SignaturePublicKey::class);
 
         $message   = 'The quick brown fox jumps over the lazy dog';
         $signature = 'invalid_signature';
 
-        $this->expectException('Tuleap\\Cryptography\\Exception\\InvalidSignatureException');
+        $this->expectException(InvalidSignatureException::class);
         AsymmetricCrypto::verify($message, $public_key, $signature);
-    }
-
-    public function itRejectsSignatureOfNonStringMessage()
-    {
-        $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignatureSecretKey');
-
-        try {
-            AsymmetricCrypto::sign(123456789, $secret_key);
-        } catch (\TypeError $error) {
-            $this->pass();
-            return;
-        }
-        $this->fail();
-    }
-
-    public function itRejectsSignatureVerificationOfNonStringMessage()
-    {
-        $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignaturePublicKey');
-
-        try {
-            AsymmetricCrypto::verify(123456789, $secret_key, 'signature');
-        } catch (\TypeError $error) {
-            $this->pass();
-            return;
-        }
-        $this->fail();
-    }
-
-    public function itRejectsSignatureVerificationOfNonStringSignature()
-    {
-        $secret_key = mock('Tuleap\\Cryptography\\Asymmetric\\SignaturePublicKey');
-
-        try {
-            AsymmetricCrypto::verify('message', $secret_key, 123456789);
-        } catch (\TypeError $error) {
-            $this->pass();
-            return;
-        }
-        $this->fail();
     }
 }
