@@ -59,7 +59,11 @@ export default {
             return this.folded_items_ids.includes(this.item.id);
         },
         item_indentation() {
-            const indentation_size = 10 + this.item.level * 23;
+            if (!this.item.level) {
+                return;
+            }
+
+            const indentation_size = this.item.level * 23;
 
             return {
                 "padding-left": `${indentation_size}px`
