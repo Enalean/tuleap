@@ -69,6 +69,8 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        \session_write_close();
+
         $server_request = ServerRequest::fromGlobals()
             ->withAttribute('item_id', $variables['item_id'])
             ->withAttribute('user_id', $this->rest_user_manager->getCurrentUser()->getId());
