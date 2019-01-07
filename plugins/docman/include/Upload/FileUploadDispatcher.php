@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,10 +20,11 @@
 
 namespace Tuleap\Docman\Upload;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Docman\Tus\TusServer;
-use Tuleap\Http\Server\MiddlewareInterface;
-use Tuleap\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final class FileUploadDispatcher implements RequestHandlerInterface
 {
@@ -42,10 +43,7 @@ final class FileUploadDispatcher implements RequestHandlerInterface
         $this->middlewares = $middlewares;
     }
 
-    /**
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request)
+    public function handle(ServerRequestInterface $request) : ResponseInterface
     {
         $middleware = current($this->middlewares);
         if ($middleware === false) {

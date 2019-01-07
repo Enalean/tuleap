@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,8 @@ namespace Tuleap\REST;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Tuleap\Http\MessageFactoryBuilder;
-use Tuleap\Http\Server\RequestHandlerInterface;
 
 class TuleapRESTCORSMiddlewareTest extends TestCase
 {
