@@ -67,7 +67,9 @@ export const createNewDocument = async (context, [item, parent]) => {
             context.commit("removeCreatedPropertyOnItem", created_item);
         }, 5000);
 
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+        return Promise.resolve(
+            context.commit("addJustCreatedDocumentToFolderContent", created_item)
+        );
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }

@@ -198,29 +198,71 @@ describe("Store mutations", () => {
         });
     });
 
-    describe("addJustCreatedItemToFolderContent", () => {
-        it("set the level of the new item according to its parent one", () => {
-            const item = { id: 66, parent_id: 42 };
+    describe("addJustCreatedDocumentToFolderContent", () => {
+        it("set the level of the new document according to its parent one", () => {
+            const item = { id: 66, parent_id: 42, type: "wiki", title: "Document" };
             const state = {
-                folder_content: [{ id: 42, parent_id: 0, level: 2 }]
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" }
+                ]
             };
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
+            mutations.addJustCreatedDocumentToFolderContent(state, item);
             expect(state.folder_content).toEqual([
-                { id: 42, parent_id: 0, level: 2 },
-                { id: 66, parent_id: 42, level: 3 }
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 66, parent_id: 42, level: 3, type: "wiki", title: "Document" }
             ]);
         });
         it("it default to level=0 if parent is not found (should not happen)", () => {
-            const item = { id: 66, parent_id: 42 };
+            const item = { id: 66, parent_id: 42, type: "wiki", title: "Document" };
             const state = {
-                folder_content: [{ id: 101, parent_id: 0, level: 2 }]
+                folder_content: [
+                    { id: 101, parent_id: 0, level: 2, type: "folder", title: "Folder" }
+                ]
             };
 
-            mutations.addJustCreatedItemToFolderContent(state, item);
+            mutations.addJustCreatedDocumentToFolderContent(state, item);
             expect(state.folder_content).toEqual([
-                { id: 101, parent_id: 0, level: 2 },
-                { id: 66, parent_id: 42, level: 0 }
+                { id: 101, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 66, parent_id: 42, level: 0, type: "wiki", title: "Document" }
+            ]);
+        });
+        it("it inserts item by respecting the natural sort order", () => {
+            const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "wiki", title: "A.1" },
+                    { id: 44, parent_id: 42, level: 3, type: "wiki", title: "A.10" }
+                ]
+            };
+
+            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "wiki", title: "A.1" },
+                { id: 66, parent_id: 42, level: 3, type: "wiki", title: "A.2.x" },
+                { id: 44, parent_id: 42, level: 3, type: "wiki", title: "A.10" }
+            ]);
+        });
+        it("it inserts item by respecting the natural sort order, and after folders", () => {
+            const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "A.1" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "A.10" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+
+            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "A.1" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "A.10" },
+                { id: 66, parent_id: 42, level: 3, type: "wiki", title: "A.2.x" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });
     });
