@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2019. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class SOAPBase extends PHPUnit_Framework_TestCase
+// phpcs:ignoreFile
+
+class SOAPBase extends \PHPUnit\Framework\TestCase
 {
 
     protected $server_base_url;

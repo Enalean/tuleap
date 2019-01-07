@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All rights reserved
+ * Copyright (c) Enalean, 2015 - 2019. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -90,6 +90,8 @@ class DocmanTest extends SOAPBase
             ''
         );
 
+        $this->assertTrue($file_id > 0);
+
         return $file_id;
     }
 
@@ -138,6 +140,8 @@ class DocmanTest extends SOAPBase
             SOAP_TestDataBuilder::TEST_USER_1_NAME,
             '1438953065'
         );
+
+        $this->assertTrue($item_id > 0);
 
         return $item_id;
     }

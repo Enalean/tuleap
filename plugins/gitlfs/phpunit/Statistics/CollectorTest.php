@@ -24,7 +24,7 @@ use Mockery;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationDAO;
 use Tuleap\GitLFS\LFSObject\LFSObjectDAO;
 
-class CollectorTest extends \PHPUnit_Framework_TestCase
+class CollectorTest extends \PHPUnit\Framework\TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

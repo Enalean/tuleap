@@ -20,7 +20,7 @@
 
 require_once __DIR__.'/../../bootstrap.php';
 
-class FileImporter_PathTest extends PHPUnit_Framework_TestCase {
+class FileImporter_PathTest extends \PHPUnit\Framework\TestCase {
 
     protected function setUp() {
         parent::setUp();

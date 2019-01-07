@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__) . '/../../bootstrap.php';
 
-class Tracker_FormElement_Field_NumericTest extends PHPUnit_Framework_TestCase // @codingStandardsIgnoreLine
+class Tracker_FormElement_Field_NumericTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 

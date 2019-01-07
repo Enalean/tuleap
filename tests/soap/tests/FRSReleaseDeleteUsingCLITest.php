@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -69,6 +69,8 @@ class FRSReleaseDeleteUsingCLITest extends SOAPBase
             false
         );
 
+        $this->assertTrue($package_id > 0);
+
         return $package_id;
     }
 
@@ -87,6 +89,8 @@ class FRSReleaseDeleteUsingCLITest extends SOAPBase
             1,
             time()
         );
+
+        $this->assertTrue($release_id > 0);
 
         return $release_id;
     }
@@ -141,6 +145,8 @@ class FRSReleaseDeleteUsingCLITest extends SOAPBase
             md5($this->content),
             ''
         );
+
+        $this->assertTrue($file_id > 0);
 
         return $file_id;
     }
