@@ -44,7 +44,8 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
             >
-                <i class="tlp-button-icon fa fa-spin fa-spinner" v-if="is_saving"></i>
+                <i class="tlp-button-icon fa fa-fw fa-spin fa-spinner" v-if="is_saving"></i>
+                <i class="tlp-button-icon fa fa-fw fa-save" v-else></i>
                 <span v-translate>Save configuration</span>
             </button>
         </div>
