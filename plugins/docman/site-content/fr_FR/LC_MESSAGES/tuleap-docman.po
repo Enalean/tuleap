@@ -24,6 +24,9 @@ msgstr "Permissions globales"
 msgid "Granted groups"
 msgstr "Groupes autorisés"
 
+msgid "Initial version"
+msgstr "Version initiale"
+
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
@@ -830,7 +830,8 @@ class Docman_ItemFactory
         $status_id,
         $user_id,
         $item_type_id,
-        $wiki_page
+        $wiki_page = null,
+        $link_url = null
     ) {
         $row = [
             'title'       => $title,
@@ -842,7 +843,8 @@ class Docman_ItemFactory
             'user_id'     => $user_id,
             'status'      => $status_id,
             'item_type'   => $item_type_id,
-            'wiki_page'   => $wiki_page
+            'wiki_page'   => $wiki_page,
+            'link_url'    => $link_url
 
         ];
         $id  = $this->create($row, null);
@@ -853,7 +855,6 @@ class Docman_ItemFactory
         if (! $item) {
             throw new CannotInstantiateItemWeHaveJustCreatedInDBException();
         }
-
         return $item;
     }
 
