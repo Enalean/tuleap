@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,7 +53,7 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
         $driver             = mock('Git_GitoliteDriver');
         $dao                = mock('GitDao');
         $permissionsManager = mock('PermissionsManager');
-        $gitPlugin          = mock('GitPlugin');
+        $gitPlugin          = \Mockery::mock(GitPlugin::class);
         $backend = new Git_Backend_Gitolite($driver, mock(GitoliteAccessURLGenerator::class), mock('Logger'));
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
