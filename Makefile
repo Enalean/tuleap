@@ -151,11 +151,11 @@ phpunit-ci-72:
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-72
 	@docker run --rm -v $(CURDIR):/tuleap:ro -v $(WORKSPACE)/results/ut-phpunit/php-72:/tmp/results enalean/tuleap-test-phpunit:c6-php72 make -C /tuleap TARGET=phpunit-ci-run PHP=/opt/remi/php72/root/usr/bin/php run-as-owner
 
-phpunit-docker-72:
-	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit"
+phpunit-docker-72: ## Run PHPUnit tests in Docker container with PHP 7.2. Use FILES parameter to run specific tests.
+	@docker run --rm -v $(CURDIR):/tuleap:ro enalean/tuleap-test-phpunit:c6-php72 scl enable php72 "make -C /tuleap phpunit FILES=$(FILES)"
 
 phpunit:
-	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml
+	src/vendor/bin/phpunit -c tests/phpunit/phpunit.xml $(FILES)
 
 simpletest-72-ci:
 	@mkdir -p $(WORKSPACE)/results/ut-simpletest/php-72
