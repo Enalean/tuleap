@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "Administration"
@@ -35,6 +35,12 @@ msgstr "Le document a été créé avec succès."
 
 msgid "Documents"
 msgstr "Documents"
+
+msgid "Drop your file to upload it to %s."
+msgstr "Déposez votre fichier pour le téléverser dans %s."
+
+msgid "Dropping files in %s is forbidden."
+msgstr "Déposer des fichiers dans %s n'est pas permis."
 
 msgid "Empty"
 msgstr "Vide"
