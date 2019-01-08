@@ -16,14 +16,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 import Vue from "vue";
+import { TYPE_FOLDER } from "../constants";
 
 export {
     beginLoading,
     initApp,
     resetErrors,
     saveFolderContent,
-    addJustCreatedItemToFolderContent,
+    addJustCreatedDocumentToFolderContent,
     appendSubFolderContent,
     foldFolderContent,
     unfoldFolderContent,
@@ -45,12 +47,26 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function addJustCreatedItemToFolderContent(state, item) {
+function addJustCreatedDocumentToFolderContent(state, item) {
     const parent = state.folder_content.find(parent => parent.id === item.parent_id);
 
     item.level = parent ? parent.level + 1 : 0;
 
-    state.folder_content.push(item);
+    const length = state.folder_content.length;
+    let i = 0;
+    while (i < length) {
+        const possible_sibling = state.folder_content[i];
+        if (
+            possible_sibling.parent_id === item.parent_id &&
+            possible_sibling.type !== TYPE_FOLDER &&
+            possible_sibling.title.localeCompare(item.title, undefined, { numeric: true }) >= 0
+        ) {
+            break;
+        }
+        i++;
+    }
+
+    state.folder_content.splice(i, 0, item);
 }
 
 function appendSubFolderContent(state, [folder_id, sub_items]) {
