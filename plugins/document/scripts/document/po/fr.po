@@ -91,6 +91,9 @@ msgstr "Documentation du projet"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
+msgid "Switch to old user interface"
+msgstr "Basculer sur l'ancienne interface utilisateur"
+
 msgid "This folder is empty"
 msgstr "Ce dossier est vide"
 
