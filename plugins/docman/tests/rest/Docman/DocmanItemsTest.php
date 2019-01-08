@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,7 @@
 
 namespace Tuleap\Docman\rest\v1;
 
+use Guzzle\Http\Client;
 use Tuleap\Docman\rest\DocmanBase;
 use Tuleap\Docman\rest\DocmanDataBuilder;
 
@@ -219,30 +220,57 @@ class DocmanItemsTest extends DocmanBase
      */
     public function testPostFileDocument(int $root_id): void
     {
-        $headers = ['Content-Type' => 'application/json'];
-        $query   = json_encode([
+        $file_size = 123;
+        $query     = json_encode([
             'title'           => 'File1',
             'parent_id'       => $root_id,
             'type'            => 'file',
-            'file_properties' => ['file_name' => 'file1', 'file_size' => 123]
+            'file_properties' => ['file_name' => 'file1', 'file_size' => $file_size]
         ]);
 
         $response1 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
+            $this->client->post('docman_items', null, $query)
         );
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertNotEmpty($response1->json()['file_properties']['upload_href']);
 
         $response2 = $this->getResponseByName(
             DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->client->post('docman_items', $headers, $query)
+            $this->client->post('docman_items', null, $query)
         );
         $this->assertEquals(201, $response1->getStatusCode());
         $this->assertSame(
             $response1->json()['file_properties']['upload_href'],
             $response2->json()['file_properties']['upload_href']
         );
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_upload = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->patch(
+                $response1->json()['file_properties']['upload_href'],
+                [
+                    'Tus-Resumable' => '1.0.0',
+                    'Content-Type'  => 'application/offset+octet-stream',
+                    'Upload-Offset' => '0'
+                ],
+                str_repeat('A', $file_size)
+            )
+        );
+        $this->assertEquals(204, $tus_response_upload->getStatusCode());
+        $this->assertEquals([$file_size], $tus_response_upload->getHeader('Upload-Offset')->toArray());
+
+        $file_item_response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->get($response1->json()['uri'])
+        );
+        $this->assertEquals(200, $file_item_response->getStatusCode());
+        $this->assertEquals('file', $file_item_response->json()['type']);
     }
 
     /**
