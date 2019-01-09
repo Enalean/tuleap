@@ -10,9 +10,19 @@ ifeq ($(RELEASE),)
 	RELEASE=1
 endif
 
+ifeq ($(OS),)
+	DIST=
+endif
+ifeq ($(OS),centos:6)
+	DIST=.el6
+endif
+ifeq ($(OS),centos:7)
+	DIST=.el7
+endif
+
 VERSION := $(shell cat ../package.json | grep version | cut -d: -f 2 | tr -d ',' | tr -d '"' | tr -d " ")
 PACKAGE_NAME_VERSION := $(NAME)-$(VERSION)
-RPMDEFINES := --define "_topdir $(RPM_TMP)"
+RPMDEFINES := --define "_topdir $(RPM_TMP)" --define "dist $(DIST)"
 
 srpm: $(NAME).tar.gz
 	rpmbuild $(RPMDEFINES) -bs $(NAME).spec
@@ -25,11 +35,12 @@ clean:
 build:
 	@[ -n "$(GID)" -a -n "$(UID)" ] || (echo "*** ERROR: UID or GID are missing" && false)
 	@[ -n "$(RELEASE)" ] || (echo "*** ERROR: RELEASE is missing" && false)
+	@[ -n "$(OS)" ] || (echo "*** ERROR: OS is missing" && false)
 	useradd -d /build -m builder_user
-	su --login --command "make -C /realtime/packaging rpm RELEASE=$(RELEASE)" builder_user
-	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/$(PACKAGE_NAME_VERSION)-$(RELEASE).noarch.rpm $(PACKAGINGDIR)
+	su --login --command "make -C /realtime/packaging rpm RELEASE=$(RELEASE) OS=$(OS)" builder_user
+	install -o $(UID) -g $(GID) -m 0644 /build/rpmbuild/RPMS/noarch/$(PACKAGE_NAME_VERSION)-$(RELEASE)$(DIST).noarch.rpm /output
 
-rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).conf $(RPM_TMP)/SOURCES/$(NAME).service $(RPM_TMP)/SOURCES/logrotate.conf
+rpm: clean $(RPM_TMP)/SOURCES/$(NAME).tar.gz $(RPM_TMP)/SOURCES/$(NAME).conf $(RPM_TMP)/SOURCES/$(NAME).service $(RPM_TMP)/SOURCES/$(NAME).systemd-service $(RPM_TMP)/SOURCES/logrotate.conf
 	cat $(NAME).spec | sed -e 's/@@VERSION@@/$(VERSION)/' -e 's/@@RELEASE@@/$(RELEASE)/' > $(RPM_TMP)/SPECS/$(NAME).spec
 	time rpmbuild $(RPMDEFINES) -bb $(RPM_TMP)/SPECS/$(NAME).spec
 
@@ -41,6 +52,9 @@ $(RPM_TMP)/SOURCES/$(NAME).conf:
 
 $(RPM_TMP)/SOURCES/$(NAME).service:
 	cp $(NAME).service $@
+
+$(RPM_TMP)/SOURCES/$(NAME).systemd-service:
+	cp $(NAME).systemd-service $@
 
 $(RPM_TMP)/SOURCES/logrotate.conf:
 	cp logrotate.conf $@

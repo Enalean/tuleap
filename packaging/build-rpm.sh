@@ -20,4 +20,11 @@ if [ "$LAST_TAG" == "$PACKAGE_VERSION" ]; then
     fi
 fi
 
-docker run --rm -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE -v $mydir/..:/realtime enalean/build-tuleap-realtime
+if [[ -z "$OUTPUTDIR" ]]; then
+    OUTPUTDIR="$mydir"
+fi
+
+DOCKERIMAGE=build-tuleap-realtime-"$OS"
+
+docker build --build-arg OS="$OS" -t "$DOCKERIMAGE" "$mydir"/
+docker run --rm -e UID=`id -u` -e GID=`id -g` -e RELEASE=$RELEASE -e OS="$OS" -v $mydir/..:/realtime -v "$OUTPUTDIR":/output build-tuleap-realtime-"$OS"
