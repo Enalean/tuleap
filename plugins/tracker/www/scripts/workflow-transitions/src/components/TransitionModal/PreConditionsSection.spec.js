@@ -23,6 +23,7 @@ import PreConditionsSection from "./PreConditionsSection.vue";
 import localVue from "../../support/local-vue.js";
 import store_options from "../../store/index.js";
 import { createStoreWrapper } from "../../support/store-wrapper.spec-helper.js";
+import { create } from "../../support/factories";
 
 describe("PreConditionsSection", () => {
     let store_wrapper;
@@ -51,8 +52,8 @@ describe("PreConditionsSection", () => {
         });
 
         describe("with a current tracker", () => {
-            const valid_field = { type: "valid" };
-            const invalid_field = { type: "burndown" };
+            const valid_field = create("field", { type: "valid" });
+            const invalid_field = create("field", { type: "burndown" });
 
             beforeEach(() => {
                 store_wrapper.state.current_tracker = {
@@ -64,6 +65,23 @@ describe("PreConditionsSection", () => {
             });
             it("does not return invalid fields", () => {
                 expect(wrapper.vm.writable_fields).not.toContain(invalid_field);
+            });
+
+            describe("which fields are not sorted", () => {
+                beforeEach(() => {
+                    store_wrapper.state.current_tracker.fields = [
+                        create("field", { type: "valid", label: "second" }),
+                        create("field", { type: "valid", label: "First" }),
+                        create("field", { type: "valid", label: "Third" })
+                    ];
+                });
+                it("returns fields sorted by natural order", () => {
+                    expect(wrapper.vm.writable_fields.map(field => field.label)).toEqual([
+                        "First",
+                        "second",
+                        "Third"
+                    ]);
+                });
             });
         });
     });

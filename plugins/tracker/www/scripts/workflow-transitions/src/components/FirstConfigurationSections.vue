@@ -66,6 +66,7 @@
 
 <script>
 import { mapState } from "vuex";
+import { compare } from "../support/string.js";
 
 export default {
     name: "FirstConfigurationSections",
@@ -81,7 +82,8 @@ export default {
         all_fields() {
             return this.current_tracker.fields
                 .filter(field => field.type === "sb" && field.bindings.type === "static")
-                .map(field => ({ id: field.field_id, label: field.label }));
+                .map(field => ({ id: field.field_id, label: field.label }))
+                .sort((field1, field2) => compare(field1.label, field2.label));
         },
         field_tooltip() {
             return this.$gettext("Transitions based field");

@@ -55,6 +55,10 @@ const factories = {
             label: "Field label",
             type: "sb",
             bindings: { type: "static" }
+        },
+        workflow_compliant: {
+            type: "sb",
+            bindings: { type: "static" }
         }
     },
     field_value: {
