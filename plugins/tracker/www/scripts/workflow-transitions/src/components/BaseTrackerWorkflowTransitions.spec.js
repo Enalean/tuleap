@@ -19,12 +19,12 @@
  */
 
 import Vue from "vue";
-import Vuex from "vuex";
 import { shallowMount } from "@vue/test-utils";
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
+import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
 import store_options from "../store/index.js";
 import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
 import { create } from "../support/factories.js";
@@ -96,6 +96,9 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("shows first configuration", () => {
                 expect(wrapper.contains(FirstConfigurationSections)).toBeTruthy();
             });
+            it("does not show rules enforcement warning", () => {
+                expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeFalsy();
+            });
         });
 
         describe("when base field configured", () => {
@@ -109,6 +112,9 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("shows configuration header and matrix", () => {
                 expect(wrapper.contains(TransitionsConfigurationHeaderSection)).toBeTruthy();
                 expect(wrapper.contains(TransitionsMatrixSection)).toBeTruthy();
+            });
+            it("shows rules enforcement warning", () => {
+                expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeTruthy();
             });
         });
     });
