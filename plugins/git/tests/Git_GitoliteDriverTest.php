@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -87,7 +87,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             mock('GitDao'),
             mock('Git_Mirror_MirrorDao'),
-            mock('GitPlugin'),
+            \Mockery::mock(GitPlugin::class),
             $this->gitExec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,
@@ -107,7 +107,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
             $this->url_manager,
             mock('GitDao'),
             mock('Git_Mirror_MirrorDao'),
-            mock('GitPlugin'),
+            \Mockery::mock(GitPlugin::class),
             $this->another_git_exec,
             $this->repository_factory,
             $this->another_gitolite_permissions_serializer,

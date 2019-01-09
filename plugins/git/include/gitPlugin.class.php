@@ -22,6 +22,7 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\BurningParrotCompatiblePageDetector;
+use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\Git\AccessRightsPresenterOptionsBuilder;
 use Tuleap\Git\BreadCrumbDropdown\GitCrumbBuilder;
 use Tuleap\Git\BreadCrumbDropdown\RepositoryCrumbBuilder;
@@ -297,6 +298,7 @@ class GitPlugin extends Plugin
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(ProjectSuspendedAndNotBlockedWarningCollector::NAME);
         $this->addHook(StatisticsCollectionCollector::NAME);
+        $this->addHook(CLICommandsCollector::NAME);
 
         if (defined('STATISTICS_BASE_DIR')) {
             $this->addHook(Statistics_Event::FREQUENCE_STAT_ENTRIES);
@@ -2765,6 +2767,16 @@ class GitPlugin extends Plugin
         return  new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
             new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
             $this->getProjectManager()
+        );
+    }
+
+    public function collectCLICommands(CLICommandsCollector $commands_collector) : void
+    {
+        $commands_collector->addCommand(
+            new \Tuleap\Git\Gitolite\RegenerateConfigurationCommand(
+                ProjectManager::instance(),
+                $this->getGitSystemEventManager()
+            )
         );
     }
 }

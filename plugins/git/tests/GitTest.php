@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -140,7 +140,8 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
     protected function getGit($request, $factory, $template_factory = null) {
         $template_factory = $template_factory?$template_factory:$this->template_factory;
 
-        $git_plugin            = stub('GitPlugin')->areFriendlyUrlsActivated()->returns(false);
+        $git_plugin            = \Mockery::mock(GitPlugin::class);
+        $git_plugin->shouldReceive('areFriendlyUrlsActivated')->andReturns(false);
         $url_manager           = new Git_GitRepositoryUrlManager($git_plugin);
         $server                = mock('Git_RemoteServer_GerritServer');
         $gerrit_server_factory = stub('Git_RemoteServer_GerritServerFactory')->getServerById()->returns($server);
@@ -152,7 +153,7 @@ abstract class Git_RouteBaseTestCase extends TuleapTestCase {
             Git::class,
             array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'),
             array(
-                mock('GitPlugin'),
+                \Mockery::mock(GitPlugin::class),
                 $gerrit_server_factory,
                 stub('Git_Driver_Gerrit_GerritDriverFactory')->getDriver()->returns(mock('Git_Driver_Gerrit')),
                 mock('GitRepositoryManager'),
