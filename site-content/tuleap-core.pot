@@ -1488,6 +1488,14 @@ msgstr ""
 msgid "my_service"
 msgstr ""
 
+#, php-format
+msgid "parameter \"query\" syntax error: \"%s\" property not found"
+msgstr ""
+
+#, php-format
+msgid "parameter \"query\", property \"%s\" invalid type: boolean expected"
+msgstr ""
+
 msgid "permissions"
 msgstr ""
 

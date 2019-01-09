@@ -22,12 +22,15 @@ namespace Tuleap\REST;
 
 use Guzzle\Http\Exception\BadResponseException;
 use REST_TestDataBuilder;
+use Tuleap\CustomAssert;
 
 /**
  * @group ProjectTests
  */
 class ProjectTest extends ProjectBase
 {
+    use CustomAssert;
+
     private function getBasicAuthResponse($request)
     {
         return $this->getResponseByBasicAuth(
@@ -826,6 +829,18 @@ class ProjectTest extends ProjectBase
             )
         );
         $this->assertEquals($expected_result, $response->json());
+    }
+
+    public function testGETUserGroupsWithSystemUserGroupsReturnsAnonymousAndRegisteredWhenAnonymousUsersCanAccessThePlatform()
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_1_NAME,
+            $this->client->get('projects/' . $this->project_public_member_id . '/user_groups?query=' . urlencode('{"with_system_user_groups":true}'))
+        );
+
+        $json_response = $response->json();
+        $this->assertContainsAnyArrayWithKey($json_response, 'id', 1); // ProjectUgroup::ANONYMOUS
+        $this->assertContainsAnyArrayWithKey($json_response, 'id', 2); // ProjectUgroup::REGISTERED
     }
 
     /**

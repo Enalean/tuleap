@@ -1,0 +1,248 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2018. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+namespace Tuleap\Project;
+
+use EventManager;
+use ForgeAccess;
+use ForgeConfig;
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Project;
+use ProjectUGroup;
+use Tuleap\CustomAssert;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Project\Admin\ProjectUGroup\DynamicUGroupMembersUpdater;
+use UGroupDao;
+use UGroupManager;
+use UGroupUserDao;
+
+class UGroupManagerTest extends TestCase
+{
+    use MockeryPHPUnitIntegration, CustomAssert, ForgeConfigSandbox, GlobalLanguageMock;
+
+    /**
+     * @var UGroupManager
+     */
+    private $user_group_manager;
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $user_group_dao;
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $event_manager;
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $user_group_user_dao;
+
+    /**
+     * @var \Mockery\MockInterface
+     */
+    private $dynamic_user_group_member_updater;
+
+    /**
+     * @before
+     */
+    public function instantiateMocks()
+    {
+        $globals = array_merge([], $GLOBALS);
+
+        $this->user_group_dao = Mockery::mock(UGroupDao::class);
+        $this->event_manager = Mockery::mock(EventManager::class);
+        $this->user_group_user_dao = Mockery::mock(UGroupUserDao::class);
+        $this->user_group_dao->shouldReceive('searchDynamicAndStaticByGroupId')
+            ->andReturn([
+                ['ugroup_id' => ProjectUgroup::ANONYMOUS],
+                ['ugroup_id' => ProjectUgroup::AUTHENTICATED],
+                ['ugroup_id' => ProjectUgroup::REGISTERED],
+                ['ugroup_id' => ProjectUgroup::NONE],
+            ])
+            ->byDefault();
+
+        $this->dynamic_user_group_member_updater = Mockery::mock(DynamicUGroupMembersUpdater::class);
+
+        $this->user_group_manager = Mockery::mock(
+            UGroupManager::class,
+            [
+                $this->user_group_dao,
+                $this->event_manager,
+                $this->user_group_user_dao,
+                $this->dynamic_user_group_member_updater
+            ]
+        )->makePartial();
+
+        $this->user_group_manager->shouldReceive('getDao')
+            ->andReturn($this->user_group_dao);
+
+        $GLOBALS = $globals;
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_returns_anonymous_group_when_platform_access_is_anonymous_and_project_is_public()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
+        $project = $this->buildAProject(Project::ACCESS_PUBLIC);
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_does_not_return_anonymous_group_when_platform_access_is_restricted()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $project = $this->buildAProject();
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_does_not_return_anonymous_group_when_platform_access_is_regular()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
+        $project = $this->buildAProject();
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_returns_authenticated_group_when_platform_access_is_restricted_and_project_allows_restricted()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $project = $this->buildAProject(Project::ACCESS_PUBLIC_UNRESTRICTED);
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_does_not_return_authenticated_group_when_project_does_not_allow_restricted()
+    {
+        ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
+        $project = $this->buildAProject(Project::ACCESS_PRIVATE);
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_returns_registered_group_when_project_is_public()
+    {
+        $project = $this->buildAProject(Project::ACCESS_PUBLIC);
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsContainsId($user_groups, ProjectUgroup::REGISTERED);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_does_not_return_registered_group_when_project_is_private()
+    {
+        $project = $this->buildAProject(Project::ACCESS_PRIVATE);
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::REGISTERED);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_does_not_return_none_group()
+    {
+        $project = $this->buildAProject();
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::NONE);
+    }
+
+    /**
+     * @test
+     */
+    // phpcs:ignore
+    public function getAvailableUgroups_returns_non_system_groups()
+    {
+        $this->user_group_dao->shouldReceive('searchDynamicAndStaticByGroupId')
+            ->andReturn([['ugroup_id' => 102]]);
+        $project = $this->buildAProject();
+
+        $user_groups = $this->user_group_manager->getAvailableUGroups($project);
+
+        $this->assertUgroupsContainsId($user_groups, 102);
+    }
+
+    private function buildAProject($access = Project::ACCESS_PRIVATE): Project
+    {
+        return new Project(['group_id' => 1, 'access' => $access]);
+    }
+
+    private function assertUgroupsContainsId($user_groups, $id)
+    {
+        $this->assertContainsAnySatisfies($user_groups, function (ProjectUGroup $group) use ($id) {
+            return $group->getId() === $id;
+        });
+    }
+
+    private function assertUgroupsNotContainsId($user_groups, $id)
+    {
+        $this->assertNotContainsAnySatisfies($user_groups, function (ProjectUGroup $group) use ($id) {
+            return $group->getId() === $id;
+        });
+    }
+}
