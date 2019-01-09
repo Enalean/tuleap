@@ -508,7 +508,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
 
         stub($this->field)->getBurndown($burndown_data)->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
-        stub($this->field)->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration)->returns($burndown_data);
+        stub($this->field)->buildBurndownDataForLegacy($this->current_user, $this->sprint)->returns($burndown_data);
         stub($this->field)->getLogger()->returns(\Mockery::spy(\Tuleap\Tracker\FormElement\BurndownLogger::class));
 
         stub($this->form_element_factory)->getDateFieldByNameForUser(

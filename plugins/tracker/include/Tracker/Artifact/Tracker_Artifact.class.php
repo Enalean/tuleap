@@ -51,7 +51,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SubmittedValueConvertor;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdder;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\RecentlyVisited\VisitRecorder;
@@ -1997,15 +1997,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $event_manager   = SystemEventManager::instance();
         $logger          = new BurndownLogger();
         $field_retriever = new ChartConfigurationFieldRetriever($this->getFormElementFactory(), $logger);
+        $computed_dao    = new Tracker_FormElement_Field_ComputedDao();
+
         return new BurndownCacheGenerationChecker(
             $logger,
             new BurndownCacheGenerator($event_manager),
             $event_manager,
             $field_retriever,
             new ChartConfigurationValueChecker($field_retriever, new ChartConfigurationValueRetriever($field_retriever, $logger)),
-            new Tracker_FormElement_Field_ComputedDao(),
+            $computed_dao,
             new ChartCachedDaysComparator($logger),
-            new BurndownRemainingEffortAdder($field_retriever)
+            new BurndownRemainingEffortAdderForREST($field_retriever, $computed_dao)
         );
     }
 

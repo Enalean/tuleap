@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
-use DateTime;
 use Logger;
 use PFUser;
 use TimePeriodWithoutWeekEnd;
@@ -30,7 +29,7 @@ use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 
-class BurndownDataBuilder
+class BurndownDataBuilderForLegacy
 {
     /**
      * @var Logger
@@ -49,7 +48,7 @@ class BurndownDataBuilder
      */
     private $cache_checker;
     /**
-     * @var BurndownRemainingEffortAdder
+     * @var BurndownRemainingEffortAdderForLegacy
      */
     private $reminaing_effort_adder;
 
@@ -58,7 +57,7 @@ class BurndownDataBuilder
         ChartConfigurationFieldRetriever $field_retriever,
         ChartConfigurationValueRetriever $value_retriever,
         BurndownCacheGenerationChecker $cache_checker,
-        BurndownRemainingEffortAdder $remaining_effort_adder
+        BurndownRemainingEffortAdderForLegacy $remaining_effort_adder
     ) {
         $this->logger                 = $logger;
         $this->field_retriever        = $field_retriever;
@@ -69,30 +68,16 @@ class BurndownDataBuilder
 
     public function build(Tracker_Artifact $artifact, PFUser $user, $start_date, $duration)
     {
-        $this->logger->info("Start calculating burndown " . $artifact->getId());
+        $capacity      = $this->getCapacity($artifact, $user);
+        $user_timezone = TimezoneRetriever::getUserTimezone($user);
 
-        $capacity = null;
-        if ($this->field_retriever->doesCapacityFieldExist($artifact->getTracker())) {
-            $capacity = $this->value_retriever->getCapacity($artifact, $user);
-        }
-
-        $user_timezone   = TimezoneRetriever::getUserTimezone($user);
-        $server_timezone = TimezoneRetriever::getServerTimezone();
-
-        date_default_timezone_set($server_timezone);
-
-        $this->logger->debug("Capacity: " . $capacity);
-        $this->logger->debug("Original start date: " . $start_date);
-        $this->logger->debug("Duration: " . $duration);
-        $this->logger->debug("User Timezone: " . $user_timezone);
-        $this->logger->debug("Server timezone: " . $server_timezone);
-
-        $is_burndown_under_calculation = $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
+        $is_burndown_under_calculation = $this->getBurndownCalculationStatus(
             $artifact,
             $user,
             $start_date,
             $duration,
-            $capacity
+            $capacity,
+            $user_timezone
         );
 
         $efforts = $this->addBurndownRemainingEffortDotsBasedOnServerTimezone(
@@ -112,6 +97,47 @@ class BurndownDataBuilder
         return $efforts;
     }
 
+    /**
+     * @return int|null
+     */
+    private function getCapacity(Tracker_Artifact $artifact, PFUser $user)
+    {
+        $capacity = null;
+        if ($this->field_retriever->doesCapacityFieldExist($artifact->getTracker())) {
+            $capacity = $this->value_retriever->getCapacity($artifact, $user);
+        }
+        return $capacity;
+    }
+
+    private function getBurndownCalculationStatus(
+        Tracker_Artifact $artifact,
+        PFUser $user,
+        $start_date,
+        $duration,
+        $capacity,
+        $user_timezone
+    ) {
+        $this->logger->info("Start calculating burndown " . $artifact->getId());
+
+        $server_timezone = TimezoneRetriever::getServerTimezone();
+
+        date_default_timezone_set($server_timezone);
+
+        $this->logger->debug("Capacity: " . $capacity);
+        $this->logger->debug("Original start date: " . $start_date);
+        $this->logger->debug("Duration: " . $duration);
+        $this->logger->debug("User Timezone: " . $user_timezone);
+        $this->logger->debug("Server timezone: " . $server_timezone);
+
+        return $this->cache_checker->isBurndownUnderCalculationBasedOnServerTimezone(
+            $artifact,
+            $user,
+            $start_date,
+            $duration,
+            $capacity
+        );
+    }
+
     private function addBurndownRemainingEffortDotsBasedOnServerTimezone(
         Tracker_Artifact $artifact,
         PFUser $user,
@@ -120,19 +146,11 @@ class BurndownDataBuilder
         $capacity,
         $is_burndown_under_calculation
     ) {
-        if (! $start_date) {
-            $start_date = $_SERVER['REQUEST_TIME'];
-        }
-
-        $start = new  DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
-
-        $user_time_period   = new TimePeriodWithoutWeekEnd($start_date, $duration);
+        $user_time_period = $this->getTimePeriod($start_date, $duration);
         $user_burndown_data = new Tracker_Chart_Data_Burndown($user_time_period, $capacity);
 
         if ($is_burndown_under_calculation === false) {
-            $this->reminaing_effort_adder->addRemainingEffortData(
+            $this->reminaing_effort_adder->addRemainingEffortDataForLegacy(
                 $user_burndown_data,
                 $user_time_period,
                 $artifact,
@@ -143,5 +161,19 @@ class BurndownDataBuilder
         $user_burndown_data->setIsBeingCalculated($is_burndown_under_calculation);
 
         return $user_burndown_data;
+    }
+
+    /**
+     * @param $start_date
+     * @param $duration
+     * @return TimePeriodWithoutWeekEnd
+     */
+    private function getTimePeriod($start_date, $duration)
+    {
+        if (! $start_date) {
+            $start_date = $_SERVER['REQUEST_TIME'];
+        }
+
+        return new TimePeriodWithoutWeekEnd($start_date, $duration);
     }
 }
