@@ -21,6 +21,9 @@
 @import 'new-document';
 @import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
+$document-upload-animation-color: transparentize($tlp-ui-success, .9);
+$document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95);
+
 .document-upload-to-current-folder {
     position: fixed;
     top: $navbar-height;
@@ -94,6 +97,26 @@
     color: $tlp-ui-dimmed;
     font-size: 14px;
     white-space: nowrap;
+}
+
+.tlp-table > tbody > tr.document-tree-item-uploading > td {
+    animation: document-uploading-animation 1.2s infinite linear;
+    background: linear-gradient(90deg, $document-upload-animation-color 0, $document-upload-animation-secondary-color 80px, $document-upload-animation-color 160px) repeat bottom left;
+    background-size: 600px 1px;
+}
+
+@keyframes document-uploading-animation {
+    0% {
+        background-position: -160px;
+    }
+
+    40% {
+        background-position: 140px;
+    }
+
+    100% {
+        background-position: 440px;
+    }
 }
 
 .tlp-table > tbody > tr.document-tree-item-created > td {

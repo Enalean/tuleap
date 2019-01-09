@@ -1,7 +1,7 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
-  - This file is a part of Tuleap.
+  - This item is a part of Tuleap.
   -
   - Tuleap is free software; you can redistribute it and/or modify
   - it under the terms of the GNU General Public License as published by
@@ -14,39 +14,31 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
-  -
-  -
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
 <template>
     <div>
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        <a v-bind:href="item.file_properties.html_url" class="document-folder-subitem-link">
-            {{ item.title }}
-        </a>
+        {{ item.title }}
     </div>
 </template>
 
 <script>
-import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
-import { ICON_EMPTY } from "../../../constants.js";
+import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
+import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
 
 export default {
-    name: "FileCellTitle",
     components: { FakeCaret },
     props: {
         item: Object
     },
     computed: {
+        ...mapState(["current_folder"]),
         icon_class() {
-            if (!this.item.file_properties) {
-                return ICON_EMPTY;
-            }
-
-            return iconForMimeType(this.item.file_properties.file_type);
+            return iconForMimeType(this.item.file_type);
         }
     }
 };

@@ -21,11 +21,8 @@
 
 import { ICON_EMPTY } from "../constants.js";
 
-function iconForMimeType(item) {
-    if (!item.file_properties) {
-        return ICON_EMPTY;
-    }
-    const mime_type_lower = item.file_properties.file_type.toLowerCase();
+function iconForMimeType(mime_type) {
+    const mime_type_lower = mime_type.toLowerCase();
     const parts = mime_type_lower.split("/");
     let icon;
     switch (parts[0]) {

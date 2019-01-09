@@ -18,8 +18,8 @@
   -->
 
 <template>
-    <tr v-bind:class="{ 'document-tree-item-hidden': is_folded, 'document-tree-item-created': item.created }">
-        <td>
+    <tr v-bind:class="row_classes">
+        <td v-bind:colspan="colspan">
             <component
                 v-bind:is="cell_title_component_name"
                 v-bind:item="item"
@@ -27,10 +27,12 @@
                 class="document-folder-content-title"
             />
         </td>
-        <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
-        <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
-            {{ formatted_date }}
-        </td>
+        <template v-if="! item.is_uploading">
+            <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
+            <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
+                {{ formatted_date }}
+            </td>
+        </template>
     </tr>
 </template>
 
@@ -69,12 +71,26 @@ export default {
                 "padding-left": `${indentation_size}px`
             };
         },
+        row_classes() {
+            return {
+                "document-tree-item-hidden": this.is_folded,
+                "document-tree-item-created": this.item.created,
+                "document-tree-item-uploading": this.item.is_uploading
+            };
+        },
         cell_title_component_name() {
             let name = "Document";
             switch (this.item.type) {
+                case TYPE_FILE:
+                    if (this.item.is_uploading) {
+                        name = "FileUploading";
+                    } else {
+                        name = "File";
+                    }
+
+                    break;
                 case TYPE_FOLDER:
                 case TYPE_LINK:
-                case TYPE_FILE:
                 case TYPE_WIKI:
                     name = this.item.type;
                     name = name.charAt(0).toUpperCase() + name.slice(1);
@@ -84,6 +100,9 @@ export default {
             }
             return () =>
                 import(/* webpackChunkName: "document-cell-title-" */ `./ItemTitle/${name}CellTitle.vue`);
+        },
+        colspan() {
+            return this.item.is_uploading ? 3 : 1;
         }
     },
     methods: {
