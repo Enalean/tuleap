@@ -266,4 +266,45 @@ describe("Store mutations", () => {
             ]);
         });
     });
+
+    describe("replaceUploadingFileWithActualFile", () => {
+        it("it should replace the fake item by the actual item in the folder content", () => {
+            const fake_item = {
+                id: 46,
+                title: "toto.txt",
+                parent_id: 42,
+                type: "file",
+                file_type: "plain/text",
+                is_uploading: true
+            };
+
+            const actual_file = {
+                id: 46,
+                parent_id: 42,
+                level: 3,
+                type: "file",
+                title: "toto.txt"
+            };
+
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                    { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                    fake_item,
+                    { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+                ]
+            };
+
+            mutations.replaceUploadingFileWithActualFile(state, [fake_item, actual_file]);
+
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                actual_file,
+                { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+            ]);
+        });
+    });
 });
