@@ -94,7 +94,7 @@ const evaluateAttributesAsFunction = instance =>
         return evaluatedInstance;
     }, {});
 
-export function create(factory_name, trait_or_attributes) {
+function getDefaultAttributes(factory_name) {
     if (!factories.hasOwnProperty(factory_name)) {
         throw new Error(
             `No factory found with name [${factory_name}]. Did you register this new factory?`
@@ -104,21 +104,27 @@ export function create(factory_name, trait_or_attributes) {
     if (!factory.hasOwnProperty("default")) {
         throw new Error(`No default trait found for factory [${factory_name}]`);
     }
-    if (trait_or_attributes && typeof trait_or_attributes === "string") {
-        const trait = trait_or_attributes;
-        if (!factory.hasOwnProperty(trait)) {
-            throw new Error(`No trait [${trait}] found for factory [${factory_name}]`);
-        }
-        return evaluateAttributesAsFunction({
-            ...factories[factory_name].default,
-            ...factories[factory_name][trait],
-            ...trait_or_attributes
-        });
+    return factories[factory_name].default;
+}
+
+function getTraitAttributes(factory_name, trait) {
+    if (!factories[factory_name].hasOwnProperty(trait)) {
+        throw new Error(`No trait [${trait}] found for factory [${factory_name}]`);
     }
-    return evaluateAttributesAsFunction({
-        ...factories[factory_name].default,
-        ...trait_or_attributes
+    return factories[factory_name][trait];
+}
+
+export function create(factory_name, ...trait_or_attributes) {
+    const attributes = [getDefaultAttributes(factory_name)];
+    trait_or_attributes.forEach((trait_or_attribute, index) => {
+        if (index < trait_or_attributes.length - 1 || typeof trait_or_attribute === "string") {
+            attributes.push(getTraitAttributes(factory_name, trait_or_attribute));
+        } else {
+            attributes.push(trait_or_attribute);
+        }
     });
+
+    return evaluateAttributesAsFunction(Object.assign({}, ...attributes));
 }
 
 export function createList(factory, count, attributes) {
