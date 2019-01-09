@@ -494,3 +494,12 @@ a img {
 .docman-notification-add-cascade {
     margin: 0;
 }
+
+.docman-title-with-external-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.docman-title-external-link {
+    align-self: center;
+}

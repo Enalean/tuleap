@@ -30,14 +30,38 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
      * @access: protected
      */
     function _getTitle($params) {
+        // If a title is defined in the report, use it instead of the  default one
+        $title = $this->getTitleWhenFilterIsSet($params);
+        if ($title === false) {
+            return parent::_getTitle($params);
+        }
+
+        return $title;
+    }
+
+    protected function getUnconvertedTitle($params)
+    {
         // If a title is defined in the report, use it instead of the
         // default one
-        if(isset($params['filter']) && $params['filter'] !== null) {
-            if($params['filter']->getTitle() !== null && trim($params['filter']->getTitle()) != '') {
-                return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
-            }
-        } 
-        return parent::_getTitle($params);
+        $title = $this->getTitleWhenFilterIsSet($params);
+        if ($title === false) {
+            return parent::getUnconvertedTitle($params);
+        }
+
+        return $title;
+    }
+
+    private function getTitleWhenFilterIsSet(array $params)
+    {
+        if(isset($params['filter']) || $params['filter'] === null) {
+            return false;
+        }
+
+        if($params['filter']->getTitle() === null && trim($params['filter']->getTitle()) === '') {
+            return false;
+        }
+
+        return htmlentities($params['filter']->getTitle(), ENT_COMPAT, 'UTF-8');
     }
 
     /* protected */ function _mode($params) {

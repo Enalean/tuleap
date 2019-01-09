@@ -30,11 +30,21 @@ msgstr "Version initiale"
 msgid "Items permissions are not listed."
 msgstr "Les permissions des éléments ne sont pas listées."
 
+msgid ""
+"New user interface is under construction and all feature are not available "
+"yet."
+msgstr ""
+"La nouvelle interface est en cours de construction et toutes les "
+"fonctionnalités n'ont pas encore été portées."
+
 msgid "Notified people"
 msgstr "Personnes notifiées"
 
 msgid "Permission"
 msgstr "Permission"
+
+msgid "Switch to new user interface"
+msgstr "Basculer sur la nouvelle interface utilisateur"
 
 #, php-format
 msgid "The item %d is not a folder."

@@ -75,6 +75,18 @@
         return $title;
     }
 
+    protected function getUnconvertedTitle(array $params)
+    {
+        $title   = '';
+        $project = $this->getProjectFromParams($params);
+        if ($project) {
+            $title .= $project->getUnconvertedPublicName() . ' - ';
+        }
+        $title .= $GLOBALS['Language']->getText('plugin_docman', 'title');
+
+        return $title;
+    }
+
     /* protected */ function _footer($params) {
         if(isset($params['pv']) && $params['pv'] > 0) {
             $GLOBALS['HTML']->pv_footer(array());
