@@ -76,6 +76,7 @@ class TransitionsPermissionsChecker
      * @param Transition $transition
      * @throws OrphanTransitionException
      * @throws RestException 403
+     * @throws RestException 404
      */
     public function checkRead(PFUser $user, $transition)
     {

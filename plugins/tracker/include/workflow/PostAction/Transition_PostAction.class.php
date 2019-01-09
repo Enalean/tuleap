@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\Visitor;
+
 require_once 'common/include/Codendi_Request.class.php';
 
 /**
  * class Transition_PostAction
  * Post action occuring when transition is run
  */
-abstract class Transition_PostAction {
+abstract class Transition_PostAction
+{ //phpcs:ignore
 
     /**
      * @var Transition the transition
@@ -180,5 +183,7 @@ abstract class Transition_PostAction {
      * @return boolean
      */
     public abstract function bypassPermissions(Tracker_FormElement_Field $field);
+
+    public abstract function accept(Visitor $visitor);
 }
 ?>
