@@ -79,7 +79,7 @@ import TransitionModal from "./TransitionModal/TransitionModal.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
-    name: "BaseTrackerWorflowTransitions",
+    name: "BaseTrackerWorkflowTransitions",
     components: {
         TransitionModal,
         FirstConfigurationSections,
