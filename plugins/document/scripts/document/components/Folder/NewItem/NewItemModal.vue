@@ -110,6 +110,7 @@ export default {
         async addDocument(event) {
             event.preventDefault();
             this.is_loading = true;
+            this.$store.commit("resetModalError");
 
             await this.$store.dispatch("createNewDocument", [this.item, this.current_folder]);
             this.is_loading = false;
