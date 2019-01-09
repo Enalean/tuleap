@@ -25,11 +25,14 @@ use Docman_Item;
 use Luracast\Restler\RestException;
 use PFUser;
 use Project;
+use Rule_Regexp;
 use Tuleap\Docman\Upload\DocumentOngoingUploadRetriever;
 use Tuleap\Docman\Upload\DocumentToUploadCreationConflictException;
 use Tuleap\Docman\Upload\DocumentToUploadCreationFileMismatchException;
 use Tuleap\Docman\Upload\DocumentToUploadCreator;
 use Tuleap\Docman\Upload\DocumentToUploadMaxSizeExceededException;
+use Valid_FTPURI;
+use Valid_LocalURI;
 
 class DocmanItemCreator
 {
@@ -101,6 +104,7 @@ class DocmanItemCreator
                     $project,
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
+                    null,
                     null
                 );
             case ItemRepresentation::TYPE_WIKI:
@@ -116,7 +120,12 @@ class DocmanItemCreator
                         sprintf('"file_properties" is not null while the given type is "wiki"')
                     );
                 }
-
+                if ($docman_item_post_representation->link_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"link_properties" is not null while the given type is "wiki"')
+                    );
+                }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                     $parent_item,
@@ -124,7 +133,8 @@ class DocmanItemCreator
                     $project,
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
-                    $docman_item_post_representation->wiki_properties->page_name
+                    $docman_item_post_representation->wiki_properties->page_name,
+                    null
                 );
             case ItemRepresentation::TYPE_FILE:
                 if ($docman_item_post_representation->file_properties === null) {
@@ -139,6 +149,12 @@ class DocmanItemCreator
                         sprintf('"wiki_properties" is not null while the given type is "file"')
                     );
                 }
+                if ($docman_item_post_representation->link_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"link_properties" is not null while the given type is "file"')
+                    );
+                }
                 return $this->createFileDocument(
                     $parent_item,
                     $user,
@@ -146,6 +162,45 @@ class DocmanItemCreator
                     $docman_item_post_representation->description,
                     $current_time,
                     $docman_item_post_representation->file_properties
+                );
+
+            case ItemRepresentation::TYPE_LINK:
+                if ($docman_item_post_representation->link_properties === null) {
+                    throw new RestException(
+                        400,
+                        "Please provide link_properties in order to create a link document."
+                    );
+                }
+                if ($docman_item_post_representation->wiki_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"wiki_properties" is not null while the given type is "link"')
+                    );
+                }
+                if ($docman_item_post_representation->file_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"file_properties" is not null while the given type is "link"')
+                    );
+                }
+                $link_url   = $docman_item_post_representation->link_properties->link_url;
+                $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
+                $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
+                if (!$valid_ftp->isValid($link_url) && !$valid_http->isValid($link_url)) {
+                    throw new RestException(
+                        400,
+                        sprintf('The link is not a valid URL')
+                    );
+                }
+                return $this->createDocument(
+                    PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                    $parent_item,
+                    $user,
+                    $project,
+                    $docman_item_post_representation->title,
+                    $docman_item_post_representation->description,
+                    null,
+                    $link_url
                 );
             default:
                 throw new \DomainException('Unknown document type: ' . $docman_item_post_representation->type);
@@ -185,7 +240,8 @@ class DocmanItemCreator
         Project $project,
         $title,
         $description,
-        $wiki_page
+        $wiki_page,
+        $link_url
     ) {
         $item = $this->item_factory->createWithoutOrdering(
             $title,
@@ -194,7 +250,8 @@ class DocmanItemCreator
             PLUGIN_DOCMAN_ITEM_STATUS_NONE,
             $user->getId(),
             $item_type_id,
-            $wiki_page
+            $wiki_page,
+            $link_url
         );
 
         $params = [
@@ -203,8 +260,8 @@ class DocmanItemCreator
             'item'     => $item,
             'user'     => $user
         ];
-        $item->accept($this->creator_visitor, $params);
 
+        $item->accept($this->creator_visitor, $params);
         $representation = new CreatedItemRepresentation();
         $representation->build($item->getId());
 
@@ -251,6 +308,9 @@ class DocmanItemCreator
 
     private function checkAllItemPropertiesAreNull(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
-        return ($docman_item_post_representation->wiki_properties === null && $docman_item_post_representation->file_properties == null);
+        return ($docman_item_post_representation->wiki_properties === null
+            && $docman_item_post_representation->file_properties === null
+            && $docman_item_post_representation->link_properties === null
+        );
     }
 }

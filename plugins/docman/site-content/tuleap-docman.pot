@@ -10,6 +10,9 @@ msgstr ""
 msgid "Granted groups"
 msgstr ""
 
+msgid "Initial version"
+msgstr ""
+
 msgid "Items permissions are not listed."
 msgstr ""
 

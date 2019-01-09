@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018-2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -115,15 +115,31 @@ class DocmanItemsResource extends AuthenticatedResource
      * /!\ Docman REST routes are under construction and subject to changes /!\
      * </pre>
      *
-     * Warning: only empty, wiki and file items can be created.
+     * Warning: only empty, wiki, link and file items can be created.
      *
      * When creating a new file, you will get an URL where the file needs
      * to be uploaded using the
      * <a href="https://tus.io/protocols/resumable-upload.html">tus resumable upload protocol</a>
      * to validate the item creation. You will need to use the same authentication mechanism you used
      * to call this endpoint.
-     *
-     * If you want to create an empty item, all keys xxx_properties must be null
+     * <br/>
+     * <br/>
+     * If you want to create an empty item, all keys xxx_properties must be null.
+     * <br/>
+     * If the document is not an empty document,'type = xxx' MUST match with the key 'xxx_properties'. The others properties types must not be written.
+     * <br/>
+     * <br/>
+     * Example with the creation of a wiki: <br/>
+     * <pre>
+     *{ <br/>
+     * &nbsp; "title": "My wiki", <br/>
+     * &nbsp; "parent_id": 1, <br/>
+     * &nbsp; "type": "wiki", <br/>
+     * &nbsp; "wiki_properties": { <br/>
+     * &nbsp; &nbsp; "page_name": "string" <br/>
+     * &nbsp; } <br/>
+     *}
+     * </pre>
      *
      * @param DocmanItemPOSTRepresentation $docman_item_post_representation
      *
@@ -159,16 +175,19 @@ class DocmanItemsResource extends AuthenticatedResource
             $this->getItemFactory($project->getID()),
             new DocumentOngoingUploadRetriever($document_on_going_upload_dao),
             new DocumentToUploadCreator($document_on_going_upload_dao),
-            new AfterItemCreationVisitor($this->getPermissionManager(), $this->event_manager)
+            new AfterItemCreationVisitor(
+                $this->getPermissionManager(),
+                $this->event_manager,
+                new \Docman_LinkVersionFactory()
+            )
         );
-
-        return $docman_item_creator->create(
-            $parent,
-            $current_user,
-            $project,
-            $docman_item_post_representation,
-            new \DateTimeImmutable()
-        );
+            return $docman_item_creator->create(
+                $parent,
+                $current_user,
+                $project,
+                $docman_item_post_representation,
+                new \DateTimeImmutable()
+            );
     }
 
     private function getItemFactory($group_id = null)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -40,11 +40,19 @@ class AfterItemCreationVisitor implements ItemVisitor
      * @var \PermissionsManager
      */
     private $permission_manager;
+    /**
+     * @var \Docman_LinkVersionFactory
+     */
+    private $docman_link_version_factory;
 
-    public function __construct(\PermissionsManager $permission_manager, \EventManager $event_manager)
-    {
-        $this->permission_manager = $permission_manager;
-        $this->event_manager      = $event_manager;
+    public function __construct(
+        \PermissionsManager $permission_manager,
+        \EventManager $event_manager,
+        \Docman_LinkVersionFactory $docman_link_version_factory
+    ) {
+        $this->permission_manager          = $permission_manager;
+        $this->event_manager               = $event_manager;
+        $this->docman_link_version_factory = $docman_link_version_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
@@ -62,7 +70,15 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitLink(Docman_Link $item, array $params = [])
     {
-        throw new CannotCreateThisItemTypeException();
+        $this->docman_link_version_factory->create(
+            $item,
+            dgettext('plugin_docman', 'Initial version'),
+            dgettext('plugin_docman', 'Initial version'),
+            time()
+        );
+        $this->inheritPermissionsFromParent($item);
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_LINK, $params);
+        $this->triggerPostCreationEvents($params);
     }
 
     public function visitFile(Docman_File $item, array $params = [])

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,7 +35,7 @@ class DocmanItemPOSTRepresentation
      */
     public $parent_id;
     /**
-     * @var string Item type {@choice empty,wiki,file} {@from body} {@required true}
+     * @var string Item type {@choice empty,wiki,file,link} {@from body} {@required true}
      */
     public $type;
     /**
@@ -46,4 +46,8 @@ class DocmanItemPOSTRepresentation
      * @var WikiPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\WikiPropertiesPOSTRepresentation} {@from body} {@required false}
      */
     public $wiki_properties = null;
+    /**
+     * @var LinkPropertiesPOSTRepresentation {@type \Tuleap\Docman\REST\v1\LinkPropertiesPOSTRepresentation} {@from body} {@required false}
+     */
+    public $link_properties = null;
 }

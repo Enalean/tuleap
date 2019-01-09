@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,12 +36,18 @@ class DocmanItemCreatorTest extends TestCase
     private $item_factory;
     private $document_ongoing_upload_retriever;
     private $document_to_upload_creator;
+    private $link_version_factory;
 
     public function setUp()
     {
-        $this->permissions_manager = \Mockery::mock(\PermissionsManager::class);
-        $this->event_manager       = \Mockery::mock(\EventManager::class);
-        $this->creator_visitor     = new AfterItemCreationVisitor($this->permissions_manager, $this->event_manager);
+        $this->permissions_manager  = \Mockery::mock(\PermissionsManager::class);
+        $this->event_manager        = \Mockery::mock(\EventManager::class);
+        $this->link_version_factory = \Mockery::mock(\Docman_LinkVersionFactory::class);
+        $this->creator_visitor      = new AfterItemCreationVisitor(
+            $this->permissions_manager,
+            $this->event_manager,
+            $this->link_version_factory
+        );
 
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
@@ -80,7 +86,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null)
+            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_EMPTY, null, null)
             ->once()
             ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
@@ -130,7 +136,7 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory
             ->shouldReceive('createWithoutOrdering')
-            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi")
+            ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_WIKI, "Monchichi", null)
             ->once()
             ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
@@ -216,5 +222,72 @@ class DocmanItemCreatorTest extends TestCase
             $post_representation,
             $current_time
         );
+    }
+
+    public function testLinkDocumentCanBeCreated()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                  = new DocmanItemPOSTRepresentation();
+        $post_representation->type            = ItemRepresentation::TYPE_LINK;
+        $post_representation->title           = 'Mie faboulouse linke';
+        $post_representation->parent_id       = 11;
+        $post_representation->link_properties = json_decode(json_encode(['link_url' => 'https://my.example.test']));
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+
+        $this->event_manager->shouldReceive('processEvent');
+
+        $created_item = \Mockery::mock(\Docman_Link::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->with(
+                'Mie faboulouse linke',
+                '',
+                11,
+                100,
+                222,
+                PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+                null,
+                'https://my.example.test'
+            )
+            ->once()
+            ->andReturns($created_item);
+
+        $this->permissions_manager->shouldReceive('clonePermissions')->once();
+
+        $this->link_version_factory
+            ->shouldReceive('create')
+            ->with($created_item, 'Initial version', 'Initial version', time())
+            ->once()
+            ->andReturn(true);
+
+        $created_item_representation = $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time
+        );
+
+        $this->assertSame(12, $created_item_representation->id);
+        $this->assertNull($created_item_representation->file_properties);
     }
 }
