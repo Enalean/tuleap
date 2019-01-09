@@ -29,6 +29,12 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
+msgid "Drop your file to upload it to %s."
+msgstr ""
+
+msgid "Dropping files in %s is forbidden."
+msgstr ""
+
 msgid "Empty"
 msgstr ""
 
