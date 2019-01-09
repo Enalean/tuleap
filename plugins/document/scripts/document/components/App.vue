@@ -23,6 +23,7 @@
         <document-breadcrumb v-if="! has_folder_permission_error"/>
         <loading-error v-if="has_folder_loading_error"/>
         <router-view/>
+        <switch-to-old-u-i/>
     </div>
 </template>
 <script>
@@ -30,10 +31,11 @@ import { mapState } from "vuex";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/EmptyState/PermissionError.vue";
 import LoadingError from "./Folder/EmptyState/LoadingError.vue";
+import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 
 export default {
     name: "App",
-    components: { DocumentBreadcrumb, PermissionError, LoadingError },
+    components: { DocumentBreadcrumb, PermissionError, LoadingError, SwitchToOldUI },
     props: {
         user_id: Number,
         project_id: Number,

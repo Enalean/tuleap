@@ -1,0 +1,45 @@
+<!--
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  -
+  - This file is a part of Tuleap.
+  -
+  - Tuleap is free software; you can redistribute it and/or modify
+  - it under the terms of the GNU General Public License as published by
+  - the Free Software Foundation; either version 2 of the License, or
+  - (at your option) any later version.
+  -
+  - Tuleap is distributed in the hope that it will be useful,
+  - but WITHOUT ANY WARRANTY; without even the implied warranty of
+  - MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  - GNU General Public License for more details.
+  -
+  - You should have received a copy of the GNU General Public License
+  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<template>
+    <a v-bind:href="old_url" class="switch-to-docman" translate>Switch to old user interface</a>
+</template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+    name: "SwitchToOldUI",
+    computed: {
+        ...mapState(["project_id", "current_folder"]),
+        old_url() {
+            if (this.$route.params.item_id) {
+                return (
+                    "/plugins/docman/?group_id=" +
+                    this.project_id +
+                    "&action=show&id=" +
+                    parseInt(this.$route.params.item_id, 10)
+                );
+            }
+
+            return "/plugins/docman/?group_id=" + this.project_id;
+        }
+    }
+};
+</script>

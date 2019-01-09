@@ -89,6 +89,9 @@ msgstr ""
 msgid "Show error details"
 msgstr ""
 
+msgid "Switch to old user interface"
+msgstr ""
+
 msgid "This folder is empty"
 msgstr ""
 
