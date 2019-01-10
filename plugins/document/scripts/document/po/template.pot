@@ -29,8 +29,10 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
-msgid "Drop your file to upload it to %s."
-msgstr ""
+msgid "Drop one file to upload it to %{ folder }."
+msgid_plural "Drop up to %{ n } files to upload them to %{ folder }."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Dropping files in %s is forbidden."
 msgstr ""
@@ -74,6 +76,9 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
+msgid "Oops"
+msgstr ""
+
 msgid "Oops, there's an issue."
 msgstr ""
 
@@ -81,6 +86,9 @@ msgid "Owner"
 msgstr ""
 
 msgid "Parent folders are not displayed to not clutter the interface"
+msgstr ""
+
+msgid "Please start again."
 msgstr ""
 
 msgid "Project documentation"
@@ -106,6 +114,12 @@ msgstr ""
 
 msgid "Wiki page"
 msgstr ""
+
+msgid "You are not allowed to drag 'n drop more than %{ nb } file at once."
+msgid_plural ""
+"You are not allowed to drag 'n drop more than %{ nb } files at once."
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

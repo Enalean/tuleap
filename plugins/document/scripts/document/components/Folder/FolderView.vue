@@ -24,7 +24,7 @@
         <empty-folder-for-writers v-else-if="is_folder_empty && current_folder.user_can_write"/>
         <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
         <folder-content v-else/>
-        <drag-n-drop-in-current-folder/>
+        <drag-n-drop-in-current-folder v-if="current_folder"/>
     </div>
 </template>
 <script>
@@ -35,7 +35,7 @@ import FolderLoadingScreen from "./FolderLoadingScreen.vue";
 import FolderContent from "./FolderContent.vue";
 import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
 import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
-import DragNDropInCurrentFolder from "./DragNDropInCurrentFolder.vue";
+import DragNDropInCurrentFolder from "./DragNDrop/DragNDropInCurrentFolder.vue";
 
 export default {
     name: "FolderView",
