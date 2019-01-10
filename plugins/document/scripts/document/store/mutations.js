@@ -40,7 +40,8 @@ export {
     setCurrentFolder,
     setModalError,
     resetModalError,
-    removeCreatedPropertyOnItem
+    removeCreatedPropertyOnItem,
+    replaceUploadingFileWithActualFile
 };
 
 function saveFolderContent(state, folder_content) {
@@ -212,4 +213,10 @@ function resetModalError(state) {
 
 function removeCreatedPropertyOnItem(state, item) {
     Vue.delete(item, "created");
+}
+
+function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]) {
+    const index = state.folder_content.findIndex(item => item.id === uploading_file.id);
+
+    state.folder_content.splice(index, 1, actual_file);
 }

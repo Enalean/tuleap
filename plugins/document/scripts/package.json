@@ -9,6 +9,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "phptomoment": "0.0.2",
+    "tus-js-client": "^1.5.2",
     "vue": "^2.5.17",
     "vue-gettext": "^2.1.0",
     "vue-router": "^3.0.1",
