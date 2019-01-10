@@ -108,6 +108,12 @@ class DocmanItemCreator
                     null
                 );
             case ItemRepresentation::TYPE_WIKI:
+                if (! $project->usesWiki()) {
+                    throw new RestException(
+                        400,
+                        sprintf('The wiki service of the project: "%s" is not available', $project->getUnixName())
+                    );
+                }
                 if ($docman_item_post_representation->wiki_properties === null) {
                     throw new RestException(
                         400,
@@ -117,13 +123,13 @@ class DocmanItemCreator
                 if ($docman_item_post_representation->file_properties !== null) {
                     throw new RestException(
                         400,
-                        sprintf('"file_properties" is not null while the given type is "wiki"')
+                        '"file_properties" is not null while the given type is "wiki"'
                     );
                 }
                 if ($docman_item_post_representation->link_properties !== null) {
                     throw new RestException(
                         400,
-                        sprintf('"link_properties" is not null while the given type is "wiki"')
+                        '"link_properties" is not null while the given type is "wiki"'
                     );
                 }
                 return $this->createDocument(
