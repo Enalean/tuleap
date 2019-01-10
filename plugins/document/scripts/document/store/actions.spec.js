@@ -382,7 +382,7 @@ describe("Store actions", () => {
 
             expect(getItem).toHaveBeenCalledWith(66);
             expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
+                "addJustCreatedDocumentToFolderContent",
 
                 item
             );
@@ -402,7 +402,7 @@ describe("Store actions", () => {
             await createNewDocument(context, ["", "", "empty", 2]);
 
             expect(context.commit).not.toHaveBeenCalledWith(
-                "addJustCreatedItemToFolderContent",
+                "addJustCreatedDocumentToFolderContent",
                 jasmine.any(Object)
             );
             expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
