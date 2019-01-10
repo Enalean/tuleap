@@ -20,7 +20,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import FirstConfigurationSections from "./FirstConfigurationSections.vue";
-import { createList } from "../support/factories.js";
+import { create, createList } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
 import store_options from "../store/index.js";
 import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
@@ -89,6 +89,18 @@ describe("FirstConfigurationSections", () => {
                 id: 1,
                 label: "First field"
             });
+        });
+        it("returns fields sorted by natural order", () => {
+            store_wrapper.state.current_tracker.fields = [
+                create("field", "workflow_compliant", { label: "second" }),
+                create("field", "workflow_compliant", { label: "First" }),
+                create("field", "workflow_compliant", { label: "Third" })
+            ];
+            expect(wrapper.vm.all_fields.map(field => field.label)).toEqual([
+                "First",
+                "second",
+                "Third"
+            ]);
         });
     });
 });

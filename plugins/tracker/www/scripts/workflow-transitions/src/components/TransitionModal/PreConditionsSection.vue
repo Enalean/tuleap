@@ -96,6 +96,7 @@ import {
     COMPUTED_FIELD
 } from "../../../../constants/fields-constants.js";
 import MultiSelect from "./MultiSelect.vue";
+import { compare } from "../../support/string.js";
 
 const fields_blacklist = [...STRUCTURAL_FIELDS, ...READ_ONLY_FIELDS, COMPUTED_FIELD];
 
@@ -114,9 +115,9 @@ export default {
                 if (state.current_tracker === null) {
                     return [];
                 }
-                return state.current_tracker.fields.filter(
-                    field => !fields_blacklist.includes(field.type)
-                );
+                return state.current_tracker.fields
+                    .filter(field => !fields_blacklist.includes(field.type))
+                    .sort((field1, field2) => compare(field1.label, field2.label));
             }
         }),
         ...mapGetters("transitionModal", ["is_transition_from_new_artifact"]),
