@@ -62,7 +62,7 @@ function mockStoreOptions(store_options) {
         ...store_options,
         actions: mockAllFunctions(store_options.actions),
         mutations: mockAllFunctions(store_options.mutations),
-        getters: mockAllFunctions(store_options.getters)
+        getters: store_options.getters
     };
     if (store_options.modules) {
         mocked_options.modules = mockModules(store_options.modules);
