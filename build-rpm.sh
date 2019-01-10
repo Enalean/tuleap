@@ -12,7 +12,13 @@ if [ ! -d "$WORKSPACE" ]; then
     exit 1
 fi
 
-DOCKERIMAGE=build-plugin-mytuleap-contact-support-rpm
+if [[ -z "$OS" ]]; then
+    echo "*** ERROR: OS is missing"
+    exit 1
+
+fi
+
+DOCKERIMAGE=build-plugin-mytuleap-contact-support-rpm-"$OS"
 
 PACKAGE_VERSION="$(tr -d '[:space:]' < VERSION)"
 
@@ -25,5 +31,5 @@ if [ "$LAST_TAG" == "$PACKAGE_VERSION" ]; then
     fi
 fi
 
-docker build -t "$DOCKERIMAGE" rpm
+docker build --build-arg OS="$OS" -t "$DOCKERIMAGE" rpm
 docker run --rm -v "$TULEAP_PATH":/tuleap:ro -v "$(pwd)":/plugin:ro -v "$WORKSPACE":/output -e UID="$(id -u)" -e GID="$(id -g)" -e RELEASE="$RELEASE" "$DOCKERIMAGE"

@@ -1,4 +1,5 @@
-FROM centos:7
+ARG OS
+FROM $OS
 
 RUN yum install -y make rpm-build tar git fontconfig epel-release \
     && yum install -y nodejs npm
