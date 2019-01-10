@@ -103,11 +103,7 @@ class UGroupManagerTest extends TestCase
         $GLOBALS = $globals;
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_returns_anonymous_group_when_platform_access_is_anonymous_and_project_is_public()
+    public function testGetAvailableUgroupsReturnsAnonymousGroupWhenPlatformAccessIsAnonymousAndProjectIsPublic()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
         $project = $this->buildAProject(Project::ACCESS_PUBLIC);
@@ -117,11 +113,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsContainsId($user_groups, ProjectUgroup::ANONYMOUS);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_does_not_return_anonymous_group_when_platform_access_is_restricted()
+    public function testGetAvailableUgroupsDoesNotReturnAnonymousGroupWhenPlatformAccessIsRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $project = $this->buildAProject();
@@ -131,11 +123,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_does_not_return_anonymous_group_when_platform_access_is_regular()
+    public function testGetAvailableUgroupsDoesNotReturnAnonymousGroupWhenPlatformAccessIsRegular()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
         $project = $this->buildAProject();
@@ -145,11 +133,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::ANONYMOUS);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_returns_authenticated_group_when_platform_access_is_restricted_and_project_allows_restricted()
+    public function testGetAvailableUgroupsReturnsAuthenticatedGroupWhenPlatformAccessIsRestrictedAndProjectAllowsRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $project = $this->buildAProject(Project::ACCESS_PUBLIC_UNRESTRICTED);
@@ -159,11 +143,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_does_not_return_authenticated_group_when_project_does_not_allow_restricted()
+    public function testGetAvailableUgroupsDoesNotReturnAuthenticatedGroupWhenProjectDoesNotAllowRestricted()
     {
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $project = $this->buildAProject(Project::ACCESS_PRIVATE);
@@ -173,11 +153,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::AUTHENTICATED);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_returns_registered_group_when_project_is_public()
+    public function testGetAvailableUgroupsReturnsRegisteredGroupWhenProjectIsPublic()
     {
         $project = $this->buildAProject(Project::ACCESS_PUBLIC);
 
@@ -186,11 +162,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsContainsId($user_groups, ProjectUgroup::REGISTERED);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_does_not_return_registered_group_when_project_is_private()
+    public function testGetAvailableUgroupsDoesNotReturnRegisteredGroupWhenProjectIsPrivate()
     {
         $project = $this->buildAProject(Project::ACCESS_PRIVATE);
 
@@ -199,11 +171,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::REGISTERED);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_does_not_return_none_group()
+    public function testGetAvailableUgroupsDoesNotReturnNoneGroup()
     {
         $project = $this->buildAProject();
 
@@ -212,11 +180,7 @@ class UGroupManagerTest extends TestCase
         $this->assertUgroupsNotContainsId($user_groups, ProjectUgroup::NONE);
     }
 
-    /**
-     * @test
-     */
-    // phpcs:ignore
-    public function getAvailableUgroups_returns_non_system_groups()
+    public function testGetAvailableUgroupsReturnsNonSystemGroups()
     {
         $this->user_group_dao->shouldReceive('searchDynamicAndStaticByGroupId')
             ->andReturn([['ugroup_id' => 102]]);
