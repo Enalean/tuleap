@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,8 @@
 import {
     workflow_field_label,
     are_transition_rules_enforced,
-    current_tracker_id
+    current_tracker_id,
+    selectbox_fields
 } from "./getters.js";
 import initial_state from "./state.js";
 import { create } from "../support/factories.js";
@@ -99,6 +100,48 @@ describe("Store getters:", () => {
             beforeEach(() => (state.current_tracker = null));
             it("returns null", () => {
                 expect(current_tracker_id(state)).toBeNull();
+            });
+        });
+    });
+
+    describe("selectbox fields", () => {
+        beforeEach(() => {
+            const fields = [
+                create("field", "workflow_compliant", { field_id: 64 }),
+                create("field", "selectbox_users", { field_id: 20 }),
+                create("field", { field_id: 93, type: "column" }),
+                create("field", "workflow_compliant", { field_id: 55 })
+            ];
+            state.current_tracker = create("tracker", { id: 85, fields });
+        });
+
+        it("filters out fields that aren't selectboxes", () => {
+            const selectbox_field_ids = selectbox_fields(state).map(({ id }) => id);
+            expect(selectbox_field_ids).not.toContain(93);
+        });
+
+        it("filters out selectboxes that aren't bound to static values", () => {
+            const selectbox_field_ids = selectbox_fields(state).map(({ id }) => id);
+            expect(selectbox_field_ids).not.toContain(20);
+        });
+
+        it("returns fields sorted by natural order", () => {
+            state.current_tracker.fields = [
+                create("field", "workflow_compliant", { label: "second" }),
+                create("field", "workflow_compliant", { label: "First" }),
+                create("field", "workflow_compliant", { label: "Third" })
+            ];
+            expect(selectbox_fields(state).map(field => field.label)).toEqual([
+                "First",
+                "second",
+                "Third"
+            ]);
+        });
+
+        describe("without tracker", () => {
+            beforeEach(() => (state.current_tracker = null));
+            it("returns an empty array", () => {
+                expect(selectbox_fields(state)).toEqual([]);
             });
         });
     });

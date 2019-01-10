@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,5 +32,7 @@ const READ_ONLY_FIELDS = [
 ];
 
 const COMPUTED_FIELD = "computed";
+const SELECTBOX_FIELD = "sb";
+const LIST_BIND_STATIC = "static";
 
-export { STRUCTURAL_FIELDS, READ_ONLY_FIELDS, COMPUTED_FIELD };
+export { STRUCTURAL_FIELDS, READ_ONLY_FIELDS, COMPUTED_FIELD, SELECTBOX_FIELD, LIST_BIND_STATIC };

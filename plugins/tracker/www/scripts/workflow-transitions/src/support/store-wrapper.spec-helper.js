@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,57 +18,7 @@
  *
  */
 
-import Vuex from "vuex";
-
-/**
- * Mock all properties which are functions.
- *
- * @param object which properties have to be mocked.
- * @returns {{}} New object with copied properties or mock if properties are functions.
- */
-function mockAllFunctions(object) {
-    return Object.keys(object).reduce(function(mocked_object, key) {
-        if (typeof object[key] === "function") {
-            mocked_object[key] = jasmine.createSpy(key);
-        } else {
-            mocked_object[key] = object[key];
-        }
-        return mocked_object;
-    }, {});
-}
-
-/**
- * Mock all given store modules.
- *
- * @param modules Object where each property represents a module
- * @returns {{}} New objects with mocked modules.
- */
-function mockModules(modules) {
-    return Object.keys(modules).reduce(function(mocked_modules, module) {
-        mocked_modules[module] = mockStoreOptions(modules[module]);
-        return mocked_modules;
-    }, {});
-}
-
-/**
- * Mock all actions, mutations, getters of a given store option.
- * If present, modules are handled with actions, mutations and getters also mocked.
- *
- * @param store_options
- * @returns {{}} New store options with mocked actions, mutations and getters.
- */
-function mockStoreOptions(store_options) {
-    const mocked_options = {
-        ...store_options,
-        actions: mockAllFunctions(store_options.actions),
-        mutations: mockAllFunctions(store_options.mutations),
-        getters: store_options.getters
-    };
-    if (store_options.modules) {
-        mocked_options.modules = mockModules(store_options.modules);
-    }
-    return mocked_options;
-}
+import { Store } from "vuex-mock-store";
 
 /**
  * Create a Vuex Store with all actions, mutations and getters mocked.
@@ -76,29 +26,17 @@ function mockStoreOptions(store_options) {
  *
  * @param store_options
  * @param custom_state
- * @returns {{store: Store<any>}} Store wrapper. Clean Vuex store is available through store property.
+ * @returns Store
  */
-export function createStoreWrapper(store_options, custom_state = {}) {
-    const mocked_store_options = mockStoreOptions(store_options);
-
+export function createStoreMock(store_options, custom_state = {}) {
     const state = Object.assign({}, store_options.state, custom_state);
-    const actions = mocked_store_options.actions;
-    const mutations = mocked_store_options.mutations;
-    const getters = mocked_store_options.getters;
-    const modules = mocked_store_options.modules;
-
-    return {
+    const options = Object.assign({}, store_options, {
         state,
-        actions,
-        mutations,
-        getters,
-        modules,
-        store: new Vuex.Store({
-            state,
-            actions,
-            mutations,
-            getters,
-            modules
-        })
-    };
+        spy: {
+            create: () => jasmine.createSpy(),
+            reset: spy => spy.and.stub()
+        }
+    });
+
+    return new Store(options);
 }

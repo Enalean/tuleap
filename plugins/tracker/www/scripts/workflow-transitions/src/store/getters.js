@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,6 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import { SELECTBOX_FIELD, LIST_BIND_STATIC } from "../../../constants/fields-constants.js";
+import { compare } from "../support/string.js";
 
 export const workflow_field_label = state => {
     if (state.current_tracker === null) {
@@ -46,3 +49,16 @@ export const current_tracker_id = state => {
 export const current_project_id = state => {
     return state.current_tracker !== null ? state.current_tracker.project.id : null;
 };
+
+export const selectbox_fields = state => {
+    if (!state.current_tracker) {
+        return [];
+    }
+
+    return state.current_tracker.fields
+        .filter(field => field.type === SELECTBOX_FIELD && field.bindings.type === LIST_BIND_STATIC)
+        .map(field => ({ id: field.field_id, label: field.label }))
+        .sort((field1, field2) => compare(field1.label, field2.label));
+};
+
+export const has_selectbox_fields = (state, getters) => getters.selectbox_fields.length > 0;

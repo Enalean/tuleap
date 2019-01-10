@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,35 +20,41 @@
 
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
+
 import BaseTrackerWorkflowTransitions from "./BaseTrackerWorkflowTransitions.vue";
-import FirstConfigurationSections from "./FirstConfigurationSections.vue";
+import FirstConfigurationImpossibleWarning from "./FirstConfiguration/FirstConfigurationImpossibleWarning.vue";
+import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
 import store_options from "../store/index.js";
-import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "../support/store-wrapper.spec-helper.js";
 import { create } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
 
 describe("BaseTrackerWorkflowTransitions", () => {
-    let store_wrapper;
+    let store;
     let wrapper;
 
     beforeEach(() => {
-        store_wrapper = createStoreWrapper(store_options, { is_operation_running: false });
+        store = createStoreMock(store_options, { is_operation_running: false });
         wrapper = shallowMount(BaseTrackerWorkflowTransitions, {
-            store: store_wrapper.store,
+            mocks: {
+                $store: store
+            },
             localVue,
             propsData: { trackerId: 1 }
         });
     });
+
+    afterEach(() => store.reset());
 
     const tracker_load_error_message_selector = '[data-test-type="tracker-load-error-message"]';
     const tracker_load_spinner_selector = '[data-test-type="tracker-load-spinner"]';
 
     describe("when tracker load failed", () => {
         beforeEach(() => {
-            store_wrapper.state.is_current_tracker_load_failed = true;
+            store.state.is_current_tracker_load_failed = true;
         });
 
         it("shows tracker load error message", () => {
@@ -63,8 +69,8 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     describe("when tracker loading", () => {
         beforeEach(() => {
-            store_wrapper.state.is_current_tracker_load_failed = false;
-            store_wrapper.state.is_current_tracker_loading = true;
+            store.state.is_current_tracker_load_failed = false;
+            store.state.is_current_tracker_loading = true;
         });
 
         it("shows tracker load spinner", () => {
@@ -79,32 +85,42 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     describe("when tracker loaded", () => {
         beforeEach(() => {
-            store_wrapper.state.is_current_tracker_load_failed = false;
-            store_wrapper.state.is_current_tracker_loading = false;
-            store_wrapper.state.current_tracker = {};
-            Vue.set(store_wrapper.state, "current_tracker", {});
+            store.state.is_current_tracker_load_failed = false;
+            store.state.is_current_tracker_loading = false;
+            store.state.current_tracker = {};
+            Vue.set(store.state, "current_tracker", {});
         });
 
-        describe("when base field not configured", () => {
+        describe("when base field is not configured", () => {
             beforeEach(() => {
                 Vue.set(
-                    store_wrapper.state.current_tracker,
+                    store.state.current_tracker,
                     "workflow",
                     create("workflow", "field_not_defined")
                 );
             });
-            it("shows first configuration", () => {
+
+            it("and there is a selectbox field, then it shows first configuration", () => {
+                store.getters.has_selectbox_fields = true;
+
                 expect(wrapper.contains(FirstConfigurationSections)).toBeTruthy();
             });
+
             it("does not show rules enforcement warning", () => {
                 expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeFalsy();
             });
+
+            it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", () => {
+                store.getters.has_selectbox_fields = false;
+
+                expect(wrapper.contains(FirstConfigurationImpossibleWarning)).toBeTruthy();
+            });
         });
 
-        describe("when base field configured", () => {
+        describe("when base field is configured", () => {
             beforeEach(() => {
                 Vue.set(
-                    store_wrapper.state.current_tracker,
+                    store.state.current_tracker,
                     "workflow",
                     create("workflow", "field_defined")
                 );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,32 +19,48 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+
 import PreConditionsSection from "./PreConditionsSection.vue";
 import localVue from "../../support/local-vue.js";
-import store_options from "../../store/index.js";
-import { createStoreWrapper } from "../../support/store-wrapper.spec-helper.js";
+import module_options from "../../store/transition-modal/module.js";
+import { createStoreMock } from "../../support/store-wrapper.spec-helper.js";
 import { create } from "../../support/factories";
 
 describe("PreConditionsSection", () => {
-    let store_wrapper;
+    let store;
     let wrapper;
 
     beforeEach(() => {
-        store_wrapper = createStoreWrapper(store_options, { current_tracker: null });
-        store_wrapper.modules.transitionModal.state.current_transition = null;
-        store_wrapper.modules.transitionModal.state.user_groups = null;
-        store_wrapper.modules.transitionModal.state.is_loading_modal = null;
+        const { state, mutations, actions } = module_options;
+        const store_options = {
+            state: {
+                current_tracker: null,
+                transitionModal: state
+            },
+            getters: {
+                "transitionModal/is_transition_from_new_artifact": false
+            },
+            mutations,
+            actions
+        };
+
+        store = createStoreMock(store_options);
 
         wrapper = shallowMount(PreConditionsSection, {
-            store: store_wrapper.store,
-            localVue
+            mocks: {
+                $store: store
+            },
+            localVue,
+            sync: false // Without this, store.reset() causes errors
         });
     });
+
+    afterEach(() => store.reset());
 
     describe("writable_fields", () => {
         describe("when no current tracker", () => {
             beforeEach(() => {
-                store_wrapper.state.current_tracker = null;
+                store.state.current_tracker = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.writable_fields).toEqual([]);
@@ -56,7 +72,7 @@ describe("PreConditionsSection", () => {
             const invalid_field = create("field", { type: "burndown" });
 
             beforeEach(() => {
-                store_wrapper.state.current_tracker = {
+                store.state.current_tracker = {
                     fields: [invalid_field, valid_field]
                 };
             });
@@ -69,7 +85,7 @@ describe("PreConditionsSection", () => {
 
             describe("which fields are not sorted", () => {
                 beforeEach(() => {
-                    store_wrapper.state.current_tracker.fields = [
+                    store.state.current_tracker.fields = [
                         create("field", { type: "valid", label: "second" }),
                         create("field", { type: "valid", label: "First" }),
                         create("field", { type: "valid", label: "Third" })
@@ -89,7 +105,7 @@ describe("PreConditionsSection", () => {
     describe("authorized_user_group_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = null;
+                store.state.transitionModal.current_transition = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.authorized_user_group_ids).toEqual([]);
@@ -99,7 +115,7 @@ describe("PreConditionsSection", () => {
         describe("with a current transition", () => {
             const authorized_user_group_ids = ["1", "2"];
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = {
+                store.state.transitionModal.current_transition = {
                     authorized_user_group_ids
                 };
             });
@@ -112,7 +128,7 @@ describe("PreConditionsSection", () => {
     describe("not_empty_field_ids", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = null;
+                store.state.transitionModal.current_transition = null;
             });
             it("returns empty array", () => {
                 expect(wrapper.vm.not_empty_field_ids).toEqual([]);
@@ -122,7 +138,7 @@ describe("PreConditionsSection", () => {
         describe("with a current transition", () => {
             const not_empty_field_ids = [1, 2];
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = {
+                store.state.transitionModal.current_transition = {
                     not_empty_field_ids
                 };
             });
@@ -135,7 +151,7 @@ describe("PreConditionsSection", () => {
     describe("transition_comment_not_empty", () => {
         describe("when no current transition", () => {
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = null;
+                store.state.transitionModal.current_transition = null;
             });
             it("returns false", () => {
                 expect(wrapper.vm.transition_comment_not_empty).toBeFalsy();
@@ -144,7 +160,7 @@ describe("PreConditionsSection", () => {
 
         describe("when current transition requires comment", () => {
             beforeEach(() => {
-                store_wrapper.modules.transitionModal.state.current_transition = {
+                store.state.transitionModal.current_transition = {
                     is_comment_required: true
                 };
             });
