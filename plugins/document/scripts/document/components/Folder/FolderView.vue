@@ -20,6 +20,7 @@
 <template>
     <div>
         <folder-header/>
+        <drag-n-drop-in-current-folder v-if="! is_loading_folder"/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <empty-folder-for-writers v-else-if="is_folder_empty && current_folder.user_can_write"/>
         <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>

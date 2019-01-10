@@ -18,7 +18,12 @@
   -->
 
 <template>
-    <a v-bind:href="old_url" class="switch-to-docman" translate>Switch to old user interface</a>
+    <div class="document-switch-to-docman">
+        <a v-bind:href="old_url" class="document-switch-to-docman-link">
+            <i class="fa fa-random document-switch-to-docman-icon"></i><!--
+            --><translate>Switch to old user interface</translate>
+        </a>
+    </div>
 </template>
 
 <script>

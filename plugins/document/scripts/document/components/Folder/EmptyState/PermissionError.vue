@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="empty-page">
+    <div class="empty-page document-folder-with-error">
         <div class="empty-page-illustration">
             <permission-error-svg/>
         </div>
