@@ -30,6 +30,7 @@ import {
 import { handleErrors, handleErrorsForModal } from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
+import { TYPE_FILE } from "../constants.js";
 
 export const loadRootFolder = async context => {
     try {
@@ -178,4 +179,15 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
     } catch (exception) {
         return handleErrors(context, exception);
     }
+};
+
+export const addNewUploadFile = (context, [file, parent]) => {
+    const fake_item = {
+        title: file.name,
+        parent_id: parent.id,
+        type: TYPE_FILE,
+        file_type: file.type,
+        is_uploading: true
+    };
+    context.commit("addJustCreatedDocumentToFolderContent", fake_item);
 };

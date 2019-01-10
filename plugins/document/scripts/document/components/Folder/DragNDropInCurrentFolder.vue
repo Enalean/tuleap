@@ -36,6 +36,11 @@ import { mapState, mapGetters } from "vuex";
 import { sprintf } from "sprintf-js";
 
 export default {
+    data() {
+        return {
+            main: null
+        };
+    },
     computed: {
         ...mapGetters(["current_folder_title"]),
         ...mapState(["current_folder"]),
@@ -57,30 +62,48 @@ export default {
             );
         }
     },
-    mounted() {
-        const main = document.querySelector(".document-main");
-        main.addEventListener("dragover", event => {
-            this.highlight();
-            event.preventDefault();
-            event.stopPropagation();
-        });
-        main.addEventListener("dragleave", event => {
-            this.unhighlight();
-            event.preventDefault();
-            event.stopPropagation();
-        });
-        main.addEventListener("drop", event => {
-            this.unhighlight();
-            event.preventDefault();
-            event.stopPropagation();
-        });
+    created() {
+        this.main = document.querySelector(".document-main");
+        this.main.addEventListener("dragover", this.ondragover);
+        this.main.addEventListener("dragleave", this.ondragleave);
+        this.main.addEventListener("drop", this.ondrop);
+    },
+    beforeDestroy() {
+        this.main.removeEventListener("dragover", this.ondragover);
+        this.main.removeEventListener("dragleave", this.ondragleave);
+        this.main.removeEventListener("drop", this.ondrop);
     },
     methods: {
+        ondragover(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.highlight();
+        },
+        ondragleave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.unhighlight();
+        },
+        ondrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.unhighlight();
+            this.upload(event);
+        },
         unhighlight() {
             this.$el.classList.remove(this.upload_current_folder_class);
         },
         highlight() {
             this.$el.classList.add(this.upload_current_folder_class);
+        },
+        upload({ dataTransfer }) {
+            if (!dataTransfer.files) {
+                return;
+            }
+
+            for (const file of dataTransfer.files) {
+                this.$store.dispatch("addNewUploadFile", [file, this.current_folder]);
+            }
         }
     }
 };
