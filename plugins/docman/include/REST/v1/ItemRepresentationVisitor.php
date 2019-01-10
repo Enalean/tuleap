@@ -73,7 +73,7 @@ class ItemRepresentationVisitor implements ItemVisitor
         $wiki_representation = null;
         if ($item->getPagename() !== null) {
             $wiki_representation = new WikiPropertiesRepresentation();
-            $wiki_html_url       = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item->getId());
+            $wiki_html_url       = $this->buildWikiUrl($item);
             $wiki_representation->build($item, $wiki_html_url);
         }
         return $this->item_representation_builder->buildItemRepresentation(
@@ -165,8 +165,20 @@ class ItemRepresentationVisitor implements ItemVisitor
         return $this->item_representation_builder->buildItemRepresentation($item, null, null);
     }
 
-    private function buildDocmanUrl($projectId, $itemId)
+    private function buildDocmanUrl($project_id, $item_id): string
     {
-        return '/plugins/docman/?group_id=' . urlencode($projectId) . '&action=show&id=' . urlencode($itemId);
+        return '/plugins/docman/?group_id=' . urlencode($project_id) . '&action=show&id=' . urlencode($item_id) . '&switcholdui=true';
+    }
+
+    /**
+     * @param Docman_Wiki $item
+     *
+     * @return string
+     */
+    private function buildWikiUrl(Docman_Wiki $item): string
+    {
+        $wiki_html_url = '/plugins/docman/?group_id=' .
+            urlencode($item->getGroupId()) . '&action=show&id=' . urlencode($item->getId()) . '&switcholdui=true';
+        return $wiki_html_url;
     }
 }

@@ -24,6 +24,8 @@
  *
  */
 
+use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
+use Tuleap\Docman\ExternalLinks\ExternalLinkRedirectionProcessor;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -382,10 +384,22 @@ class DocmanPlugin extends Plugin
         $this->cleanUnusedResources();
     }
 
-    function process() {
-        $controler = $this->getHTTPController();
-        $controler->process();
+    public function process()
+    {
+        $request   = HTTPRequest::instance();
+        $user      = $request->getCurrentUser();
+        $processor = new ExternalLinkRedirectionProcessor(
+            EventManager::instance(),
+            new ExternalLinkParametersExtractor()
+        );
+
+        $has_processed = $processor->processIfPossible($request, $user);
+
+        if ($has_processed === false) {
+            $this->getHTTPController()->process();
+        }
     }
+
 
     public function processSOAP($request) {
         return $this->getSOAPController($request)->process();

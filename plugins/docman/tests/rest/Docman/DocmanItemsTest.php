@@ -84,7 +84,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[2]['file_properties']['file_type'], 'application/pdf');
         $this->assertEquals(
             $items[2]['file_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[2]['id'])
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[2]['id']). '&switcholdui=true'
         );
         $this->assertEquals($items[3]['file_properties'], null);
         $this->assertEquals($items[4]['file_properties'], null);
@@ -96,7 +96,7 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[3]['link_properties']['link_url'], 'https://my.example.test');
         $this->assertEquals(
             $items[3]['link_properties']['html_url'],
-            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[3]['id'])
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' . urlencode($items[3]['id']). '&switcholdui=true'
         );
         $this->assertEquals($items[4]['link_properties'], null);
         $this->assertEquals($items[5]['link_properties'], null);
@@ -126,7 +126,11 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[3]['wiki_properties'], null);
         $this->assertEquals($items[4]['wiki_properties'], null);
         $this->assertEquals($items[5]['wiki_properties']['page_name'], 'MyWikiPage');
-        $this->assertEquals($items[5]['wiki_properties']['html_url'], '/plugins/docman/?group_id='.urlencode($this->project_id).'&action=show&id='.urlencode($items[5]['id']));
+        $this->assertEquals(
+            $items[5]['wiki_properties']['html_url'],
+            '/plugins/docman/?group_id=' . urlencode($this->project_id) . '&action=show&id=' .
+            urlencode($items[5]['id']) . '&switcholdui=true'
+        );
 
         return $items;
     }

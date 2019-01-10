@@ -18,13 +18,14 @@
  */
 
 import {
+    addNewDocument,
+    deleteUserPreferenciesForFolderInProject,
+    getFolderContent,
     getItem,
     getProject,
-    getFolderContent,
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
-    deleteUserPreferenciesForFolderInProject,
-    addNewDocument
+    patchUserPreferenciesForUIInProject
 } from "../api/rest-querier.js";
 
 import { handleErrors, handleErrorsForModal } from "./actions-helpers/handle-errors.js";
@@ -210,4 +211,15 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
     context.commit("addJustCreatedDocumentToFolderContent", fake_item);
 
     uploadFile(context, dropped_file, fake_item, new_file);
+};
+
+export const setUserPreferenciesForUI = async context => {
+    try {
+        return await patchUserPreferenciesForUIInProject(
+            context.state.user_id,
+            context.state.project_id
+        );
+    } catch (exception) {
+        return handleErrors(context, exception);
+    }
 };
