@@ -73,7 +73,7 @@ class BurndownRemainingEffortAdderForREST
 
         if ($burndown_data->getTimePeriod()->isTodayWithinTimePeriod()) {
             $remaining_effort = $field->getComputedValue($user, $artifact, null);
-            $burndown_data->addEffortAtDateTime($this->getMidnightDate(new DateTime()), $remaining_effort);
+            $burndown_data->addEffortAtDateTime($this->getLastTodayTime(new DateTime()), $remaining_effort);
             $burndown_data->addEffortAt(count($cached_days_result) + 1, $remaining_effort);
         }
     }
@@ -81,9 +81,9 @@ class BurndownRemainingEffortAdderForREST
     /**
      * @return DateTime
      */
-    private function getMidnightDate(DateTime $date)
+    private function getLastTodayTime(DateTime $date)
     {
-        $date->setTime(0, 0, 0);
+        $date->setTime(23, 59, 59);
 
         return $date;
     }
