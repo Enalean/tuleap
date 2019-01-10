@@ -45,35 +45,26 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT SimpleTest PHP 5.6') {
-                    steps { script { actions.runSimpleTestTests('56') } }
-                    post { always { junit 'results/ut-simpletest/php-56/results.xml' } }
-                }
                 stage('UT SimpleTest PHP 7.2') {
                     steps { script { actions.runSimpleTestTests('72') } }
                     post { always { junit 'results/ut-simpletest/php-72/results.xml' } }
                 }
                 stage('UT PHPUnit') {
                     stages {
-                        stage('UT PHPUnit PHP 5.6') { steps { script { actions.runPHPUnitTests('56') } } }
                         stage('UT PHPUnit PHP 7.2') { steps { script { actions.runPHPUnitTests('72') } } }
                     }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
                 stage('REST') {
                     stages {
-                        stage('REST CentOS 6 PHP 5.6 MySQL 5.6') {
-                            steps { script { actions.runRESTTests('c6-php56-mysql56') } }
-                        }
-                        stage('REST CentOS 6 PHP 7.2 MySQL 5.6') {
-                            steps { script { actions.runRESTTests('c6-php72-mysql56') } }
+                        stage('REST CentOS 6 PHP 7.2 MySQL 5.7') {
+                            steps { script { actions.runRESTTests('c6-php72-mysql57') } }
                         }
                     }
                     post { always { junit 'results/api-rest/*/rest_tests.xml' } }
                 }
                 stage('SOAP') {
                     stages {
-                        stage('SOAP PHP 5.6') { steps { script { actions.runSOAPTests('php-56', '3') } } }
                         stage('SOAP PHP 7.2') { steps { script { actions.runSOAPTests('php-72', '4') } } }
                     }
                     post { always { junit "results/api-soap/*/soap_tests.xml" } }
