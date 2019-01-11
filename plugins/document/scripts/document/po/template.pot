@@ -29,8 +29,8 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
-msgid "Drop one file to upload it to %{ folder }."
-msgid_plural "Drop up to %{ n } files to upload them to %{ folder }."
+msgid "Drop one file to upload it to %(folder)s."
+msgid_plural "Drop up to %(nb_files)s files to upload them to %(folder)s."
 msgstr[0] ""
 msgstr[1] ""
 

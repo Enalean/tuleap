@@ -43,14 +43,14 @@ export default {
         ...mapGetters(["current_folder_title"]),
         ...mapState(["max_files_dragndrop"]),
         message_success() {
-            return this.$gettextInterpolate(
+            return sprintf(
                 this.$ngettext(
-                    "Drop one file to upload it to %{ folder }.",
-                    "Drop up to %{ n } files to upload them to %{ folder }.",
+                    "Drop one file to upload it to %(folder)s.",
+                    "Drop up to %(nb_files)s files to upload them to %(folder)s.",
                     this.max_files_dragndrop
                 ),
                 {
-                    n: this.max_files_dragndrop,
+                    nb_files: this.max_files_dragndrop,
                     folder: this.current_folder_title
                 }
             );
