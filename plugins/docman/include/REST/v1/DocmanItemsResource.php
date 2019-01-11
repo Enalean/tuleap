@@ -144,6 +144,8 @@ class DocmanItemsResource extends AuthenticatedResource
      * @param DocmanItemPOSTRepresentation $docman_item_post_representation
      *
      * @url    POST
+     * @access hybrid
+
      * @status 201
      *
      * @return CreatedItemRepresentation
@@ -153,7 +155,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @throws 404
      * @throws 409
      */
-    protected function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
+    public function post(DocmanItemPOSTRepresentation $docman_item_post_representation)
     {
         $this->checkAccess();
         $this->sendAllowHeadersWithPost();
