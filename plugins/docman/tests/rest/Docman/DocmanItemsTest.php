@@ -297,7 +297,7 @@ class DocmanItemsTest extends DocmanBase
     /**
      * @depends testGetRootId
      */
-    public function testPostWikiDocument($root_id): void
+    public function testPostWikiDocument(int $root_id): void
     {
         $headers = ['Content-Type' => 'application/json'];
         $wiki_properties = ['page_name' => 'Ten steps to become a Tuleap'];

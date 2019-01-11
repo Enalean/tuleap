@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,8 @@ use PluginManager;
 use Project;
 use REST_TestDataBuilder;
 
+require_once __DIR__ .'/DocmanDatabaseInitialization.php';
+
 class DocmanDataBuilder extends REST_TestDataBuilder
 {
     const PROJECT_NAME                 = 'DocmanProject';
@@ -50,6 +52,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
     {
         $plugin_manager = PluginManager::instance();
         $plugin_manager->installAndActivate('docman');
+        $this->activateWikiServiceForTheProject();
     }
 
     private function addItem(Project $project, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
@@ -210,5 +213,12 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $docman_user = $this->user_manager->getUserByUserName(self::DOCMAN_REGULAR_USER_NAME);
         $docman_user->setPassword(self::DOCMAN_REGULAR_USER_PASSWORD);
         $this->user_manager->updateDb($docman_user);
+    }
+
+    private function activateWikiServiceForTheProject(): void
+    {
+        $project = $this->project_manager->getProjectByUnixName(self::PROJECT_NAME);
+        $initializer = new DocmanDatabaseInitialization();
+        $initializer->setup($project);
     }
 }

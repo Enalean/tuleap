@@ -127,6 +127,7 @@ class DocmanItemCreatorTest extends TestCase
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user->shouldReceive('getId')->andReturns(222);
         $project->shouldReceive('getID')->andReturns(102);
+        $project->shouldReceive('usesWiki')->andReturn(true);
         $this->event_manager->shouldReceive('processEvent');
 
         $created_item = \Mockery::mock(\Docman_Empty::class);
@@ -151,6 +152,57 @@ class DocmanItemCreatorTest extends TestCase
 
         $this->assertSame(12, $created_item_representation->id);
         $this->assertNull($created_item_representation->file_properties);
+    }
+
+    /**
+     * @expectedException \Luracast\Restler\RestException
+     * @expectedExceptionCode 400
+     */
+    public function testWikiDocumentCannotBeCreatedIfServiceWikiIsNotAvailable()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation                  = new DocmanItemPOSTRepresentation();
+        $post_representation->type            = ItemRepresentation::TYPE_WIKI;
+        $post_representation->title           = 'Title';
+        $post_representation->parent_id       = 11;
+        $post_representation->wiki_properties = json_decode(json_encode(["page_name" => "Monchichi"]));
+
+        $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(false);
+        $parent_item->shouldReceive('getId')->andReturns(11);
+        $user->shouldReceive('getId')->andReturns(222);
+        $project->shouldReceive('getID')->andReturns(102);
+        $this->event_manager->shouldReceive('processEvent');
+
+        $created_item = \Mockery::mock(\Docman_Empty::class);
+        $created_item->shouldReceive('getId')->andReturns(12);
+        $created_item->shouldReceive('getParentId')->andReturns(11);
+        $created_item->makePartial();
+
+        $this->item_factory
+            ->shouldReceive('createWithoutOrdering')
+            ->never();
+
+        $project->shouldReceive('usesWiki')->andReturn(false);
+        $project->shouldReceive('getUnixName')->once();
+
+        $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time
+        );
     }
 
     public function testFileDocumentCanBeCreated()

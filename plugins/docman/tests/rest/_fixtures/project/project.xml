@@ -6,6 +6,7 @@
         <service shortname="admin" enabled="1"/>
         <service shortname="mail" enabled="0"/>
         <service shortname="docman" enabled="1"/>
+        <service shortname="wiki" enabled="1"/>
         <service shortname="plugin_svn" enabled="0"/>
         <service shortname="file" enabled="0"/>
         <service shortname="plugin_tracker" enabled="0"/>
