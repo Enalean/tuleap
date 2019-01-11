@@ -25,7 +25,6 @@
         <empty-folder-for-writers v-else-if="is_folder_empty && current_folder.user_can_write"/>
         <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
         <folder-content v-else/>
-        <drag-n-drop-in-current-folder v-if="current_folder"/>
     </div>
 </template>
 <script>
