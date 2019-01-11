@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,27 +20,45 @@
 
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFile;
+use Tuleap\Docman\Tus\TusFileInformation;
 
-final class DocumentAlreadyUploaded implements TusFile
+final class DocumentBeingUploadedInformation implements TusFileInformation
 {
     /**
      * @var int
      */
+    private $id;
+    /**
+     * @var int
+     */
     private $length;
+    /**
+     * @var int
+     */
+    private $offset;
 
-    public function __construct($length)
+    public function __construct(int $id, int $length, int $offset)
     {
+        $this->id = $id;
         if ($length < 0) {
             throw new \UnexpectedValueException('The length must be positive');
         }
         $this->length = $length;
+        if ($offset < 0) {
+            throw new \UnexpectedValueException('The offset must be positive');
+        }
+        $this->offset = $offset;
+    }
+
+    public function getID() : int
+    {
+        return $this->id;
     }
 
     /**
      * @return int
      */
-    public function getLength()
+    public function getLength() : int
     {
         return $this->length;
     }
@@ -48,16 +66,8 @@ final class DocumentAlreadyUploaded implements TusFile
     /**
      * @return int
      */
-    public function getOffset()
+    public function getOffset() : int
     {
-        return $this->length;
-    }
-
-    /**
-     * @return \resource
-     */
-    public function getStream()
-    {
-        return fopen('php://memory', 'rb');
+        return $this->offset;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,11 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFileProvider;
+use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Docman\Tus\TusFileInformationProvider;
 
-final class DocumentBeingUploadedProvider implements TusFileProvider
+final class DocumentBeingUploadedInformationProvider implements TusFileInformationProvider
 {
     /**
      * @var DocumentUploadPathAllocator
@@ -47,7 +50,7 @@ final class DocumentBeingUploadedProvider implements TusFileProvider
         $this->item_factory   = $item_factory;
     }
 
-    public function getFile(\Psr\Http\Message\ServerRequestInterface $request)
+    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation
     {
         $item_id = $request->getAttribute('item_id');
         $user_id = $request->getAttribute('user_id');
@@ -59,29 +62,20 @@ final class DocumentBeingUploadedProvider implements TusFileProvider
         $document_row = $this->dao->searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate(
             $item_id,
             $user_id,
-            (new \DateTimeImmutable)->getTimestamp()
+            (new \DateTimeImmutable())->getTimestamp()
         );
         if (empty($document_row)) {
             return null;
         }
         $existing_item = $this->item_factory->getItemFromDb($item_id);
         if ($existing_item !== null) {
-            return new DocumentAlreadyUploaded($document_row['filesize']);
+            return new DocumentAlreadyUploadedInformation((int) $item_id, $document_row['filesize']);
         }
 
-        $allocated_path           = $this->path_allocator->getPathForItemBeingUploaded($item_id);
-        $allocated_path_directory = dirname($allocated_path);
+        $allocated_path = $this->path_allocator->getPathForItemBeingUploaded($item_id);
 
-        if (! \is_dir($allocated_path_directory) &&
-            ! \mkdir($allocated_path_directory, 0777, true) && ! \is_dir($allocated_path_directory)) {
-            return null;
-        }
+        $current_file_size = file_exists($allocated_path) ? filesize($allocated_path) : 0;
 
-        if (! file_exists($allocated_path)) {
-            touch($allocated_path);
-        }
-        $handle = fopen($allocated_path, 'ab');
-
-        return new DocumentBeingUploaded($handle, $document_row['filesize'], filesize($allocated_path));
+        return new DocumentBeingUploadedInformation((int) $item_id, $document_row['filesize'], $current_file_size);
     }
 }

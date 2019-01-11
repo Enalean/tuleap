@@ -37,7 +37,7 @@ use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
-use Tuleap\Docman\Upload\DocumentBeingUploadedProvider;
+use Tuleap\Docman\Upload\DocumentBeingUploadedInformationProvider;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -1249,13 +1249,16 @@ class DocmanPlugin extends Plugin
             return new \Tuleap\Docman\Upload\FileUploadController(
                 new TusServer(
                     MessageFactoryBuilder::build(),
-                    new DocumentBeingUploadedProvider(
-                        $path_allocator,
-                        $document_ongoing_upload_dao,
-                        $this->getItemFactory()
-                    ),
-                    new \Tuleap\Docman\Tus\GenericTusEventDispatcher(
-                        new \Tuleap\Docman\Upload\DocumentUploaded(
+                    new \Tuleap\Docman\Upload\DocumentDataStore(
+                        new \Tuleap\Docman\Upload\DocumentBeingUploadedInformationProvider(
+                            $path_allocator,
+                            $document_ongoing_upload_dao,
+                            $this->getItemFactory()
+                        ),
+                        new \Tuleap\Docman\Upload\DocumentBeingUploadedWriter(
+                            $path_allocator
+                        ),
+                        new \Tuleap\Docman\Upload\DocumentUploadFinisher(
                             new BackendLogger(),
                             $path_allocator,
                             $this->getItemFactory(),

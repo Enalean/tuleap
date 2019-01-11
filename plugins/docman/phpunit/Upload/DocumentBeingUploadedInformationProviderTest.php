@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,40 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DocumentBeingUploadedProviderTest extends TestCase
+class DocumentBeingUploadedInformationProviderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var vfsStreamDirectory
-     */
-    private $tmp_dir;
-
-    protected function setUp()
+    public function testFileInformationCanBeProvided() : void
     {
-        \ForgeConfig::store();
-        $this->tmp_dir = vfsStream::setup();
-        \ForgeConfig::set('tmp_dir', $this->tmp_dir->url());
-    }
-
-    protected function tearDown()
-    {
-        \ForgeConfig::restore();
-    }
-
-    public function testFileIsCreatedIfItDoesNotExist()
-    {
-        $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentBeingUploadedProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
+        $path_allocator = new DocumentUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
+        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456
@@ -59,40 +43,44 @@ class DocumentBeingUploadedProviderTest extends TestCase
         $item_factory->shouldReceive('getItemFromDb')->andReturns(null);
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns('12');
+        $item_id = 12;
+        $request->shouldReceive('getAttribute')->with('item_id')->andReturns((string) $item_id);
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
+        $file_information = $data_store->getFileInformation($request);
 
-        $file = $file_provider->getFile($request);
-        $this->assertCount(1, $this->tmp_dir->getChildren());
-        $this->assertSame(123456, $file->getLength());
-        $this->assertSame(0, $file->getOffset());
+        $this->assertSame($item_id, $file_information->getID());
+        $this->assertSame(123456, $file_information->getLength());
+        $this->assertSame(0, $file_information->getOffset());
     }
 
-    public function testFileIsNotCreatedAgainWhenIfItHasAlreadyBeenUploaded()
+    public function testFileInformationCanBeProvidedWhenTheFileHasAlreadyBeenUploaded() : void
     {
-        $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
-        $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentBeingUploadedProvider(new DocumentUploadPathAllocator(), $dao, $item_factory);
+        $path_allocator = new DocumentUploadPathAllocator();
+        $dao            = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $item_factory   = \Mockery::mock(\Docman_ItemFactory::class);
+        $data_store     = new DocumentBeingUploadedInformationProvider($path_allocator, $dao, $item_factory);
 
         $dao->shouldReceive('searchDocumentOngoingUploadByItemIDUserIDAndExpirationDate')->andReturns([
             'filesize' => 123456
         ]);
-        $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_File::class));
+        $item_factory->shouldReceive('getItemFromDb')->andReturns(\Mockery::mock(\Docman_Item::class));
 
         $request = \Mockery::mock(ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns('12');
+        $item_id = 12;
+        $request->shouldReceive('getAttribute')->with('item_id')->andReturns((string) $item_id);
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
-        $file = $file_provider->getFile($request);
-        $this->assertCount(0, $this->tmp_dir->getChildren());
-        $this->assertSame(123456, $file->getLength());
-        $this->assertSame(123456, $file->getOffset());
+        $file_information = $data_store->getFileInformation($request);
+
+        $this->assertSame($item_id, $file_information->getID());
+        $this->assertSame(123456, $file_information->getLength());
+        $this->assertSame(123456, $file_information->getOffset());
     }
 
-    public function testDocumentCannotBeFoundIfRequestAttributesAreMissing()
+    public function testFileInformationCannotBeFoundIfRequestAttributesAreMissing() : void
     {
-        $file_provider = new DocumentBeingUploadedProvider(
+        $data_store = new DocumentBeingUploadedInformationProvider(
             new DocumentUploadPathAllocator(),
             \Mockery::mock(DocumentOngoingUploadDAO::class),
             \Mockery::mock(\Docman_ItemFactory::class)
@@ -101,14 +89,14 @@ class DocumentBeingUploadedProviderTest extends TestCase
         $request = \Mockery::mock(ServerRequestInterface::class);
         $request->shouldReceive('getAttribute')->andReturns(null);
 
-        $this->assertNull($file_provider->getFile($request));
+        $this->assertNull($data_store->getFileInformation($request));
     }
 
-    public function testDocumentCannotBeFoundIfThereIsNotAValidEntryInTheDatabase()
+    public function testFileInformationCannotBeFoundIfThereIsNotAValidEntryInTheDatabase() : void
     {
         $dao           = \Mockery::mock(DocumentOngoingUploadDAO::class);
         $item_factory  = \Mockery::mock(\Docman_ItemFactory::class);
-        $file_provider = new DocumentBeingUploadedProvider(
+        $data_store = new DocumentBeingUploadedInformationProvider(
             new DocumentUploadPathAllocator(),
             $dao,
             $item_factory
@@ -122,6 +110,6 @@ class DocumentBeingUploadedProviderTest extends TestCase
         $request->shouldReceive('getAttribute')->with('user_id')->andReturns('102');
 
 
-        $this->assertNull($file_provider->getFile($request));
+        $this->assertNull($data_store->getFileInformation($request));
     }
 }
