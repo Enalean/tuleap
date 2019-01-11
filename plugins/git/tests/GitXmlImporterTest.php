@@ -25,15 +25,6 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 use Tuleap\Git\XmlUgroupRetriever;
 
-Mock::generate('GitDao', 'MockGitDao');
-
-class MyMockGitDao extends MockGitDao {
-    public $last_saved_repository;
-    public function save(GitRepository $repository) {
-        $this->last_saved_repository = $repository;
-        return true;
-    }
-}
 
 class GitXmlImporterTest extends TuleapTestCase {
     /**
@@ -92,6 +83,11 @@ class GitXmlImporterTest extends TuleapTestCase {
      */
     private $event_manager;
 
+    /**
+     * @var GitRepository|null
+     */
+    private $last_saved_repository;
+
     public function setUp() {
         $this->old_cwd = getcwd();
         $this->system_command = new System_Command();
@@ -107,7 +103,13 @@ class GitXmlImporterTest extends TuleapTestCase {
         ForgeConfig::store();
         ForgeConfig::set('tmp_dir', parent::getTmpDir());
 
-        $this->git_dao = new MyMockGitDao();
+        $this->git_dao = \Mockery::spy(GitDao::class);
+        $this->git_dao->shouldReceive('save')->with(\Mockery::on(
+            function (GitRepository $repository) : bool {
+                $this->last_saved_repository = $repository;
+                return true;
+            }
+        ));
         $plugin_dao = mock('PluginDao');
         ProjectManager::clearInstance();
         $this->project_manager = ProjectManager::instance();
@@ -246,7 +248,7 @@ XML;
         $xml_element = new SimpleXMLElement($xml);
         $res = $this->importer->import(new Tuleap\Project\XML\Import\ImportConfig(), $this->project, mock('PFUSer'), $xml_element, parent::getTmpDir());
 
-        $this->assertEqual($this->git_dao->last_saved_repository->getName(), 'empty');
+        $this->assertEqual($this->last_saved_repository->getName(), 'empty');
 
         $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'].'/gitolite/repositories/test_project');
         $empty_is_here = false;
@@ -381,7 +383,7 @@ XML;
             </project>
 XML;
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual('description stable', $this->git_dao->last_saved_repository->getDescription());
+        $this->assertEqual('description stable', $this->last_saved_repository->getDescription());
     }
 
     public function itShouldImportDefaultDescription() {
@@ -393,7 +395,7 @@ XML;
             </project>
 XML;
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->git_dao->last_saved_repository->getDescription());
+        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 
     public function itShouldAtLeastSetProjectsAdminAsGitAdmins() {
@@ -692,6 +694,6 @@ XML;
         stub($this->user_finder)->getUser()->returns(aUser()->withId(102)->build());
         expect($this->git_dao)->logGitPush()->once();
         $this->import(new SimpleXMLElement($xml));
-        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->git_dao->last_saved_repository->getDescription());
+        $this->assertEqual(GitRepository::DEFAULT_DESCRIPTION, $this->last_saved_repository->getDescription());
     }
 }

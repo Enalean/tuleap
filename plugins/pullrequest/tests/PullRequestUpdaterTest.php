@@ -24,6 +24,7 @@ use Tuleap\PullRequest\GitReference\GitPullRequestReferenceUpdater;
 use \TuleapDbTestCase;
 use \GitRepository;
 use \ForgeConfig;
+use Tuleap\PullRequest\InlineComment\Dao as InlineCommentDAO;
 
 require_once 'bootstrap.php';
 
@@ -60,7 +61,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $reference_manager = mock('ReferenceManager');
 
         $this->dao = new Dao();
-        $this->inline_comments_dao    = mock('Tuleap\PullRequest\InlineComment\Dao');
+        $this->inline_comments_dao    = \Mockery::spy(InlineCommentDAO::class);
         $this->git_repository_factory = mock('GitRepositoryFactory');
         $this->git_exec_factory       = \Mockery::mock(GitExecFactory::class);
         $this->pull_request_updater   = new PullRequestUpdater(
@@ -96,7 +97,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock(GitRepository::class);
         stub($git_repo)->getId()->returns(1);
 
-        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
 
         stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));
@@ -120,7 +121,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock(GitRepository::class);
         stub($git_repo)->getId()->returns(1);
 
-        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
 
         stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));
@@ -145,7 +146,7 @@ class PullRequestUpdaterTest extends TuleapDbTestCase
         $git_repo = mock('\GitRepository');
         stub($git_repo)->getId()->returns(1);
 
-        stub($this->inline_comments_dao)->searchUpToDateByPullRequestId()->returns(array());
+        $this->inline_comments_dao->shouldReceive('searchUpToDateByPullRequestId')->andReturns([]);
 
         stub($this->git_repository_factory)->getRepositoryById()->returns($git_repo);
         $this->git_exec_factory->shouldReceive('getGitExec')->with($git_repo)->andReturns(\Mockery::spy($this->git_exec));

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -165,7 +165,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      */
     public function quoteSmart($value, $params = array())
     {
-        return $this->db->quote($value);
+        return $this->db->quote((string) $value);
     }
 
     /**
@@ -178,7 +178,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      */
     public function quoteSmartSchema($value, $params = array())
     {
-        return $this->db->escapeIdentifier($value);
+        return $this->db->escapeIdentifier((string) $value);
     }
 
     /**
@@ -259,6 +259,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      */
     public function escapeLikeValue($value)
     {
+        $value = $value ?? '';
         return $this->db->escapeLikeValue($value);
     }
 

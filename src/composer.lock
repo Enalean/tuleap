@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac11e9a2646be8ec7eff50fd7cc97832",
+    "content-hash": "a7300f942c1fea9e4e3a917982677f14",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -861,26 +861,68 @@
             "time": "2018-02-13T20:26:39+00:00"
         },
         {
-            "name": "paragonie/easydb",
-            "version": "v1.6.2",
+            "name": "paragonie/corner",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/paragonie/easydb.git",
-                "reference": "dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f"
+                "url": "https://github.com/paragonie/corner.git",
+                "reference": "6a02dcefde29e795432a9a5850ff6c240dc596d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/easydb/zipball/dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f",
-                "reference": "dcabf9d00c28a102a1cffdd01e1adaf3a58bc20f",
+                "url": "https://api.github.com/repos/paragonie/corner/zipball/6a02dcefde29e795432a9a5850ff6c240dc596d2",
+                "reference": "6a02dcefde29e795432a9a5850ff6c240dc596d2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7",
+                "vimeo/psalm": "^2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ParagonIE\\Corner\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com"
+                }
+            ],
+            "description": "Generic PHP Exceptions and Errors, made user-friendly.",
+            "time": "2018-12-20T23:52:02+00:00"
+        },
+        {
+            "name": "paragonie/easydb",
+            "version": "v2.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/easydb.git",
+                "reference": "daeaac952ba5f036a520b31d87b089679f09ae24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/easydb/zipball/daeaac952ba5f036a520b31d87b089679f09ae24",
+                "reference": "daeaac952ba5f036a520b31d87b089679f09ae24",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^5.5|^7"
+                "paragonie/corner": "^1|^2",
+                "php": "^7"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4|^5",
-                "squizlabs/php_codesniffer": "^2.7"
+                "phpunit/phpunit": "^5",
+                "squizlabs/php_codesniffer": "^2.7",
+                "vimeo/psalm": "^1|^2"
             },
             "type": "library",
             "autoload": {
@@ -917,7 +959,7 @@
                 "security",
                 "sql"
             ],
-            "time": "2018-06-14T17:14:21+00:00"
+            "time": "2019-01-03T20:31:26+00:00"
         },
         {
             "name": "php-amqplib/php-amqplib",

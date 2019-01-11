@@ -29,7 +29,6 @@ Mock::generate('Backend');
 Mock::generate('Git_GitoliteDriver');
 Mock::generatePartial('Git_Backend_Gitolite', 'Git_Backend_GitoliteTestVersion', array('getDao', 'loadRepositoryFromId'));
 Mock::generate('GitRepository');
-Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
@@ -51,7 +50,7 @@ abstract class Git_Backend_GitoliteCommonTest extends TuleapTestCase {
 
     protected function _GivenABackendGitolite() {
         $driver             = mock('Git_GitoliteDriver');
-        $dao                = mock('GitDao');
+        $dao                = \Mockery::spy(GitDao::class);
         $permissionsManager = mock('PermissionsManager');
         $gitPlugin          = \Mockery::mock(GitPlugin::class);
         $backend = new Git_Backend_Gitolite($driver, mock(GitoliteAccessURLGenerator::class), mock('Logger'));
@@ -125,13 +124,12 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $old_repo->setProject($project);
 
         $backend = partial_mock('Git_Backend_Gitolite', array('clonePermissions'), array($driver, mock(GitoliteAccessURLGenerator::class), mock('Logger')));
-        $dao = mock('GitDao');
+        $dao = \Mockery::spy(GitDao::class);
         $backend->setDao($dao);
 
         $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
-        $dao->expectOnce('save', array($new_repo));
-        stub($dao)->save()->returns(667);
-        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
+        $dao->shouldReceive('save')->with($new_repo)->once()->andReturns(667);
+        $dao->shouldReceive('isRepositoryExisting')->with(\Mockery::any(), $new_repo_path)->andReturns(false);
 
         $this->assertEqual(667, $backend->fork($old_repo, $new_repo, $this->forkPermissions));
     }
@@ -203,7 +201,7 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $new_repo_path = "gpig/$new_namespace/$name.git";
 
         $driver     = new MockGit_GitoliteDriver();
-        $dao        = new MockGitDao();
+        $dao        = \Mockery::spy(GitDao::class);
 
         $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
         $new_repo->setPath($new_repo_path);
@@ -218,8 +216,8 @@ class Git_Backend_GitoliteTest extends Git_Backend_GitoliteCommonTest {
         $this->expectException('GitRepositoryAlreadyExistsException');
 
         $backend->expectNever('clonePermissions');
-        $dao->expectNever('save');
-        $dao->setReturnValue('isRepositoryExisting', true, array($project_id, $new_repo_path));
+        $dao->shouldNotReceive('save');
+        $dao->shouldReceive('isRepositoryExisting')->with($project_id, $new_repo_path)->andReturns(true);
         $driver->expectNever('fork');
         $driver->expectNever('dumpProjectRepoConf');
         $driver->expectNever('push');
@@ -282,13 +280,14 @@ class Git_Backend_Gitolite_disconnectFromGerrit extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->repository = aGitRepository()->withId($this->repo_id)->build();
-        $this->dao        = mock('GitDao');
+        $this->dao        = \Mockery::spy(GitDao::class);
         $this->backend    = partial_mock('Git_Backend_Gitolite', array('updateRepoConf'));
         $this->backend->setDao($this->dao);
     }
 
-    public function itAsksToDAOToDisconnectFromGerrit() {
-        expect($this->dao)->disconnectFromGerrit($this->repo_id)->once();
+    public function itAsksToDAOToDisconnectFromGerrit()
+    {
+        $this->dao->shouldReceive('disconnectFromGerrit')->with($this->repo_id)->once();
 
         $this->backend->disconnectFromGerrit($this->repository);
     }
