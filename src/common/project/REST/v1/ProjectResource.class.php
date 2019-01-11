@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,9 +87,6 @@ use WikiDao;
 class ProjectResource extends AuthenticatedResource {
 
     const MAX_LIMIT = 50;
-
-    /** Query parameter used to filter returned user groups */
-    const WITH_SYSTEM_USER_GROUPS = 'with_system_user_groups';
 
     /** @var LabelsCurlyCoatedRetriever */
     private $labels_retriever;
@@ -1125,13 +1122,17 @@ class ProjectResource extends AuthenticatedResource {
      *
      * @return array {@type Tuleap\Project\REST\v1\UserGroupRepresentation}
      * @throws I18NRestException 400
+     * @throws \Tuleap\REST\Exceptions\InvalidJsonException
      */
     protected function getUserGroups($id, $query = '')
     {
         $project = $this->getProjectForUser($id);
         $this->userCanSeeUserGroups($id);
 
-        if ($query === '') {
+        $queryRepresentation = $this->getUserGroupQueryParser()->parse($query);
+        if ($queryRepresentation->isWithSystemUserGroups()) {
+            $ugroups = $this->ugroup_manager->getAvailableUGroups($project);
+        } else {
             $excluded_ugroups_ids = [
                 ProjectUGroup::NONE,
                 ProjectUGroup::ANONYMOUS,
@@ -1139,31 +1140,6 @@ class ProjectResource extends AuthenticatedResource {
                 ProjectUGroup::AUTHENTICATED
             ];
             $ugroups = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
-        } else {
-            $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-            if (isset($json_query[self::WITH_SYSTEM_USER_GROUPS])) {
-                if ($json_query[self::WITH_SYSTEM_USER_GROUPS] === true) {
-                    $ugroups = $this->ugroup_manager->getAvailableUGroups($project);
-                } elseif ($json_query[self::WITH_SYSTEM_USER_GROUPS] === false) {
-                    $excluded_ugroups_ids = [
-                        ProjectUGroup::NONE,
-                        ProjectUGroup::ANONYMOUS,
-                        ProjectUGroup::REGISTERED,
-                        ProjectUGroup::AUTHENTICATED
-                    ];
-                    $ugroups = $this->ugroup_manager->getUGroups($project, $excluded_ugroups_ids);
-                } else {
-                    throw new I18NRestException(400, sprintf(
-                        dgettext('tuleap-core', 'parameter "query", property "%s" invalid type: boolean expected'),
-                        self::WITH_SYSTEM_USER_GROUPS
-                    ));
-                }
-            } else {
-                throw new I18NRestException(400, sprintf(
-                    dgettext('tuleap-core', 'parameter "query" syntax error: "%s" property not found'),
-                    self::WITH_SYSTEM_USER_GROUPS
-                ));
-        }
         }
         $user_groups = $this->getUserGroupsRepresentations($ugroups, $id);
 
@@ -1627,5 +1603,10 @@ class ProjectResource extends AuthenticatedResource {
     private function isUserARestProjectManager(PFUser $user)
     {
         return $user->isSuperUser() || $this->isUserDelegatedRestProjectManager($user);
+    }
+
+    private function getUserGroupQueryParser(): UserGroupQueryParameterParser
+    {
+        return new UserGroupQueryParameterParser($this->json_decoder);
     }
 }
