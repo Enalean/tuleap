@@ -34,7 +34,8 @@ const state = {
     folded_items_ids: [],
     folded_by_map: {},
     has_modal_error: false,
-    modal_error: null
+    modal_error: null,
+    max_files_dragndrop: 1
 };
 
 export default state;

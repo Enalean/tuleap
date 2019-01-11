@@ -18,49 +18,47 @@
   -->
 
 <template>
-    <div class="document-upload-to-current-folder"
-         v-if="current_folder"
-    >
-        <div v-if="user_can_write" class="document-upload-to-current-folder-message">
-            <i class="fa fa-rotate-90 fa-mail-forward document-upload-to-current-folder-icon"></i>
-            <p>{{ message_success }}</p>
-        </div>
-        <div v-else class="document-upload-to-current-folder-message">
-            <i class="fa fa-ban document-upload-to-current-folder-icon"></i>
-            <p>{{ message_error }}</p>
-        </div>
+    <div>
+        <current-folder-drop-zone
+            ref="dropzone"
+            v-bind:user_can_dragndrop_in_current_folder="user_can_dragndrop_in_current_folder"
+            v-bind:is_dropzone_highlighted="is_dropzone_highlighted"
+        />
+        <component
+            v-bind:is="error_modal_name"
+            v-on:error-modal-hidden="error_modal_hidden"
+        />
     </div>
 </template>
+
 <script>
 import { mapState, mapGetters } from "vuex";
-import { sprintf } from "sprintf-js";
+import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 
 export default {
+    components: { CurrentFolderDropZone },
     data() {
         return {
-            main: null
+            main: null,
+            error_modal_shown: false,
+            is_dropzone_highlighted: false
         };
     },
     computed: {
-        ...mapGetters(["current_folder_title"]),
-        ...mapState(["current_folder"]),
-        upload_current_folder_class() {
-            return this.user_can_write ? "shown-success" : "shown-error";
-        },
-        user_can_write() {
-            return this.current_folder && this.current_folder.user_can_write;
-        },
-        message_success() {
-            return sprintf(
-                this.$gettext("Drop your file to upload it to %s."),
-                this.current_folder_title
+        ...mapGetters(["user_can_dragndrop"]),
+        ...mapState(["current_folder", "max_files_dragndrop"]),
+        user_can_dragndrop_in_current_folder() {
+            return (
+                this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
             );
         },
-        message_error() {
-            return sprintf(
-                this.$gettext("Dropping files in %s is forbidden."),
-                this.current_folder_title
-            );
+        error_modal_name() {
+            if (!this.error_modal_shown) {
+                return null;
+            }
+
+            return () =>
+                import(/* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue");
         }
     },
     created() {
@@ -78,35 +76,36 @@ export default {
         ondragover(event) {
             event.preventDefault();
             event.stopPropagation();
-            this.highlight();
+            this.is_dropzone_highlighted = true;
         },
         ondragleave(event) {
             event.preventDefault();
             event.stopPropagation();
-            this.unhighlight();
+            this.is_dropzone_highlighted = false;
         },
         ondrop(event) {
             event.preventDefault();
             event.stopPropagation();
-            this.unhighlight();
-            if (this.user_can_write) {
-                this.upload(event);
-            }
-        },
-        unhighlight() {
-            this.$el.classList.remove(this.upload_current_folder_class);
-        },
-        highlight() {
-            this.$el.classList.add(this.upload_current_folder_class);
-        },
-        upload({ dataTransfer }) {
-            if (!dataTransfer.files) {
+            this.is_dropzone_highlighted = false;
+            if (!this.user_can_dragndrop_in_current_folder) {
                 return;
             }
 
-            for (const file of dataTransfer.files) {
+            if (!event.dataTransfer.files) {
+                return;
+            }
+
+            if (event.dataTransfer.files.length > this.max_files_dragndrop) {
+                this.error_modal_shown = true;
+                return;
+            }
+
+            for (const file of event.dataTransfer.files) {
                 this.$store.dispatch("addNewUploadFile", [file, this.current_folder]);
             }
+        },
+        error_modal_hidden() {
+            this.error_modal_shown = false;
         }
     }
 };
