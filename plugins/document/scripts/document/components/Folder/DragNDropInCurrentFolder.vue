@@ -21,7 +21,7 @@
     <div class="document-upload-to-current-folder"
          v-if="current_folder"
     >
-        <div v-if="current_folder.user_can_write" class="document-upload-to-current-folder-message">
+        <div v-if="user_can_write" class="document-upload-to-current-folder-message">
             <i class="fa fa-rotate-90 fa-mail-forward document-upload-to-current-folder-icon"></i>
             <p>{{ message_success }}</p>
         </div>
@@ -45,9 +45,10 @@ export default {
         ...mapGetters(["current_folder_title"]),
         ...mapState(["current_folder"]),
         upload_current_folder_class() {
-            return this.current_folder && this.current_folder.user_can_write
-                ? "shown-success"
-                : "shown-error";
+            return this.user_can_write ? "shown-success" : "shown-error";
+        },
+        user_can_write() {
+            return this.current_folder && this.current_folder.user_can_write;
         },
         message_success() {
             return sprintf(
@@ -88,7 +89,9 @@ export default {
             event.preventDefault();
             event.stopPropagation();
             this.unhighlight();
-            this.upload(event);
+            if (this.user_can_write) {
+                this.upload(event);
+            }
         },
         unhighlight() {
             this.$el.classList.remove(this.upload_current_folder_class);
