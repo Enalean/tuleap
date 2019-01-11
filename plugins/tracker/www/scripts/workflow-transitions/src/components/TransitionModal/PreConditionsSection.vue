@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -57,6 +57,7 @@
             ></select>
             <multi-select
                 v-else
+                id="workflow-configuration-not-empty-fields"
                 class="tlp-select"
                 ref="not_empty_fields_select"
                 v-bind:configuration="{width: '100%', placeholder: not_empty_field_select_placeholder}"
@@ -70,15 +71,20 @@
             </multi-select>
         </div>
         <div class="tlp-form-element" v-if="!is_transition_from_new_artifact">
-            <label class="tlp-label tlp-checkbox">
+            <label
+                for="workflow-configuration-not-empty-comment"
+                class="tlp-label tlp-checkbox"
+            >
                 <input
                     v-if="is_loading_modal"
+                    id="workflow-configuration-not-empty-comment"
                     type="checkbox"
                     name="transition-comment-not-empty"
                     disabled
                 >
                 <input
                     v-else
+                    id="workflow-configuration-not-empty-comment"
                     type="checkbox"
                     name="transition-comment-not-empty"
                     v-model="transition_comment_not_empty"
