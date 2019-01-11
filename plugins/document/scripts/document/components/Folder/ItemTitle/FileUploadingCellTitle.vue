@@ -18,10 +18,11 @@
   -->
 
 <template>
-    <div>
+    <div class="file-upload-cell-title">
         <fake-caret v-bind:item="item"/>
         <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
         {{ item.title }}
+        <upload-progress-bar v-bind:progress="item.progress"/>
     </div>
 </template>
 
@@ -29,9 +30,10 @@
 import { mapState } from "vuex";
 import FakeCaret from "./FakeCaret.vue";
 import { iconForMimeType } from "../../../helpers/icon-for-mime-type.js";
+import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
 
 export default {
-    components: { FakeCaret },
+    components: { FakeCaret, UploadProgressBar },
     props: {
         item: Object
     },

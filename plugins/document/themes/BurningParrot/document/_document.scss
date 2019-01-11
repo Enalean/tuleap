@@ -119,6 +119,57 @@ $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95)
     }
 }
 
+.file-upload-progress {
+    display: flex;
+    align-items: center;
+}
+
+.file-upload-cell-title {
+    position: relative;
+
+    > .file-upload-progress {
+        position: absolute;
+        right: 30%;
+        top: 0;
+        bottom: 0;
+    }
+}
+
+.file-upload-progress-value {
+    margin: 0 5px 0 0;
+    color: $tlp-ui-success;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+progress::-moz-progress-bar {
+    background: $tlp-ui-success;
+    border-radius: 20px;
+}
+
+progress::-webkit-progress-bar {
+    background: $tlp-ui-success;
+    border-radius: 20px;
+}
+
+progress::-webkit-progress-value {
+    background: $tlp-ui-success;
+    border-radius: 20px;
+}
+
+
+.file-upload-progress-bar {
+    color: $tlp-ui-success;
+    position: relative;
+    top: 1px;
+    width: 100px;
+    height:5px;
+    background: #f0f1f8;
+    border: 0;
+    border-radius: 20px;
+    vertical-align: unset;
+}
+
 .tlp-table > tbody > tr.document-tree-item-created > td {
     background: transparentize($tlp-ui-success, .9);
 }

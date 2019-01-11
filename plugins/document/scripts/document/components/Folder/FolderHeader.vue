@@ -21,13 +21,23 @@
 
 <template>
     <div class="document-header">
-        <h1 v-bind:class="title_class" class="document-header-title">{{ folder_title }}</h1>
+        <h1 v-bind:class="title_class" class="document-header-title">
+            {{ folder_title }}
+        </h1>
         <div class="document-header-actions">
             <template v-if="can_display_new_document_button">
                 <new-item-button class="tlp-button-primary"/>
                 <new-item-modal/>
             </template>
             <div class="document-header-spacer"></div>
+            <div class="document-header-global-progress tlp-tooltip tlp-tooltip-bottom"
+                 v-bind:data-tlp-tooltip="progress_bar_tooltip"
+            >
+                <upload-progress-bar
+                    v-if="global_upload_progress"
+                    v-bind:progress="global_upload_progress"
+                />
+            </div>
             <search-box v-if="can_display_search_box"/>
         </div>
     </div>
@@ -38,13 +48,14 @@ import { mapGetters, mapState } from "vuex";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
+import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
 
 export default {
     name: "FolderHeader",
-    components: { SearchBox, NewItemButton, NewItemModal },
+    components: { SearchBox, NewItemButton, NewItemModal, UploadProgressBar },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
-        ...mapGetters(["current_folder_title", "is_folder_empty"]),
+        ...mapGetters(["current_folder_title", "is_folder_empty", "global_upload_progress"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
                 ? "tlp-skeleton-text document-folder-title-loading"
@@ -58,6 +69,9 @@ export default {
         },
         can_display_new_document_button() {
             return this.current_folder && this.current_folder.user_can_write;
+        },
+        progress_bar_tooltip() {
+            return this.$gettext("Some files are being uploaded.");
         }
     }
 };

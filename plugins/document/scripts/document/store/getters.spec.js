@@ -57,4 +57,29 @@ describe("Store getters", () => {
             expect(title).toBe("Documents");
         });
     });
+
+    describe("global_upload_progress", () => {
+        it("returns the global upload progress by computing the mean of all progress values", () => {
+            const global_progress = getters.global_upload_progress({
+                folder_content: [
+                    { id: 1 },
+                    { id: 2 },
+                    { id: 3, progress: 25 },
+                    { id: 4 },
+                    { id: 5, progress: 75 },
+                    { id: 6 }
+                ]
+            });
+
+            expect(global_progress).toEqual(50);
+        });
+
+        it("returns 0 if no upload is in progress", () => {
+            const global_progress = getters.global_upload_progress({
+                folder_content: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }]
+            });
+
+            expect(global_progress).toEqual(0);
+        });
+    });
 });
