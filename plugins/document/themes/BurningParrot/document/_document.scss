@@ -200,7 +200,26 @@ $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95)
     margin: $tlp-double-spacing auto $tlp-spacing;
 }
 
-.switch-to-docman {
-    padding: 0 0 $tlp-spacing $tlp-spacing;
+.document-app {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$navbar-height});
+}
+
+.document-folder-with-error,
+.document-folder-container-empty {
+    flex: 1 0 auto;
+}
+
+.document-switch-to-docman {
+    padding: 0 $tlp-spacing $tlp-spacing;
+    font-size: 14px;
+}
+
+.document-switch-to-docman-link {
     color: $tlp-ui-dimmed;
+}
+
+.document-switch-to-docman-icon {
+    margin: 0 5px 0 0;
 }

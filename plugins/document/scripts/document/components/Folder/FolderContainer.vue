@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2019. All Rights Reserved.
+  - Copyright (c) Enalean, 2018. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -20,18 +20,25 @@
   -->
 
 <template>
-    <folder-container/>
+    <div class="tlp-framed" v-bind:class="classes" v-if="! does_folder_have_any_error">
+        <folder-view/>
+    </div>
 </template>
-
 <script>
-import FolderContainer from "./FolderContainer.vue";
+import { mapGetters, mapState } from "vuex";
+import FolderView from "./FolderView.vue";
 
 export default {
-    name: "RootFolder",
-    components: { FolderContainer },
-    mounted() {
-        this.$store.dispatch("loadRootFolder");
-        this.$store.commit("resetAscendantHierarchy");
+    name: "FolderContainer",
+    components: { FolderView },
+    computed: {
+        ...mapState(["is_loading_folder"]),
+        ...mapGetters(["does_folder_have_any_error", "is_folder_empty"]),
+        classes() {
+            return {
+                "document-folder-container-empty": !this.is_loading_folder && this.is_folder_empty
+            };
+        }
     }
 };
 </script>

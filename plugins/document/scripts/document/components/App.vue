@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div>
+    <div class="document-app">
         <permission-error v-if="has_folder_permission_error"/>
         <document-breadcrumb v-if="! has_folder_permission_error"/>
         <loading-error v-if="has_folder_loading_error"/>

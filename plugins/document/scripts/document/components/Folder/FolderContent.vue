@@ -18,27 +18,23 @@
   -->
 
 <template>
-    <div class="tlp-pane">
-        <div class="tlp-pane-container">
-            <section class="tlp-pane-section">
-                <table class="tlp-table">
-                    <thead>
-                        <tr>
-                            <th class="document-tree-head-name" v-translate>Name</th>
-                            <th class="document-tree-head-owner" v-translate>Owner</th>
-                            <th class="document-tree-head-updatedate" v-translate>Last update date</th>
-                        </tr>
-                    </thead>
+    <div class="tlp-card">
+        <table class="tlp-table">
+            <thead>
+                <tr>
+                    <th class="document-tree-head-name" v-translate>Name</th>
+                    <th class="document-tree-head-owner" v-translate>Owner</th>
+                    <th class="document-tree-head-updatedate" v-translate>Last update date</th>
+                </tr>
+            </thead>
 
-                    <tbody>
-                        <folder-content-row v-for="item of folder_content"
-                                            v-bind:key="item.id"
-                                            v-bind:item="item"
-                        />
-                    </tbody>
-                </table>
-            </section>
-        </div>
+            <tbody>
+                <folder-content-row v-for="item of folder_content"
+                                    v-bind:key="item.id"
+                                    v-bind:item="item"
+                />
+            </tbody>
+        </table>
     </div>
 </template>
 
