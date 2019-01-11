@@ -42,7 +42,8 @@ export {
     resetModalError,
     removeCreatedPropertyOnItem,
     replaceUploadingFileWithActualFile,
-    removeItemFromFolderContent
+    removeItemFromFolderContent,
+    removeIsUnderConstruction
 };
 
 function saveFolderContent(state, folder_content) {
@@ -117,7 +118,8 @@ function initApp(
         root_title,
         user_can_create_wiki,
         max_files_dragndrop,
-        max_size_upload
+        max_size_upload,
+        is_under_construction
     ]
 ) {
     state.user_id = user_id;
@@ -128,6 +130,7 @@ function initApp(
     state.user_can_create_wiki = user_can_create_wiki;
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
+    state.is_under_construction = is_under_construction;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {
@@ -241,4 +244,8 @@ function removeItemFromFolderContent(state, item_to_remove) {
     const index = state.folder_content.findIndex(item => item.id === item_to_remove.id);
 
     state.folder_content.splice(index, 1);
+}
+
+function removeIsUnderConstruction(state) {
+    state.is_under_construction = false;
 }

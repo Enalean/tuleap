@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 namespace Tuleap\Document\Tree;
 
 use HTTPRequest;
@@ -34,13 +36,13 @@ use Tuleap\Request\NotFoundException;
 class DocumentTreeController implements DispatchableWithRequest, DispatchableWithProject, DispatchableWithBurningParrot
 {
     /**
-     * @var \ProjectManager
+     * @var DocumentTreeProjectExtractor
      */
-    private $project_manager;
+    private $project_extractor;
 
-    public function __construct(\ProjectManager $project_manager)
+    public function __construct(DocumentTreeProjectExtractor $project_extractor)
     {
-        $this->project_manager = $project_manager;
+        $this->project_extractor = $project_extractor;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -56,10 +58,16 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
         $this->includeHeaderAndNavigationBar($layout, $project);
         $this->includeJavascriptFiles($layout);
 
+        $preference = $user->getPreference('plugin_document_set_display_under_construction_modal_' . $project->getID());
+
         $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'document-tree',
-            new DocumentTreePresenter($project, $request->getCurrentUser())
+            new DocumentTreePresenter(
+                $project,
+                $request->getCurrentUser(),
+                $preference === '1'
+            )
         );
 
         $layout->footer(["without_content" => true]);
@@ -74,21 +82,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      */
     public function getProject(\HTTPRequest $request, array $variables)
     {
-        $project = $this->project_manager->getProjectByUnixName($variables['project_name']);
-        if (! $project) {
-            throw new NotFoundException(dgettext('tuleap-document', "Project not found"));
-        }
-
-        if (! $project->usesService(\docmanPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(
-                sprintf(
-                    dgettext("tuleap-document", "Documents service is not activated in project %s"),
-                    $project->getUnconvertedPublicName()
-                )
-            );
-        }
-
-        return $project;
+        return $this->project_extractor->getProject($request, $variables);
     }
 
     /**

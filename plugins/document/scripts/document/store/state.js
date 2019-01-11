@@ -37,7 +37,8 @@ const state = {
     modal_error: null,
     user_can_create_wiki: false,
     max_files_dragndrop: 1,
-    max_size_upload: 1
+    max_size_upload: 1,
+    is_under_construction: false
 };
 
 export default state;

@@ -21,6 +21,7 @@ import {
     addNewDocument,
     cancelUpload,
     deleteUserPreferenciesForFolderInProject,
+    deleteUserPreferenciesForUnderConstructionModal,
     getFolderContent,
     getItem,
     getProject,
@@ -237,5 +238,18 @@ export const setUserPreferenciesForUI = async context => {
         );
     } catch (exception) {
         return handleErrors(context, exception);
+    }
+};
+
+export const unsetUnderConstructionUserPreference = async context => {
+    try {
+        return await deleteUserPreferenciesForUnderConstructionModal(
+            context.state.user_id,
+            context.state.project_id
+        );
+    } catch (exception) {
+        return handleErrors(context, exception);
+    } finally {
+        context.commit("removeIsUnderConstruction");
     }
 };

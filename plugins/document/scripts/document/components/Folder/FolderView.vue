@@ -19,6 +19,9 @@
 
 <template>
     <div>
+        <component
+            v-bind:is="under_construction_modal"
+        />
         <folder-header/>
         <drag-n-drop-in-current-folder v-if="! is_loading_folder"/>
         <folder-loading-screen v-if="is_loading_folder"/>
@@ -48,8 +51,16 @@ export default {
         FolderContent
     },
     computed: {
-        ...mapState(["is_loading_folder", "current_folder"]),
-        ...mapGetters(["is_folder_empty"])
+        ...mapState(["is_loading_folder", "current_folder", "is_under_construction"]),
+        ...mapGetters(["is_folder_empty"]),
+        under_construction_modal() {
+            if (!this.is_under_construction) {
+                return null;
+            }
+
+            return () =>
+                import(/* webpackChunkName: "under-construction" */ "../UnderConstructionModal.vue");
+        }
     }
 };
 </script>

@@ -19,7 +19,7 @@
 
 <template>
     <div class="document-switch-to-docman">
-        <a v-bind:href="redirect_url" v-on:click="redirectUser()" class="document-switch-to-docman-link">
+        <a v-bind:href="redirect_url" v-on:click.prevent="redirectUser()" class="document-switch-to-docman-link">
             <i class="fa fa-random document-switch-to-docman-icon"></i><!--
             --><translate>Switch to old user interface</translate>
         </a>
@@ -47,10 +47,9 @@ export default {
         }
     },
     methods: {
-        redirectUser() {
-            this.$store.dispatch("setUserPreferenciesForUI").then(() => {
-                window.location = this.redirect_url();
-            });
+        async redirectUser() {
+            await this.$store.dispatch("setUserPreferenciesForUI");
+            window.location = this.redirect_url;
         }
     }
 };

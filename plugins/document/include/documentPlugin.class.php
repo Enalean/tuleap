@@ -22,6 +22,8 @@ use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\Tree\DocumentTreeController;
+use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
+use Tuleap\Document\Tree\DocumentTreeUnderConstructionController;
 use Tuleap\Request\CollectRoutesEvent;
 
 require_once __DIR__ . '/../../docman/include/docmanPlugin.class.php';
@@ -66,8 +68,13 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
         $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
+            $r->get('/{project_name:[A-z0-9-]+}/under_construction/[{vue-routing:.*}]', function () {
+
+
+                return new DocumentTreeUnderConstructionController($this->getProjectExtractor());
+            });
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', function () {
-                return new DocumentTreeController(ProjectManager::instance());
+                return new DocumentTreeController($this->getProjectExtractor());
             });
         });
     }
@@ -91,5 +98,10 @@ class documentPlugin extends Plugin // phpcs:ignore
         }
 
         $external_link_redirector->checkAndStoreIfUserHasToBeenRedirected();
+    }
+
+    public function getProjectExtractor() : DocumentTreeProjectExtractor
+    {
+        return new DocumentTreeProjectExtractor(ProjectManager::instance());
     }
 }

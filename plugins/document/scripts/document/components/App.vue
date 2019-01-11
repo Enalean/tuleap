@@ -35,7 +35,12 @@ import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 
 export default {
     name: "App",
-    components: { DocumentBreadcrumb, PermissionError, LoadingError, SwitchToOldUI },
+    components: {
+        DocumentBreadcrumb,
+        PermissionError,
+        LoadingError,
+        SwitchToOldUI
+    },
     props: {
         user_id: Number,
         project_id: Number,
@@ -43,7 +48,8 @@ export default {
         user_can_create_wiki: Boolean,
         date_time_format: String,
         max_files_dragndrop: Number,
-        max_size_upload: Number
+        max_size_upload: Number,
+        is_under_construction: Boolean
     },
     computed: {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
@@ -69,7 +75,8 @@ export default {
             this.$gettext("Documents"),
             this.user_can_create_wiki,
             this.max_files_dragndrop,
-            this.max_size_upload
+            this.max_size_upload,
+            this.is_under_construction
         ]);
     }
 };
