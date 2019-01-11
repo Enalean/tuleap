@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
+use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -37,6 +39,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function getHooksAndCallbacks()
     {
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(ExternalLinksManager::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -65,5 +68,16 @@ class documentPlugin extends Plugin // phpcs:ignore
                 return new DocumentTreeController(ProjectManager::instance());
             });
         });
+    }
+
+    public function externalLinksManager(ExternalLinksManager $collector)
+    {
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $collector->getProjectId())) {
+            return;
+        }
+
+        $project = ProjectManager::instance()->getProject($collector->getProjectId());
+
+        $collector->addExternalLink(new Link($project, $collector->getFolderId()));
     }
 }

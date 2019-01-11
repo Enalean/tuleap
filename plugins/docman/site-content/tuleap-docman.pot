@@ -16,10 +16,18 @@ msgstr ""
 msgid "Items permissions are not listed."
 msgstr ""
 
+msgid ""
+"New user interface is under construction and all feature are not available "
+"yet."
+msgstr ""
+
 msgid "Notified people"
 msgstr ""
 
 msgid "Permission"
+msgstr ""
+
+msgid "Switch to new user interface"
 msgstr ""
 
 #, php-format
