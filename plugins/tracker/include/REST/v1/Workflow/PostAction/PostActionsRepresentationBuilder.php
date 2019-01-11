@@ -62,6 +62,7 @@ class PostActionsRepresentationBuilder implements Visitor
     public function visitCIBuild(Transition_PostAction_CIBuild $post_action)
     {
         $this->post_action_representations[] = RunJobRepresentation::build(
+            $post_action->getId(),
             $post_action->getJobUrl()
         );
     }
@@ -69,6 +70,7 @@ class PostActionsRepresentationBuilder implements Visitor
     public function visitDateField(Transition_PostAction_Field_Date $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forDate(
+            $post_action->getId(),
             $post_action->getFieldId(),
             $post_action->getValueType()
         );
@@ -77,6 +79,7 @@ class PostActionsRepresentationBuilder implements Visitor
     public function visitIntField(Transition_PostAction_Field_Int $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forInt(
+            $post_action->getId(),
             $post_action->getFieldId(),
             $post_action->getValue()
         );
@@ -85,6 +88,7 @@ class PostActionsRepresentationBuilder implements Visitor
     public function visitFloatField(Transition_PostAction_Field_Float $post_action)
     {
         $this->post_action_representations[] = SetFieldValueRepresentation::forFloat(
+            $post_action->getId(),
             $post_action->getFieldId(),
             $post_action->getValue()
         );

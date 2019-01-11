@@ -33,6 +33,11 @@ use Tuleap\REST\JsonCast;
 class SetFieldValueRepresentation
 {
     /**
+     * @var string Action identifier (unique among actions with same type and same field type)
+     */
+    public $id;
+
+    /**
      * @var string
      */
     public $type = "set_field_value";
@@ -52,40 +57,59 @@ class SetFieldValueRepresentation
      */
     public $value;
 
-    private function __construct($field_id, $field_type, $value)
+    private function __construct($id, $field_id, $field_type, $value)
     {
+        $this->id = $id;
         $this->field_id = $field_id;
         $this->field_type = $field_type;
         $this->value = $value;
     }
 
     /**
+     * @var string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param int $value
      * @return SetFieldValueRepresentation
      */
-    public static function forDate($field_id, $value)
+    public static function forDate($id, $field_id, $value)
     {
-        return new self(JsonCast::toInt($field_id), 'date', JsonCast::toInt($value));
+        return new self(
+            JsonCast::toInt($id),
+            JsonCast::toInt($field_id),
+            'date',
+            JsonCast::toInt($value)
+        );
     }
 
     /**
+     * @var string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param int $value
      * @return SetFieldValueRepresentation
      */
-    public static function forInt($field_id, $value)
+    public static function forInt($id, $field_id, $value)
     {
-        return new self(JsonCast::toInt($field_id), 'int', JsonCast::toInt($value));
+        return new self(
+            JsonCast::toInt($id),
+            JsonCast::toInt($field_id),
+            'int',
+            JsonCast::toInt($value)
+        );
     }
 
     /**
+     * @var string $id Action identifier (unique among actions with same type and same field type)
      * @param int $field_id
      * @param float $value
      * @return SetFieldValueRepresentation
      */
-    public static function forFloat($field_id, $value)
+    public static function forFloat($id, $field_id, $value)
     {
-        return new self(JsonCast::toInt($field_id), 'float', JsonCast::toFloat($value));
+        return new self(
+            JsonCast::toInt($id),
+            JsonCast::toInt($field_id),
+            'float',
+            JsonCast::toFloat($value)
+        );
     }
 }

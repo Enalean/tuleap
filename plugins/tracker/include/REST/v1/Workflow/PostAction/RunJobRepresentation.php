@@ -21,8 +21,15 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+use Tuleap\REST\JsonCast;
+
 class RunJobRepresentation
 {
+    /**
+     * @var string Action identifier (unique among actions with same type)
+     */
+    public $id;
+
     /**
      * @var string
      */
@@ -33,17 +40,22 @@ class RunJobRepresentation
      */
     public $job_url;
 
-    private function __construct($job_url)
+    private function __construct($id, $job_url)
     {
+        $this->id = $id;
         $this->job_url = $job_url;
     }
 
     /**
+     * @param int $id Action identifier (unique among actions with same type)
      * @param string $job_url
      * @return RunJobRepresentation
      */
-    public static function build($job_url)
+    public static function build($id, $job_url)
     {
-        return new self($job_url);
+        return new self(
+            JsonCast::toInt($id),
+            $job_url
+        );
     }
 }

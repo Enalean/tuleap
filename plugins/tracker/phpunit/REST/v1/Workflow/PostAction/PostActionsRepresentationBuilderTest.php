@@ -43,6 +43,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
         $representation = $builder->build();
 
+        $this->assertSame(1, $representation[0]->id);
         $this->assertSame('run_job', $representation[0]->type);
         $this->assertSame('http://job.example.com', $representation[0]->job_url);
     }
@@ -63,6 +64,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
         $representation = $builder->build();
 
+        $this->assertSame(1, $representation[0]->id);
         $this->assertSame('set_field_value', $representation[0]->type);
         $this->assertSame(8, $representation[0]->field_id);
         $this->assertSame('date', $representation[0]->field_type);
@@ -78,6 +80,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
         $representation = $builder->build();
 
+        $this->assertSame(1, $representation[0]->id);
         $this->assertSame('set_field_value', $representation[0]->type);
         $this->assertSame(8, $representation[0]->field_id);
         $this->assertSame('int', $representation[0]->field_type);
@@ -93,6 +96,7 @@ class PostActionsRepresentationBuilderTest extends TestCase
 
         $representation = $builder->build();
 
+        $this->assertSame(1, $representation[0]->id);
         $this->assertSame('set_field_value', $representation[0]->type);
         $this->assertSame(8, $representation[0]->field_id);
         $this->assertSame('float', $representation[0]->field_type);
