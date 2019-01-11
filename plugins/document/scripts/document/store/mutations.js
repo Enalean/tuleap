@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -114,6 +114,7 @@ function initApp(
         user_is_admin,
         date_time_format,
         root_title,
+        user_can_create_wiki,
         max_files_dragndrop,
         max_size_upload
     ]
@@ -123,6 +124,7 @@ function initApp(
     state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;
     state.root_title = root_title;
+    state.user_can_create_wiki = user_can_create_wiki;
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
 }

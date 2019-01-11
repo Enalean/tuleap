@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -40,6 +40,7 @@ export default {
         user_id: Number,
         project_id: Number,
         user_is_admin: Boolean,
+        user_can_create_wiki: Boolean,
         date_time_format: String,
         max_files_dragndrop: Number,
         max_size_upload: Number
@@ -66,6 +67,7 @@ export default {
             this.user_is_admin,
             this.date_time_format,
             this.$gettext("Documents"),
+            this.user_can_create_wiki,
             this.max_files_dragndrop,
             this.max_size_upload
         ]);
