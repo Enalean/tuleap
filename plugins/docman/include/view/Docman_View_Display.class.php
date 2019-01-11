@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\DocumentTitlePresenter;
-use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
+use Tuleap\Docman\view\DocumentTitlePresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
@@ -32,19 +31,12 @@ use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
             return;
         }
 
-        $folder_id               = 0;
-        $item                    = $params['item']->toRow();
-        $is_folder_migrated_view = $item['item_type'] === PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
-            && isset($params['action']) && $params['action'] === "show";
-
-        if ($is_folder_migrated_view && $item['parent_id']!== 0) {
-            $folder_id =  $params['item']->getId();
-        }
-        $this->displayNewDocumentViewButton(
-            $params['group_id'],
-            $this->getUnconvertedTitle($params),
-            $folder_id,
-            $is_folder_migrated_view
+        $builder   = new DocumentTitlePresenterBuilder(ProjectManager::instance(), EventManager::instance());
+        $presenter = $builder->build($params, $params['group_id'], $this->getUnconvertedTitle($params), $params['item']->toRow());
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer->renderToPage(
+            'docman-title',
+            $presenter
         );
     }
 
@@ -107,21 +99,5 @@ use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
         $html .= '</tr>';
         $html .= '</table>';
         echo $html;
-    }
-
-    private function displayNewDocumentViewButton(int $project_id, string $title, int $folder_id, bool $is_folder_migrated_view)
-    {
-        $collector = new ExternalLinksManager($project_id, $folder_id);
-        if ($is_folder_migrated_view === true) {
-            EventManager::instance()->processEvent($collector);
-        }
-
-        $project = ProjectManager::instance()->getProject($project_id);
-
-        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
-        $renderer->renderToPage(
-            'docman-title',
-            new DocumentTitlePresenter($project, $title, $collector)
-        );
     }
 }
