@@ -29,8 +29,10 @@ msgstr ""
 msgid "Documents"
 msgstr ""
 
-msgid "Drop one file to upload it to %(folder)s."
-msgid_plural "Drop up to %(nb_files)s files to upload them to %(folder)s."
+msgid "Drop one file to upload it to %(folder)s (max size is %(size)s)."
+msgid_plural ""
+"Drop up to %(nb_files)s files to upload them to %(folder)s (max size is "
+"%(size)s)."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -120,6 +122,9 @@ msgid_plural ""
 "You are not allowed to drag 'n drop more than %{ nb } files at once."
 msgstr[0] ""
 msgstr[1] ""
+
+msgid "You are not allowed to upload files bigger than %{ size }."
+msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
 msgstr ""

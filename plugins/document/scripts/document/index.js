@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const date_time_format = document.body.dataset.dateTimeFormat;
     const user_id = Number.parseInt(document.body.dataset.userId, 10);
     const max_files_dragndrop = Number.parseInt(vue_mount_point.dataset.maxFilesDragndrop, 10);
+    const max_size_upload = Number.parseInt(vue_mount_point.dataset.maxSizeUpload, 10);
 
     moment.tz(user_timezone).locale(user_locale);
 
@@ -66,7 +67,8 @@ document.addEventListener("DOMContentLoaded", () => {
             project_id,
             user_is_admin,
             date_time_format,
-            max_files_dragndrop
+            max_files_dragndrop,
+            max_size_upload
         }
     }).$mount(vue_mount_point);
 });

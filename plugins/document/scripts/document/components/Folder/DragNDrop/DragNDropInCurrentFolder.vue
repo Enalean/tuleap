@@ -41,12 +41,14 @@ export default {
         return {
             main: null,
             error_modal_shown: false,
-            is_dropzone_highlighted: false
+            is_dropzone_highlighted: false,
+            MAX_FILES_ERROR: "max_files",
+            MAX_SIZE_ERROR: "max_size"
         };
     },
     computed: {
         ...mapGetters(["user_can_dragndrop"]),
-        ...mapState(["current_folder", "max_files_dragndrop"]),
+        ...mapState(["current_folder", "max_files_dragndrop", "max_size_upload"]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
@@ -55,6 +57,11 @@ export default {
         error_modal_name() {
             if (!this.error_modal_shown) {
                 return null;
+            }
+
+            if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
+                return () =>
+                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue");
             }
 
             return () =>
@@ -95,12 +102,21 @@ export default {
                 return;
             }
 
-            if (event.dataTransfer.files.length > this.max_files_dragndrop) {
-                this.error_modal_shown = true;
+            const files = event.dataTransfer.files;
+
+            if (files.length > this.max_files_dragndrop) {
+                this.error_modal_shown = this.MAX_FILES_ERROR;
                 return;
             }
 
-            for (const file of event.dataTransfer.files) {
+            for (const file of files) {
+                if (file.size > this.max_size_upload) {
+                    this.error_modal_shown = this.MAX_SIZE_ERROR;
+                    return;
+                }
+            }
+
+            for (const file of files) {
                 this.$store.dispatch("addNewUploadFile", [file, this.current_folder]);
             }
         },

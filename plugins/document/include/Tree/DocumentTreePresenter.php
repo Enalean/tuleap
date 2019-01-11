@@ -34,11 +34,16 @@ class DocumentTreePresenter
      * @var bool
      */
     public $user_is_admin;
+    /**
+     * @var int
+     */
+    public $max_size_upload;
 
     public function __construct(\Project $project, \PFUser $user)
     {
-        $this->project_id    = $project->getID();
-        $this->project_name  = $project->getUnixNameLowerCase();
-        $this->user_is_admin = $user->isAdmin($project->getID());
+        $this->project_id      = $project->getID();
+        $this->project_name    = $project->getUnixNameLowerCase();
+        $this->user_is_admin   = $user->isAdmin($project->getID());
+        $this->max_size_upload = \ForgeConfig::get("sys_max_size_upload");
     }
 }

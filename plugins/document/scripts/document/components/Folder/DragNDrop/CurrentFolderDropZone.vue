@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import prettyKibibytes from "pretty-kibibytes";
 import { mapState, mapGetters } from "vuex";
 import { sprintf } from "sprintf-js";
 
@@ -41,17 +42,18 @@ export default {
     },
     computed: {
         ...mapGetters(["current_folder_title"]),
-        ...mapState(["max_files_dragndrop"]),
+        ...mapState(["max_files_dragndrop", "max_size_upload"]),
         message_success() {
             return sprintf(
                 this.$ngettext(
-                    "Drop one file to upload it to %(folder)s.",
-                    "Drop up to %(nb_files)s files to upload them to %(folder)s.",
+                    "Drop one file to upload it to %(folder)s (max size is %(size)s).",
+                    "Drop up to %(nb_files)s files to upload them to %(folder)s (max size is %(size)s).",
                     this.max_files_dragndrop
                 ),
                 {
                     nb_files: this.max_files_dragndrop,
-                    folder: this.current_folder_title
+                    folder: this.current_folder_title,
+                    size: prettyKibibytes(this.max_size_upload)
                 }
             );
         },

@@ -35,7 +35,8 @@ const state = {
     folded_by_map: {},
     has_modal_error: false,
     modal_error: null,
-    max_files_dragndrop: 1
+    max_files_dragndrop: 1,
+    max_size_upload: 1
 };
 
 export default state;

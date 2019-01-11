@@ -41,7 +41,8 @@ export default {
         project_id: Number,
         user_is_admin: Boolean,
         date_time_format: String,
-        max_files_dragndrop: Number
+        max_files_dragndrop: Number,
+        max_size_upload: Number
     },
     computed: {
         ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
@@ -65,7 +66,8 @@ export default {
             this.user_is_admin,
             this.date_time_format,
             this.$gettext("Documents"),
-            this.max_files_dragndrop
+            this.max_files_dragndrop,
+            this.max_size_upload
         ]);
     }
 };
