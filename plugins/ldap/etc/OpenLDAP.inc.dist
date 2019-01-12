@@ -15,7 +15,7 @@ $sys_ldap_server = '%sys_ldap_server%';
 $sys_ldap_server_type = 'OpenLDAP';
 
 // To enable LDAP information on Tuleap users, also define the DN
-// (distinguised name) to use in LDAP queries.
+// (distinguished name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
 $sys_ldap_dn     = 'dc=example,dc=com';
@@ -32,7 +32,7 @@ $sys_ldap_dn     = 'dc=example,dc=com';
 // usually authenticate themself with a login. So we need to first look
 // for the DN that correspond to the given login and once found attempt to bind
 // with the given password.
-// In order to autenticate successfully users you need to properly
+// In order to authenticate successfully users you need to properly
 
 // User login (authentication 1st step)
 $sys_ldap_uid   = 'uid';
@@ -97,11 +97,11 @@ $sys_ldap_grp_dn        = 'ou=groups,dc=example,dc=com';
 
 // How group search is performed
 // - either 'onelevel' for search only within $sys_ldap_grp_dn branch
-// - or 'subtree' for a recursive look-up
+// - or 'subtree' for a recursive lookup
 // be careful with the later, as it's used in autocompleter, LDAP server performances are critical for good responsiveness
 $sys_ldap_grp_search_scope = 'onelevel';
 
-// Field that reprsent group name
+// Field that represent group name
 $sys_ldap_grp_cn        = 'cn';
 
 // Field that indicate the membership of a user in a group
