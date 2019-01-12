@@ -49,15 +49,14 @@ $sys_ldap_cn    = 'cn';
 // User email address
 $sys_ldap_mail  = 'mail';
 
-// Specific DN to look for people
+// Specific DN to look for people, used for user authentication.
 // You may use more than one DN separated by ; if you want to use several branches.
 // Example : 'ou=People, dc=example, dc=com ; ou=Extranet, dc=example, dc=com'
-$sys_ldap_people_dn     = 'dc=example,dc=com';
+$sys_ldap_people_dn     = 'ou=people,dc=example,dc=com';
 
 // Filter used to look for user. It should cover a wide selection of
 // fields because it's aim to find a user whatever it's given (email, name,
 // login, etc).
-
 $sys_ldap_search_user='(|(sAMAccountName=%words%)(cn=%words%)(mail=%words%))';
 
 // By default tooltip search is using ($sys_ldap_cn=%words%*) search filter (Hardcoded)
