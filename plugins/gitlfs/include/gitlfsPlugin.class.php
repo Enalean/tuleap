@@ -36,7 +36,7 @@ use Tuleap\GitLFS\Authorization\LFSAuthorizationTokenHeaderSerializer;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationDAO;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationRemover;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
-use Tuleap\GitLFS\Batch\LSFBatchAPIHTTPAuthorization;
+use Tuleap\GitLFS\HTTP\LSFAPIHTTPAuthorization;
 use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
 use Tuleap\Git\GitPHP\Events\DisplayFileContentInGitView;
 use Tuleap\GitLFS\Download\FileDownloaderController;
@@ -166,25 +166,33 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
     {
+        if (ForgeConfig::get('feature_gitlfs_lock_api')) {
+            $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
+                $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+                $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockCreateController(
+                    $this,
+                    $this->getGitRepositoryFactory(),
+                    $this->getLFSAPIHTTPAccessControl(),
+                    new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+                    new \Tuleap\GitLFS\Lock\LockCreator(
+                        new \Tuleap\GitLFS\Lock\LockDao()
+                    ),
+                    new \Tuleap\GitLFS\HTTP\UserRetriever(
+                        $this->getLFSAPIHTTPAuthorization(),
+                        $this->getGitPlugin()->getHTTPAccessControl($logger),
+                        $this->getUserManager()
+                    )
+                );
+                return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
+            });
+        }
+
         $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
             $logger               = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Batch');
-            $user_manager         = UserManager::instance();
             $lfs_batch_controller = new \Tuleap\GitLFS\Batch\LFSBatchController(
                 $this,
                 $this->getGitPlugin()->getRepositoryFactory(),
-                new \Tuleap\GitLFS\Batch\LFSBatchAPIHTTPAccessControl(
-                    new LSFBatchAPIHTTPAuthorization(
-                        new UserTokenVerifier(
-                            new UserAuthorizationDAO(),
-                            new SplitTokenVerificationStringHasher(),
-                            $user_manager
-                        ),
-                        new LFSAuthorizationTokenHeaderSerializer()
-                    ),
-                    $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    $user_manager,
-                    new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
-                ),
+                $this->getLFSAPIHTTPAccessControl(),
                 new BatchSuccessfulResponseBuilder(
                     new ActionAuthorizationTokenCreator(new SplitTokenVerificationStringHasher(), new ActionAuthorizationDAO()),
                     new LFSAuthorizationTokenHeaderSerializer(),
@@ -192,7 +200,8 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Admin\AdminDao(),
                     new ProjectQuotaChecker(EventManager::instance()),
                     $logger
-                )
+                ),
+                $this->getUserRetriever($logger)
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_batch_controller);
         });
@@ -347,5 +356,43 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $event->addPluginsKeys(self::DISPLAY_CONFIG_KEY);
         $event->addPluginsKeys(self::MAX_FILE_SIZE_KEY);
+    }
+
+    private function getLFSAPIHTTPAccessControl()
+    {
+        return new \Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl(
+            new AccessControlVerifier(new FineGrainedRetriever(new FineGrainedDao()), new \System_Command())
+        );
+    }
+
+    private function getUserRetriever(Logger $logger)
+    {
+        return new \Tuleap\GitLFS\HTTP\UserRetriever(
+            $this->getLFSAPIHTTPAuthorization(),
+            $this->getGitPlugin()->getHTTPAccessControl($logger),
+            $this->getUserManager()
+        );
+    }
+
+    private function getLFSAPIHTTPAuthorization()
+    {
+        return new LSFAPIHTTPAuthorization(
+            new UserTokenVerifier(
+                new UserAuthorizationDAO(),
+                new SplitTokenVerificationStringHasher(),
+                $this->getUserManager()
+            ),
+            new LFSAuthorizationTokenHeaderSerializer()
+        );
+    }
+
+    private function getUserManager()
+    {
+        return UserManager::instance();
+    }
+
+    private function getGitRepositoryFactory()
+    {
+        return $this->getGitPlugin()->getRepositoryFactory();
     }
 }

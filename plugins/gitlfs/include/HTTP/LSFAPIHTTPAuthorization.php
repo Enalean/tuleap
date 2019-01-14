@@ -19,7 +19,7 @@
  *
  */
 
-namespace Tuleap\GitLFS\Batch;
+namespace Tuleap\GitLFS\HTTP;
 
 use GitRepository;
 use HTTPRequest;
@@ -31,9 +31,8 @@ use Tuleap\GitLFS\Authorization\User\Operation\UserOperationDownload;
 use Tuleap\GitLFS\Authorization\User\Operation\UserOperationUpload;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
-use Tuleap\GitLFS\Batch\Request\BatchRequest;
 
-class LSFBatchAPIHTTPAuthorization
+class LSFAPIHTTPAuthorization
 {
     /**
      * @var UserTokenVerifier
@@ -53,7 +52,7 @@ class LSFBatchAPIHTTPAuthorization
     /**
      * @return \PFUser|null
      */
-    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, BatchRequest $batch_request)
+    public function getUserFromAuthorizationToken(HTTPRequest $request, GitRepository $repository, GitLfsHTTPOperation $lfs_request)
     {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {
@@ -71,10 +70,10 @@ class LSFBatchAPIHTTPAuthorization
         }
 
         $user_operation = null;
-        if ($batch_request->isRead()) {
+        if ($lfs_request->isRead()) {
             $user_operation = new UserOperationDownload();
         }
-        if ($user_operation === null && $batch_request->isWrite()) {
+        if ($user_operation === null && $lfs_request->isWrite()) {
             $user_operation = new UserOperationUpload();
         }
         if ($user_operation === null) {

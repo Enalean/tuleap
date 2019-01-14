@@ -20,12 +20,13 @@
 
 namespace Tuleap\GitLFS\Batch\Request;
 
-use Tuleap\Git\HTTP\GitHTTPOperation;
+use Tuleap\GitLFS\HTTP\GitLfsHTTPOperation;
+use Tuleap\GitLFS\HTTP\RequestReference;
 use Tuleap\GitLFS\LFSObject\LFSObject;
 use Tuleap\GitLFS\LFSObject\LFSObjectID;
 use Tuleap\GitLFS\Transfer\Transfer;
 
-class BatchRequest implements GitHTTPOperation
+class BatchRequest implements GitLfsHTTPOperation
 {
     /**
      * @var BatchRequestOperation
@@ -40,7 +41,7 @@ class BatchRequest implements GitHTTPOperation
      */
     private $transfers;
     /**
-     * @var BatchRequestReference|null
+     * @var RequestReference|null
      */
     private $reference;
 
@@ -48,7 +49,7 @@ class BatchRequest implements GitHTTPOperation
         BatchRequestOperation $operation,
         array $objects,
         array $transfers,
-        BatchRequestReference $reference = null
+        RequestReference $reference = null
     ) {
 
         $this->operation = $operation;
@@ -120,7 +121,7 @@ class BatchRequest implements GitHTTPOperation
                     'ref value of the batch request is expected to be an object with a name'
                 );
             }
-            $reference = new BatchRequestReference($parameters->ref->name);
+            $reference = new RequestReference($parameters->ref->name);
         }
 
         return new self($operation, $objects, $transfers, $reference);
@@ -173,10 +174,7 @@ class BatchRequest implements GitHTTPOperation
         return $this->transfers;
     }
 
-    /**
-     * @return BatchRequestReference|null
-     */
-    public function getReference()
+    public function getReference(): ?RequestReference
     {
         return $this->reference;
     }

@@ -35,3 +35,13 @@ CREATE TABLE plugin_gitlfs_ssh_authorization (
 
 # 536870912 bytes = 512 Mb
 INSERT INTO forgeconfig (name, value) VALUES ('git_lfs_max_file_size', 536870912);
+
+CREATE TABLE plugin_gitlfs_lock (
+  id            INT(11)          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  lock_path     VARCHAR(255)     NOT NULL,
+  lock_owner    INT(11)          NOT NULL,
+  ref           VARCHAR(255),
+  creation_date INT(11) UNSIGNED NOT NULL,
+  repository_id INT(10) UNSIGNED NOT NULL,
+  INDEX idx_lock_path (lock_path(191))
+);

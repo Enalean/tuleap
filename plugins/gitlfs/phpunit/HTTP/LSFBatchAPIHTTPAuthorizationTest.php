@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch;
+namespace Tuleap\GitLFS\HTTP;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -28,6 +28,7 @@ use Tuleap\Authentication\SplitToken\SplitTokenIdentifierTranslator;
 use Tuleap\GitLFS\Authorization\User\UserAuthorizationException;
 use Tuleap\GitLFS\Authorization\User\UserTokenVerifier;
 use Tuleap\GitLFS\Batch\Request\BatchRequest;
+use Tuleap\GitLFS\HTTP\LSFAPIHTTPAuthorization;
 
 class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 {
@@ -44,7 +45,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testUserWithAValidAuthorizationTokenIsFoundWithADownloadOperation()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
@@ -66,7 +67,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testUserWithAValidAuthorizationTokenIsFoundWithAnUploadOperation()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
@@ -89,7 +90,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenThereIsNoAuthorizationHeader()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns(false);
@@ -105,7 +106,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheAuthorizationHeaderIsNotAValidToken()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('invalid_token');
@@ -122,7 +123,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheBatchRequestOperationIsNotKnown()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_token');
@@ -142,7 +143,7 @@ class LSFBatchAPIHTTPAuthorizationTest extends TestCase
 
     public function testNoUserIsRetrievedWhenTheAuthorizationIsNotValid()
     {
-        $lfs_http_api_authorization = new LSFBatchAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
+        $lfs_http_api_authorization = new LSFAPIHTTPAuthorization($this->token_verifier, $this-> token_unserializer);
 
         $request = \Mockery::mock(\HTTPRequest::class);
         $request->shouldReceive('getFromServer')->andReturns('valid_authorization');
