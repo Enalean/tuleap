@@ -199,6 +199,10 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
         parent.id
     );
 
+    if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
+        return;
+    }
+
     const fake_item = {
         id: new_file.id,
         title: dropped_file.name,

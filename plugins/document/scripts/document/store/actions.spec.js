@@ -23,8 +23,10 @@ import {
     loadFolder,
     setUserPreferenciesForFolder,
     createNewDocument,
-    setUserPreferenciesForUI
+    setUserPreferenciesForUI,
+    addNewUploadFile
 } from "./actions.js";
+import { restore as restoreUploadFile, rewire$uploadFile } from "./actions-helpers/upload-file.js";
 import {
     restore as restoreRestQuerier,
     rewire$getItem,
@@ -42,12 +44,14 @@ import {
     restore as restoreLoadAscendantHierarchy,
     rewire$loadAscendantHierarchy
 } from "./actions-helpers/load-ascendant-hierarchy.js";
+import { TYPE_FILE } from "../constants";
 
 describe("Store actions", () => {
     afterEach(() => {
         restoreRestQuerier();
         restoreLoadFolderContent();
         restoreLoadAscendantHierarchy();
+        restoreUploadFile();
     });
 
     let context,
@@ -58,7 +62,8 @@ describe("Store actions", () => {
         deleteUserPreferenciesForFolderInProject,
         patchUserPreferenciesForFolderInProject,
         patchUserPreferenciesForUIInProject,
-        addNewDocument;
+        addNewDocument,
+        uploadFile;
 
     beforeEach(() => {
         const project_id = 101;
@@ -84,6 +89,9 @@ describe("Store actions", () => {
 
         addNewDocument = jasmine.createSpy("addNewDocument");
         rewire$addNewDocument(addNewDocument);
+
+        uploadFile = jasmine.createSpy("uploadFile");
+        rewire$uploadFile(uploadFile);
 
         deleteUserPreferenciesForFolderInProject = jasmine.createSpy(
             "deleteUserPreferenciesForFolderInProject"
@@ -429,6 +437,72 @@ describe("Store actions", () => {
                 jasmine.any(Object)
             );
             expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
+        });
+    });
+
+    describe("addNewUploadFile", () => {
+        it("Creates a fake item with created item reference", async () => {
+            context.state.folder_content = [{ id: 45 }];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" };
+            const parent = { id: 42 };
+
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            await addNewUploadFile(context, [dropped_file, parent]);
+
+            const expected_fake_item = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 42,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0
+            };
+            expect(context.commit).toHaveBeenCalledWith(
+                "addJustCreatedDocumentToFolderContent",
+                expected_fake_item
+            );
+        });
+        it("Starts upload", async () => {
+            context.state.folder_content = [{ id: 45 }];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" };
+            const parent = { id: 42 };
+
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            await addNewUploadFile(context, [dropped_file, parent]);
+
+            const expected_fake_item = {
+                id: 66,
+                title: "filename.txt",
+                parent_id: 42,
+                type: TYPE_FILE,
+                file_type: "text/plain",
+                is_uploading: true,
+                progress: 0
+            };
+            expect(uploadFile).toHaveBeenCalledWith(
+                context,
+                dropped_file,
+                expected_fake_item,
+                created_item_reference
+            );
+        });
+        it("Does not start upload nor create fake item if item reference already exist in the store", async () => {
+            context.state.folder_content = [{ id: 45 }, { id: 66 }];
+            const dropped_file = { name: "filename.txt", size: 10, type: "text/plain" };
+            const parent = { id: 42 };
+
+            const created_item_reference = { id: 66 };
+            addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+
+            await addNewUploadFile(context, [dropped_file, parent]);
+
+            expect(context.commit).not.toHaveBeenCalled();
+            expect(uploadFile).not.toHaveBeenCalled();
         });
     });
 });
