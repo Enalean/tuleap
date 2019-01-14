@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -33,13 +33,14 @@
 </template>
 <script>
 import {
-    TYPE_EMPTY,
     ICON_EMPTY,
-    TYPE_LINK,
     ICON_LINK,
-    TYPE_WIKI,
-    ICON_WIKI
+    ICON_WIKI,
+    TYPE_EMPTY,
+    TYPE_LINK,
+    TYPE_WIKI
 } from "../../../constants";
+import { mapState } from "vuex";
 
 export default {
     name: "TypeSelector",
@@ -47,19 +48,14 @@ export default {
         value: String
     },
     computed: {
+        ...mapState(["user_can_create_wiki"]),
         supported_types() {
-            return [
+            let types = [
                 {
                     identifier: TYPE_LINK,
                     is_checked: this.value === TYPE_LINK,
                     label: this.$gettext("Link"),
                     icon: ICON_LINK
-                },
-                {
-                    identifier: TYPE_WIKI,
-                    is_checked: this.value === TYPE_WIKI,
-                    label: this.$gettext("Wiki page"),
-                    icon: ICON_WIKI
                 },
                 {
                     identifier: TYPE_EMPTY,
@@ -68,6 +64,15 @@ export default {
                     icon: ICON_EMPTY
                 }
             ];
+            if (this.user_can_create_wiki) {
+                types.push({
+                    identifier: TYPE_WIKI,
+                    is_checked: this.value === TYPE_WIKI,
+                    label: this.$gettext("Wiki page"),
+                    icon: ICON_WIKI
+                });
+            }
+            return types;
         }
     }
 };

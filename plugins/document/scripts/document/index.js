@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId, 10);
     const project_name = vue_mount_point.dataset.projectName;
     const user_is_admin = Boolean(vue_mount_point.dataset.userIsAdmin);
+    const user_can_create_wiki = Boolean(vue_mount_point.dataset.userCanCreateWiki);
     const user_timezone = document.body.dataset.userTimezone;
     const date_time_format = document.body.dataset.dateTimeFormat;
     const user_id = Number.parseInt(document.body.dataset.userId, 10);
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
             user_id,
             project_id,
             user_is_admin,
+            user_can_create_wiki,
             date_time_format,
             max_files_dragndrop,
             max_size_upload

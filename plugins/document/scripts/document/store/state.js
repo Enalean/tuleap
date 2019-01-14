@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ const state = {
     folded_by_map: {},
     has_modal_error: false,
     modal_error: null,
+    user_can_create_wiki: false,
     max_files_dragndrop: 1,
     max_size_upload: 1
 };

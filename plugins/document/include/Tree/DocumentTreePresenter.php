@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,15 +35,20 @@ class DocumentTreePresenter
      */
     public $user_is_admin;
     /**
+     * @var bool
+     */
+    public $user_can_create_wiki;
+    /**
      * @var int
      */
     public $max_size_upload;
 
     public function __construct(\Project $project, \PFUser $user)
     {
-        $this->project_id      = $project->getID();
-        $this->project_name    = $project->getUnixNameLowerCase();
-        $this->user_is_admin   = $user->isAdmin($project->getID());
-        $this->max_size_upload = \ForgeConfig::get("sys_max_size_upload");
+        $this->project_id           = $project->getID();
+        $this->project_name         = $project->getUnixNameLowerCase();
+        $this->user_is_admin        = $user->isAdmin($project->getID());
+        $this->user_can_create_wiki = $project->usesWiki();
+        $this->max_size_upload      = \ForgeConfig::get("sys_max_size_upload");
     }
 }
