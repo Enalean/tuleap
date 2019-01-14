@@ -19,7 +19,7 @@
 
 <template>
     <div class="document-switch-to-docman">
-        <a v-on:click="redirectUser()" class="document-switch-to-docman-link">
+        <a v-bind:href="redirect_url" v-on:click="redirectUser()" class="document-switch-to-docman-link">
             <i class="fa fa-random document-switch-to-docman-icon"></i><!--
             --><translate>Switch to old user interface</translate>
         </a>
@@ -32,21 +32,24 @@ import { mapState } from "vuex";
 export default {
     name: "SwitchToOldUI",
     computed: {
-        ...mapState(["project_id", "current_folder"])
+        ...mapState(["project_id", "current_folder"]),
+        redirect_url() {
+            if (this.$route.params.item_id) {
+                return (
+                    "/plugins/docman/?group_id=" +
+                    this.project_id +
+                    "&action=show&id=" +
+                    parseInt(this.$route.params.item_id, 10)
+                );
+            }
+
+            return "/plugins/docman/?group_id=" + this.project_id;
+        }
     },
     methods: {
         redirectUser() {
             this.$store.dispatch("setUserPreferenciesForUI").then(() => {
-                if (this.$route.params.item_id) {
-                    window.location =
-                        "/plugins/docman/?group_id=" +
-                        this.project_id +
-                        "&action=show&id=" +
-                        parseInt(this.$route.params.item_id, 10);
-                    return;
-                }
-
-                window.location = "/plugins/docman/?group_id=" + this.project_id;
+                window.location = this.redirect_url();
             });
         }
     }
