@@ -46,6 +46,7 @@ function iconForMimeType(mime_type) {
             icon = "fa-file-code-o document-code-icon";
             if (typeof parts[1] !== "undefined") {
                 switch (parts[1]) {
+                    case "gzip":
                     case "zip":
                     case "x-tar":
                     case "x-java-archive":

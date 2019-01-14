@@ -30,19 +30,19 @@ class Docman_Icons {
     function __construct($images_path) {
         $this->images_path = $images_path;
     }
-    
+
     function getActionIcon($action) {
         switch ($action) {
-            case 'popup': 
+            case 'popup':
                 return $this->images_path. 'popup.png';
                 break;
-            case 'newFolder': 
+            case 'newFolder':
                 return $this->images_path. 'folder-new.png';
                 break;
-            case 'newDocument': 
+            case 'newDocument':
                 return $this->images_path. 'document-new.png';
                 break;
-            case 'details': 
+            case 'details':
                 return $this->images_path. 'item-details.png';
                 break;
             case 'show':
@@ -52,7 +52,7 @@ class Docman_Icons {
                 break;
         }
     }
-    
+
     function getIconForItem(&$item, $params = null) {
         $icon = $this->images_path;
         if (isset($params['icon_width'])) {
@@ -89,8 +89,8 @@ class Docman_Icons {
     }
 
     /**
-    * 
-    * 
+    *
+    *
     * @see http://www.ltsw.se/knbase/internet/mime.htp
     * @see http://framework.openoffice.org/documentation/mimetypes/mimetypes.html
     * @see http://filext.com/
@@ -115,6 +115,7 @@ class Docman_Icons {
                 $icon = 'binary';
                 if (isset($parts[1])) {
                     switch($parts[1]) {
+                        case 'gzip':
                         case 'zip':
                         case 'x-tar':
                         case 'x-java-archive':
@@ -182,7 +183,7 @@ class Docman_Icons {
         }
         return $icon;
     }
-    
+
     function getFolderSpinner() {
         return $this->images_path . 'folder-spinner.gif';
     }
