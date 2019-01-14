@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -16,8 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_DateReminderDao extends DataAccessObject
 {
@@ -55,7 +53,9 @@ class Tracker_DateReminderDao extends DataAccessObject
         $sql = "SELECT DISTINCT(tracker_reminder.tracker_id)
                 FROM tracker_reminder
                 JOIN tracker_field ON tracker_reminder.field_id = tracker_field.id
-                WHERE tracker_reminder.status = 1
+                JOIN tracker ON (tracker.id = tracker_reminder.tracker_id)
+                JOIN `groups` ON (`groups`.group_id = tracker.group_id)
+                WHERE tracker_reminder.status = 1 AND tracker.deletion_date IS NULL AND `groups`.status = 'A'
                 ORDER BY reminder_id";
         return $this->retrieve($sql);
     }
