@@ -22,7 +22,8 @@ import {
     loadRootFolder,
     loadFolder,
     setUserPreferenciesForFolder,
-    createNewDocument
+    createNewDocument,
+    setUserPreferenciesForUI
 } from "./actions.js";
 import {
     restore as restoreRestQuerier,
@@ -30,6 +31,7 @@ import {
     rewire$getProject,
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$patchUserPreferenciesForFolderInProject,
+    rewire$patchUserPreferenciesForUIInProject,
     rewire$addNewDocument
 } from "../api/rest-querier.js";
 import {
@@ -55,6 +57,7 @@ describe("Store actions", () => {
         loadAscendantHierarchy,
         deleteUserPreferenciesForFolderInProject,
         patchUserPreferenciesForFolderInProject,
+        patchUserPreferenciesForUIInProject,
         addNewDocument;
 
     beforeEach(() => {
@@ -91,6 +94,11 @@ describe("Store actions", () => {
             "patchUserPreferenciesForFolderInProject"
         );
         rewire$patchUserPreferenciesForFolderInProject(patchUserPreferenciesForFolderInProject);
+
+        patchUserPreferenciesForUIInProject = jasmine.createSpy(
+            "patchUserPreferenciesForUIInProject"
+        );
+        rewire$patchUserPreferenciesForUIInProject(patchUserPreferenciesForUIInProject);
     });
 
     describe("loadRootFolder()", () => {
@@ -367,6 +375,21 @@ describe("Store actions", () => {
 
             expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
             expect(deleteUserPreferenciesForFolderInProject).toHaveBeenCalled();
+        });
+    });
+
+    describe("setUserPreferenciesForUI", () => {
+        it("sets the user preference to old ui", async () => {
+            const context = {
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                }
+            };
+
+            await setUserPreferenciesForUI(context);
+
+            expect(patchUserPreferenciesForUIInProject).toHaveBeenCalled();
         });
     });
 

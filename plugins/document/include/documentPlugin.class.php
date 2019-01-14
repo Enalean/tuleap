@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\Tree\DocumentTreeController;
@@ -40,6 +41,7 @@ class documentPlugin extends Plugin // phpcs:ignore
     {
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(ExternalLinksManager::NAME);
+        $this->addHook(ExternalLinkRedirector::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -79,5 +81,15 @@ class documentPlugin extends Plugin // phpcs:ignore
         $project = ProjectManager::instance()->getProject($collector->getProjectId());
 
         $collector->addExternalLink(new Link($project, $collector->getFolderId()));
+    }
+
+    public function externalLinkRedirector(ExternalLinkRedirector $external_link_redirector)
+    {
+        $project_id = $external_link_redirector->getProject()->getID();
+        if (! PluginManager::instance()->isPluginAllowedForProject($this, $project_id)) {
+            return;
+        }
+
+        $external_link_redirector->checkAndStoreIfUserHasToBeenRedirected();
     }
 }

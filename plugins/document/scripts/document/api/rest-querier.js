@@ -29,7 +29,8 @@ export {
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
-    addNewDocument
+    addNewDocument,
+    patchUserPreferenciesForUIInProject
 };
 
 async function getProject(project_id) {
@@ -114,6 +115,18 @@ async function patchUserPreferenciesForFolderInProject(user_id, project_id, fold
         body: JSON.stringify({
             key: `plugin_docman_hide_${project_id}_${folder_id}`,
             value: DOCMAN_FOLDER_EXPANDED_VALUE
+        })
+    });
+}
+
+function patchUserPreferenciesForUIInProject(user_id, project_id) {
+    return patch(`/api/users/${user_id}/preferences`, {
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            key: `plugin_docman_display_legacy_ui_${project_id}`,
+            value: true
         })
     });
 }
