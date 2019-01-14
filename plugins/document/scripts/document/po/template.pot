@@ -97,6 +97,9 @@ msgstr ""
 msgid "Show error details"
 msgstr ""
 
+msgid "Some files are being uploaded."
+msgstr ""
+
 msgid "Switch to old user interface"
 msgstr ""
 

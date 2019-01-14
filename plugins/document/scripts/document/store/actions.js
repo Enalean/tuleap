@@ -204,7 +204,8 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
         parent_id: parent.id,
         type: TYPE_FILE,
         file_type: dropped_file.type,
-        is_uploading: true
+        is_uploading: true,
+        progress: 0
     };
 
     context.commit("addJustCreatedDocumentToFolderContent", fake_item);

@@ -28,7 +28,10 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
             filename: dropped_file.name,
             filetype: dropped_file.type
         },
-        onSuccess: async function() {
+        onProgress: (bytes_uploaded, bytes_total) => {
+            fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
+        },
+        onSuccess: async () => {
             const file = await getItem(docman_item.id);
             context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
         }

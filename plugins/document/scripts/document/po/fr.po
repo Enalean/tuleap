@@ -106,6 +106,9 @@ msgstr "Documentation du projet"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
+msgid "Some files are being uploaded."
+msgstr "Des fichiers sont en cours de téléversement."
+
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
