@@ -119,23 +119,16 @@ $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95)
     }
 }
 
-.file-upload-progress {
+.document-file-upload-progress {
     display: flex;
     align-items: center;
 }
 
-.file-upload-cell-title {
-    position: relative;
-
-    > .file-upload-progress {
-        position: absolute;
-        right: 30%;
-        top: 0;
-        bottom: 0;
-    }
+.document-file-upload-cell-title {
+    justify-content: space-between;
 }
 
-.file-upload-progress-value {
+.document-file-upload-progress-value {
     margin: 0 5px 0 0;
     color: $tlp-ui-success;
     font-size: 12px;
@@ -158,7 +151,7 @@ progress::-webkit-progress-value {
 }
 
 
-.file-upload-progress-bar {
+.document-file-upload-progress-bar {
     color: $tlp-ui-success;
     position: relative;
     top: 1px;
@@ -168,6 +161,18 @@ progress::-webkit-progress-value {
     border: 0;
     border-radius: 20px;
     vertical-align: unset;
+}
+
+.document-file-upload-progress-cancel {
+    padding: 0 0 0 $tlp-half-spacing;
+    color: $tlp-ui-success;
+    cursor: pointer;
+    transition: color ease-in-out 150ms;
+
+    &:hover {
+        color: $tlp-ui-danger;
+        text-decoration: none;
+    }
 }
 
 .tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td {

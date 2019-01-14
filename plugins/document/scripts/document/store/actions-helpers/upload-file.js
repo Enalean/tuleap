@@ -21,7 +21,7 @@ import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
 
 export function uploadFile(context, dropped_file, fake_item, docman_item) {
-    const upload = new Upload(dropped_file, {
+    const uploader = new Upload(dropped_file, {
         uploadUrl: docman_item.file_properties.upload_href,
         retryDelays: [0, 1000, 3000, 5000],
         metadata: {
@@ -37,5 +37,7 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
         }
     });
 
-    upload.start();
+    uploader.start();
+
+    return uploader;
 }

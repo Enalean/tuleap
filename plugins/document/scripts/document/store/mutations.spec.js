@@ -307,4 +307,33 @@ describe("Store mutations", () => {
             ]);
         });
     });
+
+    describe("removeItemFromFolderContent", () => {
+        it("it should remove the item from the folder content", () => {
+            const item = {
+                id: 46,
+                title: "toto.txt",
+                parent_id: 42
+            };
+
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                    { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                    item,
+                    { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+                ]
+            };
+
+            mutations.removeItemFromFolderContent(state, item);
+
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" },
+                { id: 44, parent_id: 42, level: 3, type: "file", title: "titi.txt" },
+                { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
+            ]);
+        });
+    });
 });

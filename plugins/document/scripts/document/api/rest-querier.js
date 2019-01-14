@@ -30,7 +30,8 @@ export {
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
     addNewDocument,
-    patchUserPreferenciesForUIInProject
+    patchUserPreferenciesForUIInProject,
+    cancelUpload
 };
 
 async function getProject(project_id) {
@@ -135,4 +136,12 @@ async function deleteUserPreferenciesForFolderInProject(user_id, project_id, fol
     const key = `plugin_docman_hide_${project_id}_${folder_id}`;
 
     await del(`/api/users/${user_id}/preferences?key=${key}`);
+}
+
+function cancelUpload(item) {
+    return del(item.uploader.url, {
+        headers: {
+            "Tus-Resumable": "1.0.0"
+        }
+    });
 }

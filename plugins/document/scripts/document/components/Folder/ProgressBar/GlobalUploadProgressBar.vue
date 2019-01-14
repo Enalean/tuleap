@@ -17,44 +17,14 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
+<template functional>
     <div class="document-file-upload-progress">
         <span class="document-file-upload-progress-value">
-            {{ item.progress }}%
+            {{ props.progress }}%
         </span>
         <progress class="document-file-upload-progress-bar"
                   max="100"
-                  v-bind:value="item.progress"
+                  v-bind:value="props.progress"
         ></progress>
-        <a class="document-file-upload-progress-cancel tlp-tooltip tlp-tooltip-left"
-           href="#"
-           v-bind:aria-label="cancel_title"
-           v-bind:data-tlp-tooltip="cancel_title"
-           role="button"
-           v-on:click.prevent="cancel"
-        >
-            <i class="fa fa-times-circle"></i>
-        </a>
     </div>
 </template>
-
-<script>
-import { mapActions } from "vuex";
-
-export default {
-    props: {
-        item: Object
-    },
-    computed: {
-        cancel_title() {
-            return this.$gettext("Cancel upload");
-        }
-    },
-    methods: {
-        ...mapActions(["cancelFileUpload"]),
-        cancel() {
-            this.cancelFileUpload(this.item);
-        }
-    }
-};
-</script>
