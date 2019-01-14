@@ -22,7 +22,7 @@ declare(strict_types = 1);
 
 namespace Tuleap\Docman\ExternalLinks;
 
-class ExternalLinkRedirectionProcessor
+class DocmanHTTPControllerProxy
 {
     /**
      * @var \EventManager
@@ -32,14 +32,22 @@ class ExternalLinkRedirectionProcessor
      * @var ExternalLinkParametersExtractor
      */
     private $parameters_extractor;
+    /**
+     * @var \Docman_HTTPController
+     */
+    private $docman_HTTP_controller;
 
-    public function __construct(\EventManager $event_manager, ExternalLinkParametersExtractor $parameters_extractor)
-    {
-        $this->event_manager        = $event_manager;
-        $this->parameters_extractor = $parameters_extractor;
+    public function __construct(
+        \EventManager $event_manager,
+        ExternalLinkParametersExtractor $parameters_extractor,
+        \Docman_HTTPController $docman_HTTP_controller
+    ) {
+        $this->event_manager          = $event_manager;
+        $this->parameters_extractor   = $parameters_extractor;
+        $this->docman_HTTP_controller = $docman_HTTP_controller;
     }
 
-    public function processIfPossible(\HTTPRequest $request, \PFUser $user) : bool
+    public function process(\HTTPRequest $request, \PFUser $user) : void
     {
         $folder_id = $this->parameters_extractor->extractFolderIdFromParams($request);
 
@@ -53,10 +61,9 @@ class ExternalLinkRedirectionProcessor
 
         if ($redirector->shouldRedirectUser()) {
             $GLOBALS['HTML']->redirect($redirector->getUrlRedirection());
-            return true;
+        } else {
+            $this->docman_HTTP_controller->process();
         }
-
-        return false;
     }
 
 

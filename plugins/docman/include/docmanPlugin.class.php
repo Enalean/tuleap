@@ -24,8 +24,10 @@
  *
  */
 
+use Tuleap\Docman\ExternalLinks\ExternalLink;
 use Tuleap\Docman\ExternalLinks\ExternalLinkParametersExtractor;
-use Tuleap\Docman\ExternalLinks\ExternalLinkRedirectionProcessor;
+use Tuleap\Docman\ExternalLinks\DocmanHTTPControllerProxy;
+use Tuleap\Docman\ExternalLinks\LegacyLink;
 use Tuleap\Docman\Notifications\NotificationsForProjectMemberCleaner;
 use Tuleap\Docman\Notifications\NotifiedPeopleRetriever;
 use Tuleap\Docman\Notifications\UGroupsRetriever;
@@ -39,7 +41,6 @@ use Tuleap\Docman\PermissionsPerGroup\PermissionPerGroupDocmanServicePaneBuilder
 use Tuleap\Docman\REST\ResourcesInjector;
 use Tuleap\Docman\REST\v1\ItemRepresentationBuilder;
 use Tuleap\Docman\Tus\TusServer;
-use Tuleap\Docman\Upload\DocumentBeingUploadedInformationProvider;
 use Tuleap\Http\MessageFactoryBuilder;
 use Tuleap\Layout\PaginationPresenter;
 use Tuleap\Mail\MailFilter;
@@ -386,18 +387,15 @@ class DocmanPlugin extends Plugin
 
     public function process()
     {
-        $request   = HTTPRequest::instance();
-        $user      = $request->getCurrentUser();
-        $processor = new ExternalLinkRedirectionProcessor(
+        $request            = HTTPRequest::instance();
+        $user               = $request->getCurrentUser();
+        $proxy = new DocmanHTTPControllerProxy(
             EventManager::instance(),
-            new ExternalLinkParametersExtractor()
+            new ExternalLinkParametersExtractor(),
+            $this->getHTTPController()
         );
 
-        $has_processed = $processor->processIfPossible($request, $user);
-
-        if ($has_processed === false) {
-            $this->getHTTPController()->process();
-        }
+        $proxy->process($request, $user);
     }
 
 
