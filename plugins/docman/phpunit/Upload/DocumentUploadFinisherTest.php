@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
-class DocumentUploadedTest extends TestCase
+class DocumentUploadFinisherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -57,14 +57,14 @@ class DocumentUploadedTest extends TestCase
         \ForgeConfig::restore();
     }
 
-    public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete()
+    public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
     {
         $root = vfsStream::setup();
         \ForgeConfig::set('tmp_dir', $root->url());
 
         $path_allocator = new DocumentUploadPathAllocator();
 
-        $document_uploaded_subscriber = new DocumentUploaded(
+        $upload_finisher = new DocumentUploadFinisher(
             $this->logger,
             $path_allocator,
             $this->item_factory,
@@ -116,35 +116,10 @@ class DocumentUploadedTest extends TestCase
         $this->user_manager->shouldReceive('getUserByID')->andReturns(\Mockery::mock(\PFUser::class));
         $this->logger->shouldReceive('debug');
 
-        $request = \Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->with('item_id')->andReturns($item_id_being_created);
+        $file_information = new DocumentAlreadyUploadedInformation($item_id_being_created, 123);
 
-        $document_uploaded_subscriber->notify($request);
+        $upload_finisher->finishUpload($file_information);
 
         $this->assertFileNotExists($path_item_being_uploaded);
-    }
-
-    /**
-     * @expectedException \LogicException
-     */
-    public function testNotificationIsRejectedIsTheRequestDoesNotContainsTheExpectedInformation()
-    {
-        $document_uploaded_subscriber = new DocumentUploaded(
-            $this->logger,
-            new DocumentUploadPathAllocator(),
-            $this->item_factory,
-            $this->version_factory,
-            $this->permission_manager,
-            $this->event_manager,
-            $this->on_going_upload_dao,
-            $this->file_storage,
-            new \Docman_MIMETypeDetector(),
-            $this->user_manager
-        );
-
-        $request = \Mockery::mock(\Psr\Http\Message\ServerRequestInterface::class);
-        $request->shouldReceive('getAttribute')->andReturns(null);
-
-        $document_uploaded_subscriber->notify($request);
     }
 }

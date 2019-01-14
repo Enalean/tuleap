@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,64 +18,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusFile;
+use Tuleap\Docman\Tus\TusFileInformation;
 
-final class DocumentBeingUploaded implements TusFile
+final class DocumentAlreadyUploadedInformation implements TusFileInformation
 {
     /**
-     * @var resource
+     * @var int
      */
-    private $handle;
+    private $id;
     /**
      * @var int
      */
     private $length;
-    /**
-     * @var int
-     */
-    private $offset;
 
-    public function __construct($handle, $length, $offset)
+    public function __construct(int $id, int $length)
     {
-        if (! \is_resource($handle)) {
-            throw new \InvalidArgumentException(
-                'Expected a resource to the document, got ' . gettype($handle)
-            );
-        }
-        $this->handle = $handle;
+        $this->id = $id;
         if ($length < 0) {
             throw new \UnexpectedValueException('The length must be positive');
         }
         $this->length = $length;
-        if ($offset < 0) {
-            throw new \UnexpectedValueException('The offset must be positive');
-        }
-        $this->offset = $offset;
     }
 
-    /**
-     * @return int
-     */
-    public function getLength()
+    public function getID(): int
+    {
+        return $this->id;
+    }
+
+    public function getLength(): int
     {
         return $this->length;
     }
 
-    /**
-     * @return int
-     */
-    public function getOffset()
+    public function getOffset(): int
     {
-        return $this->offset;
-    }
-
-    /**
-     * @return \resource
-     */
-    public function getStream()
-    {
-        return $this->handle;
+        return $this->length;
     }
 }

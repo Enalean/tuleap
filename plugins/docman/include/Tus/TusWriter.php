@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Tus;
 
-interface TusFile
+interface TusWriter
 {
     /**
-     * @return int
+     * @param resource $input_source
+     * @throws CannotWriteFileException
      */
-    public function getLength();
-
-    /**
-     * @return int
-     */
-    public function getOffset();
-
-    /**
-     * @return \resource
-     */
-    public function getStream();
+    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source) : int;
 }

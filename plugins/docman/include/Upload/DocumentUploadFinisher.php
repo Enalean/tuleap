@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
-use Tuleap\Docman\Tus\TusEvent;
-use Tuleap\Docman\Tus\TusEventSubscriber;
+use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\Docman\Tus\TusFinisherDataStore;
 
-final class DocumentUploaded implements TusEventSubscriber
+final class DocumentUploadFinisher implements TusFinisherDataStore
 {
     /**
      * @var \Logger
@@ -90,23 +92,9 @@ final class DocumentUploaded implements TusEventSubscriber
         $this->user_manager                   = $user_manager;
     }
 
-    /**
-     * @return string
-     */
-    public function getInterestedBySubject()
+    public function finishUpload(TusFileInformation $file_information) : void
     {
-        return TusEvent::UPLOAD_COMPLETED;
-    }
-
-    /**
-     * @return void
-     */
-    public function notify(\Psr\Http\Message\ServerRequestInterface $request)
-    {
-        $item_id = $request->getAttribute('item_id');
-        if ($item_id === null) {
-            throw new \LogicException('The item ID was not given in the request, not able to save the uploaded document');
-        }
+        $item_id = $file_information->getID();
 
         $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
         $this->createDocument($uploaded_document_path, $item_id);
@@ -114,7 +102,7 @@ final class DocumentUploaded implements TusEventSubscriber
         $this->document_ongoing_upload_dao->deleteByItemID($item_id);
     }
 
-    private function createDocument($uploaded_document_path, $item_id)
+    private function createDocument($uploaded_document_path, $item_id) : void
     {
         $this->document_ongoing_upload_dao->wrapAtomicOperations(function () use ($uploaded_document_path, $item_id) {
             if ($this->docman_item_factory->getItemFromDb($item_id) !== null) {
@@ -188,10 +176,7 @@ final class DocumentUploaded implements TusEventSubscriber
         $this->logger->debug('Item #' . $item_id . ' has been created');
     }
 
-    /**
-     * @return string
-     */
-    private function getFiletype($path)
+    private function getFiletype($path) : string
     {
         $filename = basename($path);
         if ($this->docman_mime_type_detector->isAnOfficeFile($filename)) {
@@ -200,7 +185,7 @@ final class DocumentUploaded implements TusEventSubscriber
         return mime_content_type($path);
     }
 
-    private function notifyCreation($item_id)
+    private function notifyCreation($item_id) : void
     {
         $item = $this->docman_item_factory->getItemFromDb($item_id);
         if ($item === null) {
@@ -217,9 +202,9 @@ final class DocumentUploaded implements TusEventSubscriber
             'plugin_docman_event_add',
             [
                 'group_id' => $item->getGroupId(),
-                'parent'   => $this->docman_item_factory->getItemFromDb($item->getParentId()),
-                'item'     => $item,
-                'user'     => $user
+                'parent' => $this->docman_item_factory->getItemFromDb($item->getParentId()),
+                'item' => $item,
+                'user' => $user
             ]
         );
         $this->event_manager->processEvent('send_notifications', []);
@@ -227,9 +212,9 @@ final class DocumentUploaded implements TusEventSubscriber
             'plugin_docman_event_new_version',
             [
                 'group_id' => $item->getGroupId(),
-                'item'     => $item,
-                'version'  => $item_version,
-                'user'     => $user
+                'item' => $item,
+                'version' => $item_version,
+                'user' => $user
             ]
         );
     }

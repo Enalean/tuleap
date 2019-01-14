@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Tus;
 
-interface TusEvent
+interface TusCoreDataStore
 {
-    const UPLOAD_COMPLETED = 'upload_completed';
+    public function getFileInformation(\Psr\Http\Message\ServerRequestInterface $request) : ?TusFileInformation;
+    /**
+     * @param resource $input_source
+     * @throws CannotWriteFileException
+     */
+    public function writeChunk(TusFileInformation $file_information, int $offset, $input_source) : int;
 }
