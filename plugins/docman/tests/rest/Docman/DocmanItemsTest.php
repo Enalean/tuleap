@@ -416,6 +416,54 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testPostFolderItem(int $root_id): void
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'My Folder',
+                'description' => 'A Folder description',
+                'parent_id'   => $root_id,
+                'type'        => 'folder'
+            ]
+        );
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+
+        $this->assertEquals(201, $response->getStatusCode());
+        $this->assertNull($response->json()['file_properties']);
+    }
+
+    /**
+     * @depends             testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 400
+     */
+    public function testPostFolderReturns400IfTypeAndPropertiesDoesNotMatch(int $root_id): void
+    {
+        $headers         = ['Content-Type' => 'application/json'];
+        $link_properties = ['link_url' => 'https://turfu.example.test'];
+        $query           = json_encode(
+            [
+                'title'           => 'To the fail future',
+                'parent_id'       => $root_id,
+                'type'            => 'folder',
+                'link_properties' => $link_properties
+            ]
+        );
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+    }
+
+    /**
      * Find first item in given array of items which has given title.
      * @return array|null Found item. null otherwise.
      */
