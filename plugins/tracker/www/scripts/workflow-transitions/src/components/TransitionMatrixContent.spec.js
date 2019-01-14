@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,21 +19,24 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+
 import TransitionMatrixContent from "./TransitionMatrixContent.vue";
 import { create } from "../support/factories.js";
 import localVue from "../support/local-vue.js";
 import store_options from "../store/index.js";
-import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "../support/store-wrapper.spec-helper.js";
 
 describe("TransitionMatrixContent", () => {
-    let store_wrapper;
+    let store;
     let wrapper;
 
     beforeEach(() => {
-        store_wrapper = createStoreWrapper(store_options, { is_operation_running: false });
+        store = createStoreMock(store_options, { is_operation_running: false });
 
         wrapper = shallowMount(TransitionMatrixContent, {
-            store: store_wrapper.store,
+            mocks: {
+                $store: store
+            },
             localVue,
             propsData: {
                 from: create("field_value"),
@@ -42,6 +45,8 @@ describe("TransitionMatrixContent", () => {
             }
         });
     });
+
+    afterEach(() => store.reset());
 
     const create_transition_selector = '[data-test-action="create-transition"]';
     const delete_transition_selector = '[data-test-action="delete-transition"]';
@@ -82,7 +87,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("during another operation running", () => {
                 beforeEach(() => {
-                    store_wrapper.state.is_operation_running = true;
+                    store.state.is_operation_running = true;
                 });
 
                 it("transition creation is disabled", () => {
@@ -97,7 +102,7 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("does nothing", () => {
-                        expect(store_wrapper.actions.createTransition).not.toHaveBeenCalled();
+                        expect(store.commit).not.toHaveBeenCalledWith("createTransition");
                     });
                 });
             });
@@ -106,11 +111,10 @@ describe("TransitionMatrixContent", () => {
                 let resolveCreateTransition;
 
                 beforeEach(() => {
-                    store_wrapper.actions.createTransition.and.callFake(
-                        () =>
-                            new Promise(resolve => {
-                                resolveCreateTransition = resolve;
-                            })
+                    store.dispatch.and.returnValue(
+                        new Promise(resolve => {
+                            resolveCreateTransition = resolve;
+                        })
                     );
                     wrapper.find(create_transition_selector).trigger("click");
                 });
@@ -119,15 +123,10 @@ describe("TransitionMatrixContent", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
                 it("creates transition", () => {
-                    expect(store_wrapper.actions.createTransition).toHaveBeenCalled();
-                    expect(
-                        store_wrapper.actions.createTransition.calls.mostRecent().args[1]
-                    ).toEqual(
-                        jasmine.objectContaining({
-                            from_id: 1,
-                            to_id: 2
-                        })
-                    );
+                    expect(store.dispatch).toHaveBeenCalledWith("createTransition", {
+                        from_id: 1,
+                        to_id: 2
+                    });
                 });
 
                 describe("and new transition successfully saved", () => {
@@ -157,7 +156,7 @@ describe("TransitionMatrixContent", () => {
 
             describe("during another operation running", () => {
                 beforeEach(() => {
-                    store_wrapper.state.is_operation_running = true;
+                    store.state.is_operation_running = true;
                 });
 
                 it("transition deletion is disabled", () => {
@@ -172,7 +171,7 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("does nothing", () => {
-                        expect(store_wrapper.actions.deleteTransition).not.toHaveBeenCalled();
+                        expect(store.dispatch).not.toHaveBeenCalledWith("deleteTransition");
                     });
                 });
             });
@@ -181,11 +180,10 @@ describe("TransitionMatrixContent", () => {
                 let deleteTransitionResolve;
 
                 beforeEach(() => {
-                    store_wrapper.actions.deleteTransition.and.callFake(
-                        () =>
-                            new Promise(resolve => {
-                                deleteTransitionResolve = resolve;
-                            })
+                    store.dispatch.and.returnValue(
+                        new Promise(resolve => {
+                            deleteTransitionResolve = resolve;
+                        })
                     );
                     wrapper.find(delete_transition_selector).trigger("click");
                 });
@@ -194,10 +192,7 @@ describe("TransitionMatrixContent", () => {
                     expect(wrapper.contains(spinner_selector)).toBeTruthy();
                 });
                 it("deletes the transition", () => {
-                    expect(store_wrapper.actions.deleteTransition).toHaveBeenCalled();
-                    expect(
-                        store_wrapper.actions.deleteTransition.calls.mostRecent().args[1]
-                    ).toEqual(transition);
+                    expect(store.dispatch).toHaveBeenCalledWith("deleteTransition", transition);
                 });
 
                 describe("and transition successfully deleted", () => {

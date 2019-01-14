@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -42,7 +42,8 @@
                             <transitions-configuration-header-section/>
                             <transitions-matrix-section/>
                         </template>
-                        <first-configuration-sections v-else/>
+                        <first-configuration-sections v-else-if="has_selectbox_fields"/>
+                        <first-configuration-impossible-warning v-else/>
                     </template>
                     <section class="tlp-pane-section" v-else>
                         <div
@@ -58,17 +59,19 @@
 </template>
 
 <script>
-import FirstConfigurationSections from "./FirstConfigurationSections.vue";
+import { mapState, mapGetters } from "vuex";
+import FirstConfigurationSections from "./FirstConfiguration/FirstConfigurationSections.vue";
 import TransitionsConfigurationHeaderSection from "./TransitionsConfigurationHeaderSection.vue";
 import TransitionsMatrixSection from "./TransitionsMatrixSection.vue";
 import TransitionModal from "./TransitionModal/TransitionModal.vue";
 import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarning.vue";
-import { mapState } from "vuex";
+import FirstConfigurationImpossibleWarning from "./FirstConfiguration/FirstConfigurationImpossibleWarning.vue";
 
 export default {
     name: "BaseTrackerWorkflowTransitions",
     components: {
         TransitionRulesEnforcementWarning,
+        FirstConfigurationImpossibleWarning,
         TransitionModal,
         FirstConfigurationSections,
         TransitionsConfigurationHeaderSection,
@@ -90,6 +93,7 @@ export default {
             "is_operation_failed",
             "operation_failure_message"
         ]),
+        ...mapGetters(["has_selectbox_fields"]),
         is_tracker_available() {
             return !this.is_current_tracker_loading && Boolean(this.current_tracker);
         },

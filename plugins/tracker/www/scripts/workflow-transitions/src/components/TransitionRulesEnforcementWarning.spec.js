@@ -23,28 +23,32 @@ import TransitionRulesEnforcementWarning from "./TransitionRulesEnforcementWarni
 import localVue from "../support/local-vue.js";
 import { create } from "../support/factories.js";
 import store_options from "../store/index.js";
-import { createStoreWrapper } from "../support/store-wrapper.spec-helper.js";
+import { createStoreMock } from "../support/store-wrapper.spec-helper.js";
 
 describe("TransitionRulesEnforcementWarning", () => {
-    let store_wrapper;
+    let store;
     let wrapper;
 
     beforeEach(() => {
-        store_wrapper = createStoreWrapper(store_options, {
+        store = createStoreMock(store_options, {
             current_tracker: create("tracker", { workflow: create("workflow") })
         });
         wrapper = shallowMount(TransitionRulesEnforcementWarning, {
-            store: store_wrapper.store,
+            mocks: {
+                $store: store
+            },
             localVue
         });
     });
+
+    afterEach(() => store.reset());
 
     const enforcement_active_message_selector = '[data-test-message="rules-enforcement-active"]';
     const enforcement_inactive_message_selector =
         '[data-test-message="rules-enforcement-inactive"]';
 
     describe("when rules enforcement is active", () => {
-        beforeEach(() => (store_wrapper.state.current_tracker.workflow.is_used = 1));
+        beforeEach(() => (store.getters.are_transition_rules_enforced = true));
 
         it("shows only rules enforcement active message", () => {
             expect(wrapper.contains(enforcement_active_message_selector)).toBeTruthy();
@@ -53,7 +57,7 @@ describe("TransitionRulesEnforcementWarning", () => {
     });
 
     describe("when rules enforcement is inactive", () => {
-        beforeEach(() => (store_wrapper.state.current_tracker.workflow.is_used = 0));
+        beforeEach(() => (store.getters.are_transition_rules_enforced = false));
 
         it("shows only rule enforcement inactive message", () => {
             expect(wrapper.contains(enforcement_active_message_selector)).toBeFalsy();

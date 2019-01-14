@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -59,6 +59,10 @@ const factories = {
         workflow_compliant: {
             type: "sb",
             bindings: { type: "static" }
+        },
+        selectbox_users: {
+            type: "sb",
+            bindings: { type: "users" }
         }
     },
     field_value: {

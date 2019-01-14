@@ -34,7 +34,8 @@
     "@vue/test-utils": "^1.0.0-beta.27",
     "angular-mocks": "^1.7.4",
     "gulp": "^3.9.1",
-    "gulp-angular-gettext": "^2.2.0"
+    "gulp-angular-gettext": "^2.2.0",
+    "vuex-mock-store": "0.0.6"
   },
   "config": {
     "bin": "../../../../node_modules/.bin/"

@@ -83,6 +83,11 @@ msgstr ""
 msgid "The field on which the transitions are based has no selectable value"
 msgstr ""
 
+msgid ""
+"There is no selectbox bound to static values in your tracker! Please\n"
+"        <a href=\"%{ url }\">add one</a> before configuring the workflow."
+msgstr ""
+
 msgid "This action will delete all transition rules! It is irreversible."
 msgstr ""
 

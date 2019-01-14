@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -20,14 +20,17 @@
 <template>
     <form v-on:submit.prevent="createWorkflowTransitions()">
         <section class="tlp-pane-section">
-            <p
-                v-translate
-            >In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.</p>
+            <p v-translate>
+                In order to configure transitions rules on this tracker, your first need to choose a list field. Once chosen, you will be able to configure transition using the configuration matrix.
+            </p>
 
             <div class="tlp-form-element">
                 <label for="workflow-field" class="tlp-label">
                     <span v-translate>Field</span>
-                    <span class="tlp-tooltip tlp-tooltip-top" v-bind:data-tlp-tooltip="field_tooltip">
+                    <span
+                        class="tlp-tooltip tlp-tooltip-top"
+                        v-bind:data-tlp-tooltip="field_tooltip"
+                    >
                         <i class="fa fa-question-circle"></i>
                     </span>
                     <i class="fa fa-asterisk"></i>
@@ -42,7 +45,7 @@
                 >
                     <option value disabled></option>
                     <option
-                        v-for="field in all_fields"
+                        v-for="field in selectbox_fields"
                         v-bind:key="field.id"
                         v-bind:value="field"
                     >{{ field.label }}</option>
@@ -50,7 +53,12 @@
             </div>
         </section>
         <section class="tlp-pane-section tlp-pane-section-submit">
-            <button class="tlp-button-primary" type="submit" v-bind:disabled="is_operation_running">
+            <button
+                class="tlp-button-primary"
+                type="submit"
+                v-bind:disabled="is_operation_running"
+                data-test-action="create-workflow"
+            >
                 <i
                     class="tlp-button-icon fa"
                     v-bind:class="{
@@ -65,8 +73,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { compare } from "../support/string.js";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "FirstConfigurationSections",
@@ -78,13 +85,8 @@ export default {
     },
 
     computed: {
-        ...mapState(["current_tracker", "is_operation_running"]),
-        all_fields() {
-            return this.current_tracker.fields
-                .filter(field => field.type === "sb" && field.bindings.type === "static")
-                .map(field => ({ id: field.field_id, label: field.label }))
-                .sort((field1, field2) => compare(field1.label, field2.label));
-        },
+        ...mapState(["is_operation_running"]),
+        ...mapGetters(["selectbox_fields"]),
         field_tooltip() {
             return this.$gettext("Transitions based field");
         }
