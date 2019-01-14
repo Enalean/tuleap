@@ -300,6 +300,93 @@ class DocmanItemsTest extends DocmanBase
 
     /**
      * @depends testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 409
+     */
+    public function testDocumentCreationIsRejectedIfAFileIsBeingUploadedForTheSameNameByADifferentUser(int $root_id) : void
+    {
+        $document_name = 'document_conflict_' . bin2hex(random_bytes(8));
+
+        $response = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_items',
+                null,
+                json_encode([
+                    'title'           => $document_name,
+                    'parent_id'       => $root_id,
+                    'type'            => 'file',
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                ])
+            )
+        );
+        $this->assertEquals(201, $response->getStatusCode());
+
+        $this->getResponse(
+            $this->client->post(
+                'docman_items',
+                null,
+                json_encode([
+                    'title'     => $document_name,
+                    'parent_id' => $root_id,
+                    'type'      => 'empty'
+                ])
+            )
+        );
+    }
+
+    /**
+     * @depends testGetRootId
+     */
+    public function testDocumentCreationWithASameNameIsNotRejectedWhenTheUploadHasBeenCanceled(int $root_id) : void
+    {
+        $document_name = 'document_not_conflict_after_cancel_' . bin2hex(random_bytes(8));
+
+        $response_creation_file = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post(
+                'docman_items',
+                null,
+                json_encode([
+                    'title'           => $document_name,
+                    'parent_id'       => $root_id,
+                    'type'            => 'file',
+                    'file_properties' => ['file_name' => 'file', 'file_size' => 123]
+                ])
+            )
+        );
+        $this->assertEquals(201, $response_creation_file->getStatusCode());
+
+        $tus_client = new Client(
+            str_replace('/api/v1', '', $this->client->getBaseUrl()),
+            $this->client->getConfig()
+        );
+        $tus_client->setSslVerification(false, false, false);
+        $tus_response_cancel = $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $tus_client->delete(
+                $response_creation_file->json()['file_properties']['upload_href'],
+                ['Tus-Resumable' => '1.0.0']
+            )
+        );
+        $this->assertEquals(204, $tus_response_cancel->getStatusCode());
+
+        $response_creation_empty = $this->getResponse(
+            $this->client->post(
+                'docman_items',
+                null,
+                json_encode([
+                    'title'     => $document_name,
+                    'parent_id' => $root_id,
+                    'type'      => 'empty'
+                ])
+            )
+        );
+        $this->assertEquals(201, $response_creation_empty->getStatusCode());
+    }
+
+    /**
+     * @depends testGetRootId
      */
     public function testPostWikiDocument(int $root_id): void
     {

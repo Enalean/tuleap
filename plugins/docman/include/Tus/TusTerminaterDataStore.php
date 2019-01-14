@@ -22,10 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Tus;
 
-interface TusDataStore
+interface TusTerminaterDataStore
 {
-    public function getFileInformationProvider() : TusFileInformationProvider;
-    public function getWriter() : TusWriter;
-    public function getFinisher() : ?TusFinisherDataStore;
-    public function getTerminater() : ?TusTerminaterDataStore;
+    public function terminateUpload(TusFileInformation $file_information) : void;
 }

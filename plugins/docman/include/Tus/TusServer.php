@@ -69,8 +69,20 @@ final class TusServer implements RequestHandlerInterface
                         $response = $this->processPatch($request, $file);
                     }
                     break;
+                case 'DELETE':
+                    $terminater = $this->data_store->getTerminater();
+                    if ($terminater === null) {
+                        return $this->getNonSupportedResponse();
+                    }
+                    $this->checkProtocolVersionIsSupported($request);
+                    $file = $this->data_store->getFileInformationProvider()->getFileInformation($request);
+                    if ($file !== null) {
+                        $terminater->terminateUpload($file);
+                        $response = $this->response_factory->createResponse(204);
+                    }
+                    break;
                 default:
-                    return $this->response_factory->createResponse(405);
+                    return $this->getNonSupportedResponse();
             }
         } catch (TusServerIncompatibleVersionException $exception) {
             $response = $this->response_factory->createResponse(
@@ -96,10 +108,26 @@ final class TusServer implements RequestHandlerInterface
         return $response->withHeader('Tus-Resumable', self::TUS_VERSION);
     }
 
+    private function getNonSupportedResponse() : ResponseInterface
+    {
+        return $this->response_factory->createResponse(405);
+    }
+
     private function processOptions() : ResponseInterface
     {
-        return $this->response_factory->createResponse(204)
+        $response = $this->response_factory->createResponse(204)
             ->withHeader('Tus-Version', self::TUS_VERSION);
+
+        $extensions = [];
+        if ($this->data_store->getTerminater() !== null) {
+            $extensions[] = 'termination';
+        }
+
+        if (! empty($extensions)) {
+            $response = $response->withAddedHeader('Tus-Extension', \implode(',', $extensions));
+        }
+
+        return $response;
     }
 
     private function processHead(TusFileInformation $file_information) : ResponseInterface
