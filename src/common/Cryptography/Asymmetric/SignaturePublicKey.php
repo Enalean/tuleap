@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography\Asymmetric;
 
 use Tuleap\Cryptography\ConcealedString;
@@ -28,7 +30,7 @@ class SignaturePublicKey extends Key
 {
     public function __construct(ConcealedString $key_data)
     {
-        if (\mb_strlen($key_data, '8bit') !== \SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
+        if (\mb_strlen($key_data->getString(), '8bit') !== \SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES) {
             throw new InvalidKeyException('Signature public key must be SODIUM_CRYPTO_SIGN_PUBLICKEYBYTES long');
         }
         parent::__construct($key_data);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Cryptography;
 
 use Tuleap\Cryptography\Exception\CannotSerializeKeyException;
@@ -34,33 +36,27 @@ class Key
         $this->key_material = $key_data->getString();
     }
 
-    /**
-     * @return string
-     */
-    public function getRawKeyMaterial()
+    public function getRawKeyMaterial() : string
     {
         return $this->key_material;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return '';
     }
 
-    public function __debugInfo()
+    public function __debugInfo() : array
     {
-        return array('key_material' => '** protected value**');
+        return ['key_material' => '** protected value**'];
     }
 
-    public function __sleep()
+    public function __sleep() : array
     {
         throw new CannotSerializeKeyException();
     }
 
-    public function __wakeup()
+    public function __wakeup() : void
     {
         throw new CannotSerializeKeyException();
     }
