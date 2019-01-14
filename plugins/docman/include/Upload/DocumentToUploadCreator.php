@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -44,7 +44,10 @@ class DocumentToUploadCreator
         $filesize
     ) {
         if ((int) $filesize > (int) \ForgeConfig::get('sys_max_size_upload')) {
-            throw new DocumentToUploadMaxSizeExceededException($filesize);
+            throw new DocumentToUploadMaxSizeExceededException(
+                (int) $filesize,
+                (int) \ForgeConfig::get('sys_max_size_upload')
+            );
         }
 
         $this->dao->wrapAtomicOperations(function (DocumentOngoingUploadDAO $dao) use (

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Upload;
 
 final class DocumentToUploadMaxSizeExceededException extends DocumentToUploadCreationException
 {
-    public function __construct($requested_size)
+    public function __construct(int $requested_size, int $max_allowed_size)
     {
         parent::__construct(
-            'The maximum allowed size for a file is ' . formatByteToMb(\ForgeConfig::get(\ForgeConfig::get('sys_max_size_upload'))) . ', ' .
-            'you requested the creation of a file of ' . formatByteToMb($requested_size)
+            'The maximum allowed size for a file is ' . $max_allowed_size . ' bytes, ' .
+            'you requested the creation of a file of ' . $requested_size . ' bytes'
         );
     }
 }
