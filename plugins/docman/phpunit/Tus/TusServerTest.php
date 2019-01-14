@@ -48,6 +48,7 @@ class TusServerTest extends TestCase
 
     public function testInformationAboutTheServerCanBeGathered() : void
     {
+        $this->data_store->shouldReceive('getTerminater')->andReturns(null);
         $server = new TusServer($this->message_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
@@ -57,6 +58,21 @@ class TusServerTest extends TestCase
 
         $this->assertEquals(204, $response->getStatusCode());
         $this->assertTrue($response->hasHeader('Tus-Version'));
+        $this->assertFalse($response->hasHeader('Tus-Extension'));
+    }
+
+    public function testInformationAboutExtensionsAreGivenIfThereIsAnAvailableExtension() : void
+    {
+        $this->data_store->shouldReceive('getTerminater')->andReturns(\Mockery::mock(TusTerminaterDataStore::class));
+        $server = new TusServer($this->message_factory, $this->data_store);
+
+        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
+        $incoming_request->shouldReceive('getMethod')->andReturns('OPTIONS');
+
+        $response = $server->handle($incoming_request);
+
+        $this->assertTrue($response->hasHeader('Tus-Extension'));
+        $this->assertNotEmpty(\explode(',', $response->getHeaderLine('Tus-Extension')));
     }
 
     public function testInformationAboutTheFileBeingUploadedCanBeGathered() : void
@@ -259,5 +275,38 @@ class TusServerTest extends TestCase
         $response = $server->handle($incoming_request);
 
         $this->assertEquals(404, $response->getStatusCode());
+    }
+
+    public function testAnUploadCanBeTerminatedWhenTheTerminationExtensionIsEnabled() : void
+    {
+        $terminater = \Mockery::mock(TusTerminaterDataStore::class);
+        $this->data_store->shouldReceive('getTerminater')->andReturns($terminater);
+        $server = new TusServer($this->message_factory, $this->data_store);
+
+        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
+        $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
+        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+
+        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+
+        $terminater->shouldReceive('terminateUpload')->once();
+
+        $response = $server->handle($incoming_request);
+
+        $this->assertEquals(204, $response->getStatusCode());
+    }
+
+    public function testAnUploadCanNotBeTerminatedWhenTheTerminationExtensionIsNotEnabled() : void
+    {
+        $this->data_store->shouldReceive('getTerminater')->andReturns(null);
+        $server = new TusServer($this->message_factory, $this->data_store);
+
+        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
+        $incoming_request->shouldReceive('getMethod')->andReturns('DELETE');
+        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+
+        $response = $server->handle($incoming_request);
+
+        $this->assertEquals(405, $response->getStatusCode());
     }
 }

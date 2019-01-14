@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Upload;
 use Tuleap\Docman\Tus\TusDataStore;
 use Tuleap\Docman\Tus\TusFileInformationProvider;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
+use Tuleap\Docman\Tus\TusTerminaterDataStore;
 use Tuleap\Docman\Tus\TusWriter;
 
 final class DocumentDataStore implements TusDataStore
@@ -41,15 +42,21 @@ final class DocumentDataStore implements TusDataStore
      * @var DocumentUploadFinisher
      */
     private $document_upload_finisher;
+    /**
+     * @var DocumentUploadCanceler
+     */
+    private $document_upload_canceler;
 
     public function __construct(
         DocumentBeingUploadedInformationProvider $document_being_uploaded_information_provider,
         DocumentBeingUploadedWriter $document_being_uploaded_writer,
-        DocumentUploadFinisher $document_upload_finisher
+        DocumentUploadFinisher $document_upload_finisher,
+        DocumentUploadCanceler $document_upload_canceler
     ) {
         $this->document_being_uploaded_information_provider = $document_being_uploaded_information_provider;
         $this->document_being_uploaded_writer               = $document_being_uploaded_writer;
         $this->document_upload_finisher                     = $document_upload_finisher;
+        $this->document_upload_canceler                     = $document_upload_canceler;
     }
 
     public function getFileInformationProvider() : TusFileInformationProvider
@@ -65,5 +72,10 @@ final class DocumentDataStore implements TusDataStore
     public function getFinisher() : ?TusFinisherDataStore
     {
         return $this->document_upload_finisher;
+    }
+
+    public function getTerminater(): ?TusTerminaterDataStore
+    {
+        return $this->document_upload_canceler;
     }
 }

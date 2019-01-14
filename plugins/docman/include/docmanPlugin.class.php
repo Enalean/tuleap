@@ -1256,7 +1256,7 @@ class DocmanPlugin extends Plugin
 
     public function collectRoutesEvent(CollectRoutesEvent $event)
     {
-        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH'], '/uploads/docman/file/{item_id:\d+}', function () {
+        $event->getRouteCollector()->addRoute(['OPTIONS', 'HEAD', 'PATCH', 'DELETE'], '/uploads/docman/file/{item_id:\d+}', function () {
             $document_ongoing_upload_dao = new \Tuleap\Docman\Upload\DocumentOngoingUploadDAO();
             $root_path                   = $this->getPluginInfo()->getPropertyValueForName('docman_root');
             $path_allocator              = new \Tuleap\Docman\Upload\DocumentUploadPathAllocator();
@@ -1283,6 +1283,10 @@ class DocmanPlugin extends Plugin
                             new Docman_FileStorage($root_path),
                             new Docman_MIMETypeDetector(),
                             UserManager::instance()
+                        ),
+                        new \Tuleap\Docman\Upload\DocumentUploadCanceler(
+                            $path_allocator,
+                            $document_ongoing_upload_dao
                         )
                     )
                 ),
