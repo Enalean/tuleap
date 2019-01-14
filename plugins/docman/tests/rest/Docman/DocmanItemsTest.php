@@ -71,6 +71,9 @@ class DocmanItemsTest extends DocmanBase
         $this->assertEquals($items[4]['title'], 'item F');
         $this->assertEquals($items[5]['title'], 'item G');
 
+        $this->assertEquals('Test User 1 (rest_api_tester_1)', $items[0]['owner']['display_name']);
+        $this->assertEquals('Anonymous user', $items[1]['owner']['display_name']);
+
         $this->assertEquals($items[0]['user_can_write'], false);
         $this->assertEquals($items[1]['user_can_write'], false);
         $this->assertEquals($items[2]['user_can_write'], false);

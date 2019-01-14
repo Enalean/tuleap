@@ -22,7 +22,13 @@
         <div class="tlp-avatar-small document-badge-avatar-img">
             <img v-bind:src="user.avatar_url" v-if="user.has_avatar">
         </div>
-        <a v-bind:href="user.user_url" class="document-badge-avatar-username"> {{ user.display_name }}</a>
+        <a v-bind:href="user.user_url"
+           class="document-badge-avatar-username"
+           v-if="! user.is_anonymous"
+        >{{ user.display_name }}</a>
+        <span v-else
+              class="document-badge-avatar-username"
+        >{{ user.display_name }}</span>
     </div>
 </template>
 

@@ -31,9 +31,11 @@ require_once __DIR__ .'/DocmanDatabaseInitialization.php';
 
 class DocmanDataBuilder extends REST_TestDataBuilder
 {
-    const PROJECT_NAME                 = 'DocmanProject';
-    const DOCMAN_REGULAR_USER_NAME     = 'docman_regular_user';
-    const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
+    const         PROJECT_NAME                 = 'DocmanProject';
+    const         DOCMAN_REGULAR_USER_NAME     = 'docman_regular_user';
+    const         DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
+    private const ANON_ID                      = 0;
+    private const REGULAR_USER_ID              = 102;
 
     /**
      * @var Docman_ItemFactory
@@ -55,7 +57,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->activateWikiServiceForTheProject();
     }
 
-    private function addItem(Project $project, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
+    private function addItem($user_id, Project $project, $docman_root_id, $title, $item_type, $link_url = '', $file_path = '', $wiki_page = '')
     {
         $item = array(
             'parent_id'         => $docman_root_id,
@@ -64,7 +66,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             'description'       => '',
             'create_date'       => time(),
             'update_date'       => time(),
-            'user_id'           => 102,
+            'user_id'           => $user_id,
             'status'            => 100,
             'obsolescence_date' => 0,
             'rank'              => 1,
@@ -145,18 +147,19 @@ class DocmanDataBuilder extends REST_TestDataBuilder
         $this->docman_item_factory = Docman_ItemFactory::instance($project->getID());
         $docman_root               = $this->docman_item_factory->getRoot($project->getID());
 
-        $folder_id = $this->addItem($project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_id = $this->addItem(self::REGULAR_USER_ID, $project, $docman_root->getId(), 'folder 1', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
         $this->addWritePermissionOnItem($project, $folder_id, \ProjectUGroup::PROJECT_MEMBERS);
 
-        $item_A_id = $this->addItem($project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
-        $item_B_id = $this->addItem($project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
-        $item_C_id = $this->addItem($project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
-        $folder_2_id = $this->addItem($project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
-        $folder_3_id = $this->addItem($project, $folder_id, 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $item_A_id = $this->addItem(self::ANON_ID, $project, $folder_id, 'item A', PLUGIN_DOCMAN_ITEM_TYPE_EMPTY);
+        $item_B_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item B', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_C_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item C', PLUGIN_DOCMAN_ITEM_TYPE_FILE);
+        $folder_2_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 2', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+        $folder_3_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'folder 3', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
 
-        $item_D_id = $this->addItem($project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
+        $item_D_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_2_id, 'item D', PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE);
 
         $item_E_id = $this->addItem(
+            self::REGULAR_USER_ID,
             $project,
             $folder_id,
             'item E',
@@ -166,6 +169,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
 
         $item_F_path = dirname(__FILE__) . '/_fixtures/docmanFile/embeddedFile';
         $item_F_id   = $item_B_id = $this->addItem(
+            self::REGULAR_USER_ID,
             $project,
             $folder_id,
             'item F',
@@ -173,7 +177,7 @@ class DocmanDataBuilder extends REST_TestDataBuilder
             '',
             $item_F_path
         );
-        $item_G_id = $this->addItem($project, $folder_id, 'item G', PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', '', 'MyWikiPage');
+        $item_G_id = $this->addItem(self::REGULAR_USER_ID, $project, $folder_id, 'item G', PLUGIN_DOCMAN_ITEM_TYPE_WIKI, '', '', 'MyWikiPage');
 
         $this->addReadPermissionOnItem($project, $item_A_id, \ProjectUGroup::PROJECT_MEMBERS);
         $this->addReadPermissionOnItem($project, $item_B_id, \ProjectUGroup::PROJECT_ADMIN);

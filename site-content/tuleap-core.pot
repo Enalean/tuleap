@@ -157,6 +157,9 @@ msgid_plural "And %d other users groups you are not allowed to administrate."
 msgstr[0] ""
 msgstr[1] ""
 
+msgid "Anonymous user"
+msgstr ""
+
 msgid "Ask to join"
 msgstr ""
 
