@@ -21,14 +21,9 @@
     <error-modal>
         <translate
             tag="p"
-            v-bind:translate-params="{nb: max_files_dragndrop}"
-            v-bind:translate-n="max_files_dragndrop"
-            translate-plural="You are not allowed to drag 'n drop more than %{ nb } files at once."
+            v-bind:translate-params="{size: max_size_upload_in_mb}"
         >
-            You are not allowed to drag 'n drop more than %{ nb } file at once.
-        </translate>
-        <translate tag="p">
-            Please start again.
+            You are not allowed to upload files bigger than %{ size }.
         </translate>
     </error-modal>
 </template>
@@ -36,11 +31,15 @@
 <script>
 import { mapState } from "vuex";
 import ErrorModal from "./ErrorModal.vue";
+import prettyKibibytes from "pretty-kibibytes";
 
 export default {
     components: { ErrorModal },
     computed: {
-        ...mapState(["max_files_dragndrop"])
+        ...mapState(["max_size_upload"]),
+        max_size_upload_in_mb() {
+            return prettyKibibytes(this.max_size_upload);
+        }
     }
 };
 </script>
