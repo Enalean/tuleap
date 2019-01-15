@@ -19,6 +19,7 @@
 
 import {
     addNewDocument,
+    cancelUpload,
     deleteUserPreferenciesForFolderInProject,
     getFolderContent,
     getItem,
@@ -208,12 +209,24 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
         type: TYPE_FILE,
         file_type: dropped_file.type,
         is_uploading: true,
-        progress: 0
+        progress: 0,
+        uploader: null
     };
 
-    context.commit("addJustCreatedDocumentToFolderContent", fake_item);
+    fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file);
 
-    uploadFile(context, dropped_file, fake_item, new_file);
+    context.commit("addJustCreatedDocumentToFolderContent", fake_item);
+};
+
+export const cancelFileUpload = async (context, item) => {
+    try {
+        item.uploader.abort();
+        await cancelUpload(item);
+    } catch (e) {
+        // do nothing
+    } finally {
+        context.commit("removeItemFromFolderContent", item);
+    }
 };
 
 export const setUserPreferenciesForUI = async context => {

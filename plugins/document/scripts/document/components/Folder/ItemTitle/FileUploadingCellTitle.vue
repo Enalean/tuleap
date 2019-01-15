@@ -18,11 +18,13 @@
   -->
 
 <template>
-    <div class="file-upload-cell-title">
-        <fake-caret v-bind:item="item"/>
-        <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
-        {{ item.title }}
-        <upload-progress-bar v-bind:progress="item.progress"/>
+    <div class="document-file-upload-cell-title">
+        <span>
+            <fake-caret v-bind:item="item"/>
+            <i class="fa fa-fw document-folder-content-icon" v-bind:class="icon_class"></i>
+            {{ item.title }}
+        </span>
+        <upload-progress-bar v-bind:item="item"/>
     </div>
 </template>
 

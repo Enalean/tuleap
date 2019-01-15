@@ -24,7 +24,8 @@ import {
     setUserPreferenciesForFolder,
     createNewDocument,
     setUserPreferenciesForUI,
-    addNewUploadFile
+    addNewUploadFile,
+    cancelFileUpload
 } from "./actions.js";
 import { restore as restoreUploadFile, rewire$uploadFile } from "./actions-helpers/upload-file.js";
 import {
@@ -34,7 +35,8 @@ import {
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$patchUserPreferenciesForUIInProject,
-    rewire$addNewDocument
+    rewire$addNewDocument,
+    rewire$cancelUpload
 } from "../api/rest-querier.js";
 import {
     restore as restoreLoadFolderContent,
@@ -63,7 +65,8 @@ describe("Store actions", () => {
         patchUserPreferenciesForFolderInProject,
         patchUserPreferenciesForUIInProject,
         addNewDocument,
-        uploadFile;
+        uploadFile,
+        cancelUpload;
 
     beforeEach(() => {
         const project_id = 101;
@@ -92,6 +95,9 @@ describe("Store actions", () => {
 
         uploadFile = jasmine.createSpy("uploadFile");
         rewire$uploadFile(uploadFile);
+
+        cancelUpload = jasmine.createSpy("cancelUpload");
+        rewire$cancelUpload(cancelUpload);
 
         deleteUserPreferenciesForFolderInProject = jasmine.createSpy(
             "deleteUserPreferenciesForFolderInProject"
@@ -448,21 +454,24 @@ describe("Store actions", () => {
 
             const created_item_reference = { id: 66 };
             addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            const uploader = {};
+            uploadFile.and.returnValue(uploader);
 
             await addNewUploadFile(context, [dropped_file, parent]);
 
-            const expected_fake_item = {
+            const expected_fake_item_with_uploader = {
                 id: 66,
                 title: "filename.txt",
                 parent_id: 42,
                 type: TYPE_FILE,
                 file_type: "text/plain",
                 is_uploading: true,
-                progress: 0
+                progress: 0,
+                uploader
             };
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedDocumentToFolderContent",
-                expected_fake_item
+                expected_fake_item_with_uploader
             );
         });
         it("Starts upload", async () => {
@@ -472,6 +481,8 @@ describe("Store actions", () => {
 
             const created_item_reference = { id: 66 };
             addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
+            const uploader = {};
+            uploadFile.and.returnValue(uploader);
 
             await addNewUploadFile(context, [dropped_file, parent]);
 
@@ -482,7 +493,8 @@ describe("Store actions", () => {
                 type: TYPE_FILE,
                 file_type: "text/plain",
                 is_uploading: true,
-                progress: 0
+                progress: 0,
+                uploader
             };
             expect(uploadFile).toHaveBeenCalledWith(
                 context,
@@ -503,6 +515,34 @@ describe("Store actions", () => {
 
             expect(context.commit).not.toHaveBeenCalled();
             expect(uploadFile).not.toHaveBeenCalled();
+        });
+    });
+    describe("cancelFileUpload", () => {
+        let item;
+        beforeEach(() => {
+            item = {
+                uploader: {
+                    abort: jasmine.createSpy("abort")
+                }
+            };
+        });
+
+        it("asks to tus client to abort the upload", async () => {
+            await cancelFileUpload(context, item);
+            expect(item.uploader.abort).toHaveBeenCalled();
+        });
+        it("asks to tus server to abort the upload, because tus client does not do it for us", async () => {
+            await cancelFileUpload(context, item);
+            expect(cancelUpload).toHaveBeenCalledWith(item);
+        });
+        it("remove item from the store", async () => {
+            await cancelFileUpload(context, item);
+            expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
+        });
+        it("remove item from the store even if there is an error on cancelUpload", async () => {
+            cancelUpload.and.throwError("Failed to fetch");
+            await cancelFileUpload(context, item);
+            expect(context.commit).toHaveBeenCalledWith("removeItemFromFolderContent", item);
         });
     });
 });

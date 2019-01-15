@@ -21,6 +21,9 @@ msgstr "Avancé"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cancel upload"
+msgstr "Annuler le téléversement"
+
 msgid "Close"
 msgstr "Fermer"
 

@@ -31,10 +31,10 @@
             </template>
             <div class="document-header-spacer"></div>
             <div class="document-header-global-progress tlp-tooltip tlp-tooltip-bottom"
+                 v-if="global_upload_progress"
                  v-bind:data-tlp-tooltip="progress_bar_tooltip"
             >
-                <upload-progress-bar
-                    v-if="global_upload_progress"
+                <global-upload-progress-bar
                     v-bind:progress="global_upload_progress"
                 />
             </div>
@@ -48,11 +48,11 @@ import { mapGetters, mapState } from "vuex";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
-import UploadProgressBar from "./ProgressBar/UploadProgressBar.vue";
+import GlobalUploadProgressBar from "./ProgressBar/GlobalUploadProgressBar.vue";
 
 export default {
     name: "FolderHeader",
-    components: { SearchBox, NewItemButton, NewItemModal, UploadProgressBar },
+    components: { SearchBox, NewItemButton, NewItemModal, GlobalUploadProgressBar },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
         ...mapGetters(["current_folder_title", "is_folder_empty", "global_upload_progress"]),
