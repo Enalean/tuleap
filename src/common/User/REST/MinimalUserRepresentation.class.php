@@ -92,10 +92,15 @@ class MinimalUserRepresentation
 
     private function getDisplayName(PFUser $user)
     {
-        if ($user->isAnonymous()) {
-            return $user->getEmail();
+        if (! $user->isAnonymous()) {
+            return $this->user_helper->getDisplayNameFromUser($user);
         }
 
-        return $this->user_helper->getDisplayNameFromUser($user);
+        $email = $user->getEmail();
+        if ($email) {
+            return $email;
+        }
+
+        return _('Anonymous user');
     }
 }
