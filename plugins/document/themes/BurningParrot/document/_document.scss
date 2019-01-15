@@ -170,10 +170,41 @@ progress::-webkit-progress-value {
     vertical-align: unset;
 }
 
-.tlp-table > tbody > tr.document-tree-item-created > td {
-    background: transparentize($tlp-ui-success, .9);
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(odd) > td {
+    animation: 5s ease-in-out document-created-item-animation-odd;
 }
 
+.tlp-table > tbody > tr.document-tree-item-created:nth-child(even) > td {
+    animation: 5s ease-in-out document-created-item-animation-even;
+}
+
+@keyframes document-created-item-animation-odd {
+    0% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    80% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    100% {
+        background: $tlp-table-row-background-odd;
+    }
+}
+
+@keyframes document-created-item-animation-even {
+    0% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    80% {
+        background: transparentize($tlp-ui-success, .9);
+    }
+
+    100% {
+        background: $tlp-table-row-background-even;
+    }
+}
 .document-folder-title-loading {
     width: 300px;
 }
