@@ -31,6 +31,7 @@
                     <dropdown-button/>
                 </div>
                 <new-item-modal/>
+                <new-folder-modal/>
             </div>
             <div class="document-header-spacer"></div>
             <file-upload-manager/>
@@ -46,14 +47,17 @@ import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
 import DropdownButton from "./Dropdown/DropdownButton.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
+import NewFolderModal from "./NewItem/NewFolderModal.vue";
 
 export default {
+    name: "FolderHeader",
     components: {
+        NewFolderModal,
         DropdownButton,
-        FileUploadManager,
         SearchBox,
         NewItemButton,
-        NewItemModal
+        NewItemModal,
+        FileUploadManager
     },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),

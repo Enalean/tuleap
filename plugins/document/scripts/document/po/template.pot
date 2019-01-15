@@ -31,6 +31,9 @@ msgstr ""
 msgid "Create document"
 msgstr ""
 
+msgid "Create folder"
+msgstr ""
+
 msgid "Creation of wiki page, link, empty item."
 msgstr ""
 
@@ -54,6 +57,9 @@ msgid "Dropping files in %s is forbidden."
 msgstr ""
 
 msgid "Empty"
+msgstr ""
+
+msgid "Folder has been successfully created."
 msgstr ""
 
 msgid "Go to my home page"

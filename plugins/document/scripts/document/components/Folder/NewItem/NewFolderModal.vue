@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -14,23 +14,17 @@
   - GNU General Public License for more details.
   -
   - You should have received a copy of the GNU General Public License
-  - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  - along with Tuleap. If not, see http://www.gnu.org/licenses/.
   -
   -->
 
 <template>
-    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-item-modal" v-on:submit="addDocument">
+    <form class="tlp-modal" role="dialog" aria-labelledby="document-new-folder-modal" v-on:submit="addFolder">
         <modal-header v-bind:modal_title="modal_title"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <type-selector v-model="item.type"/>
-
-            <global-properties v-bind:item="item">
-                <link-properties v-model="item.link_properties" v-bind:item="item"/>
-                <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
-            </global-properties>
+            <global-properties v-bind:item="item"/>
         </div>
-
         <modal-footer v-bind:is_loading="is_loading" v-bind:submit_button_label="submit_button_label"/>
     </form>
 </template>
@@ -38,53 +32,40 @@
 <script>
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
-import { TYPE_EMPTY } from "../../../constants.js";
+import { TYPE_FOLDER } from "../../../constants.js";
 import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
-import GlobalProperties from "./Property/GlobalProperties.vue";
-import LinkProperties from "./Property/LinkProperties.vue";
-import WikiProperties from "./Property/WikiProperties.vue";
-import TypeSelector from "./TypeSelector.vue";
 import ModalHeader from "./ModalHeader.vue";
-import ModalFooter from "./ModalFooter.vue";
 import ModalFeedback from "./ModalFeedback.vue";
+import ModalFooter from "./ModalFooter.vue";
+import GlobalProperties from "./Property/GlobalProperties.vue";
 
 export default {
-    name: "NewItemModal",
+    name: "NewFolderModal",
     components: {
-        ModalFooter,
+        ModalFeedback,
         ModalHeader,
-        GlobalProperties,
-        LinkProperties,
-        WikiProperties,
-        TypeSelector,
-        ModalFeedback
+        ModalFooter,
+        GlobalProperties
     },
     data() {
         return {
-            default_item: {
+            item: {
                 title: "",
                 description: "",
-                type: TYPE_EMPTY,
-                link_properties: {
-                    link_url: ""
-                },
-                wiki_properties: {
-                    page_name: ""
-                }
+                type: TYPE_FOLDER
             },
-            item: {},
-            is_displayed: false,
             is_loading: false,
+            is_displayed: false,
             modal: null
         };
     },
     computed: {
         ...mapState(["current_folder", "has_modal_error"]),
         submit_button_label() {
-            return this.$gettext("Create document");
+            return this.$gettext("Create folder");
         },
         modal_title() {
-            return this.$gettext("New document");
+            return this.$gettext("New folder");
         }
     },
     mounted() {
@@ -93,14 +74,15 @@ export default {
     },
     methods: {
         registerEvents() {
-            document.addEventListener("show-new-document-modal", this.show);
+            document.addEventListener("show-new-folder-modal", this.show);
             this.$once("hook:beforeDestroy", () => {
-                document.removeEventListener("show-new-document-modal", this.show);
+                document.removeEventListener("show-new-folder-modal", this.show);
             });
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
         show() {
-            this.item = { ...this.default_item };
+            this.item.title = "";
+            this.item.description = "";
             this.is_displayed = true;
             this.modal.show();
         },
@@ -109,7 +91,7 @@ export default {
             this.is_displayed = false;
             this.is_loading = false;
         },
-        async addDocument(event) {
+        async addFolder(event) {
             event.preventDefault();
             this.is_loading = true;
             this.$store.commit("resetModalError");
@@ -118,7 +100,7 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
-                selfClosingInfo(this.$gettext("Document has been successfully created."));
+                selfClosingInfo(this.$gettext("Folder has been successfully created."));
             }
         }
     }

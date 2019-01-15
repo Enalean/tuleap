@@ -63,16 +63,14 @@ export const getSubfolderContent = async (context, folder_id) => {
     }
 };
 
-export const createNewDocument = async (context, [item, parent]) => {
+export const createNewItem = async (context, [item, parent]) => {
     try {
         const item_reference = await addNewDocument(item, parent.id);
 
         const created_item = await getItem(item_reference.id);
         flagItemAsCreated(context, created_item);
 
-        return Promise.resolve(
-            context.commit("addJustCreatedDocumentToFolderContent", created_item)
-        );
+        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
@@ -217,7 +215,7 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file);
 
-    context.commit("addJustCreatedDocumentToFolderContent", fake_item);
+    context.commit("addJustCreatedItemToFolderContent", fake_item);
     context.commit("addFileInUploadsList", fake_item);
 };
 

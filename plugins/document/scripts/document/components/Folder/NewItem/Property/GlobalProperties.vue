@@ -19,20 +19,25 @@
   -->
 
 <template>
-    <div class="tlp-dropdown-menu tlp-dropdown-shown">
-        <a href="#" v-on:click.prevent="showNewFolderModal" class="tlp-dropdown-menu-item" role="menuitem">
-            <i class="fa fa-fw fa-folder-open-o tlp-dropdown-menu-item-icon"></i>
-            <translate>New folder</translate>
-        </a>
+    <div class="document-new-item-properties">
+        <property-title v-model="item.title"/>
+        <property-description v-model="item.description"/>
+        <slot></slot>
     </div>
 </template>
+
 <script>
+import PropertyTitle from "./PropertyTitle.vue";
+import PropertyDescription from "./PropertyDescription.vue";
+
 export default {
-    name: "DropDownMenu",
-    methods: {
-        showNewFolderModal() {
-            document.dispatchEvent(new CustomEvent("show-new-folder-modal"));
-        }
+    name: "GlobalProperties",
+    components: {
+        PropertyTitle,
+        PropertyDescription
+    },
+    props: {
+        item: Object
     }
 };
 </script>

@@ -34,7 +34,7 @@
             v-bind:disabled="is_loading"
         >
             <i v-if="props.is_loading" class="fa fa-plus tlp-button-icon fa-spin fa-spinner"></i>
-            <translate>Create document</translate>
+            {{ props.submit_button_label }}
         </button>
     </div>
 </template>

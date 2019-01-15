@@ -22,7 +22,7 @@
     <div class="tlp-modal-header">
         <h1 class="tlp-modal-title" id="document-new-item-modal">
             <i class="fa fa-plus tlp-modal-title-icon"></i>
-            <translate>New document</translate>
+            {{ modal_title }}
         </h1>
         <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
             &times;
@@ -32,6 +32,9 @@
 <script>
 export default {
     name: "ModalHeader",
+    props: {
+        modal_title: String
+    },
     computed: {
         close() {
             return this.$gettext("Close");
