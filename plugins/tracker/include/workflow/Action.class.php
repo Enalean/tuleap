@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,8 +23,8 @@ use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 /**
  * Base class to manage action that can be done on a workflow
  */
-abstract class Tracker_Workflow_Action {
-
+abstract class Tracker_Workflow_Action
+{
     const PANE_RULES                  = 'rules';
     const PANE_TRANSITIONS            = 'transitions';
     const PANE_CROSS_TRACKER_TRIGGERS = 'triggers';
@@ -33,7 +33,8 @@ abstract class Tracker_Workflow_Action {
     /** @var Tracker */
     protected $tracker;
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker)
+    {
         $this->tracker = $tracker;
     }
 
@@ -43,41 +44,105 @@ abstract class Tracker_Workflow_Action {
 
         echo '<div class="tabbable">';
         echo '<ul class="nav nav-tabs">';
-        foreach ($this->getPanes() as $identifier => $pane) {
-            $active = '';
-            if ($this->getPaneIdentifier() == $identifier) {
-                $active = 'active';
-            }
-            $link = TRACKER_BASE_URL.'/?'. http_build_query(
-                array(
-                    'tracker' =>  (int)$this->tracker->id,
-                    'func'    =>  $pane['func'],
-                )
-            );
-            echo '<li class="'. $active .'"><a href="'. $link .'">'. $pane['title'] .'</a></li>';
+        foreach ($this->buildPanesLinks() as $link) {
+            echo $link;
         }
         echo '</ul>';
         echo '<div class="tab-content">';
     }
 
-    private function getPanes() {
-        return array(
-            self::PANE_RULES => array(
-                'func'  => Workflow::FUNC_ADMIN_RULES,
-                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_global_rules'),
-            ),
-            self::PANE_TRANSITIONS => array(
-                'func'  => Workflow::FUNC_ADMIN_TRANSITIONS,
-                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions'),
-            ),
-            self::PANE_CROSS_TRACKER_TRIGGERS => array(
-                'func'  => Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
-                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers'),
-            ),
-            self::PANE_WEBHOOKS => [
-                'func'  => AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
-                'title' => dgettext('tuleap-tracker', "Webhooks"),
-            ]
+    private function buildPanesLinks(): array
+    {
+        return [
+            $this->buildGlobalRulesLink(),
+            $this->buildTransitionsLink(),
+            $this->buildTriggersLink(),
+            $this->buildWebhooksLink()
+        ];
+    }
+
+    private function buildHTMLLink(string $identifier, string $link, string $title): string
+    {
+        $active_classname = '';
+        if ($this->getPaneIdentifier() === $identifier) {
+            $active_classname = 'active';
+        }
+        return '<li class="' . $active_classname . '"><a href="' . $link . '">' . $title . '</a></li>';
+    }
+
+    private function buildLinkWithFuncQuery(string $identifier, string $func, string $title): string
+    {
+        $link = TRACKER_BASE_URL . '/?' . http_build_query(['tracker' => (int) $this->tracker->id, 'func' => $func]);
+        return $this->buildHTMLLink($identifier, $link, $title);
+    }
+
+    private function buildGlobalRulesLink(): string
+    {
+        return $this->buildLinkWithFuncQuery(
+            self::PANE_RULES,
+            Workflow::FUNC_ADMIN_RULES,
+            $GLOBALS['Language']->getText('workflow_admin', 'tab_global_rules')
+        );
+    }
+
+    private function buildLegacyTransitionsLink(): string
+    {
+        return $this->buildLinkWithFuncQuery(
+            self::PANE_TRANSITIONS,
+            Workflow::FUNC_ADMIN_TRANSITIONS,
+            $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions')
+        );
+    }
+
+    private function buildNewTransitionsLink(): string
+    {
+        $link = TRACKER_BASE_URL . '/workflow/' . urlencode($this->tracker->id) . '/transitions';
+        return $this->buildHTMLLink(
+            self::PANE_TRANSITIONS,
+            $link,
+            $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions')
+        );
+    }
+
+    private function isNewWorkflowEnabled(): bool
+    {
+        $whitelist = ForgeConfig::get('sys_tracker_whitelist_that_should_use_new_workflow_transitions_interface');
+        if (empty($whitelist)) {
+            return false;
+        }
+
+        foreach (explode(',', $whitelist) as $whitelisted_tracker_id) {
+            if ($this->tracker->id === trim($whitelisted_tracker_id)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function buildTransitionsLink(): string
+    {
+        if ($this->isNewWorkflowEnabled()) {
+            return $this->buildNewTransitionsLink();
+        }
+        return $this->buildLegacyTransitionsLink();
+    }
+
+    private function buildTriggersLink()
+    {
+        return $this->buildLinkWithFuncQuery(
+            self::PANE_CROSS_TRACKER_TRIGGERS,
+            Workflow::FUNC_ADMIN_CROSS_TRACKER_TRIGGERS,
+            $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers')
+        );
+    }
+
+    private function buildWebhooksLink()
+    {
+        return $this->buildLinkWithFuncQuery(
+            self::PANE_WEBHOOKS,
+            AdminWebhooks::FUNC_ADMIN_WEBHOOKS,
+            dgettext('tuleap-tracker', "Webhooks")
         );
     }
 

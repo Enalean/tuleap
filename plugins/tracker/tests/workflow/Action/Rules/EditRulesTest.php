@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once __DIR__.'/../../../bootstrap.php';
-class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
+
+class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase{
 
     const PARAMETER_ADD_RULE     = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;
     const PARAMETER_UPDATE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES;
@@ -41,12 +43,16 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
     protected $target_field_id        = 22;
     protected $actual_source_field_id = 66;
     protected $actual_target_field_id = 55;
+    private $backup_globals;
 
     public function setUp() {
         parent::setUp();
-        $this->date_factory = mock('Tracker_Rule_Date_Factory');
-        $this->tracker      = stub('Tracker')->getId()->returns($this->tracker_id);
-        $this->token        = mock('CSRFSynchronizerToken');
+        $this->backup_globals     = array_merge([], $GLOBALS);
+        $GLOBALS['Language']      = Mockery::mock(BaseLanguage::class);
+        $GLOBALS['Language']->shouldReceive('getText')->andReturn('');
+        $this->date_factory       = mock('Tracker_Rule_Date_Factory');
+        $this->tracker            = stub('Tracker')->getId()->returns($this->tracker_id);
+        $this->token              = mock('CSRFSynchronizerToken');
         $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
         $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
@@ -67,6 +73,12 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
             )
         );
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
+    }
+
+    public function tearDown()
+    {
+        $GLOBALS = $this->backup_globals;
+        parent::tearDown();
     }
 
     private function setUpField($id, $label) {
