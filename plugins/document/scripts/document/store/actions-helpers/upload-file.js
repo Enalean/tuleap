@@ -19,6 +19,7 @@
 
 import { Upload } from "tus-js-client";
 import { getItem } from "../../api/rest-querier.js";
+import { flagItemAsCreated } from "./flag-item-as-created.js";
 
 export function uploadFile(context, dropped_file, fake_item, docman_item) {
     const upload = new Upload(dropped_file, {
@@ -33,6 +34,7 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
         },
         onSuccess: async () => {
             const file = await getItem(docman_item.id);
+            flagItemAsCreated(context, file);
             context.commit("replaceUploadingFileWithActualFile", [fake_item, file]);
         }
     });
