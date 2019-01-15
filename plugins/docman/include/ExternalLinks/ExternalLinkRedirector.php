@@ -72,6 +72,10 @@ class ExternalLinkRedirector implements Dispatchable
 
     public function checkAndStoreIfUserHasToBeenRedirected()
     {
+        if ($this->user->isAnonymous()) {
+            return;
+        }
+
         $preference_name = "plugin_docman_display_legacy_ui_" . $this->project->getID();
         if ((bool) $this->user->getPreference($preference_name) === true) {
             $this->should_redirect_user = false;

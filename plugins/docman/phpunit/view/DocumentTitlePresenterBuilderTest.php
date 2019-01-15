@@ -22,6 +22,7 @@ namespace Tuleap\Docman\view;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
@@ -29,6 +30,11 @@ use ProjectManager;
 class DocumentTitlePresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var PFUser
+     */
+    private $user;
     /**
      * @var \EventManager
      */
@@ -50,6 +56,9 @@ class DocumentTitlePresenterBuilderTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->user = Mockery::mock(PFUser::class);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
 
         $this->project    = Mockery::mock(Project::class);
         $this->project_id = 101;
@@ -74,7 +83,7 @@ class DocumentTitlePresenterBuilderTest extends TestCase
             'item' => $item,
         ];
 
-        $this->builder->build($params, $this->project_id, 'folder name', $item);
+        $this->builder->build($params, $this->project_id, 'folder name', $item, $this->user);
 
         $this->event_manager->shouldReceive('processEvent')->never();
     }
@@ -93,6 +102,6 @@ class DocumentTitlePresenterBuilderTest extends TestCase
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->builder->build($params, $this->project_id, 'folder name', $item);
+        $this->builder->build($params, $this->project_id, 'folder name', $item, $this->user);
     }
 }

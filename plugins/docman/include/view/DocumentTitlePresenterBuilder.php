@@ -23,6 +23,7 @@ declare(strict_types = 1);
 namespace Tuleap\Docman\view;
 
 use EventManager;
+use PFUser;
 use Tuleap\Docman\DocumentTitlePresenter;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 
@@ -46,13 +47,18 @@ class DocumentTitlePresenterBuilder
     /**
      * @return DocumentTitlePresenter
      */
-    public function build(array $params, int $project_id, string $title, array $item) : DocumentTitlePresenter
-    {
+    public function build(
+        array $params,
+        int $project_id,
+        string $title,
+        array $item,
+        PFUser $user
+    ) : DocumentTitlePresenter {
         $is_folder_in_migrated_view = $this->isFolderInMigratedView($params, $item);
         $folder_id                  = $this->getFolderId($is_folder_in_migrated_view, $item);
 
         $collector = new ExternalLinksManager($project_id, $folder_id);
-        if ($is_folder_in_migrated_view === true) {
+        if ($is_folder_in_migrated_view === true && ! $user->isAnonymous()) {
             $this->event_manager->processEvent($collector);
         }
 

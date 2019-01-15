@@ -23,7 +23,7 @@
         <document-breadcrumb v-if="! has_folder_permission_error"/>
         <loading-error v-if="has_folder_loading_error"/>
         <router-view/>
-        <switch-to-old-u-i/>
+        <switch-to-old-u-i v-if="user_id !== 0"/>
     </div>
 </template>
 <script>

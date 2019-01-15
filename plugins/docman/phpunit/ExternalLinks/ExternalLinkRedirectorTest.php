@@ -41,6 +41,7 @@ class ExternalLinkRedirectorTest extends TestCase
         parent::setUp();
 
         $this->user    = Mockery::mock(PFUser::class);
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getId')->andReturn(102);
     }
