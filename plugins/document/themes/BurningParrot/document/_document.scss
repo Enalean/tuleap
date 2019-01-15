@@ -23,6 +23,7 @@
 
 $document-upload-animation-color: transparentize($tlp-ui-success, .9);
 $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95);
+$progress-bar-background-color: #f0f1f8;
 
 .document-upload-to-current-folder {
     position: fixed;
@@ -135,29 +136,34 @@ $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95)
     font-weight: 600;
 }
 
-progress::-moz-progress-bar {
+.document-file-upload-progress-bar::-moz-progress-bar {
     background: $tlp-ui-success;
     border-radius: 20px;
 }
 
-progress::-webkit-progress-bar {
+.document-file-upload-progress-bar::-webkit-progress-bar {
+    background: $progress-bar-background-color;
+    border-radius: 20px;
+}
+
+.document-file-upload-progress-bar::-webkit-progress-value {
     background: $tlp-ui-success;
     border-radius: 20px;
 }
 
-progress::-webkit-progress-value {
-    background: $tlp-ui-success;
-    border-radius: 20px;
+.document-file-upload-progress-bar[value] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 5px;
 }
-
 
 .document-file-upload-progress-bar {
     color: $tlp-ui-success;
     position: relative;
     top: 1px;
     width: 100px;
-    height:5px;
-    background: #f0f1f8;
+    background: $progress-bar-background-color;
     border: 0;
     border-radius: 20px;
     vertical-align: unset;
