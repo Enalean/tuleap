@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Upload;
 use Tuleap\Docman\Tus\TusDataStore;
 use Tuleap\Docman\Tus\TusFileInformationProvider;
 use Tuleap\Docman\Tus\TusFinisherDataStore;
+use Tuleap\Docman\Tus\TusLocker;
 use Tuleap\Docman\Tus\TusTerminaterDataStore;
 use Tuleap\Docman\Tus\TusWriter;
 
@@ -39,6 +40,10 @@ final class DocumentDataStore implements TusDataStore
      */
     private $document_being_uploaded_writer;
     /**
+     * @var DocumentBeingUploadedLocker
+     */
+    private $document_being_uploaded_locker;
+    /**
      * @var DocumentUploadFinisher
      */
     private $document_upload_finisher;
@@ -50,11 +55,13 @@ final class DocumentDataStore implements TusDataStore
     public function __construct(
         DocumentBeingUploadedInformationProvider $document_being_uploaded_information_provider,
         DocumentBeingUploadedWriter $document_being_uploaded_writer,
+        DocumentBeingUploadedLocker $document_being_uploaded_locker,
         DocumentUploadFinisher $document_upload_finisher,
         DocumentUploadCanceler $document_upload_canceler
     ) {
         $this->document_being_uploaded_information_provider = $document_being_uploaded_information_provider;
         $this->document_being_uploaded_writer               = $document_being_uploaded_writer;
+        $this->document_being_uploaded_locker               = $document_being_uploaded_locker;
         $this->document_upload_finisher                     = $document_upload_finisher;
         $this->document_upload_canceler                     = $document_upload_canceler;
     }
@@ -77,5 +84,10 @@ final class DocumentDataStore implements TusDataStore
     public function getTerminater(): ?TusTerminaterDataStore
     {
         return $this->document_upload_canceler;
+    }
+
+    public function getLocker() : ?TusLocker
+    {
+        return $this->document_being_uploaded_locker;
     }
 }

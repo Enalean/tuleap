@@ -156,15 +156,27 @@ final class TusServer implements RequestHandlerInterface
             return $this->response_factory->createResponse(400);
         }
 
-        if ((int) $request->getHeaderLine('Upload-Offset') !== $file_information->getOffset()) {
-            return $this->response_factory->createResponse(409);
-        }
+        $copied_size = 0;
+        $locker      = $this->data_store->getLocker();
+        try {
+            if ($locker !== null && ! $locker->lock($file_information)) {
+                return $this->response_factory->createResponse(423);
+            }
 
-        $copied_size = $this->data_store->getWriter()->writeChunk(
-            $file_information,
-            $file_information->getOffset(),
-            $request->getBody()->detach()
-        );
+            if ((int) $request->getHeaderLine('Upload-Offset') !== $file_information->getOffset()) {
+                return $this->response_factory->createResponse(409);
+            }
+
+            $copied_size = $this->data_store->getWriter()->writeChunk(
+                $file_information,
+                $file_information->getOffset(),
+                $request->getBody()->detach()
+            );
+        } finally {
+            if ($locker !== null) {
+                $locker->unlock($file_information);
+            }
+        }
 
         $finisher           = $this->data_store->getFinisher();
         $is_upload_finished = ($file_information->getOffset() + $copied_size) >= $file_information->getLength();

@@ -22,11 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Tus;
 
-interface TusDataStore
+interface TusLocker
 {
-    public function getFileInformationProvider() : TusFileInformationProvider;
-    public function getWriter() : TusWriter;
-    public function getFinisher() : ?TusFinisherDataStore;
-    public function getTerminater() : ?TusTerminaterDataStore;
-    public function getLocker() : ?TusLocker;
+    public function lock(TusFileInformation $file_information) : bool;
+    public function unlock(TusFileInformation $file_information) : void;
 }
