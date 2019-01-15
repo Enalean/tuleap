@@ -230,6 +230,14 @@ export const cancelFileUpload = async (context, item) => {
     }
 };
 
+export const cancelAllFileUploads = context => {
+    return Promise.all(
+        context.state.folder_content
+            .filter(item => item.is_uploading)
+            .map(item => cancelFileUpload(context, item))
+    );
+};
+
 export const setUserPreferenciesForUI = async context => {
     try {
         return await patchUserPreferenciesForUIInProject(

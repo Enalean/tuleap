@@ -27,7 +27,7 @@
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/EmptyState/PermissionError.vue";
 import LoadingError from "./Folder/EmptyState/LoadingError.vue";
@@ -52,7 +52,8 @@ export default {
         is_under_construction: Boolean
     },
     computed: {
-        ...mapState(["has_folder_permission_error", "has_folder_loading_error"])
+        ...mapState(["has_folder_permission_error", "has_folder_loading_error"]),
+        ...mapGetters(["is_uploading"])
     },
     created() {
         const base_title = document.title;
@@ -78,6 +79,13 @@ export default {
             this.max_size_upload,
             this.is_under_construction
         ]);
+
+        window.addEventListener("beforeunload", event => {
+            if (this.is_uploading) {
+                event.returnValue = true;
+                event.preventDefault();
+            }
+        });
     }
 };
 </script>

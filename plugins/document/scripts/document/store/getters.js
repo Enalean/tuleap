@@ -56,3 +56,7 @@ export const global_upload_progress = state => {
 
     return Math.trunc((total_progress + finished_upload_total_progress) / nb_uploads);
 };
+
+export const is_uploading = state => {
+    return Boolean(state.folder_content.find(item => item.is_uploading));
+};

@@ -32,14 +32,15 @@
                'fa-spinner fa-spin': is_loading
            }"
         ></i>
-        <a v-on:click="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
+        <a v-on:click.prevent="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">
             {{ item.title }}
         </a>
     </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
+import { abortCurrentUploads } from "../../../helpers/abort-current-uploads.js";
 
 export default {
     name: "FolderCellTitle",
@@ -55,6 +56,7 @@ export default {
     },
     computed: {
         ...mapState(["folder_content"]),
+        ...mapGetters(["is_uploading"]),
         folder_href() {
             const { href } = this.$router.resolve({
                 name: "folder",
@@ -78,8 +80,12 @@ export default {
         }
     },
     methods: {
-        goToFolder(event) {
-            event.preventDefault();
+        goToFolder() {
+            if (!this.is_uploading || abortCurrentUploads(this.$gettext, this.$store)) {
+                this.doGoToFolder();
+            }
+        },
+        doGoToFolder() {
             this.$store.commit("appendFolderToAscendantHierarchy", this.item);
             this.$router.push({ name: "folder", params: { item_id: this.item.id } });
         },
