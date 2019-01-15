@@ -57,7 +57,9 @@ class AfterItemCreationVisitor implements ItemVisitor
 
     public function visitFolder(Docman_Folder $item, array $params = [])
     {
-        throw new CannotCreateThisItemTypeException();
+        $this->inheritPermissionsFromParent($item);
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FOLDER, $params);
+        $this->triggerPostCreationEvents($params);
     }
 
     public function visitWiki(Docman_Wiki $item, array $params = [])

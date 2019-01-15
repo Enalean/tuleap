@@ -124,7 +124,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * to call this endpoint.
      * <br/>
      * <br/>
-     * If you want to create an empty item, all keys xxx_properties must be null.
+     * If you want to create an empty or a folder item, all keys xxx_properties must be null.
      * <br/>
      * If the document is not an empty document,'type = xxx' MUST match with the key 'xxx_properties'. The others properties types must not be written.
      * <br/>

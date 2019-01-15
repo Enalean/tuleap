@@ -90,6 +90,23 @@ class DocmanItemCreator
         );
 
         switch ($docman_item_post_representation->type) {
+            case ItemRepresentation::TYPE_FOLDER:
+                if (!$this->checkAllItemPropertiesAreNull($docman_item_post_representation)) {
+                    throw new RestException(
+                        400,
+                        sprintf('The type "folder" and the properties given does not match')
+                    );
+                }
+                return $this->createDocument(
+                    PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
+                    $parent_item,
+                    $user,
+                    $project,
+                    $docman_item_post_representation->title,
+                    $docman_item_post_representation->description,
+                    null,
+                    null
+                );
             case ItemRepresentation::TYPE_EMPTY:
                 if (!$this->checkAllItemPropertiesAreNull($docman_item_post_representation)) {
                     throw new RestException(
