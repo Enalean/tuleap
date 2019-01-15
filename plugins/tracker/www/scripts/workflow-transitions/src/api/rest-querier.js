@@ -1,5 +1,5 @@
 /**
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2018 - 2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -32,7 +32,8 @@ export {
     getTransition,
     deleteTransition,
     getUserGroups,
-    patchTransition
+    patchTransition,
+    getPostActions
 };
 
 const JSON_HEADERS = { "content-type": "application/json" };
@@ -125,4 +126,9 @@ function patchTransition({
             is_comment_required
         })
     });
+}
+
+async function getPostActions(transition_id) {
+    const response = await get(`/api/tracker_workflow_transitions/${transition_id}/actions`);
+    return response.json();
 }

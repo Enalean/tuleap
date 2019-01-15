@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,8 @@ export {
     failModalOperation,
     updateIsCommentRequired,
     updateNotEmptyFieldIds,
-    updateAuthorizedUserGroupIds
+    updateAuthorizedUserGroupIds,
+    savePostActions
 };
 
 function showModal(state) {
@@ -72,4 +73,8 @@ function updateAuthorizedUserGroupIds(state, authorized_user_group_ids) {
         return;
     }
     state.current_transition.authorized_user_group_ids = authorized_user_group_ids;
+}
+
+function savePostActions(state, actions) {
+    state.actions = actions;
 }

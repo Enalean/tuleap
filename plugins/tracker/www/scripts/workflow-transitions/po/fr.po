@@ -80,6 +80,12 @@ msgstr ""
 "devez d'abord choisir un champ de type liste. Une fois choisi, vous pourrez "
 "configurer les transitions en utilisant la matrice de configuration."
 
+msgid "Job url"
+msgstr "Adresse URL de la tâche"
+
+msgid "Launch a CI job"
+msgstr "Exécuter une tâche CI"
+
 msgid "No action is currently defined."
 msgstr "Aucune action n'est encore définie."
 
@@ -128,6 +134,10 @@ msgid "Transitions rules was deleted. Workflow is reset."
 msgstr ""
 "Les règles de transitions ont été supprimées. Le workflow est réinitialisé."
 
+msgid "Tuleap will automatically pass the following parameters to the job:"
+msgstr ""
+"Tuleap va automatiquement transmettre les paramètres suivants à la tâche :"
+
 msgid "Use advanced configuration"
 msgstr "Utiliser la configuration avancée"
 
@@ -137,3 +147,31 @@ msgid ""
 msgstr ""
 "Utilisez la configuration avancée si vous voulez configurer chaque "
 "transition indépendamment."
+
+msgid ""
+"artifactId: identifier of the artifact where the transition happens (integer)"
+msgstr ""
+"artifactId : identifiant de l'artefact où la transition est survenue "
+"(numérique)"
+
+msgid ""
+"projectId: identifier of the current project (ie. %{ project_id }) (integer)"
+msgstr ""
+"projectId : identifiant du projet courant (i.e. %{ project_id }) (numérique)"
+
+msgid ""
+"trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)"
+msgstr ""
+"trackerId : identifiant du tracker courant (i.e. %{ tracker_id }) (numérique)"
+
+msgid ""
+"triggerFieldValue: value of current transition target (ie. "
+"%{ transition_id }) (string)"
+msgstr ""
+"triggerFieldValue : valeur de la destination de la transition courante (i.e. "
+"%{ transition_id }) (numérique)"
+
+msgid "userId: identifier of Tuleap user who made the transition (integer)"
+msgstr ""
+"userId : identifiant de l'utilisateur Tuleap qui a réalisé la transition "
+"(numérique)"

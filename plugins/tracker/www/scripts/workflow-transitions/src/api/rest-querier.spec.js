@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,7 +26,8 @@ import {
     updateTransitionRulesEnforcement,
     getTransition,
     getUserGroups,
-    patchTransition
+    patchTransition,
+    getPostActions
 } from "../api/rest-querier.js";
 import { create } from "../support/factories.js";
 
@@ -67,6 +68,16 @@ describe("Rest queries:", () => {
                     "/api/projects/266/user_groups?query=%7B%22with_system_user_groups%22%3Atrue%7D"
                 ));
             it("returns the user groups", () => expect(result).toEqual(return_json));
+        });
+
+        describe("getPostActions()", () => {
+            beforeEach(async () => {
+                result = await getPostActions(266);
+            });
+
+            it("calls project API", () =>
+                expect(get).toHaveBeenCalledWith("/api/tracker_workflow_transitions/266/actions"));
+            it("returns the post actions", () => expect(result).toEqual(return_json));
         });
     });
 

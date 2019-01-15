@@ -68,6 +68,12 @@ msgid ""
 "using the configuration matrix."
 msgstr ""
 
+msgid "Job url"
+msgstr ""
+
+msgid "Launch a CI job"
+msgstr ""
+
 msgid "No action is currently defined."
 msgstr ""
 
@@ -109,10 +115,33 @@ msgstr ""
 msgid "Transitions rules was deleted. Workflow is reset."
 msgstr ""
 
+msgid "Tuleap will automatically pass the following parameters to the job:"
+msgstr ""
+
 msgid "Use advanced configuration"
 msgstr ""
 
 msgid ""
 "Use advanced configuration if you want to configure each transition "
 "independently."
+msgstr ""
+
+msgid ""
+"artifactId: identifier of the artifact where the transition happens (integer)"
+msgstr ""
+
+msgid ""
+"projectId: identifier of the current project (ie. %{ project_id }) (integer)"
+msgstr ""
+
+msgid ""
+"trackerId: identifier of the current tracker (ie. %{ tracker_id }) (integer)"
+msgstr ""
+
+msgid ""
+"triggerFieldValue: value of current transition target (ie. "
+"%{ transition_id }) (string)"
+msgstr ""
+
+msgid "userId: identifier of Tuleap user who made the transition (integer)"
 msgstr ""

@@ -86,6 +86,13 @@ const factories = {
             id: identity,
             label: "Group label"
         }
+    },
+    post_action: {
+        default: {
+            id: identity,
+            type: "run_job",
+            job_url: index => `http://ci.example${index}.test`
+        }
     }
 };
 
