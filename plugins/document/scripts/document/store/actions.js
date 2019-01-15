@@ -32,6 +32,7 @@ import { handleErrors, handleErrorsForModal } from "./actions-helpers/handle-err
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile } from "./actions-helpers/upload-file.js";
+import { flagItemAsCreated } from "./actions-helpers/flag-item-as-created.js";
 import { TYPE_FILE } from "../constants.js";
 
 export const loadRootFolder = async context => {
@@ -65,10 +66,7 @@ export const createNewDocument = async (context, [item, parent]) => {
         const item_reference = await addNewDocument(item, parent.id);
 
         const created_item = await getItem(item_reference.id);
-        created_item.created = true;
-        setTimeout(() => {
-            context.commit("removeCreatedPropertyOnItem", created_item);
-        }, 5000);
+        flagItemAsCreated(context, created_item);
 
         return Promise.resolve(
             context.commit("addJustCreatedDocumentToFolderContent", created_item)
