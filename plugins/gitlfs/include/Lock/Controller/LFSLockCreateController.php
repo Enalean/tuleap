@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,86 +18,99 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Batch;
+namespace Tuleap\GitLFS\Lock\Controller;
 
+use DateTimeImmutable;
 use HTTPRequest;
-use Tuleap\GitLFS\Batch\Request\BatchRequest;
-use Tuleap\GitLFS\Batch\Request\IncorrectlyFormattedBatchRequestException;
-use Tuleap\GitLFS\Batch\Response\BatchSuccessfulResponseBuilder;
-use Tuleap\GitLFS\Batch\Response\UnknownOperationException;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
+use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
+use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedLockCreateRequestException;
+use Tuleap\GitLFS\Lock\Request\LockCreateRequest;
+use Tuleap\GitLFS\Lock\LockCreator;
 use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 
-class LFSBatchController implements DispatchableWithRequestNoAuthz
+class LFSLockCreateController implements DispatchableWithRequestNoAuthz
 {
     /**
      * @var \gitlfsPlugin
      */
     private $plugin;
+
     /**
      * @var \GitRepositoryFactory
      */
     private $repository_factory;
+
     /**
      * @var LFSAPIHTTPAccessControl
      */
     private $api_access_control;
+
     /**
-     * @var BatchSuccessfulResponseBuilder
+     * @var LockResponseBuilder
      */
-    private $batch_successful_response_builder;
+    private $lock_response_builder;
+
     /**
      * @var \GitRepository
      */
     private $repository;
-    /**
-     * @var BatchRequest
-     */
-    private $batch_request;
 
     /**
-     * @var \PFUser
+     * @var LockCreateRequest
      */
-    private $user;
+    private $lock_create_request;
+
+    /**
+     * @var LockCreator
+     */
+    private $lock_creator;
 
     /**
      * @var UserRetriever
      */
     private $user_retriever;
 
+    /**
+     * @var \PFUser
+     */
+    private $user;
+
     public function __construct(
         \gitlfsPlugin $plugin,
         \GitRepositoryFactory $repository_factory,
         LFSAPIHTTPAccessControl $api_access_control,
-        BatchSuccessfulResponseBuilder $batch_successful_response_builder,
+        LockResponseBuilder $lock_response_builder,
+        LockCreator $lock_creator,
         UserRetriever $user_retriever
     ) {
-        $this->plugin                            = $plugin;
-        $this->repository_factory                = $repository_factory;
-        $this->api_access_control                = $api_access_control;
-        $this->batch_successful_response_builder = $batch_successful_response_builder;
-        $this->user_retriever                    = $user_retriever;
+        $this->plugin                = $plugin;
+        $this->repository_factory    = $repository_factory;
+        $this->api_access_control    = $api_access_control;
+        $this->lock_response_builder = $lock_response_builder;
+        $this->lock_creator          = $lock_creator;
+        $this->user_retriever        = $user_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        try {
-            $response = $this->batch_successful_response_builder->build(
-                new \DateTimeImmutable(),
-                $request->getServerUrl(),
-                $this->repository,
-                $this->batch_request->getOperation(),
-                ...$this->batch_request->getObjects()
-            );
-        } catch (UnknownOperationException $ex) {
-            http_response_code(501);
-            echo json_encode(['message' => $ex->getMessage()]);
-            return;
+        if ($this->user === null) {
+            throw new \LogicException();
         }
+
+        $lock = $this->lock_creator->createLock(
+            $this->lock_create_request->getPath(),
+            $this->user,
+            $this->lock_create_request->getReference() === null ? null : $this->lock_create_request->getReference()->getName(),
+            $this->repository,
+            new DateTimeImmutable()
+        );
+
+        $response = $this->lock_response_builder->buildSuccessfulLockCreation($lock);
 
         echo json_encode($response);
     }
@@ -105,7 +118,7 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->batch_request !== null || $this->user !== null) {
+        if ($this->repository !== null || $this->lock_create_request !== null || $this->user !== null) {
             throw new \RuntimeException(
                 'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
             );
@@ -126,16 +139,16 @@ class LFSBatchController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException('Can not read the body of the request');
         }
         try {
-            $this->batch_request = BatchRequest::buildFromJSONString($json_string);
-        } catch (IncorrectlyFormattedBatchRequestException $exception) {
+            $this->lock_create_request = LockCreateRequest::buildFromJSONString($json_string);
+        } catch (IncorrectlyFormattedLockCreateRequestException $exception) {
             throw new \RuntimeException($exception->getMessage(), 400);
         }
 
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->batch_request);
+        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_create_request);
 
         return $this->api_access_control->canAccess(
             $this->repository,
-            $this->batch_request,
+            $this->lock_create_request,
             $this->user
         );
     }
