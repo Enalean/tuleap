@@ -32,7 +32,7 @@ use Tuleap\Docman\view\DocumentTitlePresenterBuilder;
         }
 
         $builder   = new DocumentTitlePresenterBuilder(ProjectManager::instance(), EventManager::instance());
-        $presenter = $builder->build($params, $params['group_id'], $this->getUnconvertedTitle($params), $params['item']->toRow());
+        $presenter = $builder->build($params, $params['group_id'], $this->getUnconvertedTitle($params), $params['item']->toRow(), $params['user']);
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'docman-title',
