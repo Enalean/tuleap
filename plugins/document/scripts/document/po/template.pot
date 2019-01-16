@@ -5,10 +5,18 @@ msgstr ""
 "Generated-By: easygettext\n"
 "Project-Id-Version: \n"
 
+msgid ""
+"<b>New interface is under construction</b>, all features are not available "
+"for now. Here's the list of what have already been migrated:"
+msgstr ""
+
 msgid "Administration"
 msgstr ""
 
 msgid "Advanced"
+msgstr ""
+
+msgid "Browsing of the whole folder hierarchy."
 msgstr ""
 
 msgid "Cancel"
@@ -21,6 +29,9 @@ msgid "Close"
 msgstr ""
 
 msgid "Create document"
+msgstr ""
+
+msgid "Creation of wiki page, link, empty item."
 msgstr ""
 
 msgid "Description"
@@ -81,6 +92,9 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
+msgid "OK, got it"
+msgstr ""
+
 msgid "Oops"
 msgstr ""
 
@@ -97,6 +111,9 @@ msgid "Please start again."
 msgstr ""
 
 msgid "Project documentation"
+msgstr ""
+
+msgid "Searching for items (will redirect you to the old results page)."
 msgstr ""
 
 msgid "Show error details"
@@ -120,6 +137,9 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
+msgid "Welcome to the new document manager"
+msgstr ""
+
 msgid "Wiki page"
 msgstr ""
 
@@ -130,6 +150,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 msgid "You are not allowed to upload files bigger than %{ size }."
+msgstr ""
+
+msgid ""
+"You can drag 'n drop files from your desktop into the current folder to "
+"upload them."
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."

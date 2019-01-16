@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types = 1);
+
 namespace Tuleap\Document\Tree;
 
 class DocumentTreePresenter
@@ -42,13 +44,18 @@ class DocumentTreePresenter
      * @var int
      */
     public $max_size_upload;
+    /**
+     * @var bool
+     */
+    public $is_under_construction;
 
-    public function __construct(\Project $project, \PFUser $user)
+    public function __construct(\Project $project, \PFUser $user, bool $is_under_construction)
     {
-        $this->project_id           = $project->getID();
-        $this->project_name         = $project->getUnixNameLowerCase();
-        $this->user_is_admin        = $user->isAdmin($project->getID());
-        $this->user_can_create_wiki = $project->usesWiki();
-        $this->max_size_upload      = \ForgeConfig::get("sys_max_size_upload");
+        $this->project_id            = $project->getID();
+        $this->project_name          = $project->getUnixNameLowerCase();
+        $this->user_is_admin         = $user->isAdmin($project->getID());
+        $this->user_can_create_wiki  = $project->usesWiki();
+        $this->max_size_upload       = \ForgeConfig::get("sys_max_size_upload");
+        $this->is_under_construction = $is_under_construction;
     }
 }

@@ -25,7 +25,8 @@ import {
     createNewDocument,
     setUserPreferenciesForUI,
     addNewUploadFile,
-    cancelFileUpload
+    cancelFileUpload,
+    unsetUnderConstructionUserPreference
 } from "./actions.js";
 import { restore as restoreUploadFile, rewire$uploadFile } from "./actions-helpers/upload-file.js";
 import {
@@ -33,6 +34,7 @@ import {
     rewire$getItem,
     rewire$getProject,
     rewire$deleteUserPreferenciesForFolderInProject,
+    rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$patchUserPreferenciesForFolderInProject,
     rewire$patchUserPreferenciesForUIInProject,
     rewire$addNewDocument,
@@ -62,6 +64,7 @@ describe("Store actions", () => {
         loadFolderContent,
         loadAscendantHierarchy,
         deleteUserPreferenciesForFolderInProject,
+        deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
         patchUserPreferenciesForUIInProject,
         addNewDocument,
@@ -103,6 +106,13 @@ describe("Store actions", () => {
             "deleteUserPreferenciesForFolderInProject"
         );
         rewire$deleteUserPreferenciesForFolderInProject(deleteUserPreferenciesForFolderInProject);
+
+        deleteUserPreferenciesForUnderConstructionModal = jasmine.createSpy(
+            "deleteUserPreferenciesForUnderConstructionModal"
+        );
+        rewire$deleteUserPreferenciesForUnderConstructionModal(
+            deleteUserPreferenciesForUnderConstructionModal
+        );
 
         patchUserPreferenciesForFolderInProject = jasmine.createSpy(
             "patchUserPreferenciesForFolderInProject"
@@ -404,6 +414,23 @@ describe("Store actions", () => {
             await setUserPreferenciesForUI(context);
 
             expect(patchUserPreferenciesForUIInProject).toHaveBeenCalled();
+        });
+    });
+
+    describe("unsetUnderConstructionUserPreference", () => {
+        it("unset the under construction preference", async () => {
+            const context = {
+                commit: jasmine.createSpy("commit"),
+                state: {
+                    user_id: 102,
+                    project_id: 110
+                }
+            };
+
+            await unsetUnderConstructionUserPreference(context);
+
+            expect(deleteUserPreferenciesForUnderConstructionModal).toHaveBeenCalled();
+            expect(context.commit).toHaveBeenCalledWith("removeIsUnderConstruction");
         });
     });
 

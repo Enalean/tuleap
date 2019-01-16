@@ -46,7 +46,7 @@ class Link
 
     private function buildUrl(\Project $project, int $folder_id) : string
     {
-        $url = "/plugins/document/" . urlencode($project->getUnixName()) . "/";
+        $url = "/plugins/document/" . urlencode($project->getUnixName()) . "/under_construction/";
         if ($folder_id === 0) {
             return $url;
         }
