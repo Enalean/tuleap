@@ -24,10 +24,10 @@ namespace Tuleap\Docman\view;
 
 use EventManager;
 use PFUser;
-use Tuleap\Docman\DocumentTitlePresenter;
+use Tuleap\Docman\DocumentFooterPresenter;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 
-class DocumentTitlePresenterBuilder
+class DocumentFooterPresenterBuilder
 {
     /**
      * @var \ProjectManager
@@ -45,15 +45,14 @@ class DocumentTitlePresenterBuilder
     }
 
     /**
-     * @return DocumentTitlePresenter
+     * @return DocumentFooterPresenter
      */
     public function build(
         array $params,
         int $project_id,
-        string $title,
         array $item,
         PFUser $user
-    ) : DocumentTitlePresenter {
+    ) : DocumentFooterPresenter {
         $is_folder_in_migrated_view = $this->isFolderInMigratedView($params, $item);
         $folder_id                  = $this->getFolderId($is_folder_in_migrated_view, $item);
 
@@ -64,7 +63,7 @@ class DocumentTitlePresenterBuilder
 
         $project = $this->project_manager->getProject($project_id);
 
-        return new DocumentTitlePresenter($project, $title, $collector);
+        return new DocumentFooterPresenter($project, $collector);
     }
 
     private function getFolderId(bool $is_folder_in_migrated_view, array $item) : int

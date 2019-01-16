@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Docman\view\DocumentTitlePresenterBuilder;
+use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
 
 /* abstract */ class Docman_View_Display extends Docman_View_Docman
 {
@@ -31,13 +31,23 @@ use Tuleap\Docman\view\DocumentTitlePresenterBuilder;
             return;
         }
 
-        $builder   = new DocumentTitlePresenterBuilder(ProjectManager::instance(), EventManager::instance());
-        $presenter = $builder->build($params, $params['group_id'], $this->getUnconvertedTitle($params), $params['item']->toRow(), $params['user']);
         $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
         $renderer->renderToPage(
             'docman-title',
+            [ "title" => $this->getUnconvertedTitle($params)]
+        );
+    }
+
+    /* protected */ function _footer($params)
+    {
+        $builder   = new DocumentFooterPresenterBuilder(ProjectManager::instance(), EventManager::instance());
+        $presenter = $builder->build($params, $params['group_id'],  $params['item']->toRow(), $params['user']);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . "/../../templates");
+        $renderer->renderToPage(
+            'docman-footer',
             $presenter
         );
+        parent::_footer($params);
     }
 
     function _breadCrumbs($params) {
