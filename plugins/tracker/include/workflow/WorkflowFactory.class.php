@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
@@ -18,6 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
+
 class WorkflowFactory
 {
 
@@ -36,6 +39,9 @@ class WorkflowFactory
     /** @var WorkflowBackendLogger */
     private $logger;
 
+    /** @var ReadOnlyDao */
+    private $read_only_dao;
+
     /**
      * Should use the singleton instance()
      *
@@ -46,13 +52,15 @@ class WorkflowFactory
         TrackerFactory $tracker_factory,
         Tracker_FormElementFactory $formelement_factory,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
-        WorkflowBackendLogger $logger
+        WorkflowBackendLogger $logger,
+        ReadOnlyDao $read_only_dao
     ) {
         $this->transition_factory    = $transition_factory;
         $this->tracker_factory       = $tracker_factory;
         $this->formelement_factory   = $formelement_factory;
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->logger                = $logger;
+        $this->read_only_dao         = $read_only_dao;
     }
 
     /**
@@ -98,7 +106,8 @@ class WorkflowFactory
                 TrackerFactory::instance(),
                 $formelement_factory,
                 $trigger_rules_manager,
-                $logger
+                $logger,
+                new ReadOnlyDao()
             );
         }
         return self::$_instance;
@@ -425,7 +434,7 @@ class WorkflowFactory
 
     public function getGlobalRulesManager(Tracker $tracker)
     {
-        return new Tracker_RulesManager($tracker, $this->formelement_factory);
+        return new Tracker_RulesManager($tracker, $this->formelement_factory, $this->read_only_dao);
     }
 
     /**

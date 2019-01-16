@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2015-2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 
 require_once __DIR__.'/../bootstrap.php';
 
@@ -87,7 +89,8 @@ class WorkflowFactoryTest extends TuleapTestCase {
             mock('TrackerFactory'),
             mock('Tracker_FormElementFactory'),
             mock('Tracker_Workflow_Trigger_RulesManager'),
-            mock('WorkflowBackendLogger')
+            mock('WorkflowBackendLogger'),
+            mock(ReadOnlyDao::class)
         );
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker, $this->project);
@@ -155,7 +158,8 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
                 mock('TrackerFactory'),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                mock('WorkflowBackendLogger')
+                mock('WorkflowBackendLogger'),
+                mock(ReadOnlyDao::class)
             )
         );
         stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
@@ -199,7 +203,8 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
                 stub('TrackerFactory')->getTrackerById()->returns(aMockTracker()->build()),
                 mock('Tracker_FormElementFactory'),
                 mock('Tracker_Workflow_Trigger_RulesManager'),
-                mock('WorkflowBackendLogger')
+                mock('WorkflowBackendLogger'),
+                mock(ReadOnlyDao::class)
             )
         );
         $this->dao = mock('Workflow_Dao');
@@ -213,6 +218,4 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
             $this->workflow_factory->getWorkflowByTrackerId(112)
         );
     }
-
-
 }

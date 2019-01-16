@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -861,8 +862,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return boolean returns true if the field is used in field dependency, false otherwise
      */
-    public function isUsedInFieldDependency() {
-        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
+    public function isUsedInFieldDependency()
+    {
+        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance(), new ReadOnlyDao());
         return $rm->isUsedInFieldDependency($this);
     }
 
