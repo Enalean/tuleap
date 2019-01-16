@@ -25,12 +25,8 @@ namespace Tuleap\Docman;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 
-class DocumentTitlePresenter
+class DocumentFooterPresenter
 {
-    /**
-     * @var string
-     */
-    public $title;
     /**
      * @var bool
      */
@@ -46,10 +42,8 @@ class DocumentTitlePresenter
 
     public function __construct(
         \Project $project,
-        string $title,
         ExternalLinksManager $collector
     ) {
-        $this->title                        = $title;
         $this->should_display_external_link = $collector->hasExternalLinks();
         $this->project_shortname            = $project->getUnixNameLowerCase();
         $this->links                        = $collector->getLinks();

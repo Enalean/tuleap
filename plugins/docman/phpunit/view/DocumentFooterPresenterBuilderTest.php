@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use ProjectManager;
 
-class DocumentTitlePresenterBuilderTest extends TestCase
+class DocumentFooterPresenterBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -45,7 +45,7 @@ class DocumentTitlePresenterBuilderTest extends TestCase
     private $project_id;
 
     /**
-     * @var DocumentTitlePresenterBuilder
+     * @var DocumentFooterPresenterBuilder
      */
     private $builder;
     /**
@@ -69,7 +69,7 @@ class DocumentTitlePresenterBuilderTest extends TestCase
 
         $this->event_manager = Mockery::mock(\EventManager::class);
 
-        $this->builder = new DocumentTitlePresenterBuilder($project_manager, $this->event_manager);
+        $this->builder = new DocumentFooterPresenterBuilder($project_manager, $this->event_manager);
     }
 
     public function testItShouldNotRaiseAnEventWhenFolderIsNotInAMigratedView()
@@ -83,7 +83,7 @@ class DocumentTitlePresenterBuilderTest extends TestCase
             'item' => $item,
         ];
 
-        $this->builder->build($params, $this->project_id, 'folder name', $item, $this->user);
+        $this->builder->build($params, $this->project_id, $item, $this->user);
 
         $this->event_manager->shouldReceive('processEvent')->never();
     }
@@ -102,6 +102,6 @@ class DocumentTitlePresenterBuilderTest extends TestCase
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
-        $this->builder->build($params, $this->project_id, 'folder name', $item, $this->user);
+        $this->builder->build($params, $this->project_id, $item, $this->user);
     }
 }

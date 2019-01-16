@@ -495,11 +495,20 @@ a img {
     margin: 0;
 }
 
-.docman-title-with-external-content {
-    display: flex;
-    justify-content: space-between;
+.docman-footer-with-external-content {
+    margin: 20px 0 0 0;
 }
 
-.docman-title-external-link {
-    align-self: center;
+.docman-footer-external-link {
+    font-size: 12px;
+    color: #747474;
+    text-decoration: none;
+
+    &:hover {
+        color: #747474;
+    }
+}
+
+.docman-footer-external-link-icon {
+    margin:0 5px 0 0;
 }
