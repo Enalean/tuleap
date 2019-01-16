@@ -41,7 +41,11 @@
 }
 
 .document-header-global-progress {
+    display: flex;
+    align-items: center;
     margin: 0 $tlp-spacing 0;
+    min-height: 30px;
+    cursor: pointer;
 }
 
 .document-header-filter-container {

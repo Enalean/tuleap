@@ -122,10 +122,13 @@ msgstr ""
 msgid "Show error details"
 msgstr ""
 
-msgid "Some files are being uploaded."
+msgid "Some files are being uploaded, click here to see the whole list."
 msgstr ""
 
 msgid "Switch to old user interface"
+msgstr ""
+
+msgid "There are no uploads in progress"
 msgstr ""
 
 msgid "This folder is empty"
@@ -138,6 +141,12 @@ msgid "Title"
 msgstr ""
 
 msgid "URL"
+msgstr ""
+
+msgid "Upload error"
+msgstr ""
+
+msgid "Uploading documents"
 msgstr ""
 
 msgid "Welcome to the new documents manager"

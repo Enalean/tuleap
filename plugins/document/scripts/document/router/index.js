@@ -45,8 +45,9 @@ export function createRouter(project_name) {
     });
 
     router.beforeEach((to, from, next) => {
-        store.commit("resetErrors");
         if (!store.getters.is_uploading || abortCurrentUploads(router.app.$gettext, store)) {
+            store.commit("resetErrors");
+            store.commit("emptyFilesUploadsList");
             next();
         } else {
             next(false);

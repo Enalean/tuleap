@@ -19,11 +19,12 @@
 @import 'icons';
 @import 'headers';
 @import 'new-document';
+@import 'files-uploads-modal';
 @import '../../../../../src/www/themes/BurningParrot/css/includes/global-variables';
 
 $document-upload-animation-color: transparentize($tlp-ui-success, .9);
 $document-upload-animation-secondary-color: transparentize($tlp-ui-success, .95);
-$progress-bar-background-color: #f0f1f8;
+$progress-bar-background-color: $tlp-ui-border-normal;
 
 .document-upload-to-current-folder {
     position: fixed;
@@ -120,6 +121,12 @@ $progress-bar-background-color: #f0f1f8;
     }
 }
 
+.document-dragndrop-file-upload {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $tlp-ui-border-normal;
+}
+
 .document-file-upload-progress {
     display: flex;
     align-items: center;
@@ -182,6 +189,38 @@ $progress-bar-background-color: #f0f1f8;
     &:hover {
         color: $tlp-ui-danger;
         text-decoration: none;
+    }
+}
+
+.document-file-upload-progress-canceled {
+    > .document-file-upload-progress-bar,
+    > .document-file-upload-progress-value {
+        color: $tlp-ui-dimmed;
+    }
+
+    > .document-file-upload-progress-bar::-moz-progress-bar,
+    > .document-file-upload-progress-bar::-webkit-progress-value {
+        background: $tlp-ui-dimmed;
+    }
+
+    > .document-file-upload-progress-cancel {
+        color: $tlp-ui-dimmed;
+
+        &:hover {
+            color: $tlp-ui-dimmed;
+        }
+    }
+}
+
+.document-file-upload-progress-error {
+    > .document-file-upload-progress-bar,
+    > .document-file-upload-progress-value {
+        color: $tlp-ui-danger;
+    }
+
+    > .document-file-upload-progress-bar::-moz-progress-bar,
+    > .document-file-upload-progress-bar::-webkit-progress-value {
+        background: $tlp-ui-danger;
     }
 }
 

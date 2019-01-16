@@ -494,7 +494,8 @@ describe("Store actions", () => {
                 file_type: "text/plain",
                 is_uploading: true,
                 progress: 0,
-                uploader
+                uploader,
+                upload_error: null
             };
             expect(context.commit).toHaveBeenCalledWith(
                 "addJustCreatedDocumentToFolderContent",
@@ -521,7 +522,8 @@ describe("Store actions", () => {
                 file_type: "text/plain",
                 is_uploading: true,
                 progress: 0,
-                uploader
+                uploader,
+                upload_error: null
             };
             expect(uploadFile).toHaveBeenCalledWith(
                 context,

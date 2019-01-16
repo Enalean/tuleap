@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="document-file-upload-progress">
+    <div class="document-file-upload-progress" v-bind:class="{'document-file-upload-progress-canceled': is_canceled}">
         <span class="document-file-upload-progress-value">
             {{ item.progress }}%
         </span>
@@ -45,6 +45,11 @@ export default {
     props: {
         item: Object
     },
+    data() {
+        return {
+            is_canceled: false
+        };
+    },
     computed: {
         cancel_title() {
             return this.$gettext("Cancel upload");
@@ -53,7 +58,10 @@ export default {
     methods: {
         ...mapActions(["cancelFileUpload"]),
         cancel() {
-            this.cancelFileUpload(this.item);
+            if (!this.is_canceled) {
+                this.is_canceled = true;
+                this.cancelFileUpload(this.item);
+            }
         }
     }
 };

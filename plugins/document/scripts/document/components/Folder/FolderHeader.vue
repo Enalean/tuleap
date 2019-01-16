@@ -33,14 +33,7 @@
                 <new-item-modal/>
             </div>
             <div class="document-header-spacer"></div>
-            <div class="document-header-global-progress tlp-tooltip tlp-tooltip-bottom"
-                 v-if="global_upload_progress"
-                 v-bind:data-tlp-tooltip="progress_bar_tooltip"
-            >
-                <global-upload-progress-bar
-                    v-bind:progress="global_upload_progress"
-                />
-            </div>
+            <file-upload-manager/>
             <search-box v-if="can_display_search_box"/>
         </div>
     </div>
@@ -51,15 +44,20 @@ import { mapGetters, mapState } from "vuex";
 import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
-import GlobalUploadProgressBar from "./ProgressBar/GlobalUploadProgressBar.vue";
 import DropdownButton from "./Dropdown/DropdownButton.vue";
+import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
 
 export default {
-    name: "FolderHeader",
-    components: { DropdownButton, SearchBox, NewItemButton, NewItemModal, GlobalUploadProgressBar },
+    components: {
+        DropdownButton,
+        FileUploadManager,
+        SearchBox,
+        NewItemButton,
+        NewItemModal
+    },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
-        ...mapGetters(["current_folder_title", "is_folder_empty", "global_upload_progress"]),
+        ...mapGetters(["current_folder_title", "is_folder_empty"]),
         title_class() {
             return this.is_loading_ascendant_hierarchy
                 ? "tlp-skeleton-text document-folder-title-loading"
@@ -73,9 +71,6 @@ export default {
         },
         can_display_new_document_button() {
             return this.current_folder && this.current_folder.user_can_write;
-        },
-        progress_bar_tooltip() {
-            return this.$gettext("Some files are being uploaded.");
         }
     }
 };

@@ -211,12 +211,14 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
         file_type: dropped_file.type,
         is_uploading: true,
         progress: 0,
-        uploader: null
+        uploader: null,
+        upload_error: null
     };
 
     fake_item.uploader = uploadFile(context, dropped_file, fake_item, new_file);
 
     context.commit("addJustCreatedDocumentToFolderContent", fake_item);
+    context.commit("addFileInUploadsList", fake_item);
 };
 
 export const cancelFileUpload = async (context, item) => {
@@ -227,6 +229,7 @@ export const cancelFileUpload = async (context, item) => {
         // do nothing
     } finally {
         context.commit("removeItemFromFolderContent", item);
+        context.commit("removeFileFromUploadsList", item);
     }
 };
 
