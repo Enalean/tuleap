@@ -129,6 +129,10 @@ $progress-bar-background-color: #f0f1f8;
     justify-content: space-between;
 }
 
+.document-file-upload-cell-title-content {
+    display: flex;
+}
+
 .document-file-upload-progress-value {
     margin: 0 5px 0 0;
     color: $tlp-ui-success;
