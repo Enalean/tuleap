@@ -20,32 +20,22 @@
 
 namespace Tuleap\GitLFS\Lock\Response;
 
-use DateTimeInterface;
-use Tuleap\GitLFS\Lock\Lock;
-
-class LockResponseSuccessfulCreation implements LockResponse
+class LockResponseSuccessfulListRepresentation implements LockResponse
 {
     /**
-     * @var Lock
+     * @var LockResponseLockRepresentation[]
      */
-    private $lock;
+    private $lock_representations;
 
-    public function __construct(Lock $lock)
+    public function __construct(LockResponseLockRepresentation ...$lock_representations)
     {
-        $this->lock = $lock;
+        $this->lock_representations = $lock_representations;
     }
 
     public function jsonSerialize(): array
     {
         return [
-            "lock" => [
-                "id" => (string) $this->lock->getId(),
-                "path" => $this->lock->getPath(),
-                "locked_at" => $this->lock->getCreationDate()->format(DateTimeInterface::ATOM),
-                "owner" => [
-                    "name" => $this->lock->getOwner()->getRealName()
-                ]
-            ]
+            "locks" => $this->lock_representations
         ];
     }
 }

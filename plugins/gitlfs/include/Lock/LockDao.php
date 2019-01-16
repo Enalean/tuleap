@@ -20,6 +20,7 @@
 
 namespace Tuleap\GitLFS\Lock;
 
+use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 
 class LockDao extends DataAccessObject
@@ -41,5 +42,42 @@ class LockDao extends DataAccessObject
                 'creation_date' => $creation_date
             ]
         );
+    }
+
+    public function searchLocks(
+        ?int $id,
+        ?string $path,
+        ?string $ref
+    ): array {
+        $condition = $this->buildSearchCondition($id, $path, $ref);
+
+        return $this->getDB()->safeQuery(
+            "SELECT *
+            FROM plugin_gitlfs_lock
+            WHERE $condition",
+            $condition->values()
+        );
+    }
+
+    private function buildSearchCondition(
+        ?int $id,
+        ?string $path,
+        ?string $ref
+    ): EasyStatement {
+        $condition = EasyStatement::open();
+
+        if ($id !== null) {
+            $condition = $condition->andWith('id = ?', $id);
+        }
+
+        if ($path !== null) {
+            $condition = $condition->andWith('lock_path = ?', $path);
+        }
+
+        if ($ref !== null) {
+            $condition = $condition->andWith('ref = ?', $ref);
+        }
+
+        return $condition;
     }
 }
