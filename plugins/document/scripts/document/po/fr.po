@@ -158,7 +158,7 @@ msgid "URL"
 msgstr "URL"
 
 msgid "Welcome to the new document manager"
-msgstr "Binevenue dans le nouveau gestionnaire de documents"
+msgstr "Bienvenue dans le nouveau gestionnaire de documents"
 
 msgid "Wiki page"
 msgstr "Page wiki"
