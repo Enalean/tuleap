@@ -227,7 +227,7 @@ describe("Store mutations", () => {
                 { id: 66, parent_id: 42, level: 0, type: "wiki", title: "Document" }
             ]);
         });
-        it("it inserts item by respecting the natural sort order", () => {
+        it("it inserts DOCUMENT by respecting the natural sort order", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
             const state = {
                 folder_content: [
@@ -245,7 +245,7 @@ describe("Store mutations", () => {
                 { id: 44, parent_id: 42, level: 3, type: "wiki", title: "A.10" }
             ]);
         });
-        it("it inserts item by respecting the natural sort order, and after folders", () => {
+        it("it inserts DOCUMENT by respecting the natural sort order, and AFTER folders", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "A.2.x" };
             const state = {
                 folder_content: [
@@ -262,6 +262,126 @@ describe("Store mutations", () => {
                 { id: 43, parent_id: 42, level: 3, type: "folder", title: "A.1" },
                 { id: 44, parent_id: 42, level: 3, type: "folder", title: "A.10" },
                 { id: 66, parent_id: 42, level: 3, type: "wiki", title: "A.2.x" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+            ]);
+        });
+        it("it inserts FOLDER by respecting the natural sort order, and BEFORE items", () => {
+            const folder = { id: 66, parent_id: 42, type: "folder", title: "D folder" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "C folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, folder);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "C folder" },
+                { id: 66, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+            ]);
+        });
+        it("it inserts FOLDER by respecting the natural sort order, and at the right level", () => {
+            const folder = { id: 66, parent_id: 43, type: "folder", title: "Z folder" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, folder);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 66, parent_id: 43, level: 4, type: "folder", title: "Z folder" },
+                { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+            ]);
+        });
+        it("it inserts DOCUMENT by respecting the natural sort order, and at the right level", () => {
+            const item = { id: 66, parent_id: 43, type: "empty", title: "zzzzempty" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                { id: 66, parent_id: 43, level: 4, type: "empty", title: "zzzzempty" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+            ]);
+        });
+        it("it inserts DOCUMENT by respecting the natural sort order, at the end of the folder", () => {
+            const item = { id: 66, parent_id: 42, type: "empty", title: "zzzzempty" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 46, parent_id: 43, level: 4, type: "wiki", title: "B.1" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" },
+                { id: 66, parent_id: 42, level: 3, type: "empty", title: "zzzzempty" }
+            ]);
+        });
+        it("it inserts FOLDER by respecting the natural sort order, at the end of the folder", () => {
+            const folder = { id: 66, parent_id: 43, type: "folder", title: "zzzzfolder" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, folder);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 66, parent_id: 43, level: 4, type: "folder", title: "zzzzfolder" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+            ]);
+        });
+        it("it inserts DOCUMENT by respecting the natural sort order, at the end of the folder", () => {
+            const item = { id: 66, parent_id: 43, type: "empty", title: "zzzzDOCUMENT" };
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                    { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
+                ]
+            };
+            mutations.addJustCreatedItemToFolderContent(state, item);
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 43, parent_id: 42, level: 3, type: "folder", title: "B folder" },
+                { id: 66, parent_id: 43, level: 4, type: "empty", title: "zzzzDOCUMENT" },
+                { id: 44, parent_id: 42, level: 3, type: "folder", title: "D folder" },
                 { id: 45, parent_id: 42, level: 3, type: "wiki", title: "A.11" }
             ]);
         });

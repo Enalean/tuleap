@@ -57,16 +57,57 @@ function addJustCreatedItemToFolderContent(state, item) {
     const parent = state.folder_content.find(parent => parent.id === item.parent_id);
 
     item.level = parent ? parent.level + 1 : 0;
-
     const length = state.folder_content.length;
     let i = 0;
     while (i < length) {
         const possible_sibling = state.folder_content[i];
-        if (
-            possible_sibling.parent_id === item.parent_id &&
-            possible_sibling.type !== TYPE_FOLDER &&
-            possible_sibling.title.localeCompare(item.title, undefined, { numeric: true }) >= 0
-        ) {
+        const next_sibling = state.folder_content[i + 1];
+        const is_sibling = possible_sibling.parent_id === item.parent_id;
+
+        if (is_sibling) {
+            const are_both_folders =
+                item.type === TYPE_FOLDER && possible_sibling.type === TYPE_FOLDER;
+            const are_both_documents =
+                item.type !== TYPE_FOLDER && possible_sibling.type !== TYPE_FOLDER;
+            if (are_both_folders || are_both_documents) {
+                if (
+                    possible_sibling.title.localeCompare(item.title, undefined, {
+                        numeric: true
+                    }) >= 0
+                ) {
+                    break;
+                }
+            } else if (item.type === TYPE_FOLDER) {
+                break;
+            }
+            if (!next_sibling) {
+                i++;
+                break;
+            }
+            const are_next_item_and_current_item_sibling =
+                next_sibling.parent_id === item.parent_id;
+            if (!are_next_item_and_current_item_sibling) {
+                if (next_sibling.parent_id === possible_sibling.parent_id) {
+                    i++;
+                    break;
+                }
+                const are_both_items_different_type =
+                    possible_sibling.type === TYPE_FOLDER && item.type !== TYPE_FOLDER;
+                if (are_both_items_different_type) {
+                    i++;
+                    continue;
+                }
+                i++;
+                break;
+            }
+        }
+        const is_current_folder_empty =
+            next_sibling &&
+            possible_sibling.id === item.parent_id &&
+            next_sibling.parent_id === possible_sibling.parent_id;
+
+        if (is_current_folder_empty) {
+            i++;
             break;
         }
         i++;
