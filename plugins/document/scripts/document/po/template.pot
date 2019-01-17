@@ -10,6 +10,12 @@ msgid ""
 "available for now. Here's the list of what have already been migrated:"
 msgstr ""
 
+msgid "A document already exists with the same title."
+msgstr ""
+
+msgid "A folder already exists with the same title."
+msgstr ""
+
 msgid "Administration"
 msgstr ""
 
