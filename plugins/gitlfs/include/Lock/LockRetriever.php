@@ -20,6 +20,7 @@
 
 namespace Tuleap\GitLFS\Lock;
 
+use PFUser;
 use UserManager;
 
 class LockRetriever
@@ -45,14 +46,28 @@ class LockRetriever
     public function retrieveLocks(
         ?int $id,
         ?string $path,
-        ?string $ref
+        ?string $ref,
+        ?PFUser $owner
     ): array {
         $lock_rows = $this->lock_dao->searchLocks(
             $id,
             $path,
-            $ref
+            $ref,
+            $owner ? $owner->getId() : null
         );
 
+        return $this->instantiateLocksFromRows($lock_rows);
+    }
+
+    public function retrieveLocksNotBelongingToOwner(?string $ref, PFUser $owner): array
+    {
+        return $this->instantiateLocksFromRows(
+            $this->lock_dao->searchLocksNotBelongingToOwner($ref, $owner->getId())
+        );
+    }
+
+    private function instantiateLocksFromRows(array $lock_rows): array
+    {
         $locks = array();
 
         foreach ($lock_rows as $lock_row) {

@@ -32,10 +32,17 @@ class LockResponseBuilder
         );
     }
 
-    public function buildSuccessfulLockList(
-        array $locks
-    ): LockResponse {
+    public function buildSuccessfulLockList(array $locks): LockResponse
+    {
         return new LockResponseSuccessfulListRepresentation(...$this->generateLocksRepresentations(...$locks));
+    }
+
+    public function buildSuccessfulLockVerify(array $ours, array $theirs): LockResponse
+    {
+        return new LockResponseSuccessfulVerifyRepresentation(
+            $this->generateLocksRepresentations(...$ours),
+            $this->generateLocksRepresentations(...$theirs)
+        );
     }
 
     private function generateLocksRepresentations(Lock ...$locks): array

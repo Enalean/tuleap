@@ -103,4 +103,48 @@ class LockResponseBuilderTest extends TestCase
         $this->assertSame('2', $serialized_lock_2->id);
         $this->assertSame('2019-01-16T19:18:15+01:00', $serialized_lock_2->locked_at);
     }
+
+    public function testVerifyLocksResponseIsCorrect()
+    {
+        $our_user = \Mockery::mock(PFUser::class);
+        $our_user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+
+        $their_user = \Mockery::mock(PFUser::class);
+        $their_user->shouldReceive('getRealName')->andReturn('Jean Bono');
+
+        $our_lock = new Lock(
+            1,
+            'test/FileTest1.png',
+            $our_user,
+            1547486947
+        );
+
+        $their_lock = new Lock(
+            2,
+            'test/FileTest2.png',
+            $their_user,
+            1547662695
+        );
+
+        $ours   = array($our_lock);
+        $theirs = array($their_lock);
+
+        $response            = $this->lock_response_builder->buildSuccessfulLockVerify($ours, $theirs);
+        $serialized_response = json_decode(json_encode($response));
+
+        $this->assertCount(1, $serialized_response->ours);
+        $this->assertCount(1, $serialized_response->theirs);
+
+        $our_serialized_lock = $serialized_response->ours[0];
+        $this->assertSame('Mick Jagger', $our_serialized_lock->owner->name);
+        $this->assertSame('test/FileTest1.png', $our_serialized_lock->path);
+        $this->assertSame('1', $our_serialized_lock->id);
+        $this->assertSame('2019-01-14T18:29:07+01:00', $our_serialized_lock->locked_at);
+
+        $their_serialized_lock = $serialized_response->theirs[0];
+        $this->assertSame('Jean Bono', $their_serialized_lock->owner->name);
+        $this->assertSame('test/FileTest2.png', $their_serialized_lock->path);
+        $this->assertSame('2', $their_serialized_lock->id);
+        $this->assertSame('2019-01-16T19:18:15+01:00', $their_serialized_lock->locked_at);
+    }
 }
