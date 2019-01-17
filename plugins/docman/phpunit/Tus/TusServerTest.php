@@ -126,7 +126,7 @@ class TusServerTest extends TestCase
         $upload_request->shouldReceive('getBody')->andReturns($request_body);
 
         $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getLength')->andReturns(123456);
+        $file_information->shouldReceive('getLength')->andReturns(strlen($body_content));
         $file_information->shouldReceive('getOffset')->andReturns($upload_offset);
         $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
 
@@ -142,8 +142,6 @@ class TusServerTest extends TestCase
             )->andReturns(strlen($body_content));
         if ($has_finisher) {
             $finisher_data_store->shouldReceive('finishUpload')->with($file_information)->once();
-        } else {
-            $finisher_data_store->shouldReceive('finishUpload')->with($file_information)->never();
         }
 
         $response = $server->handle($upload_request);
@@ -308,5 +306,36 @@ class TusServerTest extends TestCase
         $response = $server->handle($incoming_request);
 
         $this->assertEquals(405, $response->getStatusCode());
+    }
+
+    public function testAnUploadIsNotFinishedWhenAllDataHasNotBeenCopied() : void
+    {
+        $data_writer = \Mockery::mock(TusWriter::class);
+        $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
+        $finisher = \Mockery::mock(TusFinisherDataStore::class);
+        $this->data_store->shouldReceive('getFinisher')->andReturns($finisher);
+        $server = new TusServer($this->message_factory, $this->data_store);
+
+        $incomplete_upload_request = \Mockery::mock(ServerRequestInterface::class);
+        $incomplete_upload_request->shouldReceive('getMethod')->andReturns('PATCH');
+        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
+        $incomplete_upload_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
+        $incomplete_upload_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
+        $request_body = \Mockery::mock(StreamInterface::class);
+        $body_size    = 12;
+        $request_body->shouldReceive('detach')->andReturns(fopen('php://memory', 'rb+'));
+        $incomplete_upload_request->shouldReceive('getBody')->andReturns($request_body);
+
+        $file_information = \Mockery::mock(TusFileInformation::class);
+        $file_information->shouldReceive('getLength')->andReturns($body_size * 100);
+        $file_information->shouldReceive('getOffset')->andReturns(0);
+        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+
+        $data_writer->shouldReceive('writeChunk')->andReturns($body_size);
+
+        $finisher->shouldReceive('finishUpload')->with($file_information)->never();
+
+        $server->handle($incomplete_upload_request);
     }
 }
