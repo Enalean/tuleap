@@ -275,15 +275,71 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $tracker_id  = 2;
         $field_id    = 103;
         $is_used     = 1;
+        $is_legacy   = 0;
         $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
         $this->workflow = partial_mock(
             'Workflow',
             array('getTracker'),
-            array(mock('Tracker_RulesManager'), $this->trigger_rules_manager, mock('WorkflowBackendLogger'), $workflow_id, $tracker_id, $field_id, $is_used, $transitions)
+            array(
+                mock('Tracker_RulesManager'),
+                $this->trigger_rules_manager,
+                mock('WorkflowBackendLogger'),
+                $workflow_id,
+                $tracker_id,
+                $field_id,
+                $is_used,
+                $is_legacy,
+                $transitions
+            )
         );
+
+        $this->unused_workflow = partial_mock(
+            'Workflow',
+            array('getTracker'),
+            array(
+                mock('Tracker_RulesManager'),
+                $this->trigger_rules_manager,
+                mock('WorkflowBackendLogger'),
+                $workflow_id,
+                $tracker_id,
+                $field_id,
+                false,
+                $is_legacy,
+                $transitions
+            )
+        );
+
+        $this->unused_legacy_workflow = partial_mock(
+            'Workflow',
+            array('getTracker'),
+            array(
+                mock('Tracker_RulesManager'),
+                $this->trigger_rules_manager,
+                mock('WorkflowBackendLogger'),
+                $workflow_id,
+                $tracker_id,
+                $field_id,
+                false,
+                true,
+                $transitions
+            )
+        );
+
         $this->workflow->setField($this->status_field);
+        $this->unused_workflow->setField($this->status_field);
+        $this->unused_legacy_workflow->setField($this->status_field);
 
         $this->artifact = new MockTracker_Artifact();
+
+        $this->event_manager = mock(EventManager::class);
+        EventManager::setInstance($this->event_manager);
+    }
+
+    public function tearDown()
+    {
+        EventManager::clearInstance();
+
+        parent::tearDown();
     }
 
     function testBeforeShouldTriggerTransitionActions() {
@@ -313,6 +369,37 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $this->transition_null_to_open->expectOnce('before', array($fields_data, $this->current_user));
         $this->transition_open_to_close->expectNever('before');
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
+    }
+
+    public function testBeforeShouldDoNothingIfWorkflowIsNotUsedAndIsNotLegacy()
+    {
+        $changeset = new MockTracker_Artifact_Changeset_Null();
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+
+        expect($this->transition_null_to_open)->before()->never();
+        expect($this->transition_open_to_close)->before()->never();
+        expect($this->event_manager)->processEvent()->never();
+
+        $this->unused_workflow->before($fields_data, $this->current_user, $this->artifact);
+    }
+
+    public function testBeforeShouldProcessActionsIfWorkflowIsNotUsedAndIsLegacy()
+    {
+        $changeset = new MockTracker_Artifact_Changeset_Null();
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+
+        expect($this->transition_null_to_open)->before()->once();
+        expect($this->event_manager)->processEvent()->once();
+
+        $this->unused_legacy_workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
     public function testAfterShouldTriggerTransitionActions() {
@@ -355,6 +442,40 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         expect($this->trigger_rules_manager)->processTriggers($new_changeset)->once();
 
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+    }
+
+    public function testAfterShouldDoNothingIfWorkflowIsNotUsedAndIsNotLegacy()
+    {
+        $previous_changeset = null;
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getArtifact()->returns(mock('Tracker_Artifact'));
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+
+        expect($this->transition_null_to_open)->after()->never();
+        expect($this->transition_open_to_close)->after()->never();
+        expect($this->event_manager)->processEvent()->never();
+        expect($this->trigger_rules_manager)->processTriggers()->never();
+
+        $this->unused_workflow->after($fields_data, $new_changeset, $previous_changeset);
+    }
+
+    public function testAfterShouldProcessActionsIfWorkflowIsNotUsedAndIsLegacy()
+    {
+        $previous_changeset = null;
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+        stub($new_changeset)->getArtifact()->returns(mock('Tracker_Artifact'));
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+
+        expect($this->transition_null_to_open)->after()->once();
+        expect($this->trigger_rules_manager)->processTriggers()->once();
+
+        $this->unused_legacy_workflow->after($fields_data, $new_changeset, $previous_changeset);
     }
 }
 

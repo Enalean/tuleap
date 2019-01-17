@@ -771,6 +771,14 @@ msgstr "Ce tracker a été supprimé."
 msgid "This transition already exists."
 msgstr "Cette transition existe déjà."
 
+msgid ""
+"This workflow is legacy, which means that pre conditions and post actions "
+"defined in transitions are processed even if the workflow is not activated."
+msgstr ""
+"Ce workflow a un comportement incohérent. Ceci signifie que les conditions "
+"ainsi que les actions définies dans les transitions seront exécutées bien que "
+"le worflow soit désactivé."
+
 msgid "Time"
 msgstr "Date"
 

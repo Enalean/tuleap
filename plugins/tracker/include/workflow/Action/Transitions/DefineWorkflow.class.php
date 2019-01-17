@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -116,6 +116,11 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         if (! $workflow->is_used) {
             echo '<h4>'. $GLOBALS['Language']->getText('workflow_admin', 'transitions_deactivated') .'</h4>';
         }
+        if ($workflow->isLegacy()) {
+            echo '<p>';
+            echo dgettext('tuleap-tracker', "This workflow is legacy, which means that pre conditions and post actions defined in transitions are processed even if the workflow is not activated.");
+            echo '</p>';
+        }
         echo '<p>';
         echo '<input type="hidden" name="is_used" value="0" />';
         echo '<label><input type="checkbox" name="is_used" value="1" '. $checked .'> ';
@@ -135,4 +140,3 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         }
     }
 }
-?>

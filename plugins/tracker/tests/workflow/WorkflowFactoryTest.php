@@ -212,7 +212,9 @@ class WorkflowFactory_CacheTest extends TuleapTestCase {
     }
 
     public function itReturnsSameObjectWhenUsingSameTrackerId() {
-        stub($this->dao)->searchByTrackerId(112)->returnsDar(array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1));
+        stub($this->dao)->searchByTrackerId(112)->returnsDar(
+            array('tracker_id' => 112, 'workflow_id' => 34, 'field_id' => 56, 'is_used' => 1, 'is_legacy' => 0)
+        );
         $this->assertIdentical(
             $this->workflow_factory->getWorkflowByTrackerId(112),
             $this->workflow_factory->getWorkflowByTrackerId(112)

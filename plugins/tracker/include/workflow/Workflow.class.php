@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,7 @@ class Workflow {
     protected $field = null;
 
     /**
-     * @var Array of Tracker_FormElement_Field_List_Value
+     * @var Tracker_FormElement_Field_List_Value[]
      */
     protected $field_values = null;
 
@@ -70,6 +70,11 @@ class Workflow {
      */
     private $before_event;
 
+    /**
+     * @var bool
+     */
+    private $is_legacy;
+
     public function __construct(
         Tracker_RulesManager $global_rules_manager,
         Tracker_Workflow_Trigger_RulesManager $trigger_rules_manager,
@@ -78,6 +83,7 @@ class Workflow {
         $tracker_id,
         $field_id,
         $is_used,
+        $is_legacy = false,
         $transitions = null
     ) {
         $this->workflow_id           = $workflow_id;
@@ -88,6 +94,7 @@ class Workflow {
         $this->global_rules_manager  = $global_rules_manager;
         $this->trigger_rules_manager = $trigger_rules_manager;
         $this->logger                = $logger;
+        $this->is_legacy             = $is_legacy;
     }
 
     /**
@@ -294,7 +301,14 @@ class Workflow {
      *
      * @return void
      */
-    public function before(array &$fields_data, PFUser $current_user, Tracker_Artifact $artifact) {
+    public function before(array &$fields_data, PFUser $current_user, Tracker_Artifact $artifact)
+    {
+        $artifact_id = $artifact->getId();
+        if (! $this->is_used && ! $this->is_legacy) {
+            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping.");
+            return;
+        }
+
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
             if ($transition) {
@@ -319,8 +333,19 @@ class Workflow {
      *
      * @return void
      */
-    public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
-        $this->logger->defineFingerprint($new_changeset->getArtifact()->getId());
+    public function after(
+        array $fields_data,
+        Tracker_Artifact_Changeset $new_changeset,
+        Tracker_Artifact_Changeset $previous_changeset = null
+    ) {
+        $artifact_id = $new_changeset->getArtifact()->getId();
+
+        if (! $this->is_used && ! $this->is_legacy) {
+            $this->logger->debug("Workflow for artifact #$artifact_id is disabled, skipping.");
+            return;
+        }
+
+        $this->logger->defineFingerprint($artifact_id);
         $this->logger->start(__METHOD__, $new_changeset->getId(), ($previous_changeset ? $previous_changeset->getId() : 'null'));
 
         if (isset($fields_data[$this->getFieldId()])) {
@@ -418,5 +443,13 @@ class Workflow {
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLegacy()
+    {
+        return $this->is_legacy;
     }
 }

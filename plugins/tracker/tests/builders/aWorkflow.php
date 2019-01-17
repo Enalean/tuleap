@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -82,8 +82,8 @@ class Test_Workflow_Builder {
             $this->tracker_id,
             $this->field_id,
             $this->is_used,
+            false,
             $this->transitions
         );
     }
 }
-?>

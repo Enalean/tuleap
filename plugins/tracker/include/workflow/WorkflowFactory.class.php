@@ -139,7 +139,8 @@ class WorkflowFactory
             $row['workflow_id'],
             $row['tracker_id'],
             $row['field_id'],
-            $row['is_used']
+            $row['is_used'],
+            $row['is_legacy']
         );
     }
 
@@ -403,6 +404,7 @@ class WorkflowFactory
             $tracker->getId(),
             0, // not available yet
             (string)$xml->is_used,
+            false,
             $transitions
         );
 
