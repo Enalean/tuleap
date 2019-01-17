@@ -47,15 +47,16 @@ services:
       - ldap-data:/data
 
   gerrit:
-    container_name: tuleap-gerrit
-    image: enalean/gerrit-tuleap:2.12
-    volumes:
-    - gerrit-data:/home/gerrit
+    build:
+      context: tools/docker/gerrit
     env_file:
-    - .env
+      - .env
+    environment:
+      - CANONICAL_WEB_URL=http://gerrit.tuleap-aio-dev.docker:8080
+    volumes:
+      - gerrit-data:/data
     depends_on:
-    - ldap
-    - db
+      - ldap
 
   jenkins:
     image: jenkins/jenkins:lts
