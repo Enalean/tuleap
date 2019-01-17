@@ -100,6 +100,29 @@ class Docman_ItemDao extends DataAccessObject {
         return $this->_searchWithCurrentVersion($where, '', $order);
     }
 
+    public function doesTitleCorrespondToExistingDocument($title, $parent_id)
+    {
+        $title     = $this->da->quoteSmart($title);
+        $parent_id = $this->da->escapeInt($parent_id);
+        $type_folder = $this->da->escapeInt(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+
+        $sql = "SELECT * FROM plugin_docman_item WHERE title = $title AND parent_id = $parent_id AND item_type <> $type_folder";
+
+        return $this->retrieveCount($sql) > 0;
+    }
+
+    public function doesTitleCorrespondToExistingFolder($title, $parent_id)
+    {
+        $title     = $this->da->quoteSmart($title);
+        $parent_id = $this->da->escapeInt($parent_id);
+
+        $type_folder = $this->da->escapeInt(PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
+
+        $sql = "SELECT * FROM plugin_docman_item WHERE title = $title AND parent_id = $parent_id AND item_type = $type_folder";
+
+        return $this->retrieveCount($sql) > 0;
+    }
+
     function searchObsoleteByGroupId($groupId) {
         $sql = '';
         $sql .= $this->_getItemSearchSelectStmt();

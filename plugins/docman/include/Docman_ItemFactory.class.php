@@ -695,6 +695,16 @@ class Docman_ItemFactory
         return $items;
     }
 
+    public function doesTitleCorrespondToExistingDocument(string $title, int $parent_id)
+    {
+        return $this->_getItemDao()->doesTitleCorrespondToExistingDocument($title, $parent_id);
+    }
+
+    public function doesTitleCorrespondToExistingFolder(string $title, int $parent_id)
+    {
+        return $this->_getItemDao()->doesTitleCorrespondToExistingFolder($title, $parent_id);
+    }
+
     /**
      *
      */
