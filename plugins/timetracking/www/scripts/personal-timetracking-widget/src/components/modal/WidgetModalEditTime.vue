@@ -69,7 +69,7 @@
 <script>
 import { DateTime } from "luxon";
 import { formatMinutes } from "../../time-formatters.js";
-import { TIME_REGEX } from "../../constants.js";
+import { TIME_REGEX } from "../../../../constants.js";
 import { datePicker } from "tlp";
 import { mapGetters } from "vuex";
 

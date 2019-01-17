@@ -22,7 +22,7 @@ import {
     addTime as addTimeQuerrier,
     updateTime as updateTimeQuerrier
 } from "../api/rest-querier.js";
-import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURED } from "../constants.js";
+import { REST_FEEDBACK_ADD, REST_FEEDBACK_EDIT, ERROR_OCCURRED } from "../../../constants.js";
 
 export function setDatesAndReload(context, [start_date, end_date]) {
     context.commit("setParametersForNewQuery", [start_date, end_date]);
@@ -83,7 +83,7 @@ async function showErrorMessage(context, rest_error) {
         const { error } = await rest_error.response.json();
         context.commit("setErrorMessage", error.code + " " + error.message);
     } catch (error) {
-        context.commit("setErrorMessage", ERROR_OCCURED);
+        context.commit("setErrorMessage", ERROR_OCCURRED);
     }
 }
 
@@ -92,6 +92,6 @@ async function showRestError(context, rest_error) {
         const { error } = await rest_error.response.json();
         return context.commit("setRestFeedback", [error.code + " " + error.message, "danger"]);
     } catch (error) {
-        return context.commit("setRestFeedback", [ERROR_OCCURED, "danger"]);
+        return context.commit("setRestFeedback", [ERROR_OCCURRED, "danger"]);
     }
 }

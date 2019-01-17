@@ -41,10 +41,15 @@ document.addEventListener("DOMContentLoaded", () => {
     Vue.config.language = locale;
 
     for (const widget_element of widgets) {
+        const report_id = widget_element.dataset.reportId;
+
         const store = createStore();
 
         new Widget({
-            store
+            store,
+            propsData: {
+                reportId: report_id
+            }
         }).$mount(widget_element);
     }
 });

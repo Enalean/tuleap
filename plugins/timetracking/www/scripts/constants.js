@@ -17,22 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import mutations from "./mutations.js";
-import * as actions from "./actions.js";
-import * as getters from "./getters.js";
-import state from "./state.js";
-
-Vue.use(Vuex);
-
-export function createStore() {
-    return new Vuex.Store({
-        state: {
-            ...state
-        },
-        mutations,
-        getters,
-        actions
-    });
-}
+export const TIME_REGEX = new RegExp("^[0-9]{2}[:][0-9]{2}$");
+export const REST_FEEDBACK_EDIT = "updated";
+export const REST_FEEDBACK_ADD = "added";
+export const ERROR_OCCURRED = "error";

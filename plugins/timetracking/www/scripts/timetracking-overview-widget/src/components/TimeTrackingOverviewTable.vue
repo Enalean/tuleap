@@ -19,7 +19,10 @@
 
 <template>
     <div class="timetracking-overview-widget-table">
-        <table class="tlp-table">
+        <div v-if="has_error" class="tlp-alert-danger">
+            {{ error_message }}
+        </div>
+        <table v-else class="tlp-table">
             <thead>
                 <tr>
                     <th v-translate> Tracker </th>
@@ -48,9 +51,13 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
+
 export default {
     name: "TimeTrackingOverviewTable",
     computed: {
+        ...mapState(["error_message"]),
+        ...mapGetters(["has_error"]),
         time_format_tooltip() {
             return this.$gettext("The time is displayed in hours:minutes");
         }

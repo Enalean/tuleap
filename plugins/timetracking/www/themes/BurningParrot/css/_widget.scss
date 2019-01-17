@@ -63,6 +63,43 @@
     vertical-align: middle;
 }
 
+.timetracking-overview-reading-mode-trackers-list {
+    display: flex;
+    flex-direction: row;
+    margin: $tlp-spacing;
+    color: $tlp-theme-color;
+}
+
+.timetracking-overview-reading-mode-trackers {
+    display: flex;
+}
+
+.timetracking-overview-reading-mode-tracker {
+    display: flex;
+    flex-direction: column;
+    margin: 0 $tlp-spacing 0 0;
+}
+
+.timetracking-overview-reading-mode-tracker-project-name {
+    margin: 7px 0 0;
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+    font-weight: 400;
+
+    > .timetracking-overview-project-icon {
+        margin: 0 5px;
+        fill: $tlp-theme-color;
+    }
+}
+
+.timetracking-overview-reading-mode-trackers-empty {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 $tlp-spacing;
+    font-style: italic;
+}
+
+
 .timetracking-badge-direct-link-to-artifact {
     margin: 0 5px 0 0;
 }

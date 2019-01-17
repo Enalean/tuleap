@@ -17,22 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import mutations from "./mutations.js";
-import * as actions from "./actions.js";
-import * as getters from "./getters.js";
-import state from "./state.js";
+export default {
+    setSelectedTrackers(state, trackers) {
+        state.selected_trackers = trackers;
+    },
 
-Vue.use(Vuex);
+    resetErrorMessage(state) {
+        state.error_message = null;
+    },
 
-export function createStore() {
-    return new Vuex.Store({
-        state: {
-            ...state
-        },
-        mutations,
-        getters,
-        actions
-    });
-}
+    setErrorMessage(state, error_message) {
+        state.error_message = error_message;
+    },
+
+    setReportId(state, report_id) {
+        state.report_id = report_id;
+    }
+};

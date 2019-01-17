@@ -1,5 +1,9 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright Enalean (c) 2019. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +21,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const TIME_REGEX = new RegExp("^[0-9]{2}[:][0-9]{2}$");
-export const REST_FEEDBACK_EDIT = "updated";
-export const REST_FEEDBACK_ADD = "added";
-export const ERROR_OCCURED = "error";
+import { get } from "tlp";
+export { getTrackersFromReport };
+
+async function getTrackersFromReport(report_id) {
+    const response = await get("/api/v1/timetracking_reports/" + encodeURI(report_id));
+    return response.json();
+}

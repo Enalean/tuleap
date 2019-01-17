@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import mutations from "./mutations.js";
-import * as actions from "./actions.js";
-import * as getters from "./getters.js";
-import state from "./state.js";
-
-Vue.use(Vuex);
-
-export function createStore() {
-    return new Vuex.Store({
-        state: {
-            ...state
-        },
-        mutations,
-        getters,
-        actions
-    });
-}
+export const has_error = state => state.error_message !== null;

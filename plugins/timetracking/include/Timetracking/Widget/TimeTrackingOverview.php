@@ -37,6 +37,11 @@ class TimeTrackingOverview extends Widget
         parent::__construct(self::NAME);
     }
 
+    public function loadContent($id)
+    {
+        $this->content_id = $id;
+    }
+
     public function getTitle()
     {
         return dgettext('tuleap-timetracking', 'Timetracking overview');
@@ -61,7 +66,10 @@ class TimeTrackingOverview extends Widget
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 
-        return $renderer->renderToString('timetracking-overview', []);
+        return $renderer->renderToString(
+            'timetracking-overview',
+            new TimetrackingOverviewPresenter($this->content_id)
+        );
     }
 
     public function getJavascriptDependencies()

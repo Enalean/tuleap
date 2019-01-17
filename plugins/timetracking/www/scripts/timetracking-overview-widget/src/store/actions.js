@@ -1,5 +1,5 @@
 /*
- * Copyright Enalean (c) 2018. All rights reserved.
+ * Copyright Enalean (c) 2019. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,26 +21,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const webpack_config = require("./webpack.config.js");
-const karma_configurator = require("../../../../tools/utils/scripts/karma-configurator.js");
+import { getTrackersFromReport } from "../api/rest-querier.js";
+import { ERROR_OCCURRED } from "../../../constants.js";
 
-webpack_config.mode = "development";
+export async function initWidgetWithReport(context) {
+    try {
+        context.commit("resetErrorMessage");
+        const report = await getTrackersFromReport(context.state.report_id);
+        return context.commit("setSelectedTrackers", report.trackers);
+    } catch (error) {
+        return showRestError(context, error);
+    }
+}
 
-module.exports = function(config) {
-    const coverage_dir = path.resolve(__dirname, "./coverage");
-    const base_config = karma_configurator.setupBaseKarmaConfig(
-        config,
-        webpack_config,
-        coverage_dir
-    );
-
-    Object.assign(base_config, {
-        files: ["./*/src/app.spec.js"],
-        preprocessors: {
-            "./*/src/app.spec.js": ["webpack"]
-        }
-    });
-
-    config.set(base_config);
-};
+async function showRestError(context, rest_error) {
+    try {
+        const { error } = await rest_error.response.json();
+        context.commit("setErrorMessage", error.code + " " + error.message);
+    } catch (error) {
+        context.commit("setErrorMessage", ERROR_OCCURRED);
+    }
+}

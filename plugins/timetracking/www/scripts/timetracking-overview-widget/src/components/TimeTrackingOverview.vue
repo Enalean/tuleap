@@ -25,10 +25,17 @@
 </template>
 
 <script>
-import TimeTrackingOverviewReadingMode from "./TimeTrackingOverviewReadingMode.vue";
+import TimeTrackingOverviewReadingMode from "./reading-mode/TimeTrackingOverviewReadingMode.vue";
 import TimeTrackingOverviewTable from "./TimeTrackingOverviewTable.vue";
 export default {
     name: "TimeTrackingOverview",
-    components: { TimeTrackingOverviewTable, TimeTrackingOverviewReadingMode }
+    components: { TimeTrackingOverviewTable, TimeTrackingOverviewReadingMode },
+    props: {
+        reportId: String
+    },
+    mounted() {
+        this.$store.commit("setReportId", this.reportId);
+        this.$store.dispatch("initWidgetWithReport");
+    }
 };
 </script>
