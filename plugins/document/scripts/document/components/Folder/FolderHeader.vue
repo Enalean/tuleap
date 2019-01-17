@@ -1,5 +1,5 @@
 <!--
-  - Copyright (c) Enalean, 2018. All Rights Reserved.
+  - Copyright (c) Enalean, 2018-2019. All Rights Reserved.
   -
   - This file is a part of Tuleap.
   -
@@ -25,10 +25,13 @@
             {{ folder_title }}
         </h1>
         <div class="document-header-actions">
-            <template v-if="can_display_new_document_button">
-                <new-item-button class="tlp-button-primary"/>
+            <div class="tlp-dropdown" v-if="can_display_new_document_button">
+                <div class="tlp-dropdown-split-button">
+                    <new-item-button class="tlp-button-primary tlp-dropdown-split-button-main"/>
+                    <dropdown-button/>
+                </div>
                 <new-item-modal/>
-            </template>
+            </div>
             <div class="document-header-spacer"></div>
             <div class="document-header-global-progress tlp-tooltip tlp-tooltip-bottom"
                  v-if="global_upload_progress"
@@ -49,10 +52,11 @@ import SearchBox from "./SearchBox.vue";
 import NewItemButton from "./NewItem/NewItemButton.vue";
 import NewItemModal from "./NewItem/NewItemModal.vue";
 import GlobalUploadProgressBar from "./ProgressBar/GlobalUploadProgressBar.vue";
+import DropdownButton from "./Dropdown/DropdownButton.vue";
 
 export default {
     name: "FolderHeader",
-    components: { SearchBox, NewItemButton, NewItemModal, GlobalUploadProgressBar },
+    components: { DropdownButton, SearchBox, NewItemButton, NewItemModal, GlobalUploadProgressBar },
     computed: {
         ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
         ...mapGetters(["current_folder_title", "is_folder_empty", "global_upload_progress"]),

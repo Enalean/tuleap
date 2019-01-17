@@ -92,6 +92,9 @@ msgstr ""
 msgid "New document"
 msgstr ""
 
+msgid "New folder"
+msgstr ""
+
 msgid "OK, got it"
 msgstr ""
 

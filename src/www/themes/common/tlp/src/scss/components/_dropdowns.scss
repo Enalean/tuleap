@@ -193,6 +193,20 @@ $tlp-dropdown-transition: 75ms ease-out;
     color: $tlp-ui-danger;
 }
 
+.tlp-dropdown-split-button {
+    display: flex;
+    align-items: center;
+}
+
+.tlp-dropdown-split-button-main,
+.tlp-dropdown-split-button-main.tlp-button-outline {
+    border-right: 0;
+    border-radius: 4px 0 0 4px;
+}
+
+.tlp-dropdown-split-button-caret {
+    border-radius: 0 4px 4px 0;
+}
 $flatpickr-day-hover: #f3f3f3;
 $flatpickr-day-dimmed: #d0d0d0;
 $flatpickr-animation: 100ms ease-in-out showFlatPickr;
