@@ -71,6 +71,7 @@ class UserResource extends AuthenticatedResource
     public function getUserTimes($id, $query, $limit, $offset)
     {
         $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
+        $query_checker = new TimetrackingQueryChecker();
 
         try {
             $start_date = $query_parameter_parser ->getString($query, 'start_date');
@@ -79,7 +80,7 @@ class UserResource extends AuthenticatedResource
             throw new RestException(400, $ex->getMessage());
         }
         $representation_builder = new TimetrackingRepresentationBuilder();
-        $this->checkTimePeriodIsValid($start_date, $end_date);
+        $query_checker->checkTimePeriodIsValid($start_date, $end_date);
 
         if ($id != $this->rest_user_manager->getCurrentUser()->getId()) {
             throw new RestException(403, 'You can only access to your own preferences');
@@ -114,25 +115,5 @@ class UserResource extends AuthenticatedResource
         );
 
         return $representation_builder->buildPaginatedTimes($paginated_times->getTimes());
-    }
-
-
-    private function checkTimePeriodIsValid($start_date, $end_date)
-    {
-        $period_start = DateTime::createFromFormat(DateTime::ISO8601, $start_date);
-        $period_end   = DateTime::createFromFormat(DateTime::ISO8601, $end_date);
-
-        if (!$period_start || !$period_end) {
-            throw new RestException(400, "Please provide valid ISO-8601 dates");
-        }
-
-        $period_length = $period_start->diff($period_end);
-
-        if ($period_length->days < 1) {
-            throw new RestException(400, 'There must be one day offset between the both dates');
-        }
-        if ($period_start > $period_end) {
-            throw new RestException(400, "end_date must be greater than start_date");
-        }
     }
 }

@@ -96,4 +96,29 @@ class TimetrackingReportTest extends TimetrackingBase
 
         $this->assertEquals(403, $response->getStatusCode());
     }
+
+    public function testGetTimesByTrackers()
+    {
+        $query = urlencode(
+            json_encode([
+                            "trackers_id" => [$this->tracker_timetracking],
+                            "start_date"  => "2010-03-01T00:00:00+01",
+                            "end_date"    => "2019-03-21T00:00:00+01"
+                        ])
+        );
+        $this->initUserId(TimetrackingDataBuilder::USER_TESTER_NAME);
+        $response = $this->getResponseByName(
+            TimetrackingDataBuilder::USER_TESTER_NAME,
+            $this->client->get("/api/v1/timetracking_reports/1/times?query=$query")
+        );
+        $result   = $response->json();
+        $total    = 0;
+
+        foreach ($result as $tracker) {
+            $total += $tracker["minutes"];
+        }
+
+        $this->assertEquals($response->getStatusCode(), 200);
+        $this->assertEquals($total, 1200);
+    }
 }

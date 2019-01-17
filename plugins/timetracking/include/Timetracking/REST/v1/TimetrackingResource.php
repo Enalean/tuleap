@@ -288,25 +288,6 @@ class TimetrackingResource extends AuthenticatedResource
         Header::allowOptionsGetPutPostDelete();
     }
 
-    private function checkTimePeriodIsValid($start_date, $end_date)
-    {
-        $period_start = DateTime::createFromFormat(DateTime::ISO8601, $start_date);
-        $period_end   = DateTime::createFromFormat(DateTime::ISO8601, $end_date);
-
-        if (! $period_start || ! $period_end) {
-            throw new RestException(400, "Please provide valid ISO-8601 dates");
-        }
-
-        $period_length = $period_start->diff($period_end);
-
-        if ($period_length->days < 1) {
-            throw new RestException(400, 'There must be one day offset between the both dates');
-        }
-        if ($period_start > $period_end) {
-            throw new RestException(400, "end_date must be greater than start_date");
-        }
-    }
-
     private function getArtifact(\PFUser $user, $artifact_id)
     {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactByIdUserCanView($user, $artifact_id);
