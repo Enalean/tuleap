@@ -6,8 +6,8 @@ msgstr ""
 "Project-Id-Version: \n"
 
 msgid ""
-"<b>New interface is under construction</b>, all features are not available "
-"for now. Here's the list of what have already been migrated:"
+"<b>The new interface is under construction</b>, all features are not "
+"available for now. Here's the list of what have already been migrated:"
 msgstr ""
 
 msgid "Administration"
@@ -140,7 +140,7 @@ msgstr ""
 msgid "URL"
 msgstr ""
 
-msgid "Welcome to the new document manager"
+msgid "Welcome to the new documents manager"
 msgstr ""
 
 msgid "Wiki page"
@@ -158,6 +158,11 @@ msgstr ""
 msgid ""
 "You can drag 'n drop files from your desktop into the current folder to "
 "upload them."
+msgstr ""
+
+msgid ""
+"You can switch to the old Document Manager UI whenever you want. (The switch "
+"is at the bottom of the page)"
 msgstr ""
 
 msgid "You may only access documents you are granted read permission on."
