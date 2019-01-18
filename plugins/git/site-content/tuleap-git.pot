@@ -189,6 +189,16 @@ msgid ""
 "in a few minutes."
 msgstr ""
 
+msgid ""
+"This section gather credentials of the gerrit user who can perform admin "
+"tasks on Gerrit."
+msgstr ""
+
+msgid ""
+"Tuleap will use Basic Auth to interact with Gerrit REST API, check you "
+"gerrit.config."
+msgstr ""
+
 msgid "Undefined"
 msgstr ""
 
@@ -215,6 +225,11 @@ msgid "User, group, email"
 msgstr ""
 
 msgid "You don't have permissions to see user groups."
+msgstr ""
+
+msgid ""
+"You should consider switching to Basic Auth (here and, of course in gerrit."
+"config). Recent version of gerrit no longer support Digest."
 msgstr ""
 
 msgid "submodule"

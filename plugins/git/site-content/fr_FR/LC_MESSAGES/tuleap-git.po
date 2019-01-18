@@ -210,6 +210,20 @@ msgstr ""
 "Le dépôt est en attente de transfert vers gerrit. Veuillez revenir dans "
 "quelques minutes."
 
+msgid ""
+"This section gather credentials of the gerrit user who can perform admin "
+"tasks on Gerrit."
+msgstr ""
+"Cette section concerne les identifiants de l'utilisateur gerrit qui peut "
+"faire les tâches d'administration."
+
+msgid ""
+"Tuleap will use Basic Auth to interact with Gerrit REST API, check you "
+"gerrit.config."
+msgstr ""
+"Tuleap utilisera Basic Auth pour intéragir avec l'API REST de gerrit, "
+"vérifez votre gerrit.config."
+
 msgid "Undefined"
 msgstr "Indéfini"
 
@@ -237,6 +251,13 @@ msgstr "Utilisateur, groupe, email"
 
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateur."
+
+msgid ""
+"You should consider switching to Basic Auth (here and, of course in gerrit."
+"config). Recent version of gerrit no longer support Digest."
+msgstr ""
+"Vous devriez passer à l'authentification Basic Auth (ici et sur gerrit dans "
+"gerrit.config). Les versions récentes de gerrit ne supportent plus Digest."
 
 msgid "submodule"
 msgstr "sous-module"

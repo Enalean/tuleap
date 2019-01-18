@@ -108,25 +108,32 @@
             />
         </div>
 
-        <div class="tlp-form-element">
-            <label class="tlp-label">{{ gerrit_label_auth_type }}</label>
-            <label class="tlp-label tlp-radio">
-                <input type="radio"
-                       name="auth_type"
-                       value="Digest"
-                    {{ auth_type_digest_checked }}
-                />
-                {{ digest }}
-            </label>
-            <label class="tlp-label tlp-radio">
-                <input type="radio"
-                       name="auth_type"
-                       value="Basic"
-                    {{ auth_type_basic_checked }}
-                />
-                {{ basic }}
-            </label>
-        </div>
+
+        {{# is_digest }}
+            <p class="tlp-text-warning">
+                {{# dgettext }} tuleap-git | You should consider switching to Basic Auth (here and, of course in gerrit.config). Recent version of gerrit no longer support Digest.{{/ dgettext }}
+            </p>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label">{{ gerrit_label_auth_type }}</label>
+                <label class="tlp-label tlp-radio">
+                    <input type="radio"
+                           name="auth_type"
+                           value="Digest"
+                        {{ auth_type_digest_checked }}
+                    />
+                    {{ digest }}
+                </label>
+                <label class="tlp-label tlp-radio">
+                    <input type="radio"
+                           name="auth_type"
+                           value="Basic"
+                        {{ auth_type_basic_checked }}
+                    />
+                    {{ basic }}
+                </label>
+            </div>
+        {{/ is_digest }}
 
 
         <div class="tlp-form-element">

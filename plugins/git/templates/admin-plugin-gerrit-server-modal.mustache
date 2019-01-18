@@ -30,11 +30,15 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="ssh-port-required">{{ gerrit_label_ssh_port }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="22" maxlength="5" size="6" required />
+                <input type="text" class="tlp-input" id="ssh-port-required" name="ssh_port" placeholder="29418" maxlength="5" size="6" required />
             </div>
             <input type="hidden" name="gerrit_version" value="2.8+" />
 
             <hr class="tlp-modal-separator">
+
+            <p class="tlp-text-info">
+                {{# dgettext }} tuleap-git | This section gather credentials of the gerrit user who can perform admin tasks on Gerrit.{{/ dgettext }}
+            </p>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="login-required">{{ gerrit_label_login }} <i class="fa fa-asterisk"></i></label>
@@ -42,23 +46,14 @@
             </div>
 
             <div class="tlp-form-element">
-                <label class="tlp-label" for="identity-file-required">{{ gerrit_label_identity_file }} <i class="fa fa-asterisk"></i></label>
-                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/etc/..." required />
-            </div>
-
-            <div class="tlp-form-element">
-                <label class="tlp-label">{{ gerrit_label_auth_type }}</label>
-                <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Digest" checked /> {{ digest }}
-                </label>
-                <label class="tlp-label tlp-radio">
-                    <input type="radio" name="auth_type" value="Basic" /> {{ basic }}
-                </label>
-            </div>
-
-            <div class="tlp-form-element">
                 <label class="tlp-label" for="http-password-required">{{ gerrit_label_http_password }} <i class="fa fa-asterisk"></i></label>
                 <input type="password" class="tlp-input" id="http-password-required" name="http_password" placeholder="************" size="40" required />
+                 <p class="tlp-text-info"><i class="fa fa-life-saver"></i>{{# dgettext }} tuleap-git | Tuleap will use Basic Auth to interact with Gerrit REST API, check you gerrit.config.{{/ dgettext }}</p>
+            </div>
+
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="identity-file-required">{{ gerrit_label_identity_file }} <i class="fa fa-asterisk"></i></label>
+                <input type="text" class="tlp-input" id="identity-file-required" name="identity_file" placeholder="/var/lib/tuleap/.ssh/id_rsa-gerrit.pub" required />
             </div>
 
             <hr class="tlp-modal-separator">
