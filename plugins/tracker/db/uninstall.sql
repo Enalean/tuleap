@@ -104,6 +104,8 @@ DROP TABLE IF EXISTS plugin_tracker_artifact_pending_removal;
 DROP TABLE IF EXISTS tracker_report_criteria_comment_value;
 DROP TABLE IF EXISTS plugin_tracker_webhook_url;
 DROP TABLE IF EXISTS plugin_tracker_webhook_log;
+DROP TABLE IF EXISTS plugin_tracker_workflow_transition_postactions_read_only;
+DROP TABLE IF EXISTS plugin_tracker_workflow_transition_postactions_read_only_fields;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

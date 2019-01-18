@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Workflow\PostAction\ReadOnly\ReadOnlyDao;
 
 /**
 * Manager of rules
@@ -26,8 +27,8 @@
 * This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
-class Tracker_RulesManager {
-
+class Tracker_RulesManager
+{
     /**
      *
      * @var Tracker
@@ -46,9 +47,14 @@ class Tracker_RulesManager {
      */
     private $rule_list_factory;
 
-    public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
+    /** @var ReadOnlyDao */
+    private $read_only_dao;
+
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, ReadOnlyDao $read_only_dao)
+    {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
+        $this->read_only_dao        = $read_only_dao;
     }
 
     /**
@@ -178,13 +184,15 @@ class Tracker_RulesManager {
         return $selected_values;
     }
 
-    function fieldIsAForbiddenSource($tracker_id, $field_id, $target_id) {
-        return !$this->ruleExists($tracker_id, $field_id, $target_id) &&
-                (
-                    $field_id == $target_id ||
-                    $this->isCyclic($tracker_id, $field_id, $target_id) ||
-                    $this->fieldHasSource($tracker_id, $target_id)
-               );
+    public function fieldIsAForbiddenSource($tracker_id, $field_id, $target_id)
+    {
+        return ! $this->ruleExists($tracker_id, $field_id, $target_id) &&
+            (
+                $field_id == $target_id ||
+                $this->isCyclic($tracker_id, $field_id, $target_id) ||
+                $this->fieldHasSource($tracker_id, $target_id) ||
+                $this->isFieldUsedInReadOnlyTransitionPostAction($field_id)
+            );
     }
 
     function isCyclic($tracker_id, $source_id, $target_id) {
@@ -205,13 +213,15 @@ class Tracker_RulesManager {
         }
     }
 
-    function fieldIsAForbiddenTarget($tracker_id, $field_id, $source_id) {
-        return !$this->ruleExists($tracker_id, $source_id, $field_id) &&
-                (
-                    $field_id == $source_id ||
-                    $this->isCyclic($tracker_id, $source_id, $field_id) ||
-                    $this->fieldHasSource($tracker_id, $field_id)
-               );
+    public function fieldIsAForbiddenTarget($tracker_id, $field_id, $source_id)
+    {
+        return ! $this->ruleExists($tracker_id, $source_id, $field_id) &&
+            (
+                $field_id == $source_id ||
+                $this->isCyclic($tracker_id, $source_id, $field_id) ||
+                $this->fieldHasSource($tracker_id, $field_id) ||
+                $this->isFieldUsedInReadOnlyTransitionPostAction($field_id)
+            );
     }
 
     function fieldHasTarget($tracker_id, $field_id) {
@@ -264,11 +274,12 @@ class Tracker_RulesManager {
         return false;
     }
 
-    function getAllSourceFields($target_id) {
-        $sources     = array();
+    private function getAllSourceFields()
+    {
+        $sources     = [];
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
-        foreach($used_fields as $field) {
-            if (!$target_id || !$this->fieldIsAForbiddenSource($this->tracker->id, $field->getId(), $target_id)) {
+        foreach ($used_fields as $field) {
+            if (! $this->fieldIsAForbiddenSource($this->tracker->id, $field->getId(), null)) {
                 $sources[$field->getId()] = $field;
             }
         }
@@ -387,7 +398,7 @@ class Tracker_RulesManager {
         if (!$source_field) {
             echo '<select name="source_field" onchange="this.form.submit()">';
             echo '<option value="0">'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_source_field') .'</option>';
-            $sources = $this->getAllSourceFields(null);
+            $sources = $this->getAllSourceFields();
             foreach($sources as $id => $field) {
                 echo '<option value="'. $hp->purify($id) .'">';
                 echo $hp->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
@@ -781,5 +792,10 @@ class Tracker_RulesManager {
         $tracker_list_factory = $this->getTrackerFormElementFactory();
         $field                = $tracker_list_factory->getFormElementById($field_id);
         return $field;
+    }
+
+    private function isFieldUsedInReadOnlyTransitionPostAction($field_id)
+    {
+        return $this->read_only_dao->isFieldUsedInPostAction($field_id);
     }
 }
