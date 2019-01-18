@@ -82,6 +82,10 @@ class DocmanItemCreator
         DocmanItemPOSTRepresentation $docman_item_post_representation,
         \DateTimeImmutable $current_time
     ) {
+        $this->checkDocumentDoesNotAlreadyExists(
+            $docman_item_post_representation
+        );
+
         $this->checkDocumentIsNotBeingUploaded(
             $parent_item,
             $docman_item_post_representation->type,
@@ -335,5 +339,20 @@ class DocmanItemCreator
             && $docman_item_post_representation->file_properties === null
             && $docman_item_post_representation->link_properties === null
         );
+    }
+
+    private function checkDocumentDoesNotAlreadyExists(DocmanItemPOSTRepresentation $representation)
+    {
+        if ($representation->type !== \Tuleap\Docman\REST\v1\ItemRepresentation::TYPE_FOLDER
+            && $this->item_factory->doesTitleCorrespondToExistingDocument($representation->title, $representation->parent_id)
+        ) {
+            throw new RestException(400, "A document with same title already exists in the given folder.");
+        }
+
+        if ($representation->type === \Tuleap\Docman\REST\v1\ItemRepresentation::TYPE_FOLDER
+            && $this->item_factory->doesTitleCorrespondToExistingFolder($representation->title, $representation->parent_id)
+        ) {
+            throw new RestException(400, "A folder with same title already exists in the given folder.");
+        }
     }
 }

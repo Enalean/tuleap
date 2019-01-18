@@ -30,6 +30,7 @@ class DocmanItemCreatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
+    private $type_retriever;
     private $creator_visitor;
     private $permissions_manager;
     private $event_manager;
@@ -91,6 +92,8 @@ class DocmanItemCreatorTest extends TestCase
             ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
         $created_item_representation = $item_creator->create(
             $parent_item,
             $user,
@@ -141,6 +144,8 @@ class DocmanItemCreatorTest extends TestCase
             ->once()
             ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -196,6 +201,8 @@ class DocmanItemCreatorTest extends TestCase
         $project->shouldReceive('usesWiki')->andReturn(false);
         $project->shouldReceive('getUnixName')->once();
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
         $item_creator->create(
             $parent_item,
             $user,
@@ -229,6 +236,8 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->file_properties           = $file_properties_post_representation;
 
         $this->document_to_upload_creator->shouldReceive('create')->once()->andReturns(new DocumentToUpload(12));
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -264,6 +273,8 @@ class DocmanItemCreatorTest extends TestCase
         $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
         $post_representation->title     = 'Title';
         $post_representation->parent_id = 11;
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
 
         $this->document_ongoing_upload_retriever->shouldReceive('isThereAlreadyAnUploadOngoing')->andReturns(true);
 
@@ -331,6 +342,8 @@ class DocmanItemCreatorTest extends TestCase
             ->once()
             ->andReturn(true);
 
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(false);
+
         $created_item_representation = $item_creator->create(
             $parent_item,
             $user,
@@ -379,6 +392,8 @@ class DocmanItemCreatorTest extends TestCase
             ->once()
             ->andReturns($created_item);
         $this->permissions_manager->shouldReceive('clonePermissions')->once();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
 
         $created_item_representation = $item_creator->create(
             $parent_item,
@@ -431,6 +446,42 @@ class DocmanItemCreatorTest extends TestCase
             ->shouldReceive('createWithoutOrdering')
             ->with('Title', '', 11, 100, 222, PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, null, null)
             ->never();
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingFolder')->andReturn(false);
+
+        $item_creator->create(
+            $parent_item,
+            $user,
+            $project,
+            $post_representation,
+            $current_time
+        );
+    }
+
+    /**
+     * @expectedException \Luracast\Restler\RestException
+     * @expectedExceptionCode 400
+     */
+    public function testItemAreRejectedIfItemWIthSameNameAlreadyExists()
+    {
+        $item_creator = new DocmanItemCreator(
+            $this->item_factory,
+            $this->document_ongoing_upload_retriever,
+            $this->document_to_upload_creator,
+            $this->creator_visitor
+        );
+
+        $parent_item  = \Mockery::mock(\Docman_Item::class);
+        $user         = \Mockery::mock(\PFUser::class);
+        $project      = \Mockery::mock(\Project::class);
+        $current_time = new \DateTimeImmutable();
+
+        $post_representation            = new DocmanItemPOSTRepresentation();
+        $post_representation->type      = ItemRepresentation::TYPE_EMPTY;
+        $post_representation->title     = 'Title';
+        $post_representation->parent_id = 11;
+
+        $this->item_factory->shouldReceive('doesTitleCorrespondToExistingDocument')->andReturn(true);
 
         $item_creator->create(
             $parent_item,

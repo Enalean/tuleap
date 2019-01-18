@@ -223,6 +223,29 @@ class DocmanItemsTest extends DocmanBase
     }
 
     /**
+     * @depends             testGetRootId
+     * @expectedException \Guzzle\Http\Exception\ClientErrorResponseException
+     * @expectExceptionCode 400
+     */
+    public function testPostDocumentIsRejectedIfDocumentAlreadyExists($root_id)
+    {
+        $headers = ['Content-Type' => 'application/json'];
+        $query   = json_encode(
+            [
+                'title'       => 'Custom title',
+                'description' => 'A description',
+                'parent_id'   => $root_id,
+                'type'        => 'empty'
+            ]
+        );
+
+        $this->getResponseByName(
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $this->client->post('docman_items', $headers, $query)
+        );
+    }
+
+    /**
      * @depends testGetRootId
      */
     public function testPostFileDocument(int $root_id): void
