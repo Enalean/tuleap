@@ -21,7 +21,7 @@
     <div class="tlp-modal tlp-modal-info" role="dialog" aria-labelledby="document-modal-under-construction">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-modal-under-construction">
-                <translate>Welcome to the new document manager</translate>
+                <translate>Welcome to the new documents manager</translate>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
                 &times;
@@ -29,7 +29,7 @@
         </div>
         <div class="tlp-modal-body">
             <p v-translate>
-                <b>New interface is under construction</b>, all features are not available for now. Here's the list of what have already been migrated:
+                <b>The new interface is under construction</b>, all features are not available for now. Here's the list of what have already been migrated:
             </p>
             <ul>
                 <li v-translate>
@@ -45,6 +45,9 @@
                     Searching for items (will redirect you to the old results page).
                 </li>
             </ul>
+            <p v-translate>
+                You can switch to the old Document Manager UI whenever you want. (The switch is at the bottom of the page)
+            </p>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button type="button"
