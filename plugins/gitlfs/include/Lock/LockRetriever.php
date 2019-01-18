@@ -31,7 +31,7 @@ class LockRetriever
     private $lock_dao;
 
     /**
-     * @var \UserManager
+     * @var UserManager
      */
     private $user_manager;
 

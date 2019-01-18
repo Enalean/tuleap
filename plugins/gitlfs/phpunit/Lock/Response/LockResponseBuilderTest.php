@@ -147,4 +147,35 @@ class LockResponseBuilderTest extends TestCase
         $this->assertSame('2', $their_serialized_lock->id);
         $this->assertSame('2019-01-16T19:18:15+01:00', $their_serialized_lock->locked_at);
     }
+
+    public function testErrorResponseIsCorrect()
+    {
+        $message             = "this is a test error message";
+        $response            = $this->lock_response_builder->buildErrorResponse($message);
+        $serialized_response = json_decode(json_encode($response));
+
+        $this->assertSame($message, $serialized_response->message);
+    }
+
+    public function testDeleteLockResponseIsCorrect()
+    {
+        $user = \Mockery::mock(PFUser::class);
+
+        $user->shouldReceive('getRealName')->andReturn('Mick Jagger');
+
+        $lock = new Lock(
+            1,
+            'test/FileTest.png',
+            $user,
+            1547486947
+        );
+
+        $response            = $this->lock_response_builder->buildSuccessfulLockDestruction($lock);
+        $serialized_response = json_decode(json_encode($response));
+
+        $this->assertSame('Mick Jagger', $serialized_response->lock->owner->name);
+        $this->assertSame('test/FileTest.png', $serialized_response->lock->path);
+        $this->assertSame('1', $serialized_response->lock->id);
+        $this->assertSame('2019-01-14T18:29:07+01:00', $serialized_response->lock->locked_at);
+    }
 }
