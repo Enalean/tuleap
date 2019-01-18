@@ -20,6 +20,34 @@
 
 namespace Tuleap\GitLFS\Lock\Request;
 
-final class IncorrectlyFormattedLockCreateRequestException extends \RuntimeException
+use PHPUnit\Framework\TestCase;
+
+class LockVerifyRequestTest extends TestCase
 {
+
+    public function testParsingRequest()
+    {
+        $json = <<<JSON
+{
+  "ref": {
+    "name": "refs/heads/master"
+  }
+}
+JSON;
+        $verify_request = LockVerifyRequest::buildFromJSONString($json);
+
+        $this->assertSame('refs/heads/master', $verify_request->getReference()->getName());
+        $this->assertTrue($verify_request->isWrite());
+        $this->assertFalse($verify_request->isRead());
+    }
+
+    public function testRequestCanBeParsedWhenNoRefIsGiven()
+    {
+        $json_without_ref = <<<JSON
+{}
+JSON;
+        $verify_request_without_ref = LockVerifyRequest::buildFromJSONString($json_without_ref);
+
+        $this->assertNull($verify_request_without_ref->getReference());
+    }
 }

@@ -99,7 +99,8 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
         $locks = $this->lock_retriever->retrieveLocks(
             $this->lock_list_request->getId(),
             $this->lock_list_request->getPath(),
-            $this->lock_list_request->getReference() === null ? null : $this->lock_list_request->getReference()->getName()
+            $this->lock_list_request->getReference() === null ? null : $this->lock_list_request->getReference()->getName(),
+            null
         );
 
         echo json_encode($this->lock_response_builder->buildSuccessfulLockList($locks));

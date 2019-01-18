@@ -22,73 +22,44 @@ namespace Tuleap\GitLFS\Lock\Request;
 
 use Tuleap\GitLFS\HTTP\GitLfsHTTPOperation;
 use Tuleap\GitLFS\HTTP\RequestReference;
-use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 
-class LockCreateRequest implements GitLfsHTTPOperation
+class LockVerifyRequest implements GitLfsHTTPOperation
 {
     /**
-     * @var RequestReference
+     * @var RequestReference|null
      */
     private $reference;
 
-    /**
-     * @var string
-     */
-    private $path;
-
-    public function __construct(
-        string $path,
-        ?RequestReference $reference
-    ) {
-        $this->path      = $path;
+    public function __construct(?RequestReference $reference)
+    {
         $this->reference = $reference;
     }
 
-    /**
-     * @throws IncorrectlyFormattedReferenceRequestException
-     * @return self
-     */
-    public static function buildFromJSONString(string $json_string) : LockCreateRequest
+    public static function buildFromJSONString(string $json_string): LockVerifyRequest
     {
         $decoded_json           = json_decode($json_string);
         $json_decode_error_code = json_last_error();
+
         if ($json_decode_error_code !== JSON_ERROR_NONE) {
             throw new IncorrectlyFormattedReferenceRequestException('JSON is not valid: ' . json_last_error_msg());
         }
+
         return self::buildFromObject($decoded_json);
     }
 
-    /**
-     * @throws IncorrectlyFormattedReferenceRequestException
-     * @return self
-     */
-    private static function buildFromObject(\stdClass $parameters) : LockCreateRequest
+    private static function buildFromObject(\stdClass $parameters): LockVerifyRequest
     {
-        if (! isset($parameters->path)) {
-            throw new IncorrectlyFormattedReferenceRequestException('path should be present in the request');
-        }
-
         $reference = null;
         if (isset($parameters->ref)) {
-            if (! isset($parameters->ref->name)) {
+            if (!isset($parameters->ref->name)) {
                 throw new IncorrectlyFormattedReferenceRequestException(
-                    'ref value of the lock creation request is expected to be an object with a name'
+                    'ref value of the lock verify request is expected to be an object with a name'
                 );
             }
             $reference = new RequestReference($parameters->ref->name);
         }
 
-        return new self($parameters->path, $reference);
-    }
-
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    public function getReference(): ?RequestReference
-    {
-        return $this->reference;
+        return new self($reference);
     }
 
     public function isWrite(): bool
@@ -99,5 +70,10 @@ class LockCreateRequest implements GitLfsHTTPOperation
     public function isRead(): bool
     {
         return false;
+    }
+
+    public function getReference(): ?RequestReference
+    {
+        return $this->reference;
     }
 }

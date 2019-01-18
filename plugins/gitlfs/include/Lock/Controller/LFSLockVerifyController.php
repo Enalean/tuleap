@@ -20,20 +20,19 @@
 
 namespace Tuleap\GitLFS\Lock\Controller;
 
-use DateTimeImmutable;
 use HTTPRequest;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
-use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
+use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
-use Tuleap\GitLFS\Lock\Request\LockCreateRequest;
-use Tuleap\GitLFS\Lock\LockCreator;
+use Tuleap\GitLFS\Lock\Request\LockVerifyRequest;
+use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 
-class LFSLockCreateController implements DispatchableWithRequestNoAuthz
+class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
 {
     /**
      * @var \gitlfsPlugin
@@ -61,14 +60,14 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
     private $repository;
 
     /**
-     * @var LockCreateRequest
+     * @var LockVerifyRequest
      */
-    private $lock_create_request;
+    private $lock_verify_request;
 
     /**
-     * @var LockCreator
+     * @var LockRetriever
      */
-    private $lock_creator;
+    private $lock_retriever;
 
     /**
      * @var UserRetriever
@@ -85,40 +84,40 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         \GitRepositoryFactory $repository_factory,
         LFSAPIHTTPAccessControl $api_access_control,
         LockResponseBuilder $lock_response_builder,
-        LockCreator $lock_creator,
+        LockRetriever $lock_retriever,
         UserRetriever $user_retriever
     ) {
         $this->plugin                = $plugin;
         $this->repository_factory    = $repository_factory;
         $this->api_access_control    = $api_access_control;
         $this->lock_response_builder = $lock_response_builder;
-        $this->lock_creator          = $lock_creator;
+        $this->lock_retriever        = $lock_retriever;
         $this->user_retriever        = $user_retriever;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if ($this->user === null) {
-            throw new \LogicException();
-        }
+        $reference = $this->lock_verify_request->getReference() === null ? null : $this->lock_verify_request->getReference()->getName();
 
-        $lock = $this->lock_creator->createLock(
-            $this->lock_create_request->getPath(),
-            $this->user,
-            $this->lock_create_request->getReference() === null ? null : $this->lock_create_request->getReference()->getName(),
-            $this->repository,
-            new DateTimeImmutable()
+        $ours = $this->lock_retriever->retrieveLocks(
+            null,
+            null,
+            $reference,
+            $this->user
         );
 
-        $response = $this->lock_response_builder->buildSuccessfulLockCreation($lock);
+        $theirs = $this->lock_retriever->retrieveLocksNotBelongingToOwner(
+            $reference,
+            $this->user
+        );
 
-        echo json_encode($response);
+        echo json_encode($this->lock_response_builder->buildSuccessfulLockVerify($ours, $theirs));
     }
 
     public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
     {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->lock_create_request !== null || $this->user !== null) {
+        if ($this->repository !== null || $this->lock_verify_request !== null || $this->user !== null) {
             throw new \RuntimeException(
                 'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
             );
@@ -139,16 +138,20 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException('Can not read the body of the request');
         }
         try {
-            $this->lock_create_request = LockCreateRequest::buildFromJSONString($json_string);
+            $this->lock_verify_request = LockVerifyRequest::buildFromJSONString($json_string);
         } catch (IncorrectlyFormattedReferenceRequestException $exception) {
             throw new \RuntimeException($exception->getMessage(), 400);
         }
 
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_create_request);
+        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_verify_request);
+
+        if ($this->user === null) {
+            throw new \LogicException();
+        }
 
         return $this->api_access_control->canAccess(
             $this->repository,
-            $this->lock_create_request,
+            $this->lock_verify_request,
             $this->user
         );
     }

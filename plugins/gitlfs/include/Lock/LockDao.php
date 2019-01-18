@@ -47,9 +47,26 @@ class LockDao extends DataAccessObject
     public function searchLocks(
         ?int $id,
         ?string $path,
-        ?string $ref
+        ?string $ref,
+        ?int $owner
     ): array {
-        $condition = $this->buildSearchCondition($id, $path, $ref);
+        $condition = $this->buildSearchCondition($id, $path, $ref, $owner);
+
+        return $this->getDB()->safeQuery(
+            "SELECT *
+            FROM plugin_gitlfs_lock
+            WHERE $condition",
+            $condition->values()
+        );
+    }
+
+    public function searchLocksNotBelongingToOwner(?string $ref, int $owner): array
+    {
+        $condition = EasyStatement::open()->with('lock_owner <> ?', $owner);
+
+        if ($ref !== null) {
+            $condition->andWith('ref = ?', $ref);
+        }
 
         return $this->getDB()->safeQuery(
             "SELECT *
@@ -62,7 +79,8 @@ class LockDao extends DataAccessObject
     private function buildSearchCondition(
         ?int $id,
         ?string $path,
-        ?string $ref
+        ?string $ref,
+        ?int $owner
     ): EasyStatement {
         $condition = EasyStatement::open();
 
@@ -76,6 +94,10 @@ class LockDao extends DataAccessObject
 
         if ($ref !== null) {
             $condition = $condition->andWith('ref = ?', $ref);
+        }
+
+        if ($owner !== null) {
+            $condition = $condition->andWith('lock_owner = ?', $owner);
         }
 
         return $condition;
