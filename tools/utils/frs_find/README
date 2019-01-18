@@ -1,7 +1,0 @@
-This tool aims to fix "missing files" in FRS after upgrade to 6.9
-
-A bug (request #5808) was introduced in 6.9 and fixed (request #6338) in 6.11.
-This bug move references to files without actually moving the files themselves,
-hence people get "File not found" in FRS for valid files.
-
-This script will re-associate files and DB entries properly.

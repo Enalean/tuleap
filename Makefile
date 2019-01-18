@@ -28,27 +28,6 @@ help:
 # Utilities
 #
 
-autoload:
-	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
-		test -f "plugins/$$path/composer.json" && continue; \
-		echo "Generate plugin $$path"; \
-		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .) \
-        done;
-
-autoload-with-userid:
-	@echo "Generate tests"
-	@for path in `ls plugins | egrep -v "$(AUTOLOAD_EXCLUDES)"`; do \
-		test -f "plugins/$$path/composer.json" && continue; \
-		echo "Generate plugin $$path"; \
-		(cd "plugins/$$path/include"; phpab -q --compat -o autoload.php .; chown $(USER_ID):$(USER_ID) autoload.php) \
-        done;
-
-autoload-docker: ## Generate autoload files
-	@$(DOCKER) run --rm=true -v $(CURDIR):/tuleap:cached -e USER=`id -u` -e GROUP=`id -g` enalean/tuleap-dev-swissarmyknife:2 --autoload
-
-autoload-dev:
-	@tools/utils/autoload.sh
-
 .PHONY: composer
 composer:  ## Install PHP dependencies with Composer
 	@echo "Processing src/composer.json"
