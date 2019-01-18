@@ -22,6 +22,7 @@ import VueRouter from "vue-router";
 import store from "../store/index.js";
 import RootFolder from "../components/Folder/RootFolder.vue";
 import ChildFolder from "../components/Folder/ChildFolder.vue";
+import { abortCurrentUploads } from "../helpers/abort-current-uploads.js";
 
 Vue.use(VueRouter);
 
@@ -45,7 +46,11 @@ export function createRouter(project_name) {
 
     router.beforeEach((to, from, next) => {
         store.commit("resetErrors");
-        next();
+        if (!store.getters.is_uploading || abortCurrentUploads(router.app.$gettext, store)) {
+            next();
+        } else {
+            next(false);
+        }
     });
 
     return router;

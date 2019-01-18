@@ -28,7 +28,9 @@
             />
         </td>
         <template v-if="! item.is_uploading">
-            <td class="document-tree-cell-owner"><user-badge v-bind:user="item.owner"/></td>
+            <td class="document-tree-cell-owner">
+                <user-badge v-bind:user="item.owner"/>
+            </td>
             <td class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left" v-bind:data-tlp-tooltip="formatted_full_date">
                 {{ formatted_date }}
             </td>
@@ -103,14 +105,6 @@ export default {
         },
         colspan() {
             return this.item.is_uploading ? 3 : 1;
-        }
-    },
-    methods: {
-        goToFolder(event) {
-            event.preventDefault();
-            this.$store.commit("setCurrentFolder", this.item);
-            this.$store.commit("appendFolderToAscendantHierarchy", this.item);
-            this.$router.push({ name: "folder", params: { item_id: this.item.id } });
         }
     }
 };
