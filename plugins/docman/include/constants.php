@@ -87,6 +87,24 @@ define('PLUGIN_DOCMAN_EVENT_NEW_LINKVERSION', 'plugin_docman_event_new_linkVersi
 define('PLUGIN_DOCMAN_EVENT_NEW_PHPWIKI_PAGE', 'plugin_docman_event_new_wikipage');
 
 /**
+ * Event raised when a new Docman embedded file/file  item is created
+ *
+ * Parameters:
+ *      'item'            => Docman_Item,
+ *      'version'         => Docman_Version,
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_FILE', 'plugin_docman_after_new_document');
+
+/**
+ * Event raised when a new Docman embedded file/file version is created
+ *
+ * Parameters:
+ *      'item'            => Docman_Item,
+ *      'version'         => Docman_Version,
+ */
+define('PLUGIN_DOCMAN_EVENT_NEW_FILE_VERSION', 'plugin_docman_event_new_version');
+
+/**
  * Event raised when docman need to get a phpwiki page
  *
  * Parameters:

@@ -44,15 +44,27 @@ class AfterItemCreationVisitor implements ItemVisitor
      * @var \Docman_LinkVersionFactory
      */
     private $docman_link_version_factory;
+    /**
+     * @var \Docman_FileStorage
+     */
+    private $docman_file_storage;
+    /**
+     * @var \Docman_VersionFactory
+     */
+    private $docman_version_factory;
 
     public function __construct(
         \PermissionsManager $permission_manager,
         \EventManager $event_manager,
-        \Docman_LinkVersionFactory $docman_link_version_factory
+        \Docman_LinkVersionFactory $docman_link_version_factory,
+        \Docman_FileStorage $docman_file_storage,
+        \Docman_VersionFactory $docman_version_factory
     ) {
         $this->permission_manager          = $permission_manager;
         $this->event_manager               = $event_manager;
         $this->docman_link_version_factory = $docman_link_version_factory;
+        $this->docman_file_storage         = $docman_file_storage;
+        $this->docman_version_factory      = $docman_version_factory;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = [])
@@ -88,9 +100,37 @@ class AfterItemCreationVisitor implements ItemVisitor
         throw new CannotCreateThisItemTypeException();
     }
 
+
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = [])
     {
-        throw new CannotCreateThisItemTypeException();
+        $initial_version_number = 1;
+
+        $created_file_path = $this->docman_file_storage->store(
+            $params['content'],
+            $item->getGroupId(),
+            $item->getId(),
+            $initial_version_number
+        );
+
+        $new_embedded_version_row = [
+            'item_id'   => $item->getId(),
+            'number'    => $initial_version_number,
+            'user_id'   => $params['user']->getId(),
+            'label'     => '',
+            'changelog' => dgettext('plugin_docman', 'Initial version'),
+            'date'      => time(),
+            'filename'  => basename($created_file_path),
+            'filesize'  => filesize($created_file_path),
+            'filetype'  => 'text/html',
+            'path'      => $created_file_path
+        ];
+
+        $this->docman_version_factory->create($new_embedded_version_row);
+        $this->inheritPermissionsFromParent($item);
+        $params['version'] = $this->docman_version_factory->getCurrentVersionForItem($item);
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE, $params);
+        $this->event_manager->processEvent(PLUGIN_DOCMAN_EVENT_NEW_FILE_VERSION, $params);
+        $this->triggerPostCreationEvents($params);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = [])

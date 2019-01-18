@@ -86,7 +86,8 @@ class DocmanItemCreator
         PFUser $user,
         Project $project,
         DocmanItemPOSTRepresentation $docman_item_post_representation,
-        \DateTimeImmutable $current_time
+        \DateTimeImmutable $current_time,
+        bool $is_embedded_allowed
     ) {
         $this->checkDocumentDoesNotAlreadyExists(
             $docman_item_post_representation
@@ -115,6 +116,7 @@ class DocmanItemCreator
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
                     null,
+                    null,
                     null
                 );
             case ItemRepresentation::TYPE_EMPTY:
@@ -131,6 +133,7 @@ class DocmanItemCreator
                     $project,
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
+                    null,
                     null,
                     null
                 );
@@ -159,6 +162,12 @@ class DocmanItemCreator
                         '"link_properties" is not null while the given type is "wiki"'
                     );
                 }
+                if ($docman_item_post_representation->embedded_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"embedded_properties" is not null while the given type is "wiki"')
+                    );
+                }
                 return $this->createDocument(
                     PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
                     $parent_item,
@@ -167,6 +176,7 @@ class DocmanItemCreator
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
                     $docman_item_post_representation->wiki_properties->page_name,
+                    null,
                     null
                 );
             case ItemRepresentation::TYPE_FILE:
@@ -186,6 +196,12 @@ class DocmanItemCreator
                     throw new RestException(
                         400,
                         sprintf('"link_properties" is not null while the given type is "file"')
+                    );
+                }
+                if ($docman_item_post_representation->embedded_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"embedded_properties" is not null while the given type is "file"')
                     );
                 }
                 return $this->createFileDocument(
@@ -216,6 +232,12 @@ class DocmanItemCreator
                         sprintf('"file_properties" is not null while the given type is "link"')
                     );
                 }
+                if ($docman_item_post_representation->embedded_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"embedded_properties" is not null while the given type is "link"')
+                    );
+                }
                 $link_url   = $docman_item_post_representation->link_properties->link_url;
                 $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
                 $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
@@ -233,8 +255,51 @@ class DocmanItemCreator
                     $docman_item_post_representation->title,
                     $docman_item_post_representation->description,
                     null,
-                    $link_url
+                    $link_url,
+                    null
                 );
+
+            case ItemRepresentation::TYPE_EMBEDDED:
+                if ($is_embedded_allowed === false) {
+                    throw new RestException(403, 'Embedded files are not allowed');
+                }
+                if ($docman_item_post_representation->embedded_properties === null) {
+                    throw new RestException(
+                        400,
+                        "Please provide embedded_properties in order to create an embedded document."
+                    );
+                }
+                if ($docman_item_post_representation->wiki_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"wiki_properties" is not null while the given type is "embedded"')
+                    );
+                }
+                if ($docman_item_post_representation->file_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"file_properties" is not null while the given type is "embedded"')
+                    );
+                }
+                if ($docman_item_post_representation->link_properties !== null) {
+                    throw new RestException(
+                        400,
+                        sprintf('"link_properties" is not null while the given type is "embedded"')
+                    );
+                }
+
+                return $this->createDocument(
+                    PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE,
+                    $parent_item,
+                    $user,
+                    $project,
+                    $docman_item_post_representation->title,
+                    $docman_item_post_representation->description,
+                    null,
+                    null,
+                    $docman_item_post_representation->embedded_properties->content
+                );
+                break;
             default:
                 throw new \DomainException('Unknown document type: ' . $docman_item_post_representation->type);
         }
@@ -274,7 +339,8 @@ class DocmanItemCreator
         $title,
         $description,
         $wiki_page,
-        $link_url
+        $link_url,
+        $content
     ) {
         $item = $this->item_factory->createWithoutOrdering(
             $title,
@@ -293,6 +359,10 @@ class DocmanItemCreator
             'item'     => $item,
             'user'     => $user
         ];
+
+        if ($item_type_id === PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+            $params['content'] = $content;
+        }
 
         $item->accept($this->creator_visitor, $params);
         $representation = new CreatedItemRepresentation();
@@ -353,9 +423,13 @@ class DocmanItemCreator
         return ($docman_item_post_representation->wiki_properties === null
             && $docman_item_post_representation->file_properties === null
             && $docman_item_post_representation->link_properties === null
+            && $docman_item_post_representation->embedded_properties === null
         );
     }
 
+    /**
+     * @throws RestException
+     */
     private function checkDocumentDoesNotAlreadyExists(DocmanItemPOSTRepresentation $representation)
     {
         if ($representation->type !== \Tuleap\Docman\REST\v1\ItemRepresentation::TYPE_FOLDER
