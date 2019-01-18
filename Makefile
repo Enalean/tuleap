@@ -263,12 +263,15 @@ deploy-mailhog-conf:
 stop-distlp:
 	@$(SUDO) docker-compose -f docker-compose-distlp.yml stop
 
-env-gerrit: .env
-	@grep --quiet GERRIT_SERVER_NAME .env || echo 'GERRIT_SERVER_NAME=tuleap-gerrit.gerrit-tuleap.docker' >> .env
+start-gerrit:
+	@$(DOCKER_COMPOSE) up -d gerrit
+	@echo "You should update /etc/hosts with: "
+	@echo "$(call get_ip_addr,gerrit) gerrit.tuleap-aio-dev.docker"
+	@echo "Gerrit will be available soon at http://gerrit.tuleap-aio-dev.docker:8080"
+	@echo "If you need to setup gerrit, see instructions in tools/utils/gerrit_setup/Readme.md"
 
-start-gerrit: env-gerrit
-	@docker-compose up -d gerrit
-	@echo "Gerrit will be available soon at http://`grep GERRIT_SERVER_NAME .env | cut -d= -f2`:8080"
+show-gerrit-ssh-pub-key:
+	@$(DOCKER_COMPOSE) exec gerrit cat /data/.ssh/id_rsa.pub
 
 start-jenkins:
 	@$(DOCKER_COMPOSE) up -d jenkins
