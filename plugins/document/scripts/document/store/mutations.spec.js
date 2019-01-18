@@ -335,5 +335,27 @@ describe("Store mutations", () => {
                 { id: 43, parent_id: 42, level: 3, type: "file", title: "tutu.txt" }
             ]);
         });
+
+        it("it should not remove any element if id is not found in array", () => {
+            const item = {
+                id: 46,
+                title: "toto.txt",
+                parent_id: 42
+            };
+
+            const state = {
+                folder_content: [
+                    { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                    { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" }
+                ]
+            };
+
+            mutations.removeItemFromFolderContent(state, item);
+
+            expect(state.folder_content).toEqual([
+                { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
+                { id: 45, parent_id: 42, level: 3, type: "wiki", title: "tata.txt" }
+            ]);
+        });
     });
 });

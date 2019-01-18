@@ -242,6 +242,9 @@ function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]
 
 function removeItemFromFolderContent(state, item_to_remove) {
     const index = state.folder_content.findIndex(item => item.id === item_to_remove.id);
+    if (index === -1) {
+        return;
+    }
 
     state.folder_content.splice(index, 1);
 }
