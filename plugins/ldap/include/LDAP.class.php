@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - 2019. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -199,11 +199,13 @@ class LDAP {
             if ($bind_result = @ldap_bind($this->ds, $binddn, $bindpw)) {
                 $this->bound = true;
             } else {
-                $this->logger->error('Unable to bind to LDAP server: '.$this->ldapParams['server'].
+                $error_message = 'Unable to bind to LDAP server: '.$this->ldapParams['server'].
                     ' ***ERROR:'. ldap_error($this->ds) .
-                    ' ***ERROR no:'. $this->getErrno()
-                );
-                //$this->setError($Language->getText('ldap_class','err_bind_invpasswd',$binddn));
+                    ' ***ERROR no:'. $this->getErrno();
+                if (ldap_get_option($this->ds, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+                    $error_message .= ' ***ERROR extended: ' . print_r($extended_error, true);
+                }
+                $this->logger->error($error_message);
                 $this->bound = false;
             }
         }
