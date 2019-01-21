@@ -100,11 +100,16 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
     public function deletePostActionByTransitionIfIdNotIn(int $transition_id, array $ids_to_skip)
     {
         $escaped_transition_id = $this->da->escapeInt($transition_id);
-        $escaped_ids_to_skip   = $this->da->escapeIntImplode($ids_to_skip);
+
+        $where_clause = "";
+        if (!empty($ids_to_skip)) {
+            $escaped_ids_to_skip = $this->da->escapeIntImplode($ids_to_skip);
+            $where_clause        = "AND id NOT IN ($escaped_ids_to_skip)";
+        }
 
         $sql = "DELETE FROM tracker_workflow_transition_postactions_cibuild
                 WHERE transition_id = $escaped_transition_id
-                AND id NOT IN ($escaped_ids_to_skip)";
+                $where_clause";
         return $this->update($sql);
     }
 
