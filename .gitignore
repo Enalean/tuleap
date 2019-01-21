@@ -1,3 +1,4 @@
+vendor/
 www/scripts/angular/*.sw*
 www/scripts/angular/*~
 www/scripts/coverage/

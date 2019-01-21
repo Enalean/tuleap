@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -50,7 +50,8 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 
-require_once 'constants.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../../tracker/include/trackerPlugin.class.php';
 
 class testmanagementPlugin extends Plugin
 {
