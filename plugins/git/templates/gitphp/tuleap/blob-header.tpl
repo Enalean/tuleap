@@ -22,7 +22,7 @@
     {include file='tuleap/blob-header-title.tpl'}
 
     <div class="git-repository-blob-header-actions">
-        <a {if $special_download_url !== ''}
+        <a {if $special_download_url}
                href="{$SCRIPT_NAME}/{$special_download_url|urlencode}"
            {else}
                href="{$SCRIPT_NAME}?a=blob_plain&amp;h={$blob->GetHash()|urlencode}&amp;f={$blob->GetPath()|urlencode}&amp;noheader=1"
