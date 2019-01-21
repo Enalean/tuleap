@@ -108,11 +108,11 @@ class CIBuildRepository
                 )
             );
         }
-        return array_map(
-            function ($row) {
-                return (int)$row['id'];
-            },
-            $rows_or_failure
-        );
+
+        $ids = [];
+        foreach ($rows_or_failure as $row) {
+            $ids[] = (int)$row['id'];
+        }
+        return $ids;
     }
 }
