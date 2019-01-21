@@ -34,40 +34,40 @@ class PostActionCollectionTest extends TestCase
     {
         $ci_build_action       = new CIBuild(1, 'http://example.test');
         $set_date_value_action = new SetDateValue(1, 22, 13);
-        $actions               = new PostActionCollection([$ci_build_action, $set_date_value_action]);
+        $actions               = new PostActionCollection($ci_build_action, $set_date_value_action);
 
         $ci_build_actions = $actions->getCIBuildActions();
 
         $this->assertEquals([$ci_build_action], $ci_build_actions);
     }
 
-    public function testGetSetDateValueActionsReturnsCIBuildActions()
+    public function testGetSetDateValueActionsReturnsSetDateValueActions()
     {
         $ci_build_action       = new CIBuild(1, 'http://example.test');
         $set_date_value_action = new SetDateValue(1, 22, 1);
-        $actions               = new PostActionCollection([$ci_build_action, $set_date_value_action]);
+        $actions               = new PostActionCollection($ci_build_action, $set_date_value_action);
 
         $ci_build_actions = $actions->getSetDateValueActions();
 
         $this->assertEquals([$set_date_value_action], $ci_build_actions);
     }
 
-    public function testGetSetIntValueActionsReturnsCIBuildActions()
+    public function testGetSetIntValueActionsReturnsSetIntValueActions()
     {
         $ci_build_action      = new CIBuild(1, 'http://example.test');
         $set_int_value_action = new SetIntValue(1, 22, 13);
-        $actions              = new PostActionCollection([$ci_build_action, $set_int_value_action]);
+        $actions              = new PostActionCollection($ci_build_action, $set_int_value_action);
 
         $ci_build_actions = $actions->getSetIntValueActions();
 
         $this->assertEquals([$set_int_value_action], $ci_build_actions);
     }
 
-    public function testGetSetFloatValueActionsReturnsCIBuildActions()
+    public function testGetSetFloatValueActionsReturnsSetFloatValueActions()
     {
         $ci_build_action        = new CIBuild(1, 'http://example.test');
         $set_float_value_action = new SetFloatValue(1, 22, 1.3);
-        $actions                = new PostActionCollection([$ci_build_action, $set_float_value_action]);
+        $actions                = new PostActionCollection($ci_build_action, $set_float_value_action);
 
         $ci_build_actions = $actions->getSetFloatValueActions();
 
@@ -77,7 +77,7 @@ class PostActionCollectionTest extends TestCase
     public function testCompareCIBuildActionsToIdentifiesNewActions()
     {
         $added_action = new CIBuild(null, 'http://example.test');
-        $actions      = new PostActionCollection([$added_action]);
+        $actions      = new PostActionCollection($added_action);
 
         $diff = $actions->compareCIBuildActionsTo([1, 2, 3]);
 
@@ -87,7 +87,7 @@ class PostActionCollectionTest extends TestCase
     public function testCompareCIBuildActionsToIdentifiesUpdatedActions()
     {
         $updated_action = new CIBuild(2, 'http://example.test');
-        $actions        = new PostActionCollection([$updated_action]);
+        $actions        = new PostActionCollection($updated_action);
 
         $diff = $actions->compareCIBuildActionsTo([1, 2, 3]);
 

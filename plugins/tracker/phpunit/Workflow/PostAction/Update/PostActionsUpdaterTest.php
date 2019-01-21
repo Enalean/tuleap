@@ -70,7 +70,7 @@ class PostActionsUpdaterTest extends TestCase
             ->andReturns([2, 3]);
 
         $action  = new CIBuild(1, 'http://example.test');
-        $actions = new PostActionCollection([$action]);
+        $actions = new PostActionCollection($action);
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
@@ -90,7 +90,7 @@ class PostActionsUpdaterTest extends TestCase
             ->andReturns([1]);
 
         $added_action = new CIBuild(1, 'http://example.test');
-        $actions      = new PostActionCollection([$added_action]);
+        $actions      = new PostActionCollection($added_action);
 
         $this->ci_build_repository
             ->shouldReceive('create')
@@ -110,7 +110,7 @@ class PostActionsUpdaterTest extends TestCase
             ->andReturns([1]);
 
         $updated_action = new CIBuild(1, 'http://example.test');
-        $actions        = new PostActionCollection([$updated_action]);
+        $actions        = new PostActionCollection($updated_action);
 
         $this->ci_build_repository
             ->shouldReceive('update')
