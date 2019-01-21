@@ -94,10 +94,9 @@ class CIBuildRepository
     }
 
     /**
-     * @return int[]
      * @throws DataAccessQueryException
      */
-    public function findAllIdsByTransition(Transition $transition): array
+    public function findAllIdsByTransition(Transition $transition): PostActionIdCollection
     {
         $rows_or_failure = $this->ci_build_dao->findAllIdsByTransitionId($transition->getId());
         if ($rows_or_failure === false) {
@@ -113,6 +112,6 @@ class CIBuildRepository
         foreach ($rows_or_failure as $row) {
             $ids[] = (int)$row['id'];
         }
-        return $ids;
+        return new PostActionIdCollection(...$ids);
     }
 }

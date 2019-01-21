@@ -137,7 +137,7 @@ class CIBuildRepositoryTest extends TestCase
         $transition = $this->buildATransitionWithId(1);
         $ids        = $this->ci_build_repository->findAllIdsByTransition($transition);
 
-        $this->assertEquals([1, 2, 3], $ids);
+        $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
     }
 
     /**

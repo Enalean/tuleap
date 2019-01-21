@@ -42,6 +42,11 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicateCIBuildPostAction;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\DuplicatePostActionIdsException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildValidator;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\InvalidCIBuildPostActionException;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\UnknownPostActionIdsException;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
@@ -398,7 +403,24 @@ class TransitionsResource extends AuthenticatedResource
 
         $post_actions = $this->getPostActionCollectionJsonParser()
             ->parse($post_actions_representation->post_actions);
-        $this->getPostActionCollectionUpdater()->updateByTransition($transition, $post_actions);
+        try {
+            $this->getPostActionCollectionUpdater()->updateByTransition($transition, $post_actions);
+        } catch (DuplicateCIBuildPostAction $e) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-tracker', 'There should not be duplicate run_job ids.')
+            );
+        } catch (UnknownPostActionIdsException $e) {
+            throw new I18NRestException(
+                400,
+                sprintf(
+                    dgettext('tuleap-tracker', "One id or more could not be found: '%s'"),
+                    implode(',', $e->getUnknownIds())
+                )
+            );
+        } catch (InvalidCIBuildPostActionException $e) {
+            throw new I18NRestException(400, $e->getMessage());
+        }
     }
 
     /**
@@ -501,7 +523,8 @@ class TransitionsResource extends AuthenticatedResource
                 new DataAccessObject()
             ),
             new CIBuildUpdater(
-                new CIBuildRepository(new Transition_PostAction_CIBuildDao())
+                new CIBuildRepository(new Transition_PostAction_CIBuildDao()),
+                new CIBuildValidator()
             )
         );
     }

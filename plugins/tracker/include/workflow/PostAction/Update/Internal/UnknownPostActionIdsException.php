@@ -16,22 +16,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use DataAccessQueryException;
-use Transition;
-use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
-
-interface PostActionUpdater
+final class UnknownPostActionIdsException extends \Exception
 {
     /**
-     * @throws DataAccessQueryException
-     * @throws DuplicateCIBuildPostAction
-     * @throws UnknownPostActionIdsException
-     * @throws InvalidCIBuildPostActionException
+     * @var mixed[]
      */
-    public function updateByTransition(PostActionCollection $actions, Transition $transition): void;
+    private $unknown_ids;
+
+    public function __construct(array $unknown_ids)
+    {
+        parent::__construct();
+        $this->unknown_ids = $unknown_ids;
+    }
+
+    public function getUnknownIds(): array
+    {
+        return $this->unknown_ids;
+    }
 }

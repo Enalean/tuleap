@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,8 +15,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
@@ -34,11 +33,10 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     const BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId';
     const BUILD_PARAMETER_TRACKER_ID          = 'trackerId';
     const BUILD_PARAMETER_TRIGGER_FIELD_VALUE = 'triggerFieldValue';
-    
     /**
      * @var string Pattern to validate a job url
      */
-    private $job_url_pattern = 'https?://.+';
+    const JOB_URL_PATTERN = 'https?://.+';
 
     /**
      *
@@ -87,7 +85,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
             title="'. $title .'"
             required
             class="required"
-            pattern="'. $this->job_url_pattern .'"
+            pattern="' . self::JOB_URL_PATTERN . '"
             name="workflow_postaction_ci_build['.$this->id.']"
             value="'. $this->getJobUrl() .'"
             size="50"
@@ -172,7 +170,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     }
 
     private function urlIsValid($url) {
-        return preg_match("#$this->job_url_pattern#", $url) > 0;
+        return preg_match('#' . self::JOB_URL_PATTERN . '#', $url) > 0;
     }
 
     private function updateJobUrl($new_job_url) {
@@ -194,5 +192,3 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
         $visitor->visitCIBuild($this);
     }
 }
-
-?>

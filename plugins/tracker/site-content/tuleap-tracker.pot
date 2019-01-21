@@ -315,6 +315,10 @@ msgstr ""
 msgid "On all updates?"
 msgstr ""
 
+#, php-format
+msgid "One id or more could not be found: '%s'"
+msgstr ""
+
 msgid "Please provide a valid limit."
 msgstr ""
 
@@ -578,6 +582,9 @@ msgstr ""
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr ""
 
+msgid "The job_url attribute must be a valid URL."
+msgstr ""
+
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
 msgstr ""
@@ -659,6 +666,9 @@ msgstr ""
 
 #, php-format
 msgid "The value '%s' doesn't exist for the list field '%s'."
+msgstr ""
+
+msgid "There should not be duplicate run_job ids."
 msgstr ""
 
 msgid "This template does not use trackers"
