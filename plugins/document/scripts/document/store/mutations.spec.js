@@ -198,7 +198,7 @@ describe("Store mutations", () => {
         });
     });
 
-    describe("addJustCreatedDocumentToFolderContent", () => {
+    describe("addJustCreatedItemToFolderContent", () => {
         it("set the level of the new document according to its parent one", () => {
             const item = { id: 66, parent_id: 42, type: "wiki", title: "Document" };
             const state = {
@@ -207,7 +207,7 @@ describe("Store mutations", () => {
                 ]
             };
 
-            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            mutations.addJustCreatedItemToFolderContent(state, item);
             expect(state.folder_content).toEqual([
                 { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
                 { id: 66, parent_id: 42, level: 3, type: "wiki", title: "Document" }
@@ -221,7 +221,7 @@ describe("Store mutations", () => {
                 ]
             };
 
-            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            mutations.addJustCreatedItemToFolderContent(state, item);
             expect(state.folder_content).toEqual([
                 { id: 101, parent_id: 0, level: 2, type: "folder", title: "Folder" },
                 { id: 66, parent_id: 42, level: 0, type: "wiki", title: "Document" }
@@ -237,7 +237,7 @@ describe("Store mutations", () => {
                 ]
             };
 
-            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            mutations.addJustCreatedItemToFolderContent(state, item);
             expect(state.folder_content).toEqual([
                 { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
                 { id: 43, parent_id: 42, level: 3, type: "wiki", title: "A.1" },
@@ -256,7 +256,7 @@ describe("Store mutations", () => {
                 ]
             };
 
-            mutations.addJustCreatedDocumentToFolderContent(state, item);
+            mutations.addJustCreatedItemToFolderContent(state, item);
             expect(state.folder_content).toEqual([
                 { id: 42, parent_id: 0, level: 2, type: "folder", title: "Folder" },
                 { id: 43, parent_id: 42, level: 3, type: "folder", title: "A.1" },

@@ -25,7 +25,7 @@ export {
     initApp,
     resetErrors,
     saveFolderContent,
-    addJustCreatedDocumentToFolderContent,
+    addJustCreatedItemToFolderContent,
     appendSubFolderContent,
     foldFolderContent,
     unfoldFolderContent,
@@ -53,7 +53,7 @@ function saveFolderContent(state, folder_content) {
     state.folder_content = folder_content;
 }
 
-function addJustCreatedDocumentToFolderContent(state, item) {
+function addJustCreatedItemToFolderContent(state, item) {
     const parent = state.folder_content.find(parent => parent.id === item.parent_id);
 
     item.level = parent ? parent.level + 1 : 0;

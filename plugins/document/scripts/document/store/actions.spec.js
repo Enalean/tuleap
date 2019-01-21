@@ -22,7 +22,7 @@ import {
     loadRootFolder,
     loadFolder,
     setUserPreferenciesForFolder,
-    createNewDocument,
+    createNewItem,
     setUserPreferenciesForUI,
     addNewUploadFile,
     cancelFileUpload,
@@ -434,7 +434,7 @@ describe("Store actions", () => {
         });
     });
 
-    describe("createNewDocument", () => {
+    describe("createNewItem", () => {
         it("Creates new document and reload folder content", async () => {
             const created_item_reference = { id: 66 };
             addNewDocument.and.returnValue(Promise.resolve(created_item_reference));
@@ -442,11 +442,11 @@ describe("Store actions", () => {
             const item = { id: 66, title: "whatever" };
             getItem.and.returnValue(Promise.resolve(item));
 
-            await createNewDocument(context, ["title", "", "empty", 2]);
+            await createNewItem(context, ["title", "", "empty", 2]);
 
             expect(getItem).toHaveBeenCalledWith(66);
             expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedDocumentToFolderContent",
+                "addJustCreatedItemToFolderContent",
 
                 item
             );
@@ -463,10 +463,10 @@ describe("Store actions", () => {
                     }
                 }
             });
-            await createNewDocument(context, ["", "", "empty", 2]);
+            await createNewItem(context, ["", "", "empty", 2]);
 
             expect(context.commit).not.toHaveBeenCalledWith(
-                "addJustCreatedDocumentToFolderContent",
+                "addJustCreatedItemToFolderContent",
                 jasmine.any(Object)
             );
             expect(context.commit).toHaveBeenCalledWith("setModalError", error_message);
@@ -498,7 +498,7 @@ describe("Store actions", () => {
                 upload_error: null
             };
             expect(context.commit).toHaveBeenCalledWith(
-                "addJustCreatedDocumentToFolderContent",
+                "addJustCreatedItemToFolderContent",
                 expected_fake_item_with_uploader
             );
         });

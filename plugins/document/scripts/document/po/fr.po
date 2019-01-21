@@ -40,6 +40,9 @@ msgstr "Fermer"
 msgid "Create document"
 msgstr "Créer le document"
 
+msgid "Create folder"
+msgstr "Créer le dossier"
+
 msgid "Creation of wiki page, link, empty item."
 msgstr "Création de page wiki, de lien, d'élément vide."
 
@@ -65,6 +68,9 @@ msgstr "Déposer des fichiers dans %s n'est pas permis."
 
 msgid "Empty"
 msgstr "Vide"
+
+msgid "Folder has been successfully created."
+msgstr "Le dossier a été créé avec succès."
 
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
