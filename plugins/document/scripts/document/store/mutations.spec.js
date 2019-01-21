@@ -358,4 +358,60 @@ describe("Store mutations", () => {
             ]);
         });
     });
+
+    describe("addFileInUploadsList", () => {
+        it("it should add the file at the beggining of the upload list", () => {
+            const file = {
+                id: 5,
+                title: "tyty.txt"
+            };
+
+            const state = {
+                files_uploads_list: [
+                    { id: 4, title: "tete.txt" },
+                    { id: 3, title: "tata.txt" },
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
+            };
+
+            mutations.addFileInUploadsList(state, file);
+
+            expect(state.files_uploads_list).toEqual([
+                file,
+                { id: 4, title: "tete.txt" },
+                { id: 3, title: "tata.txt" },
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+    });
+
+    describe("removeFileFromUploadsList", () => {
+        it("it should remove file from the upload list", () => {
+            const file = {
+                id: 5,
+                title: "tyty.txt"
+            };
+
+            const state = {
+                files_uploads_list: [
+                    file,
+                    { id: 4, title: "tete.txt" },
+                    { id: 3, title: "tata.txt" },
+                    { id: 2, title: "titi.txt" },
+                    { id: 1, title: "tutu.txt" }
+                ]
+            };
+
+            mutations.removeFileFromUploadsList(state, file);
+
+            expect(state.files_uploads_list).toEqual([
+                { id: 4, title: "tete.txt" },
+                { id: 3, title: "tata.txt" },
+                { id: 2, title: "titi.txt" },
+                { id: 1, title: "tutu.txt" }
+            ]);
+        });
+    });
 });

@@ -43,7 +43,10 @@ export {
     removeCreatedPropertyOnItem,
     replaceUploadingFileWithActualFile,
     removeItemFromFolderContent,
-    removeIsUnderConstruction
+    removeIsUnderConstruction,
+    addFileInUploadsList,
+    removeFileFromUploadsList,
+    emptyFilesUploadsList
 };
 
 function saveFolderContent(state, folder_content) {
@@ -236,6 +239,9 @@ function removeCreatedPropertyOnItem(state, item) {
 
 function replaceUploadingFileWithActualFile(state, [uploading_file, actual_file]) {
     const index = state.folder_content.findIndex(item => item.id === uploading_file.id);
+    if (index === -1) {
+        return;
+    }
 
     state.folder_content.splice(index, 1, actual_file);
 }
@@ -251,4 +257,22 @@ function removeItemFromFolderContent(state, item_to_remove) {
 
 function removeIsUnderConstruction(state) {
     state.is_under_construction = false;
+}
+
+function addFileInUploadsList(state, file) {
+    removeFileFromUploadsList(state, file);
+    state.files_uploads_list.unshift(file);
+}
+
+function removeFileFromUploadsList(state, uploaded_file) {
+    const file_index = state.files_uploads_list.findIndex(file => file.id === uploaded_file.id);
+    if (file_index === -1) {
+        return;
+    }
+
+    state.files_uploads_list.splice(file_index, 1);
+}
+
+function emptyFilesUploadsList(state) {
+    state.files_uploads_list = [];
 }
