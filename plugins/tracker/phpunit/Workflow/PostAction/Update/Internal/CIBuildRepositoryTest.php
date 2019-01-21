@@ -22,6 +22,7 @@
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use DataAccessQueryException;
+use FakeDataAccessResult;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
@@ -127,11 +128,11 @@ class CIBuildRepositoryTest extends TestCase
         $this->ci_build_dao
             ->shouldReceive('findAllIdsByTransitionId')
             ->with(1)
-            ->andReturn([
+            ->andReturn(new FakeDataAccessResult([
                 ['id' => 1],
                 ['id' => 2],
                 ['id' => 3]
-            ]);
+            ]));
 
         $transition = $this->buildATransitionWithId(1);
         $ids        = $this->ci_build_repository->findAllIdsByTransition($transition);
