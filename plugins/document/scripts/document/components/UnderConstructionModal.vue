@@ -33,7 +33,7 @@
             </p>
             <ul>
                 <li v-translate>
-                    Creation of wiki page, link, empty item.
+                    Creation of folder, wiki page, link, empty item.
                 </li>
                 <li v-translate>
                     You can drag 'n drop files from your desktop into the current folder to upload them.
