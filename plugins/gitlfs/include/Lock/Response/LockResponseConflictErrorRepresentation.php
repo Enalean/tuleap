@@ -18,44 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\GitLFS\Lock;
+namespace Tuleap\GitLFS\Lock\Response;
 
-use DateTimeImmutable;
-use GitRepository;
-use PFUser;
-
-class LockCreator
+class LockResponseConflictErrorRepresentation implements LockResponse
 {
     /**
-     * @var LockDao
+     * @var LockResponseLockRepresentation
      */
-    private $lock_dao;
+    private $lock_representation;
 
-    public function __construct(LockDao $lock_dao)
+    public function __construct(LockResponseLockRepresentation $lock_representation)
     {
-        $this->lock_dao = $lock_dao;
+        $this->lock_representation = $lock_representation;
     }
 
-    public function createLock(
-        string $path,
-        PFUser $user,
-        ?string $reference,
-        GitRepository $repository,
-        DateTimeImmutable $creation_time
-    ): Lock {
-        $lock_id = $this->lock_dao->create(
-            $path,
-            $user->getId(),
-            $reference,
-            $repository->getId(),
-            $creation_time->getTimestamp()
-        );
-
-        return new Lock(
-            $lock_id,
-            $path,
-            $user,
-            $creation_time->getTimestamp()
-        );
+    public function jsonSerialize(): array
+    {
+        return [
+            "lock"    => $this->lock_representation,
+            "message" => "already created lock"
+        ];
     }
 }

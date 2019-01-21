@@ -24,6 +24,7 @@ use DateTimeImmutable;
 use HTTPRequest;
 use Tuleap\GitLFS\HTTP\LFSAPIHTTPAccessControl;
 use Tuleap\GitLFS\HTTP\UserRetriever;
+use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\GitLFS\Lock\Request\LockCreateRequest;
@@ -71,6 +72,11 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
     private $lock_creator;
 
     /**
+     * @var LockRetriever
+     */
+    private $lock_retriever;
+
+    /**
      * @var UserRetriever
      */
     private $user_retriever;
@@ -86,6 +92,7 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         LFSAPIHTTPAccessControl $api_access_control,
         LockResponseBuilder $lock_response_builder,
         LockCreator $lock_creator,
+        LockRetriever $lock_retriever,
         UserRetriever $user_retriever
     ) {
         $this->plugin                = $plugin;
@@ -93,6 +100,7 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         $this->api_access_control    = $api_access_control;
         $this->lock_response_builder = $lock_response_builder;
         $this->lock_creator          = $lock_creator;
+        $this->lock_retriever        = $lock_retriever;
         $this->user_retriever        = $user_retriever;
     }
 
@@ -100,6 +108,19 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
     {
         if ($this->user === null) {
             throw new \LogicException();
+        }
+
+        $locks = $this->lock_retriever->retrieveLocks(
+            null,
+            $this->lock_create_request->getPath(),
+            null,
+            null
+        );
+
+        if (! empty($locks)) {
+            http_response_code(409);
+            echo json_encode($this->lock_response_builder->buildLockConflictErrorResponse(array_shift($locks)));
+            return;
         }
 
         $lock = $this->lock_creator->createLock(

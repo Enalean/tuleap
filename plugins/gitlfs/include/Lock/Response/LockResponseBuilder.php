@@ -57,6 +57,13 @@ class LockResponseBuilder
         );
     }
 
+    public function buildLockConflictErrorResponse(Lock $lock): LockResponse
+    {
+        return new LockResponseConflictErrorRepresentation(
+            new LockResponseLockRepresentation($lock)
+        );
+    }
+
     private function generateLocksRepresentations(Lock ...$locks): array
     {
         $locks_representations = array();

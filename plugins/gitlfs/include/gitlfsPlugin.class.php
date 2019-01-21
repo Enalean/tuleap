@@ -177,6 +177,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockCreator(
                         new \Tuleap\GitLFS\Lock\LockDao()
                     ),
+                    new \Tuleap\GitLFS\Lock\LockRetriever(
+                        new \Tuleap\GitLFS\Lock\LockDao(),
+                        $this->getUserManager()
+                    ),
                     new \Tuleap\GitLFS\HTTP\UserRetriever(
                         $this->getLFSAPIHTTPAuthorization(),
                         $this->getGitPlugin()->getHTTPAccessControl($logger),
