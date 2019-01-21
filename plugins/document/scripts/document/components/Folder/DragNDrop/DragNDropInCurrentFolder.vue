@@ -26,7 +26,7 @@
         />
         <component
             v-bind:is="error_modal_name"
-            v-on:error-modal-hidden="error_modal_hidden"
+            v-on:error-modal-hidden="errorModalHasBeenClosed"
         />
     </div>
 </template>
@@ -83,6 +83,9 @@ export default {
         ondragover(event) {
             event.preventDefault();
             event.stopPropagation();
+            if (this.isDragNDropingOnAModal(event)) {
+                return;
+            }
             this.is_dropzone_highlighted = true;
         },
         ondragleave(event) {
@@ -93,6 +96,10 @@ export default {
         ondrop(event) {
             event.preventDefault();
             event.stopPropagation();
+            if (this.isDragNDropingOnAModal(event)) {
+                return;
+            }
+
             this.is_dropzone_highlighted = false;
             if (!this.user_can_dragndrop_in_current_folder) {
                 return;
@@ -120,8 +127,11 @@ export default {
                 this.$store.dispatch("addNewUploadFile", [file, this.current_folder]);
             }
         },
-        error_modal_hidden() {
+        errorModalHasBeenClosed() {
             this.error_modal_shown = false;
+        },
+        isDragNDropingOnAModal(event) {
+            return Boolean(event.target.closest(".tlp-modal"));
         }
     }
 };
