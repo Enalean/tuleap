@@ -55,11 +55,6 @@ class UserAuthorizationDAO extends DataAccessObject
         );
     }
 
-    public function deleteByID($authorization_id)
-    {
-        $this->getDB()->run('DELETE FROM plugin_gitlfs_ssh_authorization WHERE id = ?', $authorization_id);
-    }
-
     public function deleteByExpirationDate($expiration_date)
     {
         $this->getDB()->run('DELETE FROM plugin_gitlfs_ssh_authorization WHERE ? >= expiration_date', $expiration_date);
