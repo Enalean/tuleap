@@ -55,10 +55,7 @@ class PostActionCollection implements PostActionVisitor
      */
     private $set_float_value_actions = [];
 
-    /**
-     * @param PostAction[] $actions
-     */
-    public function __construct(array $actions)
+    public function __construct(PostAction... $actions)
     {
         foreach ($actions as $action) {
             $action->accept($this);
