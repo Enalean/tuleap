@@ -189,6 +189,8 @@ class Git_AdminGerritController {
     private function addServer($request_gerrit_server)
     {
         if ($this->allGerritServerParamsRequiredExist($request_gerrit_server) && $this->isHTTPPasswordDefined($request_gerrit_server)) {
+            // Starting gerrit 2.16 support, enforce BasicAuth for new servers.
+            $request_gerrit_server['auth_type'] = 'Basic';
 
             $gerrit_server = $this->admin_gerrit_builder->buildFromRequest($request_gerrit_server);
             $server = new Git_RemoteServer_GerritServer(
@@ -280,13 +282,12 @@ class Git_AdminGerritController {
         return (isset($request_gerrit_server['http_password']) && ! empty($request_gerrit_server['http_password']));
     }
 
-    private function allGerritServerParamsRequiredExist($request_gerrit_server)
+    private function allGerritServerParamsRequiredExist(array $request_gerrit_server) : bool
     {
         return (isset($request_gerrit_server['host']) && ! empty($request_gerrit_server['host'])) &&
         (isset($request_gerrit_server['ssh_port']) && ! empty($request_gerrit_server['ssh_port'])) &&
         (isset($request_gerrit_server['http_port']) && ! empty($request_gerrit_server['http_port'])) &&
         (isset($request_gerrit_server['login']) && ! empty($request_gerrit_server['login'])) &&
-        (isset($request_gerrit_server['identity_file']) && ! empty($request_gerrit_server['identity_file'])) &&
-        (isset($request_gerrit_server['auth_type']) && ! empty($request_gerrit_server['auth_type']));
+        (isset($request_gerrit_server['identity_file']) && ! empty($request_gerrit_server['identity_file']));
     }
 }

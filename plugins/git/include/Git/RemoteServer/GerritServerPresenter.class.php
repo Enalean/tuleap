@@ -21,9 +21,28 @@
 class Git_RemoteServer_GerritServerPresenter
 {
 
+    public $id;
+    public $host;
+    public $http_port;
+    public $ssh_port;
+    public $replication_key;
+    public $use_ssl;
+    public $login;
+    public $identity_file;
+    public $use_gerrit_2_5;
+    public $use_gerrit_2_8;
+    public $is_used;
+    public $http_password;
+    public $replication_password;
+    public $is_digest;
+    public $is_basic;
+    public $replication_key_ellipsis_value;
+    public $edit_title;
+    public $delete_title;
     public $warning_no_possible_go_back;
+    public $purified_delete_desc;
 
-    public function __construct(Git_RemoteServer_GerritServer $server, $is_used)
+    public function __construct(Git_RemoteServer_GerritServer $server, bool $is_used)
     {
         $this->id                             = $server->getId();
         $this->host                           = $server->getHost();

@@ -28,11 +28,9 @@ And create a new server with the SSH key you get with:
 * Host: gerrit.tuleap-aio-dev.docker
 * HTTP port: 8080
 * Use ssl: no
-* Version: 2.8+
 * ssh port: 29418
 * login: gerrit-admin
+* password: %PASSWORD%
 * Identity file: /home/codendiadm/.ssh/id_rsa-gerrit
-* Authentication type: Basic
-* HTTP password: %PASSWORD%
 * Replication ssh key:
   you@workstation $> make show-gerrit-ssh-pub-key

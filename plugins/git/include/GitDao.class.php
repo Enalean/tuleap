@@ -575,8 +575,10 @@ class GitDao extends \Tuleap\DB\DataAccessObject
     {
         $sql = 'SELECT NULL
                 FROM plugin_git
+                    JOIN groups ON (group_id = project_id)
                 WHERE remote_server_id = ?
                     AND remote_server_disconnect_date IS NULL
+                    AND `groups`.status IN ("A", "s")
                 LIMIT 1';
         $rows = $this->getDB()->run($sql, $remote_server_id);
         return count($rows) > 0;
