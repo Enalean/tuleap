@@ -45,6 +45,18 @@ class LockResponseBuilder
         );
     }
 
+    public function buildErrorResponse(string $message): LockResponse
+    {
+        return new LockResponseErrorRepresentation($message);
+    }
+
+    public function buildSuccessfulLockDestruction(Lock $lock): LockResponse
+    {
+        return new LockResponseSuccessfulDestructionRepresentation(
+            new LockResponseLockRepresentation($lock)
+        );
+    }
+
     private function generateLocksRepresentations(Lock ...$locks): array
     {
         $locks_representations = array();

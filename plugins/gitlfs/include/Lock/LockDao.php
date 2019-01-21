@@ -76,6 +76,14 @@ class LockDao extends DataAccessObject
         );
     }
 
+    public function deleteLock(int $lock_id): void
+    {
+        $this->getDB()->delete(
+            'plugin_gitlfs_lock',
+            ['id' => $lock_id]
+        );
+    }
+
     private function buildSearchCondition(
         ?int $id,
         ?string $path,
