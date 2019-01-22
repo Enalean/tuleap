@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <error-modal>
+    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <translate
             tag="p"
             v-bind:translate-params="{size: max_size_upload_in_mb}"
@@ -39,6 +39,11 @@ export default {
         ...mapState(["max_size_upload"]),
         max_size_upload_in_mb() {
             return prettyKibibytes(this.max_size_upload);
+        }
+    },
+    methods: {
+        bubbleErrorModalHidden() {
+            this.$emit("error-modal-hidden");
         }
     }
 };
