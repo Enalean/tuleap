@@ -119,6 +119,16 @@ msgid ""
 "Artifact submissions (and possibly updates) will be systematically sent."
 msgstr ""
 
+#, php-format
+msgid "Bad format: '%s'. Array expected"
+msgstr ""
+
+msgid "Bad id attribute format: int expected."
+msgstr ""
+
+msgid "Bad job_url attribute format: string expected."
+msgstr ""
+
 msgid ""
 "Be careful, all the artifact content is sent in the payload without "
 "permission checks."
@@ -236,6 +246,9 @@ msgid "Logs for %s"
 msgstr ""
 
 msgid "Mail configuration"
+msgstr ""
+
+msgid "Mandatory attribute job_url not found in CI build action."
 msgstr ""
 
 msgid ""
@@ -707,6 +720,10 @@ msgid "Triggers"
 msgstr ""
 
 msgid "URL"
+msgstr ""
+
+#, php-format
+msgid "Unknown post action '%s'."
 msgstr ""
 
 msgid "Unsubscribe a user"

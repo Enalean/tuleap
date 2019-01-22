@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Luracast\Restler\RestException;
 use TrackerFactory;
+use Transition_PostAction_CIBuildDao;
 use TransitionFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -31,7 +32,14 @@ use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\RESTLogger;
 use Tuleap\REST\UserManager;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\CIBuildJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\PostActionCollectionJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetDateValueJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
+use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionsUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
@@ -304,7 +312,7 @@ class TransitionsResource extends AuthenticatedResource
     protected function getPostActions($id)
     {
         $this->checkAccess();
-        $this->sendAllowHeaderForPostActions();
+        $this->sendAllowHeaderForActions();
 
         $transition = $this->getTransitionFactory()->getTransition($id);
         if ($transition === null) {
@@ -322,6 +330,72 @@ class TransitionsResource extends AuthenticatedResource
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt($current_user, $project);
 
         return (new PostActionsRepresentationBuilder($transition->getAllPostActions()))->build();
+    }
+
+    /**
+     * Update all post actions of a transition.
+     * WARNING: only CI Build post actions are handled for now.
+     *
+     * <ul>
+     * <li>Actions without id will be created</li>
+     * <li>Actions with same id will be updated</li>
+     * <li>Other actions will be removed</li>
+     * </ul>
+     *
+     * Body sample :
+     * <pre>
+     * { <br/>
+     * &nbsp; "post_actions": [ <br/>
+     * &nbsp; &nbsp; { <br/>
+     * &nbsp; &nbsp; &nbsp; "id": null, <br/>
+     * &nbsp; &nbsp; &nbsp; "type": "run_job", <br/>
+     * &nbsp; &nbsp; &nbsp; "job_url": "http://example.com" <br/>
+     * &nbsp; &nbsp; } <br/>
+     * &nbsp; ] <br/>
+     * } <br/>
+     * </pre>
+     *
+     * @url PUT {id}/actions
+     * @status 200
+     *
+     * @access protected
+     *
+     * @param int $id Id of transition
+     * @param PostActionsPUTRepresentation $post_actions_representation actions {@from body}
+     *
+     * @throws 401 I18NRestException
+     * @throws 403 I18NRestException
+     * @throws 404 I18NRestException
+     * @throws OrphanTransitionException
+     * @throws \DataAccessQueryException
+     * @throws RestException
+     */
+    protected function putPostActions(int $id, PostActionsPUTRepresentation $post_actions_representation)
+    {
+        $this->checkAccess();
+        $this->sendAllowHeaderForActions();
+
+        $transition = $this->getTransitionFactory()->getTransition($id);
+        if ($transition === null) {
+            throw new I18NRestException(
+                404,
+                dgettext('tuleap-tracker', 'Transition not found.')
+            );
+        }
+
+        $current_user = $this->user_manager->getCurrentUser();
+        $this->getPermissionsChecker()->checkRead($current_user, $transition);
+        try {
+            $project = $transition->getWorkflow()->getTracker()->getProject();
+        } catch (OrphanTransitionException $exception) {
+            $this->getRESTLogger()->error('Cannot update transition post actions', $exception);
+            throw new RestException(520);
+        }
+        ProjectStatusVerificator::build()->checkProjectStatusAllowsAllUsersToAccessIt($project);
+
+        $post_actions = $this->getPostActionsUpdateJsonParser()
+            ->parse($post_actions_representation->post_actions);
+        $this->getPostActionUpdater()->updateByTransition($transition, $post_actions);
     }
 
     /**
@@ -349,9 +423,9 @@ class TransitionsResource extends AuthenticatedResource
         Header::allowOptionsGetPostPatchDelete();
     }
 
-    private function sendAllowHeaderForPostActions()
+    private function sendAllowHeaderForActions()
     {
-        Header::allowOptionsGet();
+        Header::allowOptionsGetPut();
     }
 
     /**
@@ -408,5 +482,19 @@ class TransitionsResource extends AuthenticatedResource
     private function getRESTLogger()
     {
         return new RESTLogger();
+    }
+
+    private function getPostActionsUpdateJsonParser(): PostActionCollectionJsonParser
+    {
+        return new PostActionCollectionJsonParser(
+            new CIBuildJsonParser()
+        );
+    }
+
+    private function getPostActionUpdater(): PostActionsUpdater
+    {
+        return new PostActionsUpdater(
+            new CIBuildRepository(new Transition_PostAction_CIBuildDao())
+        );
     }
 }

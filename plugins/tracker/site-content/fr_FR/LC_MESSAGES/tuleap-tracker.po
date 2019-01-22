@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -153,6 +153,16 @@ msgstr ""
 "adresses e-mail qui recevront systématiquement les notifications de "
 "soumission (et éventuellement de modification) d'artefacts."
 
+#, php-format
+msgid "Bad format: '%s'. Array expected"
+msgstr "Mauvais format: '%s'. Tableau attendu"
+
+msgid "Bad id attribute format: int expected."
+msgstr "Mauvais format de l'attribut id : numérique attendu."
+
+msgid "Bad job_url attribute format: string expected."
+msgstr "Mauvais format de l'attribut job_url : chaine de caractères attendu."
+
 msgid ""
 "Be careful, all the artifact content is sent in the payload without "
 "permission checks."
@@ -282,6 +292,9 @@ msgstr "Historique pour %s"
 
 msgid "Mail configuration"
 msgstr "Configuration des e-mail"
+
+msgid "Mandatory attribute job_url not found in CI build action."
+msgstr "L'attribut obligatoire job_url non trouvé dans une action de build CI."
 
 msgid ""
 "Maximum number of artifacts users can delete or move from the REST API on a "
@@ -821,6 +834,10 @@ msgstr "Déclenchements"
 
 msgid "URL"
 msgstr "URL"
+
+#, php-format
+msgid "Unknown post action '%s'."
+msgstr "Post action inconnue '%s'."
 
 msgid "Unsubscribe a user"
 msgstr "Désabonner un utilisateur"
