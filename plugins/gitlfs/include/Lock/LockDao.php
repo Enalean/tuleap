@@ -48,9 +48,10 @@ class LockDao extends DataAccessObject
         ?int $id,
         ?string $path,
         ?string $ref,
-        ?int $owner
+        ?int $owner,
+        int $repository
     ): array {
-        $condition = $this->buildSearchCondition($id, $path, $ref, $owner);
+        $condition = $this->buildSearchCondition($id, $path, $ref, $owner, $repository);
 
         return $this->getDB()->safeQuery(
             "SELECT *
@@ -60,9 +61,11 @@ class LockDao extends DataAccessObject
         );
     }
 
-    public function searchLocksNotBelongingToOwner(?string $ref, int $owner): array
+    public function searchLocksNotBelongingToOwner(?string $ref, int $owner, int $repository): array
     {
-        $condition = EasyStatement::open()->with('lock_owner <> ?', $owner);
+        $condition = EasyStatement::open()
+            ->with('lock_owner <> ?', $owner)
+            ->andWith('repository_id = ?', $repository);
 
         if ($ref !== null) {
             $condition->andWith('ref = ?', $ref);
@@ -88,7 +91,8 @@ class LockDao extends DataAccessObject
         ?int $id,
         ?string $path,
         ?string $ref,
-        ?int $owner
+        ?int $owner,
+        int $repository
     ): EasyStatement {
         $condition = EasyStatement::open();
 
@@ -107,6 +111,8 @@ class LockDao extends DataAccessObject
         if ($owner !== null) {
             $condition = $condition->andWith('lock_owner = ?', $owner);
         }
+
+        $condition = $condition->andWith('repository_id = ?', $repository);
 
         return $condition;
     }

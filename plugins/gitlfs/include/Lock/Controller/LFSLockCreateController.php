@@ -114,7 +114,8 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
             null,
             $this->lock_create_request->getPath(),
             null,
-            null
+            null,
+            $this->repository
         );
 
         if (! empty($locks)) {

@@ -114,7 +114,8 @@ class LFSLockDeleteController implements DispatchableWithRequestNoAuthz
             $variables['lock_id'],
             null,
             null,
-            null
+            null,
+            $this->repository
         );
 
         if (empty($locks)) {
