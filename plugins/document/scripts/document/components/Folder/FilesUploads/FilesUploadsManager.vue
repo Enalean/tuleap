@@ -20,7 +20,7 @@
 <template>
     <div>
         <div class="document-header-global-progress tlp-tooltip tlp-tooltip-left"
-             v-if="global_upload_progress"
+             v-if="should_display_progress_bar"
              v-bind:data-tlp-tooltip="progress_bar_tooltip"
              v-on:click="modal.show()"
         >
@@ -32,13 +32,12 @@
     </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import FilesUploadsModal from "./FilesUploadsModal.vue";
 import GlobalUploadProgressBar from "../ProgressBar/GlobalUploadProgressBar.vue";
 
 export default {
-    name: "file-upload-manager",
     components: { FilesUploadsModal, GlobalUploadProgressBar },
     data() {
         return {
@@ -47,11 +46,15 @@ export default {
         };
     },
     computed: {
+        ...mapState(["files_uploads_list"]),
         ...mapGetters(["global_upload_progress"]),
         progress_bar_tooltip() {
             return this.$gettext(
                 "Some files are being uploaded, click here to see the whole list."
             );
+        },
+        should_display_progress_bar() {
+            return this.files_uploads_list.filter(file => file.upload_error === null).length > 0;
         }
     },
     mounted() {
