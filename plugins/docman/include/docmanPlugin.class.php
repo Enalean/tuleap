@@ -1270,6 +1270,9 @@ class DocmanPlugin extends Plugin
                         new \Tuleap\Docman\Upload\DocumentBeingUploadedWriter(
                             $path_allocator
                         ),
+                        new \Tuleap\Docman\Upload\DocumentBeingUploadedLocker(
+                            $path_allocator
+                        ),
                         new \Tuleap\Docman\Upload\DocumentUploadFinisher(
                             new BackendLogger(),
                             $path_allocator,

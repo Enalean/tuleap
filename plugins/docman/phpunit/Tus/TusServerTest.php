@@ -110,6 +110,8 @@ class TusServerTest extends TestCase
         } else {
             $this->data_store->shouldReceive('getFinisher')->andReturns(null);
         }
+        $locker = \Mockery::mock(TusLocker::class);
+        $this->data_store->shouldReceive('getLocker')->andReturns($locker);
         $server = new TusServer($this->message_factory, $this->data_store);
 
         $upload_request = \Mockery::mock(ServerRequestInterface::class);
@@ -143,6 +145,8 @@ class TusServerTest extends TestCase
         if ($has_finisher) {
             $finisher_data_store->shouldReceive('finishUpload')->with($file_information)->once();
         }
+        $locker->shouldReceive('lock')->andReturns(true)->once();
+        $locker->shouldReceive('unlock')->once();
 
         $response = $server->handle($upload_request);
 
@@ -179,6 +183,7 @@ class TusServerTest extends TestCase
 
     public function testAnUploadRequestWithAnIncorrectOffsetIsRejected() : void
     {
+        $this->data_store->shouldReceive('getLocker')->andReturns(null);
         $server = new TusServer($this->message_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
@@ -234,6 +239,7 @@ class TusServerTest extends TestCase
     {
         $data_writer = \Mockery::mock(TusWriter::class);
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
+        $this->data_store->shouldReceive('getLocker')->andReturns(null);
         $server = new TusServer($this->message_factory, $this->data_store);
 
         $incoming_request = \Mockery::mock(ServerRequestInterface::class);
@@ -314,6 +320,7 @@ class TusServerTest extends TestCase
         $this->data_store->shouldReceive('getWriter')->andReturns($data_writer);
         $finisher = \Mockery::mock(TusFinisherDataStore::class);
         $this->data_store->shouldReceive('getFinisher')->andReturns($finisher);
+        $this->data_store->shouldReceive('getLocker')->andReturns(null);
         $server = new TusServer($this->message_factory, $this->data_store);
 
         $incomplete_upload_request = \Mockery::mock(ServerRequestInterface::class);
@@ -337,5 +344,33 @@ class TusServerTest extends TestCase
         $finisher->shouldReceive('finishUpload')->with($file_information)->never();
 
         $server->handle($incomplete_upload_request);
+    }
+
+    public function testALockedUploadIsNotOverwritten() : void
+    {
+        $locker = \Mockery::mock(TusLocker::class);
+        $this->data_store->shouldReceive('getLocker')->andReturns($locker);
+        $server = new TusServer($this->message_factory, $this->data_store);
+
+        $incoming_request = \Mockery::mock(ServerRequestInterface::class);
+        $incoming_request->shouldReceive('getMethod')->andReturns('PATCH');
+        $incoming_request->shouldReceive('getHeaderLine')->with('Tus-Resumable')->andReturns('1.0.0');
+        $incoming_request->shouldReceive('getHeaderLine')->with('Content-Type')->andReturns('application/offset+octet-stream');
+        $incoming_request->shouldReceive('hasHeader')->with('Upload-Offset')->andReturns(true);
+        $incoming_request->shouldReceive('getHeaderLine')->with('Upload-Offset')->andReturns(0);
+
+        $file_information = \Mockery::mock(TusFileInformation::class);
+        $file_information->shouldReceive('getLength')->andReturns(123456);
+        $file_information->shouldReceive('getOffset')->andReturns(0);
+        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns($file_information);
+        $this->file_information_provider->shouldReceive('getFileInformation')->andReturns(\Mockery::mock(TusFileInformation::class));
+
+        $locker->shouldReceive('lock')->andReturns(false);
+        $locker->shouldReceive('unlock');
+        $this->data_store->shouldReceive('getWriter')->never();
+
+        $response = $server->handle($incoming_request);
+
+        $this->assertEquals(423, $response->getStatusCode());
     }
 }

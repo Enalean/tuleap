@@ -20,13 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\Tus;
+namespace Tuleap\Docman\Upload;
 
-interface TusDataStore
+final class DocumentBeingUploadedLockVerificationException extends \RuntimeException
 {
-    public function getFileInformationProvider() : TusFileInformationProvider;
-    public function getWriter() : TusWriter;
-    public function getFinisher() : ?TusFinisherDataStore;
-    public function getTerminater() : ?TusTerminaterDataStore;
-    public function getLocker() : ?TusLocker;
+    public function __construct(string $file_path)
+    {
+        parent::__construct("Could not verify the presence of lock for $file_path");
+    }
 }
