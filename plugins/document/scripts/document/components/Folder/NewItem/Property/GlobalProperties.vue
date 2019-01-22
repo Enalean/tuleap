@@ -20,7 +20,7 @@
 
 <template>
     <div class="document-new-item-properties">
-        <property-title v-model="item.title" v-bind:type="item.type"/>
+        <property-title v-model="item.title" v-bind:type="item.type" v-bind:parent="parent"/>
         <property-description v-model="item.description"/>
         <slot></slot>
     </div>
@@ -37,7 +37,8 @@ export default {
         PropertyDescription
     },
     props: {
-        item: Object
+        item: Object,
+        parent: Object
     }
 };
 </script>

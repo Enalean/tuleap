@@ -25,7 +25,7 @@
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
             <type-selector v-model="item.type"/>
 
-            <global-properties v-bind:item="item">
+            <global-properties v-bind:item="item" v-bind:parent="parent">
                 <link-properties v-model="item.link_properties" v-bind:item="item"/>
                 <wiki-properties v-model="item.wiki_properties" v-bind:item="item"/>
             </global-properties>
@@ -75,7 +75,8 @@ export default {
             item: {},
             is_displayed: false,
             is_loading: false,
-            modal: null
+            modal: null,
+            parent: {}
         };
     },
     computed: {
@@ -99,8 +100,9 @@ export default {
             });
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
-        show() {
+        show(event) {
             this.item = { ...this.default_item };
+            this.parent = event.detail.parent;
             this.is_displayed = true;
             this.modal.show();
         },

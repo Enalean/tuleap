@@ -50,7 +50,8 @@ import { TYPE_FOLDER } from "../../../../constants.js";
 export default {
     props: {
         value: String,
-        type: String
+        type: String,
+        parent: Object
     },
     data() {
         return {
@@ -58,7 +59,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["folder_content", "current_folder"]),
+        ...mapState(["folder_content"]),
         placeholder() {
             return this.$gettext("My document");
         }
@@ -71,7 +72,7 @@ export default {
                     item =>
                         item.title === text_value &&
                         item.type === TYPE_FOLDER &&
-                        item.parent_id === this.current_folder.id
+                        item.parent_id === this.parent.id
                 );
 
                 if (does_folder_already_exist) {
@@ -82,7 +83,7 @@ export default {
                     item =>
                         item.title === text_value &&
                         item.type !== TYPE_FOLDER &&
-                        item.parent_id === this.current_folder.id
+                        item.parent_id === this.parent.id
                 );
 
                 if (does_document_already_exist) {

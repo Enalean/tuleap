@@ -27,11 +27,19 @@
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
     name: "DropDownMenu",
+    computed: {
+        ...mapState(["current_folder"])
+    },
     methods: {
         showNewFolderModal() {
-            document.dispatchEvent(new CustomEvent("show-new-folder-modal"));
+            document.dispatchEvent(
+                new CustomEvent("show-new-folder-modal", {
+                    detail: { parent: this.current_folder }
+                })
+            );
         }
     }
 };

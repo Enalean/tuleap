@@ -29,10 +29,18 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+    computed: {
+        ...mapState(["current_folder"])
+    },
     methods: {
         showNewDocumentModal() {
-            document.dispatchEvent(new CustomEvent("show-new-document-modal"));
+            document.dispatchEvent(
+                new CustomEvent("show-new-document-modal", {
+                    detail: { parent: this.current_folder }
+                })
+            );
         }
     }
 };
