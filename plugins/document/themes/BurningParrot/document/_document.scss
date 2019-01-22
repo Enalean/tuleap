@@ -28,24 +28,24 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 
 .document-upload-to-current-folder {
     position: fixed;
-    top: $navbar-height;
-    color: $tlp-ui-white;
-    left: $sidebar-expanded-width;
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
-    text-align: center;
-    height: calc(100vh - #{$navbar-height});
-    width: calc(100% - #{$sidebar-expanded-width});
     z-index: 1000;
-    box-shadow: inset 0 0 0 $tlp-half-spacing transparent;
+    top: $navbar-height;
+    left: $sidebar-expanded-width;
+    width: calc(100% - #{$sidebar-expanded-width});
+    height: calc(100vh - #{$navbar-height});
+    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
     transition: box-shadow 100ms ease-in-out;
+    box-shadow: inset 0 0 0 $tlp-half-spacing transparent;
+    color: $tlp-ui-white;
+    text-align: center;
     pointer-events: none;
 
     &.shown-success {
         box-shadow: inset 0 0 0 $tlp-half-spacing transparentize($tlp-theme-color, .15);
 
         > .document-upload-to-current-folder-message {
-            background: transparentize($tlp-theme-color, .15);
             transform: translateY(-10px);
+            background: transparentize($tlp-theme-color, .15);
         }
     }
 
@@ -53,27 +53,27 @@ $progress-bar-background-color: $tlp-ui-border-normal;
         box-shadow: inset 0 0 0 $tlp-half-spacing transparentize($tlp-ui-danger, .15);
 
         > .document-upload-to-current-folder-message {
-            background: transparentize($tlp-ui-danger, .15);
             transform: translateY(-10px);
+            background: transparentize($tlp-ui-danger, .15);
         }
     }
 }
 
 .document-upload-to-current-folder-message {
     position: absolute;
-    left: $tlp-half-spacing;
     bottom: 0;
+    left: $tlp-half-spacing;
     width: calc(100% - #{$tlp-spacing});
     padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
-    background: transparent;
-    transition: background 100ms ease-in-out, transform 100ms ease-in-out;
     transform: translateY(100%);
+    transition: background 100ms ease-in-out, transform 100ms ease-in-out;
+    background: transparent;
 }
 
 .document-upload-to-current-folder-icon {
     display: inline-block;
-    font-size: 24px;
     margin: 0 0 $tlp-half-spacing;
+    font-size: 24px;
 }
 
 .sidebar-collapsed .document-upload-to-current-folder {
@@ -121,13 +121,16 @@ $progress-bar-background-color: $tlp-ui-border-normal;
     }
 }
 
+
 .document-dragndrop-file-upload {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid $tlp-ui-border-normal;
+    border-bottom: 1px solid $tlp-ui-border-light;
 
     &.document-dragndrop-file-upload-error {
         border-bottom: 1px solid transparentize($tlp-ui-danger, .9);
+        background-color: transparentize($tlp-ui-danger, .9);
     }
 
     &:last-child {
@@ -146,6 +149,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 
 .document-file-upload-cell-title-content {
     display: flex;
+    align-items: center;
 }
 
 .document-file-upload-progress-value {
@@ -156,18 +160,18 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 }
 
 .document-file-upload-progress-bar::-moz-progress-bar {
-    background: $tlp-ui-success;
     border-radius: 20px;
+    background: $tlp-ui-success;
 }
 
 .document-file-upload-progress-bar::-webkit-progress-bar {
-    background: $progress-bar-background-color;
     border-radius: 20px;
+    background: $progress-bar-background-color;
 }
 
 .document-file-upload-progress-bar::-webkit-progress-value {
-    background: $tlp-ui-success;
     border-radius: 20px;
+    background: $tlp-ui-success;
 }
 
 .document-file-upload-progress-bar[value] {
@@ -178,21 +182,22 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 }
 
 .document-file-upload-progress-bar {
-    color: $tlp-ui-success;
     position: relative;
     top: 1px;
     width: 100px;
-    background: $progress-bar-background-color;
     border: 0;
     border-radius: 20px;
+    background: $progress-bar-background-color;
+    color: $tlp-ui-success;
     vertical-align: unset;
 }
 
 .document-file-upload-progress-cancel {
-    padding: 0 0 0 $tlp-half-spacing;
-    color: $tlp-ui-success;
-    cursor: pointer;
+    margin: 0 0 0 $tlp-half-spacing;
     transition: color ease-in-out 150ms;
+    color: $tlp-ui-success;
+    font-size: 15px;
+    cursor: pointer;
 
     &:hover {
         color: $tlp-ui-danger;
@@ -206,7 +211,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
         color: $tlp-ui-dimmed;
     }
 
-    > .document-file-upload-progress-bar::-moz-progress-bar,
+    > .document-file-upload-progress-bar::-moz-progress-bar {
+        background: $tlp-ui-dimmed;
+    }
+
     > .document-file-upload-progress-bar::-webkit-progress-value {
         background: $tlp-ui-dimmed;
     }
@@ -226,7 +234,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
         color: $tlp-ui-danger;
     }
 
-    > .document-file-upload-progress-bar::-moz-progress-bar,
+    > .document-file-upload-progress-bar::-moz-progress-bar {
+        background: $tlp-ui-danger;
+    }
+
     > .document-file-upload-progress-bar::-webkit-progress-value {
         background: $tlp-ui-danger;
     }
@@ -267,6 +278,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
         background: $tlp-table-row-background-even;
     }
 }
+
 .document-folder-title-loading {
     width: 300px;
 }
@@ -289,6 +301,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 
 .document-folder-content-title {
     display: flex;
+    align-items: center;
 }
 
 .document-folder-content-icon {
@@ -348,6 +361,10 @@ $progress-bar-background-color: $tlp-ui-border-normal;
     display: flex;
     flex-direction: column;
     height: calc(100vh - #{$navbar-height});
+
+    > .breadcrumb {
+        flex: 0 0 auto;
+    }
 }
 
 .document-folder-with-error,

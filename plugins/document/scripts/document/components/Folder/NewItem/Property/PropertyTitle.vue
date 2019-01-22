@@ -39,7 +39,6 @@
             ref="input"
         >
         <p class="tlp-text-danger" v-if="error_message.length > 0">
-            <i class="fa fa-info-circle"></i>
             {{ error_message }}
         </p>
     </div>
