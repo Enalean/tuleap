@@ -76,6 +76,9 @@ msgstr "Déposer des fichiers dans %s n'est pas permis."
 msgid "Empty"
 msgstr "Vide"
 
+msgid "File"
+msgstr "Fichier"
+
 msgid "Go to my home page"
 msgstr "Aller à la page d'accueil"
 
@@ -200,10 +203,10 @@ msgstr[1] ""
 "Vous n'êtes pas autorisés à glisser-déposer plus de %{ nb } fichiers à la "
 "fois."
 
-msgid "You are not allowed to upload files bigger than %{ size }."
+msgid "You are not allowed to upload files bigger than %s."
 msgstr ""
 "Vous n'êtes pas autorisés à téléverser des fichiers avec une taille excédant "
-"%{ size }."
+"%size."
 
 msgid ""
 "You can drag 'n drop files from your desktop into the current folder to "

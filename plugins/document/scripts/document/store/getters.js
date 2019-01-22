@@ -64,21 +64,19 @@ export const is_uploading = state => {
     return Boolean(state.folder_content.find(item => item.is_uploading));
 };
 
-export const has_file_upload_error = state => files => {
-    for (const file of files) {
-        if (file.size > state.max_size_upload) {
-            return MAX_SIZE_ERROR;
-        }
+export const has_file_upload_error = state => file => {
+    if (file.size > state.max_size_upload) {
+        return MAX_SIZE_ERROR;
+    }
 
-        if (
-            state.folder_content.find(
-                item =>
-                    item.title === file.name &&
-                    item.type !== TYPE_FOLDER &&
-                    item.parent_id === state.current_folder.id
-            )
-        ) {
-            return ALREADY_EXISTS_ERROR;
-        }
+    if (
+        state.folder_content.find(
+            item =>
+                item.title === file.name &&
+                item.type !== TYPE_FOLDER &&
+                item.parent_id === state.current_folder.id
+        )
+    ) {
+        return ALREADY_EXISTS_ERROR;
     }
 };

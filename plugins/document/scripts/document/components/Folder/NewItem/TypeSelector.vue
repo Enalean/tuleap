@@ -38,8 +38,10 @@ import {
     ICON_WIKI,
     TYPE_EMPTY,
     TYPE_LINK,
-    TYPE_WIKI
-} from "../../../constants";
+    TYPE_WIKI,
+    TYPE_FILE,
+    ICON_FILE
+} from "../../../constants.js";
 import { mapState } from "vuex";
 
 export default {
@@ -62,6 +64,12 @@ export default {
                     is_checked: this.value === TYPE_EMPTY,
                     label: this.$gettext("Empty"),
                     icon: ICON_EMPTY
+                },
+                {
+                    identifier: TYPE_FILE,
+                    is_checked: this.value === TYPE_FILE,
+                    label: this.$gettext("File"),
+                    icon: ICON_FILE
                 }
             ];
             if (this.user_can_create_wiki) {

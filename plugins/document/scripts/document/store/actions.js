@@ -69,12 +69,24 @@ export const getSubfolderContent = async (context, folder_id) => {
 
 export const createNewItem = async (context, [item, parent]) => {
     try {
-        const item_reference = await addNewDocument(item, parent.id);
+        if (item.type === TYPE_FILE) {
+            const new_file = await createNewFile(
+                item.title,
+                item.description,
+                item.file_properties.file,
+                parent
+            );
+            uploadNewFileAndAdjustContent(new_file, item.file_properties.file, parent, context);
+        } else {
+            const item_reference = await addNewDocument(item, parent.id);
 
-        const created_item = await getItem(item_reference.id);
-        flagItemAsCreated(context, created_item);
+            const created_item = await getItem(item_reference.id);
+            flagItemAsCreated(context, created_item);
 
-        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+            return Promise.resolve(
+                context.commit("addJustCreatedItemToFolderContent", created_item)
+            );
+        }
     } catch (exception) {
         return handleErrorsForModal(context, exception);
     }
@@ -187,26 +199,22 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
     }
 };
 
-export const addNewUploadFile = async (context, [dropped_file, parent]) => {
-    let new_file;
-    try {
-        new_file = await addNewDocument(
-            {
-                title: dropped_file.name,
-                description: "",
-                type: TYPE_FILE,
-                file_properties: {
-                    file_name: dropped_file.name,
-                    file_size: dropped_file.size
-                }
-            },
-            parent.id
-        );
-    } catch (exception) {
-        const error_json = await exception.response.json();
-        throw getErrorMessage(error_json);
-    }
+function createNewFile(title, description, dropped_file, parent) {
+    return addNewDocument(
+        {
+            title: title,
+            description: description,
+            type: TYPE_FILE,
+            file_properties: {
+                file_name: dropped_file.name,
+                file_size: dropped_file.size
+            }
+        },
+        parent.id
+    );
+}
 
+function uploadNewFileAndAdjustContent(new_file, dropped_file, parent, context) {
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
         return;
     }
@@ -227,6 +235,18 @@ export const addNewUploadFile = async (context, [dropped_file, parent]) => {
 
     context.commit("addJustCreatedItemToFolderContent", fake_item);
     context.commit("addFileInUploadsList", fake_item);
+}
+
+export const addNewUploadFile = async (context, [dropped_file, parent, title, description]) => {
+    let new_file;
+    try {
+        new_file = await createNewFile(title, description, dropped_file, parent);
+    } catch (exception) {
+        const error_json = await exception.response.json();
+        throw getErrorMessage(error_json);
+    }
+
+    uploadNewFileAndAdjustContent(new_file, dropped_file, parent, context);
 };
 
 export const cancelFileUpload = async (context, item) => {

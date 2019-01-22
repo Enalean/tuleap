@@ -18,8 +18,7 @@
  */
 
 import { get, recursiveGet, patch, del, post } from "tlp";
-import { DOCMAN_FOLDER_EXPANDED_VALUE } from "../constants.js";
-import { TYPE_LINK, TYPE_WIKI } from "../constants";
+import { DOCMAN_FOLDER_EXPANDED_VALUE, TYPE_LINK, TYPE_WIKI, TYPE_FILE } from "../constants.js";
 
 export {
     getProject,
@@ -64,10 +63,11 @@ async function addNewDocument(item, parent_id) {
     return response.json();
 
     function cleanUpBody(item) {
-        const properties_to_remove = { wiki_properties: 1, link_properties: 1 };
+        const properties_to_remove = { wiki_properties: 1, link_properties: 1, file_properties: 1 };
         const properties_to_keep_by_type = {};
         properties_to_keep_by_type[TYPE_LINK] = "link_properties";
         properties_to_keep_by_type[TYPE_WIKI] = "wiki_properties";
+        properties_to_keep_by_type[TYPE_FILE] = "file_properties";
 
         if (properties_to_keep_by_type.hasOwnProperty(item.type)) {
             delete properties_to_remove[properties_to_keep_by_type[item.type]];
