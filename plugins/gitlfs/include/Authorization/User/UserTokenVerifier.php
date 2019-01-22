@@ -74,7 +74,6 @@ class UserTokenVerifier
 
         $user = $this->user_manager->getUserById($row['user_id']);
         if ($user !== null && $user->isAlive()) {
-            $this->dao->deleteByID($authorization_token->getID());
             return $user;
         }
 

@@ -69,13 +69,43 @@ class UserTokenVerifierTest extends TestCase
             'user_id'         => 123,
             'operation_name'  => 'operation',
         ]);
-        $this->dao->shouldReceive('deleteByID')->once();
         $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
 
         $this->assertSame(
             $user,
             $verifier->getUser($this->current_time, $user_token, $repository, $operation)
         );
+    }
+
+    public function testUserTokenCanBeUsedMoreThanOnce()
+    {
+        $verifier = new UserTokenVerifier($this->dao, $this->hasher, $this->user_manager);
+
+        $user_token = \Mockery::mock(SplitToken::class);
+        $user_token->shouldReceive('getID')->andReturns(1);
+        $verification_string = \Mockery::mock(SplitTokenVerificationString::class);
+        $user_token->shouldReceive('getVerificationString')->andReturns($verification_string);
+        $repository = \Mockery::mock(\GitRepository::class);
+        $repository->shouldReceive('getId')->andReturns(3);
+        $operation = \Mockery::mock(UserOperation::class);
+        $operation->shouldReceive('getName')->andReturns('operation');
+
+        $user = \Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAlive')->andReturns(true);
+        $this->user_manager->shouldReceive('getUserById')->andReturns($user);
+
+        $this->dao->shouldReceive('searchAuthorizationByIDAndExpiration')->andReturns([
+            'id'              => 1,
+            'verifier'        => 'valid',
+            'expiration_date' => PHP_INT_MAX,
+            'repository_id'   => 3,
+            'user_id'         => 123,
+            'operation_name'  => 'operation',
+        ]);
+        $this->hasher->shouldReceive('verifyHash')->with($verification_string, 'valid')->andReturns(true);
+
+        $verifier->getUser($this->current_time, $user_token, $repository, $operation);
+        $verifier->getUser($this->current_time, $user_token, $repository, $operation);
     }
 
     /**
