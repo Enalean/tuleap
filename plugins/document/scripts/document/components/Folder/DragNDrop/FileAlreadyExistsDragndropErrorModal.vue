@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <error-modal>
+    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <translate tag="p">
             A document already exists with the same title.
         </translate>
@@ -28,6 +28,11 @@
 <script>
 import ErrorModal from "./ErrorModal.vue";
 export default {
-    components: { ErrorModal }
+    components: { ErrorModal },
+    methods: {
+        bubbleErrorModalHidden() {
+            this.$emit("error-modal-hidden");
+        }
+    }
 };
 </script>

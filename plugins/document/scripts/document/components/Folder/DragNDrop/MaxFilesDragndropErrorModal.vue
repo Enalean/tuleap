@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <error-modal>
+    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
         <translate
             tag="p"
             v-bind:translate-params="{nb: max_files_dragndrop}"
@@ -41,6 +41,11 @@ export default {
     components: { ErrorModal },
     computed: {
         ...mapState(["max_files_dragndrop"])
+    },
+    methods: {
+        bubbleErrorModalHidden() {
+            this.$emit("error-modal-hidden");
+        }
     }
 };
 </script>
