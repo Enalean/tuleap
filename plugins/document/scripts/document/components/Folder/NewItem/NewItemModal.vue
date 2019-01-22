@@ -39,7 +39,6 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { TYPE_EMPTY } from "../../../constants.js";
-import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
 import GlobalProperties from "./Property/GlobalProperties.vue";
 import LinkProperties from "./Property/LinkProperties.vue";
 import WikiProperties from "./Property/WikiProperties.vue";
@@ -120,7 +119,6 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
-                selfClosingInfo(this.$gettext("Document has been successfully created."));
             }
         }
     }

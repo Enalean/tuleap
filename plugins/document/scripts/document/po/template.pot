@@ -46,9 +46,6 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-msgid "Document has been successfully created."
-msgstr ""
-
 msgid "Documents"
 msgstr ""
 
@@ -63,9 +60,6 @@ msgid "Dropping files in %s is forbidden."
 msgstr ""
 
 msgid "Empty"
-msgstr ""
-
-msgid "Folder has been successfully created."
 msgstr ""
 
 msgid "Go to my home page"
