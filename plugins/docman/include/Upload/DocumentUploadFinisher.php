@@ -56,6 +56,10 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
      */
     private $document_ongoing_upload_dao;
     /**
+     * @var \Docman_ItemDao
+     */
+    private $docman_item_dao;
+    /**
      * @var \Docman_FileStorage
      */
     private $docman_file_storage;
@@ -76,6 +80,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         \PermissionsManager $permission_manager,
         \EventManager $event_manager,
         DocumentOngoingUploadDAO $document_ongoing_upload_dao,
+        \Docman_ItemDao $docman_item_dao,
         \Docman_FileStorage $docman_file_storage,
         \Docman_MIMETypeDetector $docman_mime_type_detector,
         \UserManager $user_manager
@@ -87,6 +92,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
         $this->permission_manager             = $permission_manager;
         $this->event_manager                  = $event_manager;
         $this->document_ongoing_upload_dao    = $document_ongoing_upload_dao;
+        $this->docman_item_dao                = $docman_item_dao;
         $this->docman_file_storage            = $docman_file_storage;
         $this->docman_mime_type_detector      = $docman_mime_type_detector;
         $this->user_manager                   = $user_manager;
@@ -96,8 +102,13 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
     {
         $item_id = $file_information->getID();
 
-        $uploaded_document_path = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
-        $this->createDocument($uploaded_document_path, $item_id);
+        $uploaded_document_path   = $this->document_upload_path_allocator->getPathForItemBeingUploaded($item_id);
+        $current_value_user_abort = (bool) ignore_user_abort(true);
+        try {
+            $this->createDocument($uploaded_document_path, $item_id);
+        } finally {
+            ignore_user_abort($current_value_user_abort);
+        }
         \unlink($uploaded_document_path);
         $this->document_ongoing_upload_dao->deleteByItemID($item_id);
     }
@@ -117,6 +128,23 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 return;
             }
 
+            /*
+             * Some tables of the docman plugin relies on the MyISAM engine so the DB transaction
+             * will not be taken into account. The copy of the file being the most brittle operation
+             * we want to do it first before inserting anything in the DB to limit to a maximum incorrect
+             * states.
+             */
+            $file_path = $this->docman_file_storage->copy(
+                $uploaded_document_path,
+                $document_row['filename'],
+                $document_row['group_id'],
+                $item_id,
+                1
+            );
+            if ($file_path === false) {
+                throw new \RuntimeException('Could not copy uploaded item #' . $item_id);
+            }
+
             $current_time    = (new \DateTimeImmutable)->getTimestamp();
             $is_item_created = $this->docman_item_factory->create(
                 [
@@ -134,6 +162,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 null
             );
             if ($is_item_created === false) {
+                \unlink($file_path);
                 throw new \RuntimeException("Not able to create item #$item_id in DB");
             }
             $has_permissions_been_set = $this->permission_manager->clonePermissions(
@@ -142,18 +171,9 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE']
             );
             if (! $has_permissions_been_set) {
+                $this->docman_item_dao->delete($item_id);
+                \unlink($file_path);
                 throw new \RuntimeException('Could not set permissions on item #' . $item_id);
-            }
-
-            $file_path = $this->docman_file_storage->copy(
-                $uploaded_document_path,
-                $document_row['filename'],
-                $document_row['group_id'],
-                $item_id,
-                1
-            );
-            if ($file_path === false) {
-                throw new \RuntimeException('Could not copy uploaded item #' . $item_id);
             }
 
             $has_version_been_created = $this->version_factory->create([
@@ -167,6 +187,7 @@ final class DocumentUploadFinisher implements TusFinisherDataStore
                 'date'      => $current_time
             ]);
             if (! $has_version_been_created) {
+                $this->docman_item_dao->delete($item_id);
                 \unlink($file_path);
                 throw new \RuntimeException('Not able to create the first version of item #' . $item_id);
             }

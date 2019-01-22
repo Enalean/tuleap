@@ -1281,6 +1281,7 @@ class DocmanPlugin extends Plugin
                             PermissionsManager::instance(),
                             EventManager::instance(),
                             $document_ongoing_upload_dao,
+                            new Docman_ItemDao(),
                             new Docman_FileStorage($root_path),
                             new Docman_MIMETypeDetector(),
                             UserManager::instance()
