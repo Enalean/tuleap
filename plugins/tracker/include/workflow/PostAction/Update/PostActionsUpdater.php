@@ -23,6 +23,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
 use DataAccessQueryException;
 use Transition;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
@@ -33,9 +34,15 @@ class PostActionsUpdater
      */
     private $ci_build_repository;
 
-    public function __construct(CIBuildRepository $ci_build_repository)
+    /**
+     * @var TransactionExecutor
+     */
+    private $transaction_executor;
+
+    public function __construct(CIBuildRepository $ci_build_repository, TransactionExecutor $transaction_executor)
     {
-        $this->ci_build_repository = $ci_build_repository;
+        $this->ci_build_repository  = $ci_build_repository;
+        $this->transaction_executor = $transaction_executor;
     }
 
     /**
@@ -44,7 +51,11 @@ class PostActionsUpdater
      */
     public function updateByTransition(Transition $transition, PostActionCollection $actions): void
     {
-        $this->updateCIBuild($transition, $actions);
+        $this->transaction_executor->execute(
+            function () use ($transition, $actions) {
+                $this->updateCIBuild($transition, $actions);
+            }
+        );
     }
 
     /**
