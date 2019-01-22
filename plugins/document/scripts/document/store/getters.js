@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TYPE_FOLDER } from "../constants.js";
+import { MAX_SIZE_ERROR, ALREADY_EXISTS_ERROR } from "../constants.js";
+
 export const does_folder_have_any_error = state =>
     state.has_folder_permission_error || state.has_folder_loading_error;
 
@@ -59,4 +62,23 @@ export const global_upload_progress = state => {
 
 export const is_uploading = state => {
     return Boolean(state.folder_content.find(item => item.is_uploading));
+};
+
+export const has_file_upload_error = state => files => {
+    for (const file of files) {
+        if (file.size > state.max_size_upload) {
+            return MAX_SIZE_ERROR;
+        }
+
+        if (
+            state.folder_content.find(
+                item =>
+                    item.title === file.name &&
+                    item.type !== TYPE_FOLDER &&
+                    item.parent_id === state.current_folder.id
+            )
+        ) {
+            return ALREADY_EXISTS_ERROR;
+        }
+    }
 };
