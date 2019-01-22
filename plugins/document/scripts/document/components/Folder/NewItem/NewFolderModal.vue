@@ -23,7 +23,7 @@
         <modal-header v-bind:modal_title="modal_title"/>
         <modal-feedback/>
         <div class="tlp-modal-body document-new-item-modal-body" v-if="is_displayed">
-            <global-properties v-bind:item="item"/>
+            <global-properties v-bind:item="item" v-bind:parent="parent"/>
         </div>
         <modal-footer v-bind:is_loading="is_loading" v-bind:submit_button_label="submit_button_label"/>
     </form>
@@ -56,7 +56,8 @@ export default {
             },
             is_loading: false,
             is_displayed: false,
-            modal: null
+            modal: null,
+            parent: {}
         };
     },
     computed: {
@@ -80,9 +81,10 @@ export default {
             });
             this.modal.addEventListener("tlp-modal-hidden", this.reset);
         },
-        show() {
+        show(event) {
             this.item.title = "";
             this.item.description = "";
+            this.parent = event.detail.parent;
             this.is_displayed = true;
             this.modal.show();
         },
