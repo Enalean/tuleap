@@ -290,17 +290,17 @@ extends Docman_View_ItemDetailsSectionApproval {
                     $begLink = '';
                     $upLink  = '';
                     if(!$isFirst) {
-                        $begIcon = '<img src="'.$docmanIcons->getIcon('move-beginning').'" alt="Beginning" />';
+                        $begIcon = '<img src="'.$docmanIcons->getIcon('move-beginning.png').'" alt="Beginning" />';
                         $begLink = '<a href="'.$baseUrl.'beginning">'.$begIcon.'</a>';
-                        $upIcon  = '<img src="'.$docmanIcons->getIcon('move-up').'" alt="Up" />';
+                        $upIcon  = '<img src="'.$docmanIcons->getIcon('move-up.png').'" alt="Up" />';
                         $upLink  = '<a href="'.$baseUrl.'up">'.$upIcon.'</a>';
                     }
                     $endLink  = '';
                     $downLink = '';
                     if(!$isLast) {
-                        $endIcon  = '<img src="'.$docmanIcons->getIcon('move-end').'" alt="End" />';
+                        $endIcon  = '<img src="'.$docmanIcons->getIcon('move-end.png').'" alt="End" />';
                         $endLink  = '<a href="'.$baseUrl.'end">'.$endIcon.'</a>';
-                        $downIcon = '<img src="'.$docmanIcons->getIcon('move-down').'" alt="Down" />';
+                        $downIcon = '<img src="'.$docmanIcons->getIcon('move-down.png').'" alt="Down" />';
                         $downLink = '<a href="'.$baseUrl.'down">'.$downIcon.'</a>';
                     }
                     $rankHtml = $upLink.'&nbsp;'.$downLink.'&nbsp;'.$begLink.'&nbsp;'.$endLink;
