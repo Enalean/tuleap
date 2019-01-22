@@ -30,7 +30,11 @@ import {
     patchUserPreferenciesForUIInProject
 } from "../api/rest-querier.js";
 
-import { handleErrors, handleErrorsForModal } from "./actions-helpers/handle-errors.js";
+import {
+    handleErrors,
+    handleErrorsForModal,
+    getErrorMessage
+} from "./actions-helpers/handle-errors.js";
 import { loadFolderContent } from "./actions-helpers/load-folder-content.js";
 import { loadAscendantHierarchy } from "./actions-helpers/load-ascendant-hierarchy.js";
 import { uploadFile } from "./actions-helpers/upload-file.js";
@@ -184,18 +188,24 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
 };
 
 export const addNewUploadFile = async (context, [dropped_file, parent]) => {
-    const new_file = await addNewDocument(
-        {
-            title: dropped_file.name,
-            description: "",
-            type: TYPE_FILE,
-            file_properties: {
-                file_name: dropped_file.name,
-                file_size: dropped_file.size
-            }
-        },
-        parent.id
-    );
+    let new_file;
+    try {
+        new_file = await addNewDocument(
+            {
+                title: dropped_file.name,
+                description: "",
+                type: TYPE_FILE,
+                file_properties: {
+                    file_name: dropped_file.name,
+                    file_size: dropped_file.size
+                }
+            },
+            parent.id
+        );
+    } catch (exception) {
+        const error_json = await exception.response.json();
+        throw getErrorMessage(error_json);
+    }
 
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
         return;

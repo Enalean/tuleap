@@ -26,6 +26,7 @@
         />
         <component
             v-bind:is="error_modal_name"
+            v-bind:reasons="error_modal_reasons"
             v-on:error-modal-hidden="errorModalHasBeenClosed"
         />
     </div>
@@ -43,9 +44,11 @@ export default {
             main: null,
             error_modal_shown: false,
             is_dropzone_highlighted: false,
+            error_modal_reasons: [],
             MAX_FILES_ERROR: "max_files",
             MAX_SIZE_ERROR: "max_size",
-            ALREADY_EXISTS_ERROR: "already_exists"
+            ALREADY_EXISTS_ERROR: "already_exists",
+            CREATION_ERROR: "creation_error"
         };
     },
     computed: {
@@ -69,6 +72,11 @@ export default {
             if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue");
+            }
+
+            if (this.error_modal_shown === this.CREATION_ERROR) {
+                return () =>
+                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue");
             }
 
             return () =>
@@ -143,11 +151,17 @@ export default {
             }
 
             for (const file of files) {
-                this.$store.dispatch("addNewUploadFile", [file, this.current_folder]);
+                this.$store
+                    .dispatch("addNewUploadFile", [file, this.current_folder])
+                    .catch(error => {
+                        this.error_modal_shown = this.CREATION_ERROR;
+                        this.error_modal_reasons.push({ filename: file.name, message: error });
+                    });
             }
         },
         errorModalHasBeenClosed() {
             this.error_modal_shown = false;
+            this.error_modal_reasons = [];
         },
         isDragNDropingOnAModal(event) {
             return Boolean(event.target.closest(".tlp-modal"));

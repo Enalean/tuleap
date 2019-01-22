@@ -110,11 +110,16 @@ msgstr ""
 msgid "OK, got it"
 msgstr ""
 
-msgid "Oops"
-msgstr ""
-
 msgid "Oops, there's an issue."
 msgstr ""
+
+msgid "Oops…"
+msgstr ""
+
+msgid "Oops… Unable to upload file"
+msgid_plural "Oops… Unable to upload files"
+msgstr[0] ""
+msgstr[1] ""
 
 msgid "Owner"
 msgstr ""

@@ -32,7 +32,8 @@ export async function handleErrorsForModal(context, exception) {
     const json = await exception.response.json();
     context.commit("setModalError", getErrorMessage(json));
 }
-function getErrorMessage(error_json) {
+
+export function getErrorMessage(error_json) {
     if (error_json.hasOwnProperty("error")) {
         if (error_json.error.hasOwnProperty("i18n_error_message")) {
             return error_json.error.i18n_error_message;

@@ -25,18 +25,20 @@
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="document-dragndrop-error-modal-title">
                 <i class="fa fa-frown-o tlp-modal-title-icon"></i>
-                <translate>Oops</translate>
+                <slot name="modal-title">
+                    <translate>Oops…</translate>
+                </slot>
             </h1>
             <div class="tlp-modal-close" data-dismiss="modal" v-bind:aria-label="close">
                 &times;
             </div>
         </div>
-        <div class="tlp-modal-body">
+        <div class="tlp-modal-body" v-bind:class="body_class">
             <slot></slot>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
             <button type="submit"
-                    class="tlp-button-danger tlp-button-outline tlp-modal-action"
+                    class="tlp-button-danger tlp-modal-action"
                     data-dismiss="modal"
                     v-translate
             >
@@ -54,6 +56,9 @@ export default {
         close() {
             return this.$gettext("Close");
         }
+    },
+    props: {
+        body_class: String
     },
     mounted() {
         const modal = createModal(this.$el);
