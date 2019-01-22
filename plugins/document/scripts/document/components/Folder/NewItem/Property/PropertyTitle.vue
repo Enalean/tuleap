@@ -38,16 +38,60 @@
             v-on:input="$emit('input', $event.target.value)"
             ref="input"
         >
+        <p class="tlp-text-danger" v-if="error_message.length > 0">
+            <i class="fa fa-info-circle"></i>
+            {{ error_message }}
+        </p>
     </div>
 </template>
 <script>
+import { mapState } from "vuex";
+import { TYPE_FOLDER } from "../../../../constants.js";
 export default {
     props: {
-        value: String
+        value: String,
+        type: String
+    },
+    data() {
+        return {
+            error_message: ""
+        };
     },
     computed: {
+        ...mapState(["folder_content", "current_folder"]),
         placeholder() {
             return this.$gettext("My document");
+        }
+    },
+    watch: {
+        value(text_value) {
+            let error = "";
+            if (this.type === TYPE_FOLDER) {
+                const does_folder_already_exist = this.folder_content.find(
+                    item =>
+                        item.title === text_value &&
+                        item.type === TYPE_FOLDER &&
+                        item.parent_id === this.current_folder.id
+                );
+
+                if (does_folder_already_exist) {
+                    error = this.$gettext("A folder already exists with the same title.");
+                }
+            } else {
+                const does_document_already_exist = this.folder_content.find(
+                    item =>
+                        item.title === text_value &&
+                        item.type !== TYPE_FOLDER &&
+                        item.parent_id === this.current_folder.id
+                );
+
+                if (does_document_already_exist) {
+                    error = this.$gettext("A document already exists with the same title.");
+                }
+            }
+
+            this.$refs.input.setCustomValidity(error);
+            this.error_message = error;
         }
     },
     mounted() {

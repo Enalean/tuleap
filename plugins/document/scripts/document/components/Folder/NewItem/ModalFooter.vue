@@ -31,7 +31,7 @@
         <button
             type="submit"
             class="tlp-button-primary tlp-modal-action"
-            v-bind:disabled="is_loading"
+            v-bind:disabled="props.is_loading"
         >
             <i v-if="props.is_loading" class="fa fa-plus tlp-button-icon fa-spin fa-spinner"></i>
             {{ props.submit_button_label }}

@@ -20,7 +20,7 @@
 
 <template>
     <div class="document-new-item-properties">
-        <property-title v-model="item.title"/>
+        <property-title v-model="item.title" v-bind:type="item.type"/>
         <property-description v-model="item.description"/>
         <slot></slot>
     </div>

@@ -20,6 +20,12 @@ msgstr ""
 "fonctionnalités ne sont pas disponibles pour le moment. Voici ce qui est "
 "déjà disponible :"
 
+msgid "A document already exists with the same title."
+msgstr "Un document existe déjà avec le même titre."
+
+msgid "A folder already exists with the same title."
+msgstr "Un dossier existe déjà avec le même titre."
+
 msgid "Administration"
 msgstr "Administration"
 
@@ -59,6 +65,10 @@ msgstr "Documents"
 msgid "Drop one file to upload it to %(folder)s (max size is %(size)s)."
 msgid_plural ""
 "Drop up to %(nb_files)s files to upload them to %(folder)s (max size is "
+"%(size)s)."
+msgstr[0] ""
+"Déposez un fichier pour le téléverser dans %(folder)s (la taille max est "
+"%(size)s)."
 "%(size)s)."
 msgstr[0] ""
 "Déposez un fichier pour le téléverser dans %(folder)s (la taille max est "
