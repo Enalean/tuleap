@@ -34,6 +34,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
+import { TYPE_FOLDER } from "../../../constants.js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -43,12 +44,13 @@ export default {
             error_modal_shown: false,
             is_dropzone_highlighted: false,
             MAX_FILES_ERROR: "max_files",
-            MAX_SIZE_ERROR: "max_size"
+            MAX_SIZE_ERROR: "max_size",
+            ALREADY_EXISTS_ERROR: "already_exists"
         };
     },
     computed: {
         ...mapGetters(["user_can_dragndrop"]),
-        ...mapState(["current_folder", "max_files_dragndrop", "max_size_upload"]),
+        ...mapState(["current_folder", "max_files_dragndrop", "max_size_upload", "folder_content"]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
@@ -62,6 +64,11 @@ export default {
             if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue");
+            }
+
+            if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
+                return () =>
+                    import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue");
             }
 
             return () =>
@@ -119,6 +126,18 @@ export default {
             for (const file of files) {
                 if (file.size > this.max_size_upload) {
                     this.error_modal_shown = this.MAX_SIZE_ERROR;
+                    return;
+                }
+
+                if (
+                    this.folder_content.find(
+                        item =>
+                            item.title === file.name &&
+                            item.type !== TYPE_FOLDER &&
+                            item.parent_id === this.current_folder.id
+                    )
+                ) {
+                    this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
                     return;
                 }
             }
