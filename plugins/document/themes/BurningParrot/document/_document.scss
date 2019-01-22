@@ -125,6 +125,14 @@ $progress-bar-background-color: $tlp-ui-border-normal;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid $tlp-ui-border-normal;
+
+    &.document-dragndrop-file-upload-error {
+        border-bottom: 1px solid transparentize($tlp-ui-danger, .9);
+    }
+
+    &:last-child {
+        border-bottom: 0;
+    }
 }
 
 .document-file-upload-progress {
