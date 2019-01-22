@@ -24,6 +24,7 @@
         />
         <folder-header/>
         <drag-n-drop-in-current-folder v-if="! is_loading_folder"/>
+        <under-the-fold-notification v-if="! is_loading_folder"/>
         <folder-loading-screen v-if="is_loading_folder"/>
         <empty-folder-for-writers v-else-if="is_folder_empty && current_folder.user_can_write"/>
         <empty-folder-for-readers v-else-if="is_folder_empty && ! current_folder.user_can_write"/>
@@ -39,6 +40,7 @@ import FolderContent from "./FolderContent.vue";
 import EmptyFolderForWriters from "./EmptyState/EmptyFolderForWriters.vue";
 import EmptyFolderForReaders from "./EmptyState/EmptyFolderForReaders.vue";
 import DragNDropInCurrentFolder from "./DragNDrop/DragNDropInCurrentFolder.vue";
+import UnderTheFoldNotification from "./NewItem/UnderTheFoldNotification.vue";
 
 export default {
     name: "FolderView",
@@ -48,7 +50,8 @@ export default {
         EmptyFolderForWriters,
         EmptyFolderForReaders,
         FolderLoadingScreen,
-        FolderContent
+        FolderContent,
+        UnderTheFoldNotification
     },
     computed: {
         ...mapState(["is_loading_folder", "current_folder", "is_under_construction"]),

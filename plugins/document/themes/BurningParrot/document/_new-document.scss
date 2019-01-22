@@ -92,7 +92,31 @@
     }
 }
 
-
 .document-new-item-properties {
     padding: $tlp-spacing;
+}
+
+.document-new-item-under-the-fold-notification {
+    position: absolute;
+    z-index: 11000;
+    right: $tlp-half-spacing;
+    bottom: $tlp-half-spacing;
+    margin: 0;
+    opacity: 1;
+    background: mix($tlp-ui-success, $tlp-ui-white, 7);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .175);
+}
+
+.document-new-item-under-the-fold-notification-fadeout {
+    transition: opacity 1s ease-in-out;
+    opacity: 0;
+}
+
+.document-new-item-under-the-fold-notification-fast-fadeout {
+    transition: opacity 250ms ease-in-out;
+    opacity: 0;
+}
+
+.document-new-item-under-the-fold-notification-icon {
+    margin: 0 0 0 5px;
 }

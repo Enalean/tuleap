@@ -145,6 +145,12 @@ msgstr ""
 msgid "Switch to old user interface"
 msgstr ""
 
+msgid "The document has been created below."
+msgstr ""
+
+msgid "The folder has been created below."
+msgstr ""
+
 msgid "There are no uploads in progress"
 msgstr ""
 
