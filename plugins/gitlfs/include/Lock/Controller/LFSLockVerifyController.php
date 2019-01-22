@@ -103,7 +103,8 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
             null,
             null,
             $reference,
-            $this->user
+            $this->user,
+            $this->repository
         );
 
         $theirs = $this->lock_retriever->retrieveLocksNotBelongingToOwner(
