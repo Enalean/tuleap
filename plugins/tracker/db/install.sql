@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS tracker_workflow (
   tracker_id int(11) NOT NULL,
   field_id int(11) NOT NULL,
   is_used tinyint(1) NOT NULL,
+  is_legacy tinyint(1) NOT NULL DEFAULT 0,
   INDEX idx_wf_tracker_id( tracker_id ),
   INDEX idx_wf_field_id( field_id )
 ) ENGINE=InnoDB;

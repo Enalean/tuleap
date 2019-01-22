@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - 2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ class WorkflowWithoutTransition extends Workflow {
         $workflow_id = 0;
         $field_id    = 0;
         $is_used     = false;
+        $is_legacy   = false;
         parent::__construct(
             $global_rules_manager,
             $trigger_rules_manager,
@@ -42,7 +43,8 @@ class WorkflowWithoutTransition extends Workflow {
             $workflow_id,
             $tracker_id,
             $field_id,
-            $is_used
+            $is_used,
+            $is_legacy
         );
     }
 }
