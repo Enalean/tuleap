@@ -166,93 +166,91 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
 
     public function collectGitRoutesEvent(CollectGitRoutesEvent $event)
     {
-        if (ForgeConfig::get('feature_gitlfs_lock_api')) {
-            $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
-                $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-                $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockCreateController(
-                    $this,
-                    $this->getGitRepositoryFactory(),
-                    $this->getLFSAPIHTTPAccessControl(),
-                    new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                    new \Tuleap\GitLFS\Lock\LockCreator(
-                        new \Tuleap\GitLFS\Lock\LockDao()
-                    ),
-                    new \Tuleap\GitLFS\Lock\LockRetriever(
-                        new \Tuleap\GitLFS\Lock\LockDao(),
-                        $this->getUserManager()
-                    ),
-                    new \Tuleap\GitLFS\HTTP\UserRetriever(
-                        $this->getLFSAPIHTTPAuthorization(),
-                        $this->getGitPlugin()->getHTTPAccessControl($logger),
-                        $this->getUserManager()
-                    )
-                );
-                return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-            });
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
+            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockCreateController(
+                $this,
+                $this->getGitRepositoryFactory(),
+                $this->getLFSAPIHTTPAccessControl(),
+                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+                new \Tuleap\GitLFS\Lock\LockCreator(
+                    new \Tuleap\GitLFS\Lock\LockDao()
+                ),
+                new \Tuleap\GitLFS\Lock\LockRetriever(
+                    new \Tuleap\GitLFS\Lock\LockDao(),
+                    $this->getUserManager()
+                ),
+                new \Tuleap\GitLFS\HTTP\UserRetriever(
+                    $this->getLFSAPIHTTPAuthorization(),
+                    $this->getGitPlugin()->getHTTPAccessControl($logger),
+                    $this->getUserManager()
+                )
+            );
+            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
+        });
 
-            $event->getRouteCollector()->get('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
-                $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-                $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockListController(
-                    $this,
-                    $this->getGitRepositoryFactory(),
-                    $this->getLFSAPIHTTPAccessControl(),
-                    new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                    new \Tuleap\GitLFS\Lock\LockRetriever(
-                        new \Tuleap\GitLFS\Lock\LockDao(),
-                        $this->getUserManager()
-                    ),
-                    new \Tuleap\GitLFS\HTTP\UserRetriever(
-                        $this->getLFSAPIHTTPAuthorization(),
-                        $this->getGitPlugin()->getHTTPAccessControl($logger),
-                        $this->getUserManager()
-                    )
-                );
-                return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-            });
+        $event->getRouteCollector()->get('/{project_name}/{path:.*\.git}/info/lfs/locks', function () {
+            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockListController(
+                $this,
+                $this->getGitRepositoryFactory(),
+                $this->getLFSAPIHTTPAccessControl(),
+                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+                new \Tuleap\GitLFS\Lock\LockRetriever(
+                    new \Tuleap\GitLFS\Lock\LockDao(),
+                    $this->getUserManager()
+                ),
+                new \Tuleap\GitLFS\HTTP\UserRetriever(
+                    $this->getLFSAPIHTTPAuthorization(),
+                    $this->getGitPlugin()->getHTTPAccessControl($logger),
+                    $this->getUserManager()
+                )
+            );
+            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
+        });
 
-            $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/verify', function () {
-                $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-                $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockVerifyController(
-                    $this,
-                    $this->getGitRepositoryFactory(),
-                    $this->getLFSAPIHTTPAccessControl(),
-                    new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                    new \Tuleap\GitLFS\Lock\LockRetriever(
-                        new \Tuleap\GitLFS\Lock\LockDao(),
-                        $this->getUserManager()
-                    ),
-                    new \Tuleap\GitLFS\HTTP\UserRetriever(
-                        $this->getLFSAPIHTTPAuthorization(),
-                        $this->getGitPlugin()->getHTTPAccessControl($logger),
-                        $this->getUserManager()
-                    )
-                );
-                return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-            });
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/verify', function () {
+            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockVerifyController(
+                $this,
+                $this->getGitRepositoryFactory(),
+                $this->getLFSAPIHTTPAccessControl(),
+                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+                new \Tuleap\GitLFS\Lock\LockRetriever(
+                    new \Tuleap\GitLFS\Lock\LockDao(),
+                    $this->getUserManager()
+                ),
+                new \Tuleap\GitLFS\HTTP\UserRetriever(
+                    $this->getLFSAPIHTTPAuthorization(),
+                    $this->getGitPlugin()->getHTTPAccessControl($logger),
+                    $this->getUserManager()
+                )
+            );
+            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
+        });
 
-            $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/{lock_id}/unlock', function () {
-                $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
-                $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockDeleteController(
-                    $this,
-                    $this->getGitRepositoryFactory(),
-                    $this->getLFSAPIHTTPAccessControl(),
-                    new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
-                    new \Tuleap\GitLFS\Lock\LockDestructor(
-                        new \Tuleap\GitLFS\Lock\LockDao()
-                    ),
-                    new \Tuleap\GitLFS\Lock\LockRetriever(
-                        new \Tuleap\GitLFS\Lock\LockDao(),
-                        $this->getUserManager()
-                    ),
-                    new \Tuleap\GitLFS\HTTP\UserRetriever(
-                        $this->getLFSAPIHTTPAuthorization(),
-                        $this->getGitPlugin()->getHTTPAccessControl($logger),
-                        $this->getUserManager()
-                    )
-                );
-                return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
-            });
-        }
+        $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/locks/{lock_id}/unlock', function () {
+            $logger              = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Lock');
+            $lfs_lock_controller = new \Tuleap\GitLFS\Lock\Controller\LFSLockDeleteController(
+                $this,
+                $this->getGitRepositoryFactory(),
+                $this->getLFSAPIHTTPAccessControl(),
+                new \Tuleap\GitLFS\Lock\Response\LockResponseBuilder(),
+                new \Tuleap\GitLFS\Lock\LockDestructor(
+                    new \Tuleap\GitLFS\Lock\LockDao()
+                ),
+                new \Tuleap\GitLFS\Lock\LockRetriever(
+                    new \Tuleap\GitLFS\Lock\LockDao(),
+                    $this->getUserManager()
+                ),
+                new \Tuleap\GitLFS\HTTP\UserRetriever(
+                    $this->getLFSAPIHTTPAuthorization(),
+                    $this->getGitPlugin()->getHTTPAccessControl($logger),
+                    $this->getUserManager()
+                )
+            );
+            return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
+        });
 
         $event->getRouteCollector()->post('/{project_name}/{path:.*\.git}/info/lfs/objects/batch', function () {
             $logger               = new \WrapperLogger($this->getGitPlugin()->getLogger(), 'LFS Batch');
