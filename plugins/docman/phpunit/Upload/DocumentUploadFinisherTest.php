@@ -25,10 +25,11 @@ use Docman_VersionFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 
 class DocumentUploadFinisherTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     private $logger;
     private $item_factory;
@@ -36,25 +37,21 @@ class DocumentUploadFinisherTest extends TestCase
     private $permission_manager;
     private $event_manager;
     private $on_going_upload_dao;
+    private $item_dao;
     private $file_storage;
     private $user_manager;
 
     protected function setUp()
     {
-        \ForgeConfig::store();
         $this->logger              = \Mockery::mock(\Logger::class);
         $this->item_factory        = \Mockery::mock(Docman_ItemFactory::class);
         $this->version_factory     = \Mockery::mock(Docman_VersionFactory::class);
         $this->permission_manager  = \Mockery::mock(\PermissionsManager::class);
         $this->event_manager       = \Mockery::mock(\EventManager::class);
         $this->on_going_upload_dao = \Mockery::mock(DocumentOngoingUploadDAO::class);
+        $this->item_dao            = \Mockery::mock(\Docman_ItemDao::class);
         $this->file_storage        = \Mockery::mock(\Docman_FileStorage::class);
         $this->user_manager        = \Mockery::mock(\UserManager::class);
-    }
-
-    protected function tearDown()
-    {
-        \ForgeConfig::restore();
     }
 
     public function testDocumentIsAddedToTheDocumentManagerWhenTheUploadIsComplete() : void
@@ -72,6 +69,7 @@ class DocumentUploadFinisherTest extends TestCase
             $this->permission_manager,
             $this->event_manager,
             $this->on_going_upload_dao,
+            $this->item_dao,
             $this->file_storage,
             new \Docman_MIMETypeDetector(),
             $this->user_manager
