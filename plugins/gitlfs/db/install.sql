@@ -43,5 +43,6 @@ CREATE TABLE plugin_gitlfs_lock (
   ref           VARCHAR(255),
   creation_date INT(11) UNSIGNED NOT NULL,
   repository_id INT(10) UNSIGNED NOT NULL,
-  INDEX idx_lock_path (lock_path(191))
+  INDEX idx_lock_path (lock_path(191)),
+  INDEX idx_lock_repository_id (repository_id)
 );
