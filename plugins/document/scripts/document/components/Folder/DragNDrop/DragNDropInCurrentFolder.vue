@@ -35,7 +35,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
-import { TYPE_FOLDER } from "../../../constants.js";
+import { ALREADY_EXISTS_ERROR, MAX_SIZE_ERROR } from "../../../constants.js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -46,14 +46,12 @@ export default {
             is_dropzone_highlighted: false,
             error_modal_reasons: [],
             MAX_FILES_ERROR: "max_files",
-            MAX_SIZE_ERROR: "max_size",
-            ALREADY_EXISTS_ERROR: "already_exists",
             CREATION_ERROR: "creation_error"
         };
     },
     computed: {
-        ...mapGetters(["user_can_dragndrop"]),
-        ...mapState(["current_folder", "max_files_dragndrop", "max_size_upload", "folder_content"]),
+        ...mapGetters(["user_can_dragndrop", "has_file_upload_error"]),
+        ...mapState(["current_folder", "folder_content", "max_files_dragndrop"]),
         user_can_dragndrop_in_current_folder() {
             return (
                 this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
@@ -64,12 +62,12 @@ export default {
                 return null;
             }
 
-            if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
+            if (this.error_modal_shown === MAX_SIZE_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue");
             }
 
-            if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
+            if (this.error_modal_shown === ALREADY_EXISTS_ERROR) {
                 return () =>
                     import(/* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue");
             }
@@ -131,23 +129,10 @@ export default {
                 return;
             }
 
-            for (const file of files) {
-                if (file.size > this.max_size_upload) {
-                    this.error_modal_shown = this.MAX_SIZE_ERROR;
-                    return;
-                }
-
-                if (
-                    this.folder_content.find(
-                        item =>
-                            item.title === file.name &&
-                            item.type !== TYPE_FOLDER &&
-                            item.parent_id === this.current_folder.id
-                    )
-                ) {
-                    this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
-                    return;
-                }
+            const error_type = this.has_file_upload_error(files);
+            if (error_type) {
+                this.error_modal_shown = error_type;
+                return;
             }
 
             for (const file of files) {

@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import initial_state from "./state.js";
 import * as getters from "./getters.js";
+import { ALREADY_EXISTS_ERROR, MAX_SIZE_ERROR, TYPE_FILE, TYPE_FOLDER } from "../constants.js";
 
 describe("Store getters", () => {
     describe("current_folder_title", () => {
@@ -80,6 +82,86 @@ describe("Store getters", () => {
             });
 
             expect(global_progress).toEqual(0);
+        });
+    });
+
+    describe("has_file_upload_error", () => {
+        it("returns an error when max_size is exceeded", () => {
+            const state = { ...initial_state };
+            state.max_size_upload = 1;
+
+            const has_error = getters.has_file_upload_error(state)([
+                {
+                    name: "title",
+                    size: 10,
+                    type: TYPE_FILE
+                }
+            ]);
+
+            expect(has_error).toEqual(MAX_SIZE_ERROR);
+        });
+
+        it("returns an error when file already exists", () => {
+            const state = { ...initial_state };
+            state.max_size_upload = 100;
+            state.folder_content = [
+                {
+                    title: "title",
+                    size: 1,
+                    type: TYPE_FILE,
+                    parent_id: 10
+                }
+            ];
+            state.current_folder = { id: 10 };
+
+            const has_error = getters.has_file_upload_error(state)([
+                {
+                    name: "title",
+                    size: 1,
+                    type: TYPE_FILE
+                }
+            ]);
+
+            expect(has_error).toEqual(ALREADY_EXISTS_ERROR);
+        });
+
+        it("returns nothing if file has the same name than an existing folder", () => {
+            const state = { ...initial_state };
+            state.max_size_upload = 100;
+            state.folder_content = [
+                {
+                    title: "title",
+                    size: 1,
+                    type: TYPE_FOLDER,
+                    parent_id: 10
+                }
+            ];
+            state.current_folder = { id: 10 };
+
+            const has_error = getters.has_file_upload_error(state)([
+                {
+                    title: "title",
+                    size: 1,
+                    type: TYPE_FILE
+                }
+            ]);
+
+            expect(has_error).toEqual();
+        });
+
+        it("returns nothing if no error is detected", () => {
+            const state = { ...initial_state };
+            state.max_size_upload = 100;
+
+            const has_error = getters.has_file_upload_error(state)([
+                {
+                    title: "title",
+                    size: 1,
+                    type: TYPE_FILE
+                }
+            ]);
+
+            expect(has_error).toEqual();
         });
     });
 });
