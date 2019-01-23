@@ -79,21 +79,15 @@ final class DocumentBeingUploadedLocker implements TusLocker
 
     private function getSemaphoreKey(TusFileInformation $file_information) : int
     {
-        $file_path      = $this->getPathForFile($file_information);
-        $file_directory = dirname($file_path);
-        if (! is_dir($file_directory)) {
-            mkdir($file_directory, 0777, true);
-        }
-        if (! is_file($file_path)) {
-            touch($file_path);
-        }
+        $file_path = $this->getPathForFile($file_information);
 
-        $key = @ftok($file_path, 'A');
-        if ($key === -1) {
-            throw new DocumentBeingUploadedLockVerificationException($file_path);
-        }
-
-        return $key;
+        /*
+         * Get a quite unique 32 bits key for the file
+         * ftok() is not used because it relies on the inode
+         * that might be re-attributed immediately when the file
+         * is deleted. This is particularly inconvenient when running tests.
+         */
+        return hexdec(substr(hash('sha256', $file_path), 0, 8));
     }
 
     private function getPathForFile(TusFileInformation $file_information) : string

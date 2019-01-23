@@ -23,15 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Docman\Upload;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Tuleap\Docman\Tus\TusFileInformation;
+use Tuleap\ForgeConfigSandbox;
 
 class DocumentBeingUploadedLockerTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration, ForgeConfigSandbox;
 
     /**
      * @var string
@@ -85,20 +85,5 @@ class DocumentBeingUploadedLockerTest extends TestCase
         $this->assertTrue($locker->lock($file_information));
         $locker->unlock($file_information);
         $this->assertTrue($locker->lock($file_information));
-    }
-
-    /**
-     * @expectedException \Tuleap\Docman\Upload\DocumentBeingUploadedLockVerificationException
-     */
-    public function testLockDoesNotHappenWhenSemaphoreCannotBeCreated() : void
-    {
-        \ForgeConfig::set('tmp_dir', vfsStream::setup()->url());
-        $path_allocator = new DocumentUploadPathAllocator();
-        $locker         = new DocumentBeingUploadedLocker($path_allocator);
-
-        $file_information = \Mockery::mock(TusFileInformation::class);
-        $file_information->shouldReceive('getID')->andReturns(12);
-
-        $locker->lock($file_information);
     }
 }
