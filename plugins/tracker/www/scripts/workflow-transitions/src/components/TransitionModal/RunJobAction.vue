@@ -26,7 +26,10 @@
             type="text"
             class="tlp-input"
             placeholder="https://www.example.com"
-            v-bind:value="jobUrl"
+            v-model="job_url"
+            data-test-type="job-url"
+            required
+            v-bind:disabled="is_modal_save_running"
         >
         <p class="tlp-text-info" v-translate>
             Tuleap will automatically pass the following parameters to the job:
@@ -59,17 +62,31 @@ export default {
         actionId: {
             type: String,
             mandatory: true
-        },
-        jobUrl: {
-            type: String,
-            mandatory: true
         }
     },
     computed: {
         ...mapState(["current_tracker"]),
-        ...mapState("transitionModal", ["current_transition"]),
+        ...mapState("transitionModal", [
+            "current_transition",
+            "post_actions_by_unique_id",
+            "is_modal_save_running"
+        ]),
         job_url_input_id() {
             return `post-action-${this.actionId}-job-url`;
+        },
+        post_action() {
+            return this.post_actions_by_unique_id[this.actionId];
+        },
+        job_url: {
+            get() {
+                return this.post_action.job_url;
+            },
+            set(job_url) {
+                this.$store.commit("transitionModal/updatePostAction", {
+                    ...this.post_action,
+                    job_url
+                });
+            }
         }
     }
 };

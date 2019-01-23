@@ -19,6 +19,7 @@
  */
 
 const identity = i => i;
+const identityAsString = i => `${i}`;
 
 const factories = {
     tracker: {
@@ -92,6 +93,9 @@ const factories = {
             id: identity,
             type: "run_job",
             job_url: index => `http://ci.example${index}.test`
+        },
+        presented: {
+            unique_id: identityAsString
         }
     }
 };

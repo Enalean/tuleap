@@ -18,6 +18,7 @@
  */
 
 import * as mutations from "./transition-mutations.js";
+import { create } from "../../support/factories.js";
 
 describe("Transition mutations", () => {
     let state;
@@ -119,6 +120,67 @@ describe("Transition mutations", () => {
             });
             it("update current transition authorized group ids", () =>
                 expect(state.current_transition.authorized_user_group_ids).toEqual([1, 2]));
+        });
+    });
+
+    describe("savePostActions", () => {
+        const old_action = create("post_action", "presented");
+        const new_action = create("post_action", {
+            id: 2,
+            type: "run_job"
+        });
+
+        beforeEach(() => {
+            state = {
+                post_actions_by_unique_id: {
+                    "old-post-action": old_action
+                }
+            };
+            mutations.savePostActions(state, [new_action]);
+        });
+        it("removes old actions", () => {
+            expect(state.post_actions_by_unique_id).not.toContain(old_action);
+        });
+        it("adds given actions, presented with unique_id, and referenced by unique_id", () => {
+            expect(state.post_actions_by_unique_id.run_job_2).toEqual({
+                ...new_action,
+                unique_id: "run_job_2"
+            });
+        });
+
+        describe("when given post actions are field set", () => {
+            const new_set_field_action = create("post_action", {
+                id: 2,
+                type: "set_field_value",
+                field_type: "date"
+            });
+
+            beforeEach(() => {
+                mutations.savePostActions(state, [new_set_field_action]);
+            });
+
+            it("adds given post actions, presented with unique_id, and referenced by unique_id", () => {
+                expect(state.post_actions_by_unique_id.set_field_value_date_2).toEqual({
+                    ...new_set_field_action,
+                    unique_id: "set_field_value_date_2"
+                });
+            });
+        });
+    });
+
+    describe("updatePostAction", () => {
+        const old_action = create("post_action", "presented", { unique_id: "post_action_id" });
+        const new_action = create("post_action", "presented", { unique_id: "post_action_id" });
+
+        beforeEach(() => {
+            state = {
+                post_actions_by_unique_id: { "old-post-action": old_action }
+            };
+            mutations.updatePostAction(state, new_action);
+        });
+
+        it("updates state with given post action", () => {
+            expect(state.post_actions_by_unique_id.post_action_id).toBe(new_action);
         });
     });
 });

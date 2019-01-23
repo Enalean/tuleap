@@ -22,7 +22,8 @@ import {
     getTransition,
     getUserGroups,
     patchTransition,
-    getPostActions
+    getPostActions,
+    putPostActions
 } from "../../api/rest-querier.js";
 
 export {
@@ -68,12 +69,21 @@ async function loadPostActions({ commit }, transition_id) {
     commit("savePostActions", actions);
 }
 
-async function saveTransitionRules({ commit, state }) {
+async function saveTransitionRules({ commit, state, getters }) {
     try {
-        await patchTransition(state.current_transition);
+        commit("beginModalSave");
+        const ci_build_post_actions = getters.post_actions.filter(
+            post_action => post_action.type === "run_job"
+        );
+        await Promise.all([
+            patchTransition(state.current_transition),
+            putPostActions(state.current_transition.id, ci_build_post_actions)
+        ]);
         commit("clearModalShown");
     } catch (error) {
         const error_message = await getErrorMessage(error);
         commit("failModalOperation", error_message);
+    } finally {
+        commit("endModalSave");
     }
 }

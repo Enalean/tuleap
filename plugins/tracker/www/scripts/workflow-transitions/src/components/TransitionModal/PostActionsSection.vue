@@ -24,16 +24,16 @@
             v-if="is_loading_modal"
             data-test-type="skeleton"
         />
-        <template v-else-if="has_actions">
+        <template v-else-if="has_post_actions">
             <post-action
-                v-for="action in visible_actions"
-                v-bind:key="getActionId(action)"
+                v-for="post_action in visible_post_actions"
+                v-bind:key="post_action.unique_id"
                 data-test-type="action"
             >
                 <select
                     slot="action-type"
                     class="tlp-select"
-                    v-bind:value="action.type"
+                    v-bind:value="post_action.type"
                     disabled
                 >
                     <option v-bind:value="RUN_JOB_ACTION_TYPE" v-translate>Launch a CI job</option>
@@ -41,9 +41,9 @@
 
                 <run-job-action
                     slot="body"
-                    v-if="action.type === RUN_JOB_ACTION_TYPE"
-                    v-bind:action-id="getActionId(action)"
-                    v-bind:job-url="action.job_url"
+                    v-if="post_action.type === RUN_JOB_ACTION_TYPE"
+                    v-bind:action-id="post_action.unique_id"
+                    v-bind:job-url="post_action.job_url"
                 />
             </post-action>
         </template>
@@ -58,7 +58,7 @@ import EmptyPostAction from "./Empty/EmptyPostAction.vue";
 import PostActionSkeleton from "./Skeletons/PostActionSkeleton.vue";
 import RunJobAction from "./RunJobAction.vue";
 import PostAction from "./PostAction.vue";
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
     name: "PostActionsSection",
@@ -70,24 +70,18 @@ export default {
         };
     },
     computed: {
-        ...mapState("transitionModal", ["is_loading_modal", "actions"]),
-        has_actions() {
-            return this.visible_actions && this.visible_actions.length > 0;
+        ...mapState("transitionModal", ["is_loading_modal"]),
+        ...mapGetters("transitionModal", ["post_actions"]),
+        has_post_actions() {
+            return this.visible_post_actions && this.visible_post_actions.length > 0;
         },
-        visible_actions() {
-            if (!this.actions) {
+        visible_post_actions() {
+            if (!this.post_actions) {
                 return null;
             }
-            return this.actions.filter(action => action.type === this.RUN_JOB_ACTION_TYPE);
-        }
-    },
-    methods: {
-        getActionId(action) {
-            if (action.type === this.SET_FIELD_VALUE_ACTION_TYPE) {
-                return `${action.type}_${action.field_type}_${action.id}`;
-            } else {
-                return `${action.type}_${action.id}`;
-            }
+            return this.post_actions.filter(
+                post_action => post_action.type === this.RUN_JOB_ACTION_TYPE
+            );
         }
     }
 };
