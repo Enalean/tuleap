@@ -25,6 +25,8 @@ use Luracast\Restler\RestException;
 use TrackerFactory;
 use Transition_PostAction_CIBuildDao;
 use TransitionFactory;
+use Tuleap\DB\DataAccessObject;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -494,7 +496,10 @@ class TransitionsResource extends AuthenticatedResource
     private function getPostActionUpdater(): PostActionsUpdater
     {
         return new PostActionsUpdater(
-            new CIBuildRepository(new Transition_PostAction_CIBuildDao())
+            new CIBuildRepository(new Transition_PostAction_CIBuildDao()),
+            new TransactionExecutor(
+                new DataAccessObject()
+            )
         );
     }
 }

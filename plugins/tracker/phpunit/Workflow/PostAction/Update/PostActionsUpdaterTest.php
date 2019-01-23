@@ -26,6 +26,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use Transition;
+use Tuleap\DB\TransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
 
@@ -44,6 +45,11 @@ class PostActionsUpdaterTest extends TestCase
     private $ci_build_repository;
 
     /**
+     * @var MockInterface
+     */
+    private $transaction_executor;
+
+    /**
      * @before
      */
     public function createUpdater()
@@ -57,7 +63,17 @@ class PostActionsUpdaterTest extends TestCase
             ->shouldReceive('update')
             ->byDefault();
 
-        $this->post_action_updater = new PostActionsUpdater($this->ci_build_repository);
+        $this->transaction_executor = Mockery::mock(TransactionExecutor::class);
+        $this->transaction_executor
+            ->shouldReceive('execute')
+            ->andReturnUsing(function (callable $operation) {
+                $operation();
+            });
+
+        $this->post_action_updater = new PostActionsUpdater(
+            $this->ci_build_repository,
+            $this->transaction_executor
+        );
     }
 
     public function testUpdateDeletesRemovedCIBuildActions()
