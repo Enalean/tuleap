@@ -62,4 +62,17 @@ class PostActionsDiff
     {
         return $this->updated;
     }
+
+    /**
+     * @return int[]
+     */
+    public function getUpdatedActionIds(): array
+    {
+        return array_map(
+            function (PostAction $action) {
+                return $action->getId();
+            },
+            $this->updated
+        );
+    }
 }
