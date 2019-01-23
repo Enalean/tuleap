@@ -89,9 +89,6 @@ class Git_Hook_PostReceive
         $repository = $this->repository_factory->getFromFullPath($repository_path);
         if ($repository !== null) {
             $this->system_event_manager->queueGrokMirrorManifestFollowingAGitPush($repository);
-            $this->event_manager->processEvent(GIT_HOOK_POSTRECEIVE, array(
-                'repository' => $repository
-            ));
         }
     }
 

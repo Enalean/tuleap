@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2013. All rights reserved.
+ * Copyright Enalean (c) 2013-2019. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../bootstrap.php';
+require_once __DIR__ .'/../../bootstrap.php';
 
 abstract class Git_Hook_PostReceive_Common extends TuleapTestCase {
     protected $log_analyzer;
@@ -160,20 +160,6 @@ class Git_Hook_PostReceive_LaunchGrokMirrorUpdates extends Git_Hook_PostReceive_
 
     public function itLaunchesGrokMirrorUpdates() {
         expect($this->system_event_manager)->queueGrokMirrorManifestFollowingAGitPush($this->repository)->once();
-        $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
-    }
-
-}
-
-class Git_Hook_PostReceive_TriggerEventForOtherPluginsTest extends Git_Hook_PostReceive_Common {
-
-    public function setUp() {
-        parent::setUp();
-        stub($this->git_repository_factory)->getFromFullPath()->returns($this->repository);
-    }
-
-    public function itSendsTheEvent() {
-        expect($this->event_manager)->processEvent(GIT_HOOK_POSTRECEIVE, '*')->once();
         $this->post_receive->beforeParsingReferences('/var/lib/tuleap/gitolite/repositories/garden/dev.git');
     }
 
