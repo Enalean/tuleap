@@ -618,9 +618,10 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $request->get('permissions')
                             );
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms', 'perm_upd'));
+                            $GLOBALS['Response']->redirect($request->getFromServer('REQUEST_URI'));
                         }
                     }
-                    $this->displayAdminPermsFields($layout, $request, $current_user);
+                    $this->displayAdminPermsFields($layout, $request);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1620,7 +1621,8 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->displayFooter($layout);
     }
 
-    public function displayAdminPermsFields(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+    public function displayAdminPermsFields(Tracker_IDisplayTrackerLayout $layout, $request)
+    {
         $items = $this->getPermsItems();
         $title = $items['fields']['title'];
         $breadcrumbs = array(
@@ -1635,10 +1637,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         $selected_id = $request->get('selected_id');
         $selected_id = $selected_id ? $selected_id : false;
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
-                $this->getGroupId(),
-                $this->getId(),
-                Tracker_FormElementFactory::instance()->getUsedFields($this),
-                false
+            $this->getGroupId(),
+            $this->getId(),
+            Tracker_FormElementFactory::instance()->getUsedFields($this)
         );
 
         $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
@@ -1780,7 +1781,6 @@ EOS;
             foreach($related_parts as $ugroup_permissions) {
                 $second_part = $ugroup_permissions['values'];
                 $permissions = $ugroup_permissions['permissions'];
-
 
                 //The group
                 if (!$is_first) {
