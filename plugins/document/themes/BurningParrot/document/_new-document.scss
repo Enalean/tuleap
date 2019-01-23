@@ -97,7 +97,7 @@
 }
 
 .document-new-item-under-the-fold-notification {
-    position: absolute;
+    position: fixed;
     z-index: 11000;
     right: $tlp-half-spacing;
     bottom: $tlp-half-spacing;
