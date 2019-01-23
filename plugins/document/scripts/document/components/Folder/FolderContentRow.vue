@@ -106,6 +106,26 @@ export default {
         colspan() {
             return this.item.is_uploading ? 3 : 1;
         }
+    },
+    mounted() {
+        if (!(this.item.created || this.item.is_uploading)) {
+            return;
+        }
+
+        const magic_number_in_px_to_detect_if_we_partially_show_the_item = 20;
+        const position_from_top =
+            this.$el.getBoundingClientRect().top +
+            magic_number_in_px_to_detect_if_we_partially_show_the_item;
+        const viewport_height = window.innerHeight || document.documentElement.clientHeight;
+        const is_under_the_fold = position_from_top > viewport_height;
+
+        if (is_under_the_fold) {
+            document.dispatchEvent(
+                new CustomEvent("item-has-been-created-under-the-fold", {
+                    detail: { item: this.item }
+                })
+            );
+        }
     }
 };
 </script>

@@ -158,6 +158,12 @@ msgstr ""
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
+msgid "The document has been created below."
+msgstr "Le document a été créé ci dessous."
+
+msgid "The folder has been created below."
+msgstr "Le dossier a été créé ci dessous."
+
 msgid "There are no uploads in progress"
 msgstr "Il n'y a aucun téléversement en cours"
 
