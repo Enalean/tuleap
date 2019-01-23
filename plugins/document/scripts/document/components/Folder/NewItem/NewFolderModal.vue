@@ -33,7 +33,6 @@
 import { mapState } from "vuex";
 import { modal as createModal } from "tlp";
 import { TYPE_FOLDER } from "../../../constants.js";
-import { selfClosingInfo } from "../../../../../../../src/www/scripts/tuleap/feedback.js";
 import ModalHeader from "./ModalHeader.vue";
 import ModalFeedback from "./ModalFeedback.vue";
 import ModalFooter from "./ModalFooter.vue";
@@ -102,7 +101,6 @@ export default {
             this.is_loading = false;
             if (this.has_modal_error === false) {
                 this.modal.hide();
-                selfClosingInfo(this.$gettext("Folder has been successfully created."));
             }
         }
     }
