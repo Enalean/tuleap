@@ -27,7 +27,7 @@ import {
     getProject,
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
-    patchUserPreferenciesForUIInProject
+    deleteUserPreferenciesForUIInProject
 } from "../api/rest-querier.js";
 
 import {
@@ -251,7 +251,7 @@ export const cancelAllFileUploads = context => {
 
 export const setUserPreferenciesForUI = async context => {
     try {
-        return await patchUserPreferenciesForUIInProject(
+        return await deleteUserPreferenciesForUIInProject(
             context.state.user_id,
             context.state.project_id
         );

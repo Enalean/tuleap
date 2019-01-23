@@ -31,7 +31,7 @@ export {
     deleteUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForUnderConstructionModal,
     addNewDocument,
-    patchUserPreferenciesForUIInProject,
+    deleteUserPreferenciesForUIInProject,
     cancelUpload
 };
 
@@ -121,18 +121,6 @@ async function patchUserPreferenciesForFolderInProject(user_id, project_id, fold
     });
 }
 
-function patchUserPreferenciesForUIInProject(user_id, project_id) {
-    return patch(`/api/users/${user_id}/preferences`, {
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            key: `plugin_docman_display_legacy_ui_${project_id}`,
-            value: true
-        })
-    });
-}
-
 async function deleteUserPreference(user_id, key) {
     await del(`/api/users/${user_id}/preferences?key=${key}`);
 }
@@ -145,6 +133,12 @@ async function deleteUserPreferenciesForFolderInProject(user_id, project_id, fol
 
 async function deleteUserPreferenciesForUnderConstructionModal(user_id, project_id) {
     const key = `plugin_document_set_display_under_construction_modal_${project_id}`;
+
+    await deleteUserPreference(user_id, key);
+}
+
+async function deleteUserPreferenciesForUIInProject(user_id, project_id) {
+    const key = `plugin_docman_display_new_ui_${project_id}`;
 
     await deleteUserPreference(user_id, key);
 }

@@ -41,7 +41,6 @@ class ExternalLinkRedirectorTest extends TestCase
         parent::setUp();
 
         $this->user    = Mockery::mock(PFUser::class);
-        $this->user->shouldReceive('isAnonymous')->andReturn(false);
         $this->project = Mockery::mock(Project::class);
         $this->project->shouldReceive('getId')->andReturn(102);
     }
@@ -51,10 +50,12 @@ class ExternalLinkRedirectorTest extends TestCase
         $folder_id = 10;
         $redirector = new ExternalLinkRedirector($this->user, $this->project, $folder_id);
 
-        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_legacy_ui_102")->andReturn(true);
+
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_new_ui_102")->andReturn(false);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
-        $this->assertFalse($redirector->shouldRedirectUser());
+        $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 
     public function testItShouldRedirectUserIfItsPreferenceIsNewUI()
@@ -62,9 +63,23 @@ class ExternalLinkRedirectorTest extends TestCase
         $folder_id = 10;
         $redirector = new ExternalLinkRedirector($this->user, $this->project, $folder_id);
 
-        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_legacy_ui_102")->andReturn(false);
+
+        $this->user->shouldReceive('isAnonymous')->andReturn(false);
+        $this->user->shouldReceive('getPreference')->with("plugin_docman_display_new_ui_102")->andReturn(true);
 
         $redirector->checkAndStoreIfUserHasToBeenRedirected();
-        $this->assertTrue($redirector->shouldRedirectUser());
+        $this->assertTrue($redirector->shouldRedirectUserOnNewUI());
+    }
+
+    public function testItShouldDoNothingIfUserIsAnonymous()
+    {
+        $folder_id = 10;
+        $redirector = new ExternalLinkRedirector($this->user, $this->project, $folder_id);
+
+        $this->user->shouldReceive('isAnonymous')->andReturn(true);
+
+        $redirector->checkAndStoreIfUserHasToBeenRedirected();
+        $this->user->shouldReceive('getPreference')->never();
+        $this->assertFalse($redirector->shouldRedirectUserOnNewUI());
     }
 }

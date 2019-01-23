@@ -59,7 +59,7 @@ class DocmanHTTPControllerProxy
 
         $this->processEventWhenNeeded($request, $redirector);
 
-        if ($redirector->shouldRedirectUser()) {
+        if ($redirector->shouldRedirectUserOnNewUI()) {
             $GLOBALS['HTML']->redirect($redirector->getUrlRedirection());
         } else {
             $this->docman_HTTP_controller->process();

@@ -36,7 +36,7 @@ import {
     rewire$deleteUserPreferenciesForFolderInProject,
     rewire$deleteUserPreferenciesForUnderConstructionModal,
     rewire$patchUserPreferenciesForFolderInProject,
-    rewire$patchUserPreferenciesForUIInProject,
+    rewire$deleteUserPreferenciesForUIInProject,
     rewire$addNewDocument,
     rewire$cancelUpload
 } from "../api/rest-querier.js";
@@ -66,7 +66,7 @@ describe("Store actions", () => {
         deleteUserPreferenciesForFolderInProject,
         deleteUserPreferenciesForUnderConstructionModal,
         patchUserPreferenciesForFolderInProject,
-        patchUserPreferenciesForUIInProject,
+        deleteUserPreferenciesForUIInProject,
         addNewDocument,
         uploadFile,
         cancelUpload;
@@ -119,10 +119,10 @@ describe("Store actions", () => {
         );
         rewire$patchUserPreferenciesForFolderInProject(patchUserPreferenciesForFolderInProject);
 
-        patchUserPreferenciesForUIInProject = jasmine.createSpy(
-            "patchUserPreferenciesForUIInProject"
+        deleteUserPreferenciesForUIInProject = jasmine.createSpy(
+            "deleteUserPreferenciesForUIInProject"
         );
-        rewire$patchUserPreferenciesForUIInProject(patchUserPreferenciesForUIInProject);
+        rewire$deleteUserPreferenciesForUIInProject(deleteUserPreferenciesForUIInProject);
     });
 
     describe("loadRootFolder()", () => {
@@ -413,7 +413,7 @@ describe("Store actions", () => {
 
             await setUserPreferenciesForUI(context);
 
-            expect(patchUserPreferenciesForUIInProject).toHaveBeenCalled();
+            expect(deleteUserPreferenciesForUIInProject).toHaveBeenCalled();
         });
     });
 
