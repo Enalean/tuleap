@@ -41,7 +41,8 @@ use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetFloatValueJsonParser;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\Update\SetIntValueJsonParser;
 use Tuleap\Tracker\REST\WorkflowTransitionPOSTRepresentation;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
-use Tuleap\Tracker\Workflow\PostAction\Update\PostActionsUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildUpdater;
+use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollectionUpdater;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdateException;
 use Tuleap\Tracker\Workflow\Transition\TransitionUpdater;
@@ -493,12 +494,14 @@ class TransitionsResource extends AuthenticatedResource
         );
     }
 
-    private function getPostActionUpdater(): PostActionsUpdater
+    private function getPostActionUpdater(): PostActionCollectionUpdater
     {
-        return new PostActionsUpdater(
-            new CIBuildRepository(new Transition_PostAction_CIBuildDao()),
+        return new PostActionCollectionUpdater(
             new TransactionExecutor(
                 new DataAccessObject()
+            ),
+            new CIBuildUpdater(
+                new CIBuildRepository(new Transition_PostAction_CIBuildDao())
             )
         );
     }
