@@ -29,7 +29,7 @@
            v-bind:class="{
                'fa-folder': is_closed,
                'fa-folder-open': is_folder_open,
-               'fa-spinner fa-spin': is_loading
+               'fa-circle-o-notch fa-spin': is_loading
            }"
         ></i>
         <a v-on:click.prevent="goToFolder" v-bind:href="folder_href" class="document-folder-subitem-link">

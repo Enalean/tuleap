@@ -25,20 +25,23 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    margin: 0 $tlp-spacing 0 0;
 }
 
-.document-dragndrop-file-upload-error {
-    background-color: transparentize($tlp-ui-danger, .9);
+.document-uploads-file-title {
+    overflow: hidden;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .document-uploads-file-error-message {
+    margin: $tlp-half-spacing 0 0;
     color: $tlp-ui-danger;
 }
 
 .document-uploads-modal-empty-state {
     margin: 100px 0;
-}
-
-.document-uploads-file-title {
-    margin: 0 0 $tlp-half-spacing;
 }

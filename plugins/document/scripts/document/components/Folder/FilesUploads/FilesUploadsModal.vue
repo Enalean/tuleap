@@ -44,20 +44,18 @@
                         {{ file.upload_error }}
                     </span>
                 </div>
-                <div>
-                    <upload-progress-bar v-if="file.is_uploading" v-bind:item="file"/>
-                    <span v-else-if="file.upload_error !== null" class="tlp-badge-danger" v-translate>
-                        Upload error
-                    </span>
-                </div>
+                <upload-progress-bar v-if="file.is_uploading" v-bind:item="file"/>
+                <span v-else-if="file.upload_error !== null" class="tlp-badge-danger" v-translate>
+                    Upload error
+                </span>
             </div>
             <div class="document-uploads-modal-empty-state" v-if="files_uploads_list.length === 0">
                 <p class="empty-page-text" v-translate>
-                    There are no uploads in progress
+                    There is no upload in progress
                 </p>
             </div>
         </div>
-        <div class="tlp-modal-footer tlp-modal-footer-large">
+        <div class="tlp-modal-footer">
             <button type="submit"
                     class="tlp-button-primary tlp-modal-action"
                     data-dismiss="modal"

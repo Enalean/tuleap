@@ -145,7 +145,7 @@ msgstr ""
 msgid "The folder has been created below."
 msgstr ""
 
-msgid "There are no uploads in progress"
+msgid "There is no upload in progress"
 msgstr ""
 
 msgid "This folder is empty"
