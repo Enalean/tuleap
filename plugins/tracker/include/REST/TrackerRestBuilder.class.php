@@ -98,8 +98,7 @@ class Tracker_REST_TrackerRestBuilder {
 
         $workflow_representation = new WorkflowRepresentation();
         $workflow_representation->build(
-            $workflow->getFieldId(),
-            $workflow->getIsUsed(),
+            $workflow,
             $this->getWorkflowRulesRepresentation($workflow),
             $transitions
         );
