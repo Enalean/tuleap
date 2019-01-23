@@ -21,11 +21,12 @@
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update;
 
+require_once(__DIR__ . "/TransitionFactory.php");
+
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Transition;
 use Tuleap\DB\TransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuild;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
@@ -77,7 +78,7 @@ class PostActionCollectionUpdaterTest extends TestCase
 
     public function testUpdateByTransitionDelegatesUpdateToUpdaters()
     {
-        $transition = $this->buildATransition();
+        $transition = TransitionFactory::buildATransition();
 
         $action            = new CIBuild(2, 'http://example.test');
         $action_collection = new PostActionCollection($action);
@@ -90,10 +91,5 @@ class PostActionCollectionUpdaterTest extends TestCase
             ->with($action_collection, $transition);
 
         $this->collection_updater->updateByTransition($transition, $action_collection);
-    }
-
-    private function buildATransition(): MockInterface
-    {
-        return Mockery::mock(Transition::class);
     }
 }

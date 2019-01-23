@@ -29,42 +29,61 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
-use Transition_PostAction_CIBuildDao;
+use Transition_PostAction_Field_DateDao;
+use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Workflow\PostAction\Update\TransitionFactory;
 
-class CIBuildRepositoryTest extends TestCase
+class SetDateValueRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var CIBuildRepository
+     * @var SetDateValueRepository
      */
-    private $ci_build_repository;
+    private $set_date_value_repository;
 
     /**
      * @var MockInterface
      */
-    private $ci_build_dao;
+    private $set_date_value_dao;
+
+    /**
+     * @var MockInterface
+     */
+    private $pdo_wrapper;
 
     /**
      * @before
      */
     public function createRepository()
     {
-        $this->ci_build_dao        = Mockery::mock(Transition_PostAction_CIBuildDao::class);
-        $this->ci_build_repository = new CIBuildRepository($this->ci_build_dao);
+        $this->set_date_value_dao = Mockery::mock(Transition_PostAction_Field_DateDao::class);
+
+        $this->pdo_wrapper = Mockery::mock(DataAccessObject::class);
+        $this->pdo_wrapper
+            ->shouldReceive('wrapAtomicOperations')
+            ->andReturnUsing(function (callable $operation) {
+                $operation();
+            });
+
+        $this->set_date_value_repository = new SetDateValueRepository(
+            $this->set_date_value_dao,
+            $this->pdo_wrapper
+        );
     }
 
-    public function testCreateCreatesGivenCIBuildOnGivenTransition()
+    public function testCreateCreatesGivenSetDateValueOnGivenTransition()
     {
-        $this->ci_build_dao->shouldReceive('create')
-            ->with(1, 'http://added-ci-url.test')
+        $this->set_date_value_dao->shouldReceive('create')
+            ->with(1)
             ->andReturn(9);
+        $this->set_date_value_dao->shouldReceive('updatePostAction')
+            ->with(9, 43, 1);
 
-        $transition = TransitionFactory::buildATransitionWithId(1);
-        $ci_build   = new CIBuild(9, 'http://added-ci-url.test');
+        $transition     = TransitionFactory::buildATransitionWithId(1);
+        $set_date_value = new SetDateValue(null, 43, 1);
 
-        $this->ci_build_repository->create($transition, $ci_build);
+        $this->set_date_value_repository->create($transition, $set_date_value);
     }
 
     /**
@@ -72,23 +91,23 @@ class CIBuildRepositoryTest extends TestCase
      */
     public function testCreateThrowsWhenCreationFail()
     {
-        $this->ci_build_dao->shouldReceive('create')
+        $this->set_date_value_dao->shouldReceive('create')
             ->andReturn(false);
 
-        $transition = TransitionFactory::buildATransition();
-        $ci_build   = new CIBuild(null, 'http://example.test');
+        $transition     = TransitionFactory::buildATransition();
+        $set_date_value = new SetDateValue(null, 43, 1);
 
-        $this->ci_build_repository->create($transition, $ci_build);
+        $this->set_date_value_repository->create($transition, $set_date_value);
     }
 
-    public function testUpdateUpdatesGivenCIBuild()
+    public function testUpdateUpdatesGivenSetDateValue()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('updatePostAction')
-            ->with(9, 'http://updated-ci-url.test')
+            ->with(9, 43, 1)
             ->andReturn(true);
-        $ci_build = new CIBuild(9, 'http://updated-ci-url.test');
-        $this->ci_build_repository->update($ci_build);
+        $set_date_value = new SetDateValue(9, 43, 1);
+        $this->set_date_value_repository->update($set_date_value);
     }
 
     /**
@@ -96,21 +115,21 @@ class CIBuildRepositoryTest extends TestCase
      */
     public function testUpdateThrowsWhenUpdateFail()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('updatePostAction')
             ->andReturn(false);
-        $ci_build = new CIBuild(9, 'http://updated-ci-url.test');
-        $this->ci_build_repository->update($ci_build);
+        $set_date_value = new SetDateValue(9, 43, 1);
+        $this->set_date_value_repository->update($set_date_value);
     }
 
     public function testDeleteAllByTransitionIfIdNotInDeletesExpectedTransitions()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->with(1, [1, 2, 3])
             ->andReturn(true);
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_date_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
     /**
@@ -118,16 +137,16 @@ class CIBuildRepositoryTest extends TestCase
      */
     public function testDeleteAllByTransitionIfIdNotInThrowsIfDeleteFail()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('deletePostActionByTransitionIfIdNotIn')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
-        $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
+        $this->set_date_value_repository->deleteAllByTransitionIfIdNotIn($transition, [1, 2, 3]);
     }
 
     public function testFindAllIdsByTransitionReturnsIdsOfAllActionsOnGivenTransition()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('findAllIdsByTransitionId')
             ->with(1)
             ->andReturn(new FakeDataAccessResult([
@@ -137,7 +156,7 @@ class CIBuildRepositoryTest extends TestCase
             ]));
 
         $transition = TransitionFactory::buildATransitionWithId(1);
-        $ids        = $this->ci_build_repository->findAllIdsByTransition($transition);
+        $ids        = $this->set_date_value_repository->findAllIdsByTransition($transition);
 
         $this->assertEquals(new PostActionIdCollection(1, 2, 3), $ids);
     }
@@ -147,10 +166,10 @@ class CIBuildRepositoryTest extends TestCase
      */
     public function testFindAllIdsByTransitionThrowsWhenFindFail()
     {
-        $this->ci_build_dao
+        $this->set_date_value_dao
             ->shouldReceive('findAllIdsByTransitionId')
             ->andReturn(false);
         $transition = TransitionFactory::buildATransition();
-        $this->ci_build_repository->findAllIdsByTransition($transition);
+        $this->set_date_value_repository->findAllIdsByTransition($transition);
     }
 }

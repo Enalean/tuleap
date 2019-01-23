@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #, php-format
 msgid "%s has been created"
@@ -153,6 +153,9 @@ msgstr ""
 "adresses e-mail qui recevront systématiquement les notifications de "
 "soumission (et éventuellement de modification) d'artefacts."
 
+msgid "Bad field_id attribute format: int expected."
+msgstr "L'attribut field_id a un mauvais format : numérique attendu."
+
 #, php-format
 msgid "Bad format: '%s'. Array expected"
 msgstr "Mauvais format: '%s'. Tableau attendu"
@@ -162,6 +165,9 @@ msgstr "Mauvais format de l'attribut id : numérique attendu."
 
 msgid "Bad job_url attribute format: string expected."
 msgstr "Mauvais format de l'attribut job_url : chaine de caractères attendu."
+
+msgid "Bad value attribute format: string expected."
+msgstr "L'attribut value a un mauvais format : chaîne de caractères attendu."
 
 msgid ""
 "Be careful, all the artifact content is sent in the payload without "
@@ -293,8 +299,20 @@ msgstr "Historique pour %s"
 msgid "Mail configuration"
 msgstr "Configuration des e-mail"
 
+msgid ""
+"Mandatory attribute field_id not found in action with type \"set_field_value"
+"\"."
+msgstr ""
+"Attribut obligatoire field_id non trouvé dans une action de type "
+"\"set_field_value\"."
+
 msgid "Mandatory attribute job_url not found in CI build action."
 msgstr "L'attribut obligatoire job_url non trouvé dans une action de build CI."
+
+msgid "Mandatory attribute value not found in with type \"set_field_value\"."
+msgstr ""
+"Attribut obligatoire value non trouvé dans une action de type "
+"\"set_field_value\"."
 
 msgid ""
 "Maximum number of artifacts users can delete or move from the REST API on a "
@@ -854,6 +872,10 @@ msgstr "Désabonner un utilisateur"
 
 msgid "Unsubscribers"
 msgstr "Désabonnés"
+
+#, php-format
+msgid "Unsupported value attribute content: '%s'. Allowed contents are: '%s'"
+msgstr "Contenu de l'attribut value non supporté: '%s'. Contenus autorisé: '%s'"
 
 msgid "Use"
 msgstr "Utiliser"

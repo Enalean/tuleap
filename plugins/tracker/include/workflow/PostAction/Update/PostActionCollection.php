@@ -103,6 +103,16 @@ class PostActionCollection implements PostActionVisitor
     }
 
     /**
+     * Compare only Set Date Value actions against a list of action ids:
+     * - Actions without id are marked as added
+     * - Actions whose id is in given list are marked as updated
+     */
+    public function compareSetDateValueActionsTo(PostActionIdCollection $our_ids): PostActionsDiff
+    {
+        return $this->compare($our_ids, $this->set_date_value_actions);
+    }
+
+    /**
      * @param PostActionIdCollection $our_ids ids of actions taken as reference
      * @param PostAction[]           $theirs  actions to compare
      *
