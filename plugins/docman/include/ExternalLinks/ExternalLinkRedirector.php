@@ -65,7 +65,7 @@ class ExternalLinkRedirector implements Dispatchable
     /**
      * @return bool
      */
-    public function shouldRedirectUser() : bool
+    public function shouldRedirectUserOnNewUI() : bool
     {
         return $this->should_redirect_user;
     }
@@ -76,13 +76,13 @@ class ExternalLinkRedirector implements Dispatchable
             return;
         }
 
-        $preference_name = "plugin_docman_display_legacy_ui_" . $this->project->getID();
+        $preference_name = "plugin_docman_display_new_ui_" . $this->project->getID();
         if ((bool) $this->user->getPreference($preference_name) === true) {
-            $this->should_redirect_user = false;
+            $this->should_redirect_user = true;
             return;
         }
 
-        $this->should_redirect_user = true;
+        $this->should_redirect_user = false;
     }
 
     /**

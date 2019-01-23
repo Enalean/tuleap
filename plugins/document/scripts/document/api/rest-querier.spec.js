@@ -26,7 +26,7 @@ import {
     getUserPreferencesForFolderInProject,
     patchUserPreferenciesForFolderInProject,
     deleteUserPreferenciesForFolderInProject,
-    patchUserPreferenciesForUIInProject
+    deleteUserPreferenciesForUIInProject
 } from "./rest-querier.js";
 
 import { tlp, mockFetchSuccess } from "tlp-mocks";
@@ -215,17 +215,13 @@ describe("rest-querier", () => {
             });
         });
 
-        describe("patchUserPreferenciesForUIInProject() -", () => {
+        describe("deleteUserPreferenciesForUIInProject() -", () => {
             it("should set the current user's preferencies to old UI", async () => {
-                await patchUserPreferenciesForUIInProject(user_id, project_id);
+                await deleteUserPreferenciesForUIInProject(user_id, project_id, folder_id);
 
-                expect(tlp.patch).toHaveBeenCalledWith("/api/users/102/preferences", {
-                    ...headers,
-                    body: JSON.stringify({
-                        key: `plugin_docman_display_legacy_ui_${project_id}`,
-                        value: true
-                    })
-                });
+                expect(tlp.del).toHaveBeenCalledWith(
+                    "/api/users/102/preferences?key=plugin_docman_display_new_ui_110"
+                );
             });
         });
     });
