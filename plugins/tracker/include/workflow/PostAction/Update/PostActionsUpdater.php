@@ -25,7 +25,6 @@ use DataAccessQueryException;
 use Transition;
 use Tuleap\DB\TransactionExecutor;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\CIBuildRepository;
-use Tuleap\Tracker\Workflow\Update\PostAction;
 
 class PostActionsUpdater
 {
@@ -64,31 +63,14 @@ class PostActionsUpdater
     private function updateCIBuild(Transition $transition, PostActionCollection $actions)
     {
         $action_ids = $this->ci_build_repository->findAllIdsByTransition($transition);
-
-        $added_or_updated_actions    = $actions->getCIBuildActions();
-        $added_or_updated_action_ids = $this->extractPostActionIds($added_or_updated_actions);
-        $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, $added_or_updated_action_ids);
-
         $diff = $actions->compareCIBuildActionsTo($action_ids);
+
         foreach ($diff->getAddedActions() as $added_action) {
             $this->ci_build_repository->create($transition, $added_action);
         }
         foreach ($diff->getUpdatedActions() as $updated_action) {
             $this->ci_build_repository->update($updated_action);
         }
-    }
-
-    /**
-     * @param PostAction[] $actions
-     * @return int[]
-     */
-    private function extractPostActionIds(array $actions)
-    {
-        return array_map(
-            function (PostAction $action) {
-                return $action->getId();
-            },
-            $actions
-        );
+        $this->ci_build_repository->deleteAllByTransitionIfIdNotIn($transition, $diff->getUpdatedActionIds());
     }
 }

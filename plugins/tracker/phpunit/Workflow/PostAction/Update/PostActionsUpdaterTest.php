@@ -85,12 +85,12 @@ class PostActionsUpdaterTest extends TestCase
             ->with($transition)
             ->andReturns([2, 3]);
 
-        $action  = new CIBuild(1, 'http://example.test');
+        $action  = new CIBuild(2, 'http://example.test');
         $actions = new PostActionCollection($action);
 
         $this->ci_build_repository
             ->shouldReceive('deleteAllByTransitionIfIdNotIn')
-            ->with($transition, [1])
+            ->with($transition, [2])
             ->andReturns();
 
         $this->post_action_updater->updateByTransition($transition, $actions);
