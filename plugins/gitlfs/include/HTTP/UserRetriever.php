@@ -25,7 +25,6 @@ use HTTPRequest;
 use PFUser;
 use Tuleap\Git\HTTP\HTTPAccessControl;
 use Tuleap\Request\NotFoundException;
-use URLVerification;
 use UserManager;
 
 class UserRetriever
@@ -60,13 +59,12 @@ class UserRetriever
      */
     public function retrieveUser(
         HTTPRequest $request,
-        URLVerification $url_verification,
         GitRepository $repository,
         GitLfsHTTPOperation $lfs_request
     ): ?PFUser {
         $user = $this->lfs_http_api_authorization->getUserFromAuthorizationToken($request, $repository, $lfs_request);
         if ($user === null) {
-            $user = $this->getUserFromGitHTTPAccessControlOrStop($url_verification, $repository, $lfs_request);
+            $user = $this->getUserFromGitHTTPAccessControlOrStop($repository, $lfs_request);
         }
 
         return $user;
@@ -76,11 +74,10 @@ class UserRetriever
      * @throws NotFoundException
      */
     private function getUserFromGitHTTPAccessControlOrStop(
-        URLVerification $url_verification,
         GitRepository $repository,
         GitLfsHTTPOperation $lfs_request
     ): ?PFUser {
-        $pfo_user = $this->http_access_control->getUser($url_verification, $repository, $lfs_request);
+        $pfo_user = $this->http_access_control->getUser($repository, $lfs_request);
         if ($pfo_user === null) {
             return null;
         }

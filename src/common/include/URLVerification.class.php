@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-2019. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2010. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -80,6 +80,11 @@ class URLVerification {
      */
     protected function getPermissionsOverriderManager() {
         return PermissionsOverrider_PermissionsOverriderManager::instance();
+    }
+
+    private function getForgeAccess() : ForgeAccess
+    {
+        return new ForgeAccess($this->getPermissionsOverriderManager());
     }
 
     /**
@@ -231,23 +236,13 @@ class URLVerification {
         $user = $this->getCurrentUser();
 
         if (
-            $this->doesPlatformRequireLogin() &&
+            $this->getForgeAccess()->doesPlatformRequireLogin() &&
             $user->isAnonymous() &&
             ! $this->isScriptAllowedForAnonymous($server)
         ) {
             $redirect = new URLRedirect($this->getEventManager());
             $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
-    }
-
-    public function doesPlatformRequireLogin() {
-        $anonymous_user = new PFUser(array('user_id' => 0));
-        if (ForgeConfig::areAnonymousAllowed() && ! $this->getPermissionsOverriderManager()->doesOverriderForceUsageOfAnonymous()) {
-            return false;
-        } elseif ($this->getPermissionsOverriderManager()->doesOverriderAllowUserToAccessPlatform($anonymous_user)) {
-            return false;
-        }
-        return true;
     }
 
     /**

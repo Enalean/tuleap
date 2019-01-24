@@ -27,9 +27,9 @@ use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\GitLFS\Lock\Request\LockVerifyRequest;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
-use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
@@ -55,16 +55,6 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
     private $lock_response_builder;
 
     /**
-     * @var \GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var LockVerifyRequest
-     */
-    private $lock_verify_request;
-
-    /**
      * @var LockRetriever
      */
     private $lock_retriever;
@@ -73,11 +63,6 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
      * @var UserRetriever
      */
     private $user_retriever;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
 
     public function __construct(
         \gitlfsPlugin $plugin,
@@ -97,41 +82,13 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $reference = $this->lock_verify_request->getReference() === null ? null : $this->lock_verify_request->getReference()->getName();
-
-        $ours = $this->lock_retriever->retrieveLocks(
-            null,
-            null,
-            $reference,
-            $this->user,
-            $this->repository
-        );
-
-        $theirs = $this->lock_retriever->retrieveLocksNotBelongingToOwner(
-            $reference,
-            $this->user,
-            $this->repository
-        );
-
-        echo json_encode($this->lock_response_builder->buildSuccessfulLockVerify($ours, $theirs));
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->lock_verify_request !== null || $this->user !== null) {
-            throw new \RuntimeException(
-                'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
-            );
-        }
-
-        $this->repository = $this->repository_factory->getByProjectNameAndPath(
+        $repository = $this->repository_factory->getByProjectNameAndPath(
             $variables['project_name'],
             $variables['path']
         );
-        $project = $this->repository->getProject();
-        if ($this->repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
-            ! $this->repository->isCreated()) {
+        if ($repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
@@ -140,21 +97,44 @@ class LFSLockVerifyController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException('Can not read the body of the request');
         }
         try {
-            $this->lock_verify_request = LockVerifyRequest::buildFromJSONString($json_string);
+            $lock_verify_request = LockVerifyRequest::buildFromJSONString($json_string);
         } catch (IncorrectlyFormattedReferenceRequestException $exception) {
             throw new \RuntimeException($exception->getMessage(), 400);
         }
 
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_verify_request);
+        $user = $this->user_retriever->retrieveUser($request, $repository, $lock_verify_request);
 
-        if ($this->user === null) {
-            throw new \LogicException();
+        $user_can_access = $this->api_access_control->canAccess(
+            $repository,
+            $lock_verify_request,
+            $user
+        );
+
+        if (! $user_can_access || $user === null) {
+            throw new ForbiddenException();
         }
 
-        return $this->api_access_control->canAccess(
-            $this->repository,
-            $this->lock_verify_request,
-            $this->user
+        $this->displayLocks($lock_verify_request, $repository, $user);
+    }
+
+    private function displayLocks(LockVerifyRequest $lock_verify_request, \GitRepository $repository, \PFUser $user) : void
+    {
+        $reference = $lock_verify_request->getReference() === null ? null : $lock_verify_request->getReference()->getName();
+
+        $ours = $this->lock_retriever->retrieveLocks(
+            null,
+            null,
+            $reference,
+            $user,
+            $repository
         );
+
+        $theirs = $this->lock_retriever->retrieveLocksNotBelongingToOwner(
+            $reference,
+            $user,
+            $repository
+        );
+
+        echo json_encode($this->lock_response_builder->buildSuccessfulLockVerify($ours, $theirs));
     }
 }

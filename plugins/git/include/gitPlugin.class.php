@@ -2554,6 +2554,7 @@ class GitPlugin extends Plugin
         $password_handler = \PasswordHandlerFactory::getPasswordHandler();
         return new HTTPAccessControl(
             $logger,
+            new ForgeAccess(PermissionsOverrider_PermissionsOverriderManager::instance()),
             new \User_LoginManager(
                 \EventManager::instance(),
                 \UserManager::instance(),

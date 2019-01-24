@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,6 +36,11 @@ class HTTPAccessControl
     private $logger;
 
     /**
+     * @var \ForgeAccess
+     */
+    private $forge_access;
+
+    /**
      * @var User_LoginManager
      */
     private $login_manager;
@@ -49,7 +54,6 @@ class HTTPAccessControl
      * @var PermissionsManager
      */
     private $permissions_manager;
-
     /**
      * @var UserDao
      */
@@ -57,12 +61,14 @@ class HTTPAccessControl
 
     public function __construct(
         Logger $logger,
+        \ForgeAccess $forge_access,
         User_LoginManager $login_manager,
         ReplicationHTTPUserAuthenticator $replication_http_user_authenticator,
         PermissionsManager $permissions_manager,
         UserDao $user_dao
     ) {
         $this->logger                              = $logger;
+        $this->forge_access                        = $forge_access;
         $this->login_manager                       = $login_manager;
         $this->replication_http_user_authenticator = $replication_http_user_authenticator;
         $this->permissions_manager                 = $permissions_manager;
@@ -72,19 +78,19 @@ class HTTPAccessControl
     /**
      * @return null|\PFO_User
      */
-    public function getUser(\URLVerification $url_verification, \GitRepository $repository, GitHTTPOperation $git_operation)
+    public function getUser(\GitRepository $repository, GitHTTPOperation $git_operation)
     {
         $user = null;
-        if ($this->needAuthentication($url_verification, $repository, $git_operation)) {
+        if ($this->needAuthentication($repository, $git_operation)) {
             $this->logger->debug('Repository '.$repository->getFullName().' need authentication');
             $user = $this->authenticate($repository);
         }
         return $user;
     }
 
-    private function needAuthentication(\URLVerification $url_verification, \GitRepository $repository, GitHTTPOperation $git_operation)
+    private function needAuthentication(\GitRepository $repository, GitHTTPOperation $git_operation) : bool
     {
-        return $url_verification->doesPlatformRequireLogin() ||
+        return $this->forge_access->doesPlatformRequireLogin() ||
             $git_operation->isWrite() ||
             ! $this->canBeReadByAnonymous($repository) ||
             $this->isInPrivateProject($repository);

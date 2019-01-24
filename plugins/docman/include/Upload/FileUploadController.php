@@ -26,6 +26,7 @@ use Tuleap\Docman\Tus\TusCORSMiddleware;
 use Tuleap\Docman\Tus\TusServer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\REST\BasicAuthentication;
 use Tuleap\REST\TuleapRESTCORSMiddleware;
 use Tuleap\REST\UserManager;
@@ -71,6 +72,8 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
     {
         \session_write_close();
 
+        $this->checkUserCanAccess();
+
         $server_request = ServerRequest::fromGlobals()
             ->withAttribute('item_id', $variables['item_id'])
             ->withAttribute('user_id', $this->rest_user_manager->getCurrentUser()->getId());
@@ -87,11 +90,13 @@ class FileUploadController implements DispatchableWithRequestNoAuthz
         echo $response->getBody();
     }
 
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
+    private function checkUserCanAccess() : void
     {
         $this->basic_rest_authentication->__isAllowed();
         $current_user = $this->rest_user_manager->getCurrentUser();
 
-        return ! $current_user->isAnonymous();
+        if ($current_user->isAnonymous()) {
+            throw new ForbiddenException();
+        }
     }
 }

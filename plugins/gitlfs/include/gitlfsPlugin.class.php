@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-2019. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -107,7 +107,6 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         $event->getRouteCollector()->put('/uploads/git-lfs/objects/{oid:[a-fA-F0-9]{64}}', function () {
             return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferUploadController(
                 $this->getLFSActionUserAccessRequestChecker(),
-                new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                 new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferObjectSaver(
                     $this->getFilesystem(),
                     new LFSObjectRetriever(new \Tuleap\GitLFS\LFSObject\LFSObjectDAO()),
@@ -119,7 +118,6 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
             $r->get('/objects/{oid:[a-fA-F0-9]{64}}', function () {
                 return new \Tuleap\GitLFS\Transfer\Basic\LFSBasicTransferDownloadController(
                     $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     $this->getFilesystem(),
                     new LFSObjectPathAllocator()
                 );
@@ -128,7 +126,6 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                 $lfs_object_dao = new \Tuleap\GitLFS\LFSObject\LFSObjectDAO();
                 return new \Tuleap\GitLFS\Transfer\LFSTransferVerifyController(
                     $this->getLFSActionUserAccessRequestChecker(),
-                    new \Tuleap\GitLFS\Transfer\AuthorizedActionStore(),
                     new \Tuleap\GitLFS\Transfer\LFSTransferVerifier(
                         $this->getFilesystem(),
                         new LFSObjectRetriever($lfs_object_dao),
@@ -180,11 +177,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                new \Tuleap\GitLFS\HTTP\UserRetriever(
-                    $this->getLFSAPIHTTPAuthorization(),
-                    $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    $this->getUserManager()
-                )
+                $this->getUserRetriever($logger)
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -200,11 +193,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                new \Tuleap\GitLFS\HTTP\UserRetriever(
-                    $this->getLFSAPIHTTPAuthorization(),
-                    $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    $this->getUserManager()
-                )
+                $this->getUserRetriever($logger)
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -220,11 +209,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                new \Tuleap\GitLFS\HTTP\UserRetriever(
-                    $this->getLFSAPIHTTPAuthorization(),
-                    $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    $this->getUserManager()
-                )
+                $this->getUserRetriever($logger)
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -243,11 +228,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
                     new \Tuleap\GitLFS\Lock\LockDao(),
                     $this->getUserManager()
                 ),
-                new \Tuleap\GitLFS\HTTP\UserRetriever(
-                    $this->getLFSAPIHTTPAuthorization(),
-                    $this->getGitPlugin()->getHTTPAccessControl($logger),
-                    $this->getUserManager()
-                )
+                $this->getUserRetriever($logger)
             );
             return new \Tuleap\GitLFS\LFSJSONHTTPDispatchable($lfs_lock_controller);
         });
@@ -430,7 +411,7 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
         );
     }
 
-    private function getUserRetriever(Logger $logger)
+    private function getUserRetriever(Logger $logger) : \Tuleap\GitLFS\HTTP\UserRetriever
     {
         return new \Tuleap\GitLFS\HTTP\UserRetriever(
             $this->getLFSAPIHTTPAuthorization(),

@@ -25,6 +25,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\MFA\Enrollment\TOTP\EnrollmentTOTPException;
 use Tuleap\MFA\Enrollment\TOTP\TOTPEnroller;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 
 class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
 {
@@ -40,6 +41,10 @@ class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
+        if (! $request->getCurrentUser()->isLoggedIn()) {
+            throw new ForbiddenException();
+        }
+
         $request_uri = $request->getFromServer('REQUEST_URI');
 
         $csrf_token = new \CSRFSynchronizerToken($request_uri);
@@ -55,10 +60,5 @@ class EnrollmentRegisterController implements DispatchableWithRequestNoAuthz
         }
 
         $layout->redirect($request_uri);
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
-        return $request->getCurrentUser()->isLoggedIn();
     }
 }

@@ -26,9 +26,9 @@ use Tuleap\GitLFS\HTTP\UserRetriever;
 use Tuleap\GitLFS\Lock\LockRetriever;
 use Tuleap\GitLFS\Lock\Request\LockListRequest;
 use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
-use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class LFSLockListController implements DispatchableWithRequestNoAuthz
@@ -54,16 +54,6 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
     private $lock_response_builder;
 
     /**
-     * @var \GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var LockListRequest
-     */
-    private $lock_list_request;
-
-    /**
      * @var LockRetriever
      */
     private $lock_retriever;
@@ -72,11 +62,6 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
      * @var UserRetriever
      */
     private $user_retriever;
-
-    /**
-     * @var \PFUser
-     */
-    private $user;
 
     public function __construct(
         \gitlfsPlugin $plugin,
@@ -96,33 +81,14 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $locks = $this->lock_retriever->retrieveLocks(
-            $this->lock_list_request->getId(),
-            $this->lock_list_request->getPath(),
-            $this->lock_list_request->getReference() === null ? null : $this->lock_list_request->getReference()->getName(),
-            null,
-            $this->repository
-        );
-
-        echo json_encode($this->lock_response_builder->buildSuccessfulLockList($locks));
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
         \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->lock_list_request !== null || $this->user !== null) {
-            throw new \RuntimeException(
-                'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
-            );
-        }
 
-        $this->repository = $this->repository_factory->getByProjectNameAndPath(
+        $repository = $this->repository_factory->getByProjectNameAndPath(
             $variables['project_name'],
             $variables['path']
         );
-        $project = $this->repository->getProject();
-        if ($this->repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
-            ! $this->repository->isCreated()) {
+        if ($repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
@@ -131,18 +97,33 @@ class LFSLockListController implements DispatchableWithRequestNoAuthz
             throw new \RuntimeException('Can not read the body of the request');
         }
 
-        $this->lock_list_request = LockListRequest::buildFromHTTPRequest($request);
+        $lock_list_request = LockListRequest::buildFromHTTPRequest($request);
 
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_list_request);
+        $user = $this->user_retriever->retrieveUser($request, $repository, $lock_list_request);
 
-        if ($this->user === null) {
-            throw new \LogicException();
+        $user_can_access = $this->api_access_control->canAccess(
+            $repository,
+            $lock_list_request,
+            $user
+        );
+
+        if (! $user_can_access || $user === null) {
+            throw new ForbiddenException();
         }
 
-        return $this->api_access_control->canAccess(
-            $this->repository,
-            $this->lock_list_request,
-            $this->user
+        $this->displayLocks($lock_list_request, $repository);
+    }
+
+    private function displayLocks(LockListRequest $lock_list_request, \GitRepository $repository) : void
+    {
+        $locks = $this->lock_retriever->retrieveLocks(
+            $lock_list_request->getId(),
+            $lock_list_request->getPath(),
+            $lock_list_request->getReference() === null ? null : $lock_list_request->getReference()->getName(),
+            null,
+            $repository
         );
+
+        echo json_encode($this->lock_response_builder->buildSuccessfulLockList($locks));
     }
 }

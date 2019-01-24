@@ -29,9 +29,9 @@ use Tuleap\GitLFS\Lock\Response\LockResponseBuilder;
 use Tuleap\GitLFS\Lock\Request\IncorrectlyFormattedReferenceRequestException;
 use Tuleap\GitLFS\Lock\Request\LockCreateRequest;
 use Tuleap\GitLFS\Lock\LockCreator;
-use Tuleap\GitLFS\SSHAuthenticate\Authorization\TokenVerifier;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class LFSLockCreateController implements DispatchableWithRequestNoAuthz
@@ -57,16 +57,6 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
     private $lock_response_builder;
 
     /**
-     * @var \GitRepository
-     */
-    private $repository;
-
-    /**
-     * @var LockCreateRequest
-     */
-    private $lock_create_request;
-
-    /**
      * @var LockCreator
      */
     private $lock_creator;
@@ -81,10 +71,6 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
      */
     private $user_retriever;
 
-    /**
-     * @var \PFUser
-     */
-    private $user;
 
     public function __construct(
         \gitlfsPlugin $plugin,
@@ -106,16 +92,49 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        if ($this->user === null) {
-            throw new \LogicException();
+        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
+
+        $repository = $this->repository_factory->getByProjectNameAndPath(
+            $variables['project_name'],
+            $variables['path']
+        );
+        if ($repository === null || ! $repository->isCreated() ||
+            ! $repository->getProject()->isActive() || ! $this->plugin->isAllowed($repository->getProject()->getID())) {
+            throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
+        $json_string = file_get_contents('php://input');
+        if ($json_string === false) {
+            throw new \RuntimeException('Can not read the body of the request');
+        }
+        try {
+            $lock_create_request = LockCreateRequest::buildFromJSONString($json_string);
+        } catch (IncorrectlyFormattedReferenceRequestException $exception) {
+            throw new \RuntimeException($exception->getMessage(), 400);
+        }
+
+        $user = $this->user_retriever->retrieveUser($request, $repository, $lock_create_request);
+
+        $user_can_access = $this->api_access_control->canAccess(
+            $repository,
+            $lock_create_request,
+            $user
+        );
+        if (! $user_can_access || $user === null) {
+            throw new ForbiddenException();
+        }
+
+        $this->createLock($lock_create_request, $repository, $user);
+    }
+
+    private function createLock(LockCreateRequest $lock_create_request, \GitRepository $repository, \PFUser $user) : void
+    {
         $locks = $this->lock_retriever->retrieveLocks(
             null,
-            $this->lock_create_request->getPath(),
+            $lock_create_request->getPath(),
             null,
             null,
-            $this->repository
+            $repository
         );
 
         if (! empty($locks)) {
@@ -125,53 +144,15 @@ class LFSLockCreateController implements DispatchableWithRequestNoAuthz
         }
 
         $lock = $this->lock_creator->createLock(
-            $this->lock_create_request->getPath(),
-            $this->user,
-            $this->lock_create_request->getReference() === null ? null : $this->lock_create_request->getReference()->getName(),
-            $this->repository,
+            $lock_create_request->getPath(),
+            $user,
+            $lock_create_request->getReference() === null ? null : $lock_create_request->getReference()->getName(),
+            $repository,
             new DateTimeImmutable()
         );
 
         $response = $this->lock_response_builder->buildSuccessfulLockCreation($lock);
 
         echo json_encode($response);
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
-        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        if ($this->repository !== null || $this->lock_create_request !== null || $this->user !== null) {
-            throw new \RuntimeException(
-                'This controller expects to process only one request and then thrown away. One request seems to already have been processed.'
-            );
-        }
-
-        $this->repository = $this->repository_factory->getByProjectNameAndPath(
-            $variables['project_name'],
-            $variables['path']
-        );
-        $project = $this->repository->getProject();
-        if ($this->repository === null || ! $project->isActive() || ! $this->plugin->isAllowed($project->getID()) ||
-            ! $this->repository->isCreated()) {
-            throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
-        }
-
-        $json_string = file_get_contents('php://input');
-        if ($json_string === false) {
-            throw new \RuntimeException('Can not read the body of the request');
-        }
-        try {
-            $this->lock_create_request = LockCreateRequest::buildFromJSONString($json_string);
-        } catch (IncorrectlyFormattedReferenceRequestException $exception) {
-            throw new \RuntimeException($exception->getMessage(), 400);
-        }
-
-        $this->user = $this->user_retriever->retrieveUser($request, $url_verification, $this->repository, $this->lock_create_request);
-
-        return $this->api_access_control->canAccess(
-            $this->repository,
-            $this->lock_create_request,
-            $this->user
-        );
     }
 }

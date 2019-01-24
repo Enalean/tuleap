@@ -24,8 +24,6 @@ use HTTPRequest;
 use League\Flysystem\FilesystemInterface;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeDownload;
 use Tuleap\GitLFS\LFSObject\LFSObjectPathAllocator;
-use Tuleap\GitLFS\LFSObject\LFSObjectRetriever;
-use Tuleap\GitLFS\Transfer\AuthorizedActionStore;
 use Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -37,10 +35,6 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
      */
     private $user_access_request_checker;
     /**
-     * @var AuthorizedActionStore
-     */
-    private $authorized_action_store;
-    /**
      * @var FilesystemInterface
      */
     private $filesystem;
@@ -51,19 +45,22 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        AuthorizedActionStore $authorized_action_store,
         FilesystemInterface $filesystem,
         LFSObjectPathAllocator $path_allocator
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
-        $this->authorized_action_store     = $authorized_action_store;
         $this->filesystem                  = $filesystem;
         $this->path_allocator              = $path_allocator;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $authorized_action = $this->authorized_action_store->getAuthorizedAction();
+        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
+        $authorized_action = $this->user_access_request_checker->userCanAccess(
+            $request,
+            new ActionAuthorizationTypeDownload(),
+            $variables['oid']
+        );
 
         $lfs_object  = $authorized_action->getLFSObject();
         $object_path = $this->path_allocator->getPathForAvailableObject($lfs_object);
@@ -77,16 +74,5 @@ class LFSBasicTransferDownloadController implements DispatchableWithRequestNoAut
         ob_end_flush();
 
         fpassthru($this->filesystem->readStream($object_path));
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
-        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        return $this->user_access_request_checker->userCanAccess(
-            $this->authorized_action_store,
-            $request,
-            new ActionAuthorizationTypeDownload(),
-            $variables['oid']
-        );
     }
 }

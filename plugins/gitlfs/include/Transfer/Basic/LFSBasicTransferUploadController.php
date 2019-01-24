@@ -22,7 +22,6 @@ namespace Tuleap\GitLFS\Transfer\Basic;
 
 use HTTPRequest;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationTypeUpload;
-use Tuleap\GitLFS\Transfer\AuthorizedActionStore;
 use Tuleap\GitLFS\Transfer\LFSActionUserAccessHTTPRequestChecker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -34,27 +33,26 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
      */
     private $user_access_request_checker;
     /**
-     * @var AuthorizedActionStore
-     */
-    private $authorized_action_store;
-    /**
      * @var LFSBasicTransferObjectSaver
      */
     private $basic_object_saver;
 
     public function __construct(
         LFSActionUserAccessHTTPRequestChecker $user_access_request_checker,
-        AuthorizedActionStore $authorized_action_store,
         LFSBasicTransferObjectSaver $basic_object_saver
     ) {
         $this->user_access_request_checker = $user_access_request_checker;
-        $this->authorized_action_store     = $authorized_action_store;
         $this->basic_object_saver          = $basic_object_saver;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $authorized_action = $this->authorized_action_store->getAuthorizedAction();
+        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
+        $authorized_action = $this->user_access_request_checker->userCanAccess(
+            $request,
+            new ActionAuthorizationTypeUpload(),
+            $variables['oid']
+        );
 
         $input_resource = fopen('php://input', 'rb');
         try {
@@ -69,16 +67,5 @@ class LFSBasicTransferUploadController implements DispatchableWithRequestNoAuthz
         } finally {
             fclose($input_resource);
         }
-    }
-
-    public function userCanAccess(\URLVerification $url_verification, \HTTPRequest $request, array $variables)
-    {
-        \Tuleap\Project\ServiceInstrumentation::increment('gitlfs');
-        return $this->user_access_request_checker->userCanAccess(
-            $this->authorized_action_store,
-            $request,
-            new ActionAuthorizationTypeUpload(),
-            $variables['oid']
-        );
     }
 }

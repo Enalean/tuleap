@@ -27,6 +27,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationException;
 use Tuleap\GitLFS\Authorization\Action\ActionAuthorizationVerifier;
 use Tuleap\GitLFS\Authorization\Action\Type\ActionAuthorizationType;
+use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 
 class LFSActionUserAccessHTTPRequestChecker
@@ -55,18 +56,18 @@ class LFSActionUserAccessHTTPRequestChecker
     }
 
     /**
-     * @return bool
+     * @return \Tuleap\GitLFS\Authorization\Action\AuthorizedAction
+     * @throws ForbiddenException
      * @throws NotFoundException
      */
     public function userCanAccess(
-        AuthorizedActionStore $authorized_action_store,
         \HTTPRequest $request,
         ActionAuthorizationType $action_type,
         $oid
     ) {
         $authorization_header = $request->getFromServer('HTTP_AUTHORIZATION');
         if ($authorization_header === false) {
-            return false;
+            throw new ForbiddenException();
         }
 
         try {
@@ -74,9 +75,9 @@ class LFSActionUserAccessHTTPRequestChecker
                 new ConcealedString($authorization_header)
             );
         } catch (IncorrectSizeVerificationStringException $ex) {
-            return false;
+            throw new ForbiddenException();
         } catch (InvalidIdentifierFormatException $ex) {
-            return false;
+            throw new ForbiddenException();
         }
 
         try {
@@ -87,7 +88,7 @@ class LFSActionUserAccessHTTPRequestChecker
                 $action_type
             );
         } catch (ActionAuthorizationException $ex) {
-            return false;
+            throw new ForbiddenException();
         }
 
         $repository = $authorized_action->getRepository();
@@ -97,8 +98,6 @@ class LFSActionUserAccessHTTPRequestChecker
             throw new NotFoundException(dgettext('tuleap-git', 'Repository does not exist'));
         }
 
-        $authorized_action_store->keepAuthorizedAction($authorized_action);
-
-        return true;
+        return $authorized_action;
     }
 }
