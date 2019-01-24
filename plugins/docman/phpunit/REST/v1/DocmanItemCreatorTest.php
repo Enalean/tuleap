@@ -38,6 +38,7 @@ class DocmanItemCreatorTest extends TestCase
     private $document_ongoing_upload_retriever;
     private $document_to_upload_creator;
     private $link_version_factory;
+    private $empty_file_to_upload_finisher;
 
     public function setUp()
     {
@@ -53,6 +54,7 @@ class DocmanItemCreatorTest extends TestCase
         $this->item_factory                      = \Mockery::mock(\Docman_ItemFactory::class);
         $this->document_ongoing_upload_retriever = \Mockery::mock(DocumentOngoingUploadRetriever::class);
         $this->document_to_upload_creator        = \Mockery::mock(DocumentToUploadCreator::class);
+        $this->empty_file_to_upload_finisher     = \Mockery::mock(EmptyFileToUploadFinisher::class);
     }
 
     public function testEmptyDocumentCanBeCreated()
@@ -61,7 +63,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -112,7 +115,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -169,7 +173,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -218,7 +223,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -261,7 +267,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -293,7 +300,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -362,7 +370,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -417,7 +426,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);
@@ -468,7 +478,8 @@ class DocmanItemCreatorTest extends TestCase
             $this->item_factory,
             $this->document_ongoing_upload_retriever,
             $this->document_to_upload_creator,
-            $this->creator_visitor
+            $this->creator_visitor,
+            $this->empty_file_to_upload_finisher
         );
 
         $parent_item  = \Mockery::mock(\Docman_Item::class);

@@ -70,13 +70,7 @@ export const getSubfolderContent = async (context, folder_id) => {
 export const createNewItem = async (context, [item, parent]) => {
     try {
         if (item.type === TYPE_FILE) {
-            const new_file = await createNewFile(
-                item.title,
-                item.description,
-                item.file_properties.file,
-                parent
-            );
-            uploadNewFileAndAdjustContent(new_file, item.file_properties.file, parent, context);
+            await createNewFile(context, item, parent);
         } else {
             const item_reference = await addNewDocument(item, parent.id);
 
@@ -199,8 +193,9 @@ export const setUserPreferenciesForFolder = (context, [folder_id, should_be_clos
     }
 };
 
-function createNewFile(title, description, dropped_file, parent) {
-    return addNewDocument(
+async function createNewFile(context, { title, description, file_properties }, parent) {
+    const dropped_file = file_properties.file;
+    const new_file = await addNewDocument(
         {
             title: title,
             description: description,
@@ -212,9 +207,13 @@ function createNewFile(title, description, dropped_file, parent) {
         },
         parent.id
     );
-}
+    if (dropped_file.size === 0) {
+        const created_item = await getItem(new_file.id);
+        flagItemAsCreated(context, created_item);
 
-function uploadNewFileAndAdjustContent(new_file, dropped_file, parent, context) {
+        return Promise.resolve(context.commit("addJustCreatedItemToFolderContent", created_item));
+    }
+
     if (context.state.folder_content.find(({ id }) => id === new_file.id)) {
         return;
     }
@@ -238,15 +237,13 @@ function uploadNewFileAndAdjustContent(new_file, dropped_file, parent, context) 
 }
 
 export const addNewUploadFile = async (context, [dropped_file, parent, title, description]) => {
-    let new_file;
     try {
-        new_file = await createNewFile(title, description, dropped_file, parent);
+        const item = { title, description, file_properties: { file: dropped_file } };
+        await createNewFile(context, item, parent);
     } catch (exception) {
         const error_json = await exception.response.json();
         throw getErrorMessage(error_json);
     }
-
-    uploadNewFileAndAdjustContent(new_file, dropped_file, parent, context);
 };
 
 export const cancelFileUpload = async (context, item) => {

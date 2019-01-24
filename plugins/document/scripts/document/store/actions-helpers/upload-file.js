@@ -30,7 +30,11 @@ export function uploadFile(context, dropped_file, fake_item, docman_item) {
             filetype: dropped_file.type
         },
         onProgress: (bytes_uploaded, bytes_total) => {
-            fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
+            if (bytes_total === 0) {
+                fake_item.progress = 100;
+            } else {
+                fake_item.progress = Math.trunc((bytes_uploaded / bytes_total) * 100);
+            }
         },
         onSuccess: async () => {
             const file = await getItem(docman_item.id);

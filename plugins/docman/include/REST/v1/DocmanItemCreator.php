@@ -57,17 +57,23 @@ class DocmanItemCreator
      * @var AfterItemCreationVisitor
      */
     private $creator_visitor;
+    /**
+     * @var EmptyFileToUploadFinisher
+     */
+    private $empty_file_to_upload_finisher;
 
     public function __construct(
         \Docman_ItemFactory $item_factory,
         DocumentOngoingUploadRetriever $document_ongoing_upload_retriever,
         DocumentToUploadCreator $document_to_upload_creator,
-        AfterItemCreationVisitor $creator_visitor
+        AfterItemCreationVisitor $creator_visitor,
+        EmptyFileToUploadFinisher $empty_file_to_upload_finisher
     ) {
         $this->item_factory                      = $item_factory;
         $this->document_ongoing_upload_retriever = $document_ongoing_upload_retriever;
         $this->document_to_upload_creator        = $document_to_upload_creator;
         $this->creator_visitor                   = $creator_visitor;
+        $this->empty_file_to_upload_finisher     = $empty_file_to_upload_finisher;
     }
 
     /**
@@ -317,6 +323,15 @@ class DocmanItemCreator
                 $file_properties->file_name,
                 $file_properties->file_size
             );
+
+            if ($file_properties->file_size === 0) {
+                $this->empty_file_to_upload_finisher->createEmptyFile($document_to_upload);
+
+                $representation = new CreatedItemRepresentation();
+                $representation->build($document_to_upload->getItemId());
+
+                return $representation;
+            }
         } catch (DocumentToUploadCreationConflictException $exception) {
             throw new RestException(409, $exception->getMessage());
         } catch (DocumentToUploadCreationFileMismatchException $exception) {

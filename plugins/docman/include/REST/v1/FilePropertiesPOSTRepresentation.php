@@ -27,7 +27,7 @@ final class FilePropertiesPOSTRepresentation
      */
     public $file_name;
     /**
-     * @var int Size of the file {@from body} {@required true} {@min 1}
+     * @var int Size of the file {@from body} {@required true} {@min 0}
      */
     public $file_size;
 }
