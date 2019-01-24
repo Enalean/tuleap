@@ -29,6 +29,7 @@ use Docman_ItemDao;
 use Docman_ItemFactory;
 use Docman_Log;
 use EventManager;
+use Luracast\Restler\RestException;
 use Project;
 use ProjectManager;
 use Tuleap\Docman\Item\ItemIsNotAFolderException;
