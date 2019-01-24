@@ -55,6 +55,34 @@
 .document-new-item-type-icon {
     margin-bottom: $tlp-spacing;
     font-size: 30px;
+
+    &.fa-file-pdf-o {
+        position: relative;
+        z-index: 1;
+        background: $tlp-ui-white;
+        color: $tlp-swatch-fiesta-red;
+    }
+
+    &.fa-file-excel-o {
+        position: absolute;
+        transform: translate(-12px, -4px) rotate(-12deg);
+        color: $tlp-swatch-sherwood-green;
+        font-size: 20px;
+    }
+
+    &.fa-file-word-o {
+        position: absolute;
+        transform: translate(-17px, 18px) rotate(-18deg);
+        color: $tlp-swatch-deep-blue;
+        font-size: 22px;
+    }
+
+    &.fa-file-image-o {
+        position: absolute;
+        transform: translate(22px, 10px) rotate(10deg);
+        color: $tlp-swatch-graffiti-yellow;
+        font-size: 26px;
+    }
 }
 
 .document-new-item-type-label {
